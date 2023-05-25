@@ -125,7 +125,7 @@ const Api = {
 };
 
 /**
- * Return tileMatrixSets, tileMatrixSetLinks and tileGrids of from WMTS capabilities for a specific layer
+ * Return tileMatrixSets, tileMatrixSetLinks, tileGrids, styles and formats of from WMTS capabilities for a specific layer
  * @param {string} url wmts endpoint url
  * @param {string} layerName layer name
  * @param {object} options optional configuration

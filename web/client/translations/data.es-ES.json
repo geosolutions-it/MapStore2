@@ -126,7 +126,7 @@
             "noTileGridMatchesConfiguration": "No hay una cuadrícula de mosaicos que coincida con la proyección de mapa actual y el tamaño de mosaico seleccionado. La tabla anterior destaca las cuadrículas de mosaicos disponibles compatibles con la proyección de mapa actual. Puede hacer clic en el botón Actualizar para actualizar la lista de disponibles rejillas de azulejos",
             "noConfiguredGridSets": "No es posible obtener cuadrículas de mosaico personalizadas. Esta capa no tiene ningún conjunto de cuadrícula compatible con las proyecciones disponibles. Revise el lado del servidor de configuración y vuelva a intentarlo",
             "notPossibleToConnectToWMTSService": "No fue posible obtener las cuadrículas de mosaicos del servidor. La solicitud enviada a {requestUrl} arroja un error",
-            "notSupportedSelectedFormatCache": "El formato seleccionado no es compatible con el caché",
+            "notSupportedSelectedFormatCache": "El formato seleccionado no es compatible con el caché. Formatos admitidos: {formatos}",
             "notSupportedSelectedStyleCache": "El estilo seleccionado no es compatible con el caché",
             "customParamsCacheWarning": "Esta capa tiene activado el estilo localizado. Verifique el lado del servidor de configuración y asegúrese de que sea compatible con el parámetro ENV personalizado",
             "visibilityLimits": {

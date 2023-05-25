@@ -38,7 +38,7 @@ describe('WMSCacheOptions', () => {
         expect(buttons.length).toBe(0);
     });
     it('should not display the tile grid button if geoserver wms and disableTileGrids is true', () => {
-        ReactDOM.render(<WMSCacheOptions disableTileGrids layer={{ url: '/geoserver/wms', name: 'topp:states' }}/>, document.getElementById('container'));
+        ReactDOM.render(<WMSCacheOptions disableTileGrids layer={{ url: '/geoserver/wms', name: 'topp:states' }} />, document.getElementById('container'));
         expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
         const inputs = document.querySelectorAll('input[type="checkbox"]');
         expect(inputs.length).toBe(1);
@@ -46,7 +46,7 @@ describe('WMSCacheOptions', () => {
         expect(buttons.length).toBe(0);
     });
     it('should display the tile grid button if geoserver wms', () => {
-        ReactDOM.render(<WMSCacheOptions layer={{ url: '/geoserver/wms', name: 'topp:states' }}/>, document.getElementById('container'));
+        ReactDOM.render(<WMSCacheOptions layer={{ url: '/geoserver/wms', name: 'topp:states' }} />, document.getElementById('container'));
         expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
         const inputs = document.querySelectorAll('input[type="checkbox"]');
         expect(inputs.length).toBe(1);
@@ -65,19 +65,19 @@ describe('WMSCacheOptions', () => {
                 {
                     id: 'EPSG:32122x2',
                     crs: 'EPSG:32122',
-                    scales: [ 2557541.55271451, 1278770.776357255, 639385.3881786275 ],
-                    origins: [ [ 403035.4105968763, 414783 ], [ 403035.4105968763, 414783 ], [ 403035.4105968763, 323121 ] ],
-                    tileSize: [ 512, 512 ]
+                    scales: [2557541.55271451, 1278770.776357255, 639385.3881786275],
+                    origins: [[403035.4105968763, 414783], [403035.4105968763, 414783], [403035.4105968763, 323121]],
+                    tileSize: [512, 512]
                 },
                 {
                     id: 'EPSG:900913',
                     crs: 'EPSG:900913',
-                    scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
-                    origin: [ -20037508.34, 20037508 ],
-                    tileSize: [ 256, 256 ]
+                    scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                    origin: [-20037508.34, 20037508],
+                    tileSize: [256, 256]
                 }
             ]
-        }} projection="EPSG:3857"/>, document.getElementById('container'));
+        }} projection="EPSG:3857" />, document.getElementById('container'));
         expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
         const inputs = document.querySelectorAll('input[type="checkbox"]');
         expect(inputs.length).toBe(1);
@@ -116,19 +116,19 @@ describe('WMSCacheOptions', () => {
                 {
                     id: 'EPSG:32122x2',
                     crs: 'EPSG:32122',
-                    scales: [ 2557541.55271451, 1278770.776357255, 639385.3881786275 ],
-                    origins: [ [ 403035.4105968763, 414783 ], [ 403035.4105968763, 414783 ], [ 403035.4105968763, 323121 ] ],
-                    tileSize: [ 512, 512 ]
+                    scales: [2557541.55271451, 1278770.776357255, 639385.3881786275],
+                    origins: [[403035.4105968763, 414783], [403035.4105968763, 414783], [403035.4105968763, 323121]],
+                    tileSize: [512, 512]
                 },
                 {
                     id: 'EPSG:900913',
                     crs: 'EPSG:900913',
-                    scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
-                    origin: [ -20037508.34, 20037508 ],
-                    tileSize: [ 256, 256 ]
+                    scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                    origin: [-20037508.34, 20037508],
+                    tileSize: [256, 256]
                 }
             ]
-        }} projection="EPSG:4326"/>, document.getElementById('container'));
+        }} projection="EPSG:4326" />, document.getElementById('container'));
         expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
         const inputs = document.querySelectorAll('input[type="checkbox"]');
         expect(inputs.length).toBe(1);
@@ -303,20 +303,21 @@ describe('WMSCacheOptions', () => {
                         tileGrids: [{
                             id: 'EPSG:4326',
                             crs: 'EPSG:4326',
-                            scales: [ 279541132.0143589, 139770566.00717944, 69885283.00358972 ],
-                            origin: [ 90, -180 ],
-                            tileSize: [ 256, 256 ]
+                            scales: [279541132.0143589, 139770566.00717944, 69885283.00358972],
+                            origin: [90, -180],
+                            tileSize: [256, 256]
                         },
                         {
                             id: 'EPSG:900913',
                             crs: 'EPSG:900913',
-                            scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
-                            origin: [ -20037508.34, 20037508 ],
-                            tileSize: [ 256, 256 ]
+                            scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                            origin: [-20037508.34, 20037508],
+                            tileSize: [256, 256]
                         }],
                         tileGridCacheSupport: {
-                            styles: [ 'population' ],
-                            formats: [ 'image/png', 'image/jpeg' ] }
+                            styles: ['population'],
+                            formats: ['image/png', 'image/jpeg']
+                        }
                     });
                 } catch (e) {
                     done(e);
@@ -535,13 +536,13 @@ describe('WMSCacheOptions', () => {
                 tileGrids: [{
                     id: 'EPSG:4326',
                     crs: 'EPSG:4326',
-                    scales: [ 279541132.0143589, 139770566.00717944, 69885283.00358972 ],
-                    origin: [ 90, -180 ],
-                    tileSize: [ 256, 256 ]
+                    scales: [279541132.0143589, 139770566.00717944, 69885283.00358972],
+                    origin: [90, -180],
+                    tileSize: [256, 256]
                 }],
                 tileGridCacheSupport: {
-                    styles: [ 'population' ],
-                    formats: [ 'image/png', 'image/jpeg' ]
+                    styles: ['population'],
+                    formats: ['image/png', 'image/jpeg']
                 }
             }}
             projection="EPSG:3857"
@@ -551,13 +552,13 @@ describe('WMSCacheOptions', () => {
                         tileGrids: [{
                             id: 'EPSG:900913',
                             crs: 'EPSG:900913',
-                            scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
-                            origin: [ -20037508.34, 20037508 ],
-                            tileSize: [ 256, 256 ]
+                            scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                            origin: [-20037508.34, 20037508],
+                            tileSize: [256, 256]
                         }],
                         tileGridCacheSupport: {
-                            styles: [ 'population' ],
-                            formats: [ 'image/png', 'image/jpeg' ]
+                            styles: ['population'],
+                            formats: ['image/png', 'image/jpeg']
                         }
                     });
                 } catch (e) {
@@ -586,26 +587,26 @@ describe('WMSCacheOptions', () => {
             tileGridStrategy: 'custom',
             format: 'image/jpeg',
             tileGridCacheSupport: {
-                styles: [ 'population' ],
-                formats: [ 'image/png' ]
+                styles: ['population'],
+                formats: ['image/png']
             },
             tileGrids: [
                 {
                     id: 'EPSG:32122x2',
                     crs: 'EPSG:32122',
-                    scales: [ 2557541.55271451, 1278770.776357255, 639385.3881786275 ],
-                    origins: [ [ 403035.4105968763, 414783 ], [ 403035.4105968763, 414783 ], [ 403035.4105968763, 323121 ] ],
-                    tileSize: [ 512, 512 ]
+                    scales: [2557541.55271451, 1278770.776357255, 639385.3881786275],
+                    origins: [[403035.4105968763, 414783], [403035.4105968763, 414783], [403035.4105968763, 323121]],
+                    tileSize: [512, 512]
                 },
                 {
                     id: 'EPSG:900913',
                     crs: 'EPSG:900913',
-                    scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
-                    origin: [ -20037508.34, 20037508 ],
-                    tileSize: [ 256, 256 ]
+                    scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                    origin: [-20037508.34, 20037508],
+                    tileSize: [256, 256]
                 }
             ]
-        }} projection="EPSG:3857"/>, document.getElementById('container'));
+        }} projection="EPSG:3857" />, document.getElementById('container'));
         expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
         const inputs = document.querySelectorAll('input[type="checkbox"]');
         expect(inputs.length).toBe(1);
@@ -642,26 +643,26 @@ describe('WMSCacheOptions', () => {
             tileGridStrategy: 'custom',
             style: 'fill',
             tileGridCacheSupport: {
-                styles: [ 'population' ],
-                formats: [ 'image/png' ]
+                styles: ['population'],
+                formats: ['image/png']
             },
             tileGrids: [
                 {
                     id: 'EPSG:32122x2',
                     crs: 'EPSG:32122',
-                    scales: [ 2557541.55271451, 1278770.776357255, 639385.3881786275 ],
-                    origins: [ [ 403035.4105968763, 414783 ], [ 403035.4105968763, 414783 ], [ 403035.4105968763, 323121 ] ],
-                    tileSize: [ 512, 512 ]
+                    scales: [2557541.55271451, 1278770.776357255, 639385.3881786275],
+                    origins: [[403035.4105968763, 414783], [403035.4105968763, 414783], [403035.4105968763, 323121]],
+                    tileSize: [512, 512]
                 },
                 {
                     id: 'EPSG:900913',
                     crs: 'EPSG:900913',
-                    scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
-                    origin: [ -20037508.34, 20037508 ],
-                    tileSize: [ 256, 256 ]
+                    scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                    origin: [-20037508.34, 20037508],
+                    tileSize: [256, 256]
                 }
             ]
-        }} projection="EPSG:3857"/>, document.getElementById('container'));
+        }} projection="EPSG:3857" />, document.getElementById('container'));
         expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
         const inputs = document.querySelectorAll('input[type="checkbox"]');
         expect(inputs.length).toBe(1);
@@ -701,19 +702,19 @@ describe('WMSCacheOptions', () => {
                 {
                     id: 'EPSG:32122x2',
                     crs: 'EPSG:32122',
-                    scales: [ 2557541.55271451, 1278770.776357255, 639385.3881786275 ],
-                    origins: [ [ 403035.4105968763, 414783 ], [ 403035.4105968763, 414783 ], [ 403035.4105968763, 323121 ] ],
-                    tileSize: [ 512, 512 ]
+                    scales: [2557541.55271451, 1278770.776357255, 639385.3881786275],
+                    origins: [[403035.4105968763, 414783], [403035.4105968763, 414783], [403035.4105968763, 323121]],
+                    tileSize: [512, 512]
                 },
                 {
                     id: 'EPSG:900913',
                     crs: 'EPSG:900913',
-                    scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
-                    origin: [ -20037508.34, 20037508 ],
-                    tileSize: [ 256, 256 ]
+                    scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                    origin: [-20037508.34, 20037508],
+                    tileSize: [256, 256]
                 }
             ]
-        }} projection="EPSG:3857"/>, document.getElementById('container'));
+        }} projection="EPSG:3857" />, document.getElementById('container'));
         expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
         const inputs = document.querySelectorAll('input[type="checkbox"]');
         expect(inputs.length).toBe(1);
@@ -743,6 +744,53 @@ describe('WMSCacheOptions', () => {
         const alert = [...document.querySelectorAll('.alert')];
         expect(alert[0].innerText).toBe('layerProperties.tileGridInUse');
         expect(alert[1].innerText).toBe('layerProperties.customParamsCacheWarning');
+    });
+    it('should allow to click the grid button to switch to normal grid', (done) => {
+        ReactDOM.render(<WMSCacheOptions
+            onChange={(options) => {
+                try {
+                    expect(options).toEqual({
+                        tileGridStrategy: undefined,
+                        tileGrids: undefined,
+                        tileGridCacheSupport: undefined
+                    });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }}
+            layer={{
+                url: '/geoserver/wms',
+                name: 'topp:states',
+                tileGridStrategy: 'custom',
+                tileGrids: [
+                    {
+                        id: 'EPSG:32122x2',
+                        crs: 'EPSG:32122',
+                        scales: [2557541.55271451, 1278770.776357255, 639385.3881786275],
+                        origins: [[403035.4105968763, 414783], [403035.4105968763, 414783], [403035.4105968763, 323121]],
+                        tileSize: [512, 512]
+                    },
+                    {
+                        id: 'EPSG:900913',
+                        crs: 'EPSG:900913',
+                        scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                        origin: [-20037508.34, 20037508],
+                        tileSize: [256, 256]
+                    }
+                ]
+            }} projection="EPSG:3857" />, document.getElementById('container'));
+        expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
+        const inputs = document.querySelectorAll('input[type="checkbox"]');
+        expect(inputs.length).toBe(1);
+        const buttons = document.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect([...buttons].map(button => button.querySelector('.glyphicon').getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-refresh',
+            'glyphicon glyphicon-grid-custom'
+        ]);
+        Simulate.click(buttons[1]);
+
     });
 });
 

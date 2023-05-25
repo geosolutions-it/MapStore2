@@ -149,7 +149,7 @@ function WMSCacheOptions({
                                         : (!supportFormatCache || !supportStyleCache)
                                             ? (
                                                 <Alert bsStyle="warning">
-                                                    {!supportFormatCache && <Message msgId="layerProperties.notSupportedSelectedFormatCache" />}
+                                                    {!supportFormatCache && <Message msgId="layerProperties.notSupportedSelectedFormatCache" msgParams={{ formats: layer?.tileGridCacheSupport?.formats?.join(', ') }} />}
                                                     {!supportStyleCache && <Message msgId="layerProperties.notSupportedSelectedStyleCache" />}
                                                 </Alert>
                                             )
@@ -191,7 +191,7 @@ function WMSCacheOptions({
                                 && ((layer?.tileGrids?.length || 0) === 0 || !layer?.tileGridCacheSupport)
                                 ? onTileMatrixSetsFetch(layer)
                                 : Promise.resolve(undefined);
-                            return promise.then(({ tileGrids, tileGridCacheSupport }) => {
+                            return promise.then(({ tileGrids, tileGridCacheSupport } = {}) => {
                                 const hasTileGrids = (tileGrids?.length || 0) > 0;
                                 const tileGridStrategy = hasTileGrids
                                     ? newTileGridStrategy

@@ -129,7 +129,7 @@
             "noTileGridMatchesConfiguration": "Aucune grille de tuiles ne correspond à la projection cartographique actuelle et à la taille de tuile sélectionnée. Le tableau ci-dessus met en évidence les grilles de tuiles disponibles compatibles avec la projection cartographique actuelle. Vous pouvez cliquer sur le bouton d'actualisation pour mettre à jour la liste des grilles de tuiles",
             "noConfiguredGridSets": "Il n'est pas possible de récupérer des grilles de tuiles personnalisées. Cette couche n'a pas de grilles compatibles avec les projections disponibles. Veuillez revoir la configuration côté serveur et réessayer",
             "notPossibleToConnectToWMTSService": "Il n'a pas été possible de récupérer les grilles de tuiles depuis le serveur. La requête envoyée à {requestUrl} génère une erreur",
-            "notSupportedSelectedFormatCache": "Le format sélectionné n'est pas supporté par le cache",
+            "notSupportedSelectedFormatCache": "Le format sélectionné n'est pas pris en charge par le cache. Formats pris en charge : {formats}",
             "notSupportedSelectedStyleCache": "Le style sélectionné n'est pas supporté par le cache",
             "customParamsCacheWarning": "Ce calque a un style localisé activé. Veuillez vérifier le côté serveur de configuration et vous assurer qu'il prend en charge le paramètre ENV personnalisé",
             "visibilityLimits": {

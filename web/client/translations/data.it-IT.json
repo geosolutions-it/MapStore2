@@ -129,7 +129,7 @@
             "noTileGridMatchesConfiguration": "Non esiste una tile grid che corrisponda alla proiezione della mappa corrente e alla dimensione di tile selezionata. La tabella sopra evidenzia le tile grids disponibili compatibili con la proiezione della mappa corrente. Puoi fare clic sul pulsante Aggiorna per aggiornare l'elenco delle tile grids",
             "noConfiguredGridSets": "Non è possibile recuperare tile grids personalizzate. Questo layer non ha alcun tile grid compatibile con le proiezioni disponibili. Per favore controlla la configurazione lato server e riprova",
             "notPossibleToConnectToWMTSService": "Non è stato possibile recuperare le tile grids dal server. La richiesta inviata a {requestUrl} sta generando un errore",
-            "notSupportedSelectedFormatCache": "Il formato selezionato non è supportato dalla cache",
+            "notSupportedSelectedFormatCache": "Il formato selezionato non è supportato dalla cache. Formati supportati: {formats}",
             "notSupportedSelectedStyleCache": "Lo stile selezionato non è supportato dalla cache",
             "customParamsCacheWarning": "Questo livello ha lo stile localizzato abilitato. Verificare la configurazione lato server ed assicurarsi che supporti il parametro ENV personalizzato",
             "visibilityLimits": {
