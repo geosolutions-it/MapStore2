@@ -112,7 +112,11 @@ function getLeaderLinePositions({
             if (Cesium.defined(promise)) {
                 promise
                     .then((updatedPositions) => drawLine(updatedPositions?.[0]?.height ?? 0))
-                    .catch(() => drawLine(0));
+                    // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
+                    // and it resolve everything in the .then
+                    // while the sampleTerrain uses .catch
+                    // the optional chain help us to avoid error if catch is not exposed by the promise
+                    ?.catch?.(() => drawLine(0));
             } else {
                 drawLine(0);
             }
