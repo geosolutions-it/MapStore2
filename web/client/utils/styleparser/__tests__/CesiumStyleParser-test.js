@@ -672,6 +672,13 @@ describe('CesiumStyleParser', () => {
                 ]
             };
 
+            const canvas = document.createElement('canvas');
+            images.push({
+                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
+                image: canvas,
+                width: 32,
+                height: 32
+            });
             const sampleTerrainTest = () => Cesium.when.resolve([new Cesium.Cartographic(9, 45, 1000)]);
 
             parser.writeStyle(style).then((styleFunc) => {
