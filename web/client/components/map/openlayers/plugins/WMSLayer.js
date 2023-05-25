@@ -39,6 +39,7 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 import { generateEnvString } from '../../../../utils/LayerLocalizationUtils';
+import { getTileGridFromLayerOptions } from '../../../../utils/WMSUtils';
 
 /**
  * Check source and apply proxy
@@ -193,8 +194,39 @@ const toOLAttributions = credits => credits && creditsToAttribution(credits) || 
 const generateTileGrid = (options, map) => {
     const mapSrs = map?.getView()?.getProjection()?.getCode() || 'EPSG:3857';
     const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
-    const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
     const tileSize = options.tileSize ? options.tileSize : 256;
+    const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
+    const { TILED } = getWMSVendorParams(options);
+    const customTileGrid = TILED && options.tileGridStrategy === 'custom' && options.tileGrids
+        ? getTileGridFromLayerOptions({ tileSize, projection: normalizedSrs, tileGrids: options.tileGrids })
+        : null;
+    if (customTileGrid
+        && (customTileGrid.resolutions || customTileGrid.scales)
+        && (customTileGrid.origins || customTileGrid.origin)
+        && (customTileGrid.tileSizes || customTileGrid.tileSize)) {
+        const {
+            resolutions: customTileGridResolutions,
+            scales,
+            origin,
+            origins,
+            tileSize: customTileGridTileSize,
+            tileSizes
+        } = customTileGrid;
+        const projection = get(normalizedSrs);
+        const metersPerUnit = projection.getMetersPerUnit();
+        const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
+        const resolutions = customTileGridResolutions
+            ? customTileGridResolutions
+            : scales.map(scale => scaleToResolution(scale));
+        return new TileGrid({
+            extent,
+            resolutions,
+            tileSizes,
+            tileSize: customTileGridTileSize,
+            origin,
+            origins
+        });
+    }
     const resolutions = options.resolutions || getResolutionsForProjection(normalizedSrs, {
         tileWidth: tileSize,
         tileHeight: tileSize,
@@ -296,6 +328,8 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
         || oldOptions.tileSize !== newOptions.tileSize
         || oldOptions.forceProxy !== newOptions.forceProxy
+        || oldOptions.tileGridStrategy !== newOptions.tileGridStrategy
+        || !isEqual(oldOptions.tileGrids, newOptions.tileGrids)
     );
 };
 

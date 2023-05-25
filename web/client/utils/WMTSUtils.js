@@ -8,6 +8,7 @@
 
 
 import { getEquivalentSRS, getEPSGCode } from './CoordinatesUtils';
+import { findGeoServerName, getLayerUrl } from './LayersUtils';
 
 import { isString, isArray, isObject, head, castArray, slice, sortBy } from 'lodash';
 
@@ -190,6 +191,24 @@ export const getTileMatrix = (_options, srs) => {
         tileMatrixSetName,
         tileMatrixSet: tileMatrixSet
     };
+};
+
+/**
+ * Generate a WMTS url endpoint based on a WMS GeoServer layer configuration
+ * @param {object} options layer options
+ * @return {string} the WMTS url or an empty string
+ */
+export const generateGeoServerWMTSUrl = (options) => {
+    const geoServerName = findGeoServerName(options);
+    if (!geoServerName) {
+        return '';
+    }
+    const baseUrl = getLayerUrl(options) || '';
+    const parts = baseUrl.split(geoServerName);
+    const layerParts = (options?.name || '').split(':');
+    const workspacePath = layerParts.length === 2 ? `${layerParts[0]}/${layerParts[1]}/` : '';
+    const wmtsCapabilitiesUrl = `${parts[0]}${geoServerName}${workspacePath}gwc/service/wmts?REQUEST=GetCapabilities`;
+    return wmtsCapabilitiesUrl;
 };
 
 WMTSUtils = {
