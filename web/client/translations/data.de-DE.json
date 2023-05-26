@@ -132,6 +132,7 @@
             "notSupportedSelectedFormatCache": "Das ausgewählte Format wird vom Cache nicht unterstützt",
             "notSupportedSelectedStyleCache": "Der ausgewählte Stil wird vom Cache nicht unterstützt",
             "customParamsCacheWarning": "Für diese Ebene ist der lokalisierte Stil aktiviert. Bitte überprüfen Sie die Konfigurationsserverseite und stellen Sie sicher, dass sie den benutzerdefinierten ENV-Parameter unterstützt",
+            "supportedFormats": "Unterstützte Formate",
             "checkAvailableTileGridsInfo": "Überprüfen Sie die verfügbaren Kachelgitterinformationen",
             "tileGridInfoChecksTitle": "Informationen zu Kachelgittern",
             "tileGridInfoChecks": "Die folgende Checkliste zeigt einige mögliche Kompatibilitätsprobleme zwischen dem aktuellen Gridset und den Remote-Informationen. Es ist immer noch möglich, dass das Tile Grid den Cache nicht erreicht, selbst wenn alle aufgeführten Prüfungen erfolgreich sind",

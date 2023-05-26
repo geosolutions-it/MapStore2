@@ -129,6 +129,7 @@
             "notSupportedSelectedFormatCache": "El formato seleccionado no es compatible con el caché.",
             "notSupportedSelectedStyleCache": "El estilo seleccionado no es compatible con el caché",
             "customParamsCacheWarning": "Esta capa tiene activado el estilo localizado. Verifique el lado del servidor de configuración y asegúrese de que sea compatible con el parámetro ENV personalizado",
+            "supportedFormats": "Formatos compatibles",
             "checkAvailableTileGridsInfo": "Verificar la información de cuadrículas de mosaicos disponibles",
             "tileGridInfoChecksTitle": "Información de cuadrículas de mosaicos",
             "tileGridInfoChecks": "La siguiente lista de verificación muestra algunos posibles problemas de compatibilidad entre el conjunto de cuadrículas actual y la información remota. Todavía es posible que la cuadrícula de mosaicos no llegue al caché incluso si todas las comprobaciones enumeradas son exitosas",

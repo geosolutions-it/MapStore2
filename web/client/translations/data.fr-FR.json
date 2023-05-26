@@ -132,6 +132,7 @@
             "notSupportedSelectedFormatCache": "Le format sélectionné n'est pas pris en charge par le cache.",
             "notSupportedSelectedStyleCache": "Le style sélectionné n'est pas supporté par le cache",
             "customParamsCacheWarning": "Ce calque a un style localisé activé. Veuillez vérifier le côté serveur de configuration et vous assurer qu'il prend en charge le paramètre ENV personnalisé",
+            "supportedFormats": "Formats pris en charge",
             "checkAvailableTileGridsInfo": "Vérifier les informations disponibles sur les grilles de tuiles",
             "tileGridInfoChecksTitle": "Informations sur les grilles de tuiles",
             "tileGridInfoChecks": "La liste de contrôle suivante montre quelques problèmes de compatibilité possibles entre le jeu de grille actuel et les informations distantes. Il est toujours possible que la grille de tuiles n'atteigne pas le cache même si toutes les vérifications répertoriées sont réussies",
