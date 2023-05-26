@@ -129,9 +129,12 @@
             "noTileGridMatchesConfiguration": "Es gibt kein Kachelraster, das mit der aktuellen Kartenprojektion und der ausgewählten Kachelgröße übereinstimmt. In der Tabelle oben werden die verfügbaren Kachelraster hervorgehoben, die mit der aktuellen Kartenprojektion kompatibel sind. Sie können auf die Schaltfläche Aktualisieren klicken, um die Liste der verfügbaren zu aktualisieren Fliesengitter",
             "noConfiguredGridSets": "Es ist nicht möglich, benutzerdefinierte Kachelraster abzurufen. Diese Ebene verfügt über keinen Rastersatz, der mit den verfügbaren Projektionen kompatibel ist. Bitte überprüfen Sie die Konfigurationsserverseite und versuchen Sie es erneut",
             "notPossibleToConnectToWMTSService": "Es war nicht möglich, die Kachelraster vom Server abzurufen. Die an {requestUrl} gesendete Anfrage löst einen Fehler aus.",
-            "notSupportedSelectedFormatCache": "Das ausgewählte Format wird vom Cache nicht unterstützt. Unterstützte Formate: {formats}",
+            "notSupportedSelectedFormatCache": "Das ausgewählte Format wird vom Cache nicht unterstützt",
             "notSupportedSelectedStyleCache": "Der ausgewählte Stil wird vom Cache nicht unterstützt",
             "customParamsCacheWarning": "Für diese Ebene ist der lokalisierte Stil aktiviert. Bitte überprüfen Sie die Konfigurationsserverseite und stellen Sie sicher, dass sie den benutzerdefinierten ENV-Parameter unterstützt",
+            "checkAvailableTileGridsInfo": "Überprüfen Sie die verfügbaren Kachelgitterinformationen",
+            "tileGridInfoChecksTitle": "Informationen zu Kachelgittern",
+            "tileGridInfoChecks": "Die folgende Checkliste zeigt einige mögliche Kompatibilitätsprobleme zwischen dem aktuellen Gridset und den Remote-Informationen. Es ist immer noch möglich, dass das Tile Grid den Cache nicht erreicht, selbst wenn alle aufgeführten Prüfungen erfolgreich sind",
             "visibilityLimits": {
                 "title": "Sichtbarkeitsgrenzen",
                 "serverValuesUpdateUndefined": "Der Server hat keine Skalierungssichtbarkeitsbeschränkungen für diese Ebene angegeben",

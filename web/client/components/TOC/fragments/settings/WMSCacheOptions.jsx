@@ -20,6 +20,174 @@ import { getTileGridFromLayerOptions } from '../../../../utils/WMSUtils';
 
 const Button = tooltip(ButtonRB);
 
+const infoText = {
+    custom: ({
+        tileGrids,
+        supportFormatCache,
+        selectedTileGridId,
+        projection,
+        supportStyleCache,
+        hasCustomParams,
+        tileGridCacheSupport,
+        layer
+    }) => {
+        return (
+            <>
+                <p style={{ maxWidth: 400 }}>
+                    {(selectedTileGridId && supportFormatCache && supportStyleCache) &&
+                        <Message
+                            msgId="layerProperties.tileGridInUse"
+                            msgParams={{ id: selectedTileGridId }} />}
+                </p>
+                <Message msgId="layerProperties.availableTileGrids" />
+                <Table bordered condensed>
+                    <thead>
+                        <tr>
+                            <th><Message msgId="layerProperties.crsId" /></th>
+                            <th><Message msgId="layerProperties.projection" /></th>
+                            <th><Message msgId="layerProperties.tileSize" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {(tileGrids || []).map((tileGrid) => {
+                            const size = (tileGrid.tileSize || tileGrid.tileSizes[0] || [])[0];
+                            const markClassName = tileGrid.id === selectedTileGridId && supportFormatCache && supportFormatCache
+                                ? 'bg-success' : '';
+                            return (
+                                <tr className={markClassName} key={tileGrid.id}>
+                                    <td>{tileGrid.id}</td>
+                                    <td className={!selectedTileGridId && normalizeSRS(tileGrid.crs) === normalizeSRS(projection) ? 'bg-warning' : ''}>{tileGrid.crs}</td>
+                                    <td>{size}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </Table>
+                {tileGridCacheSupport?.formats && <>
+                    <Message msgId="layerProperties.supportedFormats" />
+                    <Table bordered condensed>
+                        <tbody>
+                            {tileGridCacheSupport.formats.map((format) => {
+                                return (
+                                    <tr key={format} className={format === layer.format ? 'bg-success' : ''}>
+                                        <td>{format}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </>}
+                <div style={{ maxWidth: 400 }}>
+                    {!selectedTileGridId
+                        ? <Alert bsStyle="warning">
+                            <Message msgId="layerProperties.noTileGridMatchesConfiguration" />
+                        </Alert>
+                        : (!supportFormatCache || !supportStyleCache)
+                            ? (
+                                <Alert bsStyle="warning">
+                                    {!supportFormatCache && <Message msgId="layerProperties.notSupportedSelectedFormatCache" />}
+                                    {!supportStyleCache && <Message msgId="layerProperties.notSupportedSelectedStyleCache" />}
+                                </Alert>
+                            )
+                            : null}
+                    {hasCustomParams && <Alert bsStyle="warning">
+                        <Message
+                            msgId="layerProperties.customParamsCacheWarning"
+                        />
+                    </Alert>}
+                </div>
+            </>
+        );
+    },
+    standard: ({
+        tileGrids,
+        tileGridCacheSupport,
+        layer,
+        supportFormatCache,
+        projection,
+        supportStyleCache,
+        hasCustomParams
+    }) => {
+        const normalizedProjection = normalizeSRS(projection);
+        const tileGridsMatchProjection = tileGrids.filter((tileGrid) => normalizeSRS(tileGrid.crs) === normalizedProjection);
+        const supportProjection = tileGridsMatchProjection.length > 0;
+        const tileGridsMatchTileSize = tileGridsMatchProjection.filter((tileGrid) => (tileGrid.tileSize || tileGrid.tileSizes[0] || [])[0] === (layer.tileSize || 256));
+        const supportTileSize = tileGridsMatchTileSize.length > 0;
+        return (
+            <>
+                <p style={{ maxWidth: 400 }}>
+                    <Message msgId="layerProperties.tileGridInfoChecks" />
+                </p>
+                <Table bordered condensed>
+                    <tbody>
+                        <tr className={supportProjection ? 'bg-success' : 'bg-warning'}>
+                            <td><Glyphicon className={supportProjection ? 'text-success' : 'text-danger'} glyph={supportProjection ? 'ok-sign' : 'remove-sign'}/>{' '}<Message msgId="layerProperties.projection" /></td>
+                        </tr>
+                        <tr className={supportTileSize ? 'bg-success' : 'bg-warning'}>
+                            <td><Glyphicon className={supportTileSize ? 'text-success' : 'text-danger'} glyph={supportTileSize ? 'ok-sign' : 'remove-sign'}/>{' '}<Message msgId="layerProperties.tileSize" /></td>
+                        </tr>
+                        <tr className={supportFormatCache ? 'bg-success' : 'bg-warning'}>
+                            <td><Glyphicon className={supportFormatCache ? 'text-success' : 'text-danger'} glyph={supportFormatCache ? 'ok-sign' : 'remove-sign'}/>{' '}<Message msgId="layerProperties.format.title" /></td>
+                        </tr>
+                        <tr className={supportStyleCache ? 'bg-success' : 'bg-warning'}>
+                            <td><Glyphicon className={supportStyleCache ? 'text-success' : 'text-danger'} glyph={supportStyleCache ? 'ok-sign' : 'remove-sign'}/>{' '}<Message msgId="layerProperties.style" /></td>
+                        </tr>
+                    </tbody>
+                </Table>
+                {tileGrids && <>
+                    <Message msgId="layerProperties.availableTileGrids" />
+                    <Table bordered condensed>
+                        <thead>
+                            <tr>
+                                <th><Message msgId="layerProperties.crsId" /></th>
+                                <th><Message msgId="layerProperties.projection" /></th>
+                                <th><Message msgId="layerProperties.tileSize" /></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tileGrids.map((tileGrid) => {
+                                const size = (tileGrid.tileSize || tileGrid.tileSizes[0] || [])[0];
+                                const projectionClass = supportProjection && !supportTileSize && normalizeSRS(tileGrid.crs) === normalizedProjection
+                                    ? 'bg-success' : '';
+                                const tileSizeClassName = size === (layer.tileSize || 256) && normalizeSRS(tileGrid.crs) === normalizedProjection
+                                    ? 'bg-success' : '';
+                                return (
+                                    <tr key={tileGrid.id}>
+                                        <td>{tileGrid.id}</td>
+                                        <td className={`${projectionClass} ${tileSizeClassName}`}>{tileGrid.crs}</td>
+                                        <td className={tileSizeClassName}>{size}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </>}
+                {tileGridCacheSupport?.formats && <>
+                    <Message msgId="layerProperties.supportedFormats" />
+                    <Table bordered condensed>
+                        <tbody>
+                            {tileGridCacheSupport.formats.map((format) => {
+                                return (
+                                    <tr key={format} className={format === layer.format ? 'bg-success' : ''}>
+                                        <td>{format}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </>}
+                <div style={{ maxWidth: 400 }}>
+                    {hasCustomParams && <Alert bsStyle="warning">
+                        <Message
+                            msgId="layerProperties.customParamsCacheWarning"
+                        />
+                    </Alert>}
+                </div>
+            </>
+        );
+    }
+};
+
 /**
  * Allow to set the cache options for a WMS layer
  * @memberof components.TOC
@@ -38,18 +206,42 @@ function WMSCacheOptions({
     const [tileGridLoading, setTileGridLoading] = useState(false);
     const [tileGridsResponseMsgId, setTileGridsResponseMsgId] = useState('');
     const [tileGridsResponseMsgStyle, setTileGridsResponseMsgStyle] = useState('');
+    const [standardTileGridInfo, setStandardTileGridInfo] = useState({});
 
-    const selectedTileGridId = layer.tileGridStrategy === 'custom' && getTileGridFromLayerOptions({
+    const selectedTileGridId = getTileGridFromLayerOptions({
         ...layer,
+        ...(layer.tileGridStrategy !== 'custom' && standardTileGridInfo),
         projection
     })?.id;
 
-    const supportFormatCache = !layer.format || !!((layer?.tileGridCacheSupport?.formats || []).includes(layer.format));
-    const supportStyleCache = !layer.style || !!((layer?.tileGridCacheSupport?.styles || []).includes(layer.style));
+    const cacheSupport = (layer.tileGridCacheSupport || standardTileGridInfo.tileGridCacheSupport);
+    const supportFormatCache = !layer.format || !!((cacheSupport?.formats || []).includes(layer.format));
+    const supportStyleCache = !layer.style || !!((cacheSupport?.styles || []).includes(layer.style));
     const hasCustomParams = !!layer.localizedLayerStyles;
     const tiled = layer && layer.tiled !== undefined ? layer.tiled : true;
 
+    const showInfo = ((layer.tileGrids || standardTileGridInfo.tileGrids || [])?.length > 0 && tiled && !layer.singleTile);
+
     const requestUrl = generateGeoServerWMTSUrl(layer);
+
+    function handleOnChange(value, isStandard) {
+        if (!isStandard) {
+            onChange(value);
+        }
+        if (value?.tileGrids !== undefined) {
+            const tileGrids = value.tileGrids.filter(tileGrid => {
+                return tileGrid.origin
+                    && tileGrid.tileSize && tileGrid.tileSize[0] === tileGrid.tileSize[1];
+            });
+            setStandardTileGridInfo({
+                ...value,
+                tileGrids
+            });
+            if (tileGrids.length === 0 && isStandard) {
+                setTileGridsResponseMsgId('layerProperties.noConfiguredGridSets');
+            }
+        }
+    }
 
     const onTileMatrixSetsFetch = (options) => {
         setTileGridLoading(true);
@@ -72,12 +264,14 @@ function WMSCacheOptions({
             .catch(() => {
                 setTileGridsResponseMsgId('layerProperties.notPossibleToConnectToWMTSService');
                 setTileGridsResponseMsgStyle('danger');
-                return { };
+                return {};
             })
             // delay the loading phase the show the loader and give a feedback to user
             // in particular when the request is cached or too fast
             .finally(() => setTimeout(() => setTileGridLoading(false), 500));
     };
+
+    const InfoText = infoText[layer.tileGridStrategy] || infoText.standard;
 
     return (
         <div className="ms-wms-cache-options">
@@ -90,89 +284,38 @@ function WMSCacheOptions({
                     <Message msgId="layerProperties.cached" />
                 </Checkbox>
                 {requestUrl && !disableTileGrids && <div className="ms-wms-cache-options-toolbar">
-                    {(layer.tileGridStrategy === 'custom' && layer.tileGrids && tiled && !layer.singleTile) && <InfoPopover
+                    {(showInfo) && <InfoPopover
                         glyph="info-sign"
-                        placement="top"
+                        placement="right"
                         bsStyle={(!supportFormatCache || !supportStyleCache || !selectedTileGridId)
                             ? 'danger'
                             : 'success'}
-                        title={<Message msgId="layerProperties.availableTileGrids" />}
+                        title={<Message msgId="layerProperties.tileGridInfoChecksTitle" />}
                         popoverStyle={{ maxWidth: 'none' }}
-                        text={
-                            <>
-                                <Table bordered condensed>
-                                    <thead>
-                                        <tr>
-                                            <th><Message msgId="layerProperties.crsId" /></th>
-                                            <th><Message msgId="layerProperties.projection" /></th>
-                                            <th><Message msgId="layerProperties.tileSize" /></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {layer?.tileGrids?.map((tileGrid) => {
-                                            const size = (tileGrid.tileSize || tileGrid.tileSizes[0] || [])[0];
-                                            const markClassName = supportFormatCache && supportFormatCache ? 'bg-success' : '';
-                                            return (
-                                                <tr key={tileGrid.id}>
-                                                    {tileGrid.id === selectedTileGridId
-                                                        ? <>
-                                                            <td><mark className={markClassName}>{tileGrid.id}</mark></td>
-                                                            <td><mark className={markClassName}>{tileGrid.crs}</mark></td>
-                                                            <td><mark className={markClassName}>{size}</mark></td>
-                                                        </>
-                                                        : !selectedTileGridId
-                                                            ? <>
-                                                                <td>{tileGrid.id}</td>
-                                                                <td>{normalizeSRS(tileGrid.crs) === normalizeSRS(projection) ? <mark>{tileGrid.crs}</mark> : tileGrid.crs}</td>
-                                                                <td>{size}</td>
-                                                            </>
-                                                            : <>
-                                                                <td>{tileGrid.id}</td>
-                                                                <td>{tileGrid.crs}</td>
-                                                                <td>{size}</td>
-                                                            </>}
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </Table>
-                                <div style={{ maxWidth: 400 }}>
-                                    {(selectedTileGridId && supportFormatCache && supportStyleCache) && <Alert bsStyle="success">
-                                        <Message
-                                            msgId="layerProperties.tileGridInUse"
-                                            msgParams={{ id: selectedTileGridId }} />
-                                    </Alert>}
-                                    {!selectedTileGridId
-                                        ? <Alert bsStyle="warning">
-                                            <Message msgId="layerProperties.noTileGridMatchesConfiguration" />
-                                        </Alert>
-                                        : (!supportFormatCache || !supportStyleCache)
-                                            ? (
-                                                <Alert bsStyle="warning">
-                                                    {!supportFormatCache && <Message msgId="layerProperties.notSupportedSelectedFormatCache" msgParams={{ formats: layer?.tileGridCacheSupport?.formats?.join(', ') }} />}
-                                                    {!supportStyleCache && <Message msgId="layerProperties.notSupportedSelectedStyleCache" />}
-                                                </Alert>
-                                            )
-                                            : null}
-                                    {hasCustomParams && <Alert bsStyle="warning">
-                                        <Message
-                                            msgId="layerProperties.customParamsCacheWarning"
-                                        />
-                                    </Alert>}
-                                </div>
-                            </>
-                        }
+                        text={<InfoText
+                            layer={layer}
+                            tileGridCacheSupport={cacheSupport}
+                            tileGrids={layer.tileGrids || standardTileGridInfo.tileGrids}
+                            supportFormatCache={supportFormatCache}
+                            selectedTileGridId={selectedTileGridId}
+                            projection={projection}
+                            supportStyleCache={supportStyleCache}
+                            hasCustomParams={hasCustomParams}
+                        />}
                     />}
-                    {layer.tileGridStrategy === 'custom' && <Button
+                    <Button
                         disabled={!!tileGridLoading || !tiled || !!layer.singleTile}
-                        tooltipId="layerProperties.updateTileGrids"
+                        tooltipId={layer.tileGridStrategy === 'custom'
+                            ? 'layerProperties.updateTileGrids'
+                            : 'layerProperties.checkAvailableTileGridsInfo'
+                        }
                         className="square-button-md no-border format-refresh"
                         onClick={() => {
-                            onTileMatrixSetsFetch({ ...layer, force: true }).then(onChange);
+                            onTileMatrixSetsFetch({ ...layer, force: true }).then((value) => handleOnChange(value, layer.tileGridStrategy !== 'custom'));
                         }}
                     >
                         <Glyphicon glyph="refresh" />
-                    </Button>}
+                    </Button>
                     <ToolbarButton
                         disabled={tileGridLoading || !tiled || !!layer.singleTile}
                         loading={tileGridLoading}
@@ -196,7 +339,7 @@ function WMSCacheOptions({
                                 const tileGridStrategy = hasTileGrids
                                     ? newTileGridStrategy
                                     : undefined;
-                                onChange({
+                                handleOnChange({
                                     tileGridCacheSupport,
                                     tileGridStrategy,
                                     tileGrids
@@ -207,7 +350,7 @@ function WMSCacheOptions({
                 </div>}
             </div>
             {!layer.singleTile && tiled && tileGridsResponseMsgId && <Alert bsStyle={tileGridsResponseMsgStyle || 'warning'}>
-                <Message msgId={tileGridsResponseMsgId} msgParams={{ requestUrl }}/>
+                <Message msgId={tileGridsResponseMsgId} msgParams={{ requestUrl }} />
             </Alert>}
         </div>
     );
