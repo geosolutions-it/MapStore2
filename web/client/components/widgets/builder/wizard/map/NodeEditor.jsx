@@ -12,6 +12,7 @@ import { NavItem as BSNavItem, Col, Glyphicon, Nav, Row } from 'react-bootstrap'
 
 import Message from '../../../../I18N/Message';
 import tooltip from '../../../../misc/enhancers/tooltip';
+import { VisualizationModes } from '../../../../../utils/MapTypeUtils';
 
 const NavItem = tooltip(BSNavItem);
 
@@ -48,6 +49,8 @@ export default ({
                     settings={settings}
                     retrieveLayerData={onRetrieveLayerData}
                     isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                    projection={props.map?.projection}
+                    isCesiumActive={props.map?.visualizationMode === VisualizationModes._3D}
                     onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({ [key]: value }, realtimeUpdate)} />
             ))}</Col>
     </Row>);
