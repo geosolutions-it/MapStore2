@@ -27,7 +27,8 @@ import {
     getCurrentMediaResourcesParams,
     getCurrentMediaResourcesTotalCount,
     getLoadingSelectedMedia,
-    getLoadingMediaList
+    getLoadingMediaList,
+    disableApplyMapMedia
 } from "../mediaEditor";
 
 describe('mediaEditor selectors', () => {
@@ -291,5 +292,17 @@ describe('mediaEditor selectors', () => {
                 loadingList: true
             }
         })).toBe(true);
+    });
+    it('disableApplyMapMedia', () => {
+        expect(disableApplyMapMedia({
+            mediaEditor: {
+                loadingSelected: true
+            }
+        })).toBe(true);
+        expect(disableApplyMapMedia({
+            mediaEditor: {
+                loadingSelected: false
+            }
+        })).toBe(false);
     });
 });
