@@ -73,13 +73,25 @@ In particular, the user is allowed to:
 
 * Enable/disable the transparency for that layer
 
-* Enable/disable the use of the layer cached tiles  (if checked, the *Tiled=true* URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms))
-
 * Decide to display the image as a single tile or as multiple tiles
 
 * Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wmswmts-catalog)
 
 * Enable/disable the *Force proxy* layer option. If enabled, forces the application to check the source and applies proxy if needed.
+
+* Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms) and the **Remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> button appears to inform the user of the available grid sets on the server side.
+
+!!!note
+    When the **Remote custom tile grids** button is enabled, it turns green <img src="../img/button/tile_grid_green.jpg" class="ms-docbutton"/> and the user is enabled to:
+
+    * Update tile grids available server side though the <img src="../img/button/update_button.jpg" class="ms-docbutton"/> button.
+
+    * Hover over the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> to open the *Available Tile Grids* panel. The tile grid currently in use is highlighted in green.
+    <img src="../img/layer-settings/green_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
+
+    The Info panel shows a warning message if it's not possible to find a tile grid that matches the map projection and selected tile size. In this case, the user can change the [projection of the map](footer.md#crs-selector) or select a different [tile size](layer-settings.md#display).
+
+    <img src="../img/layer-settings/warning_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
