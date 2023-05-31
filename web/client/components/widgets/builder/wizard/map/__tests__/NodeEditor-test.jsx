@@ -93,8 +93,8 @@ describe('NodeEditor component', () => {
             'EPSG:32122x2\tEPSG:32122\t512',
             'EPSG:900913\tEPSG:900913\t256'
         ]);
-        const alert = document.querySelector('.alert');
-        expect(alert.innerText).toBe('layerProperties.tileGridInUse');
+        const paragraph = document.querySelector('p');
+        expect(paragraph.innerText).toBe('layerProperties.tileGridInUse');
     });
     it('should not shows the cache options for 3D maps with nodeEditor(NodeEditor)', () => {
         const layer = {
