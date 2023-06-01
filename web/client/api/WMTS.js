@@ -92,7 +92,10 @@ const Api = {
             return searchAndPaginate(json, startPosition, maxRecords, text, url);
         });
     },
-    getCapabilities: (url) => {
+    getCapabilities: (url, options) => {
+        if (options?.force && capabilitiesCache[url]) {
+            delete capabilitiesCache[url];
+        }
         const cached = capabilitiesCache[url];
         if (cached && new Date().getTime() < cached.timestamp + (getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
@@ -119,6 +122,47 @@ const Api = {
             delete capabilitiesCache[key];
         });
     }
+};
+
+/**
+ * Return tileMatrixSets, tileMatrixSetLinks, tileGrids, styles and formats of from WMTS capabilities for a specific layer
+ * @param {string} url wmts endpoint url
+ * @param {string} layerName layer name
+ * @param {object} options optional configuration
+ * @param {boolean} options.force if true delete the cache for this url and force the request
+ * @return {promise}
+ */
+export const getLayerTileMatrixSetsInfo = (url, layerName = '', options) => {
+    return Api.getCapabilities(url, { force: options?.force })
+        .then((response) => {
+            const layerParts = layerName.split(':');
+            const layers = castArray(response?.Capabilities?.Contents?.Layer || []);
+            const wmtsLayer = layers.find((layer) => layer['ows:Identifier'] === layerParts[1] || layer['ows:Identifier'] === layerName);
+            const tileMatrixSetLinks = castArray(wmtsLayer?.TileMatrixSetLink || []).map(({ TileMatrixSet }) => TileMatrixSet);
+            const tileMatrixSets = castArray(response?.Capabilities?.Contents?.TileMatrixSet || []).filter((tileMatrixSet) => tileMatrixSetLinks.includes(tileMatrixSet['ows:Identifier']));
+            const tileGrids = tileMatrixSets.map((tileMatrixSet) => {
+                const origins = tileMatrixSet.TileMatrix.map((tileMatrixLevel) => tileMatrixLevel.TopLeftCorner.split(' ').map(parseFloat));
+                const tileSizes = tileMatrixSet.TileMatrix.map((tileMatrixLevel) => [parseFloat(tileMatrixLevel.TileWidth), parseFloat(tileMatrixLevel.TileHeight)]);
+                const firstOrigin = origins[0];
+                const firsTileSize = tileSizes[0];
+                const isSingleOrigin = origins.every(entry => firstOrigin[0] === entry[0] && firstOrigin[1] === entry[1]);
+                const isSingleTileSize = tileSizes.every(entry => firsTileSize[0] === entry[0] && firsTileSize[1] === entry[1]);
+                return {
+                    id: tileMatrixSet['ows:Identifier'],
+                    crs: getEPSGCode(tileMatrixSet['ows:SupportedCRS']),
+                    scales: tileMatrixSet.TileMatrix.map((tileMatrixLevel) => parseFloat(tileMatrixLevel.ScaleDenominator)),
+                    ...(isSingleOrigin ? { origin: firstOrigin } : { origins }),
+                    ...(isSingleTileSize ? { tileSize: firsTileSize } : { tileSizes })
+                };
+            });
+            return {
+                tileMatrixSets,
+                tileMatrixSetLinks,
+                tileGrids,
+                styles: castArray(wmtsLayer?.Style || []).map((style) => style['ows:Identifier']),
+                formats: castArray(wmtsLayer?.Format || [])
+            };
+        });
 };
 
 export default Api;

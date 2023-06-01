@@ -9,7 +9,7 @@
 import { clamp, isNil, isNumber } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB} from 'react-bootstrap';
+import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB } from 'react-bootstrap';
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 const Button = tooltip(ButtonRB);
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
@@ -20,6 +20,7 @@ import VisibilityLimitsForm from './VisibilityLimitsForm';
 import { ServerTypes } from '../../../../utils/LayersUtils';
 import Select from 'react-select';
 import { getSupportedFormat } from '../../../../api/WMS';
+import WMSCacheOptions from './WMSCacheOptions';
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -225,13 +226,6 @@ export default class extends React.Component {
                         <FormGroup>
                             <Checkbox key="transparent" checked={this.props.element && (this.props.element.transparent === undefined ? true : this.props.element.transparent)} onChange={(event) => {this.props.onChange("transparent", event.target.checked); }}>
                                 <Message msgId="layerProperties.transparent"/></Checkbox>
-                            {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
-                                <Checkbox value="tiled" key="tiled"
-                                    disabled={!!this.props.element.singleTile}
-                                    onChange={(e) => this.props.onChange("tiled", e.target.checked)}
-                                    checked={this.props.element && this.props.element.tiled !== undefined ? this.props.element.tiled : true} >
-                                    <Message msgId="layerProperties.cached"/>
-                                </Checkbox>))}
                             <Checkbox key="singleTile" value="singleTile"
                                 checked={this.props.element && (this.props.element.singleTile !== undefined ? this.props.element.singleTile : false )}
                                 onChange={(e) => this.props.onChange("singleTile", e.target.checked)}>
@@ -252,6 +246,17 @@ export default class extends React.Component {
                                 checked={this.props.element.forceProxy} >
                                 <Message msgId="layerProperties.forceProxy"/>
                             </Checkbox>)}
+                            {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
+                                <>
+                                    <hr/>
+                                    <WMSCacheOptions
+                                        layer={this.props.element}
+                                        projection={this.props.projection}
+                                        onChange={this.props.onChange}
+                                        disableTileGrids={!!this.props.isCesiumActive}
+                                    />
+                                </>
+                            ))}
                         </FormGroup>
                     </Col>
                     <div className={"legend-options"}>
