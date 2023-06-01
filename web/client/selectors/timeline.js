@@ -130,10 +130,14 @@ export const rangeDataToItems = (rangeData = {}, range) => {
  * @param {object} rangeData object that contains domain or histogram
  */
 export const getTimeItems = (data = {}, range, rangeData) => {
+    // rangeData populates when some changes ara applied with map sync
+    // we should use this when available
+    // because represent the latest updated value
+    if (rangeData?.domain || rangeData?.histogram) {
+        return rangeDataToItems(rangeData, range);
+    }
     if (data && data.values || data && data.domain && !isTimeDomainInterval(data.domain)) {
         return valuesToItems(data.values || data.domain.split(','), range);
-    } else if (rangeData && rangeData.histogram) {
-        return rangeDataToItems(rangeData, range);
     }
     return [];
 };
