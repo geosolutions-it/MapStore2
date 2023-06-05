@@ -8,7 +8,8 @@
 
 import assign from 'object-assign';
 
-import { get } from 'lodash';
+import get from 'lodash/get';
+import castArray from "lodash/castArray";
 
 export const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
@@ -32,6 +33,14 @@ export const rulesSelector = (state) => {
 
 export const userSelector = (state) => state && state.security && state.security.user;
 export const userGroupSecuritySelector = (state) => get(state, "security.user.groups.group");
+export const userGroupsEnabledSelector = (state) => {
+    const securityGroup = userGroupSecuritySelector(state);
+    return securityGroup
+        ? castArray(securityGroup)
+            ?.filter(group => group.enabled)
+            ?.map(group => group.groupName)
+        : [];
+};
 export const userRoleSelector = (state) => userSelector(state) && userSelector(state).role;
 export const userParamsSelector = (state) => {
     const user = userSelector(state);
@@ -46,3 +55,33 @@ export const securityTokenSelector = state => state.security && state.security.t
 export const isAdminUserSelector = (state) => userRoleSelector(state) === "ADMIN";
 export const isUserSelector = (state) => userRoleSelector(state) === "USER";
 export const authProviderSelector = state => state.security && state.security.authProvider;
+
+/**
+ * Check if user is allowed to edit based on the user's permission
+ * and plugin configuration with respect to allowed roles and groups
+ * Allow user edit based on the following hierarchy
+ * 1.`canEdit` is configured to be `true`
+ * 2. User role is `ADMIN`
+ * 3. User roles is non-admin and falls in one of the allowed groups configured
+ * @param {string[]} editingAllowedRoles
+ * @param {string[]} editingAllowedGroups
+ * @param {boolean} canEdit
+ * @returns {function(*): boolean}
+ */
+export const isUserAllowedForEditingSelector = ({
+    editingAllowedRoles,
+    editingAllowedGroups,
+    canEdit
+})=> (state) => {
+    const role = userRoleSelector(state);
+    const groups = userGroupsEnabledSelector(state);
+    let allowEdit = false;
+    if (canEdit) {
+        allowEdit = true;
+    } else if (castArray(editingAllowedRoles).includes(role)) {
+        allowEdit = role === "ADMIN" || (role !== "ADMIN"
+            && castArray(editingAllowedGroups)
+                .some((group) => groups.includes(group)));
+    }
+    return allowEdit;
+};

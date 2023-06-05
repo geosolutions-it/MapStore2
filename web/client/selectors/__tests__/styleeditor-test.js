@@ -29,8 +29,14 @@ import {
     getAllStyles,
     selectedStyleFormatSelector,
     editorMetadataSelector,
-    selectedStyleMetadataSelector
+    selectedStyleMetadataSelector,
+    editingAllowedRolesSelector,
+    editingAllowedGroupsSelector
 } from '../styleeditor';
+import {
+    setCustomUtils,
+    StyleEditorCustomUtils
+} from "../../utils/StyleEditorUtils";
 
 describe('Test styleeditor selector', () => {
     it('test temporaryIdSelector', () => {
@@ -681,6 +687,93 @@ describe('Test styleeditor selector', () => {
         expect(retval).toEqual({
             editorType: 'visual',
             styleJSON: 'null'
+        });
+    });
+    it('test editingAllowedRolesSelector', () => {
+        expect(editingAllowedRolesSelector({
+            styleeditor: {
+                editingAllowedRoles: ['ADMIN']
+            }
+        })).toEqual(['ADMIN']);
+    });
+    it('test editingAllowedGroupsSelector', () => {
+        expect(editingAllowedGroupsSelector({
+            styleeditor: {
+                editingAllowedGroups: ['test']
+            }
+        })).toEqual(['test']);
+    });
+    it('test canEditStyleSelector', () => {
+
+        expect(canEditStyleSelector({
+            styleeditor: {
+                editingAllowedGroups: ['test']
+            }
+        })).toEqual(['test']);
+    });
+    describe('canEditStyleSelector', () => {
+        const isSameOrigin = StyleEditorCustomUtils.isSameOrigin;
+        before(() => {
+            setCustomUtils('isSameOrigin', () => true);
+        });
+        after(()=> {
+            setCustomUtils('isSameOrigin', isSameOrigin);
+        });
+        it('test with role ADMIN', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedRoles: ['ADMIN']
+                },
+                security: {
+                    user: {
+                        role: 'ADMIN',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test with role non-admin and allowedgroups', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedRoles: ['USER'],
+                    editingAllowedGroups: ['test']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test not allowed for editing', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedRoles: ['USER'],
+                    editingAllowedGroups: ['some']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeFalsy();
         });
     });
 });

@@ -117,10 +117,12 @@ describe('Test the featuregrid reducer', () => {
     it('initPlugin', () => {
         const someValue = "someValue";
         const editingAllowedRoles = [someValue];
-        let state = featuregrid({}, initPlugin({editingAllowedRoles}));
+        const editingAllowedGroups = [someValue];
+        let state = featuregrid({}, initPlugin({editingAllowedRoles, editingAllowedGroups}));
         expect(state).toExist();
         expect(state.editingAllowedRoles.length).toBe(1);
         expect(state.editingAllowedRoles[0]).toBe(someValue);
+        expect(state.editingAllowedGroups[0]).toBe(someValue);
     });
     it('openFeatureGrid', () => {
         let state = featuregrid(undefined, openFeatureGrid());

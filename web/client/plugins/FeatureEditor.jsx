@@ -50,6 +50,11 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   *}
   * ```
   * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
+  * @prop {object} cfg.editingAllowedGroups array of user groups allowed to enter in edit mode.
+  * When configured, the property is applicable only when logged-in user's role is other than ADMIN
+  * User edit permission follows the below hierarchy
+  * 1. User's role is ADMIN
+  * 2. User's role is NON-ADMIN, then user's group falls in one of the configured allowed groups
   * @prop {boolean} cfg.virtualScroll default true. Activates virtualScroll. When false the grid uses normal pagination
   * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
   * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid

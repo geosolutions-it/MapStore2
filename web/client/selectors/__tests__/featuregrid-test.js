@@ -38,7 +38,7 @@ import {
     showTimeSync,
     timeSyncActive,
     multiSelect, isViewportFilterActive, viewportFilter, isFilterByViewportSupported,
-    selectedLayerFieldsSelector
+    selectedLayerFieldsSelector, editingAllowedGroupsSelector, isEditingAllowedSelector
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -666,5 +666,99 @@ describe('Test featuregrid selectors', () => {
             }
         };
         expect(selectedLayerFieldsSelector(state)).toEqual([FIELD]);
+    });
+    it('editingAllowedGroupsSelector', () => {
+        const editingAllowedGroups = ['test'];
+        expect(editingAllowedGroupsSelector({
+            featuregrid: {
+                editingAllowedGroups
+            }
+        })).toEqual(editingAllowedGroups);
+    });
+    describe('isEditingAllowedSelector', () => {
+        const state = {
+            featuregrid: {
+                canEdit: false,
+                editingAllowedRoles: ['USER'],
+                editingAllowedGroups: ['test']
+            },
+            security: {
+                user: {
+                    role: 'USER',
+                    groups: {
+                        group: {
+                            enabled: true,
+                            groupName: 'test'
+                        }
+                    }
+                }
+            }
+        };
+        it('test isEditingAllowedSelector with canEdit', () => {
+            expect(isEditingAllowedSelector({
+                ...state,
+                featuregrid: {
+                    canEdit: true
+                }
+            })).toBeTruthy();
+        });
+        it('test isEditingAllowedSelector with ADMIN user', () => {
+            expect(isEditingAllowedSelector({
+                featuregrid: {
+                    editingAllowedGroups: ['test']
+                },
+                security: {
+                    user: {
+                        role: 'ADMIN',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test isEditingAllowedSelector with non-admin user', () => {
+            expect(isEditingAllowedSelector({
+                ...state,
+                featuregrid: {
+                    editingAllowedRoles: ['USER'],
+                    editingAllowedGroups: ['test']
+                }
+            })).toBeTruthy();
+        });
+        it('test isEditingAllowedSelector with non-admin user with non-allowed groups', () => {
+            expect(isEditingAllowedSelector({
+                ...state,
+                featuregrid: {
+                    editingAllowedRoles: ['USER'],
+                    editingAllowedGroups: ['some']
+                }
+            })).toBeFalsy();
+        });
+        it('test isEditingAllowedSelector with non-admin user and with default editingAllowedRoles', () => {
+            expect(isEditingAllowedSelector({
+                ...state,
+                featuregrid: {}
+            })).toBeFalsy();
+        });
+        it('test isEditingAllowedSelector with ADMIN user and with default editingAllowedRoles', () => {
+            expect(isEditingAllowedSelector({
+                featuregrid: {},
+                security: {
+                    user: {
+                        role: 'ADMIN',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
     });
 });

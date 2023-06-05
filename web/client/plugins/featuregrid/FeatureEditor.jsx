@@ -71,6 +71,8 @@ const Dock = connect(createSelector(
   *}
   * ```
   * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
+  * @prop {object} cfg.editingAllowedGroups array of user groups allowed to enter in edit mode.
+  * When configured, the property is applicable only when logged-in user's role is other than ADMIN
   * @prop {boolean} cfg.virtualScroll default true. Activates virtualScroll. When false the grid uses normal pagination
   * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
   * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
@@ -94,7 +96,7 @@ const Dock = connect(createSelector(
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
-  * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
+  * <br/>virtual scroll mechanisms. By default, virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
   * sets the size of loaded pages cache, while vsOverscan and scrollDebounce params determine the behavior of grid scrolling
   * and of row loading.
   * <br/>Furthermore it can be configured to use custom editor cells for certain layers/columns, specifying the rules to recognize them. If no rule matches, then it will be used the default editor based on the dataType of that column.
@@ -187,10 +189,16 @@ const FeatureDock = (props = {
     // const editors = items.filter(({target}) => target === 'editors');
 
     useEffect(() => {
-        props.initPlugin({virtualScroll, editingAllowedRoles: props.editingAllowedRoles, maxStoredPages: props.maxStoredPages});
+        props.initPlugin({
+            virtualScroll,
+            editingAllowedRoles: props.editingAllowedRoles,
+            editingAllowedGroups: props.editingAllowedGroups,
+            maxStoredPages: props.maxStoredPages
+        });
     }, [
         virtualScroll,
         (props.editingAllowedRoles ?? []).join(","), // this avoids multiple calls when the array remains the equal
+        (props.editingAllowedGroups ?? []).join(","),
         props.maxStoredPages
     ]);
 
