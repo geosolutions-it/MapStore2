@@ -396,17 +396,6 @@ describe('Test styleeditor selector', () => {
             }
         );
     });
-    it('test canEditStyleSelector', () => {
-        const state = {
-            styleeditor: {
-                canEdit: true
-            }
-        };
-        const retval = canEditStyleSelector(state);
-
-        expect(retval).toExist();
-        expect(retval).toBe(true);
-    });
     it('test getUpdatedLayer', () => {
         const state = {
             layers: {
@@ -698,14 +687,6 @@ describe('Test styleeditor selector', () => {
     });
     it('test editingAllowedGroupsSelector', () => {
         expect(editingAllowedGroupsSelector({
-            styleeditor: {
-                editingAllowedGroups: ['test']
-            }
-        })).toEqual(['test']);
-    });
-    it('test canEditStyleSelector', () => {
-
-        expect(canEditStyleSelector({
             styleeditor: {
                 editingAllowedGroups: ['test']
             }
