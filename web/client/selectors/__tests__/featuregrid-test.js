@@ -37,8 +37,13 @@ import {
     queryOptionsSelector,
     showTimeSync,
     timeSyncActive,
-    multiSelect, isViewportFilterActive, viewportFilter, isFilterByViewportSupported,
-    selectedLayerFieldsSelector, editingAllowedGroupsSelector, isEditingAllowedSelector
+    multiSelect,
+    isViewportFilterActive,
+    viewportFilter,
+    isFilterByViewportSupported,
+    selectedLayerFieldsSelector,
+    editingAllowedGroupsSelector,
+    isEditingAllowedSelector
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
