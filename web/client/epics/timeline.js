@@ -427,11 +427,13 @@ export const updateRangeDataOnRangeChange = (action$, { getState = () => { } } =
         )
         .debounceTime(400)
         .merge(action$.ofType(UPDATE_LAYER_DIMENSION_DATA).debounceTime(50))
-        .switchMap( () => {
+        .switchMap( (action) => {
+            // we should force the range data update when we turn off the map sync
+            const resetMapSync = action.mapSync === false;
             const timeData = timeDataSelector(getState()) || {};
             const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain
                 // when data is already fully downloaded, no need to refresh, except if the mapSync is active
-                && (isTimeDomainInterval(timeData[id].domain)) || isMapSync(getState()));
+                && (isTimeDomainInterval(timeData[id].domain)) || isMapSync(getState()) || resetMapSync);
             // update range data for every layer that need to sync with histogram/domain
             return Rx.Observable.merge(
                 ...layerIds.map(id =>
