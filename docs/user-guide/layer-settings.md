@@ -79,17 +79,20 @@ In particular, the user is allowed to:
 
 * Enable/disable the *Force proxy* layer option. If enabled, forces the application to check the source and applies proxy if needed.
 
-* Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms) and the **Remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> button appears to inform the user of the available grid sets on the server side.
+* Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms).
+When the *Use cache options* is enabled, the **Available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/> and the **Remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> buttons are also available to inform the user about the status of the grid set used in the map compared to those available remotely.
 
 !!!note
-    When the **Remote custom tile grids** button is enabled, it turns green <img src="../img/button/tile_grid_green.jpg" class="ms-docbutton"/> and the user is enabled to:
 
-    * Update tile grids available server side though the <img src="../img/button/update_button.jpg" class="ms-docbutton"/> button.
+    When the **Refresh Available Tile Grids** <img src="../img/button/update_button.jpg" class="ms-docbutton"/> button is checked, the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> appears to inform the user about the default grid set parameters and whether they meet the remote grid sets.
+    
+    <img src="../img/layer-settings/default_gridset_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
+    
+    When the **Remote custom tile grids** button is enabled, it turns green <img src="../img/button/tile_grid_green.jpg" class="ms-docbutton"/>, and the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> appears to inform the user about the custom grid set parameters and whether they meet the remote grid sets.
 
-    * Hover over the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> to open the *Available Tile Grids* panel. The tile grid currently in use is highlighted in green.
     <img src="../img/layer-settings/green_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
-    The Info panel shows a warning message if it's not possible to find a tile grid that matches the map projection and selected tile size. In this case, the user can change the [projection of the map](footer.md#crs-selector) or select a different [tile size](layer-settings.md#display).
+    The Info panel shows a warning message if it's not possible to find, on the remote side, a tile grid that matches the map projection, the selected tile size or the tile format. In this case, the user can change the [projection of the map](footer.md#crs-selector) or select different [tile size and tile format](layer-settings.md#display).
 
     <img src="../img/layer-settings/warning_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
