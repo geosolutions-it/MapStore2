@@ -718,7 +718,43 @@ describe('Test styleeditor selector', () => {
                 }
             })).toBeTruthy();
         });
-        it('test with role non-admin and allowedgroups', () => {
+        it('test with user matching allowedRoles', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedRoles: ['USER']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test with user matching allowedGroups', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedGroups: ['test']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test with user matching both allowedRoles and allowedGroups', () => {
             expect(canEditStyleSelector({
                 styleeditor: {
                     editingAllowedRoles: ['USER'],
@@ -740,7 +776,7 @@ describe('Test styleeditor selector', () => {
         it('test not allowed for editing', () => {
             expect(canEditStyleSelector({
                 styleeditor: {
-                    editingAllowedRoles: ['USER'],
+                    editingAllowedRoles: ['USER1'],
                     editingAllowedGroups: ['some']
                 },
                 security: {

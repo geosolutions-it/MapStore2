@@ -707,7 +707,34 @@ describe('Test featuregrid selectors', () => {
                 }
             })).toBeTruthy();
         });
-        it('test isEditingAllowedSelector with ADMIN user', () => {
+        it('test isEditingAllowedSelector with ALL role', () => {
+            expect(isEditingAllowedSelector({
+                ...state,
+                featuregrid: {
+                    editingAllowedRoles: ["ALL"]
+                }
+            })).toBeTruthy();
+        });
+        it('test isEditingAllowedSelector with defaults', () => {
+            expect(isEditingAllowedSelector({
+                featuregrid: {
+                    editingAllowedRoles: ["ADMIN"],
+                    editingAllowedGroups: []
+                },
+                security: {
+                    user: {
+                        role: 'ADMIN',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test isEditingAllowedSelector with ADMIN user matching allowedGroups', () => {
             expect(isEditingAllowedSelector({
                 featuregrid: {
                     editingAllowedGroups: ['test']
@@ -725,12 +752,11 @@ describe('Test featuregrid selectors', () => {
                 }
             })).toBeTruthy();
         });
-        it('test isEditingAllowedSelector with non-admin user', () => {
+        it('test isEditingAllowedSelector with non-admin user matching allowed roles', () => {
             expect(isEditingAllowedSelector({
                 ...state,
                 featuregrid: {
-                    editingAllowedRoles: ['USER'],
-                    editingAllowedGroups: ['test']
+                    editingAllowedRoles: ['USER']
                 }
             })).toBeTruthy();
         });
@@ -738,7 +764,7 @@ describe('Test featuregrid selectors', () => {
             expect(isEditingAllowedSelector({
                 ...state,
                 featuregrid: {
-                    editingAllowedRoles: ['USER'],
+                    editingAllowedRoles: ['USER1'],
                     editingAllowedGroups: ['some']
                 }
             })).toBeFalsy();

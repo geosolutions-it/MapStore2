@@ -57,31 +57,23 @@ export const isUserSelector = (state) => userRoleSelector(state) === "USER";
 export const authProviderSelector = state => state.security && state.security.authProvider;
 
 /**
- * Check if user is allowed to edit based on the user's permission
- * and plugin configuration with respect to allowed roles and groups
- * Allow user edit based on the following hierarchy
- * 1.`canEdit` is configured to be `true`
- * 2. User role is `ADMIN`
- * 3. User roles is non-admin and falls in one of the allowed groups configured
- * @param {string[]} editingAllowedRoles
- * @param {string[]} editingAllowedGroups
- * @param {boolean} canEdit
+ * Creates a selector that checks if user is allowed to edit
+ * something based on the user's role and groups
+ * by passing the authorized roles and groups as parameter for selector creation.
+ * @param {string[]} allowedRoles array of roles allowed. Supports predefined ("ADMIN", "USER", "ALL") and custom roles
+ * @param {string[]} allowedGroups array of user group names allowed
  * @returns {function(*): boolean}
  */
-export const isUserAllowedForEditingSelector = ({
-    editingAllowedRoles,
-    editingAllowedGroups,
-    canEdit
+export const isUserAllowedSelectorCreator = ({
+    allowedRoles,
+    allowedGroups
 })=> (state) => {
     const role = userRoleSelector(state);
     const groups = userGroupsEnabledSelector(state);
-    let allowEdit = false;
-    if (canEdit) {
-        allowEdit = true;
-    } else if (castArray(editingAllowedRoles).includes(role)) {
-        allowEdit = role === "ADMIN" || (role !== "ADMIN"
-            && castArray(editingAllowedGroups)
-                .some((group) => groups.includes(group)));
-    }
-    return allowEdit;
+    return (
+        castArray(allowedRoles).includes('ALL')
+        || castArray(allowedRoles).includes(role)
+        || castArray(allowedGroups)
+            .some((group) => groups.includes(group))
+    );
 };

@@ -14,7 +14,7 @@ import { currentLocaleSelector } from './locale';
 import { isSimpleGeomType } from '../utils/MapUtils';
 import { toChangesMap } from '../utils/FeatureGridUtils';
 import { layerDimensionSelectorCreator } from './dimension';
-import { isUserAllowedForEditingSelector } from './security';
+import { isUserAllowedSelectorCreator } from './security';
 import {isCesium, mapTypeSelector} from './maptype';
 import { attributesSelector, describeSelector } from './query';
 import { createShallowSelectorCreator } from "../utils/ReselectUtils";
@@ -76,7 +76,7 @@ export const getAttributeFilters = state => state && state.featuregrid && state.
 export const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLayerIdSelector(state)), "params");
 export const selectedLayerSelector = state => getLayerById(state, selectedLayerIdSelector(state));
 export const editingAllowedRolesSelector = state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]);
-export const editingAllowedGroupsSelector = state => get(state, "featuregrid.editingAllowedGroups", ["everyone"]);
+export const editingAllowedGroupsSelector = state => get(state, "featuregrid.editingAllowedGroups", []);
 export const canEditSelector = state => state && state.featuregrid && state.featuregrid.canEdit;
 /**
  * selects featuregrid state
@@ -194,14 +194,14 @@ export const queryOptionsSelector = state => {
     };
 };
 export const isEditingAllowedSelector = (state) => {
-    const editingAllowedRoles = editingAllowedRolesSelector(state);
-    const editingAllowedGroups = editingAllowedGroupsSelector(state);
+    const allowedRoles = editingAllowedRolesSelector(state);
+    const allowedGroups = editingAllowedGroupsSelector(state);
     const canEdit = canEditSelector(state);
-    return isUserAllowedForEditingSelector({
-        editingAllowedRoles,
-        editingAllowedGroups,
-        canEdit
-    })(state) && !isCesium(state);
+    const isAllowed = isUserAllowedSelectorCreator({
+        allowedRoles,
+        allowedGroups
+    })(state);
+    return (canEdit || isAllowed) && !isCesium(state);
 };
 export const paginationSelector = state => get(state, "featuregrid.pagination");
 export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);

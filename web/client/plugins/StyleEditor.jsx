@@ -100,9 +100,7 @@ StyleEditorPanel.defaultProps = {
     editingAllowedRoles: [
         'ADMIN'
     ],
-    editingAllowedGroups: [
-        'everyone'
-    ],
+    editingAllowedGroups: [],
     editorConfig: {}
 };
 
@@ -118,12 +116,12 @@ StyleEditorPanel.defaultProps = {
  * @prop {string} cfg.styleService.baseUrl base url of service eg: '/geoserver/'
  * @prop {array} cfg.styleService.availableUrls a list of urls that can access directly to the style service
  * @prop {array} cfg.styleService.formats supported formats, could be one of [ 'sld' ] or [ 'sld', 'css' ]
- * @prop {array} cfg.editingAllowedRoles all roles with edit permission eg: [ 'ADMIN' ], if null all roles have edit permission
- * @prop {array} cfg.editingAllowedGroups all groups with edit permission.
- * When configured, the property is applicable only when logged-in user's role is other than ADMIN
- * User edit permission follows the below hierarchy
- * 1. User's role is ADMIN
- * 2. User's role is NON-ADMIN, then user's group falls in one of the configured allowed groups
+ * @prop {string[]} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode.
+ * Support predefined ('ADMIN', 'USER', 'ALL') and custom roles. Default value is ['ADMIN'].
+ * Configuring with ["ALL"] allows all users to have access regardless of user's permission.
+ * However, the outcome can be influenced by the user's permission to access the requested style service.
+ * @prop {string[]} cfg.editingAllowedGroups array of user groups allowed to enter in edit mode.
+ * When configured, gives the editing permissions to users members of one of the groups listed.
  * @prop {array} cfg.enableSetDefaultStyle enable set default style functionality
  * @prop {object} cfg.editorConfig contains editor configurations
  * @prop {object} cfg.editorConfig.classification configuration of the classification symbolizer

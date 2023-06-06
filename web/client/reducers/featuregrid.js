@@ -60,6 +60,7 @@ const emptyResultsState = {
     advancedFilters: {},
     filters: {},
     editingAllowedRoles: ["ADMIN"],
+    editingAllowedGroups: [],
     enableColumnFilters: true,
     showFilteredObject: false,
     timeSync: false,
@@ -156,7 +157,7 @@ function featuregrid(state = emptyResultsState, action) {
         return assign({}, state, {
             showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : true,
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
-            editingAllowedGroups: action.options.editingAllowedGroups || state.editingAllowedGroups || ["everyone"],
+            editingAllowedGroups: action.options.editingAllowedGroups || state.editingAllowedGroups || [],
             virtualScroll: !!action.options.virtualScroll,
             maxStoredPages: action.options.maxStoredPages || 5
         });

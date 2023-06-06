@@ -17,7 +17,7 @@ import {
     userGroupSecuritySelector,
     userParamsSelector,
     userGroupsEnabledSelector,
-    isUserAllowedForEditingSelector
+    isUserAllowedSelectorCreator
 } from '../security';
 
 const id = 1833;
@@ -116,14 +116,37 @@ describe('Test security selectors', () => {
                 }
             }
         };
-        it('test with canEdit property', () => {
-            expect(isUserAllowedForEditingSelector({
-                canEdit: true
+        it('test with allowedRole ALL', () => {
+            expect(isUserAllowedSelectorCreator({
+                allowedRoles: ["ALL"]
             })(state)).toBeTruthy();
         });
-        it('test with role ADMIN', () => {
-            expect(isUserAllowedForEditingSelector({
-                editingAllowedRoles: ['ADMIN']
+        it('test with both role and group matching both allowedRoles and allowedGroups', () => {
+            expect(isUserAllowedSelectorCreator({
+                allowedRoles: ["USER"],
+                allowedGroups: ["test"]
+            })(state)).toBeTruthy();
+        });
+        it('test with role ADMIN and allowedRoles', () => {
+            expect(isUserAllowedSelectorCreator({
+                allowedRoles: ['ADMIN']
+            })({
+                security: {
+                    user: {
+                        role: 'ADMIN',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test with role ADMIN and allowedGroups', () => {
+            expect(isUserAllowedSelectorCreator({
+                allowedGroups: ['test']
             })({
                 security: {
                     user: {
@@ -139,15 +162,19 @@ describe('Test security selectors', () => {
             })).toBeTruthy();
         });
         it('test with role non-admin and allowedgroups', () => {
-            expect(isUserAllowedForEditingSelector({
-                editingAllowedRoles: ['USER'],
-                editingAllowedGroups: ['test']
+            expect(isUserAllowedSelectorCreator({
+                allowedGroups: ['test']
+            })(state)).toBeTruthy();
+        });
+        it('test with role non-admin and allowedroles', () => {
+            expect(isUserAllowedSelectorCreator({
+                allowedRoles: ['USER']
             })(state)).toBeTruthy();
         });
         it('test not allowed for edit', () => {
-            expect(isUserAllowedForEditingSelector({
-                editingAllowedRoles: ['USER'],
-                editingAllowedGroups: ['some']
+            expect(isUserAllowedSelectorCreator({
+                allowedRoles: ['USER1'],
+                allowedGroups: ['some']
             })(state)).toBeFalsy();
         });
     });

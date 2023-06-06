@@ -10,7 +10,7 @@ import { get, head, uniqBy, find, isString } from 'lodash';
 
 import { layerSettingSelector, getSelectedLayer } from './layers';
 import { STYLE_ID_SEPARATOR, extractFeatureProperties, isSameOrigin } from '../utils/StyleEditorUtils';
-import { isUserAllowedForEditingSelector } from "./security";
+import { isUserAllowedSelectorCreator } from "./security";
 
 /**
  * selects styleeditor state
@@ -135,13 +135,14 @@ export const editingAllowedGroupsSelector = (state) => get(state, 'styleeditor.e
  * @return {bool}
  */
 export const canEditStyleSelector = (state) => {
-    const editingAllowedRoles = editingAllowedRolesSelector(state);
-    const editingAllowedGroups = editingAllowedGroupsSelector(state);
+    const allowedRoles = editingAllowedRolesSelector(state);
+    const allowedGroups = editingAllowedGroupsSelector(state);
     const _isSameOrigin = isSameOrigin(getUpdatedLayer(state), styleServiceSelector(state));
-    return isUserAllowedForEditingSelector({
-        editingAllowedRoles,
-        editingAllowedGroups
-    })(state) && _isSameOrigin;
+    const isAllowed = isUserAllowedSelectorCreator({
+        allowedRoles,
+        allowedGroups
+    })(state);
+    return isAllowed && _isSameOrigin;
 };
 /**
  * selects geometry type of selected layer from state
