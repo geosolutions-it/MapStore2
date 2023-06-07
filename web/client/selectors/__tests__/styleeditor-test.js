@@ -29,8 +29,14 @@ import {
     getAllStyles,
     selectedStyleFormatSelector,
     editorMetadataSelector,
-    selectedStyleMetadataSelector
+    selectedStyleMetadataSelector,
+    editingAllowedRolesSelector,
+    editingAllowedGroupsSelector
 } from '../styleeditor';
+import {
+    setCustomUtils,
+    StyleEditorCustomUtils
+} from "../../utils/StyleEditorUtils";
 
 describe('Test styleeditor selector', () => {
     it('test temporaryIdSelector', () => {
@@ -390,17 +396,6 @@ describe('Test styleeditor selector', () => {
             }
         );
     });
-    it('test canEditStyleSelector', () => {
-        const state = {
-            styleeditor: {
-                canEdit: true
-            }
-        };
-        const retval = canEditStyleSelector(state);
-
-        expect(retval).toExist();
-        expect(retval).toBe(true);
-    });
     it('test getUpdatedLayer', () => {
         const state = {
             layers: {
@@ -681,6 +676,121 @@ describe('Test styleeditor selector', () => {
         expect(retval).toEqual({
             editorType: 'visual',
             styleJSON: 'null'
+        });
+    });
+    it('test editingAllowedRolesSelector', () => {
+        expect(editingAllowedRolesSelector({
+            styleeditor: {
+                editingAllowedRoles: ['ADMIN']
+            }
+        })).toEqual(['ADMIN']);
+    });
+    it('test editingAllowedGroupsSelector', () => {
+        expect(editingAllowedGroupsSelector({
+            styleeditor: {
+                editingAllowedGroups: ['test']
+            }
+        })).toEqual(['test']);
+    });
+    describe('canEditStyleSelector', () => {
+        const isSameOrigin = StyleEditorCustomUtils.isSameOrigin;
+        before(() => {
+            setCustomUtils('isSameOrigin', () => true);
+        });
+        after(()=> {
+            setCustomUtils('isSameOrigin', isSameOrigin);
+        });
+        it('test with role ADMIN', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedRoles: ['ADMIN']
+                },
+                security: {
+                    user: {
+                        role: 'ADMIN',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test with user matching allowedRoles', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedRoles: ['USER']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test with user matching allowedGroups', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedGroups: ['test']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test with user matching both allowedRoles and allowedGroups', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedRoles: ['USER'],
+                    editingAllowedGroups: ['test']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test not allowed for editing', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    editingAllowedRoles: ['USER1'],
+                    editingAllowedGroups: ['some']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeFalsy();
         });
     });
 });

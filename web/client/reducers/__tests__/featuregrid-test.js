@@ -114,13 +114,22 @@ describe('Test the featuregrid reducer', () => {
         let state2 = featuregrid({showAgain: true}, toggleShowAgain());
         expect(state2.showAgain).toBe(false);
     });
-    it('initPlugin', () => {
+    it('initPlugin with default roles and groups', () => {
+        let state = featuregrid({}, initPlugin({}));
+        expect(state).toExist();
+        expect(state.editingAllowedRoles.length).toBe(1);
+        expect(state.editingAllowedRoles).toEqual(["ADMIN"]);
+        expect(state.editingAllowedGroups).toEqual([]);
+    });
+    it('initPlugin with roles and groups allowed', () => {
         const someValue = "someValue";
         const editingAllowedRoles = [someValue];
-        let state = featuregrid({}, initPlugin({editingAllowedRoles}));
+        const editingAllowedGroups = [someValue];
+        let state = featuregrid({}, initPlugin({editingAllowedRoles, editingAllowedGroups}));
         expect(state).toExist();
         expect(state.editingAllowedRoles.length).toBe(1);
         expect(state.editingAllowedRoles[0]).toBe(someValue);
+        expect(state.editingAllowedGroups[0]).toBe(someValue);
     });
     it('openFeatureGrid', () => {
         let state = featuregrid(undefined, openFeatureGrid());

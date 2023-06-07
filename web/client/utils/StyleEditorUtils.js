@@ -36,7 +36,7 @@ const xmlBuilder = new xml2js.Builder();
 export const STYLE_ID_SEPARATOR = '___';
 export const STYLE_OWNER_NAME = 'styleeditor';
 
-const StyleEditorCustomUtils = {};
+export const StyleEditorCustomUtils = {};
 
 const EDITOR_MODES = {
     'css': 'geocss',

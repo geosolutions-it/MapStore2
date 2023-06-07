@@ -12,7 +12,11 @@ import ReactDOM from 'react-dom';
 import StyleEditorPlugin from '../StyleEditor';
 import { getPluginForTest } from './pluginsTestUtils';
 import { act } from 'react-dom/test-utils';
-import { INIT_STYLE_SERVICE, TOGGLE_STYLE_EDITOR } from '../../actions/styleeditor';
+import {
+    INIT_STYLE_SERVICE,
+    TOGGLE_STYLE_EDITOR,
+    SET_EDIT_PERMISSION
+} from '../../actions/styleeditor';
 
 describe('StyleEditor Plugin', () => {
     beforeEach((done) => {
@@ -41,11 +45,12 @@ describe('StyleEditor Plugin', () => {
                 styleService={cfgStyleService}
             />, document.getElementById("container"));
         });
-        expect(actions.length).toBe(2);
+        expect(actions.length).toBe(3);
         expect(actions.map(action => action.type))
-            .toEqual([ INIT_STYLE_SERVICE, TOGGLE_STYLE_EDITOR ]);
-        expect(actions[0].service).toBeTruthy();
-        expect(actions[0].service).toEqual({ ...cfgStyleService, isStatic: true });
+            .toEqual([ TOGGLE_STYLE_EDITOR, INIT_STYLE_SERVICE, SET_EDIT_PERMISSION ]);
+        expect(actions[1].service).toBeTruthy();
+        expect(actions[1].service).toEqual({ ...cfgStyleService, isStatic: true });
+        expect(actions[1].permissions.editingAllowedRoles).toEqual(['ADMIN']);
     });
     it('should use the static service from the state', () => {
         const cfgStyleService = {
@@ -70,17 +75,23 @@ describe('StyleEditor Plugin', () => {
                 service: stateStyleService
             }
         });
+        const permissions = {
+            "editingAllowedRoles": ["USER"],
+            "editingAllowedGroups": ["temp"]
+        };
         act(() => {
             ReactDOM.render(<Plugin
                 active
                 styleService={cfgStyleService}
+                {...permissions}
             />, document.getElementById("container"));
         });
-        expect(actions.length).toBe(2);
+        expect(actions.length).toBe(3);
         expect(actions.map(action => action.type))
-            .toEqual([ INIT_STYLE_SERVICE, TOGGLE_STYLE_EDITOR ]);
-        expect(actions[0].service).toBeTruthy();
-        expect(actions[0].service).toEqual(stateStyleService);
+            .toEqual([ TOGGLE_STYLE_EDITOR, INIT_STYLE_SERVICE, SET_EDIT_PERMISSION ]);
+        expect(actions[1].service).toBeTruthy();
+        expect(actions[1].service).toEqual(stateStyleService);
+        expect(actions[1].permissions).toEqual(permissions);
     });
     it('should use the service from the state', () => {
         const styleService = {
@@ -99,10 +110,10 @@ describe('StyleEditor Plugin', () => {
                 active
             />, document.getElementById("container"));
         });
-        expect(actions.length).toBe(2);
+        expect(actions.length).toBe(3);
         expect(actions.map(action => action.type))
-            .toEqual([ INIT_STYLE_SERVICE, TOGGLE_STYLE_EDITOR ]);
-        expect(actions[0].service).toBeTruthy();
-        expect(actions[0].service).toEqual(styleService);
+            .toEqual([ TOGGLE_STYLE_EDITOR, INIT_STYLE_SERVICE, SET_EDIT_PERMISSION ]);
+        expect(actions[1].service).toBeTruthy();
+        expect(actions[1].service).toEqual(styleService);
     });
 });

@@ -90,7 +90,9 @@ import {
     toggleShowAgain,
     TOGGLE_SHOW_AGAIN_FLAG,
     setSyncTool,
-    SET_SYNC_TOOL, setViewportFilter, SET_VIEWPORT_FILTER
+    SET_SYNC_TOOL,
+    setViewportFilter,
+    SET_VIEWPORT_FILTER
 } from '../featuregrid';
 
 const idFeature = "2135";
