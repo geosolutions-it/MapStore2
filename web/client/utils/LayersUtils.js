@@ -652,7 +652,8 @@ export const saveLayer = (layer) => {
     layer.tileGrids ? { tileGrids: layer.tileGrids } : {},
     layer.tileGridStrategy ? { tileGridStrategy: layer.tileGridStrategy } : {},
     layer.tileGridCacheSupport ? { tileGridCacheSupport: layer.tileGridCacheSupport } : {},
-    !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {});
+    !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
+    !isNil(layer.readOnlyAttribute) ? { readOnlyAttribute: layer.readOnlyAttribute } : {});
 };
 
 /**

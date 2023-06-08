@@ -30,7 +30,8 @@ import {
     currentFeatureSelector,
     mapInfoEnabledSelector,
     mapInfoDisabledSelector,
-    enableInfoForSelectedLayersSelector
+    enableInfoForSelectedLayersSelector,
+    currentMapInfoLayerSelector
 } from '../mapInfo';
 
 const QUERY_PARAMS = {
@@ -393,5 +394,12 @@ describe('Test mapinfo selectors', () => {
         const state = { mapInfo: { enableInfoForSelectedLayers: false}};
         const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(state);
         expect(enableInfoForSelectedLayers).toBeFalsy();
+    });
+    it('test currentMapInfoLayerSelector', () => {
+        const layerId = "layer1";
+        const state = { mapInfo: { responses: [{layer: {id: layerId}}], index: 0}};
+        const currentMapInfoLayer = currentMapInfoLayerSelector(state);
+        expect(currentMapInfoLayer).toBeTruthy();
+        expect(currentMapInfoLayer.id).toBe(layerId);
     });
 });

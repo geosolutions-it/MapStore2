@@ -1239,6 +1239,15 @@ describe('LayersUtils', () => {
                         formats: ['image/png']
                     });
                 }
+            ],
+            // save read only attribute
+            [
+                {
+                    readOnlyAttribute: true
+                },
+                l => {
+                    expect(l.readOnlyAttribute).toBeTruthy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );

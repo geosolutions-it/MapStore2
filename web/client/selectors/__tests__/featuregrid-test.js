@@ -43,7 +43,8 @@ import {
     isFilterByViewportSupported,
     selectedLayerFieldsSelector,
     editingAllowedGroupsSelector,
-    isEditingAllowedSelector
+    isEditingAllowedSelector,
+    readOnlyAttributeSelector
 } from '../featuregrid';
 
 const idFt1 = "idFt1";
@@ -700,7 +701,7 @@ describe('Test featuregrid selectors', () => {
             }
         };
         it('test isEditingAllowedSelector with canEdit', () => {
-            expect(isEditingAllowedSelector({
+            expect(isEditingAllowedSelector()({
                 ...state,
                 featuregrid: {
                     canEdit: true
@@ -708,7 +709,7 @@ describe('Test featuregrid selectors', () => {
             })).toBeTruthy();
         });
         it('test isEditingAllowedSelector with ALL role', () => {
-            expect(isEditingAllowedSelector({
+            expect(isEditingAllowedSelector()({
                 ...state,
                 featuregrid: {
                     editingAllowedRoles: ["ALL"]
@@ -716,7 +717,7 @@ describe('Test featuregrid selectors', () => {
             })).toBeTruthy();
         });
         it('test isEditingAllowedSelector with defaults', () => {
-            expect(isEditingAllowedSelector({
+            expect(isEditingAllowedSelector()({
                 featuregrid: {
                     editingAllowedRoles: ["ADMIN"],
                     editingAllowedGroups: []
@@ -735,7 +736,7 @@ describe('Test featuregrid selectors', () => {
             })).toBeTruthy();
         });
         it('test isEditingAllowedSelector with ADMIN user matching allowedGroups', () => {
-            expect(isEditingAllowedSelector({
+            expect(isEditingAllowedSelector()({
                 featuregrid: {
                     editingAllowedGroups: ['test']
                 },
@@ -753,7 +754,7 @@ describe('Test featuregrid selectors', () => {
             })).toBeTruthy();
         });
         it('test isEditingAllowedSelector with non-admin user matching allowed roles', () => {
-            expect(isEditingAllowedSelector({
+            expect(isEditingAllowedSelector()({
                 ...state,
                 featuregrid: {
                     editingAllowedRoles: ['USER']
@@ -761,7 +762,7 @@ describe('Test featuregrid selectors', () => {
             })).toBeTruthy();
         });
         it('test isEditingAllowedSelector with non-admin user with non-allowed groups', () => {
-            expect(isEditingAllowedSelector({
+            expect(isEditingAllowedSelector()({
                 ...state,
                 featuregrid: {
                     editingAllowedRoles: ['USER1'],
@@ -770,13 +771,13 @@ describe('Test featuregrid selectors', () => {
             })).toBeFalsy();
         });
         it('test isEditingAllowedSelector with non-admin user and with default editingAllowedRoles', () => {
-            expect(isEditingAllowedSelector({
+            expect(isEditingAllowedSelector()({
                 ...state,
                 featuregrid: {}
             })).toBeFalsy();
         });
         it('test isEditingAllowedSelector with ADMIN user and with default editingAllowedRoles', () => {
-            expect(isEditingAllowedSelector({
+            expect(isEditingAllowedSelector()({
                 featuregrid: {},
                 security: {
                     user: {
@@ -791,5 +792,97 @@ describe('Test featuregrid selectors', () => {
                 }
             })).toBeTruthy();
         });
+        it('test isEditingAllowedSelector with readOnlyAttribute (featuregrid)', () => {
+            expect(isEditingAllowedSelector("featuregrid")({
+                featuregrid: {
+                    selectedLayer: "layer-1"
+                },
+                layers: {flat: [{
+                    id: "layer-1",
+                    readOnlyAttribute: true
+                }]},
+                security: {
+                    user: {
+                        role: 'ADMIN',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeFalsy();
+        });
+        it('test isEditingAllowedSelector with readOnlyAttribute (mapInfo)', () => {
+            expect(isEditingAllowedSelector("mapInfo")({
+                mapInfo: {
+                    responses: [{
+                        layer: {
+                            id: "layer-1",
+                            readOnlyAttribute: false
+                        }
+                    }],
+                    index: 0
+                },
+                security: {
+                    user: {
+                        role: 'ADMIN',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+    });
+    it('test readOnlyAttributeSelector for featurgrid', () => {
+        expect(readOnlyAttributeSelector()({
+            featuregrid: {
+                selectedLayer: "layer-1"
+            },
+            layers: {flat: [{
+                id: "layer-1",
+                readOnlyAttribute: true
+            }]},
+            security: {
+                user: {
+                    role: 'ADMIN',
+                    groups: {
+                        group: {
+                            enabled: true,
+                            groupName: 'test'
+                        }
+                    }
+                }
+            }
+        })).toBeTruthy();
+    });
+    it('test readOnlyAttributeSelector for mapInfo', () => {
+        expect(readOnlyAttributeSelector("mapInfo")({
+            mapInfo: {
+                responses: [{
+                    layer: {
+                        id: "layer-1",
+                        readOnlyAttribute: false
+                    }
+                }],
+                index: 0
+            },
+            security: {
+                user: {
+                    role: 'ADMIN',
+                    groups: {
+                        group: {
+                            enabled: true,
+                            groupName: 'test'
+                        }
+                    }
+                }
+            }
+        })).toBeFalsy();
     });
 });

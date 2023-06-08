@@ -9,7 +9,7 @@
 import { find, includes, isObject, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Col, ControlLabel, FormControl, FormGroup, Grid } from 'react-bootstrap';
+import { Checkbox, Col, ControlLabel, FormControl, FormGroup, Grid } from 'react-bootstrap';
 import LocalizedInput from '../../../misc/LocalizedInput';
 
 import Select from 'react-select';
@@ -74,6 +74,8 @@ class General extends React.Component {
 
         const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
 
+        const isSupportedLayerType = includes(this.supportedEditLayerTypes, this.props.element.type);
+
         return (
             <Grid fluid style={{ paddingTop: 15, paddingBottom: 15 }}>
                 <form ref="settings">
@@ -87,7 +89,7 @@ class General extends React.Component {
                             value={this.props.element.title}
                             onChange={this.updateTitle} />
                     </FormGroup>
-                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) &&
+                    {isSupportedLayerType &&
                     <LayerNameEditField
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
@@ -104,7 +106,7 @@ class General extends React.Component {
                                 onBlur={this.updateEntry.bind(null, "description")} />}
                     </FormGroup>
                     {this.props.nodeType === 'layers' ?
-                        <div>
+                        <div className={"form-group"}>
                             <label key="group-label" className="control-label"><Message msgId="layerProperties.group" /></label>
                             <SelectCreatable
                                 clearable={false}
@@ -139,9 +141,8 @@ class General extends React.Component {
                         </div> : null}
                     {   /* Tooltip section */
                         this.props.showTooltipOptions &&
-                        <div style={{ width: "100%" }}>
+                        <div style={{ width: "100%", display: "inline-block" }}>
                             <Col xs={12} sm={8} className="first-selectize">
-                                <br />
                                 <label key="tooltip-label" className="control-label"><Message msgId="layerProperties.tooltip.label" /></label>
                                 <Select
                                     clearable={false}
@@ -151,7 +152,6 @@ class General extends React.Component {
                                     onChange={(item) => { this.updateEntry("tooltipOptions", { target: { value: item.value || "title" } }); }} />
                             </Col>
                             <Col xs={12} sm={4} className="second-selectize">
-                                <br />
                                 <label key="tooltip-placement-label" className="control-label"><Message msgId="layerProperties.tooltip.labelPlacement" /></label>
                                 <Select
                                     clearable={false}
@@ -163,13 +163,23 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
+                    {isSupportedLayerType && <FormGroup>
+                        <Checkbox
+                            data-qa="general-read-only-attribute"
+                            key="readOnlyAttribute"
+                            checked={this.props.element?.readOnlyAttribute === undefined ? false : this.props.element?.readOnlyAttribute}
+                            onChange={(event) => this.props.onChange("readOnlyAttribute", event.target.checked)}
+                        >
+                            <Message msgId="layerProperties.readOnlyAttribute"/>
+                        </Checkbox>
+                    </FormGroup>}
 
                 </form>
             </Grid>
         );
     }
 
-    supportedNameEditLayerTypes = ['wms'];
+    supportedEditLayerTypes = ['wms'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
     updateTitle = (title) => this.props.onChange("title", title);

@@ -200,7 +200,8 @@
               "clearCustomization": "Borrar personalización",
               "clearCustomizationConfirm": "¿Está seguro de que desea borrar la personalización de los campos?",
               "error": "Error al recuperar los campos"
-            }
+            },
+            "readOnlyAttribute": "Deshabilitar la edición en la tabla de atributos"
         },
         "localizedInput": {
           "localize": "Localizar cadena...",

@@ -52,6 +52,8 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
+* Disable editing in attribute table. Un-ticked by default. Enabling this checkbox will disable editing in Attribute table and <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon is hidden in Identify panel for the layer selected
+
 ## Display
 
 Through the second section of the layer settings panel it is possible to change the display settings:

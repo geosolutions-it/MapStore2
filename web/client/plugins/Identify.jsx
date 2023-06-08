@@ -93,7 +93,7 @@ const selector = createStructuredSelector({
     formatCoord: (state) => state.mapInfo && state.mapInfo.formatCoord || ConfigUtils.getConfigProp('defaultCoordinateFormat'),
     showCoordinateEditor: (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     showEmptyMessageGFI: state => showEmptyMessageGFISelector(state),
-    isEditingAllowed: isEditingAllowedSelector,
+    isEditingAllowed: isEditingAllowedSelector("mapInfo"),
     isCesium,
     floatingIdentifyEnabled: (state) => isMouseMoveIdentifyActiveSelector(state)
 });

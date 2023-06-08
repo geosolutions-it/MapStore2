@@ -200,7 +200,8 @@
               "clearCustomization": "Supprimer les personnalisations",
               "clearCustomizationConfirm": "Voulez-vous vraiment supprimer les personnalisations ?",
               "error":  "Échec de la récupération des champs"
-            }
+            },
+            "readOnlyAttribute": "Désactiver la modification sur la table attributaire"
         },
          "localizedInput": {
           "localize": "Localiser ce texte...",
