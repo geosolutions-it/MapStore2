@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Rx from 'rxjs';
-
+import uuid from 'uuid';
 import {
     NEW,
     INSERT,
@@ -56,17 +56,32 @@ export const initEditorOnNew = (action$, {getState = () => {}} = {}) => action$.
     }, {step: 0})));
 export const initEditorOnNewChart = (action$, {getState = () => {}} = {}) => action$.ofType(NEW_CHART)
     .filter(() => widgetBuilderAvailable(getState()))
-    .switchMap((w) => Rx.Observable.of(closeFeatureGrid(), editNewWidget({
-        legend: false,
-        mapSync: true,
-        cartesian: true,
-        yAxis: true,
-        widgetType: "chart",
-        filter: wfsFilter(getState()),
-        ...w,
-        // override action's type
-        type: undefined
-    }, {step: 0}), onEditorChange("returnToFeatureGrid", true)));
+    .switchMap(() => {
+        const chartId = uuid();
+        const state = getState();
+        const layer = getWidgetLayer(state);
+        return Rx.Observable.of(
+            closeFeatureGrid(),
+            editNewWidget({
+                mapSync: true,
+                selectedChartId: chartId,
+                widgetType: 'chart',
+                charts: [
+                    {
+                        name: 'Chart-1',
+                        chartId,
+                        type: 'bar',
+                        legend: false,
+                        cartesian: true,
+                        yAxis: true,
+                        layer,
+                        filter: wfsFilter(state)
+                    }
+                ]
+            }, {step: 0}),
+            onEditorChange("returnToFeatureGrid", true)
+        );
+    });
 /**
  * Manages interaction with QueryPanel and widgetBuilder
  */
