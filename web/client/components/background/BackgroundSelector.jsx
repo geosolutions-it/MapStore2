@@ -57,7 +57,8 @@ class BackgroundSelector extends React.Component {
         updateNode: PropTypes.func,
         clearModal: PropTypes.func,
         allowDeletion: PropTypes.bool,
-        projection: PropTypes.string
+        projection: PropTypes.string,
+        disableTileGrids: PropTypes.bool
     };
 
     static defaultProps = {
@@ -256,6 +257,8 @@ class BackgroundSelector extends React.Component {
 
                     }}
                     updateThumbnail={this.props.onUpdateThumbnail}
+                    projection={this.props.projection}
+                    disableTileGrids={this.props.disableTileGrids}
                     {...backgroundDialogParams}
                     {...this.props.modalParams}
                 />}

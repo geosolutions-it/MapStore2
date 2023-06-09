@@ -1227,7 +1227,6 @@ describe('LayersUtils', () => {
                         }
                     ],
                     tileGridCacheSupport: {
-                        styles: ['polygon'],
                         formats: ['image/png']
                     }
                 },
@@ -1235,7 +1234,6 @@ describe('LayersUtils', () => {
                     expect(l.tileGridStrategy).toBe('custom');
                     expect(l.tileGrids.length).toBe(2);
                     expect(l.tileGridCacheSupport).toEqual({
-                        styles: ['polygon'],
                         formats: ['image/png']
                     });
                 }
