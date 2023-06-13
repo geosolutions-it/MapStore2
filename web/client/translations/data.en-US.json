@@ -199,7 +199,8 @@
               "clearCustomization": "Clear customization",
               "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
               "error": "It was not possible to automatically load the fields"
-            }
+            },
+          "disableFeaturesEditing": "Disable editing on Attribute table"
         },
         "localizedInput": {
           "localize": "Localize this text...",

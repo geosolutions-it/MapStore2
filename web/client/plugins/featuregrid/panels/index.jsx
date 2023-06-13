@@ -27,7 +27,8 @@ import FooterComp from '../../../components/data/featuregrid/Footer';
 import HeaderComp from '../../../components/data/featuregrid/Header';
 import ToolbarComp from '../../../components/data/featuregrid/toolbars/Toolbar';
 import {
-    getAttributeFilter, getDockSize,
+    getAttributeFilter,
+    getDockSize,
     getTitleSelector,
     hasChangesSelector,
     hasGeometrySelector,
@@ -46,7 +47,8 @@ import {
     showTimeSync,
     timeSyncActive,
     isViewportFilterActive,
-    isFilterByViewportSupported
+    isFilterByViewportSupported,
+    selectedLayerSelector
 } from '../../../selectors/featuregrid';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import {isCesium, mapTypeSelector} from '../../../selectors/maptype';
@@ -106,7 +108,8 @@ const Toolbar = connect(
         mapType: mapTypeSelector,
         editorHeight: getDockSize,
         viewportFilter: isViewportFilterActive,
-        isFilterByViewportSupported
+        isFilterByViewportSupported,
+        layer: selectedLayerSelector
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(ToolbarComp);

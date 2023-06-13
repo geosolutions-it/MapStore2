@@ -11,6 +11,7 @@ import TSplitButtonComp from "./TSplitButton";
 import Spinner from "react-spinkit";
 import Select from "react-select";
 import { MapLibraries } from '../../../../utils/MapTypeUtils';
+import { areLayerFeaturesEditable } from "../../../../utils/FeatureGridUtils";
 
 const TButton = withHint(TButtonComp);
 const TSplitButton = withHint(TSplitButtonComp);
@@ -27,12 +28,12 @@ const getSaveMessageId = ({saving, saved}) => {
     return "featuregrid.toolbar.saveChanges";
 };
 const standardButtons = {
-    editMode: ({disabled, mode, isEditingAllowed, events = {}}) => (<TButton
+    editMode: ({disabled, mode, isEditingAllowed, layer, events = {}}) => (<TButton
         id="edit-mode"
         keyProp="edit-mode"
         tooltipId="featuregrid.toolbar.editMode"
         disabled={disabled}
-        visible={mode === "VIEW" && isEditingAllowed}
+        visible={mode === "VIEW" && isEditingAllowed && areLayerFeaturesEditable(layer)}
         onClick={events.switchEditMode}
         glyph="pencil"/>),
     filter: ({isFilterActive = false, viewportFilter, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, events = {}}) => (<TButton

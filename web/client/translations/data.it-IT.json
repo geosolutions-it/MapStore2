@@ -199,7 +199,8 @@
               "clearCustomization": "Rimuovi modifiche",
               "clearCustomizationConfirm": "Sei sicuro di voler rimuovere tutte le modifiche effettuate ai campi?",
               "error": "Non è stato possibile recuperare i campi dalla sorgente dati"
-            }
+            },
+            "disableFeaturesEditing": "Disabilita la modifica sulla tabella degli attributi"
         },
         "localizedInput": {
           "localize": "Traduci questo testo...",
