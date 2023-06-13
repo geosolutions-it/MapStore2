@@ -161,8 +161,9 @@ describe("test IdentifyContainer", () => {
             getToolButtons={funcs.getToolButtons}
             index={0}
             requests={{}}
+            layer
             validResponses={[{format: 'PROPERTIES', layer: {search: {url: 'search_url'}}}]}
-            responses={[{format: 'PROPERTIES', layer: {search: {url: 'search_url'}}}]}/>, document.getElementById("container"));
+            responses={[{format: 'PROPERTIES', layer: {search: {url: 'search_url'}, type: "wms"}}]}/>, document.getElementById("container"));
         expect(getToolButtonsSpy).toHaveBeenCalled();
         expect(getToolButtonsSpy.calls[0].arguments[0].showEdit).toBe(true);
     });
@@ -181,7 +182,7 @@ describe("test IdentifyContainer", () => {
             index={0}
             requests={{}}
             validResponses={[{format: 'TEMPLATE', layer: {search: {url: 'search_url'}}}]}
-            responses={[{format: 'TEMPLATE', layer: {search: {url: 'search_url'}}}]}/>, document.getElementById("container"));
+            responses={[{format: 'TEMPLATE', layer: {search: {url: 'search_url'}, type: "wfs"}}]}/>, document.getElementById("container"));
         expect(getToolButtonsSpy).toHaveBeenCalled();
         expect(getToolButtonsSpy.calls[0].arguments[0].showEdit).toBe(true);
     });
