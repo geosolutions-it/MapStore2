@@ -130,7 +130,6 @@
             "noConfiguredGridSets": "It is not possible to fetch custom tile grids. This layer do not have any grid set compatible with the available projections. Please review the configuration server side and retry",
             "notPossibleToConnectToWMTSService": "It was not possible to fetch the tile grids from the server. The request sent to {requestUrl} is throwing an error",
             "notSupportedSelectedFormatCache": "The selected format is not supported by the cache.",
-            "notSupportedSelectedStyleCache": "The selected style is not supported by the cache",
             "customParamsCacheWarning": "This layer has localized style enabled. Please verify the configuration server side and ensure it supports the custom ENV parameter",
             "supportedFormats": "Supported formats",
             "checkAvailableTileGridsInfo": "Check available tile grids information",
