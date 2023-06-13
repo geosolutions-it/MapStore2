@@ -15,11 +15,16 @@ import LocalizedInput from '../../../misc/LocalizedInput';
 import Select from 'react-select';
 import Spinner from 'react-spinkit';
 
-import { getMessageById } from '../../../../utils/LocaleUtils';
-import { isValidNewGroupOption, flattenGroups,
-    getLabelName as _getLabelName, getTitle as _getTitle } from '../../../../utils/TOCUtils';
 import Message from '../../../I18N/Message';
 import LayerNameEditField from './LayerNameEditField';
+import { getMessageById } from '../../../../utils/LocaleUtils';
+import {
+    isValidNewGroupOption,
+    flattenGroups,
+    getLabelName as _getLabelName,
+    getTitle as _getTitle
+} from '../../../../utils/TOCUtils';
+import { supportsFeatureEditing } from "../../../../utils/FeatureGridUtils";
 
 /**
  * General Settings form for layer
@@ -74,8 +79,6 @@ class General extends React.Component {
 
         const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
 
-        const isSupportedLayerType = includes(this.supportedEditLayerTypes, this.props.element.type);
-
         return (
             <Grid fluid style={{ paddingTop: 15, paddingBottom: 15 }}>
                 <form ref="settings">
@@ -89,7 +92,7 @@ class General extends React.Component {
                             value={this.props.element.title}
                             onChange={this.updateTitle} />
                     </FormGroup>
-                    {isSupportedLayerType &&
+                    {includes(this.supportedNameEditLayerTypes, this.props.element.type) &&
                     <LayerNameEditField
                         element={this.props.element}
                         enableLayerNameEditFeedback={this.props.enableLayerNameEditFeedback}
@@ -163,14 +166,14 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
-                    {isSupportedLayerType && <FormGroup>
+                    {supportsFeatureEditing(this.props.element) && <FormGroup>
                         <Checkbox
                             data-qa="general-read-only-attribute"
-                            key="readOnlyAttribute"
-                            checked={this.props.element?.readOnlyAttribute === undefined ? false : this.props.element?.readOnlyAttribute}
-                            onChange={(event) => this.props.onChange("readOnlyAttribute", event.target.checked)}
+                            key="disableFeaturesEditing"
+                            checked={this.props.element?.disableFeaturesEditing === undefined ? false : this.props.element?.disableFeaturesEditing}
+                            onChange={(event) => this.props.onChange("disableFeaturesEditing", event.target.checked)}
                         >
-                            <Message msgId="layerProperties.readOnlyAttribute"/>
+                            <Message msgId="layerProperties.disableFeaturesEditing"/>
                         </Checkbox>
                     </FormGroup>}
 
@@ -179,7 +182,7 @@ class General extends React.Component {
         );
     }
 
-    supportedEditLayerTypes = ['wms'];
+    supportedNameEditLayerTypes = ['wms'];
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
     updateTitle = (title) => this.props.onChange("title", title);

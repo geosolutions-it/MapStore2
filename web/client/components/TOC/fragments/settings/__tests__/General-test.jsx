@@ -234,9 +234,9 @@ describe('test  Layer Properties General module component', () => {
         };
         const comp = ReactDOM.render(<General onChange={handlers.onChange} pluginCfg={{}} element={layer} settings={settings}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
-        const readOnlyAttribute = document.querySelector('[data-qa="general-read-only-attribute"]');
-        ReactTestUtils.Simulate.change(readOnlyAttribute, { "target": { "checked": true }});
+        const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
+        ReactTestUtils.Simulate.change(disableFeaturesEditing, { "target": { "checked": true }});
         expect(spyOn).toHaveBeenCalled();
-        expect(spyOn.calls[0].arguments).toEqual([ 'readOnlyAttribute', true ]);
+        expect(spyOn.calls[0].arguments).toEqual([ 'disableFeaturesEditing', true ]);
     });
 });

@@ -201,7 +201,7 @@
               "clearCustomizationConfirm": "Möchten Sie wirklich alle Anpassungen entfernen?",
               "error": "Die Felder konnten nicht automatisch geladen werden"
             },
-            "readOnlyAttribute": "Deaktivieren Sie die Bearbeitung der Attributtabelle"
+            "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle"
         },
         "localizedInput": {
           "localize": "Diesen Text lokalisieren...",

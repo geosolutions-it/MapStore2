@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { identity, trim, fill, findIndex, get, isArray, isNil, isString, isPlainObject } from 'lodash';
+import { identity, trim, fill, findIndex, get, isArray, isNil, isString, isPlainObject, includes } from 'lodash';
 
 import {
     findGeometryProperty,
@@ -366,3 +366,18 @@ export const dateFormats = {
     'date': 'YYYY-MM-DD[Z]'
 };
 
+const supportedEditLayerTypes = [ "wms", "wfs"];
+
+/**
+ * Check if the layer supports feature editing
+ * @param {object} layer current layer object
+ * @returns {boolean} flag
+ */
+export const supportsFeatureEditing = (layer) => includes(supportedEditLayerTypes, layer?.type);
+
+/**
+ * Check if layer features are editable based on configured layer setting
+ * @param {object} layer current layer object
+ * @returns {boolean} flag
+ */
+export const areLayerFeaturesEditable = (layer) =>  !layer?.disableFeaturesEditing && supportsFeatureEditing(layer);

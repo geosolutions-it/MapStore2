@@ -22,7 +22,6 @@ import isEqual from "lodash/isEqual";
 import { mapBboxSelector, projectionSelector } from "./map";
 import { bboxToFeatureGeometry } from "../utils/CoordinatesUtils";
 import { MapLibraries } from '../utils/MapTypeUtils';
-import {currentMapInfoLayerSelector} from "./mapInfo";
 
 export const getLayerById = getLayerFromId;
 export const getTitle = (layer = {}) => layer.title || layer.name;
@@ -79,11 +78,6 @@ export const selectedLayerSelector = state => getLayerById(state, selectedLayerI
 export const editingAllowedRolesSelector = state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]);
 export const editingAllowedGroupsSelector = state => get(state, "featuregrid.editingAllowedGroups", []);
 export const canEditSelector = state => state && state.featuregrid && state.featuregrid.canEdit;
-export const readOnlyAttributeSelector = (type = "featuregrid") => state => get(
-    type === "featuregrid" ? selectedLayerSelector(state) : currentMapInfoLayerSelector(state),
-    'readOnlyAttribute',
-    false
-);
 /**
  * selects featuregrid state
  * @name featuregrid
@@ -199,16 +193,15 @@ export const queryOptionsSelector = state => {
         cqlFilter
     };
 };
-export const isEditingAllowedSelector = (type) => (state) => {
+export const isEditingAllowedSelector = (state) => {
     const allowedRoles = editingAllowedRolesSelector(state);
     const allowedGroups = editingAllowedGroupsSelector(state);
     const canEdit = canEditSelector(state);
-    const readOnlyAttribute = readOnlyAttributeSelector(type)(state);
     const isAllowed = isUserAllowedSelectorCreator({
         allowedRoles,
         allowedGroups
     })(state);
-    return (canEdit || isAllowed) && !readOnlyAttribute && !isCesium(state);
+    return (canEdit || isAllowed) && !isCesium(state);
 };
 export const paginationSelector = state => get(state, "featuregrid.pagination");
 export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);

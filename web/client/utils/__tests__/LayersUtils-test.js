@@ -1243,10 +1243,10 @@ describe('LayersUtils', () => {
             // save read only attribute
             [
                 {
-                    readOnlyAttribute: true
+                    disableFeaturesEditing: true
                 },
                 l => {
-                    expect(l.readOnlyAttribute).toBeTruthy();
+                    expect(l.disableFeaturesEditing).toBeTruthy();
                 }
             ]
         ];

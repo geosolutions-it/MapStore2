@@ -16,9 +16,10 @@ import GeocodeViewer from './GeocodeViewer';
 import ResizableModal from '../../misc/ResizableModal';
 import Portal from '../../misc/Portal';
 import Coordinate from './coordinates/Coordinate';
-import { responseValidForEdit } from '../../../utils/IdentifyUtils';
 import LayerSelector from './LayerSelector';
 import ResponsivePanel from "../../misc/panels/ResponsivePanel";
+import { responseValidForEdit } from '../../../utils/IdentifyUtils';
+import { areLayerFeaturesEditable } from "../../../utils/FeatureGridUtils";
 
 /**
  * Component for rendering Identify Container inside a Dockable container
@@ -97,7 +98,7 @@ export default props => {
         lngCorrected,
         validResponses,
         latlng,
-        showEdit: showEdit && isEditingAllowed && !!targetResponse && responseValidForEdit(targetResponse),
+        showEdit: showEdit && areLayerFeaturesEditable(layer) && isEditingAllowed && !!targetResponse && responseValidForEdit(targetResponse),
         onEdit: onEdit.bind(null, layer && {
             ...layer,
             url: get(layer, 'search.url')
