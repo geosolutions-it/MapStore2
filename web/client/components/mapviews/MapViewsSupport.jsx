@@ -74,11 +74,11 @@ const useMapViewsNavigation = ({
     const [play, setPlay] = useState(false);
     const [navigationProgress, setNavigationProgress] = useState(0);
     const viewsTimeTotalLength = computeDurationSum(views);
-    const viewsTimeSegments = views.map((view, idx) => computeDurationSum(views.filter((vw, jdx) => jdx < idx)));
+    const viewsTimeSegments = views.map((view, idx) => ({ view, duration: computeDurationSum(views.filter((vw, jdx) => jdx < idx)) }));
 
     useEffect(() => {
         if (!play) {
-            setNavigationProgress(Math.round((viewsTimeSegments[currentIndex] ?? 0) / viewsTimeTotalLength * 100));
+            setNavigationProgress(Math.round((viewsTimeSegments?.[currentIndex]?.duration ?? 0) / viewsTimeTotalLength * 100));
         }
     }, [currentIndex, play]);
 
@@ -95,7 +95,7 @@ const useMapViewsNavigation = ({
         if (play) {
             let startTime = Date.now();
             let index = currentIndex === -1 ? 0 : currentIndex;
-            let initialDelta = viewsTimeSegments[index];
+            let initialDelta = viewsTimeSegments?.[index]?.duration;
             let mainStartTime = startTime;
             let currentView = views[index >= views.length ? 0 : index];
             onInit(currentView);
@@ -409,9 +409,17 @@ function MapViewsSupport({
                     <div className="ms-map-views" onClick={(event) => event.stopPropagation()}>
                         <div className="ms-map-views-wrapper">
                             <MapViewsProgressBar
+                                play={play}
+                                currentIndex={currentIndex}
                                 progress={navigationProgress}
                                 segments={viewsTimeSegments}
                                 totalLength={viewsTimeTotalLength}
+                                onSelect={view => {
+                                    if (play) {
+                                        setPlay(false);
+                                    }
+                                    handleSelectView(view);
+                                }}
                             />
                             <div className="ms-map-views-header">
                                 {(selected?.description && !expanded) ?
