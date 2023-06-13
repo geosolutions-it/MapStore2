@@ -317,7 +317,6 @@ describe('WMSCacheOptions', () => {
                             tileSize: [256, 256]
                         }],
                         tileGridCacheSupport: {
-                            styles: ['population'],
                             formats: ['image/png', 'image/jpeg']
                         }
                     });
@@ -546,7 +545,6 @@ describe('WMSCacheOptions', () => {
                     tileSize: [256, 256]
                 }],
                 tileGridCacheSupport: {
-                    styles: ['population'],
                     formats: ['image/png', 'image/jpeg']
                 }
             }}
@@ -562,7 +560,6 @@ describe('WMSCacheOptions', () => {
                             tileSize: [256, 256]
                         }],
                         tileGridCacheSupport: {
-                            styles: ['population'],
                             formats: ['image/png', 'image/jpeg']
                         }
                     });
@@ -592,7 +589,6 @@ describe('WMSCacheOptions', () => {
             tileGridStrategy: 'custom',
             format: 'image/jpeg',
             tileGridCacheSupport: {
-                styles: ['population'],
                 formats: ['image/png']
             },
             tileGrids: [
@@ -640,62 +636,6 @@ describe('WMSCacheOptions', () => {
         ]);
         const alert = document.querySelector('.alert');
         expect(alert.innerText).toBe('layerProperties.notSupportedSelectedFormatCache');
-    });
-    it('should display the style cache warning if not listed in the supported ones', () => {
-        ReactDOM.render(<WMSCacheOptions layer={{
-            url: '/geoserver/wms',
-            name: 'topp:states',
-            tileGridStrategy: 'custom',
-            style: 'fill',
-            tileGridCacheSupport: {
-                styles: ['population'],
-                formats: ['image/png']
-            },
-            tileGrids: [
-                {
-                    id: 'EPSG:32122x2',
-                    crs: 'EPSG:32122',
-                    scales: [2557541.55271451, 1278770.776357255, 639385.3881786275],
-                    origins: [[403035.4105968763, 414783], [403035.4105968763, 414783], [403035.4105968763, 323121]],
-                    tileSize: [512, 512]
-                },
-                {
-                    id: 'EPSG:900913',
-                    crs: 'EPSG:900913',
-                    scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
-                    origin: [-20037508.34, 20037508],
-                    tileSize: [256, 256]
-                }
-            ]
-        }} projection="EPSG:3857" />, document.getElementById('container'));
-        expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
-        const inputs = document.querySelectorAll('input[type="checkbox"]');
-        expect(inputs.length).toBe(1);
-        const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(2);
-        expect([...buttons].map(button => button.querySelector('.glyphicon').getAttribute('class'))).toEqual([
-            'glyphicon glyphicon-refresh',
-            'glyphicon glyphicon-grid-custom'
-        ]);
-        const info = document.querySelector('.glyphicon-info-sign');
-        expect(info).toBeTruthy();
-        expect(info.getAttribute('class')).toBe('text-danger glyphicon glyphicon-info-sign');
-
-        let table = document.querySelector('table');
-        expect(table).toBeFalsy();
-
-        Simulate.mouseOver(info);
-
-        table = document.querySelector('table');
-        expect(table).toBeTruthy();
-
-        const tableRows = table.querySelectorAll('tbody > tr');
-        expect([...tableRows].map((row) => row.innerText)).toEqual([
-            'EPSG:32122x2\tEPSG:32122\t512',
-            'EPSG:900913\tEPSG:900913\t256'
-        ]);
-        const alert = document.querySelector('.alert');
-        expect(alert.innerText).toBe('layerProperties.notSupportedSelectedStyleCache');
     });
     it('should display the custom param cache warning if localized style is enabled', () => {
         ReactDOM.render(<WMSCacheOptions layer={{
@@ -967,8 +907,7 @@ describe('WMSCacheOptions', () => {
                 expect([...tables[0].querySelectorAll('tbody > tr')].map((row) => [row.querySelector('.glyphicon').getAttribute('class'), row.innerText])).toEqual([
                     [ 'text-success glyphicon glyphicon-ok-sign', 'layerProperties.projection' ],
                     [ 'text-success glyphicon glyphicon-ok-sign', 'layerProperties.tileSize' ],
-                    [ 'text-success glyphicon glyphicon-ok-sign', 'layerProperties.format.title' ],
-                    [ 'text-success glyphicon glyphicon-ok-sign', 'layerProperties.style' ]
+                    [ 'text-success glyphicon glyphicon-ok-sign', 'layerProperties.format.title' ]
                 ]);
 
                 expect([...tables[1].querySelectorAll('tbody > tr')].map((row) => [...row.querySelectorAll('td')].map(data => [data.getAttribute('class') || '', data.innerText]))).toEqual([
@@ -1089,8 +1028,7 @@ describe('WMSCacheOptions', () => {
                 expect([...tables[0].querySelectorAll('tbody > tr')].map((row) => [row.querySelector('.glyphicon').getAttribute('class'), row.innerText])).toEqual([
                     [ 'text-success glyphicon glyphicon-ok-sign', 'layerProperties.projection' ],
                     [ 'text-danger glyphicon glyphicon-remove-sign', 'layerProperties.tileSize' ],
-                    [ 'text-danger glyphicon glyphicon-remove-sign', 'layerProperties.format.title' ],
-                    [ 'text-success glyphicon glyphicon-ok-sign', 'layerProperties.style' ]
+                    [ 'text-danger glyphicon glyphicon-remove-sign', 'layerProperties.format.title' ]
                 ]);
 
                 expect([...tables[1].querySelectorAll('tbody > tr')].map((row) => [...row.querySelectorAll('td')].map(data => [data.getAttribute('class') || '', data.innerText]))).toEqual([

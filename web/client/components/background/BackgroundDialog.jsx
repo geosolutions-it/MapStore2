@@ -24,6 +24,8 @@ import ResizableModal from '../misc/ResizableModal';
 import {Form, FormGroup, ControlLabel, FormControl, Glyphicon} from 'react-bootstrap';
 import ButtonRB from '../misc/Button';
 import Thumbnail from '../maps/forms/Thumbnail';
+import WMSCacheOptions from '../TOC/fragments/settings/WMSCacheOptions';
+import { ServerTypes } from '../../utils/LayersUtils';
 import {getMessageById} from '../../utils/LocaleUtils';
 import tooltip from '../misc/enhancers/tooltip';
 const Button = tooltip(ButtonRB);
@@ -53,7 +55,9 @@ export default class BackgroundDialog extends React.Component {
         defaultFormat: PropTypes.string,
         formatOptions: PropTypes.array,
         parameterTypeOptions: PropTypes.array,
-        booleanOptions: PropTypes.array
+        booleanOptions: PropTypes.array,
+        projection: PropTypes.string,
+        disableTileGrids: PropTypes.bool
     };
 
     static contextTypes = {
@@ -170,6 +174,14 @@ export default class BackgroundDialog extends React.Component {
                     />
                 </FormGroup>
                 {this.renderStyleSelector()}
+                {this.props.layer?.serverType !== ServerTypes.NO_VENDOR && <FormGroup>
+                    <WMSCacheOptions
+                        layer={{ ...this.props.layer, ...this.state }}
+                        projection={this.props.projection}
+                        onChange={value => this.setState(value)}
+                        disableTileGrids={this.props.disableTileGrids}
+                    />
+                </FormGroup>}
                 <Button>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <ControlLabel style={{ flex: 1 }}><Message msgId="backgroundDialog.additionalParameters" /></ControlLabel>

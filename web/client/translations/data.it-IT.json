@@ -131,7 +131,6 @@
             "noConfiguredGridSets": "Non è possibile recuperare tile grids personalizzate. Questo layer non ha alcun tile grid compatibile con le proiezioni disponibili. Per favore controlla la configurazione lato server e riprova",
             "notPossibleToConnectToWMTSService": "Non è stato possibile recuperare le tile grids dal server. La richiesta inviata a {requestUrl} sta generando un errore",
             "notSupportedSelectedFormatCache": "Il formato selezionato non è supportato dalla cache.",
-            "notSupportedSelectedStyleCache": "Lo stile selezionato non è supportato dalla cache",
             "customParamsCacheWarning": "Questo livello ha lo stile localizzato abilitato. Verificare la configurazione lato server ed assicurarsi che supporti il parametro ENV personalizzato",
             "supportedFormats": "Formati supportati",
             "checkAvailableTileGridsInfo": "Controlla le informazioni sulle tile grids disponibili",

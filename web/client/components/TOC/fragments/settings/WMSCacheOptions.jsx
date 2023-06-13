@@ -26,7 +26,6 @@ const infoText = {
         supportFormatCache,
         selectedTileGridId,
         projection,
-        supportStyleCache,
         hasCustomParams,
         tileGridCacheSupport,
         layer
@@ -34,7 +33,7 @@ const infoText = {
         return (
             <>
                 <p style={{ maxWidth: 400 }}>
-                    {(selectedTileGridId && supportFormatCache && supportStyleCache) &&
+                    {(selectedTileGridId && supportFormatCache) &&
                         <Message
                             msgId="layerProperties.tileGridInUse"
                             msgParams={{ id: selectedTileGridId }} />}
@@ -82,11 +81,10 @@ const infoText = {
                         ? <Alert bsStyle="warning">
                             <Message msgId="layerProperties.noTileGridMatchesConfiguration" />
                         </Alert>
-                        : (!supportFormatCache || !supportStyleCache)
+                        : (!supportFormatCache)
                             ? (
                                 <Alert bsStyle="warning">
                                     {!supportFormatCache && <Message msgId="layerProperties.notSupportedSelectedFormatCache" />}
-                                    {!supportStyleCache && <Message msgId="layerProperties.notSupportedSelectedStyleCache" />}
                                 </Alert>
                             )
                             : null}
@@ -105,7 +103,6 @@ const infoText = {
         layer,
         supportFormatCache,
         projection,
-        supportStyleCache,
         hasCustomParams
     }) => {
         const normalizedProjection = normalizeSRS(projection);
@@ -128,9 +125,6 @@ const infoText = {
                         </tr>
                         <tr className={supportFormatCache ? 'bg-success' : 'bg-warning'}>
                             <td><Glyphicon className={supportFormatCache ? 'text-success' : 'text-danger'} glyph={supportFormatCache ? 'ok-sign' : 'remove-sign'}/>{' '}<Message msgId="layerProperties.format.title" /></td>
-                        </tr>
-                        <tr className={supportStyleCache ? 'bg-success' : 'bg-warning'}>
-                            <td><Glyphicon className={supportStyleCache ? 'text-success' : 'text-danger'} glyph={supportStyleCache ? 'ok-sign' : 'remove-sign'}/>{' '}<Message msgId="layerProperties.style" /></td>
                         </tr>
                     </tbody>
                 </Table>
@@ -216,7 +210,6 @@ function WMSCacheOptions({
 
     const cacheSupport = (layer.tileGridCacheSupport || standardTileGridInfo.tileGridCacheSupport);
     const supportFormatCache = !layer.format || !!((cacheSupport?.formats || []).includes(layer.format));
-    const supportStyleCache = !layer.style || !!((cacheSupport?.styles || []).includes(layer.style));
     const hasCustomParams = !!layer.localizedLayerStyles;
     const tiled = layer && layer.tiled !== undefined ? layer.tiled : true;
 
@@ -248,7 +241,7 @@ function WMSCacheOptions({
         setTileGridsResponseMsgId('');
         setTileGridsResponseMsgStyle('');
         return getLayerTileMatrixSetsInfo(requestUrl, options.name, options)
-            .then(({ tileGrids, styles, formats }) => {
+            .then(({ tileGrids, formats }) => {
                 const filteredTileGrids = tileGrids.filter(({ crs }) => isProjectionAvailable(normalizeSRS(crs)));
                 if (filteredTileGrids?.length === 0) {
                     setTileGridsResponseMsgId('layerProperties.noConfiguredGridSets');
@@ -256,7 +249,6 @@ function WMSCacheOptions({
                 return {
                     tileGrids: filteredTileGrids,
                     tileGridCacheSupport: filteredTileGrids?.length > 0 ? {
-                        styles,
                         formats
                     } : undefined
                 };
@@ -279,7 +271,7 @@ function WMSCacheOptions({
                 <Checkbox value="tiled" key="tiled"
                     disabled={!!layer.singleTile}
                     style={{ margin: 0 }}
-                    onChange={(e) => onChange('tiled', e.target.checked)}
+                    onChange={(e) => onChange({ tiled: e.target.checked })}
                     checked={tiled} >
                     <Message msgId="layerProperties.cached" />
                 </Checkbox>
@@ -287,7 +279,7 @@ function WMSCacheOptions({
                     {(showInfo) && <InfoPopover
                         glyph="info-sign"
                         placement="right"
-                        bsStyle={(!supportFormatCache || !supportStyleCache || !selectedTileGridId)
+                        bsStyle={(!supportFormatCache || !selectedTileGridId)
                             ? 'danger'
                             : 'success'}
                         title={<Message msgId="layerProperties.tileGridInfoChecksTitle" />}
@@ -299,7 +291,6 @@ function WMSCacheOptions({
                             supportFormatCache={supportFormatCache}
                             selectedTileGridId={selectedTileGridId}
                             projection={projection}
-                            supportStyleCache={supportStyleCache}
                             hasCustomParams={hasCustomParams}
                         />}
                     />}
