@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MapViewsProgressBar from '../MapViewsProgressBar';
 import expect from 'expect';
+import { Simulate } from 'react-dom/test-utils';
 
 describe('MapViewsProgressBar component', () => {
     beforeEach((done) => {
@@ -39,7 +40,7 @@ describe('MapViewsProgressBar component', () => {
     });
     it('should display ticks based on segments and totalLength props', () => {
         ReactDOM.render(<MapViewsProgressBar
-            segments={[0, 2000, 4000, 5000]}
+            segments={[{ duration: 0 }, { duration: 2000 }, { duration: 4000 }, { duration: 5000 }]}
             totalLength={10000}
         />, document.getElementById("container"));
         const tickNodes = [...document.querySelectorAll('.ms-map-view-progress-tick')];
@@ -50,5 +51,53 @@ describe('MapViewsProgressBar component', () => {
             '40%',
             '50%'
         ]);
+    });
+    it('should display tooltip on tick', () => {
+        ReactDOM.render(<MapViewsProgressBar
+            segments={[
+                { duration: 0, view: { title: 'Title 01' } },
+                { duration: 2000, view: { title: 'Title 02' } },
+                { duration: 4000, view: { title: 'Title 03' } },
+                { duration: 5000, view: { title: 'Title 04' } }
+            ]}
+            totalLength={10000}
+        />, document.getElementById("container"));
+        const tickNodes = [...document.querySelectorAll('.ms-map-view-progress-tick')];
+        expect(tickNodes.length).toBeTruthy(4);
+        Simulate.mouseOver(tickNodes[0]);
+        const tooltipInner = document.querySelector('.tooltip-inner');
+        expect(tooltipInner.innerText).toBe('Title 01');
+    });
+    it('should trigger on select by clicking on tick', (done) => {
+        ReactDOM.render(<MapViewsProgressBar
+            segments={[
+                { duration: 0, view: { title: 'Title 01' } },
+                { duration: 2000, view: { title: 'Title 02' } },
+                { duration: 4000, view: { title: 'Title 03' } },
+                { duration: 5000, view: { title: 'Title 04' } }
+            ]}
+            totalLength={10000}
+            onSelect={(view) => {
+                expect(view).toEqual({ title: 'Title 01' });
+                done();
+            }}
+        />, document.getElementById("container"));
+        const tickNodes = [...document.querySelectorAll('.ms-map-view-progress-tick')];
+        expect(tickNodes.length).toBeTruthy(4);
+        Simulate.click(tickNodes[0]);
+    });
+    it('should apply active class to tick with index less and equal to the current one', () => {
+        ReactDOM.render(<MapViewsProgressBar
+            currentIndex={2}
+            segments={[
+                { duration: 0, view: { title: 'Title 01' } },
+                { duration: 2000, view: { title: 'Title 02' } },
+                { duration: 4000, view: { title: 'Title 03' } },
+                { duration: 5000, view: { title: 'Title 04' } }
+            ]}
+            totalLength={10000}
+        />, document.getElementById("container"));
+        const tickNodes = [...document.querySelectorAll('.active')];
+        expect(tickNodes.length).toBeTruthy(3);
     });
 });
