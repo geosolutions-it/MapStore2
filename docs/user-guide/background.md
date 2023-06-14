@@ -43,6 +43,9 @@ In particular, from this window, the user can perform the following operations:
 
 * Choose the **Style**, between the ones available for that layer
 
+* Enable/disable the use of the layer cached tiles. If checked, the*Tiled=true*URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms).
+When the*Use cache options* is enabled, the **Available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/> and the **Remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> buttons are also available to inform the user about the status of the grid set used in the map compared to those available remotely (more details on [Layer Settings](layer-settings.md#display) section).
+
 * Add **Additional Parameters** of three different types: *String*, *Number* or *Boolean* (these parameters will be added to the WMS request).
 
 !!! warning
