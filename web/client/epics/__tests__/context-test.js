@@ -23,7 +23,6 @@ import {
     contextLoadError,
     CONTEXT_LOAD_ERROR,
     loadFinished
-
 } from "../../actions/context";
 
 import {
@@ -115,6 +114,9 @@ describe('context epics', () => {
                 expect(sessionLoadAction.type).toBe(LOAD_USER_SESSION);
                 expect(sessionLoadAction.name).toBe("2.1.Saitama");
                 expect(userSessionLoadedAction).toBeTruthy(); // emitted by the test
+                expect(userSessionLoadedAction.session).toBeTruthy();
+                expect(userSessionLoadedAction.session.map).toBeTruthy();
+                expect(userSessionLoadedAction.session.featureGrid).toBeTruthy();
                 expect(clearMapTemplatesAction.type).toBe(CLEAR_MAP_TEMPLATES);
                 expect(loadMapAction.type).toBe(LOAD_MAP_CONFIG);
                 expect(setUserSessionAction.type).toBe(SET_USER_SESSION);
@@ -137,7 +139,8 @@ describe('context epics', () => {
                         map: {},
                         context: {
                             userPlugins: []
-                        }
+                        },
+                        featureGrid: {attributes: {col1: {hide: true}}}
                     })).delay(100)),
                 // simulate load map
                 action$

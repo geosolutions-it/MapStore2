@@ -37,6 +37,11 @@ const state = {
         layers: [{
             id: "TEST", title: "Test1", checked: true
         }]
+    },
+    featuregrid: {
+        attributes: {
+            col1: {hide: true}
+        }
     }
 };
 describe('Test mapsave selectors', () => {
@@ -60,6 +65,11 @@ describe('Test mapsave selectors', () => {
         expect(retVal.timelineData.layers).toEqual([{
             id: "TEST", title: "Test1", checked: true
         }]);
+    });
+    it('check featuregrid is selected', () => {
+        const retVal = mapOptionsToSaveSelector(state);
+        expect(retVal.featureGrid).toBeTruthy();
+        expect(retVal.featureGrid.attributes).toEqual({col1: {hide: true}});
     });
     it('check custom save handlers', () => {
         registerCustomSaveHandler('custom', (s) => s.custom);

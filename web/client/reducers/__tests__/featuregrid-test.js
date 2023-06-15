@@ -81,7 +81,8 @@ import {
     storeAdvancedSearchFilter,
     setUp,
     setTimeSync,
-    setPagination, setViewportFilter
+    setPagination,
+    setViewportFilter
 } from '../../actions/featuregrid';
 
 import {isViewportFilterActive, paginationSelector, useLayerFilterSelector} from '../../selectors/featuregrid';
@@ -89,6 +90,7 @@ import {isViewportFilterActive, paginationSelector, useLayerFilterSelector} from
 
 import { featureTypeLoaded, createQuery, updateQuery } from '../../actions/wfsquery';
 import { changeDrawingStatus } from '../../actions/draw';
+import { configureMap } from '../../actions/config';
 import museam from '../../test-resources/wfs/museam.json';
 describe('Test the featuregrid reducer', () => {
 
@@ -454,5 +456,10 @@ describe('Test the featuregrid reducer', () => {
     it('setViewportFilter', () => {
         const newState = featuregrid(undefined, setViewportFilter(true));
         expect(isViewportFilterActive({ featuregrid: newState })).toEqual(true);
+    });
+    it('configureMap', () => {
+        const featureGrid = {attributes: {col1: {hide: true}}};
+        const newState = featuregrid(undefined, configureMap({featureGrid}));
+        expect(newState.attributes).toEqual(featureGrid.attributes);
     });
 });
