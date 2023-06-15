@@ -1054,7 +1054,7 @@ describe('OpenlayersMap', () => {
     it('test getResolutions default', () => {
         const maxResolution = 2 * 20037508.34;
         const tileSize = 256;
-        const expectedResolutions = Array.from(Array(29).keys()).map( k=> maxResolution / tileSize / Math.pow(2, k));
+        const expectedResolutions = Array.from(Array(31).keys()).map( k=> maxResolution / tileSize / Math.pow(2, k));
         let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{ y: 43.9, x: 10.3 }} zoom={11} mapOptions={{ attribution: { container: 'body' } }} />, document.getElementById("map"));
         expect(map.getResolutions().length).toBe(expectedResolutions.length);
         // NOTE: round
@@ -1083,7 +1083,7 @@ describe('OpenlayersMap', () => {
         proj.defs(projectionDefs[0].code, projectionDefs[0].def);
         const maxResolution = 1847542.2626266503 - 1241482.0019432348;
         const tileSize = 256;
-        const expectedResolutions = Array.from(Array(29).keys()).map(k => maxResolution / tileSize / Math.pow(2, k));
+        const expectedResolutions = Array.from(Array(31).keys()).map(k => maxResolution / tileSize / Math.pow(2, k));
         let map = ReactDOM.render(<OpenlayersMap
             id="ol-map"
             center={{
@@ -1340,6 +1340,102 @@ describe('OpenlayersMap', () => {
             expect(mouseWheelPresent).toExist();
             expect(mouseWheelPresent.getActive()).toBe(true);
         });
+    });
+    it('should create the layer resolutions based on projection and not the map resolutions', () => {
+        const options = {
+            url: '/geoserver/wms',
+            name: 'workspace:layer',
+            visibility: true
+        };
+        const resolutions = [
+            529.1666666666666,
+            317.5,
+            158.75,
+            79.375,
+            26.458333333333332,
+            19.84375,
+            10.583333333333332,
+            5.291666666666666,
+            2.645833333333333,
+            1.3229166666666665,
+            0.6614583333333333,
+            0.396875,
+            0.13229166666666667,
+            0.079375,
+            0.0396875,
+            0.021166666666666667
+        ];
+        const map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                mapOptions={{view: { resolutions }}}
+            >
+                <OpenlayersLayer type="wms" srs="EPSG:3857" options={options} />
+            </OpenlayersMap>, document.getElementById("map")
+        );
+        expect(map).toBeTruthy();
+        expect(map.map.getView().getResolutions().length).toBe(resolutions.length);
+        expect(map.map.getLayers().getLength()).toBe(1);
+        expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getResolutions().length).toBe(31);
+    });
+    it('should use tile grid resolutions based on custom strategy and not the map resolutions', () => {
+        const options = {
+            url: '/geoserver/wms',
+            name: 'workspace:layer',
+            visibility: true,
+            tileGridStrategy: 'custom',
+            tileSize: 256,
+            tileGrids: [
+                {
+                    id: 'EPSG:4326',
+                    crs: 'EPSG:4326',
+                    scales: [ 279541132.0143589, 139770566.00717944, 69885283.00358972 ],
+                    origin: [ 90, -180 ],
+                    tileSize: [ 256, 256 ]
+                },
+                {
+                    id: 'EPSG:900913',
+                    crs: 'EPSG:900913',
+                    scales: [ 559082263.9508929, 279541131.97544646, 139770565.98772323 ],
+                    origin: [ -20037508.34, 20037508 ],
+                    tileSize: [ 256, 256 ]
+                }
+            ]
+        };
+        const resolutions = [
+            529.1666666666666,
+            317.5,
+            158.75,
+            79.375,
+            26.458333333333332,
+            19.84375,
+            10.583333333333332,
+            5.291666666666666,
+            2.645833333333333,
+            1.3229166666666665,
+            0.6614583333333333,
+            0.396875,
+            0.13229166666666667,
+            0.079375,
+            0.0396875,
+            0.021166666666666667
+        ];
+        const map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                mapOptions={{view: { resolutions }}}
+            >
+                <OpenlayersLayer type="wms" srs="EPSG:3857" options={options} />
+            </OpenlayersMap>, document.getElementById("map")
+        );
+        expect(map).toBeTruthy();
+        expect(map.map.getView().getResolutions().length).toBe(16);
+        expect(map.map.getView().getResolutions().length).toBe(resolutions.length);
+        expect(map.map.getLayers().getLength()).toBe(1);
+        expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getResolutions().length).toBe(3);
+        expect(map.map.getLayers().getArray()[0].getSource().getTileGrid().getOrigin()).toEqual(options.tileGrids[1].origin);
     });
     describe("hookRegister", () => {
         it("default", () => {

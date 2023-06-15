@@ -21,6 +21,7 @@ import OverlayTrigger from '../../misc/OverlayTrigger';
  * @prop {number} left left prop of popover
  * @prop {number} right right prop of popover
  * @prop {string} placement position of popover
+ * @prop {object} popoverStyle style for popover wrapper
  * @prop {boolean|String[]} trigger ['hover', 'focus'] by default. false always show the popover. Array with hover, focus and/or click string to specify events that trigger popover to show.
  */
 class InfoPopover extends React.Component {
@@ -34,7 +35,8 @@ class InfoPopover extends React.Component {
         placement: PropTypes.string,
         left: PropTypes.number,
         top: PropTypes.number,
-        trigger: PropTypes.oneOfType([PropTypes.array, PropTypes.bool])
+        trigger: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
+        popoverStyle: PropTypes.object
     };
 
     static defaultProps = {
@@ -56,7 +58,8 @@ class InfoPopover extends React.Component {
                 placement={this.props.placement}
                 positionLeft={this.props.left}
                 positionTop={this.props.top}
-                title={this.props.title}>
+                title={this.props.title}
+                style={this.props.popoverStyle}>
                 {this.props.text}
             </Popover>
         );

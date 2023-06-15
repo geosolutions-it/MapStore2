@@ -20,7 +20,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import assign from 'object-assign';
 
-import {reproject, reprojectBbox, normalizeLng, normalizeSRS, getExtentForProjection} from '../../../utils/CoordinatesUtils';
+import {reproject, reprojectBbox, normalizeLng, normalizeSRS } from '../../../utils/CoordinatesUtils';
+import { getProjection as msGetProjection }  from '../../../utils/ProjectionUtils';
 import ConfigUtils from '../../../utils/ConfigUtils';
 import mapUtils, { getResolutionsForProjection } from '../../../utils/MapUtils';
 import projUtils from '../../../utils/openlayers/projUtils';
@@ -180,9 +181,8 @@ class OpenlayersMap extends React.Component {
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
-                let view = this.map.getView();
                 let pos = event.coordinate.slice();
-                let projectionExtent = view.getProjection().getExtent() || getExtentForProjection(this.props.projection);
+                let projectionExtent = this.getExtent(this.map, this.props);
                 if (this.props.projection === 'EPSG:4326') {
                     pos[0] = normalizeLng(pos[0]);
                 }
@@ -374,12 +374,20 @@ class OpenlayersMap extends React.Component {
         const extent = projection.getExtent();
         return getResolutionsForProjection(
             srs ?? this.map.getView().getProjection().getCode(),
-            this.props.mapOptions.minResolution,
-            this.props.mapOptions.maxResolution,
-            this.props.mapOptions.minZoom,
-            this.props.mapOptions.maxZoom,
-            this.props.mapOptions.zoomFactor,
-            extent);
+            {
+                minResolution: this.props.mapOptions.minResolution,
+                maxResolution: this.props.mapOptions.maxResolution,
+                minZoom: this.props.mapOptions.minZoom,
+                maxZoom: this.props.mapOptions.maxZoom,
+                zoomFactor: this.props.mapOptions.zoomFactor,
+                extent
+            }
+        );
+    };
+
+    getExtent = (map, props) => {
+        const view = map.getView();
+        return view.getProjection().getExtent() || msGetProjection(props.projection).extent;
     };
 
     render() {
@@ -439,7 +447,7 @@ class OpenlayersMap extends React.Component {
     updateMapInfoState = () => {
         let view = this.map.getView();
         let tempCenter = view.getCenter();
-        let projectionExtent = view.getProjection().getExtent() || getExtentForProjection(this.props.projection);
+        let projectionExtent = this.getExtent(this.map, this.props);
         const crs = view.getProjection().getCode();
         // some projections are repeated on the x axis
         // and they need to be updated also if the center is outside of the projection extent

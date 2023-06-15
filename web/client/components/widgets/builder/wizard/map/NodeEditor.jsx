@@ -48,6 +48,7 @@ export default ({
                     settings={settings}
                     retrieveLayerData={onRetrieveLayerData}
                     isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
+                    projection={props.map?.projection}
                     onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({ [key]: value }, realtimeUpdate)} />
             ))}</Col>
     </Row>);
