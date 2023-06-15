@@ -25,7 +25,7 @@ export const userSessionToSaveSelector = createSelector(
         rawGroupsSelector,
         customAttributesSettingsSelector
     ],
-    (map, layers, groups, attributes) => {
+    (map, layers, groups, featureGridAttributes) => {
         const {center, zoom} = map;
         return {
             map: {
@@ -35,7 +35,7 @@ export const userSessionToSaveSelector = createSelector(
                 groups
             },
             featureGrid: {
-                attributes
+                attributes: featureGridAttributes
             }
         };
     });
