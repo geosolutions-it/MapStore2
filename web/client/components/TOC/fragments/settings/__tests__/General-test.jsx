@@ -65,7 +65,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(6);
+        expect(inputs.length).toBe(5);
     });
     it('tests Layer Properties Display component events', () => {
         const l = {
@@ -89,7 +89,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(6);
+        expect(inputs.length).toBe(5);
         ReactTestUtils.Simulate.change(inputs[0]);
         ReactTestUtils.Simulate.blur(inputs[1]);
         expect(spy.calls.length).toBe(1);
@@ -118,7 +118,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const forms = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "form-group" );
         expect(forms).toExist();
-        expect(forms.length).toBe(5);
+        expect(forms.length).toBe(4);
     });
 
     it('TEST showTooltipOptions = true', () => {
@@ -232,11 +232,25 @@ describe('test  Layer Properties General module component', () => {
             type: 'wms',
             url: 'fakeurl'
         };
-        const comp = ReactDOM.render(<General onChange={handlers.onChange} pluginCfg={{}} element={layer} settings={settings}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<General onChange={handlers.onChange} pluginCfg={{}} element={layer} settings={settings} canEditMap/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
         ReactTestUtils.Simulate.change(disableFeaturesEditing, { "target": { "checked": true }});
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'disableFeaturesEditing', true ]);
+    });
+    it('tests read only attribute field without permission', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} canEditMap={false}  />, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
+        expect(disableFeaturesEditing).toBeFalsy();
     });
 });

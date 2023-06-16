@@ -40,7 +40,8 @@ class General extends React.Component {
         showTooltipOptions: PropTypes.bool,
         allowNew: PropTypes.bool,
         enableLayerNameEditFeedback: PropTypes.bool,
-        currentLocale: PropTypes.string
+        currentLocale: PropTypes.string,
+        canEditMap: PropTypes.bool
     };
 
     static contextTypes = {
@@ -166,7 +167,7 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
-                    {supportsFeatureEditing(this.props.element) && <FormGroup>
+                    {supportsFeatureEditing(this.props.element) && this.props.canEditMap && <FormGroup>
                         <Checkbox
                             data-qa="general-read-only-attribute"
                             key="disableFeaturesEditing"

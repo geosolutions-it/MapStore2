@@ -29,6 +29,7 @@ import {
 import { createPlugin } from '../utils/PluginsUtils';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { isCesium } from '../selectors/maptype';
+import { mapIsEditableSelector } from "../selectors/map";
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
@@ -40,8 +41,9 @@ const tocItemsSettingsSelector = createSelector([
     activeTabSettingsSelector,
     elementSelector,
     isLocalizedLayerStylesEnabledSelector,
-    isCesium
-], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive) => ({
+    isCesium,
+    mapIsEditableSelector
+], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive, canEditMap) => ({
     settings,
     element,
     groups,
@@ -51,7 +53,8 @@ const tocItemsSettingsSelector = createSelector([
     isAdmin,
     activeTab,
     isLocalizedLayerStylesEnabled,
-    isCesiumActive
+    isCesiumActive,
+    canEditMap
 }));
 
 /**
