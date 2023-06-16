@@ -79,22 +79,25 @@ In particular, the user is allowed to:
 
 * Enable/disable the *Force proxy* layer option. If enabled, forces the application to check the source and applies proxy if needed.
 
-* Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms).
-When the *Use cache options* is enabled, the **Available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/> and the **Remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> buttons are also available to inform the user about the status of the grid set used in the map compared to those available remotely.
+* Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms).
+When the *Use cache options* is enabled, more controls are enabled so that it is possible for the user to check if the current map settings match any GWC ***standard*** Gridset defined on the server side for the given WMS layer (**Check available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/>). At the same time, it is also possible to change the setting strategy (based on the WMTS service response) to strictly adapt layer settings on the client side to the ones matching any remote ***custom*** Gridset defined for the current map settings (**Use remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> button).
 
 !!!note
 
-    When the **Refresh Available Tile Grids** <img src="../img/button/update_button.jpg" class="ms-docbutton"/> button is checked, the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> appears to inform the user about the default grid set parameters and whether they meet the remote grid sets.
-    
+    When the **Check available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/> button is clicked, an info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> appears to inform the user if the current map settings (Projection, Tile size, Image Format) are properly matching the ones of the given Tile Grids defined on the server side configuration for the layer.
+
     <img src="../img/layer-settings/default_gridset_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
     
-    When the **Remote custom tile grids** button is enabled, it turns green <img src="../img/button/tile_grid_green.jpg" class="ms-docbutton"/>, and the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> appears to inform the user about the custom grid set parameters and whether they meet the remote grid sets.
+    When the **Use remote custom tile grids** button is enabled, it turns green <img src="../img/button/tile_grid_green.jpg" class="ms-docbutton"/> and a WMTS request is performed by MapStore to fetch precise information to more finely adapt the layer settings on the client side to the ones of the matching Tile Grid defined on the server. The scope of the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> in this case is still the same but through this strategy MapStore provides a finer tuning of the client side layer settings to better fit the tile grid defined on the server side and so provide better accuracy of cache matching.
 
     <img src="../img/layer-settings/green_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
 
-    The Info panel shows a warning message if it's not possible to find, on the remote side, a tile grid that matches the map projection, the selected tile size or the tile format. In this case, the user can change the [projection of the map](footer.md#crs-selector) or select different [tile size and tile format](layer-settings.md#display).
+    In case the current map/layer settings (Projection, Tile size, Image Format) do not match any of the server-side defined Tile Grids for the given layer the Info panel shows a warning message to indicate the reason for the mismatch so that it is possible for the user to change the needed setting accordingly (for example changing the [map projection](footer.md#crs-selector) or selecting a different [tile size and/or tile format](layer-settings.md#display)).
 
     <img src="../img/layer-settings/warning_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
+
+!!!warning
+    The Gridset compatibility check made by MapStore whose result is shown by the Info tooltip, is usually quite reliable but should be considered anyway only to provide general matching indicators aimed at highlighting possible compatibility issues between the current layer/map settings and the remote Tile Grid. Due to the cache tolerance considered on the server side by GWC, it might even happen in some cases that the settings available on the client side don't HIT the tile cache even if all the checks listed are successful.
 
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
@@ -102,8 +105,6 @@ When the *Use cache options* is enabled, the **Available tile grids information*
 
 !!!Warning
     The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources.
-!!!note
-    Cached tiles works with WMS only with standard gridsets (exponential). When MapStore uses custom scales, the tile cache can not be used. This because WMS TileGrid for OpenLayers (internal MapStore mapping library) and the TileGrid generated by GeoServer have different origins (top-left vs bottom-left). While for exponential resolutions the top left remains fixed (because there is only an integer number of tiles in the interval between top-left and bottom-left corner of the bbox, 1, 2, 4, 8 ....) with custom resolutions the number of tiles is not integer, so the coordinate of the tile of top-left may vary across scales. More details about this limitation in this [issue](https://github.com/geosolutions-it/MapStore2/issues/9025) on GitHub.
 
 ## Fields
 
