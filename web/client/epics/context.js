@@ -111,8 +111,9 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
         const userName = userSelector(getState())?.name;
         return Observable.of(loadUserSession(buildSessionName(id, mapId, userName))).merge(
             action$.ofType(USER_SESSION_LOADED).take(1).switchMap(({session}) => {
-                const mapSession = session?.map && {
-                    map: session.map
+                const sessionData = {
+                    ...(session?.map && {map: session.map}),
+                    ...(session?.featureGrid && {featureGrid: session.featureGrid})
                 };
                 const contextSession = session?.context && {
                     ...session.context
@@ -120,7 +121,7 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
                 return Observable.merge(
                     Observable.of(clearMapTemplates()),
                     createContextFlow(id, contextSession, getState).catch(e => {throw new ContextError(e); }),
-                    createMapFlow(mapId, data && data.mapConfig, mapSession, action$, getState).catch(e => { throw new MapError(e); }),
+                    createMapFlow(mapId, data && data.mapConfig, sessionData, action$, getState).catch(e => { throw new MapError(e); }),
                     Observable.of(setUserSession(session)),
                     Observable.of(userSessionStartSaving())
                 );

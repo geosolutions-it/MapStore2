@@ -23,6 +23,7 @@ import {
 import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
 import { textSearchConfigSelector, bookmarkSearchConfigSelector } from './searchconfig';
+import { customAttributesSettingsSelector } from "./featuregrid";
 
 const customSaveHandlers = {};
 
@@ -54,6 +55,9 @@ export const basicMapOptionsToSaveSelector = createStructuredSelector({
         endValuesSupport: endValuesSupportSelector,
         snapRadioButtonEnabled: snapRadioButtonEnabledSelector,
         layers: timelineLayersSetting
+    }),
+    featureGrid: createStructuredSelector({
+        attributes: customAttributesSettingsSelector
     })
 });
 

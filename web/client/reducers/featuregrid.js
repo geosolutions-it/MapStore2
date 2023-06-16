@@ -50,6 +50,7 @@ import {
     SET_PAGINATION,
     SET_VIEWPORT_FILTER
 } from '../actions/featuregrid';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 
 import { FEATURE_TYPE_LOADED, QUERY_CREATE, UPDATE_QUERY } from '../actions/wfsquery';
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
@@ -442,6 +443,9 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case SET_VIEWPORT_FILTER: {
         return assign({}, state, {viewportFilter: action.value});
+    }
+    case MAP_CONFIG_LOADED: {
+        return {...state, ...get(action, 'config.featureGrid', {})};
     }
     default:
         return state;
