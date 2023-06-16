@@ -18,8 +18,8 @@ export const toLayer = (r, service) => ["tms", "wfs"].includes(service?.type) //
     // the type wms is default (for csw and wms), wmts have to be passed. // TODO: improve and centralize more
     : API[service?.type || 'wms'].getLayerFromRecord(r, { service });
 
-// checks for tms wmts in order to addSearch() to skip addSearch
-export const addSearchObservable = (selected, service) => ["tms", "wmts"].includes(service?.type) ? Rx.Observable.of(toLayer(selected, service)) : addSearch(toLayer(selected, service));
+// checks for tms, wmts & wfs, in order to skip addSearch
+export const addSearchObservable = (selected, service) => ["tms", "wmts", "wfs"].includes(service?.type) ? Rx.Observable.of(toLayer(selected, service)) : addSearch(toLayer(selected, service));
 
 /**
  * enhancer for CompactCatalog (or a container) to validate a selected record,
