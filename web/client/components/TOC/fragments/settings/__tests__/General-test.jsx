@@ -224,6 +224,7 @@ describe('test  Layer Properties General module component', () => {
         const settings = {
             options: {opacity: 0.7}
         };
+        const mapInfo = {canEdit: true, id: "1"};
         const layer = {
             name: 'layer00',
             title: 'Layer',
@@ -232,11 +233,40 @@ describe('test  Layer Properties General module component', () => {
             type: 'wms',
             url: 'fakeurl'
         };
-        const comp = ReactDOM.render(<General onChange={handlers.onChange} pluginCfg={{}} element={layer} settings={settings}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<General onChange={handlers.onChange} pluginCfg={{}} element={layer} settings={settings} mapInfo={mapInfo}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
         ReactTestUtils.Simulate.change(disableFeaturesEditing, { "target": { "checked": true }});
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'disableFeaturesEditing', true ]);
+    });
+    it('tests read only attribute field on new map', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer}  />, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
+        expect(disableFeaturesEditing).toBeTruthy();
+    });
+    it('tests read only attribute field without permission', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const mapInfo = {canEdit: false, id: "1"};
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} mapInfo={mapInfo}  />, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
+        expect(disableFeaturesEditing).toBeFalsy();
     });
 });
