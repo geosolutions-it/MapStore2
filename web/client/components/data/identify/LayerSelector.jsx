@@ -13,7 +13,7 @@ import {isEmpty} from 'lodash';
 import localizedProps from '../../misc/enhancers/localizedProps';
 const SelectLocalized = localizedProps(['placeholder', 'clearValueText', 'noResultsText'])(Select);
 
-const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, emptyResponses, validator, format}) => {
+const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, emptyResponses, validator, format, showAllResponses = false}) => {
     const selectProps = {clearable: false, isSearchable: true};
     const [options, setOptions] = useState([]);
     const [title, setTitle] = useState("");
@@ -22,9 +22,16 @@ const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, e
         if (!isEmpty(responses)) {
             setOptions(responses.map((opt, idx)=> {
                 const value = opt?.layerMetadata?.title;
-                // Display only valid responses in the drop down
+                // Display only valid responses in the drop down if showAllResponses is false,
+                // otherwise all response are visible and the first layer in toc is present in here
                 const valid = !!validator(format)?.getValidResponses([opt]).length;
-                return {label: value, value, idx, style: {display: valid ? 'block' : 'none'}};
+                return {
+                    label: value,
+                    value,
+                    idx,
+                    style: {
+                        display: showAllResponses ? 'block' : (valid ? 'block' : 'none')
+                    }};
             }));
         }
     }, [responses]);

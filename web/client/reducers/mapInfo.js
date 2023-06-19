@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import assign from 'object-assign';
-import { findIndex, isUndefined, isEmpty } from 'lodash';
 import buffer from 'turf-buffer';
 import intersect from 'turf-intersect';
+import { findIndex, isUndefined, isEmpty } from 'lodash';
 
+import { MAP_CONFIG_LOADED } from '../actions/config';
+import { RESET_CONTROLS } from '../actions/controls';
 import {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -39,9 +40,6 @@ import {
     SET_SHOW_IN_MAP_POPUP,
     INIT_PLUGIN
 } from '../actions/mapInfo';
-
-import { MAP_CONFIG_LOADED } from '../actions/config';
-import { RESET_CONTROLS } from '../actions/controls';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 
 import { getValidator } from '../utils/MapInfoUtils';
@@ -111,7 +109,7 @@ function receiveResponse(state, action, type) {
         }
 
         let indexObj;
-        if (isHover) {
+        if (isHover || state.showAllResponses) {
             indexObj = {loaded: true, index: 0};
         } else if (!isHover && isIndexValid(state, responses, requestIndex, isVector)) {
             indexObj = {loaded: true, index: requestIndex};

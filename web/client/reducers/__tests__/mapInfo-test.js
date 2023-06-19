@@ -7,9 +7,10 @@
  */
 
 import expect from 'expect';
+import assign from 'object-assign';
+import 'babel-polyfill';
 
 import mapInfo from '../mapInfo';
-
 import {
     featureInfoClick,
     toggleEmptyMessageGFI,
@@ -22,11 +23,8 @@ import {
     onInitPlugin
 } from '../../actions/mapInfo';
 import {changeVisualizationMode} from '../../actions/maptype';
-
 import { MAP_CONFIG_LOADED } from '../../actions/config';
 import { VisualizationModes } from '../../utils/MapTypeUtils';
-import assign from 'object-assign';
-import 'babel-polyfill';
 
 describe('Test the mapInfo reducer', () => {
     const appState = {
@@ -34,7 +32,11 @@ describe('Test the mapInfo reducer', () => {
             infoFormat: 'text/plain'
         },
         responses: [],
-        requests: [{reqId: 10, request: "test"}, {reqId: 11, request: "test1"}]};
+        requests: [
+            {reqId: 10, request: "test"},
+            {reqId: 11, request: "test1"},
+            {reqId: 3, request: "test3"}
+        ]};
 
     it('returns original state on unrecognized action', () => {
         let state = mapInfo(1, {type: 'UNKNOWN'});
@@ -123,6 +125,59 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].layerMetadata).toBe("meta");
         expect(state.index).toBe(1);
     });
+    it('creates a feature info data from successful request, with showAllResponses true', () => {
+        let testAction = {
+            type: 'LOAD_FEATURE_INFO',
+            data: "data",
+            requestParams: "params",
+            layerMetadata: "meta",
+            reqId: 11
+        };
+
+        let state = mapInfo({
+            configuration: {
+                infoFormat: 'text/plain'
+            },
+            responses: [],
+            requests: [
+                {reqId: 10, request: "test"},
+                {reqId: 11, request: "test1"},
+                {reqId: 3, request: "test3"}
+            ],
+            showAllResponses: true
+        }, testAction);
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(2);
+        expect(state.loaded).toBe(true);
+        expect(state.responses[1].response).toBe("data");
+        expect(state.responses[1].queryParams).toBe("params");
+        expect(state.responses[1].layerMetadata).toBe("meta");
+        expect(state.index).toBe(0);
+
+        state = mapInfo({
+            configuration: {
+                infoFormat: 'text/plain'
+            },
+            responses: [{response: "test"}, {response: "test1"}],
+            requests: [
+                {reqId: 10, request: "test"},
+                {reqId: 11, request: "test1"},
+                {reqId: 3, request: "test3"}
+            ],
+            showAllResponses: true
+        }, {...testAction, reqId: 3, layerMetadata: "meta3"});
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(3);
+        expect(state.responses[0].response).toBe("test");
+        expect(state.responses[0]).toBeTruthy();
+        expect(state.responses[1].response).toBe("test1");
+        expect(state.responses[1]).toBeTruthy();
+        expect(state.responses[2]).toBeTruthy();
+        expect(state.responses[2].queryParams).toBe("params");
+        expect(state.responses[2].layerMetadata).toBe("meta3");
+        expect(state.loaded).toBe(true);
+        expect(state.index).toBe(0);
+    });
     it('creates a feature info data from successful request on showInMapPopup', () => {
         let testAction = {
             type: 'LOAD_FEATURE_INFO',
@@ -176,6 +231,15 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[1].response).toBe("");
         expect(state.responses[1].queryParams).toBe("params");
         expect(state.responses[1].layerMetadata).toBe("meta");
+
+        state = mapInfo(assign({}, appState, {responses: [{response: "test"}, {response: "test"}]}), {...testAction, layerMetadata: "meta3", reqId: 3});
+        expect(state.responses).toExist();
+        expect(state.responses.length).toBe(3);
+        expect(state.responses[0]).toBeTruthy();
+        expect(state.responses[0].response).toBe("test");
+        expect(state.responses[1].response).toBe("test");
+        expect(state.responses[2].queryParams).toBe("params");
+        expect(state.responses[2].layerMetadata).toBe("meta3");
         expect(state.index).toBe(undefined);
         expect(state.loaded).toBe(true);
     });
@@ -241,7 +305,7 @@ describe('Test the mapInfo reducer', () => {
 
         state = mapInfo( appState, {type: 'NEW_MAPINFO_REQUEST', reqId: 1, request: "request"});
         expect(state.requests).toExist();
-        expect(state.requests.length).toBe(3);
+        expect(state.requests.length).toBe(4);
         expect(state.requests.filter((req) => req.reqId === 10)[0].request).toBe("test");
         expect(state.requests.filter((req) => req.reqId === 1)[0].request).toBe("request");
     });

@@ -39,6 +39,7 @@ export default props => {
         onClose = () => {},
         responses = [],
         index,
+        showAllResponses,
         viewerOptions = {},
         format,
         dock = true,
@@ -134,6 +135,7 @@ export default props => {
                         <LayerSelector
                             responses={responses}
                             index={index}
+                            showAllResponses={showAllResponses}
                             loaded={loaded}
                             setIndex={setIndex}
                             missingResponses={missingResponses}
