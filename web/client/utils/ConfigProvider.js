@@ -558,12 +558,11 @@ export default {
         }
     },
     BasemapAT: {
-        url: 'https://maps{s}.wien.gv.at/basemap/{variant}/normal/google3857/{z}/{y}/{x}.{format}',
+        url: 'https://mapsneu.wien.gv.at/basemap/{variant}/normal/google3857/{z}/{y}/{x}.{format}',
         options: {
             maxZoom: 19,
             maxNativeZoom: 19,
             attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
-            subdomains: ['', '1', '2', '3', '4'],
             format: 'png',
             bounds: [[46.358770, 8.782379], [49.037872, 17.189532]],
             variant: 'geolandbasemap'

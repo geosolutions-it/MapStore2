@@ -73,4 +73,49 @@ describe('PropertiesViewer', () => {
         expect(renderedPNode).toBeTruthy();
         expect(renderedPNode.innerHTML).toBe('some text');
     });
+    it('test rendering properties with fields aliases', () => {
+        const testProps = {
+            k0: "v0",
+            k1: "v1",
+            k2: "v2"
+        };
+        const fields = [{
+            name: "k0",
+            alias: "alias0"
+        }, {
+            name: "k1",
+            alias: "alias1"
+        }, {
+            name: "k2",
+            alias: {
+                "default": "localeAlias2"
+            }
+        }];
+
+        const cmp = ReactDOM.render(<PropertiesViewer
+            feature={{ properties: testProps }}
+            fields={fields}
+
+        />, document.getElementById("container"));
+        expect(cmp).toBeTruthy();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toBeTruthy();
+
+        expect(cmpDom.childNodes.length).toBe(1);
+
+        const body = cmpDom.childNodes.item(0);
+        expect(body.childNodes.length).toBe(Object.keys(testProps).length);
+
+        const testKeys = Object.keys(testProps);
+        body.childNodes.forEach((child, i) => {
+            let testKey = testKeys[i];
+            let testVal = testProps[testKey];
+            const rowData = child.querySelectorAll('div');
+            const key = rowData[0].innerHTML;
+            const value = rowData[1].innerHTML;
+            expect(key).toBe(fields[i].alias?.default || fields[i].alias);
+            expect(value).toBe(testVal);
+        });
+    });
 });

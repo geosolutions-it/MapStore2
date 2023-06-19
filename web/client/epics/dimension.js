@@ -25,12 +25,7 @@ import { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } f
 import { describeDomains, getMultidimURL } from '../api/MultiDim';
 import { domainsToDimensionsObject } from '../utils/TimeUtils';
 import { pick, find, get, flatten } from 'lodash';
-
-
-const DESCRIBE_DOMAIN_OPTIONS = {
-    expandLimit: 10 // TODO: increase this limit to max client allowed
-};
-
+import { expandLimitSelector } from '../selectors/timeline';
 
 const getTimeMultidimURL = (l = {}) => get(find(l.dimensions || [], d => d && d.source && d.source.type === "multidim-extension"), "source.url");
 
@@ -50,7 +45,7 @@ export const updateLayerDimensionOnCurrentTimeSelection = (action$, { getState =
  * Check the presence of Multidimensional API extension, then setup layers properly.
  * Updates also current dimension state
  */
-export const queryMultidimensionalAPIExtensionOnAddLayer = (action$) =>
+export const queryMultidimensionalAPIExtensionOnAddLayer = (action$, {getState = () => {}} = {}) =>
     action$
         .ofType(ADD_LAYER)
         .filter(
@@ -61,7 +56,7 @@ export const queryMultidimensionalAPIExtensionOnAddLayer = (action$) =>
         .map(({ layer = {} } = {}) => ({ layer, multidimURL: getMultidimURL(layer)}))
         // every add layer has it's own flow, this is why it uses
         .flatMap(({ layer = {}, multidimURL } = {}) =>
-            describeDomains(multidimURL, layer.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
+            describeDomains(multidimURL, layer.name, undefined, { expandLimit: expandLimitSelector(getState()) })
                 .switchMap( domains => {
                     const dimensions = domainsToDimensionsObject(domains, multidimURL) || [];
                     if (dimensions && dimensions.length > 0) {
@@ -106,7 +101,7 @@ export const updateLayerDimensionDataOnMapLoad = (action$, {getState = () => {}}
             .concat(Observable.from(layersWithMultidim)
                 // one flow for each dimension
                 .mergeMap(l =>
-                    describeDomains(getTimeMultidimURL(l), l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
+                    describeDomains(getTimeMultidimURL(l), l.name, undefined, { expandLimit: expandLimitSelector(getState()) })
                         .switchMap( domains =>
                             Observable.from(flatten(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
                                 .map(d => [

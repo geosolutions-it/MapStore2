@@ -9,7 +9,8 @@
 import { get, head, uniqBy, find, isString } from 'lodash';
 
 import { layerSettingSelector, getSelectedLayer } from './layers';
-import { STYLE_ID_SEPARATOR, extractFeatureProperties } from '../utils/StyleEditorUtils';
+import { STYLE_ID_SEPARATOR, extractFeatureProperties, isSameOrigin } from '../utils/StyleEditorUtils';
+import { isUserAllowedSelectorCreator } from "./security";
 
 /**
  * selects styleeditor state
@@ -103,13 +104,6 @@ export const enabledStyleEditorSelector = state => get(state, 'styleeditor.enabl
  */
 export const styleServiceSelector = state => get(state, 'styleeditor.service') || {};
 /**
- * selects canEdit status of styleeditor service from state
- * @memberof selectors.styleeditor
- * @param  {object} state the state
- * @return {bool}
- */
-export const canEditStyleSelector = state => get(state, 'styleeditor.canEdit');
-/**
  * selects layer with current changes applied in settings session from state
  * @memberof selectors.styleeditor
  * @param  {object} state the state
@@ -119,6 +113,36 @@ export const getUpdatedLayer = state => {
     const settings = layerSettingSelector(state);
     const selectedLayer = getSelectedLayer(state) || {};
     return {...selectedLayer, ...(settings && settings.options || {})};
+};
+/**
+ * Selects configured editing roles allowed
+ * @memberof selectors.styleeditor
+ * @param  {object} state the state
+ * @returns {object}
+ */
+export const editingAllowedRolesSelector = (state) => get(state, 'styleeditor.editingAllowedRoles', []);
+/**
+ * Selects configured editing groups allowed
+ * @memberof selectors.styleeditor
+ * @param  {object} state the state
+ * @returns {object}
+ */
+export const editingAllowedGroupsSelector = (state) => get(state, 'styleeditor.editingAllowedGroups', []);
+/**
+ * selects canEdit status of styleeditor service from state
+ * @memberof selectors.styleeditor
+ * @param  {object} state the state
+ * @return {bool}
+ */
+export const canEditStyleSelector = (state) => {
+    const allowedRoles = editingAllowedRolesSelector(state);
+    const allowedGroups = editingAllowedGroupsSelector(state);
+    const _isSameOrigin = isSameOrigin(getUpdatedLayer(state), styleServiceSelector(state));
+    const isAllowed = isUserAllowedSelectorCreator({
+        allowedRoles,
+        allowedGroups
+    })(state);
+    return isAllowed && _isSameOrigin;
 };
 /**
  * selects geometry type of selected layer from state

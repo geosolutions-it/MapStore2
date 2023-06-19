@@ -186,14 +186,14 @@ export function deleteStyle(styleName) {
 * Setup the style editor service
 * @memberof actions.styleeditor
 * @param {object} service style editor service
-* @param {bool} canEdit flag to enable/disable style editor in current session
+* @param {object} permissions editing allowed roles and groups permission object
 * @return {object} of type `INIT_STYLE_SERVICE`
 */
-export function initStyleService(service, canEdit) {
+export function initStyleService(service, permissions) {
     return {
         type: INIT_STYLE_SERVICE,
         service,
-        canEdit
+        permissions
     };
 }
 /**

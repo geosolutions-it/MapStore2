@@ -8,14 +8,8 @@
 
 import expect from 'expect';
 import LeafletStyleParser from '../LeafletStyleParser';
-import { getImageIdFromSymbolizer } from '../../VectorStyleUtils';
 
-let images = [];
-
-const parser = new LeafletStyleParser({
-    getImageIdFromSymbolizer,
-    drawIcons: () => Promise.resolve(images)
-});
+const parser = new LeafletStyleParser();
 
 describe('LeafletStyleParser', () => {
     describe('readStyle', () => {
@@ -199,16 +193,6 @@ describe('LeafletStyleParser', () => {
                 ]
             };
 
-            const canvas = document.createElement('canvas');
-
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
-                image: canvas,
-                width: 32,
-                height: 32,
-                src: 'path/to/mark'
-            });
-
             parser.writeStyle(style)
                 .then((styleFunc) => {
                     try {
@@ -225,7 +209,7 @@ describe('LeafletStyleParser', () => {
                             }
                         };
                         const icon = pointToLayer(feature, [7, 41]).options.icon;
-                        expect(icon.options.iconUrl).toBe('path/to/mark');
+                        expect(icon.options.iconUrl.indexOf('data:image/png;base64')).toBe(0);
                         expect(icon.options.iconSize).toEqual([32, 32]);
                         expect(icon.options.iconAnchor).toEqual([16, 16]);
 
@@ -246,7 +230,8 @@ describe('LeafletStyleParser', () => {
                         symbolizers: [
                             {
                                 kind: 'Icon',
-                                image: 'path/to/image',
+                                /* png 1px x 1px */
+                                image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=',
                                 opacity: 0.5,
                                 size: 32,
                                 rotate: 90
@@ -255,16 +240,6 @@ describe('LeafletStyleParser', () => {
                     }
                 ]
             };
-
-            const img = new Image();
-
-            images.push({
-                id: getImageIdFromSymbolizer(style.rules[0].symbolizers[0]),
-                image: img,
-                width: 256,
-                height: 256,
-                src: 'path/to/image'
-            });
 
             parser.writeStyle(style)
                 .then((styleFunc) => {
@@ -282,7 +257,7 @@ describe('LeafletStyleParser', () => {
                             }
                         };
                         const icon = pointToLayer(feature, [7, 41]).options.icon;
-                        expect(icon.options.iconUrl).toBe('path/to/image');
+                        expect(icon.options.iconUrl).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
                         expect(icon.options.iconSize).toEqual([32, 32]);
                         expect(icon.options.iconAnchor).toEqual([16, 16]);
                     } catch (e) {

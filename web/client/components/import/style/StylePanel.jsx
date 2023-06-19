@@ -14,7 +14,7 @@ import { Promise } from 'es6-promise';
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import { isAnnotation } from '../../../utils/AnnotationsUtils';
-import { toVectorStyle } from '../../../utils/StyleUtils';
+import { applyDefaultStyleToVectorLayer } from '../../../utils/StyleUtils';
 
 import Button from '../../misc/Button';
 import { checkFeaturesStyle } from '../../../utils/ImporterUtils';
@@ -203,11 +203,11 @@ class StylePanel extends React.Component {
     }
 
     addToMap = () => {
-        let styledLayer = this.props.selected;
-        if (!this.state.useDefaultStyle) {
-            styledLayer = toVectorStyle(styledLayer, this.props.shapeStyle);
-        }
-        const isAnnotationLayer = isAnnotation(styledLayer);
+        const hasCustomStyle = checkFeaturesStyle(this.props.selected);
+        const isAnnotationLayer = isAnnotation(this.props.selected);
+        const styledLayer = !isAnnotationLayer && !this.state.useDefaultStyle && !hasCustomStyle
+            ? applyDefaultStyleToVectorLayer(this.props.selected, this.props.shapeStyle)
+            : this.props.selected;
         Promise.resolve(isAnnotationLayer ? this.props.loadAnnotations(styledLayer.features, this.state.overrideAnnotation) :
             this.props.addLayer( styledLayer )).then(() => {
             if (!isAnnotationLayer) {

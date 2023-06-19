@@ -48,7 +48,8 @@ import {
     SET_SNAP_RADIO_BUTTON_ENABLED,
     AUTOSELECT,
     SELECT_TIME,
-    SET_TIME_LAYERS
+    SET_TIME_LAYERS,
+    setMapSync
 } from '../../actions/timeline';
 import { changeLayerProperties, removeNode } from '../../actions/layers';
 import { SET_CURRENT_TIME, SET_OFFSET_TIME, updateLayerDimensionData } from '../../actions/dimension';
@@ -781,6 +782,67 @@ describe('timeline Epics', () => {
             });
         });
     });
+    it("setRangeOnInit when the values stored are intervals", (done) => {
+        testEpic(setRangeOnInit, 3, initializeRange(), ([action1, action2, action3]) => {
+            try {
+                const { time, type } = action1;
+                const { offsetTime, type: typeOff} = action2;
+                const { type: typeRange, start, end } = action3;
+                expect(time).toBeTruthy();
+                expect(offsetTime).toBeTruthy();
+                expect(type).toBe(SET_CURRENT_TIME);
+                expect(typeOff).toBe(SET_OFFSET_TIME);
+                expect(typeRange).toBe(RANGE_CHANGED);
+                expect(start).toBe("2001-01-01T00:00:00.000Z");
+                expect(end).toBe("2001-12-31T00:00:00.000Z");
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, {
+            timeline: {
+                selectedLayer: "TEST_LAYER",
+                settings: {
+                    initialMode: 'range',
+                    initialSnap: 'fullRange'
+                }
+            },
+            dimension: {
+                currentTime: "2000-01-01T00:00:00.000Z",
+                offsetTime: "2001-12-31T00:00:00.000Z",
+                data: {
+                    time: {
+                        TEST_LAYER: {
+                            name: "time",
+                            domain: "2001-01-01T00:00:00.000Z/2001-12-31T00:00:00.000Z"
+                        }
+                    }
+                }
+            },
+            layers: {
+                flat: [{
+                    id: 'TEST_LAYER',
+                    name: 'TEST_LAYER',
+                    type: 'wms',
+                    visibility: true,
+                    url: 'base/web/client/test-resources/wmts/DomainIntervalValues.xml',
+                    dimensions: [
+                        {
+                            source: {
+                                type: 'multidim-extension',
+                                url: 'base/web/client/test-resources/wmts/DomainIntervalValues.xml'
+                            },
+                            name: 'time'
+                        }
+                    ],
+                    params: {
+                        time: '2000-06-08T00:00:00.000Z'
+                    }
+                }]
+            }
+        });
+    });
+
     it("updateTimelineDataOnMapLoad", (done) =>{
         const config = {
             timelineData: {
@@ -1059,6 +1121,26 @@ describe('timeline Epics', () => {
             testEpic(addTimeoutEpic(updateRangeDataOnRangeChange, 500), 1, changeMapView(), ([action1]) => {
                 // when off, it should not update
                 expect(action1.type).toBe(TEST_TIMEOUT);
+                done();
+            }, MAPSYNC_OFF_STATE);
+        });
+        it('mapSync off via action should trigger update range', done => {
+            // tests with mapsync on take around 400 ms to run, so this have to be set with a bigger time
+            // TODO: use mock-axios or other tools to speed up these tests
+            testEpic(addTimeoutEpic(updateRangeDataOnRangeChange, 500), 4, setMapSync(false), ([action1, action2, action3, action4]) => {
+                const { type: startType } = action1;
+                const { type: range1Type, range } = action2;
+                const { type: range2Type } = action3;
+                const { type: endType } = action4;
+                // first action moves the current timeline view to center the current time
+                expect(startType).toBe(LOADING);
+                expect(endType).toBe(LOADING);
+                // in this case loading fixed file of domain values causes double trigger of range data loaded with domain
+                // in real world the 2nd response is histogram. TODO: test also histogram
+                expect(range1Type).toBe(RANGE_DATA_LOADED);
+                expect(range2Type).toBe(RANGE_DATA_LOADED);
+                expect(range.start).toBe("2000-01-01T00:00:00.000Z");
+                expect(range.end).toBe("2001-12-31T00:00:00.000Z");
                 done();
             }, MAPSYNC_OFF_STATE);
         });

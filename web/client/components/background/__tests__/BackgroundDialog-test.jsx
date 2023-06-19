@@ -67,4 +67,20 @@ describe('test BackgroundDialog', () => {
         expect(updateThumbnailSpy).toHaveBeenCalled();
         expect(onSaveSpy).toHaveBeenCalled();
     });
+    it('should render with WMS cache options', () => {
+        ReactDOM.render(<BackgroundDialog
+            layer={{
+                type: 'wms',
+                url: '/geoserver/wms',
+                name: 'workspace:name'
+            }}
+        />,
+        document.getElementById("container"));
+        const modalNode = document.querySelector('#ms-resizable-modal');
+        expect(modalNode).toBeTruthy();
+        const wmsCacheOptionsContent = document.querySelector('.ms-wms-cache-options-content');
+        expect(wmsCacheOptionsContent).toBeTruthy();
+        const wmsCacheOptionsToolbar = document.querySelector('.ms-wms-cache-options-toolbar');
+        expect(wmsCacheOptionsToolbar).toBeTruthy();
+    });
 });

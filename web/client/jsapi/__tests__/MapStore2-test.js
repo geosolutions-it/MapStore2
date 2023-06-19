@@ -98,7 +98,7 @@ describe('MapStore2 API', () => {
         MapStore2.create('container', {
             ...testConfig
         });
-        MapStore2.onAction(MAP_CONFIG_LOADED, () => done());
+        MapStore2.onAction(LOCAL_CONFIG_LOADED, () => done());
     });
     it('offAction', (done) => {
         MapStore2.create('container', {

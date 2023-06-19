@@ -115,6 +115,23 @@
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
             },
+            "availableTileGrids": "Cuadrículas de mosaicos disponibles",
+            "crsId": "Id",
+            "projection": "Proyección",
+            "tileSize": "Tamaño del mosaico",
+            "tileGridInUse": "La cuadrícula de mosaicos '{id}' coincide con la proyección del mapa actual y el tamaño de mosaico seleccionado para esta capa",
+            "useStandardTileGridStrategy": "Usar cuadrícula de mosaico estándar",
+            "useCustomTileGridStrategy": "Usar cuadrículas de mosaico personalizadas remotas",
+            "updateTileGrids": "Actualizar cuadrículas de mosaicos disponibles",
+            "noTileGridMatchesConfiguration": "No hay una cuadrícula de mosaicos que coincida con la proyección de mapa actual y el tamaño de mosaico seleccionado. La tabla anterior destaca las cuadrículas de mosaicos disponibles compatibles con la proyección de mapa actual. Puede hacer clic en el botón Actualizar para actualizar la lista de disponibles rejillas de azulejos",
+            "noConfiguredGridSets": "No es posible obtener cuadrículas de mosaico personalizadas. Esta capa no tiene ningún conjunto de cuadrícula compatible con las proyecciones disponibles. Revise el lado del servidor de configuración y vuelva a intentarlo",
+            "notPossibleToConnectToWMTSService": "No fue posible obtener las cuadrículas de mosaicos del servidor. La solicitud enviada a {requestUrl} arroja un error",
+            "notSupportedSelectedFormatCache": "El formato seleccionado no es compatible con el caché.",
+            "customParamsCacheWarning": "Esta capa tiene activado el estilo localizado. Verifique el lado del servidor de configuración y asegúrese de que sea compatible con el parámetro ENV personalizado",
+            "supportedFormats": "Formatos compatibles",
+            "checkAvailableTileGridsInfo": "Verificar la información de cuadrículas de mosaicos disponibles",
+            "tileGridInfoChecksTitle": "Información de cuadrículas de mosaicos",
+            "tileGridInfoChecks": "La siguiente lista de verificación muestra algunos posibles problemas de compatibilidad entre el conjunto de cuadrículas actual y la información remota. Todavía es posible que la cuadrícula de mosaicos no llegue al caché incluso si todas las comprobaciones enumeradas son exitosas",
             "visibilityLimits": {
                 "title": "Límites de visibilidad",
                 "serverValuesUpdateUndefined": "El servidor no proporcionó límites de visibilidad de escala para esta capa",
@@ -182,7 +199,8 @@
               "clearCustomization": "Borrar personalización",
               "clearCustomizationConfirm": "¿Está seguro de que desea borrar la personalización de los campos?",
               "error": "Error al recuperar los campos"
-            }
+            },
+            "disableFeaturesEditing": "Deshabilitar la edición en la tabla de atributos"
         },
         "localizedInput": {
           "localize": "Localizar cadena...",
@@ -1873,6 +1891,11 @@
                     "errorChart": "Uno o más gráficos no son válidos",
                     "backToTableOptions": "Volver a las opciones de tabla",
                     "configureTableOptions": "Configurar opciones de tabla",
+                    "attributeEditorColumns": {
+                      "name": "Nombre",
+                      "title": "Título",
+                      "tooltip": "Tooltip"
+                    },
                     "resetColumnsSizes": "Restablecer todos los cambios en los tamaños de columna",
                     "updateWidget": "Actualiza el widget",
                     "addTheWidget": "Agrega el widget",
@@ -2431,7 +2454,13 @@
             "color": "Color",
             "pointHeight": "Altura del punto",
             "leaderLineColor": "Color de línea de guía",
-            "leaderLineWidth": "Ancho de la línea guía"
+            "leaderLineWidth": "Ancho de la línea guía",
+            "geometryTransformation": "Transformación de geometría",
+            "center": "Centro",
+            "startPoint": "Punto de inicio",
+            "endPoint": "Punto final",
+            "line": "Línea",
+            "geodesicLine": "Línea geodésica"
         },
         "playback": {
             "settings": {

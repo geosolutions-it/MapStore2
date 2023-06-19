@@ -19,7 +19,8 @@ import {
     multidimOptionsSelectorCreator,
     timelineLayersSelector,
     timelineLayersSetting,
-    timelineLayersParsedSettings
+    timelineLayersParsedSettings,
+    getTimeItems
 } from '../timeline';
 
 import { set, compose } from '../../utils/ImmutableUtils';
@@ -169,7 +170,40 @@ describe('timeline selector', () => {
         expect(timelayer[0].id).toEqual(TEST_LAYER_ID);
         expect(timelayer[0].hideInTimeline).toEqual(true);
     });
-
+    it('getTimeItems should give priority to rangeData', () => {
+        const data = {
+            source: {
+                type: 'multidim-extension',
+                version: '1.2',
+                url: '/geoserver/gwc/service/wmts'
+            },
+            name: 'time',
+            domain: '2022-06-01T00:00:00.000Z/2023-06-01T00:00:00.000Z,2023-01-01T00:00:00.000Z/2023-06-01T00:00:00.000Z,2023-01-01T00:00:00.000Z/2023-12-31T00:00:00.000Z'
+        };
+        const range = {
+            start: '2022-06-01T00:00:00.000Z',
+            end: '2024-01-09T11:07:53.218Z'
+        };
+        let timeItems = getTimeItems(data, range);
+        expect(timeItems.length).toBe(3);
+        const rangeData = {
+            range: {
+                start: '2022-06-01T00:00:00.000Z',
+                end: '2024-01-09T11:07:53.218Z'
+            },
+            histogram: {
+                values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                domain: '2022-06-01T00:00:00.000Z/2023-06-01T00:00:00.000Z/PT704H'
+            },
+            domain: {
+                values: [
+                    '2022-06-01T00:00:00.000Z/2023-06-01T00:00:00.000Z'
+                ]
+            }
+        };
+        timeItems = getTimeItems(data, range, rangeData);
+        expect(timeItems.length).toBe(1);
+    });
     it('itemsSelector', () => {
         const histogramItems = itemsSelector(SAMPLE_STATE_HISTOGRAM);
         expect(histogramItems.length).toBe(31);

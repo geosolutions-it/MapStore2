@@ -178,14 +178,24 @@ describe('widgetsbuilder epic', () => {
     });
     it('initEditorOnNewChart', (done) => {
         const startActions = [createChart()];
-        testEpic(initEditorOnNewChart, 2, startActions, actions => {
-            expect(actions.length).toBe(2);
+        const NUMBER_OF_ACTIONS = 3;
+        testEpic(initEditorOnNewChart, NUMBER_OF_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             actions.map((action) => {
                 switch (action.type) {
                 case EDIT_NEW:
                     expect(action.widget).toExist();
                     // verify default mapSync
                     expect(action.widget.mapSync).toBe(true);
+                    expect(action.widget.widgetType).toBe('chart');
+                    expect(action.widget.charts.length).toBe(1);
+                    expect(action.widget.charts[0].chartId).toBe(action.widget.selectedChartId);
+                    expect(action.widget.charts[0].type).toBe('bar');
+                    expect(action.widget.charts[0].name).toBe('Chart-1');
+                    break;
+                case EDITOR_CHANGE:
+                    expect(action.key).toBe('returnToFeatureGrid');
+                    expect(action.value).toBe(true);
                     break;
                 case CLOSE_FEATURE_GRID:
                     expect(action.type).toBe(CLOSE_FEATURE_GRID);
@@ -221,6 +231,11 @@ describe('widgetsbuilder epic', () => {
                     }
                     break;
                 case FEATURE_TYPE_SELECTED:
+                    expect(action.fields).toEqual([{
+                        name: "x",
+                        type: "string",
+                        alias: "X alias"
+                    }]);
                     break;
                 case LOAD_FILTER:
                     break;
@@ -241,6 +256,11 @@ describe('widgetsbuilder epic', () => {
                 builder: {
                     editor: {
                         layer: {
+                            fields: [{
+                                name: "x",
+                                type: "string",
+                                alias: "X alias"
+                            }],
                             search: {
                                 url: "test"
                             }

@@ -8,16 +8,13 @@
 
 import {compose, withProps} from 'recompose';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
+import { applyDefaultToLocalizedString } from '../../../../I18N/LocalizedString';
+
 import { getDefaultAggregationOperations } from '../../../../../utils/WidgetsUtils';
 import {find} from 'lodash';
 
-const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
-    .map( ({name} = {}) => ({label: name, value: name}));
-
-/** custom color-coded charts currently support string and number types only */
-const propsToTypedOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
-    .map(({name, localType} = {}) => ({ label: name, value: name, type: localType }))
-    .filter(item => item.type === 'string' || item.type === 'number');
+const propsToOptions = (props, fields = []) => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
+    .map( ({name, localType} = {}) => ({label: applyDefaultToLocalizedString(find(fields, {name})?.alias, name), value: name, type: localType}));
 
 const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) => {
     const prop = find(featureTypeProperties, {name: propertyName});
@@ -28,13 +25,13 @@ const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) 
 };
 
 export default compose(
-    withProps(({featureTypeProperties = [], data = {}} = {}) => ({
-        options: propsToOptions(featureTypeProperties),
-        typedOptions: propsToTypedOptions(featureTypeProperties),
+    withProps(({featureTypeProperties = [], data = {}, layer} = {}) => ({
+        options: propsToOptions(featureTypeProperties, layer?.fields),
+        /** custom color-coded charts currently support string and number types only */
         aggregationOptions:
             (data?.widgetType !== "counter" ? [{ value: "None", label: "widgets.operations.NONE" }] : [])
                 .concat(getAllowedAggregationOptions(data.options && data.options.aggregationAttribute, featureTypeProperties))
     })),
+    localizedProps("options", "label", "object"),
     localizedProps("aggregationOptions")
-
 );

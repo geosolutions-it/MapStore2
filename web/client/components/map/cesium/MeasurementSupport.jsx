@@ -18,6 +18,8 @@ import MeasureToolbar from '../../mapcontrols/measure/MeasureToolbar';
 import { MeasureTypes, defaultUnitOfMeasureOptions, measureIcons } from '../../../utils/MeasureUtils';
 import tooltip from '../../misc/enhancers/tooltip';
 import { getMessageById } from '../../../utils/LocaleUtils';
+import { download } from '../../../utils/FileUtils';
+import { convertMeasuresToGeoJSON } from '../../../utils/MeasurementUtils';
 
 const Button = tooltip(MSButton);
 
@@ -56,7 +58,9 @@ function MeasurementSupport({
         MeasureTypes.ANGLE_3D,
         MeasureTypes.SLOPE
     ],
-    onClose
+    onClose,
+    measurement,
+    onAddAsLayer
 }, { messages }) {
 
     const [clearId, setClearId] = useState(0);
@@ -170,6 +174,30 @@ function MeasurementSupport({
                         >
                             <Glyphicon glyph="trash" />
                         </Button>
+                    </ButtonGroup>
+                    <ButtonGroup>
+                        <Button
+                            className="square-button-md"
+                            bsStyle="primary"
+                            tooltipId="measureComponent.exportToGeoJSON"
+                            disabled={(measurement?.features?.length || 0) === 0}
+                            onClick={() => download(
+                                JSON.stringify(convertMeasuresToGeoJSON(measurement.features)),
+                                'measurements.json',
+                                'application/geo+json'
+                            )}
+                        >
+                            <Glyphicon glyph="ext-json" />
+                        </Button>
+                        {onAddAsLayer && <Button
+                            className="square-button-md"
+                            bsStyle="primary"
+                            tooltipId="measureComponent.addAsLayer"
+                            disabled={(measurement?.features?.length || 0) === 0}
+                            onClick={() => onAddAsLayer(measurement.features)}
+                        >
+                            <Glyphicon glyph="add-layer" />
+                        </Button>}
                     </ButtonGroup>
                 </ButtonToolbar>
             </MeasureToolbar>

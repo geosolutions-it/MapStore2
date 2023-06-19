@@ -16,7 +16,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { getFeature, describeFeatureType } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { needsReload, extractGeometryType } from '../../../../utils/WFSLayerUtils';
-import { applyDefaultStyleToLayer } from '../../../../utils/VectorStyleUtils';
+import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 
 const createLoader = (source, options) => (extent, resolution, projection) => {
     const params = optionsToVendorParams(options);
@@ -48,11 +48,14 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
  * @param {string} geometryType the geometry type
  * @param {object} layer the openlayers layer
  */
-const getWFSStyle = (layer, options, geometryType) => {
-    return getStyle(applyDefaultStyleToLayer({ ...options, style: { ...(options.style || {}), type: geometryType }, asPromise: true }))
+const getWFSStyle = (layer, options, geometryType, map) => {
+    return getStyle(applyDefaultStyleToVectorLayer({ ...options, style: { ...(options.style || {}), type: geometryType }, asPromise: true }))
         .then((style) => {
             if (style) {
-                layer.setStyle(style);
+                const olStyle = style.__geoStylerStyle
+                    ? style({ map })
+                    : style;
+                layer.setStyle(olStyle);
             }
         });
 };
@@ -62,11 +65,11 @@ const getWFSStyle = (layer, options, geometryType) => {
  * @param {object} layer the openlayers layer
  * @param {object} options MapStore layer configuration
  */
-const updateStyle = (layer, options) => layer.geometryType
-    ? getWFSStyle(layer, options, layer.geometryType)
+const updateStyle = (layer, options, map) => layer.geometryType
+    ? getWFSStyle(layer, options, layer.geometryType, map)
     : describeFeatureType(options.url, options.name)
         .then(extractGeometryType)
-        .then(geometryType => getWFSStyle(layer, options, geometryType));
+        .then(geometryType => getWFSStyle(layer, options, geometryType, map));
 
 /**
  * WFS Layer for MapStore. Openlayers implementation.
@@ -75,7 +78,7 @@ const updateStyle = (layer, options) => layer.geometryType
  *
  */
 Layers.registerType('wfs', {
-    create: (options) => {
+    create: (options, map) => {
 
         const source = new VectorSource({
             format: new GeoJSON()
@@ -91,10 +94,10 @@ Layers.registerType('wfs', {
             minResolution: options.minResolution,
             maxResolution: options.maxResolution
         });
-        updateStyle(layer, options);
+        updateStyle(layer, options, map);
         return layer;
     },
-    update: (layer, options = {}, oldOptions = {}) => {
+    update: (layer, options = {}, oldOptions = {}, map) => {
         const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
         const newCrs = options.crs || options.srs || 'EPSG:3857';
         const source = layer.getSource();
@@ -109,7 +112,7 @@ Layers.registerType('wfs', {
             source.refresh();
         }
         if (options.style !== oldOptions.style || options.styleName !== oldOptions.styleName) {
-            updateStyle(layer, options);
+            updateStyle(layer, options, map);
         }
         if (oldOptions.minResolution !== options.minResolution) {
             layer.setMinResolution(options.minResolution === undefined ? 0 : options.minResolution);

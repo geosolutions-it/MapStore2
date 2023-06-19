@@ -10,6 +10,7 @@ import expect from 'expect';
 import { addTimeoutEpic, testEpic } from './epicTestUtils';
 import { addAnnotationFromMeasureEpic, addAsLayerEpic, openMeasureEpic, setMeasureStateFromAnnotationEpic, closeMeasureEpics, addCoordinatesEpic } from '../measurement';
 import {addAnnotation, addAsLayer, setAnnotationMeasurement} from '../../actions/measurement';
+import { ADD_LAYER } from '../../actions/layers';
 import { clickOnMap } from '../../actions/map';
 import {setControlProperty, toggleControl} from '../../actions/controls';
 
@@ -72,14 +73,16 @@ describe('measurement epics', () => {
                 "position": [
                     -127.53661546263791,
                     46.54526898530547
-                ]
+                ],
+                "textId": 0
             },
             {
                 "text": "1,837,281.12 m | 140.72°",
                 "position": [
                     -101.23884662739748,
                     42.09680198161091
-                ]
+                ],
+                "textId": 0
             }
         ],
         "uom": {
@@ -158,31 +161,18 @@ describe('measurement epics', () => {
                 addAsLayer(features, textLabels, uom)
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                expect(actions[0].type).toBe("ADD_LAYER");
+                expect(actions[0].type).toBe(ADD_LAYER);
                 const resultFeatures = actions[0].layer.features;
-                expect(resultFeatures).toExist();
-                expect(resultFeatures.length).toBe(1);
-                const innerFeatures = resultFeatures[0].features;
-                expect(innerFeatures.length).toBe(4);
-                expect(innerFeatures[0].geometry).toExist();
-                expect(innerFeatures[0].geometry.type).toBe('LineString');
-                expect(innerFeatures[0].geometry.textLabels).toExist();
-                expect(innerFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17°");
-                expect(innerFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72°");
-                done();
-            }, null);
-    });
-    it('test addAsLayerEpic with textLabels', (done) => {
-        const NUMBER_OF_ACTIONS = 1;
-        const {textLabels, features, uom} = testData;
-
-        testEpic(
-            addTimeoutEpic(addAsLayerEpic, 10),
-            NUMBER_OF_ACTIONS, [
-                addAsLayer(features, textLabels, uom)
-            ], actions => {
-                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                expect(actions[0].type).toBe("ADD_LAYER");
+                expect(resultFeatures).toBeTruthy();
+                expect(resultFeatures.length).toBe(3);
+                expect(resultFeatures[0].geometry).toBeTruthy();
+                expect(resultFeatures[0].geometry.type).toBe('LineString');
+                expect(resultFeatures[1].geometry).toBeTruthy();
+                expect(resultFeatures[1].geometry.type).toBe('Point');
+                expect(resultFeatures[1].properties.label).toBe('2,937,911.16 m | 061.17°');
+                expect(resultFeatures[2].geometry).toBeTruthy();
+                expect(resultFeatures[2].geometry.type).toBe('Point');
+                expect(resultFeatures[2].properties.label).toBe('1,837,281.12 m | 140.72°');
                 done();
             }, null);
     });

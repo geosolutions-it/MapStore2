@@ -249,9 +249,11 @@ export const updateLayerOnLayerPropertiesChange = (action$, store) =>
         .switchMap(({layer, newProperties}) => {
             const state = store.getState();
             const flatLayer = getLayerFromId(state, layer);
-            return Rx.Observable.of(
-                ...(has(newProperties, "layerFilter") && flatLayer ? [updateWidgetLayer(flatLayer)] : [])
-            );
+            const shouldUpdate = flatLayer && (has(newProperties, "layerFilter") || has(newProperties, "fields"));
+            if (shouldUpdate) {
+                return Rx.Observable.of(updateWidgetLayer(flatLayer));
+            }
+            return Rx.Observable.empty();
         });
 
 /**

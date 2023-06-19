@@ -12,10 +12,10 @@ import {getStyle} from '../VectorStyle';
 import isEqual from 'lodash/isEqual';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
-import { applyDefaultStyleToLayer } from '../../../../utils/VectorStyleUtils';
+import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 
 Layers.registerType('vector', {
-    create: (options) => {
+    create: (options, map) => {
         let features = [];
 
         const source = new VectorSource({
@@ -32,16 +32,19 @@ Layers.registerType('vector', {
             maxResolution: options.maxResolution
         });
 
-        getStyle(applyDefaultStyleToLayer({ ...options, asPromise: true }))
+        getStyle(applyDefaultStyleToVectorLayer({ ...options, asPromise: true }))
             .then((style) => {
                 if (style) {
-                    layer.setStyle(style);
+                    const olStyle = style.__geoStylerStyle
+                        ? style({ map })
+                        : style;
+                    layer.setStyle(olStyle);
                 }
             });
 
         return layer;
     },
-    update: (layer, newOptions, oldOptions) => {
+    update: (layer, newOptions, oldOptions, map) => {
         const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
         const newCrs = newOptions.crs || newOptions.srs || 'EPSG:3857';
         if (newCrs !== oldCrs) {
@@ -51,10 +54,13 @@ Layers.registerType('vector', {
         }
 
         if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
-            getStyle(applyDefaultStyleToLayer({ ...newOptions, asPromise: true }))
+            getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, asPromise: true }))
                 .then((style) => {
                     if (style) {
-                        layer.setStyle(style);
+                        const olStyle = style.__geoStylerStyle
+                            ? style({ map })
+                            : style;
+                        layer.setStyle(olStyle);
                     }
                 });
         }

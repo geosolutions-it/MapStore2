@@ -156,4 +156,59 @@ describe('wfsChartOptions enhancer', () => {
             checkOptions({ aggregationAttribute: "DateTime" }, props => expect(props.aggregationOptions.every(({ value }) => NO_NUM_OPS.includes(value))).toBeTruthy(), done);
         });
     });
+    describe('check options (with fields)', () => {
+        const fields = [{
+            name: "itemWithAlias",
+            alias: "itemWithAliasAlias"
+        }, {
+            name: "itemWithAliasLocalized",
+            alias: {
+                "default": "itemWithAliasLocalizedAliasDefault"
+            }
+        }];
+        const checkOptions = (options, check = () => {}, done) => {
+            const data = {
+                options
+            };
+            const Sink = wfsChartOptions(createSink(props => {
+                check(props);
+                done();
+            }));
+            ReactDOM.render(<Sink data={data} featureTypeProperties={featureTypeProperties} layer={{fields}} />, document.getElementById("container"));
+        };
+        const featureTypeProperties2 = [{
+            "name": "itemWithAlias",
+            "maxOccurs": 1,
+            "minOccurs": 0,
+            "nillable": true,
+            "type": "xsd:string",
+            "localType": "string"
+        }, {
+            "name": "itemWithAliasLocalized",
+            "maxOccurs": 1,
+            "minOccurs": 0,
+            "nillable": true,
+            "type": "xsd:string",
+            "localType": "string"
+        }];
+        it('item with alias', (done) => {
+            checkOptions(featureTypeProperties2, props => {
+                props.options.forEach(({ value, label }) => {
+                    if (value === "itemWithAlias") {
+                        expect(label).toBe("itemWithAliasAlias");
+                    }
+                });
+            }, done);
+        });
+        it('item with alias (localized)', (done) => {
+            checkOptions(featureTypeProperties2, props => {
+                props.options.forEach(({ value, label }) => {
+                    if (value === "itemWithAliasLocalized") {
+                        expect(label).toBe("itemWithAliasLocalizedAliasDefault");
+                    }
+                });
+            }, done);
+        });
+    });
+
 });

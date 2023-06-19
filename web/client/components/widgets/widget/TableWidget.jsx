@@ -43,6 +43,7 @@ export default getWidgetFilterRenderers(({
     filterRenderers,
     columnSettings,
     features,
+    layer,
     size,
     pages,
     error,
@@ -86,6 +87,7 @@ export default getWidgetFilterRenderers(({
                 virtualScroll={virtualScroll}
                 enableColumnFilters={enableColumnFilters}
                 filterRenderers={filterRenderers}
+                fields={layer?.fields}
                 features={features}
                 pages={pages}
                 error={error}

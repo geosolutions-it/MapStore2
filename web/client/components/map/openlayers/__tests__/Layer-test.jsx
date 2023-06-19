@@ -479,14 +479,14 @@ describe('Openlayers layer', () => {
             }}
             map={map} />, document.getElementById("container"));
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.getType()).toBe('VECTOR_TILE');
         expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
         setTimeout(() => {
             try {
-                const style = layer.layer.getStyle();
-                expect(style).toExist();
+                const style = layer.layer.getStyle()()()[0];
+                expect(style).toBeTruthy();
                 expect(style.getStroke().getColor()).toBe('#FF0000');
                 // currently SLD parser use fillOpacity instead of opacity
                 // and probably this cause wrong parsing of opacity

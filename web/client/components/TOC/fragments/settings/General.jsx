@@ -9,17 +9,22 @@
 import { find, includes, isObject, uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Col, ControlLabel, FormControl, FormGroup, Grid } from 'react-bootstrap';
+import { Checkbox, Col, ControlLabel, FormControl, FormGroup, Grid } from 'react-bootstrap';
 import LocalizedInput from '../../../misc/LocalizedInput';
 
 import Select from 'react-select';
 import Spinner from 'react-spinkit';
 
-import { getMessageById } from '../../../../utils/LocaleUtils';
-import { isValidNewGroupOption, flattenGroups,
-    getLabelName as _getLabelName, getTitle as _getTitle } from '../../../../utils/TOCUtils';
 import Message from '../../../I18N/Message';
 import LayerNameEditField from './LayerNameEditField';
+import { getMessageById } from '../../../../utils/LocaleUtils';
+import {
+    isValidNewGroupOption,
+    flattenGroups,
+    getLabelName as _getLabelName,
+    getTitle as _getTitle
+} from '../../../../utils/TOCUtils';
+import { supportsFeatureEditing } from "../../../../utils/FeatureGridUtils";
 
 /**
  * General Settings form for layer
@@ -104,7 +109,7 @@ class General extends React.Component {
                                 onBlur={this.updateEntry.bind(null, "description")} />}
                     </FormGroup>
                     {this.props.nodeType === 'layers' ?
-                        <div>
+                        <div className={"form-group"}>
                             <label key="group-label" className="control-label"><Message msgId="layerProperties.group" /></label>
                             <SelectCreatable
                                 clearable={false}
@@ -139,9 +144,8 @@ class General extends React.Component {
                         </div> : null}
                     {   /* Tooltip section */
                         this.props.showTooltipOptions &&
-                        <div style={{ width: "100%" }}>
+                        <div style={{ width: "100%", display: "inline-block" }}>
                             <Col xs={12} sm={8} className="first-selectize">
-                                <br />
                                 <label key="tooltip-label" className="control-label"><Message msgId="layerProperties.tooltip.label" /></label>
                                 <Select
                                     clearable={false}
@@ -151,7 +155,6 @@ class General extends React.Component {
                                     onChange={(item) => { this.updateEntry("tooltipOptions", { target: { value: item.value || "title" } }); }} />
                             </Col>
                             <Col xs={12} sm={4} className="second-selectize">
-                                <br />
                                 <label key="tooltip-placement-label" className="control-label"><Message msgId="layerProperties.tooltip.labelPlacement" /></label>
                                 <Select
                                     clearable={false}
@@ -163,6 +166,16 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
+                    {supportsFeatureEditing(this.props.element) && <FormGroup>
+                        <Checkbox
+                            data-qa="general-read-only-attribute"
+                            key="disableFeaturesEditing"
+                            checked={this.props.element?.disableFeaturesEditing === undefined ? false : this.props.element?.disableFeaturesEditing}
+                            onChange={(event) => this.props.onChange("disableFeaturesEditing", event.target.checked)}
+                        >
+                            <Message msgId="layerProperties.disableFeaturesEditing"/>
+                        </Checkbox>
+                    </FormGroup>}
 
                 </form>
             </Grid>

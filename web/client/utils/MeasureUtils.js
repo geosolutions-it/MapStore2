@@ -11,6 +11,7 @@ import { isArray, head, isNaN } from 'lodash';
 export const MeasureTypes = {
     LENGTH: 'length',
     AREA: 'area',
+    BEARING: 'bearing',
     POINT_COORDINATES: 'POINT_COORDINATES',
     HEIGHT_FROM_TERRAIN: 'HEIGHT_FROM_TERRAIN',
     POLYLINE_DISTANCE_3D: 'POLYLINE_DISTANCE_3D',
@@ -22,6 +23,7 @@ export const MeasureTypes = {
 export const defaultUnitOfMeasure = {
     [MeasureTypes.LENGTH]: { unit: 'm', label: 'm', value: 'm' },
     [MeasureTypes.AREA]: { unit: 'sqm', label: 'm²', value: 'sqm' },
+    [MeasureTypes.BEARING]: { unit: 'deg', label: '°', value: 'deg' },
     [MeasureTypes.POLYLINE_DISTANCE_3D]: { unit: 'm', label: 'm', value: 'm' },
     [MeasureTypes.AREA_3D]: { unit: 'sqm', label: 'm²', value: 'sqm' },
     [MeasureTypes.POINT_COORDINATES]: { unit: 'm', label: 'm', value: 'm' },

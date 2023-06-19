@@ -142,11 +142,12 @@ export const loadMapConfigAndConfigureMap = (action$, store) =>
             const userName = userSelector(store.getState())?.name;
             return Observable.of(loadUserSession(buildSessionName(null, mapId, userName))).merge(
                 action$.ofType(USER_SESSION_LOADED).switchMap(({session}) => {
-                    const mapSession = session?.map && {
-                        map: session.map
+                    const sessionData = {
+                        ...(session?.map && {map: session.map}),
+                        ...(session?.featureGrid && {featureGrid: session.featureGrid})
                     };
                     return Observable.merge(
-                        mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), mapSession),
+                        mapFlowWithOverride(configName, mapId, config, mapInfo, store.getState(), sessionData),
                         Observable.of(userSessionStartSaving())
                     );
                 })

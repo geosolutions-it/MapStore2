@@ -15,6 +15,7 @@ import isArray from 'lodash/isArray';
 import assign from 'object-assign';
 import axios from '../../../../libs/ajax';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
+import { getProjection } from '../../../../utils/ProjectionUtils';
 import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
 import { getConfigProp } from '../../../../utils/ConfigUtils';
 
@@ -22,7 +23,7 @@ import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
 import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
 import { creditsToAttribution, getWMSVendorParams } from '../../../../utils/LayersUtils';
 
-import MapUtils from '../../../../utils/MapUtils';
+import { getResolutionsForProjection } from '../../../../utils/MapUtils';
 import  {loadTile, getElevation as getElevationFunc} from '../../../../utils/ElevationUtils';
 
 import ImageLayer from 'ol/layer/Image';
@@ -38,6 +39,7 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 import { generateEnvString } from '../../../../utils/LayerLocalizationUtils';
+import { getTileGridFromLayerOptions } from '../../../../utils/WMSUtils';
 
 /**
  * Check source and apply proxy
@@ -189,6 +191,55 @@ function getElevation(pos) {
 }
 const toOLAttributions = credits => credits && creditsToAttribution(credits) || undefined;
 
+const generateTileGrid = (options, map) => {
+    const mapSrs = map?.getView()?.getProjection()?.getCode() || 'EPSG:3857';
+    const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
+    const tileSize = options.tileSize ? options.tileSize : 256;
+    const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
+    const { TILED } = getWMSVendorParams(options);
+    const customTileGrid = TILED && options.tileGridStrategy === 'custom' && options.tileGrids
+        ? getTileGridFromLayerOptions({ tileSize, projection: normalizedSrs, tileGrids: options.tileGrids })
+        : null;
+    if (customTileGrid
+        && (customTileGrid.resolutions || customTileGrid.scales)
+        && (customTileGrid.origins || customTileGrid.origin)
+        && (customTileGrid.tileSizes || customTileGrid.tileSize)) {
+        const {
+            resolutions: customTileGridResolutions,
+            scales,
+            origin,
+            origins,
+            tileSize: customTileGridTileSize,
+            tileSizes
+        } = customTileGrid;
+        const projection = get(normalizedSrs);
+        const metersPerUnit = projection.getMetersPerUnit();
+        const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
+        const resolutions = customTileGridResolutions
+            ? customTileGridResolutions
+            : scales.map(scale => scaleToResolution(scale));
+        return new TileGrid({
+            extent,
+            resolutions,
+            tileSizes,
+            tileSize: customTileGridTileSize,
+            origin,
+            origins
+        });
+    }
+    const resolutions = options.resolutions || getResolutionsForProjection(normalizedSrs, {
+        tileWidth: tileSize,
+        tileHeight: tileSize,
+        extent
+    });
+    const origin = options.origin ? options.origin : [extent[0], extent[1]];
+    return new TileGrid({
+        extent,
+        resolutions,
+        tileSize,
+        origin
+    });
+};
 
 const createLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
@@ -215,20 +266,12 @@ const createLayer = (options, map) => {
             })
         });
     }
-    const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
-    const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
-    const extent = get(normalizedSrs).getExtent() || CoordinatesUtils.getExtentForProjection(normalizedSrs).extent;
     const sourceOptions = addTileLoadFunction({
         attributions: toOLAttributions(options.credits),
         urls: urls,
         crossOrigin: options.crossOrigin,
         params: queryParameters,
-        tileGrid: new TileGrid({
-            extent: extent,
-            resolutions: options.resolutions || MapUtils.getResolutions(),
-            tileSize: options.tileSize ? options.tileSize : 256,
-            origin: options.origin ? options.origin : [extent[0], extent[1]]
-        }),
+        tileGrid: generateTileGrid(options, map),
         tileLoadFunction: loadFunction(options, headers)
     }, options);
     const wmsSource = new TileWMS({ ...sourceOptions });
@@ -285,6 +328,8 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
         || oldOptions.tileSize !== newOptions.tileSize
         || oldOptions.forceProxy !== newOptions.forceProxy
+        || oldOptions.tileGridStrategy !== newOptions.tileGridStrategy
+        || !isEqual(oldOptions.tileGrids, newOptions.tileGrids)
     );
 };
 
@@ -308,16 +353,11 @@ Layers.registerType('wms', {
 
         if (oldOptions.srs !== newOptions.srs) {
             const normalizedSrs = CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS);
-            const extent = get(normalizedSrs).getExtent() || CoordinatesUtils.getExtentForProjection(normalizedSrs).extent;
+            const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
             if (newOptions.singleTile && !newIsVector) {
                 layer.setExtent(extent);
             } else {
-                const tileGrid = new TileGrid({
-                    extent: extent,
-                    resolutions: newOptions.resolutions || MapUtils.getResolutions(),
-                    tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
-                });
+                const tileGrid = generateTileGrid(newOptions, map);
                 wmsSource.tileGrid = tileGrid;
                 if (vectorSource) {
                     vectorSource.tileGrid = tileGrid;

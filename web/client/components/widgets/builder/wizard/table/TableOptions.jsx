@@ -13,9 +13,11 @@ import {compose, withProps} from 'recompose';
 import { isGeometryType } from '../../../../../utils/ogc/WFS/base';
 import AttributeTable from '../../../../data/featuregrid/AttributeTable';
 import Message from '../../../../I18N/Message';
+import { applyDefaultToLocalizedString } from '../../../../I18N/LocalizedString';
 import StepHeader from '../../../../misc/wizard/StepHeader';
 import noAttributes from '../common/noAttributesEmptyView';
 import Button from '../../../../misc/Button';
+import localizedProps from '../../../../misc/enhancers/localizedProps';
 
 const AttributeSelector = compose(
     withProps(({options = {}})=>({
@@ -25,15 +27,16 @@ const AttributeSelector = compose(
         }
     })),
     withProps(
-        ({ attributes = [], options = {}} = {}) => ({ // TODO manage hide condition
+        ({ attributes = [], options = {}, layer = {}} = {}) => ({ // TODO manage hide condition
             attributes: attributes
                 .filter(a => !isGeometryType(a))
                 .map( a => {
                     const propertyNames = options?.propertyName?.map(p => p.name);
                     const currPropertyName = options?.propertyName?.find(p => p.name === a.name);
+                    const field = layer.fields?.find(f => f.name === a.name);
                     return {
                         ...a,
-                        label: a.name,
+                        label: applyDefaultToLocalizedString(field?.alias, a.name),
                         attribute: a.name,
                         hide: propertyNames?.indexOf( a.name ) < 0,
                         title: currPropertyName?.title || '',
@@ -41,11 +44,12 @@ const AttributeSelector = compose(
                     };
                 })
         })),
+    localizedProps("attributes", "label", "object"),
     noAttributes(({ attributes = []}) => attributes.length === 0)
 )(AttributeTable);
 
 
-export default ({ data = { options: {} }, onChange = () => { }, featureTypeProperties, sampleChart}) => (<Row>
+export default ({ data = { options: {} }, onChange = () => { }, featureTypeProperties, sampleChart, layer}) => (<Row>
     <StepHeader title={<Message msgId={`widgets.builder.wizard.configureTableOptions`} />} />
     <Col xs={12}>
         <div >
@@ -55,6 +59,7 @@ export default ({ data = { options: {} }, onChange = () => { }, featureTypePrope
     <Col xs={12}>
         <Form className="chart-options-form" horizontal>
             <AttributeSelector
+                layer={layer}
                 options={data.options}
                 onChange={onChange}
                 attributes={featureTypeProperties}/>

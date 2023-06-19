@@ -43,7 +43,12 @@ describe("mapinfo wfs utils", () => {
     it("should create a request with features retrieved from the intersected ones", () => {
         const layer = {
             id: "layer-id",
-            title: "Title"
+            title: "Title",
+            fields: [{
+                name: "key",
+                type: "string",
+                alias: "alias"
+            }]
         };
         const point = {
             intersectedFeatures: [
@@ -74,6 +79,11 @@ describe("mapinfo wfs utils", () => {
             metadata: {
                 title: "Title",
                 regex: undefined,
+                fields: [{
+                    name: "key",
+                    type: "string",
+                    alias: "alias"
+                }],
                 viewer: undefined,
                 featureInfo: undefined
             },

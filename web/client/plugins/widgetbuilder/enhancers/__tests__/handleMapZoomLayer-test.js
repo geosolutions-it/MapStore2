@@ -101,5 +101,36 @@ describe('handleMapZoomLayer enhancer', function() {
         }));
         ReactDOM.render(<Provider store={store}><Sink editorData={editorData} selectedNodes={selectedNodes}  /></Provider>, document.getElementById("container"));
     });
+    it('test zoom map and epsgSupported with boundingBox', (done) => {
+        const editorData = {
+            selectedMapId: 'MAP_ID',
+            maps: [{
+                mapId: 'MAP_ID',
+                size: {
+                    width: 518,
+                    height: 351
+                },
+                layers: [{
+                    id: "layer.id1",
+                    boundingBox: {
+                        crs: 'EPSG:4326',
+                        bounds: {
+                            minx: -12,
+                            miny: 24,
+                            maxx: -66,
+                            maxy: 49
+                        }
+                    }
+                }]
+            }]
+        };
+        const selectedNodes = ["layer.id1"];
+        const Sink = handleMapZoomLayer(createSink(props => {
+            props.zoomTo(selectedNodes);
+            expect(props.isEpsgSupported()).toBeTruthy();
+            done();
+        }));
+        ReactDOM.render(<Provider store={store}><Sink editorData={editorData} selectedNodes={selectedNodes}  /></Provider>, document.getElementById("container"));
+    });
 });
 

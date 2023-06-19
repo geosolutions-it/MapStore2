@@ -51,11 +51,28 @@
 
     .ms-map-view-progress-container {
         .background-color-var(@theme-vars[main-variant-bg]);
+        .border-bottom-color-var(@theme-vars[main-border-color]);
+        &.playing {
+            .ms-map-view-progress-bar {
+                .background-color-var(@theme-vars[success]);
+            }
+            .ms-map-view-progress-tick {
+                .border-color-var(@theme-vars[success]);
+                .background-color-var(@theme-vars[success-contrast]);
+            }
+        }
         .ms-map-view-progress-bar {
             .background-color-var(@theme-vars[primary]);
         }
         .ms-map-view-progress-tick {
-            .background-color-var(@theme-vars[main-variant-color]);
+            .border-color-var(@theme-vars[primary]);
+            .background-color-var(@theme-vars[primary-contrast]);
+            &:not(.active) {
+                .border-color-var(@theme-vars[main-border-color]);
+                &:hover {
+                    .border-color-var(@theme-vars[main-color]);
+                }
+            }
         }
     }
 }
@@ -326,16 +343,27 @@
 }
 .ms-map-view-progress-container {
     width: 100%;
-    height: 4px;
+    font-size: 8px;
+    height: 1em;
     position: relative;
+    border-bottom: 0.125em solid transparent;
+    overflow: hidden;
     .ms-map-view-progress-bar {
-        height: 4px;
+        height: 1em;
         transition: 0.3s width;
+        opacity: 0.5;
     }
     .ms-map-view-progress-tick {
         top: 0;
         position: absolute;
-        width: 1px;
-        height: 100%;
+        cursor: pointer;
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        transition: 0.3s all;
+        border: 0.25em solid transparent;
+        & + .ms-map-view-progress-tick {
+            transform: translateX(-50%);
+        }
     }
 }

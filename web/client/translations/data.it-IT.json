@@ -118,6 +118,23 @@
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
             },
+            "availableTileGrids": "Tile grids disponibili",
+            "crsId": "Id",
+            "projection": "Proiezione",
+            "tileSize": "Dimensione tile",
+            "tileGridInUse": "La tile grid '{id}' corrisponde alla proiezione della mappa corrente e alla dimensione delle tile selezionata per questo layer",
+            "useStandardTileGridStrategy": "Usa tile grid standard",
+            "useCustomTileGridStrategy": "Usa tile grid personalizzate remote",
+            "updateTileGrids": "Aggiorna le tile grids disponibili",
+            "noTileGridMatchesConfiguration": "Non esiste una tile grid che corrisponda alla proiezione della mappa corrente e alla dimensione di tile selezionata. La tabella sopra evidenzia le tile grids disponibili compatibili con la proiezione della mappa corrente. Puoi fare clic sul pulsante Aggiorna per aggiornare l'elenco delle tile grids",
+            "noConfiguredGridSets": "Non è possibile recuperare tile grids personalizzate. Questo layer non ha alcun tile grid compatibile con le proiezioni disponibili. Per favore controlla la configurazione lato server e riprova",
+            "notPossibleToConnectToWMTSService": "Non è stato possibile recuperare le tile grids dal server. La richiesta inviata a {requestUrl} sta generando un errore",
+            "notSupportedSelectedFormatCache": "Il formato selezionato non è supportato dalla cache.",
+            "customParamsCacheWarning": "Questo livello ha lo stile localizzato abilitato. Verificare la configurazione lato server ed assicurarsi che supporti il parametro ENV personalizzato",
+            "supportedFormats": "Formati supportati",
+            "checkAvailableTileGridsInfo": "Controlla le informazioni sulle tile grids disponibili",
+            "tileGridInfoChecksTitle": "Informationi sulle tile grids",
+            "tileGridInfoChecks": "La seguente lista di controllo mostra alcuni possibili problemi di compatibilità tra il gridset corrente e le informazioni remote. È ancora possibile che il tile grid non raggiunga la cache anche se tutti i controlli elencati hanno esito positivo",
             "visibilityLimits": {
                 "title": "Limiti di visibilità",
                 "serverValuesUpdateUndefined": "Il server non ha fornito limiti di visibilità di scala per questo livello",
@@ -182,7 +199,8 @@
               "clearCustomization": "Rimuovi modifiche",
               "clearCustomizationConfirm": "Sei sicuro di voler rimuovere tutte le modifiche effettuate ai campi?",
               "error": "Non è stato possibile recuperare i campi dalla sorgente dati"
-            }
+            },
+            "disableFeaturesEditing": "Disabilita la modifica sulla tabella degli attributi"
         },
         "localizedInput": {
           "localize": "Traduci questo testo...",
@@ -1873,6 +1891,11 @@
                     "errorChart": "Uno o più grafici non sono validi",
                     "backToTableOptions": "Torna alle opzioni della tabella",
                     "configureTableOptions": "Configura le opzioni della tabella",
+                    "attributeEditorColumns": {
+                      "name": "Nome",
+                      "title": "Titolo",
+                      "tooltip": "Tooltip"
+                    },
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
                     "addTheWidget": "Aggiungi il widget",
@@ -2433,7 +2456,13 @@
             "color": "Colore",
             "pointHeight": "Altezza punto",
             "leaderLineColor": "Colore linea guida",
-            "leaderLineWidth": "Spessore linea guida"
+            "leaderLineWidth": "Spessore linea guida",
+            "geometryTransformation": "Trasformazione della geometria",
+            "center": "Centro",
+            "startPoint": "Punto iniziale",
+            "endPoint": "Punto finale",
+            "line": "Linea",
+            "geodesicLine": "Linea geodesica"
         },
         "playback": {
             "settings": {

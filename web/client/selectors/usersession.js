@@ -7,18 +7,25 @@
  */
 
 import ConfigUtils from '../utils/ConfigUtils';
-import {createSelector} from "reselect";
-import {contextResourceSelector} from "./context";
-import {userSelector} from "./security";
-import {mapSelector} from "./map";
-import {layersSelector, rawGroupsSelector} from "./layers";
-import {mapIdSelector} from "./mapInitialConfig";
+import { createSelector } from "reselect";
+import { contextResourceSelector } from "./context";
+import { userSelector } from "./security";
+import { mapSelector } from "./map";
+import { layersSelector, rawGroupsSelector } from "./layers";
+import { mapIdSelector } from "./mapInitialConfig";
+import { customAttributesSettingsSelector } from "./featuregrid";
 
 export const userSessionIdSelector = (state) => state.usersession && state.usersession.id || null;
 export const userSessionSelector = (state) => state.usersession && state.usersession.session || null;
 
-export const userSessionToSaveSelector = createSelector([mapSelector, layersSelector, rawGroupsSelector],
-    (map, layers, groups) => {
+export const userSessionToSaveSelector = createSelector(
+    [
+        mapSelector,
+        layersSelector,
+        rawGroupsSelector,
+        customAttributesSettingsSelector
+    ],
+    (map, layers, groups, featureGridAttributes) => {
         const {center, zoom} = map;
         return {
             map: {
@@ -26,6 +33,9 @@ export const userSessionToSaveSelector = createSelector([mapSelector, layersSele
                 zoom,
                 layers,
                 groups
+            },
+            featureGrid: {
+                attributes: featureGridAttributes
             }
         };
     });

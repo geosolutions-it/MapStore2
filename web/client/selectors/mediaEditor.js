@@ -62,6 +62,8 @@ export const disabledMediaTypeSelector = state => get(state, "mediaEditor.disabl
 /**
  * Disable `apply` on empty selection for map media editor when geostory section is GeoCarousel,
  * here disable media type value is available only in GeoCarousel section
+ * The apply button should be disabled also when a selected item is loading
  */
 export const disableApplyMapMedia = (state) =>
-    disabledMediaTypeSelector(state).length && !selectedItemSelector(state) && currentMediaTypeSelector(state) === 'map';
+    (disabledMediaTypeSelector(state).length && !selectedItemSelector(state) && currentMediaTypeSelector(state) === 'map')
+    || getLoadingSelectedMedia(state);

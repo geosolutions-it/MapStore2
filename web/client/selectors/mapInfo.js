@@ -139,7 +139,6 @@ export const currentFeatureCrsSelector = state => {
     const currentResponse = currentResponseSelector(state) || {};
     return get(currentResponse, 'layerMetadata.featuresCrs');
 };
-
 /**
  * Returns the a function that returns the correct style based on the geometry type, to use in the highlight
  * @param {feature} f the feature in json format

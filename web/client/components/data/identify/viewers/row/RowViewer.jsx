@@ -43,6 +43,7 @@ function RowViewer({
     return (
         <Row
             {...omit(feature.properties, ['ref'])}
+            fields={layer?.fields}
             feature={feature}
             labelIds={labelIds}
             exclude={excludeProperties}

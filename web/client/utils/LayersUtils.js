@@ -583,7 +583,10 @@ export const geoJSONToLayer = (geoJSON, id) => {
             },
             crs: "EPSG:4326"
         },
-        features
+        features,
+        ...(['geostyler'].includes(geoJSON?.style?.format) && geoJSON?.style?.body && {
+            style: geoJSON.style
+        })
     };
 };
 export const saveLayer = (layer) => {
@@ -646,7 +649,11 @@ export const saveLayer = (layer) => {
     layer.localizedLayerStyles ? { localizedLayerStyles: layer.localizedLayerStyles } : {},
     layer.options ? { options: layer.options } : {},
     layer.credits ? { credits: layer.credits } : {},
-    !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {});
+    layer.tileGrids ? { tileGrids: layer.tileGrids } : {},
+    layer.tileGridStrategy ? { tileGridStrategy: layer.tileGridStrategy } : {},
+    layer.tileGridCacheSupport ? { tileGridCacheSupport: layer.tileGridCacheSupport } : {},
+    !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
+    !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {});
 };
 
 /**

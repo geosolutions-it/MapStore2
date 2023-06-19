@@ -380,6 +380,39 @@ describe('widgets Epics', () => {
                 }
             });
     });
+    it('changeLayerPropertiesEpic triggers updateWidgetLayer on fields change', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "1",
+                name: "layer"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLayerPropertiesChange,
+            1,
+            [changeLayerProperties(
+                "1",
+                {fields: [{name: "field1", type: "string", alias: "Field 1"}]}
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        fields: [{name: "field1", type: "string", alias: "Field 1"}]
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
+    });
     it('changeLayerPropertiesEpic does not triger updateWidgetLayer on visibility change', (done) => {
         const action = changeLayerProperties("1", {visibility: false});
         const state = {

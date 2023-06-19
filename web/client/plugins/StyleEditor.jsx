@@ -6,89 +6,104 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isArray, isString } from 'lodash';
+import React, {useEffect} from 'react';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { connect } from 'react-redux';
 import { branch, compose, lifecycle, toClass } from 'recompose';
 import { createSelector } from 'reselect';
 
 import { updateSettingsParams } from '../actions/layers';
-import { initStyleService, toggleStyleEditor } from '../actions/styleeditor';
+import { initStyleService, setEditPermissionStyleEditor, toggleStyleEditor } from '../actions/styleeditor';
 import HTML from '../components/I18N/HTML';
 import BorderLayout from '../components/layout/BorderLayout';
 import emptyState from '../components/misc/enhancers/emptyState';
 import loadingState from '../components/misc/enhancers/loadingState';
 import Loader from '../components/misc/Loader';
-import { userRoleSelector } from '../selectors/security';
 import {
     canEditStyleSelector,
     errorStyleSelector,
-    getUpdatedLayer,
     loadingStyleSelector,
     statusStyleSelector,
     styleServiceSelector
 } from '../selectors/styleeditor';
-import { isSameOrigin } from '../utils/StyleEditorUtils';
 import {
     StyleCodeEditor,
     StyleSelector,
     StyleToolbar
 } from './styleeditor/index';
 
-class StyleEditorPanel extends React.Component {
-    static propTypes = {
-        layer: PropTypes.object,
-        header: PropTypes.node,
-        isEditing: PropTypes.bool,
-        showToolbar: PropTypes.node.bool,
-        onInit: PropTypes.func,
-        styleService: PropTypes.object,
-        userRole: PropTypes.string,
-        editingAllowedRoles: PropTypes.array,
-        enableSetDefaultStyle: PropTypes.bool,
-        canEdit: PropTypes.bool,
-        editorConfig: PropTypes.object
-    };
+const StyleEditorPanel = ({
+    header,
+    isEditing,
+    showToolbar,
+    onInit,
+    styleService,
+    editingAllowedRoles,
+    editingAllowedGroups,
+    enableSetDefaultStyle,
+    canEdit,
+    editorConfig,
+    onSetPermission
+}) => {
 
-    static defaultProps = {
-        layer: {},
-        onInit: () => {},
-        editingAllowedRoles: [
-            'ADMIN'
-        ],
-        editorConfig: {}
-    };
-
-    UNSAFE_componentWillMount() {
-        const canEdit = !this.props.editingAllowedRoles || (isArray(this.props.editingAllowedRoles) && isString(this.props.userRole)
-            && this.props.editingAllowedRoles.indexOf(this.props.userRole) !== -1);
-        this.props.onInit(this.props.styleService, canEdit && isSameOrigin(this.props.layer, this.props.styleService));
-    }
-
-    render() {
-        return (
-            <BorderLayout
-                className="ms-style-editor-container"
-                header={
-                    this.props.showToolbar ? <div className="ms-style-editor-container-header">
-                        {this.props.header}
-                        <div className="text-center">
-                            <StyleToolbar
-                                enableSetDefaultStyle={this.props.enableSetDefaultStyle}/>
-                        </div>
-                    </div> : null
-                }
-                footer={<div style={{ height: 25 }} />}>
-                {this.props.isEditing
-                    ? <StyleCodeEditor config={this.props.editorConfig}/>
-                    : <StyleSelector
-                        showDefaultStyleIcon={this.props.canEdit && this.props.enableSetDefaultStyle}/>}
-            </BorderLayout>
+    useEffect(() => {
+        onInit(
+            styleService,
+            {
+                editingAllowedRoles,
+                editingAllowedGroups
+            }
         );
-    }
-}
+    }, []);
+
+    useEffect(() => {
+        onSetPermission(canEdit);
+    }, [canEdit]);
+
+    return (
+        <BorderLayout
+            className="ms-style-editor-container"
+            header={
+                showToolbar ? <div className="ms-style-editor-container-header">
+                    {header}
+                    <div className="text-center">
+                        <StyleToolbar
+                            enableSetDefaultStyle={enableSetDefaultStyle}/>
+                    </div>
+                </div> : null
+            }
+            footer={<div style={{ height: 25 }} />}>
+            {isEditing
+                ? <StyleCodeEditor config={editorConfig}/>
+                : <StyleSelector
+                    showDefaultStyleIcon={canEdit && enableSetDefaultStyle}/>}
+        </BorderLayout>
+    );
+};
+StyleEditorPanel.propTypes = {
+    header: PropTypes.node,
+    isEditing: PropTypes.bool,
+    showToolbar: PropTypes.bool,
+    onInit: PropTypes.func,
+    styleService: PropTypes.object,
+    editingAllowedRoles: PropTypes.array,
+    editingAllowedGroups: PropTypes.array,
+    enableSetDefaultStyle: PropTypes.bool,
+    canEdit: PropTypes.bool,
+    editorConfig: PropTypes.object,
+    onSetPermission: PropTypes.func
+};
+StyleEditorPanel.defaultProps = {
+    layer: {},
+    onInit: () => {},
+    editingAllowedRoles: [
+        'ADMIN'
+    ],
+    editingAllowedGroups: [],
+    editorConfig: {}
+};
+
 /**
  * StyleEditor plugin.
  * - Select styles from available styles of the layer
@@ -101,7 +116,12 @@ class StyleEditorPanel extends React.Component {
  * @prop {string} cfg.styleService.baseUrl base url of service eg: '/geoserver/'
  * @prop {array} cfg.styleService.availableUrls a list of urls that can access directly to the style service
  * @prop {array} cfg.styleService.formats supported formats, could be one of [ 'sld' ] or [ 'sld', 'css' ]
- * @prop {array} cfg.editingAllowedRoles all roles with edit permission eg: [ 'ADMIN' ], if null all roles have edit permission
+ * @prop {string[]} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode.
+ * Support predefined ('ADMIN', 'USER', 'ALL') and custom roles. Default value is ['ADMIN'].
+ * Configuring with ["ALL"] allows all users to have access regardless of user's permission.
+ * However, the outcome can be influenced by the user's permission to access the requested style service.
+ * @prop {string[]} cfg.editingAllowedGroups array of user groups allowed to enter in edit mode.
+ * When configured, gives the editing permissions to users members of one of the groups listed.
  * @prop {array} cfg.enableSetDefaultStyle enable set default style functionality
  * @prop {object} cfg.editorConfig contains editor configurations
  * @prop {object} cfg.editorConfig.classification configuration of the classification symbolizer
@@ -123,7 +143,7 @@ const StyleEditorPlugin = compose(
     // in this case 'branch' return always a functional component and PluginUtils expects a class
     toClass,
     // No rendering if not active
-    // eg: now only TOCItemsSettings can active following plugin
+    // eg: now only TOCItemsSettings can activate the following plugin
     branch(
         ({ active } = {}) => !active,
         () => () => null
@@ -134,25 +154,22 @@ const StyleEditorPlugin = compose(
             [
                 statusStyleSelector,
                 loadingStyleSelector,
-                getUpdatedLayer,
                 errorStyleSelector,
-                userRoleSelector,
                 canEditStyleSelector,
                 styleServiceSelector
             ],
-            (status, loading, layer, error, userRole, canEdit, styleService) => ({
+            (status, loading, error, canEdit, styleService) => ({
                 isEditing: status === 'edit',
                 loading,
-                layer,
                 error,
-                userRole,
                 canEdit,
                 styleService
             })
         ),
         {
             onInit: initStyleService,
-            onUpdateParams: updateSettingsParams
+            onUpdateParams: updateSettingsParams,
+            onSetPermission: setEditPermissionStyleEditor
         },
         (stateProps, dispatchProps, ownProps) => {
             // detect if the static service has been updated with new information in the global state

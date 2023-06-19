@@ -81,7 +81,8 @@ import {
     storeAdvancedSearchFilter,
     setUp,
     setTimeSync,
-    setPagination, setViewportFilter
+    setPagination,
+    setViewportFilter
 } from '../../actions/featuregrid';
 
 import {isViewportFilterActive, paginationSelector, useLayerFilterSelector} from '../../selectors/featuregrid';
@@ -89,6 +90,7 @@ import {isViewportFilterActive, paginationSelector, useLayerFilterSelector} from
 
 import { featureTypeLoaded, createQuery, updateQuery } from '../../actions/wfsquery';
 import { changeDrawingStatus } from '../../actions/draw';
+import { configureMap } from '../../actions/config';
 import museam from '../../test-resources/wfs/museam.json';
 describe('Test the featuregrid reducer', () => {
 
@@ -114,13 +116,22 @@ describe('Test the featuregrid reducer', () => {
         let state2 = featuregrid({showAgain: true}, toggleShowAgain());
         expect(state2.showAgain).toBe(false);
     });
-    it('initPlugin', () => {
+    it('initPlugin with default roles and groups', () => {
+        let state = featuregrid({}, initPlugin({}));
+        expect(state).toExist();
+        expect(state.editingAllowedRoles.length).toBe(1);
+        expect(state.editingAllowedRoles).toEqual(["ADMIN"]);
+        expect(state.editingAllowedGroups).toEqual([]);
+    });
+    it('initPlugin with roles and groups allowed', () => {
         const someValue = "someValue";
         const editingAllowedRoles = [someValue];
-        let state = featuregrid({}, initPlugin({editingAllowedRoles}));
+        const editingAllowedGroups = [someValue];
+        let state = featuregrid({}, initPlugin({editingAllowedRoles, editingAllowedGroups}));
         expect(state).toExist();
         expect(state.editingAllowedRoles.length).toBe(1);
         expect(state.editingAllowedRoles[0]).toBe(someValue);
+        expect(state.editingAllowedGroups[0]).toBe(someValue);
     });
     it('openFeatureGrid', () => {
         let state = featuregrid(undefined, openFeatureGrid());
@@ -445,5 +456,10 @@ describe('Test the featuregrid reducer', () => {
     it('setViewportFilter', () => {
         const newState = featuregrid(undefined, setViewportFilter(true));
         expect(isViewportFilterActive({ featuregrid: newState })).toEqual(true);
+    });
+    it('configureMap', () => {
+        const featureGrid = {attributes: {col1: {hide: true}}};
+        const newState = featuregrid(undefined, configureMap({featureGrid}));
+        expect(newState.attributes).toEqual(featureGrid.attributes);
     });
 });

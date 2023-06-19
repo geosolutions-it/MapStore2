@@ -15,12 +15,14 @@ The layer settings panel is composed of four sections:
 
 * Display
 
+* Fields
+
 * Style
 
 * Feature Info
 
 !!!warning
-    For WMTS layers the Style and the Feature Info sections are not implemented. Moreover the Display section is limited to the Transparency level parameter.
+    For WMTS layers the Fields, the Style and the Feature Info sections are not implemented. Moreover the Display section is limited to the Transparency layer parameter.
 
 ## General information
 
@@ -32,7 +34,9 @@ In this page it is possible to:
 
 * Change the *Title*
 
-* Set the *Title translations*, that will be switched by changing the language
+* Set the translation of the layer title by opening the *Localize Text* popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. In this way the language of the title changes according to the language that the user has set to [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
+
+<img src="../img/layer-settings/lacalize-layer-title.gif" class="ms-docimage"/>
 
 * Take a look at the *Name* of the layer
 
@@ -47,6 +51,8 @@ In this page it is possible to:
 Setting a tooltip that shows the Title and the Description on the Right, for example, it can be similar to the following:
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
+
+* Disable editing in attribute table. Un-ticked by default. Enabling this checkbox will disable editing in Attribute table and <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon is hidden in Identify panel for the layer selected
 
 ## Display
 
@@ -72,20 +78,38 @@ In particular, the user is allowed to:
 
 * Enable/disable the transparency for that layer
 
-* Enable/disable the use of the layer cached tiles  (if checked, the *Tiled=true* URL parameter will be added to the WMS request and to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms))
-
 * Decide to display the image as a single tile or as multiple tiles
 
 * Enable/disable the localized style. If enabled allows to include the MapStore's locale in each **GetMap**, **GetLegendGraphic** and **GetFeatureInfo** requests to the server, as explained in the [WMS Catalog Settings](catalog.md#wmswmts-catalog)
 
 * Enable/disable the *Force proxy* layer option. If enabled, forces the application to check the source and applies proxy if needed.
 
+* Enable/disable the use of the layer cached tiles. If checked, the *Tiled=true* URL parameter will be added to the WMS request to [use tiles cached with GeoWebCache](https://docs.geoserver.org/latest/en/user/geowebcache/using.html#direct-integration-with-geoserver-wms).
+When the *Use cache options* is enabled, more controls are enabled so that it is possible for the user to check if the current map settings match any GWC ***standard*** Gridset defined on the server side for the given WMS layer (**Check available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/>). At the same time, it is also possible to change the setting strategy (based on the WMTS service response) to strictly adapt layer settings on the client side to the ones matching any remote ***custom*** Gridset defined for the current map settings (**Use remote custom tile grids** <img src="../img/button/tile_grid.jpg" class="ms-docbutton"/> button).
+
+!!!note
+
+    When the **Check available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/> button is clicked, an info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> appears to inform the user if the current map settings (Projection, Tile size, Image Format) are properly matching the ones of the given Tile Grids defined on the server side configuration for the layer.
+
+    <img src="../img/layer-settings/default_gridset_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
+    
+    When the **Use remote custom tile grids** button is enabled, it turns green <img src="../img/button/tile_grid_green.jpg" class="ms-docbutton"/> and a WMTS request is performed by MapStore to fetch precise information to more finely adapt the layer settings on the client side to the ones of the matching Tile Grid defined on the server. The scope of the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> in this case is still the same but through this strategy MapStore provides a finer tuning of the client side layer settings to better fit the tile grid defined on the server side and so provide better accuracy of cache matching.
+
+    <img src="../img/layer-settings/green_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
+
+    In case the current map/layer settings (Projection, Tile size, Image Format) do not match any of the server-side defined Tile Grids for the given layer the Info panel shows a warning message to indicate the reason for the mismatch so that it is possible for the user to change the needed setting accordingly (for example changing the [map projection](footer.md#crs-selector) or selecting a different [tile size and/or tile format](layer-settings.md#display)).
+
+    <img src="../img/layer-settings/warning_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
+
+!!!warning
+    The Gridset compatibility check made by MapStore whose result is shown by the Info tooltip, is usually quite reliable but should be considered anyway only to provide general matching indicators aimed at highlighting possible compatibility issues between the current layer/map settings and the remote Tile Grid. Due to the cache tolerance considered on the server side by GWC, it might even happen in some cases that the settings available on the client side don't HIT the tile cache even if all the checks listed are successful.
+
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.
 
-!!!note
-    Cached tiles works with WMS only with standard gridsets (exponential). When MapStore uses custom scales, the tile cache can not be used. This because WMS TileGrid for OpenLayers (internal MapStore mapping library) and the TileGrid generated by GeoServer have different origins (top-left vs bottom-left). While for exponential resolutions the top left remains fixed (because there is only an integer number of tiles in the interval between top-left and bottom-left corner of the bbox, 1, 2, 4, 8 ....) with custom resolutions the number of tiles is not integer, so the coordinate of the tile of top-left may vary across scales. More details about this limitation in this [issue](https://github.com/geosolutions-it/MapStore2/issues/9025) on GitHub.
+!!!Warning
+    The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources.
 
 !!!Warning
     On the *Display* tab, only the following options are available for a **3D Tile** layer:
@@ -95,6 +119,56 @@ In particular, the user is allowed to:
     * The **Height Offset** above the ground.
 
     <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
+    
+## Fields
+
+From this section of the *Settings* panel, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to add aliases to layer fields.
+
+<img src="../img/layer-settings/fields_settings.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+The panel shows the fields (feature attributes) of the layer. For each field the following are specified:
+
+* the **Name** of the field
+* the **Alias** of the field, which by default is empty
+* the **Type** of field
+
+The *Name* and the *Type* of the field cannot be modified, while the alias can be specified by the user.
+
+Using the **Localize** <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button, a popup opens so that it is possible to configure the alias of the field as well as its translations.
+
+<img src="../img/layer-settings/localize-popup.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+Setting the aliases, it is possible to configure the desired attribute names to be shown in all supported [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tools for this functionality and manage related translations accordingly.
+
+The aliases configured in Layers Settings will be used for the following supported [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) tools:
+
+* [Attribute Table](attributes-table.md)
+
+<img src="../img/layer-settings/lacalize-attribute-table.gif" class="ms-docimage"/>
+
+* [Filter layer](filtering-layers.md#layer-filter)
+
+<img src="../img/layer-settings/localize-filter.gif" class="ms-docimage"/>
+
+* [Identify](navigation-toolbar.md#identify-tool) (only `properties` output format)
+
+<img src="../img/layer-settings/localize-identify.gif" class="ms-docimage"/>
+
+* [Visual Style Editor](layer-settings.md#visual-editor-style)
+
+<img src="../img/layer-settings/localize-style.gif" class="ms-docimage"/>
+
+* [Charts Widget](widgets.md#chart) and [Table Widget](widgets.md#table)
+
+<img src="../img/layer-settings/localize-widget.gif" class="ms-docimage"/>
+
+Through the toolbar available on the top-center of the *Fields* panel, it is possible to:
+
+<img src="../img/layer-settings/fields_toolbar.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
+* **Reload** the list of fields from the data source using the <img src="../img/button/reload_button.jpg" class="ms-docbutton"/> button
+
+* **Clear all customization** in the UI by using the <img src="../img/button/clear_button.jpg" class="ms-docbutton"/> button
 
 ## Style
 

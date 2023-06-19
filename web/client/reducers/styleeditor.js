@@ -27,7 +27,8 @@ function styleeditor(state = {}, action) {
         return {
             ...state,
             service: action.service,
-            canEdit: action.canEdit
+            editingAllowedRoles: action?.permissions?.editingAllowedRoles || state.editingAllowedRoles,
+            editingAllowedGroups: action?.permissions?.editingAllowedGroups || state.editingAllowedGroups
         };
     }
     case SET_EDIT_PERMISSION: {

@@ -7,10 +7,12 @@
  */
 
 import { isString } from 'lodash';
+
 import PropTypes from 'prop-types';
 import React from 'react';
 import { containsHTML } from '../../../../../utils/StringUtils';
 import Message from '../../../../I18N/Message';
+import LocalizedString, {applyDefaultToLocalizedString} from '../../../../I18N/LocalizedString';
 class PropertiesViewer extends React.Component {
     static displayName = 'PropertiesViewer';
 
@@ -21,10 +23,12 @@ class PropertiesViewer extends React.Component {
         listStyle: PropTypes.object,
         componentStyle: PropTypes.object,
         feature: PropTypes.object,
-        labelIds: PropTypes.object
+        labelIds: PropTypes.object,
+        fields: PropTypes.array
     };
 
     static defaultProps = {
+        fields: [],
         exclude: [],
         titleStyle: {},
         listStyle: {},
@@ -37,11 +41,12 @@ class PropertiesViewer extends React.Component {
             .filter(this.props?.include?.length > 0 ? this.toInclude : this.toExclude)
             .map((key) => {
                 const val = this.renderProperty(this.props.feature.properties[key]);
+                const label = applyDefaultToLocalizedString(this.props.fields?.find(field => field.name === key)?.alias, (this.props.labelIds[key] ? <Message msgId={this.props.labelIds[key]}/> : key));
                 return (
                     <li
                         key={key}
                         style={this.props.listStyle}>
-                        <div className="ms-properties-viewer-key">{this.props.labelIds[key] ? <Message msgId={this.props.labelIds[key]}/> : key}</div>
+                        <div className="ms-properties-viewer-key"><LocalizedString value={label} /></div>
                         {containsHTML(val) ? <div className="ms-properties-viewer-value" dangerouslySetInnerHTML={{__html: val}}/> : <div className="ms-properties-viewer-value">{val}</div>}
                     </li>);
             });

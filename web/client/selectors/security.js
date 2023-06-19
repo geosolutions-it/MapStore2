@@ -8,7 +8,8 @@
 
 import assign from 'object-assign';
 
-import { get } from 'lodash';
+import get from 'lodash/get';
+import castArray from "lodash/castArray";
 
 export const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
@@ -32,6 +33,14 @@ export const rulesSelector = (state) => {
 
 export const userSelector = (state) => state && state.security && state.security.user;
 export const userGroupSecuritySelector = (state) => get(state, "security.user.groups.group");
+export const userGroupsEnabledSelector = (state) => {
+    const securityGroup = userGroupSecuritySelector(state);
+    return securityGroup
+        ? castArray(securityGroup)
+            ?.filter(group => group.enabled)
+            ?.map(group => group.groupName)
+        : [];
+};
 export const userRoleSelector = (state) => userSelector(state) && userSelector(state).role;
 export const userParamsSelector = (state) => {
     const user = userSelector(state);
@@ -46,3 +55,25 @@ export const securityTokenSelector = state => state.security && state.security.t
 export const isAdminUserSelector = (state) => userRoleSelector(state) === "ADMIN";
 export const isUserSelector = (state) => userRoleSelector(state) === "USER";
 export const authProviderSelector = state => state.security && state.security.authProvider;
+
+/**
+ * Creates a selector that checks if user is allowed to edit
+ * something based on the user's role and groups
+ * by passing the authorized roles and groups as parameter for selector creation.
+ * @param {string[]} allowedRoles array of roles allowed. Supports predefined ("ADMIN", "USER", "ALL") and custom roles
+ * @param {string[]} allowedGroups array of user group names allowed
+ * @returns {function(*): boolean}
+ */
+export const isUserAllowedSelectorCreator = ({
+    allowedRoles,
+    allowedGroups
+})=> (state) => {
+    const role = userRoleSelector(state);
+    const groups = userGroupsEnabledSelector(state);
+    return (
+        castArray(allowedRoles).includes('ALL')
+        || castArray(allowedRoles).includes(role)
+        || castArray(allowedGroups)
+            .some((group) => groups.includes(group))
+    );
+};
