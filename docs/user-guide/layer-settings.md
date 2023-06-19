@@ -119,7 +119,7 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
     * The **Height Offset** above the ground.
 
     <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
-    
+
 ## Fields
 
 From this section of the *Settings* panel, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to add aliases to layer fields.
