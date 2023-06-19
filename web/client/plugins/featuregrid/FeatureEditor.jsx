@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
@@ -17,7 +17,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import Grid from '../../components/data/featuregrid/FeatureGrid';
 import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
-import { initPlugin, sizeChange, setUp, setSyncTool} from '../../actions/featuregrid';
+import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
 import {mapLayoutValuesSelector} from '../../selectors/maplayout';
 import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
@@ -185,24 +185,8 @@ const FeatureDock = (props = {
         setDockSize: () => {},
         zIndex: 1060
     };
-    // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
-    // const editors = items.filter(({target}) => target === 'editors');
-
-    useEffect(() => {
-        props.initPlugin({
-            virtualScroll,
-            editingAllowedRoles: props.editingAllowedRoles,
-            editingAllowedGroups: props.editingAllowedGroups,
-            maxStoredPages: props.maxStoredPages
-        });
-    }, [
-        virtualScroll,
-        (props.editingAllowedRoles ?? []).join(","), // this avoids multiple calls when the array remains the equal
-        (props.editingAllowedGroups ?? []).join(","),
-        props.maxStoredPages
-    ]);
 
     return (
         <Dock {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
@@ -322,7 +306,6 @@ const EditorPlugin = compose(
         (dispatch) => ({
             gridEvents: bindActionCreators(gridEvents, dispatch),
             pageEvents: bindActionCreators(pageEvents, dispatch),
-            initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
             toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
             gridTools: gridTools.map((t) => ({
                 ...t,
