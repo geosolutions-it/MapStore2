@@ -193,7 +193,6 @@ const ContextsPlugin = compose(
  * @prop {boolean} cfg.shareToolEnabled default true. Flag to show/hide the "share" button on the item.
  * @prop {boolean} cfg.emptyView.iconHeight default "200px". Value to override default icon maximum height.
  */
-
 export default createPlugin('Contexts', {
     component: connect(contextsPluginSelector)(ContextsPlugin),
     containers: {
