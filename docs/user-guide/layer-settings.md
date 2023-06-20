@@ -69,6 +69,9 @@ In particular, the user is allowed to:
 
 * Set the size of layer tiles: choosing between `256` or `512`
 
+!!!Warning
+    The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources.
+
 * Set the opacity value of the layer (in %)
 
 * Enable/disable the **Visibility limits** to display the layer only within certain scale limits. The user is allowed to request the `MinScaleDenominator` and  `MaxScaleDenominator` value present on the *WMS GetCapabilities* of the layer though the <img src="../img/button/sync_to_server.jpg" class="ms-docbutton"/> button or set the *Max value* and the *Min value* and select the *Limits type* choosing between `Scale` or `Resolution`.
@@ -107,6 +110,15 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 
 !!!Warning
     The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources.
+
+!!!Warning
+    On the *Display* tab, only the following options are available for a **3D Tile** layer:
+
+    * The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
+    * The **Height Offset** above the ground.
+
+    <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 ## Fields
 
