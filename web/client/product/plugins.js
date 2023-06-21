@@ -5,26 +5,24 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import {toModulePlugin} from "../utils/ModulePluginsUtils";
-
 import Context from "../plugins/Context";
 import ContextCreator from "../plugins/ContextCreator";
 import Dashboard from "../plugins/Dashboard";
 import Dashboards from "../plugins/Dashboards";
 import FeedbackMask from '../plugins/FeedbackMask';
-import GeoStory from "../plugins/GeoStory";
 import GeoStories from "../plugins/GeoStories";
+import GeoStory from "../plugins/GeoStory";
+import Identify from '../plugins/Identify';
+import Login from '../plugins/Login';
 import Maps from "../plugins/Maps";
+import Print from "../plugins/Print";
 import RulesDataGrid from "../plugins/RulesDataGrid";
 import RulesEditor from "../plugins/RulesEditor";
 import RulesManagerFooter from "../plugins/RulesManagerFooter";
-import Print from "../plugins/Print";
 import UserSession from "../plugins/UserSession";
-import Login from '../plugins/Login';
-import Identify from '../plugins/Identify';
 import FeatureEditor from '../plugins/FeatureEditor';
 
+import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
 /**
   * Please, keep them sorted alphabetically
@@ -36,16 +34,16 @@ export const plugins = {
     Dashboard: Dashboard,
     DashboardsPlugin: Dashboards,
     FeedbackMaskPlugin: FeedbackMask,
-    GeoStoryPlugin: GeoStory,
     GeoStoriesPlugin: GeoStories,
+    GeoStoryPlugin: GeoStory,
+    IdentifyPlugin: Identify,
+    LoginPlugin: Login,
     MapsPlugin: Maps,
     PrintPlugin: Print,
     RulesDataGridPlugin: RulesDataGrid,
     RulesEditorPlugin: RulesEditor,
     RulesManagerFooter: RulesManagerFooter,
     UserSessionPlugin: UserSession,
-    LoginPlugin: Login,
-    IdentifyPlugin: Identify,
     FeatureEditorPlugin: FeatureEditor,
 
     // ### DYNAMIC PLUGINS ### //
@@ -103,6 +101,7 @@ export const plugins = {
     LayerDownload: toModulePlugin('LayerDownload', () => import(/* webpackChunkName: 'plugins/layerDownload' */ '../plugins/LayerDownload')),
     LayerInfoPlugin: toModulePlugin('LayerInfo', () => import(/* webpackChunkName: 'plugins/layerInfo' */ '../plugins/LayerInfo')),
     LocatePlugin: toModulePlugin('Locate', () => import(/* webpackChunkName: 'plugins/locate' */ '../plugins/Locate')),
+    LongitudinalProfilePlugin: toModulePlugin('LongitudinalProfile', () => import(/* webpackChunkName: 'plugins/LongitudinalProfile' */ '../plugins/LongitudinalProfile')),
     ManagerMenuPlugin: toModulePlugin('ManagerMenu', () => import(/* webpackChunkName: 'plugins/managerMenu' */ '../plugins/manager/ManagerMenu')),
     ManagerPlugin: toModulePlugin('Manager', () => import(/* webpackChunkName: 'plugins/manager' */ '../plugins/manager/Manager')),
     MapEditorPlugin: toModulePlugin('MapEditor', () => import(/* webpackChunkName: 'plugins/mapEditor' */ '../plugins/MapEditor')),

@@ -5,18 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import FileSaver from 'file-saver';
-
 import toBlob from 'canvas-to-blob';
-import shp from 'shpjs';
-import tj from '@mapbox/togeojson';
-import JSZip from 'jszip';
+import { DxfParser } from 'dxf-parser';
 import { Promise } from 'es6-promise';
-const parser = new DOMParser();
+import FileSaver from 'file-saver';
+import JSZip from 'jszip';
 import assign from 'object-assign';
+import shp from 'shpjs';
+
 import { hint as geojsonhint } from '@mapbox/geojsonhint/lib/object';
+import tj from '@mapbox/togeojson';
 import { toMapConfig } from './ogc/WMC';
+
+const parser = new DOMParser();
 
 const cleanStyleFromKml = (xml) => {
 
@@ -37,6 +38,7 @@ export const MIME_LOOKUPS = {
     'gpx': 'application/gpx+xml',
     'kmz': 'application/vnd.google-earth.kmz',
     'kml': 'application/vnd.google-earth.kml+xml',
+    'dxf': 'image/x-dxf',
     'zip': 'application/zip',
     'json': 'application/json',
     'geojson': 'application/json',
@@ -127,6 +129,24 @@ export const readGeoJson = function(file, warnings = false) {
                 resolve({geoJSON: geoJsonObj, errors: geojsonhint(geoJsonObj).filter((e) => warnings || e.level !== 'message')});
             } catch (e) {
                 reject(e);
+            }
+        };
+        reader.onerror = function() {
+            reject(reader.error.name);
+        };
+        reader.readAsText(file);
+    });
+};
+export const readDxf = function(file, warnings = false) {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = function() {
+            try {
+                const parserDXF = new DxfParser();
+                const dxf = parserDXF.parseSync(reader.result);
+                resolve(dxf);
+            } catch (err) {
+                reject(err);
             }
         };
         reader.onerror = function() {

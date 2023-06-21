@@ -6,11 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {get, isObject} from 'lodash';
-import {additionalLayersSelector, getAdditionalLayerFromId, getLayerFromId, layersSelector} from "./layers";
+
 import {selectedLayerSelector} from "./featuregrid";
-import {createShallowSelectorCreator} from "../utils/ReselectUtils";
-import {getLayerTitle} from "../utils/LayersUtils";
+import {additionalLayersSelector, getAdditionalLayerFromId, getLayerFromId, layersSelector} from "./layers";
 import {currentLocaleSelector} from "./locale";
+
+import {getLayerTitle} from "../utils/LayersUtils";
+import {createShallowSelectorCreator} from "../utils/ReselectUtils";
 
 export const changedGeometriesSelector = state => state && state.draw && state.draw.tempFeatures;
 export const drawSupportActiveSelector = (state) => {

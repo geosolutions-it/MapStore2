@@ -1,3 +1,4 @@
+
 const port = process.env.MAPSTORE_BACKEND_PORT || 8080;
 const protocol = process.env.MAPSTORE_BACKEND_PROTOCOL || "http";
 const host = process.env.MAPSTORE_BACKEND_HOST || "localhost";
@@ -15,6 +16,13 @@ const devServer = {
             secure: false,
             headers: {
                 host: domain
+            }
+        },
+        '/geoserver': {
+            target: "https://georchestra.geo-solutions.it",
+            secure: false,
+            headers: {
+                host: "georchestra.geo-solutions.it"
             }
         },
         '/pdf': {
@@ -51,6 +59,8 @@ const devServer = {
         }
     }
 };
+console.log("MAPSTORE_BACKEND_URL", MAPSTORE_BACKEND_URL);
+
 module.exports = {
     devServer,
     devtool: undefined

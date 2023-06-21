@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+import assign from 'object-assign';
 
 import {
     CHANGE_DRAWING_STATUS,
@@ -16,8 +17,6 @@ import {
     SNAPPING_IS_LOADING,
     SET_SNAPPING_CONFIG
 } from '../actions/draw';
-
-import assign from 'object-assign';
 
 const initialState = {
     drawStatus: null,

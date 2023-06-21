@@ -3725,6 +3725,59 @@
         },
         "sidebarMenu": {
           "showMoreItems": "Show more items"
+        },
+        "longitudinalProfile": {
+          "open": "Open Longitudinal Profile",
+          "close": "Close Longitudinal Profile",
+          "title": "Longitudinal profile",
+          "draw": "Draw profile",
+          "import": "Load file",
+          "select": "Selection to profile",
+          "parameters": "Parameters",
+          "elevation": "Elevation (m)",
+          "crsSelector": "Specify a projection for the DXF file",
+          "distance": "Distance (m)",
+          "chart": "Chart",
+          "infos": "Information",
+          "preferences": "Preferences",
+          "CRS": "CRS",
+          "uom": "Units",
+          "uomMeters": "meters",
+          "source": "Source",
+          "downloadCSV": "Download data as CSV",
+          "downloadPNG": "Download chart as PNG",
+          "downloadPDF": "Download chart & map as PDF",
+          "help": {
+            "draw": "Click on the map to draw the line. Click one more time on end point to finish.",
+            "select": "Please select layer in TOC and click on the line feature to generate profile.<br/>Selected layer: {layerName}",
+            "noLayer": "No layer selected",
+            "notSupportedLayer": "not supported. Please select WMS, WFS or vector layer."
+          },
+          "warnings": {
+            "noLayerSelected": "Please select layer first.",
+            "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
+            "noFeatureInPoint": "Line feature was not found at selected point.",
+            "noLineFeatureFound": "Line feature was not found in imported file.",
+            "fallbackToProjection": "Projection of default referential \"{defaultReferential}\" is not supported. Falling back to referential \"{referential}\" with \"{projection}\" projection."
+          },
+          "errors": {
+            "loadingError": "Error loading data for longitudinal profile",
+            "unableToSetupPlugin": "Unable to setup longitudinal profile extension",
+            "defaultReferentialNotFound": "Default referential is configured but cannot be found in referentials list. Please update extension configuration.",
+            "projectionNotSupported": "Referential with projection supported by map cannot be found. Please update extension configuration or add desired projection into app configuration."
+          },
+          "settings": {
+            "chartTitle": "Chart Title",
+            "pitch": "Pitch used (m)",
+            "referential": "Referential",
+            "distance": "Distance"
+          },
+          "dropZone": {
+            "heading": "<p><h4>Drop your file here</h4><small>or</small></p>",
+            "selectFiles": "Select file...",
+            "infoSupported": "<p><small>Supported file types: GeoJSON, DXF, Shapefiles</small></p>",
+            "dxfGeometryNotSupported": "Only LWPOLYLINE  is supported"
+          }
         }
     }
 }

@@ -3714,6 +3714,48 @@
         },
         "sidebarMenu": {
           "showMoreItems": "Mostra più elementi"
+        },
+        "longitudinalProfile": {
+          "open": "Open Longitudinal Profile",
+          "close": "Close Longitudinal Profile",
+          "title": "Profilo longitudinale",
+          "draw": "Disegna profilo",
+          "import": "Carica file JSON",
+          "select": "Selezione al profilo",
+          "parameters": "Parametri",
+          "help": {
+            "draw": "Fai clic sulla mappa per tracciare la linea. Fai clic ancora una volta sul punto finale per terminare.",
+            "select": "Seleziona il livello nel sommario e fai clic sull'elemento linea per generare il profilo.<br/>Livello selezionato: {layerName}",
+            "noLayer": "Nessun livello selezionato",
+            "notSupportedLayer": "non supportato. Seleziona WMS, WFS o livello vettoriale."
+          },
+          "warnings": {
+            "noLayerSelected": "Seleziona prima il livello.",
+            "layerNotSupported": "Il livello selezionato non è supportato. Seleziona il livello WMS, WFS o vettore.",
+            "noFeatureInPoint": "L'elemento lineare non è stato trovato nel punto selezionato.",
+            "noLineFeatureFound": "La caratteristica linea non è stata trovata nel file importato.",
+            "fallbackToProjection": "La proiezione del referenziale predefinito \"{defaultReferential}\" non è supportata. Tornare al referenziale \"{referential}\" con \"{projection}\" proiezione."
+          },
+          "error": {
+            "loadingError": "Errore nel caricamento dei dati per il profilo longitudinale",
+            "unableToSetupPlugin": "Impossibile impostare l'estensione del profilo longitudinale",
+            "defaultReferentialNotFound": "Il riferimento predefinito è configurato ma non può essere trovato nell'elenco dei riferimenti. Aggiorna la configurazione dell'estensione.",
+            "projectionNotSupported": "Impossibile trovare referenziale con proiezione supportata da mappa. Aggiorna la configurazione dell'estensione o aggiungi la proiezione desiderata nella configurazione dell'app."
+          },
+          "elevation": "Quota (m)",
+          "distance": "Distanza (m)",
+          "chart": "Schema",
+          "infos": "Informazioni",
+          "preferences": "Preferenze",
+          "settings": {
+            "referential": "Referenziale",
+            "distance": "Distanza"
+          },
+          "dropZone": {
+            "heading": "<p><h4>Trascina qui i tuoi file JSON</h4><small>o</small></p>",
+            "selectFiles": "Seleziona file...",
+            "infoSupported": "<p><small>Tipi di file supportati: GeoJSON</small></p>"
+          }
         }
     }
 }

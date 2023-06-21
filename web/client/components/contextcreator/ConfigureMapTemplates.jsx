@@ -5,18 +5,18 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-
 import React from 'react';
+import jsonlint from 'jsonlint-mod';
 import {get, isString, isObject} from 'lodash';
 import {Glyphicon} from 'react-bootstrap';
-import jsonlint from 'jsonlint-mod';
+
+import Message from '../I18N/Message';
+import ConfirmDialog from '../misc/ConfirmDialog';
+import Transfer from '../misc/transfer/Transfer';
+import handleSaveModal from '../resources/modals/enhancers/handleSaveModal';
+import SaveModal from '../resources/modals/Save';
 
 import {formatToGlyph, formatToText} from '../../utils/FileFormatUtils';
-import Transfer from '../misc/transfer/Transfer';
-import ConfirmDialog from '../misc/ConfirmDialog';
-import Message from '../I18N/Message';
-import SaveModal from '../resources/modals/Save';
-import handleSaveModal from '../resources/modals/enhancers/handleSaveModal';
 
 const SaveDialog = handleSaveModal(SaveModal);
 

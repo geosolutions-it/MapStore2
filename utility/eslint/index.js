@@ -8,6 +8,11 @@ module.exports = {
             "jsx": true
         }
     },
+    "settings": {
+        "react": {
+            "version": "detect"
+          }
+    },
     "plugins": [
         "@babel",
         "no-only-tests",                 // https://github.com/levibuzolic/eslint-plugin-no-only-tests
@@ -201,7 +206,7 @@ module.exports = {
         "react/no-multi-comp": 0,        // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-multi-comp.md
         "react/no-unknown-property": 2,  // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-unknown-property.md
         "react/no-unused-prop-types": 2, // https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-unused-prop-types.md
-        "react/prop-types": [2, { "ignore": ["children"] }],           // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md
+        "react/prop-types": [0, { "ignore": ["children"] }],           // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md
         "react/react-in-jsx-scope": 2,   // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/react-in-jsx-scope.md
         "react/self-closing-comp": 2,    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md
         "react/wrap-multilines": 2,      // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md

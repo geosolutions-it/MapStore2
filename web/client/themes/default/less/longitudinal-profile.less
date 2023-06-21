@@ -1,0 +1,110 @@
+//
+// Copyright 2023, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .longitude-help {
+        .background-color-var(@theme-vars[mask-bg]);
+        .color-var(@theme-vars[main-bg]);
+    }
+    .longitudinal-container {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+    #dock-chart-portal.visible {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
+
+#longitudinal-container.maximized {
+    z-index: 1300;
+}
+
+.longitudinal-profile-crs {
+    width: 200px;
+    padding: 8px;
+}
+
+.longitude-help {
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    top: 45px;
+    width: 300px;
+    border-radius: 3px;
+    z-index: 1;
+    padding: 10px;
+    opacity: 0.8;
+    pointer-events: none;
+    white-space: pre-line;
+}
+
+.longitudinal-container {
+    padding: 15px;
+    &.maximized {
+        position: fixed;
+        background: inherit;
+        z-index: 2000;
+    }
+    .data-used, .data-used td {
+        padding: 2px 6px;
+    }
+}
+
+#dock-chart-portal {
+    width: 100vw;
+    height: 100%;
+    z-index: 1200;
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    .visible {
+        pointer-events: all;
+    }
+}
+
+.stats-entry {
+    padding: 5px 0;
+}
+
+.stats-value {
+    padding-left: 10px;
+}
+
+.longitudinal-import {
+    z-index: 1;
+    position: relative;
+}
+
+.modebar-container.hide {
+    display: none;
+}
+.chart-toolbar {
+    &.hide {
+        display: none;
+    }
+    &.btn-group {
+        display: flex;
+        justify-content: right;
+        padding: 0 5px;
+    }
+}
+
+.downloadButtons {
+    padding: 15px;
+    button + button {
+        padding-left: 5px !important;
+    }
+
+}
