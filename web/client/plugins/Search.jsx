@@ -424,6 +424,6 @@ export default {
     reducers: {
         search: searchReducers,
         mapInfo: mapInfoReducers,
-        searchconfig: searchconfigReducer
+        searchconfig: searchconfigReducer // required to load configuration even if the SearchServicesConfig plugin is not included (e.g. in mobile)
     }
 };
