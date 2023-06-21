@@ -8,7 +8,7 @@
 import React, {useState, useMemo, useEffect} from "react";
 import {toPng} from 'html-to-image';
 import isEmpty from 'lodash/isEmpty';
-import pdfMake from 'pdfMake';
+import pdfMake from 'pdfmake';
 import PropTypes from 'prop-types';
 import {ButtonGroup, Col, Glyphicon, Nav, NavItem, Row} from 'react-bootstrap';
 import ContainerDimensions from 'react-container-dimensions';
