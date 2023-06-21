@@ -228,6 +228,7 @@
                 "web/client/plugins/BurgerMenu.jsx",
                 "web/client/plugins/ContentTabs.jsx",
                 "web/client/plugins/Context.jsx",
+                "web/client/plugins/Contexts.jsx",
                 "web/client/plugins/ContextCreator.jsx",
                 "web/client/plugins/contextmanager/ContextManager.jsx",
                 "web/client/plugins/Cookie.jsx",

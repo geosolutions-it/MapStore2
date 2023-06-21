@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
@@ -17,7 +17,7 @@ import ContainerDimensions from 'react-container-dimensions';
 import Grid from '../../components/data/featuregrid/FeatureGrid';
 import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
-import { initPlugin, sizeChange, setUp, setSyncTool} from '../../actions/featuregrid';
+import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
 import {mapLayoutValuesSelector} from '../../selectors/maplayout';
 import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
@@ -70,7 +70,11 @@ const Dock = connect(createSelector(
   *    }]
   *}
   * ```
-  * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
+  * @prop {string[]} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode.
+  * Support predefined ('ADMIN', 'USER', 'ALL') and custom roles. Default value is ['ADMIN'].
+  * Configuring with ["ALL"] allows all users to have access regardless of user's permission.
+  * @prop {string[]} cfg.editingAllowedGroups array of user groups allowed to enter in edit mode.
+  * When configured, gives the editing permissions to users members of one of the groups listed.
   * @prop {boolean} cfg.virtualScroll default true. Activates virtualScroll. When false the grid uses normal pagination
   * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
   * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
@@ -94,7 +98,7 @@ const Dock = connect(createSelector(
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
-  * <br/>virtual scroll mechanisms. By default virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
+  * <br/>virtual scroll mechanisms. By default, virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
   * sets the size of loaded pages cache, while vsOverscan and scrollDebounce params determine the behavior of grid scrolling
   * and of row loading.
   * <br/>Furthermore it can be configured to use custom editor cells for certain layers/columns, specifying the rules to recognize them. If no rule matches, then it will be used the default editor based on the dataType of that column.
@@ -181,18 +185,8 @@ const FeatureDock = (props = {
         setDockSize: () => {},
         zIndex: 1060
     };
-    // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
-    // const editors = items.filter(({target}) => target === 'editors');
-
-    useEffect(() => {
-        props.initPlugin({virtualScroll, editingAllowedRoles: props.editingAllowedRoles, maxStoredPages: props.maxStoredPages});
-    }, [
-        virtualScroll,
-        (props.editingAllowedRoles ?? []).join(","), // this avoids multiple calls when the array remains the equal
-        props.maxStoredPages
-    ]);
 
     return (
         <Dock {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
@@ -312,7 +306,6 @@ const EditorPlugin = compose(
         (dispatch) => ({
             gridEvents: bindActionCreators(gridEvents, dispatch),
             pageEvents: bindActionCreators(pageEvents, dispatch),
-            initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
             toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
             gridTools: gridTools.map((t) => ({
                 ...t,

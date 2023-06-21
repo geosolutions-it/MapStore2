@@ -174,7 +174,7 @@ const identifyDefaultProps = defaultProps({
 });
 
 /**
- * This plugin allows get informations about clicked point. It can be configured to have a mobile or a desktop flavor.
+ * This plugin allows get information about clicked point. It can be configured to have a mobile or a desktop flavor.
  *
  * You can configure some of the features of this plugin by setting up the initial mapInfo state, then you need to update the "initialState.defaultState", or by the plugin configuration
  * ```
@@ -182,7 +182,7 @@ const identifyDefaultProps = defaultProps({
  *   "enabled": true, // enabled by default
  *   "disabledAlwaysOn": false, // if true, disable always on setup
  *   "configuration": {
- *     "showEmptyMessageGFI": false // allow or deny the visiibility of message when you have no results from identify request
+ *     "showEmptyMessageGFI": false // allow or deny the visibility of message when you have no results from identify request
  *     "infoFormat": "text/plain" // default infoformat value, other values are "text/html" for text only or "application/json" for properties
  *   }
  * }
@@ -199,6 +199,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the header of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
+ * @prop cfg.showAllResponses {bool} if true it will include invalid/empty responses and it will always select the first request/layer
  * @prop cfg.zIndex {number} component z index order
  * @prop cfg.showInMapPopup {boolean} if true show the identify as popup
  * @prop cfg.maxItems {number} the number of features returned by this tool

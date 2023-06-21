@@ -8,13 +8,14 @@
 import React, { lazy } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import isEqual from "lodash/isEqual";
 import { createPlugin } from '../utils/PluginsUtils';
 import * as epics from '../epics/featuregrid';
 import featuregrid from '../reducers/featuregrid';
 import FeatureEditorFallback from '../components/data/featuregrid/FeatureEditorFallback';
 import withSuspense from '../components/misc/withSuspense';
 import {compose, lifecycle} from "recompose";
-import {setViewportFilter} from "../actions/featuregrid";
+import { initPlugin, setViewportFilter } from "../actions/featuregrid";
 import {isViewportFilterActive} from "../selectors/featuregrid";
 
 /**
@@ -49,7 +50,11 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   *    }]
   *}
   * ```
-  * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
+  * @prop {string[]} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode.
+  * Support predefined ('ADMIN', 'USER', 'ALL') and custom roles. Default value is ['ADMIN'].
+  * Configuring with ["ALL"] allows all users to have access regardless of user's permission.
+  * @prop {string[]} cfg.editingAllowedGroups array of user groups allowed to enter in edit mode.
+  * When configured, gives the editing permissions to users members of one of the groups listed.
   * @prop {boolean} cfg.virtualScroll default true. Activates virtualScroll. When false the grid uses normal pagination
   * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
   * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
@@ -156,17 +161,38 @@ const EditorPlugin = connect(
         ],
         (open, viewportFilter) => ({ open, viewportFilterInitialized: viewportFilter !== null })),
     {
-        setViewportFilter
+        setViewportFilter,
+        initPlugin
     }
 )(compose(
     lifecycle({
         componentDidMount() {
-            // Initialize configuration for viewportFilter once plugin is loaded
+            // Initialize configurations once plugin is loaded
             !this.props.viewportFilterInitialized && this.props.filterByViewport && this.props.setViewportFilter(true);
+            this.props.initPlugin({
+                virtualScroll: this.props.virtualScroll ?? true,
+                editingAllowedRoles: this.props.editingAllowedRoles,
+                editingAllowedGroups: this.props.editingAllowedGroups,
+                maxStoredPages: this.props.maxStoredPages
+            });
         },
-        componentDidUpdate() {
-            // Re-Initialize configuration
+        componentDidUpdate(prevProps) {
+            // Re-Initialize configurations
             !this.props.viewportFilterInitialized && this.props.filterByViewport && this.props.setViewportFilter(true);
+
+            const {virtualScroll, editingAllowedRoles, editingAllowedGroups, maxStoredPages} = this.props ?? {};
+            if (prevProps.virtualScroll !== virtualScroll
+                || !isEqual(prevProps.editingAllowedRoles, editingAllowedRoles)
+                || !isEqual(prevProps.editingAllowedGroups, editingAllowedGroups)
+                || prevProps.maxStoredPages !== maxStoredPages
+            ) {
+                this.props.initPlugin({
+                    virtualScroll: virtualScroll ?? true,
+                    editingAllowedRoles,
+                    editingAllowedGroups,
+                    maxStoredPages
+                });
+            }
         }
     }),
     withSuspense(

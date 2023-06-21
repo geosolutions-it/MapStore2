@@ -53,6 +53,7 @@ import controlsReducer from "../reducers/controls";
 import backgroundReducer from "../reducers/backgroundselector";
 import backgroundEpic from "../epics/backgroundselector";
 import BackgroundSelector from "../components/background/BackgroundSelector";
+import { isCesium } from '../selectors/maptype';
 
 const backgroundSelector = createSelector([
     projectionSelector,
@@ -70,8 +71,8 @@ const backgroundSelector = createSelector([
     state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled,
     state => state.browser && state.browser.mobile ? 'mobile' : 'desktop',
     confirmDeleteBackgroundModalSelector,
-    allowBackgroundsDeletionSelector],
-(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, currentLayer, tempLayer, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion) => ({
+    allowBackgroundsDeletionSelector, isCesium],
+(projection, modalParams, backgroundList, deletedId, backgrounds, map, mapIsEditable, layers, controls, currentLayer, tempLayer, style, enabledCatalog, mode, confirmDeleteBackgroundModalObj, allowDeletion, isCesiumViewer) => ({
     mode,
     modalParams,
     backgroundList,
@@ -88,7 +89,8 @@ const backgroundSelector = createSelector([
     enabledCatalog,
     confirmDeleteBackgroundModal: confirmDeleteBackgroundModalObj,
     allowDeletion,
-    projection
+    projection,
+    disableTileGrids: !!isCesiumViewer
 }));
 
 /**

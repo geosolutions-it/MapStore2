@@ -65,7 +65,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(5);
+        expect(inputs.length).toBe(6);
     });
     it('tests Layer Properties Display component events', () => {
         const l = {
@@ -89,7 +89,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(5);
+        expect(inputs.length).toBe(6);
         ReactTestUtils.Simulate.change(inputs[0]);
         ReactTestUtils.Simulate.blur(inputs[1]);
         expect(spy.calls.length).toBe(1);
@@ -118,7 +118,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const forms = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "form-group" );
         expect(forms).toExist();
-        expect(forms.length).toBe(3);
+        expect(forms.length).toBe(5);
     });
 
     it('TEST showTooltipOptions = true', () => {
@@ -215,5 +215,58 @@ describe('test  Layer Properties General module component', () => {
         });
         const selectMenuOptionNodes = cmp.querySelectorAll('.Select-option');
         expect(selectMenuOptionNodes.length).toBe(4);
+    });
+    it('tests read only attribute field', () => {
+        const handlers = {
+            onChange() {}
+        };
+        const spyOn = expect.spyOn(handlers, 'onChange');
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        const mapInfo = {canEdit: true, id: "1"};
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<General onChange={handlers.onChange} pluginCfg={{}} element={layer} settings={settings} mapInfo={mapInfo}/>, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
+        ReactTestUtils.Simulate.change(disableFeaturesEditing, { "target": { "checked": true }});
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'disableFeaturesEditing', true ]);
+    });
+    it('tests read only attribute field on new map', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer}  />, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
+        expect(disableFeaturesEditing).toBeTruthy();
+    });
+    it('tests read only attribute field without permission', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const mapInfo = {canEdit: false, id: "1"};
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} mapInfo={mapInfo}  />, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const disableFeaturesEditing = document.querySelector('[data-qa="general-read-only-attribute"]');
+        expect(disableFeaturesEditing).toBeFalsy();
     });
 });

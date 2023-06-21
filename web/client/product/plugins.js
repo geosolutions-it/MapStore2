@@ -23,6 +23,7 @@ import Print from "../plugins/Print";
 import UserSession from "../plugins/UserSession";
 import Login from '../plugins/Login';
 import Identify from '../plugins/Identify';
+import FeatureEditor from '../plugins/FeatureEditor';
 
 
 /**
@@ -45,6 +46,7 @@ export const plugins = {
     UserSessionPlugin: UserSession,
     LoginPlugin: Login,
     IdentifyPlugin: Identify,
+    FeatureEditorPlugin: FeatureEditor,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -78,7 +80,6 @@ export const plugins = {
     DetailsPlugin: toModulePlugin('Details', () => import(/* webpackChunkName: 'plugins/details' */ '../plugins/Details')),
     DrawerMenuPlugin: toModulePlugin('DrawerMenu', () => import(/* webpackChunkName: 'plugins/drawerMenu' */ '../plugins/DrawerMenu')),
     ExpanderPlugin: toModulePlugin('Expander', () => import(/* webpackChunkName: 'plugins/expander' */ '../plugins/Expander')),
-    FeatureEditorPlugin: toModulePlugin('FeatureEditor', () => import(/* webpackChunkName: 'plugins/featureEditor' */ '../plugins/FeatureEditor')),
     FeaturedMaps: toModulePlugin('FeaturedMaps', () => import(/* webpackChunkName: 'plugins/featuredMaps' */ '../plugins/FeaturedMaps')),
     FilterLayerPlugin: toModulePlugin('FilterLayer', () => import(/* webpackChunkName: 'plugins/filterLayer' */ '../plugins/FilterLayer')),
     FloatingLegendPlugin: toModulePlugin('FloatingLegend', () => import(/* webpackChunkName: 'plugins/floatingLegend' */ '../plugins/FloatingLegend')),

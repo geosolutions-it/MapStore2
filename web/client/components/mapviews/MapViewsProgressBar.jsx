@@ -7,21 +7,42 @@
  */
 
 import React from 'react';
+import tooltip from '../misc/enhancers/tooltip';
+
+const MapViewsProgressBarTick = tooltip(({
+    left,
+    active,
+    ...props
+}) => {
+    return (
+        <div
+            {...props}
+            className={`ms-map-view-progress-tick${active ? ' active' : ''}`}
+            style={{ left }}
+        />
+    );
+});
 
 function MapViewsProgressBar({
+    play,
     progress,
     segments,
-    totalLength
+    totalLength,
+    onSelect,
+    currentIndex
 }) {
     return (
-        <div className="ms-map-view-progress-container">
+        <div className={`ms-map-view-progress-container${play ? ' playing' : ''}`}>
             <div className="ms-map-view-progress-bar" style={{ width: `${progress}%` }}></div>
             {segments
-                ?.map((duration, idx) => (
-                    <div
+                ?.map(({ duration, view }, idx) => (
+                    <MapViewsProgressBarTick
                         key={idx}
-                        className="ms-map-view-progress-tick"
-                        style={{ left: `${Math.round(duration / totalLength * 100)}%` }}
+                        tooltip={view?.title}
+                        active={idx <= currentIndex}
+                        tooltipPosition="bottom"
+                        left={`${Math.round(duration / totalLength * 100)}%`}
+                        onClick={() => onSelect(view)}
                     />)
                 )}
         </div>

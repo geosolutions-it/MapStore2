@@ -50,6 +50,7 @@ import {
     SET_PAGINATION,
     SET_VIEWPORT_FILTER
 } from '../actions/featuregrid';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 
 import { FEATURE_TYPE_LOADED, QUERY_CREATE, UPDATE_QUERY } from '../actions/wfsquery';
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
@@ -60,6 +61,7 @@ const emptyResultsState = {
     advancedFilters: {},
     filters: {},
     editingAllowedRoles: ["ADMIN"],
+    editingAllowedGroups: [],
     enableColumnFilters: true,
     showFilteredObject: false,
     timeSync: false,
@@ -111,6 +113,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  * Manages the state of the featuregrid
  * The properties represent the shape of the state
  * @prop {string[]} editingAllowedRoles array of user roles allowed to enter in edit mode
+ * @prop {string[]} editingAllowedGroups array of user roles allowed to enter in edit mode, when logged-in user role is not ADMIN
  * @prop {boolean} canEdit flag used to enable editing on the feature grid
  * @prop {object} filters filters for quick search. `{attribute: "name", value: "filter_value", opeartor: "=", rawValue: "the fitler raw value"}`
  * @prop {boolean} enableColumnFilters enables column filter. [configurable]
@@ -155,6 +158,7 @@ function featuregrid(state = emptyResultsState, action) {
         return assign({}, state, {
             showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : true,
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
+            editingAllowedGroups: action.options.editingAllowedGroups || state.editingAllowedGroups || [],
             virtualScroll: !!action.options.virtualScroll,
             maxStoredPages: action.options.maxStoredPages || 5
         });
@@ -439,6 +443,9 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case SET_VIEWPORT_FILTER: {
         return assign({}, state, {viewportFilter: action.value});
+    }
+    case MAP_CONFIG_LOADED: {
+        return {...state, ...get(action, 'config.featureGrid', {})};
     }
     default:
         return state;

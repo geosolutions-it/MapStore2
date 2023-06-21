@@ -623,7 +623,7 @@ describe('PrintUtils', () => {
                 const layerSpec = specCreators.tileprovider.map(testLayer, { projection: "EPSG:900913" });
                 expect(layerSpec.type).toEqual("xyz");
                 // string without subdomains or params
-                expect(layerSpec.baseURL).toEqual("https://maps.wien.gv.at/basemap/geolandbasemap/normal/google3857/");
+                expect(layerSpec.baseURL).toEqual("https://mapsneu.wien.gv.at/basemap/geolandbasemap/normal/google3857/");
                 // parameters should be passed in pathSpec
                 expect(layerSpec.baseURL.indexOf(/\{[x,y,z]\}/)).toBeLessThan(0);
                 expect(layerSpec.path_format).toBe("${z}/${y}/${x}.png"); // use the format of mapfish print for variables

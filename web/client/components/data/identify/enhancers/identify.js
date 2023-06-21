@@ -71,6 +71,7 @@ export const identifyLifecycle = compose(
                 enabled,
                 showInMapPopup,
                 maxItems,
+                showAllResponses,
                 changeMousePointer = () => {},
                 disableCenterToMarker,
                 enableInfoForSelectedLayers = true,
@@ -85,7 +86,8 @@ export const identifyLifecycle = compose(
                 enableInfoForSelectedLayers,
                 configuration: {
                     maxItems
-                }
+                },
+                showAllResponses
             });
 
             if (enabled || showInMapPopup) {

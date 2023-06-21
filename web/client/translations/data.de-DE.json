@@ -130,7 +130,6 @@
             "noConfiguredGridSets": "Es ist nicht möglich, benutzerdefinierte Kachelraster abzurufen. Diese Ebene verfügt über keinen Rastersatz, der mit den verfügbaren Projektionen kompatibel ist. Bitte überprüfen Sie die Konfigurationsserverseite und versuchen Sie es erneut",
             "notPossibleToConnectToWMTSService": "Es war nicht möglich, die Kachelraster vom Server abzurufen. Die an {requestUrl} gesendete Anfrage löst einen Fehler aus.",
             "notSupportedSelectedFormatCache": "Das ausgewählte Format wird vom Cache nicht unterstützt",
-            "notSupportedSelectedStyleCache": "Der ausgewählte Stil wird vom Cache nicht unterstützt",
             "customParamsCacheWarning": "Für diese Ebene ist der lokalisierte Stil aktiviert. Bitte überprüfen Sie die Konfigurationsserverseite und stellen Sie sicher, dass sie den benutzerdefinierten ENV-Parameter unterstützt",
             "supportedFormats": "Unterstützte Formate",
             "checkAvailableTileGridsInfo": "Überprüfen Sie die verfügbaren Kachelgitterinformationen",
@@ -200,7 +199,8 @@
               "clearCustomization": "Alle Anpassungen entfernen",
               "clearCustomizationConfirm": "Möchten Sie wirklich alle Anpassungen entfernen?",
               "error": "Die Felder konnten nicht automatisch geladen werden"
-            }
+            },
+            "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle"
         },
         "localizedInput": {
           "localize": "Diesen Text lokalisieren...",
