@@ -102,15 +102,21 @@ jobs:
           tag_name: "v${{ github.event.inputs.version }}"
           release_name: "v${{ github.event.inputs.version }}"
           body: |
-            ## [${{ github.event.inputs.version }}](https://github.com/geosolutions-it/MapStore2/tree/v${{ github.event.inputs.version }}) (${{ steps.date.outputs.date }})
-
-              - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v${{ github.event.inputs.previousVersion }}...v${{ github.event.inputs.version }})**
-
-              - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed+label%3Aenhancement)**
-
-              - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed+label%3Abug)**
-
-              - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed)**
+            ## Useful links related to [v${{ github.event.inputs.version }}](https://github.com/geosolutions-it/MapStore2/tree/v${{ github.event.inputs.version }})
+            
+            - [Full Changelog](<https://github.com/geosolutions-it/MapStore2/compare/v${{ github.event.inputs.previousVersion }}...v${{ github.event.inputs.version }})
+            
+            - [Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed+label%3Aenhancement)
+            
+            - [Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed+label%3Abug)
+            
+            - [Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed)
+            
+            - [MapStore Extension release v${{ github.event.inputs.version }}](https://github.com/geosolutions-it/MapStoreExtension/releases/tag/v${{ github.event.inputs.version }})
+            
+            - [Docker image v${{ github.event.inputs.version }}](https://hub.docker.com/layers/geosolutionsit/mapstore2/${{ github.event.inputs.version }}/images/sha256-a2ad2e451c13fa2ae5a011f8163b9ab9025257e2caa4e6a63546973c3b0b9fa9?context=explore)
+            
+            - [MapStore documentation v${{ github.event.inputs.version }}](https://docs.mapstore.geosolutionsgroup.com/en/v${{ github.event.inputs.version }}/)
           draft: true
           prerelease: false
       - name: Upload Release war
