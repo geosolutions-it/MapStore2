@@ -32,19 +32,19 @@ By default, as soon as the user opens the layer settings panel the General infor
 
 In this page it is possible to:
 
-* Change the *Title*
+* Change the **Title**
 
-* Set the translation of the layer title by opening the *Localize Text* popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. In this way the language of the title changes according to the language that the user has set to [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
+* Set the translation of the layer title by opening the **Localize Text** popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. In this way the language of the title changes according to the language that the user has set to [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 <img src="../img/layer-settings/lacalize-layer-title.gif" class="ms-docimage"/>
 
-* Take a look at the *Name* of the layer
+* Take a look at the **Name** of the layer
 
-* Edit the layer's *Description*
+* Edit the layer's **Description**
 
-* Set the layer *Group*
+* Set the layer **Group**
 
-* Configure the *Tooltip* that appears moving the cursor over the layer's item in TOC. In this case the user can decide that the *Title*, the *Description*, both or nothing will be displayed. Moreover you can set the *Placement* of the tooltip, choosing between *Top*, *Right* or *Bottom*:
+* Configure the **Tooltip** that appears moving the cursor over the layer's item in TOC. In this case the user can decide that the *Title*, the *Description*, both or nothing will be displayed. Moreover you can set the *Placement* of the tooltip, choosing between *Top*, *Right* or *Bottom*:
 
 <img src="../img/layer-settings/tooltip_options.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -52,7 +52,7 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-* Disable editing in attribute table. Un-ticked by default. Enabling this checkbox will disable editing in Attribute table and <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon is hidden in Identify panel for the layer selected
+* **Disable editing in attribute table**. Enabling this checkbox will disable [editing in attribute table](attributes-table.md#editing-and-removing-existing-features) and the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will be hidden in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer (the checkbox is unchecked by default).
 
 ## Display
 
