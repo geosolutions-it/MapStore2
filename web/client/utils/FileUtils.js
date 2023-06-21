@@ -137,7 +137,7 @@ export const readGeoJson = function(file, warnings = false) {
         reader.readAsText(file);
     });
 };
-export const readDxf = function(file, warnings = false) {
+export const readDxf = function(file) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
         reader.onload = function() {
