@@ -90,7 +90,7 @@ import {
 } from "../selectors/mapInfo";
 
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
-import {reprojectGeoJson} from "../utils/CoordinatesUtils";
+import {reprojectGeoJson, reproject} from "../utils/CoordinatesUtils";
 import {selectLineFeature, styleFeatures} from "../utils/LongitudinalProfileUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
@@ -110,7 +110,7 @@ const deactivate = () => Rx.Observable.from(DEACTIVATE_ACTIONS);
  * @param store
  * @returns {*}
  */
-export const setupLongitudinalExtension = (action$, store) =>
+export const setupLongitudinalExtensionEpic = (action$, store) =>
     action$.ofType(SETUP)
         .switchMap(() => {
 
@@ -149,7 +149,7 @@ export const setupLongitudinalExtension = (action$, store) =>
  * @param action$
  * @returns {*}
  */
-export const cleanOnTearDown = (action$) =>
+export const cleanOnTearDownEpic = (action$) =>
     action$.ofType(TEAR_DOWN)
         .switchMap(() => {
             return Rx.Observable.of(
@@ -168,7 +168,7 @@ export const cleanOnTearDown = (action$) =>
  * @param store
  * @returns {*}
  */
-export const onDrawActivated = (action$, store) =>
+export const onDrawActivatedEpic = (action$, store) =>
     action$.ofType(TOGGLE_MODE)
         .switchMap(()=> {
             const state = store.getState();
@@ -216,7 +216,7 @@ export const onDrawActivated = (action$, store) =>
  * @returns {*}
  */
 
-export const onChartPropsChange = (action$, store) =>
+export const onChartPropsChangeEpic = (action$, store) =>
     action$.ofType(CHANGE_GEOMETRY, CHANGE_DISTANCE, CHANGE_REFERENTIAL)
         .filter(() => {
             const state = store.getState();
@@ -229,9 +229,8 @@ export const onChartPropsChange = (action$, store) =>
             const wpsurl = configSelector(state)?.wpsurl;
             const referential = configSelector(state)?.referential;
             const distance = configSelector(state)?.distance;
-
-            return executeProcess(wpsurl, profileEnLong({identifier, geometry, distance, referential }),
-                {outputsExtractor: makeOutputsExtractor()})
+            const wpsBody = profileEnLong({identifier, geometry, distance, referential });
+            return executeProcess(wpsurl, wpsBody, {outputsExtractor: makeOutputsExtractor()})
                 .switchMap((result) => {
                     const feature = {
                         type: 'Feature',
@@ -241,7 +240,7 @@ export const onChartPropsChange = (action$, store) =>
                     const center = turfCenter(reprojectGeoJson(feature, geometry.projection, 'EPSG:4326')).geometry.coordinates;
                     const bbox = turfBbox(reprojectGeoJson(feature, geometry.projection, 'EPSG:4326'));
                     const [minx, minY, maxX, maxY] = bbox;
-                    const { infos, points } = result?.profile ?? {};
+                    const { infos, profile: points } = result ?? {};
                     const styledFeatures = styleFeatures([feature], omit(highlightStyleSelector(state), ["radius"]));
                     const features = styledFeatures && geometry.projection ? styledFeatures.map( f => reprojectGeoJson(
                         f,
@@ -280,17 +279,18 @@ export const onChartPropsChange = (action$, store) =>
                 ));
         });
 
-export const onMarkerChanged = (action$, store) =>
+export const onMarkerChangedEpic = (action$, store) =>
     action$.ofType(ADD_MARKER, HIDE_MARKER)
         .switchMap(({point}) => {
             const state = store.getState();
             let featuresCollection = vectorLayerFeaturesSelector(state);
             if (point) {
+                const point4326 = reproject([point.lng, point.lat], "EPSG:3857", "EPSG:4326");
                 const pointFeature = {
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
-                        coordinates: [point.lat, point.lng],
+                        coordinates: [point4326.x, point4326.y],
                         projection: point.projection
                     },
                     style: {
@@ -327,7 +327,7 @@ export const onMarkerChanged = (action$, store) =>
  * @param store
  * @returns {*}
  */
-export const onDockClosed = (action$, store) =>
+export const onDockClosedEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY)
         .filter(({control, property, value}) => control === CONTROL_DOCK_NAME && property === 'enabled' && value === false)
         .switchMap(() => {
@@ -343,7 +343,7 @@ export const onDockClosed = (action$, store) =>
  * also keep the zoom to extent offsets aligned with the current visibile window, so when zoom the longitudinal panel
  * is considered as a right offset and it will not cover the zoomed features.
  */
-export const longitudinalMapLayout = (action$, store) =>
+export const longitudinalMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => isDockOpenSelector(store.getState()) &&  source !== CONTROL_NAME)
         .map(({layout}) => {
@@ -365,7 +365,7 @@ export const longitudinalMapLayout = (action$, store) =>
  * @param store
  * @returns {Observable<unknown>}
  */
-export const resetLongitudinalToolOnDrawToolActive = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, CONTROL_NAME,
+export const resetLongitudinalToolOnDrawToolActiveEpic = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, CONTROL_NAME,
     () => {
         return Rx.Observable.of(toggleMode());
     },
@@ -378,7 +378,7 @@ export const resetLongitudinalToolOnDrawToolActive = (action$, store) => shutdow
  * @param store
  * @return {observable}
  */
-export const deactivateOnIdentifyEnabledEpic = (action$, store) =>
+export const deactivateIdentifyEnabledEpic = (action$, store) =>
     action$
         .ofType(TOGGLE_MAPINFO_STATE)
         .filter(() => mapInfoEnabledSelector(store.getState()))
@@ -391,7 +391,7 @@ export const deactivateOnIdentifyEnabledEpic = (action$, store) =>
                 : Rx.Observable.empty();
         });
 
-export const clickToProfile = (action$, {getState}) =>
+export const clickToProfileEpic = (action$, {getState}) =>
     action$
         .ofType(CLICK_ON_MAP)
         .filter(() => isListeningClickSelector(getState()))

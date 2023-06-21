@@ -18,13 +18,6 @@ const devServer = {
                 host: domain
             }
         },
-        '/geoserver': {
-            target: "https://georchestra.geo-solutions.it",
-            secure: false,
-            headers: {
-                host: "georchestra.geo-solutions.it"
-            }
-        },
         '/pdf': {
             target: MAPSTORE_BACKEND_URL,
             secure: false,
@@ -59,8 +52,6 @@ const devServer = {
         }
     }
 };
-console.log("MAPSTORE_BACKEND_URL", MAPSTORE_BACKEND_URL);
-
 module.exports = {
     devServer,
     devtool: undefined

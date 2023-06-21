@@ -7,7 +7,9 @@
 */
 import React, {useState, useMemo, useEffect} from "react";
 import {toPng} from 'html-to-image';
-// import PropTypes from 'prop-types';
+import isEmpty from 'lodash/isEmpty';
+import pdfMake from 'pdfMake';
+import PropTypes from 'prop-types';
 import {ButtonGroup, Col, Glyphicon, Nav, NavItem, Row} from 'react-bootstrap';
 import ContainerDimensions from 'react-container-dimensions';
 import ReactDOM from 'react-dom';
@@ -21,38 +23,53 @@ import Toolbar from "../../components/misc/toolbar/Toolbar";
 import Chart from "./Chart";
 import Properties from "./Properties";
 
-import {reproject} from "../../utils/CoordinatesUtils";
-
 const NavItemT = tooltip(NavItem);
 
+/**
+ * Component used to show the chart
+ * @param {Object} props properties of the component
+ * @param {string} props.chartTitle
+ * @param {Object} props.config some info related to the longitudinal profile plugin
+ * @param {Object} props.dockStyle the style of the dock
+ * @param {boolean} props.loading flag used to manage the loading time of the process
+ * @param {boolean} props.maximized flag used to manage the maximized status of the chart
+ * @param {Object} props.messages the locale messages
+ * @param {Object[]} props.points the points of the long profile containing geom and other data
+ * @param {string} props.projection crs used to
+ * @param {Function} props.onToggleMaximize used to maximize the chart
+ * @param {Function} props.onAddMarker used to show a marker in the map
+ * @param {Function} props.onError used to display an error notification
+ * @param {Function} props.onExportCSV used to export data in CSV
+ * @param {Function} props.onHideMarker used to hide the marker
+ */
 const ChartData = ({
     chartTitle,
-    crsSelected,
     config,
-    points,
-    projection,
-    messages,
+    dockStyle,
     loading,
     maximized,
-    toggleMaximize,
-    dockStyle,
+    messages,
+    points,
+    projection,
+    onToggleMaximize,
     onAddMarker,
+    onError,
     onExportCSV,
     onHideMarker
 }) => {
     const data = useMemo(() => points ? points.map((point) => ({
-        distance: point[0],
-        x: point[1],
-        y: point[2],
-        altitude: point[3],
-        incline: point[4]
+        distance: point.totalDistanceToThisPoint,
+        x: point.x,
+        y: point.y,
+        altitude: point.altitude,
+        incline: point.slope
     })) : [], [points]);
-    const [marker, setMarker] = useState([]);
+    const [marker, setMarker] = useState({});
+    const [isTainted, setIsTainted] = useState(false);
 
     useEffect(() => {
-        if (marker.length) {
-            const point = reproject([marker[0], marker[1]], marker[2], 'EPSG:4326');
-            onAddMarker({lng: point.y, lat: point.x, projection: 'EPSG:4326'});
+        if (!isEmpty(marker)) {
+            onAddMarker({lng: marker.x, lat: marker.y, projection: 'EPSG:4326'});
         } else {
             onHideMarker();
         }
@@ -77,10 +94,24 @@ const ChartData = ({
         xAxisLabel: messages.longitudinalProfile.distance
     };
 
+    const generateChartImageUrl = () => {
+        const toolbar = document.querySelector('.chart-toolbar');
+        const chartToolbar = document.querySelector('.modebar-container');
+        toolbar.className = toolbar.className + " hide";
+        chartToolbar.className = chartToolbar.className + " hide";
+
+        return toPng(document.querySelector('.longitudinal-tool-container'))
+            .then(function(dataUrl) {
+                toolbar.className = toolbar.className.replace(" hide", "");
+                chartToolbar.className = chartToolbar.className.replace(" hide", "");
+                return dataUrl;
+            });
+    };
+
     const content = loading
         ? <LoadingView />
         : (
-            <><div className="longitudinal-container" onMouseOut={() => marker.length && setMarker([])}>
+            <><div className={`longitudinal-tool-container ${maximized ? "maximized" : ""}`} onMouseOut={() => marker.length && setMarker({})}>
                 {chartTitle}
                 <Toolbar
                     btnGroupProps={{
@@ -98,18 +129,18 @@ const ChartData = ({
                             tooltipId: `widgets.widget.menu.${maximized ? 'minimize' : 'maximize'}`,
                             tooltipPosition: 'left',
                             visible: true,
-                            onClick: () => toggleMaximize()
+                            onClick: () => onToggleMaximize()
                         }
                     ]}
                 />
                 <ContainerDimensions>
                     {({ width, height }) => (
-                        <div onMouseOut={() => marker.length && setMarker([])}>
+                        <div onMouseOut={() => !isEmpty(marker) && setMarker({})}>
                             <Chart
                                 onHover={(info) => {
                                     const idx = info.points[0].pointIndex;
                                     const point = data[idx];
-                                    setMarker([ point.x, point.y, projection]);
+                                    setMarker({x: point.x, y: point.y, projection});
                                 }}
                                 {...options}
                                 height={maximized ? height - 115 : 400}
@@ -125,7 +156,7 @@ const ChartData = ({
                                 </tr>
                                 <tr>
                                     <td><Message msgId="longitudinalProfile.CRS" /></td>
-                                    <td>{crsSelected}</td>
+                                    <td>{projection}</td>
                                 </tr>
                                 <tr>
                                     <td><Message msgId="longitudinalProfile.source" /></td>
@@ -146,27 +177,56 @@ const ChartData = ({
                         className="export"
                         bsStyle="primary"
                         onClick={() => {
-                            const toolbar = document.querySelector('.chart-toolbar');
-                            const chartToolbar = document.querySelector('.modebar-container');
-                            toolbar.className = toolbar.className + " hide";
-                            chartToolbar.className = chartToolbar.className + " hide";
-
-                            toPng(document.querySelector('.longitudinal-container'))
-                                .then(function(dataUrl) {
+                            generateChartImageUrl()
+                                .then(function(dataUrlChart) {
                                     let link = document.createElement('a');
-                                    link.download = 'my-image-name.png';
-                                    link.href = dataUrl;
+                                    link.download = chartTitle + '.png';
+                                    link.href = dataUrlChart;
                                     link.click();
-                                    toolbar.className = toolbar.className.replace(" hide", "");
-                                    chartToolbar.className = chartToolbar.className.replace(" hide", "");
                                 })
                                 .catch(function(error) {
                                     console.error('oops, something went wrong!', error);
-                                    alert(error);
+                                    onError('longitudinalProfile.errors.cannotDownloadPNG');
                                 });
 
                         }}>
                         <Glyphicon glyph="download"/> <Message msgId="longitudinalProfile.downloadPNG" />
+                    </Button>
+                    <Button
+                        className="export"
+                        bsStyle="primary"
+                        disabled={isTainted}
+                        onClick={() => {
+                            toPng(document.querySelector('canvas.ol-unselectable'))
+                                .then(function(dataUrlMap) {
+                                    generateChartImageUrl()
+                                        .then((dataUrlChart) => {
+                                            pdfMake.createPdf({
+                                                content: [{
+                                                    image: "map",
+                                                    width: 500
+                                                }, {
+                                                    image: "chart",
+                                                    width: 500
+                                                }],
+                                                images: {
+                                                    chart: dataUrlChart,
+                                                    map: dataUrlMap
+                                                }
+                                            }).download(chartTitle + ".pdf");
+
+                                        });
+
+                                })
+                                .catch(function(error) {
+                                    console.error('oops, something went wrong!', error);
+                                    onError('longitudinalProfile.errors.cannotDownloadPDF');
+                                    setIsTainted(true);
+
+                                });
+
+                        }}>
+                        <Glyphicon glyph="download"/> <Message msgId="longitudinalProfile.downloadPDF" />
                     </Button>
                 </ButtonGroup>
             ) : null}
@@ -180,36 +240,40 @@ const ChartData = ({
     }
     return content;
 };
-const Information = ({infos, messages, loading}) => {
+const Information = ({
+    infos,
+    loading,
+    messages
+}) => {
     const infoConfig = [
         {
             glyph: '1-layer',
-            prop: 'referentiel'
+            prop: 'layer'
         },
         {
             glyph: 'line',
-            prop: 'distance',
+            prop: 'totalDistance',
             round: true,
             suffix: ' m'
         },
         {
             glyph: 'chevron-up',
-            prop: 'denivelepositif',
+            prop: 'altitudePositive',
             suffix: ' m'
         },
         {
             glyph: 'chevron-down',
-            prop: 'denivelenegatif',
+            prop: 'altitudeNegative',
             suffix: ' m'
         },
         {
             glyph: 'cog',
-            prop: 'processedpoints',
+            prop: 'processedPoints',
             suffix: ` ${messages.longitudinalProfile.points ?? 'points'}`
         }
     ];
 
-    return loading ? <LoadingView /> : (<div className="longitudinal-container">
+    return loading ? <LoadingView /> : (<div className={"longitudinal-tool-container"}>
         {
             infoConfig.map((conf) => (
                 <div className="stats-entry" key={conf.prop}>
@@ -256,7 +320,6 @@ const tabs = [
 
 const Dock = ({
     chartTitle,
-    crsSelected,
     config,
     dockStyle,
     infos,
@@ -267,10 +330,11 @@ const Dock = ({
     points,
     projection,
     showDock,
-    toggleMaximize,
     onAddMarker,
+    onError,
     onExportCSV,
-    onHideMarker
+    onHideMarker,
+    onToggleMaximize
 }) => {
 
     const [activeTab, onSetTab] = useState('chart');
@@ -278,13 +342,13 @@ const Dock = ({
     return showDock ? (
         <ResponsivePanel
             dock
-            containerId="longitudinal-profile-container"
-            containerClassName={maximized ? "maximized" : null}
+            containerId="longitudinal-profile-tool-container"
+            containerClassName={maximized ? " maximized" : null}
             containerStyle={dockStyle}
             bsStyle="primary"
             position="right"
             title={<Message key="title" msgId="longitudinalProfile.title"/>}
-            glyph={<div className="longitudinal-profile" />}
+            glyph={<div className="1-line" />}
             size={550}
             open={showDock}
             onClose={onCloseDock}
@@ -323,14 +387,15 @@ const Dock = ({
                     key="ms-tab-settings-body-chart"
                     chartTitle={chartTitle}
                     config={config}
-                    crsSelected={crsSelected}
+                    maximized={maximized}
                     messages={messages}
                     points={points}
                     projection={projection}
-                    toggleMaximize={toggleMaximize}
                     onAddMarker={onAddMarker}
+                    onError={onError}
                     onExportCSV={onExportCSV}
                     onHideMarker={onHideMarker}
+                    onToggleMaximize={onToggleMaximize}
                 /> : null}
             {activeTab === "info" ?
                 <Information
@@ -344,8 +409,45 @@ const Dock = ({
     ) : null;
 };
 
-// Dock.propTypes = {
-//     size: PropTypes.number
-// };
-
 export default Dock;
+
+ChartData.propTypes = {
+    chartTitle: PropTypes.string,
+    config: PropTypes.object,
+    dockStyle: PropTypes.object,
+    loading: PropTypes.bool,
+    maximized: PropTypes.bool,
+    messages: PropTypes.object,
+    points: PropTypes.array,
+    projection: PropTypes.string,
+    onAddMarker: PropTypes.func,
+    onError: PropTypes.func,
+    onExportCSV: PropTypes.func,
+    onHideMarker: PropTypes.func,
+    onToggleMaximize: PropTypes.func
+};
+
+Dock.propTypes = {
+    chartTitle: PropTypes.string,
+    config: PropTypes.object,
+    dockStyle: PropTypes.object,
+    infos: PropTypes.object,
+    loading: PropTypes.bool,
+    maximized: PropTypes.bool,
+    messages: PropTypes.object,
+    points: PropTypes.array,
+    projection: PropTypes.string,
+    showDock: PropTypes.bool,
+    onAddMarker: PropTypes.func,
+    onCloseDock: PropTypes.func,
+    onError: PropTypes.func,
+    onExportCSV: PropTypes.func,
+    onHideMarker: PropTypes.func,
+    onToggleMaximize: PropTypes.func
+};
+
+Information.propTypes = {
+    infos: PropTypes.object,
+    loading: PropTypes.bool,
+    messages: PropTypes.object
+};

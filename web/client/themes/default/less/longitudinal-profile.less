@@ -14,10 +14,13 @@
         .background-color-var(@theme-vars[mask-bg]);
         .color-var(@theme-vars[main-bg]);
     }
-    .longitudinal-container {
+    .longitudinal-tool-container {
         .background-color-var(@theme-vars[main-bg]);
     }
     #dock-chart-portal.visible {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+    .downloadButtons {
         .background-color-var(@theme-vars[main-bg]);
     }
 }
@@ -26,13 +29,25 @@
 // Layout
 // **************
 
-#longitudinal-container.maximized {
+#longitudinal-profile-tool-container.maximized {
     z-index: 1300;
 }
 
 .longitudinal-profile-crs {
     width: 200px;
-    padding: 8px;
+}
+.crs-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .file-selected {
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .form-group{
+        display: flex;
+    }
 }
 
 .longitude-help {
@@ -49,10 +64,11 @@
     white-space: pre-line;
 }
 
-.longitudinal-container {
+.longitudinal-tool-container {
     padding: 15px;
     &.maximized {
-        position: fixed;
+        height: calc(100% - 30px);
+        width: 100%;
         background: inherit;
         z-index: 2000;
     }
@@ -63,8 +79,9 @@
 
 #dock-chart-portal {
     width: 100vw;
-    height: 100%;
     z-index: 1200;
+    display: flex;
+    flex-direction: column;
     position: absolute;
     left: 0;
     top: 0;

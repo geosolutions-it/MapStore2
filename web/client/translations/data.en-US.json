@@ -3027,6 +3027,10 @@
             "description": "Login tool",
             "title": "Login"
           },
+          "LongitudinalProfileTool": {
+            "description": "Allows user to generate a longitudinal profile given a linestring and a layer with elevation attribute. Needs configuration",
+            "title": "Longitudinal Profile tool"
+          },
           "MapCatalog": {
             "description": "Allows browsing, editing, deleting and loading of maps that are available on the server",
             "title": "Map Catalog"
@@ -3730,7 +3734,7 @@
           "open": "Open Longitudinal Profile",
           "close": "Close Longitudinal Profile",
           "title": "Longitudinal profile",
-          "draw": "Draw profile",
+          "draw": "Draw line",
           "import": "Load file",
           "select": "Selection to profile",
           "parameters": "Parameters",
@@ -3742,11 +3746,12 @@
           "preferences": "Preferences",
           "CRS": "CRS",
           "uom": "Units",
+          "fileSelected": "File selected: ",
           "uomMeters": "meters",
           "source": "Source",
-          "downloadCSV": "Download data as CSV",
-          "downloadPNG": "Download chart as PNG",
-          "downloadPDF": "Download chart & map as PDF",
+          "downloadCSV": "CSV",
+          "downloadPNG": "PNG",
+          "downloadPDF": "PDF",
           "help": {
             "draw": "Click on the map to draw the line. Click one more time on end point to finish.",
             "select": "Please select layer in TOC and click on the line feature to generate profile.<br/>Selected layer: {layerName}",
@@ -3764,13 +3769,14 @@
             "loadingError": "Error loading data for longitudinal profile",
             "unableToSetupPlugin": "Unable to setup longitudinal profile extension",
             "defaultReferentialNotFound": "Default referential is configured but cannot be found in referentials list. Please update extension configuration.",
-            "projectionNotSupported": "Referential with projection supported by map cannot be found. Please update extension configuration or add desired projection into app configuration."
+            "projectionNotSupported": "Referential with projection supported by map cannot be found. Please update extension configuration or add desired projection into app configuration.",
+            "cannotDownloadPDF": "It is not possible to print the current map as it contains references to external domain, please remove them save the map, refresh the page and try again.",
+            "cannotDownloadPNG": "Cannot download the chart as image."
           },
           "settings": {
             "chartTitle": "Chart Title",
-            "pitch": "Pitch used (m)",
             "referential": "Referential",
-            "distance": "Distance"
+            "distance": "Distance (m)"
           },
           "dropZone": {
             "heading": "<p><h4>Drop your file here</h4><small>or</small></p>",

@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 // import React from 'react';
-// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
@@ -22,6 +21,7 @@ import {
     changeReferential,
     closeDock,
     hideMarker,
+    showError,
     setup,
     tearDown,
     toggleMaximize,
@@ -40,7 +40,7 @@ import {
 } from '../selectors/locale';
 import {
     chartTitleSelector,
-    crsSelectedSelector,
+    crsSelectedDXFSelector,
     configSelector,
     dataSourceModeSelector,
     distanceSelector,
@@ -63,11 +63,47 @@ import {
 
 import { createPlugin } from '../utils/PluginsUtils';
 
+/**
+ * Plugin for generating a chart with longitudinal profile
+ * @name LongitudinalProfileTool
+ * @memberof plugins
+ * @class
+ * @prop {Object} cfg.config the plugin configuration
+ * @prop {string} cfg.config.chartTitle the default title of the chart
+ * @prop {number} cfg.config.defaultDistance the default distance value in meters
+ * @prop {string} cfg.config.identifier the profile to use in the wps request, defaulted to gs:LongitudinalProfile
+ * @prop {string} cfg.config.defaultReferentialName the default referential name
+ * @prop {Object[]} cfg.config.referentials the layers that can be used as referentials
+ * @prop {string[]} cfg.filterAllowedCRS the allowed crs to be proposed when dropping a DXF file, (needs to be supported by mapstore)
+ * @prop {Object} cfg.additionalCRS the crs object that allow to define also a label
+ *
+ * @example
+ *
+ * {
+ *   "name": "LongitudinalProfileTool",
+ *   "cfg": {
+ *     "config": {
+ *       "chartTitle": "Longitudinal profile",
+ *       "defaultDistance": 75,
+ *       "defaultReferentialName": "sfdem",
+ *       "referentials": [{
+ *          "layerName": "sfdem",
+ *          "title": "sfdem"
+ *        }]
+ *      },
+ *      "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
+ *      "additionalCRS": {
+ *        "EPSG:3003": { "label": "EPSG:3003" }
+ *       },
+ *    }
+ * }
+ * `
+ */
 const MainComponent = connect(
     createSelector(
         [
             chartTitleSelector,
-            crsSelectedSelector,
+            crsSelectedDXFSelector,
             configSelector,
             isInitializedSelector,
             isLoadingSelector,
@@ -90,7 +126,7 @@ const MainComponent = connect(
         ],
         (
             chartTitle,
-            crsSelected,
+            crsSelectedDXF,
             config,
             initialized,
             loading,
@@ -112,7 +148,7 @@ const MainComponent = connect(
             boundingRect
         ) => ({
             chartTitle,
-            crsSelected,
+            crsSelectedDXF,
             config,
             initialized,
             loading,
@@ -140,30 +176,31 @@ const MainComponent = connect(
         onChangeGeometry: changeGeometry,
         onChangeReferential: changeReferential,
         onCloseDock: closeDock,
+        onError: showError,
         onExportCSV: exportCSV,
         onHideMarker: hideMarker,
         onSetup: setup,
         onTearDown: tearDown,
         onToggleMaximize: toggleMaximize,
-        onToggleParameters: setControlProperty.bind(this, "longitudinalProfileParameters", "enabled", true, true),
+        onToggleParameters: setControlProperty.bind(this, "LongitudinalProfileToolParameters", "enabled", true, true),
         onToggleSourceMode: toggleMode,
         onWarning: warning
     })(Main);
 
 export default createPlugin(
-    "LongitudinalProfile",
+    "LongitudinalProfileTool",
     {
         component: MainComponent,
         containers: {
             SidebarMenu: {
-                name: 'LongitudinalProfile',
+                name: 'LongitudinalProfileTool',
                 position: 2100,
                 doNotHide: true,
                 tool: UserMenuConnected,
                 priority: 1
             },
             Toolbar: {
-                name: "LongitudinalProfile-spinner",
+                name: "LongitudinalProfileTool-spinner",
                 alwaysVisible: true,
                 position: 1,
                 tool: connect((state) => ({
@@ -178,31 +215,31 @@ export default createPlugin(
 // exploit in Mapstore the altitude or depth data present in digital terrain models or bathymetric surveys
 // INPUT
 // [x] Height data: The input height data (from a list - currently data used is the IGN DEM at 75 m)
-// [ ] linear profile: Three(3) options
+// [x] linear profile: Three(3) options
 //   [x] Drawing it directly on the map;
 //   [x] Importing it as JSON selected from file system
 //   [x] Importing it as ESRI Shapefile, selected from file system (compressed zip containing shp, shx, dbf and prj files)
 //   [x] Importing it as DXF file, selected from file system, and related coordinate system to be used (from a list)
-// [v] Title of the graphic profile
-// [v] Pitch used: Maximum distance between 2 points along the profile, in meters)
-// [ ] After drawing the linear profile or importing it as a file (shp or dxf), the module offers to display and export the profile produced in several ways
+// [x] Title of the graphic profile
+// [x] Pitch used (distance): Maximum distance between 2 points along the profile, in meters)
+// [x] After drawing the linear profile or importing it as a file (shp or dxf), the module offers to display and export the profile produced in several ways
 // [ ] ADD Option to use bathymetric data sources as height data input, in addition to DTMs from IGN (and lidar)
 
 // OUTPUT
 // [ ] Graph display
-//   [ ] The graph is interactive. Altitude and distance traveled values are dynamically displayed on hover
-//   [ ] The x-axis indicates the distance traveled from the starting point of the drawn or imported linear
-//   [ ] The y-axis indicates the altitude returned by the height source at the coordinates along the profile.
+//   [x] The graph is interactive. Altitude and distance traveled values are dynamically displayed on hover
+//   [x] The x-axis indicates the distance traveled from the starting point of the drawn or imported linear
+//   [x] The y-axis indicates the altitude returned by the height source at the coordinates along the profile.
 //   [ ] The y-axis is initialized at 10 m below the minimum altitude encountered on the profile and 10 m above the maximum altitude encountered on the profile
-//   [ ] Information on altimetric data source and altimetric reference is specified.
+//   [x] Information on altimetric data source and altimetric reference is specified.
 // [x] Summary display
 //   [x] Elevation data source used
 //   [x] Total linear length of the profile
 //   [x] Positive elevation
-//   [X] Negative elevation
-//   [X] Number of vertex points on which the altimetry was calculated. The number of stitches varies according to the pitch chosen.
+//   [x] Negative elevation
+//   [x] Number of vertex points on which the altimetry was calculated. The number of stitches varies according to the pitch chosen.
 // [ ] Output data - Export
-//   [v] Image format (PNG) of the graph (only chart or also with other info?)
+//   [x] Image format (PNG) of the graph (only chart or also with other info?)
 //   [x] Tabular format (CSV) of the longitudinal profile, specifying for each coordinate of the profile the Z value in addition to the X and Y values. The distance of each point from the starting point is also mentioned.
-//   [ ] Printable format (PDF) of the longitudinal profile. The PDF document should include the graphic information as well as the extract from the map allowing you to visualize the line of the profile in 2D (whether the latter has been drawn on the map or imported via an ESRI Shapefile or DXF file)
+//   [x] Printable format (PDF) of the longitudinal profile. The PDF document should include the graphic information as well as the extract from the map allowing you to visualize the line of the profile in 2D (whether the latter has been drawn on the map or imported via an ESRI Shapefile or DXF file)
 //   [ ] Export of longitudinal profile to DXF format as 3D polyline

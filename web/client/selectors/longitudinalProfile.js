@@ -30,7 +30,7 @@ export const isDockOpenSelector = (state) => state?.controls[CONTROL_DOCK_NAME]?
 export const isInitializedSelector = (state) => state?.longitudinalProfile?.initialized;
 export const isLoadingSelector = (state) => state?.longitudinalProfile?.loading;
 export const dataSourceModeSelector = (state) => state?.longitudinalProfile?.mode;
-export const crsSelectedSelector = (state) => state?.longitudinalProfile?.crsSelected;
+export const crsSelectedDXFSelector = (state) => state?.longitudinalProfile?.crsSelectedDXF || "EPSG:3857";
 export const geometrySelector = (state) => state?.longitudinalProfile?.geometry;
 export const isActiveMenuSelector = (state) => isParametersOpenSelector(state) || dataSourceModeSelector(state) !== "idle";
 export const infosSelector = (state) => state?.longitudinalProfile?.infos;
@@ -40,7 +40,6 @@ export const configSelector = (state) => state?.longitudinalProfile?.config;
 export const referentialSelector = (state) => configSelector(state)?.referential;
 export const chartTitleSelector = (state) => configSelector(state)?.chartTitle;
 export const distanceSelector = (state) => configSelector(state)?.distance;
-export const pitchSelector = (state) => configSelector(state)?.pitch;
 
 export const isSupportedLayerSelector = (state) => {
     const selectedLayer = getSelectedLayer(state);

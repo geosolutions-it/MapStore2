@@ -15,7 +15,7 @@ import SettingsPanel from "./SettingsPanel";
 const Main = ({
     additionalCRS,
     chartTitle,
-    crsSelected,
+    crsSelectedDXF,
     config,
     currentLocale,
     dataSourceMode,
@@ -42,6 +42,7 @@ const Main = ({
     onChangeGeometry,
     onChangeReferential,
     onCloseDock,
+    onError,
     onExportCSV,
     onHideMarker,
     onSetup,
@@ -68,7 +69,6 @@ const Main = ({
         />,
         <Dock
             chartTitle={chartTitle}
-            crsSelected={crsSelected}
             config={config}
             distance={distance}
             dockStyle={dockStyle}
@@ -86,6 +86,7 @@ const Main = ({
             onChangeDistance={onChangeDistance}
             onChangeReferential={onChangeReferential}
             onCloseDock={onCloseDock}
+            onError={onError}
             onExportCSV={onExportCSV}
             onHideMarker={onHideMarker}
             onToggleMaximize={onToggleMaximize}
@@ -94,7 +95,7 @@ const Main = ({
         (dataSourceMode === 'import' ?
             <Import
                 additionalCRS={additionalCRS}
-                crsSelected={crsSelected}
+                crsSelectedDXF={crsSelectedDXF}
                 filterAllowedCRS={filterAllowedCRS}
                 loading={loading}
                 onChangeCRS={onChangeCRS}

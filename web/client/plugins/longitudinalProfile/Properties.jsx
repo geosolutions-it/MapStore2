@@ -16,14 +16,12 @@ import FormControl from '../../components/misc/DebouncedFormControl';
 import {
     changeReferential,
     changeDistance,
-    changePitch,
     changeChartTitle
 } from "../../actions/longitudinalProfile";
 import {
     configSelector,
     chartTitleSelector,
     distanceSelector,
-    pitchSelector,
     referentialSelector
 } from '../../selectors/longitudinalProfile';
 
@@ -31,15 +29,13 @@ const Properties = ({
     chartTitle,
     config,
     distance,
-    pitch,
     referential,
     onChangeReferential,
     onChangeDistance,
-    onChangePitch,
     onChangeChartTitle
 }) => {
     return (
-        <div className="longitudinal-container">
+        <div className="longitudinal-container-props">
             <FormGroup bsSize="small">
                 <ControlLabel><Message msgId="longitudinalProfile.settings.referential"/></ControlLabel>
                 <Select
@@ -52,12 +48,14 @@ const Properties = ({
             </FormGroup>
             <FormGroup bsSize="small">
                 <ControlLabel><Message msgId="longitudinalProfile.settings.distance"/></ControlLabel>
-                <Select
+                <FormControl
                     id="distance"
+                    min={1}
+                    step={1}
+                    type="number"
                     value={distance}
                     clearable={false}
-                    options={config.distances.map(r => ({value: r, label: r}))}
-                    onChange={(selected) => onChangeDistance(selected?.value)}
+                    onChange={(value) => onChangeDistance(value)}
                 />
             </FormGroup>
             <FormGroup bsSize="small">
@@ -67,15 +65,6 @@ const Properties = ({
                     value={chartTitle}
                     clearable={false}
                     onChange={(value) => onChangeChartTitle(value)}
-                />
-            </FormGroup>
-            <FormGroup bsSize="small">
-                <ControlLabel><Message msgId="longitudinalProfile.settings.pitch"/></ControlLabel>
-                <FormControl
-                    id="pitch"
-                    value={pitch}
-                    clearable={false}
-                    onChange={(value) => onChangePitch(value)}
                 />
             </FormGroup>
         </div>
@@ -88,25 +77,21 @@ const PropertiesConnected = connect(
             chartTitleSelector,
             configSelector,
             distanceSelector,
-            pitchSelector,
             referentialSelector
         ],
         (
             chartTitle,
             config,
             distance,
-            pitch,
             referential
         ) => ({
             chartTitle,
             config,
             distance,
-            pitch,
             referential
         })), {
         onChangeChartTitle: changeChartTitle,
         onChangeDistance: changeDistance,
-        onChangePitch: changePitch,
         onChangeReferential: changeReferential
     })(Properties);
 

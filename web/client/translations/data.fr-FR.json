@@ -3017,6 +3017,10 @@
             "description": "Authentification",
             "title": "Login"
           },
+          "LongitudinalProfileTool": {
+            "description": "Permet à l'utilisateur de générer un profil longitudinal à partir d'une chaîne de lignes et d'un calque avec attribut d'élévation. Configuration requise",
+            "title": "Outil Profil longitudinal"
+          },
           "MapCatalog": {
             "description": "Permet la navigation, l'édition, la suppression et le chargement des cartes disponibles sur le serveur",
             "title": "Catalogue de cartes"
@@ -3716,46 +3720,58 @@
           "showMoreItems": "Afficher plus d'éléments"
         },
         "longitudinalProfile": {
-          "open": "Open Longitudinal Profile",
-          "close": "Close Longitudinal Profile",
-          "title": "Profil longitudinal",
-          "draw": "Dessiner le profil",
-          "import": "Charger le fichier JSON",
-          "select": "Sélection à profiler",
+          "open": "Ouvrir le profil en long",
+          "close": "Fermer le profil en long",
+          "title": "Profil en long",
+          "draw": "Dessiner une ligne",
+          "import": "Fichier de chargement",
+          "select": "Sélection au profil",
           "parameters": "Paramètres",
+          "elevation": "Élévation (m)",
+          "crsSelector": "Spécifiez une projection pour le fichier DXF",
+          "distance": "Distance (m)",
+          "chart": "Graphique",
+          "infos": "Information",
+          "preferences": "Préférences",
+          "CRS": "CRS",
+          "uom": "Unités de mesure",
+          "fileSelected": "Fichier sélectionné: ",
+          "uomMeters": "mètres",
+          "source": "Source",
+          "downloadCSV": "CSV",
+          "downloadPNG": "PNG",
+          "downloadPDF": "PDF",
           "help": {
             "draw": "Cliquez sur la carte pour tracer la ligne. Cliquez une fois de plus sur le point final pour terminer.",
-            "select": "Veuillez sélectionner la couche dans la table des matières et cliquez sur l'entité linéaire pour générer le profil.<br/>Couche sélectionnée : {layerName}",
+            "select": "Veuillez sélectionner la couche dans la table des matières et cliquez sur l'entité linéaire pour générer le profil.<br/>Couches sélectionnées: {layerName}",
             "noLayer": "Aucun calque sélectionné",
-            "notSupportedLayer": "non pris en charge. Veuillez sélectionner WMS, WFS ou couche vectorielle."
+            "notSupportedLayer": "non supporté. Veuillez sélectionner WMS, WFS ou couche vectorielle."
           },
           "warnings": {
             "noLayerSelected": "Veuillez d'abord sélectionner le calque.",
-            "layerNotSupported": "La couche sélectionnée n'est pas prise en charge. Veuillez sélectionner une couche WMS, WFS ou vectorielle.",
+            "layerNotSupported": "La couche sélectionnée n'est pas prise en charge. Veuillez sélectionner WMS, WFS ou couche vectorielle.",
             "noFeatureInPoint": "L'entité linéaire n'a pas été trouvée au point sélectionné.",
-            "noLineFeatureFound": "L'élément de ligne n'a pas été trouvé dans le fichier importé.",
-            "fallbackToProjection": "La projection du référentiel par défaut \"{defaultReferential}\" n'est pas prise en charge. Revenir au référentiel \"{referential}\" avec \"{projection}\" projection."
-
+            "noLineFeatureFound": "L'entité linéaire n'a pas été trouvée dans le fichier importé.",
+            "fallbackToProjection": "Projection du référentiel par défaut \"{defaultReferential}\" n'est pas pris en charge. Se replier sur des référentiels \"{referential}\" avec ça \"{projection}\" projection."
           },
-          "error": {
+          "errors": {
             "loadingError": "Erreur lors du chargement des données pour le profil longitudinal",
-            "unableToSetupPlugin": "Impossible de configurer l'extension du profil longitudinal",
+            "unableToSetupPlugin": "Impossible de configurer l'extension du profil longitudinal.",
             "defaultReferentialNotFound": "Le référentiel par défaut est configuré mais introuvable dans la liste des référentiels. Veuillez mettre à jour la configuration de l'extension.",
-            "projectionNotSupported": "Le référentiel avec projection prise en charge par la carte est introuvable. Veuillez mettre à jour la configuration de l'extension ou ajouter la projection souhaitée dans la configuration de l'application."
+            "projectionNotSupported": "Le référentiel avec projection prise en charge par la carte est introuvable. Veuillez mettre à jour la configuration de l'extension ou ajouter la projection souhaitée dans la configuration de l'application.",
+            "cannotDownloadPDF": "Il n'est pas possible d'imprimer la carte actuelle car elle contient des références à un domaine externe, veuillez les supprimer, enregistrer la carte, actualiser la page et réessayer.",
+            "cannotDownloadPNG": "Impossible de télécharger le graphique en tant qu'image."
           },
-          "elevation": "Altitude (m)",
-          "distance": "Distance (m)",
-          "chart": "Graphique",
-          "infos": "Informations",
-          "preferences": "Préférences",
           "settings": {
+            "chartTitle": "Titre du graphique",
             "referential": "Référentiel",
-            "distance": "Distance"
+            "distance": "Distance (m)"
           },
           "dropZone": {
-            "heading": "<p><h4>Déposez vos fichiers JSON ici</h4><small>ou</small></p>",
-            "selectFiles": "Sélectionner les fichiers...",
-            "infoSupported": "<p><small>Types de fichiers pris en charge : GeoJSON</small></p>"
+            "heading": "<p><h4>Déposez votre fichier ici </h4><small>ou</small></p>",
+            "selectFiles": "Choisir le dossier...",
+            "infoSupported": "<p><small>Types de fichiers pris en charge: GeoJSON, DXF, Shapefiles</small></p>",
+            "dxfGeometryNotSupported": "Seul LWPOLYLINE est pris en charge"
           }
         }
     }

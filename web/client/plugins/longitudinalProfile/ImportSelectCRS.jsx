@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FormGroup, ControlLabel } from 'react-bootstrap';
+import { Button, Glyphicon, FormGroup, ControlLabel } from 'react-bootstrap';
 import Select from 'react-select';
 
 import Message from '../../components/I18N/Message';
@@ -9,7 +9,7 @@ import { filterCRSList, getAvailableCRS, reprojectGeoJson } from '../../utils/Co
 
 const ImportSelectCRS = ({
     additionalCRS = {},
-    crsSelected = "EPSG:4326",
+    crsSelectedDXF = "EPSG:3857",
     feature,
     filterAllowedCRS = ["EPSG:4326", "EPSG:3857"],
     onChangeGeometry,
@@ -28,26 +28,35 @@ const ImportSelectCRS = ({
         }
     }
     return (
-        <FormGroup bsSize="small">
+        <div className="crs-container">
+
+            <div className="file-selected">
+                <span>
+                    <Message msgId="longitudinalProfile.fileSelected"/> {feature.fileName}
+                </span>
+            </div>
             <ControlLabel><Message msgId="longitudinalProfile.crsSelector"/></ControlLabel>
-            <Select
-                id="longitudinal-profile-crs"
-                className="longitudinal-profile-crs"
-                value={crsSelected}
-                clearable={false}
-                options={list}
-                onChange={(newCrs) => onChangeCRS(newCrs?.value)}
-            />
-            <Button onClick={() => {
-                onClose();
-                const reprojectedFt = reprojectGeoJson(feature, crsSelected, "EPSG:3857");
-                onChangeGeometry({
-                    type: "LineString",
-                    coordinates: reprojectedFt.geometry.coordinates,
-                    projection: 'EPSG:3857'
-                });
-            }}>Continue</Button>
-        </FormGroup>
+            <FormGroup bsSize="small">
+                <Select
+                    className="longitudinal-profile-crs"
+                    value={crsSelectedDXF}
+                    clearable={false}
+                    options={list}
+                    onChange={(newCrs) => onChangeCRS(newCrs?.value)}
+                />
+                <Button onClick={() => {
+                    onClose();
+                    const reprojectedFt = reprojectGeoJson(feature, crsSelectedDXF, "EPSG:3857");
+                    onChangeGeometry({
+                        type: "LineString",
+                        coordinates: reprojectedFt.geometry.coordinates,
+                        projection: "EPSG:3857"
+                    });
+                }}>
+                    <Glyphicon glyph="chevron-right"/>
+                </Button>
+            </FormGroup>
+        </div>
 
     );
 };

@@ -129,7 +129,7 @@ export default compose(
                                 showProjectionCombobox: !!res[0].showProjectionCombobox,
                                 loading: false,
                                 flattenFeatures: flattenImportedFeatures(res),
-                                crs: res[0]?.crs?.properties?.name ?? 'EPSG:4326'
+                                crs: res[0]?.crs?.properties?.name ?? 'EPSG:3857'
                             });
                         })
                         .catch(error => Rx.Observable.of({error, loading: false}))

@@ -52,11 +52,11 @@ const UserMenu = ({
         <React.Fragment>
             <DropDown
 
-                id="longitudinal"
+                id="longitudinal-tool"
                 className={className}
                 pullRight
                 bsStyle={menuIsActive ? "primary" : "tray"}
-                title={<Glyphicon glyph="longitudinal-profile"/>}
+                title={<Glyphicon glyph="1-line"/>}
                 tooltipId="longitudinalProfile.title"
                 tooltipPosition={tooltipPosition}
                 noCaret
@@ -109,9 +109,9 @@ const UserMenuConnected =  connect((state) => ({
     isParametersOpen: isParametersOpenSelector(state),
     initialized: isInitializedSelector(state)
 }), {
-    onActivateTool: setControlProperty.bind(null, "longitudinalProfile", "enabled", true),
+    onActivateTool: setControlProperty.bind(null, "longitudinalProfileTool", "enabled", true),
     onToggleSourceMode: toggleMode,
-    onToggleParameters: setControlProperty.bind(null, "longitudinalProfileParameters", "enabled", true, true)
+    onToggleParameters: setControlProperty.bind(null, "LongitudinalProfileToolParameters", "enabled", true, true)
 })(UserMenu);
 
 export default UserMenuConnected;

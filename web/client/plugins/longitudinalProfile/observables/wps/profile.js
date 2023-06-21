@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
 */
 import {
-    complexData,
     literalData,
     processData,
     processParameter,
@@ -16,10 +15,10 @@ import {
 import {executeProcessXML} from "../../../../observables/wps/execute";
 
 const prepareGeometry = (geometry) => {
-    return `<![CDATA[LINESTRING(${geometry?.coordinates?.map((point) => `${point[0]} ${point[1]}`).join(',')})]]>`;
+    return `SRID=${geometry.projection.replace("EPSG:", "")};LINESTRING(${geometry?.coordinates?.map((point) => `${point[0]} ${point[1]}`).join(',')})`;
 };
 
-const getCRS = (geometry) => geometry?.projection;
+// const getCRS = (geometry) => geometry?.projection;
 
 /**
  * Construct payload for request to obtain longitudinal profile data
@@ -32,10 +31,10 @@ const getCRS = (geometry) => geometry?.projection;
 export const profileEnLong = ({identifier, geometry, distance, referential}) => executeProcessXML(
     identifier,
     [
-        processParameter('geometrie', processData(complexData(prepareGeometry(geometry), "application/wkt"))),
-        processParameter('crs', processData(literalData(getCRS(geometry)))),
+        processParameter('linestringEWKT', processData(literalData(prepareGeometry(geometry), "application/wkt"))),
+        processParameter('projection', processData(literalData("EPSG:3857"))), // parametrized?
         processParameter('distance', processData(literalData(distance))),
-        processParameter('referentiel', processData(literalData(referential)))
+        processParameter('layerName', processData(literalData(referential)))
     ],
     responseForm(rawDataOutput('result'))
 );

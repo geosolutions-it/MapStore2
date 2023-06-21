@@ -7,7 +7,7 @@
 */
 import expect from "expect";
 
-import { CONTROL_DOCK_NAME } from '../../plugins/longitudinalProfile/constants';
+import {CONTROL_DOCK_NAME} from '../../plugins/longitudinalProfile/constants';
 import {SET_CONTROL_PROPERTY} from "../controls";
 import {
     ADD_PROFILE_DATA,
@@ -19,16 +19,18 @@ import {
     changeGeometry,
     changeReferential,
     closeDock,
-    INITIALIZED,
     initialized,
-    LOADING,
+    INITIALIZED,
     loading,
+    LOADING,
     openDock,
-    SETUP,
     setup,
+    SETUP,
     TEAR_DOWN,
-    tearDown, TOGGLE_MAXIMIZE,
-    TOGGLE_MODE, toggleMaximize,
+    tearDown,
+    TOGGLE_MAXIMIZE,
+    TOGGLE_MODE,
+    toggleMaximize,
     toggleMode
 } from "../longitudinalProfile";
 

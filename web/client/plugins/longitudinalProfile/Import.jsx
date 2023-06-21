@@ -28,19 +28,21 @@ export default compose(
         showProjectionCombobox,
         filterAllowedCRS,
         additionalCRS,
+        crsSelectedDXF,
         ...props
     }) => (<DragZone
         onClose={onClose}
         onDrop={onDrop}
         onRef={onRef}
     >
-        {showProjectionCombobox ?
+        {[<ImportContent {...props}/>, showProjectionCombobox ?
             <ImportSelectCRS
                 additionalCRS={additionalCRS}
+                crsSelectedDXF={crsSelectedDXF}
                 feature={props.flattenFeatures[0]}
                 filterAllowedCRS={filterAllowedCRS}
                 onChangeCRS={onChangeCRS}
                 onChangeGeometry={props.onChangeGeometry}
                 onClose={onClose}
-            /> : <ImportContent {...props}/>}
+            /> : null]}
     </DragZone>));

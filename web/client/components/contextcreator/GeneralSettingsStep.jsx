@@ -38,9 +38,8 @@ export default ({contextId, contextName = "", windowTitle = "", isValidContextNa
                     <Message msgId="contextCreator.generalSettings.windowTitle"/>
                 </ControlLabel>
                 <FormControl
-                    type="number"
+                    type="text"
                     value={windowTitle}
-                    min="0"
                     placeholder={getMessageById(context.messages, "contextCreator.generalSettings.windowTitlePlaceholder")}
                     onChange={e => onChange('windowTitle', e.target.value)}/>
             </FormGroup>

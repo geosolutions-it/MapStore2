@@ -11,7 +11,6 @@ import {
     CHANGE_CHART_TITLE,
     CHANGE_DISTANCE,
     CHANGE_GEOMETRY,
-    CHANGE_PITCH,
     CHANGE_REFERENTIAL,
     INITIALIZED,
     LOADING,
@@ -31,21 +30,15 @@ const DEFAULT_STATE = {
     infos: {},
     points: [],
     projection: "",
-    crsSelected: "EPSG:4326",
+    crsSelectedDXF: "EPSG:3857",
     config: {
-        pitch: 2,
         chartTitle: "",
         wpsurl: "/geoserver/wps",
-        identifier: "gs:ProfilEnLong",
-        referentials: [
-            {
-                "layerName": "sfdem",
-                "title": "sfdem"
-            }
-        ],
+        identifier: "gs:LongitudinalProfile",
+        referentials: [],
         distances: LONGITUDINAL_DISTANCES,
         defaultDistance: 100,
-        defaultReferentialName: "sfdem"
+        defaultReferentialName: ""
     }
 };
 
@@ -83,20 +76,12 @@ export default function longitudinalProfile(state = DEFAULT_STATE, action) {
     case CHANGE_CRS:
         return {
             ...state,
-            crsSelected: action.crsSelected
+            crsSelectedDXF: action.crs
         };
     case CHANGE_GEOMETRY:
         return {
             ...state,
             geometry: action.geometry
-        };
-    case CHANGE_PITCH:
-        return {
-            ...state,
-            config: {
-                ...state.config,
-                pitch: action.pitch
-            }
         };
     case CHANGE_REFERENTIAL:
         return {

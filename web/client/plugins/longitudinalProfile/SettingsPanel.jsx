@@ -58,7 +58,7 @@ const PanelConnected = connect(
         ) => ({
             isParametersOpen
         })), {
-        onToggleParameters: setControlProperty.bind(this, "longitudinalProfileParameters", "enabled", true, true)
+        onToggleParameters: setControlProperty.bind(this, "LongitudinalProfileToolParameters", "enabled", true, true)
     })(Panel);
 
 export default PanelConnected;

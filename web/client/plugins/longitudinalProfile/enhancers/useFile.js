@@ -7,6 +7,7 @@
 */
 import { compose, mapPropsStream, withHandlers } from 'recompose';
 
+import {reprojectGeoJson} from "../../../utils/CoordinatesUtils";
 import {selectLineFeature} from "../../../utils/LongitudinalProfileUtils";
 
 /**
@@ -23,11 +24,13 @@ export default compose(
             (flattenFeatures, crs) => {
                 const { feature, coordinates } = selectLineFeature(flattenFeatures, crs);
                 if (feature && feature.showProjectionCombobox) {
+                    // eslint-disable-next-line no-console
                     console.log("");
                 } else if (feature && coordinates) {
+                    const reprojectedFt = reprojectGeoJson(feature, "EPSG:4326", "EPSG:3857");
                     onChangeGeometry({
                         type: "LineString",
-                        coordinates,
+                        coordinates: reprojectedFt.geometry.coordinates,
                         projection: 'EPSG:3857'
                     });
                     onClose();

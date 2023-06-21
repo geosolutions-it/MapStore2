@@ -3015,6 +3015,10 @@
             "description": "Login Tool",
             "title": "Login"
           },
+          "LongitudinalProfileTool": {
+            "description": "Permite al usuario generar un perfil longitudinal dada una línea lineal y una capa con atributo de elevación. Necesita configuración",
+            "title": "Herramienta Perfil longitudinal"
+          },
           "MapCatalog": {
             "description": "Permite navegar, editar, borrar y cargar mapas que están disponibles en el servidor",
             "title": "Catálogo de mapas"
@@ -3713,6 +3717,61 @@
         },
         "sidebarMenu": {
           "showMoreItems": "Mostrar más elementos"
+        },
+        "longitudinalProfile": {
+          "open": "Perfil Longitudinal abierto",
+          "close": "Cerrar Perfil Longitudinal",
+          "title": "Perfil longitudinal",
+          "draw": "Dibujar linea",
+          "import": "Cargar archivo",
+          "select": "Selección a perfil",
+          "parameters": "Parámetros",
+          "elevation": "Elevación (m)",
+          "crsSelector": "Especifique una proyección para el archivo DXF",
+          "distance": "Distancia (m)",
+          "chart": "Cuadro",
+          "infos": "Información",
+          "preferences": "Preferencias",
+          "CRS": "CRS",
+          "uom": "Unidades de medida",
+          "fileSelected": "archivo seleccionado: ",
+          "uomMeters": "metros",
+          "source": "Fuente",
+          "downloadCSV": "CSV",
+          "downloadPNG": "PNG",
+          "downloadPDF": "PDF",
+          "help": {
+            "draw": "Haga clic en el mapa para dibujar la línea. Haga clic una vez más en el punto final para terminar.",
+            "select": "Seleccione la capa en TOC y haga clic en la entidad de línea para generar el perfil.<br/>capa seleccionada: {layerName}",
+            "noLayer": "Ninguna capa seleccionada",
+            "notSupportedLayer": "No soportado. Seleccione WMS, WFS o capa vectorial."
+          },
+          "warnings": {
+            "noLayerSelected": "Seleccione la capa primero.",
+            "layerNotSupported": "La capa seleccionada no es compatible. Seleccione WMS, WFS o capa vectorial.",
+            "noFeatureInPoint": "No se encontró la entidad de línea en el punto seleccionado.",
+            "noLineFeatureFound": "No se encontró la característica de línea en el archivo importado.",
+            "fallbackToProjection": "Proyección de referencial por defecto \"{defaultReferential}\" no es apoyado. Volviendo a las referencias \"{referential}\" con este \"{projection}\" proyección."
+          },
+          "errors": {
+            "loadingError": "Error al cargar datos para perfil longitudinal",
+            "unableToSetupPlugin": "No se puede configurar la extensión del perfil longitudinal.",
+            "defaultReferentialNotFound": "El referencial predeterminado está configurado pero no se puede encontrar en la lista de referencias. Actualice la configuración de la extensión.",
+            "projectionNotSupported": "No se encuentra referencial con proyección apoyada en mapa. Actualice la configuración de la extensión o agregue la proyección deseada en la configuración de la aplicación.",
+            "cannotDownloadPDF": "No es posible imprimir el mapa actual ya que contiene referencias a un dominio externo, elimínelos, guarde el mapa, actualice la página y vuelva a intentarlo.",
+            "cannotDownloadPNG": "No se puede descargar el gráfico como imagen."
+          },
+          "settings": {
+            "chartTitle": "Titulo del gráfico",
+            "referential": "Referencial",
+            "distance": "Distancia (m)"
+          },
+          "dropZone": {
+            "heading": "<p><h4>Deje su archivo aquí</h4><small>o</small></p>",
+            "selectFiles": "Seleccione Archivo...",
+            "infoSupported": "<p><small>Tipos de archivos compatibles: GeoJSON, DXF, Shapefiles</small></p>",
+            "dxfGeometryNotSupported": "Solo se admite LWPOLYLINE"
+          }
         }
     }
 }
