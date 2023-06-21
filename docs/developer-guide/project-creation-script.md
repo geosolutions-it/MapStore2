@@ -37,12 +37,13 @@ npm install
 Finally, to create the project, use the following command:
 
 ```sh
-node ./createProject.js <projectType> <projectName> <projectVersion> <projectDescription> <gitRepositoryUrl> <outputFolder>
+node ./createProject.js
 ```
 
-Note that projectName and outputFolder are mandatory:
+The command line will ask some questions about the project to create. (You can press enter to accept the default value, indicated between parenthesis, or type a new one):
 
 * **projectName**: short project name that will be used as the repository name on github, webapp path and name in package.json
+* **branch/tag**: the base branch/tag to use for the project (e.g. v2022.02.02, or master)
 * **projectType**: type of project to create, currently one type of projects is supported:
   * **standard**: is a copy of the standard MapStore project, ready to be used and customized
 * **projectVersion**: project version in package.json (X.Y.Z)
@@ -53,7 +54,15 @@ Note that projectName and outputFolder are mandatory:
 Usage:
 
 ```sh
-node ./createProject.js standard MyProject "1.0.0" "this is my awesome project" "" ../MY_PROJECT_NAME
+node ./createProject.js
+
+Project Type (standard):
+MapStore base branch (master):v2023.01.01
+Project Name: my_project
+Project Version (1.0.0):
+Project Description (Project Name):
+Repository URL:
+Output folder: ../my_project
 ```
 
 At the end of the script execution, the given outputFolder will be populated by all the configuration files needed to start working on the project. Moreover, the local git repository will be initialized and the MapStore sub-module added and downloaded.
