@@ -211,35 +211,3 @@ export default createPlugin(
         reducers: { longitudinalProfile },
         epics
     });
-
-// exploit in Mapstore the altitude or depth data present in digital terrain models or bathymetric surveys
-// INPUT
-// [x] Height data: The input height data (from a list - currently data used is the IGN DEM at 75 m)
-// [x] linear profile: Three(3) options
-//   [x] Drawing it directly on the map;
-//   [x] Importing it as JSON selected from file system
-//   [x] Importing it as ESRI Shapefile, selected from file system (compressed zip containing shp, shx, dbf and prj files)
-//   [x] Importing it as DXF file, selected from file system, and related coordinate system to be used (from a list)
-// [x] Title of the graphic profile
-// [x] Pitch used (distance): Maximum distance between 2 points along the profile, in meters)
-// [x] After drawing the linear profile or importing it as a file (shp or dxf), the module offers to display and export the profile produced in several ways
-// [ ] ADD Option to use bathymetric data sources as height data input, in addition to DTMs from IGN (and lidar)
-
-// OUTPUT
-// [ ] Graph display
-//   [x] The graph is interactive. Altitude and distance traveled values are dynamically displayed on hover
-//   [x] The x-axis indicates the distance traveled from the starting point of the drawn or imported linear
-//   [x] The y-axis indicates the altitude returned by the height source at the coordinates along the profile.
-//   [ ] The y-axis is initialized at 10 m below the minimum altitude encountered on the profile and 10 m above the maximum altitude encountered on the profile
-//   [x] Information on altimetric data source and altimetric reference is specified.
-// [x] Summary display
-//   [x] Elevation data source used
-//   [x] Total linear length of the profile
-//   [x] Positive elevation
-//   [x] Negative elevation
-//   [x] Number of vertex points on which the altimetry was calculated. The number of stitches varies according to the pitch chosen.
-// [ ] Output data - Export
-//   [x] Image format (PNG) of the graph (only chart or also with other info?)
-//   [x] Tabular format (CSV) of the longitudinal profile, specifying for each coordinate of the profile the Z value in addition to the X and Y values. The distance of each point from the starting point is also mentioned.
-//   [x] Printable format (PDF) of the longitudinal profile. The PDF document should include the graphic information as well as the extract from the map allowing you to visualize the line of the profile in 2D (whether the latter has been drawn on the map or imported via an ESRI Shapefile or DXF file)
-//   [ ] Export of longitudinal profile to DXF format as 3D polyline
