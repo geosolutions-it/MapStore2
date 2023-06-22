@@ -34,7 +34,7 @@ In this page it is possible to:
 
 * Change the **Title**
 
-* Set the translation of the layer title by opening the **Localize Text** popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. In this way the language of the title changes according to the language that the user has set to [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
+* Set the translation of the layer title by opening the **Localize Text** popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. This way the language of the title changes according to the  current language setting in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 <img src="../img/layer-settings/lacalize-layer-title.gif" class="ms-docimage"/>
 
@@ -52,7 +52,7 @@ Setting a tooltip that shows the Title and the Description on the Right, for exa
 
 <img src="../img/layer-settings/custom_tooltip.jpg" class="ms-docimage"/>
 
-* **Disable editing in attribute table**. Enabling this checkbox will disable [editing in attribute table](attributes-table.md#editing-and-removing-existing-features) and the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will be hidden in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer (the checkbox is unchecked by default).
+* **Disable editing on attribute table**. This option allows to disable [the editing function](attributes-table.md#editing-and-removing-existing-features) in Attribute Table. In case a layer has been set as read-only through this option, the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> icon will not be available in the Attribute Table and in the[Identify](navigation-toolbar.md#identify-tool) panel for the selected layer. This option is unchecked by default and it can be controlled only by users with editing permissions on the map.
 
 ## Display
 
