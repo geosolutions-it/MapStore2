@@ -22,6 +22,7 @@ import {
     isInitializedSelector,
     isParametersOpenSelector
 } from "../../selectors/longitudinalProfile";
+import { isCesium } from '../../selectors/maptype';
 
 const TNavDropdown = tooltip(NavDropdown);
 const TDropdownButton = tooltip(DropdownButton);
@@ -36,10 +37,11 @@ const UserMenu = ({
     isParametersOpen,
     menuIsActive,
     nav,
+    showDrawOption = true,
+    tooltipPosition,
     onActivateTool,
     onToggleParameters,
-    onToggleSourceMode,
-    tooltipPosition
+    onToggleSourceMode
 }) => {
     let DropDown = nav ? TNavDropdown : TDropdownButton;
 
@@ -61,9 +63,9 @@ const UserMenu = ({
                 tooltipPosition={tooltipPosition}
                 noCaret
             >
-                <MenuItem active={dataSourceMode === 'draw'} key="draw" onClick={onToggleTool('draw')}>
+                {showDrawOption ? <MenuItem active={dataSourceMode === 'draw'} key="draw" onClick={onToggleTool('draw')}>
                     <Glyphicon glyph="pencil"/><Message msgId="longitudinalProfile.draw"/>
-                </MenuItem>
+                </MenuItem> : null}
                 <MenuItem active={dataSourceMode === 'import'} key="import" onClick={onToggleTool('import')}>
                     <Glyphicon glyph="upload"/> <Message msgId="longitudinalProfile.import"/>
                 </MenuItem>
@@ -86,6 +88,7 @@ UserMenu.propTypes = {
     isParametersOpen: PropTypes.bool,
     menuIsActive: PropTypes.bool,
     nav: PropTypes.bool,
+    showDrawOption: PropTypes.bool,
     tooltipPosition: PropTypes.string,
     onActivateTool: PropTypes.func,
     onToggleParameters: PropTypes.func,
@@ -96,6 +99,7 @@ UserMenu.defaultProps = {
     className: "square-button",
     menuIsActive: false,
     nav: false,
+    showDrawOption: true,
     onActivateTool: () => {},
     onToggleParameters: () => {},
     onToggleSourceMode: () => {},
@@ -104,9 +108,9 @@ UserMenu.defaultProps = {
 
 const UserMenuConnected =  connect((state) => ({
     menuIsActive: isActiveMenuSelector(state),
-    isActive: isActiveMenuSelector(state),
     dataSourceMode: dataSourceModeSelector(state),
     isParametersOpen: isParametersOpenSelector(state),
+    showDrawOption: !isCesium(state),
     initialized: isInitializedSelector(state)
 }), {
     onActivateTool: setControlProperty.bind(null, "longitudinalProfileTool", "enabled", true),

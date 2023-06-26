@@ -7,9 +7,9 @@
 */
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
-import omit from "lodash/omit";
 import Rx from 'rxjs';
 
+import defaultIcon from '../components/map/openlayers/img/marker-icon.png';
 import turfBbox from '@turf/bbox';
 import turfCenter from '@turf/center';
 import {
@@ -26,15 +26,11 @@ import {
 } from "../actions/draw";
 import {
     addProfileData,
-    changeDistance,
     changeGeometry,
-    changeReferential,
-    initialized,
     openDock,
     loading,
     toggleMaximize,
     toggleMode,
-    SETUP,
     TEAR_DOWN,
     TOGGLE_MODE,
     CHANGE_GEOMETRY,
@@ -69,7 +65,8 @@ import {
     CONTROL_NAME,
     CONTROL_PROPERTIES_NAME,
     LONGITUDINAL_OWNER,
-    LONGITUDINAL_VECTOR_LAYER_ID
+    LONGITUDINAL_VECTOR_LAYER_ID,
+    LONGITUDINAL_VECTOR_LAYER_ID_POINT
 } from '../plugins/longitudinalProfile/constants';
 import { profileEnLong } from '../plugins/longitudinalProfile/observables/wps/profile';
 import {getSelectedLayer} from "../selectors/layers";
@@ -80,18 +77,16 @@ import {
     isDockOpenSelector,
     isListeningClickSelector,
     isMaximizedSelector,
-    isSupportedLayerSelector,
-    vectorLayerFeaturesSelector
+    isSupportedLayerSelector
 } from "../selectors/longitudinalProfile";
 import {mapSelector} from "../selectors/map";
 import {
-    highlightStyleSelector,
     mapInfoEnabledSelector
 } from "../selectors/mapInfo";
 
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import {reprojectGeoJson, reproject} from "../utils/CoordinatesUtils";
-import {selectLineFeature, styleFeatures} from "../utils/LongitudinalProfileUtils";
+import {selectLineFeature} from "../utils/LongitudinalProfileUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
 
@@ -104,52 +99,7 @@ const DEACTIVATE_ACTIONS = [
 
 const deactivate = () => Rx.Observable.from(DEACTIVATE_ACTIONS);
 
-/**
- * Ensure that default configuration is applied whenever plugin is initialized
- * @param action$
- * @param store
- * @returns {*}
- */
-export const setupLongitudinalExtensionEpic = (action$, store) =>
-    action$.ofType(SETUP)
-        .switchMap(() => {
-
-            const { referentials, distances, defaultDistance, defaultReferentialName }  = configSelector(store.getState());
-
-            const defaultReferential = referentials.find(el => el.layerName === defaultReferentialName);
-            if (defaultReferentialName && !defaultReferential) {
-                return Rx.Observable.of(error({ title: "Error", message: "longitudinalProfile.errors.defaultReferentialNotFound", autoDismiss: 10 }));
-            }
-
-            return Rx.Observable.of(
-                updateDockPanelsList(CONTROL_DOCK_NAME, "add", "right"),
-                changeReferential(defaultReferentialName ?? referentials[0].layerName),
-                changeDistance(defaultDistance ?? distances[0]),
-                updateAdditionalLayer(
-                    LONGITUDINAL_VECTOR_LAYER_ID,
-                    LONGITUDINAL_OWNER,
-                    'overlay',
-                    {
-                        id: LONGITUDINAL_VECTOR_LAYER_ID,
-                        features: [],
-                        type: "vector",
-                        name: "selectedLine",
-                        visibility: true
-                    }),
-                initialized()
-            );
-        })
-        .catch((e) => {
-            console.error(e); // eslint-disable-line no-console
-            return Rx.Observable.of(error({ title: "Error", message: "longitudinalProfile.errors.unableToSetupPlugin", autoDismiss: 10 }));
-        });
-
-/**
- * Clean up state related to the plugin whenever it tears down
- * @param action$
- * @returns {*}
- */
-export const cleanOnTearDownEpic = (action$) =>
+export const LPcleanOnTearDownEpic = (action$) =>
     action$.ofType(TEAR_DOWN)
         .switchMap(() => {
             return Rx.Observable.of(
@@ -158,7 +108,8 @@ export const cleanOnTearDownEpic = (action$) =>
                 setControlProperty(CONTROL_DOCK_NAME, 'enabled', false),
                 setControlProperty(CONTROL_PROPERTIES_NAME, 'enabled', false),
                 updateDockPanelsList(CONTROL_NAME, "remove", "right"),
-                removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID, owner: LONGITUDINAL_OWNER})
+                removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID, owner: LONGITUDINAL_OWNER}),
+                removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID_POINT, owner: LONGITUDINAL_OWNER})
             );
         });
 
@@ -168,7 +119,7 @@ export const cleanOnTearDownEpic = (action$) =>
  * @param store
  * @returns {*}
  */
-export const onDrawActivatedEpic = (action$, store) =>
+export const LPonDrawActivatedEpic = (action$, store) =>
     action$.ofType(TOGGLE_MODE)
         .switchMap(()=> {
             const state = store.getState();
@@ -203,7 +154,9 @@ export const onDrawActivatedEpic = (action$, store) =>
                 ]);
             default:
                 return Rx.Observable.from([
-                    purgeMapInfoResults(), hideMapinfoMarker(),
+                    purgeMapInfoResults(),
+                    hideMapinfoMarker(),
+                    toggleMapInfoState(),
                     ...(get(store.getState(), 'draw.drawOwner', '') === CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
                     unRegisterEventListener('click', CONTROL_NAME)
                 ]);
@@ -216,7 +169,7 @@ export const onDrawActivatedEpic = (action$, store) =>
  * @returns {*}
  */
 
-export const onChartPropsChangeEpic = (action$, store) =>
+export const LPonChartPropsChangeEpic = (action$, store) =>
     action$.ofType(CHANGE_GEOMETRY, CHANGE_DISTANCE, CHANGE_REFERENTIAL)
         .filter(() => {
             const state = store.getState();
@@ -234,14 +187,17 @@ export const onChartPropsChangeEpic = (action$, store) =>
                 .switchMap((result) => {
                     const feature = {
                         type: 'Feature',
-                        geometry
+                        geometry,
+                        properties: {
+                            id: "line"
+                        }
                     };
                     const map = mapSelector(state);
                     const center = turfCenter(reprojectGeoJson(feature, geometry.projection, 'EPSG:4326')).geometry.coordinates;
                     const bbox = turfBbox(reprojectGeoJson(feature, geometry.projection, 'EPSG:4326'));
                     const [minx, minY, maxX, maxY] = bbox;
                     const { infos, profile: points } = result ?? {};
-                    const styledFeatures = styleFeatures([feature], omit(highlightStyleSelector(state), ["radius"]));
+                    const styledFeatures = [feature];
                     const features = styledFeatures && geometry.projection ? styledFeatures.map( f => reprojectGeoJson(
                         f,
                         geometry.projection
@@ -254,6 +210,24 @@ export const onChartPropsChangeEpic = (action$, store) =>
                             {
                                 id: LONGITUDINAL_VECTOR_LAYER_ID,
                                 features,
+                                style: {
+                                    format: "geostyler",
+                                    body: {
+                                        name: "",
+                                        rules: [{
+                                            name: "line-rule",
+                                            filter: ["==", "id", "line"],
+                                            symbolizers: [
+                                                {
+                                                    "kind": "Line",
+                                                    "color": "#3075e9",
+                                                    "opacity": 1,
+                                                    "width": 3
+                                                }
+                                            ]
+                                        }]
+                                    }
+                                },
                                 type: "vector",
                                 name: "selectedLine",
                                 visibility: true
@@ -279,41 +253,69 @@ export const onChartPropsChangeEpic = (action$, store) =>
                 ));
         });
 
-export const onMarkerChangedEpic = (action$, store) =>
-    action$.ofType(ADD_MARKER, HIDE_MARKER)
+export const LPonAddMarkerEpic = (action$) =>
+    action$.ofType(ADD_MARKER)
         .switchMap(({point}) => {
-            const state = store.getState();
-            let featuresCollection = vectorLayerFeaturesSelector(state);
-            if (point) {
-                const point4326 = reproject([point.lng, point.lat], "EPSG:3857", "EPSG:4326");
-                const pointFeature = {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [point4326.x, point4326.y],
-                        projection: point.projection
-                    },
-                    style: {
-                        iconShape: 'circle',
-                        iconColor: 'blue'
-                    }
-                };
-                featuresCollection = featuresCollection?.length > 0 ? [featuresCollection[0], pointFeature] : [pointFeature];
-            } else {
-                if (featuresCollection?.length) {
-                    featuresCollection = [featuresCollection[0]];
-                } else {
-                    featuresCollection = [];
+            const point4326 = reproject([point.lng, point.lat], "EPSG:3857", "EPSG:4326");
+            const pointFeature = {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [point4326.x, point4326.y],
+                    projection: point.projection
+                },
+                properties: {
+                    id: "point"
                 }
-            }
+            };
             return Rx.Observable.from([
                 updateAdditionalLayer(
-                    LONGITUDINAL_VECTOR_LAYER_ID,
+                    LONGITUDINAL_VECTOR_LAYER_ID_POINT,
                     LONGITUDINAL_OWNER,
                     'overlay',
                     {
-                        id: LONGITUDINAL_VECTOR_LAYER_ID,
-                        features: featuresCollection,
+                        id: LONGITUDINAL_VECTOR_LAYER_ID_POINT,
+                        features: [pointFeature],
+                        type: "vector",
+                        style: {
+                            format: "geostyler",
+                            body: {
+                                name: "",
+                                rules: [{
+                                    name: "point-rule",
+                                    filter: ["==", "id", "point"],
+                                    symbolizers: [
+                                        {
+                                            kind: 'Icon',
+                                            image: defaultIcon,
+                                            opacity: 1,
+                                            size: 32,
+                                            anchor: [0.5, 1],
+                                            rotate: 0,
+                                            msBringToFront: true,
+                                            msHeightReference: 'none',
+                                            symbolizerId: "point-feature"
+                                        }
+                                    ]
+                                }]
+                            }
+                        },
+                        name: "selectedLine",
+                        visibility: true
+                    })
+            ]);
+        });
+export const LPonHideMarkerEpic = (action$) =>
+    action$.ofType(HIDE_MARKER)
+        .switchMap(() => {
+            return Rx.Observable.from([
+                updateAdditionalLayer(
+                    LONGITUDINAL_VECTOR_LAYER_ID_POINT,
+                    LONGITUDINAL_OWNER,
+                    'overlay',
+                    {
+                        id: LONGITUDINAL_VECTOR_LAYER_ID_POINT,
+                        features: [],
                         type: "vector",
                         name: "selectedLine",
                         visibility: true
@@ -327,13 +329,14 @@ export const onMarkerChangedEpic = (action$, store) =>
  * @param store
  * @returns {*}
  */
-export const onDockClosedEpic = (action$, store) =>
+export const LPonDockClosedEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY)
         .filter(({control, property, value}) => control === CONTROL_DOCK_NAME && property === 'enabled' && value === false)
         .switchMap(() => {
             return Rx.Observable.from([
                 changeGeometry(false),
                 removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID, owner: LONGITUDINAL_OWNER}),
+                removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID_POINT, owner: LONGITUDINAL_OWNER}),
                 ...(isMaximizedSelector(store.getState()) ? [toggleMaximize()] : [])
             ]);
         });
@@ -343,7 +346,7 @@ export const onDockClosedEpic = (action$, store) =>
  * also keep the zoom to extent offsets aligned with the current visibile window, so when zoom the longitudinal panel
  * is considered as a right offset and it will not cover the zoomed features.
  */
-export const longitudinalMapLayoutEpic = (action$, store) =>
+export const LPlongitudinalMapLayoutEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
         .filter(({source}) => isDockOpenSelector(store.getState()) &&  source !== CONTROL_NAME)
         .map(({layout}) => {
@@ -365,7 +368,7 @@ export const longitudinalMapLayoutEpic = (action$, store) =>
  * @param store
  * @returns {Observable<unknown>}
  */
-export const resetLongitudinalToolOnDrawToolActiveEpic = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, CONTROL_NAME,
+export const LPresetLongitudinalToolOnDrawToolActiveEpic = (action$, store) => shutdownToolOnAnotherToolDrawing(action$, store, CONTROL_NAME,
     () => {
         return Rx.Observable.of(toggleMode());
     },
@@ -378,20 +381,20 @@ export const resetLongitudinalToolOnDrawToolActiveEpic = (action$, store) => shu
  * @param store
  * @return {observable}
  */
-export const deactivateIdentifyEnabledEpic = (action$, store) =>
+export const LPdeactivateIdentifyEnabledEpic = (action$, store) =>
     action$
         .ofType(TOGGLE_MAPINFO_STATE)
         .filter(() => mapInfoEnabledSelector(store.getState()))
         .switchMap(() => {
             const mode = dataSourceModeSelector(store.getState());
-            return mode
+            return mode !== "idle"
                 ? Rx.Observable.from([
-                    toggleMode(false)
+                    toggleMode("idle")
                 ])
                 : Rx.Observable.empty();
         });
 
-export const clickToProfileEpic = (action$, {getState}) =>
+export const LPclickToProfileEpic = (action$, {getState}) =>
     action$
         .ofType(CLICK_ON_MAP)
         .filter(() => isListeningClickSelector(getState()))

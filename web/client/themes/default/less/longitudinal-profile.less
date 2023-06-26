@@ -29,8 +29,13 @@
 // Layout
 // **************
 
-#longitudinal-profile-tool-container.maximized {
-    z-index: 1300;
+#longitudinal-profile-tool-container {
+    &.maximized {
+        z-index: 1300;
+    }
+    .properties {
+        padding: 15px;
+    }
 }
 
 .longitudinal-profile-crs {
@@ -66,6 +71,7 @@
 
 .longitudinal-tool-container {
     padding: 15px;
+
     &.maximized {
         height: calc(100% - 30px);
         width: 100%;
@@ -86,7 +92,7 @@
     left: 0;
     top: 0;
     pointer-events: none;
-    .visible {
+    &.visible {
         pointer-events: all;
     }
 }

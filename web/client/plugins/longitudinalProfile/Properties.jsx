@@ -35,8 +35,8 @@ const Properties = ({
     onChangeChartTitle
 }) => {
     return (
-        <div className="longitudinal-container-props">
-            <FormGroup bsSize="small">
+        <div className="longitudinal-container">
+            <FormGroup>
                 <ControlLabel><Message msgId="longitudinalProfile.settings.referential"/></ControlLabel>
                 <Select
                     id="referential"
@@ -46,7 +46,7 @@ const Properties = ({
                     onChange={(selected) => onChangeReferential(selected?.value)}
                 />
             </FormGroup>
-            <FormGroup bsSize="small">
+            <FormGroup>
                 <ControlLabel><Message msgId="longitudinalProfile.settings.distance"/></ControlLabel>
                 <FormControl
                     id="distance"
@@ -58,7 +58,7 @@ const Properties = ({
                     onChange={(value) => onChangeDistance(value)}
                 />
             </FormGroup>
-            <FormGroup bsSize="small">
+            <FormGroup>
                 <ControlLabel><Message msgId="longitudinalProfile.settings.chartTitle"/></ControlLabel>
                 <FormControl
                     id="chartTitle"

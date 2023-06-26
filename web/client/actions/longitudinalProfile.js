@@ -5,9 +5,19 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+import {updateAdditionalLayer} from "../actions/additionallayers";
 import {SET_CONTROL_PROPERTY} from "../actions/controls";
+import {
+    updateDockPanelsList
+} from "../actions/maplayout";
 import {error} from "../actions/notifications";
-import {CONTROL_DOCK_NAME} from '../plugins/longitudinalProfile/constants';
+import {
+    CONTROL_DOCK_NAME,
+    LONGITUDINAL_OWNER,
+    LONGITUDINAL_VECTOR_LAYER_ID,
+    LONGITUDINAL_VECTOR_LAYER_ID_POINT
+} from '../plugins/longitudinalProfile/constants';
+import {configSelector} from "../selectors/longitudinalProfile";
 
 export const ADD_MARKER = "LONGITUDINAL_PROFILE:ADD_MARKER";
 export const ADD_PROFILE_DATA = "LONGITUDINAL_PROFILE:ADD_PROFILE_DATA";
@@ -141,10 +151,12 @@ export const openDock = () => ({
  * action used to setup the the config of the longitudinal profile plugin
  * @prop {Object} config the properties of the config (see Plugin documentation)
  */
-export const setup = (config) => ({
-    type: SETUP,
-    config
-});
+export const setupPlugin = (config) => {
+    return {
+        type: SETUP,
+        config
+    };
+};
 
 /**
  * action used to show a notification error message
@@ -179,3 +191,43 @@ export const toggleMode = (mode) => ({
     type: TOGGLE_MODE,
     mode
 });
+/**
+ * action used to setup
+ */
+export const setup = (config) => {
+    return (dispatch, getState) => {
+        dispatch(setupPlugin(config));
+        const { referentials, distances, defaultDistance, defaultReferentialName } = config || configSelector(getState());
+        const defaultReferential = referentials.find(el => el.layerName === defaultReferentialName);
+        if (defaultReferentialName && !defaultReferential) {
+            dispatch(error({ title: "Error", message: "longitudinalProfile.errors.defaultReferentialNotFound", autoDismiss: 10 }));
+        }
+
+        dispatch(updateDockPanelsList(CONTROL_DOCK_NAME, "add", "right"));
+        dispatch(changeReferential(defaultReferentialName ?? referentials[0].layerName));
+        dispatch(changeDistance(defaultDistance ?? distances[0]));
+        dispatch(updateAdditionalLayer(
+            LONGITUDINAL_VECTOR_LAYER_ID,
+            LONGITUDINAL_OWNER,
+            'overlay',
+            {
+                id: LONGITUDINAL_VECTOR_LAYER_ID,
+                features: [],
+                type: "vector",
+                name: "selectedLine",
+                visibility: true
+            }));
+        dispatch(updateAdditionalLayer(
+            LONGITUDINAL_VECTOR_LAYER_ID_POINT,
+            LONGITUDINAL_OWNER,
+            'overlay',
+            {
+                id: LONGITUDINAL_VECTOR_LAYER_ID_POINT,
+                features: [],
+                type: "vector",
+                name: "point",
+                visibility: true
+            }));
+        dispatch(initialized());
+    };
+};

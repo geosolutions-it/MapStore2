@@ -11,6 +11,7 @@ export const CONTROL_PROPERTIES_NAME = 'LongitudinalProfileToolParameters';
 export const CONTROL_DOCK_NAME = 'LongitudinalToolDock';
 
 export const LONGITUDINAL_VECTOR_LAYER_ID = 'longitudinal_profile_tool';
+export const LONGITUDINAL_VECTOR_LAYER_ID_POINT = 'longitudinal_profile_tool_point';
 export const LONGITUDINAL_OWNER = 'LongitudinalTool';
 export const FILE_TYPE_ALLOWED = [
     "application/json",

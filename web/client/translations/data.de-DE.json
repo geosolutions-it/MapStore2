@@ -3801,7 +3801,7 @@
           },
           "settings": {
             "chartTitle": "Diagrammtitel",
-            "referential": "Referenziell",
+            "referential": "Profilebene",
             "distance": "Distanz (m)"
           },
           "dropZone": {

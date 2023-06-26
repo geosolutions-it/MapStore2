@@ -3775,7 +3775,7 @@
           },
           "settings": {
             "chartTitle": "Chart Title",
-            "referential": "Referential",
+            "referential": "Profile layer",
             "distance": "Distance (m)"
           },
           "dropZone": {

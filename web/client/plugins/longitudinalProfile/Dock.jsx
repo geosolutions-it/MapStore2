@@ -201,19 +201,30 @@ const ChartData = ({
                                 .then(function(dataUrlMap) {
                                     generateChartImageUrl()
                                         .then((dataUrlChart) => {
-                                            pdfMake.createPdf({
-                                                content: [{
-                                                    image: "map",
-                                                    width: 500
-                                                }, {
-                                                    image: "chart",
-                                                    width: 500
-                                                }],
-                                                images: {
-                                                    chart: dataUrlChart,
-                                                    map: dataUrlMap
-                                                }
-                                            }).download(chartTitle + ".pdf");
+                                            try {
+                                                pdfMake.createPdf({
+                                                    content: [
+                                                        {
+                                                            image: "chart",
+                                                            width: 450
+                                                        },
+                                                        {
+                                                            image: "map",
+                                                            width: 555,
+                                                            margin: [0, 60]
+                                                        }
+                                                    ],
+                                                    pageMargins: [ 20, 40, 20, 40 ],
+                                                    images: {
+                                                        chart: dataUrlChart,
+                                                        map: dataUrlMap
+                                                    }
+                                                }).download(chartTitle + ".pdf");
+                                            } catch (err) {
+                                                console.error('oops, something went wrong!', err);
+                                                onError('longitudinalProfile.errors.cannotDownloadPDF');
+
+                                            }
 
                                         });
 
@@ -404,7 +415,7 @@ const Dock = ({
                     messages={messages}
                     loading={loading}
                 /> : null}
-            {activeTab === "props" ? <Properties/> : null}
+            {activeTab === "props" ? <div className="properties"><Properties/></div> : null}
         </ResponsivePanel>
     ) : null;
 };

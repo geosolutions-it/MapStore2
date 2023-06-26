@@ -3763,7 +3763,7 @@
           },
           "settings": {
             "chartTitle": "Titulo del gráfico",
-            "referential": "Referencial",
+            "referential": "Capa de perfil",
             "distance": "Distancia (m)"
           },
           "dropZone": {

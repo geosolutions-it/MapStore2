@@ -1046,6 +1046,7 @@ The `symbolizer` could be of following `kinds`:
   | `size` | size of the icon | x | x |
   | `opacity` | opacity of the icon | x | x |
   | `rotate` | rotation of the icon | x | x |
+  | `anchor` | array of values defined in fractions [0 to 1] | x | x |
   | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
   | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
   | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |

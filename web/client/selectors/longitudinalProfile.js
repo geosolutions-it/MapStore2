@@ -11,7 +11,8 @@ import {
     CONTROL_DOCK_NAME,
     CONTROL_NAME,
     CONTROL_PROPERTIES_NAME,
-    LONGITUDINAL_VECTOR_LAYER_ID
+    LONGITUDINAL_VECTOR_LAYER_ID,
+    LONGITUDINAL_VECTOR_LAYER_ID_POINT
 } from '../plugins/longitudinalProfile/constants';
 import {additionalLayersSelector} from '../selectors/additionallayers';
 import {getSelectedLayer} from "../selectors/layers";
@@ -53,4 +54,4 @@ export const isListeningClickSelector = (state) => !!(get(mapSelector(state), 'e
 
 export const isMaximizedSelector = (state) => state?.longitudinalProfile?.maximized;
 
-export const vectorLayerFeaturesSelector = (state) => head(additionalLayersSelector(state).filter(l => l.id === LONGITUDINAL_VECTOR_LAYER_ID))?.options?.features;
+export const vectorLayerFeaturesSelector = (state) => head(additionalLayersSelector(state).filter(l => (l.id === LONGITUDINAL_VECTOR_LAYER_ID || l.id === LONGITUDINAL_VECTOR_LAYER_ID_POINT)))?.options?.features;

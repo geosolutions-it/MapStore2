@@ -3764,7 +3764,7 @@
           },
           "settings": {
             "chartTitle": "Titre du graphique",
-            "referential": "Référentiel",
+            "referential": "Couche de profil",
             "distance": "Distance (m)"
           },
           "dropZone": {
