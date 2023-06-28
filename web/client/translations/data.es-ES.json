@@ -3746,7 +3746,8 @@
             "layer":"Capa:",
             "line":"Couche:",
             "up":"Ganancia de elevación acumulada:",
-            "down":"Pérdida de elevación acumulada:"
+            "down":"Pérdida de elevación acumulada:",
+            "noInfos": "No hay información disponible"
           },
           "help": {
             "draw": "Haga clic en el mapa para dibujar la línea. Haga clic una vez más en el punto final para terminar.",

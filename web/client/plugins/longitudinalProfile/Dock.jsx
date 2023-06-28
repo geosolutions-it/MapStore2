@@ -148,7 +148,7 @@ const ChartData = ({
                                 series={series}
                                 xAxis={xAxis}
                             />
-                            <table className="data-used">
+                            {config.referential && projection ? <table className="data-used">
                                 <tr>
                                     <td><Message msgId="longitudinalProfile.uom" /></td>
                                     <td><Message msgId="longitudinalProfile.uomMeters" /></td>
@@ -161,7 +161,7 @@ const ChartData = ({
                                     <td><Message msgId="longitudinalProfile.source" /></td>
                                     <td>{config.referential}</td>
                                 </tr>
-                            </table>
+                            </table> : null}
 
                         </div>
                     )}
@@ -290,7 +290,7 @@ const Information = ({
 
     return loading ? <LoadingView /> : (<div className={"longitudinal-tool-container"}>
         {
-            infoConfig.map((conf) => (
+            !isEmpty(infos) ? infoConfig.map((conf) => (
                 <div className="stats-entry" key={conf.prop}>
                     <Glyphicon glyph={conf.glyph} />
                     <span className="stats-value">
@@ -306,7 +306,7 @@ const Information = ({
                             ]}
                         </div>
                     </span>
-                </div>))
+                </div>)) : <Message msgId="longitudinalProfile.info.noInfos"/>
         }
     </div>);
 };

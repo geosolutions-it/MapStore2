@@ -3725,7 +3725,7 @@
           "title": "Profilo longitudinale",
           "draw": "Disegna profilo",
           "import": "Carica file",
-          "select": "Seleziona il livello",
+          "select": "Profilo da livello",
           "parameters": "Parametri",
           "elevation": "Altitudine (m)",
           "crsSelector": "Specifica una proiezione per il file DXF",
@@ -3746,12 +3746,13 @@
             "totalPoints": "Numero di punti processati:",
             "layer":"Livello:",
             "line":"Distanza:",
-            "up":"Dislivello Positiva:",
-            "down":"Dislivello Negativo:"
+            "up":"Dislivello Positivo:",
+            "down":"Dislivello Negativo:",
+            "noInfos": "Nessuna informazione disponibile"
           },
           "help": {
             "draw": "Clicca per disegnare una linea in mappa. Clicca ancora una volta per concludere l'interazione.",
-            "select": "Per favore seleziona una livello nella TOC e clicca una linea in mappa per generare il profilo<br/>Livello selezionato: {layerName}",
+            "select": "Per favore seleziona un livello nella TOC e clicca una linea in mappa per generare il profilo<br/>Livello selezionato: {layerName}",
             "noLayer": "Nessun livello selezionato",
             "notSupportedLayer": "Non supportato. Per favore seleziona WMS, WFS o un livello vettoriale."
           },

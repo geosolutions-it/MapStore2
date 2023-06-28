@@ -20,9 +20,9 @@ const HelpInfo = ({
     selectedLayer
 }) => {
     if (dataSourceMode && dataSourceMode !== 'import') {
-        let layerTitle = messages?.longitudinal?.help?.noLayer;
+        let layerTitle = messages?.longitudinalProfile?.help?.noLayer;
         if (selectedLayer) {
-            layerTitle = isSupportedLayer ? getLayerTitle(selectedLayer, currentLocale) : messages?.longitudinal?.help?.notSupportedLayer;
+            layerTitle = isSupportedLayer ? getLayerTitle(selectedLayer, currentLocale) : messages?.longitudinalProfile?.help?.notSupportedLayer;
         }
 
         return dataSourceMode !== "idle" ? (

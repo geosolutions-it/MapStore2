@@ -3747,7 +3747,8 @@
             "layer":"Layer:",
             "line":"Distance:",
             "up":"Gain d'altitude cumulé.",
-            "down":"Perte d'altitude cumulée:"
+            "down":"Perte d'altitude cumulée:",
+            "noInfos": "Aucune information disponible"
           },
           "help": {
             "draw": "Cliquez sur la carte pour tracer la ligne. Cliquez une fois de plus sur le point final pour terminer.",

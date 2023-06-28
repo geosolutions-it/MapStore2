@@ -3758,7 +3758,8 @@
             "layer":"Layer:",
             "line":"Distance:",
             "up":"Cumulative elevation gain:",
-            "down":"Cumulative elevation loss:"
+            "down":"Cumulative elevation loss:",
+            "noInfos": "No info available"
           },
           "help": {
             "draw": "Click on the map to draw the line. Click one more time on end point to finish.",

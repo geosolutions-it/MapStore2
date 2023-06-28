@@ -3784,7 +3784,8 @@
             "layer":"Schicht:",
             "line":"Distance:",
             "up":"Kumulierter Höhenunterschied:",
-            "down":"Kumulativer Höhenverlust:"
+            "down":"Kumulativer Höhenverlust:",
+            "noInfos": "Keine Informationen verfügbar"
           },
           "help": {
             "draw": "Klicken Sie auf die Karte, um die Linie zu zeichnen. Klicken Sie zum Abschluss noch einmal auf den Endpunkt.",
