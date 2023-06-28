@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { Editor } from 'react-draft-wysiwyg';
-import { DEFAULT_FONT_FAMILIES } from '../../../utils/GeoStoryUtils';
 import embed from 'embed-video';
+import { DEFAULT_FONT_FAMILIES } from '../../../utils/GeoStoryUtils';
 
 export const resizeBase64Image = (src, options) => {
     return new Promise((resolve, reject) => {
@@ -43,6 +44,7 @@ export const resizeBase64Image = (src, options) => {
 
 function CompactRichTextEditor({
     wrapperClassName = 'ms-compact-text-editor',
+    toolbarOptions,
     ...props
 }) {
 
@@ -52,7 +54,7 @@ function CompactRichTextEditor({
             editorStyle={{ minHeight: 200 }}
             wrapperClassName={wrapperClassName}
             toolbar={{
-                options: ['fontFamily', 'blockType', 'inline', 'textAlign', 'list', 'link', 'colorPicker', 'remove', 'image', 'embedded'],
+                options: toolbarOptions || ['fontFamily', 'blockType', 'inline', 'textAlign', 'list', 'link', 'colorPicker', 'remove', 'image', 'embedded'],
                 image: {
                     urlEnabled: true,
                     // disable the upload at the moment
@@ -123,3 +125,8 @@ function CompactRichTextEditor({
 }
 
 export default CompactRichTextEditor;
+
+CompactRichTextEditor.propTypes = {
+    toolbarOptions: PropTypes.array,
+    wrapperClassName: PropTypes.string
+};
