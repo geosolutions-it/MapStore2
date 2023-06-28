@@ -8,6 +8,7 @@
 
 import FileSaver from 'file-saver';
 
+import { DxfParser } from 'dxf-parser';
 import toBlob from 'canvas-to-blob';
 import shp from 'shpjs';
 import tj from '@mapbox/togeojson';
@@ -37,6 +38,7 @@ export const MIME_LOOKUPS = {
     'gpx': 'application/gpx+xml',
     'kmz': 'application/vnd.google-earth.kmz',
     'kml': 'application/vnd.google-earth.kml+xml',
+    'dxf': 'image/vnd.dxf',
     'zip': 'application/zip',
     'json': 'application/json',
     'geojson': 'application/json',
@@ -127,6 +129,24 @@ export const readGeoJson = function(file, warnings = false) {
                 resolve({geoJSON: geoJsonObj, errors: geojsonhint(geoJsonObj).filter((e) => warnings || e.level !== 'message')});
             } catch (e) {
                 reject(e);
+            }
+        };
+        reader.onerror = function() {
+            reject(reader.error.name);
+        };
+        reader.readAsText(file);
+    });
+};
+export const readDxf = function(file) {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = function() {
+            try {
+                const parserDXF = new DxfParser();
+                const dxf = parserDXF.parseSync(reader.result);
+                resolve(dxf);
+            } catch (err) {
+                reject(err);
             }
         };
         reader.onerror = function() {

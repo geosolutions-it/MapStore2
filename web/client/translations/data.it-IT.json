@@ -3017,6 +3017,10 @@
             "description": "Login Tool",
             "title": "Login"
           },
+          "LongitudinalProfileTool": {
+            "description": "Consente all'utente di generare un profilo longitudinale data una geomtria lineare e un layer con attributo di elevazione. Necessita di configurazione",
+            "title": "Profilo Longitudinale"
+          },
           "MapCatalog": {
             "description": "Consente la navigazione, la modifica, l'eliminazione e il caricamento di mappe disponibili sul server",
             "title": "Catalogo mappe"
@@ -3714,6 +3718,71 @@
         },
         "sidebarMenu": {
           "showMoreItems": "Mostra più elementi"
+        },
+        "longitudinalProfile": {
+          "open": "Apri profilo longitudinale",
+          "close": "Chiudi profilo longitudinale",
+          "title": "Profilo longitudinale",
+          "draw": "Disegna profilo",
+          "import": "Carica file",
+          "select": "Profilo da livello",
+          "parameters": "Parametri",
+          "elevation": "Altitudine (m)",
+          "crsSelector": "Specifica una proiezione per il file DXF",
+          "distance": "Distanza (m)",
+          "chart": "Grafico",
+          "infos": "Informazione",
+          "preferences": "Preferenze",
+          "CRS": "CRS",
+          "uom": "Unità",
+          "fileSelected": "File selezionato: ",
+          "uomMeters": "metri",
+          "source": "Sorgente",
+          "downloadCSV": "CSV",
+          "downloadPNG": "PNG",
+          "downloadPDF": "PDF",
+          "info": {
+            "points": " punti",
+            "totalPoints": "Numero di punti processati:",
+            "layer":"Livello:",
+            "line":"Distanza:",
+            "up":"Dislivello Positivo:",
+            "down":"Dislivello Negativo:",
+            "noInfos": "Nessuna informazione disponibile"
+          },
+          "help": {
+            "draw": "Clicca per disegnare una linea in mappa. Clicca ancora una volta per concludere l'interazione.",
+            "select": "Per favore seleziona un livello nella TOC e clicca una linea in mappa per generare il profilo<br/>Livello selezionato: {layerName}",
+            "noLayer": "Nessun livello selezionato",
+            "notSupportedLayer": "Non supportato. Per favore seleziona WMS, WFS o un livello vettoriale."
+          },
+          "warnings": {
+            "noLayerSelected": "Per favore seleziona prima un livello",
+            "layerNotSupported": "Il livello selezionato non è supportato. Per favore WMS, WFS o un livello vettoriale",
+            "noFeatureInPoint": "Non è stata trovata una linea nel punto cliccato.",
+            "noLineFeatureFound": "Non è stata trovata una linea nelfile importato.",
+            "fallbackToProjection": "La proiezione del livello di riferimento \"{defaultReferential}\" non è supportata. Viene pertanto usato questo  livello di riferimento \"{referential}\" con questa proiezione \"{projection}\"."
+          },
+          "errors": {
+            "outsideCoverage": "La linea fornita si trova al di fuori del bbox del livello",
+            "loadingError": "Errore durante il caricamento di dati per il profilo longitudinale",
+            "unableToSetupPlugin": "Impossibile inizializzare il profilo longitudinale",
+            "defaultReferentialNotFound": "Il livello di riferimento di default è configurato ma non è stato trovato nella lista. Per favore aggiorna il problema della configurazione dello strumento.",
+            "projectionNotSupported": "Il livello di riferimento con la proiezione supportata dalla mappa non è stato trovato. Per favore aggiorna la configurazione dello strumento o aggiungi la proiezione non supportata.",
+            "cannotDownloadPDF": "Non è stato possibile scaricare il PDF contente la mappa attuale perchè contiene riferimenti esterni a questo dominio, rimuovili, salva la mappa e ricarica la pagina per riprovare.",
+            "cannotDownloadPNG": "Non è stato possibile scaricare il grafico in PNG."
+          },
+          "settings": {
+            "chartTitle": "Titolo del grafico",
+            "referential": "Livello del profilo",
+            "distance": "Distanza (m)"
+          },
+          "dropZone": {
+            "heading": "<p><h4>Carica il file qui</h4><small>o</small></p>",
+            "selectFiles": "Seleziona il file...",
+            "infoSupported": "<p><small>Formati supportati: GeoJSON, DXF, Shapefiles</small></p>",
+            "dxfGeometryNotSupported": "Solo LWPOLYLINE è supportata nel DXF"
+          }
         }
     }
 }

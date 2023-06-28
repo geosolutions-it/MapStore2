@@ -745,7 +745,9 @@ export class OlStyleParser {
             scale: this._computeIconScaleBasedOnSymbolizer(symbolizer),
             // Rotation in openlayers is radians while we use degree
             rotation: (typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined),
-            displacement: symbolizer.offset
+            displacement: symbolizer.offset,
+            anchor: symbolizer.anchor
+
         };
         // check if IconSymbolizer.image contains a placeholder
         const prefix = '\\{\\{';
