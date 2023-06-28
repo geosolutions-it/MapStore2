@@ -9,6 +9,7 @@ import {head, memoize} from 'lodash';
 
 import { mapSelector } from './map';
 import {DEFAULT_MAP_LAYOUT, parseLayoutValue} from '../utils/MapUtils';
+
 import ConfigUtils from "../utils/ConfigUtils";
 
 /**
@@ -143,3 +144,6 @@ export const mapPaddingSelector = state => {
 };
 
 export const dockPanelsSelector = (state) => state?.maplayout?.dockPanels ?? { left: [], right: []};
+
+export const dockStyleSelector = state => mapLayoutValuesSelector(state, { height: true, right: true }, true);
+export const helpStyleSelector = state => mapLayoutValuesSelector(state, { right: true }, true);

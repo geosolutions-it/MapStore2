@@ -5,10 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 // eslint-disable-next-line no-restricted-imports
 import { Button } from 'react-bootstrap';
 
 import buttonWithDisabled from './enhancers/buttonWithDisabled';
+import tooltip from './enhancers/tooltip';
 
 export default buttonWithDisabled(Button);
+
+export const ButtonWithTooltip = tooltip(Button);

@@ -12,6 +12,7 @@ import {createShallowSelectorCreator} from "../utils/ReselectUtils";
 import {getLayerTitle} from "../utils/LayersUtils";
 import {currentLocaleSelector} from "./locale";
 
+
 export const changedGeometriesSelector = state => state && state.draw && state.draw.tempFeatures;
 export const drawSupportActiveSelector = (state) => {
     const drawStatus = get(state, "draw.drawStatus", false);

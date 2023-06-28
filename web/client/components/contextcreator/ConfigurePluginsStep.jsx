@@ -62,10 +62,10 @@ const getEnabledTools = (plugin, isMandatory, editedPlugin, documentationBaseURL
         glyph: 'question-sign',
         tooltipId: 'contextCreator.configurePlugins.tooltips.pluginDocumentation',
         Element: (props) =>
-            <a target="_blank" rel="noopener noreferrer"
+            (<a target="_blank" rel="noopener noreferrer"
                 href={plugin.docUrl || documentationBaseURL && documentationBaseURL + '#plugins.' + (plugin.docName || plugin.name)}>
                 <ToolbarButton {...props}/>
-            </a>
+            </a>)
     }, {
         visible: plugin.isExtension,
         glyph: 'trash',
@@ -184,7 +184,7 @@ const renderPluginError = (error) => {
 
 const renderPluginsToUpload = (plugin, onRemove = () => {}) => {
     const uploadingStatus = plugin.error ? <Glyphicon glyph="remove" /> : <Glyphicon glyph="ok"/>;
-    return (<div className="uploading-file">
+    return (<div key={plugin.name} className="uploading-file">
         {uploadingStatus}<span className="plugin-name">{plugin.name}</span>
         <span className="upload-remove" onClick={onRemove}><Glyphicon glyph="trash" /></span>
         <span className="upload-error">{plugin.error && renderPluginError(plugin.error)}</span>

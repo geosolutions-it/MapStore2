@@ -1,0 +1,139 @@
+//
+// Copyright 2023, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+    .longitude-help {
+        .background-color-var(@theme-vars[mask-bg]);
+        .color-var(@theme-vars[main-bg]);
+    }
+    .longitudinal-tool-container {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+    #dock-chart-portal.visible {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+    .downloadButtons {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+}
+
+// **************
+// Layout
+// **************
+
+#longitudinal-profile-tool-container {
+    &.maximized {
+        z-index: 1300;
+    }
+    .properties {
+        padding: 15px;
+    }
+    .info-label {
+        padding-right: 15px;
+    }
+}
+
+.longitudinal-profile-crs {
+    width: 200px;
+}
+.crs-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .file-selected {
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .form-group{
+        display: flex;
+    }
+}
+
+.longitude-help {
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    top: 45px;
+    width: 300px;
+    border-radius: 3px;
+    z-index: 1;
+    padding: 10px;
+    opacity: 0.8;
+    pointer-events: none;
+    white-space: pre-line;
+}
+
+.longitudinal-tool-container {
+    padding: 15px;
+
+    &.maximized {
+        height: calc(100% - 30px);
+        width: calc(100% - 20px);
+        background: inherit;
+        z-index: 2000;
+    }
+    .data-used, .data-used td {
+        padding: 2px 6px;
+    }
+}
+
+#dock-chart-portal {
+    width: 100vw;
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    &.visible {
+        pointer-events: all;
+    }
+}
+
+.stats-entry {
+    align-items: center;
+    display: flex;
+    padding: 5px 0;
+}
+
+.stats-value {
+    display: flex;
+    padding-left: 10px;
+}
+
+.longitudinal-import {
+    z-index: 1;
+    position: relative;
+}
+
+.modebar-container.hide {
+    display: none;
+}
+.chart-toolbar {
+    &.hide {
+        display: none;
+    }
+    &.btn-group {
+        display: flex;
+        justify-content: right;
+        padding: 0 5px;
+    }
+}
+
+.downloadButtons {
+    padding: 15px;
+    button + button {
+        padding-left: 5px !important;
+    }
+
+}

@@ -3053,6 +3053,10 @@
             "description": "Anmeldungswerkzeug",
             "title": "Anmeldung"
           },
+          "LongitudinalProfileTool": {
+            "description": "Ermöglicht dem Benutzer die Erstellung eines Längsprofils anhand einer Linienfolge und einer Ebene mit Höhenattribut. Muss konfiguriert werden",
+            "title": "Längsprofilwerkzeug"
+          },
           "MapCatalog": {
             "description": "Ermöglicht das Durchsuchen, Bearbeiten, Löschen und Laden von Karten, die auf dem Server verfügbar sind",
             "title": "Kartenkatalog"
@@ -3751,6 +3755,70 @@
         },
         "sidebarMenu": {
           "showMoreItems": "Weitere Elemente anzeigen"
+        },
+        "longitudinalProfile": {
+          "open": "Längsprofil öffnen",
+          "close": "Längsprofil schließen",
+          "title": "Längsprofil",
+          "draw": "Linie zeichnen",
+          "import": "Lade Datei",
+          "select": "Auswahl zum Profilieren",
+          "parameters": "Parameter",
+          "elevation": "Elevation (m)",
+          "crsSelector": "Geben Sie eine Projektion für die DXF-Datei an",
+          "distance": "Distanz (m)",
+          "chart": "Diagramm",
+          "infos": "Information",
+          "preferences": "Präferenzen",
+          "CRS": "CRS",
+          "uom": "Maßeinheiten",
+          "fileSelected": "Datei ausgewählt: ",
+          "uomMeters": "meter",
+          "source": "Quelle",
+          "downloadCSV": "CSV",
+          "downloadPNG": "PNG",
+          "downloadPDF": "PDF",
+          "info": {
+            "points": " punkte",
+            "totalPoints": "Anzahl der verarbeiteten Punkte:",
+            "layer":"Schicht:",
+            "line":"Distance:",
+            "up":"Kumulierter Höhenunterschied:",
+            "down":"Kumulativer Höhenverlust:"
+          },
+          "help": {
+            "draw": "Klicken Sie auf die Karte, um die Linie zu zeichnen. Klicken Sie zum Abschluss noch einmal auf den Endpunkt.",
+            "select": "Bitte wählen Sie die Ebene im Inhaltsverzeichnis aus und klicken Sie auf das Linienmerkmal, um ein Profil zu erstellen.<br/>Ausgewählte Ebenen: {layerName}",
+            "noLayer": "Keine Ebene ausgewählt",
+            "notSupportedLayer": "nicht unterstützt. Bitte wählen Sie WMS, WFS oder Vektorebene aus."
+          },
+          "warnings": {
+            "noLayerSelected": "Bitte wählen Sie zuerst die Ebene aus",
+            "layerNotSupported": "Die ausgewählte Ebene wird nicht unterstützt. Bitte wählen Sie WMS, WFS oder Vektorebene aus.",
+            "noFeatureInPoint": "Das Linienmerkmal wurde am ausgewählten Punkt nicht gefunden.",
+            "noLineFeatureFound": "Das Linienmerkmal wurde am ausgewählten Punkt nicht gefunden.",
+            "fallbackToProjection": "Projektion der Standardreferenz \"{defaultReferential}\" wird nicht unterstützt. Rückgriff auf Referenzen \"{referential}\" mit \"{projection}\" Projektion."
+          },
+          "errors": {
+            "outsideCoverage": "Die angegebene Zeile liegt außerhalb der Profilabdeckung",
+            "loadingError": "Fehler beim Laden der Daten für das Längsprofil",
+            "unableToSetupPlugin": "Die Längsprofilverlängerung kann nicht eingerichtet werden.",
+            "defaultReferentialNotFound": "Die Standardreferenz ist konfiguriert, kann jedoch nicht in der Referenzliste gefunden werden. Bitte aktualisieren Sie die Erweiterungskonfiguration.",
+            "projectionNotSupported": "Referenz mit von der Karte unterstützter Projektion kann nicht gefunden werden. Bitte aktualisieren Sie die Erweiterungskonfiguration oder fügen Sie die gewünschte Projektion zur App-Konfiguration hinzu.",
+            "cannotDownloadPDF": "Es ist nicht möglich, die aktuelle Karte zu drucken, da sie Verweise auf externe Domänen enthält. Bitte entfernen Sie diese, speichern Sie die Karte, aktualisieren Sie die Seite und versuchen Sie es erneut.",
+            "cannotDownloadPNG": "Das Diagramm kann nicht als Bild heruntergeladen werden."
+          },
+          "settings": {
+            "chartTitle": "Diagrammtitel",
+            "referential": "Profilebene",
+            "distance": "Distanz (m)"
+          },
+          "dropZone": {
+            "heading": "<p><h4>Legen Sie Ihre Datei hier ab </h4><small>oder</small></p>",
+            "selectFiles": "Datei aussuchen...",
+            "infoSupported": "<p><small>Unterstützte Dateitypen: GeoJSON, DXF, Shapefiles</small></p>",
+            "dxfGeometryNotSupported": "Es wird nur LWPOLYLINE unterstützt"
+          }
         }
     }
 }
