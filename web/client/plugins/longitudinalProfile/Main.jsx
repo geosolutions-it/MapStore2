@@ -85,7 +85,10 @@ const Main = ({
             onAddMarker={onAddMarker}
             onChangeDistance={onChangeDistance}
             onChangeReferential={onChangeReferential}
-            onCloseDock={onCloseDock}
+            onCloseDock={() => {
+                onCloseDock();
+                onTearDown();
+            }}
             onError={onError}
             onExportCSV={onExportCSV}
             onHideMarker={onHideMarker}

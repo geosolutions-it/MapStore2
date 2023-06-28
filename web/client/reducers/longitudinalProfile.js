@@ -121,7 +121,11 @@ export default function longitudinalProfile(state = DEFAULT_STATE, action) {
             mode: state.mode !== action.mode ? action.mode : "idle"
         };
     case TEAR_DOWN:
-        return DEFAULT_STATE;
+        return {
+            ...DEFAULT_STATE,
+            initialized: state.initialized,
+            config: state.config
+        };
     default:
         return state;
     }
