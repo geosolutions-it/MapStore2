@@ -68,6 +68,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @memberof plugins
  * @class
  * @prop {Object} cfg.config the plugin configuration
+ * @prop {string} cfg.config.wpsurl optional, the geoserver url the the wps endpoint to use. It can be an absolute url. default is "/geoserver/wps".
  * @prop {string} cfg.config.chartTitle the default title of the chart
  * @prop {number} cfg.config.defaultDistance the default distance value in meters
  * @prop {string} cfg.config.identifier the profile to use in the wps request, defaulted to gs:LongitudinalProfile
@@ -82,6 +83,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  *   "name": "LongitudinalProfileTool",
  *   "cfg": {
  *     "config": {
+ *       "wpsurl": "/geoserver/wps",
  *       "chartTitle": "Longitudinal profile",
  *       "defaultDistance": 75,
  *       "defaultReferentialName": "sfdem",
