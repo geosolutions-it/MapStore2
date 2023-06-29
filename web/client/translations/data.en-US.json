@@ -166,7 +166,8 @@
                 "bottom": "Bottom",
                 "top": "Top",
                 "editLayerName": "Edit layer name",
-                "confirmLayerName": "Confirm layer name change"
+                "confirmLayerName": "Confirm layer name change",
+                "markDownImage": "Transform selected text into Markdown Url ![]()"
             },
             "legendOptions": {
               "title": "Legend",

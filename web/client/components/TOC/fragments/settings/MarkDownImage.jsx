@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { EditorState, Modifier } from 'draft-js';
 import {Glyphicon, Tooltip, OverlayTrigger} from 'react-bootstrap';
+import Message from '../../../I18N/Message';
 
 /**
  * Component used in the react-draft-wysiwyg for wrapping the selected text with
@@ -39,10 +40,7 @@ const MarkDownImage = ({
         onChange(EditorState.push(editorState, contentState, 'insert-characters'));
     };
     const tooltip = (<Tooltip>
-        {
-            "Transform selected text into Markdown Url ![]()"
-            // [ ] localize
-        }
+        <Message msgId="layerProperties.editCustomFormat"/>
     </Tooltip>);
 
     return (

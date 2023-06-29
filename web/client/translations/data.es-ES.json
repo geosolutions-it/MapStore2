@@ -163,7 +163,8 @@
                 "bottom": "Bottom",
                 "top": "Cima",
                 "editLayerName": "Editar el nombre de la capa",
-                "confirmLayerName": "Confirmar cambio de nombre de capa"
+                "confirmLayerName": "Confirmar cambio de nombre de capa",
+                "markDownImage": "Transformar texto seleccionado en Markdown Url ![]()"
             },
             "legendOptions": {
               "title": "Leyenda",
