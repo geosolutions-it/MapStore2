@@ -189,63 +189,65 @@ const FeatureDock = (props = {
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
 
     return (
-        <Dock {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
-            {props.open &&
-        <ContainerDimensions>
-            { ({ height }) =>
-            // added height to solve resize issue in firefox, edge and ie
-                <BorderLayout
-                    className="feature-grid-container"
-                    key={"feature-grid-container"}
-                    height={height - (42 + 32)}
-                    header={getHeader({
-                        toolbarItems,
-                        hideCloseButton: props.hideCloseButton,
-                        hideLayerTitle: props.hideLayerTitle,
-                        pluginCfg: props.pluginCfg
-                    })}
-                    columns={getPanels(props.tools)}
-                    footer={getFooter(props)}>
-                    {getDialogs(props.tools)}
-                    <Grid
-                        showCheckbox={props.showCheckbox}
-                        editingAllowedRoles={props.editingAllowedRoles}
-                        customEditorsOptions={props.customEditorsOptions}
-                        autocompleteEnabled={props.autocompleteEnabled}
-                        url={props.url}
-                        typeName={props.typeName}
-                        filterRenderers={getFilterRenderers(props.describe)}
-                        enableColumnFilters={props.enableColumnFilters}
-                        emptyRowsView={getEmptyRowsView()}
-                        focusOnEdit={props.focusOnEdit}
-                        newFeatures={props.newFeatures}
-                        changes={props.changes}
-                        mode={props.mode}
-                        select={props.select}
-                        key={"feature-grid-container"}
-                        columnSettings={props.attributes}
-                        fields={props.fields}
-                        gridEvents={props.gridEvents}
-                        pageEvents={props.pageEvents}
-                        describeFeatureType={props.describe}
-                        features={props.features}
-                        minHeight={600}
-                        tools={props.gridTools}
-                        pagination={props.pagination}
-                        pages={props.pages}
-                        virtualScroll={virtualScroll}
-                        maxStoredPages={props.maxStoredPages}
-                        vsOverScan={props.vsOverScan}
-                        scrollDebounce={props.scrollDebounce}
-                        size={props.size}
-                        actionOpts={{maxZoom}}
-                        dateFormats={props.dateFormats}
-                    />
-                </BorderLayout> }
+        <div className={"feature-grid-wrapper"}>
+            <Dock  {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
+                {props.open &&
+                    (<ContainerDimensions>
+                        { ({ height }) =>
+                        // added height to solve resize issue in firefox, edge and ie
+                            <BorderLayout
+                                className="feature-grid-container"
+                                key={"feature-grid-container"}
+                                height={height - (42 + 32)}
+                                header={getHeader({
+                                    toolbarItems,
+                                    hideCloseButton: props.hideCloseButton,
+                                    hideLayerTitle: props.hideLayerTitle,
+                                    pluginCfg: props.pluginCfg
+                                })}
+                                columns={getPanels(props.tools)}
+                                footer={getFooter(props)}>
+                                {getDialogs(props.tools)}
+                                <Grid
+                                    showCheckbox={props.showCheckbox}
+                                    editingAllowedRoles={props.editingAllowedRoles}
+                                    customEditorsOptions={props.customEditorsOptions}
+                                    autocompleteEnabled={props.autocompleteEnabled}
+                                    url={props.url}
+                                    typeName={props.typeName}
+                                    filterRenderers={getFilterRenderers(props.describe)}
+                                    enableColumnFilters={props.enableColumnFilters}
+                                    emptyRowsView={getEmptyRowsView()}
+                                    focusOnEdit={props.focusOnEdit}
+                                    newFeatures={props.newFeatures}
+                                    changes={props.changes}
+                                    mode={props.mode}
+                                    select={props.select}
+                                    key={"feature-grid-container"}
+                                    columnSettings={props.attributes}
+                                    fields={props.fields}
+                                    gridEvents={props.gridEvents}
+                                    pageEvents={props.pageEvents}
+                                    describeFeatureType={props.describe}
+                                    features={props.features}
+                                    minHeight={600}
+                                    tools={props.gridTools}
+                                    pagination={props.pagination}
+                                    pages={props.pages}
+                                    virtualScroll={virtualScroll}
+                                    maxStoredPages={props.maxStoredPages}
+                                    vsOverScan={props.vsOverScan}
+                                    scrollDebounce={props.scrollDebounce}
+                                    size={props.size}
+                                    actionOpts={{maxZoom}}
+                                    dateFormats={props.dateFormats}
+                                />
+                            </BorderLayout> }
 
-        </ContainerDimensions>
-            }
-        </Dock>);
+                    </ContainerDimensions>)
+                }
+            </Dock>
+        </div>);
 };
 export const selector = createStructuredSelector({
     open: state => get(state, "featuregrid.open"),

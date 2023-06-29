@@ -198,7 +198,7 @@ export default class ContextCreator extends React.Component {
             {
                 "name": "TOC",
                 "overrides": {
-                    "cfg": { activateQueryTool: false }
+                    "cfg": { activateQueryTool: true }
 
                 }
             },
@@ -235,7 +235,16 @@ export default class ContextCreator extends React.Component {
             "Redo",
             "Expander",
             "FilterLayer",
-            "GlobeViewSwitcher"
+            "GlobeViewSwitcher",
+            {
+                "name": "FeatureEditor",
+                "overrides": {
+                    "cfg": {
+                        // To forcefully hide edit feature for all user roles
+                        editingAllowedRoles: []
+                    }
+                }
+            }
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
