@@ -15,7 +15,6 @@ import ResizableModal from '../../../misc/ResizableModal';
 import CompactRichTextEditor from '../../../mapviews/settings/CompactRichTextEditor';
 import withDebounceOnCallback from '../../../misc/enhancers/withDebounceOnCallback';
 import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../../utils/EditorUtils';
-import MarkDownImage from './MarkDownImage';
 
 const DescriptionEditor = withDebounceOnCallback('onEditorStateChange', 'editorState')(CompactRichTextEditor);
 /**
@@ -75,13 +74,11 @@ const FeatureInfoEditor = ({
                                 setEditorState(newEditorState);
                             }
                         }}
-                        toolbarCustomButtons={[<MarkDownImage />]}
                     />
                 </div>
             </ResizableModal>
         </Portal>
     );
-
 };
 
 FeatureInfoEditor.propTypes = {

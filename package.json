@@ -210,7 +210,6 @@
     "leaflet.nontiledlayer": "1.0.7",
     "lodash": "4.17.21",
     "lrucache": "1.0.3",
-    "markdown-it": "13.0.1",
     "md5": "2.3.0",
     "moment": "2.21.0",
     "node-geo-distance": "1.2.0",

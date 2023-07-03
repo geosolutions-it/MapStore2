@@ -7,8 +7,6 @@
  */
 
 import React from 'react';
-import MarkdownIt from 'markdown-it';
-import unescape from 'lodash/unescape';
 import { template } from 'lodash';
 import PropTypes from 'prop-types';
 
@@ -16,7 +14,6 @@ import { getCleanTemplate } from '../../../../utils/TemplateUtils';
 import HtmlRenderer from '../../../misc/HtmlRenderer';
 import Message from '../../../I18N/Message';
 
-const md = new MarkdownIt().enable('image');
 
 const TemplateViewer = ({layer = {}, response}) => (
     <div className="ms-template-viewer">
@@ -24,7 +21,7 @@ const TemplateViewer = ({layer = {}, response}) => (
             const cleanTemplate = getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1);
             let html = "";
             try {
-                html = unescape(md.render(template(cleanTemplate)(feature)));
+                html = template(cleanTemplate)(feature);
             } catch (e) {
                 console.error(e);
                 return (<div key={i}>
