@@ -118,6 +118,7 @@ export const updateMapLayoutEpic = (action$, store) =>
             const rightPanels = head([
                 get(state, "controls.details.enabled") && !mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal && {right: mapLayout.right.md} || null,
                 get(state, "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
+                get(state, "controls.GeoProcessingTools.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,
                 get(state, "controls.userExtensions.enabled") && { right: mapLayout.right.md } || null,
                 get(state, "controls.mapTemplates.enabled") && { right: mapLayout.right.md } || null,

@@ -633,6 +633,15 @@
       "dependencies": [
         "SidebarMenu"
       ]
+    },
+    {
+      "name": "GeoProcessingTools",
+      "glyph": "star",
+      "title": "plugins.GeoProcessingTools.title",
+      "description": "plugins.GeoProcessingTools.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
     }
   ]
 }
