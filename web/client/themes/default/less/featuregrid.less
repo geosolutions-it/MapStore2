@@ -48,6 +48,17 @@
     cursor: auto;
 }
 
+.feature-grid-wrapper {
+    // Override dock style
+    > div {
+        position: unset !important;
+        > div {
+            position: absolute !important;
+            z-index: 1060 !important;
+        }
+    }
+}
+
 // **************
 // FeatureEditorFallback Layout
 // **************
