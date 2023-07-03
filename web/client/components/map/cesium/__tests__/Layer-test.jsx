@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import CesiumLayer from '../Layer';
 import expect from 'expect';
 import * as Cesium from 'cesium';
-
+import { waitFor } from '@testing-library/react';
 import assign from 'object-assign';
 
 import '../../../../utils/cesium/Layers';
@@ -1207,8 +1207,8 @@ describe('Cesium layer', () => {
                 map={map}
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
-        expect(cmp.layer.tileSet).toBeTruthy();
-        expect(cmp.layer.tileSet._url).toBe('/tileset.json');
+        expect(cmp.layer.resource).toBeTruthy();
+        expect(cmp.layer.resource.request.url).toBe('/tileset.json');
     });
     it('Use proxy when needed', () => {
         const options = {
@@ -1234,8 +1234,8 @@ describe('Cesium layer', () => {
                 map={map}
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
-        expect(cmp.layer.tileSet).toBeTruthy();
-        expect(cmp.layer.tileSet._url).toBe('/mapstore/proxy/?url=http%3A%2F%2Fservice.org%2Ftileset.json');
+        expect(cmp.layer.resource).toBeTruthy();
+        expect(cmp.layer.resource.request.url).toBe('/mapstore/proxy/?url=http%3A%2F%2Fservice.org%2Ftileset.json');
     });
     it('should create a 3d tiles layer with visibility set to false', () => {
         const options = {
@@ -1262,7 +1262,7 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.tileSet).toBeFalsy();
+        expect(cmp.layer.getTileSet).toBeFalsy();
     });
     it('should create a 3d tiles layer with and offset applied to the height', (done) => {
         const options = {
@@ -1290,32 +1290,25 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.tileSet).toBeTruthy();
-        expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix)).toEqual(
-            [
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
-            ]
-        );
-        cmp.layer.tileSet.readyPromise.then(() => {
-            expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix).map(Math.round)).toEqual(
-                [
-                    1, 0, 0, 0,
-                    0, 1, 0, 0,
-                    0, 0, 1, 0,
-                    19, -74, 64, 1
-                ]
-            );
-            done();
-        });
+        waitFor(() => expect(!!cmp.layer.getTileSet()).toBe(true))
+            .then(() => {
+                expect(Cesium.Matrix4.toArray(cmp.layer.getTileSet().modelMatrix).map(Math.round)).toEqual(
+                    [
+                        1, 0, 0, 0,
+                        0, 1, 0, 0,
+                        0, 0, 1, 0,
+                        19, -74, 64, 1
+                    ]
+                );
+                done();
+            })
+            .catch(done);
     });
 
-    it('should not crash if the heightOffset is not a number', () => {
+    it('should not crash if the heightOffset is not a number', (done) => {
         const options = {
             type: '3dtiles',
-            url: 'http://service.org/tileset.json',
+            url: 'base/web/client/test-resources/3dtiles/tileset.json',
             title: 'Title',
             visibility: true,
             heightOffset: NaN,
@@ -1338,18 +1331,21 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.tileSet).toBeTruthy();
-        expect(Cesium.Matrix4.toArray(cmp.layer.tileSet.modelMatrix)).toEqual(
-            [
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
-            ]
-        );
+        waitFor(() => expect(!!cmp.layer.getTileSet()).toBe(true))
+            .then(() => {
+                expect(Cesium.Matrix4.toArray(cmp.layer.getTileSet().modelMatrix)).toEqual(
+                    [
+                        1, 0, 0, 0,
+                        0, 1, 0, 0,
+                        0, 0, 1, 0,
+                        0, 0, 0, 1
+                    ]
+                );
+                done();
+            }).catch(done);
     });
 
-    it('should create a vector layer', () => {
+    it('should create a vector layer', (done) => {
         const options = {
             type: 'vector',
             features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [0, 0] } }],
@@ -1375,10 +1371,11 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.dataSource).toBeTruthy();
-        expect(cmp.layer.dataSource.entities.values.length).toBe(1);
         expect(cmp.layer.detached).toBe(true);
+        waitFor(() => expect(cmp.layer.dataSource.entities.values.length).toBe(1))
+            .then(() => done());
     });
-    it('should create a vector layer queryable', () => {
+    it('should create a vector layer queryable', (done) => {
         const options = {
             type: 'vector',
             features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [0, 0] } }],
@@ -1405,9 +1402,10 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.dataSource).toBeTruthy();
-        expect(cmp.layer.dataSource.entities.values.length).toBe(1);
         expect(cmp.layer.detached).toBe(true);
         expect(cmp.layer.dataSource.queryable).toBe(false);
+        waitFor(() => expect(cmp.layer.dataSource.entities.values.length).toBe(1))
+            .then(() => done());
     });
     it('should create a wfs layer', () => {
         const options = {

@@ -100,7 +100,7 @@ function mapArgumentsToObject(args, func) {
 const getCesiumPath = ({ prod, paths }) => {
     return prod
         ? path.join(paths.base, 'node_modules', 'cesium', 'Build', 'Cesium')
-        : path.join(paths.base, 'node_modules', 'cesium', 'Source');
+        : path.join(paths.base, 'node_modules', 'cesium', 'Build', 'CesiumUnminified');
 };
 
 module.exports = (...args) => mapArgumentsToObject(args, ({
@@ -178,16 +178,16 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             Buffer: ['buffer', 'Buffer']
         }),
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
-        // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
-        // see https://github.com/CesiumGS/cesium/issues/9212
-        new NormalModuleReplacementPlugin(/^cesium\/index\.css$/, path.join(paths.base, "node_modules", "cesium/Build/Cesium/Widgets/widgets.css")),
         new NoEmitOnErrorsPlugin()]
         .concat(castArray(plugins))
         .concat(prod ? prodPlugins : devPlugins),
     resolve: {
         fallback: {
             timers: false,
-            stream: false
+            stream: false,
+            http: false,
+            https: false,
+            zlib: false
         },
         extensions: [".js", ".jsx"],
         alias: assign({}, {
