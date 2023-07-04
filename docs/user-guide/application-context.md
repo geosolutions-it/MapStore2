@@ -30,6 +30,12 @@ This first step allows to configure the **Name** and the **Window title** of the
 !!! note
     The **Window title** is the name of the browser window.
 
+### Import/Export context
+
+In general settings, the user can import/export the context in view with all the configurations of the context. The plugins are configured under `context-creator` in the localConfig and are enabled by default.
+
+<img src="../img/application-context/context_import_export.jpg" class="ms-docimage"/>
+
 ## Configure Map
 
 To create the context viewer, the map configuration (like the one described [here](exploring-maps.md#exploring-maps) opens so that the admin can set the initial state of the context map.

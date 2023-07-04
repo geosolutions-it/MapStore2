@@ -12,7 +12,8 @@ import {
     creationStepSelector,
     selectedThemeSelector,
     customVariablesEnabledSelector,
-    isNewContext
+    isNewContext,
+    exportDataSelector
 } from '../contextcreator';
 
 const testState = {
@@ -56,5 +57,13 @@ describe('contextcreator selectors', () => {
     });
     it('isNewContext', () => {
         expect(isNewContext(testState)).toBe(true);
+    });
+    it('exportDataSelector', () => {
+        const exportData = {resource: {name: "test"}};
+        expect(exportDataSelector({
+            contextcreator: {
+                exportData
+            }
+        })).toEqual(exportData);
     });
 });

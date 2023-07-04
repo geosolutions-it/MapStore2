@@ -2171,7 +2171,7 @@
                     "pleaseLogin": "Some resource may not be public. Please try to login",
                     "unknownError": "There was an error loading the map or the context. Please contact the administrator",
                     "notFound": "Resource not found",
-	                  "notAccessible": "Resource not accessible"
+                    "notAccessible": "Resource not accessible"
                 },
                 "context": {
                     "pleaseLogin": "This context is not public. Please try to login",
@@ -3165,31 +3165,33 @@
                 "name": "Name",
                 "namePlaceholder": "Enter app context name...",
                 "windowTitle": "Window title",
-                "windowTitlePlaceholder": "Enter window title..."
+                "windowTitlePlaceholder": "Enter window title...",
+                "import": "Import",
+                "export": "Export"
             },
             "configureThemes": {
-              "title": "Configure Theme",
-              "label": "Theme",
-              "themes": "Choose a theme",
-              "noThemes": "No themes found",
-              "customVariables": "Custom Variables",
-              "main": "Main Text Color",
-              "background": "Main Background Color",
-              "primaryContrast": "Primary Text Color",
-              "primary": "Primary Color",
-              "successContrast": "Secondary Text Color",
-              "success": "Secondary Color",
-              "guidelines": "Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary)",
-              "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>An alternative color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
-              "tooltips": {
-                "main": "Text color used in panels or dialogs",
-                "background": "Background color used in panels or dialogs",
-                "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers, buttons",
-                "primary": "Background primary color: toolbars, headers, buttons",
-                "successContrast": "Text color applied when the secondary color is used as background",
-                "success": "Background color used to show when a button is 'active' or 'selected'",
-                "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
-              }
+                "title": "Configure Theme",
+                "label": "Theme",
+                "themes": "Choose a theme",
+                "noThemes": "No themes found",
+                "customVariables": "Custom Variables",
+                "main": "Main Text Color",
+                "background": "Main Background Color",
+                "primaryContrast": "Primary Text Color",
+                "primary": "Primary Color",
+                "successContrast": "Secondary Text Color",
+                "success": "Secondary Color",
+                "guidelines": "Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary)",
+                "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>An alternative color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+                "tooltips": {
+                    "main": "Text color used in panels or dialogs",
+                    "background": "Background color used in panels or dialogs",
+                    "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers, buttons",
+                    "primary": "Background primary color: toolbars, headers, buttons",
+                    "successContrast": "Text color applied when the secondary color is used as background",
+                    "success": "Background color used to show when a button is 'active' or 'selected'",
+                    "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
+                }
             },
             "configurePlugins": {
                 "label": "Configure Plugins",
@@ -3234,7 +3236,7 @@
                     "enabledTitle": "Enabled Plugin",
                     "enabledDescription": "This plugin is enabled"
                 },
-                "saveCfgErrorNotification":  {
+                "saveCfgErrorNotification": {
                     "title": "Syntax error in plugin configuration",
                     "message": "Plugin \"{pluginName}\" contains an error in configuration. Please fix before proceeding"
                 }
@@ -3286,7 +3288,22 @@
                 "unknownError": "Unexpected error occurred"
             },
             "undo": "Are you sure you want to abandon the context editing session?",
-            "showTutorial": "Show Tutorial"
+            "showTutorial": "Show Tutorial",
+            "errors":{
+                "loading": {
+                    "title": "Error loading context",
+                    "import": "Failed to import context",
+                    "export": "Failed to export context"
+                }
+            },
+            "importDialog": {
+                "selectFiles": "Select a file",
+                "heading": "Drop a previously exported context.json file",
+                "note": "The data in the imported file will replace the data in the current context"
+            },
+            "exportDialog": {
+                "heading": "Export context as a .json file"
+            }
         },
         "contextManager": {
             "title": "Manage Contexts",

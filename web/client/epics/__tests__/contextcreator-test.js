@@ -19,7 +19,9 @@ import {
     saveContextResource,
     checkIfContextExists,
     editTemplateEpic,
-    mapViewerLoadEpic
+    mapViewerLoadEpic,
+    exportContextEpic,
+    importContextEpic
 } from '../contextcreator';
 import {
     editPlugin,
@@ -33,6 +35,8 @@ import {
     saveNewContext,
     editTemplate,
     mapViewerLoad,
+    onContextExport,
+    onContextImport,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
     SET_CFG_ERROR,
@@ -51,7 +55,8 @@ import {
     CONTEXT_SAVED,
     SET_EDITED_TEMPLATE,
     SET_PARSED_TEMPLATE,
-    SET_FILE_DROP_STATUS
+    SET_FILE_DROP_STATUS,
+    SET_RESOURCE
 } from '../../actions/contextcreator';
 import {INIT_MAP} from '../../actions/map';
 import {LOAD_MAP_CONFIG} from '../../actions/config';
@@ -61,6 +66,7 @@ import {
 
 import axios from "../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
+import {TOGGLE_CONTROL} from "../../actions/controls";
 
 describe('contextcreator epics', () => {
     let mockAxios;
@@ -953,5 +959,103 @@ describe('contextcreator epics', () => {
             expect(b.overrideConfig).toEqual({});
             done();
         });
+    });
+    it('exportContextEpic, export context with plugins and themes', (done) => {
+        testEpic(exportContextEpic, 1, onContextExport('file.json'), ([a]) => {
+            expect(a.type).toEqual(TOGGLE_CONTROL);
+            expect(a.control).toEqual("export");
+            done();
+        }, {
+            map: {
+                present: {}
+            },
+            contextcreator: {
+                plugins: [{name: "Search", enabled: true}, {name: "PluginUser", isUserPlugin: true, enabled: true}],
+                selectedTheme: {
+                    color: "#000"
+                },
+                newContext: {
+                    templates: []
+                },
+                resource: {
+                    name: "test",
+                    description: "Some context"
+                },
+                exportData: {
+                    pluginsConfig: [],
+                    allTemplates: []
+                }
+            }
+        });
+    });
+    it('importContextEpic into existing context', (done) => {
+        const blob = new Blob([JSON.stringify({
+            resource: {id: 'context2', name: 'test1'},
+            pluginsConfig: [],
+            allTemplates: []
+        })], {
+            type: "application/json"
+        });
+        const jsonFile = new File([blob], "file.json", {
+            type: "application/json"
+        });
+        const epicResult = ([a, b]) => {
+            expect(a.type).toBe(SET_RESOURCE);
+            expect(a.resource).toEqual({id: 'context1', name: 'test'});
+            expect(a.pluginsConfig).toEqual([]);
+            expect(a.allTemplates).toEqual([]);
+            expect(b.type).toBe(TOGGLE_CONTROL);
+            expect(b.control).toBe('import');
+            done();
+        };
+        testEpic(importContextEpic, 2, onContextImport([jsonFile]), epicResult, {
+            contextcreator: {
+                resource: {
+                    name: "test",
+                    id: "context1"
+                }
+            }
+        }, done);
+    });
+
+    it('importContextEpic into new context', (done) => {
+        const blob = new Blob([JSON.stringify({
+            resource: {id: 'context2', name: 'test1'},
+            pluginsConfig: [],
+            allTemplates: []
+        })], {
+            type: "application/json"
+        });
+        const jsonFile = new File([blob], "file.json", {
+            type: "application/json"
+        });
+        const epicResult = ([a, b]) => {
+            expect(a.type).toBe(SET_RESOURCE);
+            expect(a.resource).toEqual({ name: 'test'});
+            expect(a.pluginsConfig).toEqual([]);
+            expect(a.allTemplates).toEqual([]);
+            expect(b.type).toBe(TOGGLE_CONTROL);
+            expect(b.control).toBe('import');
+            done();
+        };
+        testEpic(importContextEpic, 2, onContextImport([jsonFile]), epicResult, {
+            contextcreator: {
+                resource: {
+                    name: "test"
+                }
+            }
+        }, done);
+    });
+
+    it('importContextEpic, throws error if no file data is provided', (done) => {
+        const startActions = [onContextImport(null)];
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[0].level).toBe('error');
+            expect(typeof(actions[0].title) === 'string').toBeTruthy();
+            done();
+        };
+        testEpic(importContextEpic, 1, startActions, epicResult, {}, done);
     });
 });

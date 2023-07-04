@@ -3153,7 +3153,9 @@
                 "name": "Nombre",
                 "namePlaceholder": "Ingrese el nombre del contexto de la aplicación...",
                 "windowTitle": "Título de la ventana",
-                "windowTitlePlaceholder": "Ingrese el título de la ventana..."
+                "windowTitlePlaceholder": "Ingrese el título de la ventana...",
+                "import": "Importar",
+                "export": "Exportar"
             },
             "configureThemes": {
               "title": "Configurar tema",
@@ -3274,7 +3276,22 @@
                 "unknownError": "Ocurrió un error inesperado"
             },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?",
-            "showTutorial": "Tutorial de presentación"
+            "showTutorial": "Tutorial de presentación",
+            "errors":{
+                "loading": {
+                  "title": "Error al cargar el contexto",
+                  "import": "No se pudo importar el contexto",
+                  "export": "No se pudo exportar el contexto"
+                }
+            },
+            "importDialog": {
+                "selectFiles": "Seleccione un archivo",
+                "heading": "Suelte un archivo context.json previamente exportado",
+                "note": "Los datos en el archivo importado reemplazarán los datos en el contexto actual"
+            },
+            "exportDialog": {
+                "heading": "Exportar contexto como un archivo .json"
+            }
         },
         "contextManager": {
             "title": "Administrar contextos",

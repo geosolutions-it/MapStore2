@@ -33,11 +33,14 @@ export default ({
         <div className="ms2-stepper">
             <div className="footer-button-toolbar-div">
                 <ButtonToolbar className="footer-button-toolbar-extra">
-                    {(steps[curStepIndex].extraToolbarButtons || []).map(({onClick = () => {}, label, id}, idx) =>
-                        <Button key={id || label || idx} bsStyle="primary" bsSize="sm" onClick={onClick}>
-                            <Message msgId={label}/>
-                        </Button>
-                    )}
+                    {(steps[curStepIndex].extraToolbarButtons || []).map((toolbarButton, idx) => {
+                        const {component: Component, onClick = () => {}, label, id} = toolbarButton;
+                        return Component ? <Component/> : (
+                            <Button key={id || label || idx} bsStyle="primary" bsSize="sm" onClick={onClick}>
+                                <Message msgId={label}/>
+                            </Button>
+                        );
+                    })}
                 </ButtonToolbar>
                 <ButtonToolbar className="footer-button-toolbar">
                     <Button

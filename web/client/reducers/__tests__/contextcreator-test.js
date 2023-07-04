@@ -23,7 +23,8 @@ import {
     editedCfgSelector,
     editedTemplateSelector,
     selectedThemeSelector,
-    customVariablesEnabledSelector
+    customVariablesEnabledSelector,
+    exportDataSelector
 } from '../../selectors/contextcreator';
 import {
     setFilterText,
@@ -185,6 +186,7 @@ describe('contextcreator reducer', () => {
         const plugins = pluginsSelector(state);
         const templates = templatesSelector(state);
         const selectedTheme = selectedThemeSelector(state);
+        const exportData = exportDataSelector(state);
         expect(selectedTheme).toEqual(data.theme);
         expect(newContext).toExist();
         expect(newContext.windowTitle).toBe(data.windowTitle);
@@ -251,6 +253,9 @@ describe('contextcreator reducer', () => {
         expect(plugins[4].active).toBe(false);
         expect(plugins[4].docUrl).toExist();
         expect(plugins[4].docUrl).toEqual("https://domain.com/documentation");
+        expect(exportData).toEqual({
+            resource: testContextResource, pluginsConfig, allTemplates
+        });
     });
     it('setResource with context with templates inside MapTemplates config', () => {
         const contextResource = {

@@ -3155,7 +3155,9 @@
                 "name": "Nome",
                 "namePlaceholder": "Inserisci il nome del contesto applicativo...",
                 "windowTitle": "Titolo della finestra",
-                "windowTitlePlaceholder": "Inserisci il titolo della finestra..."
+                "windowTitlePlaceholder": "Inserisci il titolo della finestra...",
+                "import": "Importare",
+                "export": "Esportare"
             },
             "configureThemes": {
               "title": "Configura il tema",
@@ -3276,7 +3278,22 @@
                 "unknownError": "Si è verificato un errore imprevisto"
             },
             "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?",
-            "showTutorial": "Mostra tutorial"
+            "showTutorial": "Mostra tutorial",
+            "errors":{
+                "loading": {
+                    "title": "Errore durante il caricamento del contesto",
+                    "import": "Impossibile importare il contesto",
+                    "export": "Impossibile esportare il contesto"
+                }
+            },
+            "importDialog": {
+                "selectFiles": "Seleziona un file",
+                "heading": "Rilascia un file context.json esportato in precedenza",
+                "note": "I dati nel file importato sostituiranno i dati nel contesto corrente"
+            },
+            "exportDialog": {
+                "heading": "Esporta il contesto come file .json"
+            }
         },
         "contextManager": {
             "title": "Gestisci contesti",

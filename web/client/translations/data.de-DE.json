@@ -3191,7 +3191,9 @@
                 "name": "Name",
                 "namePlaceholder": "Geben Sie den Namen des App-Kontexts ein...",
                 "windowTitle": "Fenstertitel",
-                "windowTitlePlaceholder": "Fenstertitel eingeben..."
+                "windowTitlePlaceholder": "Fenstertitel eingeben...",
+                "import": "Importieren",
+                "export": "Export"
             },
             "configureThemes": {
               "title": "Thema konfigurieren",
@@ -3312,7 +3314,22 @@
                 "unknownError": "Ein unerwarteter Fehler ist aufgetreten"
             },
             "undo": "Möchten Sie die Kontextbearbeitungssitzung wirklich abbrechen?",
-            "showTutorial": "Tutorial anzeigen"
+            "showTutorial": "Tutorial anzeigen",
+            "errors":{
+                "loading": {
+                    "title": "Fehler beim Laden des Kontexts",
+                    "import": "Der Kontext konnte nicht importiert werden",
+                    "export": "Der Kontext konnte nicht exportiert werden"
+                }
+            },
+            "importDialog": {
+                "selectFiles": "Wählen Sie eine Datei aus",
+                "heading": "Löschen Sie eine zuvor exportierte context.json-Datei",
+                "note": "Die Daten in der importierten Datei ersetzen die Daten im aktuellen Kontext"
+            },
+            "exportDialog": {
+                "heading": "Kontext als .json-Datei exportieren"
+            }
         },
         "contextManager": {
             "title": "Kontexte verwalten",
