@@ -166,8 +166,7 @@
                 "bottom": "Sotto",
                 "top": "Sopra",
                 "editLayerName": "Modifica il nome del livello",
-                "confirmLayerName": "Conferma la modifica del nome del livello",
-                "markDownImage": "Trasforma il testo seleziona in un MarkDown Url ![]()"
+                "confirmLayerName": "Conferma la modifica del nome del livello"
             },
             "legendOptions": {
               "title": "Legenda",
