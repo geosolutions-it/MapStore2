@@ -125,8 +125,3 @@ function CompactRichTextEditor({
 }
 
 export default CompactRichTextEditor;
-
-CompactRichTextEditor.propTypes = {
-    toolbarOptions: PropTypes.array,
-    wrapperClassName: PropTypes.string
-};
