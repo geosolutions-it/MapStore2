@@ -166,8 +166,7 @@
                 "bottom": "Bas",
                 "top": "Haut",
                 "editLayerName": "Modifier le nom du calque",
-                "confirmLayerName": "Confirmer le changement de nom du calque",
-                "markDownImage": "Transformer le texte sélectionné en URL Markdown ![]()"
+                "confirmLayerName": "Confirmer le changement de nom du calque"
             },
             "legendOptions": {
               "title": "Légende",
