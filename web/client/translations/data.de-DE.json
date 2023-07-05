@@ -166,8 +166,7 @@
                 "bottom": "Unten",
                 "top": "Oben",
                 "editLayerName": "Ebenennamen bearbeiten",
-                "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens",
-                "markDownImage": "Ausgewählten Text in Markdown-URL umwandeln ![]()"
+                "confirmLayerName": "Bestätigen Sie die Änderung des Ebenennamens"
             },
             "legendOptions": {
               "title": "Legende",
