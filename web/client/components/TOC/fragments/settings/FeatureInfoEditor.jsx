@@ -22,11 +22,11 @@ const DescriptionEditor = withDebounceOnCallback('onEditorStateChange', 'editorS
  * @memberof components.TOC.fragments.settings
  * @name FeatureInfoEditor
  * @class
- * @prop {Object} element data of the current selected node
- * @prop {Boolean} showEditor show/hide modal
- * @prop {Function} onShowEditor called when click on close buttons
- * @prop {Function} onChange called when text in editor has been changed
- * @prop {Boolean} enableIFrameModule enable iframe in editor, default true
+ * @prop {object} element data of the current selected node
+ * @prop {boolean} showEditor show/hide modal
+ * @prop {function} onShowEditor called when click on close buttons
+ * @prop {function} onChange called when text in editor has been changed
+ * @prop {boolean} enableIFrameModule enable iframe in editor, default true
  */
 
 const FeatureInfoEditor = ({
