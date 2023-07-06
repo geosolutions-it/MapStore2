@@ -24,7 +24,7 @@ import {
     editedTemplateSelector,
     selectedThemeSelector,
     customVariablesEnabledSelector,
-    exportDataSelector
+    prefetchedDataSelector
 } from '../../selectors/contextcreator';
 import {
     setFilterText,
@@ -186,7 +186,7 @@ describe('contextcreator reducer', () => {
         const plugins = pluginsSelector(state);
         const templates = templatesSelector(state);
         const selectedTheme = selectedThemeSelector(state);
-        const exportData = exportDataSelector(state);
+        const prefetchedData = prefetchedDataSelector(state);
         expect(selectedTheme).toEqual(data.theme);
         expect(newContext).toExist();
         expect(newContext.windowTitle).toBe(data.windowTitle);
@@ -253,7 +253,7 @@ describe('contextcreator reducer', () => {
         expect(plugins[4].active).toBe(false);
         expect(plugins[4].docUrl).toExist();
         expect(plugins[4].docUrl).toEqual("https://domain.com/documentation");
-        expect(exportData).toEqual({
+        expect(prefetchedData).toEqual({
             resource: testContextResource, pluginsConfig, allTemplates
         });
     });

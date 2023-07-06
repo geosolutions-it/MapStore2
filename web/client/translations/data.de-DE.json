@@ -3191,9 +3191,7 @@
                 "name": "Name",
                 "namePlaceholder": "Geben Sie den Namen des App-Kontexts ein...",
                 "windowTitle": "Fenstertitel",
-                "windowTitlePlaceholder": "Fenstertitel eingeben...",
-                "import": "Importieren",
-                "export": "Export"
+                "windowTitlePlaceholder": "Fenstertitel eingeben..."        
             },
             "configureThemes": {
               "title": "Thema konfigurieren",
@@ -3322,6 +3320,9 @@
                     "export": "Der Kontext konnte nicht exportiert werden"
                 }
             },
+            "import": "Importieren",
+            "importTooltip": "Um einen Kontext zu importieren, fahren Sie mit Schritt 1 fort",
+            "export": "Export",
             "importDialog": {
                 "selectFiles": "Wählen Sie eine Datei aus",
                 "heading": "Löschen Sie eine zuvor exportierte context.json-Datei",

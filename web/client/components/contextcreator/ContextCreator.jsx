@@ -291,10 +291,9 @@ export default class ContextCreator extends React.Component {
                 onClick: () => this.props.onShowTutorial(stepId),
                 label: 'contextCreator.showTutorial'
             }] : [];
-            if (stepId === 'general-settings') {
-                const importExportButtons = this.props.items?.map(({toolbarBtn} = {}) => toolbarBtn) ?? [];
-                toolbarButton = toolbarButton.concat(importExportButtons);
-            } else if (stepId === 'configure-map') {
+            const importExportButtons = this.props.items?.map(({toolbarBtn} = {}) => toolbarBtn) ?? [];
+            toolbarButton = toolbarButton.concat(importExportButtons);
+            if (stepId === 'configure-map') {
                 toolbarButton = toolbarButton.concat({
                     id: "map-reload",
                     onClick: () => this.props.onReloadConfirm(true),

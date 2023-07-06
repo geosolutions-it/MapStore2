@@ -68,7 +68,7 @@ const ExportButton = connect(
         disabled={isEmpty(resource)}
         onClick={onExport}
     >
-        <Message msgId={"contextCreator.generalSettings.export"} />
+        <Message msgId={"contextCreator.export"} />
     </Button>
 ));
 

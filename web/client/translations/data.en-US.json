@@ -3165,9 +3165,7 @@
                 "name": "Name",
                 "namePlaceholder": "Enter app context name...",
                 "windowTitle": "Window title",
-                "windowTitlePlaceholder": "Enter window title...",
-                "import": "Import",
-                "export": "Export"
+                "windowTitlePlaceholder": "Enter window title..."
             },
             "configureThemes": {
                 "title": "Configure Theme",
@@ -3296,6 +3294,9 @@
                     "export": "Failed to export context"
                 }
             },
+            "import": "Import",
+            "importTooltip": "To import a context, go to Step 1",
+            "export": "Export",
             "importDialog": {
                 "selectFiles": "Select a file",
                 "heading": "Drop a previously exported context.json file",

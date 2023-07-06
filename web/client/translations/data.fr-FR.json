@@ -3155,9 +3155,7 @@
                 "name": "Nom",
                 "namePlaceholder": "Entrez le nom du contexte applicatif...",
                 "windowTitle": "Titre de la fenêtre",
-                "windowTitlePlaceholder": "Entrez le titre de la fenêtre...",
-                "import": "Importer",
-                "export": "Exporter"
+                "windowTitlePlaceholder": "Entrez le titre de la fenêtre..."
             },
             "configureThemes": {
               "title": "Configurer le thème",
@@ -3286,6 +3284,9 @@
                     "export": "Échec de l'exportation du contexte"
                 }
             },
+            "import": "Importer",
+            "importTooltip": "Pour importer un contexte, passez à l'étape 1",
+            "export": "Exporter",
             "importDialog": {
                 "selectFiles": "Sélectionner un fichier",
                 "heading": "Déposez un fichier context.json précédemment exporté",

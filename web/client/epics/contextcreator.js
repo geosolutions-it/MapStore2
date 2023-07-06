@@ -26,7 +26,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
-    wasTutorialShownSelector, selectedThemeSelector, customVariablesEnabledSelector, exportDataSelector} from '../selectors/contextcreator';
+    wasTutorialShownSelector, selectedThemeSelector, customVariablesEnabledSelector, prefetchedDataSelector} from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
@@ -908,27 +908,18 @@ export const savePluginCfgEpic = (action$, store) => action$
 export const exportContextEpic = (action$, { getState }) =>
     action$.ofType(CONTEXT_EXPORT)
         .switchMap(({ fileName }) => {
-            const exportData = exportDataSelector(getState());
-            const pluginsAndTemplatesInfo = pick(exportData, [
-                "pluginsConfig",
-                "allTemplates"
-            ]);
-            let { data, metadata } = generateContextResource(getState());
+            const prefetchedData = prefetchedDataSelector(getState());
+            let { data } = generateContextResource(getState());
             const resource = {
                 data: {
                     ...data,
                     mapConfig: isEmpty(data?.mapConfig)
-                        ? get(exportData, "resource.data.mapConfig", {})
+                        ? get(prefetchedData, "resource.data.mapConfig", {})
                         : data.mapConfig
-                },
-                ...metadata
-            };
-            const newContext = {
-                resource,
-                ...pluginsAndTemplatesInfo
+                }
             };
             return Rx.Observable.of([
-                JSON.stringify({ ...newContext }),
+                JSON.stringify({ ...resource }),
                 fileName,
                 "application/json"
             ])
@@ -955,6 +946,11 @@ export const importContextEpic = (action$, store) =>
         .switchMap(({ file }) =>
             Rx.Observable.defer(() => readJson(file[0]).then((data) => data))
                 .switchMap((context) => {
+                    const prefetchedData = prefetchedDataSelector(store.getState());
+                    const {pluginsConfig, allTemplates} = pick(prefetchedData, [
+                        "pluginsConfig",
+                        "allTemplates"
+                    ]);
                     const paths = ["id", "name"];
                     const currentResource = pick(
                         resourceSelector(store.getState()),
@@ -964,10 +960,16 @@ export const importContextEpic = (action$, store) =>
                     return Rx.Observable.of(
                         setResource(
                             { ...resource, ...currentResource },
-                            context.pluginsConfig,
-                            context.allTemplates
+                            pluginsConfig,
+                            allTemplates
                         ),
                         toggleControl("import")
+                    ).concat(
+                        Rx.Observable.of(
+                            enableMandatoryPlugins(),
+                            loadFinished(),
+                            mapViewerLoaded(false)
+                        )
                     );
                 })
                 .catch(() =>

@@ -9,6 +9,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
+import { Provider } from 'react-redux';
+import get from 'lodash/get';
 
 import { getPluginForTest } from './pluginsTestUtils';
 
@@ -37,5 +39,28 @@ describe('ContextImport plugin', () => {
         ReactDOM.render(<Plugin/>, document.getElementById('container'));
         const rootDiv = document.getElementById('DRAGDROP_IMPORT_ZONE');
         expect(rootDiv).toBeTruthy();
+    });
+    it('disable the import button on steps other than step 1', () => {
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({
+                controls: {
+                    "import": {
+                        enabled: false
+                    }
+                },
+                contextcreator: {
+                    stepId: "configure-map"
+                }
+            })
+        };
+        const { containers } = getPluginForTest(ContextImport, store.getState());
+        const Component = get(containers, 'ContextCreator.toolbarBtn.component');
+        expect(Component).toBeTruthy();
+        ReactDOM.render(<Provider store={store}><Component/></Provider>, document.getElementById('container'));
+        const importButton = document.querySelector('button');
+        expect(importButton).toBeTruthy();
+        expect(importButton.classList.contains('disabled')).toBeTruthy();
     });
 });

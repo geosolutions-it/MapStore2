@@ -3155,9 +3155,7 @@
                 "name": "Nome",
                 "namePlaceholder": "Inserisci il nome del contesto applicativo...",
                 "windowTitle": "Titolo della finestra",
-                "windowTitlePlaceholder": "Inserisci il titolo della finestra...",
-                "import": "Importare",
-                "export": "Esportare"
+                "windowTitlePlaceholder": "Inserisci il titolo della finestra..."                
             },
             "configureThemes": {
               "title": "Configura il tema",
@@ -3286,6 +3284,9 @@
                     "export": "Impossibile esportare il contesto"
                 }
             },
+            "import": "Importare",
+            "importTooltip": "Per importare un contesto, vai al passaggio 1",
+            "export": "Esportare",
             "importDialog": {
                 "selectFiles": "Seleziona un file",
                 "heading": "Rilascia un file context.json esportato in precedenza",

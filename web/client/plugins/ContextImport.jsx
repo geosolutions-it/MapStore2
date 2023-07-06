@@ -20,6 +20,9 @@ import { toggleControl } from "../actions/controls";
 import Message from "../components/I18N/Message";
 import HTML from "../components/I18N/HTML";
 import Button from "../components/misc/Button";
+import { disableImportSelector } from "../selectors/contextcreator";
+import tooltip from "../components/misc/enhancers/tooltip";
+const ButtonWithTooltip = tooltip(Button);
 
 const isEnabled = createControlEnabledSelector("import");
 
@@ -62,12 +65,21 @@ const Component = ({ show, onClose, handleDrop }) => {
 
 const ImportComponent = connect(mapStateToProps, actions)(Component);
 
-const ImportButton = connect(null, {
-    onImport: () => toggleControl("import")
-})(({ onImport }) => (
-    <Button key={"import"} bsStyle="primary" bsSize="sm" onClick={onImport}>
-        <Message msgId={"contextCreator.generalSettings.import"} />
-    </Button>
+const ImportButton = connect(
+    createSelector(disableImportSelector, (disable) => ({ disable })),
+    {
+        onImport: () => toggleControl("import")
+    }
+)(({ disable, onImport }) => (
+    <ButtonWithTooltip
+        {...disable && {tooltipId: "contextCreator.importTooltip", disabled: true}}
+        key={"import"}
+        bsStyle="primary"
+        bsSize="sm"
+        onClick={onImport}
+    >
+        <Message msgId={"contextCreator.import"} />
+    </ButtonWithTooltip>
 ));
 
 /**

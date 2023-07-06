@@ -56,7 +56,9 @@ import {
     SET_EDITED_TEMPLATE,
     SET_PARSED_TEMPLATE,
     SET_FILE_DROP_STATUS,
-    SET_RESOURCE
+    SET_RESOURCE,
+    LOAD_FINISHED,
+    MAP_VIEWER_LOADED
 } from '../../actions/contextcreator';
 import {INIT_MAP} from '../../actions/map';
 import {LOAD_MAP_CONFIG} from '../../actions/config';
@@ -981,7 +983,7 @@ describe('contextcreator epics', () => {
                     name: "test",
                     description: "Some context"
                 },
-                exportData: {
+                prefetchedData: {
                     pluginsConfig: [],
                     allTemplates: []
                 }
@@ -990,29 +992,36 @@ describe('contextcreator epics', () => {
     });
     it('importContextEpic into existing context', (done) => {
         const blob = new Blob([JSON.stringify({
-            resource: {id: 'context2', name: 'test1'},
-            pluginsConfig: [],
-            allTemplates: []
+            id: 'context2', name: 'test1'
         })], {
             type: "application/json"
         });
         const jsonFile = new File([blob], "file.json", {
             type: "application/json"
         });
-        const epicResult = ([a, b]) => {
-            expect(a.type).toBe(SET_RESOURCE);
-            expect(a.resource).toEqual({id: 'context1', name: 'test'});
-            expect(a.pluginsConfig).toEqual([]);
-            expect(a.allTemplates).toEqual([]);
-            expect(b.type).toBe(TOGGLE_CONTROL);
-            expect(b.control).toBe('import');
+        const epicResult = (actions) => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(SET_RESOURCE);
+            expect(actions[0].resource).toEqual({id: 'context1', name: 'test'});
+            expect(actions[0].pluginsConfig).toEqual([]);
+            expect(actions[0].allTemplates).toEqual([]);
+            expect(actions[1].type).toBe(TOGGLE_CONTROL);
+            expect(actions[1].control).toBe('import');
+            expect(actions[2].type).toBe(ENABLE_MANDATORY_PLUGINS);
+            expect(actions[3].type).toBe(LOAD_FINISHED);
+            expect(actions[4].type).toBe(MAP_VIEWER_LOADED);
+            expect(actions[4].status).toBe(false);
             done();
         };
-        testEpic(importContextEpic, 2, onContextImport([jsonFile]), epicResult, {
+        testEpic(importContextEpic, 5, onContextImport([jsonFile]), epicResult, {
             contextcreator: {
                 resource: {
                     name: "test",
                     id: "context1"
+                },
+                prefetchedData: {
+                    pluginsConfig: [],
+                    allTemplates: []
                 }
             }
         }, done);
@@ -1020,28 +1029,35 @@ describe('contextcreator epics', () => {
 
     it('importContextEpic into new context', (done) => {
         const blob = new Blob([JSON.stringify({
-            resource: {id: 'context2', name: 'test1'},
-            pluginsConfig: [],
-            allTemplates: []
+            id: 'context2', name: 'test1'
         })], {
             type: "application/json"
         });
         const jsonFile = new File([blob], "file.json", {
             type: "application/json"
         });
-        const epicResult = ([a, b]) => {
-            expect(a.type).toBe(SET_RESOURCE);
-            expect(a.resource).toEqual({ name: 'test'});
-            expect(a.pluginsConfig).toEqual([]);
-            expect(a.allTemplates).toEqual([]);
-            expect(b.type).toBe(TOGGLE_CONTROL);
-            expect(b.control).toBe('import');
+        const epicResult = (actions) => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(SET_RESOURCE);
+            expect(actions[0].resource).toEqual({ name: 'test'});
+            expect(actions[0].pluginsConfig).toEqual([]);
+            expect(actions[0].allTemplates).toEqual([]);
+            expect(actions[1].type).toBe(TOGGLE_CONTROL);
+            expect(actions[1].control).toBe('import');
+            expect(actions[2].type).toBe(ENABLE_MANDATORY_PLUGINS);
+            expect(actions[3].type).toBe(LOAD_FINISHED);
+            expect(actions[4].type).toBe(MAP_VIEWER_LOADED);
+            expect(actions[4].status).toBe(false);
             done();
         };
-        testEpic(importContextEpic, 2, onContextImport([jsonFile]), epicResult, {
+        testEpic(importContextEpic, 5, onContextImport([jsonFile]), epicResult, {
             contextcreator: {
                 resource: {
                     name: "test"
+                },
+                prefetchedData: {
+                    pluginsConfig: [],
+                    allTemplates: []
                 }
             }
         }, done);
