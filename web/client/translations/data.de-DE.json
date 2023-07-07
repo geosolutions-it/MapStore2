@@ -3191,7 +3191,7 @@
                 "name": "Name",
                 "namePlaceholder": "Geben Sie den Namen des App-Kontexts ein...",
                 "windowTitle": "Fenstertitel",
-                "windowTitlePlaceholder": "Fenstertitel eingeben..."        
+                "windowTitlePlaceholder": "Fenstertitel eingeben..."
             },
             "configureThemes": {
               "title": "Thema konfigurieren",
