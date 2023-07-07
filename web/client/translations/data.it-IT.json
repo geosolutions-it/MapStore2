@@ -3155,7 +3155,7 @@
                 "name": "Nome",
                 "namePlaceholder": "Inserisci il nome del contesto applicativo...",
                 "windowTitle": "Titolo della finestra",
-                "windowTitlePlaceholder": "Inserisci il titolo della finestra..."                
+                "windowTitlePlaceholder": "Inserisci il titolo della finestra..."
             },
             "configureThemes": {
               "title": "Configura il tema",
