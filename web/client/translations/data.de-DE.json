@@ -3325,7 +3325,7 @@
             "export": "Export",
             "importDialog": {
                 "selectFiles": "Wählen Sie eine Datei aus",
-                "heading": "Löschen Sie eine zuvor exportierte context.json-Datei",
+                "heading": "Exportieren Sie diesen Kontext als Datei",
                 "note": "Die Daten in der importierten Datei ersetzen die Daten im aktuellen Kontext"
             },
             "exportDialog": {

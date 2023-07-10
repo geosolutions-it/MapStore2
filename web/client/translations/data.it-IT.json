@@ -3293,7 +3293,7 @@
                 "note": "I dati nel file importato sostituiranno i dati nel contesto corrente"
             },
             "exportDialog": {
-                "heading": "Esporta il contesto come file .json"
+                "heading": "Esporta questo contesto come file"
             }
         },
         "contextManager": {

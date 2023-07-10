@@ -3291,7 +3291,7 @@
                 "note": "Los datos en el archivo importado reemplazarán los datos en el contexto actual"
             },
             "exportDialog": {
-                "heading": "Exportar contexto como un archivo .json"
+                "heading": "Exportar este contexto como un archivo"
             }
         },
         "contextManager": {
