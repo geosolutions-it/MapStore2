@@ -3274,7 +3274,25 @@
                 "unknownError": "Ocurrió un error inesperado"
             },
             "undo": "¿Seguro que quieres abandonar la sesión de edición de contexto?",
-            "showTutorial": "Tutorial de presentación"
+            "showTutorial": "Tutorial de presentación",
+            "errors":{
+                "loading": {
+                  "title": "Error al cargar el contexto",
+                  "import": "No se pudo importar el contexto",
+                  "export": "No se pudo exportar el contexto"
+                }
+            },
+            "import": "Importar",
+            "importTooltip": "Para importar un contexto, vaya al Paso 1",
+            "export": "Exportar",
+            "importDialog": {
+                "selectFiles": "Seleccione un archivo",
+                "heading": "Suelte un archivo context.json previamente exportado",
+                "note": "Los datos en el archivo importado reemplazarán los datos en el contexto actual"
+            },
+            "exportDialog": {
+                "heading": "Exportar este contexto como un archivo"
+            }
         },
         "contextManager": {
             "title": "Administrar contextos",

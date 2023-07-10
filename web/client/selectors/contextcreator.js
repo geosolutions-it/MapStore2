@@ -43,3 +43,5 @@ export const tutorialStepSelector = state => state.contextcreator?.tutorialStep;
 export const selectedThemeSelector = state => get(state, 'contextcreator.selectedTheme');
 export const customVariablesEnabledSelector = state => get(state, 'contextcreator.customVariablesEnabled', false);
 export const isNewContext = state => state.contextcreator?.contextId === 'new';
+export const prefetchedDataSelector = state => get(state, 'contextcreator.prefetchedData', {});
+export const disableImportSelector = state => creationStepSelector(state) !== "general-settings";

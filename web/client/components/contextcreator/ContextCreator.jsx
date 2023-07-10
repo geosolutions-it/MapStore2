@@ -160,7 +160,8 @@ export default class ContextCreator extends React.Component {
         basicVariables: PropTypes.object,
         customVariablesEnabled: PropTypes.bool,
         onToggleCustomVariables: PropTypes.func,
-        enableClickOnStep: PropTypes.bool
+        enableClickOnStep: PropTypes.bool,
+        items: PropTypes.array
     };
 
     static contextTypes = {
@@ -244,7 +245,9 @@ export default class ContextCreator extends React.Component {
                         editingAllowedRoles: []
                     }
                 }
-            }
+            },
+            "ContextImport",
+            "ContextExport"
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],
@@ -282,11 +285,23 @@ export default class ContextCreator extends React.Component {
     }
 
     render() {
-        const extraToolbarButtons = (stepId) => this.props.tutorials[stepId] ? [{
-            id: 'show-tutorial',
-            onClick: () => this.props.onShowTutorial(stepId),
-            label: 'contextCreator.showTutorial'
-        }] : [];
+        const extraToolbarButtons = (stepId) => {
+            let toolbarButton = this.props.tutorials[stepId] ? [{
+                id: 'show-tutorial',
+                onClick: () => this.props.onShowTutorial(stepId),
+                label: 'contextCreator.showTutorial'
+            }] : [];
+            const importExportButtons = this.props.items?.map(({toolbarBtn} = {}) => toolbarBtn) ?? [];
+            toolbarButton = toolbarButton.concat(importExportButtons);
+            if (stepId === 'configure-map') {
+                toolbarButton = toolbarButton.concat({
+                    id: "map-reload",
+                    onClick: () => this.props.onReloadConfirm(true),
+                    label: 'contextCreator.configureMap.reload'
+                });
+            }
+            return toolbarButton;
+        };
 
         return (
             <Stepper
@@ -319,11 +334,7 @@ export default class ContextCreator extends React.Component {
                 }, {
                     id: 'configure-map',
                     label: 'contextCreator.configureMap.label',
-                    extraToolbarButtons: [...extraToolbarButtons('configure-map'), {
-                        id: "map-reload",
-                        onClick: () => this.props.onReloadConfirm(true),
-                        label: 'contextCreator.configureMap.reload'
-                    }],
+                    extraToolbarButtons: extraToolbarButtons('configure-map'),
                     component:
                         <ConfigureMap
                             pluginsConfig={this.props.ignoreViewerPlugins ?

@@ -48,7 +48,11 @@ import {
     SET_SELECTED_THEME,
     setSelectedTheme,
     onToggleCustomVariables,
-    ON_TOGGLE_CUSTOM_VARIABLES
+    ON_TOGGLE_CUSTOM_VARIABLES,
+    onContextExport,
+    CONTEXT_EXPORT,
+    onContextImport,
+    CONTEXT_IMPORT
 } from '../contextcreator';
 
 describe('contextcreator actions', () => {
@@ -176,5 +180,19 @@ describe('contextcreator actions', () => {
         const retval = onToggleCustomVariables([{}]);
         expect(retval).toBeTruthy();
         expect(retval.type).toBe(ON_TOGGLE_CUSTOM_VARIABLES);
+    });
+    it('onContextExport', () => {
+        const fileName = "test.json";
+        const retVal = onContextExport(fileName);
+        expect(retVal).toBeTruthy();
+        expect(retVal.type).toBe(CONTEXT_EXPORT);
+        expect(retVal.fileName).toBe(fileName);
+    });
+    it('onContextImport', () => {
+        const file = {name: "test"};
+        const retVal = onContextImport(file);
+        expect(retVal).toBeTruthy();
+        expect(retVal.type).toBe(CONTEXT_IMPORT);
+        expect(retVal.file).toEqual(file);
     });
 });

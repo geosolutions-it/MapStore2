@@ -8,17 +8,16 @@
 
 import Rx from 'rxjs';
 import jsonlint from 'jsonlint-mod';
-import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, find, cloneDeep, isString} from 'lodash';
+import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, find, cloneDeep, isString, isEmpty} from 'lodash';
 import {push} from 'connected-react-router';
-
 import Api from '../api/GeoStoreDAO';
 
 import ConfigUtils from '../utils/ConfigUtils';
 
 import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLATE, EDIT_TEMPLATE, SHOW_DIALOG, SET_CREATION_STEP, MAP_VIEWER_LOAD,
     MAP_VIEWER_RELOAD, CHANGE_ATTRIBUTE, ENABLE_MANDATORY_PLUGINS, ENABLE_PLUGINS, DISABLE_PLUGINS, SAVE_PLUGIN_CFG,
-    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, UNINSTALL_PLUGIN,
-    SHOW_TUTORIAL, contextSaved, setResource, startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate,
+    EDIT_PLUGIN, CHANGE_PLUGINS_KEY, UPDATE_EDITED_CFG, VALIDATE_EDITED_CFG, SET_RESOURCE, UPLOAD_PLUGIN, UNINSTALL_PLUGIN, CONTEXT_EXPORT,
+    CONTEXT_IMPORT, SHOW_TUTORIAL, contextSaved, setResource, startResourceLoad, loadFinished, loadTemplate, showDialog, setFileDropStatus, updateTemplate,
     isValidContextName, contextNameChecked, setCreationStep, contextLoadError, loading, mapViewerLoad, mapViewerLoaded, setEditedPlugin,
     setEditedCfg, setParsedCfg, validateEditedCfg, setValidationStatus, savePluginCfg, enableMandatoryPlugins,
     enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, setParsedTemplate,
@@ -27,7 +26,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
-    wasTutorialShownSelector, selectedThemeSelector, customVariablesEnabledSelector} from '../selectors/contextcreator';
+    wasTutorialShownSelector, selectedThemeSelector, customVariablesEnabledSelector, prefetchedDataSelector} from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
@@ -39,6 +38,9 @@ import {loadMapConfig} from '../actions/config';
 import {createResource, createCategory, updateResource, deleteResource, getResource} from '../api/persistence';
 import getPluginsConfig from '../observables/config/getPluginsConfig';
 import { upload, uninstall } from '../api/plugins';
+import { download, readJson } from "../utils/FileUtils";
+import { toggleControl } from "../actions/controls";
+import { mapSelector } from "../selectors/map";
 
 const saveContextErrorStatusToMessage = (status) => {
     switch (status) {
@@ -68,6 +70,51 @@ const findPlugin = (plugins, pluginName) =>
     plugins && plugins.reduce((result, plugin) =>
         result || pluginName === plugin.name && plugin || findPlugin(plugin.children, pluginName), null);
 
+const generateContextResource = (state) => {
+    const mapConfig = mapSelector(state) ? mapSaveSelector(state) : {};
+    const plugins = pluginsSelector(state);
+    const context = newContextSelector(state);
+    const resource = resourceSelector(state);
+    const templates = templatesSelector(state);
+    const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled).map(plugin => plugin.name === 'MapTemplates' ? ({
+        ...plugin,
+        pluginConfig: {
+            ...plugin.pluginConfig,
+            cfg: {
+                ...(plugin.pluginConfig.cfg || {}),
+                allowedTemplates: templates.filter(template => template.enabled).map(template => pick(template, 'id'))
+            }
+        }
+    }) : plugin);
+    const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
+    const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
+    const theme = selectedThemeSelector(state);
+    const customVariablesEnabled = customVariablesEnabledSelector(state);
+
+    const newContext = {
+        ...context,
+        mapConfig,
+        theme,
+        customVariablesEnabled,
+        plugins: {desktop: unselectablePlugins},
+        userPlugins
+    };
+    return resource && resource.id ? {
+        ...omit(resource, 'name', 'description'),
+        data: newContext,
+        metadata: {
+            name: resource && resource.name,
+            description: resource.description
+        }
+    } : {
+        category: 'CONTEXT',
+        data: newContext,
+        metadata: {
+            name: resource && resource.name
+        }
+    };
+};
+
 /**
  * Handles saving context resource
  * @memberof epics.contextcreator
@@ -78,49 +125,9 @@ export const saveContextResource = (action$, store) => action$
     .ofType(SAVE_CONTEXT)
     .exhaustMap(({destLocation}) => {
         const state = store.getState();
-        const mapConfig = mapSaveSelector(state);
-        const plugins = pluginsSelector(state);
-        const context = newContextSelector(state);
         const resource = resourceSelector(state);
-        const templates = templatesSelector(state);
-        const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled).map(plugin => plugin.name === 'MapTemplates' ? ({
-            ...plugin,
-            pluginConfig: {
-                ...plugin.pluginConfig,
-                cfg: {
-                    ...(plugin.pluginConfig.cfg || {}),
-                    allowedTemplates: templates.filter(template => template.enabled).map(template => pick(template, 'id'))
-                }
-            }
-        }) : plugin);
-        const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
-        const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
-        const theme = selectedThemeSelector(state);
-        const customVariablesEnabled = customVariablesEnabledSelector(state);
-
-        const newContext = {
-            ...context,
-            mapConfig,
-            theme,
-            customVariablesEnabled,
-            plugins: {desktop: unselectablePlugins},
-            userPlugins
-        };
-        const newResource = resource && resource.id ? {
-            ...omit(resource, 'name', 'description'),
-            data: newContext,
-            metadata: {
-                name: resource && resource.name,
-                description: resource.description
-            }
-        } : {
-            category: 'CONTEXT',
-            data: newContext,
-            metadata: {
-                name: resource && resource.name
-            }
-        };
-
+        const context = newContextSelector(state);
+        const newResource = generateContextResource(state);
         return (resource && resource.id ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.merge(
                 // LOCATION_CHANGE triggers notifications clear, need to work around that
@@ -891,3 +898,83 @@ export const savePluginCfgEpic = (action$, store) => action$
             ) :
             Rx.Observable.empty();
     });
+
+/**
+ * Handles context export action
+ * @memberof epics.contextcreator
+ * @param {observables} action$ manages `CONTEXT_EXPORT`
+ * @param {object} store
+ */
+export const exportContextEpic = (action$, { getState }) =>
+    action$.ofType(CONTEXT_EXPORT)
+        .switchMap(({ fileName }) => {
+            const prefetchedData = prefetchedDataSelector(getState());
+            let { data } = generateContextResource(getState());
+            const resource = {
+                ...data,
+                mapConfig: isEmpty(data?.mapConfig)
+                    ? get(prefetchedData, "resource.data.mapConfig", {})
+                    : data.mapConfig
+            };
+            return Rx.Observable.of([
+                JSON.stringify({ ...resource }),
+                fileName,
+                "application/json"
+            ])
+                .do((downloadArgs) => download(...downloadArgs))
+                .map(() => toggleControl("export"))
+                .catch(() =>
+                    Rx.Observable.of(
+                        error({
+                            title: "contextCreator.errors.loading.title",
+                            message: "contextCreator.errors.loading.export"
+                        })
+                    )
+                );
+        });
+
+/**
+ * Handles context import action
+ * @memberof epics.contextcreator
+ * @param {observables} action$ manages `CONTEXT_IMPORT`
+ * @param {object} store
+ */
+export const importContextEpic = (action$, store) =>
+    action$.ofType(CONTEXT_IMPORT)
+        .switchMap(({ file }) =>
+            Rx.Observable.defer(() => readJson(file[0]).then((data) => data))
+                .switchMap((context) => {
+                    const prefetchedData = prefetchedDataSelector(store.getState());
+                    const {pluginsConfig, allTemplates} = pick(prefetchedData, [
+                        "pluginsConfig",
+                        "allTemplates"
+                    ]);
+                    const currentResource = pick(
+                        resourceSelector(store.getState()),
+                        ["id", "name"]
+                    );
+                    const resource = { data: {...context}, ...currentResource };
+                    return Rx.Observable.of(
+                        setResource(
+                            resource,
+                            pluginsConfig,
+                            allTemplates
+                        ),
+                        toggleControl("import")
+                    ).concat(
+                        Rx.Observable.of(
+                            enableMandatoryPlugins(),
+                            loadFinished(),
+                            mapViewerLoaded(false)
+                        )
+                    );
+                })
+                .catch(() =>
+                    Rx.Observable.of(
+                        error({
+                            title: "contextCreator.errors.loading.title",
+                            message: "contextCreator.errors.loading.import"
+                        })
+                    )
+                )
+        );

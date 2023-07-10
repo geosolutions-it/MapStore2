@@ -19,7 +19,9 @@ import {
     saveContextResource,
     checkIfContextExists,
     editTemplateEpic,
-    mapViewerLoadEpic
+    mapViewerLoadEpic,
+    exportContextEpic,
+    importContextEpic
 } from '../contextcreator';
 import {
     editPlugin,
@@ -33,6 +35,8 @@ import {
     saveNewContext,
     editTemplate,
     mapViewerLoad,
+    onContextExport,
+    onContextImport,
     SET_EDITED_PLUGIN,
     SET_EDITED_CFG,
     SET_CFG_ERROR,
@@ -51,7 +55,10 @@ import {
     CONTEXT_SAVED,
     SET_EDITED_TEMPLATE,
     SET_PARSED_TEMPLATE,
-    SET_FILE_DROP_STATUS
+    SET_FILE_DROP_STATUS,
+    SET_RESOURCE,
+    LOAD_FINISHED,
+    MAP_VIEWER_LOADED
 } from '../../actions/contextcreator';
 import {INIT_MAP} from '../../actions/map';
 import {LOAD_MAP_CONFIG} from '../../actions/config';
@@ -61,6 +68,7 @@ import {
 
 import axios from "../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
+import {TOGGLE_CONTROL} from "../../actions/controls";
 
 describe('contextcreator epics', () => {
     let mockAxios;
@@ -953,5 +961,117 @@ describe('contextcreator epics', () => {
             expect(b.overrideConfig).toEqual({});
             done();
         });
+    });
+    it('exportContextEpic, export context with plugins and themes', (done) => {
+        testEpic(exportContextEpic, 1, onContextExport('file.json'), ([a]) => {
+            expect(a.type).toEqual(TOGGLE_CONTROL);
+            expect(a.control).toEqual("export");
+            done();
+        }, {
+            map: {
+                present: {}
+            },
+            contextcreator: {
+                plugins: [{name: "Search", enabled: true}, {name: "PluginUser", isUserPlugin: true, enabled: true}],
+                selectedTheme: {
+                    color: "#000"
+                },
+                newContext: {
+                    templates: []
+                },
+                resource: {
+                    name: "test",
+                    description: "Some context"
+                },
+                prefetchedData: {
+                    pluginsConfig: [],
+                    allTemplates: []
+                }
+            }
+        });
+    });
+    it('importContextEpic into existing context', (done) => {
+        const blob = new Blob([JSON.stringify({
+            windowTitle: "test"
+        })], {
+            type: "application/json"
+        });
+        const jsonFile = new File([blob], "file.json", {
+            type: "application/json"
+        });
+        const epicResult = (actions) => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(SET_RESOURCE);
+            expect(actions[0].resource).toEqual({data: {windowTitle: "test"}, id: 'context1', name: 'test'});
+            expect(actions[0].pluginsConfig).toEqual([]);
+            expect(actions[0].allTemplates).toEqual([]);
+            expect(actions[1].type).toBe(TOGGLE_CONTROL);
+            expect(actions[1].control).toBe('import');
+            expect(actions[2].type).toBe(ENABLE_MANDATORY_PLUGINS);
+            expect(actions[3].type).toBe(LOAD_FINISHED);
+            expect(actions[4].type).toBe(MAP_VIEWER_LOADED);
+            expect(actions[4].status).toBe(false);
+            done();
+        };
+        testEpic(importContextEpic, 5, onContextImport([jsonFile]), epicResult, {
+            contextcreator: {
+                resource: {
+                    name: "test",
+                    id: "context1"
+                },
+                prefetchedData: {
+                    pluginsConfig: [],
+                    allTemplates: []
+                }
+            }
+        }, done);
+    });
+
+    it('importContextEpic into new context', (done) => {
+        const blob = new Blob([JSON.stringify({
+            windowTitle: "test"
+        })], {
+            type: "application/json"
+        });
+        const jsonFile = new File([blob], "file.json", {
+            type: "application/json"
+        });
+        const epicResult = (actions) => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(SET_RESOURCE);
+            expect(actions[0].resource).toEqual({ data: {windowTitle: "test"}, name: 'test'});
+            expect(actions[0].pluginsConfig).toEqual([]);
+            expect(actions[0].allTemplates).toEqual([]);
+            expect(actions[1].type).toBe(TOGGLE_CONTROL);
+            expect(actions[1].control).toBe('import');
+            expect(actions[2].type).toBe(ENABLE_MANDATORY_PLUGINS);
+            expect(actions[3].type).toBe(LOAD_FINISHED);
+            expect(actions[4].type).toBe(MAP_VIEWER_LOADED);
+            expect(actions[4].status).toBe(false);
+            done();
+        };
+        testEpic(importContextEpic, 5, onContextImport([jsonFile]), epicResult, {
+            contextcreator: {
+                resource: {
+                    name: "test"
+                },
+                prefetchedData: {
+                    pluginsConfig: [],
+                    allTemplates: []
+                }
+            }
+        }, done);
+    });
+
+    it('importContextEpic, throws error if no file data is provided', (done) => {
+        const startActions = [onContextImport(null)];
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(SHOW_NOTIFICATION);
+            expect(actions[0].level).toBe('error');
+            expect(typeof(actions[0].title) === 'string').toBeTruthy();
+            done();
+        };
+        testEpic(importContextEpic, 1, startActions, epicResult, {}, done);
     });
 });

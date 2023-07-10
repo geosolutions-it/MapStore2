@@ -3276,7 +3276,25 @@
                 "unknownError": "Si è verificato un errore imprevisto"
             },
             "undo": "Sei sicuro di voler abbandonare la sessione di modifica del contesto?",
-            "showTutorial": "Mostra tutorial"
+            "showTutorial": "Mostra tutorial",
+            "errors":{
+                "loading": {
+                    "title": "Errore durante il caricamento del contesto",
+                    "import": "Impossibile importare il contesto",
+                    "export": "Impossibile esportare il contesto"
+                }
+            },
+            "import": "Importare",
+            "importTooltip": "Per importare un contesto, vai al passaggio 1",
+            "export": "Esportare",
+            "importDialog": {
+                "selectFiles": "Seleziona un file",
+                "heading": "Rilascia un file context.json esportato in precedenza",
+                "note": "I dati nel file importato sostituiranno i dati nel contesto corrente"
+            },
+            "exportDialog": {
+                "heading": "Esporta questo contesto come file"
+            }
         },
         "contextManager": {
             "title": "Gestisci contesti",

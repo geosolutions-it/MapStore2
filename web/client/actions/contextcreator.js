@@ -74,6 +74,9 @@ export const CONTEXT_TUTORIALS = {
     "configure-map": "contextcreator_configuremap_tutorial",
     "configure-plugins": "contextcreator_configureplugins_tutorial"
 };
+export const CONTEXT_EXPORT = 'CONTEXT:EXPORT';
+export const CONTEXT_IMPORT = 'CONTEXT:IMPORT';
+
 /**
  * Merges initState into context creator state. Meant to be called on ContextCreator component mount
  * @param {object} initState state to merge
@@ -561,4 +564,20 @@ export const showBackToPageConfirmation = (show) => ({
 
 export const onToggleCustomVariables = () => ({
     type: ON_TOGGLE_CUSTOM_VARIABLES
+});
+
+/**
+ * Triggers context export
+ */
+export const onContextExport = (fileName) => ({
+    type: CONTEXT_EXPORT,
+    fileName
+});
+
+/**
+ * Triggers context import
+ */
+export const onContextImport = (file) => ({
+    type: CONTEXT_IMPORT,
+    file
 });

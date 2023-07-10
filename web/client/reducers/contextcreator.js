@@ -238,6 +238,7 @@ export default (state = {}, action) => {
 
         const contextCreatorPlugins = convertPlugins(allPlugins);
         const pluginTemplates = findPlugin(contextCreatorPlugins, 'MapTemplates')?.pluginConfig?.cfg?.allowedTemplates;
+        const {type, ...prefetchedData} = action;
 
         return set('initialEnabledPlugins', pluginsToEnable,
             set('templates', (action.allTemplates || []).map(template => ({
@@ -254,7 +255,8 @@ export default (state = {}, action) => {
                 set('plugins', contextCreatorPlugins,
                     set('resource', resource,
                         set('selectedTheme', theme,
-                            set('customVariablesEnabled', customVariablesEnabled, state)))))));
+                            set('customVariablesEnabled', customVariablesEnabled,
+                                set('prefetchedData', prefetchedData, state))))))));
     }
     case UPDATE_TEMPLATE: {
         const newResource = action.resource || {};
