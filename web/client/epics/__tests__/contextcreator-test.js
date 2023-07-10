@@ -70,7 +70,7 @@ import axios from "../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
 import {TOGGLE_CONTROL} from "../../actions/controls";
 
-describe.only('contextcreator epics', () => {
+describe('contextcreator epics', () => {
     let mockAxios;
     beforeEach(() => {
         mockAxios = new MockAdapter(axios);
