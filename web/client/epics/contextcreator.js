@@ -911,12 +911,10 @@ export const exportContextEpic = (action$, { getState }) =>
             const prefetchedData = prefetchedDataSelector(getState());
             let { data } = generateContextResource(getState());
             const resource = {
-                data: {
-                    ...data,
-                    mapConfig: isEmpty(data?.mapConfig)
-                        ? get(prefetchedData, "resource.data.mapConfig", {})
-                        : data.mapConfig
-                }
+                ...data,
+                mapConfig: isEmpty(data?.mapConfig)
+                    ? get(prefetchedData, "resource.data.mapConfig", {})
+                    : data.mapConfig
             };
             return Rx.Observable.of([
                 JSON.stringify({ ...resource }),
@@ -951,15 +949,14 @@ export const importContextEpic = (action$, store) =>
                         "pluginsConfig",
                         "allTemplates"
                     ]);
-                    const paths = ["id", "name"];
                     const currentResource = pick(
                         resourceSelector(store.getState()),
-                        paths
+                        ["id", "name"]
                     );
-                    const resource = omit(context.resource, paths) ?? {};
+                    const resource = { data: {...context}, ...currentResource };
                     return Rx.Observable.of(
                         setResource(
-                            { ...resource, ...currentResource },
+                            resource,
                             pluginsConfig,
                             allTemplates
                         ),

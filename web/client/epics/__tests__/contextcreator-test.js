@@ -70,7 +70,7 @@ import axios from "../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
 import {TOGGLE_CONTROL} from "../../actions/controls";
 
-describe('contextcreator epics', () => {
+describe.only('contextcreator epics', () => {
     let mockAxios;
     beforeEach(() => {
         mockAxios = new MockAdapter(axios);
@@ -992,7 +992,7 @@ describe('contextcreator epics', () => {
     });
     it('importContextEpic into existing context', (done) => {
         const blob = new Blob([JSON.stringify({
-            id: 'context2', name: 'test1'
+            windowTitle: "test"
         })], {
             type: "application/json"
         });
@@ -1002,7 +1002,7 @@ describe('contextcreator epics', () => {
         const epicResult = (actions) => {
             expect(actions.length).toBe(5);
             expect(actions[0].type).toBe(SET_RESOURCE);
-            expect(actions[0].resource).toEqual({id: 'context1', name: 'test'});
+            expect(actions[0].resource).toEqual({data: {windowTitle: "test"}, id: 'context1', name: 'test'});
             expect(actions[0].pluginsConfig).toEqual([]);
             expect(actions[0].allTemplates).toEqual([]);
             expect(actions[1].type).toBe(TOGGLE_CONTROL);
@@ -1029,7 +1029,7 @@ describe('contextcreator epics', () => {
 
     it('importContextEpic into new context', (done) => {
         const blob = new Blob([JSON.stringify({
-            id: 'context2', name: 'test1'
+            windowTitle: "test"
         })], {
             type: "application/json"
         });
@@ -1039,7 +1039,7 @@ describe('contextcreator epics', () => {
         const epicResult = (actions) => {
             expect(actions.length).toBe(5);
             expect(actions[0].type).toBe(SET_RESOURCE);
-            expect(actions[0].resource).toEqual({ name: 'test'});
+            expect(actions[0].resource).toEqual({ data: {windowTitle: "test"}, name: 'test'});
             expect(actions[0].pluginsConfig).toEqual([]);
             expect(actions[0].allTemplates).toEqual([]);
             expect(actions[1].type).toBe(TOGGLE_CONTROL);
