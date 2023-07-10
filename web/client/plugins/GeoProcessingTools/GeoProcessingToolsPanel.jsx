@@ -5,56 +5,56 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import { connect } from 'react-redux';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { Panel } from 'react-bootstrap';
 
+import Message from '../../components/I18N/Message';
+import BorderLayout from '../../components/layout/BorderLayout';
+import ResponsivePanel from "../../components/misc/panels/ResponsivePanel";
+import GeoProcessingToolsMain from './GeoProcessingToolsMain';
+import { toggleControl } from '../../actions/controls';
 import { isGeoProcessingToolsEnabledSelector } from '../../selectors/controls';
 import { dockStyleSelector } from '../../selectors/maplayout';
-import Message from '../../components/I18N/Message';
-import ResponsivePanel from "../../components/misc/panels/ResponsivePanel";
 
 const PanelComp = ({
     dockStyle,
     enabled,
-    panelStyle = {
-        zIndex: 100,
-        overflow: "hidden",
-        height: "100%"
-    },
-    panelClassName = "catalog-panel",
     onClose
 }) => {
+    useEffect( () => {
+        onClose();
+    }, []);
     return enabled ?
         (
             <ResponsivePanel
                 containerStyle={dockStyle}
-                containerId="geoProcessing-root"
-                containerClassName={enabled ? 'catalog-active' : ''}
+                containerClassName="dock-container"
+                containerId="GeoProcessingTools-root"
                 open={enabled}
                 size={550}
                 dock
                 position="right"
                 bsStyle="primary"
-                title={<Message msgId="catalog.title"/>}
+                title={<Message msgId="GeoProcessingTools.title"/>}
                 onClose={onClose}
-                glyph="folder-open"
+                glyph="star"
                 style={dockStyle}
             >
-                <Panel id={"geoProcessing-panel"} style={panelStyle} className={panelClassName}>
-                    test
-                </Panel>
+                <BorderLayout
+                    key="gpt-BorderLayout"
+                    className="geo-processing-tool-panel"
+                >
+                    <GeoProcessingToolsMain/>
+                </BorderLayout>
             </ResponsivePanel>
         ) : null;
 };
 
 PanelComp.propTypes = {
-    dockStyle: PropTypes.object,
-    panelStyle: PropTypes.object,
-    panelClassName: PropTypes.string,
     enabled: PropTypes.bool,
+    dockStyle: PropTypes.object,
     onClose: PropTypes.func
 };
 
@@ -72,6 +72,7 @@ const PanelCompConnected = connect(
             dockStyle
         })),
     {
+        onClose: toggleControl.bind(null, 'GeoProcessingTools', null)
     })(PanelComp);
 
 export default PanelCompConnected;

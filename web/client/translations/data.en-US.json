@@ -3858,8 +3858,25 @@
         },
         "GeoProcessingTools": {
           "title": "GeoProcessing Tools",
-          "tooltip": "GeoProcessing Tools"
-
+          "emptyTitle": "These WPS proceses must be installed in Geoserver in order to use this tool:",
+          "emptyDescription": "<ul><li>geo:Buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "sourceLayer": "Source Layer",
+          "sourceFeature": "Source Feature",
+          "tool": "Select a tool to use",
+          "bufferTool": "Buffer",
+          "intersectionTool": "Intersection",
+          "noSourceLayer": "No layer matches the current filter",
+          "noSourceFeature": "No feature matches the current filter",
+          "intersectionLayer": "Intersection Layer",
+          "tooltip": {
+            "siderBarBtn": "GeoProcessing Tools",
+            "selectFeature": "Please select a feature",
+            "validFeature": "This feature is valid",
+            "invalidFeature": "This feature is not valid",
+            "selectLayer": "Please select a layer",
+            "validLayer": "This layer is valid and can be used in this tool",
+            "invalidLayer": "This layer does not support the needed wps processes \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries"
+          }
         }
     }
 }

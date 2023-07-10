@@ -8,10 +8,13 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
-import { toggleControl } from '../actions/controls';
 import Message from '../components/I18N/Message';
+import GeoProcessingToolsPanel from './GeoProcessingTools/GeoProcessingToolsPanel';
+import { toggleControl } from '../actions/controls';
+import * as epics  from '../epics/geoProcessingTools';
+import geoProcessingTools from '../reducers/geoProcessingTools';
+
 import { createPlugin } from '../utils/PluginsUtils';
-import PanelComponent from './GeoProcessingTools/Panel';
 
 /**
  * Plugin for geo process layers
@@ -34,18 +37,16 @@ import PanelComponent from './GeoProcessingTools/Panel';
  * }
  * `
  */
-
-
 const GeoProcessingTools = createPlugin(
     "GeoProcessingTools",
     {
-        component: PanelComponent,
+        component: GeoProcessingToolsPanel,
         containers: {
             SidebarMenu: {
                 name: 'GeoProcessingTools',
                 position: 2100,
                 doNotHide: true,
-                tooltip: "GeoProcessingTools.tooltip",
+                tooltip: "GeoProcessingTools.tooltip.siderBarBtn",
                 text: <Message msgId="GeoProcessingTools.title" />,
                 icon: <Glyphicon glyph="star" />, // [ ] change this
                 action: toggleControl.bind(null, 'GeoProcessingTools', null),
@@ -53,9 +54,10 @@ const GeoProcessingTools = createPlugin(
                 toggle: true
             }
         },
-        reducers: {}/* ,
-        epics*/
+        reducers: {
+            geoProcessingTools
+        },
+        epics
     });
 
 export default GeoProcessingTools;
-

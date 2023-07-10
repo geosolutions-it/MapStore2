@@ -1,3 +1,6 @@
+import {get, head} from 'lodash';
+import urlUtil from 'url';
+
 /*
  * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
@@ -5,11 +8,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import { optionsToVendorParams } from './VendorParamsUtils';
-import urlUtil from 'url';
-import {get, head} from 'lodash';
-
 
 export const needsReload = (oldOptions, newOptions) => {
     const oldParams = { ...(optionsToVendorParams(oldOptions) || {}), _v_: oldOptions._v_ };
@@ -58,5 +57,29 @@ export const extractGeometryAttributeName = describeFeatureType => {
     return properties && head(properties
         .filter(elem => elem.type.indexOf("gml:") === 0) // find fields of geometric type
         .map(elem => elem.name) // extract the geometry attribute name. E.g. from gml:Point extract the "Point" string
+    );
+};
+
+/**
+ * Extract first prop that is not a geometry
+ * @param {object} describeFeatureType the describe ft type object
+ * @example
+ * describeFeatureType: {
+ *   featureTypes: [{
+ *     properties:[{
+ *       localType: "string",
+ *       maxOccurs: 1,
+ *       minOccurs: 0,
+ *       name: "id",
+ *       nillable: true,
+ *       type: "xsd:string"
+ *     }]
+ * }]
+ */
+export const extractFirstNonGeometryProp = describeFeatureType => {
+    const properties = get(describeFeatureType, "featureTypes[0].properties") || [];
+    return properties && head(properties
+        .filter(elem => elem.type.indexOf("gml:") !== 0)
+        .map(elem => elem.name)
     );
 };
