@@ -1,32 +1,56 @@
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+import { get } from 'lodash';
 
 import { updateNode } from './layers';
 
-import WMS from '../api/WMS';
-import { getLayerOptions } from '../utils/WMSUtils';
-import * as WFS from '../api/WFS';
-import WCS from '../api/WCS';
 import {getCapabilitiesUrl} from '../utils/LayersUtils';
-import { get } from 'lodash';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
+import { getLayerOptions } from '../utils/WMSUtils';
+import WCS from '../api/WCS';
+import * as WFS from '../api/WFS';
+import WMS from '../api/WMS';
 
-export function getDescribeLayer(url, layer, options) {
+export const DESCRIBE_FEATURE_TYPE_LOADED = "LAYER_CAPABILITIES:DESCRIBE_FEATURE_TYPE_LOADED";
+
+/**
+ * action for saying a describe feature type has been loaded
+ * @memberof actions.layerCapabilities
+ * @param  {string} layerId the layer id
+ */
+export const describeFeatureTypeLoaded = (layerId, source) => ({
+    type: DESCRIBE_FEATURE_TYPE_LOADED,
+    layerId,
+    source
+});
+
+/**
+ * action for getting describe layer and describe feature type
+ * @memberof actions.layerCapabilities
+ * @param  {string} url the url
+ * @param  {object} layer the layer object
+ * @param  {object} options the options
+ * @param  {source} source if present it will trigger a loaded action, useful for side effect
+ */
+export function getDescribeLayer(url, layer, options, source) {
     return (dispatch /* , getState */) => {
         return WMS.describeLayer(url, layer.name, options).then((describeLayer) => {
             if (describeLayer && describeLayer.owsType === "WFS") {
-                return WFS.describeFeatureType(url, describeLayer.name)
+                WFS.describeFeatureType(url, describeLayer.name)
                     .then( (describeFeatureType) => {
                         describeLayer.geometryType = extractGeometryType(describeFeatureType);
-                        return dispatch(updateNode(layer.id, "id", { describeLayer, describeFeatureType }));
+                        dispatch(updateNode(layer.id, "id", { describeLayer, describeFeatureType }));
+                        if (source) {
+                            dispatch(describeFeatureTypeLoaded(layer.id, source));
+                        }
                     })
                     .catch(() => {
-                        return dispatch(updateNode(layer.id, "id", { describeLayer: describeLayer || { "error": "no describe feature found" }}));
+                        dispatch(updateNode(layer.id, "id", { describeLayer: describeLayer || { "error": "no describe feature found" }}));
                     });
             } else if ( describeLayer && describeLayer.owsType === "WCS" ) {
                 WCS.describeCoverage(url, describeLayer.name).then((describeCoverage) => {
@@ -40,14 +64,14 @@ export function getDescribeLayer(url, layer, options) {
 
                     dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));
                 }).catch(() => {
-                    return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe coverage found"}}));
+                    dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe coverage found"}}));
                 });
             }
-            return dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe Layer found"}}));
+            dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe Layer found"}}));
 
         })
             .catch((error) => {
-                return dispatch(updateNode(layer.id, "id", {describeLayer: {"error": error.status}}));
+                dispatch(updateNode(layer.id, "id", {describeLayer: {"error": error.status}}));
             });
     };
 }
