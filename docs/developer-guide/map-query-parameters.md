@@ -343,7 +343,7 @@ Requirements:
 - The number of layers should match the number of sources
 - The source name can be a string that must match a catalog service name present in the map or an object that defines an external catalog (see example)
 
-Supported layer types are WMS, WMTS, WFS and 3D Tiles.
+Supported layer types are WMS, WMTS, WFS, 3D Tiles and GeoJSON.
 
 Example:
 

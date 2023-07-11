@@ -942,4 +942,30 @@ describe('catalog Epics', () => {
                 });
         });
     });
+
+    describe('addLayersFromCatalogsEpic geojson', () => {
+        it('should add layer with title from geojson', (done) => {
+            const NUM_ACTIONS = 1;
+            testEpic(
+                addLayersFromCatalogsEpic,
+                NUM_ACTIONS,
+                addLayersMapViewerUrl(["Title"], [{ url: 'base/web/client/test-resources/geojson/example.geojson', type: 'GEOJSON' }]),
+                (actions) => {
+                    try {
+                        const [
+                            addLayerAndDescribeAction
+                        ] = actions;
+                        expect(addLayerAndDescribeAction.type).toBe(ADD_LAYER_AND_DESCRIBE);
+                        expect(addLayerAndDescribeAction.layer).toBeTruthy();
+                        expect(addLayerAndDescribeAction.layer.bbox.crs).toBe("EPSG:4326");
+                        expect(addLayerAndDescribeAction.layer.type).toBe("vector");
+                        expect(addLayerAndDescribeAction.layer.title).toBe("Title");
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }, {});
+        });
+    });
+
 });
