@@ -30,15 +30,20 @@ This first step allows to configure the **Name** and the **Window title** of the
 !!! note
     The **Window title** is the name of the browser window.
 
-### Import/Export context
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to **Import** a context with all the configurations of the context by selecting the <img src="../img/button/import_button.jpg" class="ms-docbutton" /> button. The import screen appears and the user can drag and drop a context, in `json` format, inside the import screen or select it from the folders of the local machine through the <img src="../img/button/select-files.jpg" class="ms-docbutton"/> button.
 
-In general settings, the user can import/export the context in view with all the configurations of the context. The plugins are configured under `context-creator` in the localConfig and are enabled by default.
+<img src="../img/application-context/import_context.gif" class="ms-docimage"/>
 
-<img src="../img/application-context/context_import_export.jpg" class="ms-docimage"/>
+After entering the context name, in the *general settings*, the user can also **Export** the context with all the configurations of the context by selecting the <img src="../img/button/export_button.jpg" class="ms-docbutton" /> button. The export screen appears and the user exports the context, in `json` format, by clicking the <img src="../img/button/export_button.jpg" class="ms-docbutton"/> button.
+
+<img src="../img/application-context/export_context.gif" class="ms-docimage"/>
+
+!!! note
+    The <img src="../img/button/import_button.jpg" class="ms-docbutton"/> button is only available on the first step of the context wizard, the *general settings*, while the <img src="../img/button/export_button.jpg" class="ms-docbutton"/> button is also available in the later steps of the wizard.
 
 ## Configure Map
 
-To create the context viewer, the map configuration (like the one described [here](exploring-maps.md#exploring-maps) opens so that the admin can set the initial state of the context map.
+To create the context viewer, the map configuration like the one described [here](exploring-maps.md#exploring-maps) opens so that the admin can set the initial state of the context map.
 
 <img src="../img/application-context/steptwo_part.jpg" class="ms-docimage"/>
 
