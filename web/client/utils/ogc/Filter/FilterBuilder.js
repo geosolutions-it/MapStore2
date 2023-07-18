@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {logical, spatial, comparison, literal, propertyName, valueReference, distance, lower, upper} = require('./operators');
+const {logical, spatial, comparison, literal, propertyName, valueReference, distance, lower, upper, func} = require('./operators');
 const {filter, fidFilter} = require('./filter');
 const {processOGCGeometry} = require("../GML");
 // const isValidXML = (value, {filterNS, gmlNS}) => value.indexOf(`<${filterNS}:` === 0) || value.indexOf(`<${gmlNS}:`) === 0;
@@ -21,7 +21,7 @@ const {processOGCGeometry} = require("../GML");
  *      filter(
  *          and(
  *              property("P1").equals("v1"),
- *              proprety("the_geom").intersects(geoJSONGeometry)
+ *              property("the_geom").intersects(geoJSONGeometry)
  *          )
  *      ),
  *      {srsName="EPSG:4326"} // 3rd for query is optional
@@ -92,11 +92,26 @@ module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} =
     };
     const propName = wfsVersion.indexOf("2.") === 0 ? valueReference : propertyName;
     return {
+
+        operations: Object.entries({
+            ...spatial,
+            ...comparison,
+            ...logical,
+            // override between to avoid to explicit lower and upper boundaries as arguments
+            between: (ns, prop, ...args) => comparison.between(ns, prop, lower(ns, args[0]), upper(ns, args[1])),
+            func
+        }).reduce((acc, [key, fun]) => {
+            acc[key] = fun.bind(null, filterNS);
+            return acc;
+        }),
         filter: filter.bind(null, filterNS),
         fidFilter: fidFilter.bind(null, filterNS),
         and: logical.and.bind(null, filterNS),
         or: logical.or.bind(null, filterNS),
         not: logical.not.bind(null, filterNS),
+        func: func.bind(null, filterNS),
+        literal: getValue,
+        propertyName: propName.bind(null, filterNS),
         property: function(name) {
             return {
                 equalTo: (value) => comparison.equal(filterNS, propName(filterNS, name), getValue(value)),

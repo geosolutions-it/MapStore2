@@ -1,14 +1,14 @@
-import {includes, isNil} from 'lodash';
+import {includes} from 'lodash';
 const logical = ["and", "or", "not"];
 const cql = ["include"];
 const operators = {
-    '=': "equalTo",
-    "<>": "notEqualTo",
+    '=': "equal",
+    "<>": "notEqual",
     "><": "between",
-    '<': "lessThen",
-    '<=': "lessThenOrEqualTo",
-    '>': "greaterThen",
-    '>=': "greaterThenOrEqualTo",
+    '<': "less",
+    '<=': "lessOrEqual",
+    '>': "greater",
+    '>=': "greaterOrEqual",
     'like': "like",
     'ilike': "ilike"
     // TODO: support unary operators like isNull
@@ -16,7 +16,7 @@ const operators = {
 };
 /**
  * Returns a function that convert objects coming from CQL/parser.js --> read function
- * into ogc filter
+ * into XML OGC filter
  * @param {object} filterBuilder The FilterBuilder instance to use for this conversion.
  * @example
  * const cqlFilter = "property = 'value";
@@ -26,7 +26,13 @@ const operators = {
  * const ogcFilter = toOgcFiler(filterObject);
  * // ogcFilter --> "<ogc:PropertyIsEqualTo><ogc:PropertyName>property</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>"
  */
-const fromObject = (filterBuilder = {}) => ({type, filters = [], value, property, lowerBoundary, upperBoundary }) => {
+const fromObject = (filterBuilder = {}) => ({type, filters = [], args, name, value }) => {
+    if (type === "literal") {
+        return filterBuilder.literal(value);
+    }
+    if (type === "property") {
+        return filterBuilder.propertyName(name);
+    }
     if (includes(logical, type)) {
         return filterBuilder[type](
             ...filters.map(fromObject(filterBuilder))
@@ -35,7 +41,12 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], value, property
     if (includes(cql, type)) {
         return "";
     }
-    return filterBuilder.property(property)[operators[type]](isNil(value) ? lowerBoundary : value, upperBoundary);
+    if (includes(Object.keys(operators), type)) {
+        return filterBuilder.operations[operators[type]](...args.map(fromObject(filterBuilder)));
+    }
+    if (includes(filterBuilder.operators, type)) {
+        return filterBuilder.operations[type](...args.map(fromObject(filterBuilder)));
+    }
 };
 
 export default fromObject;
