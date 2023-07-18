@@ -213,6 +213,7 @@
             "update": "Aggiorna",
             "warning": "Attenzione",
             "success": "Aggiornamento completo",
+            "error": "Errore",
             "backgroundLayerNotSupported": "Lo sfondo precedentemente caricato non è supportato per questo tipo di mappa. E' stato pertanto selezionato il primo disponibile.",
             "noBackgroundLayerSupported": "Non ci sono sfondi supportati per questo tipo di mappa.",
             "updateOldMap": "Questa è una vecchia mappa perciò non tutte le funzionalità sono abilitate. Clicca su Aggiorna per aggiornare la mappa o semplicemnte chiudi la notifica se non desideri aggiornarla",
@@ -1342,6 +1343,30 @@
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
+            "permalink": {
+                "title": "Permalink",
+                "accessible": "Pubblico",
+                "success": "Il permalink è stato salvato con successo",
+                "error": "Errore durante il salvataggio del permalink",
+                "descriptionLabel": "Descrizione",
+                "titleLabel": "Titolo",
+                "titlePlaceholder": "Inserisci un titolo",
+                "descriptionPlaceholder": "Inserisci una descrizione",
+                "save": "Salva",
+                "create": "Creare nuovo",
+                "loadingSpinner": "Permalink in caricamento",
+                "errors": {
+                    "loading": {
+                        "unknownError": "Si è verificato un errore durante il caricamento del permalink",
+                        "permalinkNotAccessible": "Non sei autorizzato ad accedere a questo permalink. Contatta il proprietario della risorsa",
+                        "permalinkDoesNotExist": "Il permalink a cui stai tentando di accedere non esiste",
+                        "title": "Errore durante il caricamento di peramlink",
+                        "pleaseLogin": "Questo permalink non è pubblico. Si prega di provare ad accedere",
+                        "notFound": "Permalink non trovato",
+	                    "notAccessible": "Permalink non accessibile"
+                    }
+                }
+            },
             "embeddedLinkTitle": "Con il codice embedded",
             "forceDrawer": "Mostra l'indice dei livelli",
             "apiLinkTitle": "Usando le API",
@@ -2832,10 +2857,12 @@
             "title": "Modifica proprietà",
             "name": "Nome",
             "description": "Descrizione",
+            "titleInput": "Titolo",
             "createdAt": "Creata",
             "modifiedAt": "Modificata",
             "namePlaceholder": "Inserisci un nome..",
             "descriptionPlaceholder": "Inserisci una descrizione...",
+            "titlePlaceholder": "Digita un titolo...",
             "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
             "close": "Chiudi",
             "cancel": "Annulla",
@@ -3076,6 +3103,10 @@
           "Share": {
             "description": "Permette di condividere la mappa in diversi modi (link, QR-Code, embed, social network ...)",
             "title": "Strumento di condivisione"
+          },
+          "Permalink": {
+            "description": "Permette di creare un permalink della risorsa attualmente in vista",
+            "title": "Permalink"
           },
           "StreetView": {
             "title": "Street View",

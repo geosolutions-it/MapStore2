@@ -17,6 +17,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FormControl as BFormControl, ControlLabel, FormGroup } from 'react-bootstrap';
+import get from 'lodash/get';
 
 import ConfigUtils from '../../../utils/ConfigUtils';
 import localizedProps from '../../misc/enhancers/localizedProps';
@@ -34,10 +35,12 @@ class Metadata extends React.Component {
 
         // I18N
         nameFieldText: PropTypes.node,
+        titleFieldText: PropTypes.node,
         descriptionFieldText: PropTypes.node,
         nameFieldFilter: PropTypes.func,
         namePlaceholderText: PropTypes.string,
         descriptionPlaceholderText: PropTypes.string,
+        titlePlaceholderText: PropTypes.string,
         createdAtFieldText: PropTypes.string,
         modifiedAtFieldText: PropTypes.string
     };
@@ -83,6 +86,17 @@ class Metadata extends React.Component {
                     value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.name || ""} />
             </FormGroup>
             <FormGroup>
+                <ControlLabel>{this.props.titleFieldText}</ControlLabel>
+                <FormControl
+                    key="mapTitle"
+                    type="text"
+                    onChange={this.changeTitle}
+                    disabled={this.props.resource.saving}
+                    placeholder={this.props.titlePlaceholderText}
+                    defaultValue={get(this.props.resource, 'attributes.title', "")}
+                    value={get(this.props.resource, 'attributes.title', "")} />
+            </FormGroup>
+            <FormGroup>
                 <ControlLabel>{this.props.descriptionFieldText}</ControlLabel>
                 <FormControl
                     key="mapDescription"
@@ -114,6 +128,10 @@ class Metadata extends React.Component {
 
     changeDescription = (e) => {
         this.props.onChange('metadata.description', e.target.value);
+    };
+
+    changeTitle = (e) => {
+        this.props.onChange('attributes.title', e.target.value);
     };
 }
 

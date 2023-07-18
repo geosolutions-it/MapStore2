@@ -213,6 +213,7 @@
             "update": "Mise à jour",
             "warning": "Avertissement",
             "success": "Réussi",
+            "error": "Erreur",
             "backgroundLayerNotSupported": "Le fond de plan précédemment sélectionné n'est pas pris en charge pour ce type de carte. Le premier disponible sera utilisé.",
             "noBackgroundLayerSupported": "Il n'y a pas de fond de plan supporté pour ce type de carte.",
             "updateOldMap": "Cette carte est à un ancien format. Certaines fonctionnalités peuvent donc ne pas fonctionner. Cliquez sur le bouton de mise à jour pour mettre à niveau la carte ou ne tenez pas compte de cet avertissement pour ne pas mettre à niveau la carte.",
@@ -1342,6 +1343,30 @@
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
+            "permalink": {
+                "title": "Permalink",
+                "accessible": "Public",
+                "success": "Le lien permanent a été enregistré avec succès",
+                "error": "Erreur lors de l'enregistrement du permalien",
+                "descriptionLabel": "Description",
+                "titleLabel": "Titre",
+                "titlePlaceholder": "Entrez un titre",
+                "descriptionPlaceholder": "Entrez une description",
+                "save": "Sauvegarder",
+                "create": "Créer un nouveau",
+                "loadingSpinner": "Chargement du lien permanent",
+                "errors": {
+                    "loading": {
+                        "unknownError": "Une erreur s'est produite lors du chargement du permalien",
+                        "permalinkNotAccessible": "Vous n'êtes pas autorisé à accéder à ce permalien. Veuillez contacter le propriétaire de la ressource",
+                        "permalinkDoesNotExist": "Le permalien auquel vous essayez d'accéder n'existe pas",
+                        "title": "Erreur lors du chargement du lien permanent",
+                        "pleaseLogin": "Ce permalien n'est pas public. Veuillez essayer de vous connecter",
+                        "notFound": "Permalien introuvable",
+	                    "notAccessible": "Permalien inaccessible"
+                    }
+                }
+            },
             "embeddedLinkTitle": "Via le code intégré",
             "forceDrawer": "Afficher la liste des couches",
             "apiLinkTitle": "Via les APIs",
@@ -2832,10 +2857,12 @@
             "title": "Modifier les propriétés",
             "name": "Nom",
             "description": "Description",
+            "titleInput": "Titre",
             "createdAt": "Créé",
             "modifiedAt": "Modifié",
             "namePlaceholder": "Tapez un nom...",
             "descriptionPlaceholder": "Tapez une description...",
+            "titlePlaceholder": "Tapez un titre...",
             "confirmCloseText": "Des modifications sont en attente, êtes-vous sûr de vouloir fermer sans enregistrer ?",
             "close": "Fermer",
             "cancel": "Annuler",
@@ -3076,6 +3103,10 @@
           "Share": {
             "description": "Permet de partager la carte de diverses manières (lien, QR-Code, embarqué, réseaux sociaux ...)",
             "title": "Outil de partage"
+          },
+          "Permalink": {
+            "description": "Permet de créer un permalien de la ressource courante en vue",
+            "title": "Lien permanent"
           },
           "StreetView": {
             "title": "Street View",

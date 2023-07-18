@@ -213,6 +213,7 @@
             "update": "Aktualisierung",
             "warning": "Warnung",
             "success": "Erfolg",
+            "error": "Fehler",
             "backgroundLayerNotSupported": "Der zuvor gewählte Hintergrund wird nicht für diese Art von Karte unterstützt. Der erste verfügbare wird alternativ verwendet.",
             "noBackgroundLayerSupported": "Es gibt keine unterstützten Hintergrundebenen für diese Art von Karte.",
             "updateOldMap": "Dies ist eine alte Karte, daher können nicht alle Funktionen aktiviert werden. Klicken Sie auf die Schaltfläche Aktualisieren, um die Karte zu aktualisieren, oder schließen Sie diese Benachrichtigung einfach, wenn Sie sie nicht aktualisieren möchten.",
@@ -1381,6 +1382,30 @@
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
+            "permalink": {
+                "title": "Permalink",
+                "accessible": "Öffentlich",
+                "success": "Permalink wurde erfolgreich gespeichert",
+                "error": "Fehler beim Speichern des Permalinks",
+                "descriptionLabel": "Beschreibung",
+                "titleLabel": "Titel",
+                "titlePlaceholder": "Geben Sie einen Titel ein",
+                "descriptionPlaceholder": "Geben Sie eine Beschreibung ein",
+                "save": "Speichern",
+                "create": "Erstelle neu",
+                "loadingSpinner": "Permalink wird geladen",
+                "errors": {
+                    "loading": {
+                        "unknownError": "Beim Laden des Permalinks ist ein Fehler aufgetreten",
+                        "permalinkNotAccessible": "Sie haben keine Berechtigung, auf diesen Permalink zuzugreifen. Bitte wenden Sie sich an den Ressourceneigentümer",
+                        "permalinkDoesNotExist": "Der Permalink, auf den Sie zugreifen möchten, existiert nicht",
+                        "title": "Fehler beim Laden des Peramlinks",
+                        "pleaseLogin": "Dieser Permalink ist nicht öffentlich. Bitte versuchen Sie sich anzumelden",
+                        "notFound": "Permalink nicht gefunden",
+	                    "notAccessible": "Permalink nicht zugänglich"
+                    }
+                }
+            },
             "embeddedLinkTitle": "Über einen eingebetteten Code",
             "forceDrawer": "Inhaltsverzeichnis anzeigen",
             "apiLinkTitle": "API verwenden",
@@ -2868,10 +2893,12 @@
             "title": "Eigenschaften bearbeiten",
             "name": "Name",
             "description": "Beschreibung",
+            "titleInput": "Titel",
             "createdAt": "Erstellt",
             "modifiedAt": "Geändert",
             "namePlaceholder": "Geben Sie einen Namen ein ...",
             "descriptionPlaceholder": "Geben Sie eine Beschreibung ein ...",
+            "titlePlaceholder": "Geben Sie einen Titel ein...",
             "confirmCloseText": "Es gibt ausstehende Änderungen, sind Sie sicher, dass Sie schließen möchten, ohne zu speichern?",
             "close": "Schließen",
             "cancel": "Abbrechen",
@@ -3112,6 +3139,10 @@
           "Share": {
             "description": "Ermöglicht das Teilen der Karte auf verschiedene Arten (Link, QR-Code, Einbettung, soziale Netzwerke ...)",
             "title": "Freigabe-Werkzeug"
+          },
+          "Permalink": {
+            "description": "Ermöglicht das Erstellen eines Permalinks der aktuell angezeigten Ressource",
+            "title": "Permalink"
           },
           "StreetView": {
             "title": "Street-View",

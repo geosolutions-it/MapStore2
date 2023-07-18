@@ -26,7 +26,7 @@ describe('Metadata component', () => {
         ReactDOM.render(<Metadata />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
-        expect(el.length).toBe(2);
+        expect(el.length).toBe(3);
     });
     it('Metadata rendering with meta-data', () => {
         const resource = {
@@ -41,9 +41,24 @@ describe('Metadata component', () => {
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(6);
+        expect(labels.length).toBe(7);
         expect(el[0].value).toBe("NAME");
-        expect(el[1].value).toBe("DESCRIPTION");
+        expect(el[2].value).toBe("DESCRIPTION");
+    });
+    it('Metadata rendering with attributes', () => {
+        const resource = {
+            modifiedAt: new Date(),
+            createdAt: new Date(),
+            attributes: {
+                title: "TITLE"
+            }
+        };
+        ReactDOM.render(<Metadata resource={resource}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelectorAll('input');
+        const labels = container.querySelectorAll('label');
+        expect(labels.length).toBe(7);
+        expect(el[1].value).toBe("TITLE");
     });
     it('Metadata rendering without timestamp', () => {
         const resource = {
@@ -55,7 +70,7 @@ describe('Metadata component', () => {
         ReactDOM.render(<Metadata resource={resource}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(2);
+        expect(labels.length).toBe(3);
     });
 
     it('Test Metadata onChange', () => {
@@ -92,11 +107,12 @@ describe('Metadata component', () => {
                 description: "DESCRIPTION"
             }
         };
-        ReactDOM.render(<Metadata resource={resource} createdAtFieldText="Created" modifiedAtFieldText="Modified"/>, document.getElementById("container"));
+        ReactDOM.render(<Metadata resource={resource} titleFieldText="Title" createdAtFieldText="Created" modifiedAtFieldText="Modified"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(6);
-        expect(labels[2].innerText).toBe('Created');
-        expect(labels[4].innerText).toBe('Modified');
+        expect(labels.length).toBe(7);
+        expect(labels[1].innerText).toBe('Title');
+        expect(labels[3].innerText).toBe('Created');
+        expect(labels[5].innerText).toBe('Modified');
     });
 });

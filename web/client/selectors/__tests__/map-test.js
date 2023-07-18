@@ -15,6 +15,7 @@ import {
     mapIdSelector,
     projectionDefsSelector,
     mapNameSelector,
+    mapInfoSelector,
     mapInfoDetailsUriFromIdSelector,
     configuredRestrictedExtentSelector,
     configuredExtentCrsSelector,
@@ -24,7 +25,8 @@ import {
     isMouseMoveActiveSelector,
     isMouseMoveCoordinatesActiveSelector,
     isMouseMoveIdentifyActiveSelector,
-    identifyFloatingToolSelector
+    identifyFloatingToolSelector,
+    mapInfoAttributesSelector
 } from '../map';
 
 const center = {x: 1, y: 1};
@@ -112,6 +114,10 @@ describe('Test map selectors', () => {
         const props = mapNameSelector({});
         expect(props).toBe('');
     });
+    it('test mapNameSelector with title', () => {
+        const props = mapNameSelector({map: {present: {info: { name: 'map name', attributes: {title: "map title"} }}}});
+        expect(props).toBe('map title');
+    });
     it('test configuredExtentSelectorCrs', () => {
         const props = configuredExtentCrsSelector({localConfig: {mapConstraints: {crs: 'EPSG:4326'}}});
         expect(props).toBe('EPSG:4326');
@@ -180,5 +186,16 @@ describe('Test map selectors', () => {
     it('test identifyFloatingToolSelector should non display mapPopUp data if identify is not enabled for pop up maps', () => {
         const renderValidOnly = identifyFloatingToolSelector({mapPopups: {popups: [{component: 'sampleComponent'}]}});
         expect(renderValidOnly).toBe(false);
+    });
+    it('test mapInfoSelector', () => {
+        const mapInfo = mapInfoSelector({map: {present: {info: {name: "test"}}}});
+        expect(mapInfo).toBeTruthy();
+        expect(mapInfo.name).toBe("test");
+    });
+    it('test mapInfoAttributesSelector', () => {
+        const attributes = {title: "test"};
+        const mapInfoAttributes = mapInfoAttributesSelector({map: {present: {info: {attributes}}}});
+        expect(mapInfoAttributes).toBeTruthy();
+        expect(mapInfoAttributes).toEqual(attributes);
     });
 });

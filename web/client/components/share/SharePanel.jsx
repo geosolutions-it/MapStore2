@@ -59,6 +59,7 @@ import { MapLibraries } from '../../utils/MapTypeUtils';
  */
 class SharePanel extends React.Component {
     static propTypes = {
+        items: PropTypes.array,
         isVisible: PropTypes.bool,
         title: PropTypes.node,
         modal: PropTypes.bool,
@@ -241,7 +242,9 @@ class SharePanel extends React.Component {
         if (this.props.shareUrlRegex && this.props.shareUrlReplaceString) {
             shareEmbeddedUrl = this.generateUrl(shareEmbeddedUrl, this.props.shareUrlRegex, this.props.shareUrlReplaceString);
         }
-        const currentTab = !this.props.embedPanel && this.state.eventKey === 3 ? 1 : this.state.eventKey; // fallback to tab link if embed is disabled and selected at the same time
+        const {component: Permalink} = this.props.items?.find(({name} = {}) => name === "Permalink") ?? {};
+        const permalink = Permalink ? <Permalink shareUrl={shareUrl}/> : null;
+        const currentTab = ((!this.props.embedPanel && this.state.eventKey === 4) || (!permalink && this.state.eventKey === 3)) ? 1 : this.state.eventKey; // fallback to tab link if embed|permalink is disabled and selected at the same time
         const shareApiUrl = this.props.shareApiUrl || cleanShareUrl || location.href;
         const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
         const direct = <div><ShareLink shareUrl={shareUrl} bbox={this.props.bbox}/><ShareQRCode shareUrl={shareUrl}/></div>;
@@ -251,8 +254,10 @@ class SharePanel extends React.Component {
         const tabs = (<Tabs defaultActiveKey={currentTab} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
             <Tab eventKey={1} title={<Message msgId="share.direct" />}>{currentTab === 1 && direct}</Tab>
             <Tab eventKey={2} title={<Message msgId="share.social" />}>{currentTab === 2 && social}</Tab>
-            {this.props.embedPanel ? <Tab eventKey={3} title={<Message msgId="share.code" />}>{currentTab === 3 && code}</Tab> : null}
+            {permalink ? <Tab eventKey={3} title={<Message msgId="share.permalink.title" />}>{currentTab === 3 && permalink}</Tab> : null}
+            {this.props.embedPanel ? <Tab eventKey={4} title={<Message msgId="share.code" />}>{currentTab === 4 && code}</Tab> : null}
         </Tabs>);
+        const hideInTabs = [this.props?.advancedSettings?.hideInTab, "permalink"];
         let sharePanel =
             (<ResizableModal
                 id={this.props.modal ? "share-panel-dialog-modal" : "share-panel-dialog"}
@@ -266,7 +271,7 @@ class SharePanel extends React.Component {
                 <div role="body" className="share-panels">
                     {tabs}
                     {!isEmpty(this.props.advancedSettings)
-                        && currentTab !== SHARE_TABS[this.props?.advancedSettings?.hideInTab]
+                        && hideInTabs.every(hideInTab => currentTab !== SHARE_TABS[hideInTab])
                         && this.renderAdvancedSettings()
                     }
                 </div>

@@ -93,6 +93,107 @@ The old spring maven repositories that do not exist anymore have been removed fr
 -        </repository>
 ```
 
+### New Permalink plugin
+
+As part this release, permalink plugin is added to MS.
+
+#### Add permalink to localConfig.json
+
+- Update `localConfig.json` and add "Permalink" plugin to the "desktop", "dashboard" and "geostory" section
+
+```json
+{
+    "desktop": [
+        ...
+        "Permalink",
+        ...
+    ],
+    "dashboard": [
+        ...
+        "Permalink",
+        ...
+    ],
+    "geostory": [
+        ...
+        "Permalink",
+        ...
+    ]
+}
+```
+
+- Add new "permalink" section as shown below
+
+```json
+{
+    "permalink": [
+        "Permalink",
+        "FeedbackMask"
+    ]
+}
+```
+
+#### Using Permalink in new contexts
+
+Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "Peramlink" in new contexts.
+Existing contexts need to be updated separately.
+
+- Find "Share" plugin configuration in `pluginsConfig.json` and modify as shown below:
+
+```json
+    {
+      "name": "Share",
+      "glyph": "share",
+      "title": "plugins.Share.title",
+      "description": "plugins.Share.description",
+      "dependencies": [
+        "SidebarMenu"
+      ],
+      "children": [
+        "Permalink"
+      ],
+      "autoEnableChildren": [
+        "Permalink"
+      ]
+    }
+```
+
+- Add "Permalink" plugin configuration to `pluginsConfig.json`
+
+```json
+    {
+      "name": "Permalink",
+      "glyph": "link",
+      "title": "plugins.Permalink.title",
+      "description": "plugins.Permalink.description",
+      "denyUserSelection": true
+    },
+```
+
+#### Database Update
+
+Add new category `PERMALINK` to `gs_category` table. To update your database you need to apply this SQL scripts to your database
+
+##### PostgreSQL
+
+```sql
+-- New PERMALINK category
+INSERT INTO geostore.gs_category(id, name) VALUES (nextval('geostore.hibernate_sequence'), 'PERMALINK') ON CONFLICT DO NOTHING;
+```
+
+##### H2
+
+```sql
+-- New PERMALINK category
+INSERT INTO gs_category(name) VALUES ('PERMALINK');
+```
+
+##### Oracle
+
+```sql
+-- New PERMALINK category
+INSERT INTO gs_category(id, name) VALUES (hibernate_sequence.nextval, ‘PERMALINK');
+```
+
 ## Migration from 2022.02.02 to 2023.01.00
 
 ### Log4j update to Log4j2

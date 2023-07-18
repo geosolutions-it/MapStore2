@@ -93,6 +93,11 @@ export default {
         name: "geostory",
         path: "/geostory/shared/:gid/section/:sectionId/column/:columnId",
         component: require('./pages/GeoStory').default
+    },
+    {
+        name: "permalink",
+        path: "/permalink/:pid",
+        component: require('./pages/Permalink').default
     }],
     initialState: {
         defaultState: {
