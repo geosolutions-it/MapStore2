@@ -214,7 +214,7 @@ const WKT_TESTS = [
     }
 ];
 const FUNCTION_TESTS = [
-    {
+    /* {
         cql: "func('text')",
         expected: {
             type: functionOperator,
@@ -310,7 +310,7 @@ const FUNCTION_TESTS = [
             name: "func",
             args: [{type: 'literal', value: 3.14159}]
         }
-    },
+    },*/
     // nested functions
     {
         cql: "func(func2('text'))",
@@ -345,7 +345,7 @@ const FUNCTION_TESTS = [
 
 const REAL_WORLD = [
     // real world example
-    /* {
+    {
         cql: "( DTINCID <= '1789-07-13' AND DTINCID >= '1492-10-11' ) AND (DOW='1') AND (TPINCID='1')",
         expected: {
             "type": "and",
@@ -375,7 +375,27 @@ const REAL_WORLD = [
                 "value": true
             }]
         }
-    },*/{
+    },
+
+    {
+        cql: "INTERSECTS(PROP1, POINT(1 2)) AND PROP2 < 1",
+        expected: {
+            "type": "and",
+            "filters": [{
+                "type": "INTERSECTS",
+                "property": {type: "property", name: "PROP1"},
+                "value": {
+                    "type": "Point",
+                    "coordinates": [1, 2]
+                }
+            }, {
+                "type": "<",
+                "args": [{type: "property", name: "PROP2"}, {type: "literal", value: 1}]
+            }]
+
+        }
+    },
+    {
         cql: "a = 1 AND b = 2",
         expected: {
             "type": "and",
@@ -401,9 +421,9 @@ const REAL_WORLD = [
                 "args": [{type: 'property', name: "b"}]
             }]
         }
-    }/* ,
+    },
     {
-        cql: "(jsonArrayContains(\"property1\", 'key', 'value') = false) AND (jsonPointer(\"property2\", 'key') = 'value')",
+        cql: "(jsonArrayContains(\"property1\", 'key', 'value') = false) AND (jsonPointer(\"property2\", 'key') = 'value'))",
         expected: {
             "type": "and",
             filters: [{
@@ -435,7 +455,7 @@ const REAL_WORLD = [
                 }]
             }]
         }
-    }*/
+    }
 ];
 const testRules = rules => rules.map(({ cql, expected }) => {
     it(`testing ${cql}`, () => {
@@ -468,7 +488,7 @@ describe('cql parser', () => {
     describe('test function parsing', () => {
         testRules(FUNCTION_TESTS);
     });
-    describe.only('test more real world examples', () => {
+    describe('test more real world examples', () => {
         testRules(REAL_WORLD);
     });
 

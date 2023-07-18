@@ -29,7 +29,7 @@ const patterns = {
     SPATIAL: /^(BBOX|INTERSECTS|DWITHIN|WITHIN|CONTAINS)/i,
     NOT: /^NOT/i,
     BETWEEN: /^BETWEEN/i,
-    FUNCTION: /^[_a-zA-Z][_a-zA-Z1-9]*\(/,
+    FUNCTION: /^[_a-zA-Z][_a-zA-Z1-9]*(?=\()/,
     GEOMETRY: (text) => {
         let type = /^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/.exec(text);
         if (type) {
@@ -59,7 +59,7 @@ const patterns = {
 };
 const follows = {
     INCLUDE: ['END'],
-    LPAREN: ['GEOMETRY', 'SPATIAL', 'PROPERTY', 'VALUE', 'LPAREN'],
+    LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'VALUE', 'LPAREN'],
     RPAREN: ['NOT', 'LOGICAL', 'END', 'RPAREN', 'COMMA', 'COMPARISON', 'BETWEEN', 'IS_NULL'],
     PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL', 'RPAREN'],
     BETWEEN: ['VALUE'],
@@ -164,7 +164,7 @@ const tokenize = (text) => {
 const buildAst = (tokens) => {
     let operatorStack = [];
     let postfix = [];
-
+    let nestingF = 0;
     while (tokens.length) {
         let tok = tokens.shift();
         switch (tok.type) {
@@ -192,6 +192,10 @@ const buildAst = (tokens) => {
         case "FUNCTION":
         case "NOT":
         case "LPAREN":
+            if (operatorStack.length > 0 &&
+                operatorStack?.[operatorStack.length - 1]?.type === "FUNCTION") {
+                operatorStack[operatorStack.length - 1].initialCount = postfix.length;
+            }
             operatorStack.push(tok);
             break;
         case "RPAREN":
@@ -208,8 +212,10 @@ const buildAst = (tokens) => {
             }
 
             if (operatorStack.length > 0 &&
-                    operatorStack[operatorStack.length - 1].type === "FUNCTION") {
-                postfix.push(operatorStack.pop());
+                operatorStack[operatorStack.length - 1].type === "FUNCTION") {
+                let funcTok = operatorStack.pop();
+                funcTok.count = postfix.length - funcTok.initialCount;
+                postfix.push(funcTok);
             }
             break;
         case "COMMA":
@@ -297,7 +303,7 @@ const buildAst = (tokens) => {
         case "FUNCTION": {
             let name = tok.text.replace(/\($/, "");
             let args = [];
-            while (postfix.length > 0) {
+            for ( let i = 0; i < tok.count; i++) {
                 args.push(buildTree());
             }
 

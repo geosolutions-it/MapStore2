@@ -39,7 +39,7 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], args, name, val
         );
     }
     if (includes(cql, type)) {
-        return "";
+        return ""; // TODO: implement in filterBuilder as empty filter
     }
     if (includes(Object.keys(operators), type)) {
         return filterBuilder.operations[operators[type]](...args.map(fromObject(filterBuilder)));
@@ -47,6 +47,7 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], args, name, val
     if (includes(filterBuilder.operators, type)) {
         return filterBuilder.operations[type](...args.map(fromObject(filterBuilder)));
     }
+    throw new Error(`Filter type ${type} not supported`);
 };
 
 export default fromObject;
