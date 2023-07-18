@@ -53,7 +53,8 @@ With a click on the **Add new details** button <img src="../img/button/add_detai
 
 <img src="../img/resource-properties/details_panel.jpg" class="ms-docimage"/>
 
-The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar). Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other buttons appear on the *Edit properties* panel.
+The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar).
+Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other buttons appear on the *Edit properties* panel.
 
 <img src="../img/resource-properties/details_sheet_buttons.jpg" class="ms-docimage"/>
 

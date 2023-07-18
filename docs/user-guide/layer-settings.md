@@ -454,6 +454,10 @@ In particular, by clicking on the <img src="../img/button/edit_button.jpg" class
 
 <img src="../img/layer-settings/edit_custom_format.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
+!!!note
+    [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to view an image present as a URL in the [Attribute Table](attributes-table.md) in [Identify Tool](navigation-toolbar.md#identify-tool). By clicking the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button, in the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar), a pop-up opens where the editor can enter the URL of the images, the markdown syntax to use is the following: `${properties.IMAGE}`.
+    <img src="../img/layer-settings/image_on_template.gif" class="ms-docimage"  style="max-width:600px;"/>
+
 Here it is possible to insert the text to be displayed through the [Identify Tool](navigation-toolbar.md#identify-tool), with the possibility to wrap the desired properties. <br>
 Let's make an example: we assume to have a layer where each record corresponds to a USA State geometry in the map. In the [Attribute Table](attributes-table.md#attribute-table) of this layer there's the `STATE_NAME` field that, for each record, contains a text value with the name of the State. <br>
 If the goal is to show, performing the [Identify Tool](navigation-toolbar.md#identify-tool), only the State name, an option could be to insert the following text on the Template text editor:
