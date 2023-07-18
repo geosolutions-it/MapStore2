@@ -69,7 +69,7 @@ describe('withShareTool enhancer', () => {
             expect(directLink).toExist('directLink doesn\'t exist');
             expect(directLink.value).toBe(FAKE_RESOURCE_URL);
             expect(directLink.value).toBe("http://some-location/mapstore/#/FAKE_RESOURCE_PATH"); // double check
-            document.getElementById('sharePanel-tabs-tab-3').click();
+            document.getElementById('sharePanel-tabs-tab-4').click();
             const codeBlock = document.getElementsByTagName('code')[0];
             expect(codeBlock).toExist();
             const iframeCode = codeBlock.innerText;
@@ -86,7 +86,7 @@ describe('withShareTool enhancer', () => {
             />, document.getElementById("container"));
             const sharePanel = document.querySelector('#sharePanel-tabs');
             expect(sharePanel).toExist('Share panel doesn\'t exist');
-            document.getElementById('sharePanel-tabs-tab-3').click();
+            document.getElementById('sharePanel-tabs-tab-4').click();
             // check if the showTOC is enabled by deafult
             let showTOC = document.querySelector('#sharePanel-tabs .input-link-tools input[type=checkbox]');
             expect(showTOC).toExist();
@@ -97,7 +97,7 @@ describe('withShareTool enhancer', () => {
                 editedResource={{}}
                 getShareUrl={() => FAKE_RESOURCE_PATH}
             />, document.getElementById("container"));
-            document.getElementById('sharePanel-tabs-tab-3').click();
+            document.getElementById('sharePanel-tabs-tab-4').click();
             showTOC = document.querySelector('#sharePanel-tabs .input-link-tools input[type=checkbox]');
             // verify the embedOptions.showTOCToggle has effect on "show TOC" checkbox hiding it
             expect(showTOC).toNotExist();
@@ -114,7 +114,7 @@ describe('withShareTool enhancer', () => {
             />, document.getElementById("container"));
             const sharePanel = document.querySelector('#sharePanel-tabs');
             expect(sharePanel).toExist('Share panel doesn\'t exist');
-            document.getElementById('sharePanel-tabs-tab-3').click();
+            document.getElementById('sharePanel-tabs-tab-4').click();
             // check if the showTOC is enabled by deafult
             let showTOC = document.querySelector('#sharePanel-tabs .input-link-tools input[type=checkbox]');
             expect(showTOC).toExist();
@@ -125,7 +125,7 @@ describe('withShareTool enhancer', () => {
                 editedResource={{}}
                 getShareUrl={() => FAKE_RESOURCE_PATH}
             />, document.getElementById("container"));
-            document.getElementById('sharePanel-tabs-tab-3').click();
+            document.getElementById('sharePanel-tabs-tab-4').click();
             const codeAPI = document.querySelectorAll("code")[1];
             const code = codeAPI.innerText;
             const index = code.indexOf("dist/ms2-api.js?VERSION");
