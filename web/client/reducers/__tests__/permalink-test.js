@@ -13,6 +13,7 @@ import {
     resetPermalink
 } from '../../actions/permalink';
 import permalink from '../permalink';
+import { loadFinished } from '../../actions/context';
 
 describe('permalink reducer', () => {
     it('default permalink', () => {
@@ -33,6 +34,12 @@ describe('permalink reducer', () => {
     });
     it('reset permalink', () => {
         const state = permalink({}, resetPermalink());
+        expect(state).toBeTruthy();
+        expect(state.settings).toBeTruthy();
+        expect(state.settings.allowAllUser).toBeTruthy();
+    });
+    it('reset permalink on loadfinished', () => {
+        const state = permalink({}, loadFinished());
         expect(state).toBeTruthy();
         expect(state.settings).toBeTruthy();
         expect(state.settings.allowAllUser).toBeTruthy();

@@ -23,7 +23,7 @@ import {
     updatePermalinkSettings
 } from "../actions/permalink";
 
-import { createResource, updateResourceAttribute } from "../api/persistence";
+import { getResource, createResource, updateResourceAttribute } from "../api/persistence";
 import { contextResourceSelector } from "../selectors/context";
 import { currentStorySelector } from "../selectors/geostory";
 import { mapSelector } from "../selectors/map";
@@ -47,12 +47,12 @@ const PERMALINK_RESOURCES = {
     },
     context: (resource, state) => {
         const newResources = PERMALINK_RESOURCES.map(resource, state);
-        const contextId = contextResourceSelector(state)?.id;
+        const context = contextResourceSelector(state);
         return {
-            ...newResources,
-            attributes: {
-                ...newResources.attributes,
-                context: contextId
+            ...resource,
+            data: {
+                ...context.data,
+                mapConfig: newResources.data
             }
         };
     },
@@ -160,14 +160,22 @@ export const loadPermalinkEpic = (action$, { getState = () => {} } = {}) =>
         .switchMap(({ id: pid } = {}) => {
             const state = getState();
             const id = pid ?? pathnameSelector(state)?.split("/")?.pop();
-            return Observable.defer(() =>
-                API.getResourceAttributes(id)
-            ).switchMap((attributes) => {
+            return Observable.forkJoin(
+                [
+                    getResource(id),
+                    Observable.defer(() => API.getResourceAttributes(id))
+                ]
+            ).switchMap(([resource, attributes]) => {
+                const resourceName = resource?.name;
                 let { value: pathTemplate } =
                         attributes.find(
                             ({ name } = {}) => name === "pathTemplate"
                         ) ?? {};
-                pathTemplate = template(pathTemplate)({ id });
+                const { value: type } =
+                        attributes.find(
+                            ({ name } = {}) => name === "type"
+                        ) ?? {};
+                pathTemplate = template(pathTemplate)(type === "context" ? {name: resourceName} : { id });
                 return Observable.of(push(pathTemplate), permalinkLoaded());
             }).catch((e) => {
                 const errorMsg = "share.permalink.errors.loading";

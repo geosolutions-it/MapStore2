@@ -9,7 +9,8 @@ import expect from 'expect';
 
 import {
     permalinkSettingsSelector,
-    permalinkLoadingSelector
+    permalinkLoadingSelector,
+    isPermalinkSelector
 } from "../permalink";
 
 describe('permalink selectors', () => {
@@ -22,5 +23,9 @@ describe('permalink selectors', () => {
     it('permalinkLoadingSelector', () => {
         const permalinkLoading = permalinkLoadingSelector({permalink: {loading: true}});
         expect(permalinkLoading).toBeTruthy();
+    });
+    it('isPermalinkSelector', () => {
+        const isPermalink = isPermalinkSelector({permalink: {id: 1}});
+        expect(isPermalink).toBeTruthy();
     });
 });

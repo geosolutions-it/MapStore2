@@ -19,6 +19,7 @@ import { loginSuccess } from '../../actions/security';
 
 const api = {
     createResource: () => Rx.Observable.of(10),
+    getResource: () => Rx.Observable.of({name: "test"}),
     updateResource: () => Rx.Observable.of(10),
     updateResourceAttribute: () =>  Rx.Observable.of(11)
 };
@@ -255,6 +256,29 @@ describe('Permalink Epics', () => {
                     switch (action.type) {
                     case "@@router/CALL_HISTORY_METHOD":
                         expect(action.payload.args).toEqual(["/viewer/10"]);
+                        break;
+                    case PERMALINK_LOADED:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {});
+    });
+    it("loadPermalinkEpic on load permalink - context", (done) => {
+        mockAxios.onGet().reply(200, {AttributeList: {Attribute: [{name: "pathTemplate", value: "/context/${name}"}, {name: "type", value: "context"}]}});
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            loadPermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                loadPermalink(10)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action)=>{
+                    switch (action.type) {
+                    case "@@router/CALL_HISTORY_METHOD":
+                        expect(action.payload.args).toEqual(["/context/test"]);
                         break;
                     case PERMALINK_LOADED:
                         break;

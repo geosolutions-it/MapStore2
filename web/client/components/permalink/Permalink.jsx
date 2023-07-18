@@ -28,11 +28,11 @@ const getPathinfo = (url = "") => {
     const [, path] = url?.split("#/") ?? [];
     const pathInfos = path?.split("/") ?? [];
     let [pathType] = pathInfos ?? [];
-    const pathTemplate =
-        (pathType === "context" && pathInfos?.length === 3)
-        || pathType !== "context"
-            ? path?.substring(0, path?.lastIndexOf("/")) ?? ""
-            : path;
+    let pathTemplate = pathType === "context"
+        ? "context"
+        : (path?.substring(0, path?.lastIndexOf("/")) ?? "");
+    pathTemplate = `/${pathTemplate}/` + '${id}';
+
     let type;
     switch (pathType) {
     case "viewer":
@@ -46,13 +46,14 @@ const getPathinfo = (url = "") => {
         break;
     case "context":
         type = "context";
+        pathTemplate = pathTemplate.replace("id", "name");
         break;
     default:
         break;
     }
     return {
         type,
-        pathTemplate: `/${pathTemplate}/` + '${id}'
+        pathTemplate
     };
 };
 
