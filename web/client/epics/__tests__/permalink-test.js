@@ -7,23 +7,20 @@
  */
 import expect from 'expect';
 import Rx from 'rxjs';
-import MockAdapter from 'axios-mock-adapter';
 
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import { loadPermalinkEpic, savePermalinkEpic } from '../permalink';
 import { LOADING, LOAD_PERMALINK_ERROR, PERMALINK_LOADED, UPDATE_SETTINGS, loadPermalink, savePermalink } from '../../actions/permalink';
 import Persistence from '../../api/persistence';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
-import axios from '../../libs/ajax';
 import { loginSuccess } from '../../actions/security';
 
 const api = {
     createResource: () => Rx.Observable.of(10),
-    getResource: () => Rx.Observable.of({name: "test"}),
+    getResource: () => Rx.Observable.of({name: "test", attributes: {type: "map", pathTemplate: "/viewer/${id}"}}),
     updateResource: () => Rx.Observable.of(10),
     updateResourceAttribute: () =>  Rx.Observable.of(11)
 };
-let mockAxios;
 const state = {
     map: {
         present: {
@@ -52,17 +49,23 @@ const state = {
         }]
     }
 };
+const setApiGetResource = (_api, getResource) => {
+    const apiTest = {
+        ..._api,
+        getResource
+    };
+    Persistence.addApi("testPermalink", apiTest);
+    Persistence.setApi("testPermalink");
+};
 describe('Permalink Epics', () => {
     Persistence.addApi("testPermalink", api);
     beforeEach(done => {
         Persistence.setApi("testPermalink");
-        mockAxios = new MockAdapter(axios);
         setTimeout(done);
     });
 
     afterEach(done => {
         Persistence.setApi("geostore");
-        mockAxios.restore();
         setTimeout(done);
     });
     it('test savePermalinkEpic with empty resource', (done) => {
@@ -244,7 +247,6 @@ describe('Permalink Epics', () => {
             }, _state);
     });
     it("loadPermalinkEpic on load permalink", (done) => {
-        mockAxios.onGet().reply(200, {AttributeList: {Attribute: [{name: "pathTemplate", value: "/viewer/${id}"}]}});
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
             loadPermalinkEpic,
@@ -266,31 +268,7 @@ describe('Permalink Epics', () => {
                 done();
             }, {});
     });
-    it("loadPermalinkEpic on load permalink - context", (done) => {
-        mockAxios.onGet().reply(200, {AttributeList: {Attribute: [{name: "pathTemplate", value: "/context/${name}"}, {name: "type", value: "context"}]}});
-        const NUMBER_OF_ACTIONS = 2;
-        testEpic(
-            loadPermalinkEpic,
-            NUMBER_OF_ACTIONS, [
-                loadPermalink(10)
-            ], actions => {
-                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                actions.forEach((action)=>{
-                    switch (action.type) {
-                    case "@@router/CALL_HISTORY_METHOD":
-                        expect(action.payload.args).toEqual(["/context/test"]);
-                        break;
-                    case PERMALINK_LOADED:
-                        break;
-                    default:
-                        expect(true).toBe(false);
-                    }
-                });
-                done();
-            }, {});
-    });
     it("loadPermalinkEpic on login success", (done) => {
-        mockAxios.onGet().reply(200, {AttributeList: {Attribute: [{name: "pathTemplate", value: "/viewer/${id}"}]}});
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
             loadPermalinkEpic,
@@ -318,9 +296,35 @@ describe('Permalink Epics', () => {
                 }
             });
     });
+    it("loadPermalinkEpic on load permalink - context", (done) => {
+        const getResource = () => Rx.Observable.of({name: "test", attributes: {type: "context", pathTemplate: "/context/${name}"}});
+        setApiGetResource(api, getResource);
+        const NUMBER_OF_ACTIONS = 2;
+        testEpic(
+            loadPermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                loadPermalink(10)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action)=>{
+                    switch (action.type) {
+                    case "@@router/CALL_HISTORY_METHOD":
+                        expect(action.payload.args).toEqual(["/context/test"]);
+                        break;
+                    case PERMALINK_LOADED:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {});
+    });
+
     it("loadPermalinkEpic on error - not found", (done) => {
+        const getResource = () => Rx.Observable.throw({status: 404});
+        setApiGetResource(api, getResource);
         const ERROR_STATUS = 404;
-        mockAxios.onGet().reply(ERROR_STATUS);
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
             loadPermalinkEpic,
@@ -348,8 +352,9 @@ describe('Permalink Epics', () => {
             }, {});
     });
     it("loadPermalinkEpic on error forbidden and not logged in", (done) => {
+        const getResource = () => Rx.Observable.throw({status: 403});
+        setApiGetResource(api, getResource);
         const ERROR_STATUS = 403;
-        mockAxios.onGet().reply(ERROR_STATUS);
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
             loadPermalinkEpic,
@@ -377,8 +382,9 @@ describe('Permalink Epics', () => {
             }, {});
     });
     it("loadPermalinkEpic on error forbidden and logged in", (done) => {
+        const getResource = () => Rx.Observable.throw({status: 403});
+        setApiGetResource(api, getResource);
         const ERROR_STATUS = 403;
-        mockAxios.onGet().reply(ERROR_STATUS);
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
             loadPermalinkEpic,
@@ -410,8 +416,9 @@ describe('Permalink Epics', () => {
             });
     });
     it("loadPermalinkEpic on error unknown", (done) => {
+        const getResource = () => Rx.Observable.throw({status: 500});
+        setApiGetResource(api, getResource);
         const ERROR_STATUS = 500;
-        mockAxios.onGet().reply(ERROR_STATUS);
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
             loadPermalinkEpic,

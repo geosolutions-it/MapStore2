@@ -160,22 +160,10 @@ export const loadPermalinkEpic = (action$, { getState = () => {} } = {}) =>
         .switchMap(({ id: pid } = {}) => {
             const state = getState();
             const id = pid ?? pathnameSelector(state)?.split("/")?.pop();
-            return Observable.forkJoin(
-                [
-                    getResource(id),
-                    Observable.defer(() => API.getResourceAttributes(id))
-                ]
-            ).switchMap(([resource, attributes]) => {
-                const resourceName = resource?.name;
-                let { value: pathTemplate } =
-                        attributes.find(
-                            ({ name } = {}) => name === "pathTemplate"
-                        ) ?? {};
-                const { value: type } =
-                        attributes.find(
-                            ({ name } = {}) => name === "type"
-                        ) ?? {};
-                pathTemplate = template(pathTemplate)(type === "context" ? {name: resourceName} : { id });
+            return getResource(id).switchMap((resource) => {
+                const { name, attributes } = resource ?? {};
+                let { type, pathTemplate } = attributes ?? {};
+                pathTemplate = template(pathTemplate)(type === "context" ? {name} : { id });
                 return Observable.of(push(pathTemplate), permalinkLoaded());
             }).catch((e) => {
                 const errorMsg = "share.permalink.errors.loading";
