@@ -32,7 +32,7 @@ jobs:
       # CACHING
       ##########
       - name: "cache node modules"
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
         with:
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "checking out"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       ###########
       # SET UP
@@ -78,11 +78,11 @@ jobs:
       - name: "setting up Java"
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '11.x'
 
       - name: "cache maven dependencies"
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -105,7 +105,7 @@ jobs:
       - name: "setting up Java"
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '11.x'
 
       - name: "setting up npm"
@@ -117,7 +117,7 @@ jobs:
       # CACHING
       ##########
       - name: "cache node modules"
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
         with:
@@ -129,7 +129,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: "cache maven dependencies"
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -155,7 +155,7 @@ jobs:
     needs: [test-front-end, test-back-end, build]
     steps:
       - name: "checking out"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: "setting up npm"
         uses: actions/setup-node@v2
         with:
@@ -163,7 +163,7 @@ jobs:
       - name: "setting up Java"
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '11.x'
       ############
       # Publish
@@ -172,7 +172,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'adopt'
+          distribution: 'temurin'
           server-id: geosolutions
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
