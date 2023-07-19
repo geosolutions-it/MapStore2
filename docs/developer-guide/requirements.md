@@ -31,8 +31,8 @@ These tools needs to be installed (other than **Java** in versions above above):
         - Build with success with v11, only smoke tests passing on v13, errors with v16.(Details on issue [#6935](https://github.com/geosolutions-it/MapStore2/issues/6935))
         - Running with Tomcat 10 causes this issue [#7524](https://github.com/geosolutions-it/MapStore2/issues/7524).
     - ² About NodeJS and NPM:
-        - Node 18 causes [this issue](https://github.com/geosolutions-it/mapstore-project/issues/18) on MapStore project system.
-        - Also this [webpack issue](https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported) needs to be solved by changing the hash algorithm or setting proper flags.
+        - NPM 6.14.15 causes [this issue](https://github.com/geosolutions-it/mapstore-project/issues/18) on MapStore project system.
+        - Node 18 causes [webpack issue](https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported) needs to be solved by changing the hash algorithm or setting proper flags.
 
         - *If you are using Node >= 12 you can remove the -max_old_space_size=2048 config for the `compile` script*
     - ³ Python is only needed for building documentation.
