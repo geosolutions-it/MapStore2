@@ -276,7 +276,7 @@
     "react-swipeable-views": "0.12.2",
     "react-textfit": "1.1.0",
     "react-widgets": "3.5.0",
-    "recharts": "0.22.5",
+    "recharts": "0.22.4",
     "recompose": "0.24.0",
     "redux": "3.6.0",
     "redux-logger": "3.0.6",
