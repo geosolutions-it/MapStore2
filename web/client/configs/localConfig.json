@@ -867,6 +867,8 @@
                   "backToPageConfirmationMessage": "contextCreator.undo"
               }
           },
+          "ContextImport",
+          "ContextExport",
           "Notifications",
           {
             "name": "FeedbackMask",

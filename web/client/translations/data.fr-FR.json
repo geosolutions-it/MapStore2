@@ -3276,7 +3276,25 @@
                 "unknownError": "Une erreur inattendue s'est produite"
             },
             "undo": "Êtes-vous sûr de vouloir abandonner la session de modification de contexte ?",
-            "showTutorial": "Afficher le didacticiel"
+            "showTutorial": "Afficher le didacticiel",
+            "errors":{
+                "loading": {
+                    "title": "Erreur lors du chargement du contexte",
+                    "import": "Échec de l'importation du contexte",
+                    "export": "Échec de l'exportation du contexte"
+                }
+            },
+            "import": "Importer",
+            "importTooltip": "Pour importer un contexte, passez à l'étape 1",
+            "export": "Exporter",
+            "importDialog": {
+                "selectFiles": "Sélectionner un fichier",
+                "heading": "Déposez un fichier context.json précédemment exporté",
+                "note": "Les données du fichier importé remplaceront les données du contexte actuel"
+            },
+            "exportDialog": {
+                "heading": "Exporter ce contexte sous forme de fichier"
+            }
         },
         "contextManager": {
             "title": "Gérer les contextes",

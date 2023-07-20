@@ -137,4 +137,37 @@ describe('ContextCreator component', () => {
         });
 
     });
+    it("test plugin container items in general-settings", () => {
+        const eng = {
+            "locale": "en-US",
+            "messages": {
+                "aboutLbl": "About"
+            }
+        };
+        const actions = {
+            onSave: () => { }
+        };
+        const allAvailablePlugins = [
+            {enabled: true, title: 'title', pluginConfig: {cfg: {}}},
+            {enabled: false, title: 'title', pluginConfig: {cfg: {}}}
+        ];
+        ReactDOM.render(
+            <Localized messages={eng.messages} locale="en-US">
+                <Provider store={store}>
+                    <ContextCreator
+                        isCfgValidated
+                        allAvailablePlugins={allAvailablePlugins}
+                        curStepId="general-settings"
+                        onSave={actions.onSave}
+                        items={[{
+                            toolbarBtn: {
+                                component: () => <button>ITEM1</button>
+                            }
+                        }]}
+                    />
+                </Provider>
+            </Localized>, document.getElementById("container"));
+        const itemBtn = document.querySelectorAll('.footer-button-toolbar-extra button')[1];
+        expect(itemBtn.innerText).toBe('ITEM1');
+    });
 });

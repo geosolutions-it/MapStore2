@@ -7,13 +7,15 @@
  */
 
 import React from 'react';
-
 import { template } from 'lodash';
+import PropTypes from 'prop-types';
+
 import { getCleanTemplate } from '../../../../utils/TemplateUtils';
 import HtmlRenderer from '../../../misc/HtmlRenderer';
 import Message from '../../../I18N/Message';
 
-export default ({layer = {}, response}) => (
+
+const TemplateViewer = ({layer = {}, response}) => (
     <div className="ms-template-viewer">
         {response.features.map((feature, i) => {
             const cleanTemplate = getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1);
@@ -33,3 +35,10 @@ export default ({layer = {}, response}) => (
         )}
     </div>
 );
+
+export default TemplateViewer;
+
+TemplateViewer.propTypes = {
+    response: PropTypes.object,
+    layer: PropTypes.object
+};

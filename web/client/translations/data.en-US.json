@@ -2171,7 +2171,7 @@
                     "pleaseLogin": "Some resource may not be public. Please try to login",
                     "unknownError": "There was an error loading the map or the context. Please contact the administrator",
                     "notFound": "Resource not found",
-	                  "notAccessible": "Resource not accessible"
+                    "notAccessible": "Resource not accessible"
                 },
                 "context": {
                     "pleaseLogin": "This context is not public. Please try to login",
@@ -3286,7 +3286,25 @@
                 "unknownError": "Unexpected error occurred"
             },
             "undo": "Are you sure you want to abandon the context editing session?",
-            "showTutorial": "Show Tutorial"
+            "showTutorial": "Show Tutorial",
+            "errors":{
+                "loading": {
+                    "title": "Error loading context",
+                    "import": "Failed to import context",
+                    "export": "Failed to export context"
+                }
+            },
+            "import": "Import",
+            "importTooltip": "To import a context, go to Step 1",
+            "export": "Export",
+            "importDialog": {
+                "selectFiles": "Select a file",
+                "heading": "Drop a previously exported context.json file",
+                "note": "The data in the imported file will replace the data in the current context"
+            },
+            "exportDialog": {
+                "heading": "Export this context as a file"
+            }
         },
         "contextManager": {
             "title": "Manage Contexts",

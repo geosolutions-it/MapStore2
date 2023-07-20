@@ -47,7 +47,9 @@ describe('LangSelector', () => {
             "tiếng Việt": "vi-VN",
             'Suomi': 'fi-FI',
             'Svenska': 'sv-SE',
-            'Slovak': 'sk-SK'
+            'Slovak': 'sk-SK',
+            'Islensku': 'is-IS',
+            'Dansk': 'da-DK'
         };
 
         for (let i = 0; i < opts.length; i++) {

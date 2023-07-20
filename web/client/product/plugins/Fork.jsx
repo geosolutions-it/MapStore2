@@ -6,18 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Fork Ribbon that links to MapStore GitHub repository
  * @memberof plugins
+ * @prop {string} src image source
  * @class
  * @name Fork
  */
 class ForkPlugin extends React.Component {
+    static propTypes = {
+        src: PropTypes.string
+    }
+    static defaultProps = {
+        src: "https://github.blog/wp-content/uploads/2008/12/forkme_left_green_007200.png?resize=149%2C149"
+    }
     render() {
         return (
             <a href="https://github.com/geosolutions-it/MapStore2">
-                <img className="ms-fork-button" style={{position: "absolute", top: 40, left: 0, border: 0, zIndex: 100}} src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"/>
+                <img className="ms-fork-button" style={{position: "absolute", top: 40, left: 0, border: 0, zIndex: 100}} src={this.props.src} alt="Fork me on GitHub" />
             </a>
         );
     }

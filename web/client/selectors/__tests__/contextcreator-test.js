@@ -12,7 +12,9 @@ import {
     creationStepSelector,
     selectedThemeSelector,
     customVariablesEnabledSelector,
-    isNewContext
+    isNewContext,
+    prefetchedDataSelector,
+    disableImportSelector
 } from '../contextcreator';
 
 const testState = {
@@ -56,5 +58,25 @@ describe('contextcreator selectors', () => {
     });
     it('isNewContext', () => {
         expect(isNewContext(testState)).toBe(true);
+    });
+    it('prefetchedDataSelector', () => {
+        const prefetchedData = {resource: {name: "test"}};
+        expect(prefetchedDataSelector({
+            contextcreator: {
+                prefetchedData
+            }
+        })).toEqual(prefetchedData);
+    });
+    it('disableImportSelector', () => {
+        expect(disableImportSelector({
+            contextcreator: {
+                stepId: "general-settings"
+            }
+        })).toBeFalsy();
+        expect(disableImportSelector({
+            contextcreator: {
+                stepId: "configure-map"
+            }
+        })).toBeTruthy();
     });
 });
