@@ -135,13 +135,14 @@ describe('BaseMap', () => {
     it('test openlayers map', (done) => {
         const map = ReactDOM.render(<TestMap
             mapType="openlayers"
-            id="myMap" layers={SAMPLE_LAYERS_1}
+            id="myMap"
+            layers={SAMPLE_LAYERS_1}
             onMapTypeLoaded={() => {
                 expect(map).toBeTruthy();
                 const el = ReactDOM.findDOMNode(map);
                 expect(el).toBeTruthy();
                 expect(el.id).toBe("myMap");
-                expect(el.querySelector('canvas')).toBeTruthy();
+                expect(el.querySelector('.ol-viewport')).toBeTruthy();
                 done();
             }}
         />, document.getElementById("container"));

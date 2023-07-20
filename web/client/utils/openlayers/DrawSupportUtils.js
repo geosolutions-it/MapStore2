@@ -12,9 +12,9 @@ import { reproject } from '../CoordinatesUtils';
 import { getCenter } from 'ol/extent';
 import { Circle } from 'ol/geom';
 
-export const VECTOR = "VECTOR";
-export const TILE = "TILE";
-export const IMAGE = "IMAGE";
+export const VECTOR = "VectorLayer";
+export const TILE = "TileLayer";
+export const IMAGE = "ImageLayer";
 
 const calculateRadius = (center, coordinates, mapCrs, coordinateCrs) => {
     if (isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0])) {

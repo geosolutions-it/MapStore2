@@ -21,7 +21,7 @@ import { isVectorFormat} from '../../../../utils/VectorTileUtils';
 import urlParser from 'url';
 
 import { get, getTransform } from 'ol/proj';
-import { applyTransform, getIntersection, isEmpty } from 'ol/extent';
+import { applyTransform, getIntersection } from 'ol/extent';
 import TileLayer from 'ol/layer/Tile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import WMTS from 'ol/source/WMTS';
@@ -94,11 +94,11 @@ const createLayer = options => {
             parseFloat(bbox.bounds.maxx),
             parseFloat(bbox.bounds.maxy)
         ], getTransform(bbox.crs, options.srs))
-        : projection.getExtent();
-    let extent = getIntersection(layerExtent, projection.getExtent());
-    if (isEmpty(extent)) {
-        extent = projection.getExtent();
-    }
+        : undefined;
+    // based on this PR https://github.com/openlayers/openlayers/pull/11532 on ol
+    // the extent has effect to the tile ranges
+    // we should skip the extent if the layer does not provide bounding box
+    let extent = layerExtent && getIntersection(layerExtent, projection.getExtent());
     const queryParameters = {};
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: { ...queryParameters } });
