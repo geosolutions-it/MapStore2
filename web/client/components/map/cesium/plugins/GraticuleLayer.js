@@ -272,7 +272,7 @@ const Graticule = (function() {
             this._drawGrid(this._getExtentView());
         }
 
-        return this._canvas;
+        return Promise.resolve(this._canvas);
     };
 
     _.prototype.setVisible = function(visible) {

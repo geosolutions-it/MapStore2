@@ -6,10 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import * as Cesium from 'cesium';
-// it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
-// see https://github.com/CesiumGS/cesium/issues/9212
-import 'cesium/index.css';
-
+import 'cesium/Build/Cesium/Widgets/widgets.css';
 import '@znemz/cesium-navigation/dist/index.css';
 import viewerCesiumNavigationMixin from '@znemz/cesium-navigation';
 
@@ -358,8 +355,8 @@ class CesiumMap extends React.Component {
                     msId = feature.tileset.msId;
                     // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
                     // it has content but refers to the whole tile model
-                    const propertyNames = feature.getPropertyNames();
-                    properties = Object.fromEntries(propertyNames.map(key => [key, feature.getProperty(key)]));
+                    const getPropertyIds = feature.getPropertyIds();
+                    properties = Object.fromEntries(getPropertyIds.map(key => [key, feature.getProperty(key)]));
                 } else if (feature?.id instanceof Cesium.Entity && feature.id.id && feature.id.properties) {
                     const {properties: {propertyNames}, entityCollection: {owner: {name}}} = feature.id;
                     properties = Object.fromEntries(propertyNames.map(key => [key, feature.id.properties[key].getValue(0)]));

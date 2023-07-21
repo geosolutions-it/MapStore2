@@ -2,7 +2,7 @@ const assign = require('object-assign');
 const nodePath = require('path');
 const webpack = require('webpack');
 const ProvidePlugin = require("webpack/lib/ProvidePlugin");
-const NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
+
 const {
     VERSION_INFO_DEFINE_PLUGIN
 } = require('./BuildUtils');
@@ -23,7 +23,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     files: [
         ...files,
         // add all assets needed for Cesium library
-        { pattern: './node_modules/cesium/Source/**/*', included: false }
+        { pattern: './node_modules/cesium/Build/CesiumUnminified/**/*', included: false }
     ],
 
     plugins: [
@@ -131,7 +131,10 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
         resolve: {
             fallback: {
                 timers: false,
-                stream: false
+                stream: false,
+                http: false,
+                https: false,
+                zlib: false
             },
             alias: assign({}, {
                 jsonix: '@boundlessgeo/jsonix',
@@ -154,12 +157,9 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
             }),
             new webpack.DefinePlugin({
                 // Define relative base path in cesium for loading assets
-                'CESIUM_BASE_URL': JSON.stringify('base/node_modules/cesium/Source')
+                'CESIUM_BASE_URL': JSON.stringify('base/node_modules/cesium/Build/CesiumUnminified')
             }),
-            VERSION_INFO_DEFINE_PLUGIN,
-            // it's not possible to load directly from the module name `cesium/Build/Cesium/Widgets/widgets.css`
-            // see https://github.com/CesiumGS/cesium/issues/9212
-            new NormalModuleReplacementPlugin(/^cesium\/index\.css$/, nodePath.join(basePath, 'node_modules', 'cesium/Build/Cesium/Widgets/widgets.css'))
+            VERSION_INFO_DEFINE_PLUGIN
         ]
     },
     webpackServer: {

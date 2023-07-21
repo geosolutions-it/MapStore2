@@ -14,8 +14,7 @@ const {
     TerrainProvider,
     HeightmapTerrainData,
     Event,
-    Request,
-    when
+    Request
 } = Cesium;
 
 let tilesCache = {};
@@ -402,8 +401,7 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
         const limitations = { highest: this._options.highest, lowest: this._options.lowest, offset: this._options.offset };
         const hasChildren = terrainChildrenMask(x, y, level, this._options);
         if (tilesCache[urlValue]) {
-            // we need .when because sampleTerrain expect to use .otherwise
-            return when(Promise.resolve(new HeightmapTerrainData(tilesCache[urlValue])));
+            return Promise.resolve(new HeightmapTerrainData(tilesCache[urlValue]));
         }
         const proxy = this._options.proxy || { getURL: v => v };
         requestPromise = Resource.fetchArrayBuffer({
@@ -435,7 +433,7 @@ GeoServerBILTerrainProvider.prototype.getHeightmapTerrainDataArray = function(x,
                     );
                     return new HeightmapTerrainData(tilesCache[urlValue]);
                 })
-                .otherwise(() => {
+                .catch(() => {
                     return new HeightmapTerrainData({
                         buffer: new Uint16Array(this._options.heightMapWidth * this._options.heightMapHeight),
                         width: this._options.heightMapWidth,

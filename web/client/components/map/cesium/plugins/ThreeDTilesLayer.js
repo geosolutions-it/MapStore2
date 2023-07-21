@@ -88,40 +88,50 @@ Layers.registerType('3dtiles', {
     create: (options, map) => {
         if (options.visibility && options.url) {
 
-            const tileSet = map.scene.primitives.add(new Cesium.Cesium3DTileset({
-                showCreditsOnScreen: true,
-                url: new Cesium.Resource({
-                    url: options.url,
-                    proxy: needProxy(options.url) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
-                    // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
-                    // if we want to use internal cesium functionality to retrieve data
-                    // we need to create a utility to set a CesiumResource that applies also this part.
-                    // in addition to this proxy.
-                })
-            }));
+            let tileSet;
+            const resource = new Cesium.Resource({
+                url: options.url,
+                proxy: needProxy(options.url) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
+                // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
+                // if we want to use internal cesium functionality to retrieve data
+                // we need to create a utility to set a CesiumResource that applies also this part.
+                // in addition to this proxy.
+            });
+            Cesium.Cesium3DTileset.fromUrl(resource,
+                {
+                    showCreditsOnScreen: true
+                }
+            ).then((_tileSet) => {
+                tileSet = _tileSet;
+                map.scene.primitives.add(tileSet);
+                // assign the original mapstore id of the layer
+                tileSet.msId = options.id;
 
-            // assign the original mapstore id of the layer
-            tileSet.msId = options.id;
-
-            ensureReady(tileSet, () => {
-                updateModelMatrix(tileSet, options);
-                clip3DTiles(tileSet, options, map);
-                getStyle(options)
-                    .then((style) => {
-                        if (style) {
-                            tileSet.style = new Cesium.Cesium3DTileStyle(style);
-                        }
-                    });
+                ensureReady(tileSet, () => {
+                    updateModelMatrix(tileSet, options);
+                    clip3DTiles(tileSet, options, map);
+                    getStyle(options)
+                        .then((style) => {
+                            if (style) {
+                                tileSet.style = new Cesium.Cesium3DTileStyle(style);
+                            }
+                        });
+                });
             });
 
             return {
                 detached: true,
-                tileSet,
+                getTileSet: () => tileSet,
+                resource,
                 remove: () => {
-                    map.scene.primitives.remove(tileSet);
+                    if (tileSet) {
+                        map.scene.primitives.remove(tileSet);
+                    }
                 },
                 setVisible: (visible) => {
-                    tileSet.show = !!visible;
+                    if (tileSet) {
+                        tileSet.show = !!visible;
+                    }
                 }
             };
         }
@@ -139,29 +149,30 @@ Layers.registerType('3dtiles', {
             layer.remove();
             return null;
         }
+        const tileSet = layer?.getTileSet();
         if (
             (!isEqual(newOptions.clippingPolygon, oldOptions.clippingPolygon)
             || newOptions.clippingPolygonUnion !== oldOptions.clippingPolygonUnion
             || newOptions.clipOriginalGeometry !== oldOptions.clipOriginalGeometry)
-         && layer?.tileSet) {
-            ensureReady(layer.tileSet, () => {
-                clip3DTiles(layer.tileSet, newOptions, map);
+         && tileSet) {
+            ensureReady(tileSet, () => {
+                clip3DTiles(tileSet, newOptions, map);
             });
         }
-        if (!isEqual(newOptions.style, oldOptions.style) && layer?.tileSet) {
-            ensureReady(layer.tileSet, () => {
+        if (!isEqual(newOptions.style, oldOptions.style) && tileSet) {
+            ensureReady(tileSet, () => {
                 getStyle(newOptions)
                     .then((style) => {
-                        if (style && layer?.tileSet) {
-                            layer.tileSet.makeStyleDirty();
-                            layer.tileSet.style = new Cesium.Cesium3DTileStyle(style);
+                        if (style && tileSet) {
+                            tileSet.makeStyleDirty();
+                            tileSet.style = new Cesium.Cesium3DTileStyle(style);
                         }
                     });
             });
         }
-        if (layer?.tileSet && newOptions.heightOffset !== oldOptions.heightOffset) {
-            ensureReady(layer.tileSet, () => {
-                updateModelMatrix(layer.tileSet, newOptions);
+        if (tileSet && newOptions.heightOffset !== oldOptions.heightOffset) {
+            ensureReady(tileSet, () => {
+                updateModelMatrix(tileSet, newOptions);
             });
         }
         return null;
