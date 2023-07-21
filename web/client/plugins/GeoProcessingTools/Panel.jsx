@@ -13,18 +13,22 @@ import { createSelector } from 'reselect';
 import Message from '../../components/I18N/Message';
 import BorderLayout from '../../components/layout/BorderLayout';
 import ResponsivePanel from "../../components/misc/panels/ResponsivePanel";
-import GeoProcessingToolsMain from './GeoProcessingToolsMain';
+import GeoProcessingToolsMain from './Main';
 import { toggleControl } from '../../actions/controls';
+import { initPlugin } from '../../actions/geoProcessingTools';
 import { isGeoProcessingToolsEnabledSelector } from '../../selectors/controls';
 import { dockStyleSelector } from '../../selectors/maplayout';
 
 const PanelComp = ({
     dockStyle,
     enabled,
-    onClose
+    pluginCfg,
+    onClose,
+    onMount
 }) => {
     useEffect( () => {
         onClose();
+        onMount(pluginCfg);
     }, []);
     return enabled ?
         (
@@ -55,7 +59,9 @@ const PanelComp = ({
 PanelComp.propTypes = {
     enabled: PropTypes.bool,
     dockStyle: PropTypes.object,
-    onClose: PropTypes.func
+    pluginCfg: PropTypes.object,
+    onClose: PropTypes.func,
+    onMount: PropTypes.func
 };
 
 const PanelCompConnected = connect(
@@ -72,6 +78,7 @@ const PanelCompConnected = connect(
             dockStyle
         })),
     {
+        onMount: initPlugin,
         onClose: toggleControl.bind(null, 'GeoProcessingTools', null)
     })(PanelComp);
 

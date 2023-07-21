@@ -5,14 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import React from 'react';
-
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Popover, Glyphicon } from 'react-bootstrap';
+import ReactDOM from 'react-dom';
+
 import Overlay from '../../misc/Overlay';
 import OverlayTrigger from '../../misc/OverlayTrigger';
+
 /**
  * InfoPopover. A component that renders a icon with a Popover.
  * @prop {string} title the title of popover
