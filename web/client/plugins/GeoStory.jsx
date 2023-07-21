@@ -5,16 +5,16 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 import React, { useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import WebFont from 'webfontloader';
 
-import {createPlugin} from '../utils/PluginsUtils';
-import { Modes, createWebFontLoaderConfig, extractFontNames, scrollToContent } from '../utils/GeoStoryUtils';
-import { getMessageById } from '../utils/LocaleUtils';
-import { basicError } from '../utils/NotificationUtils';
+import MapEditor from '../components/geostory/common/MapEditor';
+import Story from '../components/geostory/Story';
+import BorderLayout from '../components/layout/BorderLayout';
+import MediaContentToolbar from './geostory/MediaContentToolbar';
+import MediaViewer from './geostory/MediaViewer';
 import {
     add,
     update,
@@ -28,6 +28,7 @@ import {
 } from '../actions/geostory';
 import { editMedia } from '../actions/mediaEditor';
 import * as epics from '../epics/geostory';
+import geostory from '../reducers/geostory';
 import {
     currentStorySelector,
     modeSelector,
@@ -38,12 +39,11 @@ import {
     isDrawControlEnabled
 } from '../selectors/geostory';
 import { currentMessagesSelector } from '../selectors/locale';
-import geostory from '../reducers/geostory';
-import BorderLayout from '../components/layout/BorderLayout';
-import Story from '../components/geostory/Story';
-import MapEditor from '../components/geostory/common/MapEditor';
-import MediaViewer from './geostory/MediaViewer';
-import MediaContentToolbar from './geostory/MediaContentToolbar';
+
+import { Modes, createWebFontLoaderConfig, extractFontNames, scrollToContent } from '../utils/GeoStoryUtils';
+import { getMessageById } from '../utils/LocaleUtils';
+import { basicError } from '../utils/NotificationUtils';
+import {createPlugin} from '../utils/PluginsUtils';
 
 const GeoStory = ({
     story,

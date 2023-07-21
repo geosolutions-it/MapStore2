@@ -9,7 +9,7 @@ import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
 import Message from '../components/I18N/Message';
-import GeoProcessingToolsPanel from './GeoProcessingTools/GeoProcessingToolsPanel';
+import GeoProcessingToolsPanel from './GeoProcessingTools/Panel';
 import { toggleControl } from '../actions/controls';
 import * as epics  from '../epics/geoProcessingTools';
 import geoProcessingTools from '../reducers/geoProcessingTools';
@@ -28,14 +28,21 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @memberof plugins
  * @class
  *
+ * @prop {number} cfg.quadrantSegments Number determining the style and smoothness of buffer corners. Positive numbers create round corners with that number of segments per quarter-circle, 0 creates flat corners, default is unset.
+ * @prop {string} cfg.capStyle Style for the buffer end caps. Values are: Round - rounded ends (default), Flat - flat ends; Square - square ends, default is unset
+ * @prop {string} cfg.selectedTool the values are "buffer", "intersection", default is "buffer"
+ *
  * @example
  *
  * {
  *   "name": "GeoProcessingTools",
  *   "cfg": {
+ *     "selectedTool": "buffer",
+ *     "quadrantSegments": 200,
+ *     "capStyle": "Round",
  *   }
  * }
- * `
+ *
  */
 const GeoProcessingTools = createPlugin(
     "GeoProcessingTools",
