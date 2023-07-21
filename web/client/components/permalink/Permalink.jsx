@@ -46,7 +46,7 @@ const getPathinfo = (url = "") => {
         break;
     case "context":
         type = "context";
-        pathTemplate = pathTemplate.replace("id", "name");
+        pathTemplate = pathTemplate.replace("id", "name") + '?category=PERMALINK';
         break;
     default:
         break;
@@ -98,14 +98,15 @@ export default ({
     }, []);
 
     return (
-        <div id="permalink" style={{padding: 4}}>
-            {settings.id ? (
+        <div id="permalink">
+            {settings.name ? (
                 <>
-                    <ShareLink shareUrl={getPermalinkUrl(settings.id)} />
-                    <Button bsStyle="primary" onClick={onReset}>
+                    <ShareLink shareTitle="share.permalink.shareLinkTitle" shareUrl={getPermalinkUrl(settings.name)} />
+                    <span className="subtitle">Share the resource using the generated address</span>
+                    <Button className="create-new" bsStyle="primary" onClick={onReset}>
                         <Message msgId={"share.permalink.create"}/>
                     </Button>
-                    <ShareQRCode shareUrl={getPermalinkUrl(settings.id)} />
+                    <ShareQRCode shareUrl={getPermalinkUrl(settings.name)} />
                 </>
             ) : (
                 <>
@@ -148,14 +149,16 @@ export default ({
                             <Message msgId="share.permalink.accessible" />
                         </Checkbox>
                     </FormGroup>
-                    <Button
-                        style={{ display: "flex", alignItems: "center", "float": "right" }}
-                        disabled={loading || isEmpty(settings.title)}
-                        onClick={onClickSave}
-                    >
-                        <Message msgId="share.permalink.save" />
-                        {loading && <LoadingSpinner />}
-                    </Button>
+                    <div className="permalink-save">
+                        <Button
+                            className={loading ? "loading" : ''}
+                            disabled={loading || isEmpty(settings.title)}
+                            onClick={onClickSave}
+                        >
+                            <Message msgId="share.permalink.save" />
+                            {loading && <LoadingSpinner />}
+                        </Button>
+                    </div>
                 </>
             )}
         </div>

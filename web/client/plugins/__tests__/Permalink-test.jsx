@@ -26,7 +26,8 @@ describe('PermalinkPlugin Plugin', () => {
         const { Plugin, containers } = getPluginForTest(PermalinkPlugin, {});
         ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(containers).toBeTruthy();
-        expect(containers.Share.name).toBe("Permalink");
+        expect(containers.Share.target).toBe("tabs");
+        expect(containers.Share.title).toBeTruthy();
         expect(containers.Share.component).toBeTruthy();
 
         const store = { dispatch: () => {}, subscribe: () => {}, getState: () => ({}) };

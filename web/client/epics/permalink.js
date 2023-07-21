@@ -9,6 +9,7 @@
 import { Observable } from "rxjs";
 import { push } from "connected-react-router";
 import pick from "lodash/pick";
+import get from "lodash/get";
 import template from "lodash/template";
 
 import API from "../api/GeoStoreDAO";
@@ -23,7 +24,7 @@ import {
     updatePermalinkSettings
 } from "../actions/permalink";
 
-import { getResource, createResource, updateResourceAttribute } from "../api/persistence";
+import { getResource, createResource, updateResourceAttribute, getResourceIdByName } from "../api/persistence";
 import { contextResourceSelector } from "../selectors/context";
 import { currentStorySelector } from "../selectors/geostory";
 import { mapSelector } from "../selectors/map";
@@ -106,6 +107,7 @@ export const savePermalinkEpic = (action$, { getState = () => {} }) =>
 
             let attributes = {...newResource.attributes};
             attributes = pick(attributes, Object.keys(attributes).filter(key=> attributes[key]));
+            const name = get(newResource, "metadata.name");
 
             return createResource(newResource)
                 .switchMap((id) =>
@@ -122,7 +124,7 @@ export const savePermalinkEpic = (action$, { getState = () => {} }) =>
                         )
                     ).switchMap(() =>
                         Observable.of(
-                            updatePermalinkSettings({id}),
+                            updatePermalinkSettings({name}),
                             show({
                                 id: "PERMALINK_SAVE_SUCCESS",
                                 title: "notification.success",
@@ -159,32 +161,40 @@ export const loadPermalinkEpic = (action$, { getState = () => {} } = {}) =>
         .ofType(LOAD_PERMALINK, LOGIN_SUCCESS)
         .switchMap(({ id: pid } = {}) => {
             const state = getState();
-            const id = pid ?? pathnameSelector(state)?.split("/")?.pop();
-            return getResource(id).switchMap((resource) => {
-                const { name, attributes } = resource ?? {};
-                let { type, pathTemplate } = attributes ?? {};
-                pathTemplate = template(pathTemplate)(type === "context" ? {name} : { id });
-                return Observable.of(push(pathTemplate), permalinkLoaded());
-            }).catch((e) => {
-                const errorMsg = "share.permalink.errors.loading";
-                let message = errorMsg + ".unknownError";
-                if (e.status === 403) {
-                    message = errorMsg + ".pleaseLogin";
-                    if (isLoggedIn(state)) {
-                        message = errorMsg + ".permalinkNotAccessible";
+            const hash = pid ?? pathnameSelector(state)?.split("/")?.pop();
+
+            return getResourceIdByName("PERMALINK", hash)
+                .switchMap((id) =>
+                    getResource(id).switchMap((resource) => {
+                        const { name, attributes } = resource ?? {};
+                        let { type, pathTemplate } = attributes ?? {};
+                        pathTemplate = template(pathTemplate)(type === "context" ? {name} : { id });
+                        return Observable.of(push(pathTemplate), permalinkLoaded());
+                    })
+                ).catch((e) => {
+                    const errorMsg = "share.permalink.errors.loading";
+                    let message = errorMsg + ".unknownError";
+                    if (e.status === 403) {
+                        message = errorMsg + ".pleaseLogin";
+                        if (isLoggedIn(state)) {
+                            message = errorMsg + ".permalinkNotAccessible";
+                        }
                     }
-                }
-                if (e.status === 404) {
-                    message = errorMsg + ".permalinkDoesNotExist";
-                }
-                return Observable.of(
-                    error({
-                        title: errorMsg + ".title",
-                        message
-                    }),
-                    loadPermalinkError({ ...e, messageId: message })
-                );
-            });
+                    if (e.status === 404) {
+                        message = errorMsg + ".permalinkDoesNotExist";
+                        // getResourceIdByName always provides 404 in both case (not permitted/not found)
+                        if (isLoggedIn(state)) {
+                            message = errorMsg + ".permalinkNotAccessible";
+                        }
+                    }
+                    return Observable.of(
+                        error({
+                            title: errorMsg + ".title",
+                            message
+                        }),
+                        loadPermalinkError({ ...e, messageId: message })
+                    );
+                });
         });
 
 export default {

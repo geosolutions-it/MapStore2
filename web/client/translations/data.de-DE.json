@@ -1384,6 +1384,7 @@
             "code": "Embed",
             "permalink": {
                 "title": "Permalink",
+                "shareLinkTitle": "Permalink generiert",
                 "accessible": "Öffentlich",
                 "success": "Permalink wurde erfolgreich gespeichert",
                 "error": "Fehler beim Speichern des Permalinks",

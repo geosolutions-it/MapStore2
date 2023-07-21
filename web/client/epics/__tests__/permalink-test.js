@@ -19,7 +19,8 @@ const api = {
     createResource: () => Rx.Observable.of(10),
     getResource: () => Rx.Observable.of({name: "test", attributes: {type: "map", pathTemplate: "/viewer/${id}"}}),
     updateResource: () => Rx.Observable.of(10),
-    updateResourceAttribute: () =>  Rx.Observable.of(11)
+    updateResourceAttribute: () =>  Rx.Observable.of(11),
+    getResourceIdByName: () =>  Rx.Observable.of(10)
 };
 const state = {
     map: {
@@ -107,7 +108,7 @@ describe('Permalink Epics', () => {
                     case LOADING:
                         break;
                     case UPDATE_SETTINGS:
-                        expect(action.settings).toEqual({id: 10});
+                        expect(action.settings).toEqual({name: "test"});
                         break;
                     case SHOW_NOTIFICATION:
                         expect(action.id).toBe("PERMALINK_SAVE_SUCCESS");
@@ -144,7 +145,7 @@ describe('Permalink Epics', () => {
                     case LOADING:
                         break;
                     case UPDATE_SETTINGS:
-                        expect(action.settings).toEqual({id: 10});
+                        expect(action.settings).toEqual({name: "test"});
                         break;
                     case SHOW_NOTIFICATION:
                         expect(action.id).toBe("PERMALINK_SAVE_SUCCESS");
@@ -194,7 +195,7 @@ describe('Permalink Epics', () => {
                     case LOADING:
                         break;
                     case UPDATE_SETTINGS:
-                        expect(action.settings).toEqual({id: 10});
+                        expect(action.settings).toEqual({name: "test"});
                         break;
                     case SHOW_NOTIFICATION:
                         expect(action.id).toBe("PERMALINK_SAVE_SUCCESS");
@@ -234,7 +235,7 @@ describe('Permalink Epics', () => {
                     case LOADING:
                         break;
                     case UPDATE_SETTINGS:
-                        expect(action.settings).toEqual({id: 10});
+                        expect(action.settings).toEqual({name: "test"});
                         break;
                     case SHOW_NOTIFICATION:
                         expect(action.id).toBe("PERMALINK_SAVE_SUCCESS");
@@ -297,7 +298,7 @@ describe('Permalink Epics', () => {
             });
     });
     it("loadPermalinkEpic on load permalink - context", (done) => {
-        const getResource = () => Rx.Observable.of({name: "test", attributes: {type: "context", pathTemplate: "/context/${name}"}});
+        const getResource = () => Rx.Observable.of({name: "test", attributes: {type: "context", pathTemplate: "/context/${name}?category=PERMALINK"}});
         setApiGetResource(api, getResource);
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
@@ -309,7 +310,7 @@ describe('Permalink Epics', () => {
                 actions.forEach((action)=>{
                     switch (action.type) {
                     case "@@router/CALL_HISTORY_METHOD":
-                        expect(action.payload.args).toEqual(["/context/test"]);
+                        expect(action.payload.args).toEqual(["/context/test?category=PERMALINK"]);
                         break;
                     case PERMALINK_LOADED:
                         break;

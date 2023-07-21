@@ -1345,6 +1345,7 @@
             "code": "Embebido",
             "permalink": {
                 "title": "Permalink",
+                "shareLinkTitle": "Enlace permanente generado",
                 "accessible": "Público",
                 "success": "El enlace permanente se guardó con éxito",
                 "error": "Error al guardar enlace permanente",

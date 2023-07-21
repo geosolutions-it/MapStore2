@@ -221,8 +221,8 @@ export const feedbackMaskPromptLogin = (action$, store) => // TODO: separate log
         .filter((action) => {
             const pathname = pathnameSelector(store.getState());
             return action.error
-                && action.error.status === 403
-                && pathname.indexOf("new") === -1 && !(pathname.match(/(dashboard|permalink)/) !== null && pathname.match(/(dashboard|permalink)\/[0-9]+/) === null); // new map geostory and dashboard has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
+                && action.error.status === ([LOAD_PERMALINK_ERROR].includes(action.type) ? 404 : 403)
+                && pathname.indexOf("new") === -1 && !(pathname.match(/(dashboard)/) !== null && pathname.match(/(dashboard)\/[0-9]+/) === null); // new map geostory and dashboard has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
         })
         .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(

@@ -95,11 +95,15 @@ The old spring maven repositories that do not exist anymore have been removed fr
 
 ### New Permalink plugin
 
-As part this release, permalink plugin is added to MS.
+As part this release, permalink plugin is added to MapStore. The new plugin is already configured in standard MapStore application, but if you are working on a project or if you customized the configuration files, you may need to update them to introduce the new plugin.
 
-#### Add permalink to localConfig.json
+In any case on an existing installation you **must** update the database adding the category to make the plugin work.
 
-- Update `localConfig.json` and add "Permalink" plugin to the "desktop", "dashboard" and "geostory" section
+#### Add Permalink plugin to localConfig.json
+
+In the case you customized your `configs/localConfig.json` file in your project/installation, to add the permalink plugin you will have to update it as following:
+
+- Add the "Permalink" plugin to the pages you want to use this plugin. Pages plugins are in the `plugins` section in the root of `localConfig.json`,  so you have to add "Permalink" entry to `desktop`, `dashboard` and `geostory` arrays, like this:
 
 ```json
 {
@@ -121,7 +125,7 @@ As part this release, permalink plugin is added to MS.
 }
 ```
 
-- Add new "permalink" section as shown below
+- To activate the functionality, you must add a new `permalink` section to `plugins` root object of `localConfig.json`, as shown below
 
 ```json
 {
@@ -134,10 +138,10 @@ As part this release, permalink plugin is added to MS.
 
 #### Using Permalink in new contexts
 
-Contents of your `pluginsConfig.json` need to be reviewed to allow usage of new "Peramlink" in new contexts.
-Existing contexts need to be updated separately.
+The plugins available for contexts are listed in the file `configs/pluginsConfig.json`. In your project/installation, you may need to edit this configuration to make the plugin selectable for your context.
+Existing contexts need to be updated separately, after applying these changes
 
-- Find "Share" plugin configuration in `pluginsConfig.json` and modify as shown below:
+- Find the "Share" plugin configuration in the `plugins` array in the root of  `pluginsConfig.json` configuration file and modify it as shown below (adding `children` and `autoEnableChildren` sections:
 
 ```json
     {
@@ -157,15 +161,14 @@ Existing contexts need to be updated separately.
     }
 ```
 
-- Add "Permalink" plugin configuration to `pluginsConfig.json`
+- Add "Permalink" plugin configuration to the `plugins` array in the root of `pluginsConfig.json`
 
 ```json
     {
       "name": "Permalink",
       "glyph": "link",
       "title": "plugins.Permalink.title",
-      "description": "plugins.Permalink.description",
-      "denyUserSelection": true
+      "description": "plugins.Permalink.description"
     },
 ```
 

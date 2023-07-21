@@ -69,10 +69,10 @@ describe('Permalink tests', () => {
         expect(args.permalinkType).toBe('context');
         expect(args.resource.category).toBe('PERMALINK');
         expect(args.resource.attributes).toBeTruthy();
-        expect(args.resource.attributes.pathTemplate).toBe("/context/${name}");
+        expect(args.resource.attributes.pathTemplate).toBe("/context/${name}?category=PERMALINK");
     });
     it('test show permalink link panel', () => {
-        ReactDOM.render(<Permalink shareUrl="#/viewer/22" settings={{id: 1}} />, document.getElementById("container"));
+        ReactDOM.render(<Permalink shareUrl="#/viewer/22" settings={{name: 1}} />, document.getElementById("container"));
         expect(document.getElementById('permalink')).toBeTruthy();
         expect(document.getElementsByClassName('qr-code')[0]).toBeTruthy();
     });

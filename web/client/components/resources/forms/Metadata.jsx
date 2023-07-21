@@ -73,6 +73,7 @@ class Metadata extends React.Component {
     }
 
     render() {
+        const title = get(this.props.resource, 'attributes.title', "");
         return (<form ref="metadataForm" onSubmit={this.handleSubmit}>
             <FormGroup>
                 <ControlLabel>{this.props.nameFieldText}</ControlLabel>
@@ -85,7 +86,7 @@ class Metadata extends React.Component {
                     defaultValue={this.props.resource ? this.props.resource.name : ""}
                     value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.name || ""} />
             </FormGroup>
-            <FormGroup>
+            {!!title && <FormGroup>
                 <ControlLabel>{this.props.titleFieldText}</ControlLabel>
                 <FormControl
                     key="mapTitle"
@@ -93,9 +94,9 @@ class Metadata extends React.Component {
                     onChange={this.changeTitle}
                     disabled={this.props.resource.saving}
                     placeholder={this.props.titlePlaceholderText}
-                    defaultValue={get(this.props.resource, 'attributes.title', "")}
-                    value={get(this.props.resource, 'attributes.title', "")} />
-            </FormGroup>
+                    defaultValue={title}
+                    value={title} />
+            </FormGroup>}
             <FormGroup>
                 <ControlLabel>{this.props.descriptionFieldText}</ControlLabel>
                 <FormControl

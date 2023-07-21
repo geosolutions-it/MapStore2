@@ -164,8 +164,7 @@
       "name": "Permalink",
       "glyph": "link",
       "title": "plugins.Permalink.title",
-      "description": "plugins.Permalink.description",
-      "denyUserSelection": true
+      "description": "plugins.Permalink.description"
     },
     {
       "name": "BackgroundSelector",

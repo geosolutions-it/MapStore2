@@ -1345,6 +1345,7 @@
             "code": "Embed",
             "permalink": {
                 "title": "Permalink",
+                "shareLinkTitle": "Permalink generato",
                 "accessible": "Pubblico",
                 "success": "Il permalink è stato salvato con successo",
                 "error": "Errore durante il salvataggio del permalink",

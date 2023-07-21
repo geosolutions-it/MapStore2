@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import React from 'react';
 import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
@@ -15,6 +15,7 @@ import { updatePermalinkSettings, savePermalink, resetPermalink } from '../actio
 import permalink from '../reducers/permalink';
 import permalinkEpics from '../epics/permalink';
 import { permalinkLoadingSelector, permalinkSettingsSelector } from "../selectors/permalink";
+import Message from '../components/I18N/Message';
 
 /**
  * Permalink Component
@@ -47,7 +48,10 @@ export default createPlugin('Permalink', {
     },
     containers: {
         Share: {
-            name: "Permalink",
+            target: "tabs",
+            tabName: "permalink",
+            hideAdvancedSettingsInTab: true,
+            title: <Message msgId="share.permalink.title" />,
             component: PermalinkComponent
         }
     },

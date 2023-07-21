@@ -48,8 +48,7 @@ export const CONTEXT_DEFAULT_SHARE_OPTIONS = {
 export const SHARE_TABS = {
     link: 1,
     social: 2,
-    permalink: 3,
-    embed: 4
+    embed: 3
 };
 /**
  * Utility functions for Share tools.

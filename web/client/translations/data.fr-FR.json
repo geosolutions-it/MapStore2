@@ -1345,6 +1345,7 @@
             "code": "Embed",
             "permalink": {
                 "title": "Permalink",
+                "shareLinkTitle": "Permalien généré",
                 "accessible": "Public",
                 "success": "Le lien permanent a été enregistré avec succès",
                 "error": "Erreur lors de l'enregistrement du permalien",

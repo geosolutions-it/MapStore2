@@ -23,7 +23,7 @@ import { wrapStartStop } from '../observables/epics';
 import ConfigUtils from '../utils/ConfigUtils';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import merge from "lodash/merge";
-import { isPermalinkSelector } from '../selectors/permalink';
+import { searchSelector } from '../selectors/router';
 
 function MapError(error) {
     this.originalError = error;
@@ -138,8 +138,10 @@ const createSessionFlow = (mapId, contextName, resourceCategory, action$, getSta
  */
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
     action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextName }) => {
-        const isPermalink = isPermalinkSelector(getState());
-        const resourceCategory = isPermalink ? 'PERMALINK' : 'CONTEXT';
+        const params = new URLSearchParams(searchSelector(getState()));
+        // When loading a permalink of type context, we lose the category type upon page reload.
+        // Hence the category is fetched from the param to provide correct category name to getResourceIdByName
+        const resourceCategory = params.get("category") || 'CONTEXT';
         const sessionsEnabled = userSessionEnabledSelector(getState());
         const flow = sessionsEnabled
             ? createSessionFlow(mapId, contextName, resourceCategory, action$, getState)

@@ -5,8 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { UPDATE_SETTINGS, LOADING, RESET, LOAD_PERMALINK } from "../actions/permalink";
-import { LOAD_FINISHED } from "../actions/context";
+import { UPDATE_SETTINGS, LOADING, RESET } from "../actions/permalink";
 
 const initialState = {
     settings: {
@@ -25,13 +24,6 @@ export default (state = initialState, action = {}) => {
             ...state,
             loading: action.loading
         };
-
-    case LOAD_PERMALINK:
-        return {
-            ...state,
-            id: action.id
-        };
-    case LOAD_FINISHED:
     case RESET: {
         return initialState;
     }
