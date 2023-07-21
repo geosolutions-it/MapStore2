@@ -32,7 +32,7 @@ export const profileEnLong = ({identifier, geometry, distance, referential}) => 
     identifier,
     [
         processParameter('linestringEWKT', processData(literalData(prepareGeometry(geometry), "application/wkt"))),
-        processParameter('projection', processData(literalData("EPSG:3857"))), // parametrized?
+        processParameter('targetProjection', processData(literalData("EPSG:3857"))), // parametrized?
         processParameter('distance', processData(literalData(distance))),
         processParameter('layerName', processData(literalData(referential)))
     ],
