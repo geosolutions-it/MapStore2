@@ -74,7 +74,7 @@ In the **Information** tab are reported all relevant indicators related to the l
 
 ## Setting Parameters
 
-When the <img src="../img/button/parameters-button.jpg" class="ms-docbutton"/> button is activated, the editor is allowed to set the following options:
+Through the <img src="../img/button/parameters-button.jpg" class="ms-docbutton"/> button it is possible to tune the profile properties. The available parameters used to calculate the longitudinal profile are:
 
 <img src="../img/longitudinal-profile/setting-parameters.jpg" class="ms-docimage"/>
 
