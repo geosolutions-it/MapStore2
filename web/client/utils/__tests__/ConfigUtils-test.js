@@ -418,5 +418,10 @@ describe('ConfigUtils', () => {
         // do not replace parameters that do not exist (some URL templates should not be replaced)
         expect(ConfigUtils.replacePlaceholders("{OTHER_PLACEHOLDER}")).toBe("{OTHER_PLACEHOLDER}");
     });
+    it('miscSettings', () => {
+        ConfigUtils.setConfigProp("miscSettings", {homePath: "/home", loginPage: "/login"});
+        expect(ConfigUtils.getMiscSetting("homePath", '/')).toBe("/home");
+        expect(ConfigUtils.getMiscSetting("loginPage")).toBe("/login");
+    });
 
 });
