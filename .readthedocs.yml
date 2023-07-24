@@ -1,0 +1,10 @@
+version: 2
+
+python:
+  install:
+    - requirements: docs/requirements.txt
+  system_packages: true
+
+mkdocs:
+  configuration: mkdocs.yml
+  fail_on_warning: true
