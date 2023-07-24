@@ -455,7 +455,7 @@ In particular, by clicking on the <img src="../img/button/edit_button.jpg" class
 <img src="../img/layer-settings/edit_custom_format.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 !!!note
-    [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to view an image present as a URL in the [Attribute Table](attributes-table.md) in [Identify Tool](navigation-toolbar.md#identify-tool). By clicking the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button, in the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar), a pop-up opens where the editor can enter the URL of the images, the markdown syntax to use is the following: `${properties.IMAGE}`.
+    The template editor, by clicking the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button, allows to insert images using direct the URL of resources available on the web. At the same point it also allows to parse needed image URLs from feature attributes (eg. attributes reporting image URL values or images in base64). The same markdown syntax (eg. `${properties.IMAGE}`) can also be used in this case so that, at run time, MapStore is able to parse attribute values to display images accordingly in the Identify panel.
     <img src="../img/layer-settings/image_on_template.gif" class="ms-docimage"  style="max-width:600px;"/>
 
 Here it is possible to insert the text to be displayed through the [Identify Tool](navigation-toolbar.md#identify-tool), with the possibility to wrap the desired properties. <br>
