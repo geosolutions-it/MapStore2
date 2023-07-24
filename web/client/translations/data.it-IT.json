@@ -1384,7 +1384,7 @@
             "shareLinkTitle": "Permalink generato",
             "accessible": "Pubblico",
             "success": "Il permalink è stato salvato con successo",
-            "createAndSaveSuccess": "La categoria \"PERMALINK\" viene creata e il permalink viene salvato correttamente",
+            "createCategorySuccess": "La categoria \"PERMALINK\" mancava, quindi è stata creata",
             "descriptionLabel": "Descrizione",
             "titleLabel": "Titolo",
             "titlePlaceholder": "Inserisci un titolo",

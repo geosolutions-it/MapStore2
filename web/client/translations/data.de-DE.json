@@ -1423,7 +1423,7 @@
             "shareLinkTitle": "Permalink generiert",
             "accessible": "Öffentlich",
             "success": "Permalink wurde erfolgreich gespeichert",
-            "createAndSaveSuccess": "Die Kategorie \"PERMALINK\" wurde erstellt und der Permalink wurde erfolgreich gespeichert",
+            "createCategorySuccess": "Die Kategorie \"PERMALINK\" wurde erstellt und der Permalink wurde erfolgreich gespeichert",
             "descriptionLabel": "Beschreibung",
             "titleLabel": "Titel",
             "titlePlaceholder": "Geben Sie einen Titel ein",

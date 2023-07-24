@@ -1384,7 +1384,7 @@
             "shareLinkTitle": "Enlace permanente generado",
             "accessible": "Público",
             "success": "El enlace permanente se guardó con éxito",
-            "createAndSaveSuccess": "Se crea la categoría \"PERMALINK\" y el enlace permanente se guarda correctamente",
+            "createCategorySuccess": "Faltaba la categoría \"PERMALINK\", por lo que se ha creado",
             "descriptionLabel": "Descripción",
             "titleLabel": "Título",
             "titlePlaceholder": "Introduce un título",
@@ -1409,7 +1409,7 @@
                     "categoryErrorAdmin": "Error al crear el enlace \"{categoryName}\" de la categoría faltante",
                     "categoryErrorNonAdmin": "Falta el enlace \"{categoryName}\" de la categoría, comuníquese con el administrador para crear la categoría"
                 }
-                
+
             }
         },
         "snapshot": {

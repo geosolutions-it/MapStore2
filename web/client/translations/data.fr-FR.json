@@ -1385,7 +1385,7 @@
             "shareLinkTitle": "Permalien généré",
             "accessible": "Public",
             "success": "Le lien permanent a été enregistré avec succès",
-            "createAndSaveSuccess": "La catégorie \"PERMALINK\" est créée et le permalien est enregistré avec succès",
+            "createCategorySuccess": "La catégorie \"PERMALINK\" était manquante, elle a donc été créée",
             "descriptionLabel": "Description",
             "titleLabel": "Titre",
             "titlePlaceholder": "Entrez un titre",

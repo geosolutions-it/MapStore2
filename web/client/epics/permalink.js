@@ -71,7 +71,6 @@ const PERMALINK_RESOURCES = {
 
 };
 
-let categoryCreated = false;
 const permalinkErrorHandler = (state) =>
     (e, stream$) => {
         if (e.status === 404 && isString(e.data) && e.data.indexOf('Resource Category not found') > -1) {
@@ -79,8 +78,11 @@ const permalinkErrorHandler = (state) =>
                 // Create category when missing and role is ADMIN
                 return createCategory(PERMALINK)
                     .switchMap(() => {
-                        categoryCreated = true;
-                        return stream$.skip(1);
+                        return stream$.skip(1).concat(Observable.of(show({
+                            id: "PERMALINK_SAVE_SUCCESS",
+                            title: "notification.success",
+                            message: `permalink.createCategorySuccess`
+                        })));
                     })
                     .catch(() => Observable.of(error({
                         title: 'permalink.errors.save.title',
@@ -168,9 +170,9 @@ export const savePermalinkEpic = (action$, { getState = () => {} }) =>
                         show({
                             id: "PERMALINK_SAVE_SUCCESS",
                             title: "notification.success",
-                            message: `permalink.${categoryCreated ? 'createAndSaveSuccess' : 'success'}`
+                            message: "permalink.success"
                         })
-                    ).do(categoryCreated = false))
+                    ))
                 );
         }).let(
             wrapStartStop(
