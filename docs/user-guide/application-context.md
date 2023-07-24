@@ -39,7 +39,7 @@ Once a valid context name is specified in *General settings*, it is possible to 
 <img src="../img/application-context/export_context.gif" class="ms-docimage"/>
 
 !!! note
-    The <img src="../img/button/import_button.jpg" class="ms-docbutton"/> button is only available on the first step of the context wizard, the *general settings*, while the <img src="../img/button/export_button.jpg" class="ms-docbutton"/> button is also available in the later steps of the wizard.
+    The <img src="../img/button/import_button.jpg" class="ms-docbutton"/> button is only available on the first step of the application context wizard (the *General settings*) while the <img src="../img/button/export_button.jpg" class="ms-docbutton"/> button is always available with the only condition that a valid context name has been specified.
 
 ## Configure Map
 
