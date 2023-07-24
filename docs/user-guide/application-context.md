@@ -30,7 +30,7 @@ This first step allows to configure the **Name** and the **Window title** of the
 !!! note
     The **Window title** is the name of the browser window.
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to **Import** a context with all the configurations of the context by selecting the <img src="../img/button/import_button.jpg" class="ms-docbutton" /> button. The import screen appears and the user can drag and drop a context, in `json` format, inside the import screen or select it from the folders of the local machine through the <img src="../img/button/select-files.jpg" class="ms-docbutton"/> button.
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to **Import** an application context  by selecting the <img src="../img/button/import_button.jpg" class="ms-docbutton" /> button. The import screen appears so that it is possible to drag and drop a previously exported context file there or select it from the local machine through the <img src="../img/button/select-files.jpg" class="ms-docbutton"/> button.
 
 <img src="../img/application-context/import_context.gif" class="ms-docimage"/>
 
