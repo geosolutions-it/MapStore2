@@ -26,7 +26,7 @@ By clicking the **Longitudinal Profile** <img src="../img/button/long-profile-bu
 
 ## Chart
 
-When the line has been drawn on the map, the **Longitudinal Profile** panel is opened and the line chart appears in the **Chart** tab.
+When the geometry of the profile path has been drawn on the map, the **Longitudinal Profile** panel opens and the  chart appears in the **Chart** tab.
 
 <img src="../img/longitudinal-profile/chart-tab.jpg" class="ms-docimage"/>
 
