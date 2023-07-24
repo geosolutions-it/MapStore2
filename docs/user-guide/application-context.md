@@ -34,7 +34,7 @@ This first step allows to configure the **Name** and the **Window title** of the
 
 <img src="../img/application-context/import_context.gif" class="ms-docimage"/>
 
-After entering the context name, in the *general settings*, the user can also **Export** the context with all the configurations of the context by selecting the <img src="../img/button/export_button.jpg" class="ms-docbutton" /> button. The export screen appears and the user exports the context, in `json` format, by clicking the <img src="../img/button/export_button.jpg" class="ms-docbutton"/> button.
+Once a valid context name is specified in *General settings*, it is possible to **Export** the context with all the configurations introduced up to that point; this is possible through the <img src="../img/button/export_button.jpg" class="ms-docbutton" /> button. The export screen appears and the user exports the context, in `JSON` format, by clicking the <img src="../img/button/export_button.jpg" class="ms-docbutton"/> button.
 
 <img src="../img/application-context/export_context.gif" class="ms-docimage"/>
 
