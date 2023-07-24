@@ -82,6 +82,6 @@ Through the <img src="../img/button/parameters-button.jpg" class="ms-docbutton"/
 
 * The **Distance** choosing the maximum distance between two points along the profile (in `m`)
 
-* The **Chart Title** to type a title that it is visible on the top of the chart line.
+* The **Chart Title** to be used  in the UI on the top of the chart.
 
 <img src="../img/longitudinal-profile/chart-title.jpg" class="ms-docimage"/>
