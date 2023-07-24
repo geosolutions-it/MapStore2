@@ -455,7 +455,7 @@ In particular, by clicking on the <img src="../img/button/edit_button.jpg" class
 <img src="../img/layer-settings/edit_custom_format.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 !!!note
-    The template editor, by clicking the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button, allows to insert images using direct the URL of resources available on the web. At the same point it also allows to parse needed image URLs from feature attributes (eg. attributes reporting image URL values or images in base64). The same markdown syntax (eg. `${properties.IMAGE}`) can also be used in this case so that, at run time, MapStore is able to parse attribute values to display images accordingly in the Identify panel.
+    The Identify Template editor, by clicking the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button, allows to insert images using direct URLs of resources available on the web. At the same point it also allows to parse needed image URLs from available feature attributes (eg. attributes reporting image URL values or images in base64). The same markdown syntax (eg. `${properties.IMAGE}`) can also be used in this case so that, at run time, MapStore is able to parse attribute values to finally display images accordingly in the Identify panel.
     <img src="../img/layer-settings/image_on_template.gif" class="ms-docimage"  style="max-width:600px;"/>
 
 Here it is possible to insert the text to be displayed through the [Identify Tool](navigation-toolbar.md#identify-tool), with the possibility to wrap the desired properties. <br>
