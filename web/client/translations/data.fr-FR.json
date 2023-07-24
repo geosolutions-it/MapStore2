@@ -1343,31 +1343,6 @@
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
-            "permalink": {
-                "title": "Permalink",
-                "shareLinkTitle": "Permalien généré",
-                "accessible": "Public",
-                "success": "Le lien permanent a été enregistré avec succès",
-                "error": "Erreur lors de l'enregistrement du permalien",
-                "descriptionLabel": "Description",
-                "titleLabel": "Titre",
-                "titlePlaceholder": "Entrez un titre",
-                "descriptionPlaceholder": "Entrez une description",
-                "generate": "Générer un permalien",
-                "create": "Créer un nouveau lien permanent",
-                "loadingSpinner": "Chargement du lien permanent",
-                "errors": {
-                    "loading": {
-                        "unknownError": "Une erreur s'est produite lors du chargement du permalien",
-                        "permalinkNotAccessible": "Vous n'êtes pas autorisé à accéder à ce permalien. Veuillez contacter le propriétaire de la ressource",
-                        "permalinkDoesNotExist": "Le permalien auquel vous essayez d'accéder n'existe pas",
-                        "title": "Erreur lors du chargement du lien permanent",
-                        "pleaseLogin": "Ce permalien n'est pas public. Veuillez essayer de vous connecter",
-                        "notFound": "Permalien introuvable",
-	                    "notAccessible": "Permalien inaccessible"
-                    }
-                }
-            },
             "embeddedLinkTitle": "Via le code intégré",
             "forceDrawer": "Afficher la liste des couches",
             "apiLinkTitle": "Via les APIs",
@@ -1403,6 +1378,38 @@
             "sizeOptions": {
                 "width": "largeur",
                 "height": "la taille"
+            }
+        },
+        "permalink": {
+            "title": "Permalink",
+            "shareLinkTitle": "Permalien généré",
+            "accessible": "Public",
+            "success": "Le lien permanent a été enregistré avec succès",
+            "createAndSaveSuccess": "La catégorie \"PERMALINK\" est créée et le permalien est enregistré avec succès",
+            "descriptionLabel": "Description",
+            "titleLabel": "Titre",
+            "titlePlaceholder": "Entrez un titre",
+            "descriptionPlaceholder": "Entrez une description",
+            "generate": "Générer un permalien",
+            "create": "Créer un nouveau lien permanent",
+            "loadingSpinner": "Chargement du lien permanent",
+            "subtitle": "Partager la ressource à l'aide de l'adresse générée",
+            "errors": {
+                "loading": {
+                    "unknownError": "Une erreur s'est produite lors du chargement du permalien",
+                    "permalinkNotAccessible": "Vous n'êtes pas autorisé à accéder à ce permalien. Veuillez contacter le propriétaire de la ressource",
+                    "permalinkDoesNotExist": "Le permalien auquel vous essayez d'accéder n'existe pas",
+                    "title": "Erreur lors du chargement du lien permanent",
+                    "pleaseLogin": "Ce permalien n'est pas public. Veuillez essayer de vous connecter",
+                    "notFound": "Permalien introuvable",
+                    "notAccessible": "Permalien inaccessible"
+                },
+                "save": {
+                    "title": "La génération du permalien a échoué",
+                    "generic": "Erreur lors de l'enregistrement du permalien",
+                    "categoryErrorAdmin": "La création de la catégorie manquante \"{categoryName}\" a échoué",
+                    "categoryErrorNonAdmin": "Catégorie manquante \"{categoryName}\", veuillez contacter l'administrateur pour créer la catégorie"
+                }
             }
         },
         "snapshot": {

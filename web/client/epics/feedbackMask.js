@@ -161,7 +161,7 @@ export const updatePermalinkFeedbackMaskVisibility = action$ =>
         .switchMap(() => {
             const loadActions = [PERMALINK_LOADED, LOAD_PERMALINK_ERROR];
             const isEnabled = ({ type }) => type === LOAD_PERMALINK_ERROR;
-            const updateObservable = updateVisibility(action$, loadActions, isEnabled, "share.permalink");
+            const updateObservable = updateVisibility(action$, loadActions, isEnabled, "permalink");
             return Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)

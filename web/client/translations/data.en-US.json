@@ -1344,31 +1344,6 @@
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
-            "permalink": {
-                "title": "Permalink",
-                "shareLinkTitle": "Permalink generated",
-                "accessible": "Public",
-                "success": "Permalink is saved successfully",
-                "error": "Error when saving permalink",
-                "descriptionLabel": "Description",
-                "titleLabel": "Title",
-                "titlePlaceholder": "Enter a title",
-                "descriptionPlaceholder": "Enter a description",
-                "generate": "Generate permalink",
-                "create": "Create a new permalink",
-                "loadingSpinner": "Loading Permalink",
-                "errors": {
-                    "loading": {
-                        "unknownError": "There was an error loading the permalink",
-                        "permalinkNotAccessible": "You don't have permission to access this permalink. Please contact the resource owner",
-                        "permalinkDoesNotExist": "The permalink you are trying to access doesn't exist",
-                        "title": "Error loading peramlink",
-                        "pleaseLogin": "This permalink is not public. Please try to login",
-                        "notFound": "Permalink not found",
-	                    "notAccessible": "Permalink not accessible"
-                    }
-                }
-            },
             "forceDrawer": "Show TOC",
             "apiLinkTitle": "Using APIs",
             "QRCodeLinkTitle": "QR code",
@@ -1402,6 +1377,38 @@
             "sizeOptions": {
                 "width": "width",
                 "height": "height"
+            }
+        },
+        "permalink": {
+            "title": "Permalink",
+            "shareLinkTitle": "Permalink generated",
+            "accessible": "Public",
+            "success": "Permalink is saved successfully",
+            "createAndSaveSuccess": "\"PERMALINK\" category is created and the permalink is saved successfully",
+            "descriptionLabel": "Description",
+            "titleLabel": "Title",
+            "titlePlaceholder": "Enter a title",
+            "descriptionPlaceholder": "Enter a description",
+            "generate": "Generate permalink",
+            "create": "Create a new permalink",
+            "loadingSpinner": "Loading Permalink",
+            "subtitle": "Share the resource using the generated address",
+            "errors": {
+                "loading": {
+                    "unknownError": "There was an error loading the permalink",
+                    "permalinkNotAccessible": "You don't have permission to access this permalink. Please contact the resource owner",
+                    "permalinkDoesNotExist": "The permalink you are trying to access doesn't exist",
+                    "title": "Error loading peramlink",
+                    "pleaseLogin": "This permalink is not public. Please try to login",
+                    "notFound": "Permalink not found",
+                    "notAccessible": "Permalink not accessible"
+                },
+                "save": {
+                    "title": "Permalink generation failed",
+                    "generic": "Error when saving permalink",
+                    "categoryErrorAdmin": "Creating missing category \"{categoryName}\" failed",
+                    "categoryErrorNonAdmin": "Missing category \"{categoryName}\", please contact administrator to create the category"
+                }
             }
         },
         "snapshot": {

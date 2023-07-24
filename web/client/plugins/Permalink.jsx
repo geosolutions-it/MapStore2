@@ -51,7 +51,7 @@ export default createPlugin('Permalink', {
             target: "tabs",
             tabName: "permalink",
             hideAdvancedSettingsInTab: true,
-            title: <Message msgId="share.permalink.title" />,
+            title: <Message msgId="permalink.title" />,
             component: PermalinkComponent
         }
     },

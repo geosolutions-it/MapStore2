@@ -55,10 +55,10 @@ const state = {
         }
     }
 };
-const setApiGetResource = (_api, getResource) => {
+const setApiGetResource = (_api, apiResources) => {
     const apiTest = {
         ..._api,
-        getResource
+        ...apiResources
     };
     Persistence.addApi("testPermalink", apiTest);
     Persistence.setApi("testPermalink");
@@ -252,6 +252,84 @@ describe('Permalink Epics', () => {
                 done();
             }, _state);
     });
+    it('savePermalinkEpic with missing category as an ADMIN user', (done) => {
+        setApiGetResource(api, {
+            createResource: ()=> Rx.Observable.throw({status: 404, data: "Resource Category not found"}),
+            createCategory: () => Rx.Observable.throw({status: 500})
+        });
+        const NUMBER_OF_ACTIONS = 2;
+        const permalinkObj = {
+            permalinkType: "map",
+            resource: {
+                category: "PERMALINK",
+                metadata: {name: "test"},
+                attributes: {
+                    title: "title",
+                    description: "description"
+                }
+            }
+        };
+
+        testEpic(
+            savePermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                savePermalink(permalinkObj)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action)=>{
+                    switch (action.type) {
+                    case LOADING:
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(action.title).toBe('permalink.errors.save.title');
+                        expect(action.message).toBe('permalink.errors.save.categoryErrorAdmin');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {...state, security: { user: {role: "ADMIN"}}});
+    });
+    it('savePermalinkEpic with missing category as NON-ADMIN user', (done) => {
+        setApiGetResource(api, {
+            createResource: ()=> Rx.Observable.throw({status: 404, data: "Resource Category not found"}),
+            createCategory: () => Rx.Observable.throw({status: 500})
+        });
+        const NUMBER_OF_ACTIONS = 2;
+        const permalinkObj = {
+            permalinkType: "map",
+            resource: {
+                category: "PERMALINK",
+                metadata: {name: "test"},
+                attributes: {
+                    title: "title",
+                    description: "description"
+                }
+            }
+        };
+
+        testEpic(
+            savePermalinkEpic,
+            NUMBER_OF_ACTIONS, [
+                savePermalink(permalinkObj)
+            ], actions => {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                actions.forEach((action)=>{
+                    switch (action.type) {
+                    case LOADING:
+                        break;
+                    case SHOW_NOTIFICATION:
+                        expect(action.title).toBe('permalink.errors.save.title');
+                        expect(action.message).toBe('permalink.errors.save.categoryErrorNonAdmin');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {...state, security: { user: {role: "USER"}}});
+    });
     it("loadPermalinkEpic on load permalink", (done) => {
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
@@ -298,7 +376,7 @@ describe('Permalink Epics', () => {
     });
     it("loadPermalinkEpic on load permalink - context", (done) => {
         const getResource = () => Rx.Observable.of({name: "test", attributes: {type: "context", pathTemplate: "/context/${name}?category=PERMALINK"}});
-        setApiGetResource(api, getResource);
+        setApiGetResource(api, {getResource});
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
             loadPermalinkEpic,
@@ -323,7 +401,7 @@ describe('Permalink Epics', () => {
 
     it("loadPermalinkEpic on error - not found", (done) => {
         const getResource = () => Rx.Observable.throw({status: 404});
-        setApiGetResource(api, getResource);
+        setApiGetResource(api, {getResource});
         const ERROR_STATUS = 404;
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
@@ -333,7 +411,7 @@ describe('Permalink Epics', () => {
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 actions.forEach((action)=>{
-                    const permalinkDontExit = 'share.permalink.errors.loading.permalinkDoesNotExist';
+                    const permalinkDontExit = 'permalink.errors.loading.permalinkDoesNotExist';
                     switch (action.type) {
                     case LOAD_PERMALINK_ERROR:
                         expect(action.error).toBeTruthy();
@@ -341,7 +419,7 @@ describe('Permalink Epics', () => {
                         expect(action.error.messageId).toBe(permalinkDontExit);
                         break;
                     case SHOW_NOTIFICATION:
-                        expect(action.title).toBe('share.permalink.errors.loading.title');
+                        expect(action.title).toBe('permalink.errors.loading.title');
                         expect(action.message).toBe(permalinkDontExit);
                         break;
                     default:
@@ -353,7 +431,7 @@ describe('Permalink Epics', () => {
     });
     it("loadPermalinkEpic on error forbidden and not logged in", (done) => {
         const getResource = () => Rx.Observable.throw({status: 403});
-        setApiGetResource(api, getResource);
+        setApiGetResource(api, {getResource});
         const ERROR_STATUS = 403;
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
@@ -363,7 +441,7 @@ describe('Permalink Epics', () => {
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 actions.forEach((action)=>{
-                    const permalinkErrorLogin = 'share.permalink.errors.loading.pleaseLogin';
+                    const permalinkErrorLogin = 'permalink.errors.loading.pleaseLogin';
                     switch (action.type) {
                     case LOAD_PERMALINK_ERROR:
                         expect(action.error).toBeTruthy();
@@ -371,7 +449,7 @@ describe('Permalink Epics', () => {
                         expect(action.error.messageId).toBe(permalinkErrorLogin);
                         break;
                     case SHOW_NOTIFICATION:
-                        expect(action.title).toBe('share.permalink.errors.loading.title');
+                        expect(action.title).toBe('permalink.errors.loading.title');
                         expect(action.message).toBe(permalinkErrorLogin);
                         break;
                     default:
@@ -383,7 +461,7 @@ describe('Permalink Epics', () => {
     });
     it("loadPermalinkEpic on error forbidden and logged in", (done) => {
         const getResource = () => Rx.Observable.throw({status: 403});
-        setApiGetResource(api, getResource);
+        setApiGetResource(api, {getResource});
         const ERROR_STATUS = 403;
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
@@ -393,7 +471,7 @@ describe('Permalink Epics', () => {
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 actions.forEach((action)=>{
-                    const permalinkErrorLogin = 'share.permalink.errors.loading.permalinkNotAccessible';
+                    const permalinkErrorLogin = 'permalink.errors.loading.permalinkNotAccessible';
                     switch (action.type) {
                     case LOAD_PERMALINK_ERROR:
                         expect(action.error).toBeTruthy();
@@ -401,7 +479,7 @@ describe('Permalink Epics', () => {
                         expect(action.error.messageId).toBe(permalinkErrorLogin);
                         break;
                     case SHOW_NOTIFICATION:
-                        expect(action.title).toBe('share.permalink.errors.loading.title');
+                        expect(action.title).toBe('permalink.errors.loading.title');
                         expect(action.message).toBe(permalinkErrorLogin);
                         break;
                     default:
@@ -418,7 +496,7 @@ describe('Permalink Epics', () => {
     });
     it("loadPermalinkEpic on error unknown", (done) => {
         const getResource = () => Rx.Observable.throw({status: 500});
-        setApiGetResource(api, getResource);
+        setApiGetResource(api, {getResource});
         const ERROR_STATUS = 500;
         const NUMBER_OF_ACTIONS = 2;
         testEpic(
@@ -428,7 +506,7 @@ describe('Permalink Epics', () => {
             ], actions => {
                 expect(actions.length).toBe(NUMBER_OF_ACTIONS);
                 actions.forEach((action)=>{
-                    const permalinkErrorUnknown = 'share.permalink.errors.loading.unknownError';
+                    const permalinkErrorUnknown = 'permalink.errors.loading.unknownError';
                     switch (action.type) {
                     case LOAD_PERMALINK_ERROR:
                         expect(action.error).toBeTruthy();
@@ -436,7 +514,7 @@ describe('Permalink Epics', () => {
                         expect(action.error.messageId).toBe(permalinkErrorUnknown);
                         break;
                     case SHOW_NOTIFICATION:
-                        expect(action.title).toBe('share.permalink.errors.loading.title');
+                        expect(action.title).toBe('permalink.errors.loading.title');
                         expect(action.message).toBe(permalinkErrorUnknown);
                         break;
                     default:

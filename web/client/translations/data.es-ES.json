@@ -1343,31 +1343,6 @@
             "social": "Social",
             "direct": "Enlace",
             "code": "Embebido",
-            "permalink": {
-                "title": "Permalink",
-                "shareLinkTitle": "Enlace permanente generado",
-                "accessible": "Público",
-                "success": "El enlace permanente se guardó con éxito",
-                "error": "Error al guardar enlace permanente",
-                "descriptionLabel": "Descripción",
-                "titleLabel": "Título",
-                "titlePlaceholder": "Introduce un título",
-                "descriptionPlaceholder": "Introduce una descripción",
-                "generate": "Generar enlace permanente",
-                "create": "Crear un nuevo enlace permanente",
-                "loadingSpinner": "Cargando Enlace permanente",
-                "errors": {
-                    "loading": {
-                        "unknownError": "Hubo un error al cargar el enlace permanente",
-                        "permalinkNotAccessible": "No tienes permiso para acceder a este enlace permanente. Póngase en contacto con el propietario del recurso.",
-                        "permalinkDoesNotExist": "El enlace permanente al que intenta acceder no existe",
-                        "title": "Error al cargar el enlace permanente",
-                        "pleaseLogin": "Este enlace permanente no es público. Intente iniciar sesión",
-                        "notFound": "Enlace permanente no encontrado",
-	                    "notAccessible": "Enlace permanente no accesible"
-                    }
-                }
-            },
             "embeddedLinkTitle": "A través de código embebido",
             "forceDrawer": "Mostrar el contenido",
             "apiLinkTitle": "A través de APIs",
@@ -1402,6 +1377,39 @@
             "sizeOptions": {
                 "width": "ancho",
                 "height": "altura"
+            }
+        },
+        "permalink": {
+            "title": "Permalink",
+            "shareLinkTitle": "Enlace permanente generado",
+            "accessible": "Público",
+            "success": "El enlace permanente se guardó con éxito",
+            "createAndSaveSuccess": "Se crea la categoría \"PERMALINK\" y el enlace permanente se guarda correctamente",
+            "descriptionLabel": "Descripción",
+            "titleLabel": "Título",
+            "titlePlaceholder": "Introduce un título",
+            "descriptionPlaceholder": "Introduce una descripción",
+            "generate": "Generar enlace permanente",
+            "create": "Crear un nuevo enlace permanente",
+            "loadingSpinner": "Cargando Enlace permanente",
+            "subtitle": "Comparte el recurso usando la dirección generada",
+            "errors": {
+                "loading": {
+                    "unknownError": "Hubo un error al cargar el enlace permanente",
+                    "permalinkNotAccessible": "No tienes permiso para acceder a este enlace permanente. Póngase en contacto con el propietario del recurso.",
+                    "permalinkDoesNotExist": "El enlace permanente al que intenta acceder no existe",
+                    "title": "Error al cargar el enlace permanente",
+                    "pleaseLogin": "Este enlace permanente no es público. Intente iniciar sesión",
+                    "notFound": "Enlace permanente no encontrado",
+                    "notAccessible": "Enlace permanente no accesible"
+                },
+                "save": {
+                    "title": "La generación del enlace permanente falló",
+                    "generic": "Error al guardar enlace permanente",
+                    "categoryErrorAdmin": "Error al crear el enlace \"{categoryName}\" de la categoría faltante",
+                    "categoryErrorNonAdmin": "Falta el enlace \"{categoryName}\" de la categoría, comuníquese con el administrador para crear la categoría"
+                }
+                
             }
         },
         "snapshot": {

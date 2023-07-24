@@ -10,6 +10,7 @@ import { Observable } from "rxjs";
 import { push } from "connected-react-router";
 import pick from "lodash/pick";
 import get from "lodash/get";
+import isString from "lodash/isString";
 import template from "lodash/template";
 
 import API from "../api/GeoStoreDAO";
@@ -24,16 +25,17 @@ import {
     updatePermalinkSettings
 } from "../actions/permalink";
 
-import { getResource, createResource, updateResourceAttribute, getResourceIdByName } from "../api/persistence";
+import { getResource, createResource, createCategory, updateResourceAttribute, getResourceIdByName } from "../api/persistence";
 import { contextResourceSelector } from "../selectors/context";
 import { currentStorySelector } from "../selectors/geostory";
 import { mapSelector } from "../selectors/map";
 import { mapSaveSelector } from "../selectors/mapsave";
-import { isLoggedIn, userSelector } from "../selectors/security";
+import { isAdminUserSelector, isLoggedIn, userSelector } from "../selectors/security";
 import { widgetsConfig } from "../selectors/widgets";
 import { pathnameSelector } from "../selectors/router";
 import { wrapStartStop } from "../observables/epics";
 
+const PERMALINK = "PERMALINK";
 const PERMALINK_RESOURCES = {
     map: (resource, state) => {
         const mapConfig = mapSaveSelector(state);
@@ -68,6 +70,45 @@ const PERMALINK_RESOURCES = {
     }
 
 };
+
+let categoryCreated = false;
+const permalinkErrorHandler = (state) =>
+    (e, stream$) => {
+        if (e.status === 404 && isString(e.data) && e.data.indexOf('Resource Category not found') > -1) {
+            if (isAdminUserSelector(state)) {
+                // Create category when missing and role is ADMIN
+                return createCategory(PERMALINK)
+                    .switchMap(() => {
+                        categoryCreated = true;
+                        return stream$.skip(1);
+                    })
+                    .catch(() => Observable.of(error({
+                        title: 'permalink.errors.save.title',
+                        message: 'permalink.errors.save.categoryErrorAdmin',
+                        autoDismiss: 6,
+                        values: {
+                            categoryName: PERMALINK
+                        }
+                    })));
+            }
+            return Observable.of(error({
+                title: 'permalink.errors.save.title',
+                message: 'permalink.errors.save.categoryErrorNonAdmin',
+                autoDismiss: 6,
+                values: {
+                    categoryName: PERMALINK
+                }
+            }));
+        }
+        return Observable.of(
+            error({
+                title: 'notifcation.error',
+                message: 'permalink.errors.save.generic',
+                autoDismiss: 6,
+                position: "tc"
+            })
+        );
+    };
 
 /**
  * Save permalink by resource type
@@ -108,7 +149,7 @@ export const savePermalinkEpic = (action$, { getState = () => {} }) =>
             let attributes = {...newResource.attributes};
             attributes = pick(attributes, Object.keys(attributes).filter(key=> attributes[key]));
             const name = get(newResource, "metadata.name");
-
+            newResource = {...newResource, category: PERMALINK};
             return createResource(newResource)
                 .switchMap((id) =>
                     Observable.forkJoin(
@@ -122,30 +163,20 @@ export const savePermalinkEpic = (action$, { getState = () => {} }) =>
                                     ]
                                 })
                         )
-                    ).switchMap(() =>
-                        Observable.of(
-                            updatePermalinkSettings({name}),
-                            show({
-                                id: "PERMALINK_SAVE_SUCCESS",
-                                title: "notification.success",
-                                message: "share.permalink.success"
-                            })
-                        )
-                    )
+                    ).switchMap(() => Observable.of(
+                        updatePermalinkSettings({name}),
+                        show({
+                            id: "PERMALINK_SAVE_SUCCESS",
+                            title: "notification.success",
+                            message: `permalink.${categoryCreated ? 'createAndSaveSuccess' : 'success'}`
+                        })
+                    ).do(categoryCreated = false))
                 );
         }).let(
             wrapStartStop(
                 permalinkLoading(true),
                 permalinkLoading(false),
-                () =>
-                    Observable.of(
-                        error({
-                            title: "notification.error",
-                            message: "share.permalink.error",
-                            autoDismiss: 6,
-                            position: "tc"
-                        })
-                    )
+                permalinkErrorHandler(state)
             )
         );
     });
@@ -163,8 +194,7 @@ export const loadPermalinkEpic = (action$, { getState = () => {} } = {}) =>
         .switchMap(({ id: pid } = {}) => {
             const state = getState();
             const hash = pid ?? pathnameSelector(state)?.split("/")?.pop();
-
-            return getResourceIdByName("PERMALINK", hash)
+            return getResourceIdByName(PERMALINK, hash)
                 .switchMap((id) =>
                     getResource(id).switchMap((resource) => {
                         const { name, attributes } = resource ?? {};
@@ -173,7 +203,7 @@ export const loadPermalinkEpic = (action$, { getState = () => {} } = {}) =>
                         return Observable.of(push(pathTemplate), permalinkLoaded());
                     })
                 ).catch((e) => {
-                    const errorMsg = "share.permalink.errors.loading";
+                    const errorMsg = "permalink.errors.loading";
                     let message = errorMsg + ".unknownError";
                     if (e.status === 403) {
                         message = errorMsg + ".pleaseLogin";

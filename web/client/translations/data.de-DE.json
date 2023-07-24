@@ -1382,31 +1382,6 @@
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
-            "permalink": {
-                "title": "Permalink",
-                "shareLinkTitle": "Permalink generiert",
-                "accessible": "Öffentlich",
-                "success": "Permalink wurde erfolgreich gespeichert",
-                "error": "Fehler beim Speichern des Permalinks",
-                "descriptionLabel": "Beschreibung",
-                "titleLabel": "Titel",
-                "titlePlaceholder": "Geben Sie einen Titel ein",
-                "descriptionPlaceholder": "Geben Sie eine Beschreibung ein",
-                "generate": "Permalink generieren",
-                "create": "Erstellen Sie einen neuen Permalink",
-                "loadingSpinner": "Permalink wird geladen",
-                "errors": {
-                    "loading": {
-                        "unknownError": "Beim Laden des Permalinks ist ein Fehler aufgetreten",
-                        "permalinkNotAccessible": "Sie haben keine Berechtigung, auf diesen Permalink zuzugreifen. Bitte wenden Sie sich an den Ressourceneigentümer",
-                        "permalinkDoesNotExist": "Der Permalink, auf den Sie zugreifen möchten, existiert nicht",
-                        "title": "Fehler beim Laden des Peramlinks",
-                        "pleaseLogin": "Dieser Permalink ist nicht öffentlich. Bitte versuchen Sie sich anzumelden",
-                        "notFound": "Permalink nicht gefunden",
-	                    "notAccessible": "Permalink nicht zugänglich"
-                    }
-                }
-            },
             "embeddedLinkTitle": "Über einen eingebetteten Code",
             "forceDrawer": "Inhaltsverzeichnis anzeigen",
             "apiLinkTitle": "API verwenden",
@@ -1441,6 +1416,38 @@
             "sizeOptions": {
                 "width": "Breite",
                 "height": "Höhe"
+            }
+        },
+        "permalink": {
+            "title": "Permalink",
+            "shareLinkTitle": "Permalink generiert",
+            "accessible": "Öffentlich",
+            "success": "Permalink wurde erfolgreich gespeichert",
+            "createAndSaveSuccess": "Die Kategorie \"PERMALINK\" wurde erstellt und der Permalink wurde erfolgreich gespeichert",
+            "descriptionLabel": "Beschreibung",
+            "titleLabel": "Titel",
+            "titlePlaceholder": "Geben Sie einen Titel ein",
+            "descriptionPlaceholder": "Geben Sie eine Beschreibung ein",
+            "generate": "Permalink generieren",
+            "create": "Erstellen Sie einen neuen Permalink",
+            "loadingSpinner": "Permalink wird geladen",
+            "subtitle": "Teilen Sie die Ressource mithilfe der generierten Adresse",
+            "errors": {
+                "loading": {
+                    "unknownError": "Beim Laden des Permalinks ist ein Fehler aufgetreten",
+                    "permalinkNotAccessible": "Sie haben keine Berechtigung, auf diesen Permalink zuzugreifen. Bitte wenden Sie sich an den Ressourceneigentümer",
+                    "permalinkDoesNotExist": "Der Permalink, auf den Sie zugreifen möchten, existiert nicht",
+                    "title": "Fehler beim Laden des Peramlinks",
+                    "pleaseLogin": "Dieser Permalink ist nicht öffentlich. Bitte versuchen Sie sich anzumelden",
+                    "notFound": "Permalink nicht gefunden",
+                    "notAccessible": "Permalink nicht zugänglich"
+                },
+                "save": {
+                    "title": "Die Permalink-Generierung ist fehlgeschlagen",
+                    "generic": "Fehler beim Speichern des Permalinks",
+                    "categoryErrorAdmin": "Das Erstellen der fehlenden Kategorie \"{categoryName}\" ist fehlgeschlagen",
+                    "categoryErrorNonAdmin": "Fehlende Kategorie \"{categoryName}\". Bitte wenden Sie sich an den Administrator, um die Kategorie zu erstellen"
+                }
             }
         },
         "snapshot": {

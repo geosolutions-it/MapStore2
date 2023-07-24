@@ -101,13 +101,13 @@ export default ({
         <div id="permalink">
             {settings.name ? (
                 <>
-                    <ShareLink shareTitle="share.permalink.shareLinkTitle" shareUrl={getPermalinkUrl(settings.name)} />
-                    <span className="subtitle">Share the resource using the generated address</span>
+                    <ShareLink shareTitle="permalink.shareLinkTitle" shareUrl={getPermalinkUrl(settings.name)} />
+                    <span className="subtitle"><Message msgId={"permalink.subtitle"}/></span>
 
                     <ShareQRCode shareUrl={getPermalinkUrl(settings.name)} />
                     <div className="create-new">
                         <Button bsStyle="primary" onClick={onReset}>
-                            <Message msgId={"share.permalink.create"}/>
+                            <Message msgId={"permalink.create"}/>
                         </Button>
                     </div>
                 </>
@@ -115,7 +115,7 @@ export default ({
                 <>
                     <FormGroup>
                         <ControlLabel>
-                            <Message msgId={"share.permalink.titleLabel"} />*
+                            <Message msgId={"permalink.titleLabel"} />*
                         </ControlLabel>
                         <FormControl
                             key="permalinkTitle"
@@ -123,13 +123,13 @@ export default ({
                             value={settings.title || ""}
                             name="title"
                             onChange={onChange}
-                            placeholder={"share.permalink.titlePlaceholder"}
+                            placeholder={"permalink.titlePlaceholder"}
                         />
                     </FormGroup>
                     <FormGroup>
                         <ControlLabel>
                             <Message
-                                msgId={"share.permalink.descriptionLabel"}
+                                msgId={"permalink.descriptionLabel"}
                             />
                         </ControlLabel>
                         <FormControl
@@ -139,7 +139,7 @@ export default ({
                             name="description"
                             onChange={onChange}
                             placeholder={
-                                "share.permalink.descriptionPlaceholder"
+                                "permalink.descriptionPlaceholder"
                             }
                         />
                     </FormGroup>
@@ -149,7 +149,7 @@ export default ({
                             checked={settings.allowAllUser}
                             onChange={onChange}
                         >
-                            <Message msgId="share.permalink.accessible" />
+                            <Message msgId="permalink.accessible" />
                         </Checkbox>
                     </FormGroup>
                     <div className="permalink-save">
@@ -158,7 +158,7 @@ export default ({
                             disabled={loading || isEmpty(settings.title)}
                             onClick={onClickSave}
                         >
-                            <Message msgId="share.permalink.generate" />
+                            <Message msgId="permalink.generate" />
                             {loading && <LoadingSpinner />}
                         </Button>
                     </div>
