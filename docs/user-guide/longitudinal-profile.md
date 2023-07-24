@@ -12,7 +12,7 @@ By clicking the **Longitudinal Profile** <img src="../img/button/long-profile-bu
 
 <img src="../img/longitudinal-profile/dropdown-menu-long-profile.jpg" class="ms-docimage"/>
 
-* The **Draw line** to draw a line directly on the map through <img src="../img/button/drawing-line.jpg" class="ms-docbutton"/> button
+* It is possible to draw a line directly on the map through <img src="../img/button/drawing-line.jpg" class="ms-docbutton"/> button
 
 <img src="../img/longitudinal-profile/drawing-line.gif" class="ms-docimage"/>
 
