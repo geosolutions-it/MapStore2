@@ -16,7 +16,7 @@ By clicking the **Longitudinal Profile** <img src="../img/button/long-profile-bu
 
 <img src="../img/longitudinal-profile/drawing-line.gif" class="ms-docimage"/>
 
-* The **Load file** to import linear profile as `JSON`, `ShapeFile` or `DXF`, selected from file system, through <img src="../img/button/import-file.jpg" class="ms-docbutton"/> button
+* In alternative it is also possible to import a linear profile as a vector file (available formats for this are `GeoJSON`, `ShapeFile` or `DXF`),  through <img src="../img/button/import-file.jpg" class="ms-docbutton"/> button
 
 <img src="../img/longitudinal-profile/import-file.gif" class="ms-docimage"/>
 
