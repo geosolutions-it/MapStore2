@@ -2,7 +2,7 @@
 
 *******************
 
-The **Longitudinal Profile** tool allows the user to analyze the altitude or depth data present in digital terrain models or bathymetric surveys and displays the found values in an interactive graphic profile.
+Given a DEM or a bathymetric layer as a source and a provided path on it, this tool allows to calculate the **Longitudinal Profile** and display it within an interactive chart.
 
 !!! note
     By default, the **Longitudinal Profile** plugin is ready to be configured for [application contexts](application-context.md#configure-plugins), and is not available in the default plugin configuration.
