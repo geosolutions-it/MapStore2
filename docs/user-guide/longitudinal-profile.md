@@ -20,7 +20,7 @@ By clicking the **Longitudinal Profile** <img src="../img/button/long-profile-bu
 
 <img src="../img/longitudinal-profile/import-file.gif" class="ms-docimage"/>
 
-* The **Selection to profile** to select a linear layer on [TOC](toc.md) and then click a line feature on map through <img src="../img/button/selection-layer.jpg" class="ms-docbutton"/> button
+* Finally, through <img src="../img/button/selection-layer.jpg" class="ms-docbutton"/> button, the user can also select a vector linear layer in [TOC](toc.md) and then select the line feature representing the desired profile path on map.
 
 <img src="../img/longitudinal-profile/selection-layer.gif" class="ms-docimage"/>
 
