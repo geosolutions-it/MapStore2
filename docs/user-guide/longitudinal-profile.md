@@ -8,7 +8,7 @@ Given a DEM or a bathymetric layer as a source and a provided path on it, this t
     By default, the **Longitudinal Profile** plugin is ready to be configured for [application contexts](application-context.md#configure-plugins), and is not available in the default plugin configuration.
     The plugin works only if the [WPS process](gs-wps-longitudinal-profile-2.24-SNAPSHOT.zip) is configured on the [GeoServer](http://geoserver.org/).
 
-By clicking the **Longitudinal Profile** <img src="../img/button/long-profile-button.jpg" class="ms-docbutton"/> button, available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar), a drop down menu opens and the user can select the way to calculate altitude and distance traveled values, choosing between three options:
+By clicking the **Longitudinal Profile** <img src="../img/button/long-profile-button.jpg" class="ms-docbutton"/> button, available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar), a drop down menu opens so that the user can manage the available options including different ways to calculate the profile:
 
 <img src="../img/longitudinal-profile/dropdown-menu-long-profile.jpg" class="ms-docimage"/>
 
