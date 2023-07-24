@@ -70,7 +70,7 @@ In the **Information** tab are reported all relevant indicators related to the l
 
 * Cumulative elevation loss
 
-* Number of points processed (The number of stitches varies according to the pitch chosen).
+* Number of points processed (the number of points varies according to the pitch chosen).
 
 ## Setting Parameters
 
