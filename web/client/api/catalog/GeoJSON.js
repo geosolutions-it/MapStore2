@@ -10,7 +10,7 @@ export const preprocess = commonPreprocess;
 export const validate = (service) => Observable.of(service);
 export const testService = (service) => Observable.of(service);
 export const textSearch = (url, startPosition, maxRecords, text) => {
-    return axios.get(url).then((data) => {
+    return axios.get(url).then(({data}) => {
         const records = [{
             title: text,
             url: url,
