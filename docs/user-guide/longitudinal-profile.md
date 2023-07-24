@@ -30,7 +30,7 @@ When the geometry of the profile path has been drawn on the map, the **Longitudi
 
 <img src="../img/longitudinal-profile/chart-tab.jpg" class="ms-docimage"/>
 
-The *X axis* of the chart indicates the distance traveled from the starting point of the drawn or imported linear and the *Y axis* indicates the altitude returned by the height source at the coordinates along the profile. The user can hover over the chart to interact between the chart and the line of the map as follows:
+While the *X axis* indicates the distance from the starting point of the provided path, the *Y axis* indicates instead the height of points along the profile calculated from the provided path.  The user can hover over the chart to interact between the chart and the line of the map as follows:
 
 <img src="../img/longitudinal-profile/interact-with-chart.gif" class="ms-docimage"/>
 
