@@ -396,3 +396,18 @@ For the 3D Tiles you can pass also the layer options, to customize the layer. He
 ```
 
 GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My 3D Tiles Layer"],"sources":[{"type":"3dtiles","url":"https://example.com/tileset-pathname/tileset.json"}],"options":[{"title":{"en-US":"LayerTitle","it-IT":"TitoloLivello"}}]}]`
+
+
+It is possible to add GeoJSON layer using the following configuration: 
+
+```json
+{
+"type": "CATALOG:ADD_LAYERS_FROM_CATALOGS",
+"layers": ["My GeoJSON Layer"],
+"sources": [{ "type":"GEOJSON", "url":"https://example.com/example.geojson" }]
+}
+```
+
+GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My GeoJSON Layer"],"sources":[{"type":"GEOJSON","url":"https://example.com/example.geojson"}]}]`
+
+This GeoJSON catalog will return a single record similar to the 3D Tiles catalog and for this reason the name used in the layers array will be used to apply the title to the added vector layer.
