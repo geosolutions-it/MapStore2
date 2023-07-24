@@ -229,6 +229,12 @@ export function cleanAuthParamsFromURL(url) {
     return ConfigUtils.filterUrlParams(url, [getAuthKeyParameter(url)].filter(p => p));
 }
 
+export function getLoginPage() {
+    const { protocol, host } = URL.parse(window.location.href, false);
+    const loginPage = ConfigUtils.getMiscSetting('loginPage');
+    return loginPage ? protocol + '//' + host + loginPage : "";
+}
+
 /**
  * This utility class will get information about the current logged user directly from the store.
  */
@@ -252,7 +258,8 @@ const SecurityUtils = {
     addAuthenticationToSLD,
     getAuthKeyParameter,
     cleanAuthParamsFromURL,
-    getAuthenticationHeaders
+    getAuthenticationHeaders,
+    getLoginPage
 };
 
 export default SecurityUtils;

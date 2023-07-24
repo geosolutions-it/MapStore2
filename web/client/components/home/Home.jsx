@@ -13,11 +13,10 @@ import { Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import Message from '../../components/I18N/Message';
 import ConfirmModal from '../../components/misc/ResizableModal';
-import { get, pick } from "lodash";
+import { pick } from "lodash";
 import ConfigUtils from "../../utils/ConfigUtils";
 export const getPath = () => {
-    const miscSettings = ConfigUtils.getConfigProp('miscSettings');
-    return get(miscSettings, ['homePath'], '/');
+    return ConfigUtils.getMiscSetting('homePath', '/');
 };
 class Home extends React.Component {
     static propTypes = {

@@ -13,17 +13,22 @@ import { logoutWithReload, resetError } from './security';
 import AuthenticationAPI from '../api/GeoStoreDAO';
 
 /**
+ * Go to page
+ * @param {string} page to be redirected to
+ */
+export function goToPage(page) { window.location.href = page; }
+/**
  * Thunk with side effects to trigger set the proper temp cookie and redirect to openID login provider URL.
  * @param {object} entry the provider entry to use for login
  * @param {string} entry.provider the name of the provider configured (e.g. google, keycloak, ...)
  * @param {string} entry.url URL of the entry to use to login. If not passed, `<geostore-base-path>/openid/<provider>/login`.
- * @param {function} goToPage redirect function, useful to mock for testing.
+ * @param {function} goToPageAction redirect function, useful to mock for testing.
  * @returns {function} the think to execute. It doesn't dispatch any action, but sets a cookie to remember the authProvider used.
  * @memberof actions.login
  */
-export function openIDLogin(entry, goToPage = (page) => {window.location.href = page; }) {
+export function openIDLogin(entry, goToPageFn = goToPage) {
     return () => {
-        goToPage(entry?.url ?? `${ ConfigUtils.getConfigProp("geoStoreUrl")}openid/${entry?.provider}/login`);
+        goToPageFn(entry?.url ?? `${ ConfigUtils.getConfigProp("geoStoreUrl")}openid/${entry?.provider}/login`);
     };
 }
 /**

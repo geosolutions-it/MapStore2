@@ -2169,7 +2169,7 @@
                 "loading": {
                     "title": "Error loading context",
                     "pleaseLogin": "Some resource may not be public. Please try to login",
-                    "unknownError": "There was an error loading the map or the context. Please contact the administrator",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access the context and/or map</li> <li>you are trying to access a context and/or map that doesn't exist</li> <li>the context and/or map has been removed</li> <li>the projection of the map is not configured</li></ul> <p>",
                     "notFound": "Resource not found",
                     "notAccessible": "Resource not accessible"
                 },

@@ -9,7 +9,7 @@ import Proj4js from 'proj4';
 import PropTypes from 'prop-types';
 import url from 'url';
 import axios from 'axios';
-import { castArray, isArray, isObject, endsWith, isNil } from 'lodash';
+import { castArray, isArray, isObject, endsWith, isNil, get } from 'lodash';
 import assign from 'object-assign';
 import { Promise } from 'es6-promise';
 import isMobile from 'ismobilejs';
@@ -477,6 +477,16 @@ export const removeConfigProp = function(prop) {
     delete defaultConfig[prop];
 };
 
+/**
+ * Get misc settings from localConfig
+ * @param {string} name of the prop to find
+ * @param {any} defaultVal
+ * @returns {any} value configured in misc settings
+ */
+export const getMiscSetting = (name, defaultVal) => {
+    return get(getConfigProp('miscSettings') ?? {}, name, defaultVal);
+};
+
 const ConfigUtils = {
     PropTypes: {
         center: centerPropType,
@@ -513,7 +523,8 @@ const ConfigUtils = {
     setLayerId,
     getConfigProp,
     setConfigProp,
-    removeConfigProp
+    removeConfigProp,
+    getMiscSetting
 };
 
 export default ConfigUtils;

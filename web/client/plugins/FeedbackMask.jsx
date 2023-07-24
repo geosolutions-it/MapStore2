@@ -22,18 +22,20 @@ import { feedbackMaskSelector } from '../selectors/feedbackmask';
 import { isSharedStory } from '../selectors/geostory';
 import { isLoggedIn } from '../selectors/security';
 import Button from '../components/misc/Button';
+import { getPath } from '../components/home/Home';
 
 const feedbackMaskPluginSelector = createSelector([
     feedbackMaskSelector,
     isLoggedIn,
     state => !get(state, 'security'),
     isSharedStory
-], ({loading, enabled, status, mode, errorMessage, errorMessageParams}, login, alwaysVisible, shared) => ({
+], ({loading, enabled, status, mode, errorMessage, errorMessageType, errorMessageParams}, login, alwaysVisible, shared) => ({
     loading,
     enabled,
     status,
     mode,
     errorMessage,
+    errorMessageType,
     errorMessageParams,
     login,
     alwaysVisible,
@@ -42,7 +44,7 @@ const feedbackMaskPluginSelector = createSelector([
 }));
 
 const HomeButton = connect(() => ({}), {
-    onClick: push.bind(null, '/')
+    onClick: () => push(getPath())
 })(
     ({onClick = () => {}}) => <Button
         bsStyle="primary"

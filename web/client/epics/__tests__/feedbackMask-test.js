@@ -31,6 +31,7 @@ import { loadGeostory, geostoryLoaded, loadGeostoryError } from '../../actions/g
 import { LOGIN_REQUIRED } from '../../actions/security';
 import { onLocationChanged } from 'connected-react-router';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { contextLoadError } from '../../actions/context';
 
 describe('feedbackMask Epics', () => {
 
@@ -220,6 +221,30 @@ describe('feedbackMask Epics', () => {
         {router: {
             location: {
                 pathname: '/geostory/shared/17473'
+            }
+        }
+        });
+    });
+    it('test feedbackMaskPromptLogin on context 404', done => {
+        const ACTIONS_EMITTED = 2;
+        const error = {status: 404, statusText: 'Forbidden'};
+        testEpic(addTimeoutEpic(feedbackMaskPromptLogin, 10), ACTIONS_EMITTED, contextLoadError({error}), actions => {
+            expect(actions.length).toBe(ACTIONS_EMITTED);
+            actions.map((action) => {
+                switch (action.type) {
+                case TEST_TIMEOUT:
+                    break;
+                case LOGIN_REQUIRED:
+                    break;
+                default:
+                    done(new Error("Action not recognized"));
+                }
+            });
+            done();
+        },
+        {router: {
+            location: {
+                pathname: '/context/Context/1'
             }
         }
         });

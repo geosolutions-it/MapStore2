@@ -25,6 +25,7 @@ import { LOGIN_SUCCESS, LOGOUT, LOGIN_PROMPT_CLOSED, loginRequired } from '../ac
 import { LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR } from '../actions/dashboard';
 import { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } from '../actions/geostory';
 import { LOAD_CONTEXT, LOAD_FINISHED, CONTEXT_LOAD_ERROR } from '../actions/context';
+import { goToPage } from '../actions/login';
 
 import {
     START_RESOURCE_LOAD as LOAD_CONTEXT_CONTEXTCREATOR,
@@ -39,6 +40,8 @@ import { isLoggedIn } from '../selectors/security';
 import { isSharedStory } from '../selectors/geostory';
 import { pathnameSelector } from '../selectors/router';
 import { getGeostoryMode } from '../utils/GeoStoryUtils';
+import { getLoginPage } from '../utils/SecurityUtils';
+import { getMiscSetting } from '../utils/ConfigUtils';
 
 
 /**
@@ -200,20 +203,22 @@ export const feedbackMaskPromptLogin = (action$, store) => // TODO: separate log
         .filter((action) => {
             const pathname = pathnameSelector(store.getState());
             return action.error
-                && action.error.status === 403
+                && [403].concat([CONTEXT_LOAD_ERROR].includes(action.type) ? 404 : []).includes(action.error.status)
                 && pathname.indexOf("new") === -1 && !(pathname.match(/dashboard/) !== null && pathname.match(/dashboard\/[0-9]+/) === null); // new map geostory and dashboard has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
         })
         .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(
-            () =>
-                Rx.Observable.of(loginRequired()) // prompt login
+            () => {
+                const loginPage = getLoginPage();
+                const homePage = getMiscSetting('homePath', '/');
+                return Rx.Observable.of(loginPage ? goToPage(loginPage) : loginRequired()) // prompt login panel or redirect to login page
                     .concat(
                         action$.ofType(LOGIN_PROMPT_CLOSED) // then if for login close
                             .take(1)
-                            .switchMap(() => Rx.Observable.of(feedbackMaskLoading(), push('/'))) // go to home page
+                            .switchMap(() => Rx.Observable.of(feedbackMaskLoading(), push(homePage))) // go to home page
 
-                    ).takeUntil(action$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE))
-        );
+                    ).takeUntil(action$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE));
+            });
 
 export const redirectUnauthorizedUserOnNewLoadError = (action$, { getState = () => {}}) =>
     action$.ofType(MAP_CONFIG_LOAD_ERROR, LOAD_GEOSTORY_ERROR, DASHBOARD_LOAD_ERROR)
@@ -223,7 +228,7 @@ export const redirectUnauthorizedUserOnNewLoadError = (action$, { getState = () 
              pathnameSelector(getState()).match(/dashboard\/[0-9]+/) === null &&
              pathnameSelector(getState()).match(/dashboard/) !== null))
         .filter(() => !isLoggedIn(getState()))
-        .switchMap(() => Rx.Observable.of(push('/'))); // go to home page
+        .switchMap(() => Rx.Observable.of(push(getMiscSetting('homePath', '/')))); // go to home page
 
 /**
  * Epics for feedbackMask functionality

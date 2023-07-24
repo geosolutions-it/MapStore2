@@ -31,10 +31,13 @@ describe('Test the feedbackMask reducer', () => {
         expect(state.loading).toEqual(false);
     });
     it('test feedbackMaskLoaded', () => {
-        const state = feedbackMask({}, feedbackMaskEnabled(true, {status: 404, messageId: 'message'}));
+        const messageId = '<p>message</p>';
+        const errorMessageType = 'html';
+        const state = feedbackMask({}, feedbackMaskEnabled(true, {status: 404, messageId, errorMessageType}));
         expect(state.enabled).toEqual(true);
         expect(state.status).toEqual(404);
-        expect(state.errorMessage).toEqual('message');
+        expect(state.errorMessage).toEqual(messageId);
+        expect(state.errorMessageType).toEqual(errorMessageType);
     });
     it('test detectedNewPage', () => {
         const state = feedbackMask({}, detectedNewPage('viewer'));

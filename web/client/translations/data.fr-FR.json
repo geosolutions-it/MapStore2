@@ -2170,7 +2170,7 @@
                     "title": "Erreur lors du chargement du contexte",
                     "notAccessible": "Vous n'êtes pas autorisé à accéder à certaines ressources. Veuillez contacter le propriétaire des ressources",
                     "pleaseLogin": "Certaines ressources ne sont pas publiques. Veuillez vous connecter",
-                    "unknownError": "Il y avait une erreur au chargement de la carte ou du contexte. Veuillez contacter l'administrateur",
+                    "unknownError": "<p><small>L'une des raisons suivantes peut en être la cause :</small> <ul><li>vous n'avez pas la permission d'accéder au contexte et/ou à la carte</li> <li>vous essayez d'accéder à un contexte et/ou à une carte qui n'existe pas</li> <li>le contexte et/ou la carte a été supprimé</li> <li>la projection de la carte n'est pas configurée</li></ul> <p>",
                     "notFound": "Ressource introuvable"
                 },
                 "context": {

@@ -25,7 +25,8 @@ function feedbackMask(state = {}, action) {
             enabled: action.enabled,
             status: action.error && action.error.status,
             errorMessage: action.error && action.error.messageId,
-            errorMessageParams: action.error && action.error.errorMessageParams
+            errorMessageParams: action.error && action.error.errorMessageParams,
+            errorMessageType: action.error && action.error.errorMessageType
         };
     case DETECTED_NEW_PAGE:
         return {

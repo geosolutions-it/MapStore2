@@ -179,14 +179,14 @@ describe('context epics', () => {
         /*
          * check error actions
          */
-        const checkLoadErrors = (startActions, initialState, messageId, done) => {
+        const checkLoadErrors = (startActions, initialState, messageId, errorStatus, done) => {
             testEpic(loadContextAndMap, 5, startActions, ([loadingAction, clearMapTemplatesAction, loadMapAction, errorAction, loadEndAction]) => {
                 expect(loadingAction.type).toBe(LOADING);
                 expect(loadingAction.value).toBe(true);
                 expect(clearMapTemplatesAction.type).toBe(CLEAR_MAP_TEMPLATES);
                 expect(loadMapAction.type).toBe(LOAD_MAP_CONFIG);
                 expect(errorAction.type).toBe(CONTEXT_LOAD_ERROR);
-                expect(errorAction.error.status).toBe(403);
+                expect(errorAction.error.status).toBe(errorStatus);
                 expect(errorAction.error.messageId).toBe(messageId);
                 expect(loadEndAction.type).toBe(LOADING);
                 expect(loadEndAction.value).toBe(false);
@@ -208,7 +208,7 @@ describe('context epics', () => {
                     loadContext({ mapId, contextName }),
                     configureError({status: 403}) // THIS ACTION FAKES MAP LOAD FLOW END
                 ];
-                checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.map.pleaseLogin', done);
+                checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.map.pleaseLogin', 403, done);
 
             });
             it('403 forbidden, logged in', done => {
@@ -217,7 +217,7 @@ describe('context epics', () => {
                     loadContext({ mapId, contextName }),
                     configureError({ status: 403 }) // THIS ACTION FAKES MAP LOAD FLOW END
                 ];
-                checkLoadErrors(actions, LOGGED_STATE, 'context.errors.map.notAccessible', done);
+                checkLoadErrors(actions, LOGGED_STATE, 'context.errors.map.notAccessible', 403, done);
 
             });
         });
@@ -228,7 +228,7 @@ describe('context epics', () => {
                     loadContext({ mapId, contextName }),
                     configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
                 ];
-                checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.context.pleaseLogin', done);
+                checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.context.pleaseLogin', 403, done);
 
             });
             it('403 forbidden, logged in', done => {
@@ -237,13 +237,39 @@ describe('context epics', () => {
                     loadContext({ mapId, contextName }),
                     configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
                 ];
-                checkLoadErrors(actions, LOGGED_STATE, 'context.errors.context.notAccessible', done);
+                checkLoadErrors(actions, LOGGED_STATE, 'context.errors.context.notAccessible', 403, done);
+            });
+            it('404, logged in', done => {
+                createContextResponse(404);
+                const actions = [
+                    loadContext({ mapId, contextName }),
+                    configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
+                ];
+                checkLoadErrors(actions, LOGGED_STATE, 'context.errors.context.unknownError', 404, done);
+            });
+            it('404, not logged in', done => {
+                createContextResponse(404);
+                const actions = [
+                    loadContext({ mapId, contextName }),
+                    configureMap() // THIS ACTION FAKES MAP LOAD FLOW END
+                ];
+                checkLoadErrors(actions, NOT_LOGGED_STATE, 'context.errors.context.notFound', 404, done);
+
             });
         });
     });
     describe('handleLoginLogoutContextReload', () => {
         it('reload when forbidden, then the user login', done => {
             const actions = [loadContext({ mapId, contextName }), contextLoadError({ error: { status: 403 } }), loginSuccess()];
+            testEpic(handleLoginLogoutContextReload, 1, actions, ([reloadAction]) => {
+                expect(reloadAction.type).toBe(LOAD_CONTEXT);
+                expect(reloadAction.mapId).toBe(mapId);
+                expect(reloadAction.contextName).toBe(contextName);
+                done();
+            });
+        });
+        it('reload when 404, then the user login', done => {
+            const actions = [loadContext({ mapId, contextName }), contextLoadError({ error: { status: 404 } }), loginSuccess()];
             testEpic(handleLoginLogoutContextReload, 1, actions, ([reloadAction]) => {
                 expect(reloadAction.type).toBe(LOAD_CONTEXT);
                 expect(reloadAction.mapId).toBe(mapId);
