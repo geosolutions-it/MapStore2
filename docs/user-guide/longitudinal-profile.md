@@ -58,7 +58,7 @@ The **Chart toolbar**, displayed in the right corner of the chart, allows the us
 
 ## Information
 
-In the **Information** tab, the most important characteristics of the profile are highlighted, in particular it is reported:
+In the **Information** tab are reported all relevant indicators related to the longitudinal profile calculation. In particular it is reported:
 
 <img src="../img/longitudinal-profile/profile-info.jpg" class="ms-docimage"/>
 
