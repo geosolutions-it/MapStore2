@@ -52,7 +52,7 @@ The **Chart toolbar**, displayed in the right corner of the chart, allows the us
 
 * **Reset axes** to return the chart to its initial state through the <img src="../img/button/reset_axes_chart.jpg" class="ms-docbutton"/> button.
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) also allows to exporting the *Longitudinal Profile* as `CSV`, `PNG` or `PDF`.
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) also allows to export the *Longitudinal Profile* as `CSV`, `PNG` or `PDF` file.
 
 <img src="../img/longitudinal-profile/export-profile.jpg" class="ms-docimage"/>
 
