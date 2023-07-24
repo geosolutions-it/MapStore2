@@ -1354,8 +1354,8 @@
                 "titleLabel": "Title",
                 "titlePlaceholder": "Enter a title",
                 "descriptionPlaceholder": "Enter a description",
-                "save": "Save",
-                "create": "Create New",
+                "generate": "Generate permalink",
+                "create": "Create a new permalink",
                 "loadingSpinner": "Loading Permalink",
                 "errors": {
                     "loading": {

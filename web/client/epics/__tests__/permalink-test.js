@@ -48,6 +48,11 @@ const state = {
             id: 'layer_02',
             title: 'title_02'
         }]
+    },
+    router: {
+        location: {
+            pathname: "/permalink/10"
+        }
     }
 };
 const setApiGetResource = (_api, getResource) => {
@@ -267,7 +272,7 @@ describe('Permalink Epics', () => {
                     }
                 });
                 done();
-            }, {});
+            }, state);
     });
     it("loadPermalinkEpic on login success", (done) => {
         const NUMBER_OF_ACTIONS = 2;
@@ -289,13 +294,7 @@ describe('Permalink Epics', () => {
                     }
                 });
                 done();
-            }, {
-                router: {
-                    location: {
-                        pathname: "/permalink/10"
-                    }
-                }
-            });
+            }, state);
     });
     it("loadPermalinkEpic on load permalink - context", (done) => {
         const getResource = () => Rx.Observable.of({name: "test", attributes: {type: "context", pathTemplate: "/context/${name}?category=PERMALINK"}});
@@ -319,7 +318,7 @@ describe('Permalink Epics', () => {
                     }
                 });
                 done();
-            }, {});
+            }, state);
     });
 
     it("loadPermalinkEpic on error - not found", (done) => {
@@ -350,7 +349,7 @@ describe('Permalink Epics', () => {
                     }
                 });
                 done();
-            }, {});
+            }, state);
     });
     it("loadPermalinkEpic on error forbidden and not logged in", (done) => {
         const getResource = () => Rx.Observable.throw({status: 403});
@@ -380,7 +379,7 @@ describe('Permalink Epics', () => {
                     }
                 });
                 done();
-            }, {});
+            }, state);
     });
     it("loadPermalinkEpic on error forbidden and logged in", (done) => {
         const getResource = () => Rx.Observable.throw({status: 403});
@@ -411,6 +410,7 @@ describe('Permalink Epics', () => {
                 });
                 done();
             }, {
+                ...state,
                 security: {
                     user: {}
                 }
@@ -445,6 +445,7 @@ describe('Permalink Epics', () => {
                 });
                 done();
             }, {
+                ...state,
                 security: {
                     user: {}
                 }

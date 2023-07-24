@@ -1353,8 +1353,8 @@
                 "titleLabel": "Título",
                 "titlePlaceholder": "Introduce un título",
                 "descriptionPlaceholder": "Introduce una descripción",
-                "save": "Ahorrar",
-                "create": "Crear nuevo",
+                "generate": "Generar enlace permanente",
+                "create": "Crear un nuevo enlace permanente",
                 "loadingSpinner": "Cargando Enlace permanente",
                 "errors": {
                     "loading": {

@@ -103,10 +103,13 @@ export default ({
                 <>
                     <ShareLink shareTitle="share.permalink.shareLinkTitle" shareUrl={getPermalinkUrl(settings.name)} />
                     <span className="subtitle">Share the resource using the generated address</span>
-                    <Button className="create-new" bsStyle="primary" onClick={onReset}>
-                        <Message msgId={"share.permalink.create"}/>
-                    </Button>
+
                     <ShareQRCode shareUrl={getPermalinkUrl(settings.name)} />
+                    <div className="create-new">
+                        <Button bsStyle="primary" onClick={onReset}>
+                            <Message msgId={"share.permalink.create"}/>
+                        </Button>
+                    </div>
                 </>
             ) : (
                 <>
@@ -155,7 +158,7 @@ export default ({
                             disabled={loading || isEmpty(settings.title)}
                             onClick={onClickSave}
                         >
-                            <Message msgId="share.permalink.save" />
+                            <Message msgId="share.permalink.generate" />
                             {loading && <LoadingSpinner />}
                         </Button>
                     </div>

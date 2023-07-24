@@ -1392,8 +1392,8 @@
                 "titleLabel": "Titel",
                 "titlePlaceholder": "Geben Sie einen Titel ein",
                 "descriptionPlaceholder": "Geben Sie eine Beschreibung ein",
-                "save": "Speichern",
-                "create": "Erstelle neu",
+                "generate": "Permalink generieren",
+                "create": "Erstellen Sie einen neuen Permalink",
                 "loadingSpinner": "Permalink wird geladen",
                 "errors": {
                     "loading": {

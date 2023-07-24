@@ -159,6 +159,7 @@ export const savePermalinkEpic = (action$, { getState = () => {} }) =>
 export const loadPermalinkEpic = (action$, { getState = () => {} } = {}) =>
     action$
         .ofType(LOAD_PERMALINK, LOGIN_SUCCESS)
+        .filter(() => pathnameSelector(getState())?.split('/')?.[1] === "permalink")
         .switchMap(({ id: pid } = {}) => {
             const state = getState();
             const hash = pid ?? pathnameSelector(state)?.split("/")?.pop();

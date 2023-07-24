@@ -1353,8 +1353,8 @@
                 "titleLabel": "Titre",
                 "titlePlaceholder": "Entrez un titre",
                 "descriptionPlaceholder": "Entrez une description",
-                "save": "Sauvegarder",
-                "create": "Créer un nouveau",
+                "generate": "Générer un permalien",
+                "create": "Créer un nouveau lien permanent",
                 "loadingSpinner": "Chargement du lien permanent",
                 "errors": {
                     "loading": {
