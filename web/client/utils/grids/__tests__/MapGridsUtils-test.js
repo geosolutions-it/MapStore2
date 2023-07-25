@@ -90,13 +90,15 @@ describe('Test MapGridsUtils createGrid', () => {
             0,
             0
         );
-        expect(grid.xLines.length).toBe(3);
+        expect(grid.xLines.length).toBe(5);
         expect(grid.yLines.length).toBe(3);
         expect(grid.xLabels.length).toBe(0);
         expect(grid.yLabels.length).toBe(0);
-        expect(grid.xLines[0]).toEqual([-45, -45, -45, 45]);
-        expect(grid.xLines[1]).toEqual([ 0, -45, 0, 45]);
-        expect(grid.xLines[2]).toEqual([45, -45, 45, 45]);
+        expect(grid.xLines[0]).toEqual([-88, -45, -88, 45]);
+        expect(grid.xLines[1]).toEqual([ -45, -45, -45, 45 ]);
+        expect(grid.xLines[2]).toEqual([0, -45, 0, 45]);
+        expect(grid.xLines[3]).toEqual([ 45, -45, 45, 45 ]);
+        expect(grid.xLines[4]).toEqual([ 88, -45, 88, 45 ]);
         expect(grid.yLines[0]).toEqual([-88, -45, 88, -45 ]);
         expect(grid.yLines[1]).toEqual([-88, 0, 88, 0]);
         expect(grid.yLines[2]).toEqual([-88, 45, 88, 45]);
@@ -251,10 +253,10 @@ describe("getGridGeoJson", () => {
             zoom: 5
         });
         expect(geoJson.type).toBe("FeatureCollection");
-        expect(geoJson.features.length).toBe(6);
-        expect(geoJson.features[0].geometry.coordinates.map(p => p.map(Math.round))).toEqual([[ 6, 40 ], [ 6, 44 ]]);
-        expect(geoJson.features[3].geometry.coordinates.map(p => p.map(Math.round))).toEqual([[ 5, 40 ], [ 10, 40 ]]);
-        expect(geoJson.features[5].geometry.coordinates.map(p => p.map(Math.round))).toEqual([[5, 44], [10, 44]]);
+        expect(geoJson.features.length).toBe(7);
+        expect(geoJson.features[1].geometry.coordinates.map(p => p.map(Math.round))).toEqual([[ 6, 40 ], [ 6, 44 ]]);
+        expect(geoJson.features[4].geometry.coordinates.map(p => p.map(Math.round))).toEqual([[ 5, 40 ], [ 10, 40 ]]);
+        expect(geoJson.features[6].geometry.coordinates.map(p => p.map(Math.round))).toEqual([[5, 44], [10, 44]]);
     });
     it("map and grid in EPSG:4326 and zoom 5, with labels", () => {
         const geoJson = getGridGeoJson({
@@ -265,14 +267,14 @@ describe("getGridGeoJson", () => {
             withLabels: true
         });
         expect(geoJson.type).toBe("FeatureCollection");
-        expect(geoJson.features.length).toBe(12);
-        expect(geoJson.features[7].geometry.coordinates).toEqual([ 8, 40 ]);
-        expect(geoJson.features[7].properties.valueText).toEqual("8° 00′ 00″ E");
-        expect(geoJson.features[8].geometry.coordinates).toEqual([ 10, 40 ]);
-        expect(geoJson.features[8].properties.valueText).toEqual("10° 00′ 00″ E");
-        expect(geoJson.features[9].geometry.coordinates).toEqual([ 10, 40 ]);
-        expect(geoJson.features[9].properties.valueText).toEqual("40° 00′ 00″ N");
-        expect(geoJson.features[11].geometry.coordinates).toEqual([ 10, 44 ]);
-        expect(geoJson.features[11].properties.valueText).toEqual("44° 00′ 00″ N");
+        expect(geoJson.features.length).toBe(14);
+        expect(geoJson.features[9].geometry.coordinates).toEqual([ 8, 40 ]);
+        expect(geoJson.features[9].properties.valueText).toEqual("8° 00′ 00″ E");
+        expect(geoJson.features[10].geometry.coordinates).toEqual([ 10, 40 ]);
+        expect(geoJson.features[10].properties.valueText).toEqual("10° 00′ 00″ E");
+        expect(geoJson.features[11].geometry.coordinates).toEqual([ 10, 40 ]);
+        expect(geoJson.features[11].properties.valueText).toEqual("40° 00′ 00″ N");
+        expect(geoJson.features[13].geometry.coordinates).toEqual([ 10, 44 ]);
+        expect(geoJson.features[13].properties.valueText).toEqual("44° 00′ 00″ N");
     });
 });

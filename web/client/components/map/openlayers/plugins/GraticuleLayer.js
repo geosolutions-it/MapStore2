@@ -12,8 +12,10 @@ import Graticule from '../../../../utils/openlayers/Graticule';
 import {Stroke, Fill, Text, Style} from 'ol/style';
 import {getStyle} from "../VectorStyle";
 
-function create(options, map) {
-    let graticule = new Graticule({
+function create(options) {
+    const graticule = new Graticule({
+        // force graticule on foreground with zIndex
+        zIndex: Infinity,
         strokeStyle: options.style ? getStyle(options).getStroke() : new Stroke({
             color: 'rgba(255,120,0,0.9)',
             width: 2,
@@ -72,21 +74,13 @@ function create(options, map) {
         xLabelFormatter: options.xLabelFormatter,
         yLabelFormatter: options.yLabelFormatter
     });
-    graticule.setMap(map);
-
-    return {
-        detached: true,
-        remove: () => {
-            graticule.setMap(null);
-        }
-    };
+    return graticule;
 }
 
 Layers.registerType('graticule', {
     create,
     update(layer, newOptions, oldOptions, map) {
         if (newOptions.srs !== oldOptions.srs) {
-            layer.remove();
             return create(newOptions, map);
         }
         return null;

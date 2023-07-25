@@ -329,16 +329,16 @@ export function createGrid(interval, mapProjection, gridProjection, extent, proj
         projMinX,
         projMaxX
     );
-    const leftPoints = orderBy(linePoints(centerX, -interval, projMinX, centerX));
-    const rightPoints = orderBy(linePoints(centerX, interval, centerX, projMaxX));
+    const leftPoints = orderBy(linePoints(centerX, -interval, minX, centerX));
+    const rightPoints = orderBy(linePoints(centerX, interval, centerX, maxX));
 
     const centerY = clamp(
         Math.floor(gridCenterY / interval) * interval,
         projMinY,
         projMaxY
     );
-    const downPoints = orderBy(linePoints(centerY, -interval, projMinY, centerY));
-    const upPoints = orderBy(linePoints(centerY, interval, centerY, projMaxY));
+    const downPoints = orderBy(linePoints(centerY, -interval, minY, centerY));
+    const upPoints = orderBy(linePoints(centerY, interval, centerY, maxY));
 
     const xLines = limitTo([...leftPoints, centerX, ...rightPoints]
         .map(p => getXLine(p, minY, maxY, squaredTolerance, gridProjection || "EPSG:4326", mapProjection))

@@ -621,9 +621,9 @@ export default class MeasurementSupport extends React.Component {
             })
         });
 
-        this.clickListener = this.props.map.on('click', () => this.updateMeasurementResults(this.props));
+        this.clickListener = this.props.map.on('click', this.updateMeasurementResults.bind(this, this.props));
         if (this.props.updateOnMouseMove) {
-            this.props.map.on('pointermove', () => this.updateMeasurementResults(this.props));
+            this.props.map.on('pointermove', this.updateMeasurementResults.bind(this, this.props));
         }
 
         this.props.map.on('pointermove', (evt) => this.pointerMoveHandler(evt));
@@ -896,10 +896,10 @@ export default class MeasurementSupport extends React.Component {
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
             this.sketchFeature = null;
-            this.props.map.un('click', () => this.updateMeasurementResults(this.props), this);
+            this.props.map.un('click', this.updateMeasurementResults.bind(this, this.props), this);
             unByKey(this.clickListener);
             if (this.props.updateOnMouseMove) {
-                this.props.map.un('pointermove', () => this.updateMeasurementResults(this.props), this);
+                this.props.map.un('pointermove', this.updateMeasurementResults.bind(this, this.props), this);
             }
         }
     };

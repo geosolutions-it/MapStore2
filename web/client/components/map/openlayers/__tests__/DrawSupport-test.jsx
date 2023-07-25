@@ -12,11 +12,13 @@ import assign from 'object-assign';
 import DrawSupport from '../DrawSupport';
 import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
 import {circle, geomCollFeature} from '../../../../test-resources/drawsupport/features';
-import {IMAGE} from '../../../../utils/openlayers/DrawSupportUtils';
 import {Map, View, Feature} from 'ol';
 import {Point, Circle, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString} from 'ol/geom';
 import Collection from 'ol/Collection';
 import VectorSource from "ol/source/Vector";
+import VectorLayer from 'ol/layer/Vector';
+import ImageLayer from 'ol/layer/Image';
+import ImageWMS from 'ol/source/ImageWMS';
 
 const viewOptions = {
     projection: 'EPSG:3857',
@@ -136,7 +138,7 @@ describe('Test DrawSupport', () => {
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point"/>, document.getElementById("container"));
         ReactDOM.render(
-            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="LineString  "/>, document.getElementById("container"));
+            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="LineString"/>, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(2);
         expect(spyAddInteraction.calls.length).toBe(2);
     });
@@ -2480,11 +2482,14 @@ describe('Test DrawSupport', () => {
                 })
             }),
             getLayers: () => ({
-                getArray: () => [{
-                    get: () => 'snap_layer_1',
-                    getSource: () => new VectorSource(),
-                    type: 'VECTOR'
-                }]
+                getArray: () => [
+                    new VectorLayer({
+                        msId: 'snap_layer_1',
+                        source: new VectorSource({
+                            features: []
+                        })
+                    })
+                ]
             })
         };
 
@@ -2699,11 +2704,12 @@ describe('Test DrawSupport', () => {
                 })
             }),
             getLayers: () => ({
-                getArray: () => [{
-                    get: () => 'snap_layer_1',
-                    getSource: () => new VectorSource(),
-                    type: IMAGE
-                }]
+                getArray: () => [
+                    new ImageLayer({
+                        msId: 'snap_layer_1',
+                        source: new ImageWMS()
+                    })
+                ]
             })
         };
 

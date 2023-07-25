@@ -220,7 +220,7 @@
     "object-assign": "4.1.1",
     "object-fit-images": "3.2.4",
     "ogc-schemas": "2.6.1",
-    "ol": "5.3.0",
+    "ol": "7.4.0",
     "pdfmake": "0.2.7",
     "pdfviewer": "0.3.2",
     "plotly.js-cartesian-dist": "2.5.1",

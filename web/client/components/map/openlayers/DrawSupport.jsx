@@ -483,14 +483,17 @@ export default class DrawSupport extends React.Component {
         if (!snapping) return;
         const mapLayerInstance = this.getLayerInstance(snappingLayerInstance.id);
         const layerType = snappingLayerInstance.type;
-
+        // type is not exposed anymore
+        // we could take the name from the constructor instead
+        const mapLayerInstanceType = (mapLayerInstance?.constructor?.name);
         this.removeSnapInteraction();
         if (mapLayerInstance) {
-            switch (mapLayerInstance?.type) {
+            switch (mapLayerInstanceType) {
             case VECTOR:
                 this.snapInteraction = new Snap({...snapConfig, source: mapLayerInstance.getSource()});
                 break;
-            case TILE: case IMAGE:
+            case TILE:
+            case IMAGE:
                 if (layerType === 'wms') {
                     const source = this.getWMSSnapSource(snappingLayerInstance, snapConfig);
                     this.snapLayer = new VectorLayer({
@@ -797,7 +800,9 @@ export default class DrawSupport extends React.Component {
     drawPropertiesForGeometryType = (geometryType, maxPoints, source, newProps = {}) => {
         let drawBaseProps = {
             source: this.drawSource || source,
-            type: /** @type {ol.geom.GeometryType} */ geometryType,
+            // type is mandatory in new version
+            // if it's not provided we get an error
+            type: /** @type {ol.geom.GeometryType} */ geometryType ?? 'Point',
             style: geometryType === "Marker" ? getMarkerStyle(newProps.style) : new Style({
                 fill: new Fill({
                     color: 'rgba(255, 255, 255, 0.2)'
@@ -962,10 +967,14 @@ export default class DrawSupport extends React.Component {
         return evtKey;
     };
 
-    addDrawOrEditInteractions = (newProps) => {
+    unSingleClickCallback() {
         if (this.state && this.state.keySingleClickCallback) {
             unByKey(this.state.keySingleClickCallback);
         }
+    }
+
+    addDrawOrEditInteractions = (newProps) => {
+        this.unSingleClickCallback();
         const singleClickCallback = (event) => {
             if (this.drawSource && newProps.options) {
                 let previousFeatures = this.drawSource.getFeatures();
@@ -1267,7 +1276,7 @@ export default class DrawSupport extends React.Component {
 
         if (this.modifyInteraction) {
             this.props.map.removeInteraction(this.modifyInteraction);
-            this.props.map.un('singleclick');
+            this.unSingleClickCallback();
         }
 
         if (this.translateInteraction) {

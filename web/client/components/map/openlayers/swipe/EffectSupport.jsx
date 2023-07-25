@@ -8,23 +8,23 @@
 
 import { useEffect, useCallback } from 'react';
 
-const verticalCut = (layer, verticalCutPrecomposeCallback, postcomposeCallback) => {
-    layer.on('precompose', verticalCutPrecomposeCallback);
-    layer.on('postcompose', postcomposeCallback);
+const verticalCut = (layer, verticalCutPrerenderCallback, postrenderCallback) => {
+    layer.on('prerender', verticalCutPrerenderCallback);
+    layer.on('postrender', postrenderCallback);
 };
 
-const horizontalCut = (layer, horizontalCutPrecomposeCallback, postcomposeCallback) => {
-    layer.on('precompose', horizontalCutPrecomposeCallback);
-    layer.on('postcompose', postcomposeCallback);
+const horizontalCut = (layer, horizontalCutPrerenderCallback, postrenderCallback) => {
+    layer.on('prerender', horizontalCutPrerenderCallback);
+    layer.on('postrender', postrenderCallback);
 };
 
-const circleCut = (layer, circleCutPrecomposeCallback, postcomposeCallback) => {
-    layer.on('precompose', circleCutPrecomposeCallback);
-    layer.on('postcompose', postcomposeCallback);
+const circleCut = (layer, circleCutPrerenderCallback, postrenderCallback) => {
+    layer.on('prerender', circleCutPrerenderCallback);
+    layer.on('postrender', postrenderCallback);
 };
 
 const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleCutProp }) => {
-    const verticalCutPrecomposeCallback = useCallback((event) => {
+    const verticalCutPrerenderCallback = useCallback((event) => {
         let ctx = event.context;
         const width = getWidth() * map.pixelRatio_;
         ctx.save();
@@ -34,12 +34,12 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
         ctx.clip();
     }, [ layerId, type ]);
 
-    const postcomposeCallback = useCallback((event) => {
+    const postrenderCallback = useCallback((event) => {
         let ctx = event.context;
         ctx.restore();
     }, [ layerId, type ]);
 
-    const horizontalCutPrecomposeCallback = useCallback((event) => {
+    const horizontalCutPrerenderCallback = useCallback((event) => {
         let ctx = event.context;
         const height = getHeight() * map.pixelRatio_;
         ctx.save();
@@ -48,7 +48,7 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
         ctx.clip();
     }, [ layerId, type ]);
 
-    const circleCutPrecomposeCallback = useCallback((event) => {
+    const circleCutPrerenderCallback = useCallback((event) => {
         let ctx = event.context;
         let pixelRatio = event.frameState.pixelRatio;
         ctx.save();
@@ -71,23 +71,23 @@ const EffectSupport = ({ map, layer: layerId, type, getWidth, getHeight, circleC
         if (layer) {
             switch (type) {
             case "cut-vertical":
-                verticalCut(layer, verticalCutPrecomposeCallback, postcomposeCallback);
+                verticalCut(layer, verticalCutPrerenderCallback, postrenderCallback);
                 break;
             case "cut-horizontal":
-                horizontalCut(layer, horizontalCutPrecomposeCallback, postcomposeCallback);
+                horizontalCut(layer, horizontalCutPrerenderCallback, postrenderCallback);
                 break;
             case "circle":
-                circleCut(layer, circleCutPrecomposeCallback, postcomposeCallback);
+                circleCut(layer, circleCutPrerenderCallback, postrenderCallback);
                 break;
             default:
                 break;
             }
             map.render();
             return () => {
-                layer.un('precompose', verticalCutPrecomposeCallback);
-                layer.un('precompose', horizontalCutPrecomposeCallback);
-                layer.un('precompose', circleCutPrecomposeCallback);
-                layer.un('postcompose', postcomposeCallback);
+                layer.un('prerender', verticalCutPrerenderCallback);
+                layer.un('prerender', horizontalCutPrerenderCallback);
+                layer.un('prerender', circleCutPrerenderCallback);
+                layer.un('postrender', postrenderCallback);
                 map.render();
             };
         }
