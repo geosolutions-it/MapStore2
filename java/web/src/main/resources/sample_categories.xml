@@ -24,4 +24,7 @@
     <Category>
         <name>USERSESSION</name>
     </Category>
+    <Category>
+        <name>PERMALINK</name>
+    </Category>
 </CategoryList>

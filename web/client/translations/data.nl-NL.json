@@ -43,7 +43,7 @@
           "githubUrl": "Open github tree in nieuw tabblad"
         },
         "errorPage": {
-            "title":"Ops, er is iets misgegaan.",
+            "title":"Oeps, er is iets misgegaan.",
             "subtitle":"Klik op het onderstaande pictogram om MapStore opnieuw te laden",
             "description":"Als u deze fout wilt melden, kunt u onze mailinglijst een e-mail sturen",
             "descriptionAdmin":"Neem contact op met de beheerder"
@@ -69,7 +69,7 @@
             "name": "Naam",
             "group": "Groep",
             "general": "Algemeen",
-	    "description": "Beschrijving",
+	          "description": "Beschrijving",
             "display": "Weergave",
             "style": "Stijl",
             "transparent": "Transparant",
@@ -112,6 +112,12 @@
             "templateError": "De server geeft een foutmelding bij het toepassen van het sjabloon; gelieve het sjabloon te controleren",
             "templatePreview": "Sjabloon voorbeeld",
             "heightOffset": "Hoogteverschuiving (m)",
+            "wmsLayerTileSize": "Tegelgrootte (WMS)",
+            "serverType": "Type server",
+            "serverTypeOption": {
+                "noVendor": "Geen 'Vendor'",
+                "geoserver": "GeoServer"
+            },
 	    "visibilityLimits": {
                 "title": "Zichtbaarheidslimieten",
                 "serverValuesUpdateUndefined": "De server heeft geen limieten voor de zichtbaarheid van de schaal voor deze laag opgegeven",
@@ -479,7 +485,7 @@
                     "notFound": "Kaart niet gevonden",
                     "notAccessible": "Kaart niet toegankelijk",
                     "unknownError": "<p> <small> Een van de volgende redenen kan de oorzaak zijn: </small> <ul> <li> je hebt geen toestemming om de kaart te openen </li> <li> je probeert een kaart te openen dat niet bestaat </li> <li> de kaart is verwijderd </li> <li> de projectie van de kaart is niet geconfigureerd </li> </ul> <p>",
-                    "projectionError": "De projectie {projectie} van de kaart is niet geconfigureerd",
+                    "projectionError": "De projectie {projection} van de kaart is niet geconfigureerd",
                     "title" : "Fout bij het laden van de kaart"
                 }
             }
@@ -740,7 +746,25 @@
             "selectTool": "Selecteer een meetinstrument",
             "exportToGeoJSON": "Exporteer naar GeoJSON",
             "resetTooltip": "Verwijder metingen",
-            "addAsLayer": "Voeg toe als laag"
+            "addAsLayer": "Voeg toe als laag",
+            "polylineDistance3DMeasure": "Meet afstand in 3D",
+            "area3DMeasure": "Meet oppervlakte in 3D",
+            "pointCoordinatesMeasure": "Meet puntcoördinaten",
+            "heightFromTerrainMeasure": "Meet hoogte ten opzichte van terrein",
+            "angle3DMeasure": "Meet hoek in 3D",
+            "slopeMeasure": "Meet helling",
+            "tooltipPolylineDistance3DStart": "Klik om te starten met meten",
+            "tooltipPolylineDistance3DEnd": "Klik om een segment toe te voegen\nof dubbelklik om te stoppen",
+            "tooltipArea3DStart": "Klik om te starten met meten",
+            "tooltipArea3DMissingVertex": "Oppervlak heeft ten minste 3 hoekpunten nodig, \nklik om een vertex toe te voegen",
+            "tooltipArea3DEnd": "Klik om een vertex toe te voegen\nof dubbelklik om te stoppen",
+            "tooltipPointCoordinatesStart": "Klik om een puntmeting toe te voegen",
+            "tooltipHeightFromTerrainStart": "Klik om de hoogte ten opzichte van het terrein toe te voegen",
+            "tooltipAngle3DStart": "Klik om drie hoekpunten aan te duiden voor de hoekmeting",
+            "tooltipSlopeStart": "Klik om drie punten aan te duiden die een driehoek afbakenen.\nDe helling wordt berekend op basis van de getekende driehoek",
+            "altitude": "Hoogte",
+            "latitude": "Breedtegraad",
+            "longitude": "Lengtegraad"
         },
         "search":{
             "layerMustBeVisible": "De doellaag is inactief",
@@ -1263,7 +1287,7 @@
           "groupName": "Groepsnaam",
           "groupDescription": "Omschrijving",
           "saveGroup": "Opslaan",
-          "createGroup": "Maan aan",
+          "createGroup": "Maak aan",
           "creatingGroup": "Aanmaken...",
           "groupMembers": "Leden:",
           "addMember": "Lid toevoegen:",
@@ -1360,7 +1384,7 @@
             "tooltip": "Importeer een JSON kaartconfiguratiebestand of vectordata",
             "dropZone": {
                 "heading": "<p> <h4> Zet uw kaartcontext of vectorbestanden hier neer </h4> <small> of </small> </p>",
-                "selectFiles": "SSelecteer bestanden...",
+                "selectFiles": "Selecteer bestanden...",
                 "infoSupported": "<p> <small> Ondersteunde kaartconfiguratiebestanden: MapStore legacy-indeling (JSON), WMC <br /> Ondersteunde vectorlaagbestanden: shapefiles (moeten in zip-archieven staan), KML / KMZ, GeoJSON, Annotaties of GPX </small> </ p>",
                 "note": "<p><small><i> <strong> opmerking </strong>: huidige kaart wordt overschreven in het geval van kaartconfiguratiebestanden </i> </small> </p>"
             },
@@ -1372,7 +1396,7 @@
             }
         },
         "mapExport": {
-            "title": "Exporteer kaart",
+            "title": "Exporteer",
             "tooltip": "Exporteer de huidige kaart",
             "exportPanel": {
                 "title": "<p> <h4> Selecteer uw formaat </h4> </p>",
@@ -1404,7 +1428,7 @@
             "addToMap": "Toevoegen aan kaart",
             "getWMSLink": "Krijg WMS Link",
             "error": "Er is een fout opgetreden bij het laden van de catalogus",
-            "pageInfo": "Resultaten {start} - {end} van {totaal}",
+            "pageInfo": "Resultaten {start} - {end} van {total}",
             "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
             "pageInfoInfinite": "{total, plural, =undefined {} =0 {No results} =1 {{total} of {total} matched} other {Loaded {loaded} of {total} matched}}",
             "noRecordsMatched": "Geen overeenkomend record",
@@ -1474,7 +1498,7 @@
                 "dynamic": {
                     "label": "Dynamische Filter",
                     "info": "Filter wordt gebruikt wanneer zoektekst aanwezig is en wordt toegepast als 'AND' met statische filter",
-                    "helpText": "Gebruik sjabloon met placeholder ${searchText} om de zoektekst op te vangen"
+                    "helpText": "Gebruik sjabloon met placeholder $\\{searchText\\} om de zoektekst op te vangen"
                 },
                 "error": "Ongeldige XML syntaxis"
             },
@@ -1482,6 +1506,9 @@
                   "label": "Zichtbaarheidslimieten instellen",
                   "tooltip": "Pas automatisch de door de server voorgestelde zichtbaarheidslimieten toe"
             },
+            "singleTile": {
+                 "tooltip": "Met deze optie wordt de laag gerenderd als enkele tegel wanneer deze wordt ingeladen op de kaart"
+             },
             "allowUnsecureLayers": {
                   "label": "Sta niet-beveiligde lagen toe",
                   "tooltip": "Bij het toevoegen van een laag met deze optie geactiveerd, wordt het gebruik van de proxy afgedwongen"
@@ -1708,7 +1735,9 @@
                   "edge": "Segment",
                   "pixelTolerance": "Tolerantie (pixels)",
                   "loadingStrategy": "Strategie laden"
-                }
+                },
+                "disableViewportFilter": "Stop kaartvensterfilter",
+                "enableViewportFilter": "Filter data uit huidig kaartvenster"
             }
         },
         "layerdownload": {
@@ -1779,7 +1808,8 @@
             },
             "selectWidgetType": "Selecteer het widgettype",
             "selectChartType": {
-                "title": "Selecteer het grafiektype"
+                "title": "Selecteer het grafiektype",
+                "noResults": "Geen grafiek gevonden"
             },
             "selectMap": {
                 "TOC": {
@@ -1813,15 +1843,18 @@
                 "wizard": {
                     "backToTypeSelection": "Terug naar de selectie van het grafiektype",
                     "backToWidgetTypeSelection": "Terug naar keuze van widgettype",
+                    "backToChartOptionConfiguration": "Terug naar grafiektype configuratie",
                     "backToFeatureGrid": "Terug naar het objectengrid",
                     "backToLayerSelection": "Terug naar laagselectie",
                     "backToMapSelection": "Terug naar kaartselectie",
                     "backToPreview": "Terug naar voorbeeld",
                     "backToChartOptions": "Terug naar kaartopties",
                     "selectALayer": "Selecteer een laag",
+                    "selectLayers": "Selecteer een of meerdere lagen",
                     "selectAMap": "Selecteer een kaart",
                     "configureChartOptions": "Configureer grafiekopties",
                     "configureWidgetOptions": "Configureer widget-opties",
+                    "errorChart": "Een of meerdere grafieken zijn ongeldig",
                     "backToTableOptions": "Terug naar tabelopties",
                     "configureTableOptions": "Configureer tabelopties",
                     "resetColumnsSizes": "Reset alle wijzigingen in de kolomafmetingen",
@@ -1841,6 +1874,7 @@
                     "connectToTheMap": "Maak verbinding met de andere widget",
                     "selectMapToConnect": "Selecteer de widget om verbinding te maken",
                     "clearConnection": "Verwijder verbinding",
+                    "disableConnectToMap": "Operatie niet beschikbaar",
                     "classAttributes": {
                       "classColor": "Klassekleur",
                       "classLabel": "Klasselabel",
@@ -1870,11 +1904,14 @@
                     "noAttributesDescription": "De geselecteerde laag heeft geen attributen om weer te geven. Selecteer een ander type widget of een andere laag",
                     "noWidgetsAvailableTitle": "Kan de widget voor de geselecteerde laag niet maken",
                     "noWidgetsAvailableDescription": "<p> <strong> Probeer een andere laag of een ander type widget te selecteren </strong> </p> <p> De server biedt niet de benodigde services voor de laag en het geselecteerde type widget </p> <p> Mogelijke oorzaken zijn: <ul> <li> De geselecteerde laag is een rasterlaag </li> <li> WFS-service is niet beschikbaar </li> <li> Het WPS-proces <code> gs: aggregate </code> is niet beschikbaar </li> </ul> </p>",
+                    "attributesNotMatchingDescription": "<p><strong>Probeer een andere laag te selecteren</strong></p><p>De attributen van de geselecteerde la(a)g(en) komen niet overeen met de parent afhankelijke widget</p>",
                     "checkAtLeastOneAttribute": "U moet minimaal één kolom selecteren",
                     "noMapAvailableForLegend": "Geen kaart beschikbaar",
                     "noMapAvailableForLegendDescription": "U hebt ten minste één kaartwidget nodig om de legende te maken"
                 },
-                "setupFilter": "Configureer een filter voor de widgetgegevens"
+                "setupFilter": "Configureer een filter voor de widgetgegevens",
+                "addNewLayers": "Voeg nieuwe lagen toe",
+                "deleteChart": "Verwijder huidige grafiek"
             },
             "widget": {
                 "menu": {
@@ -1901,6 +1938,13 @@
               "selectLabel": "Selecteer een kaart",
               "infoOnHide": "Vergroot widget om de kaart switcher zichtbaar te maken",
               "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
+            },
+            "chartSwitcher": {
+                "noResults": "Geen laag gevonden",
+                "placeholder": "Geef grafieknaam",
+                "selectLabel": "Grafiek",
+                "infoOnHide": "Vergroot widget om de grafiek switcher zichtbaar te maken",
+                "subTitle": "<p>Voor multi-selectie,<br>gebruik CTRL + klik op Windows <br> en gebruik control + klik op Mac</p>"
             },
             "chartType": {
                 "bar": {
@@ -2274,8 +2318,8 @@
             "fontStyleItalic": "Cursief",
             "fontWeightNormal": "Normaal",
             "fontWeightBold": "Vet",
-            "boolTrue": "Waar",
-            "boolFalse": "Onwaar",
+            "boolTrue": "Ja",
+            "boolFalse": "Nee",
 
             "colorMapType": {
               "label": "Type kleurenkaart",
@@ -2369,12 +2413,37 @@
             "warningTextOrderTitle": "Waarschuwing",
             "warningTextOrder": "De volgorde van de regel met de tekststijl kan niet overeenkomen met de weergavevolgorde op de kaart. Dit gedrag is gerelateerd aan een rendering-engine die een label boven andere regels plaatst",
             "invalidProperty": "Het attribuut { key } is ongeldig",
-            "notSupportedVariable": "De variabele { key } is niet ondersteund door de tileset"
+            "notSupportedVariable": "De variabele { key } is niet ondersteund door de tileset",
+            "addModelRule": "Voeg 3D model regel toe",
+            "model": "3D Model",
+            "placeholderEnterModelUrl": "Vul een .glb-bestand url in",
+            "invalidModelUrl": "De opgegeven url is ongeldig",
+            "scale": "Schaal",
+            "heading": "Rotatie Z-as",
+            "pitch": "Rotatie X-as",
+            "roll": "Rotatie Y-as",
+            "color": "Kleur",
+            "pointHeight": "Punthoogte",
+            "leaderLineColor": "Kleur verwijslijn",
+            "leaderLineWidth": "Breedte verwijslijn",
+            "geometryTransformation": "Geometrietransformatie",
+            "center": "Middelpunt",
+            "startPoint": "Startpunt",
+            "endPoint": "Eindpunt",
+            "line": "Lijn",
+            "geodesicLine": "Geodetische lijn"
         },
         "playback": {
             "settings": {
                 "tooltip": "Instellingen",
-                "title": "Afspeelinstellingen",
+                "tab": {
+                  "playback": "Afspelen",
+                  "layers": "Lagen"
+                },
+                "layer": {
+                  "enabled": "Toon of verberg lagen van de tijdlijn",
+                  "disabled": "Snappinglaag kan niet verborgen worden"
+                },
                 "frameDuration": "Beeldtijd",
                 "range": {
                     "title": "Animatiebereik",
@@ -2433,6 +2502,11 @@
             "disablePlayBack": "Schakel afspeelknoppen uit",
             "expand" : "Schuifregelaar voor tijd uitvouwen",
             "collapse" : "Schuifregelaar voor tijd samenvouwen",
+            "reset" : {
+              "range": "Pas tijdsbereik aan naar de grenzen van de data (alle data tonen)",
+              "singleNow": "Stel tijd in op heden",
+              "singleNearest": "Stel tijd in naar dichtstbijzijnde waarde ten opzichte van heden"
+            },
             "collapsed": {
                 "title": "De tijdlijn is samengevouwen",
                 "tooltip": "Klik hier om het weer uit te vouwen"
@@ -3031,8 +3105,12 @@
             "title": "Inzoomen"
           },
           "ZoomOut": {
-            "description": "BKnop die het zoomniveau van de kaart verlaagt",
+            "description": "Knop die het zoomniveau van de kaart verlaagt",
             "title": "Uitzoomen"
+          },
+          "MapViews": {
+            "description": "Met deze plugin kun je een reeks van verschillende overzichten toevoegen aan een kaart",
+            "title": "Kaartoverzichten"
           }
         },
         "contextCreator": {
@@ -3240,6 +3318,68 @@
                 "message": "Er is een onverwachte fout opgetreden tijdens het synchroniseren van lagen. Er zit waarschijnlijk een bug in MapStore"
             },
             "layerType": "type: {type}"
+        },
+        "mapViews": {
+            "description": "Omschrijving",
+            "position": "Positie",
+            "animation": "Animatie",
+            "mask": "Masker",
+            "globeTranslucency": "Doorzichtigheid globe",
+            "layersOptions": "Lagen",
+            "cameraPosition": "Camerastandpunt",
+            "longitude": "Lengtegraad",
+            "latitude": "Breedtegraad",
+            "height": "Hoogte (m)",
+            "centerPosition": "Centerpositie",
+            "captureThisViewPositions": "Leg huidig kaartbeeld vast",
+            "durationLabel": "Duur (s)",
+            "flyToLabel": "Animatie-overgang tijdens navigatie",
+            "maskEnable": "Activeer masker",
+            "maskLayer": "Laag",
+            "maskInverse": "Inverteer",
+            "maskInverseOffset": "Inverse verschuiving (m)",
+            "globeTranslucencyEnable": "Activeer doorzichtigheid",
+            "globeTranslucencyOpacity": "Doorzichtigheid",
+            "globeTranslucencyFadeByDistance": "Vervaag doorzichtigheid met de afstand",
+            "globeTranslucencyNearDistance": "Minimum afstand (m)",
+            "globeTranslucencyFarDistance": "Maximum afstand (m)",
+            "showClippingLayersGeometries": "Toon geometrieën van kniplagen",
+            "terrain": "Terrein",
+            "clippingSourceLayer": "Kniplaag",
+            "clippingFeature": "Knipobject",
+            "clippingInverse": "Keer knippen om",
+            "layerOpacity": "Doorzichtigheid",
+            "showViewsGeometries": "Toon positie van de overzichten",
+            "addInitialView": "Klik op de plusknop om een nieuw overzicht toe te voegen",
+            "removeView": "Verwijder overzicht",
+            "resetLayerOverrides": "Aanpassingen resetten naar standaardwaarden",
+            "hideLayer": "Verberg laag",
+            "showLayer": "Toon laag",
+            "undoChanges": "Aanpassingen ongedaan maken",
+            "redoChanges": "Aanpassingen opnieuw toepassen",
+            "addNewView": "Nieuw overzicht toevoegen",
+            "addNewViewBelowSelected": "Nieuw overzicht toevoegen onder het geselecteerde overzicht",
+            "hideDescription": "Verberg omschrijving",
+            "showDescription": "Toon omschrijving",
+            "copyCurrentView": "Kopieer huidig overzicht",
+            "edit": "Bewerk",
+            "stopEdit": "Stop bewerken",
+            "showViewsList": "Toon overzichtslijst",
+            "hideViewsList": "Verberg overzichtslijst",
+            "gotToFirstView": "Ga naar eerste overzicht",
+            "gotToPreviousView": "Ga naar vorig overzicht",
+            "play": "Start navigatie",
+            "pause": "Pauzeer navigatie",
+            "gotToNextView": "Ga naar volgend overzicht",
+            "gotToLastView": "Ga naar laatste overzicht",
+            "maskWithGlobeTranslucencyWarning": "Het gelijktijdig activeren van masker en globe doorzichtigheid kan ongewenste artifacten veroorzaken in de visualisatie. Gelieve voor elk overzicht slechts een van beide opties te gebruiken",
+            "deactivateMapViews": "Deactiveer kaartoverzichten",
+            "activateMapViews": "Activeer kaartoverzichten",
+            "maskOtherVisibleLayerWarning": "Er zijn andere vectorlagen zichtbaar, alle zichtbare polygoonobjecten zullen toegepast worden op alle zichtbare 3D tiles",
+            "resourceLayerRequestError": "Het was niet mogelijk om de geselecteerde laag op te vragen. Gelieve na te gaan of de laag nog steeds beschikbaar is",
+            "maskLayerPolygonError": "De geselecteerde laag bevat geen polygoonobjecten waardoor het masker geen effect kan hebben",
+            "clipPolygonFeaturesNotAvailable": "De geselecteerde laag bevat geen polygoonobjecten, gelieve een andere laag te selecteren",
+            "addNewLayerToTheMap": "De kaart is leeg. Gelieve nieuwe lagen toe te voegen aan de kaart om deze beschikbaar te stellen in de lijst voor overzichten"
         },
         "tutorial": {
             "title": "Tutorial",

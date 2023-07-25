@@ -174,7 +174,7 @@ class ResourceCard extends React.Component {
 
         return (
             <div>
-                <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.resource.title || this.props.resource.name}
+                <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.resource.name || this.props.resource.title}
                     actions={availableAction} onClick={this.onClick}
                 >
                     <div className="map-thumb-description">{this.props.resource.description}</div>

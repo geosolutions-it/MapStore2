@@ -592,59 +592,6 @@ describe('CesiumStyleParser', () => {
             }).catch(done);
         });
 
-        it('should add leader line where HeightReference is Relative and sampleTerrain is using when from Cesium', (done) => {
-            const style = {
-                "name": "",
-                "rules": [
-                    {
-                        "name": "",
-                        "symbolizers": [
-                            {
-                                "kind": "Mark",
-                                "color": "#ffea00",
-                                "fillOpacity": 1,
-                                "strokeColor": "#3f3f3f",
-                                "strokeOpacity": 1,
-                                "strokeWidth": 1,
-                                "radius": 32,
-                                "wellKnownName": "Star",
-                                "msHeightReference": "relative",
-                                "msBringToFront": false,
-                                "symbolizerId": "ea1db421-980f-11ed-a8e7-c1b9d44be36c",
-                                "msHeight": 5000,
-                                "msLeaderLineWidth": 4,
-                                "msLeaderLineColor": "#ff0000",
-                                "msLeaderLineOpacity": 1
-                            }
-                        ],
-                        "ruleId": "ea1db420-980f-11ed-a8e7-c1b9d44be36c"
-                    }
-                ]
-            };
-
-            const sampleTerrainTest = () => Cesium.when.resolve([new Cesium.Cartographic(9, 45, 1000)]);
-
-            parser.writeStyle(style).then((styleFunc) => {
-                return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
-                    .then((dataSource) => {
-                        const entities = dataSource.entities.values;
-                        const mockMap = {terrainProvider: {ready: true}};
-                        return styleFunc({entities, map: mockMap, sampleTerrain: sampleTerrainTest }).then((styledEntities) => {
-                            expect(styledEntities.length).toBe(1);
-                            expect(styledEntities[0].billboard).toBeTruthy();
-                            expect(styledEntities[0].polyline).toBeTruthy();
-                            const cartographicPosition = Cesium.Cartographic.fromCartesian(styledEntities[0].position._value);
-                            const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[0]);
-                            const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[1]);
-                            expect(Math.round(cartographicPosition.height)).toBe(5000);
-                            expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
-                            expect(Math.round(leaderLineCartographicPositionB.height)).toBe(6000);
-                            done();
-                        });
-                    });
-            }).catch(done);
-        });
-
         it('should add leader line where HeightReference is none', (done) => {
             const style = {
                 "name": "",

@@ -329,6 +329,7 @@
                 }
               }
             },
+            "Permalink",
             {
                 "name": "Identify",
                 "cfg": {
@@ -659,6 +660,10 @@
             "declineUrl" : "http://www.google.com"
           }
         }],
+        "permalink": [
+          "Permalink",
+          "FeedbackMask"
+        ],
         "dashboard": [
           "BurgerMenu",
           "Dashboard",
@@ -702,6 +707,7 @@
               }
             }
           },
+          "Permalink",
           {"name": "DashboardEditor",
             "cfg": {
               "selectedService": "GeoSolutions GeoServer CSW",
@@ -843,7 +849,8 @@
                 "sectionId": true
               }
             }
-          }
+          },
+          "Permalink"
         ],
         "context-creator": [
           {

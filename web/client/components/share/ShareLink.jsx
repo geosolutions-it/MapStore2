@@ -20,7 +20,12 @@ import { FormControl } from 'react-bootstrap';
 class ShareLink extends React.Component {
 
     static propTypes = {
-        shareUrl: PropTypes.string
+        shareUrl: PropTypes.string,
+        shareTitle: PropTypes.string
+    };
+
+    static defaultProps = {
+        shareTitle: "share.directLinkTitle"
     };
 
     state = {
@@ -32,7 +37,7 @@ class ShareLink extends React.Component {
             <div className="input-link">
                 <div className="input-link-head">
                     <h4>
-                        <Message msgId="share.directLinkTitle"/>
+                        <Message msgId={this.props.shareTitle}/>
                     </h4>
                     <ShareCopyToClipboard
                         copied={this.state.copied}

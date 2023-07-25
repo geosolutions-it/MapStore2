@@ -23,6 +23,7 @@ import { wrapStartStop } from '../observables/epics';
 import ConfigUtils from '../utils/ConfigUtils';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import merge from "lodash/merge";
+import { searchSelector } from '../selectors/router';
 
 function MapError(error) {
     this.originalError = error;
@@ -108,10 +109,10 @@ const errorToMessageId = (name = "loading", e, getState = () => {}) => {
  *
  * @returns {Observable} flow to load the current context (with session, if enabled)
  */
-const createSessionFlow = (mapId, contextName, action$, getState) => {
+const createSessionFlow = (mapId, contextName, resourceCategory, action$, getState) => {
     return Observable.forkJoin(
-        getResourceIdByName('CONTEXT', contextName),
-        (mapId ? Observable.of(null) : getResourceDataByName('CONTEXT', contextName))
+        getResourceIdByName(resourceCategory, contextName),
+        (mapId ? Observable.of(null) : getResourceDataByName(resourceCategory, contextName))
     ).flatMap(([id, data]) => {
         const userName = userSelector(getState())?.name;
         return Observable.of(loadUserSession(buildSessionName(id, mapId, userName))).merge(
@@ -142,14 +143,18 @@ const createSessionFlow = (mapId, contextName, action$, getState) => {
  */
 export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
     action$.ofType(LOAD_CONTEXT).switchMap(({ mapId, contextName }) => {
+        const params = new URLSearchParams(searchSelector(getState()));
+        // When loading a permalink of type context, we lose the category type upon page reload.
+        // Hence the category is fetched from the param to provide correct category name to getResourceIdByName
+        const resourceCategory = params.get("category") || 'CONTEXT';
         const sessionsEnabled = userSessionEnabledSelector(getState());
         const flow = sessionsEnabled
-            ? createSessionFlow(mapId, contextName, action$, getState)
+            ? createSessionFlow(mapId, contextName, resourceCategory, action$, getState)
             : Observable.merge(
                 Observable.of(clearMapTemplates()),
-                getResourceIdByName('CONTEXT', contextName)
+                getResourceIdByName(resourceCategory, contextName)
                     .switchMap(id => createContextFlow(id, null, getState)).catch(e => {throw new ContextError(e); }),
-                (mapId ? Observable.of(null) : getResourceDataByName('CONTEXT', contextName))
+                (mapId ? Observable.of(null) : getResourceDataByName(resourceCategory, contextName))
                     .switchMap(data => createMapFlow(mapId, data && data.mapConfig, null, action$, getState)).catch(e => { throw new MapError(e); })
             );
         return flow

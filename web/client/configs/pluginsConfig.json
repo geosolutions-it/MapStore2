@@ -152,7 +152,19 @@
       "description": "plugins.Share.description",
       "dependencies": [
         "SidebarMenu"
+      ],
+      "children": [
+        "Permalink"
+      ],
+      "autoEnableChildren": [
+        "Permalink"
       ]
+    },
+    {
+      "name": "Permalink",
+      "glyph": "link",
+      "title": "plugins.Permalink.title",
+      "description": "plugins.Permalink.description"
     },
     {
       "name": "BackgroundSelector",
