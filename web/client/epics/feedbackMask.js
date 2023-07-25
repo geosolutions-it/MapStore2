@@ -25,6 +25,7 @@ import { LOGIN_SUCCESS, LOGOUT, LOGIN_PROMPT_CLOSED, loginRequired } from '../ac
 import { LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR } from '../actions/dashboard';
 import { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } from '../actions/geostory';
 import { LOAD_CONTEXT, LOAD_FINISHED, CONTEXT_LOAD_ERROR } from '../actions/context';
+import { LOAD_PERMALINK, LOAD_PERMALINK_ERROR, PERMALINK_LOADED } from '../actions/permalink';
 
 import {
     START_RESOURCE_LOAD as LOAD_CONTEXT_CONTEXTCREATOR,
@@ -150,6 +151,26 @@ export const updateContextFeedbackMaskVisibility = action$ =>
         });
 
 /**
+ * Enabled/disabled mask based on permalink load feedback, in case of error enable feedbackMask.
+ * @param {Observable} action$ stream of actions. Manages `LOAD_PERMALINK, `PERMALINK_LOADED`, `LOAD_PERMALINK_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
+ * @memberof epics.feedbackMask
+ * @return {Observable}
+ */
+export const updatePermalinkFeedbackMaskVisibility = action$ =>
+    action$.ofType(LOAD_PERMALINK)
+        .switchMap(() => {
+            const loadActions = [PERMALINK_LOADED, LOAD_PERMALINK_ERROR];
+            const isEnabled = ({ type }) => type === LOAD_PERMALINK_ERROR;
+            const updateObservable = updateVisibility(action$, loadActions, isEnabled, "permalink");
+            return Rx.Observable.merge(
+                updateObservable,
+                action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                    .switchMap(() => updateObservable)
+                    .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
+            );
+        });
+
+/**
  * Enabled/disabled mask based on context load feedback in context creator, in case of error enable feedbackMask.
  * @param {Observable} action$ stream of actions. Manages `LOAD_CONTEXT, `LOAD_FINISHED`, `CONTEXT_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
  * @memberof epics.feedbackMask
@@ -196,12 +217,12 @@ export const detectNewPage = (action$, store) =>
  * @param {stream} action$ the action stream
  */
 export const feedbackMaskPromptLogin = (action$, store) => // TODO: separate login required logic (403) condition from feedback mask
-    action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR)
+    action$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR, LOAD_GEOSTORY_ERROR, CONTEXT_LOAD_ERROR, CONTEXT_LOAD_ERROR_CONTEXTCREATOR, LOAD_PERMALINK_ERROR)
         .filter((action) => {
             const pathname = pathnameSelector(store.getState());
             return action.error
-                && action.error.status === 403
-                && pathname.indexOf("new") === -1 && !(pathname.match(/dashboard/) !== null && pathname.match(/dashboard\/[0-9]+/) === null); // new map geostory and dashboard has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
+                && [403].concat([LOAD_PERMALINK_ERROR].includes(action.type) ? 404 : []).includes(action.error.status)
+                && pathname.indexOf("new") === -1 && !(pathname.match(/(dashboard)/) !== null && pathname.match(/(dashboard)\/[0-9]+/) === null); // new map geostory and dashboard has different handling (see redirectUnauthorizedUserOnNewLoadError, TODO: uniform different behaviour)
         })
         .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(
@@ -238,5 +259,6 @@ export default {
     updateGeoStoryFeedbackMaskVisibility,
     detectNewPage,
     feedbackMaskPromptLogin,
-    redirectUnauthorizedUserOnNewLoadError
+    redirectUnauthorizedUserOnNewLoadError,
+    updatePermalinkFeedbackMaskVisibility
 };

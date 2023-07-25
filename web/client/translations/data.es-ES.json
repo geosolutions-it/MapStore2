@@ -213,6 +213,7 @@
             "update": "Actualizar",
             "warning": "Aviso",
             "success": "Éxito",
+            "error": "Error",
             "backgroundLayerNotSupported": "El mapa de fondo seleccionado no está soportado para este tipo de mapa. Se usará el primero disponible.",
             "noBackgroundLayerSupported": "No hay capas de fondo soportadas para este tipo de mapa.",
             "updateOldMap": "Este es un mapa antiguo, de modo que no todas las funcionalidades pueden ser habilitadas. Pinche en el botón de actulizar el mapa o ignore este aviso si no quiere actualizarlo.",
@@ -1376,6 +1377,39 @@
             "sizeOptions": {
                 "width": "ancho",
                 "height": "altura"
+            }
+        },
+        "permalink": {
+            "title": "Permalink",
+            "shareLinkTitle": "Enlace permanente generado",
+            "accessible": "Público",
+            "success": "El enlace permanente se guardó con éxito",
+            "createCategorySuccess": "Faltaba la categoría \"PERMALINK\", por lo que se ha creado",
+            "descriptionLabel": "Descripción",
+            "titleLabel": "Título",
+            "titlePlaceholder": "Introduce un título",
+            "descriptionPlaceholder": "Introduce una descripción",
+            "generate": "Generar enlace permanente",
+            "create": "Crear un nuevo enlace permanente",
+            "loadingSpinner": "Cargando Enlace permanente",
+            "subtitle": "Comparte el recurso usando la dirección generada",
+            "errors": {
+                "loading": {
+                    "unknownError": "Hubo un error al cargar el enlace permanente",
+                    "permalinkNotAccessible": "No tienes permiso para acceder a este enlace permanente. Póngase en contacto con el propietario del recurso.",
+                    "permalinkDoesNotExist": "El enlace permanente al que intenta acceder no existe",
+                    "title": "Error al cargar el enlace permanente",
+                    "pleaseLogin": "Este enlace permanente no es público. Intente iniciar sesión",
+                    "notFound": "Enlace permanente no encontrado",
+                    "notAccessible": "Enlace permanente no accesible"
+                },
+                "save": {
+                    "title": "La generación del enlace permanente falló",
+                    "generic": "Error al guardar enlace permanente",
+                    "categoryErrorAdmin": "Error al crear el enlace \"{categoryName}\" de la categoría faltante",
+                    "categoryErrorNonAdmin": "Falta el enlace \"{categoryName}\" de la categoría, comuníquese con el administrador para crear la categoría"
+                }
+
             }
         },
         "snapshot": {
@@ -2830,10 +2864,12 @@
             "title": "Editar propiedades",
             "name": "Nombre",
             "description": "Descripción",
+            "titleInput": "Título",
             "createdAt": "Creado",
             "modifiedAt": "Modificado",
             "namePlaceholder": "Escriba un nombre ...",
             "descriptionPlaceholder": "Escriba una descripción ...",
+            "titlePlaceholder": "Escribe un título...",
             "confirmCloseText": "Hay cambios pendientes, ¿está seguro que quiere cerrar sin guardar?",
             "close": "Cerrar",
             "cancel": "Cancelar",
@@ -3074,6 +3110,10 @@
           "Share": {
             "description": "Permite compartir el mapa de varias maneras (enlace, código QR, incrustar, redes sociales ...)",
             "title": "Compartir herramienta"
+          },
+          "Permalink": {
+            "description": "Permite crear un enlace permanente del recurso actual a la vista",
+            "title": "Enlace permanente"
           },
           "StreetView": {
             "title": "Street View",

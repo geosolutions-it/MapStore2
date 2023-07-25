@@ -67,12 +67,14 @@ class MainForm extends React.Component {
                     onChange={onUpdate}
                     resource={resource}
                     nameFieldText={<Message msgId="saveDialog.name" />}
+                    titleFieldText={<Message msgId="saveDialog.titleInput" />}
                     descriptionFieldText={<Message msgId="saveDialog.description" />}
                     nameFieldFilter={nameFieldFilter}
                     createdAtFieldText={<Message msgId="saveDialog.createdAt" />}
                     modifiedAtFieldText={<Message msgId="saveDialog.modifiedAt" />}
                     namePlaceholderText={"saveDialog.namePlaceholder"}
                     descriptionPlaceholderText={"saveDialog.descriptionPlaceholder"}
+                    titlePlaceholderText={"saveDialog.titlePlaceholder"}
                 />
             </Col>
         </Row>);

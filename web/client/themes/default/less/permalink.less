@@ -1,0 +1,43 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {}
+
+// **************
+// Layout
+// **************
+#permalink {
+    padding: 10px 4px;
+    .subtitle {
+        font-size: 14px;
+    }
+    .create-new {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .form-group {
+        margin-bottom: 10px;
+    }
+    .permalink-save {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: -10px;
+        button {
+            display: flex;
+            align-items: center;
+            &.loading {
+                width: unset;
+            }
+            
+        }
+    }
+}

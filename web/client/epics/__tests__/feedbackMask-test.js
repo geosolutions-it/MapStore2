@@ -14,7 +14,8 @@ import {
     updateGeoStoryFeedbackMaskVisibility,
     detectNewPage,
     feedbackMaskPromptLogin,
-    redirectUnauthorizedUserOnNewLoadError
+    redirectUnauthorizedUserOnNewLoadError,
+    updatePermalinkFeedbackMaskVisibility
 } from '../feedbackMask';
 
 import {
@@ -31,6 +32,7 @@ import { loadGeostory, geostoryLoaded, loadGeostoryError } from '../../actions/g
 import { LOGIN_REQUIRED } from '../../actions/security';
 import { onLocationChanged } from 'connected-react-router';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { loadPermalink, loadPermalinkError, permalinkLoaded } from '../../actions/permalink';
 
 describe('feedbackMask Epics', () => {
 
@@ -274,5 +276,34 @@ describe('feedbackMask Epics', () => {
         };
 
         testEpic(redirectUnauthorizedUserOnNewLoadError, 1, configureError({status: 403}), epicResponse, initState);
+    });
+    it('test updatePermalinkFeedbackMaskVisibility loaded', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(3);
+            const loadingAction = actions[0];
+            expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADING);
+            const loadedAction = actions[1];
+            expect(loadedAction.type).toBe(FEEDBACK_MASK_LOADED);
+            const enabledAction = actions[2];
+            expect(enabledAction.type).toBe(FEEDBACK_MASK_ENABLED);
+            expect(enabledAction.enabled).toBe(false);
+            done();
+        };
+        testEpic(updatePermalinkFeedbackMaskVisibility, 3, [loadPermalink(), permalinkLoaded()], epicResult, {});
+    });
+
+    it('test updatePermalinkFeedbackMaskVisibility error', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(3);
+            const loadingAction = actions[0];
+            expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADING);
+            const loadedAction = actions[1];
+            expect(loadedAction.type).toBe(FEEDBACK_MASK_LOADED);
+            const enabledAction = actions[2];
+            expect(enabledAction.type).toBe(FEEDBACK_MASK_ENABLED);
+            expect(enabledAction.enabled).toBe(true);
+            done();
+        };
+        testEpic(updatePermalinkFeedbackMaskVisibility, 3, [loadPermalink(), loadPermalinkError()], epicResult, {});
     });
 });

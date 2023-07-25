@@ -213,6 +213,7 @@
             "update": "Update",
             "warning": "Warning",
             "success": "Success",
+            "error": "Error",
             "backgroundLayerNotSupported": "The previously selected background is not supported for this type of map. The first one available is then used.",
             "noBackgroundLayerSupported": "There are no supported background layers for this type of map.",
             "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on upgrade button in order to upgrade the map or simply dismiss this notification if you don't want to upgrade it.",
@@ -1376,6 +1377,38 @@
             "sizeOptions": {
                 "width": "width",
                 "height": "height"
+            }
+        },
+        "permalink": {
+            "title": "Permalink",
+            "shareLinkTitle": "Permalink generated",
+            "accessible": "Public",
+            "success": "Permalink is saved successfully",
+            "createCategorySuccess": "\"PERMALINK\" category was missing, so it has been created",
+            "descriptionLabel": "Description",
+            "titleLabel": "Title",
+            "titlePlaceholder": "Enter a title",
+            "descriptionPlaceholder": "Enter a description",
+            "generate": "Generate permalink",
+            "create": "Create a new permalink",
+            "loadingSpinner": "Loading Permalink",
+            "subtitle": "Share the resource using the generated address",
+            "errors": {
+                "loading": {
+                    "unknownError": "There was an error loading the permalink",
+                    "permalinkNotAccessible": "You don't have permission to access this permalink. Please contact the resource owner",
+                    "permalinkDoesNotExist": "The permalink you are trying to access doesn't exist",
+                    "title": "Error loading peramlink",
+                    "pleaseLogin": "This permalink is not public. Please try to login",
+                    "notFound": "Permalink not found",
+                    "notAccessible": "Permalink not accessible"
+                },
+                "save": {
+                    "title": "Permalink generation failed",
+                    "generic": "Error when saving permalink",
+                    "categoryErrorAdmin": "Creating missing category \"{categoryName}\" failed",
+                    "categoryErrorNonAdmin": "Missing category \"{categoryName}\", please contact administrator to create the category"
+                }
             }
         },
         "snapshot": {
@@ -2841,11 +2874,13 @@
         "saveDialog": {
             "title": "Edit properties",
             "name": "Name",
+            "titleInput": "Title",
             "description": "Description",
             "createdAt": "Created",
             "modifiedAt": "Modified",
             "namePlaceholder": "Type a name...",
             "descriptionPlaceholder": "Type a description...",
+            "titlePlaceholder": "Type a title...",
             "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
             "close": "Close",
             "cancel": "Cancel",
@@ -3086,6 +3121,10 @@
           "Share": {
             "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
             "title": "Share Tool"
+          },
+          "Permalink": {
+            "description": "Allows to create a permalink of the current resource in view",
+            "title": "Permalink"
           },
           "StreetView": {
             "title": "Street View",
