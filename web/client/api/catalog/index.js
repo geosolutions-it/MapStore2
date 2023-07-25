@@ -12,6 +12,7 @@ import * as wms from './WMS';
 import * as wmts from './WMTS';
 import * as tms from './TMS';
 import * as wfs from './WFS';
+import * as geojson from './GeoJSON';
 import * as backgrounds from './backgrounds';
 import * as threeDTiles from './ThreeDTiles';
 
@@ -46,6 +47,7 @@ export default {
     'wms': wms,
     'tms': tms,
     'wmts': wmts,
+    'geojson': geojson,
     'backgrounds': backgrounds,
     '3dtiles': threeDTiles
 };
