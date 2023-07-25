@@ -454,6 +454,10 @@ In particular, by clicking on the <img src="../img/button/edit_button.jpg" class
 
 <img src="../img/layer-settings/edit_custom_format.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
+!!!note
+    The Identify Template editor, by clicking the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button, allows to insert images using direct URLs of resources available on the web. At the same point it also allows to parse needed image URLs from available feature attributes (eg. attributes reporting image URL values or images in base64). The same markdown syntax (eg. `${properties.IMAGE}`) can also be used in this case so that, at run time, MapStore is able to parse attribute values to finally display images accordingly in the Identify panel.
+    <img src="../img/layer-settings/image_on_template.gif" class="ms-docimage"  style="max-width:600px;"/>
+
 Here it is possible to insert the text to be displayed through the [Identify Tool](navigation-toolbar.md#identify-tool), with the possibility to wrap the desired properties. <br>
 Let's make an example: we assume to have a layer where each record corresponds to a USA State geometry in the map. In the [Attribute Table](attributes-table.md#attribute-table) of this layer there's the `STATE_NAME` field that, for each record, contains a text value with the name of the State. <br>
 If the goal is to show, performing the [Identify Tool](navigation-toolbar.md#identify-tool), only the State name, an option could be to insert the following text on the Template text editor:
