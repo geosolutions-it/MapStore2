@@ -58,7 +58,7 @@ After selecting the **Measure Bearing** button <img src="../img/button/measure-b
 
 ## Export the measure
 
-Measurements drawn on the map can be exported in `GeoJson` format through the <img src="../img/button/json_export_button.jpg" class="ms-docbutton"/> button.  
+Measurements drawn on the map can be exported in `GeoJson` format through the <img src="../img/button/json_export_button.jpg" class="ms-docbutton"/> button.
 
 ## Add the measure as layer
 
@@ -76,7 +76,7 @@ From this step the creation process is the same described in the [Annotations se
 
 ## Measurement on the 3D navigation
 
-When the [3D Navigation](side-bar.md#3d-navigation) is enabled, the user has the ability to perform distance, area, point coordinates, height from terrain, angle and slope measurements on the 3D map.
+When the [3D Navigation](navigation-toolbar.md#3d-navigation) is enabled, the user has the ability to perform distance, area, point coordinates, height from terrain, angle and slope measurements on the 3D map.
 
 ### Measure distance on the 3D navigation
 

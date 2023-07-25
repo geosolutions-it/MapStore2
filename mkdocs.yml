@@ -32,8 +32,6 @@ extra_css:
   - 'theme/css/extra.css'
 repo_name: 'geosolutions-it/MapStore2'
 repo_url: 'https://github.com/geosolutions-it/MapStore2/'
-repo_issues: 'https://github.com/geosolutions-it/MapStore2/issues'
-repo_issues_doc: 'https://github.com/geosolutions-it/MapStore2/issues/new/choose'
 edit_uri: ''
 docs_dir: 'docs'
 markdown_extensions:
