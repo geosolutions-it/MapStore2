@@ -8,6 +8,7 @@
  */
 export const GPT_TOOL_BUFFER = "buffer";
 export const GPT_TOOL_INTERSECTION = "intersection";
+export const GPT_CONTROL_NAME = "GeoProcessingTools";
 
 export const CHECK_WPS_AVAILABILITY = "GPT:CHECK_WPS_AVAILABILITY";
 export const CHECKING_WPS_AVAILABILITY = "GPT:CHECKING_WPS_AVAILABILITY";
@@ -27,6 +28,7 @@ export const SET_BUFFER_QUADRANT_SEGMENTS = "GPT:SET_BUFFER_QUADRANT_SEGMENTS";
 export const SET_BUFFER_CAP_STYLE = "GPT:SET_BUFFER_CAP_STYLE";
 export const SET_FEATURES = "GPT:SET_FEATURES";
 export const SET_FEATURE_SOURCE_LOADING = "GPT:SET_FEATURE_SOURCE_LOADING";
+export const SET_INVALID_LAYER = "GPT:SET_INVALID_LAYER";
 export const SET_WPS_AVAILABILITY = "GPT:SET_WPS_AVAILABILITY";
 export const SET_SELECTED_TOOL = "GPT:SET_SELECTED_TOOL";
 export const SET_SOURCE_LAYER_ID = "GPT:SET_SOURCE_LAYER_ID";
@@ -40,6 +42,8 @@ export const SET_INTERSECTION_SECOND_ATTRIBUTE = "GPT:SET_INTERSECTION_SECOND_AT
 export const SET_INTERSECTION_MODE = "GPT:SET_INTERSECTION_MODE";
 export const SET_INTERSECTION_PERCENTAGES_ENABLED = "GPT:SET_INTERSECTION_PERCENTAGES_ENABLED";
 export const SET_INTERSECTION_AREAS_ENABLED = "GPT:SET_INTERSECTION_AREAS_ENABLED";
+export const SET_SELECTED_LAYER_TYPE = "GPT:SET_SELECTED_LAYER_TYPE";
+export const TOGGLE_HIGHLIGHT_LAYERS = "GPT:TOGGLE_HIGHLIGHT_LAYERS";
 
 /**
  * Actions for Geo Processing Tools
@@ -202,6 +206,17 @@ export const setFeatureSourceLoading = (status) => ({
     type: SET_FEATURE_SOURCE_LOADING,
     status
 });
+/**
+ * action for setting the layer to be invalid
+ * @memberof actions.geoProcessingTools
+ * @param  {string} layerId the layer id
+ * @param {string} status the status
+ */
+export const setInvalidLayer = (layerId, status) => ({
+    type: SET_INVALID_LAYER,
+    status,
+    layerId
+});
 
 /**
  * action that sets if needed WPS are available (geo:Buffer and gs:IntersectionFeatureCollection, gs:CollectGeometries)
@@ -324,4 +339,20 @@ export const setIntersectionPercentagesEnabled = (percentagesEnabled) => ({
 export const setIntersectionAreasEnabled = (areasEnabled) => ({
     type: SET_INTERSECTION_AREAS_ENABLED,
     areasEnabled
+});
+/**
+ * action that sets the owner were the selection of the features must be done
+ * @memberof actions.geoProcessingTools
+ * @param  {string} source
+ */
+export const setSelectedLayerType = (source) => ({
+    type: SET_SELECTED_LAYER_TYPE,
+    source
+});
+/**
+ * action that toggles on / off highlight layers
+ * @memberof actions.geoProcessingTools
+  */
+export const toggleHighlightLayers = () => ({
+    type: TOGGLE_HIGHLIGHT_LAYERS
 });

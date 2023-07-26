@@ -33,7 +33,7 @@ export const isLoadingSelector = (state) => state?.longitudinalProfile?.loading;
 export const dataSourceModeSelector = (state) => state?.longitudinalProfile?.mode;
 export const crsSelectedDXFSelector = (state) => state?.longitudinalProfile?.crsSelectedDXF || "EPSG:3857";
 export const geometrySelector = (state) => state?.longitudinalProfile?.geometry;
-export const isActiveMenuSelector = (state) => isParametersOpenSelector(state) || dataSourceModeSelector(state) !== "idle";
+export const isActiveMenuSelector = (state) => isParametersOpenSelector(state) || (dataSourceModeSelector(state) && dataSourceModeSelector(state) !== "idle");
 export const infosSelector = (state) => state?.longitudinalProfile?.infos;
 export const pointsSelector = (state) => state?.longitudinalProfile?.points;
 export const projectionSelector = (state) => state?.longitudinalProfile?.projection;

@@ -17,14 +17,27 @@ import * as WFS from '../api/WFS';
 import WMS from '../api/WMS';
 
 export const DESCRIBE_FEATURE_TYPE_LOADED = "LAYER_CAPABILITIES:DESCRIBE_FEATURE_TYPE_LOADED";
+export const DESCRIBE_COVERAGES_LOADED = "LAYER_CAPABILITIES:DESCRIBE_COVERAGES_LOADED";
 
 /**
  * action for saying a describe feature type has been loaded
  * @memberof actions.layerCapabilities
  * @param  {string} layerId the layer id
+ * @param  {string} source
  */
 export const describeFeatureTypeLoaded = (layerId, source) => ({
     type: DESCRIBE_FEATURE_TYPE_LOADED,
+    layerId,
+    source
+});
+/**
+ * action for saying a describe coverages has been loaded
+ * @memberof actions.layerCapabilities
+ * @param  {string} layerId the layer id
+ * @param  {string} source
+ */
+export const describeCoveragesLoaded = (layerId, source) => ({
+    type: DESCRIBE_COVERAGES_LOADED,
     layerId,
     source
 });
@@ -63,6 +76,9 @@ export function getDescribeLayer(url, layer, options, source) {
                     }
 
                     dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));
+                    if (source) {
+                        dispatch(describeCoveragesLoaded(layer.id, source));
+                    }
                 }).catch(() => {
                     dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe coverage found"}}));
                 });
