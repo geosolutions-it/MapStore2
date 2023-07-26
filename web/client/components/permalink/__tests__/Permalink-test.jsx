@@ -43,7 +43,7 @@ describe('Permalink tests', () => {
         };
 
         const onSaveSpy = expect.spyOn(actions, 'onSave');
-        ReactDOM.render(<Permalink onSave={actions.onSave} shareUrl="#/viewer/22" settings={{title: "name"}} />, document.getElementById("container"));
+        ReactDOM.render(<Permalink onSave={actions.onSave} shareUrl="#/viewer/22" settings={{title: "name", description: "test-description"}} />, document.getElementById("container"));
         expect(document.getElementById('permalink')).toBeTruthy();
         const button = document.querySelector('button');
         TestUtils.Simulate.click(button);
@@ -51,6 +51,8 @@ describe('Permalink tests', () => {
         const args = onSaveSpy.calls[0].arguments[0];
         expect(args.permalinkType).toBe('map');
         expect(args.resource.category).toBe('PERMALINK');
+        expect(args.resource.metadata).toBeTruthy();
+        expect(args.resource.metadata.description).toBe("test-description");
         expect(args.resource.attributes).toBeTruthy();
         expect(args.resource.attributes.pathTemplate).toBe("/viewer/${id}");
     });
