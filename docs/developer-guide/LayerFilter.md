@@ -91,7 +91,7 @@ The `cql` format is a JSON object that has this shape:
 ```
 
 !!! Note:
-    MapStore actually supports only a subset of CQL, that is the one used by GeoServer. In particular can not parse WKT geometries yet.
+    MapStore actually supports only a subset of CQL, that is the one used by GeoServer.
 
 ### `mapstore-query-panel` format
 
