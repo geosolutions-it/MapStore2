@@ -17,6 +17,8 @@ import { removeAdditionalLayer } from '../actions/additionallayers';
 import { configureMap } from '../actions/config';
 import { toggleControl } from '../actions/controls';
 import { zoomToExtent } from '../actions/map';
+import searchconfigReducer from '../reducers/searchconfig';
+
 import {
     addMarker,
     cancelSelectedItem,
@@ -421,6 +423,7 @@ export default {
     epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic, delayedSearchEpic},
     reducers: {
         search: searchReducers,
-        mapInfo: mapInfoReducers
+        mapInfo: mapInfoReducers,
+        searchconfig: searchconfigReducer // required to load configuration even if the SearchServicesConfig plugin is not included (e.g. in mobile)
     }
 };
