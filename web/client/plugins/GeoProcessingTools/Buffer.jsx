@@ -10,8 +10,7 @@ import PropTypes from 'prop-types';
 import {
     FormGroup,
     InputGroup,
-    ControlLabel,
-    Glyphicon
+    ControlLabel
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import Select from 'react-select';
@@ -19,57 +18,37 @@ import { createSelector } from 'reselect';
 
 import Message from '../../components/I18N/Message';
 import FormControl from '../../components/misc/DebouncedFormControl';
-import tooltip from '../../components/misc/enhancers/tooltip';
-import Loader from '../../components/misc/Loader';
 import SwitchPanel from '../../components/misc/switch/SwitchPanel';
+import SourceLayer from './SourceLayer';
 import {
     checkWPSAvailability,
     runBufferProcess,
     setBufferDistance,
     setBufferDistanceUom,
     setBufferQuadrantSegments,
-    setBufferCapStyle,
-    setSourceLayerId,
-    setSourceFeatureId
+    setBufferCapStyle
 } from '../../actions/geoProcessingTools';
 import {
-    areAllWPSAvailableForSourceLayerSelector,
-    checkingWPSAvailabilitySelector,
     distanceSelector,
     distanceUomSelector,
     quadrantSegmentsSelector,
     capStyleSelector,
-    sourceLayerIdSelector,
-    sourceFeatureIdSelector,
-    sourceFeaturesSelector,
-    sourceErrorSelector,
-    isSourceFeaturesLoadingSelector
+    runningProcessSelector,
+    sourceLayerIdSelector
 } from '../../selectors/geoProcessingTools';
-import {
-    nonBackgroundLayersSelector
-} from '../../selectors/layers';
 
-const Addon = tooltip(InputGroup.Addon);
 const Buffer = ({
-    areAllWPSAvailableForSourceLayer,
-    checkingWPSAvailability,
     distance,
     distanceUom,
     quadrantSegments,
     capStyle,
-    layers,
-    sourceError,
-    sourceFeatureId,
+    runningProcess,
     sourceLayerId,
-    sourceFeatures,
-    isSourceFeaturesLoading,
     onCheckWPSAvailability,
     onSetBufferDistance,
     onSetBufferDistanceUom,
     onSetBufferQuadrantSegments,
-    onSetBufferCapStyle,
-    onSetSourceFeatureId,
-    onSetSourceLayerId
+    onSetBufferCapStyle
 }) => {
     useEffect(() => {
         if (sourceLayerId) {
@@ -78,12 +57,6 @@ const Buffer = ({
     }, [sourceLayerId]);
     const [showBufferAdvancedSettings, setShowBufferAdvancedSettings] = useState(false);
 
-    const handleOnChangeSource = (sel) => {
-        onSetSourceLayerId(sel?.value || "");
-    };
-    const handleOnChangeSourceFeatureId = (sel) => {
-        onSetSourceFeatureId(sel?.value || "");
-    };
     const handleOnChangeBufferDistance = (val) => {
         onSetBufferDistance(val);
     };
@@ -98,62 +71,7 @@ const Buffer = ({
     };
     return (
         <>
-            <FormGroup>
-                <ControlLabel>
-                    <Message msgId="GeoProcessingTools.sourceLayer" />
-                </ControlLabel>
-            </FormGroup>
-            <FormGroup>
-                <InputGroup>
-                    <Select
-                        clearable
-                        value={sourceLayerId}
-                        noResultsText={<Message msgId="GeoProcessingTools.noMatchedLayer" />}
-                        onChange={handleOnChangeSource}
-                        options={layers.map(f => ({value: f.id, label: f.title || f.name || f.id }))} />
-                    <Addon
-                        tooltipId={
-                            !sourceLayerId ? "GeoProcessingTools.tooltip.selectLayer" : areAllWPSAvailableForSourceLayer ? "GeoProcessingTools.tooltip.validLayer" : "GeoProcessingTools.tooltip.invalidLayer"}
-                        tooltipPosition="left"
-                        className="btn"
-                        bsStyle="primary"
-                    >
-                        {checkingWPSAvailability ? <Loader size={14} style={{margin: '0 auto'}}/> : <Glyphicon
-                            glyph={!sourceLayerId ? "question-sign" : areAllWPSAvailableForSourceLayer ? "ok-sign" : "exclamation-mark"}
-                            className={!sourceLayerId ? "text-info" : areAllWPSAvailableForSourceLayer ? "text-success" : "text-danger"}/>}
-                    </Addon>
-
-                </InputGroup>
-            </FormGroup>
-            <FormGroup>
-                <ControlLabel>
-                    <Message msgId="GeoProcessingTools.sourceFeature" />
-                </ControlLabel>
-            </FormGroup>
-            <FormGroup>
-                <InputGroup>
-                    <Select
-                        clearable
-                        value={sourceFeatureId}
-                        noResultsText={<Message msgId="GeoProcessingTools.noMatchedFeature" />}
-                        onChange={handleOnChangeSourceFeatureId}
-                        options={sourceFeatures.map(f => ({value: f.id, label: f.id }))} />
-                    <Addon
-                        tooltipId={
-                            !sourceFeatureId ? "GeoProcessingTools.tooltip.selectFeature" : areAllWPSAvailableForSourceLayer ? "GeoProcessingTools.tooltip.validFeature" : "GeoProcessingTools.tooltip.invalidFeature"}
-                        tooltipPosition="left"
-                        className="btn"
-                        bsStyle="primary"
-                    >
-                        {isSourceFeaturesLoading ? <Loader size={14} style={{margin: '0 auto'}}/> : <Glyphicon
-                            glyph={!sourceFeatureId ? "question-sign" : !sourceError ? "ok-sign" : "exclamation-mark"}
-                            className={!sourceFeatureId ? "text-info" : !sourceError ? "text-success" : "text-danger"}/>}
-                        {
-                            // [ ] improve this with error handling, sfdem is raster and has no features
-                        }
-                    </Addon>
-                </InputGroup>
-            </FormGroup>
+            <SourceLayer/>
             <div className="gpt-distance">
                 <div className="value">
                     <FormGroup>
@@ -164,12 +82,14 @@ const Buffer = ({
                     <FormGroup>
                         <InputGroup className="distance">
                             <FormControl
+                                disabled={runningProcess}
                                 type="number"
                                 value={distance}
                                 onChange={handleOnChangeBufferDistance}
                             />
                             <Select
                                 clearable={false}
+                                disabled={runningProcess}
                                 value={distanceUom}
                                 noResultsText={<Message msgId="GeoProcessingTools.noMatchedLayer" />}
                                 onChange={handleOnChangeBufferDistanceUom}
@@ -182,6 +102,7 @@ const Buffer = ({
                 </div>
             </div>
             <SwitchPanel
+                disabled={runningProcess}
                 useToolbar
                 title={<Message msgId="GeoProcessingTools.advancedSettings" />}
                 expanded={showBufferAdvancedSettings}
@@ -194,6 +115,7 @@ const Buffer = ({
                 <FormGroup>
                     <InputGroup>
                         <FormControl
+                            disabled={runningProcess}
                             type="number"
                             value={quadrantSegments}
                             onChange={handleOnChangeBufferQuadrantSegments}
@@ -208,6 +130,7 @@ const Buffer = ({
                 </FormGroup>
                 <FormGroup>
                     <Select
+                        disabled={runningProcess}
                         clearable
                         value={capStyle}
                         noResultsText={<Message msgId="GeoProcessingTools.noMatchedStyle" />}
@@ -225,69 +148,43 @@ const Buffer = ({
 };
 
 Buffer.propTypes = {
-    areAllWPSAvailableForSourceLayer: PropTypes.bool,
-    checkingWPSAvailability: PropTypes.bool,
     distance: PropTypes.number,
     distanceUom: PropTypes.string,
-    layers: PropTypes.array,
     quadrantSegments: PropTypes.number,
     capStyle: PropTypes.string,
-    sourceFeatureId: PropTypes.string,
-    sourceFeatures: PropTypes.array,
-    isSourceFeaturesLoading: PropTypes.bool,
-    sourceError: PropTypes.bool,
+    runningProcess: PropTypes.bool,
     sourceLayerId: PropTypes.string,
     onCheckWPSAvailability: PropTypes.func,
     onSetBufferDistance: PropTypes.func,
     onSetBufferDistanceUom: PropTypes.func,
     onSetBufferQuadrantSegments: PropTypes.func,
-    onSetBufferCapStyle: PropTypes.func,
-    onSetSourceLayerId: PropTypes.func,
-    onSetSourceFeatureId: PropTypes.func
+    onSetBufferCapStyle: PropTypes.func
 };
 
 const BufferConnected = connect(
     createSelector(
         [
-            areAllWPSAvailableForSourceLayerSelector,
             distanceSelector,
             distanceUomSelector,
             quadrantSegmentsSelector,
             capStyleSelector,
-            nonBackgroundLayersSelector,
-            sourceLayerIdSelector,
-            sourceFeatureIdSelector,
-            sourceFeaturesSelector,
-            isSourceFeaturesLoadingSelector,
-            sourceErrorSelector,
-            checkingWPSAvailabilitySelector
+            runningProcessSelector,
+            sourceLayerIdSelector
         ],
         (
-            areAllWPSAvailableForSourceLayer,
             distance,
             distanceUom,
             quadrantSegments,
             capStyle,
-            layers,
-            sourceLayerId,
-            sourceFeatureId,
-            sourceFeatures,
-            isSourceFeaturesLoading,
-            sourceError,
-            checkingWPSAvailability
+            runningProcess,
+            sourceLayerId
         ) => ({
-            areAllWPSAvailableForSourceLayer,
             distance,
             distanceUom,
             quadrantSegments,
             capStyle,
-            layers,
-            sourceLayerId,
-            sourceFeatureId,
-            sourceFeatures,
-            isSourceFeaturesLoading,
-            sourceError,
-            checkingWPSAvailability
+            runningProcess,
+            sourceLayerId
         })),
     {
         onCheckWPSAvailability: checkWPSAvailability,
@@ -295,9 +192,7 @@ const BufferConnected = connect(
         onSetBufferDistance: setBufferDistance,
         onSetBufferDistanceUom: setBufferDistanceUom,
         onSetBufferQuadrantSegments: setBufferQuadrantSegments,
-        onSetBufferCapStyle: setBufferCapStyle,
-        onSetSourceLayerId: setSourceLayerId,
-        onSetSourceFeatureId: setSourceFeatureId
+        onSetBufferCapStyle: setBufferCapStyle
     })(Buffer);
 
 export default BufferConnected;

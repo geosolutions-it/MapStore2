@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {
-    // GPT_TOOL_BUFFER,
+    GPT_TOOL_BUFFER,
     GPT_TOOL_INTERSECTION,
     CHECKING_WPS_AVAILABILITY,
     CHECKING_WPS_AVAILABILITY_INTERSECTION,
@@ -21,6 +21,7 @@ import {
     SET_BUFFER_CAP_STYLE,
     SET_FEATURES,
     SET_FEATURE_SOURCE_LOADING,
+    SET_INVALID_LAYER,
     SET_WPS_AVAILABILITY,
     SET_SELECTED_TOOL,
     SET_SOURCE_LAYER_ID,
@@ -33,7 +34,9 @@ import {
     SET_INTERSECTION_SECOND_ATTRIBUTE,
     SET_INTERSECTION_MODE,
     SET_INTERSECTION_PERCENTAGES_ENABLED,
-    SET_INTERSECTION_AREAS_ENABLED
+    SET_INTERSECTION_AREAS_ENABLED,
+    SET_SELECTED_LAYER_TYPE,
+    TOGGLE_HIGHLIGHT_LAYERS
 } from '../actions/geoProcessingTools';
 
 import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingToolsUtils';
@@ -46,14 +49,17 @@ import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingToolsUtils'
  *
  */
 function geoProcessingTools( state = {
-    selectedTool: GPT_TOOL_INTERSECTION,
+    selectedTool: GPT_TOOL_INTERSECTION || GPT_TOOL_BUFFER,
     buffer: {
         counter: 0
     },
     intersection: {
+        counter: 0,
         intersectionMode: "INTERSECTION"
     },
     flags: {
+        showHighlightLayers: true,
+        isIntersectionEnabled: true,
         runningProcess: false
     }
 }, action) {
@@ -162,6 +168,18 @@ function geoProcessingTools( state = {
             }
         };
     }
+    case SET_INVALID_LAYER: {
+        return {
+            ...state,
+            flags: {
+                ...state.flags,
+                invalid: {
+                    ...state.flags.invalid,
+                    [action.layerId]: action.status
+                }
+            }
+        };
+    }
     case SET_FEATURE_SOURCE_LOADING: {
         return {
             ...state,
@@ -200,6 +218,7 @@ function geoProcessingTools( state = {
     case SET_SOURCE_LAYER_ID: {
         return {
             ...state,
+            selectedLayerId: action.layerId,
             source: {
                 ...state.source,
                 layerId: action.layerId,
@@ -234,6 +253,7 @@ function geoProcessingTools( state = {
     case SET_INTERSECTION_LAYER_ID: {
         return {
             ...state,
+            selectedLayerId: action.layerId,
             intersection: {
                 ...state.intersection,
                 layerId: action.layerId,
@@ -308,6 +328,22 @@ function geoProcessingTools( state = {
             intersection: {
                 ...state.intersection,
                 areasEnabled: action.areasEnabled
+            }
+        };
+    }
+    case SET_SELECTED_LAYER_TYPE: {
+        return {
+            ...state,
+            selectedLayerType: action.source,
+            selectedLayerId: action.source === "source" ? state.source.layerId : state.intersection.layerId
+        };
+    }
+    case TOGGLE_HIGHLIGHT_LAYERS: {
+        return {
+            ...state,
+            flags: {
+                ...state.flags,
+                showHighlightLayers: !state?.flags?.showHighlightLayers
             }
         };
     }

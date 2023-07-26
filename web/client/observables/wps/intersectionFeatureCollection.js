@@ -30,8 +30,8 @@ import {executeProcessXML} from './execute';
 export const intersectXML = ({
     firstFC,
     secondFC,
-    firstAttributesToRetain = false,
-    secondAttributesToRetain = false,
+    firstAttributesToRetain = "",
+    secondAttributesToRetain = "",
     intersectionMode = "INTERSECTION",
     percentagesEnabled = false,
     areasEnabled = false
@@ -40,11 +40,11 @@ export const intersectXML = ({
     [
         processParameter('first feature collection', processData(complexData(cdata(JSON.stringify(firstFC)), "application/json"))),
         processParameter('second feature collection', processData(complexData(cdata(JSON.stringify(secondFC)), "application/json"))),
-        ...(firstAttributesToRetain ? processParameter("first attributes to retain", processData(literalData(firstAttributesToRetain))) : null),
-        ...(secondAttributesToRetain ? processParameter("second attributes to retain", processData(literalData(secondAttributesToRetain))) : null),
-        ...(intersectionMode ? processParameter("intersectionMode", processData(literalData(intersectionMode))) : null),
-        ...(percentagesEnabled ? processParameter("percentagesEnabled", processData(literalData(percentagesEnabled))) : null),
-        ...(areasEnabled ? processParameter("areasEnabled", processData(literalData(areasEnabled))) : null)
+        ...(firstAttributesToRetain ? [processParameter("first attributes to retain", processData(literalData(firstAttributesToRetain)))] : []),
+        ...(secondAttributesToRetain ? [processParameter("second attributes to retain", processData(literalData(secondAttributesToRetain)))] : []),
+        ...(intersectionMode ? [processParameter("intersectionMode", processData(literalData(intersectionMode)))] : []),
+        processParameter("percentagesEnabled", processData(literalData(percentagesEnabled))),
+        processParameter("areasEnabled", processData(literalData(areasEnabled)))
     ],
     responseForm(
         rawDataOutput('result', "application/json")

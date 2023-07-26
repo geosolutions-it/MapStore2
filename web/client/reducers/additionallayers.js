@@ -9,6 +9,7 @@
 
 import {
     ADD_ADDITIONAL_LAYERS,
+    MERGE_OPTIONS_BY_OWNER,
     REMOVE_ADDITIONAL_LAYER,
     REMOVE_ALL_ADDITIONAL_LAYERS,
     UPDATE_ADDITIONAL_LAYER,
@@ -41,6 +42,15 @@ function additionallayers(state = [], action) {
     }
     case ADD_ADDITIONAL_LAYERS: {
         return state.concat(action.layers);
+    }
+    case MERGE_OPTIONS_BY_OWNER: {
+        return state.map((layerItem) => layerItem.owner === action.owner ? {
+            ...layerItem,
+            options: {
+                ...layerItem.options,
+                ...action.options
+            }
+        } : layerItem);
     }
     case UPDATE_OPTIONS_BY_OWNER: {
         const {options, owner} = action;
