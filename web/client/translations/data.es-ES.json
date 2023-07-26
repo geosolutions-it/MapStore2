@@ -3031,6 +3031,10 @@
             "description": "Permite agregar un filtro a una capa",
             "title": "Capa de filtro"
           },
+          "GeoProcessingTools": {
+            "description": "Permite geoprocesar capas para generar una nueva, utilizando procesos wps buffer e intersección",
+            "title": "Herramientas de procesamiento geográfico"
+          },
           "HelpLink": {
             "description": "Un botón para acceder a la documentación de MapStore",
             "title": "Enlace de documentación"
@@ -3839,6 +3843,69 @@
             "selectFiles": "Seleccione Archivo...",
             "infoSupported": "<p><small>Tipos de archivos compatibles: GeoJSON, DXF, Shapefiles</small></p>",
             "dxfGeometryNotSupported": "Solo se admite LWPOLYLINE"
+          }
+        },
+        "GeoProcessingTools": {
+          "title": "GeoProcessing Tools",
+          "emptyTitle": "These WPS proceses must be installed in Geoserver in order to use this tool:",
+          "emptyDescription": "<ul><li>geo:Buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "sourceLayer": "Source Layer",
+          "sourceFeature": "Source Feature",
+          "tool": "Select a tool to use",
+          "highlight": "Enable highlight of selected features",
+          "bufferTool": "Buffer",
+          "distance": "Distance",
+          "distanceUom": "Units of measure",
+          "km": "km",
+          "m": "m",
+          "run": "Run",
+          "intersectionTool": "Intersection",
+          "noMatchedLayer": "No layer matches the current filter",
+          "noMatchedFeature": "No feature matches the current filter",
+          "intersectionLayer": "Intersection Layer",
+          "intersectionFeature": "Intersection Feature",
+          "advancedSettings": "Advanced Settings",
+          "quadrantSegments": "Quadrant Segments",
+          "capStyle": "Style for the buffer end caps",
+          "round": "Round",
+          "flat": "Flat",
+          "square": "Square",
+          "firstAttributesToRetain": "First feature collection attribute to include",
+          "secondAttributesToRetain": "Second feature collection attribute to include",
+          "intersectionMode": "Specifies geometry computed for intersecting features",
+          "percentagesEnabled": "Indicates whether to output feature area percentages",
+          "areasEnabled": "Indicates whether to output feature areas",
+          "noMatchedMode": "No mode matches the current filter",
+          "INTERSECTION": "INTERSECTION",
+          "FIRST": "FIRST",
+          "SECOND": "SECOND",
+          "true": "true",
+          "false": "false",
+          "notifications": {
+            "errorGFI": "There was an error loading the feature",
+            "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
+            "noFeatureInPoint": "No feature was not found at selected point.",
+            "featureFound": "A feature was found at selected point.",
+            "noLayerSelected": "Please select layer first.",
+            "successfulIntersection": "The intersection operation was successful and a new layer has ben created and added to the TOC",
+            "successfulBuffer": "The Buffer operation was successful and a new layer has ben created and added to the TOC"
+          },
+          "tooltip": {
+            "clickToSelectFeature": "Click to select feature",
+            "warningTitle": "Warning",
+            "warningBody": "You have not selected a feature and this may slow down performances in geoserver. Do you want to continue?",
+            "warningConfirmText": "Yes",
+            "warningCancel": "Cancel",
+            "invalidLayers": "One of the layers you have selected cannot be used within this tool",
+            "fillRequiredDataIntersection": "Please select at least the source layer and the intersection layer",
+            "fillRequiredDataBuffer": "Please select at least the source layer",
+            "siderBarBtn": "GeoProcessing Tools",
+            "selectFeature": "Please select a feature",
+            "validFeature": "This feature is valid",
+            "invalidFeature": "This feature is not valid",
+            "selectLayer": "Please select a layer",
+            "validLayer": "This layer is valid and can be used in this tool",
+            "invalidLayer": "This layer does not support the needed wps processes \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\nor it is a Raster layer"
           }
         }
     }
