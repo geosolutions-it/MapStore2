@@ -1,6 +1,6 @@
 import expect from 'expect';
 import { get } from 'lodash';
-import parser, {functionOperator} from '../parser';
+import {read, functionOperator} from '../parser';
 
 const COMPARISON_TESTS = [
     // numeric
@@ -142,11 +142,13 @@ const WKT_TESTS = [
         cql: "INTERSECTS(PROP1, POINT(1 2))",
         expected: {
             type: "INTERSECTS",
-            property: {type: "property", name: "PROP1"},
-            value: {
+            args: [{
+                type: "property",
+                name: "PROP1"
+            }, {
                 type: "Point",
                 coordinates: [1, 2]
-            }
+            }]
         }
     },
     // MULTIPOINT
@@ -154,11 +156,11 @@ const WKT_TESTS = [
         cql: "INTERSECTS(PROP1, MULTIPOINT(1 2, 3 4))",
         expected: {
             type: "INTERSECTS",
-            property: {type: "property", name: "PROP1"},
-            value: {
-                type: "MultiPoint",
-                coordinates: [[1, 2], [3, 4]]
-            }
+            args: [{type: "property", name: "PROP1"},
+                {
+                    type: "MultiPoint",
+                    coordinates: [[1, 2], [3, 4]]
+                }]
         }
     },
     // LINESTRING
@@ -166,11 +168,13 @@ const WKT_TESTS = [
         cql: "INTERSECTS(PROP1, LINESTRING(1 2, 3 4))",
         expected: {
             type: "INTERSECTS",
-            property: {type: "property", name: "PROP1"},
-            value: {
+            args: [{
+                type: "property",
+                name: "PROP1"
+            }, {
                 type: "LineString",
                 coordinates: [[1, 2], [3, 4]]
-            }
+            }]
         }
     },
     // MULTILINESTRING
@@ -178,11 +182,10 @@ const WKT_TESTS = [
         cql: "INTERSECTS(PROP1, MULTILINESTRING((1 2, 3 4), (5 6, 7 8)))",
         expected: {
             type: "INTERSECTS",
-            property: {type: "property", name: "PROP1"},
-            value: {
+            args: [ {type: "property", name: "PROP1"}, {
                 type: "MultiLineString",
                 coordinates: [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
-            }
+            }]
         }
     },
     // POLYGON
@@ -190,11 +193,11 @@ const WKT_TESTS = [
         cql: "INTERSECTS(PROP1, POLYGON((1 2, 3 4, 5 6, 1 2)))",
         expected: {
             type: "INTERSECTS",
-            property: {type: "property", name: "PROP1"},
-            value: {
-                type: "Polygon",
-                coordinates: [[[1, 2], [3, 4], [5, 6], [1, 2]]]
-            }
+            args: [
+                {type: "property", name: "PROP1"}, {
+                    type: "Polygon",
+                    coordinates: [[[1, 2], [3, 4], [5, 6], [1, 2]]]
+                }]
         }
     },
     // MULTIPOLYGON
@@ -202,19 +205,20 @@ const WKT_TESTS = [
         cql: "INTERSECTS(PROP1, MULTIPOLYGON(((1 2, 3 4, 5 6, 1 2)), ((7 8, 9 10, 11 12, 7 8))))",
         expected: {
             type: "INTERSECTS",
-            property: {type: "property", name: "PROP1"},
-            value: {
-                type: "MultiPolygon",
-                coordinates: [
-                    [[[1, 2], [3, 4], [5, 6], [1, 2]]],
-                    [[[7, 8], [9, 10], [11, 12], [7, 8]]]
-                ]
-            }
+            args: [
+                {type: "property", name: "PROP1"},
+                {
+                    type: "MultiPolygon",
+                    coordinates: [
+                        [[[1, 2], [3, 4], [5, 6], [1, 2]]],
+                        [[[7, 8], [9, 10], [11, 12], [7, 8]]]
+                    ]
+                }]
         }
     }
 ];
 const FUNCTION_TESTS = [
-    /* {
+    {
         cql: "func('text')",
         expected: {
             type: functionOperator,
@@ -310,7 +314,7 @@ const FUNCTION_TESTS = [
             name: "func",
             args: [{type: 'literal', value: 3.14159}]
         }
-    },*/
+    },
     // nested functions
     {
         cql: "func(func2('text'))",
@@ -322,6 +326,63 @@ const FUNCTION_TESTS = [
                 name: "func2",
                 args: [{type: 'literal', value: 'text'}]
             }]
+        }
+    },
+    {
+        cql: "func(func2('text1'), func3('text2'))",
+        expected: {
+            type: functionOperator,
+            name: "func",
+            args: [
+                {
+                    type: functionOperator,
+                    name: "func2",
+                    args: [{type: 'literal', value: 'text1'}]
+                },
+                {
+                    type: functionOperator,
+                    name: "func3",
+                    args: [{type: 'literal', value: 'text2'}]
+                }
+            ]
+        }
+    },
+    // nested functions with property names
+    {
+        cql: "func(func2(propertyName))",
+        expected: {
+            type: functionOperator,
+            name: "func",
+            args: [{
+                type: functionOperator,
+                name: "func2",
+                args: [{type: 'property', name: 'propertyName'}]
+            }]
+        }
+    },
+    // nested functions with multiple arguments
+    {
+        cql: "func(func2(propertyName, 'text1'), func3('text2', 2))",
+        expected: {
+            type: functionOperator,
+            name: "func",
+            args: [
+                {
+                    type: functionOperator,
+                    name: "func2",
+                    args: [
+                        {type: 'property', name: 'propertyName'},
+                        {type: 'literal', value: 'text1'}
+                    ]
+                }, {
+                    type: functionOperator,
+                    name: "func3",
+                    args: [
+                        {type: 'literal', value: 'text2'},
+                        {type: 'literal', value: 2}
+                    ]
+                }
+            ]
         }
     },
     // Existing functions
@@ -338,6 +399,16 @@ const FUNCTION_TESTS = [
                 {type: 'literal', value: "value"}
             ]
 
+        }
+    }, {
+        cql: "jsonPointer(\"properties\", 'key')",
+        expected: {
+            "type": functionOperator,
+            "name": "jsonPointer",
+            "args": [
+                {type: 'property', name: "properties"},
+                {type: 'literal', value: "key"}
+            ]
         }
     }
 
@@ -356,6 +427,19 @@ const REAL_WORLD = [
             "filters[1].type": "=",
             "filters[1].args[1].value": "1"
 
+        }
+    }, {
+        cql: 'func1() = false',
+        expected: {
+            "type": "=",
+            "args": [{
+                "type": functionOperator,
+                "name": "func1",
+                "args": []
+            }, {
+                "type": "literal",
+                "value": false
+            }]
         }
     },
     {
@@ -383,11 +467,12 @@ const REAL_WORLD = [
             "type": "and",
             "filters": [{
                 "type": "INTERSECTS",
-                "property": {type: "property", name: "PROP1"},
-                "value": {
-                    "type": "Point",
-                    "coordinates": [1, 2]
-                }
+                "args": [
+                    {type: "property", name: "PROP1"},
+                    {
+                        "type": "Point",
+                        "coordinates": [1, 2]
+                    }]
             }, {
                 "type": "<",
                 "args": [{type: "property", name: "PROP2"}, {type: "literal", value: 1}]
@@ -419,6 +504,40 @@ const REAL_WORLD = [
                 "type": functionOperator,
                 "name": "f2",
                 "args": [{type: 'property', name: "b"}]
+            }]
+        }
+    },
+    {
+        cql: "jsonArrayContains(\"property1\", 'key', 'value') = false AND jsonPointer(\"property2\", 'key') = 'value')",
+        expected: {
+            "type": "and",
+            filters: [{
+                "type": "=",
+                "args": [{
+                    "type": functionOperator,
+                    "name": "jsonArrayContains",
+                    "args": [
+                        {type: 'property', name: "property1"},
+                        {type: 'literal', value: "key"},
+                        {type: 'literal', value: "value"}
+                    ]
+                }, {
+                    "type": "literal",
+                    "value": false
+                }]
+            }, {
+                "type": "=",
+                "args": [{
+                    "type": functionOperator,
+                    "name": "jsonPointer",
+                    "args": [
+                        {type: 'property', name: "property2"},
+                        {type: 'literal', value: "key"}
+                    ]
+                }, {
+                    "type": "literal",
+                    "value": "value"
+                }]
             }]
         }
     },
@@ -455,12 +574,65 @@ const REAL_WORLD = [
                 }]
             }]
         }
+    },
+    {
+        // mixed functions and operators
+        cql: `jsonArrayContains(\"property1\", 'key', 'value') = false AND jsonPointer(\"property2\", 'key') = 'value' AND INTERSECTS(geom, POINT(1 2)) AND property3 = 'value'`,
+        expected: {
+            type: "and",
+            filters: [{
+                "type": "and",
+                filters: [{
+                    type: "and",
+                    filters: [{
+                        "type": "=",
+                        "args": [{
+                            "type": functionOperator,
+                            "name": "jsonArrayContains",
+                            "args": [
+                                {type: 'property', name: "property1"},
+                                {type: 'literal', value: "key"},
+                                {type: 'literal', value: "value"}
+                            ]
+                        }, {
+                            "type": "literal",
+                            "value": false
+                        }]
+                    }, {
+                        "type": "=",
+                        "args": [{
+                            "type": functionOperator,
+                            "name": "jsonPointer",
+                            "args": [
+                                {type: 'property', name: "property2"},
+                                {type: 'literal', value: "key"}
+                            ]
+                        }, {
+                            "type": "literal",
+                            "value": "value"
+                        }]
+                    }]
+                }, {
+                    "type": "INTERSECTS",
+                    "args": [
+                        {type: "property", name: "geom"},
+                        {
+                            "type": "Point",
+                            "coordinates": [1, 2]
+                        }]
+                }]
+            }, {
+                "type": "=",
+                "args": [{type: 'property', name: "property3"}, {type: 'literal', value: "value"}]
+            }]
+
+        }
     }
 ];
 const testRules = rules => rules.map(({ cql, expected }) => {
     it(`testing ${cql}`, () => {
         try {
-            const res = parser.read(cql);
+            const res = read(cql);
             Object.keys(expected).map(k => {
                 expect(get(res, k)).toEqual(expected[k]);
             });

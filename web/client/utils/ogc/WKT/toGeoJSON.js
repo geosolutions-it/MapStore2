@@ -33,7 +33,15 @@ const parsePolygon = (coordinates) => {
 };
 const parseMultiPoint = (coordinates) => {
     const points = coordinates.split(',').map(point => {
-        const [x, y] = point.trim().split(' ').map(parseFloat);
+        const [x, y] = point
+            /*
+            MultiPoint can have these forms. Remove the parenthesis to suppor both,
+            given that we are parsing one single point.
+            MULTIPOINT ((10 40), (40 30), (20 20), (30 10))
+            MULTIPOINT (10 40, 40 30, 20 20, 30 10)
+            */
+            .replace('(', '').replace(')', '')
+            .trim().split(' ').map(parseFloat);
         return [x, y];
     });
     return {
@@ -72,12 +80,12 @@ const parseMultiPolygon = (coordinates) => {
         coordinates: polygons
     };
 };
-let toGeometry;
+let toGeoJSON;
 const parseGeometryCollection = (coordinates) => {
     const geometries = coordinates.split('),').map(geometry => {
         const type = geometry.substring(0, geometry.indexOf('(')).trim().toUpperCase();
         const coords = geometry.substring(geometry.indexOf('(') + 1).trim();
-        return toGeometry(`${type}(${coords})`);
+        return toGeoJSON(`${type}(${coords})`);
     });
     return {
         type: 'GeometryCollection',
@@ -85,7 +93,7 @@ const parseGeometryCollection = (coordinates) => {
     };
 };
 
-toGeometry = (rawWkt) => {
+toGeoJSON = (rawWkt) => {
     // Remove any leading or trailing white spaces from the WKT
     let wkt = rawWkt.trim();
 
@@ -127,10 +135,10 @@ toGeometry = (rawWkt) => {
     return result;
 };
 /**
- * Convert a WKT string to a geojson geometry
- * @name toGeometry
+ * Convert a WKT string to a geoJSON geometry
+ * @name toGeoJSON
  * @memberof utils.ogc.Filter.WKT
  * @param {string} wkt the wkt string
- * @return {object} the geojson geometry
+ * @return {object} the geoJSON geometry
  */
-export default toGeometry;
+export default toGeoJSON;

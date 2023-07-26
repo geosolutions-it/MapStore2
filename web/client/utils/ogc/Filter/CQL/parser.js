@@ -5,9 +5,9 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const toGeometry = require('../../WKT/toGeometry').default;
+import {toGeoJSON} from '../../WKT';
 
-const spatialOperators = {
+export const spatialOperators = {
     INTERSECTS: "INTERSECTS",
     BBOX: "BBOX",
     CONTAINS: "CONTAINS",
@@ -15,8 +15,8 @@ const spatialOperators = {
     WITHIN: "WITHIN"
 };
 
-const functionOperator = "func";
-const patterns = {
+export const functionOperator = "func";
+export const patterns = {
     INCLUDE: /^INCLUDE$/,
     PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE)/i,
@@ -59,13 +59,13 @@ const patterns = {
 };
 const follows = {
     INCLUDE: ['END'],
-    LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'VALUE', 'LPAREN'],
+    LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'VALUE', 'LPAREN', 'RPAREN', 'NOT'],
     RPAREN: ['NOT', 'LOGICAL', 'END', 'RPAREN', 'COMMA', 'COMPARISON', 'BETWEEN', 'IS_NULL'],
     PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL', 'RPAREN'],
     BETWEEN: ['VALUE'],
     IS_NULL: ['END'],
     COMPARISON: ['VALUE', 'FUNCTION'],
-    COMMA: ['GEOMETRY', 'VALUE', 'PROPERTY'],
+    COMMA: ['GEOMETRY', 'FUNCTION', 'VALUE', 'PROPERTY'],
     VALUE: ['LOGICAL', 'COMMA', 'RPAREN', 'END'],
     SPATIAL: ['LPAREN'],
     LOGICAL: ['NOT', 'VALUE', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'LPAREN'],
@@ -164,13 +164,16 @@ const tokenize = (text) => {
 const buildAst = (tokens) => {
     let operatorStack = [];
     let postfix = [];
-    let nestingF = 0;
     while (tokens.length) {
         let tok = tokens.shift();
         switch (tok.type) {
         case "PROPERTY":
         case "GEOMETRY":
         case "VALUE":
+            if (operatorStack.length > 0 &&
+                operatorStack?.[operatorStack.length - 2]?.type === "FUNCTION") {
+                operatorStack[operatorStack.length - 2].count++;
+            }
             postfix.push(tok);
             break;
         case "COMPARISON":
@@ -185,16 +188,25 @@ const buildAst = (tokens) => {
             ) {
                 postfix.push(operatorStack.pop());
             }
-
+            if (operatorStack.length > 0 &&
+                operatorStack?.[operatorStack.length - 2]?.type === "FUNCTION") {
+                operatorStack[operatorStack.length - 2].count++;
+            }
             operatorStack.push(tok);
             break;
         case "SPATIAL":
         case "FUNCTION":
         case "NOT":
+            if (operatorStack.length > 0 &&
+                operatorStack?.[operatorStack.length - 2]?.type === "FUNCTION") {
+                operatorStack[operatorStack.length - 2].count++;
+            }
+            operatorStack.push(tok);
+            break;
         case "LPAREN":
             if (operatorStack.length > 0 &&
                 operatorStack?.[operatorStack.length - 1]?.type === "FUNCTION") {
-                operatorStack[operatorStack.length - 1].initialCount = postfix.length;
+                operatorStack[operatorStack.length - 1].count = 0;
             }
             operatorStack.push(tok);
             break;
@@ -214,7 +226,6 @@ const buildAst = (tokens) => {
             if (operatorStack.length > 0 &&
                 operatorStack[operatorStack.length - 1].type === "FUNCTION") {
                 let funcTok = operatorStack.pop();
-                funcTok.count = postfix.length - funcTok.initialCount;
                 postfix.push(funcTok);
             }
             break;
@@ -334,8 +345,7 @@ const buildAst = (tokens) => {
                 const property = buildTree();
                 return ({
                     type: spatialOperators.INTERSECTS,
-                    property,
-                    value
+                    args: [property, value]
                 });
             }
             case "WITHIN": {
@@ -343,8 +353,7 @@ const buildAst = (tokens) => {
                 let property = buildTree();
                 return ({
                     type: spatialOperators.WITHIN,
-                    property,
-                    value
+                    args: [property, value]
                 });
             }
             case "CONTAINS": {
@@ -352,8 +361,7 @@ const buildAst = (tokens) => {
                 const property = buildTree();
                 return ({
                     type: spatialOperators.CONTAINS,
-                    property,
-                    value
+                    args: [property, value]
                 });
             }
             case "DWITHIN": {
@@ -371,7 +379,8 @@ const buildAst = (tokens) => {
                 return null;
             }
         case "GEOMETRY":
-            return toGeometry(tok.text);
+            // WKT to convert in GeoJSON.
+            return toGeoJSON(tok.text);
         default:
             return tok.text;
         }
@@ -388,45 +397,43 @@ const buildAst = (tokens) => {
 
     return result;
 };
-module.exports = {
-    patterns,
-    spatialOperators,
-    functionOperator,
-    /**
-     * Parse a CQL filter. returns an object representation of the filter.
-     * For the moment this parser doesn't support WKT parsing.
-     * Example:
-     * ```
-     * const cqlFilter = "property1 = 'value1' AND property2 = 'value2'";
-     * const obj = read(cqlFilter);
-     * console.log(obj);
-     * // obj looks like this
-     * {
-     *   type: "and",
-     *   filters: [{
-     *      type: "=",
-     *      args[{type: "property", name: "property1"}, {type: "literal", value: "value1"}]
-     *   },{
-     *      type: "=",
-     *      property: "property1",
-     *      args[{type: "property", name: "property1"}, {type: "literal", value: "value1"}]
-     *   }, {
-     *      type: "func",
-     *      name: "func1",
-     *      args: [{
-     *         type: "property",
-     *         name: "property5"
-     *      }, {
-     *         type: "literal",
-     *         value: "value5"
-     *      }]
-     * }]]
-     * }
-     * ```
-     * @memberof utils.ogc.Filter.CQL.parser
-     * @name read
-     * @param cqlFilter the cql_filter o parse
-     * @return a javascript representation of the filter.
-     */
-    read: (text) => buildAst(tokenize(text))
-};
+
+
+/**
+ * Parse a CQL filter. returns an AST object representation of the filter.
+ * For the moment this parser doesn't support WKT parsing.
+ * Example:
+ * ```
+ * const cqlFilter = "property1 = 'value1' AND property2 = 'value2'";
+ * const obj = read(cqlFilter);
+ * console.log(obj);
+ * // obj looks like this
+ * {
+ *   type: "and",
+ *   filters: [{
+ *      type: "=",
+ *      args[{type: "property", name: "property1"}, {type: "literal", value: "value1"}]
+ *   },{
+ *      type: "=",
+ *      property: "property1",
+ *      args[{type: "property", name: "property1"}, {type: "literal", value: "value1"}]
+ *   }, {
+ *      type: "func",
+ *      name: "func1",
+ *      args: [{
+ *         type: "property",
+ *         name: "property5"
+ *      }, {
+ *         type: "literal",
+ *         value: "value5"
+ *      }]
+ * }]]
+ * }
+ * ```
+ * @memberof utils.ogc.Filter.CQL.parser
+ * @name read
+ * @param cqlFilter the cql_filter o parse
+ * @return a javascript representation of the filter.
+ */
+export const read = (text) => buildAst(tokenize(text));
+

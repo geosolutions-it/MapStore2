@@ -103,7 +103,8 @@ module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} =
         }).reduce((acc, [key, fun]) => {
             acc[key] = fun.bind(null, filterNS);
             return acc;
-        }),
+        }, {}),
+        geometry: getGeom,
         filter: filter.bind(null, filterNS),
         fidFilter: fidFilter.bind(null, filterNS),
         and: logical.and.bind(null, filterNS),

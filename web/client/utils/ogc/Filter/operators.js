@@ -52,7 +52,7 @@ const logical = {
     nor: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.NOR, [content, ...other]) : multiop(ns, ogcLogicalOperators.NOR, content)
 };
 
-const ogcFunc = (ns, name, content) => `<${ns}:Function name="${name}">${content.join("")}</${ns}:Function>`;
+const ogcFunc =  (ns, name, content = []) => `<${ns}:Function name="${name}">${Array.isArray(content) ? content.join("") : content}</${ns}:Function>`;
 
 const spatial = {
     intersects: (ns, ...args) => multiop(ns, ogcSpatialOperators.INTERSECTS, args),
@@ -74,7 +74,7 @@ const comparison = {
     ilike: (ns, ...args) => multiop(ns, ogcComparisonOperators.ilike, args),
     isNull: (ns, ...args) => multiop(ns, ogcComparisonOperators.isNull, args)
 };
-const func = (ns, ...args) => multiop(ns, ogcFunc, args);
+const func = (ns, name, ...args) => ogcFunc(ns, name, args);
 
 module.exports = {
     ogcComparisonOperators,
