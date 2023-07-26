@@ -49,7 +49,7 @@ import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingToolsUtils'
  *
  */
 function geoProcessingTools( state = {
-    selectedTool: GPT_TOOL_INTERSECTION || GPT_TOOL_BUFFER,
+    selectedTool: GPT_TOOL_BUFFER || GPT_TOOL_INTERSECTION,
     buffer: {
         counter: 0
     },
