@@ -11,7 +11,7 @@ import { identity, trim, fill, findIndex, get, isArray, isNil, isString, isPlain
 import {
     findGeometryProperty,
     getFeatureTypeProperties,
-    getPropertyDesciptor,
+    getPropertyDescriptor,
     isGeometryType,
     isValid,
     isValidValueForPropertyName as isValidValueForPropertyNameBase
@@ -185,7 +185,7 @@ export const getGridEvents = (gridEvents = {}, rowGetter, describe, actionOpts, 
     ...events,
     [currentEventKey]: (...args) => gridEvents[currentEventKey](...args, rowGetter, describe, actionOpts, columns)
 }), {});
-export const isProperty = (k, d) => !!getPropertyDesciptor(k, d);
+export const isProperty = (k, d) => !!getPropertyDescriptor(k, d);
 export const isValidValueForPropertyName = (v, k, d) => isValidValueForPropertyNameBase(v, getPropertyName(k, d), d);
 export const getDefaultFeatureProjection = () => "EPSG:4326";
 

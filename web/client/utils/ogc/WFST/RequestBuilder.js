@@ -11,7 +11,7 @@ const {insert, feature, attribute} = require('./insert');
 const {transaction} = require('./transaction');
 const {deleteFeaturesByFilter, deleteFeature} = require('./delete');
 const {update, propertyChange} = require('./update');
-const {getPropertyDesciptor, getValue, findGeometryProperty, featureTypeSchema} = require("../WFS/base");
+const {getPropertyDescriptor, getValue, findGeometryProperty, featureTypeSchema} = require("../WFS/base");
 const wfsRequestBuilder = require('../WFS/RequestBuilder');
 
 const mergeArray = (e, arr2) => arr2 && arr2.length > 0 ? [e, ...arr2] : e;
@@ -61,7 +61,7 @@ module.exports = function(describe, {wfsVersion = "1.1.0", wfsNS = "wfs", ...oth
         throw new WFSVersionNotSupportedException(wfsVersion);
     }
     const toFeature = (f) => feature( describe.targetPrefix, getTypeName(describe), Object.keys(f.properties || [])
-        .filter(k => getPropertyDesciptor(k, describe))
+        .filter(k => getPropertyDescriptor(k, describe))
         .map((key) => attribute(describe.targetPrefix, key, getValue(f.properties[key], key, describe)))
         .concat(f.geometry ? attribute(describe.targetPrefix, getGeometryName(f, describe), getValue(f.geometry, getGeometryName(f, describe), describe) ) : [])
     );
