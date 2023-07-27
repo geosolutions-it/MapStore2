@@ -178,5 +178,38 @@ describe('layerdownload Epics', () => {
             state
         );
     });
+    it('startFeatureExportDownload cql_filter support', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].error.config.url).toExist();
+            // remove duplicated question marks
+            expect(actions[0].error.config.url.indexOf('??') < 0).toBe(true);
+
+            // forwards outputFormat in the URL
+            expect(actions[0].error.config.url.indexOf("test-format") > 0).toBe(true);
+            expect(actions[0].error.config.data.indexOf("<ogc:PropertyIsEqualTo><ogc:PropertyName>name</ogc:PropertyName><ogc:Literal>test</ogc:Literal></ogc:PropertyIsEqualTo>") > 0).toBe(true);
+            done();
+        };
+
+        mockAxios.onGet().reply(404);
+        const state = {
+            controls: {
+                queryPanel: { enabled: false },
+                layerdownload: { enabled: true }
+            },
+            featuregrid: {},
+            layers: {
+                flat: [{ id: 'test layer', layerFilter: { featureTypeName: 'test' }, params: { cql_filter: "name = 'test'"} }],
+                selected: ['test layer']
+            }
+        };
+        testEpic(
+            startFeatureExportDownload,
+            1,
+            downloadFeatures('/wrong/path?', { featureTypeName: 'test' }, { selectedFormat: "test-format"}),
+            epicResult,
+            state
+        );
+    });
 
 });
