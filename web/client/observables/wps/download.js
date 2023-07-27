@@ -134,7 +134,7 @@ export const queryXML = ({input, attribute, filter, asynchronous, outputAsRefere
  * @param {boolean} downloadOptions.notifyDownloadEstimatorSuccess if true, the returned observable emits 'DownloadEstimatorSuccess' string after successful gs:DownloadEstimator run
  * @param {object} executeOptions options to pass to executeProcess. See {@link api/framework#observables.wps.execute.exports.executeProcess|executeProcess}
  */
-export const downloadRaster = (url, downloadOptions, executeOptions) => {
+export const download = (url, downloadOptions, executeOptions) => {
     if (url && downloadOptions) {
         const downloadEstimator$ = executeProcess(url, downloadEstimatorXML({
             layerName: downloadOptions.layerName,
@@ -182,7 +182,7 @@ export const downloadRaster = (url, downloadOptions, executeOptions) => {
  * @param {boolean} downloadOptions.notifyDownloadEstimatorSuccess if true, the returned observable emits 'DownloadEstimatorSuccess' string after successful gs:DownloadEstimator run
  * @param {object} executeOptions options to pass to executeProcess. See {@link api/framework#observables.wps.execute.exports.executeProcess|executeProcess}
  */
-export const download = (url, downloadOptions, executeOptions) => {
+export const downloadWithAttributesFilter = (url, downloadOptions, executeOptions) => {
     if (url && downloadOptions) {
         const downloadEstimator$ = executeProcess(url, downloadEstimatorXML({
             layerName: downloadOptions.layerName,
