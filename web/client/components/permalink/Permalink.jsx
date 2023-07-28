@@ -82,11 +82,10 @@ export default ({
             permalinkType: pathInfo.type,
             resource: {
                 category: "PERMALINK",
-                metadata: {name: uuid()},
+                metadata: {name: uuid(), description: settings.description},
                 attributes: {
                     ...pathInfo,
-                    title: settings.title,
-                    description: settings.description
+                    title: settings.title
                 }
             },
             allowAllUser: settings.allowAllUser

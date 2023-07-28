@@ -8,10 +8,10 @@
 import Rx from 'rxjs';
 
 import expect from 'expect';
-import { testEpic, testCombinedEpicStream } from './epicTestUtils';
+import { testEpic, testCombinedEpicStream, TEST_TIMEOUT, addTimeoutEpic } from './epicTestUtils';
 import ajax from '../../libs/ajax';
 
-import { configureMap, configureError, LOAD_MAP_CONFIG } from "../../actions/config";
+import { configureMap, configureError, LOAD_MAP_CONFIG, MAP_INFO_LOADED } from "../../actions/config";
 import { CLEAR_MAP_TEMPLATES } from '../../actions/maptemplates';
 import {
     loadContext,
@@ -35,7 +35,7 @@ import CONTEXT_RESOURCE from '../../test-resources/geostore/resources/resource/c
 import CONTEXT_DATA from '../../test-resources/geostore/data/context_1.json';
 import CONTEXT_ATTRIBUTES from '../../test-resources/geostore/resources/resource/context_1_attributes.json';
 
-import { loadContextAndMap, handleLoginLogoutContextReload } from "../context";
+import { loadContextAndMap, handleLoginLogoutContextReload, setMapInfoOnPermalinkContext } from "../context";
 import MockAdapter from 'axios-mock-adapter';
 import ConfigUtils from "../../utils/ConfigUtils";
 import { LOAD_USER_SESSION, userSessionLoaded, SET_USER_SESSION, USER_SESSION_START_SAVING } from '../../actions/usersession';
@@ -275,6 +275,38 @@ describe('context epics', () => {
             });
         });
     });
-
+    describe('setMapInfoOnPermalinkContext', () => {
+        it('setMapInfoOnPermalinkContext, with no resource', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+            testEpic(
+                addTimeoutEpic(setMapInfoOnPermalinkContext, 10),
+                NUMBER_OF_ACTIONS, [
+                    loadFinished()
+                ], actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    actions.map((action) => {
+                        expect(action.type).toBe(TEST_TIMEOUT);
+                    });
+                    done();
+                }, {router: {location: {search: '?category=PERMALINK'}}});
+        });
+        it('setMapInfoOnPermalinkContext, with context resource', (done) => {
+            const NUMBER_OF_ACTIONS = 1;
+            testEpic(
+                setMapInfoOnPermalinkContext,
+                NUMBER_OF_ACTIONS, [
+                    loadFinished()
+                ], actions => {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    actions.map((action) => {
+                        expect(action.type).toBe(MAP_INFO_LOADED);
+                    });
+                    done();
+                }, {
+                    router: {location: {search: '?category=PERMALINK'}},
+                    context: {resource: {id: "1", name: "test", data: {mapConfig: {map: {}}}}}
+                });
+        });
+    });
 });
 
