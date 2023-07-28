@@ -22,6 +22,12 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.01.xx to 2023.02.00
 
+### NodeJS/NPM upgrade
+
+In this release we updated all our systems to use node 16/NPM 8. This because Node 12 is actually out of maintainance. 
+We are going to support soon more recent versions of NodeJS solving the related issues. 
+So make you sure to use the correct verison of NodeJS/NPM to build things correctly. See the [requirements](../requirements/#debug-build) section of the document for the details.
+
 ### Visualization mode in map configuration
 
 The map configuration stores the information related to the visualization mode 2D or 3D after saving a map.
