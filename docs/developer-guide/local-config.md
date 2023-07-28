@@ -68,9 +68,7 @@ This is the main structure:
       // Use POST requests for each WMS length URL highter than this value.
       "maxURLLength": 5000,
       // Custom path to home page
-      "homePath": '/home',
-      // Custom path to login page 
-      "loginPage": '/login',
+      "homePath": '/home'
   },
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {

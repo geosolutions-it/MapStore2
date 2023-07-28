@@ -10,7 +10,7 @@
 import Rx from 'rxjs';
 
 import { split, get, isNil } from 'lodash';
-import { LOCATION_CHANGE, push } from 'connected-react-router';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import {
     FEEDBACK_MASK_ENABLED,
@@ -25,7 +25,6 @@ import { LOGIN_SUCCESS, LOGOUT, LOGIN_PROMPT_CLOSED, loginRequired } from '../ac
 import { LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR } from '../actions/dashboard';
 import { LOAD_GEOSTORY, GEOSTORY_LOADED, LOAD_GEOSTORY_ERROR } from '../actions/geostory';
 import { LOAD_CONTEXT, LOAD_FINISHED, CONTEXT_LOAD_ERROR } from '../actions/context';
-import { goToPage } from '../actions/login';
 import { LOAD_PERMALINK, LOAD_PERMALINK_ERROR, PERMALINK_LOADED } from '../actions/permalink';
 
 import {
@@ -41,8 +40,7 @@ import { isLoggedIn } from '../selectors/security';
 import { isSharedStory } from '../selectors/geostory';
 import { pathnameSelector } from '../selectors/router';
 import { getGeostoryMode } from '../utils/GeoStoryUtils';
-import { getLoginPage } from '../utils/SecurityUtils';
-import { getMiscSetting } from '../utils/ConfigUtils';
+import { goToHomePage } from '../actions/router';
 
 
 /**
@@ -229,17 +227,15 @@ export const feedbackMaskPromptLogin = (action$, store) => // TODO: separate log
         })
         .filter(() => !isLoggedIn(store.getState()) && !isSharedStory(store.getState()))
         .exhaustMap(
-            () => {
-                const loginPage = getLoginPage();
-                const homePage = getMiscSetting('homePath', '/');
-                return Rx.Observable.of(loginPage ? goToPage(loginPage) : loginRequired()) // prompt login panel or redirect to login page
+            () =>
+                Rx.Observable.of(loginRequired()) // prompt login
                     .concat(
                         action$.ofType(LOGIN_PROMPT_CLOSED) // then if for login close
                             .take(1)
-                            .switchMap(() => Rx.Observable.of(feedbackMaskLoading(), push(homePage))) // go to home page
+                            .switchMap(() => Rx.Observable.of(feedbackMaskLoading(), goToHomePage()))
 
-                    ).takeUntil(action$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE));
-            });
+                    ).takeUntil(action$.ofType(LOGIN_SUCCESS, LOCATION_CHANGE))
+        );
 
 export const redirectUnauthorizedUserOnNewLoadError = (action$, { getState = () => {}}) =>
     action$.ofType(MAP_CONFIG_LOAD_ERROR, LOAD_GEOSTORY_ERROR, DASHBOARD_LOAD_ERROR)
@@ -249,7 +245,7 @@ export const redirectUnauthorizedUserOnNewLoadError = (action$, { getState = () 
              pathnameSelector(getState()).match(/dashboard\/[0-9]+/) === null &&
              pathnameSelector(getState()).match(/dashboard/) !== null))
         .filter(() => !isLoggedIn(getState()))
-        .switchMap(() => Rx.Observable.of(push(getMiscSetting('homePath', '/')))); // go to home page
+        .switchMap(() => Rx.Observable.of(goToHomePage()));
 
 /**
  * Epics for feedbackMask functionality

@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { push } from 'connected-react-router';
 import { get } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -22,7 +21,7 @@ import { feedbackMaskSelector } from '../selectors/feedbackmask';
 import { isSharedStory } from '../selectors/geostory';
 import { isLoggedIn } from '../selectors/security';
 import Button from '../components/misc/Button';
-import { getPath } from '../components/home/Home';
+import { goToHomePage } from '../actions/router';
 
 const feedbackMaskPluginSelector = createSelector([
     feedbackMaskSelector,
@@ -44,7 +43,7 @@ const feedbackMaskPluginSelector = createSelector([
 }));
 
 const HomeButton = connect(() => ({}), {
-    onClick: () => push(getPath())
+    onClick: goToHomePage
 })(
     ({onClick = () => {}}) => <Button
         bsStyle="primary"

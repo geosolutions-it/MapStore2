@@ -247,11 +247,4 @@ describe('Test security utils methods', () => {
         cleanParams = SecurityUtils.clearNilValuesForParams(validAndInvalidParams);
         expect(cleanParams).toEqual({"param1": "some val"});
     });
-    it('getLoginPage', () => {
-        const miscSettings = ConfigUtils.getConfigProp("miscSettings");
-        ConfigUtils.setConfigProp("miscSettings", {loginPage: "/login"});
-        expect(SecurityUtils.getLoginPage()).toContain('/login');
-        // restore
-        ConfigUtils.setConfigProp("miscSettings", miscSettings);
-    });
 });
