@@ -1,4 +1,17 @@
+/*
+ * Copyright 2023, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
+/**
+ * Convert a WKT sub-string of geometries to a geoJSON Point
+ * @private
+ * @param {string} coordinates coordinates string
+ * @returns {object} geoJSON point
+ */
 const parsePoint = (coordinates) => {
     const [x, y] = coordinates.split(' ').map(parseFloat);
     return {
@@ -7,6 +20,12 @@ const parsePoint = (coordinates) => {
     };
 };
 
+/**
+ * Convert a WKT sub-string of geometries to a geoJSON LineString
+ * @private
+ * @param {string} coordinates coordinates string
+ * @returns {object} geoJSON LineString
+ */
 const parseLineString = (coordinates) => {
     const points = coordinates.split(',').map(point => {
         const [x, y] = point.trim().split(' ').map(parseFloat);
@@ -18,6 +37,12 @@ const parseLineString = (coordinates) => {
     };
 };
 
+/**
+ * Convert a WKT sub-string of geometries to a geoJSON Polygon
+ * @private
+ * @param {string} coordinates coordinates string
+ * @returns {object} geoJSON Polygon
+ */
 const parsePolygon = (coordinates) => {
     const rings = coordinates.split('),').map(ring => {
         const points = ring.replace('(', '').trim().split(',').map(point => {
@@ -31,11 +56,18 @@ const parsePolygon = (coordinates) => {
         coordinates: rings
     };
 };
+
+/**
+ * Convert a WKT sub-string of geometries to a geoJSON MultiPoint
+ * @private
+ * @param {string} coordinates coordinates string
+ * @returns {object} geoJSON MultiPoint
+ */
 const parseMultiPoint = (coordinates) => {
     const points = coordinates.split(',').map(point => {
         const [x, y] = point
             /*
-            MultiPoint can have these forms. Remove the parenthesis to suppor both,
+            MultiPoint can have these forms. Remove the parenthesis to support both,
             given that we are parsing one single point.
             MULTIPOINT ((10 40), (40 30), (20 20), (30 10))
             MULTIPOINT (10 40, 40 30, 20 20, 30 10)
@@ -50,6 +82,12 @@ const parseMultiPoint = (coordinates) => {
     };
 };
 
+/**
+ * Convert a WKT sub-string of geometries to a geoJSON MultiLineString
+ * @private
+ * @param {string} coordinates coordinates string
+ * @returns {object} geoJSON MultiLineString
+ */
 const parseMultiLineString = (coordinates) => {
     const lines = coordinates.split('),').map(line => {
         const points = line.replace('(', '').trim().split(',').map(point => {
@@ -64,6 +102,12 @@ const parseMultiLineString = (coordinates) => {
     };
 };
 
+/**
+ * Convert a WKT sub-string of geometries to a geoJSON MultiPolygon
+ * @private
+ * @param {string} coordinates coordinates string
+ * @returns {object} geoJSON MultiPolygon
+ */
 const parseMultiPolygon = (coordinates) => {
     const polygons = coordinates.split(')),').map(polygon => {
         const rings = polygon.replace('(', '').trim().split('),').map(ring => {
@@ -81,6 +125,13 @@ const parseMultiPolygon = (coordinates) => {
     };
 };
 let toGeoJSON;
+
+/**
+ * Convert a WKT sub-string of geometries to a geoJSON GeometryCollection
+ * @private
+ * @param {string} coordinates coordinates string
+ * @returns {object} geoJSON GeometryCollection
+ */
 const parseGeometryCollection = (coordinates) => {
     const geometries = coordinates.split('),').map(geometry => {
         const type = geometry.substring(0, geometry.indexOf('(')).trim().toUpperCase();
@@ -135,7 +186,7 @@ toGeoJSON = (rawWkt) => {
     return result;
 };
 /**
- * Convert a WKT string to a geoJSON geometry
+ * Convert a WKT sub-string of geometries to a geoJSON geometry
  * @name toGeoJSON
  * @memberof utils.ogc.Filter.WKT
  * @param {string} wkt the wkt string

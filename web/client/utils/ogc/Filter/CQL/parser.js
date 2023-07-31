@@ -401,7 +401,6 @@ const buildAst = (tokens) => {
 
 /**
  * Parse a CQL filter. returns an AST object representation of the filter.
- * For the moment this parser doesn't support WKT parsing.
  * Example:
  * ```
  * const cqlFilter = "property1 = 'value1' AND property2 = 'value2'";
