@@ -36,6 +36,14 @@ const valueReference = (ns, name) => `<${ns}:ValueReference>${name}</${ns}:Value
 const literal = (ns, value) => `<${ns}:Literal>${value}</${ns}:Literal>`;
 const lower = (ns, value) => `<${ns}:LowerBoundary>${value}</${ns}:LowerBoundary>`;
 const upper = (ns, value) => `<${ns}:UpperBoundary>${value}</${ns}:UpperBoundary>`;
+
+/**
+ * This function is used to apply multiple operations to the same content.
+ * @param {string} ns namespace
+ * @param {function} op operation function
+ * @param {string|Array} content content
+ * @returns the operation result
+ */
 const multiop = (ns, op, content) => op(ns, Array.isArray(content) ? content.join("") : content);
 const logical = {
     and: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.AND, [content, ...other]) : multiop(ns, ogcLogicalOperators.AND, content),
@@ -44,6 +52,7 @@ const logical = {
     nor: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.NOR, [content, ...other]) : multiop(ns, ogcLogicalOperators.NOR, content)
 };
 
+const ogcFunc =  (ns, name, content = []) => `<${ns}:Function name="${name}">${Array.isArray(content) ? content.join("") : content}</${ns}:Function>`;
 
 const spatial = {
     intersects: (ns, ...args) => multiop(ns, ogcSpatialOperators.INTERSECTS, args),
@@ -65,6 +74,7 @@ const comparison = {
     ilike: (ns, ...args) => multiop(ns, ogcComparisonOperators.ilike, args),
     isNull: (ns, ...args) => multiop(ns, ogcComparisonOperators.isNull, args)
 };
+const func = (ns, name, ...args) => ogcFunc(ns, name, args);
 
 module.exports = {
     ogcComparisonOperators,
@@ -78,5 +88,6 @@ module.exports = {
     spatial,
     comparison,
     lower,
-    upper
+    upper,
+    func
 };

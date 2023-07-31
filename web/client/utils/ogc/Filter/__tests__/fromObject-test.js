@@ -106,6 +106,70 @@ const CQL_SPECIFIC = [{
     expected: ""
 }];
 
+const FUNCTIONS = [
+    // empty
+    {
+        cql: "func1() = false",
+        expected: '<ogc:PropertyIsEqualTo>'
+            + '<ogc:Function name="func1">'
+            + '</ogc:Function>'
+            + '<ogc:Literal>false</ogc:Literal>'
+        + '</ogc:PropertyIsEqualTo>'
+    },
+    // simple
+    {
+        cql: "func1('arg1') = false",
+        expected: '<ogc:PropertyIsEqualTo>'
+            + '<ogc:Function name="func1">'
+                + '<ogc:Literal>arg1</ogc:Literal>'
+            + '</ogc:Function>'
+            + '<ogc:Literal>false</ogc:Literal>'
+        + '</ogc:PropertyIsEqualTo>'
+    },
+    // multiple args
+    {
+        cql: "func1('arg1', 'arg2') = false",
+        expected: '<ogc:PropertyIsEqualTo>'
+            + '<ogc:Function name="func1">'
+                + '<ogc:Literal>arg1</ogc:Literal>'
+                + '<ogc:Literal>arg2</ogc:Literal>'
+            + '</ogc:Function>'
+            + '<ogc:Literal>false</ogc:Literal>'
+        + '</ogc:PropertyIsEqualTo>'
+    },
+    // property
+    {
+        cql: "func1(PROP) = false",
+        expected: '<ogc:PropertyIsEqualTo>'
+            + '<ogc:Function name="func1">'
+                + '<ogc:PropertyName>PROP</ogc:PropertyName>'
+            + '</ogc:Function>'
+            + '<ogc:Literal>false</ogc:Literal>'
+        + '</ogc:PropertyIsEqualTo>'
+    },
+
+    // nested
+    {
+        cql: "jsonArrayContains(\"property1\", 'key', 'value') = false",
+        expected: '<ogc:PropertyIsEqualTo>'
+        + '<ogc:Function name="jsonArrayContains">'
+            + '<ogc:PropertyName>property1</ogc:PropertyName>'
+            + '<ogc:Literal>key</ogc:Literal>'
+            + '<ogc:Literal>value</ogc:Literal>'
+        + '</ogc:Function>'
+        + '<ogc:Literal>false</ogc:Literal>'
+    + '</ogc:PropertyIsEqualTo>'
+    }, {
+        cql: "jsonPointer(\"property2\", 'key') = 'value')",
+        expected: '<ogc:PropertyIsEqualTo>'
+        + '<ogc:Function name="jsonPointer">'
+            + '<ogc:PropertyName>property2</ogc:PropertyName>'
+            + '<ogc:Literal>key</ogc:Literal>'
+        + '</ogc:Function>'
+        + '<ogc:Literal>value</ogc:Literal>'
+    + '</ogc:PropertyIsEqualTo>'
+    }];
+
 const REAL_WORLD = [
     // real world example
     {
@@ -133,6 +197,41 @@ const REAL_WORLD = [
                 + '<ogc:Literal>1</ogc:Literal>'
             + '</ogc:PropertyIsEqualTo>'
         + '</ogc:And>'
+    }, {
+        cql: "jsonArrayContains(\"property1\", 'key', 'value') = false AND jsonPointer(\"property2\", 'key') = 'value')",
+        expected:
+            '<ogc:And>'
+                + '<ogc:PropertyIsEqualTo>'
+                    + '<ogc:Function name="jsonArrayContains">'
+                        + '<ogc:PropertyName>property1</ogc:PropertyName>'
+                        + '<ogc:Literal>key</ogc:Literal>'
+                        + '<ogc:Literal>value</ogc:Literal>'
+                    + '</ogc:Function>'
+                    + '<ogc:Literal>false</ogc:Literal>'
+                + '</ogc:PropertyIsEqualTo>'
+                + '<ogc:PropertyIsEqualTo>'
+                    + '<ogc:Function name="jsonPointer">'
+                        + '<ogc:PropertyName>property2</ogc:PropertyName>'
+                        + '<ogc:Literal>key</ogc:Literal>'
+                    + '</ogc:Function>'
+                    + '<ogc:Literal>value</ogc:Literal>'
+                + '</ogc:PropertyIsEqualTo>'
+            + '</ogc:And>'
+
+    },
+    // geometry example
+    {
+        cql: "INTERSECTS(GEOMETRY, POLYGON((0 0, 0 10, 10 10, 10 0, 0 0)))",
+        expected: '<ogc:Intersects>'
+            + '<ogc:PropertyName>GEOMETRY</ogc:PropertyName>'
+            + '<gml:Polygon srsName="EPSG:4326">'
+                + '<gml:exterior>'
+                    + '<gml:LinearRing>'
+                        + '<gml:posList>0 0 0 10 10 10 10 0 0 0</gml:posList>'
+                    + '</gml:LinearRing>'
+                + '</gml:exterior>'
+            + '</gml:Polygon>'
+        + '</ogc:Intersects>'
     }
 ];
 const testRules = (rules, toOGCFilter) => rules.map(({ cql, expected }) => {
@@ -155,6 +254,10 @@ describe('Convert CQL filter to OGC Filter', () => {
         const toOGCFilter = fromObject(filterBuilder({ gmlVersion: "3.1.1" }));
         testRules(CQL_SPECIFIC, toOGCFilter);
 
+    });
+    it('functions', () => {
+        const toOGCFilter = fromObject(filterBuilder({ gmlVersion: "3.1.1" }));
+        testRules(FUNCTIONS, toOGCFilter);
     });
     it('more real world examples', () => {
         const toOGCFilter = fromObject(filterBuilder({ gmlVersion: "3.1.1" }));

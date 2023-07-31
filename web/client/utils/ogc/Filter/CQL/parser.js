@@ -5,29 +5,31 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const fromWKT = () => {
-    throw new Error("WKT parsing for CQL filter not supported yet");
-}; // TODO: use wkt-parser
-const spatialOperators = {
+import {toGeoJSON} from '../../WKT';
+
+export const spatialOperators = {
     INTERSECTS: "INTERSECTS",
     BBOX: "BBOX",
     CONTAINS: "CONTAINS",
     DWITHIN: "DWITHIN",
     WITHIN: "WITHIN"
 };
-const patterns = {
+
+export const functionOperator = "func";
+export const patterns = {
     INCLUDE: /^INCLUDE$/,
     PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE)/i,
     IS_NULL: /^IS NULL/i,
     COMMA: /^,/,
     LOGICAL: /^(AND|OR)/i,
-    VALUE: /^('([^']|'')*'|-?\d+(\.\d*)?|\.\d+)/,
+    VALUE: /^('([^']|'')*'|-?\d+(\.\d*)?|\.\d+|true|false)/i,
     LPAREN: /^\(/,
     RPAREN: /^\)/,
     SPATIAL: /^(BBOX|INTERSECTS|DWITHIN|WITHIN|CONTAINS)/i,
     NOT: /^NOT/i,
     BETWEEN: /^BETWEEN/i,
+    FUNCTION: /^[_a-zA-Z][_a-zA-Z1-9]*(?=\()/,
     GEOMETRY: (text) => {
         let type = /^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)/.exec(text);
         if (type) {
@@ -57,18 +59,19 @@ const patterns = {
 };
 const follows = {
     INCLUDE: ['END'],
-    LPAREN: ['GEOMETRY', 'SPATIAL', 'PROPERTY', 'VALUE', 'LPAREN'],
-    RPAREN: ['NOT', 'LOGICAL', 'END', 'RPAREN'],
-    PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL'],
+    LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'VALUE', 'LPAREN', 'RPAREN', 'NOT'],
+    RPAREN: ['NOT', 'LOGICAL', 'END', 'RPAREN', 'COMMA', 'COMPARISON', 'BETWEEN', 'IS_NULL'],
+    PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL', 'RPAREN'],
     BETWEEN: ['VALUE'],
     IS_NULL: ['END'],
-    COMPARISON: ['VALUE'],
-    COMMA: ['GEOMETRY', 'VALUE', 'PROPERTY'],
+    COMPARISON: ['VALUE', 'FUNCTION'],
+    COMMA: ['GEOMETRY', 'FUNCTION', 'VALUE', 'PROPERTY'],
     VALUE: ['LOGICAL', 'COMMA', 'RPAREN', 'END'],
     SPATIAL: ['LPAREN'],
-    LOGICAL: ['NOT', 'VALUE', 'SPATIAL', 'PROPERTY', 'LPAREN'],
+    LOGICAL: ['NOT', 'VALUE', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'LPAREN'],
     NOT: ['PROPERTY', 'LPAREN'],
-    GEOMETRY: ['COMMA', 'RPAREN']
+    GEOMETRY: ['COMMA', 'RPAREN'],
+    FUNCTION: ['LPAREN', 'FUNCTION', 'VALUE', 'PROPERTY']
 };
 
 
@@ -141,7 +144,7 @@ const nextToken = (text, tokens) => {
 const tokenize = (text) => {
     let results = [];
     let token;
-    const expect = ["INCLUDE", "NOT", "GEOMETRY", "SPATIAL", "PROPERTY", "LPAREN"];
+    const expect = ["INCLUDE", "NOT", "GEOMETRY",  "SPATIAL", "FUNCTION", "PROPERTY", "LPAREN"];
     let text2 = text;
     let expect2 = expect;
     do {
@@ -161,13 +164,16 @@ const tokenize = (text) => {
 const buildAst = (tokens) => {
     let operatorStack = [];
     let postfix = [];
-
     while (tokens.length) {
         let tok = tokens.shift();
         switch (tok.type) {
         case "PROPERTY":
         case "GEOMETRY":
         case "VALUE":
+            if (operatorStack.length > 0 &&
+                operatorStack?.[operatorStack.length - 2]?.type === "FUNCTION") {
+                operatorStack[operatorStack.length - 2].count++;
+            }
             postfix.push(tok);
             break;
         case "COMPARISON":
@@ -182,12 +188,26 @@ const buildAst = (tokens) => {
             ) {
                 postfix.push(operatorStack.pop());
             }
-
+            if (operatorStack.length > 0 &&
+                operatorStack?.[operatorStack.length - 2]?.type === "FUNCTION") {
+                operatorStack[operatorStack.length - 2].count++;
+            }
             operatorStack.push(tok);
             break;
         case "SPATIAL":
+        case "FUNCTION":
         case "NOT":
+            if (operatorStack.length > 0 &&
+                operatorStack?.[operatorStack.length - 2]?.type === "FUNCTION") {
+                operatorStack[operatorStack.length - 2].count++;
+            }
+            operatorStack.push(tok);
+            break;
         case "LPAREN":
+            if (operatorStack.length > 0 &&
+                operatorStack?.[operatorStack.length - 1]?.type === "FUNCTION") {
+                operatorStack[operatorStack.length - 1].count = 0;
+            }
             operatorStack.push(tok);
             break;
         case "RPAREN":
@@ -201,6 +221,12 @@ const buildAst = (tokens) => {
             if (operatorStack.length > 0 &&
                     operatorStack[operatorStack.length - 1].type === "SPATIAL") {
                 postfix.push(operatorStack.pop());
+            }
+
+            if (operatorStack.length > 0 &&
+                operatorStack[operatorStack.length - 1].type === "FUNCTION") {
+                let funcTok = operatorStack.pop();
+                postfix.push(funcTok);
             }
             break;
         case "COMMA":
@@ -237,39 +263,68 @@ const buildAst = (tokens) => {
             let min = buildTree();
             const property = buildTree();
             return ({
-                property,
-                lowerBoundary: min,
-                upperBoundary: max,
+                args: [property, min, max],
                 type: operators.BETWEEN
             });
         }
         case "COMPARISON": {
-            let value = buildTree();
-            const property = buildTree();
+            const arg2 = buildTree();
+            const arg1 = buildTree();
             return ({
-                property,
-                value: value,
+                args: [arg1, arg2],
                 type: operators[tok.text.toUpperCase()]
             });
         }
         case "IS_NULL": {
             const property = buildTree();
             return ({
-                property,
+                args: [property],
                 type: operators[tok.text.toUpperCase()]
             });
         }
         case "VALUE":
             let match = tok.text.match(/^'(.*)'$/);
             if (match) {
-                return match[1].replace(/''/g, "'");
+                return {
+                    type: 'literal',
+                    value: match[1].replace(/''/g, "'")
+                };
             }
-            return Number(tok.text);
+            if (tok.text.toLowerCase() === "true" || tok.text.toLowerCase() === "false") {
+                return {
+                    type: 'literal',
+                    value: tok.text.toLowerCase() === "true"
+                };
+            }
+            return {
+                type: 'literal',
+                value: Number(tok.text)
+            };
+        case "PROPERTY":
+            return ({
+                type: "property",
+                name: tok.text
+            });
+
         case "INCLUDE": {
             return ({
                 type: cql.INCLUDE
             });
         }
+        case "FUNCTION": {
+            let name = tok.text.replace(/\($/, "");
+            let args = [];
+            for ( let i = 0; i < tok.count; i++) {
+                args.push(buildTree());
+            }
+
+            return ({
+                type: functionOperator,
+                name,
+                args: args.reverse()
+            });
+        }
+
         case "SPATIAL":
             switch (tok.text.toUpperCase()) {
             case "BBOX": {
@@ -290,8 +345,7 @@ const buildAst = (tokens) => {
                 const property = buildTree();
                 return ({
                     type: spatialOperators.INTERSECTS,
-                    property,
-                    value
+                    args: [property, value]
                 });
             }
             case "WITHIN": {
@@ -299,8 +353,7 @@ const buildAst = (tokens) => {
                 let property = buildTree();
                 return ({
                     type: spatialOperators.WITHIN,
-                    property,
-                    value
+                    args: [property, value]
                 });
             }
             case "CONTAINS": {
@@ -308,8 +361,7 @@ const buildAst = (tokens) => {
                 const property = buildTree();
                 return ({
                     type: spatialOperators.CONTAINS,
-                    property,
-                    value
+                    args: [property, value]
                 });
             }
             case "DWITHIN": {
@@ -327,7 +379,8 @@ const buildAst = (tokens) => {
                 return null;
             }
         case "GEOMETRY":
-            return fromWKT(tok.text);
+            // WKT to convert in GeoJSON.
+            return toGeoJSON(tok.text);
         default:
             return tok.text;
         }
@@ -344,33 +397,42 @@ const buildAst = (tokens) => {
 
     return result;
 };
-module.exports = {
-    /**
-     * Parse a CQL filter. returns an object representation of the filter.
-     * For the moment this parser doesn't support WKT parsing.
-     * Example:
-     * ```
-     * const cqlFilter = "property1 = 'value1' AND property2 = 'value2'";
-     * const obj = read(cqlFilter);
-     * console.log(obj);
-     * // obj looks like this
-     * {
-     *   type: "and",
-     *   filters: [{
-     *      type: "=",
-     *      property: "property1",
-     *      value: "value1"
-     *   },{
-     *      type: "=",
-     *      property: "property1",
-     *      value: "value2"
-     *   }]
-     * }
-     * ```
-     * @memberof utils.ogc.Filter.CQL.parser
-     * @name read
-     * @param cqlFilter the cql_filter o parse
-     * @return a javascript representation of the filter.
-     */
-    read: (text) => buildAst(tokenize(text))
-};
+
+
+/**
+ * Parse a CQL filter. returns an AST object representation of the filter.
+ * Example:
+ * ```
+ * const cqlFilter = "property1 = 'value1' AND property2 = 'value2'";
+ * const obj = read(cqlFilter);
+ * console.log(obj);
+ * // obj looks like this
+ * {
+ *   type: "and",
+ *   filters: [{
+ *      type: "=",
+ *      args[{type: "property", name: "property1"}, {type: "literal", value: "value1"}]
+ *   },{
+ *      type: "=",
+ *      property: "property1",
+ *      args[{type: "property", name: "property1"}, {type: "literal", value: "value1"}]
+ *   }, {
+ *      type: "func",
+ *      name: "func1",
+ *      args: [{
+ *         type: "property",
+ *         name: "property5"
+ *      }, {
+ *         type: "literal",
+ *         value: "value5"
+ *      }]
+ * }]]
+ * }
+ * ```
+ * @memberof utils.ogc.Filter.CQL.parser
+ * @name read
+ * @param cqlFilter the cql_filter o parse
+ * @return a javascript representation of the filter.
+ */
+export const read = (text) => buildAst(tokenize(text));
+
