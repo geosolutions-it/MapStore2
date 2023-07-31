@@ -1,4 +1,3 @@
-import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'lodash';
 /*
 * Copyright 2016, GeoSolutions Sas.
 * All rights reserved.
@@ -6,20 +5,21 @@ import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'l
 * This source code is licensed under the BSD-style license found in the
 * LICENSE file in the root directory of this source tree.
 */
+
 import { createSelector } from 'reselect';
 
-import { mapSelector } from './map';
-import { clickedPointWithFeaturesSelector } from './mapInfo';
-import { getSelectedMapView } from './mapviews';
-import { currentLocaleSelector } from "../selectors/locale";
-
-import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
-import { denormalizeGroups, isInsideResolutionsLimits } from '../utils/LayersUtils';
-import {getMarkerLayer, defaultQueryableFilter} from '../utils/MapInfoUtils';
 import { getCurrentResolution } from '../utils/MapUtils';
-import { mergeViewLayers } from '../utils/MapViewsUtils';
+import {getMarkerLayer, defaultQueryableFilter} from '../utils/MapInfoUtils';
+import { denormalizeGroups, isInsideResolutionsLimits } from '../utils/LayersUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
+import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
+import { clickedPointWithFeaturesSelector } from './mapInfo';
+import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'lodash';
 import { flattenGroups, getTitle } from '../utils/TOCUtils';
+import { mapSelector } from './map';
+import { getSelectedMapView } from './mapviews';
+import { mergeViewLayers } from '../utils/MapViewsUtils';
+import { currentLocaleSelector } from "../selectors/locale";
 
 export const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 export const nonBackgroundLayersSelector = (state) => layersSelector(state).filter(l => l.group !== "background");

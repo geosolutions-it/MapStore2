@@ -123,17 +123,15 @@ const MainComp = ({
                     </FormGroup>
                     {selectedTool === GPT_TOOL_BUFFER ? <Buffer/> : null}
                     {selectedTool === GPT_TOOL_INTERSECTION ? <Intersection/> : null}
-                    <FormGroup>
-                        <ControlLabel>
-                            <Message msgId="GeoProcessingTools.highlight" />
-                        </ControlLabel>
-                    </FormGroup>
-                    <FormGroup>
+                    <FormGroup className="highlight">
                         <SwitchButton
                             disabled={runningProcess}
                             checked={showHighlightLayers}
                             onClick={handleOnToggleHighlightLayers}
                         />
+                        <ControlLabel>
+                            <Message msgId="GeoProcessingTools.highlight" />
+                        </ControlLabel>
                     </FormGroup>
                 </Form>
                 <div className="run">

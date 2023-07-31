@@ -17,6 +17,10 @@ import uuidV1 from 'uuid/v1';
 import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
 
+import {
+    UPDATE_MAP_LAYOUT,
+    updateMapLayout
+} from "../actions/maplayout";
 import centroidTurf from '@turf/centroid';
 import {
     mergeOptionsByOwner,
@@ -95,7 +99,8 @@ import {
     sourceLayerIdSelector,
     selectedLayerIdSelector,
     sourceFeatureSelector,
-    showHighlightLayersSelector
+    showHighlightLayersSelector,
+    isDockOpenSelector
 } from '../selectors/geoProcessingTools';
 import { getLayerFromId as getLayerFromIdSelector, groupsSelector } from '../selectors/layers';
 import { mapSelector } from '../selectors/map';
@@ -112,6 +117,7 @@ import { extractFirstNonGeometryProp } from '../utils/WFSLayerUtils';
 import {getFeatureInfo} from "../api/identify";
 import { getFeatureSimple } from '../api/WFS';
 
+const OFFSET = 550;
 const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),
     changeDrawingStatus("clean", '', GPT_CONTROL_NAME)
@@ -524,10 +530,13 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
 
                     })
                     .catch(error => {
-                    // [ ] handle get ft by id error
-
                         console.error(error);
-                        return Rx.Observable.empty();
+                        return Rx.Observable.of(showErrorNotification({
+                            title: "errorTitleDefault",
+                            message: "GeoProcessingTools.notifications.errorIntersectGFI",
+                            autoDismiss: 6,
+                            position: "tc"
+                        }));
                     });
                 return intersection$;
             })
@@ -629,4 +638,25 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
                 autoDismiss: 10,
                 position: "tc"
             }));
+        });
+
+/**
+ * Re-trigger an update map layout with the margin to adjust map layout and show navigation toolbar. This
+ * also keep the zoom to extent offsets aligned with the current visibile window, so when zoom the Geo processing tools
+ * is considered as a right offset and it will not cover the zoomed features.
+ */
+export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
+    action$.ofType(UPDATE_MAP_LAYOUT)
+        .filter(({source}) => isDockOpenSelector(store.getState()) &&  source !== GPT_CONTROL_NAME)
+        .map(({layout}) => {
+            const action = updateMapLayout({
+                ...layout,
+                right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0),
+                boundingMapRect: {
+                    ...(layout.boundingMapRect || {}),
+                    right: OFFSET + (layout?.boundingSidebarRect?.right ?? 0)
+                },
+                rightPanel: true
+            });
+            return { ...action, source: GPT_CONTROL_NAME }; // add an argument to avoid infinite loop.
         });

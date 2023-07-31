@@ -5,6 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+
+import geo from 'node-geo-distance';
+
+import Proj4js from 'proj4';
+const proj4 = Proj4js;
+import axios from '../libs/ajax';
+import assign from 'object-assign';
+
 import {
     isArray,
     isObject,
@@ -17,23 +25,17 @@ import {
     head,
     last
 } from 'lodash';
-import geo from 'node-geo-distance';
-import assign from 'object-assign';
-import Proj4js from 'proj4';
-import toPoint from 'turf-point';
-
-import turfBbox from '@turf/bbox';
-import bboxPolygon from '@turf/bbox-polygon';
-import contains from '@turf/boolean-contains';
-import overlap from '@turf/boolean-overlap';
 import turfCircle from '@turf/circle';
-import greatCircle from '@turf/great-circle';
+
 import lineIntersect from '@turf/line-intersect';
 import polygonToLinestring from '@turf/polygon-to-linestring';
+import greatCircle from '@turf/great-circle';
+import toPoint from 'turf-point';
+import bboxPolygon from '@turf/bbox-polygon';
+import overlap from '@turf/boolean-overlap';
+import contains from '@turf/boolean-contains';
+import turfBbox from '@turf/bbox';
 import { getProjection } from './ProjectionUtils';
-import axios from '../libs/ajax';
-
-const proj4 = Proj4js;
 
 let CoordinatesUtils;
 
@@ -949,6 +951,7 @@ export const midpoint = (p1, p2, returnArray = false) => {
 };
 export const pointObjectToArray = p => isObject(p) && isNumber(p.x) && isNumber(p.y) ? [p.x, p.y] : p;
 
+
 export const isPointInsideExtent = (point = {lat: 1, lng: 1}, extent) => {
     return contains(getPolygonFromExtent(extent), toPoint([point.lng, point.lat]));
 };
@@ -1016,6 +1019,7 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
 
     return [lc[0], lc[1], uc[0], uc[1]];
 };
+
 
 /**
  * helper use to create a geojson Feature with a Polygon geometry
@@ -1086,62 +1090,62 @@ export const convertDegreesToRadian = (deg) => {
 };
 
 CoordinatesUtils = {
-    calculateAzimuth,
-    calculateCircleCoordinates,
-    calculateCircleRadiusFromPixel,
-    calculateDistance,
-    centerToVisibleArea,
-    checkIfLayerFitsExtentForProjection,
-    convertDegreesToRadian,
-    convertRadianToDegrees,
-    coordsOLtoLeaflet,
-    createBBox,
-    crsCodeTable,
-    determineCrs,
-    extendExtent,
-    extractCrsFromURN,
-    fetchProjRemotely,
-    filterCRSList,
-    FORMULAS,
-    getAvailableCRS,
-    getCompatibleSRS,
-    getEPSGCode,
-    getEquivalentSRS,
-    getExtentFromNormalized,
-    getExtentFromViewport,
-    getGeoJSONExtent,
-    getLonLatFromPoint,
-    getNormalizedLatLon,
-    getPolygonFromCircle,
-    getPolygonFromExtent,
-    getProjectedBBox,
-    getProjUrl,
-    getUnits,
-    getViewportGeometry,
-    getWMSBoundingBox,
-    isAllowedSRS,
-    isBboxCompatible,
-    isInsideVisibleArea,
-    isPointInsideExtent,
-    isSRSAllowed,
-    isValidExtent,
-    lineIntersectPolygon,
-    makeBboxFromOWS,
-    makeNumericEPSG,
-    mergeToPolyGeom,
-    midpoint,
-    normalizeLng,
-    normalizePoint,
-    normalizeSRS,
-    parseString,
-    parseURN,
-    pointObjectToArray,
-    reproject,
-    reprojectBbox,
-    reprojectGeoJson,
-    roundCoord,
     setCrsLabels,
+    getUnits,
+    reproject,
+    getProjectedBBox,
+    createBBox,
+    reprojectGeoJson,
+    lineIntersectPolygon,
+    normalizePoint,
+    normalizeLng,
+    reprojectBbox,
+    getCompatibleSRS,
+    getEquivalentSRS,
+    getEPSGCode,
+    normalizeSRS,
+    isAllowedSRS,
+    getAvailableCRS,
+    filterCRSList,
+    calculateAzimuth,
+    calculateDistance,
+    FORMULAS,
+    extendExtent,
+    getGeoJSONExtent,
+    isValidExtent,
+    calculateCircleCoordinates,
+    transformLineToArcs,
     transformArcsToLine,
-    transformLineToArcs
+    coordsOLtoLeaflet,
+    mergeToPolyGeom,
+    getViewportGeometry,
+    getProjUrl,
+    getExtentFromViewport,
+    fetchProjRemotely,
+    parseURN,
+    determineCrs,
+    parseString,
+    getWMSBoundingBox,
+    isSRSAllowed,
+    getNormalizedLatLon,
+    isInsideVisibleArea,
+    centerToVisibleArea,
+    calculateCircleRadiusFromPixel,
+    roundCoord,
+    midpoint,
+    pointObjectToArray,
+    getExtentFromNormalized,
+    getPolygonFromExtent,
+    isPointInsideExtent,
+    isBboxCompatible,
+    extractCrsFromURN,
+    crsCodeTable,
+    makeNumericEPSG,
+    makeBboxFromOWS,
+    getPolygonFromCircle,
+    checkIfLayerFitsExtentForProjection,
+    getLonLatFromPoint,
+    convertRadianToDegrees,
+    convertDegreesToRadian
 };
 export default CoordinatesUtils;

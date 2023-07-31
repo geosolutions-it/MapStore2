@@ -60,3 +60,4 @@ export const showHighlightLayersSelector = state => !!state?.geoProcessingTools?
 export const isListeningClickSelector = (state) => !!(get(mapSelector(state), 'eventListeners.click', []).find((el) => el === GPT_CONTROL_NAME));
 export const selectedLayerIdSelector = (state) => state?.geoProcessingTools?.selectedLayerId;
 export const selectedLayerTypeSelector = (state) => state?.geoProcessingTools?.selectedLayerType;
+export const isDockOpenSelector = (state) => state?.controls?.GeoProcessingTools?.enabled;

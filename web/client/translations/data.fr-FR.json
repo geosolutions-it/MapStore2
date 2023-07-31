@@ -3852,7 +3852,7 @@
           "sourceLayer": "Source Layer",
           "sourceFeature": "Source Feature",
           "tool": "Select a tool to use",
-          "highlight": "Enable highlight of selected features",
+          "highlight": "Highlight features",
           "bufferTool": "Buffer",
           "distance": "Distance",
           "distanceUom": "Units of measure",
@@ -3882,6 +3882,7 @@
           "true": "true",
           "false": "false",
           "notifications": {
+            "errorIntersectGFI": "There was an error intersecting the features. It was not possible to create the intersection layer.",
             "errorGFI": "There was an error loading the feature",
             "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
             "noFeatureInPoint": "No feature was not found at selected point.",
