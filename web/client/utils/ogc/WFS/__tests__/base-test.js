@@ -8,13 +8,14 @@
 
 import expect from 'expect';
 import describePois from '../../../../test-resources/wfs/describe-pois.json';
+import museam from '../../../../test-resources/wfs/museam.json';
 import {
     isGeometryType,
     getFeatureTypeProperties,
     findGeometryProperty,
     getPropertyDescriptor,
-    getTypeName
-
+    getTypeName,
+    isValid
 } from '../base';
 
 describe('WFS base utility functions', () => {
@@ -79,5 +80,8 @@ describe('WFS base utility functions', () => {
         expect(geomProp).toExist();
         expect(geomProp.name).toBe('the_geom');
         expect(isGeometryType(geomProp)).toBe(true);
+    });
+    it('isValid', () => {
+        museam.features.forEach(f => isValid(f, describePois).map( v => expect(v).toBe(true)));
     });
 });
