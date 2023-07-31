@@ -7,12 +7,12 @@
  */
 
 const getAttributeName = (k, d) => d.targetPrefix ? d.targetPrefix + ":" + k : k;
-const {getValue, getTypeName, getPropertyDesciptor, findGeometryProperty} = require("../../WFS/base");
+const {getValue, getTypeName, getPropertyDescriptor, findGeometryProperty} = require("../../WFS/base");
 
 const attribute = (key, value) => `<${key}>${value}</${key}>`;
 const attributes = (f, describeFeatureType) =>
     Object.keys(f.properties || [])
-        .filter(k => getPropertyDesciptor(k, describeFeatureType))
+        .filter(k => getPropertyDescriptor(k, describeFeatureType))
         .map((key) => attribute(getAttributeName(key, describeFeatureType), getValue(f.properties[key], key, describeFeatureType)));
 const geometryAttribute = (f, describeFeatureType) =>
     attribute(getAttributeName(f.geometry_name || findGeometryProperty(describeFeatureType).name, describeFeatureType), getValue(f.geometry, f.geometry_name, describeFeatureType));
