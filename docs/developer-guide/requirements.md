@@ -17,8 +17,8 @@ These tools needs to be installed (other than **Java** in versions above above):
 
 | Tool       | Link                                                   | Minimum | Recommended | Maximum     |
 |------------|--------------------------------------------------------|---------|-------------|-------------|
-| npm        | [link](https://www.npmjs.com/get-npm)                  | 5       | 6           | 6.14.13²    |
-| NodeJS     | [link](https://nodejs.org/en/)                         | 10      | 12          | 14.17.0²    |
+| npm        | [link](https://www.npmjs.com/get-npm)                  | 8       | 8           | 8.19.4²    |
+| NodeJS     | [link](https://nodejs.org/en/)                         | 16      | 16          | 16.20.1²    |
 | Java (JDK) | [link](https://www.java.com/en/download/help/develop.html) | 8       | 9           | 11¹         |
 | Maven      | [link](https://maven.apache.org/download.cgi)          | 3.1.0   | 3.6         |             |
 | python³    | [link](https://www.python.org/downloads/)              | 2.7.9   | 3.7         |             |
@@ -31,8 +31,9 @@ These tools needs to be installed (other than **Java** in versions above above):
         - Build with success with v11, only smoke tests passing on v13, errors with v16.(Details on issue [#6935](https://github.com/geosolutions-it/MapStore2/issues/6935))
         - Running with Tomcat 10 causes this issue [#7524](https://github.com/geosolutions-it/MapStore2/issues/7524).
     - ² About NodeJS and NPM:
-        - NPM 7 not supported yet.
-        - NPM 6.14.15 causes [this issue](https://github.com/geosolutions-it/mapstore-project/issues/18) on MapStore project system. No other know issues.
+        - **note** node 14.18.1 / npm 6.14.15 causes [this issue](https://github.com/geosolutions-it/mapstore-project/issues/18) on MapStore project system.
+        - Node 18 causes [webpack issue](https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported) needs to be solved by changing the hash algorithm or setting proper flags.
+
         - *If you are using Node >= 12 you can remove the -max_old_space_size=2048 config for the `compile` script*
     - ³ Python is only needed for building documentation.
 
