@@ -261,7 +261,7 @@ describe('Test Geo Processing Tools selectors', () => {
     it('isIntersectionFeaturesLoadingSelector', () => {
         const geoProcessingTools = {
             flags: {
-                intersectionFeaturesLoading: true
+                featuresIntersectionLoading: true
             }
         };
         expect(isIntersectionFeaturesLoadingSelector({geoProcessingTools})).toEqual(true);

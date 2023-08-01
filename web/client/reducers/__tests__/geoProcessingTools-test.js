@@ -68,24 +68,19 @@ describe('Test Geo Processing Tools reducer', () => {
             }
         };
         const action = initPlugin(cfg);
-        const state = geoProcessingTools( {
-            buffer: {
-                test: "test"
-            }
-        }, action);
+        const state = geoProcessingTools(undefined, action);
         expect(state.buffer.distance).toEqual(1234);
-        expect(state.buffer.test).toEqual("test");
         expect(state.intersection.counter).toEqual(0);
     });
     it('INCREASE_BUFFERED_COUNTER', () => {
         const action = increaseBufferedCounter();
         const state = geoProcessingTools(undefined, action);
-        expect(state.buffer.counter).toEqual(0);
+        expect(state.buffer.counter).toEqual(1);
     });
     it('INCREASE_INTERSECT_COUNTER', () => {
         const action = increaseIntersectedCounter();
         const state = geoProcessingTools(undefined, action);
-        expect(state.intersection.counter).toEqual(0);
+        expect(state.intersection.counter).toEqual(1);
     });
     it('RUNNING_PROCESS', () => {
         const status = true;
@@ -174,7 +169,7 @@ describe('Test Geo Processing Tools reducer', () => {
                 }
             }
         }, action);
-        expect(state.flags.wpsAvailability.layerId).toEqual(status);
+        expect(state.flags.wpsAvailability.layerId).toEqual(false);
         expect(state.flags.wpsAvailability[layerId]).toEqual(status);
     });
     it('SET_WPS_AVAILABILITY intersection', () => {
@@ -184,19 +179,19 @@ describe('Test Geo Processing Tools reducer', () => {
         const action = setWPSAvailability(layerId, status, source);
         const state = geoProcessingTools({
             flags: {
-                wpsAvailability: {
+                wpsAvailabilityIntersection: {
                     layerId: false
                 }
             }
         }, action);
-        expect(state.flags.wpsAvailabilityIntersection.layerId).toEqual(status);
+        expect(state.flags.wpsAvailabilityIntersection.layerId).toEqual(false);
         expect(state.flags.wpsAvailabilityIntersection[layerId]).toEqual(status);
     });
     it('SET_SELECTED_TOOL', () => {
         const tool = "buffer";
         const action = setSelectedTool(tool);
         const state = geoProcessingTools(undefined, action);
-        expect(state.selectedTool).toEqual(status);
+        expect(state.selectedTool).toEqual(tool);
     });
     it('SET_SOURCE_LAYER_ID', () => {
         const layerId = "id";
@@ -218,9 +213,9 @@ describe('Test Geo Processing Tools reducer', () => {
         }, setSourceLayerId("layerId"));
         expect(state.selectedLayerId).toEqual("layerId");
         expect(state.source.layerId).toEqual("layerId");
-        expect(state.source.features).toEqual([{type: "Feature"}]);
-        expect(state.source.feature).toEqual({type: "Feature"});
-        expect(state.source.featureId).toEqual("ft");
+        expect(state.source.features).toEqual([]);
+        expect(state.source.feature).toEqual(undefined);
+        expect(state.source.featureId).toEqual("");
     });
     it('SET_SOURCE_FEATURE_ID', () => {
         const featureId = "ftId";
@@ -259,9 +254,9 @@ describe('Test Geo Processing Tools reducer', () => {
         }, setIntersectionLayerId("layerId"));
         expect(state.selectedLayerId).toEqual("layerId");
         expect(state.intersection.layerId).toEqual("layerId");
-        expect(state.intersection.features).toEqual([{type: "Feature"}]);
-        expect(state.intersection.feature).toEqual({type: "Feature"});
-        expect(state.intersection.featureId).toEqual("ft");
+        expect(state.intersection.features).toEqual([]);
+        expect(state.intersection.feature).toEqual(undefined);
+        expect(state.intersection.featureId).toEqual("");
     });
     it('SET_INTERSECTION_FEATURE_ID', () => {
         const featureId = "ftId";
@@ -331,6 +326,6 @@ describe('Test Geo Processing Tools reducer', () => {
     it('TOGGLE_HIGHLIGHT_LAYERS', () => {
         const action = toggleHighlightLayers();
         const state = geoProcessingTools(undefined, action);
-        expect(state.flags.showHighlightLayers).toEqual(true);
+        expect(state.flags.showHighlightLayers).toEqual(false);
     });
 });

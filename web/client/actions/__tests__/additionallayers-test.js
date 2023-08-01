@@ -44,7 +44,7 @@ describe('Test additional layers actions', () => {
         };
         const retval = mergeOptionsByOwner(owner, options);
         expect(retval).toBeTruthy();
-        expect(retval.id).toEqual({
+        expect(retval).toEqual({
             type: MERGE_OPTIONS_BY_OWNER,
             owner,
             options
