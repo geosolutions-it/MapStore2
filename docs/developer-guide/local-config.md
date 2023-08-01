@@ -66,7 +66,9 @@ This is the main structure:
   // optionals misc settings
   "miscSettings": {
       // Use POST requests for each WMS length URL highter than this value.
-      "maxURLLength": 5000
+      "maxURLLength": 5000,
+      // Custom path to home page
+      "homePath": '/home'
   },
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {

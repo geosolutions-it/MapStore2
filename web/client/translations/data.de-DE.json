@@ -2240,7 +2240,7 @@
                     "title": "Fehler beim Laden des Kontexts",
                     "notAccessible": "Ressource nicht zugänglich",
                     "pleaseLogin": "Einige Ressource kann nicht öffentlich. Bitte versuchen Sie sich einloggen",
-                    "unknownError": "Es gab einen Fehler in der Karte oder des Kontexts. Bitte kontaktieren Sie den Administrator",
+                    "unknownError": "<p><small>Einer der folgenden Gründe könnte die Ursache sein:</small> <ul><li>Sie haben keine Berechtigung, auf den Kontext und/oder die Karte zuzugreifen</li> <li>Sie versuchen, auf einen Kontext und/oder eine Karte zuzugreifen, die nicht existiert</li> <li>Der Kontext und/oder die Karte wurde entfernt</li> <li>Die Projektion der Karte ist nicht konfiguriert</li></ul> <p>",
                     "notFound": "Ressource nicht gefunden"
                 },
                 "context": {

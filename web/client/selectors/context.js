@@ -39,7 +39,7 @@ export const loadFlagsSelector = state => get(state, 'context.loadFlags');
  */
 export const defaultPluginsSelector = createSelector(
     () => get(ConfigUtils.getConfigProp("plugins"), 'context'),
-    (plugins = []) => ({ desktop: [...plugins, "Context", "FeedbackMask"] } )
+    (plugins = ["Login"]) => ({ desktop: [...plugins, "Context", "FeedbackMask"] } )
 );
 export const loadingPluginsSelector = state => defaultPluginsSelector(state);
 export const errorPluginsSelector = state => loadingPluginsSelector(state);

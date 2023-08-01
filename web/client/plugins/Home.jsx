@@ -9,11 +9,11 @@
 import React from 'react';
 
 import assign from 'object-assign';
-import { goToPage } from '../actions/router';
+import { goToHomePage } from '../actions/router';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import Message from './locale/Message';
 import { Glyphicon } from 'react-bootstrap';
-import Home, {getPath} from '../components/home/Home';
+import Home from '../components/home/Home';
 import { connect } from 'react-redux';
 import { checkPendingChanges } from '../actions/pendingChanges';
 import { setControlProperty } from '../actions/controls';
@@ -57,7 +57,7 @@ export default {
             tooltip: "gohome",
             icon: <Glyphicon glyph="home"/>,
             help: <Message msgId="helptexts.gohome"/>,
-            action: (context) => goToPage(getPath(), context.router),
+            action: goToHomePage,
             priority: 1
         },
         BurgerMenu: {
@@ -65,7 +65,7 @@ export default {
             position: 1,
             text: <Message msgId="gohome"/>,
             icon: <Glyphicon glyph="home"/>,
-            action: (context) => goToPage(getPath(), context.router),
+            action: goToHomePage,
             priority: 2
         },
         OmniBar: {

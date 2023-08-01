@@ -2203,7 +2203,7 @@
                     "title": "del contexto de carga de error",
                     "notAccessible": "Recurso no accesible",
                     "pleaseLogin": "Algunos de recursos puede no ser pública. Por favor, intente iniciar la sesión",
-                    "unknownError": "Hubo un error al cargar el mapa o el contexto. Por favor, póngase en contacto con el administrador",
+                    "unknownError": "<p><small>Una de las siguientes razones podría ser la causa:</small> <ul><li>no tiene permiso para acceder al contexto y/o mapa</li> <li>está intentando acceder a un contexto y/o mapa que no existe</li> <li>el contexto y/o mapa se ha eliminado</li> <li>la proyección del mapa no está configurada</li></ul> <p>",
                     "notFound": "Recurso no encontrado"
                 },
                 "context": {

@@ -7,18 +7,16 @@
  */
 
 import React from 'react';
+import { connect } from 'react-redux';
 import Button from '../misc/Button';
 import PropTypes from 'prop-types';
 import { Glyphicon, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
 import Message from '../../components/I18N/Message';
 import ConfirmModal from '../../components/misc/ResizableModal';
-import { get, pick } from "lodash";
-import ConfigUtils from "../../utils/ConfigUtils";
-export const getPath = () => {
-    const miscSettings = ConfigUtils.getConfigProp('miscSettings');
-    return get(miscSettings, ['homePath'], '/');
-};
+import { pick } from "lodash";
+import { goToHomePage } from '../../actions/router';
+
 class Home extends React.Component {
     static propTypes = {
         icon: PropTypes.string,
@@ -94,8 +92,10 @@ class Home extends React.Component {
     }
 
     goHome = () => {
-        this.context.router.history.push(getPath());
+        this.props.goToHomePage();
     };
 }
 
-export default Home;
+export default connect(null, {
+    goToHomePage
+})(Home);

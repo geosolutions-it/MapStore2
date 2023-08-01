@@ -82,17 +82,22 @@ const createMapFlow = (mapId = 'new', mapConfig, session, action$) => {
     );
 };
 
-const errorToMessageId = (name, e, getState = () => {}) => {
-    let message = `context.errors.${name}.unknownError`;
+const errorToMessageId = (name = "loading", e, getState = () => {}) => {
+    let messageId = `context.errors.${name}.unknownError`;
+    let errorMessageType = "text";
     if (e.status === 403) {
-        message = `context.errors.${name}.pleaseLogin`;
+        messageId = `context.errors.${name}.pleaseLogin`;
         if (isLoggedIn(getState())) {
-            message = `context.errors.${name}.notAccessible`;
+            messageId = `context.errors.${name}.notAccessible`;
         }
     } if (e.status === 404) {
-        message = `context.errors.${name}.notFound`;
+        messageId = `context.errors.${name}.notFound`;
+        if (isLoggedIn(getState())) {
+            messageId = `context.errors.${name}.unknownError`;
+            errorMessageType = "html";
+        }
     }
-    return message;
+    return { messageId, errorMessageType };
 };
 
 /**
@@ -162,9 +167,10 @@ export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
                     loading(true, "loading"),
                     [loading(false, "loading")],
                     e => {
-                        const messageId = errorToMessageId(e.name, e.originalError, getState);
+                        const error = {...e.originalError, status: e.originalError?.status ?? e.status};
+                        const { messageId, errorMessageType } = errorToMessageId(e.name, error, getState);
                         // prompt login should be triggered here
-                        return Observable.of(contextLoadError({ error: {...e.originalError, messageId} }) );
+                        return Observable.of(contextLoadError({ error: {...e.originalError, messageId, errorMessageType} }) );
                     }
                 )
             );
@@ -184,7 +190,7 @@ export const loadContextAndMap = (action$, { getState = () => { } } = {}) =>
  */
 export const handleLoginLogoutContextReload = action$ =>
     // If the was a forbidden error (access denied to the given context)
-    action$.ofType(CONTEXT_LOAD_ERROR).filter(({ error }) => error.status === 403)
+    action$.ofType(CONTEXT_LOAD_ERROR).filter(({ error }) => [404, 403].includes(error.status)) // getResourceIdByName returns 404 in both the cases (not permitted/not found)
         //  or in case of context successfully loaded
         .merge(action$.ofType(LOAD_FINISHED))
         // on login-logout event

@@ -94,6 +94,14 @@ describe('ResourceUnavailable component', () => {
         expect(glyphicon).toExist();
     });
 
+    it('ResourceUnavailable with error message type', () => {
+        ReactDOM.render(<ResourceUnavailable enabled login status={404} errorMessage={'<p>Error 404</p>'} mode="testMode" errorMessageType="html"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const desc = container.querySelector('.empty-state-description > .text-center > span');
+        expect(desc).toBeTruthy();
+        expect(desc.innerHTML).toBe('&lt;p&gt;Error 404&lt;/p&gt;');
+    });
+
     it('ResourceUnavailable glyph and mode (missing glyph)', () => {
         ReactDOM.render(<ResourceUnavailable enabled login status={404} errorMessage={'Error 404'} mode="newTestMode" glyphs={{testMode: 'list'}}/>, document.getElementById("container"));
         const container = document.getElementById('container');

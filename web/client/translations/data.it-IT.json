@@ -2204,7 +2204,7 @@
                     "title": "Errore di caricamento del contesto",
                     "notAccessible": "Risorsa non accessibile",
                     "pleaseLogin": "Alcune risorse potrebbero non essere pubbliche. Si prega di provare ad effettuare il login",
-                    "unknownError": "Si è verificato un errore durante il caricamento della mappa o del contesto. Si prega di contattare l'amministratore",
+                    "unknownError": "<p><small>La causa potrebbe essere una delle seguenti ragioni:</small> <ul><li>non hai i permessi per accedere al contesto e/o alla mappa</li> <li>stai tentando di accedere a un contesto e/o mappa che non esiste</li> <li>il contesto e/o mappa è stato rimosso</li> <li>la proiezione della mappa non è configurata</li></ul> <p>",
                     "notFound": "Risorsa non trovata"
                 },
                 "context": {

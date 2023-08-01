@@ -8,6 +8,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from "react-dom/test-utils";
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 
 import STORY from '../../../../test-resources/geostory/sampleStory_1.json';
 import expect from 'expect';
@@ -61,7 +63,7 @@ describe('GeoStory Navigation component', () => {
         expect(selectedElement.innerText).toBe("Abstract");
     });
     it('should render home icon', () => {
-        ReactDOM.render(<Navigation router={{ pathname: '/geostory/shared/1', search: '?showHome=true' }} />, document.getElementById('container'));
+        ReactDOM.render(<Provider store={configureMockStore()()}><Navigation router={{ pathname: '/geostory/shared/1', search: '?showHome=true' }} /></Provider>, document.getElementById('container'));
         expect(document.querySelector('#home-button')).toBeTruthy();
     });
     it('should hide home icon when showHome is false', () => {

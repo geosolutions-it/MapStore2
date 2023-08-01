@@ -1,10 +1,16 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 import Home from '../Home';
 
+const mockStore = configureMockStore();
+
 describe("Test Home component", () => {
+    let store;
     beforeEach((done) => {
+        store = mockStore();
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
@@ -16,21 +22,18 @@ describe("Test Home component", () => {
     });
 
     it('creates component with defaults', () => {
-        const cmp = ReactDOM.render(<Home/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Provider store={store}><Home/></Provider>, document.getElementById("container"));
         expect(cmp).toBeTruthy();
-        expect(cmp.props.icon).toEqual("home");
         const icons = document.querySelectorAll(".glyphicon-home");
         expect(icons.length).toEqual(1);
         expect(icons[0]).toBeTruthy();
     });
     it('creates component with custom icon text', () => {
         const cmp = ReactDOM.render(
-            <Home
+            <Provider store={store}><Home
                 icon="pencil"
-            />, document.getElementById("container"));
+            /></Provider>, document.getElementById("container"));
         expect(cmp).toBeTruthy();
-        expect(cmp.props.icon).toEqual("pencil");
-
         const buttons = document.querySelectorAll("button");
         expect(buttons.length).toEqual(1);
         expect(buttons[0]).toBeTruthy();
