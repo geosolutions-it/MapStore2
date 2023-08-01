@@ -11,8 +11,8 @@ import expect from 'expect';
 import {
     describeFeatureTypeLoaded, DESCRIBE_FEATURE_TYPE_LOADED,
     describeCoveragesLoaded, DESCRIBE_COVERAGES_LOADED
-} from '../layerCapabilites';
-describe('Test layerCapabilites related actions', () => {
+} from '../layerCapabilities';
+describe('Test layerCapabilities related actions', () => {
     it('checkWPSAvailability', () => {
         const layerId = "layerId";
         const source = "source";
