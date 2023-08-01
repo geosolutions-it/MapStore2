@@ -1,0 +1,11 @@
+{
+  "type": "ADDITIONALLAYER:UPDATE_ADDITIONAL_LAYER",
+  "id": "gpt-layer-intersection",
+  "owner": "gpt-intersection",
+  "actionType": "overlay",
+  "options": {
+    "type": "vector",
+    "name": "highlight-gpt-intersection-features",
+    "features": []
+  }
+}

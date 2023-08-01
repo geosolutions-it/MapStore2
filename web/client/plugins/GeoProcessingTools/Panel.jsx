@@ -27,7 +27,6 @@ const PanelComp = ({
     onMount
 }) => {
     useEffect( () => {
-        onClose();
         onMount(pluginCfg);
     }, []);
     return enabled ?

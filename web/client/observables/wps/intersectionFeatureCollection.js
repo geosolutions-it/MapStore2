@@ -21,8 +21,8 @@ import {executeProcessXML} from './execute';
  * @param {object} options the options to use
  * @param {object} options.firstFC the first feature collection to intersect
  * @param {object} options.secondFC the second feature collection to intersect
- * @param {string} options.firstAttributesToRetain First feature collection attribute to include
- * @param {string} options.secondAttributesToRetain Second feature collection attribute to include
+ * @param {string} options.firstAttributeToRetain First feature collection attribute to include
+ * @param {string} options.secondAttributeToRetain Second feature collection attribute to include
  * @param {string} options.intersectionMode Specifies geometry computed for intersecting features. INTERSECTION (default) computes the spatial intersection of the inputs. FIRST copies geometry A. SECOND copies geometry B.
  * @param {boolean} options.percentagesEnabled Indicates whether to output feature area percentages (attributes percentageA and percentageB)
  * @param {boolean} options.areasEnabled Indicates whether to output feature areas (attributes areaA and areaB)
@@ -30,8 +30,8 @@ import {executeProcessXML} from './execute';
 export const intersectXML = ({
     firstFC,
     secondFC,
-    firstAttributesToRetain = "",
-    secondAttributesToRetain = "",
+    firstAttributeToRetain = "",
+    secondAttributeToRetain = "",
     intersectionMode = "INTERSECTION",
     percentagesEnabled = false,
     areasEnabled = false
@@ -40,8 +40,8 @@ export const intersectXML = ({
     [
         processParameter('first feature collection', processData(complexData(cdata(JSON.stringify(firstFC)), "application/json"))),
         processParameter('second feature collection', processData(complexData(cdata(JSON.stringify(secondFC)), "application/json"))),
-        ...(firstAttributesToRetain ? [processParameter("first attributes to retain", processData(literalData(firstAttributesToRetain)))] : []),
-        ...(secondAttributesToRetain ? [processParameter("second attributes to retain", processData(literalData(secondAttributesToRetain)))] : []),
+        ...(firstAttributeToRetain ? [processParameter("first attributes to retain", processData(literalData(firstAttributeToRetain)))] : []),
+        ...(secondAttributeToRetain ? [processParameter("second attributes to retain", processData(literalData(secondAttributeToRetain)))] : []),
         ...(intersectionMode ? [processParameter("intersectionMode", processData(literalData(intersectionMode)))] : []),
         processParameter("percentagesEnabled", processData(literalData(percentagesEnabled))),
         processParameter("areasEnabled", processData(literalData(areasEnabled)))

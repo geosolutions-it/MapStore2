@@ -10,11 +10,12 @@ import expect from 'expect';
 import describePois from '../../../../test-resources/wfs/describe-pois.json';
 import museam from '../../../../test-resources/wfs/museam.json';
 import {
-    isGeometryType,
-    getFeatureTypeProperties,
     findGeometryProperty,
+    findNonGeometryProperty,
+    getFeatureTypeProperties,
     getPropertyDescriptor,
     getTypeName,
+    isGeometryType,
     isValid
 } from '../base';
 
@@ -23,6 +24,11 @@ describe('WFS base utility functions', () => {
         const prop = findGeometryProperty(describePois);
         expect(prop).toExist();
         expect(prop.name).toBe('the_geom');
+    });
+    it('findNonGeometryProperty', () => {
+        const prop = findNonGeometryProperty(describePois)[0];
+        expect(prop).toBeTruthy();
+        expect(prop.name).toBe('NAME');
     });
     it('getFeatureTypeProperties', () => {
         const props = getFeatureTypeProperties(describePois);

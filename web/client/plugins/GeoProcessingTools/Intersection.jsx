@@ -30,16 +30,16 @@ import {
 } from '../../actions/geoProcessingTools';
 import {
     runningProcessSelector,
-    firstAttributesToRetainSelector,
-    secondAttributesToRetainSelector,
+    firstAttributeToRetainSelector,
+    secondAttributeToRetainSelector,
     intersectionModeSelector,
     percentagesEnabledSelector,
     areasEnabledSelector
 } from '../../selectors/geoProcessingTools';
 
 const Intersection = ({
-    firstAttributesToRetain,
-    secondAttributesToRetain,
+    firstAttributeToRetain,
+    secondAttributeToRetain,
     intersectionMode,
     percentagesEnabled,
     areasEnabled,
@@ -52,10 +52,10 @@ const Intersection = ({
 }) => {
     const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
-    const handleOnChangeFirstAttributesToRetain = (val) => {
+    const handleOnChangeFirstAttributeToRetain = (val) => {
         onSetIntersectionFirstAttribute(val);
     };
-    const handleOnChangeSecondAttributesToRetain = (val) => {
+    const handleOnChangeSecondAttributeToRetain = (val) => {
         onSetIntersectionSecondAttribute(val);
     };
     const handleOnChangeIntersectionMode = (sel) => {
@@ -80,7 +80,7 @@ const Intersection = ({
                 onSwitch={setShowAdvancedSettings}>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.firstAttributesToRetain" />
+                        <Message msgId="GeoProcessingTools.firstAttributeToRetain" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -88,14 +88,14 @@ const Intersection = ({
                         <FormControl
                             disabled={runningProcess}
                             type="text"
-                            value={firstAttributesToRetain}
-                            onChange={handleOnChangeFirstAttributesToRetain}
+                            value={firstAttributeToRetain}
+                            onChange={handleOnChangeFirstAttributeToRetain}
                         />
                     </InputGroup>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.secondAttributesToRetain" />
+                        <Message msgId="GeoProcessingTools.secondAttributeToRetain" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -103,8 +103,8 @@ const Intersection = ({
                         <FormControl
                             disabled={runningProcess}
                             type="text"
-                            value={secondAttributesToRetain}
-                            onChange={handleOnChangeSecondAttributesToRetain}
+                            value={secondAttributeToRetain}
+                            onChange={handleOnChangeSecondAttributeToRetain}
                         />
                     </InputGroup>
                 </FormGroup>
@@ -169,11 +169,11 @@ const Intersection = ({
 
 Intersection.propTypes = {
     areasEnabled: PropTypes.bool,
-    firstAttributesToRetain: PropTypes.string,
+    firstAttributeToRetain: PropTypes.string,
     intersectionMode: PropTypes.string,
     percentagesEnabled: PropTypes.bool,
     runningProcess: PropTypes.bool,
-    secondAttributesToRetain: PropTypes.string,
+    secondAttributeToRetain: PropTypes.string,
 
     onSetIntersectionFirstAttribute: PropTypes.func,
     onSetIntersectionSecondAttribute: PropTypes.func,
@@ -190,23 +190,23 @@ const IntersectionConnected = connect(
     createSelector(
         [
             runningProcessSelector,
-            firstAttributesToRetainSelector,
-            secondAttributesToRetainSelector,
+            firstAttributeToRetainSelector,
+            secondAttributeToRetainSelector,
             intersectionModeSelector,
             percentagesEnabledSelector,
             areasEnabledSelector
         ],
         (
             runningProcess,
-            firstAttributesToRetain,
-            secondAttributesToRetain,
+            firstAttributeToRetain,
+            secondAttributeToRetain,
             intersectionMode,
             percentagesEnabled,
             areasEnabled
         ) => ({
             runningProcess,
-            firstAttributesToRetain,
-            secondAttributesToRetain,
+            firstAttributeToRetain,
+            secondAttributeToRetain,
             intersectionMode,
             percentagesEnabled,
             areasEnabled

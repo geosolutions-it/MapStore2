@@ -27,15 +27,15 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @name GeoProcessingTools
  * @memberof plugins
  * @class
- *
- * @prop {number} cfg.quadrantSegments (ONLY BUFFER) Number determining the style and smoothness of buffer corners. Positive numbers create round corners with that number of segments per quarter-circle, 0 creates flat corners, default is unset.
- * @prop {string} cfg.capStyle (ONLY BUFFER) Style for the buffer end caps. Values are: Round - rounded ends (default), Flat - flat ends; Square - square ends, default is unset
+*
  * @prop {string} cfg.selectedTool the values are "buffer", "intersection", default is "buffer"
- * @prop {string} cfg.firstAttributesToRetain (ONLY INTERSECTION) First feature collection attribute to include
- * @prop {string} cfg.secondAttributesToRetain (ONLY INTERSECTION) Second feature collection attribute to include
- * @prop {string} cfg.intersectionMode (ONLY INTERSECTION) Specifies geometry computed for intersecting features. INTERSECTION (default) computes the spatial intersection of the inputs. FIRST copies geometry A. SECOND copies geometry B.
- * @prop {boolean} cfg.percentagesEnabled (ONLY INTERSECTION) Indicates whether to output feature area percentages (attributes percentageA and percentageB)
- * @prop {boolean} cfg.areasEnabled (ONLY INTERSECTION) Indicates whether to output feature areas (attributes areaA and areaB)
+ * @prop {number} cfg.buffer.quadrantSegments Number determining the style and smoothness of buffer corners. Positive numbers create round corners with that number of segments per quarter-circle, 0 creates flat corners, default is unset.
+ * @prop {string} cfg.buffer.capStyle Style for the buffer end caps. Values are: Round - rounded ends (default), Flat - flat ends; Square - square ends, default is unset
+ * @prop {string} cfg.intersection.firstAttributeToRetain First feature collection attribute to include
+ * @prop {string} cfg.intersection.secondAttributeToRetain Second feature collection attribute to include
+ * @prop {string} cfg.intersection.intersectionMode Specifies geometry computed for intersecting features. INTERSECTION (default) computes the spatial intersection of the inputs. FIRST copies geometry A. SECOND copies geometry B.
+ * @prop {boolean} cfg.intersection.percentagesEnabled Indicates whether to output feature area percentages (attributes percentageA and percentageB)
+ * @prop {boolean} cfg.intersection.areasEnabled Indicates whether to output feature areas (attributes areaA and areaB)
  *
  * @example
  *
@@ -43,8 +43,10 @@ import { createPlugin } from '../utils/PluginsUtils';
  *   "name": "GeoProcessingTools",
  *   "cfg": {
  *     "selectedTool": "buffer",
- *     "quadrantSegments": 200,
- *     "capStyle": "Round",
+ *     "buffer": {
+ *       "quadrantSegments": 200,
+ *       "capStyle": "Round"
+ *     }
  *   }
  * }
  *

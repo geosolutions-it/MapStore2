@@ -120,3 +120,21 @@ export const isValid = (f, describe) => getFeatureTypeProperties(describe).map( 
 export const isValidValueForPropertyName = (v, name, desc) => isValidValue(v, getPropertyDescriptor(name, desc));
 
 
+/**
+ * Extract first property that is not a geometry
+ * @param {object} describeFeatureType the describeFeatureType object
+ * @return {object} the featureType property
+ * @example
+ * describeFeatureType: {
+ *   featureTypes: [{
+ *     properties:[{
+ *       localType: "string",
+ *       maxOccurs: 1,
+ *       minOccurs: 0,
+ *       name: "id",
+ *       nillable: true,
+ *       type: "xsd:string"
+ *     }]
+ * }]
+ */
+export const findNonGeometryProperty = (describeFeatureType) => (getFeatureTypeProperties(describeFeatureType) || []).filter( d => !isGeometryType(d));

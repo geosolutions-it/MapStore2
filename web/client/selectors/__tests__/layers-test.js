@@ -28,10 +28,30 @@ import {
     elementSelector,
     queryableSelectedLayersSelector,
     getAdditionalLayerFromId,
-    getTitleSelector
+    getTitleSelector,
+    nonBackgroundLayersSelector
 } from '../layers';
 
 describe('Test layers selectors', () => {
+    it('test nonBackgroundLayersSelector', () => {
+        let layers = nonBackgroundLayersSelector({});
+        expect(layers.length).toBeFalsy();
+        layers = nonBackgroundLayersSelector({
+            layers: {
+                flat: [{
+                    name: "ws:layer_1",
+                    group: "buffer"
+                },
+                {
+                    name: "ws:layer_2",
+                    group: "background"
+                }]}});
+        expect(layers.length).toBeTruthy();
+        expect(layers).toEqual([{
+            name: "ws:layer_1",
+            group: "buffer"
+        }]);
+    });
     it('test getLayerFromName', () => {
         let layer = getLayerFromName({}, "ws:layer_1");
         expect(layer).toNotExist();

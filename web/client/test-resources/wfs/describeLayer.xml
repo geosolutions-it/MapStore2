@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wps:ProcessDescriptions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en" service="WPS" version="1.0.0" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
+    <ProcessDescription wps:processVersion="1.0.0" statusSupported="true" storeSupported="true">
+        <ows:Identifier>geo:buffer</ows:Identifier>
+        <ows:Title>Buffer</ows:Title>
+        <ows:Abstract>Returns a polygonal geometry representing the input geometry enlarged by a given distance around its exterior.</ows:Abstract>
+        <DataInputs>
+            <Input maxOccurs="1" minOccurs="1">
+                <ows:Identifier>geom</ows:Identifier>
+                <ows:Title>geom</ows:Title>
+                <ows:Abstract>Input geometry</ows:Abstract>
+                <ComplexData>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/3.1.1</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/3.1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/2.1.2</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wkt</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/gml-3.1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/gml-2.1.2</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                    </Supported>
+                </ComplexData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="1">
+                <ows:Identifier>distance</ows:Identifier>
+                <ows:Title>distance</ows:Title>
+                <ows:Abstract>Distance to buffer the input geometry, in the units of the geometry</ows:Abstract>
+                <LiteralData>
+                    <ows:DataType>xs:double</ows:DataType>
+                    <ows:AnyValue/>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="0">
+                <ows:Identifier>quadrantSegments</ows:Identifier>
+                <ows:Title>quadrantSegments</ows:Title>
+                <ows:Abstract>Number determining the style and smoothness of buffer corners. Positive numbers create round corners with that number of segments per quarter-circle, 0 creates flat corners.</ows:Abstract>
+                <LiteralData>
+                    <ows:DataType>xs:int</ows:DataType>
+                    <ows:AnyValue/>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="0">
+                <ows:Identifier>capStyle</ows:Identifier>
+                <ows:Title>capStyle</ows:Title>
+                <ows:Abstract>Style for the buffer end caps. Values are: Round - rounded ends (default), Flat - flat ends; Square - square ends.</ows:Abstract>
+                <LiteralData>
+                    <ows:AllowedValues>
+                        <ows:Value>Round</ows:Value>
+                        <ows:Value>Flat</ows:Value>
+                        <ows:Value>Square</ows:Value>
+                    </ows:AllowedValues>
+                </LiteralData>
+            </Input>
+        </DataInputs>
+        <ProcessOutputs>
+            <Output>
+                <ows:Identifier>result</ows:Identifier>
+                <ows:Title>result</ows:Title>
+                <ComplexOutput>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/3.1.1</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/3.1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/2.1.2</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wkt</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/gml-3.1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/gml-2.1.2</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                    </Supported>
+                </ComplexOutput>
+            </Output>
+        </ProcessOutputs>
+    </ProcessDescription>
+    <ProcessDescription wps:processVersion="1.0.0" statusSupported="true" storeSupported="true">
+        <ows:Identifier>gs:IntersectionFeatureCollection</ows:Identifier>
+        <ows:Title>Intersection of Feature Collections</ows:Title>
+        <ows:Abstract>Spatial intersection of two feature collections, including combining attributes from both.</ows:Abstract>
+        <DataInputs>
+            <Input maxOccurs="1" minOccurs="1">
+                <ows:Identifier>first feature collection</ows:Identifier>
+                <ows:Title>first feature collection</ows:Title>
+                <ows:Abstract>First feature collection</ows:Abstract>
+                <ComplexData>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/zip</MimeType>
+                            <Encoding>base64</Encoding>
+                        </Format>
+                        <Format>
+                            <MimeType>text/csv</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                    </Supported>
+                </ComplexData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="1">
+                <ows:Identifier>second feature collection</ows:Identifier>
+                <ows:Title>second feature collection</ows:Title>
+                <ows:Abstract>Second feature collection</ows:Abstract>
+                <ComplexData>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/zip</MimeType>
+                            <Encoding>base64</Encoding>
+                        </Format>
+                        <Format>
+                            <MimeType>text/csv</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                    </Supported>
+                </ComplexData>
+            </Input>
+            <Input maxOccurs="2147483647" minOccurs="0">
+                <ows:Identifier>first attributes to retain</ows:Identifier>
+                <ows:Title>first attributes to retain</ows:Title>
+                <ows:Abstract>First feature collection attribute to include</ows:Abstract>
+                <LiteralData>
+                    <ows:AnyValue/>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="2147483647" minOccurs="0">
+                <ows:Identifier>second attributes to retain</ows:Identifier>
+                <ows:Title>second attributes to retain</ows:Title>
+                <ows:Abstract>Second feature collection attribute to include</ows:Abstract>
+                <LiteralData>
+                    <ows:AnyValue/>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="0">
+                <ows:Identifier>intersectionMode</ows:Identifier>
+                <ows:Title>intersectionMode</ows:Title>
+                <ows:Abstract>Specifies geometry computed for intersecting features.  INTERSECTION (default) computes the spatial intersection of the inputs. FIRST copies geometry A.  SECOND copies geometry B.</ows:Abstract>
+                <LiteralData>
+                    <ows:AllowedValues>
+                        <ows:Value>INTERSECTION</ows:Value>
+                        <ows:Value>FIRST</ows:Value>
+                        <ows:Value>SECOND</ows:Value>
+                    </ows:AllowedValues>
+                    <DefaultValue>INTERSECTION</DefaultValue>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="0">
+                <ows:Identifier>percentagesEnabled</ows:Identifier>
+                <ows:Title>percentagesEnabled</ows:Title>
+                <ows:Abstract>Indicates whether to output feature area percentages (attributes percentageA and percentageB)</ows:Abstract>
+                <LiteralData>
+                    <ows:DataType>xs:boolean</ows:DataType>
+                    <ows:AnyValue/>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="0">
+                <ows:Identifier>areasEnabled</ows:Identifier>
+                <ows:Title>areasEnabled</ows:Title>
+                <ows:Abstract>Indicates whether to output feature areas (attributes areaA and areaB)</ows:Abstract>
+                <LiteralData>
+                    <ows:DataType>xs:boolean</ows:DataType>
+                    <ows:AnyValue/>
+                </LiteralData>
+            </Input>
+        </DataInputs>
+        <ProcessOutputs>
+            <Output>
+                <ows:Identifier>result</ows:Identifier>
+                <ows:Title>result</ows:Title>
+                <ComplexOutput>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/zip</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/csv</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                    </Supported>
+                </ComplexOutput>
+            </Output>
+        </ProcessOutputs>
+    </ProcessDescription>
+    <ProcessDescription wps:processVersion="1.0.0" statusSupported="true" storeSupported="true">
+        <ows:Identifier>gs:CollectGeometries</ows:Identifier>
+        <ows:Title>Collect Geometries</ows:Title>
+        <ows:Abstract>Collects the default geometries of the input features and combines them into a single geometry collection</ows:Abstract>
+        <DataInputs>
+            <Input maxOccurs="1" minOccurs="1">
+                <ows:Identifier>features</ows:Identifier>
+                <ows:Title>features</ows:Title>
+                <ows:Abstract>Input feature collection</ows:Abstract>
+                <ComplexData>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/zip</MimeType>
+                            <Encoding>base64</Encoding>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                    </Supported>
+                </ComplexData>
+            </Input>
+        </DataInputs>
+        <ProcessOutputs>
+            <Output>
+                <ows:Identifier>result</ows:Identifier>
+                <ows:Title>result</ows:Title>
+                <ComplexOutput>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/3.1.1</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/3.1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/xml; subtype=gml/2.1.2</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wkt</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/gml-3.1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/gml-2.1.2</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                    </Supported>
+                </ComplexOutput>
+            </Output>
+        </ProcessOutputs>
+    </ProcessDescription>
+</wps:ProcessDescriptions>

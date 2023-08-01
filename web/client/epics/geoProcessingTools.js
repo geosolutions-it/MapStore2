@@ -14,8 +14,8 @@ import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 import Rx from 'rxjs';
 import uuidV1 from 'uuid/v1';
-import { parseString } from 'xml2js';
-import { stripPrefix } from 'xml2js/lib/processors';
+import {parseString} from 'xml2js';
+import {stripPrefix} from 'xml2js/lib/processors';
 
 import {
     UPDATE_MAP_LAYOUT,
@@ -50,6 +50,7 @@ import {
     SET_SOURCE_LAYER_ID,
     setFeatures,
     setFeatureSourceLoading,
+    setFeatureIntersectionLoading,
     setIntersectionFeature,
     setSourceFeatureId,
     setIntersectionFeatureId,
@@ -63,7 +64,7 @@ import {
     DESCRIBE_FEATURE_TYPE_LOADED,
     DESCRIBE_COVERAGES_LOADED
 } from '../actions/layerCapabilities';
-import { addLayer, addGroup } from '../actions/layers';
+import {addLayer, addGroup} from '../actions/layers';
 import {
     zoomToExtent,
     CLICK_ON_MAP,
@@ -99,29 +100,34 @@ import {
     sourceLayerIdSelector,
     selectedLayerIdSelector,
     sourceFeatureSelector,
-    showHighlightLayersSelector,
-    isDockOpenSelector
+    showHighlightLayersSelector
 } from '../selectors/geoProcessingTools';
-import { getLayerFromId as getLayerFromIdSelector, groupsSelector } from '../selectors/layers';
-import { mapSelector } from '../selectors/map';
-import { highlightStyleSelector, applyMapInfoStyle, mapInfoEnabledSelector } from '../selectors/mapInfo';
+import {getLayerFromId as getLayerFromIdSelector, groupsSelector} from '../selectors/layers';
+import {isGeoProcessingToolsEnabledSelector} from '../selectors/controls';
+import {mapSelector} from '../selectors/map';
+import {highlightStyleSelector, applyMapInfoStyle, mapInfoEnabledSelector} from '../selectors/mapInfo';
 
 import {
     getGeoJSONExtent,
     reprojectGeoJson,
     calculateDistance
 } from "../utils/CoordinatesUtils";
-import { convertGeoJSONFeatureToWKT } from '../utils/GeoProcessingToolsUtils';
+import {convertGeoJSONFeatureToWKT} from '../utils/GeoProcessingToolsUtils';
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
-import { extractFirstNonGeometryProp } from '../utils/WFSLayerUtils';
 import {getFeatureInfo} from "../api/identify";
-import { getFeatureSimple } from '../api/WFS';
+import {getFeatureSimple} from '../api/WFS';
+import {findNonGeometryProperty} from '../utils/ogc/WFS/base';
+
 
 const OFFSET = 550;
 const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),
     changeDrawingStatus("clean", '', GPT_CONTROL_NAME)
 ];
+/**
+ * checks if a layer is a valid one that can be used in the gpt tool.
+ * also checks if it is a raster using describe layer
+ */
 export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
     .ofType(CHECK_WPS_AVAILABILITY)
     .switchMap(({layerId, source}) => {
@@ -130,7 +136,9 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
         const layerUrl = head(castArray(layer.url));
         const checkingWPS = source === "source" ? checkingWPSAvailability : checkingIntersectionWPSAvailability;
         return describeProcess(layerUrl, "geo:buffer,gs:IntersectionFeatureCollection,gs:CollectGeometries")
-            .switchMap(response => Rx.Observable.defer(() => new Promise((resolve, reject) => parseString(response.data, {tagNameProcessors: [stripPrefix]}, (err, res) => err ? reject(err) : resolve(res)))))
+            .switchMap(response => Rx.Observable.defer(
+                () => new Promise((resolve, reject) => parseString(response.data, {tagNameProcessors: [stripPrefix]}, (err, res) => err ? reject(err) : resolve(res))))
+            )
             .flatMap(xmlObj => {
                 const ids = [
                     xmlObj?.ProcessDescriptions?.ProcessDescription?.[0]?.Identifier?.[0],
@@ -156,22 +164,32 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
             })
             .startWith(checkingWPS(true));
     });
-
+/**
+ * trigger the getFeatures stream given some parameters.
+ * this needs to be done when a describe feature type is requested and the response is dispatched
+ */
 export const triggerGetFeaturesGPTEpic = (action$) => action$
     .ofType(DESCRIBE_FEATURE_TYPE_LOADED)
     .switchMap(({layerId, source}) => {
         return Rx.Observable.of(getFeatures(layerId, source));
     });
+/**
+ * handle the case when after the describe layer is executed we found out that
+ * the selected layer is a raster.
+ */
 export const disableCoverageLayerGPTEpic = (action$) => action$
     .ofType(DESCRIBE_COVERAGES_LOADED)
     .switchMap(({layerId}) => {
         return Rx.Observable.of(setInvalidLayer(layerId, true));
     });
-
+/**
+ * fetch all features ids
+ */
 export const getFeaturesGPTEpic = (action$, store) => action$
     .ofType(GET_FEATURES)
     .switchMap(({layerId, source}) => {
         const state = store.getState();
+        const setFeatureLoading = source === "source" ? setFeatureSourceLoading : setFeatureIntersectionLoading;
         const layer = getLayerFromIdSelector(state, layerId);
         const filterObj = null;
         if (isNil(layer.describeFeatureType)) {
@@ -179,7 +197,7 @@ export const getFeaturesGPTEpic = (action$, store) => action$
             return Rx.Observable.of(errorLoadingDFT(layerId));
         }
         const options = {
-            propertyName: extractFirstNonGeometryProp(layer.describeFeatureType)
+            propertyName: findNonGeometryProperty(layer.describeFeatureType)[0].name
         };
         return Rx.Observable.merge(
             getLayerJSONFeature({
@@ -195,10 +213,13 @@ export const getFeaturesGPTEpic = (action$, store) => action$
                     console.error(error);
                     return Rx.Observable.of(setFeatures(layerId, source, error));
                 })
-                .startWith(setFeatureSourceLoading(true))
-                .concat(Rx.Observable.of(setFeatureSourceLoading(false))));
+                .startWith(setFeatureLoading(true))
+                .concat(Rx.Observable.of(setFeatureLoading(false))));
 
     });
+/**
+ * fetch the source feature geom by id
+ */
 export const getFeatureDataGPTEpic = (action$, store) => action$
     .ofType(SET_SOURCE_FEATURE_ID)
     .filter(a => a.featureId !== "")
@@ -232,13 +253,18 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
 
             })
             .catch(error => {
-                // [ ] handle get ft by id error
-
                 console.error(error);
-                return Rx.Observable.empty();
+                return Rx.Observable.of(showErrorNotification({
+                    title: "errorTitleDefault",
+                    message: "GeoProcessingTools.notifications.errorGetFeature",
+                    autoDismiss: 6,
+                    position: "tc"
+                }));
             });
     });
-
+/**
+ * fetch the intersection feature geom by id
+ */
 export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
     .ofType(SET_INTERSECTION_FEATURE_ID)
     .filter(a => a.featureId !== "")
@@ -272,12 +298,18 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
 
             })
             .catch(error => {
-                // [ ] handle get ft by id error
-
                 console.error(error);
-                return Rx.Observable.empty();
+                return Rx.Observable.of(showErrorNotification({
+                    title: "errorTitleDefault",
+                    message: "GeoProcessingTools.notifications.errorGetFeature",
+                    autoDismiss: 6,
+                    position: "tc"
+                }));
             });
     });
+/**
+ * run buffer process and update toc with new layer geom
+ */
 export const runBufferProcessGPTEpic = (action$, store) => action$
     .ofType(RUN_BUFFER_PROCESS)
     .switchMap(({}) => {
@@ -288,7 +320,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
         const quadrantSegments = quadrantSegmentsSelector(state);
         const capStyle = capStyleSelector(state);
         const executeOptions = {};
-        let distance = distanceSelector(state); // do we need a fixing distance factor here 1.49 ??
+        let distance = distanceSelector(state);
         const distanceUom = distanceUomSelector(state);
         if (distanceUom === "km") {
             distance = distance * 1000;
@@ -296,7 +328,6 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
         const counter = bufferedLayersCounterSelector(state);
 
         const executeBufferProcess$ = (wktGeom, feature4326) => {
-            // [ ] to be tested
             const centroid = centroidTurf(feature4326);
             const reprojectedCentroid = reprojectGeoJson(centroid, "EPSG:4326", "EPSG:3857");
             let centroidOffset = reprojectGeoJson({
@@ -331,7 +362,6 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                         const groups = groupsSelector(state);
                         if (!find(groups, ({id}) => id === "buffered.layers")) {
                             actions.push(addGroup("Buffered layers", null, {id: "buffered.layers"}));
-                            // [ ] localize group name and layer name
                         }
                         actions.push(addLayer({
                             id: uuidV1(),
@@ -373,10 +403,13 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                         return Rx.Observable.from(actions);
                     })
                     .catch(error => {
-                    // [ ] handle get ft by id error
-
                         console.error(error);
-                        return Rx.Observable.empty();
+                        return Rx.Observable.of(showErrorNotification({
+                            title: "errorTitleDefault",
+                            message: "GeoProcessingTools.notifications.errorBuffer",
+                            autoDismiss: 6,
+                            position: "tc"
+                        }));
                     })
         );
         const feature = sourceFeatureSelector(state);
@@ -388,7 +421,15 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
-                });
+                }).catch(error => {
+                console.error(error);
+                return Rx.Observable.of(showErrorNotification({
+                    title: "errorTitleDefault",
+                    message: "GeoProcessingTools.notifications.errorBuffer",
+                    autoDismiss: 6,
+                    position: "tc"
+                }));
+            });
             return executeCollectProcess$
                 .switchMap((geom) => {
                     const ft = {
@@ -409,20 +450,27 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
             .concat([runningProcess(false)]);
 
     });
-
+/**
+ * clear source highlight feature
+ */
 export const resetSourceHighlightGPTEpic = (action$) => action$
     .ofType(SET_SOURCE_LAYER_ID, SET_SOURCE_FEATURE_ID)
     .filter(a => a.layerId === "" || a.featureId === "")
     .switchMap(({}) => {
         return Rx.Observable.of(removeAdditionalLayer({id: "gpt-layer"}));
     });
+/**
+ * clear intersection highlight feature
+ */
 export const resetIntersectHighlightGPTEpic = (action$) => action$
     .ofType(SET_INTERSECTION_LAYER_ID, SET_INTERSECTION_FEATURE_ID)
     .filter(a => a.layerId === "" || a.featureId === "")
     .switchMap(({}) => {
         return Rx.Observable.of(removeAdditionalLayer({id: "gpt-layer-intersection"}));
     });
-
+/**
+ * run intersection process and update toc with new layer geom
+ */
 export const runIntersectProcessGPTEpic = (action$, store) => action$
     .ofType(RUN_INTERSECTION_PROCESS)
     .switchMap(({}) => {
@@ -544,7 +592,9 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
             .concat([runningProcess(false)]);
 
     });
-
+/**
+ * toggle highlight value for showing or not the highlight layers by owner
+ */
 export const toggleHighlightLayersGPTEpic = (action$, store) => action$
     .ofType(TOGGLE_HIGHLIGHT_LAYERS)
     .switchMap(() => {
@@ -553,8 +603,9 @@ export const toggleHighlightLayersGPTEpic = (action$, store) => action$
             visibility: showHighlightLayers
         }));
     });
-
-//
+/**
+ * activate feature selection from map
+ */
 export const disableIdentifyGPTEpic = (action$, {getState}) =>
     action$
         .ofType(SET_SELECTED_LAYER_TYPE)
@@ -569,7 +620,9 @@ export const disableIdentifyGPTEpic = (action$, {getState}) =>
                 )]);
         });
 
-// [ ] verify this
+/**
+ * handle feature selection from map
+ */
 export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
     action$
         .ofType(CLICK_ON_MAP)
@@ -647,7 +700,7 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
  */
 export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
-        .filter(({source}) => isDockOpenSelector(store.getState()) &&  source !== GPT_CONTROL_NAME)
+        .filter(({source}) => isGeoProcessingToolsEnabledSelector(store.getState()) && source !== GPT_CONTROL_NAME)
         .map(({layout}) => {
             const action = updateMapLayout({
                 ...layout,

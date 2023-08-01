@@ -1,0 +1,11 @@
+
+- [x] va controllato che il layer sia vettoriale prima di procedere,
+- [x] metter warning se utente non sceglie feature
+- [x] finire intersection wps process con collect geom included
+- [x] mettere checkbox per highlight
+- [x] fix distanza coeff.
+- [x] fare selezione in mappa per singola feature
+- [ ] tests
+- [ ] localize messages
+- [ ] icona da definire
+

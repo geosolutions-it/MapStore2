@@ -21,6 +21,7 @@ import {
     SET_BUFFER_CAP_STYLE,
     SET_FEATURES,
     SET_FEATURE_SOURCE_LOADING,
+    SET_FEATURE_INTERSECTION_LOADING,
     SET_INVALID_LAYER,
     SET_WPS_AVAILABILITY,
     SET_SELECTED_TOOL,
@@ -93,7 +94,15 @@ function geoProcessingTools( state = {
     case INIT_PLUGIN: {
         return {
             ...state,
-            ...action.cfg
+            ...action.cfg,
+            buffer: {
+                ...state.buffer,
+                ...(action.cfg.buffer || {})
+            },
+            intersection: {
+                ...state.intersection,
+                ...(action.cfg.intersection || {})
+            }
         };
     }
     case INCREASE_BUFFERED_COUNTER: {
@@ -144,13 +153,19 @@ function geoProcessingTools( state = {
     case SET_BUFFER_QUADRANT_SEGMENTS: {
         return {
             ...state,
-            quadrantSegments: action.quadrantSegments
+            buffer: {
+                ...state.buffer,
+                quadrantSegments: action.quadrantSegments
+            }
         };
     }
     case SET_BUFFER_CAP_STYLE: {
         return {
             ...state,
-            capStyle: action.capStyle
+            buffer: {
+                ...state.buffer,
+                capStyle: action.capStyle
+            }
         };
     }
     case SET_FEATURES: {
@@ -168,6 +183,24 @@ function geoProcessingTools( state = {
             }
         };
     }
+    case SET_FEATURE_SOURCE_LOADING: {
+        return {
+            ...state,
+            flags: {
+                ...state.flags,
+                featuresSourceLoading: action.status
+            }
+        };
+    }
+    case SET_FEATURE_INTERSECTION_LOADING: {
+        return {
+            ...state,
+            flags: {
+                ...state.flags,
+                featuresIntersectionLoading: action.status
+            }
+        };
+    }
     case SET_INVALID_LAYER: {
         return {
             ...state,
@@ -177,15 +210,6 @@ function geoProcessingTools( state = {
                     ...state.flags.invalid,
                     [action.layerId]: action.status
                 }
-            }
-        };
-    }
-    case SET_FEATURE_SOURCE_LOADING: {
-        return {
-            ...state,
-            flags: {
-                ...state.flags,
-                featuresSourceLoading: action.status
             }
         };
     }
@@ -283,7 +307,6 @@ function geoProcessingTools( state = {
                 ...state.flags,
                 isIntersectionEnabled: checkIfIntersectionIsPossible(state?.source?.feature, action?.feature)
             }
-
         };
     }
     case SET_INTERSECTION_FIRST_ATTRIBUTE: {
@@ -291,7 +314,7 @@ function geoProcessingTools( state = {
             ...state,
             intersection: {
                 ...state.intersection,
-                firstAttributesToRetain: action.firstAttributesToRetain
+                firstAttributeToRetain: action.firstAttributeToRetain
             }
         };
     }
@@ -300,7 +323,7 @@ function geoProcessingTools( state = {
             ...state,
             intersection: {
                 ...state.intersection,
-                secondAttributesToRetain: action.secondAttributesToRetain
+                secondAttributeToRetain: action.secondAttributeToRetain
             }
         };
     }

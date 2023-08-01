@@ -59,27 +59,3 @@ export const extractGeometryAttributeName = describeFeatureType => {
         .map(elem => elem.name) // extract the geometry attribute name. E.g. from gml:Point extract the "Point" string
     );
 };
-
-/**
- * Extract first prop that is not a geometry
- * @param {object} describeFeatureType the describe ft type object
- * @example
- * describeFeatureType: {
- *   featureTypes: [{
- *     properties:[{
- *       localType: "string",
- *       maxOccurs: 1,
- *       minOccurs: 0,
- *       name: "id",
- *       nillable: true,
- *       type: "xsd:string"
- *     }]
- * }]
- */
-export const extractFirstNonGeometryProp = describeFeatureType => {
-    const properties = get(describeFeatureType, "featureTypes[0].properties") || [];
-    return properties && head(properties
-        .filter(elem => elem.type.indexOf("gml:") !== 0)
-        .map(elem => elem.name)
-    );
-};

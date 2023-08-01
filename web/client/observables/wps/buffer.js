@@ -20,11 +20,11 @@ import {executeProcessXML} from './execute';
  * function used to generate the Execute wps process payload for
  * the geo:buffer
  * @param {object} options the options to use
+ * @param {string} options.geometry3857 the geometry coordinates reprojected in 3857
  * @param {number} options.distance the distance to buffer the input geometry, in the units of the geometry
- * @param {object} options.geometry the geojson geometry in 3857
  * @param {number} options.quadrantSegments Number determining the style and smoothness of buffer corners. Positive numbers create round corners with that number of segments per quarter-circle, 0 creates flat corners.
  * @param {string} options.capStyle Style for the buffer end caps. Values are: Round - rounded ends (default), Flat - flat ends; Square - square ends.
-
+ * @return {string} the body payload for the wps process
  */
 export const bufferXML = ({
     geometry3857,

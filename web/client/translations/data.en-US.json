@@ -3859,7 +3859,7 @@
         "GeoProcessingTools": {
           "title": "GeoProcessing Tools",
           "emptyTitle": "These WPS proceses must be installed in Geoserver in order to use this tool:",
-          "emptyDescription": "<ul><li>geo:Buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
           "sourceLayer": "Source Layer",
           "sourceFeature": "Source Feature",
           "tool": "Select a tool to use",
@@ -3881,8 +3881,8 @@
           "round": "Round",
           "flat": "Flat",
           "square": "Square",
-          "firstAttributesToRetain": "First feature collection attribute to include",
-          "secondAttributesToRetain": "Second feature collection attribute to include",
+          "firstAttributeToRetain": "First feature collection attribute to include",
+          "secondAttributeToRetain": "Second feature collection attribute to include",
           "intersectionMode": "Specifies geometry computed for intersecting features",
           "percentagesEnabled": "Indicates whether to output feature area percentages",
           "areasEnabled": "Indicates whether to output feature areas",
@@ -3895,12 +3895,14 @@
           "notifications": {
             "errorIntersectGFI": "There was an error intersecting the features. It was not possible to create the intersection layer.",
             "errorGFI": "There was an error loading the feature",
+            "errorGetFeature": "There was an error loading the feature in order to obtain its geometry",
             "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
             "noFeatureInPoint": "No feature was not found at selected point.",
             "featureFound": "A feature was found at selected point.",
             "noLayerSelected": "Please select layer first.",
             "successfulIntersection": "The intersection operation was successful and a new layer has ben created and added to the TOC",
-            "successfulBuffer": "The Buffer operation was successful and a new layer has ben created and added to the TOC"
+            "successfulBuffer": "The Buffer operation was successful and a new layer has ben created and added to the TOC",
+            "errorBuffer": "The Buffer operation has failed"
           },
           "tooltip": {
             "clickToSelectFeature": "Click to select feature",
