@@ -3876,9 +3876,9 @@
           "percentagesEnabled": "Indica se indica se emettere le percentuali dell'area caratteristica",
           "areasEnabled": "Indica se emettere aree caratteristiche",
           "noMatchedMode": "Nessuna modalità corrisponde al filtro corrente",
-          "INTERSEZIONE": "INTERSEZIONE",
-          "PRIMO": "PRIMO",
-          "SECONDO": "SECONDO",
+          "INTERSECTION": "INTERSEZIONE",
+          "FIRST": "PRIMO",
+          "SECOND": "SECONDO",
           "true": "vero",
           "false": "falso",
           "notifications": {
