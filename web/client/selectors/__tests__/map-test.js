@@ -26,7 +26,8 @@ import {
     isMouseMoveCoordinatesActiveSelector,
     isMouseMoveIdentifyActiveSelector,
     identifyFloatingToolSelector,
-    mapInfoAttributesSelector
+    mapInfoAttributesSelector,
+    showEditableFeatureCheckboxSelector
 } from '../map';
 
 const center = {x: 1, y: 1};
@@ -197,5 +198,39 @@ describe('Test map selectors', () => {
         const mapInfoAttributes = mapInfoAttributesSelector({map: {present: {info: {attributes}}}});
         expect(mapInfoAttributes).toBeTruthy();
         expect(mapInfoAttributes).toEqual(attributes);
+    });
+    describe('showEditableFeatureCheckboxSelector', () =>{
+        it('test with user not logged in - map', () => {
+            const _state = {map: {present: {info: {id: 1, canEdit: false}}}};
+            expect(showEditableFeatureCheckboxSelector(_state)).toBeFalsy();
+        });
+        it('test with user not logged in - context with map', () => {
+            const _state = {map: {present: {info: {id: 1, canEdit: true}}}, context: {resource: {id: 1, canEdit: true}}};
+            expect(showEditableFeatureCheckboxSelector(_state)).toBeFalsy();
+        });
+        it('test with user not logged in - context', () => {
+            const _state = {map: {present: {info: {id: 1, canEdit: true}}}, context: {resource: {id: 1, canEdit: true}}};
+            expect(showEditableFeatureCheckboxSelector(_state)).toBeFalsy();
+        });
+        it('test with user logged in - context', () => {
+            const _state = {map: {present: {info: null}}, context: {resource: {id: 1, canEdit: true}}, security: {user: {name: "Test"}}};
+            expect(showEditableFeatureCheckboxSelector(_state)).toBeFalsy();
+        });
+        it('test with user logged in - context map', () => {
+            const _state = {map: {present: {info: {id: 1, canEdit: true}}}, context: {resource: {id: 1, canEdit: true}}, security: {user: {name: "Test"}}};
+            expect(showEditableFeatureCheckboxSelector(_state)).toBeTruthy();
+        });
+        it('test with user logged in - map with only view permission', () => {
+            const _state = {map: {present: {info: {id: 1, canEdit: false}}}, security: {user: {name: "Test"}}};
+            expect(showEditableFeatureCheckboxSelector(_state)).toBeFalsy();
+        });
+        it('test with user logged in - new map', () => {
+            const _state = {map: {present: {info: undefined}}, security: {user: {name: "Test"}}};
+            expect(showEditableFeatureCheckboxSelector(_state)).toBeTruthy();
+        });
+        it('test with user logged in - context creator', () => {
+            const _state = {map: {present: {info: undefined}}, security: {user: {name: "Test"}}};
+            expect(showEditableFeatureCheckboxSelector(_state)).toBeTruthy();
+        });
     });
 });
