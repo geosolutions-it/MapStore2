@@ -178,6 +178,25 @@ Existing contexts need to be updated separately, after applying these changes
     },
 ```
 
+- the app pages inside a MapStore project must be updated with a new entry, only for projects using permalink feature, here an example:
+
+```js
+import Permalink from '@mapstore/product/pages/Permalink';
+import productAppConfig from "@mapstore/product/appConfig";
+
+const appConfig = {
+    ...productAppConfig,
+    pages: [
+        // my custom pages ...,
+        {
+            name: "permalink",
+            path: "/permalink/:pid",
+            component: Permalink
+        }
+    ]
+};
+```
+
 #### Database Update
 
 Add new category `PERMALINK` to `gs_category` table. To update your database you need to apply this SQL scripts to your database

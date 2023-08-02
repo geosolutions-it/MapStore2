@@ -10,7 +10,6 @@ import { Observable } from "rxjs";
 import { push } from "connected-react-router";
 import pick from "lodash/pick";
 import get from "lodash/get";
-import isString from "lodash/isString";
 import template from "lodash/template";
 
 import API from "../api/GeoStoreDAO";
@@ -73,7 +72,7 @@ const PERMALINK_RESOURCES = {
 
 const permalinkErrorHandler = (state) =>
     (e, stream$) => {
-        if (e.status === 404 && isString(e.data) && e.data.indexOf('Resource Category not found') > -1) {
+        if (e.status === 404) { // Upon saving a permalink, the only instance when a 404 can happen is in the case of missing category
             if (isAdminUserSelector(state)) {
                 // Create category when missing and role is ADMIN
                 return createCategory(PERMALINK)
@@ -104,7 +103,7 @@ const permalinkErrorHandler = (state) =>
         }
         return Observable.of(
             error({
-                title: 'notifcation.error',
+                title: 'notification.error',
                 message: 'permalink.errors.save.generic',
                 autoDismiss: 6,
                 position: "tc"
