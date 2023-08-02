@@ -157,7 +157,7 @@ For more information check <a href="https://github.com/geosolutions-it/MapStore2
 Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add (or remove :( ) your organization from this list, please, contact simone.giannecchini@geosolutionsgroup.com.
 
 - [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
-- City of Bozen - Italy
+- (https://sit.comune.bolzano.it/mapstore2/#/(City of Bozen - Italy)
 - City of Florence - Italy
 - City of Munich - Germany
 - Rennes Metropole - France
@@ -182,3 +182,4 @@ Here below is a small list of organizations using MapStore either directly or th
 - MapStand - UK
 - [County of Milan - Italy](https://inlineainfrastrutture.cittametropolitana.mi.it/mapstore)
 - [Nordeste Municipality - Portugal](https://sigweb.cmnordeste.pt/mapstore/#/)
+- [Corvi Muncipality - Portugal](https://geocorvo.pt/mapstore/#/)
