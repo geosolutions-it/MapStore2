@@ -41,7 +41,7 @@ class General extends React.Component {
         allowNew: PropTypes.bool,
         enableLayerNameEditFeedback: PropTypes.bool,
         currentLocale: PropTypes.string,
-        mapInfo: PropTypes.object
+        showFeatureEditOption: PropTypes.bool
     };
 
     static contextTypes = {
@@ -167,7 +167,7 @@ class General extends React.Component {
                             </Col>
                         </div>
                     }
-                    {supportsFeatureEditing(this.props.element) && this.canEditFeature() && <FormGroup>
+                    {supportsFeatureEditing(this.props.element) && this.props.showFeatureEditOption && <FormGroup>
                         <Checkbox
                             data-qa="general-read-only-attribute"
                             key="disableFeaturesEditing"
@@ -187,11 +187,6 @@ class General extends React.Component {
 
     updateEntry = (key, event) => isObject(key) ? this.props.onChange(key) : this.props.onChange(key, event.target.value);
     updateTitle = (title) => this.props.onChange("title", title);
-
-    canEditFeature = () => {
-        const {id, canEdit} = this.props.mapInfo ?? {};
-        return id ? canEdit : true;
-    }
 
     findGroupLabel = () => {
         const wholeGroups = this.props.groups && flattenGroups(this.props.groups, 0, true);
