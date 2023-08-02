@@ -2912,7 +2912,7 @@
             "cancel": "Abbrechen",
             "saveSuccessTitle": "Erfolg",
             "saveSuccessMessage": "Erfolgreich gespeichert",
-            "saveTooltip": "Sparen",
+            "saveTooltip": "Speichern",
             "saveAsTooltip": "Speichern als"
         },
         "mapEditor": {
