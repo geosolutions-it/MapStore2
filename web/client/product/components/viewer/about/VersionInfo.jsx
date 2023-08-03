@@ -57,9 +57,13 @@ class VersionInfo extends React.Component {
                             <Message msgId="version.commit"/>
                         </div>
                         <div className="v_commit">
-                            <a href={this.props.githubUrl} target="_blank" className="v_githubUrl">
-                                {this.props.commit}
-                            </a>
+                            {
+                                this.props.githubUrl ?
+                                    <a href={this.props.githubUrl + this.props.commit} target="_blank" className="v_githubUrl">
+                                        {this.props.commit}
+                                    </a> :
+                                    this.props.commit
+                            }
                         </div>
                     </div>
                     <div className="version-info">

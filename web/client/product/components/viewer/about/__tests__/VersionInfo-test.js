@@ -33,7 +33,7 @@ describe("The VersionInfo component", () => {
         const message = "#7934 refactor code and resolve eslint error";
         const commit = "01046133761de880aebce08a7bf11dd858117837";
         const date = "Thu, 23 Jun 2022 20:00:02 +0300";
-        const githubUrl = "https://github.com/geosolutions-it/MapStore/tree/sha_commit";
+        const githubUrl = "https://github.com/geosolutions-it/MapStore/tree/";
 
         const vd = ReactDOM.render(
             <VersionInfo
@@ -63,7 +63,7 @@ describe("The VersionInfo component", () => {
         expect(versionValue.textContent.trim()).toBe(version);
         expect(messageValue.textContent.trim()).toBe(message);
         expect(commitValue.textContent.trim()).toBe(commit);
-        expect(commitValue.innerHTML.trim()).toBe('<a href="https://github.com/geosolutions-it/MapStore/tree/sha_commit" target="_blank" class="v_githubUrl">01046133761de880aebce08a7bf11dd858117837</a>');
+        expect(commitValue.innerHTML.trim()).toBe(`<a href="https://github.com/geosolutions-it/MapStore/tree/${commit}" target="_blank" class="v_githubUrl">${commit}</a>`);
         expect(dateValue.textContent.trim()).toBe(date);
         expect(githubUrlValue.textContent.trim()).toBe(commit);
     });

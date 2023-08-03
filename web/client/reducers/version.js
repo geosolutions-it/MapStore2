@@ -27,8 +27,7 @@ function version(state = {
     splitData,
     message: splitData.find((x)=> x.includes('Message:')).split('Message: ')[1],
     commit: splitData.find((x)=> x.includes('Commit:')).split('Commit: ')[1],
-    date: splitData.find((x)=> x.includes('Date:')).split('Date: ')[1],
-    githubUrl: "https://github.com/geosolutions-it/MapStore2/tree/" + __COMMITHASH__
+    date: splitData.find((x)=> x.includes('Date:')).split('Date: ')[1]
 }, action) {
     switch (action.type) {
     case CHANGE_VERSION: {

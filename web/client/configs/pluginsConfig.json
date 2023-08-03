@@ -350,7 +350,10 @@
       "description": "plugins.About.description",
       "dependencies": [
         "SidebarMenu"
-      ]
+      ],
+      "defaultConfig": {
+        "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+      }
     },
     {
       "name": "MousePosition",
