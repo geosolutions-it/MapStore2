@@ -7,7 +7,6 @@
 */
 
 export const versionSelector = (state) => state.version && state.version.current || '';
-export const githubUrlSelector = (state) => state.version && state.version.githubUrl || '';
 export const commitSelector = (state) => state.version && state.version.commit || '';
 export const messageSelector = (state) => state.version && state.version.message || '';
 export const dateSelector = (state) => state.version && state.version.date || '';

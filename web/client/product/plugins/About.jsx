@@ -18,7 +18,6 @@ import version from '../../reducers/version';
 import { aboutSelector } from '../../selectors/controls';
 import {
     versionSelector,
-    githubUrlSelector,
     commitSelector,
     messageSelector,
     dateSelector
@@ -26,7 +25,6 @@ import {
 
 const About = connect((state) => ({
     version: versionSelector(state),
-    githubUrl: githubUrlSelector(state),
     commit: commitSelector(state),
     message: messageSelector(state),
     date: dateSelector(state),
@@ -42,6 +40,14 @@ const About = connect((state) => ({
  * @name About
  * @class
  * @memberof plugins
+ * @prop {string} cfg.githubUrl base url to the github tree project, default is "". It will generate a url like "https://github.com/GITHUB_USER/REPO_NAME/tree/COMMIT_SHA"
+ *
+ * @example
+ * {
+ *   "cfg" : {
+ *     githubUrl: "https://github.com/GITHUB_USER/REPO_NAME/tree/"
+ *   }
+ * }
  */
 export default {
     AboutPlugin: assign(About,
