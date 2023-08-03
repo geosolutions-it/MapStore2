@@ -67,6 +67,30 @@ const {castArray} = require('lodash');
  * // examples
  * property("p").equalTo("a")
  * ```
+ * @prop {function} valueReference `valueReference("P1")` -> `<ogc:PropertyName>P1</ogc:PropertyName>` or `<fes:ValueReference>P1</fes:ValueReference>` depending on the wfs version
+ * @prop {function} literal `literal('a')` -> `<ogc:Literal>a</ogc:Literal>`
+ * @prop {object} operations all the available operations (logical, spatial, comparison or custom):
+ * @prop {function} operations.func creates a function condition. Parameters can be passed as array or args list. E.g. `func("funcName", valueReference("propName"), literal('literal'))` -> `<ogc:Function name="funcName"><ogc:PropertyName>propName</ogc:PropertyName><ogc:Literal>literal</ogc:Literal></ogc:Function>`
+ * @prop {function} operations.and logic and. `and(...conditions)` -> `<ogc:And>...conditions</ogc:And>`
+ * @prop {function} operations.or logic or. `or(...conditions)` -> `<ogc:Or>...conditions</ogc:Or>`
+ * @prop {function} operations.not logic not. `not(condition)` -> `<ogc:Not>condition</ogc:Not>`
+ * @prop {function} operations.nor logic nor. `nor(...conditions)` -> `<ogc:Not><ogc:Or>...conditions</ogc:Or></ogc:Not>`
+ * @prop {function} operations.intersects spatial intersection. `intersects(valueReference('propName'), valueReference('geometry'))` -> `<ogc:Intersects><ogc:PropertyName>property</ogc:PropertyName>geometry</ogc:Intersects>`
+ * @prop {function} operations.within spatial within operation
+ * @prop {function} operations.bbox spatial bbox operation
+ * @prop {function} operations.dwithin spatial dwithin operation
+ * @prop {function} operations.contains spatial contains operation
+ * @prop {function} operations.equal comparison equal operation
+ * @prop {function} operations.greater comparison greater operation
+ * @prop {function} operations.less comparison less operation
+ * @prop {function} operations.greaterOrEqual comparison greaterOrEqual operation
+ * @prop {function} operations.lessOrEqual comparison lessOrEqual operation
+ * @prop {function} operations.notEqual comparison notEqual operation
+ * @prop {function} operations.between comparison between operation
+ * @prop {function} operations.like comparison like operation
+ * @prop {function} operations.ilike comparison ilike operation
+ * @prop {function} operations.isNull comparison isNull operation
+ * @prop {function} property Property is a function that returns an object with all the available operations for a property. When applied the operation, the final XML is generated. It is a quick shortcut to create filters.
  * @prop {function} property.equalTo `property("P1").equals("v1")`
  * @prop {function} property.greaterThen `property("P1").greaterThen(1)`
  * @prop {function} property.greaterThenOrEqualTo `property("P1").greaterThenOrEqualTo(1)`
@@ -113,9 +137,11 @@ module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} =
         not: logical.not.bind(null, filterNS),
         func: func.bind(null, filterNS),
         literal: getValue,
-        propertyName: (property) =>
+        // note: use valueReference method for filters and SortBy conditions. PropertyName is used in WFS 2.0 only for listing required attributes, while the rest uses ValueReference.
+        // this function already uses PropertyName or ValueReference depending of the wfsVersion passed.
+        valueReference: (property) =>
             castArray(property)
-                .map(p => propertyName(filterNS, p))
+                .map(p => propName(filterNS, p))
                 .join(""),
         property: function(name) {
             return {

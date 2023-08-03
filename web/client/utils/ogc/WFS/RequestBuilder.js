@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const filterBuilder = require('../Filter/FilterBuilder');
+const castArray = require('lodash/castArray');
 const {wfsToGmlVersion} = require("./base");
 const getStaticAttributesWFS1 = (ver) => 'service="WFS" version="' + ver + '" ' +
     (ver === "1.0.0" ? 'outputFormat="GML2" ' : "") +
@@ -87,12 +88,22 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS = "
             + (viewParams ? ` viewParams="${viewParams}"` : "");
     };
     const fb = filterBuilder({gmlVersion: gmlV, wfsVersion, filterNS: filterNS || wfsVersion === "2.0" ? "fes" : "ogc"});
-
+    /*
+        Accordingly to XSD, PropertyName in query body is still PropertyName for WFS 2.0
+        https://schemas.opengis.net/wfs/2.0/wfs.xsd
+        While SortBy and Filters use ValueReference
+        https://schemas.opengis.net/filter/2.0/sort.xsd
+    */
+    const propertyName = (property) =>
+        castArray(property)
+            .map(p => `<${wfsVersion === "2.0" ? "fes" : "ogc"}:PropertyName>${p}</${wfsVersion === "2.0" ? "fes" : "ogc"}:PropertyName>`)
+            .join("");
     return {
         ...fb,
         getFeature: (content, opts) => `<${wfsNS}:GetFeature ${requestAttributes(opts)}>${Array.isArray(content) ? content.join("") : content}</${wfsNS}:GetFeature>`,
+        propertyName,
         sortBy: (property, order = "ASC") =>
-            `<${wfsNS}:SortBy><${wfsNS}:SortProperty>${fb.propertyName(property)}<${wfsNS}:SortOrder>${order}</${wfsNS}:SortOrder></${wfsNS}:SortProperty></${wfsNS}:SortBy>`,
+            `<${wfsNS}:SortBy><${wfsNS}:SortProperty>${fb.valueReference(property)}<${wfsNS}:SortOrder>${order}</${wfsNS}:SortOrder></${wfsNS}:SortProperty></${wfsNS}:SortBy>`,
         query: (featureName, content, {srsName = "EPSG:4326"} = {}) =>
             `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" ${srsName !== 'native' ? `srsName="${srsName}"` : ''}>`
             + `${Array.isArray(content) ? content.join("") : content}`

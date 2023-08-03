@@ -80,12 +80,21 @@ describe('FilterBuilder', () => {
             + `<ogc:And>${intersectsElem2}<ogc:Not>${intersectsElem1}</ogc:Not></ogc:And>`
             + `</ogc:Or>`);
     });
-    it('propertyName', () => {
+
+    it('valueReference 1.1.0', () => {
         const b = new FilterBuilder();
-        expect(b.propertyName("PROPERTY")).toBe("<ogc:PropertyName>PROPERTY</ogc:PropertyName>");
+        expect(b.valueReference("PROPERTY")).toBe("<ogc:PropertyName>PROPERTY</ogc:PropertyName>");
     });
     it('array of propertyNames translated into a sequesnce of propertyName tags', () => {
         const b = new FilterBuilder();
-        expect(b.propertyName(["PROPERTY1", "PROPERTY2"])).toBe("<ogc:PropertyName>PROPERTY1</ogc:PropertyName><ogc:PropertyName>PROPERTY2</ogc:PropertyName>");
+        expect(b.valueReference(["PROPERTY1", "PROPERTY2"])).toBe("<ogc:PropertyName>PROPERTY1</ogc:PropertyName><ogc:PropertyName>PROPERTY2</ogc:PropertyName>");
+    });
+    it('valueReference wfs 2.0', () => {
+        const b = new FilterBuilder({wfsVersion: '2.0'});
+        expect(b.valueReference("PROPERTY")).toBe("<ogc:ValueReference>PROPERTY</ogc:ValueReference>");
+    });
+    it('func', () => {
+        const b = new FilterBuilder();
+        expect(b.func("funcName", b.valueReference('propName'), b.literal('value'))).toBe('<ogc:Function name="funcName"><ogc:PropertyName>propName</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:Function>');
     });
 });
