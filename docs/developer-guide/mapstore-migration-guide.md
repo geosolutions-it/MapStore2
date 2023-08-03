@@ -22,11 +22,43 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.01.xx to 2023.02.00
 
+### About plugin cfg changes
+
+Starting this release **2023.02.00** we have included a new *cfg* option the About plugin called **githubUrl**
+
+We suggest you to edit About plugin cfg of **localConfig.json** adding the following
+
+```diff
+{
+-    "name": "About"
++    "name": "About",
++    "cfg": {
++      "githubUrl": "https://github.com/GITHUB_USER/REPO_NAME/tree/"
++    }
+```
+
+inside `configs/pluginsConfig.json` you can add this to the About plugin definition
+
+```diff
+      "name": "About",
+      "glyph": "info-sign",
+      "title": "plugins.About.title",
+      "description": "plugins.About.description",
+      "dependencies": [
+        "SidebarMenu"
+-      ]
++      ],
++      "defaultConfig": {
++        "githubUrl": "https://github.com/geosolutions-it/MapStore2-C027/tree/"
++      }
+    },
+```
+
 ### NodeJS/NPM upgrade
 
-In this release we updated all our systems to use node 16/NPM 8. This because Node 12 is actually out of maintainance.
+In this release we updated all our systems to use node 16/NPM 8. This because Node 12 is actually out of maintenance.
 We are going to support soon more recent versions of NodeJS solving the related issues.
-So make you sure to use the correct verison of NodeJS/NPM to build things correctly. See the [requirements](../requirements/#debug-build) section of the document for the details.
+So make you sure to use the correct version of NodeJS/NPM to build things correctly. See the [requirements](../requirements/#debug-build) section of the document for the details.
 
 ### Visualization mode in map configuration
 
