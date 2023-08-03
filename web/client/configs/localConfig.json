@@ -189,7 +189,10 @@
                     }
                 }
             }, {
-              "name": "About"
+              "name": "About",
+              "cfg": {
+                "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+              }
             }, "DrawerMenu",
             {
                 "name": "BackgroundSelector",
@@ -407,7 +410,10 @@
                     "wrap": true
                 }
             }, {
-              "name": "About"
+              "name": "About",
+              "cfg": {
+                "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+              }
             },
             {
               "name": "MousePosition",
@@ -670,7 +676,10 @@
           "Notifications",
           "Login",
           {
-            "name": "About"
+            "name": "About",
+            "cfg": {
+                "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+              }
           },
           "Language",
           "NavMenu",
@@ -796,7 +805,10 @@
           "Login",
           "BurgerMenu",
           {
-            "name": "About"
+            "name": "About",
+            "cfg": {
+                "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
+              }
           },
           "Language",
           "NavMenu",
