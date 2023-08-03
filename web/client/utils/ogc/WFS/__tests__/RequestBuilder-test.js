@@ -76,4 +76,79 @@ describe('RequestBuilder Operators', () => {
             ), {outputFormat: "application/json"})
         ).toBe(expected3);
     });
+    it('test PropertyName and sortBy usage WFS 1.1.0', () => {
+        const {filter, getFeature, property, query, propertyName, sortBy} = requestBuilder({wfsVersion: "1.1.0"});
+        const expected = '<wfs:GetFeature service="WFS" version="1.1.0"'
+            + ' xmlns:gml="http://www.opengis.net/gml"'
+            + ' xmlns:wfs="http://www.opengis.net/wfs"'
+            + ' xmlns:ogc="http://www.opengis.net/ogc"'
+            + ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">'
+            + '<wfs:Query typeName="ft_name_test" srsName="EPSG:4326">'
+                + '<wfs:SortBy>'
+                    + '<wfs:SortProperty>'
+                        + '<ogc:PropertyName>highway_system</ogc:PropertyName>'
+                        + '<wfs:SortOrder>A</wfs:SortOrder>'
+                    + '</wfs:SortProperty>'
+                + '</wfs:SortBy>'
+                + '<ogc:PropertyName>highway_system</ogc:PropertyName>'
+                + '<ogc:PropertyName>name</ogc:PropertyName>'
+                + '<ogc:Filter>'
+                    + '<ogc:PropertyIsEqualTo>'
+                        + '<ogc:PropertyName>highway_system</ogc:PropertyName>'
+                        + '<ogc:Literal>state</ogc:Literal>'
+                    + '</ogc:PropertyIsEqualTo>'
+                + '</ogc:Filter>'
+            + '</wfs:Query>'
+        + '</wfs:GetFeature>';
+        expect(
+            getFeature(query("ft_name_test",
+                [
+                    sortBy("highway_system", "A"),
+                    propertyName(["highway_system", "name"]),
+                    filter(property("highway_system").equalTo("state"))
+                ]
+
+            ))
+        ).toBe(
+            expected
+        );
+
+    });
+    it('test PropertyName and sortBy usage WFS 2.0', () => {
+        const {filter, getFeature, property, query, propertyName, sortBy} = requestBuilder({wfsVersion: "2.0"});
+        const expected = '<wfs:GetFeature service="WFS" version="2.0"'
+            + ' xmlns:wfs="http://www.opengis.net/wfs/2.0"'
+            + ' xmlns:fes="http://www.opengis.net/fes/2.0"'
+            + ' xmlns:gml="http://www.opengis.net/gml/3.2"'
+            + ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">'
+            + '<wfs:Query typeNames="ft_name_test" srsName="EPSG:4326">'
+                + '<wfs:SortBy>'
+                    + '<wfs:SortProperty>'
+                        + '<fes:ValueReference>highway_system</fes:ValueReference>'
+                        + '<wfs:SortOrder>A</wfs:SortOrder>'
+                    + '</wfs:SortProperty>'
+                + '</wfs:SortBy>'
+                + '<fes:PropertyName>highway_system</fes:PropertyName>'
+                + '<fes:PropertyName>name</fes:PropertyName>'
+                + '<fes:Filter>'
+                    + '<fes:PropertyIsEqualTo>'
+                        + '<fes:ValueReference>highway_system</fes:ValueReference>'
+                        + '<fes:Literal>state</fes:Literal>'
+                    + '</fes:PropertyIsEqualTo>'
+                + '</fes:Filter>'
+            + '</wfs:Query>'
+        + '</wfs:GetFeature>';
+        expect(
+            getFeature(query("ft_name_test",
+                [
+                    sortBy("highway_system", "A"),
+                    propertyName(["highway_system", "name"]),
+                    filter(property("highway_system").equalTo("state"))
+                ]
+
+            ))
+        ).toBe(
+            expected
+        );
+    });
 });

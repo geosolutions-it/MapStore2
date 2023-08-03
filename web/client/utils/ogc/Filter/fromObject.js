@@ -33,7 +33,7 @@ const fromObject = (filterBuilder = {}) => ({type, filters = [], args = [], name
         return filterBuilder.literal(value);
     }
     if (type === "property") {
-        return filterBuilder.propertyName(name);
+        return filterBuilder.valueReference(name);
     }
     if (includes(logical, type)) {
         return filterBuilder[type](
