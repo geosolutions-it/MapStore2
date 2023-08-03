@@ -40,9 +40,12 @@ The **Permalink** section allows to save the current overall viewer state of the
 
 <img src="../img/share/permalink.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-To obtain the permalink, the user must enter the resource **Title** and **Description** (not mandatory) and choose whether the resource will be public or not by enabling/disabling the **Public** option.
+A permalink is a new resource belonging to a dedicated category in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) for which the user must enter the **Title** and **Description** (the last one is not mandatory) and choose whether the resource will be public by checking the **Public** option (this will generate a public map permalink so that everyone can access it).
 
-When all options are filled, the user can **Generate permalink** through the <img src="../img/button/generate_permalink.jpg" class="ms-docbutton"/> button to get the **Permalink URL** and **QR code** to share.
+!!! Warning
+    [Map Details](resources-properties.md#details) as well as other resources connected to a map or context, if present, will not be available in the final permalink resource.
+
+When all options are filled, the user can **Generate permalink** through the <img src="../img/button/generate_permalink.jpg" class="ms-docbutton"/> button to get the **Permalink URL** or the **QR code** to share it.
 
 <img src="../img/share/permalink_generated.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
