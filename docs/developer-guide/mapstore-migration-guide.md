@@ -49,7 +49,7 @@ inside `configs/pluginsConfig.json` you can add this to the About plugin definit
 -      ]
 +      ],
 +      "defaultConfig": {
-+        "githubUrl": "https://github.com/geosolutions-it/MapStore2-C027/tree/"
++        "githubUrl": "https://github.com/GITHUB_USER/REPO_NAME/tree/"
 +      }
     },
 ```
