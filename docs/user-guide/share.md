@@ -12,11 +12,13 @@
 
 From the *Share panel* the user is allowed to share a resource in different ways:
 
-* With a **direct link**
+* With a **Direct Link**
 
-* Through a **social network**
+* Through a **Social Network**
 
-* With **embedded code** or **APIs** (only available for *maps*)
+* Through a **Permalink** to shares current user session (only available from the [Side Toolbar](mapstore-toolbars.md#side-toolbar))
+
+* With **Embedded code** or **APIs** (only available for *maps*)
 
 ## Link
 
@@ -31,6 +33,21 @@ Here, the user can copy the resource **URL link** or share it through the **QR c
 The **Social** section allows the user to share the resource on the most common social networks like **Facebook**, **Twitter** and **LinkedIn** simply by clicking on the social icon.
 
 <img src="../img/share/social.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+## Permalink
+
+The **Permalink** section allows to save the current overall viewer state of the resource and share it as a permalink.
+
+<img src="../img/share/permalink.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+A permalink is a new resource belonging to a dedicated category in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) for which the user must enter the **Title** and **Description** (the last one is not mandatory) and choose whether the resource will be public by checking the **Public** option (this will generate a public map permalink so that everyone can access it).
+
+!!! Warning
+    [Map Details](resources-properties.md#details) as well as other resources connected to a map or context, if present, will not be available in the final permalink resource.
+
+When all options are filled, the user can **Generate permalink** through the <img src="../img/button/generate_permalink.jpg" class="ms-docbutton"/> button to get the **Permalink URL** or the **QR code** to share it.
+
+<img src="../img/share/permalink_generated.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
 ## Embed
 
@@ -99,7 +116,7 @@ The related available options allow the user to:
 
 In case of GeoStories, enabling the **Advanced options** in the *Share tool* the user can include the following to the share URL:
 
-<img src="../img/exploring-stories/share_options.jpg" class="ms-docimage" width="400px"/>
+<img src="../img/share/share_options.jpg" class="ms-docimage" width="400px"/>
 
 * The **Home button** to allow the possibility to bring the user to the MapStore Home Page if needed: that button will be automatically included in view mode inside the story toolbar just beside the navigation bar.
 
