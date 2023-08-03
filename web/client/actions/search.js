@@ -214,6 +214,7 @@ export function textSearch(searchText, {services = null} = {}, maxResults = 15) 
  * @memberof actions.search
  * @param {object} item the selected item
  * @param {object} mapConfig the current map configuration (with size, projection...)
+ * @param {object} service the selected item results generating service (nominatim, wfs, etc.)
  * @param {object} resultsStyle style to apply to results geometries
  */
 export function selectSearchItem(item, mapConfig, service, resultsStyle) {
