@@ -8,6 +8,7 @@
 const {logical, spatial, comparison, literal, propertyName, valueReference, distance, lower, upper, func} = require('./operators');
 const {filter, fidFilter} = require('./filter');
 const {processOGCGeometry} = require("../GML");
+const {castArray} = require('lodash');
 // const isValidXML = (value, {filterNS, gmlNS}) => value.indexOf(`<${filterNS}:` === 0) || value.indexOf(`<${gmlNS}:`) === 0;
 /**
  * Returns OGC Filter Builder. The FilterBuilder returns the method to compose the filter.
@@ -112,7 +113,10 @@ module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} =
         not: logical.not.bind(null, filterNS),
         func: func.bind(null, filterNS),
         literal: getValue,
-        propertyName: propName.bind(null, filterNS),
+        propertyName: (property) =>
+            castArray(property)
+                .map(p => propertyName(filterNS, p))
+                .join(""),
         property: function(name) {
             return {
                 equalTo: (value) => comparison.equal(filterNS, propName(filterNS, name), getValue(value)),
