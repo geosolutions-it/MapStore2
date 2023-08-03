@@ -58,9 +58,11 @@ class VersionInfo extends React.Component {
                         </div>
                         <div className="v_commit">
                             {
-                                this.props.githubUrl ? <a href={this.props.githubUrl + __COMMITHASH__} target="_blank" className="v_githubUrl">
-                                    {this.props.commit}
-                                </a> : this.props.commit
+                                this.props.githubUrl ?
+                                    <a href={this.props.githubUrl + this.props.commit} target="_blank" className="v_githubUrl">
+                                        {this.props.commit}
+                                    </a> :
+                                    this.props.commit
                             }
                         </div>
                     </div>

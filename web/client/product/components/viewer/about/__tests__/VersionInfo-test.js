@@ -63,7 +63,7 @@ describe("The VersionInfo component", () => {
         expect(versionValue.textContent.trim()).toBe(version);
         expect(messageValue.textContent.trim()).toBe(message);
         expect(commitValue.textContent.trim()).toBe(commit);
-        expect(commitValue.innerHTML.trim()).toBe(`<a href="https://github.com/geosolutions-it/MapStore/tree/${__COMMITHASH__}" target="_blank" class="v_githubUrl">${__COMMITHASH__}</a>`);
+        expect(commitValue.innerHTML.trim()).toBe(`<a href="https://github.com/geosolutions-it/MapStore/tree/${commit}" target="_blank" class="v_githubUrl">${commit}</a>`);
         expect(dateValue.textContent.trim()).toBe(date);
         expect(githubUrlValue.textContent.trim()).toBe(commit);
     });
