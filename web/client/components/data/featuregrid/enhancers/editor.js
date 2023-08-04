@@ -169,7 +169,7 @@ const featuresToGrid = compose(
                             return props.editors(desc.localType, generalProps);
                         },
                         getFilterRenderer: getFilterRendererFunc,
-                        getFormatter: (desc) => getFormatter(desc, props.dateFormats)
+                        getFormatter: (desc) => getFormatter(desc, (props.fields ?? []).find(f => f.name === desc.name), {dateFormats: props.dateFormats})
                     }))
             });
             return result;
