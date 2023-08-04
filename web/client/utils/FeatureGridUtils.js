@@ -147,7 +147,7 @@ export const featureTypeToGridColumns = (
             filterable,
             editor: getEditor(desc),
             formatter: getFormatter(desc),
-            filterRenderer: getFilterRenderer(desc, desc.name)
+            filterRenderer: getFilterRenderer(desc)
         };
     });
 /**
