@@ -243,8 +243,51 @@ Details:
 - `params`: an object with additional parameters to add to the WMS request
 - `layerFilter`: an object to filter the layer. See [LayerFilter](LayerFilter.md) for details.
 - `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs'}`.
-- `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.)
+- `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.). See [Fields](#fields) for details.
 - `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
+
+##### Fields
+
+The `fields` array is used to configure the attributes of the features of the layer. They can be used in the Identify tool, in the FeatureGrid plugin, in the FeatureInfo popup, etc.
+It is supported by `wms` and `wfs` layers. The supported attributes are:
+
+- `name`: the name of the attribute
+- `alias`: the alias of the attribute (used in the Identify tool, in the FeatureGrid plugin, in the FeatureInfo popup, etc.). If not present, the `name` will be used. It can be an object to support i18n.
+- `type`: the type of the attribute. Supported types are: `string`, `number`, `date`, `boolean`. If not present, the default type is `string`.
+- `filterRenderer`: an object to configure the filter renderer in feature grid (for custom projects)
+  - `name`: the name of the filter renderer (for custom projects)
+- `featureGridFormatter`: an object to configure the feature grid formatter in feature grid.
+  - `name`: the name of the feature grid formatter .
+  - `config`: the configuration of the feature grid formatter.
+
+Example:
+
+```json
+{
+    "fields": [{
+        "name": "attr1",
+        "alias": "Attribute 1",
+        "type": "string",
+        "filterRenderer": {
+            "name": "customFilterRenderer"
+        },
+        "featureGridFormatter": {
+            "name": "customFeatureGridFormatter",
+            "config": {
+                "someConfig": "someValue"
+            }
+        }
+    }, {
+        "name": "attr2",
+        "alias": {
+            "default": "Attribute 2",
+            "en-US": "Attribute 2",
+            "it-IT": "Attributo 2"
+        },
+        "type": "number"
+    }]
+}
+```
 
 ##### Multiple URLs
 
