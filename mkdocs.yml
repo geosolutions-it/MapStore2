@@ -32,8 +32,6 @@ extra_css:
   - 'theme/css/extra.css'
 repo_name: 'geosolutions-it/MapStore2'
 repo_url: 'https://github.com/geosolutions-it/MapStore2/'
-repo_issues: 'https://github.com/geosolutions-it/MapStore2/issues'
-repo_issues_doc: 'https://github.com/geosolutions-it/MapStore2/issues/new/choose'
 edit_uri: ''
 docs_dir: 'docs'
 markdown_extensions:
@@ -141,6 +139,7 @@ nav:
       - Map Configuration: 'developer-guide/maps-configuration.md'
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
       - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
+      - Filters: 'developer-guide/LayerFilter.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - Users:
