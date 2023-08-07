@@ -194,7 +194,7 @@ class SidebarMenu extends React.Component {
     };
 
     renderExtraItems = (items) => {
-        const dummySelector = () => {};
+        const dummySelector = () => ({});
         const menuItems = items.map((item) => {
             if (item.tool) {
                 const CustomMenuItem = item.tool;
