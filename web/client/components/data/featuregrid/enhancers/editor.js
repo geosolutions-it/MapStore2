@@ -139,7 +139,8 @@ const featuresToGrid = compose(
                 if (props.filterRenderers && props.filterRenderers[name]) {
                     return props.filterRenderers[name];
                 }
-                return null;
+                // return empty component if no filter renderer is defined, to avoid failures
+                return () => null;
             };
 
             const result = ({
