@@ -116,21 +116,7 @@ import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
 import {getFeatureSimple} from '../api/WFS';
 import {findNonGeometryProperty} from '../utils/ogc/WFS/base';
-import {WKT, GeoJSON} from 'ol/format';
-
-/**
- * Convert geojson geom in wkt
- * @param {object} feature the geojson feature
- * @returns {string} the converted string in wkt
- */
-const convertGeoJSONFeatureToWKT = (feature) => {
-    const formatGeoJSON = new GeoJSON();
-    const WKTGeoJSON = new WKT();
-    const olFeature = formatGeoJSON.readFeature(feature);
-    const geometry = WKTGeoJSON.writeFeature(olFeature);
-    return geometry;
-};
-
+import toWKT from '../utils/ogc/WKT/toWKT';
 
 const OFFSET = 550;
 const DEACTIVATE_ACTIONS = [
@@ -450,14 +436,14 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                         geometry: geom
                     };
                     const featureReprojected = reprojectGeoJson(ft, "EPSG:4326", "EPSG:3857");
-                    const geometry3857 = convertGeoJSONFeatureToWKT(featureReprojected);
+                    const geometry3857 = toWKT(featureReprojected);
                     return bufferStream(geometry3857, ft);
                 })
                 .startWith(runningProcess(true))
                 .concat([runningProcess(false)]);
         }
         const featureReprojected = reprojectGeoJson(feature, "EPSG:4326", "EPSG:3857");
-        const geometry3857 = convertGeoJSONFeatureToWKT(featureReprojected);
+        const geometry3857 = toWKT(featureReprojected);
         return bufferStream(geometry3857, feature)
             .startWith(runningProcess(true))
             .concat([runningProcess(false)]);
