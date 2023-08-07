@@ -25,13 +25,32 @@ const types = {
     "geometry": () => GeometryFilter
 };
 
-export const getFilterRenderer = (type, props) => types[type] ? types[type](type, props) : types.defaultFilter(type, props);
+const register = {};
 
-export default {
-    getFilterRenderer,
-    DefaultFilter,
-    StringFilter,
-    NumberFilter,
-    DateTimeFilter,
-    GeometryFilter
+export const registerFilterRenderer = (name, renderer) => {
+    register[name] = renderer;
 };
+
+export const unregisterFilterRenderer = (name) => {
+    delete register[name];
+};
+
+export const getFilterRendererByName = (name) => {
+    return register[name];
+};
+
+/**
+ * Returns the filter renderer for the given name or type. If the name is not found, it returns the default filter renderer for the given type.
+ * If the type is not found, it returns the default filter renderer for the "defaultFilter" type.
+ * @param {string} [params.name] the name of the filter renderer.
+ * @param {string} [params.type] the type of the filter renderer. The available types are: "defaultFilter", "string", "number", "int", "date", "time", "date-time", "geometry".
+ * @returns {React.Component} the filter renderer
+ */
+export const getFilterRenderer = ({name, type}) => {
+    if (name) {
+        return getFilterRendererByName(name);
+    }
+    return types[type] ? types[type](type) : types.defaultFilter(type);
+};
+
+

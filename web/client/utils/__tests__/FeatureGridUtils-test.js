@@ -165,6 +165,36 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter.filterFields[4].value).toBe(10);
         expect(queryUpdateFilter.filterFields[4].operator).toBe("<");
     });
+    it('gridUpdateToQueryUpdate with cql filters in filters', () => {
+        const gridUpdate1 = {
+            filters: [{format: 'cql', body: 'STATE_NAME = \'Texas\''}]
+        };
+
+        const oldFilterObject = {
+            "groupFields": [{"id": "ATTR_1_STRING", "logic": "OR", "groupId": 1, "index": 0}],
+            "filterFields": [
+                {
+                    "attribute": "ATTR_1_STRING",
+                    "rowId": 1608204971082,
+                    "type": "string",
+                    "groupId": "ATTR_1_STRING",
+                    "operator": "ilike",
+                    "value": "cat"
+                },
+                {"attribute": "ATTR_1_STRING",
+                    "rowId": 1608204971082,
+                    "type": "string",
+                    "groupId": "ATTR_1_STRING",
+                    "operator": "ilike",
+                    "value": "to"
+                }
+            ]};
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, oldFilterObject);
+        expect(queryUpdateFilter.filters.length).toBe(1);
+        expect(queryUpdateFilter.filters[0].format).toBe('cql');
+        expect(queryUpdateFilter.filters[0].body).toBe('STATE_NAME = \'Texas\'');
+        expect(queryUpdateFilter.filterFields.length).toBe(2);
+    });
     it('getAttributesList', () => {
         const attributes = [
             {

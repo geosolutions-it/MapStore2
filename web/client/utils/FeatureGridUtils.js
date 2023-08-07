@@ -145,9 +145,9 @@ export const featureTypeToGridColumns = (
             resizable,
             editable,
             filterable,
-            editor: getEditor(desc),
-            formatter: getFormatter(desc),
-            filterRenderer: getFilterRenderer(desc)
+            editor: getEditor(desc, field),
+            formatter: getFormatter(desc, field),
+            filterRenderer: getFilterRenderer(desc, field)
         };
     });
 /**
@@ -223,7 +223,7 @@ export const getOperatorAndValue = (value, type) => {
 };
 
 
-export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
+export const gridUpdateToQueryUpdate = ({attribute, operator, value, type, filters = []} = {}, oldFilterObj = {}) => {
 
     const cleanGroupFields = oldFilterObj.groupFields?.filter((group) => attribute !== group.id && group.id !== 1 ) || [];
     if ((type === 'string' || type === 'number') && isString(value) && value?.indexOf(",") !== -1) {
@@ -238,6 +238,7 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
                     groupId: 1,
                     index: 0
                 }]),
+            filters: (oldFilterObj?.filters?.filter((filter) => attribute !== filter?.attribute) ?? []).concat(filters),
             filterFields: cleanFilterFields.concat(multipleValues.map((v) => {
                 let {operator: op, newVal} = getOperatorAndValue(v, type);
 
@@ -264,6 +265,7 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
                 groupId: 1,
                 index: 0
             }]),
+        filters: (oldFilterObj?.filters?.filter((filter) => attribute !== filter?.attribute) ?? []).concat(filters),
         filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value)
             ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                 attribute,

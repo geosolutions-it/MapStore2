@@ -1528,6 +1528,7 @@ describe('FilterUtils', () => {
                     "index": 1
                 }
             ],
+            filters: [{format: 'cql', body: "STATE_FIPS = '01'"}],
             "filterFields": [
                 {
                     "rowId": 1545411885028,
@@ -1580,6 +1581,7 @@ describe('FilterUtils', () => {
                     "index": 1
                 }
             ],
+            filters: [{format: 'cql', body: "STATE_NAME = 'Illinois'"}],
             "filterFields": [
                 {
                     "rowId": 15454118,
@@ -1631,6 +1633,9 @@ describe('FilterUtils', () => {
         expect(filter.filterFields[1].groupId).toBe(filter.groupFields[2].id);
         expect(filter.filterFields[2].groupId).toBe(filter.groupFields[3].id);
         expect(filter.filterFields[3].groupId).toBe(filter.groupFields[4].id);
+        expect(filter.filters.length).toBe(2);
+        expect(filter.filters[0].body).toBe("STATE_FIPS = '01'");
+        expect(filter.filters[1].body).toBe("STATE_NAME = 'Illinois'");
     });
     it('check CQL filter when logic is NOR', () => {
         const filterObject = {
