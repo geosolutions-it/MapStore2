@@ -436,14 +436,14 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                         geometry: geom
                     };
                     const featureReprojected = reprojectGeoJson(ft, "EPSG:4326", "EPSG:3857");
-                    const geometry3857 = toWKT(featureReprojected);
+                    const geometry3857 = toWKT(featureReprojected.geometry);
                     return bufferStream(geometry3857, ft);
                 })
                 .startWith(runningProcess(true))
                 .concat([runningProcess(false)]);
         }
         const featureReprojected = reprojectGeoJson(feature, "EPSG:4326", "EPSG:3857");
-        const geometry3857 = toWKT(featureReprojected);
+        const geometry3857 = toWKT(featureReprojected.geometry);
         return bufferStream(geometry3857, feature)
             .startWith(runningProcess(true))
             .concat([runningProcess(false)]);
