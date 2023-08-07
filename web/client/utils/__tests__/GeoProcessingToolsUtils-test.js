@@ -8,7 +8,6 @@
 import expect from 'expect';
 
 import {
-    convertGeoJSONFeatureToWKT,
     checkIfIntersectionIsPossible
 } from '../GeoProcessingToolsUtils';
 
@@ -33,10 +32,6 @@ describe('GeoProcessingToolsUtils', () => {
             type: "LineString"
         }
     };
-    it('test convertGeoJSONFeatureToWKT', () => {
-        const wktString = convertGeoJSONFeatureToWKT(pointFT);
-        expect(wktString).toEqual("POINT(1 2)");
-    });
     describe('checkIfIntersectionIsPossible', () => {
 
         it('successful result', () => {

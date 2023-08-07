@@ -3902,7 +3902,8 @@
             "noLayerSelected": "Please select layer first.",
             "successfulIntersection": "The intersection operation was successful and a new layer has ben created and added to the TOC",
             "successfulBuffer": "The Buffer operation was successful and a new layer has ben created and added to the TOC",
-            "errorBuffer": "The Buffer operation has failed"
+            "errorBuffer": "The Buffer operation has failed",
+            "WCSDisabled": "Service WCS is disabled"
           },
           "tooltip": {
             "clickToSelectFeature": "Click to select feature",

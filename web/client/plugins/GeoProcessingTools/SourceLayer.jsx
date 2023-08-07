@@ -134,7 +134,7 @@ const Source = ({
                     tooltipId={"GeoProcessingTools.tooltip.clickToSelectFeature"}
                     tooltipPosition="left"
                     className="btn"
-                    bsStyle={selectedLayerType === "source" ? "secondary" : "primary"}
+                    bsStyle={selectedLayerType === "source" ? "success" : "primary"}
                 >
                     <Glyphicon
                         glyph={"map-marker"}

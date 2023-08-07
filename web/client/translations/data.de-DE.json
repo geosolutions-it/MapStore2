@@ -3928,7 +3928,8 @@
              "noLayerSelected": "Bitte wählen Sie zuerst die Ebene aus.",
              "successfulIntersection": "Der Schnittvorgang war erfolgreich und ein neuer Layer wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
              "successfulBuffer": "Der Puffervorgang war erfolgreich und eine neue Ebene wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
-             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen"
+             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen",
+             "WCSDisabled": "Der Dienst WCS ist deaktiviert"
           },
           "tooltip": {
             "clickToSelectFeature": "Klicken, um Funktion auszuwählen",

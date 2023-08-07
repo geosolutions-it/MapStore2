@@ -13,7 +13,7 @@
         "about_ul0_li0": "MapViewer es un visualizador simple de mapas preconfigurados (almacenados opcionalmente en una base de datos GeoStore)",
         "about_ul0_li1": "MapPublisher está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros. Para más información: ",
         "about_h20": "Licencia",
-        "about_p3": "Ma es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
+        "about_p3": "Mapstore es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
         "about_p5-0": "Para más información, consulte",
         "about_a0": "esta",
         "about_p5-1": "página.",
@@ -3891,7 +3891,8 @@
             "noLayerSelected": "Por favor seleccione la capa primero.",
             "successfulIntersection": "La operación de intersección fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
             "successfulBuffer": "La operación de búfer fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
-            "errorBuffer": "La operación de búfer ha fallado"
+            "errorBuffer": "La operación de búfer ha fallado",
+            "WCSDisabled": "El servicio WCS está deshabilitado"
           },
           "tooltip": {
             "clickToSelectFeature": "Haga clic para seleccionar la característica",

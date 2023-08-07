@@ -3891,7 +3891,8 @@
             "noLayerSelected": "Seleziona prima il livello.",
             "successfulIntersection": "L'operazione di intersezione è andata a buon fine e un nuovo livello è stato creato e aggiunto alla tabella dei contenuti",
             "successfulBuffer": "L'operazione Buffer è andata a buon fine e un nuovo livello è stato creato e aggiunto alla tabella dei contenuti",
-            "errorBuffer": "L'operazione Buffer è fallita"
+            "errorBuffer": "L'operazione Buffer è fallita",
+            "WCSDisabled": "Il servizio WCS è disabilitato"
           },
           "tooltip": {
             "clickToSelectFeature": "Fai click per selezionare una feature",

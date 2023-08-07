@@ -60,7 +60,7 @@ export const updateOptionsByOwner = (owner, options) => {
  * @memberof actions.additionallayers
  * @param {string} owner string that define the plugin is using following layers
  * @param {object} options same object to be updated to all layers that matches the owner
- * @return {object} of type `UPDATE_OPTIONS_BY_OWNER` with owner and options
+ * @return {object} of type `MERGE_OPTIONS_BY_OWNER` with owner and options
  */
 export const mergeOptionsByOwner = (owner, options) => {
     return {

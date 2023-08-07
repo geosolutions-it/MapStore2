@@ -33,6 +33,8 @@ import {
     GPT_TOOL_INTERSECTION
 } from '../../actions/geoProcessingTools';
 import {
+    areAllWPSAvailableForSourceLayerSelector,
+    areAllWPSAvailableForIntersectionLayerSelector,
     distanceSelector,
     intersectionLayerIdSelector,
     isIntersectionEnabledSelector,
@@ -49,6 +51,8 @@ import {
 import { getMessageById } from '../../utils/LocaleUtils';
 
 const MainComp = ({
+    areAllWPSAvailableForSourceLayer,
+    areAllWPSAvailableForIntersectionLayer,
     distance,
     intersectionLayerId,
     isIntersectionEnabled,
@@ -138,8 +142,10 @@ const MainComp = ({
                     <Button
                         disabled={
                             runningProcess ||
-                            (selectedTool === GPT_TOOL_BUFFER ? !(sourceLayerId && distance) : !(isIntersectionEnabled && intersectionLayerId && sourceLayerId)) ||
-                            isIntersectionLayerInvalid || isSourceLayerInvalid
+                            (selectedTool === GPT_TOOL_BUFFER ? !(sourceLayerId && distance && areAllWPSAvailableForSourceLayer) :
+                                !(isIntersectionEnabled && intersectionLayerId && sourceLayerId && areAllWPSAvailableForSourceLayer && areAllWPSAvailableForIntersectionLayer)) ||
+                            isIntersectionLayerInvalid ||
+                            isSourceLayerInvalid
                         }
                         onClick={handleRunAction}
                     >
@@ -179,6 +185,8 @@ const MainComp = ({
 };
 
 MainComp.propTypes = {
+    areAllWPSAvailableForSourceLayer: PropTypes.bool,
+    areAllWPSAvailableForIntersectionLayer: PropTypes.bool,
     distance: PropTypes.number,
     intersectionLayerId: PropTypes.string,
     isIntersectionEnabled: PropTypes.bool,
@@ -203,6 +211,8 @@ MainComp.contextTypes = {
 const MainCompConnected = connect(
     createSelector(
         [
+            areAllWPSAvailableForSourceLayerSelector,
+            areAllWPSAvailableForIntersectionLayerSelector,
             distanceSelector,
             intersectionLayerIdSelector,
             isIntersectionEnabledSelector,
@@ -216,6 +226,8 @@ const MainCompConnected = connect(
             isSourceLayerInvalidSelector
         ],
         (
+            areAllWPSAvailableForSourceLayer,
+            areAllWPSAvailableForIntersectionLayer,
             distance,
             intersectionLayerId,
             isIntersectionEnabled,
@@ -228,6 +240,8 @@ const MainCompConnected = connect(
             isIntersectionLayerInvalid,
             isSourceLayerInvalid
         ) => ({
+            areAllWPSAvailableForSourceLayer,
+            areAllWPSAvailableForIntersectionLayer,
             distance,
             intersectionLayerId,
             isIntersectionEnabled,

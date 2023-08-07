@@ -8,6 +8,7 @@
 import { get } from 'lodash';
 
 import { updateNode } from './layers';
+import { error as showErrorNotification } from './notifications';
 
 import {getCapabilitiesUrl} from '../utils/LayersUtils';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
@@ -18,6 +19,7 @@ import WMS from '../api/WMS';
 
 export const DESCRIBE_FEATURE_TYPE_LOADED = "LAYER_CAPABILITIES:DESCRIBE_FEATURE_TYPE_LOADED";
 export const DESCRIBE_COVERAGES_LOADED = "LAYER_CAPABILITIES:DESCRIBE_COVERAGES_LOADED";
+export const DESCRIBE_FEATURE_TYPE_ERROR = "LAYER_CAPABILITIES:DESCRIBE_FEATURE_TYPE_ERROR";
 
 /**
  * action for saying a describe feature type has been loaded
@@ -41,6 +43,17 @@ export const describeCoveragesLoaded = (layerId, source) => ({
     layerId,
     source
 });
+/**
+ * action for saying a describe coverages has failed
+ * @memberof actions.layerCapabilities
+ * @param  {object} layer the layer
+ * @param  {string} source
+ */
+export const describeFeatureTypeError = (layer, source) => ({
+    type: DESCRIBE_FEATURE_TYPE_ERROR,
+    layer,
+    source
+});
 
 /**
  * action for getting describe layer and describe feature type
@@ -52,40 +65,52 @@ export const describeCoveragesLoaded = (layerId, source) => ({
  */
 export function getDescribeLayer(url, layer, options, source) {
     return (dispatch /* , getState */) => {
-        return WMS.describeLayer(url, layer.name, options).then((describeLayer) => {
-            if (describeLayer && describeLayer.owsType === "WFS") {
-                WFS.describeFeatureType(url, describeLayer.name)
-                    .then( (describeFeatureType) => {
-                        describeLayer.geometryType = extractGeometryType(describeFeatureType);
-                        dispatch(updateNode(layer.id, "id", { describeLayer, describeFeatureType }));
-                        if (source) {
-                            dispatch(describeFeatureTypeLoaded(layer.id, source));
-                        }
-                    })
-                    .catch(() => {
-                        dispatch(updateNode(layer.id, "id", { describeLayer: describeLayer || { "error": "no describe feature found" }}));
-                    });
-            } else if ( describeLayer && describeLayer.owsType === "WCS" ) {
-                WCS.describeCoverage(url, describeLayer.name).then((describeCoverage) => {
+        return WMS.describeLayer(url, layer.name, options)
+            .then((describeLayer) => {
+                if (describeLayer && describeLayer.owsType === "WFS") {
+                    WFS.describeFeatureType(url, describeLayer.name)
+                        .then( (describeFeatureType) => {
+                            describeLayer.geometryType = extractGeometryType(describeFeatureType);
+                            dispatch(updateNode(layer.id, "id", { describeLayer, describeFeatureType }));
+                            if (source) {
+                                dispatch(describeFeatureTypeLoaded(layer.id, source));
+                            }
+                        })
+                        .catch(() => {
+                            dispatch(updateNode(layer.id, "id", { describeLayer: describeLayer || { "error": "no describe feature found" }}));
+                        });
+                } else if ( describeLayer && describeLayer.owsType === "WCS" ) {
+                    WCS.describeCoverage(url, describeLayer.name).then((describeCoverage) => {
                     // TODO move the management of this bands in the proper components, getting the describeFeatureType entry:
-                    let axis = get(describeCoverage, "wcs:CoverageDescriptions.wcs:CoverageDescription.wcs:Range.wcs:Field.wcs:Axis.wcs:AvailableKeys.wcs:Key");
-                    if (axis && typeof axis === "string") {
-                        describeLayer.bands = [1 + ""];
-                    } else {
-                        describeLayer.bands = axis.map((el, index) => index + 1 + ""); // array of 1 2 3 because the sld do not recognize the name
-                    }
+                        if (describeCoverage?.["ows:ExceptionReport"]?.["ows:Exception"]?.["ows:ExceptionText"].includes("Service WCS is disabled")) {
+                            dispatch(showErrorNotification({
+                                title: "errorTitleDefault",
+                                message: "GeoProcessingTools.notifications.WCSDisabled",
+                                autoDismiss: 6,
+                                position: "tc"
+                            }));
+                            dispatch(describeCoveragesLoaded(layer.id, source));
+                            dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe coverage found"}}));
+                        } else {
+                            let axis = get(describeCoverage, "wcs:CoverageDescriptions.wcs:CoverageDescription.wcs:Range.wcs:Field.wcs:Axis.wcs:AvailableKeys.wcs:Key");
+                            if (axis && typeof axis === "string") {
+                                describeLayer.bands = [1 + ""];
+                            } else {
+                                describeLayer.bands = axis.map((el, index) => index + 1 + ""); // array of 1 2 3 because the sld do not recognize the name
+                            }
 
-                    dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));
-                    if (source) {
-                        dispatch(describeCoveragesLoaded(layer.id, source));
-                    }
-                }).catch(() => {
-                    dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe coverage found"}}));
-                });
-            }
-            dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe Layer found"}}));
+                            dispatch(updateNode(layer.id, "id", {describeLayer, describeCoverage}));
+                            if (source) {
+                                dispatch(describeCoveragesLoaded(layer.id, source));
+                            }
+                        }
+                    }).catch(() => {
+                        dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe coverage found"}}));
+                    });
+                }
+                dispatch(updateNode(layer.id, "id", {describeLayer: describeLayer || {"error": "no describe Layer found"}}));
 
-        })
+            })
             .catch((error) => {
                 dispatch(updateNode(layer.id, "id", {describeLayer: {"error": error.status}}));
             });

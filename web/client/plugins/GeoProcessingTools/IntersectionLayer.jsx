@@ -135,7 +135,7 @@ const Intersection = ({
                         tooltipId={"GeoProcessingTools.tooltip.clickToSelectFeature"}
                         tooltipPosition="left"
                         className="btn"
-                        bsStyle={selectedLayerType === "intersection" ? "secondary" : "primary"}
+                        bsStyle={selectedLayerType === "intersection" ? "success" : "primary"}
                     >
                         <Glyphicon
                             glyph={"map-marker"}

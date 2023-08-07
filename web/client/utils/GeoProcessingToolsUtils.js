@@ -5,20 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {WKT, GeoJSON} from 'ol/format';
-
-/**
- * Convert geojson geom in wkt
- * @param {object} feature the geojson feature
- * @returns {string} the converted string in wkt
- */
-export const convertGeoJSONFeatureToWKT = (feature) => {
-    const formatGeoJSON = new GeoJSON();
-    const WKTGeoJSON = new WKT();
-    const olFeature = formatGeoJSON.readFeature(feature);
-    const geometry = WKTGeoJSON.writeFeature(olFeature);
-    return geometry;
-};
 
 /**
  * check if intersection is possible between two features

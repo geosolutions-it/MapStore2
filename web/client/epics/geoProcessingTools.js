@@ -112,11 +112,24 @@ import {
     reprojectGeoJson,
     calculateDistance
 } from "../utils/CoordinatesUtils";
-import {convertGeoJSONFeatureToWKT} from '../utils/GeoProcessingToolsUtils';
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
 import {getFeatureSimple} from '../api/WFS';
 import {findNonGeometryProperty} from '../utils/ogc/WFS/base';
+import {WKT, GeoJSON} from 'ol/format';
+
+/**
+ * Convert geojson geom in wkt
+ * @param {object} feature the geojson feature
+ * @returns {string} the converted string in wkt
+ */
+const convertGeoJSONFeatureToWKT = (feature) => {
+    const formatGeoJSON = new GeoJSON();
+    const WKTGeoJSON = new WKT();
+    const olFeature = formatGeoJSON.readFeature(feature);
+    const geometry = WKTGeoJSON.writeFeature(olFeature);
+    return geometry;
+};
 
 
 const OFFSET = 550;

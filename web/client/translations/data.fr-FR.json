@@ -3891,7 +3891,8 @@
             "noLayerSelected": "Veuillez d'abord sélectionner le calque.",
             "successfulIntersection": "L'opération d'intersection a réussi et une nouvelle couche a été créée et ajoutée à la table des matières",
             "successfulBuffer": "L'opération Buffer a réussi et une nouvelle couche a été créée et ajoutée à la table des matières",
-            "errorBuffer": "L'opération Buffer a échoué"
+            "errorBuffer": "L'opération Buffer a échoué",
+            "WCSDisabled": "Le service WCS est désactivé"
           },
           "tooltip": {
             "clickToSelectFeature": "Cliquez pour sélectionner une fonctionnalité",

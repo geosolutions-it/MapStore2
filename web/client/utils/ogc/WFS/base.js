@@ -121,9 +121,9 @@ export const isValidValueForPropertyName = (v, name, desc) => isValidValue(v, ge
 
 
 /**
- * Extract first property that is not a geometry
+ * Gets all properties that are not a geometry
  * @param {object} describeFeatureType the describeFeatureType object
- * @return {object} the featureType property
+ * @return {object[]} the featureType properties
  * @example
  * describeFeatureType: {
  *   featureTypes: [{
