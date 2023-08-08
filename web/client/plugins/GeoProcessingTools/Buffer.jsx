@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {
     FormGroup,
@@ -21,7 +21,6 @@ import FormControl from '../../components/misc/DebouncedFormControl';
 import SwitchPanel from '../../components/misc/switch/SwitchPanel';
 import SourceLayer from './SourceLayer';
 import {
-    checkWPSAvailability,
     runBufferProcess,
     setBufferDistance,
     setBufferDistanceUom,
@@ -33,8 +32,7 @@ import {
     distanceUomSelector,
     quadrantSegmentsSelector,
     capStyleSelector,
-    runningProcessSelector,
-    sourceLayerIdSelector
+    runningProcessSelector
 } from '../../selectors/geoProcessingTools';
 
 const Buffer = ({
@@ -43,18 +41,11 @@ const Buffer = ({
     quadrantSegments,
     capStyle,
     runningProcess,
-    sourceLayerId,
-    onCheckWPSAvailability,
     onSetBufferDistance,
     onSetBufferDistanceUom,
     onSetBufferQuadrantSegments,
     onSetBufferCapStyle
 }) => {
-    useEffect(() => {
-        if (sourceLayerId) {
-            onCheckWPSAvailability(sourceLayerId, "source");
-        }
-    }, [sourceLayerId]);
     const [showBufferAdvancedSettings, setShowBufferAdvancedSettings] = useState(false);
 
     const handleOnChangeBufferDistance = (val) => {
@@ -153,8 +144,6 @@ Buffer.propTypes = {
     quadrantSegments: PropTypes.number,
     capStyle: PropTypes.string,
     runningProcess: PropTypes.bool,
-    sourceLayerId: PropTypes.string,
-    onCheckWPSAvailability: PropTypes.func,
     onSetBufferDistance: PropTypes.func,
     onSetBufferDistanceUom: PropTypes.func,
     onSetBufferQuadrantSegments: PropTypes.func,
@@ -168,26 +157,22 @@ const BufferConnected = connect(
             distanceUomSelector,
             quadrantSegmentsSelector,
             capStyleSelector,
-            runningProcessSelector,
-            sourceLayerIdSelector
+            runningProcessSelector
         ],
         (
             distance,
             distanceUom,
             quadrantSegments,
             capStyle,
-            runningProcess,
-            sourceLayerId
+            runningProcess
         ) => ({
             distance,
             distanceUom,
             quadrantSegments,
             capStyle,
-            runningProcess,
-            sourceLayerId
+            runningProcess
         })),
     {
-        onCheckWPSAvailability: checkWPSAvailability,
         onRunBufferProcess: runBufferProcess,
         onSetBufferDistance: setBufferDistance,
         onSetBufferDistanceUom: setBufferDistanceUom,

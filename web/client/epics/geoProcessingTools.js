@@ -60,11 +60,9 @@ import {
     TOGGLE_HIGHLIGHT_LAYERS
 } from '../actions/geoProcessingTools';
 import {
-    getDescribeLayer,
-    DESCRIBE_FEATURE_TYPE_LOADED,
-    DESCRIBE_COVERAGES_LOADED
+    getDescribeLayer
 } from '../actions/layerCapabilities';
-import {addLayer, addGroup} from '../actions/layers';
+import {addLayer, addGroup, UPDATE_NODE} from '../actions/layers';
 import {
     zoomToExtent,
     CLICK_ON_MAP,
@@ -129,13 +127,13 @@ const DEACTIVATE_ACTIONS = [
  */
 export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
     .ofType(CHECK_WPS_AVAILABILITY)
-    .switchMap(({layerId, source}) => {
+    .mergeMap(({layerId, source}) => {
         const state = store.getState();
         const layer = getLayerFromIdSelector(state, layerId);
         const layerUrl = head(castArray(layer.url));
         const checkingWPS = source === "source" ? checkingWPSAvailability : checkingIntersectionWPSAvailability;
         return describeProcess(layerUrl, "geo:buffer,gs:IntersectionFeatureCollection,gs:CollectGeometries")
-            .switchMap(response => Rx.Observable.defer(
+            .mergeMap(response => Rx.Observable.defer(
                 () => new Promise((resolve, reject) => parseString(response.data, {tagNameProcessors: [stripPrefix]}, (err, res) => err ? reject(err) : resolve(res))))
             )
             .flatMap(xmlObj => {
@@ -148,44 +146,64 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
                     return status && findIndex(ids, x => x === process) > -1;
                 }, true);
 
-                const actions = [
-                    setWPSAvailability(layerId, areAllWpsAvailable, source),
-                    checkingWPS(false)
-                ];
-                if (areAllWpsAvailable) {
-                    actions.push(getDescribeLayer(layerUrl, layer, {}, source));
+                if (!areAllWpsAvailable) {
+                    // just set the layer to invalid,
+                    // the wps flag to false
+                    // no need to ask the describe layer and describe feature type
+                    return Rx.Observable.from(
+                        [
+                            setInvalidLayer(layerId, source),
+                            setWPSAvailability(layerId, false, source),
+                            checkingWPS(false)
+                        ]);
                 }
-                return Rx.Observable.from(actions);
+                // wps are all present, so we continue the checks
+                if (layer.describeFeatureType) {
+                    // we have the describe feature type available so we just fetch features
+                    return Rx.Observable.from([
+                        setWPSAvailability(layerId, true, source),
+                        getFeatures(layerId, source),
+                        checkingWPS(false)
+                    ]);
+                }
+                // wps are all present, but
+                // we miss the describe feature type info so we trigger it and we wait for the answer
+
+                return Rx.Observable.from([
+                    setWPSAvailability(layerId, true, source),
+                    getDescribeLayer(layerUrl, layer, {}, source)
+                ])
+                    .merge(
+                        Rx.Observable.race(
+                            action$.ofType(UPDATE_NODE).filter(({node}) => node === layerId),
+                            Rx.Observable.timer(10 * 1000).mapTo("timeout")
+                        )
+                            .switchMap((act) => {
+                                // if the describe ft goes in timeout or has an error we invalidate the layer
+                                if (act === "timeout" || act?.error) {
+                                    return Rx.Observable.of(setInvalidLayer(layerId, source));
+                                }
+                                return Rx.Observable.of(
+                                    getFeatures(layerId, source),
+                                    checkingWPS(false));
+                            })
+                    );
             })
-            .catch(() => {
-                return Rx.Observable.of(setWPSAvailability(layerId, false, source), checkingWPS(false));
+            .catch((e) => {
+                console.error(e);
+                return Rx.Observable.of(
+                    setWPSAvailability(layerId, false, source),
+                    checkingWPS(false)
+                );
             })
             .startWith(checkingWPS(true));
-    });
-/**
- * trigger the getFeatures stream given some parameters.
- * this needs to be done when a describe feature type is requested and the response is dispatched
- */
-export const triggerGetFeaturesGPTEpic = (action$) => action$
-    .ofType(DESCRIBE_FEATURE_TYPE_LOADED)
-    .switchMap(({layerId, source}) => {
-        return Rx.Observable.of(getFeatures(layerId, source));
-    });
-/**
- * handle the case when after the describe layer is executed we found out that
- * the selected layer is a raster.
- */
-export const disableCoverageLayerGPTEpic = (action$) => action$
-    .ofType(DESCRIBE_COVERAGES_LOADED)
-    .switchMap(({layerId}) => {
-        return Rx.Observable.of(setInvalidLayer(layerId, true));
     });
 /**
  * fetch all features ids
  */
 export const getFeaturesGPTEpic = (action$, store) => action$
     .ofType(GET_FEATURES)
-    .switchMap(({layerId, source}) => {
+    .mergeMap(({layerId, source}) => {
         const state = store.getState();
         const setFeatureLoading = source === "source" ? setFeatureSourceLoading : setFeatureIntersectionLoading;
         const layer = getLayerFromIdSelector(state, layerId);
@@ -351,51 +369,50 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
             () =>
                 executeBufferProcess$(wktGeom, feature4326)
                     .switchMap((geom) => {
-                        const actions = [
-                            increaseBufferedCounter()
-                        ];
                         const groups = groupsSelector(state);
-                        if (!find(groups, ({id}) => id === "buffered.layers")) {
-                            actions.push(addGroup("Buffered layers", null, {id: "buffered.layers"}));
-                        }
-                        actions.push(addLayer({
-                            id: uuidV1(),
-                            type: "vector",
-                            name: "Buffer Layer " + counter,
-                            title: "Buffer Layer " + counter,
-                            visibility: true,
-                            group: "buffered.layers",
-                            features: [
-                                reprojectGeoJson({
-                                    id: 0,
-                                    geometry: geom,
-                                    type: "Feature"
-                                }, "EPSG:3857", "EPSG:4326" )],
-                            style: {
-                                format: "geostyler",
-                                body: {
-                                    name: "",
-                                    rules: [{
-                                        symbolizers: [
-                                            {
-                                                "kind": "Fill",
-                                                "outlineColor": "#3075e9",
-                                                "fillOpacity": 0,
-                                                "width": 3
+                        const groupExist = find(groups, ({id}) => id === "buffered.layers");
+                        return (!groupExist ? Rx.Observable.of( addGroup("Buffered layers", null, {id: "buffered.layers"})) : Rx.Observable.empty())
+                            .concat(
+                                Rx.Observable.of(
+                                    increaseBufferedCounter(),
+                                    addLayer({
+                                        id: uuidV1(),
+                                        type: "vector",
+                                        name: "Buffer Layer " + counter,
+                                        title: "Buffer Layer " + counter,
+                                        visibility: true,
+                                        group: "buffered.layers",
+                                        features: [
+                                            reprojectGeoJson({
+                                                id: 0,
+                                                geometry: geom,
+                                                type: "Feature"
+                                            }, "EPSG:3857", "EPSG:4326" )],
+                                        style: {
+                                            format: "geostyler",
+                                            body: {
+                                                name: "",
+                                                rules: [{
+                                                    symbolizers: [
+                                                        {
+                                                            "kind": "Fill",
+                                                            "outlineColor": "#3075e9",
+                                                            "fillOpacity": 0,
+                                                            "width": 3
+                                                        }
+                                                    ]
+                                                }]
                                             }
-                                        ]
-                                    }]
-                                }
-                            }
-                        }));
-
-                        actions.push(showSuccessNotification({
-                            title: "notification.success",
-                            message: "GeoProcessingTools.notifications.successfulBuffer",
-                            autoDismiss: 6,
-                            position: "tc"
-                        }));
-                        return Rx.Observable.from(actions);
+                                        }
+                                    }),
+                                    showSuccessNotification({
+                                        title: "notification.success",
+                                        message: "GeoProcessingTools.notifications.successfulBuffer",
+                                        autoDismiss: 6,
+                                        position: "tc"
+                                    })
+                                )
+                            );
                     })
                     .catch(() => {
                         return Rx.Observable.of(showErrorNotification({
@@ -524,51 +541,44 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
 
                 const intersection$ = executeProcess$
                     .switchMap((featureCollection) => {
-                        const actions = [
-                            increaseIntersectedCounter()
-                        ];
                         const groups = groupsSelector(state);
-                        if (!find(groups, ({id}) => id === "intersection.layer")) {
-                            actions.push(addGroup("Intersection Layer", null, {id: "intersection.layer"}));
-                            // [ ] localize group name and layer name
-                        }
-
-                        actions.push(
-                            addLayer({
-                                id: uuidV1(),
-                                type: "vector",
-                                name: "Intersection Layer " + counter,
-                                group: "intersection.layer",
-                                title: "Intersection Layer " + counter,
-                                visibility: true,
-                                features: featureCollection.features,
-                                style: {
-                                    format: "geostyler",
-                                    body: {
-                                        name: "",
-                                        rules: [{
-                                            symbolizers: [
-                                                {
-                                                    "kind": "Fill",
-                                                    "outlineColor": "#880000",
-                                                    "fillOpacity": 0.5,
-                                                    "width": 5
-                                                }
-                                            ]
-                                        }]
-                                    }
-                                }
-                            })
-                        );
-                        actions.push(showSuccessNotification({
-                            title: "notification.success",
-                            message: "GeoProcessingTools.notifications.successfulIntersection",
-                            autoDismiss: 6,
-                            position: "tc"
-                        }));
-
-                        return Rx.Observable.from(actions);
-
+                        const groupExist = find(groups, ({id}) => id === "intersection.layers");
+                        return (!groupExist ? Rx.Observable.of( addGroup("Intersected Layers", null, {id: "intersection.layer"})) : Rx.Observable.empty())
+                            .concat(
+                                Rx.Observable.of(
+                                    increaseIntersectedCounter(),
+                                    addLayer({
+                                        id: uuidV1(),
+                                        type: "vector",
+                                        name: "Intersection Layer " + counter,
+                                        group: "intersection.layer",
+                                        title: "Intersection Layer " + counter,
+                                        visibility: true,
+                                        features: featureCollection.features,
+                                        style: {
+                                            format: "geostyler",
+                                            body: {
+                                                name: "",
+                                                rules: [{
+                                                    symbolizers: [
+                                                        {
+                                                            "kind": "Fill",
+                                                            "outlineColor": "#880000",
+                                                            "fillOpacity": 0.5,
+                                                            "width": 5
+                                                        }
+                                                    ]
+                                                }]
+                                            }
+                                        }
+                                    }),
+                                    showSuccessNotification({
+                                        title: "notification.success",
+                                        message: "GeoProcessingTools.notifications.successfulIntersection",
+                                        autoDismiss: 6,
+                                        position: "tc"
+                                    })
+                                ));
                     })
                     .catch(() => {
                         return Rx.Observable.of(showErrorNotification({

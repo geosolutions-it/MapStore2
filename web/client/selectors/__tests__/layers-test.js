@@ -40,7 +40,19 @@ describe('Test layers selectors', () => {
             layers: {
                 flat: [{
                     name: "ws:layer_1",
-                    group: "buffer"
+                    group: "buffer",
+                    type: "wms",
+                    search: {
+                        type: "wfs"
+                    }
+                },
+                {
+                    name: "ws:layer_3",
+                    group: "buffer",
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
                 },
                 {
                     name: "ws:layer_2",
@@ -49,7 +61,19 @@ describe('Test layers selectors', () => {
         expect(layers.length).toBeTruthy();
         expect(layers).toEqual([{
             name: "ws:layer_1",
-            group: "buffer"
+            group: "buffer",
+            type: "wms",
+            search: {
+                type: "wfs"
+            }
+        },
+        {
+            name: "ws:layer_3",
+            group: "buffer",
+            type: "wfs",
+            search: {
+                type: "wfs"
+            }
         }]);
     });
     it('test getLayerFromName', () => {

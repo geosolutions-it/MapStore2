@@ -20,9 +20,10 @@ import { mapSelector } from './map';
 import { getSelectedMapView } from './mapviews';
 import { mergeViewLayers } from '../utils/MapViewsUtils';
 import { currentLocaleSelector } from "../selectors/locale";
+import { hasFields } from '../components/TOC/fragments/LayerFields';
 
 export const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
-export const nonBackgroundLayersSelector = (state) => layersSelector(state).filter(l => l.group !== "background");
+export const nonBackgroundLayersSelector = (state) => layersSelector(state).filter(l => l.group !== "background").filter(hasFields);
 export const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 export const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 export const getLayerFromName = (state, name) => head(layersSelector(state).filter(l => l.name === name));

@@ -13,8 +13,6 @@ import { testEpic, addTimeoutEpic } from './epicTestUtils';
 import axios from "../../libs/ajax";
 import {
     checkWPSAvailabilityGPTEpic,
-    triggerGetFeaturesGPTEpic,
-    disableCoverageLayerGPTEpic,
     getFeaturesGPTEpic,
     getFeatureDataGPTEpic,
     getIntersectionFeatureDataGPTEpic,
@@ -39,7 +37,6 @@ import {
     increaseIntersectedCounter,
     setFeatureSourceLoading,
     setFeatureIntersectionLoading,
-    setInvalidLayer,
     setSourceFeatureId,
     setSourceLayerId,
     setIntersectionFeatureId,
@@ -78,10 +75,7 @@ import DESCRIBE_LAYER from 'raw-loader!../../test-resources/wfs/describeLayer.xm
 import DESCRIBE_POIS from '../../test-resources/wfs/describe-pois.json';
 import GET_FEATURES from '../../test-resources/wms/GetFeature.json';
 import COLLECT_GEOM from '../../test-resources/wps/collectGeom.json';
-import {
-    describeFeatureTypeLoaded,
-    describeCoveragesLoaded
-} from '../../actions/layerCapabilities';
+
 
 import {
     hideMapinfoMarker,
@@ -152,34 +146,7 @@ describe('geoProcessingTools epics', () => {
             }
         });
     });
-    it('triggerGetFeaturesGPTEpic', (done) => {
-        const layerId = "id";
-        const source = "source";
-        const NUM_ACTIONS = 1;
-        const startActions = [describeFeatureTypeLoaded(layerId, source)];
-        testEpic(triggerGetFeaturesGPTEpic, NUM_ACTIONS, startActions, actions => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            const [
-                action1
-            ] = actions;
-            expect(action1).toEqual(getFeatures(layerId, source));
-            done();
-        }, {});
-    });
-    it('disableCoverageLayerGPTEpic', (done) => {
-        const layerId = "id";
-        const source = "source";
-        const NUM_ACTIONS = 1;
-        const startActions = [describeCoveragesLoaded(layerId, source)];
-        testEpic(disableCoverageLayerGPTEpic, NUM_ACTIONS, startActions, actions => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            const [
-                action1
-            ] = actions;
-            expect(action1).toEqual(setInvalidLayer(layerId, true));
-            done();
-        }, {});
-    });
+
     it('getFeaturesGPTEpic source', (done) => {
         const layerId = "id";
         const source = "source";
