@@ -157,8 +157,7 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
                 }
                 return Rx.Observable.from(actions);
             })
-            .catch((e) => {
-                console.error(e);
+            .catch(() => {
                 return Rx.Observable.of(setWPSAvailability(layerId, false, source), checkingWPS(false));
             })
             .startWith(checkingWPS(true));
@@ -209,7 +208,6 @@ export const getFeaturesGPTEpic = (action$, store) => action$
             }, filterObj, options)
                 .map(data => setFeatures(layerId, source, data))
                 .catch(error => {
-                    console.error(error);
                     return Rx.Observable.of(setFeatures(layerId, source, error));
                 })
                 .startWith(setFeatureLoading(true))
@@ -251,8 +249,7 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
                 ]);
 
             })
-            .catch(error => {
-                console.error(error);
+            .catch(() => {
                 return Rx.Observable.of(showErrorNotification({
                     title: "errorTitleDefault",
                     message: "GeoProcessingTools.notifications.errorGetFeature",
@@ -296,8 +293,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
                 ]);
 
             })
-            .catch(error => {
-                console.error(error);
+            .catch(() => {
                 return Rx.Observable.of(showErrorNotification({
                     title: "errorTitleDefault",
                     message: "GeoProcessingTools.notifications.errorGetFeature",
@@ -401,8 +397,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                         }));
                         return Rx.Observable.from(actions);
                     })
-                    .catch(error => {
-                        console.error(error);
+                    .catch(() => {
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessingTools.notifications.errorBuffer",
@@ -420,8 +415,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
-                }).catch(error => {
-                console.error(error);
+                }).catch(() => {
                 return Rx.Observable.of(showErrorNotification({
                     title: "errorTitleDefault",
                     message: "GeoProcessingTools.notifications.errorBuffer",
@@ -576,8 +570,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                         return Rx.Observable.from(actions);
 
                     })
-                    .catch(error => {
-                        console.error(error);
+                    .catch(() => {
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessingTools.notifications.errorIntersectGFI",
@@ -664,9 +657,7 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
                             position: "tc"
                         }));
                     })
-                    .catch(e => {
-                        console.error("Error while obtaining data for longitudinal profile");
-                        console.error(e);
+                    .catch(() => {
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessingTools.notifications.errorGFI",
