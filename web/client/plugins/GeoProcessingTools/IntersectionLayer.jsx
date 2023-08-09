@@ -35,11 +35,9 @@ import {
     intersectionFeatureIdSelector,
     intersectionFeaturesSelector,
     isIntersectionFeaturesLoadingSelector,
-    selectedLayerTypeSelector
+    selectedLayerTypeSelector,
+    wfsBackedLayersSelector
 } from '../../selectors/geoProcessingTools';
-import {
-    nonBackgroundLayersSelector
-} from '../../selectors/layers';
 
 const Addon = tooltip(InputGroup.Addon);
 const Intersection = ({
@@ -174,7 +172,7 @@ const IntersectionConnected = connect(
     createSelector(
         [
             areAllWPSAvailableForIntersectionLayerSelector,
-            nonBackgroundLayersSelector,
+            wfsBackedLayersSelector,
             isIntersectionFeaturesLoadingSelector,
             intersectionLayerIdSelector,
             intersectionFeatureIdSelector,

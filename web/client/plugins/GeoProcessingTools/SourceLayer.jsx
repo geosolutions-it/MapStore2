@@ -39,7 +39,7 @@ import {
     selectedLayerTypeSelector
 } from '../../selectors/geoProcessingTools';
 import {
-    nonBackgroundLayersSelector
+    wfsBackedLayersSelector
 } from '../../selectors/layers';
 
 const Addon = tooltip(InputGroup.Addon);
@@ -168,7 +168,7 @@ const SourceConnected = connect(
         [
             areAllWPSAvailableForSourceLayerSelector,
             runningProcessSelector,
-            nonBackgroundLayersSelector,
+            wfsBackedLayersSelector,
             sourceLayerIdSelector,
             sourceFeatureIdSelector,
             sourceFeaturesSelector,
