@@ -171,7 +171,8 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
 
                 return Rx.Observable.from([
                     setWPSAvailability(layerId, true, source),
-                    getDescribeLayer(layerUrl, layer, {}, source)
+                    getDescribeLayer(layerUrl, layer, {}, source),
+                    checkingWPS(false)
                 ])
                     .merge(
                         Rx.Observable.race(
@@ -183,9 +184,8 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
                                 if (act === "timeout" || act?.error) {
                                     return Rx.Observable.of(setInvalidLayer(layerId, source));
                                 }
-                                return Rx.Observable.of(
-                                    getFeatures(layerId, source));
-                            }).concat([checkingWPS(false)])
+                                return Rx.Observable.of(getFeatures(layerId, source));
+                            })
                     );
             })
             .catch((e) => {
@@ -450,13 +450,13 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                     return bufferStream(geometry3857, ft);
                 })
                 .startWith(runningProcess(true))
-                .concat([runningProcess(false)]);
+                .concat(Rx.Observable.of(runningProcess(false)));
         }
         const featureReprojected = reprojectGeoJson(feature, "EPSG:4326", "EPSG:3857");
         const geometry3857 = toWKT(featureReprojected.geometry);
         return bufferStream(geometry3857, feature)
             .startWith(runningProcess(true))
-            .concat([runningProcess(false)]);
+            .concat(Rx.Observable.of(runningProcess(false)));
 
     });
 /**
@@ -590,7 +590,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                 return intersection$;
             })
             .startWith(runningProcess(true))
-            .concat([runningProcess(false)]);
+            .concat(Rx.Observable.of(runningProcess(false)));
 
     });
 /**

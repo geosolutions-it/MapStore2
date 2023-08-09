@@ -36,11 +36,9 @@ import {
     sourceFeaturesSelector,
     isSourceLayerInvalidSelector,
     isSourceFeaturesLoadingSelector,
-    selectedLayerTypeSelector
-} from '../../selectors/geoProcessingTools';
-import {
+    selectedLayerTypeSelector,
     wfsBackedLayersSelector
-} from '../../selectors/layers';
+} from '../../selectors/geoProcessingTools';
 
 const Addon = tooltip(InputGroup.Addon);
 const Source = ({
