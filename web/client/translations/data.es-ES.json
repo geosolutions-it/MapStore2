@@ -3891,15 +3891,14 @@
             "noLayerSelected": "Por favor seleccione la capa primero.",
             "successfulIntersection": "La operación de intersección fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
             "successfulBuffer": "La operación de búfer fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
-            "errorBuffer": "La operación de búfer ha fallado",
-            "WCSDisabled": "El servicio WCS está deshabilitado"
+            "errorBuffer": "La operación de búfer ha fallado"
           },
+          "warningTitle": "Advertencia",
+          "warningBody": "No ha seleccionado una función y esto puede ralentizar el rendimiento en el geoservidor. ¿Desea continuar?",
+          "warningConfirmText": "Sí",
+          "warningCancel": "Cancelar",
           "tooltip": {
             "clickToSelectFeature": "Haga clic para seleccionar la característica",
-            "warningTitle": "Advertencia",
-            "warningBody": "No ha seleccionado una función y esto puede ralentizar el rendimiento en el geoservidor. ¿Desea continuar?",
-            "warningConfirmText": "Sí",
-            "warningCancel": "Cancelar",
             "invalidLayers": "Una de las capas que ha seleccionado no se puede usar dentro de esta herramienta",
             "fillRequiredDataIntersection": "Seleccione al menos la capa de origen y la capa de intersección",
             "fillRequiredDataBuffer": "Seleccione al menos la capa de origen",

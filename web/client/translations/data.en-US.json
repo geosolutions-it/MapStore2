@@ -3902,15 +3902,14 @@
             "noLayerSelected": "Please select layer first.",
             "successfulIntersection": "The intersection operation was successful and a new layer has ben created and added to the TOC",
             "successfulBuffer": "The Buffer operation was successful and a new layer has ben created and added to the TOC",
-            "errorBuffer": "The Buffer operation has failed",
-            "WCSDisabled": "Service WCS is disabled"
+            "errorBuffer": "The Buffer operation has failed"
           },
+          "warningTitle": "Warning",
+          "warningBody": "You have not selected a feature and this may slow down performances in geoserver. Do you want to continue?",
+          "warningConfirmText": "Yes",
+          "warningCancel": "Cancel",
           "tooltip": {
             "clickToSelectFeature": "Click to select feature",
-            "warningTitle": "Warning",
-            "warningBody": "You have not selected a feature and this may slow down performances in geoserver. Do you want to continue?",
-            "warningConfirmText": "Yes",
-            "warningCancel": "Cancel",
             "invalidLayers": "One of the layers you have selected cannot be used within this tool",
             "fillRequiredDataIntersection": "Please select at least the source layer and the intersection layer",
             "fillRequiredDataBuffer": "Please select at least the source layer",

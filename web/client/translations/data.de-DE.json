@@ -3928,15 +3928,14 @@
              "noLayerSelected": "Bitte wählen Sie zuerst die Ebene aus.",
              "successfulIntersection": "Der Schnittvorgang war erfolgreich und ein neuer Layer wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
              "successfulBuffer": "Der Puffervorgang war erfolgreich und eine neue Ebene wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
-             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen",
-             "WCSDisabled": "Der Dienst WCS ist deaktiviert"
+             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen"
           },
+          "warningTitle": "Warnung",
+          "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
+          "warningConfirmText": "Ja",
+          "warningCancel": "Abbrechen",
           "tooltip": {
             "clickToSelectFeature": "Klicken, um Funktion auszuwählen",
-             "warningTitle": "Warnung",
-             "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
-             "warningConfirmText": "Ja",
-             "warningCancel": "Abbrechen",
              "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Werkzeug nicht verwendet werden",
              "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
              "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",

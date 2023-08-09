@@ -3891,15 +3891,14 @@
             "noLayerSelected": "Seleziona prima il livello.",
             "successfulIntersection": "L'operazione di intersezione è andata a buon fine e un nuovo livello è stato creato e aggiunto alla tabella dei contenuti",
             "successfulBuffer": "L'operazione Buffer è andata a buon fine e un nuovo livello è stato creato e aggiunto alla tabella dei contenuti",
-            "errorBuffer": "L'operazione Buffer è fallita",
-            "WCSDisabled": "Il servizio WCS è disabilitato"
+            "errorBuffer": "L'operazione Buffer è fallita"
           },
+          "warningTitle": "Attenzione",
+          "warningBody": "Non hai selezionato una funzione e questo potrebbe rallentare le prestazioni del geoserver. Vuoi continuare?",
+          "warningConfirmText": "Sì",
+          "warningCancel": "Annulla",
           "tooltip": {
             "clickToSelectFeature": "Fai click per selezionare una feature",
-             "warningTitle": "Attenzione",
-             "warningBody": "Non hai selezionato una funzione e questo potrebbe rallentare le prestazioni del geoserver. Vuoi continuare?",
-             "warningConfirmText": "Sì",
-             "warningCancel": "Annulla",
              "invalidLayers": "Uno dei livelli che hai selezionato non può essere utilizzato all'interno di questo strumento",
              "fillRequiredDataIntersection": "Seleziona almeno il livello di origine e il livello di intersezione",
              "fillRequiredDataBuffer": "Seleziona almeno il livello di origine",

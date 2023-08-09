@@ -168,13 +168,13 @@ const MainComp = ({
                         show={showWarning}
                         onClose={handleCloseWarningModal}
                         onConfirm={handleConfirmRunProcess}
-                        title={<Message msgId="GeoProcessingTools.tooltip.warningTitle" />}
+                        title={<Message msgId="GeoProcessingTools.warningTitle" />}
                         fitContent
-                        confirmText={<Message msgId="GeoProcessingTools.tooltip.warningConfirmText" />}
-                        cancelText={<Message msgId="GeoProcessingTools.tooltip.warningCancel" />}
+                        confirmText={<Message msgId="GeoProcessingTools.warningConfirmText" />}
+                        cancelText={<Message msgId="GeoProcessingTools.warningCancel" />}
                     >
                         <div className="ms-detail-body">
-                            <Message msgId="GeoProcessingTools.tooltip.warningBody" />
+                            <Message msgId="GeoProcessingTools.warningBody" />
                         </div>
                     </ConfirmModal>
                 </div>
