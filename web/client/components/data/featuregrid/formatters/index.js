@@ -34,7 +34,7 @@ export const register = {};
 /**
  * Registers a formatter component with the given name.
  * @param {string} name the name of the formatter
- * @param {component} formatter the formatter component
+ * @param {React.Component} formatter the formatter component
  */
 export const registerFormatter = (name, formatter) => {
     register[name] = formatter;
