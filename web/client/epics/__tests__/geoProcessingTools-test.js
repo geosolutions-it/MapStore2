@@ -9,7 +9,7 @@
 import expect from 'expect';
 import MockAdapter from "axios-mock-adapter";
 
-import { testEpic, addTimeoutEpic } from './epicTestUtils';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import axios from "../../libs/ajax";
 import {
     checkWPSAvailabilityGPTEpic,
@@ -39,6 +39,7 @@ import {
     setFeatureIntersectionLoading,
     setSourceFeatureId,
     setSourceLayerId,
+    setInvalidLayer,
     setIntersectionFeatureId,
     setIntersectionLayerId,
     setWPSAvailability,
@@ -57,7 +58,8 @@ import {
 } from '../../actions/additionallayers';
 import {
     addGroup,
-    addLayer
+    addLayer,
+    updateNode
 } from '../../actions/layers';
 import {
     updateMapLayout
@@ -71,7 +73,8 @@ import {
     error as showErrorNotification,
     success as showSuccessNotification
 } from '../../actions/notifications';
-import DESCRIBE_LAYER from 'raw-loader!../../test-resources/wfs/describeLayer.xml';
+import DESCRIBE_PROCESS from 'raw-loader!../../test-resources/wfs/describeLayer.xml';
+import DESCRIBE_PROCESS_NO_BUFFER from 'raw-loader!../../test-resources/wfs/describeProcess_no_buffer.xml';
 import DESCRIBE_POIS from '../../test-resources/wfs/describe-pois.json';
 import GET_FEATURES from '../../test-resources/wms/GetFeature.json';
 import COLLECT_GEOM from '../../test-resources/wps/collectGeom.json';
@@ -90,8 +93,8 @@ describe('geoProcessingTools epics', () => {
     afterEach(() => {
         mockAxios.restore();
     });
-    it('checkWPSAvailabilityGPTEpic source', (done) => {
-        mockAxios.onGet("mockUrl?service=WPS&version=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=geo%3Abuffer%2Cgs%3AIntersectionFeatureCollection%2Cgs%3ACollectGeometries").reply(200, DESCRIBE_LAYER);
+    it('checkWPSAvailabilityGPTEpic describe layer available', (done) => {
+        mockAxios.onGet("mockUrl?service=WPS&version=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=geo%3Abuffer%2Cgs%3AIntersectionFeatureCollection%2Cgs%3ACollectGeometries").reply(200, DESCRIBE_PROCESS);
         const layerId = "id";
         const source = "source";
         const NUM_ACTIONS = 4;
@@ -106,8 +109,40 @@ describe('geoProcessingTools epics', () => {
             ] = actions;
             expect(action1).toEqual(checkingWPSAvailability(true));
             expect(action2).toEqual(setWPSAvailability(layerId, true, source));
-            expect(action3).toEqual(checkingWPSAvailability(false));
-            expect(action4).toBeTruthy();
+            expect(action3).toEqual(getFeatures(layerId, source));
+            expect(action4).toEqual(checkingWPSAvailability(false));
+            done();
+        }, {
+            layers: {
+                flat: [{
+                    id: "id",
+                    url: "mockUrl",
+                    describeFeatureType: {
+
+                    }
+                }]
+            }
+        });
+    });
+    it('checkWPSAvailabilityGPTEpic describe layer not available, failing', (done) => {
+        mockAxios.onGet("mockUrl?service=WPS&version=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=geo%3Abuffer%2Cgs%3AIntersectionFeatureCollection%2Cgs%3ACollectGeometries").reply(200, DESCRIBE_PROCESS);
+        const layerId = "id";
+        const source = "source";
+        const NUM_ACTIONS = 4;
+        const startActions = [checkWPSAvailability(layerId, source), updateNode(layerId, "id", { describeLayer: { error: "no describe feature found" }})];
+        // note that this update node is not captured correctly
+        testEpic(addTimeoutEpic(checkWPSAvailabilityGPTEpic, 100), NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1,
+                action2,
+                action3,
+                action4 // describe layer
+            ] = actions;
+            expect(action1).toEqual(checkingWPSAvailability(true));
+            expect(action2).toEqual(setWPSAvailability(layerId, true, source));
+            expect(action3).toBeTruthy(); // describe layer call
+            expect(action4.type).toEqual(TEST_TIMEOUT);
             done();
         }, {
             layers: {
@@ -118,8 +153,36 @@ describe('geoProcessingTools epics', () => {
             }
         });
     });
-    it('checkWPSAvailabilityGPTEpic intersection', (done) => {
-        mockAxios.onGet("mockUrl?service=WPS&version=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=geo%3Abuffer%2Cgs%3AIntersectionFeatureCollection%2Cgs%3ACollectGeometries").reply(200, DESCRIBE_LAYER);
+    it('checkWPSAvailabilityGPTEpic buffer wps not available', (done) => {
+        mockAxios.onGet("mockUrl?service=WPS&version=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=geo%3Abuffer%2Cgs%3AIntersectionFeatureCollection%2Cgs%3ACollectGeometries").reply(200, DESCRIBE_PROCESS_NO_BUFFER);
+        const layerId = "id";
+        const source = "source";
+        const NUM_ACTIONS = 4;
+        const startActions = [checkWPSAvailability(layerId, source)];
+        testEpic(checkWPSAvailabilityGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1,
+                action2,
+                action3,
+                action4 // describe layer
+            ] = actions;
+            expect(action1).toEqual(checkingWPSAvailability(true));
+            expect(action2).toEqual(setInvalidLayer(layerId, source));
+            expect(action3).toEqual(setWPSAvailability(layerId, false, source));
+            expect(action4).toEqual(checkingWPSAvailability(false));
+            done();
+        }, {
+            layers: {
+                flat: [{
+                    id: "id",
+                    url: "mockUrl"
+                }]
+            }
+        });
+    });
+    it('checkWPSAvailabilityGPTEpic buffer wps not available, intersection', (done) => {
+        mockAxios.onGet("mockUrl?service=WPS&version=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=geo%3Abuffer%2Cgs%3AIntersectionFeatureCollection%2Cgs%3ACollectGeometries").reply(200, DESCRIBE_PROCESS_NO_BUFFER);
         const layerId = "id";
         const source = "intersection";
         const NUM_ACTIONS = 4;
@@ -133,9 +196,9 @@ describe('geoProcessingTools epics', () => {
                 action4 // describe layer
             ] = actions;
             expect(action1).toEqual(checkingIntersectionWPSAvailability(true));
-            expect(action2).toEqual(setWPSAvailability(layerId, true, source));
-            expect(action3).toEqual(checkingIntersectionWPSAvailability(false));
-            expect(action4).toBeTruthy();
+            expect(action2).toEqual(setInvalidLayer(layerId, source));
+            expect(action3).toEqual(setWPSAvailability(layerId, false, source));
+            expect(action4).toEqual(checkingIntersectionWPSAvailability(false));
             done();
         }, {
             layers: {
@@ -389,8 +452,8 @@ describe('geoProcessingTools epics', () => {
                 action6
             ] = actions;
             expect(action1).toEqual(runningProcess(true));
-            expect(action2.type).toEqual(increaseBufferedCounter().type);
-            expect(action3.type).toEqual(addGroup().type);
+            expect(action2.type).toEqual(addGroup().type);
+            expect(action3.type).toEqual(increaseBufferedCounter().type);
             expect(action4.type).toEqual(addLayer().type);
             expect(action5.type).toEqual(showSuccessNotification().type);
             expect(action6).toEqual(runningProcess(false));
@@ -434,8 +497,8 @@ describe('geoProcessingTools epics', () => {
                 action6
             ] = actions;
             expect(action1).toEqual(runningProcess(true));
-            expect(action2.type).toEqual(increaseBufferedCounter().type);
-            expect(action3.type).toEqual(addGroup().type);
+            expect(action2.type).toEqual(addGroup().type);
+            expect(action3.type).toEqual(increaseBufferedCounter().type);
             expect(action4.type).toEqual(addLayer().type);
             expect(action5.type).toEqual(showSuccessNotification().type);
             expect(action6).toEqual(runningProcess(false));
@@ -549,8 +612,8 @@ describe('geoProcessingTools epics', () => {
                 action6
             ] = actions;
             expect(action1).toEqual(runningProcess(true));
-            expect(action2.type).toEqual(increaseIntersectedCounter().type);
-            expect(action3.type).toEqual(addGroup().type);
+            expect(action2.type).toEqual(addGroup().type);
+            expect(action3.type).toEqual(increaseIntersectedCounter().type);
             expect(action4.type).toEqual(addLayer().type);
             expect(action5.type).toEqual(showSuccessNotification().type);
             expect(action6).toEqual(runningProcess(false));

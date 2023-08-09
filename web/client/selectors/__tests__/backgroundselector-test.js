@@ -90,9 +90,6 @@ describe('Test backgroundselector selectors', () => {
             },
             mode: "embedded"
         });
-        expect(result).toEqual([{
-            ...bgLayers[0],
-            invalid: true
-        }]);
+        expect(result).toEqual(bgLayers);
     });
 });

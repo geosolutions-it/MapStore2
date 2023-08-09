@@ -9,6 +9,8 @@ import {get} from "lodash";
 
 import {GPT_CONTROL_NAME} from "../actions/geoProcessingTools";
 import {mapSelector} from "../selectors/map";
+import {layersSelector} from "../selectors/layers";
+import {hasWFSService} from '../utils/LayersUtils';
 
 // buffer
 export const distanceSelector = state => state?.geoProcessingTools?.buffer?.distance || 100;
@@ -62,3 +64,6 @@ export const showHighlightLayersSelector = state => !!state?.geoProcessingTools?
 export const isListeningClickSelector = (state) => !!(get(mapSelector(state), 'eventListeners.click', []).find((el) => el === GPT_CONTROL_NAME));
 export const selectedLayerIdSelector = (state) => state?.geoProcessingTools?.selectedLayerId;
 export const selectedLayerTypeSelector = (state) => state?.geoProcessingTools?.selectedLayerType;
+export const wfsBackedLayersSelector = (state) => layersSelector(state)
+    .filter(l => l.group !== "background")
+    .filter(hasWFSService);

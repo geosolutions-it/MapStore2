@@ -42,7 +42,8 @@ import {
     showHighlightLayersSelector,
     isListeningClickSelector,
     selectedLayerIdSelector,
-    selectedLayerTypeSelector
+    selectedLayerTypeSelector,
+    wfsBackedLayersSelector
 } from '../geoProcessingTools';
 import {
     GPT_CONTROL_NAME
@@ -353,5 +354,48 @@ describe('Test Geo Processing Tools selectors', () => {
             selectedLayerType: "source"
         };
         expect(selectedLayerTypeSelector({geoProcessingTools})).toEqual("source");
+    });
+    it('test wfsBackedLayersSelector', () => {
+        let layers = wfsBackedLayersSelector({});
+        expect(layers.length).toBeFalsy();
+        layers = wfsBackedLayersSelector({
+            layers: {
+                flat: [{
+                    name: "ws:layer_1",
+                    group: "buffer",
+                    type: "wms",
+                    search: {
+                        type: "wfs"
+                    }
+                },
+                {
+                    name: "ws:layer_3",
+                    group: "buffer",
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
+                },
+                {
+                    name: "ws:layer_2",
+                    group: "background"
+                }]}});
+        expect(layers.length).toBeTruthy();
+        expect(layers).toEqual([{
+            name: "ws:layer_1",
+            group: "buffer",
+            type: "wms",
+            search: {
+                type: "wfs"
+            }
+        },
+        {
+            name: "ws:layer_3",
+            group: "buffer",
+            type: "wfs",
+            search: {
+                type: "wfs"
+            }
+        }]);
     });
 });

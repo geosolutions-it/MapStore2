@@ -184,9 +184,8 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
                                     return Rx.Observable.of(setInvalidLayer(layerId, source));
                                 }
                                 return Rx.Observable.of(
-                                    getFeatures(layerId, source),
-                                    checkingWPS(false));
-                            })
+                                    getFeatures(layerId, source));
+                            }).concat([checkingWPS(false)])
                     );
             })
             .catch((e) => {
