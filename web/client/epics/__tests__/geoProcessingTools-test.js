@@ -128,7 +128,7 @@ describe('geoProcessingTools epics', () => {
         mockAxios.onGet("mockUrl?service=WPS&version=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=geo%3Abuffer%2Cgs%3AIntersectionFeatureCollection%2Cgs%3ACollectGeometries").reply(200, DESCRIBE_PROCESS);
         const layerId = "id";
         const source = "source";
-        const NUM_ACTIONS = 4;
+        const NUM_ACTIONS = 5;
         const startActions = [checkWPSAvailability(layerId, source), updateNode(layerId, "id", { describeLayer: { error: "no describe feature found" }})];
         // note that this update node is not captured correctly
         testEpic(addTimeoutEpic(checkWPSAvailabilityGPTEpic, 100), NUM_ACTIONS, startActions, actions => {
@@ -137,12 +137,14 @@ describe('geoProcessingTools epics', () => {
                 action1,
                 action2,
                 action3,
-                action4 // describe layer
+                action4, // describe layer
+                action5
             ] = actions;
             expect(action1).toEqual(checkingWPSAvailability(true));
             expect(action2).toEqual(setWPSAvailability(layerId, true, source));
-            expect(action3).toBeTruthy(); // describe layer call
-            expect(action4.type).toEqual(TEST_TIMEOUT);
+            expect(action3).toBeTruthy(checkingWPSAvailability(false));
+            expect(action4).toBeTruthy();
+            expect(action5.type).toEqual(TEST_TIMEOUT);
             done();
         }, {
             layers: {
