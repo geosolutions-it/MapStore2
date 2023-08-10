@@ -21,8 +21,7 @@ import {
 } from '../../../../utils/FeatureGridUtils';
 import propsStreamFactory from '../../../misc/enhancers/propsStreamFactory';
 import editors from '../editors';
-import { manageFilterRendererState } from '../enhancers/filterRenderers';
-import { getFilterRenderer } from '../filterRenderers';
+
 import { getFormatter } from '../formatters';
 import {getHeaderRenderer} from './headerRenderers';
 
@@ -136,11 +135,12 @@ const featuresToGrid = compose(
     withPropsOnChange(
         ["describeFeatureType", "fields", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable"],
         props => {
-            const getFilterRendererFunc = ({localType = ""} = {}, name) => {
+            const getFilterRendererFunc = ({name}) => {
                 if (props.filterRenderers && props.filterRenderers[name]) {
                     return props.filterRenderers[name];
                 }
-                return manageFilterRendererState(getFilterRenderer(localType));
+                // return empty component if no filter renderer is defined, to avoid failures
+                return () => null;
             };
 
             const result = ({
@@ -170,7 +170,7 @@ const featuresToGrid = compose(
                             return props.editors(desc.localType, generalProps);
                         },
                         getFilterRenderer: getFilterRendererFunc,
-                        getFormatter: (desc) => getFormatter(desc, props.dateFormats)
+                        getFormatter: (desc) => getFormatter(desc, (props.fields ?? []).find(f => f.name === desc.name), {dateFormats: props.dateFormats})
                     }))
             });
             return result;

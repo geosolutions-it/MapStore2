@@ -35,10 +35,10 @@ const mergeQuickFiltersStream = compose(
 
 );
 
-const getFilterComponent = ({options, localType, attributeName, quickFilterStream$}) => compose(
+const getFilterComponent = ({field = {}, options, localType, attributeName, quickFilterStream$}) => compose(
     withProps({quickFilterStream$, attributeName, options}),
     mergeQuickFiltersStream
-)(getFilterRenderer(localType, {name: attributeName }));
+)(getFilterRenderer({name: field.filterRenderer?.name, type: localType, options: field.filterRenderer?.options}));
 
 // add to the container a stream as a prop that emits a value each time quick filter stream changes
 const withQuickFiltersStream = compose(
@@ -59,11 +59,13 @@ const withQuickFiltersStream = compose(
 export const getWidgetFilterRenderers = compose(
     withQuickFiltersStream,
     withPropsOnChange(
-        ["describeFeatureType", "options"],
-        ({ describeFeatureType, options, quickFilterStream$} = {}) => {
+        ["layer", "describeFeatureType", "options"],
+        ({ layer = {}, describeFeatureType, options, quickFilterStream$} = {}) => {
+            const fields = layer?.fields || [];
             return describeFeatureType ?
                 {filterRenderers: getAttributeFields(describeFeatureType).reduce( (prev, {localType, name: attributeName}) => {
-                    const filterComp = getFilterComponent({options, localType, attributeName, quickFilterStream$});
+                    const field = find(fields, {name: attributeName});
+                    const filterComp = getFilterComponent({field, options, localType, attributeName, quickFilterStream$});
                     return {...prev, [attributeName]: filterComp};
                 }, {})}
                 : {};

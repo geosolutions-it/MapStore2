@@ -5,11 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import React from 'react';
+import ReactDOM from 'react-dom';
 import expect from 'expect';
 
 import NumberFormat from '../../../../I18N/Number';
-import {getFormatter} from '../index';
+import {getFormatter, registerFormatter, unregisterFormatter} from '../index';
 
 describe('Tests for the formatter functions', () => {
     it('test getFormatter for booleans', () => {
@@ -62,15 +63,51 @@ describe('Tests for the formatter functions', () => {
         expect(formatter({value: null})).toBe(null);
         expect(formatter({value: undefined})).toBe(null);
     });
+    describe('test featureGridFormatter', () => {
+        beforeEach((done) => {
+            document.body.innerHTML = '<div id="container"></div>';
+            setTimeout(done);
+        });
+
+        afterEach((done) => {
+            ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+            document.body.innerHTML = '';
+            setTimeout(done);
+        });
+        it('base', () => {
+            try {
+                registerFormatter("test", ({config, value}) => {
+                    expect(config).toExist();
+                    expect(value).toBe("test");
+                    return <div>test</div>;
+                });
+                const Formatter = getFormatter({localType: "test"}, {featureGridFormatter: {name: "test"}});
+                ReactDOM.render(<Formatter value="test"/>, document.getElementById("container"));
+                expect(document.getElementById("container").innerHTML).toBe('<div>test</div>');
+            } finally {
+                unregisterFormatter("test");
+            }
+        });
+        it('with directRender option', () => {
+            try {
+                const TEST_FUNC = () => <div>test</div>;
+                registerFormatter("test", TEST_FUNC);
+                const formatter = getFormatter({localType: "test"}, {featureGridFormatter: {name: "test", directRender: true}});
+                expect(formatter).toBe(TEST_FUNC);
+            } finally {
+                unregisterFormatter("test");
+            }
+        });
+    });
     it('test getFormatter for date / date-time / time', () => {
         const dateFormats = {
             date: 'YYYY',
             "date-time": 'YYYY DD',
             time: 'HH:mm'
         };
-        const dateFormatter = getFormatter({localType: "date"}, dateFormats);
-        const dateTimeFormatter = getFormatter({localType: "date-time"}, dateFormats);
-        const timeFormatter = getFormatter({localType: "time"}, dateFormats);
+        const dateFormatter = getFormatter({localType: "date"}, undefined, {dateFormats});
+        const dateTimeFormatter = getFormatter({localType: "date-time"}, undefined, {dateFormats});
+        const timeFormatter = getFormatter({localType: "time"}, undefined, {dateFormats});
         expect(typeof dateFormatter).toBe("function");
         expect(dateFormatter()).toBe(null);
         expect(dateFormatter({value: '2015-02-01T12:45:00Z'})).toBe('2015');

@@ -10,7 +10,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {getFilterRenderer} from '../index';
+import {getFilterRenderer, registerFilterRenderer, unregisterFilterRenderer} from '../index';
 
 describe('Test for filterRenderer function', () => {
     beforeEach((done) => {
@@ -23,27 +23,47 @@ describe('Test for filterRenderer function', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+    it('register and unregister', () => {
+        try {
+            registerFilterRenderer("test", () => <div id="test-filter-renderer"></div>);
+            expect(getFilterRenderer({name: "test"})).toExist();
+            unregisterFilterRenderer("test");
+            expect(getFilterRenderer({name: "test"})).toNotExist();
+        } finally {
+            unregisterFilterRenderer("test");
+        }
+    });
     it('render with defaults', () => {
-        let Cmp = getFilterRenderer("unknown");
+        let Cmp = getFilterRenderer({type: "unknown"});
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
-        Cmp = getFilterRenderer("string");
+        Cmp = getFilterRenderer({type: "string"});
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
-        Cmp = getFilterRenderer("int");
+        Cmp = getFilterRenderer({type: "int"});
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
-        Cmp = getFilterRenderer("number");
+        Cmp = getFilterRenderer({type: "number"});
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
-        Cmp = getFilterRenderer("time");
+        Cmp = getFilterRenderer({type: "time"});
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
-        Cmp = getFilterRenderer("date");
+        Cmp = getFilterRenderer({type: "date"});
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
-        Cmp = getFilterRenderer("date-time");
+        Cmp = getFilterRenderer({type: "date-time"});
         expect(Cmp).toExist();
         ReactDOM.render(<Cmp />, document.getElementById("container"));
+    });
+    it('render with custom', () => {
+        try {
+            registerFilterRenderer("test", () => <div id="test-filter-renderer"></div>);
+            let Cmp = getFilterRenderer({name: "test", type: "string"});
+            ReactDOM.render(<Cmp />, document.getElementById("container"));
+            expect(document.getElementById("test-filter-renderer")).toExist();
+        } finally {
+            unregisterFilterRenderer("test");
+        }
     });
 });
