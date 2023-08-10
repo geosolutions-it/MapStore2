@@ -34,6 +34,7 @@ import catalog from "../epics/catalog";
 import backgroundSelector from "../epics/backgroundselector";
 import API from '../api/catalog';
 import { MapLibraries } from '../utils/MapTypeUtils';
+import {getHighlightLayerOptions} from "../utils/HighlightUtils";
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -306,10 +307,21 @@ class MapPlugin extends React.Component {
 
     getHighlightLayer = (projection, index, env) => {
         const plugins = this.state.plugins;
-        return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}} env={env}>
-            {this.props.features.map( (feature) => {
+        const {features, ...options} = getHighlightLayerOptions({features: this.props.features});
+        return (<plugins.Layer type="vector"
+            srs={projection}
+            position={index}
+            key="highlight"
+            env={env}
+            options={{
+                name: "highlight",
+                ...options,
+                features
+            }} >
+            {features.map( (feature) => {
                 return (<plugins.Feature
                     msId={feature.id}
+                    properties={feature.properties}
                     key={feature.id}
                     crs={projection}
                     type={feature.type}
