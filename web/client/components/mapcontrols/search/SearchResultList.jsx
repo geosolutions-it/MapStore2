@@ -47,8 +47,8 @@ export default class SearchResultList extends React.Component {
         showGFI: () => {}
     };
 
-    onItemClick = (item) => {
-        this.props.onItemClick(item, this.props.mapConfig);
+    onItemClick = (item, service) => {
+        this.props.onItemClick(item, this.props.mapConfig, service);
     };
 
     renderResults = () => {
@@ -63,7 +63,7 @@ export default class SearchResultList extends React.Component {
                 displayName={service.displayName}
                 key={item.osm_id || item.id || "res_" + idx}
                 item={item}
-                onItemClick={this.onItemClick}
+                onItemClick={() => this.onItemClick(item, service)}
                 tools={[{
                     id: 'open-gfi',
                     keyProp: 'open-gfi',
