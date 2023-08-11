@@ -86,7 +86,10 @@ function ensureReady(tileSet, callback) {
         });
     }
 }
-// The google brand logo is needed in addition to attribution
+
+// Google Photorealistic 3D Tiles requires both attribution and brand logo (see https://cloud.google.com/blog/products/maps-platform/commonly-asked-questions-about-our-recently-launched-photorealistic-3d-tiles)
+// The attribution are dynamic and updated directly with the `showCreditsOnScreen` property (see https://developers.google.com/maps/documentation/tile/policies#3d_tiles)
+// The brand logo instead is not managed by the Cesium3DTileset class and must to be included in the credits
 function updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet) {
     if ((options?.url || '').includes('https://tile.googleapis.com')) {
         if (!tileSet._googleCredit) {
