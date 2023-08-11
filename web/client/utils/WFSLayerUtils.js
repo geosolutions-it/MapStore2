@@ -1,6 +1,3 @@
-import {get, head} from 'lodash';
-import urlUtil from 'url';
-
 /*
  * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
@@ -9,6 +6,8 @@ import urlUtil from 'url';
  * LICENSE file in the root directory of this source tree.
  */
 import { optionsToVendorParams } from './VendorParamsUtils';
+import urlUtil from 'url';
+import {get, head} from 'lodash';
 
 export const needsReload = (oldOptions, newOptions) => {
     const oldParams = { ...(optionsToVendorParams(oldOptions) || {}), _v_: oldOptions._v_ };
