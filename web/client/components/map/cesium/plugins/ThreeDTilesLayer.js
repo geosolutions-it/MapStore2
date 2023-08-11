@@ -14,6 +14,9 @@ import isNaN from 'lodash/isNaN';
 import { getProxyUrl, needProxy } from "../../../../utils/ProxyUtils";
 import { getStyleParser } from '../../../../utils/VectorStyleUtils';
 import { polygonToClippingPlanes } from '../../../../utils/cesium/PrimitivesUtils';
+import tinycolor from 'tinycolor2';
+import googleOnWhiteLogo from '../img/google_on_white_hdpi.png';
+import googleOnNonWhiteLogo from '../img/google_on_non_white_hdpi.png';
 
 function getStyle({ style }) {
     const { format, body } = style || {};
@@ -84,6 +87,25 @@ function ensureReady(tileSet, callback) {
     }
 }
 
+// Google Photorealistic 3D Tiles requires both attribution and brand logo (see https://cloud.google.com/blog/products/maps-platform/commonly-asked-questions-about-our-recently-launched-photorealistic-3d-tiles)
+// The attribution are dynamic and updated directly with the `showCreditsOnScreen` property (see https://developers.google.com/maps/documentation/tile/policies#3d_tiles)
+// The brand logo instead is not managed by the Cesium3DTileset class and must to be included in the credits
+function updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet) {
+    if ((options?.url || '').includes('https://tile.googleapis.com')) {
+        if (!tileSet._googleCredit) {
+            const bodyStyle = window?.getComputedStyle ? window.getComputedStyle(document.body, null) : null;
+            const bodyBackgroundColor = bodyStyle?.getPropertyValue ? bodyStyle.getPropertyValue('background-color') : '#ffffff';
+            const src = tinycolor(bodyBackgroundColor).isDark()
+                ? googleOnNonWhiteLogo
+                : googleOnWhiteLogo;
+            tileSet._googleCredit = new Cesium.Credit(`<img src="${src}" title="Google" style="padding:0 0.5rem"/>`, true);
+            return map.creditDisplay.addStaticCredit(tileSet._googleCredit);
+        }
+        return map.creditDisplay.removeStaticCredit(tileSet._googleCredit);
+    }
+    return null;
+}
+
 Layers.registerType('3dtiles', {
     create: (options, map) => {
         if (options.visibility && options.url) {
@@ -103,6 +125,7 @@ Layers.registerType('3dtiles', {
                 }
             ).then((_tileSet) => {
                 tileSet = _tileSet;
+                updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
                 map.scene.primitives.add(tileSet);
                 // assign the original mapstore id of the layer
                 tileSet.msId = options.id;
@@ -125,6 +148,7 @@ Layers.registerType('3dtiles', {
                 resource,
                 remove: () => {
                     if (tileSet) {
+                        updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
                         map.scene.primitives.remove(tileSet);
                     }
                 },
