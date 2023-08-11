@@ -37,7 +37,7 @@ const UserMenu = ({
     isParametersOpen,
     menuIsActive,
     nav,
-    showDrawOption = true,
+    showDrawOption,
     tooltipPosition,
     onActivateTool,
     onToggleParameters,
@@ -103,7 +103,7 @@ UserMenu.defaultProps = {
     onActivateTool: () => {},
     onToggleParameters: () => {},
     onToggleSourceMode: () => {},
-    tooltipPosition: 'bottom'
+    tooltipPosition: 'left'
 };
 
 const UserMenuConnected =  connect((state) => ({

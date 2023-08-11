@@ -854,9 +854,20 @@ export const getWMSVendorParams = (layer) =>  {
     return { TILED: layer.singleTile ? false : (!isNil(layer.tiled) ? layer.tiled : true)};
 };
 
+/**
+ * Utility function to check if the node allows to show fields tab
+ * @param {object} node the node of the TOC (including layer properties)
+ * @returns {boolean} true if the node allows to show fields
+ */
+export const hasWFSService = ({type, search = {}} = {}) =>
+    type === 'wfs' // pure WFS layer
+        || (type === 'wms' && search.type === 'wfs'); // WMS backed by WFS (search)
+
+
 LayersUtils = {
     getGroupByName,
     getLayerId,
+    hasWFSService,
     normalizeLayer,
     getNotEmptyGroup,
     getLayersByGroup,
@@ -867,3 +878,4 @@ LayersUtils = {
     isInsideResolutionsLimits,
     visibleTimelineLayers
 };
+

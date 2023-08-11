@@ -3032,6 +3032,10 @@
             "description": "Consente di aggiungere un filtro a un livello",
             "title": "Filtra Livello"
           },
+          "GeoProcessingTools": {
+            "description": "Consente di geo processare i livelli utilizzando il buffer e l'intersezione dei processi wps",
+            "title": "Strumenti di elaborazione geospaziale"
+          },
           "HelpLink": {
             "description": "Un pulsante per accedere alla documentazione di MapStore",
             "title": "Link alla documentazione"
@@ -3839,6 +3843,72 @@
             "selectFiles": "Seleziona il file...",
             "infoSupported": "<p><small>Formati supportati: GeoJSON, DXF, Shapefiles</small></p>",
             "dxfGeometryNotSupported": "Solo LWPOLYLINE è supportata nel DXF"
+          }
+        },
+        "GeoProcessingTools": {
+          "title": "Strumenti di geoelaborazione",
+          "emptyTitle": "Questi processi WPS devono essere installati in geoserver per poter usare questo plugin:",
+          "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "sourceLayer": "Livello sorgente",
+          "sourceFeature": "Feature sorgente",
+          "tool": "Seleziona uno strumento",
+          "highlight": "Evidenzia le feature in mappa",
+          "bufferTool": "Buffer",
+          "distance": "Distanza",
+          "distanceUom": "Unita di misura",
+          "km": "km",
+          "m": "m",
+          "run": "Esegui",
+          "intersectionTool": "Intersezione",
+          "noMatchedLayer": "Nessun layer corrisponde al filtro inserito",
+          "noMatchedFeature": "Nessuna Feature corrisponde al filtro inserito",
+          "intersectionLayer": "Livello intersezione",
+          "intersectionFeature": "Feature intersezione",
+          "advancedSettings": "Opzioni avanzate",
+          "quadrantSegments": "Segmenti",
+          "capStyle": "Style da usare",
+          "round": "Rotondo",
+          "flat": "Piatto",
+          "square": "Squadrato",
+          "firstAttributeToRetain": "Primo attributo della collezione di feature",
+          "secondAttributeToRetain": "Secondo attributo della collezione di feature",
+          "intersectionMode": "Specifica che tipo di geometria per intersecare le caratteristiche",
+          "percentagesEnabled": "Indica se indica se emettere le percentuali dell'area caratteristica",
+          "areasEnabled": "Indica se emettere aree caratteristiche",
+          "noMatchedMode": "Nessuna modalità corrisponde al filtro corrente",
+          "INTERSECTION": "INTERSEZIONE",
+          "FIRST": "PRIMO",
+          "SECOND": "SECONDO",
+          "true": "vero",
+          "false": "falso",
+          "notifications": {
+            "errorIntersectGFI": "Si è verificato un errore durante l'intersezione delle geometrie. Non è stato possibile creare il livello di intersezione.",
+            "errorGFI": "Si è verificato un errore durante il caricamento della feature",
+            "errorGetFeature": "Si è verificato un errore durante il caricamento della feature per ottenerne la geometria",
+            "layerNotSupported": "Il layer selezionato non è supportato. Seleziona WMS, WFS o layer vettoriale.",
+            "noFeatureInPoint": "Nessuna feature è stata trovata nel punto cliccato.",
+            "featureFound": "È stata trovata una feature nel punto cliccato.",
+            "noLayerSelected": "Seleziona prima il livello.",
+            "successfulIntersection": "L'operazione di intersezione è andata a buon fine e un nuovo livello è stato creato e aggiunto alla tabella dei contenuti",
+            "successfulBuffer": "L'operazione Buffer è andata a buon fine e un nuovo livello è stato creato e aggiunto alla tabella dei contenuti",
+            "errorBuffer": "L'operazione Buffer è fallita"
+          },
+          "warningTitle": "Attenzione",
+          "warningBody": "Non hai selezionato una funzione e questo potrebbe rallentare le prestazioni del geoserver. Vuoi continuare?",
+          "warningConfirmText": "Sì",
+          "warningCancel": "Annulla",
+          "tooltip": {
+            "clickToSelectFeature": "Fai click per selezionare una feature",
+             "invalidLayers": "Uno dei livelli che hai selezionato non può essere utilizzato all'interno di questo strumento",
+             "fillRequiredDataIntersection": "Seleziona almeno il livello di origine e il livello di intersezione",
+             "fillRequiredDataBuffer": "Seleziona almeno il livello di origine",
+             "siderBarBtn": "Strumenti di geoelaborazione",
+             "selectFeature": "Seleziona una funzione",
+             "validFeature": "Questa feature è valida",
+             "invalidFeature": "Questa feature non è valida",
+             "selectLayer": "Seleziona un livello",
+             "validLayer": "Questo livello è valido e può essere utilizzato in questo strumento",
+             "invalidLayer": "Questo livello non supporta i processi wps necessari \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\no è un livello raster"
           }
         }
     }

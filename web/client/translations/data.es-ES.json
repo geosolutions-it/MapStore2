@@ -13,7 +13,7 @@
         "about_ul0_li0": "MapViewer es un visualizador simple de mapas preconfigurados (almacenados opcionalmente en una base de datos GeoStore)",
         "about_ul0_li1": "MapPublisher está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros. Para más información: ",
         "about_h20": "Licencia",
-        "about_p3": "MapStore es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
+        "about_p3": "Mapstore es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
         "about_p5-0": "Para más información, consulte",
         "about_a0": "esta",
         "about_p5-1": "página.",
@@ -3031,6 +3031,10 @@
             "description": "Permite agregar un filtro a una capa",
             "title": "Capa de filtro"
           },
+          "GeoProcessingTools": {
+            "description": "Permite geoprocesar capas para generar una nueva, utilizando procesos wps buffer e intersección",
+            "title": "Herramientas de procesamiento geográfico"
+          },
           "HelpLink": {
             "description": "Un botón para acceder a la documentación de MapStore",
             "title": "Enlace de documentación"
@@ -3839,6 +3843,72 @@
             "selectFiles": "Seleccione Archivo...",
             "infoSupported": "<p><small>Tipos de archivos compatibles: GeoJSON, DXF, Shapefiles</small></p>",
             "dxfGeometryNotSupported": "Solo se admite LWPOLYLINE"
+          }
+        },
+        "GeoProcessingTools": {
+          "title": "Herramientas de geoprocesamiento",
+          "emptyTitle": "Estos procesos WPS deben estar instalados en Geoserver para poder utilizar esta herramienta:",
+          "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "sourceLayer": "Capa de origen",
+          "sourceFeature": "Característica de origen",
+          "tool": "Seleccione una herramienta para usar",
+          "highlight": "Características destacadas",
+          "bufferTool": "Buffer",
+          "distance": "Distancia",
+          "distanceUom": "Unidades de medida",
+          "km": "km",
+          "m": "m",
+          "run": "Ejecutar",
+          "intersectionTool": "Intersección",
+          "noMatchedLayer": "Ninguna capa coincide con el filtro actual",
+          "noMatchedFeature": "Ninguna característica coincide con el filtro actual",
+          "intersectionLayer": "Capa de intersección",
+          "intersectionFeature": "Característica de intersección",
+          "advancedSettings": "Ajustes avanzados",
+          "quadrantSegments": "Segmentos de cuadrante",
+          "capStyle": "Estilo para las tapas de los extremos del búfer",
+          "round": "Redonda",
+          "flat": "Plana",
+          "square": "Cuadrada",
+          "firstAttributeToRetain": "Primer atributo de colección de características para incluir",
+          "secondAttributeToRetain": "Segundo atributo de colección de características a incluir",
+          "intersectionMode": "Especifica la geometría calculada para las entidades de intersección",
+          "percentagesEnabled": "Indica si se deben generar porcentajes de áreas de características",
+          "areasEnabled": "Indica si generar áreas de características",
+          "noMatchedMode": "Ningún modo coincide con el filtro actual",
+          "INTERSECTION": "INTERSECCIÓN",
+          "FIRST": "PRIMERA",
+          "SECOND": "SEGUNDA",
+          "true": "Verdadera",
+          "false": "falsa",
+          "notifications": {
+            "errorIntersectGFI": "Hubo un error al cruzar las entidades. No fue posible crear la capa de intersección.",
+            "errorGFI": "Hubo un error al cargar la característica",
+            "errorGetFeature": "Hubo un error al cargar la función para obtener su geometría",
+            "layerNotSupported": "La capa seleccionada no es compatible. Seleccione WMS, WFS o capa vectorial.",
+            "noFeatureInPoint": "No se encontró ninguna entidad en el punto seleccionado.",
+            "featureFound": "Se encontró una entidad en el punto seleccionado.",
+            "noLayerSelected": "Por favor seleccione la capa primero.",
+            "successfulIntersection": "La operación de intersección fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
+            "successfulBuffer": "La operación de búfer fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
+            "errorBuffer": "La operación de búfer ha fallado"
+          },
+          "warningTitle": "Advertencia",
+          "warningBody": "No ha seleccionado una función y esto puede ralentizar el rendimiento en el geoservidor. ¿Desea continuar?",
+          "warningConfirmText": "Sí",
+          "warningCancel": "Cancelar",
+          "tooltip": {
+            "clickToSelectFeature": "Haga clic para seleccionar la característica",
+            "invalidLayers": "Una de las capas que ha seleccionado no se puede usar dentro de esta herramienta",
+            "fillRequiredDataIntersection": "Seleccione al menos la capa de origen y la capa de intersección",
+            "fillRequiredDataBuffer": "Seleccione al menos la capa de origen",
+            "siderBarBtn": "Herramientas de geoprocesamiento",
+            "selectFeature": "Seleccione una función",
+            "validFeature": "Esta función es válida",
+            "invalidFeature": "Esta función no es válida",
+            "selectLayer": "Seleccione una capa",
+            "validLayer": "Esta capa es válida y se puede usar en esta herramienta",
+            "invalidLayer": "Esta capa no soporta los procesos wps necesarios \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\ni es una capa Raster"
           }
         }
     }

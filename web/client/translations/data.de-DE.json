@@ -3068,6 +3068,10 @@
             "description": "Ermöglicht das Hinzufügen eines Filters zu einer Ebene",
             "title": "Ebenenfilter"
           },
+          "GeoProcessingTools": {
+            "description": "Ermöglicht die Geoverarbeitung von Layern zur Generierung eines neuen Layers mithilfe von WPS-Prozessen für Puffer und Schnittpunkte",
+            "title": "Geo-Verarbeitungstools"
+          },
           "HelpLink": {
             "description": "Eine Schaltfläche für den Zugriff auf die MapStore-Dokumentation",
             "title": "Dokumentationslink"
@@ -3876,6 +3880,72 @@
             "selectFiles": "Datei aussuchen...",
             "infoSupported": "<p><small>Unterstützte Dateitypen: GeoJSON, DXF, Shapefiles</small></p>",
             "dxfGeometryNotSupported": "Es wird nur LWPOLYLINE unterstützt"
+          }
+        },
+        "GeoProcessingTools": {
+          "title": "Geoverarbeitungswerkzeuge",
+          "emptyTitle": "Diese WPS-Prozesse müssen in Geoserver installiert sein, um dieses Tool verwenden zu können:",
+          "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "sourceLayer": "Quellebene",
+          "sourceFeature": "Quellfunktion",
+          "tool": "Wählen Sie ein zu verwendendes Werkzeug aus",
+          "highlight": "Markieren Sie Funktionen",
+          "bufferTool": "Puffer",
+          "distance": "Distanz",
+          "distanceUom": "Maßeinheiten",
+          "km": "km",
+          "m": "m",
+          "run": "Laufen",
+          "intersectionTool": "Überschneidung",
+          "noMatchedLayer": "Keine Ebene entspricht dem aktuellen Filter",
+          "noMatchedFeature": "Keine Funktion entspricht dem aktuellen Filter",
+          "intersectionLayer": "Schnittebene",
+          "intersectionFeature": "Kreuzungsfunktion",
+          "advancedSettings": "Erweiterte Einstellungen",
+          "quadrantSegments": "Quadrantensegmente",
+          "capStyle": "Stil für die Pufferendkappen",
+          "round": "Runden",
+          "flat": "Wohnung",
+          "square": "Quadrat",
+          "firstAttributeToRetain": "Erstes einzuschließendes Feature-Sammlungsattribut",
+          "secondAttributeToRetain": "Zweites einzuschließendes Feature-Sammlungsattribut",
+          "intersectionMode": "Gibt die für sich überschneidende Features berechnete Geometrie an",
+          "percentagesEnabled": "Gibt an, ob Prozentsätze der Feature-Fläche ausgegeben werden sollen",
+          "areasEnabled": "Gibt an, ob Featurebereiche ausgegeben werden sollen",
+          "noMatchedMode": "Kein Modus entspricht dem aktuellen Filter",
+          "INTERSECTION": "ÜBERSCHNEIDUNG",
+          "FIRST": "ERSTE",
+          "SECOND": "ZWEITE",
+          "true": "wahr",
+          "false": "falsch",
+          "notifications": {
+            "errorIntersectGFI": "Beim Überschneiden der Features ist ein Fehler aufgetreten. Der Schnittpunkt-Layer konnte nicht erstellt werden.",
+            "errorGFI": "Beim Laden der Funktion ist ein Fehler aufgetreten",
+            "errorGetFeature": "Beim Laden des Features zum Abrufen seiner Geometrie ist ein Fehler aufgetreten",
+            "layerNotSupported": "Ausgewählte Ebene wird nicht unterstützt. Bitte wählen Sie WMS, WFS oder Vektorebene aus.",
+             "noFeatureInPoint": "Am ausgewählten Punkt wurde kein Feature gefunden.",
+             "featureFound": "Am ausgewählten Punkt wurde ein Feature gefunden.",
+             "noLayerSelected": "Bitte wählen Sie zuerst die Ebene aus.",
+             "successfulIntersection": "Der Schnittvorgang war erfolgreich und ein neuer Layer wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
+             "successfulBuffer": "Der Puffervorgang war erfolgreich und eine neue Ebene wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
+             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen"
+          },
+          "warningTitle": "Warnung",
+          "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
+          "warningConfirmText": "Ja",
+          "warningCancel": "Abbrechen",
+          "tooltip": {
+            "clickToSelectFeature": "Klicken, um Funktion auszuwählen",
+             "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Werkzeug nicht verwendet werden",
+             "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
+             "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
+             "siderBarBtn": "GeoProcessing Tools",
+             "selectFeature": "Bitte wählen Sie eine Funktion aus",
+             "validFeature": "Diese Funktion ist gültig",
+             "invalidFeature": "Diese Funktion ist ungültig",
+             "selectLayer": "Bitte wählen Sie eine Ebene aus",
+             "validLayer": "Diese Ebene ist gültig und kann in diesem Tool verwendet werden",
+             "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\noch handelt es sich um einen Raster-Layer."
           }
         }
     }
