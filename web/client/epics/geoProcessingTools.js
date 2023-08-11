@@ -31,6 +31,9 @@ import {
     changeDrawingStatus
 } from "../actions/draw";
 import {
+    TOGGLE_CONTROL
+} from "../actions/controls";
+import {
     GPT_CONTROL_NAME,
     CHECK_WPS_AVAILABILITY,
     checkingIntersectionWPSAvailability,
@@ -272,7 +275,8 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
         return Rx.Observable.defer(() => getFeatureSimple(layer.search.url, {
             typeName: layer.name,
             featureID: featureId,
-            outputFormat: "application/json"
+            outputFormat: "application/json",
+            srsName: "EPSG:4326"
         }))
             .switchMap(({features}) => {
                 const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(features[0].geometry), "EPSG:4326")] : [];
@@ -316,7 +320,8 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
         return Rx.Observable.defer(() => getFeatureSimple(layer.search.url, {
             typeName: layer.name,
             featureID: featureId,
-            outputFormat: "application/json"
+            outputFormat: "application/json",
+            srsName: "EPSG:4326"
         }))
             .switchMap(({features}) => {
                 const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(features[0].geometry), "EPSG:4326")] : [];
@@ -630,6 +635,16 @@ export const toggleHighlightLayersGPTEpic = (action$, store) => action$
             visibility: showHighlightLayers
         }));
     });
+export const toggleHighlightLayersOnOpencloseGPTEpic = (action$, store) => action$
+    .ofType(TOGGLE_CONTROL)
+    .filter(action => action.control === GPT_CONTROL_NAME)
+    .switchMap(() => {
+        const showHighlightLayers = showHighlightLayersSelector(store.getState());
+        const isGPTEnabled = isGeoProcessingToolsEnabledSelector(store.getState());
+        return Rx.Observable.of(mergeOptionsByOwner("gpt", {
+            visibility: isGPTEnabled ? showHighlightLayers : false
+        }));
+    });
 /**
  * activate feature selection from map
  */
@@ -738,3 +753,4 @@ export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
             });
             return { ...action, source: GPT_CONTROL_NAME }; // add an argument to avoid infinite loop.
         });
+
