@@ -23,6 +23,8 @@ export const sourceLayerIdSelector = state => state?.geoProcessingTools?.source?
 export const sourceFeatureIdSelector = state => state?.geoProcessingTools?.source?.featureId;
 export const sourceFeatureSelector = state => state?.geoProcessingTools?.source?.feature;
 export const sourceFeaturesSelector = state => state?.geoProcessingTools?.source?.features || [];
+export const sourceTotalCountSelector = state => state?.geoProcessingTools?.source?.totalCount || 0;
+export const sourceCurrentPageSelector = state => state?.geoProcessingTools?.source?.currentPage || 0;
 export const isSourceLayerInvalidSelector = state => {
     const id = sourceLayerIdSelector(state);
     return !!state?.geoProcessingTools?.flags?.invalid?.[id];
@@ -32,6 +34,8 @@ export const intersectionLayerIdSelector = state => state?.geoProcessingTools?.i
 export const intersectionFeatureIdSelector = state => state?.geoProcessingTools?.intersection?.featureId;
 export const intersectionFeatureSelector = state => state?.geoProcessingTools?.intersection?.feature;
 export const intersectionFeaturesSelector = state => state?.geoProcessingTools?.intersection?.features || [];
+export const intersectionTotalCountSelector = state => state?.geoProcessingTools?.intersection?.totalCount || 0;
+export const intersectionCurrentPageSelector = state => state?.geoProcessingTools?.intersection?.currentPage || 0;
 export const intersectedLayersCounterSelector = state => state?.geoProcessingTools?.intersection?.counter ?? 0;
 export const firstAttributeToRetainSelector = state => state?.geoProcessingTools?.intersection?.firstAttributeToRetain;
 export const secondAttributeToRetainSelector = state => state?.geoProcessingTools?.intersection?.secondAttributeToRetain;
@@ -64,6 +68,7 @@ export const showHighlightLayersSelector = state => !!state?.geoProcessingTools?
 export const isListeningClickSelector = (state) => !!(get(mapSelector(state), 'eventListeners.click', []).find((el) => el === GPT_CONTROL_NAME));
 export const selectedLayerIdSelector = (state) => state?.geoProcessingTools?.selectedLayerId;
 export const selectedLayerTypeSelector = (state) => state?.geoProcessingTools?.selectedLayerType;
+export const maxFeaturesSelector = (state) => state?.geoProcessingTools?.maxFeatures || 10;
 export const wfsBackedLayersSelector = (state) => layersSelector(state)
     .filter(l => l.group !== "background")
     .filter(hasWFSService);

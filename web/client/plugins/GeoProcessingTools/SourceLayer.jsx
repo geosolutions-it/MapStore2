@@ -24,6 +24,7 @@ import {
     checkWPSAvailability,
     runBufferProcess,
     setSourceLayerId,
+    getFeatures,
     setSelectedLayerType,
     setSourceFeatureId
 } from '../../actions/geoProcessingTools';
@@ -34,6 +35,8 @@ import {
     sourceLayerIdSelector,
     sourceFeatureIdSelector,
     sourceFeaturesSelector,
+    sourceTotalCountSelector,
+    sourceCurrentPageSelector,
     isSourceLayerInvalidSelector,
     isSourceFeaturesLoadingSelector,
     selectedLayerTypeSelector,
@@ -41,6 +44,7 @@ import {
 } from '../../selectors/geoProcessingTools';
 
 const Addon = tooltip(InputGroup.Addon);
+
 const Source = ({
     areAllWPSAvailableForSourceLayer,
     checkingWPSAvailability,
@@ -50,8 +54,11 @@ const Source = ({
     sourceFeatureId,
     sourceLayerId,
     sourceFeatures,
+    sourceTotalCount,
+    sourceCurrentPage,
     selectedLayerType,
     isSourceFeaturesLoading,
+    onGetFeatures,
     onCheckWPSAvailability,
     onSetSourceFeatureId,
     onSetSourceLayerId,
@@ -107,14 +114,26 @@ const Source = ({
             </ControlLabel>
         </FormGroup>
         <FormGroup>
-            <InputGroup>
+            <InputGroup className="infinite-select-scroll">
                 <Select
                     disabled={runningProcess || isSourceLayerInvalid}
                     clearable
-                    value={sourceFeatureId}
                     noResultsText={<Message msgId="GeoProcessingTools.noMatchedFeature" />}
                     onChange={handleOnChangeSourceFeatureId}
-                    options={sourceFeatures.map(f => ({value: f.id, label: f.id }))} />
+                    options={sourceFeatures.map(f => ({value: f.id, label: f.id }))}
+                    value={sourceFeatureId}
+
+                    onOpen={() => {
+                        if (selectedLayerType !== "source" && sourceFeatures.length === 0 ) {
+                            onGetFeatures(sourceLayerId, "source", 0);
+                        }
+                    }}
+                    onMenuScrollToBottom={() => {
+                        if (sourceTotalCount > sourceFeatures.length) {
+                            onGetFeatures(sourceLayerId, "source", sourceCurrentPage + 1);
+                        }
+                    }}
+                />
                 <Addon
                     tooltipId={
                         !sourceFeatureId ? "GeoProcessingTools.tooltip.selectFeature" : areAllWPSAvailableForSourceLayer ? "GeoProcessingTools.tooltip.validFeature" : "GeoProcessingTools.tooltip.invalidFeature"}
@@ -151,6 +170,8 @@ Source.propTypes = {
     runningProcess: PropTypes.bool,
     sourceFeatureId: PropTypes.string,
     sourceFeatures: PropTypes.array,
+    sourceTotalCount: PropTypes.number,
+    sourceCurrentPage: PropTypes.number,
     isSourceFeaturesLoading: PropTypes.bool,
     isSourceLayerInvalid: PropTypes.bool,
     selectedLayerType: PropTypes.bool,
@@ -158,6 +179,7 @@ Source.propTypes = {
     onCheckWPSAvailability: PropTypes.func,
     onSetSourceLayerId: PropTypes.func,
     onSetSelectedLayerType: PropTypes.func,
+    onGetFeatures: PropTypes.func,
     onSetSourceFeatureId: PropTypes.func
 };
 
@@ -170,6 +192,8 @@ const SourceConnected = connect(
             sourceLayerIdSelector,
             sourceFeatureIdSelector,
             sourceFeaturesSelector,
+            sourceTotalCountSelector,
+            sourceCurrentPageSelector,
             isSourceFeaturesLoadingSelector,
             isSourceLayerInvalidSelector,
             checkingWPSAvailabilitySelector,
@@ -182,6 +206,8 @@ const SourceConnected = connect(
             sourceLayerId,
             sourceFeatureId,
             sourceFeatures,
+            sourceTotalCount,
+            sourceCurrentPage,
             isSourceFeaturesLoading,
             isSourceLayerInvalid,
             checkingWPSAvailability,
@@ -193,6 +219,8 @@ const SourceConnected = connect(
             sourceLayerId,
             sourceFeatureId,
             sourceFeatures,
+            sourceTotalCount,
+            sourceCurrentPage,
             isSourceFeaturesLoading,
             isSourceLayerInvalid,
             checkingWPSAvailability,
@@ -202,6 +230,7 @@ const SourceConnected = connect(
         onCheckWPSAvailability: checkWPSAvailability,
         onRunBufferProcess: runBufferProcess,
         onSetSourceLayerId: setSourceLayerId,
+        onGetFeatures: getFeatures,
         onSetSelectedLayerType: setSelectedLayerType,
         onSetSourceFeatureId: setSourceFeatureId
     })(Source);

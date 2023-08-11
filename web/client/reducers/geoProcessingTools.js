@@ -5,6 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+import find from "lodash/find";
 import {
     GPT_TOOL_BUFFER,
     GPT_TOOL_INTERSECTION,
@@ -173,7 +175,9 @@ function geoProcessingTools( state = {
             ...state,
             [action.source]: {
                 ...state[action.source],
-                features: action.data.features || []
+                features: (state[action.source].features || []).concat(action.data.features || []),
+                totalCount: action.data.totalFeatures,
+                currentPage: action.nextPage
             }
         } : {
             ...state,
@@ -247,6 +251,8 @@ function geoProcessingTools( state = {
                 ...state.source,
                 layerId: action.layerId,
                 features: action.layerId !== state.source?.layerId ? [] : state?.source?.features,
+                totalCount: action.layerId !== state.source?.layerId ? 0 : state?.source?.totalCount,
+                currentPage: action.layerId !== state.source?.layerId ? 0 : state?.source?.currentPage,
                 feature: action.layerId !== state.source?.layerId ? undefined : state?.source?.feature,
                 featureId: action.layerId !== state.source?.layerId ? "" : state?.source?.featureId
             }
@@ -257,7 +263,10 @@ function geoProcessingTools( state = {
             ...state,
             source: {
                 ...state.source,
-                featureId: action.featureId
+                featureId: action.featureId,
+                currentPage: action.featureId === "" ? 0 : state?.source?.currentPage,
+                features: action.featureId === "" ? [] : state?.source?.features,
+                feature: action.featureId === "" ? {} : state?.source?.feature
             }
         };
     }
@@ -266,7 +275,8 @@ function geoProcessingTools( state = {
             ...state,
             source: {
                 ...state.source,
-                feature: action.feature
+                feature: action.feature,
+                features: find(state.source.features, ft => ft.id === action.feature.id) ? state.source.features : [action.feature]
             },
             flags: {
                 ...state.flags,
@@ -282,6 +292,8 @@ function geoProcessingTools( state = {
                 ...state.intersection,
                 layerId: action.layerId,
                 features: action.layerId !== state.intersection?.layerId ? [] : state?.intersection?.features,
+                totalCount: action.layerId !== state.intersection?.layerId ? 0 : state?.intersection?.totalCount,
+                currentPage: action.layerId !== state.intersection?.layerId ? 0 : state?.intersection?.currentPage,
                 feature: action.layerId !== state.intersection?.layerId ? undefined : state?.intersection?.feature,
                 featureId: action.layerId !== state.intersection?.layerId ? "" : state?.intersection?.featureId
             }
@@ -292,7 +304,10 @@ function geoProcessingTools( state = {
             ...state,
             intersection: {
                 ...state.intersection,
-                featureId: action.featureId
+                featureId: action.featureId,
+                currentPage: action.featureId === "" ? 0 : state?.intersection?.currentPage,
+                features: action.featureId === "" ? [] : state?.intersection?.features,
+                feature: action.featureId === "" ? {} : state?.intersection?.feature
             }
         };
     }
@@ -301,7 +316,8 @@ function geoProcessingTools( state = {
             ...state,
             intersection: {
                 ...state.intersection,
-                feature: action.feature
+                feature: action.feature,
+                features: find(state.intersection.features, ft => ft.id === action.feature.id) ? state.intersection.features : [action.feature]
             },
             flags: {
                 ...state.flags,

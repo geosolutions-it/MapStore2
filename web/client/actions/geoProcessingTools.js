@@ -97,10 +97,11 @@ export const errorLoadingDFT = (layerId) => ({
  * @param {string} layerId the layer id
  * @param {string} source can be "source" or "intersection"
  */
-export const getFeatures = (layerId, source) => ({
+export const getFeatures = (layerId, source, page = 0) => ({
     type: GET_FEATURES,
     layerId,
-    source
+    source,
+    page
 });
 /**
  * action for initializing config of the plugin
@@ -191,11 +192,12 @@ export const setBufferCapStyle = (capStyle) => ({
  * @param {string} source can be "source" or "intersection"
  * @param {object[]|object} data list of features or error
  */
-export const setFeatures = (layerId, source, data) => ({
+export const setFeatures = (layerId, source, data, nextPage) => ({
     type: SET_FEATURES,
     layerId,
     source,
-    data
+    data,
+    nextPage
 });
 /**
  * action for the loading flag of the features

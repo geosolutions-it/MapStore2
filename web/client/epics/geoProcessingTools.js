@@ -85,6 +85,11 @@ import { describeProcess } from '../observables/wps/describe';
 import executeProcess from '../observables/wps/execute';
 import intersectXML from '../observables/wps/intersectionFeatureCollection';
 import {
+    sourceFeaturesSelector,
+    sourceTotalCountSelector,
+    intersectionTotalCountSelector,
+    intersectionFeaturesSelector,
+    maxFeaturesSelector,
     bufferedLayersCounterSelector,
     distanceSelector,
     distanceUomSelector,
@@ -162,7 +167,7 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
                     // we have the describe feature type available so we just fetch features
                     return Rx.Observable.from([
                         setWPSAvailability(layerId, true, source),
-                        getFeatures(layerId, source),
+                        getFeatures(layerId, source, 0),
                         checkingWPS(false)
                     ]);
                 }
@@ -184,7 +189,7 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
                                 if (act === "timeout" || act?.error) {
                                     return Rx.Observable.of(setInvalidLayer(layerId, source));
                                 }
-                                return Rx.Observable.of(getFeatures(layerId, source));
+                                return Rx.Observable.of(getFeatures(layerId, source, 0));
                             })
                     );
             })
@@ -202,17 +207,38 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
  */
 export const getFeaturesGPTEpic = (action$, store) => action$
     .ofType(GET_FEATURES)
-    .mergeMap(({layerId, source}) => {
+    .filter(({source}) => {
+        const state = store.getState();
+        let features;
+        let totalCount;
+        if (source === "source") {
+            totalCount = sourceTotalCountSelector(state);
+            features = sourceFeaturesSelector(state);
+        } else {
+            features = intersectionFeaturesSelector(state);
+            totalCount = intersectionTotalCountSelector(state);
+        }
+        return totalCount === 0 || totalCount > features.length;
+
+    })
+    .mergeMap(({
+        layerId,
+        source,
+        page
+    }) => {
         const state = store.getState();
         const setFeatureLoading = source === "source" ? setFeatureSourceLoading : setFeatureIntersectionLoading;
         const layer = getLayerFromIdSelector(state, layerId);
+        const maxFeatures = maxFeaturesSelector(state);
         const filterObj = null;
         if (isNil(layer.describeFeatureType)) {
             // throw error and notify user that a failure has happened
             return Rx.Observable.of(errorLoadingDFT(layerId));
         }
         const options = {
-            propertyName: findNonGeometryProperty(layer.describeFeatureType)[0].name
+            propertyName: findNonGeometryProperty(layer.describeFeatureType)[0].name,
+            startIndex: page * maxFeatures,
+            maxFeatures
         };
         return Rx.Observable.merge(
             getLayerJSONFeature({
@@ -223,9 +249,9 @@ export const getFeaturesGPTEpic = (action$, store) => action$
                     url: layer.url
                 }
             }, filterObj, options)
-                .map(data => setFeatures(layerId, source, data))
+                .map(data => setFeatures(layerId, source, data, page))
                 .catch(error => {
-                    return Rx.Observable.of(setFeatures(layerId, source, error));
+                    return Rx.Observable.of(setFeatures(layerId, source, error, page));
                 })
                 .startWith(setFeatureLoading(true))
                 .concat(Rx.Observable.of(setFeatureLoading(false))));

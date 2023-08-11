@@ -24,7 +24,8 @@ import {
     checkWPSAvailability,
     setIntersectionLayerId,
     setIntersectionFeatureId,
-    setSelectedLayerType
+    setSelectedLayerType,
+    getFeatures
 } from '../../actions/geoProcessingTools';
 import {
     areAllWPSAvailableForIntersectionLayerSelector,
@@ -34,6 +35,8 @@ import {
     intersectionLayerIdSelector,
     intersectionFeatureIdSelector,
     intersectionFeaturesSelector,
+    intersectionTotalCountSelector,
+    intersectionCurrentPageSelector,
     isIntersectionFeaturesLoadingSelector,
     selectedLayerTypeSelector,
     wfsBackedLayersSelector
@@ -51,6 +54,9 @@ const Intersection = ({
     isIntersectionFeaturesLoading,
     runningProcess,
     selectedLayerType,
+    intersectionCurrentPage,
+    intersectionTotalCount,
+    onGetFeatures,
     onCheckWPSAvailability,
     onSetIntersectionLayerId,
     onSetIntersectionFeatureId,
@@ -115,7 +121,18 @@ const Intersection = ({
                         value={intersectionFeatureId}
                         noResultsText={<Message msgId="GeoProcessingTools.noMatchedFeature" />}
                         onChange={handleOnChangeIntersectionFeatureId}
-                        options={intersectionFeatures.map(f => ({value: f.id, label: f.id }))} />
+                        options={intersectionFeatures.map(f => ({value: f.id, label: f.id }))}
+                        onOpen={() => {
+                            if (selectedLayerType !== "intersection" && intersectionFeatures.length === 0 ) {
+                                onGetFeatures(intersectionLayerId, "intersection", 0);
+                            }
+                        }}
+                        onMenuScrollToBottom={() => {
+                            if (intersectionTotalCount > intersectionFeatures.length) {
+                                onGetFeatures(intersectionLayerId, "intersection", intersectionCurrentPage + 1);
+                            }
+                        }}
+                    />
                     <Addon
                         tooltipId={
                             !intersectionFeatureId ? "GeoProcessingTools.tooltip.selectFeature" : areAllWPSAvailableForIntersectionLayer ? "GeoProcessingTools.tooltip.validFeature" : "GeoProcessingTools.tooltip.invalidFeature"}
@@ -152,6 +169,8 @@ Intersection.propTypes = {
     checkingWPSAvailabilityIntersection: PropTypes.bool,
     intersectionFeatureId: PropTypes.string,
     intersectionFeatures: PropTypes.array,
+    intersectionTotalCount: PropTypes.number,
+    intersectionCurrentPage: PropTypes.number,
     intersectionLayerId: PropTypes.string,
     isIntersectionFeaturesLoading: PropTypes.bool,
     layers: PropTypes.array,
@@ -161,6 +180,7 @@ Intersection.propTypes = {
     onCheckWPSAvailability: PropTypes.func,
     onSetIntersectionLayerId: PropTypes.func,
     onSetIntersectionFeatureId: PropTypes.func,
+    onGetFeatures: PropTypes.func,
     onSetSelectedLayerType: PropTypes.func
 };
 
@@ -177,6 +197,8 @@ const IntersectionConnected = connect(
             intersectionLayerIdSelector,
             intersectionFeatureIdSelector,
             intersectionFeaturesSelector,
+            intersectionTotalCountSelector,
+            intersectionCurrentPageSelector,
             runningProcessSelector,
             checkingWPSAvailabilityIntersectionSelector,
             isIntersectionLayerInvalidSelector,
@@ -189,6 +211,8 @@ const IntersectionConnected = connect(
             intersectionLayerId,
             intersectionFeatureId,
             intersectionFeatures,
+            intersectionTotalCount,
+            intersectionCurrentPage,
             runningProcess,
             checkingWPSAvailabilityIntersection,
             isIntersectionLayerInvalid,
@@ -200,6 +224,8 @@ const IntersectionConnected = connect(
             intersectionLayerId,
             intersectionFeatureId,
             intersectionFeatures,
+            intersectionTotalCount,
+            intersectionCurrentPage,
             runningProcess,
             checkingWPSAvailabilityIntersection,
             isIntersectionLayerInvalid,
@@ -209,6 +235,7 @@ const IntersectionConnected = connect(
         onCheckWPSAvailability: checkWPSAvailability,
         onSetIntersectionLayerId: setIntersectionLayerId,
         onSetIntersectionFeatureId: setIntersectionFeatureId,
+        onGetFeatures: getFeatures,
         onSetSelectedLayerType: setSelectedLayerType
     })(Intersection);
 

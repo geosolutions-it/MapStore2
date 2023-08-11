@@ -112,18 +112,47 @@ describe('Test Geo Processing Tools reducer', () => {
         const state = geoProcessingTools(undefined, action);
         expect(state.buffer.capStyle).toEqual(capStyle);
     });
-    it('SET_FEATURES', () => {
+    it('SET_FEATURES from empty state', () => {
         const layerId = "id";
         const source = "buffer";
-        const data = {features: [{
+        const data = {
+            features: [{
+                geometry: {
+                    type: "Feature",
+                    coordinates: [0, 0]
+                }
+            }]};
+        const action = setFeatures(layerId, source, data);
+        const state = geoProcessingTools(undefined, action);
+        expect(state.buffer.features).toEqual([{
             geometry: {
                 type: "Feature",
                 coordinates: [0, 0]
             }
-        }]};
-        const action = setFeatures(layerId, source, data);
-        const state = geoProcessingTools(undefined, action);
-        expect(state.buffer.features).toEqual([{
+        }]);
+    });
+    it('SET_FEATURES add extra from pagination', () => {
+        const layerId = "id";
+        const source = "source";
+        const data = {
+            features: [{
+                geometry: {
+                    type: "Feature",
+                    coordinates: [0, 0]
+                }
+            }],
+            totalFeatures: 20
+        };
+        const nextPage = 2;
+        const action = setFeatures(layerId, source, data, nextPage);
+        const state = geoProcessingTools({
+            source: {
+                features: [{id: 1}]
+            }
+        }, action);
+        expect(state.source.totalCount).toEqual(20);
+        expect(state.source.currentPage).toEqual(nextPage);
+        expect(state.source.features).toEqual([{id: 1}, {
             geometry: {
                 type: "Feature",
                 coordinates: [0, 0]
@@ -214,6 +243,7 @@ describe('Test Geo Processing Tools reducer', () => {
         expect(state.selectedLayerId).toEqual("layerId");
         expect(state.source.layerId).toEqual("layerId");
         expect(state.source.features).toEqual([]);
+        expect(state.source.features).toEqual([]);
         expect(state.source.feature).toEqual(undefined);
         expect(state.source.featureId).toEqual("");
     });
@@ -223,15 +253,40 @@ describe('Test Geo Processing Tools reducer', () => {
         const state = geoProcessingTools({}, action);
         expect(state.source.featureId).toEqual(featureId);
     });
+    it('SET_SOURCE_FEATURE_ID clean up', () => {
+        const action = setSourceFeatureId("");
+        const state = geoProcessingTools({
+            source: {
+                totalCount: 40,
+                features: [{type: "Feature"}],
+                feature: {type: "Feature"},
+                featureId: "ft"
+            }
+        }, action);
+        expect(state.source).toEqual(
+            {
+                totalCount: 40,
+                features: [],
+                currentPage: 0,
+                feature: {},
+                featureId: ""
+            }
+        );
+    });
     it('SET_SOURCE_FEATURE', () => {
         const feature = {geometry: {type: "Point"}};
         const action = setSourceFeature(feature);
         const state = geoProcessingTools({
+            source: {
+                features: []
+            },
             intersection: {
-                feature: {geometry: {type: "Polygon"}}
+                feature: {geometry: {type: "Polygon"}},
+                features: []
             }
         }, action);
         expect(state.source.feature).toEqual(feature);
+        expect(state.source.features).toEqual([feature]);
         expect(state.flags.isIntersectionEnabled).toEqual(true);
     });
     it('SET_INTERSECTION_LAYER_ID', () => {
@@ -264,11 +319,35 @@ describe('Test Geo Processing Tools reducer', () => {
         const state = geoProcessingTools({}, action);
         expect(state.intersection.featureId).toEqual(featureId);
     });
+    it('SET_INTERSECTION_FEATURE_ID clean up', () => {
+        const action = setIntersectionFeatureId("");
+        const state = geoProcessingTools({
+            intersection: {
+                totalCount: 40,
+                features: [{type: "Feature"}],
+                feature: {type: "Feature"},
+                featureId: "ft"
+            }
+        }, action);
+        expect(state.intersection).toEqual(
+            {
+                totalCount: 40,
+                features: [],
+                currentPage: 0,
+                feature: {},
+                featureId: ""
+            }
+        );
+    });
     it('SET_INTERSECTION_FEATURE', () => {
         const feature = {geometry: {type: "Point"}};
         const action = setIntersectionFeature(feature);
         const state = geoProcessingTools({
+            intersection: {
+                features: []
+            },
             source: {
+                features: [],
                 feature: {geometry: {type: "Polygon"}}
             }
         }, action);

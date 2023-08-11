@@ -18,11 +18,15 @@ import {
     sourceFeatureIdSelector,
     sourceFeatureSelector,
     sourceFeaturesSelector,
+    sourceTotalCountSelector,
+    sourceCurrentPageSelector,
     isSourceLayerInvalidSelector,
     intersectionLayerIdSelector,
     intersectionFeatureIdSelector,
     intersectionFeatureSelector,
     intersectionFeaturesSelector,
+    intersectionTotalCountSelector,
+    intersectionCurrentPageSelector,
     intersectedLayersCounterSelector,
     firstAttributeToRetainSelector,
     secondAttributeToRetainSelector,
@@ -43,7 +47,8 @@ import {
     isListeningClickSelector,
     selectedLayerIdSelector,
     selectedLayerTypeSelector,
-    wfsBackedLayersSelector
+    wfsBackedLayersSelector,
+    maxFeaturesSelector
 } from '../geoProcessingTools';
 import {
     GPT_CONTROL_NAME
@@ -133,6 +138,22 @@ describe('Test Geo Processing Tools selectors', () => {
             type: "Feature"
         }]);
     });
+    it('sourceTotalCountSelector', () => {
+        const geoProcessingTools = {
+            source: {
+                totalCount: 5
+            }
+        };
+        expect(sourceTotalCountSelector({geoProcessingTools})).toEqual(5);
+    });
+    it('sourceCurrentPageSelector', () => {
+        const geoProcessingTools = {
+            source: {
+                currentPage: 6
+            }
+        };
+        expect(sourceCurrentPageSelector({geoProcessingTools})).toEqual(6);
+    });
     it('isSourceLayerInvalidSelector', () => {
         const layerId = "layerId";
         const geoProcessingTools = {
@@ -184,6 +205,22 @@ describe('Test Geo Processing Tools selectors', () => {
         expect(intersectionFeaturesSelector({geoProcessingTools})).toEqual([{
             type: "Feature"
         }]);
+    });
+    it('intersectionTotalCountSelector', () => {
+        const geoProcessingTools = {
+            intersection: {
+                totalCount: 2
+            }
+        };
+        expect(intersectionTotalCountSelector({geoProcessingTools})).toEqual(2);
+    });
+    it('intersectionCurrentPageSelector', () => {
+        const geoProcessingTools = {
+            intersection: {
+                currentPage: 5
+            }
+        };
+        expect(intersectionCurrentPageSelector({geoProcessingTools})).toEqual(5);
     });
     it('intersectedLayersCounterSelector', () => {
         const geoProcessingTools = {
@@ -354,6 +391,12 @@ describe('Test Geo Processing Tools selectors', () => {
             selectedLayerType: "source"
         };
         expect(selectedLayerTypeSelector({geoProcessingTools})).toEqual("source");
+    });
+    it('maxFeaturesSelector', () => {
+        const geoProcessingTools = {
+            maxFeatures: 10
+        };
+        expect(maxFeaturesSelector({geoProcessingTools})).toEqual(10);
     });
     it('test wfsBackedLayersSelector', () => {
         let layers = wfsBackedLayersSelector({});

@@ -83,11 +83,13 @@ describe('Test Geo Processing Tools related actions', () => {
     it('getFeatures', () => {
         const layerId = "id";
         const source = "id";
-        const action = getFeatures(layerId, source);
+        const page = 1;
+        const action = getFeatures(layerId, source, page);
         expect(action).toEqual({
             type: GET_FEATURES,
             layerId,
-            source
+            source,
+            page
         });
     });
     it('initPlugin', () => {
@@ -166,12 +168,15 @@ describe('Test Geo Processing Tools related actions', () => {
         const layerId = "";
         const source = "";
         const data = {};
-        const action = setFeatures(layerId, source, data);
+        const nextPage = 2;
+
+        const action = setFeatures(layerId, source, data, nextPage);
         expect(action).toEqual({
             type: SET_FEATURES,
             layerId,
             source,
-            data
+            data,
+            nextPage
         });
     });
     it('setFeatureSourceLoading', () => {
