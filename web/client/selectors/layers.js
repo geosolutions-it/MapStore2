@@ -22,7 +22,6 @@ import { mergeViewLayers } from '../utils/MapViewsUtils';
 import { currentLocaleSelector } from "../selectors/locale";
 
 export const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
-
 export const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 export const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 export const getLayerFromName = (state, name) => head(layersSelector(state).filter(l => l.name === name));
