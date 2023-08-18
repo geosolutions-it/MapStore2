@@ -11,7 +11,6 @@ import print from '../print';
 
 import {
     SET_PRINT_PARAMETER,
-    ADD_PRINT_TRANSFORMER,
     PRINT_CAPABILITIES_LOADED,
     PRINT_CAPABILITIES_ERROR,
     CONFIGURE_PRINT_MAP,
@@ -22,10 +21,6 @@ import {
     PRINT_ERROR,
     PRINT_CANCEL
 } from '../../actions/print';
-
-import {
-    getSpecTransformerChain
-} from '../../utils/PrintUtils';
 
 describe('Test the print reducer', () => {
     it('set a printing parameter', () => {
@@ -44,30 +39,6 @@ describe('Test the print reducer', () => {
             value: 'val'
         });
         expect(state.spec.path.param).toBe('val');
-    });
-
-    it('set a printing transformer', () => {
-        print({spec: {}}, {
-            type: ADD_PRINT_TRANSFORMER,
-            name: 'transformer_mock',
-            transformer: () => "mycustom_transformer"
-        });
-        const chain = getSpecTransformerChain();
-        expect(chain.length).toBe(5);
-        expect(chain[4].name).toBe("transformer_mock");
-        expect(chain[4].transformer()).toBe("mycustom_transformer");
-    });
-
-    it('set a printing transformer with position', () => {
-        print({spec: {}}, {
-            type: ADD_PRINT_TRANSFORMER,
-            name: 'transformer_mock',
-            transformer: () => "mycustom_transformer",
-            position: 1.5
-        });
-        const chain = getSpecTransformerChain();
-        expect(chain.length).toBe(5);
-        expect(chain[2].name).toBe("transformer_mock");
     });
 
     it('load capabilities', () => {

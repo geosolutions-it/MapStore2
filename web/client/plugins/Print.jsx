@@ -22,6 +22,7 @@ import { configurePrintMap, printError, printSubmit, printSubmitting, addPrintPa
 import Message from '../components/I18N/Message';
 import Dialog from '../components/misc/Dialog';
 import printReducers from '../reducers/print';
+import printEpics from '../epics/print';
 import { printSpecificationSelector } from "../selectors/print";
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
@@ -692,5 +693,6 @@ export default {
             priority: 2
         }
     }),
-    reducers: {print: printReducers}
+    reducers: {print: printReducers},
+    epics: {...printEpics}
 };

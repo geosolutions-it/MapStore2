@@ -9,7 +9,6 @@
 import {
     SET_PRINT_PARAMETER,
     ADD_PRINT_PARAMETER,
-    ADD_PRINT_TRANSFORMER,
     PRINT_CAPABILITIES_LOADED,
     PRINT_CAPABILITIES_ERROR,
     CONFIGURE_PRINT_MAP,
@@ -21,7 +20,6 @@ import {
     PRINT_CANCEL
 } from '../actions/print';
 
-import { addTransformer } from '../utils/PrintUtils';
 import { TOGGLE_CONTROL } from '../actions/controls';
 import { isObject, get } from 'lodash';
 import assign from 'object-assign';
@@ -77,10 +75,6 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         if (!exists) {
             return {...state, spec: set({...state.spec}, action.name, action.value)};
         }
-        return state;
-    }
-    case ADD_PRINT_TRANSFORMER: {
-        addTransformer(action.name, action.transformer, action.position);
         return state;
     }
     case CONFIGURE_PRINT_MAP: {
