@@ -10,6 +10,9 @@ MapStore uses an H2 in-memory DB as the default DBMS to persist the data. This c
 
 In the following guide you will learn how to configure MapStore to use an external database.
 
+!!! note
+    Database recommendations are reported in the [Requirements page](requirements.md#database).
+
 ## Externalize properties files
 
 MapStore has a file called `geostore-datasource-ovr.properties`. This file is on the repository in the folder `java/web/src/main/resources`, in the final `mapstore.war` package it will be copied into `WEB-INF/classes` path. It contains the set-up for the database connection. Anyway if you edit the file in `WEB-INF/classes` this file will be overridden on the next re-deploy. To preserve your configuration on every deploy you can use an environment variable, `geostore-ovr`, to configure the path to an override file in a different, external directory. In this file the user can re-define the default configuration and so set-up the database configuration.
