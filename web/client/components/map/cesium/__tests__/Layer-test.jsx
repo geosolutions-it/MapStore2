@@ -1262,7 +1262,8 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.getTileSet).toBeFalsy();
+        expect(cmp.layer.getTileSet).toBeTruthy();
+        expect(cmp.layer.getTileSet()).toBe(undefined);
     });
     it('should create a 3d tiles layer with and offset applied to the height', (done) => {
         const options = {

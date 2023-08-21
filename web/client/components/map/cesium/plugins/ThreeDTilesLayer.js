@@ -161,6 +161,7 @@ Layers.registerType('3dtiles', {
         }
         return {
             detached: true,
+            getTileSet: () => undefined,
             remove: () => {},
             setVisible: () => {}
         };
