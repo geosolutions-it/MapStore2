@@ -20,12 +20,17 @@ import {
     resetSourceHighlightGPTEpic,
     resetIntersectHighlightGPTEpic,
     runIntersectProcessGPTEpic,
+    toggleHighlightLayersOnOpenCloseGPTEpic,
     toggleHighlightLayersGPTEpic,
     disableIdentifyGPTEpic,
     clickToSelectFeatureGPTEpic,
-    LPlongitudinalMapLayoutGPTEpic
+    showIntersectionFeatureGPTEpic,
+    LPlongitudinalMapLayoutGPTEpic,
+    hideIntersectionFeatureGPTEpic
 } from '../geoProcessingTools';
 import {
+    GPT_TOOL_BUFFER,
+    GPT_TOOL_INTERSECTION,
     GPT_CONTROL_NAME,
     SET_FEATURES,
     checkWPSAvailability,
@@ -34,6 +39,7 @@ import {
     errorLoadingDFT,
     getFeatures,
     increaseBufferedCounter,
+    setSelectedTool,
     increaseIntersectedCounter,
     setFeatureSourceLoading,
     setFeatureIntersectionLoading,
@@ -64,6 +70,9 @@ import {
 import {
     updateMapLayout
 } from '../../actions/maplayout';
+import {
+    toggleControl
+} from '../../actions/controls';
 import {
     registerEventListener,
     zoomToExtent,
@@ -757,6 +766,164 @@ describe('geoProcessingTools epics', () => {
             controls: {
                 GeoProcessingTools: {
                     enabled: true
+                }
+            }
+        });
+    });
+    it('hideIntersectionFeatureGPTEpic', (done) => {
+        const NUM_ACTIONS = 1;
+        const startActions = [setSelectedTool(GPT_TOOL_BUFFER)];
+        testEpic(hideIntersectionFeatureGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1
+            ] = actions;
+            expect(action1.type).toEqual(updateAdditionalLayer().type);
+            expect(action1.options.visibility).toEqual(false);
+            done();
+        }, {
+            additionallayers: [{
+                id: "gpt-layer-intersection",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: true
+                }
+            }
+            ],
+            controls: {
+                GeoProcessingTools: {
+                    enabled: true,
+                    showHighlight: true
+                }
+            }
+        });
+    });
+    it('toggleHighlightLayersOnOpenCloseGPTEpic closing tool', (done) => {
+        const NUM_ACTIONS = 1;
+        const startActions = [toggleControl(GPT_CONTROL_NAME)];
+        testEpic(toggleHighlightLayersOnOpenCloseGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1
+            ] = actions;
+            expect(action1.type).toEqual(mergeOptionsByOwner().type);
+            expect(action1.options.visibility).toEqual(false);
+            done();
+        }, {
+            additionallayers: [{
+                id: "gpt-layer-intersection",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: true
+                }
+            }
+            ],
+            controls: {
+                GeoProcessingTools: {
+                    enabled: false
+                }
+            },
+            geoProcessingTools: {
+                flags: {
+                    showHighlightLayers: true
+                }
+            }
+        });
+    });
+    it('toggleHighlightLayersOnOpenCloseGPTEpic closing tool', (done) => {
+        const NUM_ACTIONS = 1;
+        const startActions = [toggleControl(GPT_CONTROL_NAME)];
+        testEpic(toggleHighlightLayersOnOpenCloseGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1
+            ] = actions;
+            expect(action1.type).toEqual(updateAdditionalLayer().type);
+            expect(action1.options.visibility).toEqual(true);
+            done();
+        }, {
+            additionallayers: [{
+                id: "gpt-layer-intersection",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: false
+                }
+            }, {
+                id: "gpt-layer",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: true
+                }
+            }],
+            controls: {
+                GeoProcessingTools: {
+                    enabled: true
+                }
+            },
+            geoProcessingTools: {
+                selectedTool: GPT_TOOL_BUFFER,
+                flags: {
+                    showHighlightLayers: true
+                }
+            }
+        });
+    });
+    it('showIntersectionFeatureGPTEpic not active', (done) => {
+        const NUM_ACTIONS = 1;
+        const startActions = [setSelectedTool(GPT_TOOL_INTERSECTION)];
+        testEpic(showIntersectionFeatureGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1
+            ] = actions;
+            expect(action1.type).toEqual(updateAdditionalLayer().type);
+            expect(action1.options.visibility).toEqual(false);
+            done();
+        }, {
+            additionallayers: [{
+                id: "gpt-layer-intersection",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: true
+                }
+            }
+            ],
+            geoProcessingTools: {
+                flags: {
+                    showHighlightLayers: false
+                }
+            }
+        });
+    });
+    it('showIntersectionFeatureGPTEpic active', (done) => {
+        const NUM_ACTIONS = 1;
+        const startActions = [setSelectedTool(GPT_TOOL_INTERSECTION)];
+        testEpic(showIntersectionFeatureGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1
+            ] = actions;
+            expect(action1.type).toEqual(updateAdditionalLayer().type);
+            expect(action1.options.visibility).toEqual(true);
+            done();
+        }, {
+            additionallayers: [{
+                id: "gpt-layer-intersection",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: true
+                }
+            }
+            ],
+            geoProcessingTools: {
+                flags: {
+                    showHighlightLayers: true
                 }
             }
         });

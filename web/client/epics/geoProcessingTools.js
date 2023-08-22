@@ -34,6 +34,9 @@ import {
     TOGGLE_CONTROL
 } from "../actions/controls";
 import {
+    GPT_TOOL_BUFFER,
+    GPT_TOOL_INTERSECTION,
+    SET_SELECTED_TOOL,
     GPT_CONTROL_NAME,
     CHECK_WPS_AVAILABILITY,
     checkingIntersectionWPSAvailability,
@@ -88,6 +91,7 @@ import { describeProcess } from '../observables/wps/describe';
 import executeProcess from '../observables/wps/execute';
 import intersectXML from '../observables/wps/intersectionFeatureCollection';
 import {
+    selectedToolSelector,
     sourceFeaturesSelector,
     sourceTotalCountSelector,
     intersectionTotalCountSelector,
@@ -109,6 +113,7 @@ import {
     showHighlightLayersSelector
 } from '../selectors/geoProcessingTools';
 import {getLayerFromId as getLayerFromIdSelector, groupsSelector} from '../selectors/layers';
+import {additionalLayersSelector} from '../selectors/additionallayers';
 import {isGeoProcessingToolsEnabledSelector} from '../selectors/controls';
 import {mapSelector} from '../selectors/map';
 import {highlightStyleSelector, applyMapInfoStyle, mapInfoEnabledSelector} from '../selectors/mapInfo';
@@ -635,12 +640,30 @@ export const toggleHighlightLayersGPTEpic = (action$, store) => action$
             visibility: showHighlightLayers
         }));
     });
-export const toggleHighlightLayersOnOpencloseGPTEpic = (action$, store) => action$
+export const toggleHighlightLayersOnOpenCloseGPTEpic = (action$, store) => action$
     .ofType(TOGGLE_CONTROL)
     .filter(action => action.control === GPT_CONTROL_NAME)
     .switchMap(() => {
-        const showHighlightLayers = showHighlightLayersSelector(store.getState());
-        const isGPTEnabled = isGeoProcessingToolsEnabledSelector(store.getState());
+        const state = store.getState();
+        const showHighlightLayers = showHighlightLayersSelector(state);
+        const isGPTEnabled = isGeoProcessingToolsEnabledSelector(state);
+        const selectedTool = selectedToolSelector(state);
+        if (selectedTool === GPT_TOOL_BUFFER) {
+            const additionalLayers = additionalLayersSelector(state);
+            const bufferLayer = find(additionalLayers, ({id}) => id === "gpt-layer" );
+            return Rx.Observable.of(
+                updateAdditionalLayer(
+                    bufferLayer.id,
+                    bufferLayer.owner,
+                    bufferLayer.actionType,
+                    {
+                        ...bufferLayer.options,
+                        visibility: isGPTEnabled ? showHighlightLayers : false
+                    }
+                )
+            );
+        }
+        // INTERSECTION enabled any
         return Rx.Observable.of(mergeOptionsByOwner("gpt", {
             visibility: isGPTEnabled ? showHighlightLayers : false
         }));
@@ -754,3 +777,51 @@ export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
             return { ...action, source: GPT_CONTROL_NAME }; // add an argument to avoid infinite loop.
         });
 
+
+/**
+ * hide intersection Feature when switching to Buffer
+ */
+export const hideIntersectionFeatureGPTEpic = (action$, {getState = () => {}}) =>
+    action$.ofType(SET_SELECTED_TOOL)
+        .filter(({tool}) => tool === GPT_TOOL_BUFFER)
+        .switchMap(() => {
+            const state = getState();
+            const additionalLayers = additionalLayersSelector(state);
+            const intersectLayer = find(additionalLayers, ({id}) => id === "gpt-layer-intersection" );
+            return Rx.Observable.of(
+                updateAdditionalLayer(
+                    intersectLayer.id,
+                    intersectLayer.owner,
+                    intersectLayer.actionType,
+                    {
+                        ...intersectLayer.options,
+                        visibility: false
+                    }
+                )
+            );
+        });
+
+
+/**
+ * hide intersection Feature when switching to Buffer
+ */
+export const showIntersectionFeatureGPTEpic = (action$, {getState = () => {}}) =>
+    action$.ofType(SET_SELECTED_TOOL)
+        .filter(({tool}) => tool === GPT_TOOL_INTERSECTION)
+        .switchMap(() => {
+            const state = getState();
+            const showHighlightLayers = showHighlightLayersSelector(state);
+            const additionalLayers = additionalLayersSelector(state);
+            const intersectLayer = find(additionalLayers, ({id}) => id === "gpt-layer-intersection" );
+            return Rx.Observable.of(
+                updateAdditionalLayer(
+                    intersectLayer.id,
+                    intersectLayer.owner,
+                    intersectLayer.actionType,
+                    {
+                        ...intersectLayer.options,
+                        visibility: showHighlightLayers
+                    }
+                )
+            );
+        });
