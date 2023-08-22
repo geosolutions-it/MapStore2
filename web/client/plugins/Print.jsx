@@ -392,9 +392,10 @@ export default {
                     };
                     getPreviewResolution = (zoom, projection) => {
                         const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
+                        const roundZoom = Math.round(zoom);
                         const scale = this.props.useFixedScales
-                            ? getPrintScales(this.props.capabilities)[zoom]
-                            : this.props.scales[zoom];
+                            ? getPrintScales(this.props.capabilities)[roundZoom]
+                            : this.props.scales[roundZoom];
                         return scale / dpu;
                     };
                     getLayout = (props) => {
