@@ -34,6 +34,8 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import tinycolor from 'tinycolor2';
+import axios from 'axios';
+import isNil from 'lodash/isNil';
 
 export const isGeoStylerBooleanFunction = (got) => [
     'between',
@@ -542,6 +544,11 @@ const paintCross = (ctx, cx, cy, r, p) => {
  * @returns {object} { width, height, canvas }
  */
 export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
+    const id = getImageIdFromSymbolizer(symbolizer);
+    if (imagesCache[id]) {
+        const { image, ...other } = imagesCache[id];
+        return { ...other, canvas: image };
+    }
     const hasStroke = !!symbolizer?.strokeWidth
         && !!symbolizer?.strokeOpacity;
     const hasFill = !!symbolizer?.fillOpacity
@@ -686,6 +693,60 @@ export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
     return { width, height, canvas};
 };
 
+const svgUrlToCanvas = (svgUrl, options) => {
+    return new Promise((resolve, reject) => {
+        axios.get(svgUrl, { 'Content-Type': "image/svg+xml;charset=utf-8" })
+            .then((response) => {
+                const DOMURL = window.URL || window.webkitURL || window;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(response.data, 'image/svg+xml'); // create a dom element
+                const svg = doc.firstElementChild; // fetch svg element
+
+                const size = options.size || 32;
+                const strokeWidth = options.strokeWidth ?? 1;
+                const width = size + strokeWidth;
+                const height = size + strokeWidth;
+                // override attributes to the first svg tag
+                svg.setAttribute("fill", options.fillColor || "#FFCC33");
+                svg.setAttribute("fill-opacity", !isNil(options.fillOpacity) ? options.fillOpacity : 0.2);
+                svg.setAttribute("stroke", options.strokeColor || "#FFCC33");
+                svg.setAttribute("stroke-opacity", !isNil(options.strokeOpacity) ? options.strokeOpacity : 1);
+                svg.setAttribute("stroke-width", strokeWidth);
+                svg.setAttribute("width", width);
+                svg.setAttribute("height", height);
+                svg.setAttribute("stroke-dasharray", options.strokeDashArray || "none");
+
+                const element = document.createElement("div");
+                element.appendChild(svg);
+
+                const svgBlob = new Blob([element.innerHTML], { type: "image/svg+xml;charset=utf-8" });
+                const symbolUrlCustomized = DOMURL.createObjectURL(svgBlob);
+                const icon = new Image();
+                icon.onload = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(icon, (canvas.width / 2) - (icon.width / 2), (canvas.height / 2) - (icon.height / 2));
+                        resolve({
+                            width,
+                            height,
+                            canvas
+                        });
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
+                icon.onerror = (e) => { reject(e); };
+                icon.src = symbolUrlCustomized;
+            })
+            .catch((e) => {
+                reject(e);
+            });
+    });
+};
+
 /**
  * prefetch images of a mark symbolizer
  * @param {object} symbolizer mark symbolizer
@@ -700,9 +761,27 @@ export const getWellKnownNameImageFromSymbolizer = (symbolizer) => {
         if (!document?.createElement) {
             reject(id);
         }
-        const { width, height, canvas} = drawWellKnownNameImageFromSymbolizer(symbolizer);
-        imagesCache[id] = { id, image: canvas, src: canvas.toDataURL(), width, height };
-        resolve(imagesCache[id]);
+        if (symbolizer?.wellKnownName?.includes('.svg')) {
+            svgUrlToCanvas(symbolizer.wellKnownName, {
+                fillColor: symbolizer.color,
+                fillOpacity: symbolizer.fillOpacity,
+                strokeColor: symbolizer.strokeColor,
+                strokeOpacity: symbolizer.strokeOpacity,
+                strokeWidth: symbolizer.strokeWidth,
+                size: symbolizer.radius * 2
+            })
+                .then(({ width, height, canvas }) => {
+                    imagesCache[id] = { id, image: canvas, src: canvas.toDataURL(), width, height };
+                    resolve(imagesCache[id]);
+                })
+                .catch(() => {
+                    reject(id);
+                });
+        } else {
+            const { width, height, canvas} = drawWellKnownNameImageFromSymbolizer(symbolizer);
+            imagesCache[id] = { id, image: canvas, src: canvas.toDataURL(), width, height };
+            resolve(imagesCache[id]);
+        }
     });
 };
 

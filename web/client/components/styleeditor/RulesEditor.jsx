@@ -92,7 +92,8 @@ const RulesEditor = forwardRef(({
         getColors,
         classification,
         format,
-        simple
+        simple,
+        svgSymbolsPath
     } = config;
 
     // needed for slider
@@ -384,7 +385,8 @@ const RulesEditor = forwardRef(({
                                                 config={{
                                                     bands,
                                                     attributes,
-                                                    fonts
+                                                    fonts,
+                                                    svgSymbolsPath
                                                 }}
                                                 onChange={(values) => handleChanges({ values, ruleId, symbolizerId })}
                                             />

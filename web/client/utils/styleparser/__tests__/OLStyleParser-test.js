@@ -188,12 +188,9 @@ describe('OLStyleParser', () => {
                 .then((parsed) => {
                     const olStyle = parsed()();
                     const image = olStyle[0].getImage();
-                    const imageFill = image.getFill();
-                    expect(imageFill.getColor()).toBe('rgba(255, 0, 0, 0.5)');
-                    const imageStroke = image.getStroke();
-                    expect(imageStroke.getColor()).toBe('rgba(0, 255, 0, 0.25)');
-                    expect(imageStroke.getWidth()).toBe(3);
-                    expect(image.getRadius()).toBe(16);
+                    expect(image.getSrc()).toBeTruthy();
+                    expect(image.getScale()).toBe(1);
+                    expect(Math.round(image.getRotation() * 180 / Math.PI)).toBe(90);
                     done();
                 })
                 .catch(done);
