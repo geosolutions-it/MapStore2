@@ -595,6 +595,55 @@ const getBlocks = ({
                 opacity: 1,
                 contrastEnhancement: {}
             }
+        },
+        Circle: {
+            kind: 'Circle',
+            glyph: '1-circle',
+            glyphAdd: '1-circle-add',
+            tooltipAddId: 'styleeditor.addCircleRule',
+            supportedTypes: [],
+            params: {
+                color: property.color({
+                    key: 'color',
+                    opacityKey: 'opacity',
+                    label: 'styleeditor.color'
+                }),
+                outlineColor: property.color({
+                    key: 'outlineColor',
+                    opacityKey: 'outlineOpacity',
+                    label: 'styleeditor.outlineColor',
+                    stroke: true
+                }),
+                outlineWidth: property.width({
+                    key: 'outlineWidth',
+                    label: 'styleeditor.outlineWidth'
+                }),
+                radius: property.number({
+                    key: 'radius',
+                    label: 'styleeditor.radius',
+                    uom: 'm',
+                    fallbackValue: 0,
+                    maxWidth: 125
+                }),
+                geodesic: property.bool({
+                    key: 'geodesic',
+                    label: 'styleeditor.geodesic'
+                }),
+                ...(!shouldHideVectorStyleOptions && vector3dStyleOptions({
+                    label: 'styleeditor.clampOutlineToGround',
+                    isDisabled: () => !enable3dStyleOptions
+                })),
+                ...(!shouldHideVectorStyleOptions && polygon3dStyleOptions({
+                    isDisabled: (value, properties) => !properties?.msClampToGround || !enable3dStyleOptions
+                }))
+            },
+            defaultProperties: {
+                kind: 'Circle',
+                color: '#dddddd',
+                opacity: 1,
+                outlineColor: '#777777',
+                outlineWidth: 1
+            }
         }
     };
 

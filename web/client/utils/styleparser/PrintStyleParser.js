@@ -12,9 +12,11 @@ import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
     drawWellKnownNameImageFromSymbolizer,
-    drawIcons
+    drawIcons,
+    parseSymbolizerFunctions
 } from './StyleParserUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
+import { circleToPolygon } from '../DrawGeometryUtils';
 
 const getGeometryFunction = geometryFunctionsLibrary.geojson();
 
@@ -94,6 +96,15 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
             fillOpacity: symbolizer.fillOpacity * globalOpacity
         };
     }
+    if (symbolizer.kind === 'Circle') {
+        return {
+            strokeColor: symbolizer.outlineColor,
+            strokeOpacity: (symbolizer.outlineOpacity ?? 0) * globalOpacity,
+            strokeWidth: symbolizer.outlineWidth ?? 0,
+            fillColor: symbolizer.color,
+            fillOpacity: symbolizer.opacity * globalOpacity
+        };
+    }
     return {
         display: 'none'
     };
@@ -101,7 +112,8 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
 
 export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
     return ({
-        layer
+        layer,
+        spec
     }) => {
         if (!layer?.features) {
             return [];
@@ -123,18 +135,25 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
                         symbolizer.kind === 'Fill' && ['Polygon'].includes(geometryType)
                     );
 
+                    const circleGeometrySymbolizers = symbolizers.filter((symbolizer) =>
+                        symbolizer.kind === 'Circle' && ['Point'].includes(geometryType)
+                    );
+
                     const additionalPointSymbolizers = symbolizers.filter((symbolizer, idx) =>
                         ['Mark', 'Icon', 'Text', 'Model'].includes(symbolizer.kind)
                         && (
                             ['Polygon'].includes(geometryType)
                             || ['LineString'].includes(geometryType)
-                            || ['Point'].includes(geometryType) && idx < pointGeometrySymbolizers.length - 1
+                            || ['Point'].includes(geometryType) && (circleGeometrySymbolizers.length === 0
+                                ? idx < pointGeometrySymbolizers.length - 1
+                                : true)
                         )
                     );
 
-                    const symbolizer = pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
+                    const symbolizer = parseSymbolizerFunctions(circleGeometrySymbolizers[circleGeometrySymbolizers.length - 1]
+                        || pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
                         || polylineGeometrySymbolizers[polylineGeometrySymbolizers.length - 1]
-                        || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1];
+                        || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1], feature);
 
                     let geometry = feature.geometry;
                     const geometryFunction = getGeometryFunction(symbolizer);
@@ -143,6 +162,11 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
                             type: 'LineString',
                             coordinates: geometryFunction(feature)
                         };
+                    }
+                    if (geometryType === 'Point' && circleGeometrySymbolizers.length) {
+                        geometry = circleToPolygon(feature.geometry.coordinates, symbolizer.radius, symbolizer.geodesic, {
+                            projection: spec.projection
+                        });
                     }
 
                     return [
@@ -154,7 +178,8 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
                                 ms_style: symbolizerToPrintMSStyle(symbolizer, feature, layer)
                             }
                         },
-                        ...additionalPointSymbolizers.map((additionalSymbolizer) => {
+                        ...additionalPointSymbolizers.map((_additionalSymbolizer) => {
+                            const additionalSymbolizer = parseSymbolizerFunctions(_additionalSymbolizer, feature);
                             const geomFunction = getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...additionalSymbolizer});
                             if (geomFunction) {
                                 const coordinates = geomFunction(feature);

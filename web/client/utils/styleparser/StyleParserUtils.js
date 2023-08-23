@@ -729,3 +729,12 @@ export const drawIcons = (geoStylerStyle) => {
         }
     });
 };
+
+export const parseSymbolizerFunctions = (symbolizer, feature) => {
+    return Object.keys(symbolizer).reduce((acc, key) => ({
+        ...acc,
+        [key]: isGeoStylerFunction(symbolizer[key])
+            ? expressionsUtils.evaluateFunction(symbolizer[key], feature)
+            : symbolizer[key]
+    }), {});
+};

@@ -48,8 +48,11 @@ import OlStyleRegularshape from 'ol/style/RegularShape';
 import { METERS_PER_UNIT } from 'ol/proj/Units';
 import { getCenter } from 'ol/extent';
 import OlGeomLineString from 'ol/geom/LineString';
+import OlGeomCircle from 'ol/geom/Circle';
 import { toContext } from 'ol/render';
 import GeoJSON from 'ol/format/GeoJSON';
+import OlGeomPolygon, { circular } from 'ol/geom/Polygon';
+import { transform } from 'ol/proj';
 import {
     expressionsUtils,
     resolveAttributeTemplate,
@@ -473,6 +476,9 @@ export class OlStyleParser {
         case 'Fill':
             olSymbolizer = this.getOlPolygonSymbolizerFromFillSymbolizer(symbolizer, feature);
             break;
+        case 'Circle':
+            olSymbolizer = this.getOlCircleSymbolizerFromCircleSymbolizer(symbolizer, feature);
+            break;
         default:
             // Return the OL default style since the TS type binding does not allow
             // us to set olSymbolizer to undefined
@@ -729,9 +735,10 @@ export class OlStyleParser {
      * @return The OL Style object
      */
     getOlIconSymbolizerFromIconSymbolizer(
-        symbolizer,
+        _symbolizer,
         feat
     ) {
+        let symbolizer = { ..._symbolizer };
         for (const key of Object.keys(symbolizer)) {
             if (isGeoStylerFunction(symbolizer[key])) {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
@@ -742,7 +749,7 @@ export class OlStyleParser {
             src: symbolizer.image,
             crossOrigin: 'anonymous',
             opacity: symbolizer.opacity,
-            scale: this._computeIconScaleBasedOnSymbolizer(symbolizer),
+            scale: this._computeIconScaleBasedOnSymbolizer(_symbolizer),
             // Rotation in openlayers is radians while we use degree
             rotation: (typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined),
             displacement: symbolizer.offset,
@@ -802,7 +809,8 @@ export class OlStyleParser {
      * @param symbolizer A GeoStyler-Style LineSymbolizer.
      * @return The OL Style object
      */
-    getOlLineSymbolizerFromLineSymbolizer(symbolizer, feat) {
+    getOlLineSymbolizerFromLineSymbolizer(_symbolizer, feat) {
+        let symbolizer = { ..._symbolizer };
         for (const key of Object.keys(symbolizer)) {
             if (isGeoStylerFunction(symbolizer[key])) {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
@@ -834,7 +842,8 @@ export class OlStyleParser {
      * @param symbolizer A GeoStyler-Style FillSymbolizer.
      * @return The OL Style object
      */
-    getOlPolygonSymbolizerFromFillSymbolizer(symbolizer, feat) {
+    getOlPolygonSymbolizerFromFillSymbolizer(_symbolizer, feat) {
+        let symbolizer = { ..._symbolizer };
         for (const key of Object.keys(symbolizer)) {
             if (isGeoStylerFunction(symbolizer[key])) {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
@@ -867,6 +876,75 @@ export class OlStyleParser {
         const olStyle = new this.OlStyleConstructor({
             fill,
             stroke
+        });
+
+        if (symbolizer.graphicFill) {
+            const pattern = this.getOlPatternFromGraphicFill(symbolizer.graphicFill);
+            if (!fill) {
+                fill = new this.OlStyleFillConstructor({});
+            }
+            if (pattern) {
+                fill.setColor(pattern);
+            }
+            olStyle.setFill(fill);
+        }
+
+        return olStyle;
+    }
+
+    /**
+     * Get the OL Style object from an GeoStyler-Style Custom CircleSymbolizer.
+     *
+     * @param symbolizer A GeoStyler-Style Custom CircleSymbolizer.
+     * @return The OL Style object
+     */
+    getOlCircleSymbolizerFromCircleSymbolizer(_symbolizer, feat) {
+        let symbolizer = {..._symbolizer};
+        for (const key of Object.keys(symbolizer)) {
+            if (isGeoStylerFunction(symbolizer[key])) {
+                symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
+            }
+        }
+
+        const color = symbolizer.color;
+        const opacity = symbolizer.opacity;
+        const fColor = color && Number.isFinite(opacity)
+            ? getRgbaColor(color, opacity)
+            : color;
+
+        let fill = color
+            ? new this.OlStyleFillConstructor({ color: fColor })
+            : undefined;
+
+        const outlineColor = symbolizer.outlineColor;
+        const outlineOpacity = symbolizer.outlineOpacity;
+        const oColor = (outlineColor && Number.isFinite(outlineOpacity))
+            ? getRgbaColor(outlineColor, outlineOpacity)
+            : outlineColor;
+
+        const stroke = outlineColor || symbolizer.outlineWidth ? new this.OlStyleStrokeConstructor({
+            color: oColor,
+            width: symbolizer.outlineWidth,
+            lineDash: symbolizer.outlineDasharray
+        }) : undefined;
+
+        const olStyle = new this.OlStyleConstructor({
+            fill,
+            stroke,
+            geometry: (feature) => {
+                const map = this._getMap();
+                if (symbolizer.geodesic) {
+                    const projectionCode = map.getView().getProjection().getCode();
+                    const center = transform(feature.getGeometry().getCoordinates(), projectionCode, 'EPSG:4326');
+                    const circle = circular(center, symbolizer.radius, 128);
+                    circle.transform('EPSG:4326', projectionCode);
+                    return  new OlGeomPolygon(circle.getCoordinates());
+                }
+                return new OlGeomCircle(
+                    feature.getGeometry().getCoordinates(),
+                    symbolizer.radius / METERS_PER_UNIT[map.getView().getProjection().getUnits()]
+                );
+            }
         });
 
         if (symbolizer.graphicFill) {
@@ -948,9 +1026,10 @@ export class OlStyleParser {
      * @return {object} The OL StyleFunction
      */
     getOlTextSymbolizerFromTextSymbolizer(
-        symbolizer,
+        _symbolizer,
         feat
     ) {
+        let symbolizer = { ..._symbolizer };
         for (const key of Object.keys(symbolizer)) {
             if (isGeoStylerFunction(symbolizer[key])) {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
