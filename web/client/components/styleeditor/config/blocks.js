@@ -215,7 +215,7 @@ const getBlocks = ({
                     label: 'styleeditor.format',
                     key: 'format',
                     isVisible: (value, { image } = {}, format) => {
-                        return format !== 'css'
+                        return value?.name !== 'msMarkerIcon' && format !== 'css'
                         && !isObject(image)
                         && !['png', 'jpg', 'svg', 'gif', 'jpeg'].includes(image.split('.').pop());
                     },

@@ -9,6 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MarkIcon from './MarkIcon';
 import { Glyphicon } from 'react-bootstrap';
+import { parseSymbolizerFunctions } from '../../../utils/styleparser/StyleParserUtils';
 
 function StyleBasedLegend({ style }) {
     const renderIcon = (symbolizer) => {
@@ -25,7 +26,7 @@ function StyleBasedLegend({ style }) {
             fillOpacity,
             image,
             rotate
-        } = symbolizer;
+        } = parseSymbolizerFunctions(symbolizer);
         switch (symbolizer.kind) {
         case 'Line':
             let displayWidth = width;

@@ -36,6 +36,8 @@
 import tinycolor from 'tinycolor2';
 import axios from 'axios';
 import isNil from 'lodash/isNil';
+import isObject from 'lodash/isObject';
+import MarkerUtils from '../MarkerUtils';
 
 export const isGeoStylerBooleanFunction = (got) => [
     'between',
@@ -92,11 +94,15 @@ export const isGeoStylerStringFunction = (got) => [
 export const isGeoStylerUnknownFunction = (got) => [
     'property'
 ].includes(got?.name);
+export const isGeoStylerMapStoreFunction = (got) => [
+    'msMarkerIcon'
+].includes(got?.name);
 export const isGeoStylerFunction = (got) =>
     isGeoStylerBooleanFunction(got)
     || isGeoStylerNumberFunction(got)
     || isGeoStylerStringFunction(got)
-    || isGeoStylerUnknownFunction(got);
+    || isGeoStylerUnknownFunction(got)
+    || isGeoStylerMapStoreFunction(got);
 const getFeatureProperties = (feature) => {
     return (feature?.getProperties
         ? feature.getProperties()
@@ -125,6 +131,9 @@ export const expressionsUtils = {
         }
         if (isGeoStylerUnknownFunction(func)) {
             return expressionsUtils.evaluateUnknownFunction(func, feature);
+        }
+        if (isGeoStylerMapStoreFunction(func)) {
+            return expressionsUtils.evaluateMapStoreFunction(func, feature);
         }
         return null;
     },
@@ -283,6 +292,24 @@ export const expressionsUtils = {
             return (args[0]).toUpperCase();
         case 'strTrim':
             return (args[0]).trim();
+        default:
+            return args[0];
+        }
+    },
+    evaluateMapStoreFunction: (func, feature) => {
+        const args = func.args.map(arg => {
+            if (isGeoStylerFunction(arg)) {
+                return expressionsUtils.evaluateFunction(arg, feature);
+            }
+            return arg;
+        });
+        switch (func.name) {
+        case 'msMarkerIcon':
+            return MarkerUtils.markers.extra.markerToDataUrl({
+                iconColor: args[0].color,
+                iconShape: args[0].shape,
+                iconGlyph: args[0].glyph
+            });
         default:
             return args[0];
         }
@@ -467,7 +494,11 @@ export const getImageIdFromSymbolizer = ({
     wellKnownName
 }) => {
     if (image) {
-        return image;
+        return isObject(image?.args?.[0]) ? MarkerUtils.markers.extra.markerToDataUrl({
+            iconColor: image.args[0].color,
+            iconShape: image.args[0].shape,
+            iconGlyph: image.args[0].glyph
+        }) : image;
     }
     return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, strokeWidth, radius].join(':');
 };
@@ -478,13 +509,26 @@ export const getImageIdFromSymbolizer = ({
  * @returns {promise} returns the image
  */
 const getImageFromSymbolizer = (symbolizer) => {
-    const src = symbolizer.image;
+    const image = symbolizer.image;
     const id = getImageIdFromSymbolizer(symbolizer);
     if (imagesCache[id]) {
         return Promise.resolve(imagesCache[id]);
     }
     return new Promise((resolve, reject) => {
         const img = new Image();
+        let src = image;
+        if (isObject(src) && src.name === 'msMarkerIcon') {
+            try {
+                const msMarkerIcon = src.args[0];
+                src = MarkerUtils.markers.extra.markerToDataUrl({
+                    iconColor: msMarkerIcon.color,
+                    iconShape: msMarkerIcon.shape,
+                    iconGlyph: msMarkerIcon.glyph
+                });
+            } catch (e) {
+                reject(id);
+            }
+        }
         img.crossOrigin = 'anonymous';
         img.onload = () => {
             imagesCache[id] = { id, image: img, src, width: img.naturalWidth, height: img.naturalHeight };
@@ -810,6 +854,9 @@ export const drawIcons = (geoStylerStyle) => {
 };
 
 export const parseSymbolizerFunctions = (symbolizer, feature) => {
+    if (!symbolizer) {
+        return {};
+    }
     return Object.keys(symbolizer).reduce((acc, key) => ({
         ...acc,
         [key]: isGeoStylerFunction(symbolizer[key])
