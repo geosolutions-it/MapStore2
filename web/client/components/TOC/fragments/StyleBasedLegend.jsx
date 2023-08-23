@@ -55,6 +55,16 @@ function StyleBasedLegend({ style }) {
                     strokeOpacity={outlineOpacity}
                 />
             </svg>);
+        case 'Circle':
+            return (<svg viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="25"
+                    fill={color}
+                    opacity={opacity}
+                    stroke={outlineColor}
+                    strokeWidth={outlineWidth}
+                    strokeOpacity={outlineOpacity}
+                />
+            </svg>);
         case 'Mark':
             return <MarkIcon symbolizer={symbolizer} />;
         case 'Icon':
