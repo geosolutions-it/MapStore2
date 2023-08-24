@@ -1071,6 +1071,7 @@ The `symbolizer` could be of following `kinds`:
   | `strokeColor` | stroke color of the mark | x | x |
   | `strokeOpacity` | stroke opacity of the mark | x | x |
   | `strokeWidth` | stroke width of the mark | x | x |
+  | `strokeDasharray` | array that represent the dashed line intervals | x | x |
   | `radius` | radius size in px of the mark | x | x |
   | `wellKnownName` | rendered shape, one of Circle, Square, Triangle, Star, Cross, X, shape://vertline, shape://horline, shape://slash, shape://backslash, shape://dot, shape://plus, shape://times, shape://oarrow or shape://carrow | x | x |
   | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
@@ -1089,7 +1090,7 @@ The `symbolizer` could be of following `kinds`:
   | `size` | size of the icon | x | x |
   | `opacity` | opacity of the icon | x | x |
   | `rotate` | rotation of the icon | x | x |
-  | `anchor` | array of values defined in fractions [0 to 1] | x | x |
+  | `anchor` | anchor point of the icon, one of: top-left, top, top-right, left, center, right, bottom-left, bottom or bottom-right | x | x |
   | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
   | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
   | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
@@ -1118,6 +1119,7 @@ The `symbolizer` could be of following `kinds`:
   | `outlineColor` | outline color of the polygon | x | x |
   | `outlineOpacity` | outline opacity of the polygon | x | x |
   | `outlineWidth` | outline width of the polygon | x | x |
+  | `outlineDasharray` | array that represent the dashed line intervals | x | x |
   | `msClassificationType` | allow setting **classificationType** value for the feature. This would only apply on polygon graphics in Cesium maps. |  | x |
   | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
 
@@ -1132,6 +1134,7 @@ The `symbolizer` could be of following `kinds`:
   | `fontStyle` | font style of the label: normal or italic | x | x |
   | `fontWeight` | font style of the label: normal or bold | x | x |
   | `color` | font color of the label | x | x |
+  | `anchor` | anchor point of the label, one of: top-left, top, top-right, left, center, right, bottom-left, bottom or bottom-right | x | x |
   | `haloColor` | halo color of the label | x | x |
   | `haloWidth` | halo width of the label | x | x |
   | `offset` | array of x and y values offset of the label | x | x |
@@ -1159,6 +1162,22 @@ The `symbolizer` could be of following `kinds`:
   | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
   | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
   | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
+
+- `Circle` symbolizer properties
+
+  | Property | Description | 2D | 3D |
+  | --- | --- | --- | --- |
+  | `kind` | must be equal to **Circle** | x | x |
+  | `color` | fill color of the circle | x | x |
+  | `opacity` | fill opacity of the circle | x | x |
+  | `outlineColor` | outline color of the circle | x | x |
+  | `outlineOpacity` | outline opacity of the circle | x | x |
+  | `outlineWidth` | outline width of the circle | x | x |
+  | `outlineDasharray` | array that represent the dashed line intervals | x | x |
+  | `radius` | radius in meter of the circle | x | x |
+  | `gedesic` | if true draws a geodesic circle | x | x |
+  | `msClassificationType` | allow setting **classificationType** value for the feature. This would only apply on polygon graphics in Cesium maps. |  | x |
+  | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
 
 #### Legacy Vector Style (deprecated)
 
