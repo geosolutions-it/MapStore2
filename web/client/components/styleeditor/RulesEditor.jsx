@@ -93,7 +93,8 @@ const RulesEditor = forwardRef(({
         classification,
         format,
         simple,
-        svgSymbolsPath
+        svgSymbolsPath,
+        lineDashOptions
     } = config;
 
     // needed for slider
@@ -386,7 +387,8 @@ const RulesEditor = forwardRef(({
                                                     bands,
                                                     attributes,
                                                     fonts,
-                                                    svgSymbolsPath
+                                                    svgSymbolsPath,
+                                                    lineDashOptions
                                                 }}
                                                 onChange={(values) => handleChanges({ values, ruleId, symbolizerId })}
                                             />

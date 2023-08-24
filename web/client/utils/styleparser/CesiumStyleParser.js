@@ -546,10 +546,16 @@ const getGraphics = ({
         // this only for the footprint
         if (symbolizer.outlineColor && symbolizer.outlineWidth !== 0) {
             polyline = new Cesium.PolylineGraphics({
-                material: getCesiumColor({
-                    color: symbolizer.outlineColor,
-                    opacity: symbolizer.outlineOpacity * globalOpacity
-                }),
+                material: symbolizer?.outlineDasharray
+                    ? getCesiumDashArray({
+                        color: symbolizer.outlineColor,
+                        opacity: symbolizer.outlineOpacity * globalOpacity,
+                        dasharray: symbolizer.outlineDasharray
+                    })
+                    : getCesiumColor({
+                        color: symbolizer.outlineColor,
+                        opacity: symbolizer.outlineOpacity * globalOpacity
+                    }),
                 width: symbolizer.outlineWidth,
                 positions: entity._msStoredCoordinates.polygon.getValue().positions,
                 clampToGround: symbolizer.msClampToGround,

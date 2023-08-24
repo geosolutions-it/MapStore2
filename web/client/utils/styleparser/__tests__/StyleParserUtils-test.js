@@ -27,7 +27,7 @@ describe("StyleParserUtils ", () => {
             strokeWidth: 3,
             radius: 16,
             rotate: 90
-        })).toBe('Circle:#ff0000:0.5:#00ff00:0.25:3:16');
+        })).toBe('Circle:#ff0000:0.5:#00ff00:0.25::3:16');
 
         expect(getImageIdFromSymbolizer({
             kind: 'Icon',
@@ -78,7 +78,7 @@ describe("StyleParserUtils ", () => {
         drawIcons(geoStylerStyle)
             .then((images) => {
                 try {
-                    expect(images[0].id).toEqual('Circle:#ff0000:0.5:#00ff00:0.25:3:16');
+                    expect(images[0].id).toEqual('Circle:#ff0000:0.5:#00ff00:0.25::3:16');
                     expect(images[1].id).toEqual('data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
                 } catch (e) {
                     done(e);

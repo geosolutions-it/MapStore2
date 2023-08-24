@@ -189,7 +189,8 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                     fillOpacity: symbolizer.opacity * globalOpacity,
                     color: symbolizer.outlineColor,
                     opacity: (symbolizer.outlineOpacity ?? 0) * globalOpacity,
-                    weight: symbolizer.outlineWidth ?? 0
+                    weight: symbolizer.outlineWidth ?? 0,
+                    ...(symbolizer.outlineDasharray && { dashArray: symbolizer.outlineDasharray.join(' ') })
                 });
                 return geoJSONLayer;
             }
@@ -308,7 +309,8 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         fillOpacity: firstValidSymbolizer.fillOpacity * globalOpacity,
                         color: firstValidSymbolizer.outlineColor,
                         opacity: (firstValidSymbolizer.outlineOpacity ?? 0) * globalOpacity,
-                        weight: firstValidSymbolizer.outlineWidth ?? 0
+                        weight: firstValidSymbolizer.outlineWidth ?? 0,
+                        ...(firstValidSymbolizer.outlineDasharray && { dashArray: firstValidSymbolizer.outlineDasharray.join(' ') })
                     };
                 }
                 return {

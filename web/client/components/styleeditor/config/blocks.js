@@ -221,6 +221,12 @@ const getBlocks = ({
                     key: 'strokeWidth',
                     label: 'styleeditor.strokeWidth'
                 }),
+                ...(!shouldHideVectorStyleOptions && {
+                    strokeDasharray: property.dasharray({
+                        label: 'styleeditor.strokeStyle',
+                        key: 'strokeDasharray'
+                    })
+                }),
                 radius: property.size({
                     key: 'radius',
                     label: 'styleeditor.radius'
@@ -391,6 +397,12 @@ const getBlocks = ({
                 outlineWidth: property.width({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
+                }),
+                ...(!shouldHideVectorStyleOptions && {
+                    outlineDasharray: property.dasharray({
+                        label: 'styleeditor.outlineStyle',
+                        key: 'outlineDasharray'
+                    })
                 }),
                 ...(!shouldHideVectorStyleOptions && vector3dStyleOptions({
                     label: 'styleeditor.clampOutlineToGround',
@@ -667,6 +679,10 @@ const getBlocks = ({
                 outlineWidth: property.width({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
+                }),
+                outlineDasharray: property.dasharray({
+                    label: 'styleeditor.outlineStyle',
+                    key: 'outlineDasharray'
                 }),
                 radius: property.number({
                     key: 'radius',

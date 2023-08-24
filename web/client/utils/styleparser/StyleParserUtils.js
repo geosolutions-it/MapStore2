@@ -490,6 +490,7 @@ export const getImageIdFromSymbolizer = ({
     strokeColor,
     strokeOpacity,
     strokeWidth,
+    strokeDasharray,
     radius,
     wellKnownName
 }) => {
@@ -500,7 +501,7 @@ export const getImageIdFromSymbolizer = ({
             iconGlyph: image.args[0].glyph
         }) : image;
     }
-    return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, strokeWidth, radius].join(':');
+    return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, strokeDasharray, strokeWidth, radius].join(':');
 };
 
 /**
@@ -622,6 +623,9 @@ export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
         ctx.lineWidth = symbolizer.strokeWidth;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
+        if (symbolizer.strokeDasharray) {
+            ctx.setLineDash(symbolizer.strokeDasharray);
+        }
     }
 
     switch (symbolizer.wellKnownName) {
@@ -758,7 +762,7 @@ const svgUrlToCanvas = (svgUrl, options) => {
                 svg.setAttribute("stroke-width", strokeWidth);
                 svg.setAttribute("width", width);
                 svg.setAttribute("height", height);
-                svg.setAttribute("stroke-dasharray", options.strokeDashArray || "none");
+                svg.setAttribute("stroke-dasharray", options.strokeDasharray || "none");
 
                 const element = document.createElement("div");
                 element.appendChild(svg);
@@ -812,6 +816,7 @@ export const getWellKnownNameImageFromSymbolizer = (symbolizer) => {
                 strokeColor: symbolizer.strokeColor,
                 strokeOpacity: symbolizer.strokeOpacity,
                 strokeWidth: symbolizer.strokeWidth,
+                strokeDasharray: symbolizer.strokeDasharray,
                 size: symbolizer.radius * 2
             })
                 .then(({ width, height, canvas }) => {

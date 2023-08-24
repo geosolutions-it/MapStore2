@@ -148,6 +148,7 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
             strokeColor: symbolizer.outlineColor,
             strokeOpacity: (symbolizer.outlineOpacity ?? 0) * globalOpacity,
             strokeWidth: symbolizer.outlineWidth ?? 0,
+            ...(symbolizer.outlineDasharray && { strokeDashstyle: symbolizer.outlineDasharray.join(" ") }),
             fillColor: symbolizer.color,
             fillOpacity: symbolizer.fillOpacity * globalOpacity
         };
@@ -157,6 +158,7 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
             strokeColor: symbolizer.outlineColor,
             strokeOpacity: (symbolizer.outlineOpacity ?? 0) * globalOpacity,
             strokeWidth: symbolizer.outlineWidth ?? 0,
+            ...(symbolizer.outlineDasharray && { strokeDashstyle: symbolizer.outlineDasharray.join(" ") }),
             fillColor: symbolizer.color,
             fillOpacity: symbolizer.opacity * globalOpacity
         };

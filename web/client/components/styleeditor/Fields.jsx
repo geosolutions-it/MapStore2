@@ -448,9 +448,19 @@ export const fields = {
         label,
         value,
         onChange,
-        config: {
-            options
-        }
+        lineDashOptions = [
+            { value: '0' },
+            { value: '1 4' },
+            { value: '1 12' },
+            { value: '8 8' },
+            { value: '8 16' },
+            { value: '8 8 1 8' },
+            { value: '8 8 1 4 1 8' },
+            { value: '10 50 30' },
+            { value: '6 6' },
+            { value: '20 20' },
+            { value: '30 30' }
+        ]
     }) => {
         return (
             <PropertyField
@@ -458,7 +468,7 @@ export const fields = {
                 <DashArray
                     dashArray={value}
                     onChange={onChange}
-                    options={options}
+                    options={lineDashOptions}
                     defaultStrokeWidth={2}
                     isValidNewOption={(option) => {
                         if (option.label) {
