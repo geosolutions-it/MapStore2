@@ -318,7 +318,7 @@ describe('LeafletStyleParser', () => {
                         expect(div.children[0].style.fontStyle).toBe('italic');
                         expect(div.children[0].style.fontWeight).toBe('bold');
                         expect(div.children[0].style.fontSize).toBe('32px');
-                        expect(div.children[0].style.transform).toBe('translate(16px, 16px) rotateZ(90deg)');
+                        expect(div.children[0].style.transform).toBe('translate(calc(-50% + 16px), calc(-50% + 16px)) rotateZ(90deg)');
                         expect(div.children[0].style.webkitTextStrokeWidth).toBe('2px');
                         expect(div.children[0].style.webkitTextStrokeColor).toBe('rgb(255, 255, 255)');
                         expect(div.children[0].style.position).toBe('absolute');

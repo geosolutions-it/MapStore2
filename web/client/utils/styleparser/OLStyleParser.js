@@ -73,6 +73,86 @@ const getGeometryFunction = geometryFunctionsLibrary.openlayers({
     getCenter
 });
 
+const anchorStringToFraction = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return [0.0, 0.0];
+    case 'top':
+        return [0.5, 0.0];
+    case 'top-right':
+        return [1.0, 0.0];
+    case 'left':
+        return [0.0, 0.5];
+    case 'center':
+        return [0.5, 0.5];
+    case 'right':
+        return [1.0, 0.5];
+    case 'bottom-left':
+        return [0.0, 1.0];
+    case 'bottom':
+        return [0.5, 1.0];
+    case 'bottom-right':
+        return [1.0, 1.0];
+    default:
+        return [0.5, 0.5];
+    }
+};
+
+const anchorStringToTextProperties = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return {
+            textBaseline: 'top',
+            textAlign: 'left'
+        };
+    case 'top':
+        return {
+            textBaseline: 'top',
+            textAlign: 'center'
+        };
+    case 'top-right':
+        return {
+            textBaseline: 'top',
+            textAlign: 'right'
+        };
+    case 'left':
+        return {
+            textBaseline: 'middle',
+            textAlign: 'left'
+        };
+    case 'center':
+        return {
+            textBaseline: 'middle',
+            textAlign: 'center'
+        };
+    case 'right':
+        return {
+            textBaseline: 'middle',
+            textAlign: 'right'
+        };
+    case 'bottom-left':
+        return {
+            textBaseline: 'bottom',
+            textAlign: 'left'
+        };
+    case 'bottom':
+        return {
+            textBaseline: 'bottom',
+            textAlign: 'center'
+        };
+    case 'bottom-right':
+        return {
+            textBaseline: 'bottom',
+            textAlign: 'right'
+        };
+    default:
+        return {
+            textBaseline: 'top',
+            textAlign: 'center'
+        };
+    }
+};
+
 const getRgbaColor = (_colorString, _opacity) => {
     let colorString = _colorString;
     let opacity = _opacity;
@@ -520,7 +600,7 @@ export class OlStyleParser {
             // Rotation in openlayers is radians while we use degree
             rotation: (typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined),
             displacement: symbolizer.offset,
-            anchor: symbolizer.anchor
+            anchor: anchorStringToFraction(symbolizer.anchor)
 
         };
         // check if IconSymbolizer.image contains a placeholder
@@ -830,10 +910,8 @@ export class OlStyleParser {
             overflow: symbolizer.allowOverlap,
             offsetX: (symbolizer.offset ? symbolizer.offset[0] : 0),
             offsetY: (symbolizer.offset ? symbolizer.offset[1] : 0),
-            rotation: typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined
-            // TODO check why props match
-            // textAlign: symbolizer.pitchAlignment,
-            // textBaseline: symbolizer.anchor
+            rotation: typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined,
+            ...anchorStringToTextProperties(symbolizer.anchor)
         };
 
         // check if TextSymbolizer.label contains a placeholder

@@ -57,6 +57,54 @@ const pointGeometryTransformation = () => ({
     })
 });
 
+const anchorProperty = () => ({
+    anchor: property.select({
+        label: 'styleeditor.anchor',
+        key: 'anchor',
+        setValue: (value) => {
+            return value ? value : 'center';
+        },
+        getOptions: () => [
+            {
+                value: 'top-left',
+                labelId: 'styleeditor.topLeft'
+            },
+            {
+                value: 'top',
+                labelId: 'styleeditor.top'
+            },
+            {
+                value: 'top-right',
+                labelId: 'styleeditor.topRight'
+            },
+            {
+                value: 'left',
+                labelId: 'styleeditor.left'
+            },
+            {
+                value: 'center',
+                labelId: 'styleeditor.center'
+            },
+            {
+                value: 'right',
+                labelId: 'styleeditor.right'
+            },
+            {
+                value: 'bottom-left',
+                labelId: 'styleeditor.bottomLeft'
+            },
+            {
+                value: 'bottom',
+                labelId: 'styleeditor.bottom'
+            },
+            {
+                value: 'bottom-right',
+                labelId: 'styleeditor.bottomRight'
+            }
+        ]
+    })
+});
+
 const lineGeometryTransformation = () => ({
     msGeometry: property.select({
         label: 'styleeditor.geometryTransformation',
@@ -231,6 +279,7 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
+                ...(!shouldHideVectorStyleOptions && anchorProperty()),
                 ...(!shouldHideVectorStyleOptions && point3dStyleOptions({
                     isDisabled: () => !enable3dStyleOptions
                 })),
@@ -539,6 +588,7 @@ const getBlocks = ({
                     label: 'styleeditor.fontWeight',
                     key: 'fontWeight'
                 }),
+                ...(!shouldHideVectorStyleOptions && anchorProperty()),
                 haloColor: property.color({
                     label: 'styleeditor.haloColor',
                     key: 'haloColor',

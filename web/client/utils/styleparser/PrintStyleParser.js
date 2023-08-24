@@ -20,6 +20,56 @@ import { circleToPolygon } from '../DrawGeometryUtils';
 
 const getGeometryFunction = geometryFunctionsLibrary.geojson();
 
+const anchorToGraphicOffset = (anchor, width, height) => {
+    switch (anchor) {
+    case 'top-left':
+        return [0, 0];
+    case 'top':
+        return [-(width / 2), 0];
+    case 'top-right':
+        return [-width, 0];
+    case 'left':
+        return [0, -(height / 2)];
+    case 'center':
+        return [-(width / 2), -(height / 2)];
+    case 'right':
+        return [-width, -(height / 2)];
+    case 'bottom-left':
+        return [0, -height];
+    case 'bottom':
+        return [-(width / 2), -height];
+    case 'bottom-right':
+        return [-width, -height];
+    default:
+        return [-(width / 2), -(height / 2)];
+    }
+};
+
+const anchorToLabelAlign = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return 'lt';
+    case 'top':
+        return 'ct';
+    case 'top-right':
+        return 'rt';
+    case 'left':
+        return 'lm';
+    case 'center':
+        return 'cm';
+    case 'right':
+        return 'rm';
+    case 'bottom-left':
+        return 'lb';
+    case 'bottom':
+        return 'cb';
+    case 'bottom-right':
+        return 'rb';
+    default:
+        return 'cm';
+    }
+};
+
 const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
     const globalOpacity = layer.opacity === undefined ? 1 : layer.opacity;
     if (symbolizer.kind === 'Mark') {
@@ -35,12 +85,21 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
         };
     }
     if (symbolizer.kind === 'Icon') {
+        const { width = symbolizer.size, height = symbolizer.size }  = drawWellKnownNameImageFromSymbolizer(symbolizer);
+        const aspect = width / height;
+        let iconSizeW = symbolizer.size;
+        let iconSizeH = iconSizeW / aspect;
+        if (height > width) {
+            iconSizeH = symbolizer.size;
+            iconSizeW = iconSizeH * aspect;
+        }
+        const [graphicXOffset, graphicYOffset] = anchorToGraphicOffset(symbolizer.anchor, iconSizeW, iconSizeH);
         return {
-            graphicWidth: symbolizer.size,
-            graphicHeight: symbolizer.size,
+            graphicWidth: iconSizeW,
+            graphicHeight: iconSizeH,
             externalGraphic: symbolizer.image,
-            graphicXOffset: -symbolizer.size / 2,
-            graphicYOffset: -symbolizer.size / 2,
+            graphicXOffset,
+            graphicYOffset,
             rotation: symbolizer.rotate || 0,
             graphicOpacity: symbolizer.opacity * globalOpacity
         };
@@ -53,10 +112,7 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
             // Supported itext fonts: COURIER, HELVETICA, TIMES_ROMAN
             fontFamily: (symbolizer.font || ['TIMES_ROMAN'])[0],
             fontWeight: symbolizer.fontWeight,
-            // Valid values for horizontal alignment: "l"=left, "c"=center,
-            // "r"=right. Valid values for vertical alignment: "t"=top,
-            // "m"=middle, "b"=bottom.
-            labelAlign: 'cm',
+            labelAlign: anchorToLabelAlign(symbolizer.anchor),
             labelXOffset: symbolizer?.offset?.[0] || 0,
             labelYOffset: -(symbolizer?.offset?.[1] || 0),
             rotation: -(symbolizer.rotate || 0),

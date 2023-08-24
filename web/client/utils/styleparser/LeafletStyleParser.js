@@ -30,6 +30,56 @@ const geometryTypeToKind = {
 
 const getGeometryFunction = geometryFunctionsLibrary.geojson();
 
+const anchorToPoint = (anchor, width, height) => {
+    switch (anchor) {
+    case 'top-left':
+        return [0, 0];
+    case 'top':
+        return [width / 2, 0];
+    case 'top-right':
+        return [width, 0];
+    case 'left':
+        return [0, height / 2];
+    case 'center':
+        return [width / 2, height / 2];
+    case 'right':
+        return [width, height / 2];
+    case 'bottom-left':
+        return [0, height];
+    case 'bottom':
+        return [width / 2, height];
+    case 'bottom-right':
+        return [width, height];
+    default:
+        return [width / 2, height / 2];
+    }
+};
+
+const anchorToTransform = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return ['0px', '0px'];
+    case 'top':
+        return ['-50%', '0px'];
+    case 'top-right':
+        return ['-100%', '0px'];
+    case 'left':
+        return ['0px', '-50%'];
+    case 'center':
+        return ['-50%', '-50%'];
+    case 'right':
+        return ['-100%', '-50%'];
+    case 'bottom-left':
+        return ['0px', '-100%'];
+    case 'bottom':
+        return ['-50%', '-100%'];
+    case 'bottom-right':
+        return ['-100%', '-100%'];
+    default:
+        return ['-50%', '-50%'];
+    }
+};
+
 function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
     images
 }) {
@@ -89,7 +139,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         icon: L.icon({
                             iconUrl: src,
                             iconSize: [iconSizeW, iconSizeH],
-                            iconAnchor: [iconSizeW / 2, iconSizeH / 2]
+                            iconAnchor: anchorToPoint(symbolizer.anchor, iconSizeW, iconSizeH)
                         }),
                         opacity: symbolizer.opacity * globalOpacity
                     });
@@ -101,6 +151,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                     -webkit-text-stroke-width:${symbolizer.haloWidth}px;
                     -webkit-text-stroke-color:${symbolizer.haloColor || ''};
                 `;
+                const [anchorH, anchorV] = anchorToTransform(symbolizer.anchor);
                 const textIcon = L.divIcon({
                     html: `<div style="
                         color:${symbolizer.color};
@@ -108,9 +159,9 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         font-style: ${symbolizer.fontStyle || 'normal'};
                         font-weight: ${symbolizer.fontWeight || 'normal'};
                         font-size: ${symbolizer.size}px;
-
+                        
                         position: absolute;
-                        transform: translate(${symbolizer?.offset?.[0] ?? 0}px, ${symbolizer?.offset?.[1] ?? 0}px) rotateZ(${symbolizer?.rotate ?? 0}deg);
+                        transform: translate(calc(${anchorH} + ${symbolizer?.offset?.[0] ?? 0}px), calc(${anchorV} + ${symbolizer?.offset?.[1] ?? 0}px)) rotateZ(${symbolizer?.rotate ?? 0}deg);
 
                         ${symbolizer.haloWidth > 0 ? haloProperties : ''}
                     ">

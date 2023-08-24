@@ -285,6 +285,61 @@ const GRAPHIC_KEYS = [
     'wall'
 ];
 
+const anchorToOrigin = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'top':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'top-right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'center':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'bottom-left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    case 'bottom':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    case 'bottom-right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    default:
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    }
+};
+
 const getGraphics = ({
     symbolizer: _symbolizer,
     images,
@@ -340,6 +395,7 @@ const getGraphics = ({
                 billboard: new Cesium.BillboardGraphics({
                     image,
                     scale,
+                    ...anchorToOrigin(symbolizer.anchor),
                     pixelOffset: symbolizer.offset ? new Cesium.Cartesian2(symbolizer.offset[0], symbolizer.offset[1]) : null,
                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
                     disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
@@ -372,6 +428,7 @@ const getGraphics = ({
                     color: symbolizer.color,
                     opacity: 1 * globalOpacity
                 }),
+                ...anchorToOrigin(symbolizer.anchor),
                 disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
                 heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'],
                 pixelOffset: new Cesium.Cartesian2(symbolizer?.offset?.[0] ?? 0, symbolizer?.offset?.[1] ?? 0),
