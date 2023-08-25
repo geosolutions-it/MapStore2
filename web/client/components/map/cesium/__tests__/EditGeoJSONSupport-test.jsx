@@ -67,8 +67,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
@@ -152,8 +152,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
@@ -224,8 +224,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
@@ -290,8 +290,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
@@ -357,8 +357,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
@@ -424,8 +424,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
@@ -491,8 +491,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
@@ -561,8 +561,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
@@ -642,8 +642,8 @@ describe('Cesium EditGeoJSONSupport', () => {
                     zoom={15}
                     style={{
                         position: 'fixed',
-                        width: 500,
-                        height: 500,
+                        width: 60,
+                        height: 60,
                         top: 0,
                         left: 0
                     }}
