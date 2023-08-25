@@ -501,7 +501,7 @@ export const getImageIdFromSymbolizer = ({
             iconGlyph: image.args[0].glyph
         }) : image;
     }
-    return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, strokeDasharray, strokeWidth, radius].join(':');
+    return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, (strokeDasharray || []).join('_'), strokeWidth, radius].join(':');
 };
 
 /**
@@ -858,7 +858,7 @@ export const drawIcons = (geoStylerStyle) => {
     });
 };
 
-export const parseSymbolizerFunctions = (symbolizer, feature) => {
+export const parseSymbolizerExpressions = (symbolizer, feature) => {
     if (!symbolizer) {
         return {};
     }

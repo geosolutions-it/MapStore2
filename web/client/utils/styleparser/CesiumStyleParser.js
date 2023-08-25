@@ -14,7 +14,7 @@ import {
     geoStylerStyleFilter,
     drawIcons,
     getImageIdFromSymbolizer,
-    parseSymbolizerFunctions
+    parseSymbolizerExpressions
 } from './StyleParserUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 import EllipseGeometryLibrary from '@cesium/engine/Source/Core/EllipseGeometryLibrary';
@@ -349,7 +349,7 @@ const getGraphics = ({
     map,
     sampleTerrain
 }) => {
-    const symbolizer = parseSymbolizerFunctions(_symbolizer, { properties });
+    const symbolizer = parseSymbolizerExpressions(_symbolizer, { properties });
     if (symbolizer.kind === 'Mark') {
         modifyPointHeight({ entity, symbolizer, properties });
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};

@@ -14,7 +14,7 @@ import {
     geoStylerStyleFilter,
     drawIcons,
     getImageIdFromSymbolizer,
-    parseSymbolizerFunctions
+    parseSymbolizerExpressions
 } from './StyleParserUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 import { circleToPolygon } from '../DrawGeometryUtils';
@@ -103,7 +103,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
         layer._msAdditionalLayers = [];
 
         const pointToLayer = ({ symbolizer: _symbolizer, latlng, feature }) => {
-            const symbolizer = parseSymbolizerFunctions(_symbolizer, feature);
+            const symbolizer = parseSymbolizerExpressions(_symbolizer, feature);
             if (symbolizer.kind === 'Mark') {
                 const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
                 if (image) {
@@ -182,7 +182,6 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                     geometry: circleToPolygon(feature.geometry.coordinates, radius, geodesic)
                 });
                 geoJSONLayer.setStyle({
-                    radius,
                     fill: true,
                     stroke: true,
                     fillColor: symbolizer.color,
@@ -256,7 +255,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                     ? flatten(validRules.map((rule) => rule.symbolizers.filter(({ kind }) => ['Mark', 'Icon', 'Text'].includes(kind))))
                     : [])
                     .forEach((_symbolizer) => {
-                        const symbolizer = parseSymbolizerFunctions(_symbolizer, feature);
+                        const symbolizer = parseSymbolizerExpressions(_symbolizer, feature);
                         const geometryFunction = getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...symbolizer});
                         if (geometryFunction) {
                             const coordinates = geometryFunction(feature);
@@ -274,7 +273,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         // the symbolizer should be included in the supported ones
                         rule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind))
                     ) || {};
-                const firstValidSymbolizer = parseSymbolizerFunctions(firstValidRule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind)) || {}, feature);
+                const firstValidSymbolizer = parseSymbolizerExpressions(firstValidRule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind)) || {}, feature);
                 if (firstValidSymbolizer.kind === 'Line') {
                     const geometryFunction = getGeometryFunction(firstValidSymbolizer);
                     const style = {

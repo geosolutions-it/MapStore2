@@ -82,7 +82,8 @@ describe('OLStyleParser', () => {
                                 fillOpacity: 0.5,
                                 outlineColor: '#00ff00',
                                 outlineOpacity: 0.25,
-                                outlineWidth: 2
+                                outlineWidth: 2,
+                                outlineDasharray: [10, 10]
                             }
                         ]
                     }
@@ -96,6 +97,7 @@ describe('OLStyleParser', () => {
                     const stroke = olStyle[0].getStroke();
                     expect(stroke.getColor()).toBe('rgba(0, 255, 0, 0.25)');
                     expect(stroke.getWidth()).toBe(2);
+                    expect(stroke.getLineDash()).toEqual([10, 10]);
                     done();
                 })
                 .catch(done);
@@ -210,7 +212,8 @@ describe('OLStyleParser', () => {
                                 image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=',
                                 opacity: 0.5,
                                 size: 32,
-                                rotate: 90
+                                rotate: 90,
+                                anchor: 'top-left'
                             }
                         ]
                     }
@@ -224,6 +227,7 @@ describe('OLStyleParser', () => {
                     expect(image.getSrc()).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
                     expect(image.getOpacity()).toBe(0.5);
                     expect(image.getScale()).toBe(32);
+                    expect(image.anchor_).toEqual([0, 0]);
                     expect(Math.round(image.getRotation() * 180 / Math.PI)).toBe(90);
                     done();
                 })
@@ -249,7 +253,8 @@ describe('OLStyleParser', () => {
                                 fontWeight: 'bold',
                                 font: ['Arial'],
                                 size: 32,
-                                rotate: 90
+                                rotate: 90,
+                                anchor: 'top-left'
                             }
                         ]
                     }
@@ -270,6 +275,45 @@ describe('OLStyleParser', () => {
                     const textStroke = text.getStroke();
                     expect(textStroke.getColor()).toBe('#ffffff');
                     expect(textStroke.getWidth()).toBe(2);
+                    expect(text.getTextBaseline()).toBe('top');
+                    expect(text.getTextAlign()).toBe('left');
+                    done();
+                })
+                .catch(done);
+        });
+        it('should write a style function with circle symbolizer', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Circle',
+                                color: '#ff0000',
+                                opacity: 0.5,
+                                outlineColor: '#00ff00',
+                                outlineWidth: 2,
+                                radius: 1000000,
+                                geodesic: true,
+                                outlineOpacity: 0.25,
+                                outlineDasharray: [10, 10]
+                            }
+                        ]
+                    }
+                ]
+            };
+            parser.writeStyle(style)
+                .then((parsed) => {
+                    const olStyle = parsed()();
+                    const fill = olStyle[0].getFill();
+                    expect(fill.getColor()).toBe('rgba(255, 0, 0, 0.5)');
+                    const stroke = olStyle[0].getStroke();
+                    expect(stroke.getColor()).toBe('rgba(0, 255, 0, 0.25)');
+                    expect(stroke.getWidth()).toBe(2);
+                    expect(stroke.getLineDash()).toEqual([10, 10]);
+                    expect(olStyle[0].getGeometry()).toBeTruthy();
                     done();
                 })
                 .catch(done);

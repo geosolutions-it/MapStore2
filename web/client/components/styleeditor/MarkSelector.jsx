@@ -40,12 +40,20 @@ const getSVGOption = (value, previewId, label) => {
         }
     };
 };
-
+/**
+ * Component select the wellKnownName property of a Mark symbolizer
+ * @memberof components.styleeditor
+ * @name MarkSelector
+ * @prop {string} value well know name or svg link
+ * @prop {function} onChange returns the updated value
+ * @prop {string} svgSymbolsPath path to symbols list (index.json or symbol.json endpoint)
+ */
 function MarkSelector({
     value,
     config = {},
     onChange = () => {},
-    svgSymbolsPath
+    svgSymbolsPath,
+    onUpdateOptions = () => {}
 }) {
     const {
         options = wellKnownName
@@ -65,11 +73,12 @@ function MarkSelector({
                 axios.get(svgSymbolsPath)
                     .then(({ data }) => {
                         const newOptions = data.map(({ name, label }) => {
-                            const svgValue = `${svgSymbolsPath.replace('symbols.json', '')}${name}.svg`;
+                            const svgValue = `${svgSymbolsPath.replace('symbols.json', '').replace('index.json', '')}${name}.svg`;
                             const previewId = `${name}-svg`;
                             return getSVGOption(svgValue, previewId, label);
                         });
                         cacheOptions[svgSymbolsPath] = newOptions;
+                        onUpdateOptions([ ...options, ...newOptions ]);
                         setSvgOptions(newOptions);
                     })
                     .finally(() => { setLoading(false); });

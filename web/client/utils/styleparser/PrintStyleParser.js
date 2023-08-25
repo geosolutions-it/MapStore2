@@ -13,7 +13,7 @@ import {
     geoStylerStyleFilter,
     drawWellKnownNameImageFromSymbolizer,
     drawIcons,
-    parseSymbolizerFunctions
+    parseSymbolizerExpressions
 } from './StyleParserUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 import { circleToPolygon } from '../DrawGeometryUtils';
@@ -171,7 +171,7 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
 export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
     return ({
         layer,
-        spec
+        spec = { projection: 'EPSG:3857' }
     }) => {
         if (!layer?.features) {
             return [];
@@ -208,7 +208,7 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
                         )
                     );
 
-                    const symbolizer = parseSymbolizerFunctions(circleGeometrySymbolizers[circleGeometrySymbolizers.length - 1]
+                    const symbolizer = parseSymbolizerExpressions(circleGeometrySymbolizers[circleGeometrySymbolizers.length - 1]
                         || pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
                         || polylineGeometrySymbolizers[polylineGeometrySymbolizers.length - 1]
                         || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1], feature);
@@ -237,7 +237,7 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
                             }
                         },
                         ...additionalPointSymbolizers.map((_additionalSymbolizer) => {
-                            const additionalSymbolizer = parseSymbolizerFunctions(_additionalSymbolizer, feature);
+                            const additionalSymbolizer = parseSymbolizerExpressions(_additionalSymbolizer, feature);
                             const geomFunction = getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...additionalSymbolizer});
                             if (geomFunction) {
                                 const coordinates = geomFunction(feature);

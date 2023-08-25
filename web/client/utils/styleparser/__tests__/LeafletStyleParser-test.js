@@ -41,7 +41,8 @@ describe('LeafletStyleParser', () => {
                                 fillOpacity: 0.5,
                                 outlineColor: '#00ff00',
                                 outlineOpacity: 0.25,
-                                outlineWidth: 2
+                                outlineWidth: 2,
+                                outlineDasharray: [10, 10]
                             }
                         ]
                     }
@@ -68,7 +69,8 @@ describe('LeafletStyleParser', () => {
                             fillOpacity: 0.5,
                             color: '#00ff00',
                             opacity: 0.25,
-                            weight: 2
+                            weight: 2,
+                            dashArray: '10 10'
                         });
                     } catch (e) {
                         done(e);
@@ -234,7 +236,8 @@ describe('LeafletStyleParser', () => {
                                 image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=',
                                 opacity: 0.5,
                                 size: 32,
-                                rotate: 90
+                                rotate: 90,
+                                anchor: 'top-right'
                             }
                         ]
                     }
@@ -259,7 +262,7 @@ describe('LeafletStyleParser', () => {
                         const icon = pointToLayer(feature, [7, 41]).options.icon;
                         expect(icon.options.iconUrl).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
                         expect(icon.options.iconSize).toEqual([32, 32]);
-                        expect(icon.options.iconAnchor).toEqual([16, 16]);
+                        expect(icon.options.iconAnchor).toEqual([32, 0]);
                     } catch (e) {
                         done(e);
                     }
@@ -286,7 +289,8 @@ describe('LeafletStyleParser', () => {
                                 fontWeight: 'bold',
                                 font: ['Arial'],
                                 size: 32,
-                                rotate: 90
+                                rotate: 90,
+                                anchor: 'bottom'
                             }
                         ]
                     }
@@ -318,11 +322,66 @@ describe('LeafletStyleParser', () => {
                         expect(div.children[0].style.fontStyle).toBe('italic');
                         expect(div.children[0].style.fontWeight).toBe('bold');
                         expect(div.children[0].style.fontSize).toBe('32px');
-                        expect(div.children[0].style.transform).toBe('translate(calc(-50% + 16px), calc(-50% + 16px)) rotateZ(90deg)');
+                        expect(div.children[0].style.transform).toBe('translate(calc(-50% + 16px), calc(-100% + 16px)) rotateZ(90deg)');
                         expect(div.children[0].style.webkitTextStrokeWidth).toBe('2px');
                         expect(div.children[0].style.webkitTextStrokeColor).toBe('rgb(255, 255, 255)');
                         expect(div.children[0].style.position).toBe('absolute');
                         expect(div.children[0].innerText.trim()).toBe('Hello World!');
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                });
+        });
+        it('should write a style function with mark symbolizer', (done) => {
+
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Circle',
+                                color: '#ff0000',
+                                opacity: 0.5,
+                                outlineColor: '#00ff00',
+                                outlineWidth: 2,
+                                radius: 1000000,
+                                geodesic: true,
+                                outlineOpacity: 0.25,
+                                outlineDasharray: [10, 10]
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            parser.writeStyle(style)
+                .then((styleFunc) => {
+                    try {
+                        const {
+                            pointToLayer
+                        } = styleFunc();
+
+                        const feature = {
+                            type: 'Feature',
+                            properties: {},
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [7, 41]
+                            }
+                        };
+                        const geoJSONPolygonCircle = pointToLayer(feature, [7, 41]);
+                        expect(geoJSONPolygonCircle.getLayers()[0].options.color).toBe('#00ff00');
+                        expect(geoJSONPolygonCircle.getLayers()[0].options.weight).toBe(2);
+                        expect(geoJSONPolygonCircle.getLayers()[0].options.opacity).toBe(0.25);
+                        expect(geoJSONPolygonCircle.getLayers()[0].options.dashArray).toBe('10 10');
+                        expect(geoJSONPolygonCircle.getLayers()[0].options.fillColor).toBe('#ff0000');
+                        expect(geoJSONPolygonCircle.getLayers()[0].options.fillOpacity).toBe(0.5);
+                        expect(geoJSONPolygonCircle.getLayers()[0].feature.geometry.type).toBe('Polygon');
+
                     } catch (e) {
                         done(e);
                     }

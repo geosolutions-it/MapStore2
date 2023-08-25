@@ -57,10 +57,11 @@ const MarkerUtils = {
                 // const c = document.getElementById("container");
                 // c.insertBefore(canvas, c.children[0])
                 const ctx = canvas.getContext("2d");
-
-                const offSet = getOffsets(iconColor, iconShape);
-                ctx.drawImage(extraMarkers.images[0], 4, 31, 35, 16); // shadowImage
-                ctx.drawImage(extraMarkers.images[1], Math.abs(offSet[0]), Math.abs(offSet[1]), size[0], size[1], 0, 0, size[0], size[1]); // iconImage
+                if (iconShape) {
+                    const offSet = getOffsets(iconColor, iconShape);
+                    ctx.drawImage(extraMarkers.images[0], 4, 31, 35, 16); // shadowImage
+                    ctx.drawImage(extraMarkers.images[1], Math.abs(offSet[0]), Math.abs(offSet[1]), size[0], size[1], 0, 0, size[0], size[1]); // iconImage
+                }
                 if (iconGlyph) {
                     // glyph
                     ctx.font = "14px FontAwesome";

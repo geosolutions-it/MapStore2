@@ -34,14 +34,20 @@ const glyphs = Object.keys(MarkerUtils.getGlyphs('fontawesome'));
 
 const Button = tooltip(ButtonRB);
 
-
+/**
+ * Component select the image property with msMarkerIcon function for an Icon symbolizer
+ * @memberof components.styleeditor
+ * @name MarkerIconSelector
+ * @prop {string} value image property
+ * @prop {function} onChange returns the updated value
+ */
 function MarkerIconSelector({
     value,
     onChange = () => {}
 }) {
     const [tab, setTab] = useState('marker');
     const [filter, setFilter] = useState('');
-    const { args } = value;
+    const { args } = value || {};
     const { color, shape, glyph } = (args || [])[0] || {};
     const selectedMarker = markers.find(marker => marker.style.color === color && marker.style.shape === shape);
     const filteredMarkers = markers.filter(marker =>
