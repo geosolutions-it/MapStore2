@@ -354,7 +354,6 @@ class CesiumModifyGeoJSONInteraction {
                 properties: this._fromEditProperties(newFeature?.properties, feature)
             }
             : feature);
-        this._map.scene.requestRender();
         return this._onEditEnd(newGeoJSON);
     }
     _getSingleLinStringGeometry() {
