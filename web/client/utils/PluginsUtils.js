@@ -15,6 +15,7 @@ import curry from 'lodash/curry';
 import {combineEpics as originalCombineEpics} from 'redux-observable';
 import {combineReducers as originalCombineReducers} from 'redux';
 import {wrapEpics} from "./EpicsUtils";
+import { pluginsSelectorCreator } from '../selectors/localConfig';
 
 /**
  * Loads a script inside the current page.
@@ -148,6 +149,10 @@ export const getPluginsConfiguration = (cfg, plugin) => {
         .map(cfgObj => isString(cfgObj) ? {
             name: cfgObj
         } : cfgObj);
+}
+
+export const getPluginConfig = (name, type = "desktop") => {
+    return (state) => find(pluginsSelectorCreator(type)(state), plugin => plugin === name || plugin.name === name);
 }
 
 export const getPluginConfiguration = (cfg, plugin) => {

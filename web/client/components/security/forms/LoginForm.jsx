@@ -25,6 +25,7 @@ class LoginForm extends React.Component {
         onLoginSuccess: PropTypes.func,
         showSubmitButton: PropTypes.bool,
         loginError: PropTypes.object,
+        autoFocus: PropTypes.bool,
 
         // actions
         onSubmit: PropTypes.func,
@@ -45,6 +46,7 @@ class LoginForm extends React.Component {
         onSubmit: () => {},
         onLoginError: () => {},
         showSubmitButton: true,
+        autoFocus: false,
         userNameText: <Message msgId="user.username"/>,
         passwordText: <Message msgId="user.password"/>,
         loginFailedMessage: <Message msgId="user.loginFail"/>,
@@ -115,6 +117,7 @@ class LoginForm extends React.Component {
                         type="text"
                         value={this.state.username}
                         placeholder={getMessageById(this.context.messages, "user.username")}
+                        autoFocus={this.props.autoFocus}
                         onChange={this.setUser} />
                 </FormGroup>
                 <FormGroup>
