@@ -24,18 +24,20 @@ import LoadingSpinner from "../misc/LoadingSpinner";
 
 const FormControl = localizedProps("placeholder")(FC);
 
-const getPathinfo = (url = "") => {
+export const getPathinfo = (url = "") => {
     const [, path] = url?.split("#/") ?? [];
-    const pathInfos = path?.split("/") ?? [];
-    let [pathType] = pathInfos ?? [];
+    const [pathType] = path?.split("/") ?? [];
+    let pathLastIndex = path?.lastIndexOf("/");
+    pathLastIndex = pathLastIndex === -1 ? path?.length : pathLastIndex;
     let pathTemplate = pathType === "context"
         ? "context"
-        : (path?.substring(0, path?.lastIndexOf("/")) ?? "");
-    pathTemplate = `/${pathTemplate}/` + '${id}';
+        : (path?.substring(0, pathLastIndex) ?? "");
+    pathTemplate = `/${!isEmpty(pathTemplate) ? pathTemplate : "viewer"}/` + '${id}';
 
     let type;
     switch (pathType) {
     case "viewer":
+    case "map":
         type = "map";
         break;
     case "dashboard":
@@ -49,6 +51,7 @@ const getPathinfo = (url = "") => {
         pathTemplate = pathTemplate.replace("id", "name") + '?category=PERMALINK';
         break;
     default:
+        type = "map";
         break;
     }
     return {
