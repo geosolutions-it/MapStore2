@@ -65,7 +65,7 @@ function EmptyRules() {
  * @prop {array} config.methods classification methods
  * @prop {function} config.getColors get color ramp available for ramp selector
  * @prop {bool} config.simple hide the symbolizer option for advanced style (eg patterns, classification)
- * @prop {string} config.svgSymbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root) symbols.json can be structured like [this](https://github.com/geosolutions-it/MapStore2/blob/90fb33465fd3ff56c4bbaafb5ab0ed492826622c/web/client/product/assets/symbols/symbols.json)
+ * @prop {string} config.svgSymbolsPath the URL to the JSON file index of the SVG symbols. By convention this JSON is an array of `name`,`label`  objects. The URL of each symbol by default is relative to the index file, so in the same folder, and named as `<name>.svg`.
  * @prop {object[]} config.lineDashOptions [{value: ["line1 gap1 line2 gap2 line3..."]}, {...}] defines how dashed lines are displayed.
  * @prop {object} ruleBlock describe all the properties and related configuration of special rules (eg: classification)
  * @prop {object} symbolizerBlock describe all the properties and related configuration of symbolizers
