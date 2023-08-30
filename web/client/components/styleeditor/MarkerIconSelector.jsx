@@ -35,7 +35,7 @@ const glyphs = Object.keys(MarkerUtils.getGlyphs('fontawesome'));
 const Button = tooltip(ButtonRB);
 
 /**
- * Component select the image property with msMarkerIcon function for an Icon symbolizer
+ * Component select the image property with `msMarkerIcon` function for an icon symbolizer
  * @memberof components.styleeditor
  * @name MarkerIconSelector
  * @prop {string} value image property
