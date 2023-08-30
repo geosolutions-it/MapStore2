@@ -196,6 +196,7 @@
 						"format": "image/jpeg",
 						"group": "background",
 						"name": "ne:ne-political",
+						"tileSize": 512,
 						"opacity": 1,
 						"title": "NE Political",
 						"thumbURL": "/product/assets/img/backgrounds/ne-political.jpg",
