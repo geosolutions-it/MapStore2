@@ -46,7 +46,7 @@ const getSVGOption = (value, previewId, label) => {
  * @name MarkSelector
  * @prop {string} value well know name or svg link
  * @prop {function} onChange returns the updated value
- * @prop {string} svgSymbolsPath path to symbols list (index.json or symbol.json endpoint)
+ * @prop {string} svgSymbolsPath path to symbols list (`index.json` or `symbol.json` endpoint)
  */
 function MarkSelector({
     value,
