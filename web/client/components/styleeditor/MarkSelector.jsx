@@ -73,7 +73,7 @@ function MarkSelector({
                 axios.get(svgSymbolsPath)
                     .then(({ data }) => {
                         const newOptions = data.map(({ name, label }) => {
-                            const svgValue = `${svgSymbolsPath.replace(/[^\/]*.json$/,`${name}.svg`);
+                            const svgValue = `${svgSymbolsPath.replace(/[^\/]*.json$/, `${name}.svg`)}`;
                             const previewId = `${name}-svg`;
                             return getSVGOption(svgValue, previewId, label);
                         });
