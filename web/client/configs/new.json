@@ -1,19 +1,15 @@
 {
-    "version": 2,
-    "map": {
-        "projection": "EPSG:900913",
-        "units": "m",
-        "center": {
-            "x": 1250000.000000,
-            "y": 5370000.000000,
-            "crs": "EPSG:900913"
-        },
-        "zoom": 5,
-        "maxExtent": [
-            -20037508.34, -20037508.34,
-            20037508.34, 20037508.34
-        ],
-        "layers": [{
+  "version": 2,
+	"map": {
+    "projection": "EPSG:900913",
+		"units": "m",
+		"center": {"x": 1250000.000000, "y": 5370000.000000, "crs": "EPSG:900913"},
+    "zoom":5,
+		"maxExtent": [
+			-20037508.34, -20037508.34,
+			20037508.34, 20037508.34
+		],
+		"layers": [{
                 "format": "image/jpeg",
                 "group": "background",
                 "name": "osm:osm_simple_light",
@@ -92,7 +88,7 @@
                     "https://maps5.geosolutionsgroup.com/geoserver/wms",
                     "https://maps6.geosolutionsgroup.com/geoserver/wms"
                 ],
-                "visibility": true,
+                "visibility": false,
                 "singleTile": false,
                 "credits": {
                     "title": "OSM Marine Dark | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
@@ -149,5 +145,5 @@
                 "type": "empty"
             }
         ]
-    }
+	}
 }
