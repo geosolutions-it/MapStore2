@@ -229,7 +229,8 @@
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
 						"source": "s2cloudless",
-						"singleTile": false
+						"singleTile": false,
+						"visibility": false
 					}, {
 						"type": "osm",
 						"title": "Open Street Map",
