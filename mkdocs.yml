@@ -140,6 +140,7 @@ nav:
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
       - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
       - Filters: 'developer-guide/LayerFilter.md'
+      - Styles: 'developer-guide/vector-style.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - Users:

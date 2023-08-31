@@ -11,7 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import MarkIcon from '../MarkIcon';
 
-describe('WFSLegend module component', () => {
+describe('MarkIcon module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);

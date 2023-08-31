@@ -2504,7 +2504,23 @@
             "startPoint": "Start point",
             "endPoint": "End point",
             "line": "Line",
-            "geodesicLine": "Geodesic line"
+            "geodesicLine": "Geodesic line",
+            "geodesic": "Geodesic",
+            "outlineStyle": "Outline style",
+            "strokeStyle": "Stroke style",
+            "anchor": "Anchor point",
+            "addCircleRule": "Add circle rule",
+            "left": "Left",
+            "right": "Right",
+            "topLeft": "Top left",
+            "top": "Top",
+            "topRight": "Top right",
+            "bottomLeft": "Bottom left",
+            "bottom": "Bottom",
+            "bottomRight": "Bottom right",
+            "glyph": "Glyph",
+            "marker": "Marker",
+            "filterByName": "Filter by name..."
         },
         "playback": {
             "settings": {

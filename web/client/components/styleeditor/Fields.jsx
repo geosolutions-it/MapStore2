@@ -27,6 +27,7 @@ import ModelInput from './ModelInput';
 import SelectInput from './SelectInput';
 import MultiInput from './MultiInput';
 import DebouncedFormControl from '../misc/DebouncedFormControl';
+import MarkerIconSelector from './MarkerIconSelector';
 
 export const fields = {
     color: ({
@@ -175,36 +176,39 @@ export const fields = {
             <MarkSelector { ...props }/>
         </PropertyField>
     ),
-    image: ({
-        label,
-        value,
-        config: {},
-        onChange
-    }) => {
+    image: (props) => {
+        const {
+            label,
+            value,
+            config: {},
+            onChange
+        } = props;
         const [error, setError] = useState(false);
-        const currentValue = isObject(value)
-            ? value.src
-            : value;
+        const isMarkerIcon = isObject(value) && value?.name === 'msMarkerIcon';
         return (
             <PropertyField
                 label={label}
                 invalid={!!(error?.type === 'error')}
                 warning={!!(error?.type === 'warning')}>
-                <IconInput
-                    label={label}
-                    value={currentValue}
-                    onChange={(newValue) => {
-                        onChange(newValue);
-                        setError(false);
-                    }}
-                    onLoad={(err, src) => {
-                        setError(err);
-                        if (err) {
-                            // send the error to VisualStyleEditor component
-                            onChange({ src, errorId: err.messageId });
-                        }
-                    }}
-                />
+                {isMarkerIcon
+                    ? <MarkerIconSelector { ...props }/>
+                    : <IconInput
+                        label={label}
+                        value={isObject(value)
+                            ? value.src
+                            : value}
+                        onChange={(newValue) => {
+                            onChange(newValue);
+                            setError(false);
+                        }}
+                        onLoad={(err, src) => {
+                            setError(err);
+                            if (err) {
+                                // send the error to VisualStyleEditor component
+                                onChange({ src, errorId: err.messageId });
+                            }
+                        }}
+                    />}
             </PropertyField>
         );
     },
@@ -444,9 +448,19 @@ export const fields = {
         label,
         value,
         onChange,
-        config: {
-            options
-        }
+        lineDashOptions = [
+            { value: '0' },
+            { value: '1 4' },
+            { value: '1 12' },
+            { value: '8 8' },
+            { value: '8 16' },
+            { value: '8 8 1 8' },
+            { value: '8 8 1 4 1 8' },
+            { value: '10 50 30' },
+            { value: '6 6' },
+            { value: '20 20' },
+            { value: '30 30' }
+        ]
     }) => {
         return (
             <PropertyField
@@ -454,7 +468,7 @@ export const fields = {
                 <DashArray
                     dashArray={value}
                     onChange={onChange}
-                    options={options}
+                    options={lineDashOptions}
                     defaultStrokeWidth={2}
                     isValidNewOption={(option) => {
                         if (option.label) {

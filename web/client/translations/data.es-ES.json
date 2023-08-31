@@ -2494,7 +2494,23 @@
             "startPoint": "Punto de inicio",
             "endPoint": "Punto final",
             "line": "Línea",
-            "geodesicLine": "Línea geodésica"
+            "geodesicLine": "Línea geodésica",
+            "geodesic": "Geodésico",
+            "outlineStyle": "Estilo de esquema",
+            "strokeStyle": "Estilo de trazo",
+            "anchor": "Punto de anclaje",
+            "addCircleRule": "Agregar regla de círculo",
+            "left": "izquierda",
+            "right": "bien",
+            "topLeft": "Arriba izquierda",
+            "top": "arriba",
+            "topRight": "Arriba derecha",
+            "bottomLeft": "Abajo izquierda",
+            "bottom": "Abajo",
+            "bottomRight": "Abajo derecha",
+            "glyph": "Glifo",
+            "marker": "Marcador",
+            "filterByName": "Filtrar por nombre..."
         },
         "playback": {
             "settings": {
