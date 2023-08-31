@@ -75,27 +75,6 @@
             }, {
                 "format": "image/jpeg",
                 "group": "background",
-                "name": "osm:osm_marine_dark_bg",
-                "opacity": 1,
-                "thumbURL": "product/assets/img/osm-marine-dark.jpg",
-                "title": "OSM Marine Dark",
-                "type": "wms",
-                "url": [
-                    "https://maps1.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps2.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps3.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps4.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps5.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps6.geosolutionsgroup.com/geoserver/wms"
-                ],
-                "visibility": false,
-                "singleTile": false,
-                "credits": {
-                    "title": "OSM Marine Dark | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
-                }
-            }, {
-                "format": "image/jpeg",
-                "group": "background",
                 "name": "ne:ne-political",
                 "opacity": 1,
                 "title": "NE Political",
