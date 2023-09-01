@@ -1,14 +1,29 @@
 site_name: MapStore
 site_url: 'https://mapstore.geosolutionsgroup.com'
+copyright: <b><a href="https://mapstore.geosolutionsgroup.com" target="_blank">MapStore&copy;</a></b> is Free and Open Source software and is licensed under the Simplified BSD License.
 use_directory_urls: true
 theme:
   name: 'material'
+  highlightjs: true
+  icon:
+    logo: 'img/mapstore2-logo.png'
+    repo: 'fontawesome/brands/github-alt'
+  favicon: 'img/favicon.ico'
   custom_dir: 'docs/theme'
   language: 'en'
-  feature:
-    tabs: true
+  features:
+    - header.autohide
+    - navigation.instant
+    - navigation.top
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.path
+    - navigation.indexes
+    - navigation.footer
+    - content.code.copy
   logo: 'img/mapstore2-logo.png'
   company_url: 'http://www.geo-solutions.it'
+  company_logo: 'img/geosolutions-brand.png'
   company_contacts: 'GeoSolutions | sales@geosolutionsgroup.com '
   palette:
     primary: 'teal'
@@ -20,7 +35,7 @@ extra:
       icon: 'fontawesome/brands/github'
       link: 'https://github.com/geosolutions-it'
     - type: 'twitter'
-      icon: 'fontawesome/brands/twitter'
+      icon: 'fontawesome/brands/x-twitter'
       link: 'https://twitter.com/geosolutions_it'
     - type: 'linkedin'
       icon: 'fontawesome/brands/linkedin'
@@ -46,6 +61,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_div_format
 nav:
   - Home: 'index.md' # To include in pdf
+  - Quick Start: 'quick-start.md'
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
     - Managing Users and Groups:
@@ -157,7 +173,6 @@ nav:
     - Communicating with MapStore:
       - API usage: 'developer-guide/API-usage.md'
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
-  - Quick Start: 'quick-start.md'
 plugins:
   - search
   - pdf-export:
