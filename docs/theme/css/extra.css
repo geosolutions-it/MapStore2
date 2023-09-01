@@ -37,6 +37,9 @@ a:hover {
 .md-social {
     justify-content: center;
 }
+.md-footer .md-footer-nav {
+    background-color: rgba(21, 147, 93, 0.89) !important;
+}
 /* end footer */
 .md-container {
     padding-top: 80px;

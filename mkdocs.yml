@@ -60,8 +60,9 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_div_format
 nav:
-  - Home: 'index.md' # To include in pdf
-  - Quick Start: 'quick-start.md'
+  - Home:
+    - Home: 'index.md' # To include in pdf
+    - Quick Start: 'quick-start.md'
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
     - Managing Users and Groups:
