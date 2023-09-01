@@ -217,6 +217,7 @@ export default class ContextCreator extends React.Component {
             "ScaleBox",
             "Toolbar",
             "MapLoading",
+            "StyleEditor",
             {
                 "name": "Identify",
                 "overrides": {

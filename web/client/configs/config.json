@@ -21,7 +21,7 @@
                 "name": "osm:osm",
                 "opacity": 1,
                 "title": "OSM Bright",
-                "thumbURL": "/product/assets/img/osm-bright.jpg",
+                "thumbURL": "product/assets/img/osm-bright.jpg",
                 "type": "wms",
                 "url": [
                     "https://maps1.geosolutionsgroup.com/geoserver/wms",

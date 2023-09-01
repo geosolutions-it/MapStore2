@@ -2531,7 +2531,23 @@
             "startPoint": "Startpunkt",
             "endPoint": "Endpunkt",
             "line": "Linie",
-            "geodesicLine": "Geodätische Linie"
+            "geodesicLine": "Geodätische Linie",
+            "geodesic": "Geodätisch",
+            "outlineStyle": "Umrissstil",
+            "strokeStyle": "Strichstil",
+            "anchor": "Ankerpunkt",
+            "addCircleRule": "Kreisregel hinzufügen",
+            "left": "Links",
+            "right": "Rechts",
+            "topLeft": "Oben links",
+            "top": "Oben",
+            "topRight": "Oben rechts",
+            "bottomLeft": "Unten links",
+            "bottom": "Unten",
+            "bottomRight": "Unten rechts",
+            "glyph": "Glyphe",
+            "marker": "Marker",
+            "filterByName": "Nach name filtern..."
         },
         "playback": {
             "settings": {

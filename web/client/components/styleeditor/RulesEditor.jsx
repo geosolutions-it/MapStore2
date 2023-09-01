@@ -65,6 +65,8 @@ function EmptyRules() {
  * @prop {array} config.methods classification methods
  * @prop {function} config.getColors get color ramp available for ramp selector
  * @prop {bool} config.simple hide the symbolizer option for advanced style (eg patterns, classification)
+ * @prop {string} config.svgSymbolsPath the URL to the JSON file index of the SVG symbols. By convention this JSON is an array of `name`,`label`  objects. The URL of each symbol by default is relative to the index file, so in the same folder, and named as `<name>.svg`.
+ * @prop {object[]} config.lineDashOptions [{value: ["line1 gap1 line2 gap2 line3..."]}, {...}] defines how dashed lines are displayed.
  * @prop {object} ruleBlock describe all the properties and related configuration of special rules (eg: classification)
  * @prop {object} symbolizerBlock describe all the properties and related configuration of symbolizers
  * @prop {func} onUpdate return changes that needs an async update, argument contains property of the rule to update
@@ -92,7 +94,9 @@ const RulesEditor = forwardRef(({
         getColors,
         classification,
         format,
-        simple
+        simple,
+        svgSymbolsPath,
+        lineDashOptions
     } = config;
 
     // needed for slider
@@ -384,7 +388,9 @@ const RulesEditor = forwardRef(({
                                                 config={{
                                                     bands,
                                                     attributes,
-                                                    fonts
+                                                    fonts,
+                                                    svgSymbolsPath,
+                                                    lineDashOptions
                                                 }}
                                                 onChange={(values) => handleChanges({ values, ruleId, symbolizerId })}
                                             />
