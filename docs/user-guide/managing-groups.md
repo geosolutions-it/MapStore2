@@ -45,7 +45,7 @@ In this section the Admin is allowed to:
 
 Through the *Members manager* section it is possible to choose which users are part of the group:
 
-<img src="../img/managing-groups/sel-users.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/managing-groups/sel-users.mp4"/></video>
 
 ## Attributes
 

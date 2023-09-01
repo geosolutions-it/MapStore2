@@ -62,7 +62,7 @@ Once the widgets are added in the viewer it is possible to:
 
 * Change widgets position by moving them with a simple *Drag and Drop* and resize them:
 
-<img src="../img/exploring-dashboards/move-resize.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/exploring-dashboards/move-resize.mp4" /></video>
 
 * Access widgets menu <img src="../img/button/menu.jpg" class="ms-docbutton"/> from which the user can choose between several options (more information about this menu's options can be found in Map's [Access Widget Menu](widgets.md#access-widgets-menu) section)
 
