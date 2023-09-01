@@ -188,7 +188,8 @@ Through this section, the user is allowed to:
 <img src="../img/widgets/legend_name.jpg" class="ms-docimage"/>
 
 !!! Note
-        The tooltips of the X and Y axis labels are available by hovering the mouse over the charts. This way the labels are available even if the **Hide labels** option for the X and Y axis is enabled.  <img src="../img/widgets/label_tooltips.<video class="ms-docimage" controls>msource"/></video>
+        The tooltips of the X and Y axis labels are available by hovering the mouse over the charts. This way the labels are available even if the **Hide labels** option for the X and Y axis is enabled.
+        <video class="ms-docimage" controls><source src="../img/widgets/label_tooltips.mp4" /></video>
 
 !!! Warning
     In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
