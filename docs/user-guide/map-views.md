@@ -13,7 +13,7 @@ Once the user opens a map, the *Map Views* tools can be opened through the <img 
 
 To create a new simple view the user can simply move the map to the interested area, enable the desired layers in TOC to be displayed in the map and finally click on the <img src="../img/button/+++.jpg" class="ms-docbutton" /> button. The view will be created and visible in the *Views* list by clicking the <img src="../img/button/timeline-layers-list-button.jpg" class="ms-docbutton" /> button.
 
-<img src="../img/map-views/add-view.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/map-views/add-view.mp4"/></video>
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize and edit the new view by opening the Edit panel through the <img src="../img/button/editing-button.jpg" class="ms-docbutton" /> button. Here the user is allowed to:
 
@@ -50,7 +50,7 @@ If the user enables the **Inverse** option, simply the inverse mask is applied u
 
 In *3D mode*, using the same logic described above for the Masking option, it is also possible to Clip (not Mask) each 3D Tiles or Terrain layers using a WFS or a vector layer as a clipping source. Furthermore, in this case the user can also choose which layer feature can be used as *Clipping feature*.
 
-<img src="../img/map-views/clipping.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/map-views/clipping.mp4"/></video>
 
 !!! warning
     The clipping layer must have polygon convex features. Concave polygons are not supported by this type of clipping.
@@ -66,7 +66,7 @@ In *3D mode*, using the same logic described above for the Masking option, it is
 
 Once multiple views are added to the *Map Views* tool it allows to visualize them in sequence by clicking on the <img src="../img/button/timeline-play-button.jpg" class="ms-docbutton" /> button. Doing that the presentation mode starts and each view is displayed in the Map Viewer, together with its descriptive panel (if configured) on the left side of the screen, for a time depended on the duration previously configured.
 
-<img src="../img/map-views/views-navigation.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/map-views/views-navigation.mp4"/></video>
 
 The user can also choose to navigate each view manually using the navigation toolbar provided by the tool.
 
