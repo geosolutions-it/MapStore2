@@ -18,7 +18,7 @@ import CesiumModifyGeoJSONInteraction from '../../../utils/cesium/ModifyGeoJSONI
  * @prop {function} onEditEnd triggered one the editing has been completed
  * @prop {function} toEditProperties convert properties of feature to edit properties `geometryType`, `geodesic` and `radius` are needed to compute the editing. `geometryType` could be: `Point`, `LineString`, `Polygon` or `Circle`
  * @prop {function} fromEditProperties restore properties of the feature to the original one
- * @prop {number} mouseMoveThrottleTime throttle value to limit the mousemove event callback and improve the interaction, default 100ms
+ * @prop {number} mouseMoveThrottleTime throttle time in milliseconds, to limit the mousemove event callback and improve the interaction. default value is 100
  * @prop {object} style override the default style of drawing mode (see web/client/utils/DrawUtils.js)
  */
 function EditGeoJSONSupport({
