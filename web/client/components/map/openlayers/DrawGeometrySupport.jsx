@@ -14,7 +14,7 @@ import OpenLayersDrawGeometryInteraction from '../../../utils/openlayers/DrawGeo
  * @name DrawGeometrySupport
  * @prop {object} map instance of the current map library in use
  * @prop {boolean} active activate the drawing functionalities
- * @prop {string} geometryType type of geometry to draw: Circle, Point, LineString or Polygon
+ * @prop {string} geometryType type of geometry to draw: `Circle`, `Point`, `LineString` or `Polygon`
  * @prop {string} geodesic if true the coordinates will visualized as geodetic
  * @prop {function} onDrawStart callback triggered at drawing start
  * @prop {function} onDrawing callback triggered at every click/pointerdown events
