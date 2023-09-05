@@ -570,11 +570,7 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        toEditProperties={(feature) => ({
-                            geodesic: feature.properties.geodesic,
-                            radius: feature.properties.radius,
-                            geometryType: feature.properties.type
-                        })}
+                        getGeometryType={(feature) => feature.properties.type}
                         onEditEnd={(newGeoJSON) => {
                             try {
                                 expect(newGeoJSON.type).toBe('Feature');
@@ -651,15 +647,7 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        toEditProperties={(feature) => ({
-                            geodesic: feature.properties.geodesic,
-                            radius: feature.properties.radius,
-                            geometryType: feature.properties.type
-                        })}
-                        fromEditProperties={(editProperties, feature) => ({
-                            ...feature?.properties,
-                            radius: Math.round(editProperties.radius)
-                        })}
+                        getGeometryType={(feature) => feature.properties.type}
                         style={{
                             lineDrawing: {
                                 color: '#000000',
@@ -673,12 +661,13 @@ describe('Cesium EditGeoJSONSupport', () => {
                             try {
                                 expect(newGeoJSON.type).toBe('Feature');
                                 expect(newGeoJSON.id).toBe('feature-01');
-                                expect(newGeoJSON.properties).toEqual({
+                                const { radius, ...properties } = newGeoJSON.properties;
+                                expect(properties).toEqual({
                                     name: 'Location 01',
                                     type: 'Circle',
-                                    geodesic: true,
-                                    radius: 1071
+                                    geodesic: true
                                 });
+                                expect(Math.round(radius)).toBe(4700);
                                 expect(newGeoJSON.geometry.type).toBe('Point');
                                 expect(newGeoJSON.geometry.coordinates).toEqual(geojson.geometry.coordinates);
                             } catch (e) {
@@ -698,10 +687,10 @@ describe('Cesium EditGeoJSONSupport', () => {
             if (!ready && ref.map.scene.globe.tilesLoaded) {
                 ready = true;
                 const mapCanvas = ref.map.canvas;
-                const options = { clientX: (mapCanvas.clientWidth / 2) + 45, clientY: mapCanvas.clientHeight / 2 };
+                const options = { clientX: (mapCanvas.clientWidth / 2) + 11, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
                 simulateClick(mapCanvas, {
-                    clientX: options.clientX + 50,
+                    clientX: options.clientX + 39,
                     clientY: options.clientY
                 });
             }

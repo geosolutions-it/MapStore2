@@ -26,7 +26,11 @@ import {
 import throttle from 'lodash/throttle';
 import isString from 'lodash/isString';
 import { computePositionInfo } from './ClickUtils';
-import { generateEditingStyle } from '../DrawUtils';
+import {
+    generateEditingStyle,
+    featureToModifyProperties as defaultFeatureToModifyProperties,
+    modifyPropertiesToFeatureProperties as defaultModifyPropertiesToFeatureProperties
+} from '../DrawUtils';
 
 function featureToCartesianCoordinates(geometryType, feature) {
 
@@ -87,17 +91,22 @@ function updateFeatureCoordinates(feature, updateCallback) {
 
 /**
  * Class to manage all modify interaction of Cesium library given a GeoJSON as input data
+ * At the moment are supported `Feature` or `FeatureCollection` with single geometries, **does not support multi geometry types**.
+ * Following feature properties are used by the edit tool:
+ * - properties.geodesic {boolean} if true enabled geodesic geometries editing
+ * - properties.radius {number} value in meters of radius for `Circle` geometry
  * @param {object} options.map a Cesium map instance
- * @param {object} options.geojson Feature or FeatureCollection GeoJSON data
- * @param {function} options.toEditProperties convert properties of feature to edit properties geometryType, geodesic and radius are needed to compute the editing. geometryType could be: Point, LineString, Polygon or Circle
- * @param {function} options.fromEditProperties restore properties of the feature to the original one
+ * @prop {object} geojson `Feature` or `FeatureCollection` GeoJSON data, **does not support multi geometry types**
+ * @prop {function} getGeometryType argument of the function is the feature and it should return a string representing the geometry type: `Point`, `LineString`, `Polygon` or `Circle`
  * @param {function} options.onEditEnd triggered one the editing has been completed
  * @param {object} options.style style for drawing geometries, see the web/client/DrawUtils.js file
- * @param {number} options.mouseMoveThrottleTime change the throttle time to get feedback on mouse move event
+ * @param {number} options.mouseMoveThrottleTime change the throttle time to get feedback on mouse move event, default 100ms
  */
 class CesiumModifyGeoJSONInteraction {
     constructor(options = {}) {
-
+        // TODO: add support for multi geometry type.
+        // We could check if possible to keep the currently workflow by splitting the multi geometry in single geometry
+        // then on edit end reconstruct the multi geometry
         this._map = options.map;
         this._ready = false;
         Cesium.GroundPrimitive.initializeTerrainHeights()
@@ -143,11 +152,8 @@ class CesiumModifyGeoJSONInteraction {
                 };
                 window.addEventListener('keydown', this._onKeyboardEvent);
 
-                this._toEditProperties = options.toEditProperties ? options.toEditProperties : (feature) => ({ ...feature?.properties, geometryType: feature?.geometry?.type });
-                this._fromEditProperties = options.fromEditProperties ? options.fromEditProperties : (editProperties, feature) => ({
-                    ...feature?.properties,
-                    ...(editProperties?.radius !== undefined && { radius: editProperties.radius })
-                });
+                this._featureToModifyProperties = defaultFeatureToModifyProperties({ getGeometryType: options?.getGeometryType });
+                this._modifyPropertiesToFeatureProperties = defaultModifyPropertiesToFeatureProperties;
                 this._onEditEnd = options?.onEditEnd ? options.onEditEnd : () => {};
 
                 this.setGeoJSON(options?.geojson || []);
@@ -159,7 +165,7 @@ class CesiumModifyGeoJSONInteraction {
                 geojson?.type === 'Feature'
                     ? [geojson]
                     : geojson?.features
-            ).map((feature) => ({ ...feature, properties: this._toEditProperties(feature) })) : [];
+            ).map((feature) => ({ ...feature, properties: this._featureToModifyProperties(feature) })) : [];
             this._geojson = {...geojson};
             this._staticBillboardCollection.removeAll();
             this._staticPrimitivesCollection.removeAll();
@@ -351,7 +357,7 @@ class CesiumModifyGeoJSONInteraction {
             ? {
                 ...feature,
                 geometry: newFeature.geometry,
-                properties: this._fromEditProperties(newFeature?.properties, feature)
+                properties: this._modifyPropertiesToFeatureProperties(newFeature?.properties, feature)
             }
             : feature);
         return this._onEditEnd(newGeoJSON);

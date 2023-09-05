@@ -60,3 +60,27 @@ export function generateEditingStyle(style) {
         ...style
     };
 }
+/**
+ * Default geometry type extractor
+ * @param {object} feature GeoJSON feature
+ * @returns string supported: `Point`, `LineString`, `Polygon` or `Circle`
+ */
+const getModifyGeometryType = (feature) => feature?.geometry?.type;
+/**
+ * Return a function to apply the correct geometryType to the modify properties
+ * @param {function} options.getGeometryType should return a string representing the editing geometry given a GeoJSON feature as argument (see `getModifyGeometryType`)
+ * @returns function
+ */
+export const featureToModifyProperties = ({ getGeometryType = getModifyGeometryType } = {}) =>
+    (feature) => ({ ...feature?.properties, geometryType: getGeometryType(feature) });
+/**
+ * Applies modified value to a GeoJSON feature properties object
+ * @param {object} modifyProperties modified properties
+ * @param {number} modifyProperties.radius radius of the circle in meters when geometry type is `Circle`
+ * @param {object} feature the original GeoJSON feature
+ * @returns object with changed properties
+ */
+export const modifyPropertiesToFeatureProperties = (modifyProperties, feature) => ({
+    ...feature?.properties,
+    ...(modifyProperties?.radius !== undefined && { radius: modifyProperties.radius })
+});

@@ -27,7 +27,11 @@ import { transformLineToArcs, reproject } from '../CoordinatesUtils';
 import { GeometryCollection } from 'ol/geom';
 import DrawHole from './hole/DrawHole';
 import tinycolor from 'tinycolor2';
-import { generateEditingStyle } from '../DrawUtils';
+import {
+    generateEditingStyle,
+    featureToModifyProperties as defaultFeatureToModifyProperties,
+    modifyPropertiesToFeatureProperties as defaultModifyPropertiesToFeatureProperties
+} from '../DrawUtils';
 
 const geoJSON = new GeoJSON();
 
@@ -46,14 +50,14 @@ const transformCoordinatesToGeodesic = (map, coordinates) => {
 function toOLFeature({
     map,
     feature,
-    toEditProperties = () => ({})
+    featureToModifyProperties = () => ({})
 }) {
     const mapProjection = map.getView().getProjection().getCode();
     const olFeature = geoJSON.readFeature(feature, {
         featureProjection: mapProjection,
         dataProjection: 'EPSG:4326'
     });
-    const properties = toEditProperties(feature);
+    const properties = featureToModifyProperties(feature);
     const { geodesic, geometryType, radius } = properties;
     olFeature.set('@properties', properties);
     if (geodesic && geometryType === 'Circle' && radius) {
@@ -80,7 +84,7 @@ function toGeoJSONFeature({
     map,
     olFeature: _olFeature,
     feature,
-    fromEditProperties = () => ({})
+    modifyPropertiesToFeatureProperties = () => ({})
 }) {
     const mapProjection = map.getView().getProjection().getCode();
     let olFeature = _olFeature.clone();
@@ -103,7 +107,7 @@ function toGeoJSONFeature({
     return {
         ...feature,
         geometry,
-        properties: fromEditProperties(properties, feature)
+        properties: modifyPropertiesToFeatureProperties(properties, feature)
     };
 }
 
@@ -117,23 +121,23 @@ function getColor(color, opacity) {
 
 /**
  * Class to manage all modify interaction of OpenLayers library given a GeoJSON as input data
+ * At the moment are supported `Feature` or `FeatureCollection` with single geometries, **does not support multi geometry types**.
+ * Following feature properties are used by the edit tool:
+ * - properties.geodesic {boolean} if true enabled geodesic geometries editing
+ * - properties.radius {number} value in meters of radius for `Circle` geometry
  * @param {object} options.map a Cesium map instance
- * @param {object} options.geojson `Feature` or `FeatureCollection` GeoJSON data
- * @param {function} options.toEditProperties convert properties of feature to edit properties `geometryType`, geodesic and radius are needed to compute the editing. `geometryType` could be: `Point`, `LineString`, `Polygon` or `Circle`
- * @param {function} options.fromEditProperties restore properties of the feature to the original one
+ * @param {object} options.geojson `Feature` or `FeatureCollection` GeoJSON data **does not support multi geometry types**
+ * @prop {function} getGeometryType argument of the function is the feature and it should return a string representing the geometry type: `Point`, `LineString`, `Polygon` or `Circle`
  * @param {function} options.onEditEnd triggered one the editing has been completed
  * @param {object} options.style style for drawing geometries, see the `web/client/DrawUtils.js` file
  */
 class OpenLayersModifyGeoJSONInteraction {
     constructor(options = {}) {
-
+        // TODO: add support for multi geometry type. Verify if the interactions of OL are already supporting it
         this._map = options.map;
         const geojson = options.geojson;
-        this._toEditProperties = options.toEditProperties ? options.toEditProperties : (feature) => ({ ...feature?.properties, geometryType: feature?.geometry?.type });
-        const fromEditProperties = options.fromEditProperties ? options.fromEditProperties : (editProperties, feature) => ({
-            ...feature?.properties,
-            ...(editProperties?.radius !== undefined && { radius: editProperties.radius })
-        });
+        this._featureToModifyProperties = defaultFeatureToModifyProperties({ getGeometryType: options?.getGeometryType });
+        const modifyPropertiesToFeatureProperties = defaultModifyPropertiesToFeatureProperties;
         const onEditEnd = options.onEditEnd ? options.onEditEnd : () => {};
         const style = generateEditingStyle(options.style);
         // not enabled yet on Cesium
@@ -222,7 +226,7 @@ class OpenLayersModifyGeoJSONInteraction {
                             map: this._map,
                             olFeature,
                             feature,
-                            fromEditProperties
+                            modifyPropertiesToFeatureProperties
                         });
                     }
                     return feature;
@@ -315,7 +319,7 @@ class OpenLayersModifyGeoJSONInteraction {
                             map: this._map,
                             olFeature: event.feature,
                             feature,
-                            fromEditProperties
+                            modifyPropertiesToFeatureProperties
                         });
                     })
                 );
@@ -358,7 +362,7 @@ class OpenLayersModifyGeoJSONInteraction {
                                 map: this._map,
                                 olFeature: event.feature,
                                 feature,
-                                fromEditProperties
+                                modifyPropertiesToFeatureProperties
                             });
                         }
                         return feature;
@@ -379,7 +383,7 @@ class OpenLayersModifyGeoJSONInteraction {
                 this._features.map((feature) => toOLFeature({
                     map: this._map,
                     feature,
-                    toEditProperties: this._toEditProperties
+                    featureToModifyProperties: this._featureToModifyProperties
                 }))
             );
         }

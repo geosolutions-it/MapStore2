@@ -11,13 +11,16 @@ import OpenLayersModifyGeoJSONInteraction from '../../../utils/openlayers/Modify
 
 /**
  * Support for 2D drawing, this component provides only the interactions and callback for a drawing workflow
+ * At the moment are supported `Feature` or `FeatureCollection` with single geometries, **does not support multi geometry types**.
+ * Following feature properties are used by the edit tool:
+ * - properties.geodesic {boolean} if true enabled geodesic geometries editing
+ * - properties.radius {number} value in meters of radius for `Circle` geometry
  * @name EditGeoJSONSupport
  * @prop {object} map instance of the current map library in use
  * @prop {boolean} active activate the drawing functionalities
- * @prop {object} geojson `Feature` or `FeatureCollection` GeoJSON data
+ * @prop {object} geojson `Feature` or `FeatureCollection` GeoJSON data, **does not support multi geometry types**
  * @prop {function} onEditEnd triggered one the editing has been completed
- * @prop {function} toEditProperties convert properties of feature to edit properties `geometryType`, `geodesic` and `radius` are needed to compute the editing. `geometryType` could be: `Point`, `LineString`, `Polygon` or `Circle`
- * @prop {function} fromEditProperties restore properties of the feature to the original one
+ * @prop {function} getGeometryType argument of the function is the feature and it should return a string representing the geometry type: `Point`, `LineString`, `Polygon` or `Circle`
  * @prop {object} style override the default style of drawing mode (see `web/client/utils/DrawUtils.js`)
  */
 function EditGeoJSONSupport({
@@ -27,8 +30,7 @@ function EditGeoJSONSupport({
     onEditEnd,
     style,
     enablePolygonHoles = false, // not implemented yet in Cesium
-    toEditProperties,
-    fromEditProperties
+    getGeometryType
 }) {
     const modify = useRef();
 
@@ -37,8 +39,7 @@ function EditGeoJSONSupport({
             modify.current = new OpenLayersModifyGeoJSONInteraction({
                 map,
                 geojson,
-                toEditProperties,
-                fromEditProperties,
+                getGeometryType,
                 onEditEnd,
                 style,
                 enablePolygonHoles

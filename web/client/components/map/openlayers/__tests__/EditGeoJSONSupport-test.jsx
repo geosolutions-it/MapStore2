@@ -567,11 +567,7 @@ describe('OpenLayers EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        toEditProperties={(feature) => ({
-                            geodesic: feature.properties.geodesic,
-                            radius: feature.properties.radius,
-                            geometryType: feature.properties.type
-                        })}
+                        getGeometryType={(feature) => feature.properties.type}
                         onEditEnd={(newGeoJSON) => {
                             try {
                                 expect(newGeoJSON.type).toBe('Feature');
@@ -643,15 +639,7 @@ describe('OpenLayers EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        toEditProperties={(feature) => ({
-                            geodesic: feature.properties.geodesic,
-                            radius: feature.properties.radius,
-                            geometryType: feature.properties.type
-                        })}
-                        fromEditProperties={(editProperties, feature) => ({
-                            ...feature?.properties,
-                            radius: Math.round(editProperties.radius)
-                        })}
+                        getGeometryType={(feature) => feature.properties.type}
                         style={{
                             lineDrawing: {
                                 color: '#000000',
@@ -665,12 +653,13 @@ describe('OpenLayers EditGeoJSONSupport', () => {
                             try {
                                 expect(newGeoJSON.type).toBe('Feature');
                                 expect(newGeoJSON.id).toBe('feature-01');
-                                expect(newGeoJSON.properties).toEqual({
+                                const { radius, ...properties } = newGeoJSON.properties;
+                                expect(properties).toEqual({
                                     name: 'Location 01',
                                     type: 'Circle',
-                                    geodesic: false,
-                                    radius: 244
+                                    geodesic: false
                                 });
+                                expect(Math.round(radius)).toBe(244);
                                 expect(newGeoJSON.geometry.type).toBe('Point');
                             } catch (e) {
                                 done(e);

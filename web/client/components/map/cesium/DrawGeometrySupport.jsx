@@ -21,7 +21,6 @@ import CesiumDrawGeometryInteraction from '../../../utils/cesium/DrawGeometryInt
  * @prop {function} onMouseMove callback triggered at every mouse move events
  * @prop {function} onDrawEnd callback triggered at drawing end with double click event or single click if coordinatesLength is defined
  * @prop {function} getObjectsToExcludeOnPick function that return all the primitive collection to be excluded while picking the coordinates, it is useful to exclude the current drawn geometries
- * @prop {number} mouseMoveThrottleTime throttle value to limit the mousemove event callback and improve the interaction, default 100ms
  * @prop {boolean} depthTestAgainstTerrain force depth against terrain while picking the coordinates
  * @prop {boolean} sampleTerrain enable sample terrain functionality only for Point geometry type
  * @prop {number} coordinatesLength number of coordinates expected by a `LineString` or `Polygon` geometry, `onDrawEnd` will be called after the last coordinates added with single click interaction
@@ -40,7 +39,6 @@ function DrawGeometrySupport({
     onInit = () => { },
     onDestroy = () => { },
     getObjectsToExcludeOnPick,
-    mouseMoveThrottleTime,
     depthTestAgainstTerrain,
     sampleTerrain,
     coordinatesLength,
@@ -61,7 +59,6 @@ function DrawGeometrySupport({
                 style,
                 geodesic,
                 sampleTerrain,
-                mouseMoveThrottleTime,
                 onDrawStart,
                 onDrawing,
                 onMouseMove,
@@ -77,7 +74,7 @@ function DrawGeometrySupport({
                 draw.current = null;
             }
         };
-    }, [map, active, geometryType, mouseMoveThrottleTime, sampleTerrain, coordinatesLength, geodesic]);
+    }, [map, active, geometryType, sampleTerrain, coordinatesLength, geodesic]);
 
     return null;
 }

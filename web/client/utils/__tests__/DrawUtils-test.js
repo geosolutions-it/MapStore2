@@ -7,7 +7,11 @@
  */
 
 import expect from 'expect';
-import { generateEditingStyle } from '../DrawUtils';
+import {
+    generateEditingStyle,
+    featureToModifyProperties,
+    modifyPropertiesToFeatureProperties
+} from '../DrawUtils';
 
 describe('Test the DrawUtils', () => {
     it('generateEditingStyle with custom style', () => {
@@ -23,5 +27,14 @@ describe('Test the DrawUtils', () => {
             ...generateEditingStyle(),
             lineDrawing: lineDrawingCustom
         });
+    });
+    it('featureToModifyProperties', () => {
+        const feature = { type: 'Feature', properties: { geometryType: 'Circle' }, geometry: { type: 'Point', coordinates: [0, 0] } };
+        expect(featureToModifyProperties()(feature)).toEqual({ geometryType: 'Point' });
+        expect(featureToModifyProperties({ getGeometryType: ({ properties }) => properties.geometryType })(feature)).toEqual({ geometryType: 'Circle' });
+    });
+    it('modifyPropertiesToFeatureProperties', () => {
+        const feature = { type: 'Feature', properties: { geometryType: 'Circle', radius: 100 }, geometry: { type: 'Point', coordinates: [0, 0] } };
+        expect(modifyPropertiesToFeatureProperties({ radius: 200 }, feature)).toEqual({ geometryType: 'Circle', radius: 200 });
     });
 });
