@@ -10,7 +10,7 @@ import { useEffect, useRef } from 'react';
 import OpenLayersModifyGeoJSONInteraction from '../../../utils/openlayers/ModifyGeoJSONInteraction';
 
 /**
- * Support for 32 drawing, this component provides only the interactions and callback for a drawing workflow
+ * Support for 2D drawing, this component provides only the interactions and callback for a drawing workflow
  * @name EditGeoJSONSupport
  * @prop {object} map instance of the current map library in use
  * @prop {boolean} active activate the drawing functionalities
