@@ -42,7 +42,7 @@ An image added inside the paragraph section can be customized through the [Image
 
 A video added inside the paragraph section can be customized through the [Video Content Toolbar](content-video-toolbar.md#video-content-toolbar). Below is an example of a video, just below an image content:
 
-<img src="../img/paragraph-section/image-video.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/paragraph-section/image-video.mp4"/></video>
 
 ### Maps
 

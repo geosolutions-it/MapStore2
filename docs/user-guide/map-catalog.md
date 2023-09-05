@@ -8,7 +8,7 @@ The **Map Catalog** is an extension that can be included in the step #3 of the a
 
 The *Map Catalog* panel allows the user to select a map and loaded it in the same browser page, as follows:
 
-<img src="../img/map-catalog/context-to-map.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/map-catalog/context-to-map.mp4"/></video>
 
 !!! note
     Selecting a map card in the Map Catalog list, the map currently in use will be replaced. In addition, if the selected map has been created in a context, also the viewer will be replaced with the one of the related map context.

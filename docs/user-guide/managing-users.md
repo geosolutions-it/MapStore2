@@ -65,7 +65,7 @@ Here the Admin can set:
 
 Through the last section of the window it is possible to manage the groups in which the user belongs to:
 
-<img src="../img/managing-users/sel-groups.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/managing-users/sel-groups.mp4" /></video>
 
 !!! note
     The *everyone* group, set by default, it is impossible to remove since it must be attributed to all users.
