@@ -26,7 +26,7 @@ const dateTimeFormatter = ({value, format, type}) => {
             ? moment.utc(value).format(format)
             : type === 'time'
                 ? moment(`${DEFAULT_DATE_PART}T${value}`).utc().format(format) // time format append default date part
-                : moment(value).format(format) // date or date-time formats
+                : moment(value, format).format(format) // date or date-time formats
         : null;
 };
 export const register = {};
