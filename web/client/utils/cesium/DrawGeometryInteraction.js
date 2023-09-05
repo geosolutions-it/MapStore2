@@ -191,16 +191,16 @@ function getSampledTerrainPositions(terrainProvider, level = 18, positions) {
 
 /**
  * Class to manage all the drawing interaction of Cesium library
- * @param {string} options.type type of drawing, one of: Point, LineString, Polygon or Circle
+ * @param {string} options.type type of drawing, one of: `Point`, `LineString`, `Polygon` or `Circle`
  * @param {object} options.map a Cesium map instance
  * @param {number} options.coordinatesLength maximum count of drawing coordinates
  * @param {function} options.getPositionInfo custom function to return info given a position
- * @param {function} options.getObjectsToExcludeOnPick function that returns a list of primitives to exclude when computing the position with the default getPositionInfo function
- * @param {boolean} options.depthTestAgainstTerrain apply depthTestAgainstTerrain while drawing inside the default getPositionInfo function
- * @param {object} options.style style for drawing geometries, see the web/client/DrawUtils.js file
- * @param {boolean} options.geodesic if true the geometries height will be forced to the ellipsoid 0 height
- * @param {boolean} options.sampleTerrain enable the possibility to get the point on terrain, it works only with Point type
- * @param {number} options.mouseMoveThrottleTime change the throttle time to get feedback on mouse move event
+ * @param {function} options.getObjectsToExcludeOnPick function that returns a list of primitives to exclude when computing the position with the default `getPositionInfo` function
+ * @param {boolean} options.depthTestAgainstTerrain apply `depthTestAgainstTerrain` while drawing inside the default `getPositionInfo` function
+ * @param {object} options.style style for drawing geometries, see the `web/client/DrawUtils.js` file
+ * @param {boolean} options.geodesic if true the geometries height will be forced to the ellipsoid at 0 height
+ * @param {boolean} options.sampleTerrain enable the possibility to get the point on terrain, it works only with `Point` type
+ * @param {number} options.mouseMoveThrottleTime change the throttle time in milliseconds to get feedback on mouse move event
  * @param {function} options.onDrawStart triggered on draw start
  * @param {function} options.onDrawing triggered while drawing
  * @param {function} options.onMouseMove triggered while moving the mouse over the globe
