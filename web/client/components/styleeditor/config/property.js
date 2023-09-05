@@ -53,12 +53,12 @@ const property = {
             return {
                 [key]: tinycolor({ ...color, a: 1 }).toHexString(),
                 [opacityKey]: a,
-                ...(pattern && {[graphicKey]: undefined})
+                ...(pattern && { [graphicKey]: undefined })
             };
         },
         isDisabled
     }),
-    width: ({ key = 'width', label = 'Width', fallbackValue = 1, dasharrayKey = 'dasharray', isDisabled }) => ({
+    width: ({ key = 'width', label = 'Width', fallbackValue = 1, isDisabled }) => ({
         type: 'input',
         label,
         config: {
@@ -71,18 +71,10 @@ const property = {
         setValue: (value) => {
             return value === undefined ? fallbackValue : parseFloat(value);
         },
-        getValue: (value, properties) => {
+        getValue: (value) => {
             const width = value === undefined ? fallbackValue : parseFloat(value);
-            const dasharray = properties[dasharrayKey];
-            const previousWidth = properties[key];
             return {
-                [key]: width,
-                ...(dasharray && {
-                    // dasharray should scale based on width
-                    [dasharrayKey]: width
-                        ? dasharray.map(entry => Math.round(entry / previousWidth * width))
-                        : undefined
-                })
+                [key]: width
             };
         },
         isDisabled
@@ -90,38 +82,20 @@ const property = {
     dasharray: ({ key = 'dasharray', label = 'Dash array' }) => ({
         type: 'dash',
         label,
-        config: {
-            options: [{
-                value: '0'
-            }, {
-                value: '1 4'
-            }, {
-                value: '1 12'
-            }, {
-                value: '8 8'
-            }, {
-                value: '8 16'
-            }, {
-                value: '8 8 1 8'
-            }, {
-                value: '8 8 1 4 1 8'
-            }]
-        },
-        setValue: (value, properties) => {
-            const width = properties.width === undefined ? 1 : properties.width;
+        config: {},
+        setValue: (value) => {
             return value !== undefined
-                ? value.map(entry => Math.round(entry / width))
+                ? value.map(entry => Math.round(entry))
                 : [0];
         },
-        getValue: (value, properties) => {
-            if (isEqual(value, ['0'])) {
+        getValue: (value) => {
+            if (isEqual(value, ['0']) || isEqual(value, ['1', '0'])) {
                 return { [key]: undefined };
             }
-            const width = properties.width === undefined ? 1 : properties.width;
             const isValid = !(value || []).find((entry) => isNaN(parseFloat(entry)));
             return {
                 [key]: value !== undefined && isValid
-                    ? value.map((entry) => parseFloat(entry) * width)
+                    ? value.map((entry) => parseFloat(entry))
                     : undefined
             };
         }
@@ -261,7 +235,7 @@ const property = {
         },
         setValue: (value = []) => {
             const currentValue = axis === 'y' ? parseFloat(value[1]) : parseFloat(value[0]);
-            return  currentValue === undefined ? fallbackValue : parseFloat(currentValue);
+            return currentValue === undefined ? fallbackValue : parseFloat(currentValue);
         },
         getValue: (value, properties) => {
             const offset = value === undefined ? fallbackValue : parseFloat(value);

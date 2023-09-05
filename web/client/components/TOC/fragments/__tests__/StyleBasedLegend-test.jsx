@@ -265,13 +265,30 @@ describe('StyleBasedLegend module component', () => {
                                 opacity: 0.5
                             }
                         ]
+                    },
+                    {
+                        ruleId: '7fefb4f0-42f5-11ed-b9d2-fbb7c629eeea',
+                        name: 'Some Circle',
+                        symbolizers: [
+                            {
+                                kind: 'Circle',
+                                color: '#ff0000',
+                                opacity: 0.5,
+                                outlineColor: '#00ff00',
+                                outlineWidth: 2,
+                                radius: 1000000,
+                                geodesic: true,
+                                outlineOpacity: 0.25,
+                                outlineDasharray: [10, 10]
+                            }
+                        ]
                     }
                 ]
             }
         };
         ReactDOM.render(<StyleBasedLegend style={style} />, document.getElementById('container'));
         const ruleElements = document.querySelectorAll('.wfs-legend-rule');
-        expect(ruleElements.length).toBe(2);
+        expect(ruleElements.length).toBe(3);
     });
 
     it('Should handle unnamed rule', () => {

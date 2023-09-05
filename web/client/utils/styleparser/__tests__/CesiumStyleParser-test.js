@@ -42,6 +42,7 @@ describe('CesiumStyleParser', () => {
                                 outlineColor: '#00ff00',
                                 outlineOpacity: 0.25,
                                 outlineWidth: 2,
+                                outlineDasharray: [10, 10],
                                 msClassificationType: 'terrain',
                                 msClampToGround: true
                             }
@@ -69,6 +70,7 @@ describe('CesiumStyleParser', () => {
                                 expect(entities[0].polyline.width.getValue()).toBe(2);
                                 expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
                                 expect(entities[0].polyline.clampToGround.getValue()).toBe(true);
+                                expect(entities[0].polyline.material.dashPattern.getValue()).toBe(65280);
                                 done();
                             }).catch(done);
                     });
@@ -265,7 +267,8 @@ describe('CesiumStyleParser', () => {
                                 opacity: 0.5,
                                 size: 32,
                                 rotate: 90,
-                                msBringToFront: true
+                                msBringToFront: true,
+                                anchor: 'bottom-left'
                             }
                         ]
                     }
@@ -290,6 +293,8 @@ describe('CesiumStyleParser', () => {
                                 expect(entities[0].billboard.scale.getValue()).toBe(32);
                                 expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
                                 expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
+                                expect(entities[0].billboard.horizontalOrigin.getValue()).toBe(Cesium.HorizontalOrigin.LEFT);
+                                expect(entities[0].billboard.verticalOrigin.getValue()).toBe(Cesium.VerticalOrigin.BOTTOM);
                                 expect(entities[0].billboard.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
                                 done();
                             }).catch(done);
@@ -365,7 +370,8 @@ describe('CesiumStyleParser', () => {
                                 fontWeight: 'bold',
                                 font: ['Arial'],
                                 size: 32,
-                                rotate: 90
+                                rotate: 90,
+                                anchor: 'top-right'
                             }
                         ]
                     }
@@ -393,6 +399,8 @@ describe('CesiumStyleParser', () => {
                                 expect({ ...entities[0].label.fillColor.getValue() }).toEqual({ red: 0, green: 0, blue: 0, alpha: 1 });
                                 expect({ ...entities[0].label.outlineColor.getValue() }).toEqual({ red: 1, green: 1, blue: 1, alpha: 1 });
                                 expect(entities[0].label.outlineWidth.getValue()).toBe(2);
+                                expect(entities[0].label.horizontalOrigin.getValue()).toBe(Cesium.HorizontalOrigin.RIGHT);
+                                expect(entities[0].label.verticalOrigin.getValue()).toBe(Cesium.VerticalOrigin.TOP);
                                 expect(entities[0].label.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
                                 done();
                             }).catch(done);
@@ -692,6 +700,53 @@ describe('CesiumStyleParser', () => {
                         });
                     });
             }).catch(done);
+        });
+
+        it('should write a style function with fill symbolizer', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Circle',
+                                color: '#ff0000',
+                                opacity: 0.5,
+                                outlineColor: '#00ff00',
+                                outlineWidth: 2,
+                                radius: 1000000,
+                                geodesic: true,
+                                outlineOpacity: 0.25,
+                                outlineDasharray: [10, 10]
+                            }
+                        ]
+                    }
+                ]
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => {
+                    Cesium.GeoJsonDataSource.load({
+                        type: 'Feature',
+                        properties: {},
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [7, 41]
+                        }
+                    }).then((dataSource) => {
+                        const entities = dataSource?.entities?.values;
+                        return styleFunc({ entities })
+                            .then(() => {
+                                expect({ ...entities[0].polygon.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
+                                expect(entities[0].polyline.width.getValue()).toBe(2);
+                                expect(entities[0].polyline.material.dashPattern.getValue()).toBe(65280);
+                                expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
+
+                                done();
+                            }).catch(done);
+                    });
+                });
         });
     });
 });

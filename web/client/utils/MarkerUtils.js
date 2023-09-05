@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import assign from 'object-assign';
 import fontawesome from './font-awesome.json';
 
 const cssJSON = {
@@ -46,7 +45,8 @@ const getOffsets = (color, shape) => {
     return [-extraMarkers.colors.indexOf(color) * extraMarkers.size[0] - 2, -extraMarkers.shapes.indexOf(shape) * extraMarkers.size[1]];
 };
 const MarkerUtils = {
-    extraMarkers: assign({}, extraMarkers, {
+    extraMarkers: {
+        ...extraMarkers,
         getOffsets,
         markerToDataUrl: ({ iconColor, iconShape, iconGlyph }) => {
             if (MarkerUtils.extraMarkers.images) {
@@ -57,16 +57,19 @@ const MarkerUtils = {
                 // const c = document.getElementById("container");
                 // c.insertBefore(canvas, c.children[0])
                 const ctx = canvas.getContext("2d");
-
-                const offSet = getOffsets(iconColor, iconShape);
-                ctx.drawImage(extraMarkers.images[0], 4, 31, 35, 16); // shadowImage
-                ctx.drawImage(extraMarkers.images[1], Math.abs(offSet[0]), Math.abs(offSet[1]), size[0], size[1], 0, 0, size[0], size[1]); // iconImage
-                // glyph
-                ctx.font = "14px FontAwesome";
-                ctx.fillStyle = "rgb(255,255,255)";
-                ctx.textBaseline = "middle";
-                ctx.textAlign = "center";
-                ctx.fillText((MarkerUtils.getGlyphs("fontawesome"))[iconGlyph] || '', (size[0] / 2) - 2, (size[1] / 2) - 7);
+                if (iconShape) {
+                    const offSet = getOffsets(iconColor, iconShape);
+                    ctx.drawImage(extraMarkers.images[0], 4, 31, 35, 16); // shadowImage
+                    ctx.drawImage(extraMarkers.images[1], Math.abs(offSet[0]), Math.abs(offSet[1]), size[0], size[1], 0, 0, size[0], size[1]); // iconImage
+                }
+                if (iconGlyph) {
+                    // glyph
+                    ctx.font = "14px FontAwesome";
+                    ctx.fillStyle = "rgb(255,255,255)";
+                    ctx.textBaseline = "middle";
+                    ctx.textAlign = "center";
+                    ctx.fillText((MarkerUtils.getGlyphs("fontawesome"))[iconGlyph] || '', (size[0] / 2) - 2, (size[1] / 2) - 7);
+                }
                 const data = canvas.toDataURL("image/png");
                 canvas = null;
                 return data;
@@ -105,7 +108,7 @@ const MarkerUtils = {
                 }))
             }));
         }
-    }),
+    },
     getGlyphs: (font) => {
         if (!glyphs[font]) {
             glyphs[font] = loadGlyphs(font);

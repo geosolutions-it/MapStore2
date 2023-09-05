@@ -34,6 +34,10 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import tinycolor from 'tinycolor2';
+import axios from 'axios';
+import isNil from 'lodash/isNil';
+import isObject from 'lodash/isObject';
+import MarkerUtils from '../MarkerUtils';
 
 export const isGeoStylerBooleanFunction = (got) => [
     'between',
@@ -90,11 +94,15 @@ export const isGeoStylerStringFunction = (got) => [
 export const isGeoStylerUnknownFunction = (got) => [
     'property'
 ].includes(got?.name);
+export const isGeoStylerMapStoreFunction = (got) => [
+    'msMarkerIcon'
+].includes(got?.name);
 export const isGeoStylerFunction = (got) =>
     isGeoStylerBooleanFunction(got)
     || isGeoStylerNumberFunction(got)
     || isGeoStylerStringFunction(got)
-    || isGeoStylerUnknownFunction(got);
+    || isGeoStylerUnknownFunction(got)
+    || isGeoStylerMapStoreFunction(got);
 const getFeatureProperties = (feature) => {
     return (feature?.getProperties
         ? feature.getProperties()
@@ -123,6 +131,9 @@ export const expressionsUtils = {
         }
         if (isGeoStylerUnknownFunction(func)) {
             return expressionsUtils.evaluateUnknownFunction(func, feature);
+        }
+        if (isGeoStylerMapStoreFunction(func)) {
+            return expressionsUtils.evaluateMapStoreFunction(func, feature);
         }
         return null;
     },
@@ -281,6 +292,24 @@ export const expressionsUtils = {
             return (args[0]).toUpperCase();
         case 'strTrim':
             return (args[0]).trim();
+        default:
+            return args[0];
+        }
+    },
+    evaluateMapStoreFunction: (func, feature) => {
+        const args = func.args.map(arg => {
+            if (isGeoStylerFunction(arg)) {
+                return expressionsUtils.evaluateFunction(arg, feature);
+            }
+            return arg;
+        });
+        switch (func.name) {
+        case 'msMarkerIcon':
+            return MarkerUtils.markers.extra.markerToDataUrl({
+                iconColor: args[0].color,
+                iconShape: args[0].shape,
+                iconGlyph: args[0].glyph
+            });
         default:
             return args[0];
         }
@@ -461,13 +490,18 @@ export const getImageIdFromSymbolizer = ({
     strokeColor,
     strokeOpacity,
     strokeWidth,
+    strokeDasharray,
     radius,
     wellKnownName
 }) => {
     if (image) {
-        return image;
+        return isObject(image?.args?.[0]) ? MarkerUtils.markers.extra.markerToDataUrl({
+            iconColor: image.args[0].color,
+            iconShape: image.args[0].shape,
+            iconGlyph: image.args[0].glyph
+        }) : image;
     }
-    return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, strokeWidth, radius].join(':');
+    return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, (strokeDasharray || []).join('_'), strokeWidth, radius].join(':');
 };
 
 /**
@@ -476,13 +510,26 @@ export const getImageIdFromSymbolizer = ({
  * @returns {promise} returns the image
  */
 const getImageFromSymbolizer = (symbolizer) => {
-    const src = symbolizer.image;
+    const image = symbolizer.image;
     const id = getImageIdFromSymbolizer(symbolizer);
     if (imagesCache[id]) {
         return Promise.resolve(imagesCache[id]);
     }
     return new Promise((resolve, reject) => {
         const img = new Image();
+        let src = image;
+        if (isObject(src) && src.name === 'msMarkerIcon') {
+            try {
+                const msMarkerIcon = src.args[0];
+                src = MarkerUtils.markers.extra.markerToDataUrl({
+                    iconColor: msMarkerIcon.color,
+                    iconShape: msMarkerIcon.shape,
+                    iconGlyph: msMarkerIcon.glyph
+                });
+            } catch (e) {
+                reject(id);
+            }
+        }
         img.crossOrigin = 'anonymous';
         img.onload = () => {
             imagesCache[id] = { id, image: img, src, width: img.naturalWidth, height: img.naturalHeight };
@@ -542,6 +589,11 @@ const paintCross = (ctx, cx, cy, r, p) => {
  * @returns {object} { width, height, canvas }
  */
 export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
+    const id = getImageIdFromSymbolizer(symbolizer);
+    if (imagesCache[id]) {
+        const { image, ...other } = imagesCache[id];
+        return { ...other, canvas: image };
+    }
     const hasStroke = !!symbolizer?.strokeWidth
         && !!symbolizer?.strokeOpacity;
     const hasFill = !!symbolizer?.fillOpacity
@@ -571,6 +623,9 @@ export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
         ctx.lineWidth = symbolizer.strokeWidth;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
+        if (symbolizer.strokeDasharray) {
+            ctx.setLineDash(symbolizer.strokeDasharray);
+        }
     }
 
     switch (symbolizer.wellKnownName) {
@@ -686,6 +741,60 @@ export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
     return { width, height, canvas};
 };
 
+const svgUrlToCanvas = (svgUrl, options) => {
+    return new Promise((resolve, reject) => {
+        axios.get(svgUrl, { 'Content-Type': "image/svg+xml;charset=utf-8" })
+            .then((response) => {
+                const DOMURL = window.URL || window.webkitURL || window;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(response.data, 'image/svg+xml'); // create a dom element
+                const svg = doc.firstElementChild; // fetch svg element
+
+                const size = options.size || 32;
+                const strokeWidth = options.strokeWidth ?? 1;
+                const width = size + strokeWidth;
+                const height = size + strokeWidth;
+                // override attributes to the first svg tag
+                svg.setAttribute("fill", options.fillColor || "#FFCC33");
+                svg.setAttribute("fill-opacity", !isNil(options.fillOpacity) ? options.fillOpacity : 0.2);
+                svg.setAttribute("stroke", options.strokeColor || "#FFCC33");
+                svg.setAttribute("stroke-opacity", !isNil(options.strokeOpacity) ? options.strokeOpacity : 1);
+                svg.setAttribute("stroke-width", strokeWidth);
+                svg.setAttribute("width", width);
+                svg.setAttribute("height", height);
+                svg.setAttribute("stroke-dasharray", options.strokeDasharray || "none");
+
+                const element = document.createElement("div");
+                element.appendChild(svg);
+
+                const svgBlob = new Blob([element.innerHTML], { type: "image/svg+xml;charset=utf-8" });
+                const symbolUrlCustomized = DOMURL.createObjectURL(svgBlob);
+                const icon = new Image();
+                icon.onload = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(icon, (canvas.width / 2) - (icon.width / 2), (canvas.height / 2) - (icon.height / 2));
+                        resolve({
+                            width,
+                            height,
+                            canvas
+                        });
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
+                icon.onerror = (e) => { reject(e); };
+                icon.src = symbolUrlCustomized;
+            })
+            .catch((e) => {
+                reject(e);
+            });
+    });
+};
+
 /**
  * prefetch images of a mark symbolizer
  * @param {object} symbolizer mark symbolizer
@@ -700,9 +809,28 @@ export const getWellKnownNameImageFromSymbolizer = (symbolizer) => {
         if (!document?.createElement) {
             reject(id);
         }
-        const { width, height, canvas} = drawWellKnownNameImageFromSymbolizer(symbolizer);
-        imagesCache[id] = { id, image: canvas, src: canvas.toDataURL(), width, height };
-        resolve(imagesCache[id]);
+        if (symbolizer?.wellKnownName?.includes('.svg')) {
+            svgUrlToCanvas(symbolizer.wellKnownName, {
+                fillColor: symbolizer.color,
+                fillOpacity: symbolizer.fillOpacity,
+                strokeColor: symbolizer.strokeColor,
+                strokeOpacity: symbolizer.strokeOpacity,
+                strokeWidth: symbolizer.strokeWidth,
+                strokeDasharray: symbolizer.strokeDasharray,
+                size: symbolizer.radius * 2
+            })
+                .then(({ width, height, canvas }) => {
+                    imagesCache[id] = { id, image: canvas, src: canvas.toDataURL(), width, height };
+                    resolve(imagesCache[id]);
+                })
+                .catch(() => {
+                    reject(id);
+                });
+        } else {
+            const { width, height, canvas} = drawWellKnownNameImageFromSymbolizer(symbolizer);
+            imagesCache[id] = { id, image: canvas, src: canvas.toDataURL(), width, height };
+            resolve(imagesCache[id]);
+        }
     });
 };
 
@@ -728,4 +856,16 @@ export const drawIcons = (geoStylerStyle) => {
             resolve(null);
         }
     });
+};
+
+export const parseSymbolizerExpressions = (symbolizer, feature) => {
+    if (!symbolizer) {
+        return {};
+    }
+    return Object.keys(symbolizer).reduce((acc, key) => ({
+        ...acc,
+        [key]: isGeoStylerFunction(symbolizer[key])
+            ? expressionsUtils.evaluateFunction(symbolizer[key], feature)
+            : symbolizer[key]
+    }), {});
 };

@@ -888,5 +888,58 @@ describe('RulesEditor', () => {
         expect(warningPopOverNode).toBeTruthy();
     });
 
+    it('should render with circle symbolizer', () => {
+        ReactDOM.render(
+            <RulesEditor
+                rules={[
+                    {
+                        name: 'Circle rule',
+                        ruleId: 1,
+                        symbolizers: [{
+                            symbolizerId: 1,
+                            kind: 'Circle',
+                            color: '#ff0000',
+                            opacity: 0.5,
+                            outlineColor: '#00ff00',
+                            outlineWidth: 2,
+                            radius: 1000000,
+                            geodesic: true,
+                            outlineOpacity: 0.25,
+                            outlineDasharray: [10, 10]
+                        }]
+                    }
+                ]}
+            />, document.getElementById('container'));
+        const ruleEditorNode = document.querySelector('.ms-style-rules-editor');
+        expect(ruleEditorNode).toBeTruthy();
+
+        const rulesNode = document.querySelectorAll('.ms-style-rule');
+        expect(rulesNode.length).toBe(1);
+
+        const ruleHeadNode = rulesNode[0].querySelector('.ms-style-rule-head');
+
+        const legendLabelInput = ruleHeadNode.querySelector('input');
+        expect(legendLabelInput).toBeTruthy();
+        expect(legendLabelInput.value).toBe('Circle rule');
+
+        const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
+        expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-trash'
+        ]);
+
+        const symbolizersNode = rulesNode[0].querySelectorAll('.ms-symbolizer');
+        expect(symbolizersNode.length).toBe(1);
+
+        const symbolizerFields = symbolizersNode[0].querySelectorAll('.ms-symbolizer-label > span');
+        expect([...symbolizerFields].map(field => field.innerHTML)).toEqual([
+            'styleeditor.color',
+            'styleeditor.outlineColor',
+            'styleeditor.outlineWidth',
+            'styleeditor.outlineStyle',
+            'styleeditor.radius',
+            'styleeditor.geodesic'
+        ]);
+    });
+
 });
 

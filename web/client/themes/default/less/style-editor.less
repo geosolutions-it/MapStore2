@@ -673,12 +673,12 @@ Ported to CodeMirror by Peter Kroon
     width: 100%;
     height: 100%;
     overflow: auto;
-    ul, li {
+    ul:not(.nav), ul:not(.nav) li {
         padding: 0;
         margin: 0;
         list-style-type: none;
     }
-    ul {
+    ul:not(.nav) {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;

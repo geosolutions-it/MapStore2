@@ -351,6 +351,9 @@ export function resetDefaultPrintingService() {
  * @example
  * // add a transformer to append a new property to the spec
  * addTransformer("mytransform", (state, spec) => ({...spec, newprop: state.print.myprop}))
+ *
+ * If you need to use addTransformer in an extension, use action ADD_PRINT_TRANSFORMER from print module
+ * Otherwise, the let userTransformerChain are copy to your extension and not override the reference in the print module of MapStore2 framework
  */
 export function addTransformer(name, transformer, position) {
     userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer, position}]);

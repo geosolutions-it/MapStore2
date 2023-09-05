@@ -60,7 +60,7 @@ Once a map has been selected, the panel display the layers present in the map in
 
     * Upon adding the name, the map wizard displays the map switcher allowing user to select and configure the map
 
-    * Add layers to the map through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button, as follows: <img src="../img/adding-widgets/wid-add-layer.gif" class="ms-docimage"  style="max-width:400px;"/>
+    * Add layers to the map through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button, as follows: <video controls class="ms-docimage"  style="max-width:400px;"><source src="../img/adding-widgets/wid-add-layer.mp4"> /></video>
 
 On the **Configure map options** panel the user can toggle the layer visibility and set layers transparency, as explained in [Display options](toc.md#display-options-in-panel) section. Furthermore, the user can manage the layer with the new buttons present on the layer toolbar by selecting the layer on the layers list.
 

@@ -3,11 +3,11 @@
 ********************
 In dashboards it is possible to connect the added widgets allowing the user to inspect and interact with more than one of them at the same time.
 
-<img src="../img/connecting-widgets/widgets_interaction.gif" class="ms-docimage" style="max-width:700px;"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/widgets_interaction.mp4"/></video>
 
 Once at least one connection between widgets is set, it is possible to identify the connected widgets turning on the connections button in the dashboard [Sidebar](exploring-dashboards.md#sidebar) making it green <img src="../img/button/connections.jpg" class="ms-docbutton"/>. This will highlight the connected elements with a colored bar on their upper side.
 
-<img src="../img/connecting-widgets/connections_widgets.gif" class="ms-docimage" style="max-width:700px;"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/connections_widgets.mp4"/></video>
 
 In general, you can connect:
 
@@ -77,11 +77,11 @@ With the same procedure used for maps (see [previous section](#maps-with-other-m
 
 When a table is connected with other widgets, it became a *Parent Table* and a filter appears on the top.
 
-<img src="../img/connecting-widgets/table_filter.jpg" class="ms-docimage" style="max-width:700px;"/>  
+<img src="../img/connecting-widgets/table_filter.jpg" class="ms-docimage" style="max-width:700px;"/>
 
 It is possible to apply a filter in the *Parent Table* simply by typing a text in the input field present at the top of each column:
 
-<img src="../img/connecting-widgets/filter_on_table.gif" class="ms-docimage" style="max-width:700px;"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/filter_on_table.mp4"/></video>
 
 A Map widget that is connected to a Parent Table receives the alphanumeric filter of the Table and:
 
@@ -93,11 +93,11 @@ Once a widget is connected to a map widget that is connected to a Parent Table a
 
 * If the widget has been created on the same dataset (layer) of the Parent Table then two filters will be applied in AND to the widget itself: the spatial filter of the Map widget and the attribute filter defined in the Parent Table
 
-<img src="../img/connecting-widgets/interaction_a.gif" class="ms-docimage" style="max-width:700px;"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/interaction_a.mp4"/></video>
 
 * If the dataset isn't the same, only the spatial filter of the Map widget will be applied as usual: in the following example, the Counter refers to a level other than that configured for the Parent Table
 
-<img src="../img/connecting-widgets/interaction_ab.gif" class="ms-docimage" style="max-width:700px;"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/interaction_ab.mp4"/></video>
 
 There are different combinations of connections, the image below illustrates the allowed ones by reporting also the kind of filters applied for each case
 
