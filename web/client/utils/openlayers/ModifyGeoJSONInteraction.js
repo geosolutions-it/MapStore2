@@ -118,11 +118,11 @@ function getColor(color, opacity) {
 /**
  * Class to manage all modify interaction of OpenLayers library given a GeoJSON as input data
  * @param {object} options.map a Cesium map instance
- * @param {object} options.geojson Feature or FeatureCollection GeoJSON data
- * @param {function} options.toEditProperties convert properties of feature to edit properties geometryType, geodesic and radius are needed to compute the editing. geometryType could be: Point, LineString, Polygon or Circle
+ * @param {object} options.geojson `Feature` or `FeatureCollection` GeoJSON data
+ * @param {function} options.toEditProperties convert properties of feature to edit properties `geometryType`, geodesic and radius are needed to compute the editing. `geometryType` could be: `Point`, `LineString`, `Polygon` or `Circle`
  * @param {function} options.fromEditProperties restore properties of the feature to the original one
  * @param {function} options.onEditEnd triggered one the editing has been completed
- * @param {object} options.style style for drawing geometries, see the web/client/DrawUtils.js file
+ * @param {object} options.style style for drawing geometries, see the `web/client/DrawUtils.js` file
  */
 class OpenLayersModifyGeoJSONInteraction {
     constructor(options = {}) {
