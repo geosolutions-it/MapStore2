@@ -408,7 +408,7 @@ export function getGridGeoJson({
     pixelRatio = devicePixelRatio,
     frameSize = 0.0
 }) {
-    const resolution = (resolutions ?? getResolutions(mapProjection))[zoom];
+    const resolution = (resolutions ?? getResolutions(mapProjection))[Math.round(zoom)];
     const mapToGrid = proj4(mapProjection, gridProjection).forward;
     const gridToMap = proj4(gridProjection, mapProjection).forward;
     const projectionCenter = mapToGrid(getCenter(getProjection(gridProjection).extent));
