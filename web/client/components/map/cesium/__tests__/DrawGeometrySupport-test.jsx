@@ -34,7 +34,7 @@ describe('Cesium DrawGeometrySupport', () => {
         act(() => {
             ReactDOM.render(
                 <CesiumMap
-                    ref={value => { ref  = value; } }
+                    ref={value => { ref = value; } }
                     id="map"
                     center={{ y: 43.9, x: 10.3 }}
                     zoom={11}
