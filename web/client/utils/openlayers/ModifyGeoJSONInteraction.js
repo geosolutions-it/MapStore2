@@ -121,7 +121,7 @@ function getColor(color, opacity) {
 
 /**
  * Class to manage all modify interaction of OpenLayers library given a GeoJSON as input data
- * At the moment are supported `Feature` or `FeatureCollection` with single geometries, **does not support multi geometry types**.
+ * At the moment only `Feature` or `FeatureCollection` with single geometries are supported. **It does not support multi geometry types**.
  * Following feature properties are used by the edit tool:
  * - properties.geodesic {boolean} if true enabled geodesic geometries editing
  * - properties.radius {number} value in meters of radius for `Circle` geometry
