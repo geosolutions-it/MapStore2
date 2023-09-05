@@ -14,7 +14,7 @@ import CesiumDrawGeometryInteraction from '../../../utils/cesium/DrawGeometryInt
  * @name DrawGeometrySupport
  * @prop {object} map instance of the current map library in use
  * @prop {boolean} active activate the drawing functionalities
- * @prop {string} geometryType type of geometry to draw: Point, LineString or Polygon
+ * @prop {string} geometryType type of geometry to draw. can be: `Point`, `LineString` or `Polygon`
  * @prop {boolean} geodesic if true the coordinates will be forced to the ellipsoid 0 height
  * @prop {function} onDrawStart callback triggered at drawing start
  * @prop {function} onDrawing callback triggered at every click/pointerdown events
