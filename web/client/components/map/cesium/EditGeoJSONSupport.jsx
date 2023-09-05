@@ -11,7 +11,7 @@ import CesiumModifyGeoJSONInteraction from '../../../utils/cesium/ModifyGeoJSONI
 
 /**
  * Support for 3D drawing, this component provides only the interactions and callback for a drawing workflow.
- * At the moment are supported `Feature` or `FeatureCollection` with single geometries, **does not support multi geometry types**.
+ * At the moment only `Feature` or `FeatureCollection` with single geometries are supported. **The component does not support multi geometry types**.
  * Following feature properties are used by the edit tool:
  * - properties.geodesic {boolean} if true enabled geodesic geometries editing
  * - properties.radius {number} value in meters of radius for `Circle` geometry
