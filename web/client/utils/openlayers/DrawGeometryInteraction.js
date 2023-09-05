@@ -162,11 +162,11 @@ function getColor(color, opacity) {
 
 /**
  * Class to manage all the drawing interaction of OpenLayers library
- * @param {string} options.type type of drawing, one of: Point, LineString, Polygon or Circle
+ * @param {string} options.type type of drawing, one of: `Point`, `LineString`, `Polygon` or `Circle`
  * @param {object} options.map a Cesium map instance
  * @param {number} options.coordinatesLength maximum count of drawing coordinates
- * @param {object} options.style style for drawing geometries, see the web/client/DrawUtils.js file
- * @param {boolean} options.geodesic if true the geometries height will be forced to the ellipsoid 0 height
+ * @param {object} options.style style for drawing geometries, see the `web/client/DrawUtils.js` file
+ * @param {boolean} options.geodesic if true the geometries height will be forced to the ellipsoid at 0 height
  * @param {function} options.onDrawStart triggered on draw start
  * @param {function} options.onDrawing triggered while drawing
  * @param {function} options.onDrawEnd triggered when the drawing event is completed (double click)
