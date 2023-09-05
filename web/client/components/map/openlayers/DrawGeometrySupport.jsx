@@ -19,7 +19,7 @@ import OpenLayersDrawGeometryInteraction from '../../../utils/openlayers/DrawGeo
  * @prop {function} onDrawStart callback triggered at drawing start
  * @prop {function} onDrawing callback triggered at every `click`/`pointerdown` events
  * @prop {function} onDrawEnd callback triggered at drawing end with double click event or single click if `coordinatesLength` is defined
- * @prop {number} coordinatesLength number of coordinates expected by a LineString or Polygon geometry, onDrawEnd will be called after the last coordinates added with single click interaction
+ * @prop {number} coordinatesLength number of coordinates expected by a `LineString` or `Polygon` geometry, `onDrawEnd` will be called after the last coordinates added with single click interaction
  * @prop {object} style override the default style of drawing mode (see `web/client/utils/DrawUtils.js`)
  */
 function DrawGeometrySupport({
