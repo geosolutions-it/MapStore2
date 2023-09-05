@@ -16,8 +16,22 @@ import {
     simulateClick,
     simulateDoubleClick
 } from './CesiumSimulate';
+import { waitFor } from '@testing-library/react';
 
-describe('Cesium EditGeoJSONSupport', () => {
+// for headless test we need to increase the timeout of the unit tests
+// with 2 seconds is not able to render completely the map
+const TEST_TIMEOUT = 5000;
+
+const isMapReady = (map) => {
+    // both dataSource display and globe must be ready
+    return waitFor(() => expect(map.dataSourceDisplay.ready && map.scene.globe.tilesLoaded).toBe(true), {
+        timeout: TEST_TIMEOUT
+    });
+};
+
+describe('Cesium EditGeoJSONSupport', function() {
+    // using function() the timeout can be applied to all the unit tests contained in this describe
+    this.timeout(TEST_TIMEOUT);
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -100,10 +114,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
@@ -111,9 +123,9 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 5,
                     clientY: options.clientY + 5
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
     it('edit feature collection', (done) => {
         let ref;
         const geojson = {
@@ -188,10 +200,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
@@ -199,9 +209,9 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 5,
                     clientY: options.clientY + 5
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
     it('edit linestring feature vertex', (done) => {
         let ref;
         const geojson = {
@@ -254,10 +264,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: (mapCanvas.clientWidth / 2) - 5, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
@@ -265,9 +273,9 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 5,
                     clientY: options.clientY + 5
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
     it('edit linestring adding new point', (done) => {
         let ref;
         const geojson = {
@@ -321,10 +329,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: (mapCanvas.clientWidth / 2) + 10, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
@@ -332,9 +338,9 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 5,
                     clientY: options.clientY + 5
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
     it('edit linestring extend coordinates', (done) => {
         let ref;
         const geojson = {
@@ -388,10 +394,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: mapCanvas.clientWidth / 3, clientY: mapCanvas.clientHeight / 3 };
                 simulateClick(mapCanvas, options);
@@ -399,9 +403,9 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 5,
                     clientY: options.clientY + 5
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
     it('edit polygon feature vertex', (done) => {
         let ref;
         const geojson = {
@@ -455,10 +459,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: (mapCanvas.clientWidth / 2) - 5, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
@@ -466,9 +468,9 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 5,
                     clientY: options.clientY + 5
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
     it('edit polygon adding new point', (done) => {
         let ref;
         const geojson = {
@@ -522,10 +524,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: (mapCanvas.clientWidth / 2) + 10, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
@@ -533,9 +533,9 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 5,
                     clientY: options.clientY + 5
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
     it('edit circle geometry center', (done) => {
         let ref;
         const geojson = {
@@ -598,10 +598,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
@@ -609,9 +607,9 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 5,
                     clientY: options.clientY + 5
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
     // this test is not working headless
     it.skip('edit circle geometry radius', (done) => {
         let ref;
@@ -682,10 +680,8 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        let ready = false;
-        ref.map.scene.postRender.addEventListener(() => {
-            if (!ready && ref.map.scene.globe.tilesLoaded) {
-                ready = true;
+        isMapReady(ref.map)
+            .then(() => {
                 const mapCanvas = ref.map.canvas;
                 const options = { clientX: (mapCanvas.clientWidth / 2) + 11, clientY: mapCanvas.clientHeight / 2 };
                 simulateClick(mapCanvas, options);
@@ -693,7 +689,7 @@ describe('Cesium EditGeoJSONSupport', () => {
                     clientX: options.clientX + 39,
                     clientY: options.clientY
                 });
-            }
-        });
-    }).timeout(5000);
+            })
+            .catch(done);
+    });
 });
