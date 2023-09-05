@@ -26,7 +26,7 @@ import CesiumDrawGeometryInteraction from '../../../utils/cesium/DrawGeometryInt
  * @prop {boolean} sampleTerrain enable sample terrain functionality only for Point geometry type
  * @prop {number} coordinatesLength number of coordinates expected by a LineString or Polygon geometry, onDrawEnd will be called after the last coordinates added with single click interaction
  * @prop {function} getPositionInfo override the default getPositionInfo function, mainly used for testing
- * @prop {object} style override the default style of drawing mode (see web/client/utils/DrawUtils.js)
+ * @prop {object} style override the default style of drawing mode (see `web/client/utils/DrawUtils.js`)
  */
 function DrawGeometrySupport({
     map,
