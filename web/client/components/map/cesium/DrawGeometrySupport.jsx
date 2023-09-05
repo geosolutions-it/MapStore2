@@ -17,7 +17,7 @@ import CesiumDrawGeometryInteraction from '../../../utils/cesium/DrawGeometryInt
  * @prop {string} geometryType type of geometry to draw. can be: `Point`, `LineString` or `Polygon`
  * @prop {boolean} geodesic if true the coordinates will be forced to the ellipsoid at 0 height
  * @prop {function} onDrawStart callback triggered at drawing start
- * @prop {function} onDrawing callback triggered at every click/pointerdown events
+ * @prop {function} onDrawing callback triggered at every `click`/`pointerdown` events
  * @prop {function} onMouseMove callback triggered at every mouse move events
  * @prop {function} onDrawEnd callback triggered at drawing end with double click event or single click if coordinatesLength is defined
  * @prop {function} getObjectsToExcludeOnPick function that return all the primitive collection to be excluded while picking the coordinates, it is useful to exclude the current drawn geometries
