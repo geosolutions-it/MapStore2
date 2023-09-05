@@ -14,7 +14,7 @@ import CesiumModifyGeoJSONInteraction from '../../../utils/cesium/ModifyGeoJSONI
  * @name EditGeoJSONSupport
  * @prop {object} map instance of the current map library in use
  * @prop {boolean} active activate the drawing functionalities
- * @prop {object} geojson Feature or FeatureCollection GeoJSON data
+ * @prop {object} geojson `Feature` or `FeatureCollection` GeoJSON data
  * @prop {function} onEditEnd triggered one the editing has been completed
  * @prop {function} toEditProperties convert properties of feature to edit properties geometryType, geodesic and radius are needed to compute the editing. geometryType could be: Point, LineString, Polygon or Circle
  * @prop {function} fromEditProperties restore properties of the feature to the original one
