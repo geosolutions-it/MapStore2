@@ -110,7 +110,7 @@
     "redux-immutable-state-invariant": "2.1.0",
     "redux-mock-store": "1.2.2",
     "rimraf": "2.5.2",
-    "simple-git": "2.20.1",
+    "simple-git": "3.16.0",
     "style-loader": "2.0.0",
     "terser": "5.18.1",
     "url-loader": "0.5.7",
