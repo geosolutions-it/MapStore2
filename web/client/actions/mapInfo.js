@@ -18,7 +18,6 @@ export const SHOW_MAPINFO_MARKER = 'SHOW_MAPINFO_MARKER';
 export const HIDE_MAPINFO_MARKER = 'HIDE_MAPINFO_MARKER';
 export const SHOW_REVERSE_GEOCODE = 'SHOW_REVERSE_GEOCODE';
 export const HIDE_REVERSE_GEOCODE = 'HIDE_REVERSE_GEOCODE';
-export const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 export const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 export const CLEAR_WARNING = 'CLEAR_WARNING';
 export const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
@@ -103,19 +102,6 @@ export function newMapInfoRequest(reqId, reqConfig) {
         type: NEW_MAPINFO_REQUEST,
         reqId: reqId,
         request: reqConfig
-    };
-}
-
-/**
- * @deprecated
- */
-export function getVectorInfo(layer, request, metadata, queryableLayers) {
-    return {
-        type: GET_VECTOR_INFO,
-        layer,
-        request,
-        metadata,
-        queryableLayers
     };
 }
 

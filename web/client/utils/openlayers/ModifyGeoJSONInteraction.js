@@ -20,7 +20,6 @@ import Circle from 'ol/geom/Circle';
 import Polygon, { circular } from 'ol/geom/Polygon';
 import Point from 'ol/geom/Point';
 import LineString from 'ol/geom/LineString';
-import MultiLineString from 'ol/geom/MultiLineString';
 import {getDistance} from 'ol/sphere';
 import {transform} from 'ol/proj';
 import { transformLineToArcs, reproject } from '../CoordinatesUtils';
@@ -504,7 +503,6 @@ class OpenLayersModifyGeoJSONInteraction {
                     }),
                     ...(geodesic ? [
                         new Style({
-                            geometry: new MultiLineString(olFeature.getGeometry().getCoordinates().map((coordinates) => transformCoordinatesToGeodesic(map, coordinates))),
                             stroke: lineDrawingStyle
                         })
                     ] : []),

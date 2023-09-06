@@ -222,7 +222,7 @@
             "plugins": [
                 "web/client/plugins/index.jsdoc",
                 "web/client/plugins/AddGroup.jsx",
-                "web/client/plugins/Annotations.jsx",
+                "web/client/plugins/Annotations/index.jsx",
                 "web/client/plugins/AutoMapUpdate.jsx",
                 "web/client/plugins/BackgroundSelector.jsx",
                 "web/client/plugins/BurgerMenu.jsx",

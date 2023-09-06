@@ -65,13 +65,6 @@
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
-        "annotations": {
-          "config": {
-            "multiGeometry": true,
-            "validationErrors": {}
-          },
-          "defaultTextAnnotation": "New"
-        },
         "catalog": {
           "default": {
             "newService": {
@@ -417,10 +410,7 @@
               }
             }
           }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Notifications", "BackgroundSelector", "Swipe", {
-            "name": "Annotations",
-            "cfg": {
-              "measurementAnnotationEdit": false
-            }
+            "name": "Annotations"
           },
             {
               "name": "Share",

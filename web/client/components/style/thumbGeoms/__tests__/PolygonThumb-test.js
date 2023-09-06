@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 
-import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
+import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 import PolygonThumb from '../PolygonThumb';
 
 describe("Test the PolygonThumb component", () => {

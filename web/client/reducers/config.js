@@ -23,7 +23,7 @@ import { MAP_TYPE_CHANGED, VISUALIZATION_MODE_CHANGED } from '../actions/maptype
 import assign from 'object-assign';
 import ConfigUtils from '../utils/ConfigUtils';
 import { set, unset } from '../utils/ImmutableUtils';
-import { transformLineToArcs } from '../utils/CoordinatesUtils';
+import { updateAnnotationsLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { findIndex, castArray } from 'lodash';
 import {
     getVisualizationModeFromMapLibrary,
@@ -47,24 +47,12 @@ function mapConfig(state = null, action) {
         // regenerate geodesic lines as property since that info has not been saved
         let annotationsLayerIndex = findIndex(mapState.layers, layer => layer.id === "annotations");
         if (annotationsLayerIndex !== -1) {
-            let featuresLayer = mapState.layers[annotationsLayerIndex].features.map(feature => {
-                if (feature.type === "FeatureCollection") {
-                    return {
-                        ...feature,
-                        features: feature.features.map(f => {
-                            if (f.properties.useGeodesicLines) {
-                                return set("properties.geometryGeodesic", {type: "LineString", coordinates: transformLineToArcs(f.geometry.coordinates)}, f);
-                            }
-                            return f;
-                        })
-                    };
+            mapState.layers = mapState.layers.reduce((acc, layer, idx) => {
+                if (annotationsLayerIndex === idx) {
+                    return [...acc, ...updateAnnotationsLayer(mapState.layers[annotationsLayerIndex])];
                 }
-                if (feature.properties.geometryGeodesic) {
-                    return set("properties.geometryGeodesic", {type: "LineString", coordinates: transformLineToArcs(feature.geometry.coordinates)}, feature);
-                }
-                return state;
-            });
-            mapState.layers[annotationsLayerIndex] = set("features", featuresLayer, mapState.layers[annotationsLayerIndex]);
+                return [...acc, layer];
+            }, []);
         }
 
         let newMapState = {

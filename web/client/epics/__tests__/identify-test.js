@@ -29,7 +29,6 @@ import {
     EXCEPTIONS_FEATURE_INFO,
     SHOW_MAPINFO_MARKER,
     HIDE_MAPINFO_MARKER,
-    GET_VECTOR_INFO,
     SET_CURRENT_EDIT_FEATURE_QUERY,
     CLEAR_WARNING,
     loadFeatureInfo,
@@ -59,7 +58,7 @@ import {
     removePopupOnUnregister,
     setMapTriggerEpic
 } from '../identify';
-import { CLOSE_ANNOTATIONS } from '../../actions/annotations';
+import { CLOSE_ANNOTATIONS } from '../../plugins/Annotations/actions/annotations';
 import { testEpic, TEST_TIMEOUT, addTimeoutEpic } from './epicTestUtils';
 
 import {
@@ -480,17 +479,15 @@ describe('identify Epics', () => {
             layers: LAYERS
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 5, sentActions, ([a0, a1, a2, a3, a4]) => {
+        testEpic(getFeatureInfoOnFeatureInfoClick, 5, sentActions, (actions) => {
             try {
-                expect(a0).toExist();
-                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
-                expect(a1.type).toBe(GET_VECTOR_INFO);
-                expect(a2.type).toBe(FORCE_UPDATE_MAP_LAYOUT);
-                expect(a3.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a3.reqId).toExist();
-                expect(a3.request).toExist();
-                expect(a4.type).toBe(LOAD_FEATURE_INFO);
+                expect(actions.map(action => action.type)).toEqual([
+                    PURGE_MAPINFO_RESULTS,
+                    NEW_MAPINFO_REQUEST,
+                    NEW_MAPINFO_REQUEST,
+                    LOAD_FEATURE_INFO,
+                    FORCE_UPDATE_MAP_LAYOUT
+                ]);
                 done();
             } catch (ex) {
                 done(ex);
