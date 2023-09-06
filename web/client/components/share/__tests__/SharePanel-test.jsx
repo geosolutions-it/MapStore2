@@ -49,7 +49,7 @@ describe("The SharePanel component", () => {
         const cmpSharePanelDom = ReactDOM.findDOMNode(cmpSharePanel);
         expect(cmpSharePanelDom).toBeFalsy();
     });
-    it.only('test regex parsing for shareEmbeddedUrl generation', () => {
+    it('test regex parsing for shareEmbeddedUrl generation', () => {
         const cmpSharePanel = ReactDOM.render(<SharePanel selectedTab="embed" getCount={()=>0} shareUrlRegex=".*" shareUrlReplaceString="ABC" shareUrl="www.geo-solutions.it" isVisible={false} />, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
         const parsed = cmpSharePanel.generateUrl("TEST", "(TE)ST", "$1");
