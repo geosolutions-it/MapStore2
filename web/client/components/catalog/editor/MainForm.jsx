@@ -111,6 +111,25 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
     </FormGroup>);
 };
 
+const COGEditor = ({ service = {}, onChangeUrl = () => { } }) => {
+    return (
+        <FormGroup controlId="URL">
+            <Col xs={12}>
+                <ControlLabel><Message msgId="catalog.urls"/>&nbsp;&nbsp;<InfoPopover text={<HTML msgId="catalog.cog.urlTemplateHint" />} /></ControlLabel>
+                <FormControl
+                    type="text"
+                    style={{
+                        textOverflow: "ellipsis"
+                    }}
+                    placeholder={defaultPlaceholder(service)}
+                    value={service && service.url}
+                    onChange={(e) => onChangeUrl(e.target.value)}/>
+            </Col>
+        </FormGroup>
+
+    );
+};
+
 
 /**
  * Main Form for editing a catalog entry
@@ -137,7 +156,7 @@ export default ({
     useEffect(() => {
         !isEmpty(service.url) && handleProtocolValidity(service.url);
     }, [service?.allowUnsecureLayers]);
-    const URLEditor = service.type === "tms" ? TmsURLEditor : DefaultURLEditor;
+    const URLEditor = service.type === "tms" ? TmsURLEditor : service.type === "cog" ? COGEditor : DefaultURLEditor;
     return (
         <Form horizontal >
             <FormGroup controlId="title" key="type-title-row">

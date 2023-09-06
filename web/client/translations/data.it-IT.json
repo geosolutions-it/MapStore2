@@ -1530,6 +1530,10 @@
             "tileprovider": {
               "tooltip": "x, y, z sono la posizione della tile, s è il sottodominio (impostazione predefinita)"
             },
+            "urls": "URL(s)",
+            "cog": {
+                "urlTemplateHint": "È possibile aggiungere più URL separandoli con virgole. Ogni URL verrà trattato come un livello individuale"
+            },
             "missingReference": "Metadati di riferimento OGC mancanti",
             "showDescription": "Mostra descrizione completa",
             "hideDescription": "Nascondi descrizione completa",

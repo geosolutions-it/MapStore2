@@ -1531,6 +1531,10 @@
               "tileprovider": {
                 "tooltip": "x, y, z sont la position des tuiles, s est le sous-domaine (par défaut)"
             },
+            "urls": "URL(s)",
+            "cog": {
+                "urlTemplateHint": "Plusieurs URL peuvent être ajoutées par séparation par des virgules. Chaque URL sera traitée comme une couche individuelle"
+            },
             "missingReference": "Les référence OGC des métadonnées sont manquantes",
             "showDescription": "Afficher la description complète",
             "hideDescription": "Masquer la description complète",

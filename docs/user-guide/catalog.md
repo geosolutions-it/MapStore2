@@ -340,3 +340,8 @@ MapStore allows to publish 3D Tiles contents in its 3D mode on top of the [Cesiu
 In **general settings of** 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.
 
 <img src="../img/catalog/3dtiles_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+### Cloud Optimized GeoTIFF
+
+A Cloud Optimized GeoTIFF (COG) is a regular GeoTIFF file, aimed at being hosted on a HTTP file server, with an internal organization that enables more efficient workflows on the cloud. It does this by leveraging the ability of clients issuing ​HTTP GET range requests to ask for just the parts of a file they need.
+MapStore allows to add COG as layers and backgrounds. Through the Catalog tool, a multiple url sources of COG are obtained and converted to layers as each url corresponds to a layer
