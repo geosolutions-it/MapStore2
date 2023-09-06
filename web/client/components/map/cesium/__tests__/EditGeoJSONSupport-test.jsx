@@ -18,7 +18,6 @@ import {
 } from './CesiumSimulate';
 import { waitFor } from '@testing-library/react';
 import * as Cesium from 'cesium';
-import { } from '../../../../utils/cesium/PrimitivesUtils';
 
 const isMapReady = (map) => {
     // globe must be ready
