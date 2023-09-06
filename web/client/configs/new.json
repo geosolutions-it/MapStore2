@@ -116,7 +116,8 @@
                 "title": "Open Street Map",
                 "name": "mapnik",
                 "source": "osm",
-                "group": "background"
+                "group": "background",
+				"visibility": false
             }, {
                 "source": "ol",
                 "group": "background",
