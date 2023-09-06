@@ -110,14 +110,14 @@
                 ],
                 "source": "s2cloudless",
                 "singleTile": false,
-				"visibility": false
+                "visibility": false
             }, {
                 "type": "osm",
                 "title": "Open Street Map",
                 "name": "mapnik",
                 "source": "osm",
                 "group": "background",
-				"visibility": false
+                "visibility": false
             }, {
                 "source": "ol",
                 "group": "background",
