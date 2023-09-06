@@ -30,6 +30,7 @@
         "expand": "Expandir",
         "Links": "Enlaces",
         "Forbidden": "Prohibido",
+        "height": "Altura",
         "layerNameChangeError": {
             "title": "Error de cambio de nombre",
             "message": "La capa no se pudo recargar con un nombre cambiado"
@@ -1243,7 +1244,10 @@
             },
             "geometryError": "La configuración de geometría no es válida",
             "annotationSaveGeometryError": "El guardado está deshabilitado debido a una geometría no válida, corríjalo para guardar la anotación",
-            "resolveAllErrors": "Corrija los errores de validación antes de editar otras geometrías"
+            "resolveAllErrors": "Corrija los errores de validación antes de editar otras geometrías",
+            "selectAnnotationFeature": "Seleccione una característica de anotación en el panel izquierdo para editar coordenadas y estilos",
+            "properties": "Propiedades",
+            "deactivatedMapInteraction": "Las interacciones de dibujo de anotaciones se han desactivado porque el complemento '{pluginName}' ha sido activado. Cierra el complemento '{pluginName}' para activar las interacciones de dibujo de anotaciones"
         },
         "user":{
             "login": "Iniciar sesión",
