@@ -16,11 +16,11 @@ By clicking the **GeoProcessing Tool** <img src="../img/button/geoprocessing-but
 
 To get a layer buffer, the editor can select **Buffer** as a process, then can select a layer from the **Source Layer** option drop down menu and one of the layer's features from the **Source Feature** option drop down menu or, enable the <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> button that gives the possibility to select the *Feature* directly from the map.
 
-<img src="../img/geoprocessing-tool/select-buffer-feature.gif" class="ms-docimage"/>
+<img src="../img/geoprocessing-tool/select-buffer-feature.mp4" class="ms-docimage"/>
 
 After entering the desired buffer **Distance**, the editor can click <img src="../img/button/run_button.jpg" class="ms-docbutton"/> to get a new buffer layer.
 
-<img src="../img/geoprocessing-tool/run_buffer-layer.gif" class="ms-docimage"/>
+<img src="../img/geoprocessing-tool/run_buffer-layer.mp4" class="ms-docimage"/>
 
 The buffer layer is now present in the [TOC](toc.md) and visible in the map viewer.
 
@@ -38,11 +38,11 @@ Enabling the *Advanced options* the editor can include the following to the *Buf
 
 Once the **Intersection** has been chosen as a process, the editor can select a layer to intersect from the **Source Layer** option drop down menu and one of the layer's features from the **Source Feature** option drop down menu or, enable the <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> button that gives the possibility to select the *Feature* directly from the map.
 
-<img src="../img/geoprocessing-tool/select-feature.gif" class="ms-docimage"/>
+<img src="../img/geoprocessing-tool/select-feature.mp4" class="ms-docimage"/>
 
 In the same way it is possible to select the **Intersection Layer** and the corresponding **Intersection Feature** to obtain the new intersected layer by clicking on <img src="../img/button/run_button.jpg" class="ms-docbutton"/> button.
 
-<img src="../img/geoprocessing-tool/run_intersection-layer.gif" class="ms-docimage"/>
+<img src="../img/geoprocessing-tool/run_intersection-layer." class="ms-docimage"/>
 
 The intersected layer is now present in the [TOC](toc.md) and visible in the map viewer.
 
