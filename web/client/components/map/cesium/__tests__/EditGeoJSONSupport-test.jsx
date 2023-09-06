@@ -20,7 +20,7 @@ import { waitFor } from '@testing-library/react';
 
 // for headless test we need to increase the timeout of the unit tests
 // with 2 seconds is not able to render completely the map
-const TEST_TIMEOUT = 5000;
+const TEST_TIMEOUT = 7000;
 
 const isMapReady = (map) => {
     // both dataSource display and globe must be ready
