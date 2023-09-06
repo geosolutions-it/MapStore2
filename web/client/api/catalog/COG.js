@@ -8,7 +8,7 @@
 
 import get from 'lodash/get';
 import { Observable } from 'rxjs';
-import { isValidURLTemplate } from '../../utils/URLUtils';
+import { isValidURL } from '../../utils/URLUtils';
 
 export const COG_LAYER_TYPE = 'cog';
 const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
@@ -57,7 +57,7 @@ export const textSearch = (url, startPosition, maxRecords, text, info = {}) => {
 
 const validateCog = (service) => {
     const urls = service.url?.split(',');
-    const isValid = urls.every(url => isValidURLTemplate(url?.trim()));
+    const isValid = urls.every(url => isValidURL(url?.trim()));
     if (service.title && isValid) {
         return Observable.of(service);
     }
@@ -77,7 +77,7 @@ export const getCatalogRecords = (data) => {
         return data.records.map(record => {
             return {
                 serviceType: COG_LAYER_TYPE,
-                isValid: isValidURLTemplate(record.url),
+                isValid: isValidURL(record.url),
                 title: record.title || record.provider,
                 url: record.url,
                 options: record.options,
