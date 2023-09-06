@@ -22,6 +22,7 @@ import CesiumModifyGeoJSONInteraction from '../../../utils/cesium/ModifyGeoJSONI
  * @prop {function} onEditEnd triggered one the editing has been completed
  * @prop {function} getGeometryType argument of the function is the feature and it should return a string representing the geometry type: `Point`, `LineString`, `Polygon` or `Circle`
  * @prop {object} style override the default style of drawing mode (see `web/client/utils/DrawUtils.js`)
+ * @prop {function} getPositionInfo override the default getPositionInfo function, mainly used for testing
  */
 function EditGeoJSONSupport({
     map,
@@ -29,7 +30,8 @@ function EditGeoJSONSupport({
     geojson,
     onEditEnd,
     getGeometryType,
-    style
+    style,
+    getPositionInfo
 }) {
     const modify = useRef();
 
@@ -40,7 +42,8 @@ function EditGeoJSONSupport({
                 geojson,
                 getGeometryType,
                 onEditEnd,
-                style
+                style,
+                getPositionInfo
             });
         }
         return () => {

@@ -101,6 +101,7 @@ At the moment  only `Feature` or `FeatureCollection` with single geometries are 
  * @param {function} options.onEditEnd triggered one the editing has been completed
  * @param {object} options.style style for drawing geometries, see the web/client/DrawUtils.js file
  * @param {number} options.mouseMoveThrottleTime change the throttle time to get feedback on mouse move event, default 100ms
+ * @param {function} options.getPositionInfo custom function to return info given a position
  */
 class CesiumModifyGeoJSONInteraction {
     constructor(options = {}) {
@@ -109,6 +110,12 @@ class CesiumModifyGeoJSONInteraction {
         // then on edit end reconstruct the multi geometry
         this._map = options.map;
         this._ready = false;
+        this._getPositionInfo = options.getPositionInfo ? options.getPositionInfo : (movement) => {
+            const position = movement.position || movement.endPosition;
+            const intersected = this._map.scene.drillPick(position);
+            const { cartesian, cartographic } = computePositionInfo(this._map, movement);
+            return { intersected, cartesian, cartographic };
+        };
         Cesium.GroundPrimitive.initializeTerrainHeights()
             .then(() => {
                 this._ready = true;
@@ -148,7 +155,9 @@ class CesiumModifyGeoJSONInteraction {
                         this._dynamicPrimitivesCollection.removeAll();
                         this._dynamicBillboardCollection.removeAll();
                     }
-                    this._map.scene.requestRender();
+                    if (this._map?.scene && !this._map.isDestroyed()) {
+                        this._map.scene.requestRender();
+                    }
                 };
                 window.addEventListener('keydown', this._onKeyboardEvent);
 
@@ -217,7 +226,6 @@ class CesiumModifyGeoJSONInteraction {
                         ...this._style?.areaDrawing,
                         coordinates: coordinates[coordinates.length - 1],
                         radius,
-                        id: newFeature?.id,
                         clampToGround: true
                     }));
                     this._staticPrimitivesCollection.add(createEllipsePolylinePrimitive({
@@ -323,9 +331,7 @@ class CesiumModifyGeoJSONInteraction {
         return (isString(objectId) ? (objectId || '').split(':') : [])[0];
     }
     _getIntersectedInfo(movement) {
-        const position = movement.position || movement.endPosition;
-        const intersected = this._map.scene.drillPick(position);
-        const { cartesian, cartographic } = computePositionInfo(this._map, movement);
+        const { cartesian, cartographic, intersected } = this._getPositionInfo(movement);
         const { id, primitive } = intersected.find((object) => {
             const primitiveFeatureId = this._getPrimitiveFeatureId(object.id);
             const selected = primitiveFeatureId && this._features.find((feature) => feature?.id === primitiveFeatureId);
