@@ -16,22 +16,35 @@ import {
     simulateClick,
     simulateDoubleClick
 } from './CesiumSimulate';
-import { waitFor } from '@testing-library/react';
 import * as Cesium from 'cesium';
-
-const isMapReady = (map) => {
-    // globe must be ready
-    return waitFor(() => expect(map.scene.globe.tilesLoaded).toBe(true));
-};
+import {
+    createPolylinePrimitive,
+    createEllipsePolylinePrimitive
+} from '../../../../utils/cesium/PrimitivesUtils';
 
 describe('Cesium EditGeoJSONSupport', () => {
+    let staticBillboardCollection;
+    const polylinePrimitive = createPolylinePrimitive({
+        coordinates: [
+            Cesium.Cartographic.toCartesian(new Cesium.Cartographic(Cesium.Math.toRadians(10.3), Cesium.Math.toRadians(43.9), 0)),
+            Cesium.Cartographic.toCartesian(new Cesium.Cartographic(Cesium.Math.toRadians(11.3), Cesium.Math.toRadians(43.9), 0))
+        ]
+    });
+    const ellipsePrimitive = createEllipsePolylinePrimitive({
+        coordinates: Cesium.Cartographic.toCartesian(new Cesium.Cartographic(Cesium.Math.toRadians(10.3), Cesium.Math.toRadians(43.9), 0)),
+        radius: 500,
+        geodesic: true
+    });
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        staticBillboardCollection = new Cesium.BillboardCollection();
         setTimeout(done);
     });
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        staticBillboardCollection.removeAll();
+        staticBillboardCollection.destroy();
         setTimeout(done);
     });
     it('should render with default values', () => {
@@ -83,15 +96,19 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
+                            const cartesian = Cesium.Cartographic.toCartesian(cartographic);
+                            staticBillboardCollection.add({
+                                id: geojson.id,
+                                position: cartesian
+                            });
                             return {
                                 intersected: [{
-                                    collection: this._staticBillboardCollection,
-                                    primitive: this._staticBillboardCollection.get(0),
-                                    id: "feature-01"
+                                    primitive: staticBillboardCollection.get(0),
+                                    id: geojson.id
                                 }],
-                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartesian,
                                 cartographic
                             };
                         }}
@@ -119,17 +136,13 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
-                simulateClick(mapCanvas, options);
-                simulateClick(mapCanvas, {
-                    clientX: options.clientX + 5,
-                    clientY: options.clientY + 5
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, {
+            clientX: options.clientX + 5,
+            clientY: options.clientY + 5
+        });
     });
     it('edit feature collection', (done) => {
         let ref;
@@ -178,15 +191,19 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
+                            const cartesian = Cesium.Cartographic.toCartesian(cartographic);
+                            staticBillboardCollection.add({
+                                id: geojson.features[0].id,
+                                position: cartesian
+                            });
                             return {
                                 intersected: [{
-                                    collection: this._staticBillboardCollection,
-                                    primitive: this._staticBillboardCollection.get(0),
-                                    id: "feature-01"
+                                    primitive: staticBillboardCollection.get(0),
+                                    id: geojson.features[0].id
                                 }],
-                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartesian,
                                 cartographic
                             };
                         }}
@@ -217,17 +234,13 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
-                simulateClick(mapCanvas, options);
-                simulateClick(mapCanvas, {
-                    clientX: options.clientX + 5,
-                    clientY: options.clientY + 5
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, {
+            clientX: options.clientX + 5,
+            clientY: options.clientY + 5
+        });
     });
     it('edit linestring feature vertex', (done) => {
         let ref;
@@ -260,15 +273,20 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
+                            const id = `${geojson.id}:0:vertex`;
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
+                            const cartesian = Cesium.Cartographic.toCartesian(cartographic);
+                            staticBillboardCollection.add({
+                                id,
+                                position: cartesian
+                            });
                             return {
                                 intersected: [{
-                                    collection: this._staticBillboardCollection,
-                                    primitive: this._staticBillboardCollection.get(0),
-                                    id: "feature-01:0:vertex"
+                                    primitive: staticBillboardCollection.get(0),
+                                    id
                                 }],
-                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartesian,
                                 cartographic
                             };
                         }}
@@ -293,17 +311,13 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: (mapCanvas.clientWidth / 2) - 5, clientY: mapCanvas.clientHeight / 2 };
-                simulateClick(mapCanvas, options);
-                simulateClick(mapCanvas, {
-                    clientX: options.clientX + 5,
-                    clientY: options.clientY + 5
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: (mapCanvas.clientWidth / 2) - 5, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, {
+            clientX: options.clientX + 5,
+            clientY: options.clientY + 5
+        });
     });
     it('edit linestring adding new point', (done) => {
         let ref;
@@ -336,12 +350,13 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
+                            const id = `${geojson.id}:0:segment`;
                             return {
                                 intersected: [{
-                                    primitive: this._staticPrimitivesCollection.get(0),
-                                    id: "feature-01:0:segment"
+                                    primitive: polylinePrimitive,
+                                    id
                                 }],
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -369,17 +384,13 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: (mapCanvas.clientWidth / 2) + 10, clientY: mapCanvas.clientHeight / 2 };
-                simulateClick(mapCanvas, options);
-                simulateClick(mapCanvas, {
-                    clientX: options.clientX + 5,
-                    clientY: options.clientY + 5
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: (mapCanvas.clientWidth / 2) + 10, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, {
+            clientX: options.clientX + 5,
+            clientY: options.clientY + 5
+        });
     });
     it('edit linestring extend coordinates', (done) => {
         let ref;
@@ -412,7 +423,7 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
                             return {
                                 intersected: [],
@@ -442,17 +453,13 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: mapCanvas.clientWidth / 3, clientY: mapCanvas.clientHeight / 3 };
-                simulateClick(mapCanvas, options);
-                simulateDoubleClick(mapCanvas, {
-                    clientX: options.clientX + 5,
-                    clientY: options.clientY + 5
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 3, clientY: mapCanvas.clientHeight / 3 };
+        simulateClick(mapCanvas, options);
+        simulateDoubleClick(mapCanvas, {
+            clientX: options.clientX + 5,
+            clientY: options.clientY + 5
+        });
     });
     it('edit polygon feature vertex', (done) => {
         let ref;
@@ -485,15 +492,20 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
+                            const id = `${geojson.id}:0:vertex`;
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
+                            const cartesian = Cesium.Cartographic.toCartesian(cartographic);
+                            staticBillboardCollection.add({
+                                id,
+                                position: cartesian
+                            });
                             return {
                                 intersected: [{
-                                    collection: this._staticBillboardCollection,
-                                    primitive: this._staticBillboardCollection.get(0),
-                                    id: "feature-01:0:vertex"
+                                    primitive: staticBillboardCollection.get(0),
+                                    id
                                 }],
-                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartesian,
                                 cartographic
                             };
                         }}
@@ -519,17 +531,13 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: (mapCanvas.clientWidth / 2) - 5, clientY: mapCanvas.clientHeight / 2 };
-                simulateClick(mapCanvas, options);
-                simulateClick(mapCanvas, {
-                    clientX: options.clientX + 5,
-                    clientY: options.clientY + 5
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: (mapCanvas.clientWidth / 2) - 5, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, {
+            clientX: options.clientX + 5,
+            clientY: options.clientY + 5
+        });
     });
     it('edit polygon adding new point', (done) => {
         let ref;
@@ -562,12 +570,13 @@ describe('Cesium EditGeoJSONSupport', () => {
                     <EditGeoJSONSupport
                         active
                         geojson={geojson}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
+                            const id = `${geojson.id}:0:segment`;
                             return {
                                 intersected: [{
-                                    primitive: this._staticPrimitivesCollection.get(0),
-                                    id: "feature-01:0:segment"
+                                    primitive: polylinePrimitive,
+                                    id
                                 }],
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -595,17 +604,13 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: (mapCanvas.clientWidth / 2) + 10, clientY: mapCanvas.clientHeight / 2 };
-                simulateClick(mapCanvas, options);
-                simulateClick(mapCanvas, {
-                    clientX: options.clientX + 5,
-                    clientY: options.clientY + 5
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: (mapCanvas.clientWidth / 2) + 10, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, {
+            clientX: options.clientX + 5,
+            clientY: options.clientY + 5
+        });
     });
     it('edit circle geometry center', (done) => {
         let ref;
@@ -642,15 +647,20 @@ describe('Cesium EditGeoJSONSupport', () => {
                         active
                         geojson={geojson}
                         getGeometryType={(feature) => feature.properties.type}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
+                            const id = `${geojson.id}:0:vertex`;
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
+                            const cartesian = Cesium.Cartographic.toCartesian(cartographic);
+                            staticBillboardCollection.add({
+                                id,
+                                position: cartesian
+                            });
                             return {
                                 intersected: [{
-                                    collection: this._staticBillboardCollection,
-                                    primitive: this._staticBillboardCollection.get(0),
-                                    id: "feature-01:0:vertex"
+                                    primitive: staticBillboardCollection.get(0),
+                                    id
                                 }],
-                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartesian,
                                 cartographic
                             };
                         }}
@@ -681,17 +691,13 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
-                simulateClick(mapCanvas, options);
-                simulateClick(mapCanvas, {
-                    clientX: options.clientX + 5,
-                    clientY: options.clientY + 5
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, {
+            clientX: options.clientX + 5,
+            clientY: options.clientY + 5
+        });
     });
     it('edit circle geometry radius', (done) => {
         let ref;
@@ -728,11 +734,11 @@ describe('Cesium EditGeoJSONSupport', () => {
                         active
                         geojson={geojson}
                         getGeometryType={(feature) => feature.properties.type}
-                        getPositionInfo={function() {
+                        getPositionInfo={() => {
                             const cartographic = new Cesium.Cartographic(Cesium.Math.toRadians(10.35), Cesium.Math.toRadians(43.85), 0);
                             return {
                                 intersected: [{
-                                    primitive: this._staticPrimitivesCollection.get(1),
+                                    primitive: ellipsePrimitive,
                                     id: "feature-01"
                                 }],
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
@@ -764,16 +770,12 @@ describe('Cesium EditGeoJSONSupport', () => {
         const viewer = document.querySelector('.cesium-viewer');
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
-        isMapReady(ref.map)
-            .then(() => {
-                const mapCanvas = ref.map.canvas;
-                const options = { clientX: (mapCanvas.clientWidth / 2) + 11, clientY: mapCanvas.clientHeight / 2 };
-                simulateClick(mapCanvas, options);
-                simulateClick(mapCanvas, {
-                    clientX: options.clientX + 39,
-                    clientY: options.clientY
-                });
-            })
-            .catch(done);
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: (mapCanvas.clientWidth / 2) + 11, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, {
+            clientX: options.clientX + 39,
+            clientY: options.clientY
+        });
     });
 });

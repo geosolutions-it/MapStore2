@@ -116,74 +116,65 @@ class CesiumModifyGeoJSONInteraction {
             const { cartesian, cartographic } = computePositionInfo(this._map, movement);
             return { intersected, cartesian, cartographic };
         };
+        this._handler = new Cesium.ScreenSpaceEventHandler(this._map.canvas);
+        this._handler.setInputAction((movement) => {
+            this._handleEdit(movement, true);
+        }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+        this._handler.setInputAction((movement) => {
+            this._handleEdit(movement);
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        this._handler.setInputAction(throttle((movement) => {
+            this._handleMouseMove(movement);
+        }, options.mouseMoveThrottleTime ?? 100), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+        this._staticPrimitivesCollection = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
+        this._map.scene.primitives.add(this._staticPrimitivesCollection);
+
+        this._staticBillboardCollection = new Cesium.BillboardCollection({ scene: this._map.scene });
+        this._map.scene.primitives.add(this._staticBillboardCollection);
+
+        this._dynamicPrimitivesCollection = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
+        this._map.scene.primitives.add(this._dynamicPrimitivesCollection);
+
+        this._dynamicBillboardCollection = new Cesium.BillboardCollection({ scene: this._map.scene });
+        this._map.scene.primitives.add(this._dynamicBillboardCollection);
+
+        this._style = generateEditingStyle(options.style);
+
+        this._cursorImage = createCircleMarkerImage(this._style ?.cursor?.radius * 2, { stroke: '#ffffff', strokeWidth: this._style ?.cursor?.width, fill: 'rgba(0, 0, 0, 0)' });
+        this._coordinateNodeImage = createCircleMarkerImage(this._style ?.coordinatesNode?.radius * 2, { stroke: '#ffffff', strokeWidth: this._style?.coordinatesNode?.width, fill: 'rgba(0, 0, 0, 0.1)' });
+
+        this._editing = false;
+
+        this._onKeyboardEvent = (event) => {
+            if (event.code === 'Escape' && this._editing) {
+                this._editing = false;
+                this._dynamicPrimitivesCollection.removeAll();
+                this._dynamicBillboardCollection.removeAll();
+            }
+            if (this._map?.scene && !this._map.isDestroyed()) {
+                this._map.scene.requestRender();
+            }
+        };
+        window.addEventListener('keydown', this._onKeyboardEvent);
+
+        this._featureToModifyProperties = defaultFeatureToModifyProperties({ getGeometryType: options?.getGeometryType });
+        this._modifyPropertiesToFeatureProperties = defaultModifyPropertiesToFeatureProperties;
+        this._onEditEnd = options?.onEditEnd ? options.onEditEnd : () => {};
+        this.setGeoJSON(options?.geojson || []);
         Cesium.GroundPrimitive.initializeTerrainHeights()
             .then(() => {
                 this._ready = true;
-                this._handler = new Cesium.ScreenSpaceEventHandler(this._map.canvas);
-                this._handler.setInputAction((movement) => {
-                    this._handleEdit(movement, true);
-                }, Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
-                this._handler.setInputAction((movement) => {
-                    this._handleEdit(movement);
-                }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-                this._handler.setInputAction(throttle((movement) => {
-                    this._handleMouseMove(movement);
-                }, options.mouseMoveThrottleTime ?? 100), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-
-                this._staticPrimitivesCollection = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
-                this._map.scene.primitives.add(this._staticPrimitivesCollection);
-
-                this._staticBillboardCollection = new Cesium.BillboardCollection({ scene: this._map.scene });
-                this._map.scene.primitives.add(this._staticBillboardCollection);
-
-                this._dynamicPrimitivesCollection = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
-                this._map.scene.primitives.add(this._dynamicPrimitivesCollection);
-
-                this._dynamicBillboardCollection = new Cesium.BillboardCollection({ scene: this._map.scene });
-                this._map.scene.primitives.add(this._dynamicBillboardCollection);
-
-                this._style = generateEditingStyle(options.style);
-
-                this._cursorImage = createCircleMarkerImage(this._style ?.cursor?.radius * 2, { stroke: '#ffffff', strokeWidth: this._style ?.cursor?.width, fill: 'rgba(0, 0, 0, 0)' });
-                this._coordinateNodeImage = createCircleMarkerImage(this._style ?.coordinatesNode?.radius * 2, { stroke: '#ffffff', strokeWidth: this._style?.coordinatesNode?.width, fill: 'rgba(0, 0, 0, 0.1)' });
-
-                this._editing = false;
-
-                this._onKeyboardEvent = (event) => {
-                    if (event.code === 'Escape' && this._editing) {
-                        this._editing = false;
-                        this._dynamicPrimitivesCollection.removeAll();
-                        this._dynamicBillboardCollection.removeAll();
-                    }
-                    if (this._map?.scene && !this._map.isDestroyed()) {
-                        this._map.scene.requestRender();
-                    }
-                };
-                window.addEventListener('keydown', this._onKeyboardEvent);
-
-                this._featureToModifyProperties = defaultFeatureToModifyProperties({ getGeometryType: options?.getGeometryType });
-                this._modifyPropertiesToFeatureProperties = defaultModifyPropertiesToFeatureProperties;
-                this._onEditEnd = options?.onEditEnd ? options.onEditEnd : () => {};
-
-                this.setGeoJSON(options?.geojson || []);
+                this._drawStaticFeatures();
             });
     }
     setGeoJSON(geojson) {
-        if (this._ready) {
-            this._features = geojson ? (
-                geojson?.type === 'Feature'
-                    ? [geojson]
-                    : geojson?.features
-            ).map((feature) => ({ ...feature, properties: this._featureToModifyProperties(feature) })) : [];
-            this._geojson = {...geojson};
-            this._staticBillboardCollection.removeAll();
-            this._staticPrimitivesCollection.removeAll();
-            if (this._features?.length > 0) {
-                this._features.forEach((feature) => {
-                    this._updatePrimitives(feature);
-                });
-            }
-        }
+        this._features = geojson ? (
+            geojson?.type === 'Feature'
+                ? [geojson]
+                : geojson?.features
+        ).map((feature) => ({ ...feature, properties: this._featureToModifyProperties(feature) })) : [];
+        this._geojson = {...geojson};
+        this._drawStaticFeatures();
     }
     remove() {
         if (this._handler) {
@@ -204,6 +195,17 @@ class CesiumModifyGeoJSONInteraction {
             this._dynamicPrimitivesCollection = null;
             clearPrimitivesCollection(this._map, this._dynamicBillboardCollection);
             this._dynamicBillboardCollection = null;
+        }
+    }
+    _drawStaticFeatures() {
+        if (this._ready) {
+            this._staticBillboardCollection.removeAll();
+            this._staticPrimitivesCollection.removeAll();
+            if (this._features?.length > 0) {
+                this._features.forEach((feature) => {
+                    this._updatePrimitives(feature);
+                });
+            }
         }
     }
     _updatePrimitives(newFeature) {
