@@ -8,7 +8,7 @@ The <img src="../img/button/user-extensions-button.jpg" class="ms-docbutton"/> b
 
 The *User Extensions* panel opens allows the user to choose which extension to add to the viewer through the **Add Extension** button <img src="../img/button/add-extension-button.jpg" class="ms-docbutton"/>, as follows:
 
-<img src="../img/estension-library/add-extension.gif" class="ms-docimage" style="max-width:500px;"/>
+<video class="ms-docimage" style="max-width:500px;" controls><source src="../img/estension-library/add-extension.mp4" /></video>
 
 !!! note
 

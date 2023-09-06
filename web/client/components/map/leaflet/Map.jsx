@@ -463,7 +463,7 @@ class LeafletMap extends React.Component {
             this.props.id,
             this.props.projection,
             viewerOptions, // viewerOptions
-            this.getResolutions()[zoom] // resolution
+            this.getResolutions()[Math.round(zoom)] // resolution
         );
     };
 

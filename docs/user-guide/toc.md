@@ -62,14 +62,14 @@ With the TOC it is also possible to perform a search between the added layers. T
 
 With the drag and drop it is possible to change layers position inside the same group, but also moving them between different groups. Once the *Default* group is created, all the layers without a specific group are automatically added to this one. Changing layers position with the drag and drop, for example, it can display like the following:
 
-<img src="../img/toc/ded-layers.gif" class="ms-docimage"  style="max-width:300px;"/>
+<video class="ms-docimage"  style="max-width:300px;" controls><source src="../img/toc/ded-layers.mp4"/></video>
 
 Groups and sub-groups, no matter their level, can be nested inside other groups and sub-groups, or can be separated from their parent-level to create new main groups. These operation can be performed, again, with the drag and drop function.
 
-<img src="../img/toc/ded-groups.gif" class="ms-docimage"  style="max-width:300px;"/>
+<video class="ms-docimage"  style="max-width:300px;" controls><source src="../img/toc/ded-groups.mp4"/></video>
 
 !!! warning
-    The only constraints applied to the groups manager refer to the *Default* group (each layer added to the map the first time is included in that group). Drag and Drop operations are not allowed for the *Default*, but it's allowed to rename it or to nest groups or sub-groups inside it.  
+    The only constraints applied to the groups manager refer to the *Default* group (each layer added to the map the first time is included in that group). Drag and Drop operations are not allowed for the *Default*, but it's allowed to rename it or to nest groups or sub-groups inside it.
 
 Layers position can also be determined through the **Selected layer settings** button <img src="../img/button/properties.jpg" class="ms-docbutton"/> available in the toolbar that appears once a layer is selected. This button opens a panel where the user can choose the destination group (or subgroup):
 
