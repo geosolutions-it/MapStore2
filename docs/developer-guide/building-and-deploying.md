@@ -10,12 +10,12 @@ To create the final war, you have several options:
 
 * separated builds (skipping all the tests and checks, mainly for development purposes):
 
-```bin sh
+```bash
 # build the front-end
-npm run fe:build 
+npm run fe:build
 
 # build the back-end, including the front-end parts build in the previous command
-mvn clean install -Dmapstore2.version=[version_identifier] [profiles] 
+mvn clean install -Dmapstore2.version=[version_identifier] [profiles]
 ```
 
 In this case we have 2 separated commands that can be run separately, for instance if you are working on back-end only, so you don't need to re-compile the front-end part every time.

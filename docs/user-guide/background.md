@@ -67,7 +67,7 @@ The user can perform the following operations:
 
 * Set the **Attribution** visible at the bottom left of the footer in the map viewer.
 
-<img src="../img/background/wmts-attribution.gif" class="ms-docimage" />
+<video class="ms-docimage" controls><source src="../img/background/wmts-attribution.mp4" /></video>
 
 ## Edit background
 

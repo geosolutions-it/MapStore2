@@ -29,7 +29,7 @@ Through this window it is possible to:
 !!!note
     In *Print settings* preview there's the map portion that will be displayed on the print sheet. In order to center the map the user can pan it until the preview displays the desired extension
 
-    <img src="../img/print/print.gif" class="ms-docimage"/>
+    <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/print/print.mp4" /></video>
 
 ### Layout
 

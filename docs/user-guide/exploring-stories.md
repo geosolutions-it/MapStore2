@@ -2,7 +2,7 @@
 
 In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/), GeoStory is a tool that allows to create inspiring and immersive stories by combining text, interactive maps, and other multimedia content like images and video or other third party contents. Through this tool you can simply tell your stories on the web and then publish and share them with different groups of MapStore user or make them public to everyone around the world.
 
-<img src="../img/exploring-stories/story3.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/exploring-stories/story3.mp4"/></video>
 
 The user can approach a story in two different ways:
 
@@ -51,4 +51,4 @@ The elements available in the top bar can be the following:
 
 The Story layout allows to navigate contents by scrolling up and down the Story page by using the mouse or the **Navigation bar**.
 
-<img src="../img/exploring-stories/view-mode-nava.gif" class="ms-docimage" width="700px"/>
+<video  class="ms-docimage" width="700px" controls><source src="../img/exploring-stories/view-mode-nava.mp4"/></video>
