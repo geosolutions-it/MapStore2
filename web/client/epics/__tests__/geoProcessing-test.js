@@ -601,7 +601,7 @@ describe('geoProcessing epics', () => {
             done();
         }, {});
     });
-    it.only('runIntersectProcessGPTEpic with double geom collect', (done) => {
+    it('runIntersectProcessGPTEpic with double geom collect', (done) => {
         const NUM_ACTIONS = 7;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
         mockAxios.onPost("mockUrl?service=WPS&version=1.0.0&REQUEST=Execute").reply(200, COLLECT_GEOM, {
