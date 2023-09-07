@@ -15,23 +15,25 @@ import {
 import { connect } from 'react-redux';
 import Select from 'react-select';
 import { createSelector } from 'reselect';
+import { processes } from './processes';
 
 import Message from '../../components/I18N/Message';
 import Button from '../../components/misc/Button';
 import Loader from '../../components/misc/Loader';
-import SwitchButton from '../../components/misc/switch/SwitchButton';
+
 import ConfirmModal from '../../components/resources/modals/ConfirmModal';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import Buffer from './Buffer';
 import Intersection from './Intersection';
 import {
+    reset,
     runBufferProcess,
     runIntersectionProcess,
     setSelectedTool,
     toggleHighlightLayers,
     GPT_TOOL_BUFFER,
     GPT_TOOL_INTERSECTION
-} from '../../actions/geoProcessingTools';
+} from '../../actions/geoProcessing';
 import {
     areAllWPSAvailableForSourceLayerSelector,
     areAllWPSAvailableForIntersectionLayerSelector,
@@ -46,7 +48,7 @@ import {
     selectedToolSelector,
     isIntersectionLayerInvalidSelector,
     isSourceLayerInvalidSelector
-} from '../../selectors/geoProcessingTools';
+} from '../../selectors/geoProcessing';
 
 import { getMessageById } from '../../utils/LocaleUtils';
 
@@ -64,6 +66,7 @@ const MainComp = ({
     isIntersectionLayerInvalid,
     isSourceLayerInvalid,
     intersectionFeature,
+    onReset,
     onRunBufferProcess,
     onRunIntersectionProcess,
     onSetSelectedTool,
@@ -72,8 +75,14 @@ const MainComp = ({
     const [showWarning, onShowWarning] = useState(false);
     const handleOnChangeTool = (sel) => {
         onSetSelectedTool(sel?.value || "");
+        if ((sel?.value) !== selectedTool) {
+            onReset();
+        }
     };
     const handleConfirmRunProcess = () => {
+        if (showHighlightLayers) {
+            onToggleHighlightLayers();
+        }
         if (selectedTool === GPT_TOOL_BUFFER) {
             onRunBufferProcess();
         } else {
@@ -84,10 +93,13 @@ const MainComp = ({
     const handleCloseWarningModal = () => {
         onShowWarning(false);
     };
-    const handleOnToggleHighlightLayers = () => {
-        onToggleHighlightLayers();
-    };
     const handleRunAction = () => {
+        if (showHighlightLayers) {
+            onToggleHighlightLayers();
+        }
+
+        selectedTool.run();
+
         if (selectedTool === GPT_TOOL_BUFFER) {
             if (!sourceFeature) {
                 onShowWarning(true);
@@ -108,7 +120,7 @@ const MainComp = ({
                 <Form>
                     <FormGroup>
                         <ControlLabel>
-                            <Message msgId="GeoProcessingTools.tool" />
+                            <Message msgId="GeoProcessing.tool" />
                         </ControlLabel>
                     </FormGroup>
                     <FormGroup>
@@ -117,26 +129,18 @@ const MainComp = ({
                             clearable={false}
                             value={selectedTool}
                             onChange={handleOnChangeTool}
-                            options={[{
-                                value: GPT_TOOL_BUFFER,
-                                label: getMessageById(messages, "GeoProcessingTools.bufferTool")
-                            }, {
-                                value: GPT_TOOL_INTERSECTION,
-                                label: getMessageById(messages, "GeoProcessingTools.intersectionTool")
-                            }]} />
+                            options={processes.map(({optionItem}) => {
+                                return {
+                                    value: optionItem.value,
+                                    label: getMessageById(messages, optionItem.labelMsgId)
+                                };
+                            })} />
                     </FormGroup>
+
+
                     {selectedTool === GPT_TOOL_BUFFER ? <Buffer/> : null}
                     {selectedTool === GPT_TOOL_INTERSECTION ? <Intersection/> : null}
-                    <FormGroup className="highlight">
-                        <SwitchButton
-                            disabled={runningProcess}
-                            checked={showHighlightLayers}
-                            onClick={handleOnToggleHighlightLayers}
-                        />
-                        <ControlLabel>
-                            <Message msgId="GeoProcessingTools.highlight" />
-                        </ControlLabel>
-                    </FormGroup>
+
                 </Form>
                 <div className="run">
                     <Button
@@ -149,32 +153,31 @@ const MainComp = ({
                         }
                         onClick={handleRunAction}
                     >
-                        <Message msgId={"GeoProcessingTools.run"} />
+                        <Message msgId={"GeoProcessing.run"} />
                         {runningProcess ? <Loader size={14} style={{margin: '0 auto'}}/> : null}
                     </Button>
                     <InfoPopover
                         bsStyle={isIntersectionLayerInvalid || isSourceLayerInvalid ? "danger" : "info"}
                         text={
                             isIntersectionLayerInvalid || isSourceLayerInvalid ?
-                                <Message msgId={"GeoProcessingTools.tooltip.invalidLayers"}
+                                <Message msgId={"GeoProcessing.tooltip.invalidLayers"}
                                 /> : <Message msgId={selectedTool === GPT_TOOL_INTERSECTION ?
-                                    "GeoProcessingTools.tooltip.fillRequiredDataIntersection" :
-                                    "GeoProcessingTools.tooltip.fillRequiredDataBuffer"}
+                                    "GeoProcessing.tooltip.fillRequiredDataIntersection" :
+                                    "GeoProcessing.tooltip.fillRequiredDataBuffer"}
                                 />
                         }
                     />
-
                     <ConfirmModal
                         show={showWarning}
                         onClose={handleCloseWarningModal}
                         onConfirm={handleConfirmRunProcess}
-                        title={<Message msgId="GeoProcessingTools.warningTitle" />}
+                        title={<Message msgId="GeoProcessing.warningTitle" />}
                         fitContent
-                        confirmText={<Message msgId="GeoProcessingTools.warningConfirmText" />}
-                        cancelText={<Message msgId="GeoProcessingTools.warningCancel" />}
+                        confirmText={<Message msgId="GeoProcessing.warningConfirmText" />}
+                        cancelText={<Message msgId="GeoProcessing.warningCancel" />}
                     >
                         <div className="ms-detail-body">
-                            <Message msgId="GeoProcessingTools.warningBody" />
+                            <Message msgId="GeoProcessing.warningBody" />
                         </div>
                     </ConfirmModal>
                 </div>
@@ -198,6 +201,7 @@ MainComp.propTypes = {
     runningProcess: PropTypes.bool,
     isIntersectionLayerInvalid: PropTypes.bool,
     isSourceLayerInvalid: PropTypes.bool,
+    onReset: PropTypes.func,
     onRunBufferProcess: PropTypes.func,
     onRunIntersectionProcess: PropTypes.func,
     onSetSelectedTool: PropTypes.func,
@@ -255,6 +259,7 @@ const MainCompConnected = connect(
             isSourceLayerInvalid
         })),
     {
+        onReset: reset,
         onRunBufferProcess: runBufferProcess,
         onRunIntersectionProcess: runIntersectionProcess,
         onSetSelectedTool: setSelectedTool,

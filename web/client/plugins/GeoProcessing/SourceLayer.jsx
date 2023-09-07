@@ -22,12 +22,11 @@ import tooltip from '../../components/misc/enhancers/tooltip';
 import Loader from '../../components/misc/Loader';
 import {
     checkWPSAvailability,
-    runBufferProcess,
     setSourceLayerId,
     getFeatures,
     setSelectedLayerType,
     setSourceFeatureId
-} from '../../actions/geoProcessingTools';
+} from '../../actions/geoProcessing';
 import {
     areAllWPSAvailableForSourceLayerSelector,
     checkingWPSAvailabilitySelector,
@@ -41,7 +40,7 @@ import {
     isSourceFeaturesLoadingSelector,
     selectedLayerTypeSelector,
     wfsBackedLayersSelector
-} from '../../selectors/geoProcessingTools';
+} from '../../selectors/geoProcessing';
 
 const Addon = tooltip(InputGroup.Addon);
 
@@ -82,7 +81,7 @@ const Source = ({
     return (<>
         <FormGroup>
             <ControlLabel>
-                <Message msgId="GeoProcessingTools.sourceLayer" />
+                <Message msgId="GeoProcessing.sourceLayer" />
             </ControlLabel>
         </FormGroup>
         <FormGroup>
@@ -91,14 +90,13 @@ const Source = ({
                     disabled={runningProcess}
                     clearable
                     value={sourceLayerId}
-                    noResultsText={<Message msgId="GeoProcessingTools.noMatchedLayer" />}
+                    noResultsText={<Message msgId="GeoProcessing.noMatchedLayer" />}
                     onChange={handleOnChangeSource}
                     options={layers.map(f => ({value: f.id, label: f.title || f.name || f.id }))} />
                 <Addon
                     tooltipId={
-                        !sourceLayerId ? "GeoProcessingTools.tooltip.selectLayer" : areAllWPSAvailableForSourceLayer && !isSourceLayerInvalid  ? "GeoProcessingTools.tooltip.validLayer" : "GeoProcessingTools.tooltip.invalidLayer"}
+                        !sourceLayerId ? "GeoProcessing.tooltip.selectLayer" : areAllWPSAvailableForSourceLayer && !isSourceLayerInvalid  ? "GeoProcessing.tooltip.validLayer" : "GeoProcessing.tooltip.invalidLayer"}
                     tooltipPosition="left"
-                    className="btn"
                     bsStyle="primary"
                 >
                     {checkingWPSAvailability ? <Loader size={14} style={{margin: '0 auto'}}/> : <Glyphicon
@@ -110,15 +108,15 @@ const Source = ({
         </FormGroup>
         <FormGroup>
             <ControlLabel>
-                <Message msgId="GeoProcessingTools.sourceFeature" />
+                <Message msgId="GeoProcessing.sourceFeature" />
             </ControlLabel>
         </FormGroup>
         <FormGroup>
             <InputGroup className="infinite-select-scroll">
                 <Select
-                    disabled={runningProcess || isSourceLayerInvalid}
+                    disabled={checkingWPSAvailability || isSourceFeaturesLoading || runningProcess || isSourceLayerInvalid}
                     clearable
-                    noResultsText={<Message msgId="GeoProcessingTools.noMatchedFeature" />}
+                    noResultsText={<Message msgId="GeoProcessing.noMatchedFeature" />}
                     onChange={handleOnChangeSourceFeatureId}
                     options={sourceFeatures.map(f => ({value: f.id, label: f.id }))}
                     value={sourceFeatureId}
@@ -136,9 +134,8 @@ const Source = ({
                 />
                 <Addon
                     tooltipId={
-                        !sourceFeatureId ? "GeoProcessingTools.tooltip.selectFeature" : areAllWPSAvailableForSourceLayer ? "GeoProcessingTools.tooltip.validFeature" : "GeoProcessingTools.tooltip.invalidFeature"}
+                        !sourceFeatureId ? "GeoProcessing.tooltip.selectFeature" : areAllWPSAvailableForSourceLayer ? "GeoProcessing.tooltip.validFeature" : "GeoProcessing.tooltip.invalidFeature"}
                     tooltipPosition="left"
-                    className="btn"
                     bsStyle="primary"
                 >
                     {isSourceFeaturesLoading ? <Loader size={14} style={{margin: '0 auto'}}/> : <Glyphicon
@@ -146,9 +143,9 @@ const Source = ({
                         className={!sourceFeatureId ? "text-info" : !isSourceLayerInvalid ? "text-success" : "text-danger"}/>}
                 </Addon>
                 <Addon
-                    disabled={!sourceLayerId}
+                    disabled={!sourceLayerId || isSourceFeaturesLoading || checkingWPSAvailability}
                     onClick={handleOnClickToSelectSourceFeature}
-                    tooltipId={"GeoProcessingTools.tooltip.clickToSelectFeature"}
+                    tooltipId={"GeoProcessing.tooltip.clickToSelectFeature"}
                     tooltipPosition="left"
                     className="btn"
                     bsStyle={selectedLayerType === "source" ? "success" : "primary"}
@@ -228,7 +225,6 @@ const SourceConnected = connect(
         })),
     {
         onCheckWPSAvailability: checkWPSAvailability,
-        onRunBufferProcess: runBufferProcess,
         onSetSourceLayerId: setSourceLayerId,
         onGetFeatures: getFeatures,
         onSetSelectedLayerType: setSelectedLayerType,

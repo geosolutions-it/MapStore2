@@ -3032,9 +3032,9 @@
             "description": "Consente di aggiungere un filtro a un livello",
             "title": "Filtra Livello"
           },
-          "GeoProcessingTools": {
+          "GeoProcessing": {
             "description": "Consente di geo processare i livelli utilizzando il buffer e l'intersezione dei processi wps",
-            "title": "Strumenti di elaborazione geospaziale"
+            "title": "Processi di Geoelaborazione"
           },
           "HelpLink": {
             "description": "Un pulsante per accedere alla documentazione di MapStore",
@@ -3845,13 +3845,13 @@
             "dxfGeometryNotSupported": "Solo LWPOLYLINE è supportata nel DXF"
           }
         },
-        "GeoProcessingTools": {
-          "title": "Strumenti di geoelaborazione",
-          "emptyTitle": "Questi processi WPS devono essere installati in geoserver per poter usare questo plugin:",
+        "GeoProcessing": {
+          "title": "Processi di Geoelaborazione",
+          "emptyTitle": "Questi processi WPS devono essere installati in geoserver per poter usare questo processo:",
           "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
           "sourceLayer": "Livello sorgente",
           "sourceFeature": "Feature sorgente",
-          "tool": "Seleziona uno strumento",
+          "tool": "Seleziona un processo",
           "highlight": "Evidenzia le feature in mappa",
           "bufferTool": "Buffer",
           "distance": "Distanza",
@@ -3872,9 +3872,9 @@
           "square": "Squadrato",
           "firstAttributeToRetain": "Primo attributo della collezione di feature",
           "secondAttributeToRetain": "Secondo attributo della collezione di feature",
-          "intersectionMode": "Specifica che tipo di geometria per intersecare le caratteristiche",
-          "percentagesEnabled": "Indica se indica se emettere le percentuali dell'area caratteristica",
-          "areasEnabled": "Indica se emettere aree caratteristiche",
+          "intersectionMode": "Specifica che tipo di geometria per intersecare le features",
+          "percentagesEnabled": "Indica se indica se emettere le percentuali dell'area feature",
+          "areasEnabled": "Indica se emettere aree features",
           "noMatchedMode": "Nessuna modalità corrisponde al filtro corrente",
           "INTERSECTION": "INTERSEZIONE",
           "FIRST": "PRIMO",
@@ -3899,7 +3899,7 @@
           "warningCancel": "Annulla",
           "tooltip": {
             "clickToSelectFeature": "Fai click per selezionare una feature",
-             "invalidLayers": "Uno dei livelli che hai selezionato non può essere utilizzato all'interno di questo strumento",
+             "invalidLayers": "Uno dei livelli che hai selezionato non può essere utilizzato all'interno di questo processo",
              "fillRequiredDataIntersection": "Seleziona almeno il livello di origine e il livello di intersezione",
              "fillRequiredDataBuffer": "Seleziona almeno il livello di origine",
              "siderBarBtn": "Strumenti di geoelaborazione",
@@ -3907,7 +3907,7 @@
              "validFeature": "Questa feature è valida",
              "invalidFeature": "Questa feature non è valida",
              "selectLayer": "Seleziona un livello",
-             "validLayer": "Questo livello è valido e può essere utilizzato in questo strumento",
+             "validLayer": "Questo livello è valido e può essere utilizzato in questo processo",
              "invalidLayer": "Questo livello non supporta i processi wps necessari \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\no è un livello raster"
           }
         }

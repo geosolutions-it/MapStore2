@@ -87,16 +87,16 @@ const moveNode = (groups, node, groupId, newLayers, foreground = true) => {
     return newGroups;
 };
 
-const insertNode = (nodes, node, parent) => {
+const insertNode = (nodes, node, parent, asFirst = false) => {
     if (!parent) {
-        return [...nodes, node];
+        return asFirst ? [node, ...nodes] : [...nodes, node];
     }
     return nodes.map(n => isString(n) ? n : (n.id === parent ? {
         ...n,
         nodes: [...n.nodes, node]
     } : {
         ...n,
-        nodes: insertNode(n.nodes, node, parent)
+        nodes: insertNode(n.nodes, node, parent, asFirst)
     }));
 };
 
@@ -367,14 +367,19 @@ function layers(state = { flat: [] }, action) {
     }
     case ADD_GROUP: {
         const id = uuidv1();
-        const newGroups = insertNode(state.groups, {
-            id: action.parent ? (action.parent + '.' + id) : id,
-            title: action.group,
-            name: id,
-            nodes: [],
-            expanded: true,
-            ...action.options
-        }, action.parent);
+        const newGroups = insertNode(
+            state.groups,
+            {
+                id: action.parent ? (action.parent + '.' + id) : id,
+                title: action.group,
+                name: id,
+                nodes: [],
+                expanded: true,
+                ...action.options
+            },
+            action.parent,
+            action.asFirst
+        );
         return assign({}, state, {
             groups: newGroups
         });

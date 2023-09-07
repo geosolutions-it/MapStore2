@@ -650,10 +650,10 @@
       ]
     },
     {
-      "name": "GeoProcessingTools",
-      "glyph": "star",
-      "title": "plugins.GeoProcessingTools.title",
-      "description": "plugins.GeoProcessingTools.description",
+      "name": "GeoProcessing",
+      "glyph": "layer-info",
+      "title": "plugins.GeoProcessing.title",
+      "description": "plugins.GeoProcessing.description",
       "dependencies": [
         "SidebarMenu"
       ]

@@ -16,6 +16,7 @@ import {
     INIT_PLUGIN,
     INCREASE_BUFFERED_COUNTER,
     INCREASE_INTERSECT_COUNTER,
+    RESET,
     RUNNING_PROCESS,
     SET_BUFFER_DISTANCE,
     SET_BUFFER_DISTANCE_UOM,
@@ -40,22 +41,24 @@ import {
     SET_INTERSECTION_AREAS_ENABLED,
     SET_SELECTED_LAYER_TYPE,
     TOGGLE_HIGHLIGHT_LAYERS
-} from '../actions/geoProcessingTools';
+} from '../actions/geoProcessing';
 
-import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingToolsUtils';
+import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingUtils';
 
 /**
- * reducer for geoProcessingTools
+ * reducer for GeoProcessing
  * @memberof reducers
- * @param  {Object} action the action
- * @return {Object}        the new state
+ * @param  {object} action the action
+ * @return {object}        the new state
  *
  */
-function geoProcessingTools( state = {
-    selectedTool: GPT_TOOL_BUFFER || GPT_TOOL_INTERSECTION,
+
+const initialState = {
+    source: {},
     buffer: {
         counter: 0
     },
+    selectedLayerId: "",
     intersection: {
         counter: 0,
         intersectionMode: "INTERSECTION"
@@ -65,6 +68,11 @@ function geoProcessingTools( state = {
         isIntersectionEnabled: true,
         runningProcess: false
     }
+};
+function geoProcessing( state = {
+    selectedTool: GPT_TOOL_BUFFER || GPT_TOOL_INTERSECTION,
+    ...initialState
+
 }, action) {
     switch (action.type) {
     case CHECKING_WPS_AVAILABILITY: {
@@ -97,6 +105,7 @@ function geoProcessingTools( state = {
         return {
             ...state,
             ...action.cfg,
+            cfg: action.cfg,
             buffer: {
                 ...state.buffer,
                 ...(action.cfg.buffer || {})
@@ -122,6 +131,23 @@ function geoProcessingTools( state = {
             intersection: {
                 ...state.intersection,
                 counter: state.intersection.counter + 1
+            }
+        };
+    }
+    case RESET: {
+        return {
+            ...state,
+            ...initialState,
+            buffer: {
+                ...(state.cfg.buffer || {}),
+                ...initialState.buffer
+            },
+            intersection: {
+                ...(state.cfg.intersection || {}),
+                ...initialState.intersection
+            },
+            source: {
+                ...initialState.source
             }
         };
     }
@@ -391,4 +417,4 @@ function geoProcessingTools( state = {
     }
 }
 
-export default geoProcessingTools;
+export default geoProcessing;

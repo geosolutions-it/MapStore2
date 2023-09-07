@@ -16,41 +16,66 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 import { createSelector } from 'reselect';
 
+import SwitchButton from '../../components/misc/switch/SwitchButton';
 import Message from '../../components/I18N/Message';
 import FormControl from '../../components/misc/DebouncedFormControl';
 import SwitchPanel from '../../components/misc/switch/SwitchPanel';
 import IntersectionLayer from './IntersectionLayer';
 import SourceLayer from './SourceLayer';
 import {
+    runProcess,
     setIntersectionFirstAttribute,
     setIntersectionSecondAttribute,
     setIntersectionMode,
     setIntersectionPercentagesEnabled,
-    setIntersectionAreasEnabled
-} from '../../actions/geoProcessingTools';
+    setIntersectionAreasEnabled,
+    toggleHighlightLayers
+} from '../../actions/geoProcessing';
 import {
-    runningProcessSelector,
+    areAllWPSAvailableForSourceLayerSelector,
+    areAllWPSAvailableForIntersectionLayerSelector,
+    areasEnabledSelector,
     firstAttributeToRetainSelector,
-    secondAttributeToRetainSelector,
     intersectionModeSelector,
+    isIntersectionLayerInvalidSelector,
+    isSourceLayerInvalidSelector,
+    sourceLayerIdSelector,
+    intersectionLayerIdSelector,
     percentagesEnabledSelector,
-    areasEnabledSelector
-} from '../../selectors/geoProcessingTools';
+    runningProcessSelector,
+    secondAttributeToRetainSelector,
+    showHighlightLayersSelector,
+    sourceFeatureSelector,
+    intersectionFeatureSelector
+} from '../../selectors/geoProcessing';
 
 const Intersection = ({
     firstAttributeToRetain,
     secondAttributeToRetain,
     intersectionMode,
+    isIntersectionLayerInvalid,
+    isSourceLayerInvalid,
+    sourceLayerId,
+    intersectionLayerId,
     percentagesEnabled,
     areasEnabled,
     runningProcess,
+    process,
+    showHighlightLayers,
+    sourceFeature,
+    intersectionFeature,
+    areAllWPSAvailableForSourceLayer,
+    areAllWPSAvailableForIntersectionLayer,
     onSetIntersectionFirstAttribute,
     onSetIntersectionSecondAttribute,
     onSetIntersectionMode,
     onSetIntersectionPercentagesEnabled,
-    onSetIntersectionAreasEnabled
+    onSetIntersectionAreasEnabled,
+    onToggleHighlightLayers,
+    onRunProcess
 }) => {
     const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
+    const [showWarning, onShowWarning] = useState(false);
 
     const handleOnChangeFirstAttributeToRetain = (val) => {
         onSetIntersectionFirstAttribute(val);
@@ -67,6 +92,19 @@ const Intersection = ({
     const handleOnChangeAreasEnabled = (val) => {
         onSetIntersectionAreasEnabled(val);
     };
+    const handleOnToggleHighlightLayers = () => {
+        onToggleHighlightLayers();
+    };
+    const handleConfirmRunProcess = () => {
+        if (showHighlightLayers) {
+            onToggleHighlightLayers();
+        }
+        process.run();
+        onShowWarning(false);
+    };
+    const handleCloseWarningModal = () => {
+        onShowWarning(false);
+    };
     return (
         <>
 
@@ -75,12 +113,12 @@ const Intersection = ({
             <SwitchPanel
                 disabled={runningProcess}
                 useToolbar
-                title={<Message msgId="GeoProcessingTools.advancedSettings" />}
+                title={<Message msgId="GeoProcessing.advancedSettings" />}
                 expanded={showAdvancedSettings}
                 onSwitch={setShowAdvancedSettings}>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.firstAttributeToRetain" />
+                        <Message msgId="GeoProcessing.firstAttributeToRetain" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -95,7 +133,7 @@ const Intersection = ({
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.secondAttributeToRetain" />
+                        <Message msgId="GeoProcessing.secondAttributeToRetain" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -110,7 +148,7 @@ const Intersection = ({
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.intersectionMode" />
+                        <Message msgId="GeoProcessing.intersectionMode" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -118,18 +156,18 @@ const Intersection = ({
                         disabled={runningProcess}
                         clearable
                         value={intersectionMode}
-                        noResultsText={<Message msgId="GeoProcessingTools.noMatchedMode" />}
+                        noResultsText={<Message msgId="GeoProcessing.noMatchedMode" />}
                         onChange={handleOnChangeIntersectionMode}
                         options={[
-                            {value: "INTERSECTION", label: <Message msgId="GeoProcessingTools.INTERSECTION" />},
-                            {value: "FIRST", label: <Message msgId="GeoProcessingTools.FIRST" />},
-                            {value: "SECOND", label: <Message msgId="GeoProcessingTools.SECOND" />}
+                            {value: "INTERSECTION", label: <Message msgId="GeoProcessing.INTERSECTION" />},
+                            {value: "FIRST", label: <Message msgId="GeoProcessing.FIRST" />},
+                            {value: "SECOND", label: <Message msgId="GeoProcessing.SECOND" />}
                         ]}
                     />
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.percentagesEnabled" />
+                        <Message msgId="GeoProcessing.percentagesEnabled" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -139,14 +177,14 @@ const Intersection = ({
                         value={percentagesEnabled}
                         onChange={handleOnChangePercentagesEnabled}
                         options={[
-                            {value: "true", label: <Message msgId="GeoProcessingTools.true" />},
-                            {value: "false", label: <Message msgId="GeoProcessingTools.false" />}
+                            {value: "true", label: <Message msgId="GeoProcessing.true" />},
+                            {value: "false", label: <Message msgId="GeoProcessing.false" />}
                         ]}
                     />
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.areasEnabled" />
+                        <Message msgId="GeoProcessing.areasEnabled" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -156,12 +194,42 @@ const Intersection = ({
                         value={areasEnabled}
                         onChange={handleOnChangeAreasEnabled}
                         options={[
-                            {value: "true", label: <Message msgId="GeoProcessingTools.true" />},
-                            {value: "false", label: <Message msgId="GeoProcessingTools.false" />}
+                            {value: "true", label: <Message msgId="GeoProcessing.true" />},
+                            {value: "false", label: <Message msgId="GeoProcessing.false" />}
                         ]}
                     />
                 </FormGroup>
             </SwitchPanel>
+            <FormGroup className="highlight">
+                <SwitchButton
+                    disabled={runningProcess}
+                    checked={showHighlightLayers}
+                    onClick={handleOnToggleHighlightLayers}
+                />
+                <ControlLabel>
+                    <Message msgId="GeoProcessing.highlight" />
+                </ControlLabel>
+            </FormGroup>
+            <process.RunComponent
+                areAllWPSAvailableForIntersectionLayer={areAllWPSAvailableForIntersectionLayer}
+                areAllWPSAvailableForSourceLayer={areAllWPSAvailableForSourceLayer}
+                intersectionFeature={intersectionFeature}
+                intersectionLayerId={intersectionLayerId}
+                isIntersectionLayerInvalid={isIntersectionLayerInvalid}
+                isSourceLayerInvalid={isSourceLayerInvalid}
+                onRunProcess={onRunProcess}
+                onShowWarning={onShowWarning}
+                runningProcess={runningProcess}
+                showHighlightLayers={showHighlightLayers}
+                sourceFeature={sourceFeature}
+                sourceLayerId={sourceLayerId}
+                {...process.actions}
+            />
+            <process.ConfirmModal
+                showWarning={showWarning}
+                handleCloseWarningModal={handleCloseWarningModal}
+                handleConfirmRunProcess={handleConfirmRunProcess}
+            />
         </>
     );
 
@@ -171,15 +239,27 @@ Intersection.propTypes = {
     areasEnabled: PropTypes.bool,
     firstAttributeToRetain: PropTypes.string,
     intersectionMode: PropTypes.string,
+    isIntersectionLayerInvalid: PropTypes.bool,
+    isSourceLayerInvalid: PropTypes.bool,
     percentagesEnabled: PropTypes.bool,
     runningProcess: PropTypes.bool,
+    process: PropTypes.object,
+    sourceLayerId: PropTypes.string,
+    intersectionLayerId: PropTypes.string,
     secondAttributeToRetain: PropTypes.string,
+    showHighlightLayers: PropTypes.bool,
+    areAllWPSAvailableForSourceLayer: PropTypes.bool,
+    areAllWPSAvailableForIntersectionLayer: PropTypes.bool,
+    sourceFeature: PropTypes.object,
+    intersectionFeature: PropTypes.object,
 
     onSetIntersectionFirstAttribute: PropTypes.func,
     onSetIntersectionSecondAttribute: PropTypes.func,
     onSetIntersectionMode: PropTypes.func,
     onSetIntersectionPercentagesEnabled: PropTypes.func,
-    onSetIntersectionAreasEnabled: PropTypes.func
+    onSetIntersectionAreasEnabled: PropTypes.func,
+    onToggleHighlightLayers: PropTypes.func,
+    onRunProcess: PropTypes.func
 };
 
 Intersection.contextTypes = {
@@ -189,34 +269,63 @@ Intersection.contextTypes = {
 const IntersectionConnected = connect(
     createSelector(
         [
+            areAllWPSAvailableForSourceLayerSelector,
+            areAllWPSAvailableForIntersectionLayerSelector,
             runningProcessSelector,
             firstAttributeToRetainSelector,
             secondAttributeToRetainSelector,
             intersectionModeSelector,
+            sourceLayerIdSelector,
+            intersectionLayerIdSelector,
+            isIntersectionLayerInvalidSelector,
+            isSourceLayerInvalidSelector,
             percentagesEnabledSelector,
-            areasEnabledSelector
+            areasEnabledSelector,
+            showHighlightLayersSelector,
+            sourceFeatureSelector,
+            intersectionFeatureSelector
         ],
         (
+            areAllWPSAvailableForSourceLayer,
+            areAllWPSAvailableForIntersectionLayer,
             runningProcess,
             firstAttributeToRetain,
             secondAttributeToRetain,
             intersectionMode,
+            sourceLayerId,
+            intersectionLayerId,
+            isIntersectionLayerInvalid,
+            isSourceLayerInvalid,
             percentagesEnabled,
-            areasEnabled
+            areasEnabled,
+            showHighlightLayers,
+            sourceFeature,
+            intersectionFeature
         ) => ({
+            areAllWPSAvailableForSourceLayer,
+            areAllWPSAvailableForIntersectionLayer,
             runningProcess,
             firstAttributeToRetain,
             secondAttributeToRetain,
             intersectionMode,
+            sourceLayerId,
+            intersectionLayerId,
+            isIntersectionLayerInvalid,
+            isSourceLayerInvalid,
             percentagesEnabled,
-            areasEnabled
+            areasEnabled,
+            showHighlightLayers,
+            sourceFeature,
+            intersectionFeature
         })),
     {
         onSetIntersectionFirstAttribute: setIntersectionFirstAttribute,
         onSetIntersectionSecondAttribute: setIntersectionSecondAttribute,
         onSetIntersectionMode: setIntersectionMode,
         onSetIntersectionPercentagesEnabled: setIntersectionPercentagesEnabled,
-        onSetIntersectionAreasEnabled: setIntersectionAreasEnabled
+        onSetIntersectionAreasEnabled: setIntersectionAreasEnabled,
+        onToggleHighlightLayers: toggleHighlightLayers,
+        onRunProcess: runProcess
     })(Intersection);
 
 export default IntersectionConnected;

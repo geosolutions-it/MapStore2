@@ -16,37 +16,54 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 import { createSelector } from 'reselect';
 
+import SwitchButton from '../../components/misc/switch/SwitchButton';
 import Message from '../../components/I18N/Message';
 import FormControl from '../../components/misc/DebouncedFormControl';
 import SwitchPanel from '../../components/misc/switch/SwitchPanel';
 import SourceLayer from './SourceLayer';
 import {
-    runBufferProcess,
+    runProcess,
     setBufferDistance,
     setBufferDistanceUom,
     setBufferQuadrantSegments,
-    setBufferCapStyle
-} from '../../actions/geoProcessingTools';
+    setBufferCapStyle,
+    toggleHighlightLayers
+} from '../../actions/geoProcessing';
 import {
+    areAllWPSAvailableForSourceLayerSelector,
     distanceSelector,
     distanceUomSelector,
     quadrantSegmentsSelector,
     capStyleSelector,
-    runningProcessSelector
-} from '../../selectors/geoProcessingTools';
+    isSourceLayerInvalidSelector,
+    sourceLayerIdSelector,
+    sourceFeatureSelector,
+    runningProcessSelector,
+    showHighlightLayersSelector
+} from '../../selectors/geoProcessing';
 
 const Buffer = ({
+    areAllWPSAvailableForSourceLayer,
     distance,
     distanceUom,
     quadrantSegments,
     capStyle,
+    isSourceLayerInvalid,
+    process,
     runningProcess,
+    showHighlightLayers,
+    sourceLayerId,
+    sourceFeature,
+    onRunProcess,
     onSetBufferDistance,
     onSetBufferDistanceUom,
     onSetBufferQuadrantSegments,
-    onSetBufferCapStyle
+    onSetBufferCapStyle,
+    onToggleHighlightLayers
 }) => {
-    const [showBufferAdvancedSettings, setShowBufferAdvancedSettings] = useState(false);
+    const [showBufferAdvancedSettings, setShowBufferAdvancedSettings] =
+    useState(false);
+    const [showWarning, onShowWarning] = useState(false);
 
     const handleOnChangeBufferDistance = (val) => {
         onSetBufferDistance(val);
@@ -60,6 +77,21 @@ const Buffer = ({
     const handleOnChangeBufferCapStyle = (sel) => {
         onSetBufferCapStyle(sel?.value || "");
     };
+    const handleOnToggleHighlightLayers = () => {
+        onToggleHighlightLayers();
+    };
+
+    // confirm modal
+    const handleConfirmRunProcess = () => {
+        if (showHighlightLayers) {
+            onToggleHighlightLayers();
+        }
+        process.run();
+        onShowWarning(false);
+    };
+    const handleCloseWarningModal = () => {
+        onShowWarning(false);
+    };
     return (
         <>
             <SourceLayer/>
@@ -67,7 +99,7 @@ const Buffer = ({
                 <div className="value">
                     <FormGroup>
                         <ControlLabel>
-                            <Message msgId="GeoProcessingTools.distance" />
+                            <Message msgId="GeoProcessing.distance" />
                         </ControlLabel>
                     </FormGroup>
                     <FormGroup>
@@ -82,11 +114,11 @@ const Buffer = ({
                                 clearable={false}
                                 disabled={runningProcess}
                                 value={distanceUom}
-                                noResultsText={<Message msgId="GeoProcessingTools.noMatchedLayer" />}
+                                noResultsText={<Message msgId="GeoProcessing.noMatchedLayer" />}
                                 onChange={handleOnChangeBufferDistanceUom}
                                 options={[
-                                    {value: "m", label: <Message msgId="GeoProcessingTools.m" />},
-                                    {value: "km", label: <Message msgId="GeoProcessingTools.km" />}
+                                    {value: "m", label: <Message msgId="GeoProcessing.m" />},
+                                    {value: "km", label: <Message msgId="GeoProcessing.km" />}
                                 ]} />
                         </InputGroup>
                     </FormGroup>
@@ -95,12 +127,12 @@ const Buffer = ({
             <SwitchPanel
                 disabled={runningProcess}
                 useToolbar
-                title={<Message msgId="GeoProcessingTools.advancedSettings" />}
+                title={<Message msgId="GeoProcessing.advancedSettings" />}
                 expanded={showBufferAdvancedSettings}
                 onSwitch={setShowBufferAdvancedSettings}>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.quadrantSegments" />
+                        <Message msgId="GeoProcessing.quadrantSegments" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -116,7 +148,7 @@ const Buffer = ({
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
-                        <Message msgId="GeoProcessingTools.capStyle" />
+                        <Message msgId="GeoProcessing.capStyle" />
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
@@ -124,60 +156,111 @@ const Buffer = ({
                         disabled={runningProcess}
                         clearable
                         value={capStyle}
-                        noResultsText={<Message msgId="GeoProcessingTools.noMatchedStyle" />}
+                        noResultsText={<Message msgId="GeoProcessing.noMatchedStyle" />}
                         onChange={handleOnChangeBufferCapStyle}
                         options={[
-                            {value: "Round", label: <Message msgId="GeoProcessingTools.round" />},
-                            {value: "Flat", label: <Message msgId="GeoProcessingTools.flat" />},
-                            {value: "Square", label: <Message msgId="GeoProcessingTools.square" />}
+                            {value: "Round", label: <Message msgId="GeoProcessing.round" />},
+                            {value: "Flat", label: <Message msgId="GeoProcessing.flat" />},
+                            {value: "Square", label: <Message msgId="GeoProcessing.square" />}
                         ]} />
                 </FormGroup>
             </SwitchPanel>
+            <FormGroup className="highlight">
+                <SwitchButton
+                    disabled={runningProcess}
+                    checked={showHighlightLayers}
+                    onClick={handleOnToggleHighlightLayers}
+                />
+                <ControlLabel>
+                    <Message msgId="GeoProcessing.highlight" />
+                </ControlLabel>
+            </FormGroup>
+            <process.RunComponent
+                runningProcess={runningProcess}
+                isSourceLayerInvalid={isSourceLayerInvalid}
+                sourceLayerId={sourceLayerId}
+                onRunProcess={onRunProcess}
+                onShowWarning={onShowWarning}
+                distance={distance}
+                showHighlightLayers={showHighlightLayers}
+                sourceFeature={sourceFeature}
+                areAllWPSAvailableForSourceLayer={areAllWPSAvailableForSourceLayer}
+                {...process.actions}
+            />
+            <process.ConfirmModal
+                showWarning={showWarning}
+                handleCloseWarningModal={handleCloseWarningModal}
+                handleConfirmRunProcess={handleConfirmRunProcess}
+            />
         </>
     );
 
 };
 
 Buffer.propTypes = {
+    areAllWPSAvailableForSourceLayer: PropTypes.bool,
     distance: PropTypes.number,
     distanceUom: PropTypes.string,
     quadrantSegments: PropTypes.number,
     capStyle: PropTypes.string,
+    isSourceLayerInvalid: PropTypes.bool,
+    sourceLayerId: PropTypes.string,
+    sourceFeature: PropTypes.object,
+    process: PropTypes.object,
     runningProcess: PropTypes.bool,
+    showHighlightLayers: PropTypes.bool,
     onSetBufferDistance: PropTypes.func,
+    onRunProcess: PropTypes.func,
     onSetBufferDistanceUom: PropTypes.func,
     onSetBufferQuadrantSegments: PropTypes.func,
-    onSetBufferCapStyle: PropTypes.func
+    onSetBufferCapStyle: PropTypes.func,
+    onToggleHighlightLayers: PropTypes.func
 };
 
 const BufferConnected = connect(
     createSelector(
         [
+            areAllWPSAvailableForSourceLayerSelector,
             distanceSelector,
             distanceUomSelector,
+            isSourceLayerInvalidSelector,
+            sourceLayerIdSelector,
+            sourceFeatureSelector,
             quadrantSegmentsSelector,
             capStyleSelector,
-            runningProcessSelector
+            runningProcessSelector,
+            showHighlightLayersSelector
         ],
         (
+            areAllWPSAvailableForSourceLayer,
             distance,
             distanceUom,
+            isSourceLayerInvalid,
+            sourceLayerId,
+            sourceFeature,
             quadrantSegments,
             capStyle,
-            runningProcess
+            runningProcess,
+            showHighlightLayers
         ) => ({
+            areAllWPSAvailableForSourceLayer,
             distance,
             distanceUom,
+            isSourceLayerInvalid,
+            sourceLayerId,
+            sourceFeature,
             quadrantSegments,
             capStyle,
-            runningProcess
+            runningProcess,
+            showHighlightLayers
         })),
     {
-        onRunBufferProcess: runBufferProcess,
         onSetBufferDistance: setBufferDistance,
         onSetBufferDistanceUom: setBufferDistanceUom,
         onSetBufferQuadrantSegments: setBufferQuadrantSegments,
-        onSetBufferCapStyle: setBufferCapStyle
+        onSetBufferCapStyle: setBufferCapStyle,
+        onToggleHighlightLayers: toggleHighlightLayers,
+        onRunProcess: runProcess
     })(Buffer);
 
 export default BufferConnected;
