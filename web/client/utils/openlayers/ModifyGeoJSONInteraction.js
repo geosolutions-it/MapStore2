@@ -26,6 +26,7 @@ import { transformLineToArcs, reproject } from '../CoordinatesUtils';
 import { GeometryCollection } from 'ol/geom';
 import DrawHole from './hole/DrawHole';
 import tinycolor from 'tinycolor2';
+import { never } from 'ol/events/condition';
 import {
     generateEditingStyle,
     featureToModifyProperties as defaultFeatureToModifyProperties,
@@ -244,6 +245,7 @@ class OpenLayersModifyGeoJSONInteraction {
             this._draw = new Draw({
                 type: 'LineString',
                 stopClick: true,
+                freehandCondition: never,
                 style: (olFeature) => {
                     const [lineFeature] = source.getFeatures();
                     const { geodesic } = lineFeature.get('@properties') || {};
