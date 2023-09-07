@@ -107,9 +107,9 @@ describe('Test controls selectors', () => {
         const showConfirmDelete = showConfirmDeleteMapModalSelector(state);
         expect(showConfirmDelete).toBe(true);
     });
-    it('isGeoProcessingToolsEnabledSelector', () => {
+    it('isGeoProcessingEnabledSelector', () => {
         const controls = {
-            GeoProcessingTools: {
+            GeoProcessing: {
                 enabled: true
             }
         };
