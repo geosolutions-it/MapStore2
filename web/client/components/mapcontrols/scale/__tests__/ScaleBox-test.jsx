@@ -96,4 +96,10 @@ describe('ScaleBox', () => {
         expect(domLabel).toExist();
         expect(domLabel.innerHTML).toContain("Scale:");
     });
+
+    it('should support not rounded zoom levels', () => {
+        TestUtils.act(() => { ReactDOM.render(<ScaleBox currentZoomLvl={5.1}/>, document.getElementById('container')); });
+        const select = document.querySelector('select');
+        expect(select.value).toBe('5');
+    });
 });

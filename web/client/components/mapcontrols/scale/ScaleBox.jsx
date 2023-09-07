@@ -45,7 +45,7 @@ class ScaleBox extends React.Component {
     }
 
     onComboChange = (event) => {
-        var selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
+        let selectedZoomLvl = parseInt(event.nativeEvent.target.value, 10);
         this.props.onChange(selectedZoomLvl, this.props.scales[selectedZoomLvl]);
     };
 
@@ -58,14 +58,15 @@ class ScaleBox extends React.Component {
     };
 
     render() {
-        var control = null;
+        let control = null;
+        const currentZoomLvl = Math.round(this.props.currentZoomLvl);
         if (this.props.readOnly) {
             control =
-                <label>{this.props.template(this.props.scales[this.props.currentZoomLvl], this.props.currentZoomLvl)}</label>
+                <label>{this.props.template(this.props.scales[currentZoomLvl], currentZoomLvl)}</label>
             ;
         } else if (this.props.useRawInput) {
             control =
-                (<select label={this.props.label} onChange={this.onComboChange} bsSize="small" value={this.props.currentZoomLvl || ""}>
+                (<select label={this.props.label} onChange={this.onComboChange} bsSize="small" value={currentZoomLvl || ""}>
                     {this.getOptions()}
                 </select>)
             ;
@@ -73,7 +74,7 @@ class ScaleBox extends React.Component {
             control =
                 (<Form inline><FormGroup bsSize="small">
                     <ControlLabel>{this.props.label}</ControlLabel>
-                    <FormControl componentClass="select" onChange={this.onComboChange} value={this.props.currentZoomLvl || ""}>
+                    <FormControl componentClass="select" onChange={this.onComboChange} value={currentZoomLvl || ""}>
                         {this.getOptions()}
                     </FormControl>
                 </FormGroup></Form>)
