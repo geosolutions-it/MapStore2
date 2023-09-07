@@ -26,7 +26,6 @@ import {getMessageById} from '../../../utils/LocaleUtils';
 import {createOLGeometry} from '../../../utils/openlayers/DrawUtils';
 
 import {Polygon, LineString} from 'ol/geom';
-import { never } from 'ol/events/condition';
 import Overlay from 'ol/Overlay';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
@@ -600,7 +599,6 @@ export default class MeasurementSupport extends React.Component {
         // create an interaction to draw with
         draw = new Draw({
             source: new VectorSource(),
-            freehandCondition: never,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
             style: new Style({
                 fill: new Fill({
@@ -623,9 +621,9 @@ export default class MeasurementSupport extends React.Component {
             })
         });
 
-        this.clickListener = this.props.map.on('click', this.updateMeasurementResults.bind(this));
+        this.clickListener = this.props.map.on('click', this.updateMeasurementResults.bind(this, this.props));
         if (this.props.updateOnMouseMove) {
-            this.props.map.on('pointermove', this.updateMeasurementResults.bind(this));
+            this.props.map.on('pointermove', this.updateMeasurementResults.bind(this, this.props));
         }
 
         this.props.map.on('pointermove', (evt) => this.pointerMoveHandler(evt));
@@ -898,10 +896,10 @@ export default class MeasurementSupport extends React.Component {
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
             this.sketchFeature = null;
-            this.props.map.un('click', this.updateMeasurementResults.bind(this), this);
+            this.props.map.un('click', this.updateMeasurementResults.bind(this, this.props), this);
             unByKey(this.clickListener);
             if (this.props.updateOnMouseMove) {
-                this.props.map.un('pointermove', this.updateMeasurementResults.bind(this), this);
+                this.props.map.un('pointermove', this.updateMeasurementResults.bind(this, this.props), this);
             }
         }
     };
@@ -931,13 +929,13 @@ export default class MeasurementSupport extends React.Component {
         this.helpTooltipElement.classList.remove('hidden');
     };
 
-    updateMeasurementResults = () => {
+    updateMeasurementResults = (props) => {
         if (!this.sketchFeature) {
             return;
         }
         let sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
 
-        if (this.props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
+        if (props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
             // calculate the azimuth as base for bearing information
             if (sketchCoords.length > 2) {
                 this.drawInteraction.sketchCoords_ = [sketchCoords[0], sketchCoords[1], sketchCoords[0]];
