@@ -49,114 +49,114 @@ import {
     selectedLayerTypeSelector,
     wfsBackedLayersSelector,
     maxFeaturesSelector
-} from '../geoProcessingTools';
+} from '../geoProcessing';
 import {
     GPT_CONTROL_NAME
-} from '../../actions/geoProcessingTools';
+} from '../../actions/geoProcessing';
 
 describe('Test Geo Processing Tools selectors', () => {
     it('distanceSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             buffer: {
                 distance: 123
             }
         };
-        expect(distanceSelector({geoProcessingTools})).toEqual(123);
+        expect(distanceSelector({geoProcessing})).toEqual(123);
         expect(distanceSelector({})).toEqual(100);
     });
     it('distanceUomSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             buffer: {
                 uom: "m"
             }
         };
-        expect(distanceUomSelector({geoProcessingTools})).toEqual("m");
+        expect(distanceUomSelector({geoProcessing})).toEqual("m");
         expect(distanceUomSelector()).toEqual("m");
     });
     it('quadrantSegmentsSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             buffer: {
                 quadrantSegments: 123
             }
         };
-        expect(quadrantSegmentsSelector({geoProcessingTools})).toEqual(123);
+        expect(quadrantSegmentsSelector({geoProcessing})).toEqual(123);
     });
     it('capStyleSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             buffer: {
                 capStyle: "Round"
             }
         };
-        expect(capStyleSelector({geoProcessingTools})).toEqual("Round");
+        expect(capStyleSelector({geoProcessing})).toEqual("Round");
     });
     it('bufferedLayersCounterSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             buffer: {
                 counter: 1
             }
         };
-        expect(bufferedLayersCounterSelector({geoProcessingTools})).toEqual(1);
+        expect(bufferedLayersCounterSelector({geoProcessing})).toEqual(1);
         expect(bufferedLayersCounterSelector({})).toEqual(0);
     });
     it('sourceLayerIdSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             source: {
                 layerId: 1
             }
         };
-        expect(sourceLayerIdSelector({geoProcessingTools})).toEqual(1);
+        expect(sourceLayerIdSelector({geoProcessing})).toEqual(1);
     });
     it('sourceFeatureIdSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             source: {
                 featureId: 1
             }
         };
-        expect(sourceFeatureIdSelector({geoProcessingTools})).toEqual(1);
+        expect(sourceFeatureIdSelector({geoProcessing})).toEqual(1);
     });
     it('sourceFeatureSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             source: {
                 feature: {
                     type: "Feature"
                 }
             }
         };
-        expect(sourceFeatureSelector({geoProcessingTools})).toEqual({
+        expect(sourceFeatureSelector({geoProcessing})).toEqual({
             type: "Feature"
         });
     });
     it('sourceFeaturesSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             source: {
                 features: [{
                     type: "Feature"
                 }]
             }
         };
-        expect(sourceFeaturesSelector({geoProcessingTools})).toEqual([{
+        expect(sourceFeaturesSelector({geoProcessing})).toEqual([{
             type: "Feature"
         }]);
     });
     it('sourceTotalCountSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             source: {
                 totalCount: 5
             }
         };
-        expect(sourceTotalCountSelector({geoProcessingTools})).toEqual(5);
+        expect(sourceTotalCountSelector({geoProcessing})).toEqual(5);
     });
     it('sourceCurrentPageSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             source: {
                 currentPage: 6
             }
         };
-        expect(sourceCurrentPageSelector({geoProcessingTools})).toEqual(6);
+        expect(sourceCurrentPageSelector({geoProcessing})).toEqual(6);
     });
     it('isSourceLayerInvalidSelector', () => {
         const layerId = "layerId";
-        const geoProcessingTools = {
+        const geoProcessing = {
             source: {layerId},
             flags: {
                 invalid: {
@@ -164,115 +164,115 @@ describe('Test Geo Processing Tools selectors', () => {
                 }
             }
         };
-        expect(isSourceLayerInvalidSelector({geoProcessingTools})).toEqual(true);
+        expect(isSourceLayerInvalidSelector({geoProcessing})).toEqual(true);
     });
     it('intersectionLayerIdSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 layerId: 1
             }
         };
-        expect(intersectionLayerIdSelector({geoProcessingTools})).toEqual(1);
+        expect(intersectionLayerIdSelector({geoProcessing})).toEqual(1);
     });
     it('intersectionFeatureIdSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 featureId: 1
             }
         };
-        expect(intersectionFeatureIdSelector({geoProcessingTools})).toEqual(1);
+        expect(intersectionFeatureIdSelector({geoProcessing})).toEqual(1);
     });
     it('intersectionFeatureSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 feature: {
                     type: "Feature"
                 }
             }
         };
-        expect(intersectionFeatureSelector({geoProcessingTools})).toEqual({
+        expect(intersectionFeatureSelector({geoProcessing})).toEqual({
             type: "Feature"
         });
     });
     it('intersectionFeaturesSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 features: [{
                     type: "Feature"
                 }]
             }
         };
-        expect(intersectionFeaturesSelector({geoProcessingTools})).toEqual([{
+        expect(intersectionFeaturesSelector({geoProcessing})).toEqual([{
             type: "Feature"
         }]);
     });
     it('intersectionTotalCountSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 totalCount: 2
             }
         };
-        expect(intersectionTotalCountSelector({geoProcessingTools})).toEqual(2);
+        expect(intersectionTotalCountSelector({geoProcessing})).toEqual(2);
     });
     it('intersectionCurrentPageSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 currentPage: 5
             }
         };
-        expect(intersectionCurrentPageSelector({geoProcessingTools})).toEqual(5);
+        expect(intersectionCurrentPageSelector({geoProcessing})).toEqual(5);
     });
     it('intersectedLayersCounterSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 counter: 2
             }
         };
-        expect(intersectedLayersCounterSelector({geoProcessingTools})).toEqual(2);
+        expect(intersectedLayersCounterSelector({geoProcessing})).toEqual(2);
     });
     it('firstAttributeToRetainSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 firstAttributeToRetain: "firstAttributeToRetain"
             }
         };
-        expect(firstAttributeToRetainSelector({geoProcessingTools})).toEqual("firstAttributeToRetain");
+        expect(firstAttributeToRetainSelector({geoProcessing})).toEqual("firstAttributeToRetain");
     });
     it('secondAttributeToRetainSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 secondAttributeToRetain: "secondAttributeToRetain"
             }
         };
-        expect(secondAttributeToRetainSelector({geoProcessingTools})).toEqual("secondAttributeToRetain");
+        expect(secondAttributeToRetainSelector({geoProcessing})).toEqual("secondAttributeToRetain");
     });
     it('intersectionModeSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 intersectionMode: "intersectionMode"
             }
         };
-        expect(intersectionModeSelector({geoProcessingTools})).toEqual("intersectionMode");
+        expect(intersectionModeSelector({geoProcessing})).toEqual("intersectionMode");
     });
     it('percentagesEnabledSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 percentagesEnabled: true
             }
         };
-        expect(percentagesEnabledSelector({geoProcessingTools})).toEqual(true);
+        expect(percentagesEnabledSelector({geoProcessing})).toEqual(true);
     });
     it('areasEnabledSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 areasEnabled: true
             }
         };
-        expect(areasEnabledSelector({geoProcessingTools})).toEqual(true);
+        expect(areasEnabledSelector({geoProcessing})).toEqual(true);
     });
     it('isIntersectionLayerInvalidSelector', () => {
         const layerId = "layerId";
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {layerId},
             flags: {
                 invalid: {
@@ -280,32 +280,32 @@ describe('Test Geo Processing Tools selectors', () => {
                 }
             }
         };
-        expect(isIntersectionLayerInvalidSelector({geoProcessingTools})).toEqual(true);
+        expect(isIntersectionLayerInvalidSelector({geoProcessing})).toEqual(true);
     });
     it('selectedToolSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             selectedTool: "buffer"
         };
-        expect(selectedToolSelector({geoProcessingTools})).toEqual("buffer");
+        expect(selectedToolSelector({geoProcessing})).toEqual("buffer");
     });
     it('isSourceFeaturesLoadingSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             flags: {
                 featuresSourceLoading: true
             }
         };
-        expect(isSourceFeaturesLoadingSelector({geoProcessingTools})).toEqual(true);
+        expect(isSourceFeaturesLoadingSelector({geoProcessing})).toEqual(true);
     });
     it('isIntersectionFeaturesLoadingSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             flags: {
                 featuresIntersectionLoading: true
             }
         };
-        expect(isIntersectionFeaturesLoadingSelector({geoProcessingTools})).toEqual(true);
+        expect(isIntersectionFeaturesLoadingSelector({geoProcessing})).toEqual(true);
     });
     it('areAllWPSAvailableForSourceLayerSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             source: {
                 layerId: "layerId"
             },
@@ -315,10 +315,10 @@ describe('Test Geo Processing Tools selectors', () => {
                 }
             }
         };
-        expect(areAllWPSAvailableForSourceLayerSelector({geoProcessingTools})).toEqual(true);
+        expect(areAllWPSAvailableForSourceLayerSelector({geoProcessing})).toEqual(true);
     });
     it('areAllWPSAvailableForIntersectionLayerSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             intersection: {
                 layerId: "layerId"
             },
@@ -328,47 +328,47 @@ describe('Test Geo Processing Tools selectors', () => {
                 }
             }
         };
-        expect(areAllWPSAvailableForIntersectionLayerSelector({geoProcessingTools})).toEqual(true);
+        expect(areAllWPSAvailableForIntersectionLayerSelector({geoProcessing})).toEqual(true);
     });
     it('checkingWPSAvailabilitySelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             flags: {
                 checkingWPSAvailability: true
             }
         };
-        expect(checkingWPSAvailabilitySelector({geoProcessingTools})).toEqual(true);
+        expect(checkingWPSAvailabilitySelector({geoProcessing})).toEqual(true);
     });
     it('checkingWPSAvailabilityIntersectionSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             flags: {
                 checkingIntersectionWPSAvailability: true
             }
         };
-        expect(checkingWPSAvailabilityIntersectionSelector({geoProcessingTools})).toEqual(true);
+        expect(checkingWPSAvailabilityIntersectionSelector({geoProcessing})).toEqual(true);
     });
     it('isIntersectionEnabledSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             flags: {
                 isIntersectionEnabled: true
             }
         };
-        expect(isIntersectionEnabledSelector({geoProcessingTools})).toEqual(true);
+        expect(isIntersectionEnabledSelector({geoProcessing})).toEqual(true);
     });
     it('runningProcessSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             flags: {
                 runningProcess: true
             }
         };
-        expect(runningProcessSelector({geoProcessingTools})).toEqual(true);
+        expect(runningProcessSelector({geoProcessing})).toEqual(true);
     });
     it('showHighlightLayersSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             flags: {
                 showHighlightLayers: true
             }
         };
-        expect(showHighlightLayersSelector({geoProcessingTools})).toEqual(true);
+        expect(showHighlightLayersSelector({geoProcessing})).toEqual(true);
     });
     it('isListeningClickSelector', () => {
         const map = {
@@ -381,22 +381,22 @@ describe('Test Geo Processing Tools selectors', () => {
         expect(isListeningClickSelector({map})).toEqual(true);
     });
     it('selectedLayerIdSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             selectedLayerId: "layerId"
         };
-        expect(selectedLayerIdSelector({geoProcessingTools})).toEqual("layerId");
+        expect(selectedLayerIdSelector({geoProcessing})).toEqual("layerId");
     });
     it('selectedLayerTypeSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             selectedLayerType: "source"
         };
-        expect(selectedLayerTypeSelector({geoProcessingTools})).toEqual("source");
+        expect(selectedLayerTypeSelector({geoProcessing})).toEqual("source");
     });
     it('maxFeaturesSelector', () => {
-        const geoProcessingTools = {
+        const geoProcessing = {
             maxFeatures: 10
         };
-        expect(maxFeaturesSelector({geoProcessingTools})).toEqual(10);
+        expect(maxFeaturesSelector({geoProcessing})).toEqual(10);
     });
     it('test wfsBackedLayersSelector', () => {
         let layers = wfsBackedLayersSelector({});
