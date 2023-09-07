@@ -90,7 +90,7 @@ import {
     purgeMapInfoResults,
     changeMapInfoState
 } from "../../actions/mapInfo";
-describe.only('geoProcessing epics', () => {
+describe('geoProcessing epics', () => {
     let mockAxios;
     beforeEach(() => {
         mockAxios = new MockAdapter(axios);
