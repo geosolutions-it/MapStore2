@@ -34,7 +34,13 @@ export const processes = [
                 } else {
                     props.onRunProcess(GPT_TOOL_BUFFER);
                 }
+            },
+            runProcessConfirm: (props) => {
+                props.onShowWarning(false);
+                props.onRunProcess(GPT_TOOL_BUFFER);
+
             }
+
         },
         RunComponent: (props) => {
             return (<div className="run">

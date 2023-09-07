@@ -38,6 +38,7 @@ import {
     firstAttributeToRetainSelector,
     intersectionModeSelector,
     isIntersectionLayerInvalidSelector,
+    isIntersectionEnabledSelector,
     isSourceLayerInvalidSelector,
     sourceLayerIdSelector,
     intersectionLayerIdSelector,
@@ -50,22 +51,23 @@ import {
 } from '../../selectors/geoProcessing';
 
 const Intersection = ({
+    areAllWPSAvailableForIntersectionLayer,
+    areAllWPSAvailableForSourceLayer,
+    areasEnabled,
     firstAttributeToRetain,
-    secondAttributeToRetain,
+    intersectionFeature,
+    intersectionLayerId,
     intersectionMode,
+    isIntersectionEnabled,
     isIntersectionLayerInvalid,
     isSourceLayerInvalid,
-    sourceLayerId,
-    intersectionLayerId,
     percentagesEnabled,
-    areasEnabled,
-    runningProcess,
     process,
+    runningProcess,
+    secondAttributeToRetain,
     showHighlightLayers,
     sourceFeature,
-    intersectionFeature,
-    areAllWPSAvailableForSourceLayer,
-    areAllWPSAvailableForIntersectionLayer,
+    sourceLayerId,
     onSetIntersectionFirstAttribute,
     onSetIntersectionSecondAttribute,
     onSetIntersectionMode,
@@ -218,11 +220,13 @@ const Intersection = ({
                 isIntersectionLayerInvalid={isIntersectionLayerInvalid}
                 isSourceLayerInvalid={isSourceLayerInvalid}
                 onRunProcess={onRunProcess}
+                onToggleHighlightLayers={onToggleHighlightLayers}
                 onShowWarning={onShowWarning}
                 runningProcess={runningProcess}
                 showHighlightLayers={showHighlightLayers}
                 sourceFeature={sourceFeature}
                 sourceLayerId={sourceLayerId}
+                isIntersectionEnabled={isIntersectionEnabled}
                 {...process.actions}
             />
             <process.ConfirmModal
@@ -241,6 +245,7 @@ Intersection.propTypes = {
     intersectionMode: PropTypes.string,
     isIntersectionLayerInvalid: PropTypes.bool,
     isSourceLayerInvalid: PropTypes.bool,
+    isIntersectionEnabled: PropTypes.bool,
     percentagesEnabled: PropTypes.bool,
     runningProcess: PropTypes.bool,
     process: PropTypes.object,
@@ -275,6 +280,7 @@ const IntersectionConnected = connect(
             firstAttributeToRetainSelector,
             secondAttributeToRetainSelector,
             intersectionModeSelector,
+            isIntersectionEnabledSelector,
             sourceLayerIdSelector,
             intersectionLayerIdSelector,
             isIntersectionLayerInvalidSelector,
@@ -292,6 +298,7 @@ const IntersectionConnected = connect(
             firstAttributeToRetain,
             secondAttributeToRetain,
             intersectionMode,
+            isIntersectionEnabled,
             sourceLayerId,
             intersectionLayerId,
             isIntersectionLayerInvalid,
@@ -308,6 +315,7 @@ const IntersectionConnected = connect(
             firstAttributeToRetain,
             secondAttributeToRetain,
             intersectionMode,
+            isIntersectionEnabled,
             sourceLayerId,
             intersectionLayerId,
             isIntersectionLayerInvalid,

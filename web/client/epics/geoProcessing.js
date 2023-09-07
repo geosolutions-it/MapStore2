@@ -40,8 +40,6 @@ import {
     GPT_SOURCE_HIGHLIGHT_ID,
     GPT_CONTROL_NAME,
 
-    ACTIVATE_EVENT_LISTENING,
-    DEACTIVATE_EVENT_LISTENING,
     CHECK_WPS_AVAILABILITY,
     checkingIntersectionWPSAvailability,
     checkingWPSAvailability,
@@ -376,7 +374,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
  */
 export const runBufferProcessGPTEpic = (action$, store) => action$
     .ofType(RUN_PROCESS)
-    .filter((process) => process === GPT_TOOL_BUFFER )
+    .filter(({process}) => process === GPT_TOOL_BUFFER )
     .switchMap(({}) => {
         const state = store.getState();
         const layerId = sourceLayerIdSelector(state);
@@ -553,7 +551,7 @@ export const resetIntersectHighlightGPTEpic = (action$) => action$
  */
 export const runIntersectProcessGPTEpic = (action$, store) => action$
     .ofType(RUN_PROCESS)
-    .filter((process) => process === GPT_TOOL_INTERSECTION )
+    .filter(({process}) => process === GPT_TOOL_INTERSECTION )
     .switchMap(({}) => {
         const state = store.getState();
         const layerId = sourceLayerIdSelector(state);
@@ -717,37 +715,6 @@ export const toggleHighlightLayersOnOpenCloseGPTEpic = (action$, store) => actio
         }));
     });
 
-export const handleGeoProcessingEvents = (action$, {getState}) =>
-    action$
-        .ofType(ACTIVATE_EVENT_LISTENING)
-        .switchMap(({id, eventType}) => {
-            const state = getState();
-            switch (eventType) {
-            case "click":
-                return Rx.Observable.of(
-                    purgeMapInfoResults(),
-                    hideMapinfoMarker(),
-                    ...(get(state, 'draw.drawOwner', '') === GPT_CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
-                    registerEventListener('click', id),
-                    ...(mapInfoEnabledSelector(state) ? [changeMapInfoState(false)] : []
-                    ));
-            default: return Rx.Observable.empty();
-            }
-        }).merge(
-            action$.ofType(CLICK_ON_MAP)
-                .switchMap(({point, handler, params}) => {
-                    const map = mapSelector(getState());
-                    // other things
-                    return handler({point, map, params});
-                })
-        )
-        .takeUntil(
-            action$.ofType(DEACTIVATE_EVENT_LISTENING)
-                // .filter(({id: id2}) => id === id2).
-                switchMap(() => {
-                    Rx.Observable.of(changeMapInfoState(true));
-                })
-        );
 /**
  * activate feature selection from map
  */

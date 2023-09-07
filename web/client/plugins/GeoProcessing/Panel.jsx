@@ -13,7 +13,7 @@ import { createSelector } from 'reselect';
 import Message from '../../components/I18N/Message';
 import BorderLayout from '../../components/layout/BorderLayout';
 import ResponsivePanel from "../../components/misc/panels/ResponsivePanel";
-import GeoProcessingMain from './MainV2';
+import GeoProcessingMain from './Main';
 import { toggleControl } from '../../actions/controls';
 import { initPlugin } from '../../actions/geoProcessing';
 import { isGeoProcessingEnabledSelector } from '../../selectors/controls';

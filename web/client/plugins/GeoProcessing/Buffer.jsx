@@ -86,8 +86,10 @@ const Buffer = ({
         if (showHighlightLayers) {
             onToggleHighlightLayers();
         }
-        process.run();
-        onShowWarning(false);
+        process.actions.runProcessConfirm({
+            onShowWarning,
+            onRunProcess
+        });
     };
     const handleCloseWarningModal = () => {
         onShowWarning(false);
@@ -176,15 +178,16 @@ const Buffer = ({
                 </ControlLabel>
             </FormGroup>
             <process.RunComponent
+                areAllWPSAvailableForSourceLayer={areAllWPSAvailableForSourceLayer}
                 runningProcess={runningProcess}
                 isSourceLayerInvalid={isSourceLayerInvalid}
                 sourceLayerId={sourceLayerId}
-                onRunProcess={onRunProcess}
-                onShowWarning={onShowWarning}
                 distance={distance}
                 showHighlightLayers={showHighlightLayers}
                 sourceFeature={sourceFeature}
-                areAllWPSAvailableForSourceLayer={areAllWPSAvailableForSourceLayer}
+                onRunProcess={onRunProcess}
+                onToggleHighlightLayers={onToggleHighlightLayers}
+                onShowWarning={onShowWarning}
                 {...process.actions}
             />
             <process.ConfirmModal

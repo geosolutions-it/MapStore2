@@ -12,8 +12,6 @@ export const GPT_CONTROL_NAME = "GeoProcessing";
 export const GPT_SOURCE_HIGHLIGHT_ID = "gpt-layer";
 export const GPT_INTERSECTION_HIGHLIGHT_ID = "gpt-layer-intersection";
 
-export const ACTIVATE_EVENT_LISTENING = "GPT:ACTIVATE_EVENT_LISTENING";
-export const DEACTIVATE_EVENT_LISTENING = "GPT:DEACTIVATE_EVENT_LISTENING";
 export const CHECK_WPS_AVAILABILITY = "GPT:CHECK_WPS_AVAILABILITY";
 export const CHECKING_WPS_AVAILABILITY = "GPT:CHECKING_WPS_AVAILABILITY";
 export const CHECKING_WPS_AVAILABILITY_INTERSECTION = "GPT:CHECKING_WPS_AVAILABILITY_INTERSECTION";
@@ -55,28 +53,6 @@ export const TOGGLE_HIGHLIGHT_LAYERS = "GPT:TOGGLE_HIGHLIGHT_LAYERS";
  * @memberof actions
  * @name GeoProcessing
  */
-
-/**
- * action for setup event listening
- * @memberof actions.GeoProcessing
- * @param  {string}
- * @param {string}
- */
-export const activateEventListening = (eventId, eventType, handler, params) => ({
-    type: ACTIVATE_EVENT_LISTENING,
-    eventId, eventType, handler, params
-});
-
-/**
- * action for clearing event listening
- * @memberof actions.GeoProcessing
- * @param  {string}
- * @param {string}
- */
-export const deactivateEventListening = (eventId, eventType, handler, params) => ({
-    type: DEACTIVATE_EVENT_LISTENING,
-    eventId, eventType, handler, params
-});
 
 /**
  * action for checking WPS availability
