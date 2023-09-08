@@ -130,21 +130,46 @@ export const computeFeatureMeasurement = (feature, options = { formatNumber: n =
         ];
     }
     if (feature.properties.measureType === MeasureTypes.BEARING) {
-        const value = calculateAzimuth(
-            feature.geometry.coordinates[0],
-            feature.geometry.coordinates[1],
-            'EPSG:4326');
+        const vertices = feature.geometry.coordinates.reduce((acc, coords, idx) => {
+            const nextCoords = feature.geometry.coordinates[idx + 1];
+            if (nextCoords) {
+                const value = calculateAzimuth(
+                    coords,
+                    nextCoords,
+                    'EPSG:4326');
+                const id = uuidv1();
+                return [
+                    ...acc,
+                    {
+                        type: 'Feature',
+                        id,
+                        geometry: {
+                            type: 'Point',
+                            coordinates: nextCoords
+                        },
+                        properties: {
+                            type: 'segment',
+                            bearing: value,
+                            label: getFormattedBearingValue(round(value || 0, 6), {
+                                measureTrueBearing: options.trueBearing,
+                                fractionDigits: options.bearingFractionDigits
+                            }).toString(),
+                            id,
+                            measureId: feature.id || feature.properties.id
+                        }
+                    }
+                ];
+            }
+            return acc;
+        }, []);
         return [{
             ...feature,
             properties: {
                 ...feature?.properties,
-                bearing: value,
-                label: getFormattedBearingValue(round(value || 0, 6), {
-                    measureTrueBearing: options.trueBearing,
-                    fractionDigits: options.bearingFractionDigits
-                }).toString()
+                bearings: vertices.map(({ properties }) => properties.bearing),
+                label: vertices.map(({ properties }) => properties.label).join(' | ')
             }
-        }];
+        }, ...vertices];
     }
     return [feature];
 };
@@ -283,20 +308,25 @@ const convertMeasureToFeatureCollection = (geometricFeatures, textLabels = [], u
 
 export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, id, description) => {
     const { features } = convertMeasureToFeatureCollection(geometricFeatures, textLabels, uom);
-    const annotationsFeatures = features.map((feature) => {
-        return {
-            ...feature,
-            id: feature.properties.id,
-            properties: {
-                ...feature.properties,
-                ...(feature?.properties?.measureType
-                    && {
-                        annotationType: feature.geometry.type,
-                        name: feature?.properties?.measureType
-                    })
+    const annotationsFeatures = features
+        .reduce((acc, feature) => {
+            const newFeature = {
+                ...feature,
+                id: feature.properties.id,
+                properties: {
+                    ...feature.properties,
+                    ...(feature?.properties?.measureType
+                        && {
+                            annotationType: feature.geometry.type,
+                            name: feature?.properties?.measureType
+                        })
+                }
+            };
+            if (feature?.properties?.measureType === MeasureTypes.BEARING) {
+                return [...acc, ...computeFeatureMeasurement(newFeature)];
             }
-        };
-    });
+            return [...acc, newFeature];
+        }, []);
     const rules = annotationsFeatures.reduce((acc, feature) => {
         if (feature.properties.annotationType) {
             return [
@@ -426,7 +456,7 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
                         }
                     ]
                 }] : []),
-                {
+                ...([MeasureTypes.AREA, MeasureTypes.LENGTH].includes(feature.properties.measureType) ? [{
                     ruleId: uuidv1(),
                     name: 'Measurement label',
                     filter: ['==', 'id', feature.properties.id],
@@ -454,7 +484,36 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
                             }
                         }
                     ]
-                }
+                }] : []),
+                ...([MeasureTypes.BEARING].includes(feature.properties.measureType) ? [{
+                    ruleId: uuidv1(),
+                    name: 'Segment labels',
+                    filter: ['==', 'measureId', feature.properties.id],
+                    mandatory: true,
+                    symbolizers: [
+                        {
+                            symbolizerId: uuidv1(),
+                            kind: 'Text',
+                            color: '#000000',
+                            size: 13,
+                            fontStyle: 'normal',
+                            fontWeight: 'bold',
+                            haloColor: '#FFFFFF',
+                            haloWidth: 3,
+                            allowOverlap: true,
+                            anchor: 'bottom',
+                            msBringToFront: true,
+                            msHeightReference: 'none',
+                            label: '{{label}}',
+                            font: ['Arial'],
+                            opacity: 1,
+                            offset: [0, 0],
+                            msGeometry: {
+                                name: 'endPoint'
+                            }
+                        }
+                    ]
+                }] : [])
             ];
         }
         return acc;
