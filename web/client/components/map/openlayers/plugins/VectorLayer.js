@@ -13,7 +13,6 @@ import isEqual from 'lodash/isEqual';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
-import { isAnnotationLayer } from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 
 Layers.registerType('vector', {
     create: (options, map) => {
@@ -26,8 +25,8 @@ Layers.registerType('vector', {
             // so we could disable it (doc states it improve performance at false with low count of features)
             // this helps also to make the circle style visible even if the center is out of the view
             // when the spatial index is active the renderBuffer of vector layer is used to filter features
-            // we could implement a different loading strategy to visualize correctly the Circle style
-            useSpatialIndex: !!isAnnotationLayer(options)
+            // we could implement a different loading strategy to visualize correctly the Circle style and Geodesic lines
+            useSpatialIndex: false
         });
 
         const layer = new VectorLayer({
