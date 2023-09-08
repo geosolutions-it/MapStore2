@@ -44,9 +44,9 @@ function getStyle({ style }) {
 function updateModelMatrix(tileSet, { heightOffset }) {
     if (!isNaN(heightOffset) && isNumber(heightOffset)) {
         const boundingSphere = tileSet.boundingSphere;
-        const cartographic = Cesium.Cartographic.fromCartesian(boundingSphere.center);
-        const surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
-        const offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, heightOffset);
+        const cartographic = Cesium.Cartographic.fromCartesian(boundingSphere.center);          // undefined if the cartesian is at the center of the ellipsoid.ان 
+        const surface = Cesium.Cartesian3.fromRadians(cartographic?.longitude || 0, cartographic?.latitude || 0, 0.0);
+        const offset = Cesium.Cartesian3.fromRadians(cartographic?.longitude || 0, cartographic?.latitude || 0, heightOffset);
         const translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
         tileSet.modelMatrix =  Cesium.Matrix4.fromTranslation(translation);
     }
