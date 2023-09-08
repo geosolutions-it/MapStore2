@@ -37,7 +37,7 @@ import {
     mergeAnnotationsFeatures
 } from '../plugins/Annotations/actions/annotations';
 import {updateDockPanelsList} from "../actions/maplayout";
-import { selectedAnnotationLayer } from '../plugins/Annotations/selectors/annotations';
+import { getSelectedAnnotationLayer } from '../plugins/Annotations/selectors/annotations';
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
 import { ANNOTATIONS } from '../plugins/Annotations/utils/AnnotationsUtils';
 
@@ -50,7 +50,7 @@ export const addAnnotationFromMeasureEpic = (action$, store) =>
             const { id = uuidv1(), visibility = true } = properties || {};
             const annotation = convertMeasuresToAnnotation(features, textLabels, uom, id, 'Annotations created from measurements');
             const state = store.getState();
-            const selected = selectedAnnotationLayer(state);
+            const selected = getSelectedAnnotationLayer(state);
             const commonActions = [
                 changeMeasurement(null),
                 changeMeasurement('LineString')

@@ -11,7 +11,7 @@ import expect from 'expect';
 import {
     annotationsLayerSelector,
     annotationsLayersSelector,
-    selectedAnnotationLayer,
+    getSelectedAnnotationLayer,
     editingSelector,
     getAnnotationsSession,
     getSelectedAnnotationFeatureId
@@ -90,7 +90,7 @@ describe('annotations selectors', () => {
             }
         ]);
     });
-    it('selectedAnnotationLayer', () => {
+    it('getSelectedAnnotationLayer', () => {
         const state = {
             layers: {
                 flat: [
@@ -111,7 +111,7 @@ describe('annotations selectors', () => {
                 selected: ['annotations:1']
             }
         };
-        expect(selectedAnnotationLayer(state)).toEqual({
+        expect(getSelectedAnnotationLayer(state)).toEqual({
             id: 'annotations:1',
             type: 'vector',
             title: 'Annotations',

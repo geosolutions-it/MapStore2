@@ -8,7 +8,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { Nav, NavItem, Glyphicon, ButtonGroup, Alert } from "react-bootstrap";
+import { Nav, NavItem, Glyphicon, ButtonGroup, Alert, ControlLabel } from "react-bootstrap";
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import isFunction from 'lodash/isFunction';
@@ -25,7 +25,7 @@ import {
     editAnnotation,
     removeAnnotation
 } from '../actions/annotations';
-import { selectedAnnotationLayer } from '../selectors/annotations';
+import { getSelectedAnnotationLayer } from '../selectors/annotations';
 import { createControlEnabledSelector } from '../../../selectors/controls';
 import { mapLayoutValuesSelector } from '../../../selectors/maplayout';
 import { setControlProperty } from '../../../actions/controls';
@@ -35,6 +35,7 @@ import { DEFAULT_TARGET_ID } from '../constants';
 import ConfirmDialog from '../../../components/misc/ConfirmDialog';
 import Portal from '../../../components/misc/Portal';
 import { mapSelector } from '../../../selectors/map';
+import VisibilityLimitsForm from '../../../components/TOC/fragments/settings/VisibilityLimitsForm';
 
 const Button = tooltip(MSButton);
 
@@ -141,7 +142,10 @@ function AnnotationsPanel({
     ],
     closeId,
     onCancel = () => {},
-    activeClickEventListener
+    activeClickEventListener,
+    projection,
+    resolutions,
+    zoom
 }) {
     const properties = {
         title: selected?.title,
@@ -236,6 +240,12 @@ function AnnotationsPanel({
                     {' '}
                     <Glyphicon glyph={validateFeatures() ? 'ok-sign text-success' : 'exclamation-mark text-danger'}/>
                 </NavItem>
+                <NavItem
+                    key="geometries"
+                    eventKey="settings"
+                    onClick={() => setTab('settings')}>
+                    <Message msgId="settings"/>
+                </NavItem>
                 <Button
                     className="square-button-md"
                     bsStyle="primary"
@@ -247,7 +257,7 @@ function AnnotationsPanel({
                 </Button>
             </Nav>
             <div className="ms-annotations-panel-body">
-                <div className="ms-annotations-properties" style={tab === 'properties' ? {  } : { display: 'none' }}>
+                <div className="ms-annotations-panel-content" style={tab === 'properties' ? {  } : { display: 'none' }}>
                     <AnnotationsFields
                         fields={fields}
                         properties={properties}
@@ -265,6 +275,16 @@ function AnnotationsPanel({
                     />
                 </div>
                 <div id={targetId} style={tab === 'geometries' ? {} : { display: 'none' }} >
+                </div>
+                <div className="ms-annotations-panel-content" style={tab === 'settings' ? {  } : { display: 'none' }}>
+                    <VisibilityLimitsForm
+                        title={<ControlLabel><Message msgId="layerProperties.visibilityLimits.title"/></ControlLabel>}
+                        layer={selected}
+                        onChange={(options) => onChange(selected.id, 'layers', options)}
+                        projection={projection}
+                        resolutions={resolutions}
+                        zoom={zoom}
+                    />
                 </div>
             </div>
             {activeClickEventListener && <Alert bsStyle="warning">
@@ -291,14 +311,17 @@ const ConnectedAnnotationsPanel = connect(
     createSelector([
         createControlEnabledSelector(ANNOTATIONS),
         state => mapLayoutValuesSelector(state, { height: true }),
-        selectedAnnotationLayer,
+        getSelectedAnnotationLayer,
         mapSelector
     ],
     (enabled, style, selected, map) => ({
         enabled,
         style,
         selected: enabled ? selected : null,
-        activeClickEventListener: map?.eventListeners?.click?.[0]
+        activeClickEventListener: map?.eventListeners?.click?.[0],
+        projection: map?.projection,
+        zoom: map?.zoom,
+        resolutions: map?.resolutions
     })),
     {
         onClose: confirmCloseAnnotations,

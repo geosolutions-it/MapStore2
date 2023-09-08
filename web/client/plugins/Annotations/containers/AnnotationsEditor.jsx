@@ -24,7 +24,7 @@ import {
     selectAnnotationFeature
 } from '../actions/annotations';
 import {
-    selectedAnnotationLayer,
+    getSelectedAnnotationLayer,
     getAnnotationsSession,
     getSelectedAnnotationFeatureId
 } from '../selectors/annotations';
@@ -384,7 +384,7 @@ function AnnotationsEditor({
 const ConnectedAnnotationsEditor = connect(
     createSelector([
         createControlVariableSelector(ANNOTATIONS, 'ready'),
-        selectedAnnotationLayer,
+        getSelectedAnnotationLayer,
         mapSelector,
         is3DMode,
         getAnnotationsSession,

@@ -21,7 +21,7 @@ export const annotationsLayersSelector = createSelector(
     [layersSelector],
     (layers) => layers.filter(isAnnotationLayer)
 );
-export const selectedAnnotationLayer = (state) => {
+export const getSelectedAnnotationLayer = (state) => {
     const selectedLayer = getSelectedLayer(state);
     return selectedLayer && isAnnotationLayer(selectedLayer) ? selectedLayer : null;
 };
