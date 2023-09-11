@@ -341,7 +341,7 @@ export const startFeatureExportDownload = (action$, store) =>
                     type: 'TEXT',
                     data: {
                         mimeType: 'application/wkt',
-                        data: JSON.stringify(toWKT(bboxToFeatureGeometry(mapBbox.bounds)))
+                        data: toWKT(bboxToFeatureGeometry(mapBbox.bounds))
                     }
                 } : undefined,
                 roiCRS: cropToROI ? (mapBbox.crs || 'EPSG:4326') : undefined,
