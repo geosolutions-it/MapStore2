@@ -7,6 +7,7 @@
  */
 
 import Rx from 'rxjs';
+import wk from 'wellknown';
 import { get, find, findIndex, pick, toPairs, castArray } from 'lodash';
 import { saveAs } from 'file-saver';
 import { parseString } from 'xml2js';
@@ -332,8 +333,8 @@ export const startFeatureExportDownload = (action$, store) =>
                 ROI: cropToROI ? {
                     type: 'TEXT',
                     data: {
-                        mimeType: 'application/json',
-                        data: JSON.stringify(bboxToFeatureGeometry(mapBbox.bounds))
+                        mimeType: 'application/wkt',
+                        data: wk.stringify(bboxToFeatureGeometry(mapBbox.bounds))
                     }
                 } : undefined,
                 roiCRS: cropToROI ? (mapBbox.crs || 'EPSG:4326') : undefined,
