@@ -82,6 +82,17 @@ export const Projection = connect((state) => ({
     onChangeParameter: setPrintParameter
 })(ProjectionComp);
 
+export const Rotation = connect((state) => ({
+    spec: state.print?.spec || {},
+    additionalProperty: false,
+    property: "rotation",
+    path: "",
+    type: "number",
+    label: "print.rotation"
+}), {
+    onChangeParameter: setPrintParameter
+})(TextInput);
+
 export const Layout = connect((state) => ({
     spec: state.print?.spec || {},
     layouts: state?.print?.capabilities?.layouts || []
@@ -190,12 +201,16 @@ export const standardItems = {
         },
         position: 4
     }, {
+        id: "rotation",
+        plugin: Rotation,
+        position: 5
+    }, {
         id: "overlayLayers",
         plugin: AdditionalLayers,
         cfg: {
             enabled: false
         },
-        position: 5
+        position: 6
     }],
     "left-panel-accordion": [{
         id: "layout",
