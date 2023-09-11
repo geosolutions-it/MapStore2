@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import {head} from 'lodash';
-import {loadMapConfigAndConfigureMap, loadMapInfoEpic} from '../config';
+import {loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoEpic} from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
     loadMapConfig,
@@ -17,16 +17,19 @@ import {
     LOAD_MAP_INFO,
     MAP_INFO_LOADED,
     MAP_INFO_LOAD_START,
-    loadMapInfo
+    loadMapInfo,
+    mapInfoLoaded
 } from '../../actions/config';
 
-import { testEpic } from './epicTestUtils';
+import { TEST_TIMEOUT, addTimeoutEpic, testEpic } from './epicTestUtils';
 import Persistence from '../../api/persistence';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
 import configBroken from "raw-loader!../../test-resources/testConfig.broken.json.txt";
 import testConfigEPSG31468 from "raw-loader!../../test-resources/testConfigEPSG31468.json.txt";
 import ConfigUtils from "../../utils/ConfigUtils";
+import { DETAILS_LOADED } from '../../actions/details';
+import { EMPTY_RESOURCE_VALUE } from '../../utils/MapInfoUtils';
 
 const api = {
     getResource: () => Promise.resolve({mapId: 1234})
@@ -278,6 +281,102 @@ describe('config epics', () => {
                 loadMapInfo(1234),
                 checkActions
             );
+        });
+    });
+    describe("storeDetailsInfoEpic", () => {
+        beforeEach(done => {
+            mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+
+        afterEach(done => {
+            mockAxios.restore();
+            setTimeout(done);
+        });
+        const mapId = 1;
+        const map = {
+            id: mapId,
+            name: "name"
+        };
+        const mapAttributesEmptyDetails = {
+            "AttributeList": {
+                "Attribute": [
+                    {
+                        "name": "details",
+                        "type": "STRING",
+                        "value": EMPTY_RESOURCE_VALUE
+                    }
+                ]
+            }
+        };
+
+        const mapAttributesWithoutDetails = {
+            "AttributeList": {
+                "Attribute": []
+            }
+        };
+
+        const mapAttributesWithDetails = {
+            AttributeList: {
+                Attribute: [
+                    {
+                        name: 'details',
+                        type: 'STRING',
+                        value: 'rest\/geostore\/data\/1\/raw?decode=datauri'
+                    },
+                    {
+                        name: "thumbnail",
+                        type: "STRING",
+                        value: 'rest\/geostore\/data\/1\/raw?decode=datauri'
+                    },
+                    {
+                        name: 'owner',
+                        type: 'STRING',
+                        value: 'admin'
+                    }
+                ]
+            }
+        };
+        it('test storeDetailsInfoEpic', (done) => {
+            mockAxios.onGet().reply(200, mapAttributesWithDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map, mapId), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+
+                    switch (action.type) {
+                    case DETAILS_LOADED:
+                        expect(action.mapId).toBe(mapId);
+                        expect(action.detailsUri).toBe("rest/geostore/data/1/raw?decode=datauri");
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {mapInitialConfig: {
+                "mapId": mapId
+            }});
+        });
+        it('test storeDetailsInfoEpic when api returns NODATA value', (done) => {
+            // const mock = new MockAdapter(axios);
+            mockAxios.onGet().reply(200, mapAttributesEmptyDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map, mapId), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+                done();
+            }, {mapInitialConfig: {
+                "mapId": mapId
+            }});
+        });
+        it('test storeDetailsInfoEpic when api doesnt return details', (done) => {
+            mockAxios.onGet().reply(200, mapAttributesWithoutDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map, mapId), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+                done();
+            }, {mapInitialConfig: {
+                "mapId": mapId
+            }});
         });
     });
 });
