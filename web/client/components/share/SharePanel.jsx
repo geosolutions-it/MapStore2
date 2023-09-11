@@ -106,8 +106,8 @@ class SharePanel extends React.Component {
         modal: false,
         draggable: true,
         onClose: () => {},
-        shareUrlRegex: "(h[^#]*)#\/viewer\/([^\/]*\/[A-Za-z0-9]*|[A-Za-z0-9]*)",
-        shareUrlReplaceString: "$1embedded.html#/$2",       // $2 points to the 2nd caputred group in the above regEx [here the words/id after viewer/]
+        shareUrlRegex: "(h[^#]*)#\\/viewer\\/([A-Za-z0-9]*)",
+        shareUrlReplaceString: "$1embedded.html#/$2",
         embedPanel: true,
         embedOptions: {},
         showAPI: true,
