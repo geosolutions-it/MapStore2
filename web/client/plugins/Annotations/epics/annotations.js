@@ -43,6 +43,9 @@ import {
     getLayerFromId
 } from '../../../selectors/layers';
 
+/**
+ * Handles the editing of an annotation, performing action such as node selection and control enable
+ */
 export const editAnnotationEpic = (action$, { getState }) =>
     action$.ofType(EDIT_ANNOTATION)
         .switchMap((action) => {
@@ -55,7 +58,9 @@ export const editAnnotationEpic = (action$, { getState }) =>
                 setControlProperty(ANNOTATIONS, 'enabled', true)
             );
         });
-
+/**
+ * Handles the creation of a new layer annotation including the initial actions to edit the layer
+ */
 export const newAnnotationEpic = (action$) =>
     action$.ofType(NEW_ANNOTATION)
         .switchMap(() => {
@@ -75,7 +80,9 @@ export const newAnnotationEpic = (action$) =>
                 setControlProperty(ANNOTATIONS, 'enabled', true)
             );
         });
-
+/**
+ * Handles all the action to close the annotation panel and clean the annotation layer from all the invalid features
+ */
 export const confirmCloseAnnotationsEpic = (action$) =>
     action$.ofType(CONFIRM_CLOSE_ANNOTATIONS)
         .switchMap(({ layer }) => {
@@ -88,7 +95,9 @@ export const confirmCloseAnnotationsEpic = (action$) =>
                     : removeLayer(layer.id)
             );
         });
-
+/**
+ * Handles the removal of an annotation layer
+ */
 export const removeAnnotationsEpic = (action$) =>
     action$.ofType(REMOVE_ANNOTATION)
         .switchMap((action) => {
@@ -98,7 +107,9 @@ export const removeAnnotationsEpic = (action$) =>
                 removeLayer(action.id)
             );
         });
-
+/**
+ * Handles the download of annotations layers converting them to a GeoJSON FeatureCollection file
+ */
 export const downloadAnnotationsEpic = (action$, { getState }) =>
     action$.ofType(DOWNLOAD)
         .switchMap(({ annotations }) => {
@@ -116,7 +127,9 @@ export const downloadAnnotationsEpic = (action$, { getState }) =>
                 }));
             }
         });
-
+/**
+ * Handles the import of annotations in a map
+ */
 export const loadAnnotationsEpic = (action$, { getState }) =>
     action$.ofType(LOAD_ANNOTATIONS)
         .switchMap(({ features, override }) => {
@@ -141,7 +154,9 @@ export const loadAnnotationsEpic = (action$, { getState }) =>
                 ...features.map((annotationLayer) => addLayer(annotationLayer))
             );
         });
-
+/**
+ * Handles the merge of feature inside an annotation, an example are the measurement features converted into an annotation
+ */
 export const mergeAnnotationsFeaturesEpic = (action$, { getState }) =>
     action$.ofType(MERGE_ANNOTATIONS_FEATURES)
         .switchMap((action) => {

@@ -10,6 +10,8 @@ import uuidv1 from 'uuid/v1';
 import { slice, head, last, get, isNaN, isEqual, isNumber } from 'lodash';
 import turfBbox from '@turf/bbox';
 import { measureIcons } from '../../../utils/MeasureUtils';
+
+// legacy style
 export const STYLE_CIRCLE = {
     color: '#ffcc33',
     opacity: 1,
@@ -17,11 +19,13 @@ export const STYLE_CIRCLE = {
     fillColor: '#ffffff',
     fillOpacity: 0.2
 };
+// legacy style
 export const STYLE_POINT_MARKER = {
     iconGlyph: 'comment',
     iconShape: 'square',
     iconColor: 'blue'
 };
+// legacy style
 export const STYLE_POINT_SYMBOL = {
     iconAnchor: [0.5, 0.5],
     anchorXUnits: 'fraction',
@@ -32,6 +36,7 @@ export const STYLE_POINT_SYMBOL = {
     size: 64,
     fillOpacity: 1
 };
+// legacy style
 export const STYLE_TEXT = {
     fontStyle: 'normal',
     fontSize: '14',
@@ -45,6 +50,7 @@ export const STYLE_TEXT = {
     fillColor: '#000000',
     fillOpacity: 1
 };
+// legacy style
 export const STYLE_LINE = {
     color: '#ffcc33',
     opacity: 1,
@@ -53,6 +59,7 @@ export const STYLE_LINE = {
         fill: 1
     }
 };
+// legacy style
 export const STYLE_POLYGON = {
     color: '#ffcc33',
     opacity: 1,
@@ -63,9 +70,7 @@ export const STYLE_POLYGON = {
         fill: 1
     }
 };
-/**
- * some defaults for the style
-*/
+// legacy styles
 export const DEFAULT_ANNOTATIONS_STYLES = {
     "Text": STYLE_TEXT,
     "Point": STYLE_POINT_MARKER,
@@ -76,35 +81,45 @@ export const DEFAULT_ANNOTATIONS_STYLES = {
     "Polygon": STYLE_POLYGON,
     "MultiPolygon": STYLE_POLYGON
 };
-/**
- * The constant for annotation type
- */
+// The constant for annotation type
 export const ANNOTATION_TYPE = "ms2-annotations";
-
-/**
- * The constant for annotations
- */
+// The constant for annotations
 export const ANNOTATIONS = "annotations";
-
-export const isAnnotationLayer = (layer) => (layer.id || '').includes(`${ANNOTATIONS}:`) && layer.rowViewer === ANNOTATIONS;
-
 /**
- * utility to check if the GeoJSON has the annotation model structure i.e. {"type": "ms2-annotations", "features": [list of FeatureCollection]}
+ * It returns true if the layer is an annotations layer
+ * @param {object} layer MapStore layer object
+ * @returns {boolean}
+ */
+export const isAnnotationLayer = (layer) => (layer.id || '').includes(`${ANNOTATIONS}:`) && layer.rowViewer === ANNOTATIONS;
+/**
+ * Legacy: utility to check if the GeoJSON has the annotation model structure i.e. {"type": "ms2-annotations", "features": [list of FeatureCollection]}
  * or the imported annotation object's name is of "Annotations"
  * @param {object} json GeoJSON/plain object
  * @returns {boolean} if the GeoJSON passes is a ms2-annotation or if the name property of the object passed is Annotations
  */
 export const isMSAnnotation = (json) => json?.type === ANNOTATION_TYPE || json?.name === "Annotations";
+/**
+ * It returns true if the FeatureCollection is a MapStore annotations
+ * @param {object} json json object, FeatureCollection type
+ * @returns {boolean}
+ */
 export const isGeoJSONAnnotation = (json) => json?.type === 'FeatureCollection' && json?.msType === ANNOTATIONS;
-
+/**
+ * It returns true if the json is a MapStore annotations, including legacy annotations
+ * @param {object} json json object, FeatureCollection type
+ * @returns {boolean}
+ */
 export const isAnnotation = (json) => isMSAnnotation(json) || isGeoJSONAnnotation(json);
-
+/**
+ * Return a valid id for annotations layer
+ * @param {string} id existing annotation id
+ * @returns {boolean}
+ */
 export const createAnnotationId = (id) => !id
     ? `${ANNOTATIONS}:${uuidv1()}`
     : `${id}`.includes(`${ANNOTATIONS}:`)
         ? id
         : `${ANNOTATIONS}:${id}`;
-
 export const validateCoords = ({lat, lon, height} = {}) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)) && (height !== undefined ? !isNaN(parseFloat(height)) : true);
 export const coordToArray = (c = {}) => [c.lon, c.lat, ...(c.height !== undefined ? [c.height] : [])];
 export const validateCoordsArray = ([lon, lat, height] = []) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)) && (height !== undefined ? !isNaN(parseFloat(height)) : true);
@@ -158,6 +173,11 @@ export const getComponents = (geometry) => {
     default: return formatCoordinates([coordinates]);
     }
 };
+/**
+ * This function takes an old annotations layer and converts it to a list of new annotations layers
+ * @param {object} layer legacy annotation layer
+ * @returns {array}
+ */
 export const updateAnnotationsLayer = (layer = {}) => {
     if (layer.id === ANNOTATIONS) {
         return (layer.features || [])
@@ -385,7 +405,11 @@ export const updateAnnotationsLayer = (layer = {}) => {
     }
     return [];
 };
-
+/**
+ * This function takes an annotations layer and converts it to valid GeoJSON Feature Collection usable for export
+ * @param {array} annotations annotations layers
+ * @returns {object}
+ */
 export const annotationsToGeoJSON = (annotations) => {
     const features = annotations.reduce((acc, annotation) => {
         return [
@@ -419,7 +443,11 @@ export const annotationsToGeoJSON = (annotations) => {
         })
     };
 };
-
+/**
+ * This function takes an GeoJSON layer with specific information and converts it to a valid annotation layers
+ * @param {object} json GeoJSON feature collection with special annotations property, created with `annotationsToGeoJSON` method
+ * @returns {array}
+ */
 export const geoJSONToAnnotations = (json) => {
     const layers = (json?.annotations || [])
         .map((annotation) => {
@@ -452,7 +480,11 @@ export const geoJSONToAnnotations = (json) => {
         });
     return layers;
 };
-
+/**
+ * This function takes a json object and check if it could be converted in an array of annotations layers
+ * @param {object} json it could be a GeoJSON with special annotations property or a legacy annotation export
+ * @returns {array}
+ */
 export const importJSONToAnnotations = (json) => {
     if (isMSAnnotation(json)) {
         const features = json?.features.map((annotation) => normalizeAnnotation(annotation));
@@ -470,9 +502,17 @@ export const importJSONToAnnotations = (json) => {
     }
     return [];
 };
-
+/**
+ * Check if the coordinates is invalid
+ * @param {number} coordinate
+ * @returns {boolean}
+ */
 export const checkInvalidCoordinate = (coord) => !(isNumber(coord) && !isNaN(coord));
-
+/**
+ * Fix polygon coordinates to ensure a closed ring
+ * @param {array} coordinates GeoJSON polygon coordinates
+ * @returns {array}
+ */
 export const cleanPolygonCoordinates = (coordinates) => {
     const firstCoordinates = coordinates[0][0];
     const lastCoordinates = coordinates[0][coordinates[0].length - 1];
@@ -483,7 +523,12 @@ export const cleanPolygonCoordinates = (coordinates) => {
             ? [[...coordinates[0], firstCoordinates]]
             : coordinates;
 };
-
+/**
+ * Parse coordinates updated with geometry editor component to be assigned to the correct feature type
+ * @param {string} geometryType one of `Point`, `LineString` or `Polygon`
+ * @param {array} updatedCoordinates coordinates to check
+ * @returns {array}
+ */
 export const parseUpdatedCoordinates = (geometryType, updatedCoordinates) => {
     const hasHeight = !!updatedCoordinates.find((coords) => coords[2] !== undefined);
     const coordinates = hasHeight ? updatedCoordinates.map(([lng, lat, height]) => [lng, lat, height === undefined ? 0 : height]) : updatedCoordinates;
@@ -495,7 +540,7 @@ export const parseUpdatedCoordinates = (geometryType, updatedCoordinates) => {
     }
     return coordinates;
 };
-
+// new default style symbolizers for annotations
 export const annotationsSymbolizerDefaultProperties = {
     Icon: {
         kind: 'Icon',
@@ -558,7 +603,12 @@ export const annotationsSymbolizerDefaultProperties = {
         anchor: 'bottom'
     }
 };
-
+/**
+ * It return a default style symbolizer for annotations that could be used in a geostyler style
+ * @param {object} feature a GeoJSON feature with `annotationType` property
+ * @param {object} defaultSymbolizers optional styles overrides, see `annotationsSymbolizerDefaultProperties`
+ * @returns {object}
+ */
 export const createDefaultStyleSymbolizer = (feature, defaultSymbolizers = {}) => {
     const { annotationType } = feature?.properties || {};
     const defaultSymbolizer = defaultSymbolizers[annotationType];
@@ -596,7 +646,7 @@ export const createDefaultStyleSymbolizer = (feature, defaultSymbolizers = {}) =
     }
     return null;
 };
-
+// validate properties for specific annotation features
 const validateProperties = (feature) => {
     if (feature?.properties?.annotationType === 'Text') {
         return !!feature?.properties?.label;
@@ -606,7 +656,12 @@ const validateProperties = (feature) => {
     }
     return true;
 };
-
+/**
+ * It validates an annotation feature
+ * @param {object} feature a GeoJSON feature with `annotationType` property
+ * @param {boolean} onlyCoordinates if true validate only the coordinates
+ * @returns {boolean}
+ */
 export const validateFeature = (feature, onlyCoordinates) => {
     const geometryType = feature?.geometry?.type;
     const coordinates = feature?.geometry?.coordinates;
@@ -625,7 +680,11 @@ export const validateFeature = (feature, onlyCoordinates) => {
     }
     return !!geometryType;
 };
-
+/**
+ * It applies default invalid coordinates for new annotation features
+ * @param {object} feature a GeoJSON feature with `annotationType` property
+ * @returns {object}
+ */
 export const applyDefaultCoordinates = (feature) => {
     if (feature.geometry === null && feature?.properties?.annotationType) {
         if (feature.properties.annotationType === 'Point') {
@@ -676,7 +735,11 @@ export const applyDefaultCoordinates = (feature) => {
     }
     return feature;
 };
-
+/**
+ * It returns a glyph name associated with an annotation
+ * @param {object} feature a GeoJSON feature with `annotationType` or `measureType` properties
+ * @returns {string}
+ */
 export const getFeatureIcon = (feature) => {
 
     if (feature?.properties?.measureType) {
