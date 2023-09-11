@@ -552,7 +552,7 @@ describe('AnnotationsUtils', () => {
         expect(checkInvalidCoordinate(0)).toBe(false);
     });
     it('parseUpdatedCoordinates', () => {
-        expect(parseUpdatedCoordinates('Polygon', [[[0, 0], [1, 1], [1, 0], [0, 0]]])).toEqual([ [ [ [ 0, 0 ], [ 1, 1 ], [ 1, 0 ], [ 0, 0 ] ] ] ]);
+        expect(parseUpdatedCoordinates('Polygon', [[0, 0], [1, 1], [1, 0], [0, 0]])).toEqual([[[ 0, 0 ], [ 1, 1 ], [ 1, 0 ], [ 0, 0 ]]]);
         expect(parseUpdatedCoordinates('LineString', [[0, 0], [1, 1], [1, 0]])).toEqual([[0, 0], [1, 1], [1, 0]]);
         expect(parseUpdatedCoordinates('Point', [[0, 0]])).toEqual([0, 0]);
     });

@@ -485,13 +485,15 @@ export const cleanPolygonCoordinates = (coordinates) => {
 };
 
 export const parseUpdatedCoordinates = (geometryType, updatedCoordinates) => {
+    const hasHeight = !!updatedCoordinates.find((coords) => coords[2] !== undefined);
+    const coordinates = hasHeight ? updatedCoordinates.map(([lng, lat, height]) => [lng, lat, height === undefined ? 0 : height]) : updatedCoordinates;
     if (geometryType === 'Point') {
-        return updatedCoordinates[0];
+        return coordinates[0];
     }
     if (geometryType === 'Polygon') {
-        return cleanPolygonCoordinates([updatedCoordinates]);
+        return cleanPolygonCoordinates([coordinates]);
     }
-    return updatedCoordinates;
+    return coordinates;
 };
 
 export const annotationsSymbolizerDefaultProperties = {

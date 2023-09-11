@@ -54,6 +54,10 @@ function featureToCartesianCoordinates(geometryType, feature) {
     }
 }
 
+function updateCoordinatesHeight(coordinates) {
+    return coordinates.map(([lng, lat, height]) => [lng, lat, height === undefined ? 0 : height]);
+}
+
 function updateFeatureCoordinates(feature, updateCallback) {
     if (feature?.geometry === null) {
         return feature;
@@ -65,7 +69,7 @@ function updateFeatureCoordinates(feature, updateCallback) {
             ...feature,
             geometry: {
                 type: 'Point',
-                coordinates: [feature.geometry.coordinates].reduce(updateCallback, [])[0]
+                coordinates: updateCoordinatesHeight([feature.geometry.coordinates].reduce(updateCallback, []))[0]
             }
         };
     case 'LineString':
@@ -73,7 +77,7 @@ function updateFeatureCoordinates(feature, updateCallback) {
             ...feature,
             geometry: {
                 type: 'LineString',
-                coordinates: feature.geometry.coordinates.reduce(updateCallback, [])
+                coordinates: updateCoordinatesHeight(feature.geometry.coordinates.reduce(updateCallback, []))
             }
         };
     case 'Polygon':
@@ -81,7 +85,7 @@ function updateFeatureCoordinates(feature, updateCallback) {
             ...feature,
             geometry: {
                 type: 'Polygon',
-                coordinates: [feature.geometry.coordinates[0].reduce(updateCallback, [])]
+                coordinates: [updateCoordinatesHeight(feature.geometry.coordinates[0].reduce(updateCallback, []))]
             }
         };
     default:
