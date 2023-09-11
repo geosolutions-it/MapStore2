@@ -131,6 +131,9 @@ class GroupField extends React.Component {
         case "array": {
             return this.props.arrayOperators;
         }
+        case "date": {
+            return [...this.props.defaultOperators, "isNull"];
+        }
         default:
             return this.props.defaultOperators;
         }

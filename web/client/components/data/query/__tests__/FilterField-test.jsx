@@ -227,6 +227,79 @@ describe('FilterField', () => {
 
     });
 
+    it('creates the FilterField component with date type and isNull operator', () => {
+        const filterField = {
+            rowId: 200,
+            attribute: "Attribute1",
+            operator: "isNull",
+            value: null,
+            exception: null
+        };
+
+        const attributes = [
+            {
+                attribute: "Attribute1",
+                label: "Attribute1",
+                type: "list",
+                values: [
+                    {id: "attribute1", name: "attribute1"},
+                    {id: "Attribute2", name: "attribute2"},
+                    {id: "attribute3", name: "attribute3"},
+                    {id: "attribute4", name: "attribute4"},
+                    {id: "attribute5", name: "attribute5"}
+                ],
+                valueId: "id",
+                valueLabel: "name",
+                fieldOptions: {"style": {display: "none"}}
+            }
+        ];
+
+        const filterfield = ReactDOM.render(
+            <FilterField
+                attributes={attributes}
+                filterField={filterField}>
+                <ComboField
+                    attType="list"
+                    valueField={'id'}
+                    textField={'name'}
+                    fieldOptions={attributes[0] && attributes[0].type === "list" ? [null, ...attributes[0].values] : null}/>
+                <DateField
+                    attType="date"
+                    operator={filterField.operator}/>
+            </FilterField>,
+            document.getElementById("container"));
+
+        expect(filterfield).toExist();
+
+        expect(filterfield.props.children).toExist();
+        expect(filterfield.props.children.length).toBe(2);
+
+        expect(filterfield.props.attributes).toExist();
+        expect(filterfield.props.attributes.length).toBe(1);
+
+        expect(filterfield.props.filterField).toExist();
+
+        const filterFieldDOMNode = expect(ReactDOM.findDOMNode(filterfield));
+
+        expect(filterFieldDOMNode).toExist();
+
+        let childNodes = filterFieldDOMNode.actual.childNodes;
+
+        expect(childNodes.length).toBe(3);
+
+        const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
+        expect(inputFields.length).toBe(2);
+
+        const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
+        expect(attributeSelect.childNodes[0].nodeValue).toBe("Attribute1");
+
+        const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
+        expect(operatorSelect.childNodes[0].nodeValue).toBe("isNull");
+
+        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('filter-field-value')[0];
+        expect(valueSelectContainer.innerHTML).toBe('');
+
+    });
     it('tests the FilterField actions', () => {
 
         const actions = {
