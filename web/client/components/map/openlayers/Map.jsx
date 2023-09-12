@@ -505,7 +505,12 @@ class OpenlayersMap extends React.Component {
             projection: normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom,
-            minZoom: limits.minZoom
+            minZoom: limits.minZoom,
+            // allow to zoom to level 0 and see world wrapping
+            multiWorld: true,
+            // does not allow intermediary zoom levels
+            // we need this at true to set correctly the scale box
+            constrainResolution: true
         }, newOptions || {});
         return new View(viewOptions);
     };
