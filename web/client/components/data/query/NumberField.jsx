@@ -76,6 +76,7 @@ class NumberField extends React.Component {
                 <div className="query-field-value">
                     {lowLabel}
                     <NumberPicker
+                        disabled={this.props.operator === "isNull"}
                         style={style}
                         value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null}
                         onChange={(value) => !isNaN(value) && this.changeNumber({lowBound: value, upBound: this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null})}
@@ -85,6 +86,7 @@ class NumberField extends React.Component {
                 <div className="query-field-value">
                     {upLabel}
                     <NumberPicker
+                        disabled={this.props.operator === "isNull"}
                         style={style}
                         value={this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null}
                         onChange={(value) => !isNaN(value) && this.changeNumber({upBound: value, lowBound: this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null})}
@@ -96,6 +98,7 @@ class NumberField extends React.Component {
             <div>
                 {label}
                 <NumberPicker
+                    disabled={this.props.operator === "isNull"}
                     style={style}
                     value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : this.props.fieldValue}
                     onChange={(value) => !isNaN(value) && this.changeNumber(value)}
