@@ -94,9 +94,10 @@ class DateField extends React.Component {
                         onChange={(date) => this.updateValueState({startDate: startdate, endDate: date})}/>
                 </div>
             </div>)
-            : this.props.operator === "isNull" ? '' : (<div>
+            : (<div>
                 {this.props.showLabels && <Message msgId="queryform.date"/>}
                 <UTCDateTimePicker
+                    disabled={this.props.operator === "isNull"}
                     type={this.props.attType}
                     defaultValue={startdate}
                     value={startdate}

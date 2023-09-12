@@ -282,7 +282,7 @@ describe('FilterField', () => {
         expect(childNodes.length).toBe(3);
 
         const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
-        expect(inputFields.length).toBe(2);
+        expect(inputFields.length).toBe(3);
 
         const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
         expect(attributeSelect.childNodes[0].nodeValue).toBe("Date");
@@ -290,12 +290,9 @@ describe('FilterField', () => {
         const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("isNull");
 
-        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('filter-field-value')[0];
-
+        const valueSelectContainer = inputFields[2];
         expect(valueSelectContainer).toExist();
-
-
-        expect(valueSelectContainer.innerHTML).toBe('');
+        expect(valueSelectContainer.disabled).toBe(true);
 
     });
     it('creates the FilterField component with time type and isNull operator', () => {
@@ -352,7 +349,7 @@ describe('FilterField', () => {
         expect(childNodes.length).toBe(3);
 
         const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
-        expect(inputFields.length).toBe(2);
+        expect(inputFields.length).toBe(3);
 
         const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
         expect(attributeSelect.childNodes[0].nodeValue).toBe("Time");
@@ -360,12 +357,9 @@ describe('FilterField', () => {
         const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("isNull");
 
-        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('filter-field-value')[0];
-
+        const valueSelectContainer = inputFields[2];
         expect(valueSelectContainer).toExist();
-
-
-        expect(valueSelectContainer.innerHTML).toBe('');
+        expect(valueSelectContainer.disabled).toBe(true);
 
     });
     it('creates the FilterField component with date-time type and isNull operator', () => {
@@ -422,7 +416,7 @@ describe('FilterField', () => {
         expect(childNodes.length).toBe(3);
 
         const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
-        expect(inputFields.length).toBe(2);
+        expect(inputFields.length).toBe(3);
 
         const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
         expect(attributeSelect.childNodes[0].nodeValue).toBe("TimeDate");
@@ -430,12 +424,9 @@ describe('FilterField', () => {
         const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("isNull");
 
-        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('filter-field-value')[0];
-
+        const valueSelectContainer = inputFields[2];
         expect(valueSelectContainer).toExist();
-
-
-        expect(valueSelectContainer.innerHTML).toBe('');
+        expect(valueSelectContainer.disabled).toBe(true);
 
     });
     it('creates the FilterField component with number type and isNull operator', () => {
@@ -492,7 +483,7 @@ describe('FilterField', () => {
         expect(childNodes.length).toBe(3);
 
         const inputFields = filterFieldDOMNode.actual.getElementsByClassName('rw-input');
-        expect(inputFields.length).toBe(2);
+        expect(inputFields.length).toBe(3);
 
         const attributeSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[0];
         expect(attributeSelect.childNodes[0].nodeValue).toBe("Number");
@@ -500,12 +491,9 @@ describe('FilterField', () => {
         const operatorSelect = filterFieldDOMNode.actual.getElementsByClassName('rw-input')[1];
         expect(operatorSelect.childNodes[0].nodeValue).toBe("isNull");
 
-        const valueSelectContainer = filterFieldDOMNode.actual.getElementsByClassName('filter-field-value')[0];
-
+        const valueSelectContainer = inputFields[2];
         expect(valueSelectContainer).toExist();
-
-
-        expect(valueSelectContainer.innerHTML).toBe('');
+        expect(valueSelectContainer.disabled).toBe(true);
 
     });
     it('tests the FilterField actions', () => {
