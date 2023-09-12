@@ -80,6 +80,28 @@ function toOLFeature({
     return olFeature;
 }
 
+function updateCoordinatesHeight(coordinates) {
+    const hasHeight = coordinates.find(coords => coords[2] !== undefined);
+    if (hasHeight) {
+        return coordinates.map(([lng, lat, height]) => [lng, lat, height === undefined ? 0 : height]);
+    }
+    return coordinates;
+}
+
+function updateGeometryHeight(geometry) {
+    const geometryType = geometry?.type;
+    if (geometryType === 'Point') {
+        return { type: 'Point', coordinates: updateCoordinatesHeight([geometry.coordinates])[0] };
+    }
+    if (geometryType === 'LineString') {
+        return { type: 'LineString', coordinates: updateCoordinatesHeight(geometry.coordinates) };
+    }
+    if (geometryType === 'Polygon') {
+        return { type: 'Polygon', coordinates: geometry.coordinates.map(updateCoordinatesHeight) };
+    }
+    return geometry;
+}
+
 function toGeoJSONFeature({
     map,
     olFeature: _olFeature,
@@ -106,7 +128,7 @@ function toGeoJSONFeature({
 
     return {
         ...feature,
-        geometry,
+        geometry: updateGeometryHeight(geometry),
         properties: modifyPropertiesToFeatureProperties(properties, feature)
     };
 }
