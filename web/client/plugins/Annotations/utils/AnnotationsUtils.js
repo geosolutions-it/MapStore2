@@ -584,7 +584,7 @@ export const annotationsSymbolizerDefaultProperties = {
         opacity: 1,
         outlineColor: '#777777',
         outlineOpacity: 1,
-        outlineWidth: 0,
+        outlineWidth: 1,
         msClassificationType: 'both'
     },
     Text: {
