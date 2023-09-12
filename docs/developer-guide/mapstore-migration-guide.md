@@ -29,7 +29,8 @@ The Annotation plugin has been updated to be supported also in 3D maps. This upd
 - All the configurations related to the "Annotations" plugin has been removed from `localConfig.json` `defaultState` entry and moved to the `cfg` property of the plugin
 - The annotations reducers is not needed anymore inside the default reducers of the app
 
-Please update by: 
+Please update by:
+
 - Removing `annotations` entry from your `localConfig.json` `defaultState`
 - If you customized the app, you can remove the `annotations` reducer from default reducers.
 - If some customizations were applied to the Annotations plugin in `defaultState`, apply these changes to the plugin configuration, following the documentation of the plugin.
