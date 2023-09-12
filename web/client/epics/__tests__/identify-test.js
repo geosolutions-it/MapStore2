@@ -646,9 +646,9 @@ describe('identify Epics', () => {
             done();
         }, {});
     });
-    it('handleMapInfoMarker hide when layer is present', done => {
+    it('handleMapInfoMarker should display the marker even when layer is present', done => {
         testEpic(handleMapInfoMarker, 1, featureInfoClick("POINT", "LAYER"), ([ a ]) => {
-            expect(a.type).toBe(HIDE_MAPINFO_MARKER);
+            expect(a.type).toBe(SHOW_MAPINFO_MARKER);
             done();
         }, {});
     });

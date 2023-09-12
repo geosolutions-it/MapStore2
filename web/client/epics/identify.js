@@ -161,9 +161,9 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
  */
 export const handleMapInfoMarker = (action$, {getState}) =>
     action$.ofType(FEATURE_INFO_CLICK).filter(() => !isMapPopup(getState()))
-        .map(({ layer }) => layer
-            ? hideMapinfoMarker()
-            : showMapinfoMarker()
+        // we should not hide the marker anymore
+        // the visibility of the marker should manage by the identify tool
+        .map(() => showMapinfoMarker()
         );
 export const closeFeatureGridFromIdentifyEpic = (action$, store) =>
     action$.ofType(LOAD_FEATURE_INFO)
