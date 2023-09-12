@@ -111,7 +111,7 @@ class NumberField extends React.Component {
             style = {...this.props.style, borderColor: "#FF0000"};
         }
         return (
-            <OverlayTrigger placement="bottom"
+            this.props.operator === "isNull" ? null : <OverlayTrigger placement="bottom"
                 overlay={this.props.fieldException ?
                     <Tooltip id={this.props.fieldRowId + "_tooltip"}>
                         <strong>

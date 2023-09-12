@@ -87,7 +87,7 @@ class GroupField extends React.Component {
         stringOperators: ["=", "<>", "like", "ilike", "isNull"],
         arrayOperators: ["contains"],
         booleanOperators: ["="],
-        defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "><"],
+        defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "><", "isNull"],
         textFieldTooltipMessageId: 'queryform.attributefilter.tooltipTextField'
     };
 
@@ -130,9 +130,6 @@ class GroupField extends React.Component {
         }
         case "array": {
             return this.props.arrayOperators;
-        }
-        case "date": {
-            return [...this.props.defaultOperators, "isNull"];
         }
         default:
             return this.props.defaultOperators;

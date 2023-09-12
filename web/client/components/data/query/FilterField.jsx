@@ -96,7 +96,7 @@ class FilterField extends React.Component {
                         comboFilter={"contains"}/>
                 </div>
                 <div className="filter-field-operator">{selectedAttribute ? this.renderOperatorField() : null}</div>
-                <div className="filter-field-value">{this.props.filterField?.operator === 'isNull' ? null : selectedAttribute && this.props.filterField.operator ? this.renderValueField(selectedAttribute) : null}</div>
+                <div className="filter-field-value">{selectedAttribute && this.props.filterField.operator ? this.renderValueField(selectedAttribute) : null}</div>
                 {this.props.deleteButton ? <div className="filter-field-tools">{this.props.deleteButton}</div> : null}
             </div>
         );
