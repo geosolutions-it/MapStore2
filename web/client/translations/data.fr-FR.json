@@ -90,7 +90,7 @@
             "groupProperties": "Propriétés du groupe",
             "featureInfo": "Informations attributaires de l'objet",
             "featureInfoFormatLbl": "Information, format de la réponse",
-            "guideText": "Prend en charge les URL ou Base64URI. Utilisez un espace réservé comme ${properties.YOUR_ATTRIBUTE} afin de récupérer l'URL d'un attribut de fonctionnalité",
+            "guideText": "Prend en charge les URL ou Base64URI. Utilisez un espace réservé comme $\\{properties.YOUR_ATTRIBUTE\\} afin de récupérer l'URL d'un attribut de fonctionnalité",
             "legenderror": "La légende n'est pas disponible",
             "editCustomFormat": "Modifier le format personnalisé",
             "exampleOfResponse": "Exemple",

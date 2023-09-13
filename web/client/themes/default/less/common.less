@@ -332,3 +332,40 @@ div#sync-popover.popover {
         }
     }
 }
+.img-template-gfi {
+    display: inline-block;
+    font-family: Arial, sans-serif;
+    font-weight: 300;
+    line-height: 2;
+    text-align: center;
+
+    min-width: 300px;
+    min-height: 50px;
+    position: relative;
+}
+.img-template-gfi::before {
+    content: '';
+    width: 100%;
+    height: calc(100% + 10px);
+    background-color: #ccc;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: -2px;
+    transform: translateY(-50%);
+}
+
+.img-template-gfi::after {
+    content: "\2639" " " attr(alt);
+
+    font-size: 18px;
+    color: rgb(100, 100, 100);
+
+    display: block;
+    position: absolute;
+    z-index: 2;
+    top: 5px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

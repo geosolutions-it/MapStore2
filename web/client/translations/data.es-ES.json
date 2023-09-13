@@ -90,7 +90,7 @@
             "groupProperties": "Propiedades del grupo",
             "featureInfo": "Información de la capa",
             "featureInfoFormatLbl": "Identificar el formato de respuesta",
-            "guideText": "Admite URL o Base64URI. Utilice un marcador de posición como ${properties.YOUR_ATTRIBUTE} para obtener la URL de un atributo de característica",
+            "guideText": "Admite URL o Base64URI. Utilice un marcador de posición como $\\{properties.YOUR_ATTRIBUTE\\} para obtener la URL de un atributo de característica",
             "legenderror": "La leyenda no está disponible",
             "editCustomFormat": "Editar formato personalizado",
             "exampleOfResponse": "Ejemplo",

@@ -22,7 +22,6 @@ const TemplateViewer = ({layer = {}, response}) => (
             let html = "";
             try {
                 html = template(cleanTemplate)(feature);
-                html.replace("originalsrc", "src");
             } catch (e) {
                 console.error(e);
                 return (<div key={i}>

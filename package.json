@@ -126,7 +126,7 @@
     "@geosolutions/geostyler-geocss-parser": "1.0.0",
     "@geosolutions/geostyler-sld-parser": "2.0.1-1",
     "@geosolutions/proj4": "2.4.9",
-    "@geosolutions/react-draft-wysiwyg": "npm:@geosolutions/react-draft-wysiwyg@1.14.9",
+    "@geosolutions/react-draft-wysiwyg": "npm:@geosolutions/react-draft-wysiwyg@1.14.10",
     "@geosolutions/react-joyride": "1.10.2",
     "@geosolutions/wkt-parser": "1.2.2",
     "@googlemaps/js-api-loader": "1.12.9",

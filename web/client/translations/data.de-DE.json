@@ -90,7 +90,7 @@
             "groupProperties": "Gruppeneigenschaften",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Antwortformat festlegen",
-            "guideText": "Unterstützt URLs oder Base64URI. Verwenden Sie einen Platzhalter wie ${properties.YOUR_ATTRIBUTE}, um die URL von einem Feature-Attribut abzurufen",
+            "guideText": "Unterstützt URLs oder Base64URI. Verwenden Sie einen Platzhalter wie $\\{properties.YOUR_ATTRIBUTE\\}, um die URL von einem Feature-Attribut abzurufen",
             "legenderror": "Legende ist nicht verfügbar",
             "editCustomFormat": "Bearbeiten Sie das benutzerdefinierte Format",
             "exampleOfResponse": "Beispiel",

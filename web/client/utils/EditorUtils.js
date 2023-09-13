@@ -9,7 +9,6 @@
 import { ContentState, EditorState, convertToRaw, Entity } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import imageNotFound from '../product/assets/img/image-not-found.jpg';
 
 
 // customGetEntityId is a utility function used by html-to-draftjs library in order
@@ -82,7 +81,7 @@ export const customEntityTransform = (entity, text) => {
             `float: ${alignment};`;
 
         // on error will replace value of src and we have to keep original value that we can replace in the template viewer
-        return  `<img  src="${entity.data.src}" originalSrc="${entity.data.src}" ${entity.data.alt ? "alt=" + entity.data.alt + '"' : null} style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}" onError="this.onerror=null;this.src='${imageNotFound}';" />`;
+        return  `<img class="img-template-gfi" src="${entity.data.src}" alt="${entity.data.alt || "image not found"}" style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}"/>`;
     }
 
     if (entity.type === 'EMBEDDED_LINK') {
