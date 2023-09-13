@@ -91,7 +91,6 @@
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identify response format",
             "guideText": "Supports Urls or Base64URI. Use a placeholder like ${properties.YOUR_ATTRIBUTE} in order to fetch the url from a feature attribute",
-            "imagePreviewTemplate": "this image cannot be rendered until an identify request is performed",
             "legenderror": "Legend is not available",
             "editCustomFormat": "Edit custom format",
             "exampleOfResponse": "Example",
