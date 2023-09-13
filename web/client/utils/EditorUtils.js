@@ -9,6 +9,8 @@
 import { ContentState, EditorState, convertToRaw, Entity } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
+import imageNotFound from '../product/assets/img/image-not-found.jpg';
+
 
 // customGetEntityId is a utility function used by html-to-draftjs library in order
 // to create anhor tag chunks
@@ -80,7 +82,7 @@ export const customEntityTransform = (entity, text) => {
             `float: ${alignment};`;
 
         // on error will replace value of src and we have to keep original value that we can replace in the template viewer
-        return  `<img  src="${entity.data.src}" originalSrc="${entity.data.src}" ${entity.data.alt ? "alt=" + entity.data.alt + '"' : null} style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}" onError="this.onerror=null;this.src='https://user-images.githubusercontent.com/1280027/265038795-c378d441-f870-48b8-86ea-de0c87bc0b4c.png';" />`;
+        return  `<img  src="${entity.data.src}" originalSrc="${entity.data.src}" ${entity.data.alt ? "alt=" + entity.data.alt + '"' : null} style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}" onError="this.onerror=null;this.src='${imageNotFound}';" />`;
     }
 
     if (entity.type === 'EMBEDDED_LINK') {
