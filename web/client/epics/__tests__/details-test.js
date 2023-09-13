@@ -7,14 +7,11 @@
 */
 
 import expect from 'expect';
-import axios from '../../libs/ajax';
-import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 
 import {
     closeDetailsPanelEpic,
-    storeDetailsInfoEpic,
     fetchDataForDetailsPanel
 } from '../details';
 
@@ -22,29 +19,21 @@ import {
     CLOSE_DETAILS_PANEL,
     closeDetailsPanel,
     openDetailsPanel,
-    UPDATE_DETAILS,
-    DETAILS_LOADED
+    UPDATE_DETAILS
 } from '../../actions/details';
-import { mapInfoLoaded } from '../../actions/config';
 
-import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import { testEpic, addTimeoutEpic } from './epicTestUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
-import { EMPTY_RESOURCE_VALUE } from '../../utils/MapInfoUtils';
 import { SHOW_NOTIFICATION } from '../../actions/notifications';
 import { TOGGLE_CONTROL, SET_CONTROL_PROPERTY } from '../../actions/controls';
 
 const baseUrl = "base/web/client/test-resources/geostore/";
 const mapId = 1;
-const mapId2 = 2;
 const detailsText = "<p>details of this map</p>";
 const detailsUri = "data/2";
 let map1 = {
     id: mapId,
     name: "name"
-};
-let map2 = {
-    id: mapId2,
-    name: "name2"
 };
 const testState = {
     mapInitialConfig: {
@@ -62,24 +51,6 @@ const testState = {
 const rootEpic = combineEpics(closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
-
-const mapAttributesEmptyDetails = {
-    "AttributeList": {
-        "Attribute": [
-            {
-                "name": "details",
-                "type": "STRING",
-                "value": EMPTY_RESOURCE_VALUE
-            }
-        ]
-    }
-};
-
-const mapAttributesWithoutDetails = {
-    "AttributeList": {
-        "Attribute": []
-    }
-};
 
 describe('details epics tests', () => {
     const oldGetDefaults = ConfigUtils.getDefaults;
@@ -170,47 +141,5 @@ describe('details epics tests', () => {
                 }
             }
         });
-    });
-    it('test storeDetailsInfoEpic', (done) => {
-        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                case DETAILS_LOADED:
-                    expect(action.mapId).toBe(mapId2);
-                    expect(action.detailsUri).toBe("rest%2Fgeostore%2Fdata%2F3983%2Fraw%3Fdecode%3Ddatauri");
-                    break;
-                default:
-                    expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {mapInitialConfig: {
-            "mapId": mapId2
-        }});
-    });
-    it('test storeDetailsInfoEpic when api returns NODATA value', (done) => {
-        const mock = new MockAdapter(axios);
-        mock.onGet().reply(200, mapAttributesEmptyDetails);
-        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
-            mock.restore();
-            done();
-        }, {mapInitialConfig: {
-            "mapId": mapId2
-        }});
-    });
-    it('test storeDetailsInfoEpic when api doesnt return details', (done) => {
-        const mock = new MockAdapter(axios);
-        mock.onGet().reply(200, mapAttributesWithoutDetails);
-        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
-            mock.restore();
-            done();
-        }, {mapInitialConfig: {
-            "mapId": mapId2
-        }});
     });
 });
