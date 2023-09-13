@@ -140,8 +140,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
                 jsonix: '@boundlessgeo/jsonix',
                 // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
                 proj4: '@geosolutions/proj4',
-                "react-joyride": '@geosolutions/react-joyride',
-                "react-draft-wysiwyg": '@geosolutions/react-draft-wysiwyg'
+                "react-joyride": '@geosolutions/react-joyride'
             }, alias),
             extensions: ['.js', '.json', '.jsx']
         },

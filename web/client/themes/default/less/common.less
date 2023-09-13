@@ -6,6 +6,7 @@
 // LICENSE file in the root directory of this source tree.
 //
 
+
 // **************
 // Theme
 // **************
@@ -66,6 +67,14 @@
     .input-group-addon-success {
         .background-color-var(@theme-vars[success]);
         .color-var(@theme-vars[primary-contrast]);
+    }
+    .DraftEditor-editorContainer,
+    .template-html-renderer,
+    .ms-template-viewer
+    {
+        img::before {
+            .background-color-var(@theme-vars[main-bg]);
+        }
     }
 }
 
@@ -332,40 +341,52 @@ div#sync-popover.popover {
         }
     }
 }
-.img-template-gfi {
-    display: inline-block;
-    font-family: Arial, sans-serif;
-    font-weight: 300;
-    line-height: 2;
-    text-align: center;
 
-    min-width: 300px;
-    min-height: 50px;
-    position: relative;
-}
-.img-template-gfi::before {
-    content: '';
-    width: 100%;
-    height: calc(100% + 10px);
-    background-color: #ccc;
-    border-radius: 10px;
-    position: absolute;
-    top: 50%;
-    left: -2px;
-    transform: translateY(-50%);
+.ms-feature-info-editor {
+    .rdw-image-modal-url-section {
+        display: block;
+    }
+    .guide-text {
+        font-size: @font-size-small;
+        font-style: italic;
+    }
 }
 
-.img-template-gfi::after {
-    content: "\2639" " " attr(alt);
 
-    font-size: 18px;
-    color: rgb(100, 100, 100);
+.DraftEditor-editorContainer, // selector editor
+.template-html-renderer, // selector preview sx
+.ms-template-viewer // selector fi panel
+{
+    img {
+        display: inline-block;
+        min-height: 145px;
+        position: relative;
+        text-align: center;
+        min-width: 460px;
+        max-width: 100%;
+        font-size: @font-size-small;
+    }
+    img::before {
+        content: '';
+        width: 101%;
+        height: calc(100% - 36px);
+        border-radius: 10px;
+        position: absolute;
+        top: -2px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        left: -2px;
+        background-image: url("../img/image-not-found.jpg");
+    }
 
-    display: block;
-    position: absolute;
-    z-index: 2;
-    top: 5px;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    img::after {
+        font-size: @font-size-small;
+        display: block;
+        bottom: 0;
+        left: 50%;
+        font-style: italic;
+        position: absolute;
+        transform: translate(-50%, 0px);
+    }
 }

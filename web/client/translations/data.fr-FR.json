@@ -91,6 +91,7 @@
             "featureInfo": "Informations attributaires de l'objet",
             "featureInfoFormatLbl": "Information, format de la réponse",
             "guideText": "Prend en charge les URL ou Base64URI. Utilisez un espace réservé comme $\\{properties.YOUR_ATTRIBUTE\\} afin de récupérer l'URL d'un attribut de fonctionnalité",
+            "imageNotFound": "Cette image peut nécessiter une demande d'informations sur les fonctionnalités pour être rendue correctement",
             "legenderror": "La légende n'est pas disponible",
             "editCustomFormat": "Modifier le format personnalisé",
             "exampleOfResponse": "Exemple",

@@ -91,6 +91,7 @@
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
             "guideText": "Sono supportati Url o URI Base64. Inserisci $\\{properties.TUO_ATTRIBUTO\\} per ottenere il valore da un'attributo di una feature",
+            "imageNotFound": "Questa immagine può necessitare di una richiesta informazioni sulle feature per essere renderizzata correttamente",
             "legenderror": "Legenda non disponibile",
             "editCustomFormat": "Edita formato",
             "exampleOfResponse": "Esempio",
