@@ -77,6 +77,7 @@ function CompactRichTextEditor({
                             reject();
                         }
                     }),
+                    guideText: props.guideText || "",
                     previewImage: true,
                     inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
                     alt: { present: false, mandatory: false },

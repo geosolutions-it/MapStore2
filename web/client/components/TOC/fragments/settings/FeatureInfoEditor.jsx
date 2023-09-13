@@ -36,8 +36,8 @@ const FeatureInfoEditor = ({
     onChange,
     enableIFrameModule
 }) => {
-
-    const [editorState, setEditorState] = useState(htmlToDraftJSEditorState(element?.featureInfo?.template || ''));
+    const [template, setTemplate] = useState(element?.featureInfo?.template || '');
+    const [editorState, setEditorState] = useState(htmlToDraftJSEditorState(template));
     const onClose = () => {
         onShowEditor(!showEditor);
         onChange('featureInfo', {
@@ -64,13 +64,14 @@ const FeatureInfoEditor = ({
                 ]}>
                 <div id="ms-template-editor" className="ms-editor">
                     <DescriptionEditor
+                        guideText={<Message msgId="layerProperties.guideText"/>}
                         toolbarOptions={['fontFamily', 'blockType', 'inline', 'textAlign', 'list', 'link', 'colorPicker', 'remove', 'image'].concat(enableIFrameModule ? ['embedded'] : [])}
                         editorState={editorState}
                         onEditorStateChange={(newEditorState) => {
                             const previousHTML = draftJSEditorStateToHtml(editorState);
                             const newHTML = draftJSEditorStateToHtml(newEditorState);
                             if (newHTML !== previousHTML) {
-                                onChange({ template: draftJSEditorStateToHtml(newEditorState) });
+                                setTemplate(draftJSEditorStateToHtml(newEditorState));
                                 setEditorState(newEditorState);
                             }
                         }}

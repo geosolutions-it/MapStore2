@@ -17,11 +17,12 @@ import Message from '../../../I18N/Message';
 
 const TemplateViewer = ({layer = {}, response}) => (
     <div className="ms-template-viewer">
-        {response.features.map((feature, i) => {
+        {response?.features?.map((feature, i) => {
             const cleanTemplate = getCleanTemplate(layer.featureInfo && layer.featureInfo.template || '', feature, /\$\{.*?\}/g, 2, 1);
             let html = "";
             try {
                 html = template(cleanTemplate)(feature);
+                html.replace("originalsrc", "src");
             } catch (e) {
                 console.error(e);
                 return (<div key={i}>

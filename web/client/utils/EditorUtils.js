@@ -79,7 +79,8 @@ export const customEntityTransform = (entity, text) => {
             'display: block; margin: 0 auto 0 auto;' :
             `float: ${alignment};`;
 
-        return `<img src="${entity.data.src}" alt="${entity.data.alt}" style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}" />`;
+        // on error will replace value of src and we have to keep original value that we can replace in the template viewer
+        return  `<img  src="${entity.data.src}" originalSrc="${entity.data.src}" ${entity.data.alt ? "alt=" + entity.data.alt + '"' : null} style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}" onError="this.onerror=null;this.src='https://user-images.githubusercontent.com/1280027/265038795-c378d441-f870-48b8-86ea-de0c87bc0b4c.png';" />`;
     }
 
     if (entity.type === 'EMBEDDED_LINK') {
