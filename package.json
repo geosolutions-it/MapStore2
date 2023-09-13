@@ -133,6 +133,7 @@
     "@mapbox/togeojson": "0.16.0",
     "@mapstore/patcher": "https://github.com/geosolutions-it/Patcher/tarball/master",
     "@turf/along": "6.5.0",
+    "@turf/area": "6.5.0",
     "@turf/bbox": "4.1.0",
     "@turf/bbox-polygon": "5.1.5",
     "@turf/boolean-clockwise": "6.5.0",

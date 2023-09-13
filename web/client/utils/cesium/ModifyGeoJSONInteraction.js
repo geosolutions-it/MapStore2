@@ -54,6 +54,10 @@ function featureToCartesianCoordinates(geometryType, feature) {
     }
 }
 
+function updateCoordinatesHeight(coordinates) {
+    return coordinates.map(([lng, lat, height]) => [lng, lat, height === undefined ? 0 : height]);
+}
+
 function updateFeatureCoordinates(feature, updateCallback) {
     if (feature?.geometry === null) {
         return feature;
@@ -65,7 +69,7 @@ function updateFeatureCoordinates(feature, updateCallback) {
             ...feature,
             geometry: {
                 type: 'Point',
-                coordinates: [feature.geometry.coordinates].reduce(updateCallback, [])[0]
+                coordinates: updateCoordinatesHeight([feature.geometry.coordinates].reduce(updateCallback, []))[0]
             }
         };
     case 'LineString':
@@ -73,7 +77,7 @@ function updateFeatureCoordinates(feature, updateCallback) {
             ...feature,
             geometry: {
                 type: 'LineString',
-                coordinates: feature.geometry.coordinates.reduce(updateCallback, [])
+                coordinates: updateCoordinatesHeight(feature.geometry.coordinates.reduce(updateCallback, []))
             }
         };
     case 'Polygon':
@@ -81,7 +85,7 @@ function updateFeatureCoordinates(feature, updateCallback) {
             ...feature,
             geometry: {
                 type: 'Polygon',
-                coordinates: [feature.geometry.coordinates[0].reduce(updateCallback, [])]
+                coordinates: [updateCoordinatesHeight(feature.geometry.coordinates[0].reduce(updateCallback, []))]
             }
         };
     default:
@@ -230,12 +234,22 @@ class CesiumModifyGeoJSONInteraction {
                         radius,
                         clampToGround: true
                     }));
+                    // add a transparent line to improve interaction
                     this._staticPrimitivesCollection.add(createEllipsePolylinePrimitive({
                         ...this._style?.lineDrawing,
+                        dashLength: undefined,
+                        opacity: 0.01,
                         coordinates: coordinates[coordinates.length - 1],
                         radius,
                         allowPicking: true,
                         id: newFeature?.id,
+                        geodesic: true
+                    }));
+                    this._staticPrimitivesCollection.add(createEllipsePolylinePrimitive({
+                        ...this._style?.lineDrawing,
+                        coordinates: coordinates[coordinates.length - 1],
+                        radius,
+                        allowPicking: false,
                         geodesic: true
                     }));
                 } else {
@@ -268,14 +282,26 @@ class CesiumModifyGeoJSONInteraction {
                 if (coordinates.length > 1) {
                     coordinates.forEach((position, idx) => {
                         if (coordinates[idx + 1]) {
+                            // add a transparent line to improve interaction
                             this._staticPrimitivesCollection.add(createPolylinePrimitive({
                                 ...this._style?.lineDrawing,
+                                dashLength: undefined,
+                                opacity: 0.01,
                                 coordinates: [
                                     position,
                                     coordinates[idx + 1]
                                 ],
                                 allowPicking: true,
                                 id: `${newFeature?.id}:${idx}:segment`,
+                                geodesic
+                            }));
+                            this._staticPrimitivesCollection.add(createPolylinePrimitive({
+                                ...this._style?.lineDrawing,
+                                coordinates: [
+                                    position,
+                                    coordinates[idx + 1]
+                                ],
+                                allowPicking: false,
                                 geodesic
                             }));
                         }
@@ -300,14 +326,26 @@ class CesiumModifyGeoJSONInteraction {
                     }));
                     coordinates.forEach((position, idx) => {
                         if (coordinates[idx + 1]) {
+                            // add a transparent line to improve interaction
                             this._staticPrimitivesCollection.add(createPolylinePrimitive({
                                 ...this._style?.lineDrawing,
+                                dashLength: undefined,
+                                opacity: 0.01,
                                 coordinates: [
                                     position,
                                     coordinates[idx + 1]
                                 ],
                                 allowPicking: true,
                                 id: `${newFeature?.id}:${idx}:segment`,
+                                geodesic
+                            }));
+                            this._staticPrimitivesCollection.add(createPolylinePrimitive({
+                                ...this._style?.lineDrawing,
+                                coordinates: [
+                                    position,
+                                    coordinates[idx + 1]
+                                ],
+                                allowPicking: false,
                                 geodesic
                             }));
                         }

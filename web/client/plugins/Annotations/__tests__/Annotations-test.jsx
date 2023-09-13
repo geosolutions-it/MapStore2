@@ -9,8 +9,9 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import AnnotationsPlugin from '../Annotations';
-import { getPluginForTest } from './pluginsTestUtils';
+import AnnotationsPlugin from '../index';
+import { createAnnotationId, ANNOTATIONS } from '../utils/AnnotationsUtils';
+import { getPluginForTest } from '../../__tests__/pluginsTestUtils';
 
 describe('Annotations Plugin', () => {
     beforeEach((done) => {
@@ -25,18 +26,27 @@ describe('Annotations Plugin', () => {
     });
 
     it('creates a Annotations plugin', () => {
+        const id = createAnnotationId('1');
         const { Plugin } = getPluginForTest(AnnotationsPlugin, {
             controls: {
                 annotations: {
                     enabled: true
                 }
+            },
+            layers: {
+                flat: [
+                    {
+                        id,
+                        rowViewer: ANNOTATIONS,
+                        type: 'vector',
+                        features: []
+                    }
+                ],
+                selected: [id]
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        ReactDOM.render(<Plugin />, document.getElementById('container'));
         const panel = document.querySelector('.ms-annotations-panel');
-        expect(panel).toExist();
-        // check the annotation panel has the classes that fits even with headers (for embedded or other, not full window size context)
-        expect(panel.className.split(" ")).toInclude("ms-side-panel");
-        expect(panel.className.split(" ")).toInclude("ms-absolute-dock");
+        expect(panel).toBeTruthy();
     });
 });

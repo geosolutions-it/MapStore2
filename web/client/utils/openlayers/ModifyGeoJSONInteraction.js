@@ -20,13 +20,13 @@ import Circle from 'ol/geom/Circle';
 import Polygon, { circular } from 'ol/geom/Polygon';
 import Point from 'ol/geom/Point';
 import LineString from 'ol/geom/LineString';
-import MultiLineString from 'ol/geom/MultiLineString';
 import {getDistance} from 'ol/sphere';
 import {transform} from 'ol/proj';
 import { transformLineToArcs, reproject } from '../CoordinatesUtils';
 import { GeometryCollection } from 'ol/geom';
 import DrawHole from './hole/DrawHole';
 import tinycolor from 'tinycolor2';
+import { never } from 'ol/events/condition';
 import {
     generateEditingStyle,
     featureToModifyProperties as defaultFeatureToModifyProperties,
@@ -80,6 +80,28 @@ function toOLFeature({
     return olFeature;
 }
 
+function updateCoordinatesHeight(coordinates) {
+    const hasHeight = coordinates.find(coords => coords[2] !== undefined);
+    if (hasHeight) {
+        return coordinates.map(([lng, lat, height]) => [lng, lat, height === undefined ? 0 : height]);
+    }
+    return coordinates;
+}
+
+function updateGeometryHeight(geometry) {
+    const geometryType = geometry?.type;
+    if (geometryType === 'Point') {
+        return { type: 'Point', coordinates: updateCoordinatesHeight([geometry.coordinates])[0] };
+    }
+    if (geometryType === 'LineString') {
+        return { type: 'LineString', coordinates: updateCoordinatesHeight(geometry.coordinates) };
+    }
+    if (geometryType === 'Polygon') {
+        return { type: 'Polygon', coordinates: geometry.coordinates.map(updateCoordinatesHeight) };
+    }
+    return geometry;
+}
+
 function toGeoJSONFeature({
     map,
     olFeature: _olFeature,
@@ -106,7 +128,7 @@ function toGeoJSONFeature({
 
     return {
         ...feature,
-        geometry,
+        geometry: updateGeometryHeight(geometry),
         properties: modifyPropertiesToFeatureProperties(properties, feature)
     };
 }
@@ -245,6 +267,7 @@ class OpenLayersModifyGeoJSONInteraction {
             this._draw = new Draw({
                 type: 'LineString',
                 stopClick: true,
+                freehandCondition: never,
                 style: (olFeature) => {
                     const [lineFeature] = source.getFeatures();
                     const { geodesic } = lineFeature.get('@properties') || {};
@@ -504,7 +527,6 @@ class OpenLayersModifyGeoJSONInteraction {
                     }),
                     ...(geodesic ? [
                         new Style({
-                            geometry: new MultiLineString(olFeature.getGeometry().getCoordinates().map((coordinates) => transformCoordinatesToGeodesic(map, coordinates))),
                             stroke: lineDrawingStyle
                         })
                     ] : []),

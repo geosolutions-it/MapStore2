@@ -9,14 +9,17 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Glyphicon, InputGroup } from 'react-bootstrap';
+import { Glyphicon, InputGroup, FormGroup } from 'react-bootstrap';
 import Toolbar from '../toolbar/Toolbar';
 import draggableComponent from '../enhancers/draggableComponent';
 import CoordinateEntry from './CoordinateEntry';
 import Message from '../../I18N/Message';
 import { isEqual, isNumber } from 'lodash';
 import DropdownToolbarOptions from '../toolbar/DropdownToolbarOptions';
+import MSIntlNumberFormControl from '../../I18N/IntlNumberFormControl';
+import localizedProps from '../../misc/enhancers/localizedProps';
 
+const IntlNumberFormControl = localizedProps('placeholder')(MSIntlNumberFormControl);
 
 class CoordinatesRow extends React.Component {
     static propTypes = {
@@ -42,7 +45,8 @@ class CoordinatesRow extends React.Component {
         removeEnabled: PropTypes.bool,
         renderer: PropTypes.string,
         disabled: PropTypes.bool,
-        onValidateFeature: PropTypes.func
+        onValidateFeature: PropTypes.func,
+        enableHeightField: PropTypes.bool
     };
 
     static defaultProps = {
@@ -52,7 +56,8 @@ class CoordinatesRow extends React.Component {
         onMouseLeave: () => {},
         onValidateFeature: () => {},
         showToolButtons: true,
-        disabled: false
+        disabled: false,
+        enableHeightField: false
     };
 
     constructor(props) {
@@ -60,6 +65,7 @@ class CoordinatesRow extends React.Component {
         this.state = {
             lat: isNumber(this.props.component.lat) ? this.props.component.lat : "",
             lon: isNumber(this.props.component.lon) ? this.props.component.lon : "",
+            ...(this.props.component.height !== undefined && { height: isNumber(this.props.component.height) ? this.props.component.height : "" }),
             disabledApplyChange: true
         };
     }
@@ -68,15 +74,24 @@ class CoordinatesRow extends React.Component {
         if (!isEqual(newProps.component, this.props.component)) {
             const lat = isNumber(newProps.component.lat) ? newProps.component.lat : "";
             const lon = isNumber(newProps.component.lon) ? newProps.component.lon : "";
-            this.setState({lat, lon, disabledApplyChange: true});
+            const height = isNumber(newProps.component.height) ? newProps.component.height : "";
+            this.setState({
+                lat,
+                lon,
+                ...(newProps.component.height !== undefined && { height }),
+                disabledApplyChange: true
+            });
         }
     }
 
-    onChangeLatLon = (coord, val) => {
+    onChangeLatLonHeight = (coord, val) => {
         this.setState({...this.state, [coord]: parseFloat(val)}, ()=>{
             const changeLat = parseFloat(this.state.lat) !== parseFloat(this.props.component.lat);
             const changeLon = parseFloat(this.state.lon) !== parseFloat(this.props.component.lon);
-            this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon)}, ()=> {
+            const changeHeight = this.state.height !== undefined
+                ? parseFloat(this.state.height) !== parseFloat(this.props.component.height)
+                : false;
+            this.setState({...this.state, disabledApplyChange: !(changeLat || changeLon || changeHeight)}, ()=> {
                 this.props.onValidateFeature();
                 // Auto save on coordinate change for annotations
                 this.props.renderer === "annotations" &&  this.props.onSubmit(this.props.idx, this.state);
@@ -133,12 +148,12 @@ class CoordinatesRow extends React.Component {
         // drag button cannot be a button since IE/Edge doesn't support drag operation on button
         const dragButton = (
             <div role="button" className="square-button-md no-border btn btn-default"
-                style={{display: "table",
+                style={{display: "inline-flex", alignItems: 'center', justifyContent: 'center', width: 'auto',
                     color: !this.props.isDraggableEnabled && "#999999",
                     pointerEvents: !this.props.isDraggableEnabled ? "none" : "auto",
                     cursor: this.props.isDraggableEnabled && 'grab' }}>
                 <Glyphicon
-                    glyph="menu-hamburger"
+                    glyph="grab-handle"
                 />
             </div>);
 
@@ -166,7 +181,7 @@ class CoordinatesRow extends React.Component {
                                 coordinate="lat"
                                 idx={idx}
                                 value={this.state.lat}
-                                onChange={(dd) => this.onChangeLatLon("lat", dd)}
+                                onChange={(dd) => this.onChangeLatLonHeight("lat", dd)}
                                 constraints={{
                                     decimal: {
                                         lat: {
@@ -193,7 +208,7 @@ class CoordinatesRow extends React.Component {
                                 coordinate="lon"
                                 idx={idx}
                                 value={this.state.lon}
-                                onChange={(dd) => this.onChangeLatLon("lon", dd)}
+                                onChange={(dd) => this.onChangeLatLonHeight("lon", dd)}
                                 constraints={{
                                     decimal: {
                                         lat: {
@@ -210,6 +225,31 @@ class CoordinatesRow extends React.Component {
                             />
                         </InputGroup>
                     </div>
+                    {this.props.enableHeightField && <div className="input-group-container">
+                        <InputGroup>
+                            <InputGroup.Addon><Message msgId="height"/></InputGroup.Addon>
+                            <FormGroup>
+                                <IntlNumberFormControl
+                                    disabled={this.props.disabled}
+                                    key="height"
+                                    value={this.state.height}
+                                    onChange={val => this.onChangeLatLonHeight("height", val)}
+                                    onKeyDown={(event) => {
+                                        if (event.keyCode === 69) {
+                                            event.preventDefault();
+                                        }
+                                        if (event.keyCode === 13) {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                            this.onSubmit(event);
+                                        }
+                                    }}
+                                    step={1}
+                                    type="number"
+                                />
+                            </FormGroup>
+                        </InputGroup>
+                    </div>}
                 </div>
                 {this.props.showToolButtons && <div key="tools">
                     <Toolbar

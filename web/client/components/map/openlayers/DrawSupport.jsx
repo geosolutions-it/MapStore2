@@ -26,7 +26,7 @@ import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
 import {transformPolygonToCircle} from '../../../utils/openlayers/DrawSupportUtils';
-import {isCompletePolygon} from '../../../utils/AnnotationsUtils';
+import {isCompletePolygon} from '../../../plugins/Annotations/utils/AnnotationsUtils';
 import { parseStyles, getStyle, defaultStyles, getMarkerStyle, getMarkerStyleLegacy } from './VectorStyle';
 
 import {GeoJSON} from 'ol/format';

@@ -13,7 +13,7 @@ import { Promise } from 'es6-promise';
 
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
-import { isAnnotation } from '../../../utils/AnnotationsUtils';
+import { isAnnotation } from '../../../plugins/Annotations/utils/AnnotationsUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../utils/StyleUtils';
 
 import Button from '../../misc/Button';

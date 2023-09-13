@@ -407,6 +407,7 @@ function msStyleToSymbolizer(style, feature) {
             rotate: 0,
             msHeightReference: 'none',
             msBringToFront: true,
+            anchor: 'bottom',
             // only needed for get feature info marker
             ...(style.leaderLine && {
                 msLeaderLineColor: '#333333',

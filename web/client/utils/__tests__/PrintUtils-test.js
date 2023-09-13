@@ -141,9 +141,10 @@ const featureLine = {
         ]
     },
     "properties": {
+        "id": "feature-1",
         "serial_num": "12C324776"
     },
-    "id": 0
+    "id": "feature-1"
 };
 
 const featureCollection = {
@@ -189,17 +190,33 @@ const annotationsVectorLayer = {
     "type": "vector",
     "visibility": true,
     "group": "Local shape",
-    "id": "annotations",
-    "name": "web2014all_mv",
+    "id": "annotations:1",
+    "title": "Annotations",
     "hideLoading": true,
-    "features": [featureCollection],
+    "features": featureCollection?.features,
+    "rowViewer": "annotations",
     "style": {
-        "weight": 3,
-        "radius": 10,
-        "opacity": 1,
-        "fillOpacity": 0.1,
-        "color": "rgb(0, 0, 255)",
-        "fillColor": "rgb(0, 0, 255)"
+        "format": "geostyler",
+        "body": {
+            "name": "Annotations",
+            "rules": [
+                {
+                    "filter": ["==", "id", featureCollection?.features?.[0]?.id],
+                    "name": "",
+                    "symbolizers": [
+                        {
+                            "kind": "Line",
+                            "color": 'rgb(0, 0, 255)',
+                            "width": 3,
+                            "opacity": 1,
+                            "cap": "round",
+                            "join": "round",
+                            "msClampToGround": true
+                        }
+                    ]
+                }
+            ]
+        }
     }
 };
 
@@ -210,14 +227,29 @@ const measurementVectorLayer = {
     "id": "aaa",
     "name": "Measurements",
     "hideLoading": true,
-    "features": [featureCollection],
+    "features": featureCollection?.features,
     "style": {
-        "weight": 3,
-        "radius": 10,
-        "opacity": 1,
-        "fillOpacity": 0.1,
-        "color": "rgb(0, 0, 255)",
-        "fillColor": "rgb(0, 0, 255)"
+        "format": "geostyler",
+        "body": {
+            "name": "Annotations",
+            "rules": [
+                {
+                    "filter": ["==", "id", featureCollection?.features?.[0]?.id],
+                    "name": "",
+                    "symbolizers": [
+                        {
+                            "kind": "Line",
+                            "color": 'rgb(0, 0, 255)',
+                            "width": 3,
+                            "opacity": 1,
+                            "cap": "round",
+                            "join": "round",
+                            "msClampToGround": true
+                        }
+                    ]
+                }
+            ]
+        }
     }
 };
 let vector2 = { ...vectorLayer };
