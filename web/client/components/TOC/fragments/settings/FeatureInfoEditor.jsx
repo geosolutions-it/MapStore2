@@ -41,17 +41,17 @@ const FeatureInfoEditor = ({
     const [, setCounter] = useState(0);
     useEffect(() => {
         const imageButton = document.querySelector(".rdw-image-wrapper");
-        const func = () => {
+        const clickImageToolbarListener = () => {
             setTimeout(() => {
                 setCounter(value => value + 1);
             });
         };
         if (imageButton) {
-            imageButton.addEventListener("click", func);
+            imageButton.addEventListener("click", clickImageToolbarListener);
         }
         return () => {
             if (imageButton) {
-                imageButton?.removeEventListener("click", func);
+                imageButton?.removeEventListener("click", clickImageToolbarListener);
             }
         };
 
@@ -94,7 +94,13 @@ const FeatureInfoEditor = ({
                         editorState={editorState}
                         onEditorStateChange={(newEditorState) => {
                             const previousHTML = draftJSEditorStateToHtml(editorState);
+                            const images = document.querySelectorAll(".DraftEditor-editorContainer img");
                             const newHTML = draftJSEditorStateToHtml(newEditorState);
+                            for (const img of images) {
+                                img.alt = " ";
+                                // an alt value iss needed for firefox to show the ::after and ::after pseudo elements, empty space because otherwise it would show the alt value, very different behaviour from chrome
+
+                            }
                             if (newHTML !== previousHTML) {
                                 setTemplate(draftJSEditorStateToHtml(newEditorState));
                                 setEditorState(newEditorState);

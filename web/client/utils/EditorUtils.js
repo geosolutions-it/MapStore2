@@ -81,7 +81,7 @@ export const customEntityTransform = (entity, text) => {
             `float: ${alignment};`;
 
         // on error will replace value of src and we have to keep original value that we can replace in the template viewer
-        return  `<img title="${entity.data.src}" src="${entity.data.src}" alt="${entity.data.alt || "image not found"}" style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}"/>`;
+        return  `<img title="${entity.data.src}" src="${entity.data.src}" alt="${entity.data.alt || " "}" style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}"/>`;
     }
 
     if (entity.type === 'EMBEDDED_LINK') {
