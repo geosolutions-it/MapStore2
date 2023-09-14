@@ -73,7 +73,8 @@ import {
     STYLE_POINT_MARKER,
     STYLE_POINT_SYMBOL,
     DEFAULT_SHAPE,
-    DEFAULT_PATH, ANNOTATIONS
+    DEFAULT_PATH, ANNOTATIONS,
+    isCompletePolygon
 } from '../utils/AnnotationsUtils';
 import { MEASURE_TYPE } from '../utils/MeasurementUtils';
 import { createSvgUrl } from '../utils/VectorStyleUtils';
@@ -565,7 +566,21 @@ export default {
             const {messages = {}} = (getState()).locale || {};
             const oldFeature = annotationsLayer && annotationsLayer.features || [];
             const normFeatures = features.map((a) => normalizeAnnotation(a, messages));
-            const newFeatures = override ? normFeatures : oldFeature.concat(normFeatures);
+            let newFeatures = override ? normFeatures : oldFeature.concat(normFeatures);
+            newFeatures = newFeatures.map(newFeature => {
+                return {
+                    ...newFeature,
+                    features: get(newFeature, 'features', []).map(feature => {
+                        if (get(feature, 'geometry.type') === 'Polygon') {
+                            let coordinates = get(feature, 'geometry.coordinates', []);
+                            const isComplete = isCompletePolygon(coordinates);
+                            coordinates = isComplete ? coordinates : [[...coordinates[0], coordinates[0][0]]];
+                            return {...feature, geometry: {...feature?.geometry, coordinates}};
+                        }
+                        return feature;
+                    })
+                };
+            });
             const action = annotationsLayer ? updateNode(ANNOTATIONS, 'layer', {
                 features: removeDuplicate(newFeatures)}) : addLayer({
                 type: 'vector',

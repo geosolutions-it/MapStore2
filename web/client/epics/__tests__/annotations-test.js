@@ -906,6 +906,25 @@ describe('annotations Epics', () => {
         store.dispatch(action);
 
     });
+    it('load annotations - polygon malformed', done => {
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                const [coordinate] = actions[1].options.features[0].features[0].geometry.coordinates;
+                expect(coordinate.length).toBe(6);
+                expect(coordinate[0]).toEqual(coordinate[coordinate.length - 1]);
+                done();
+            }
+        });
+        const coordinates = [[30.732623291015646, 43.136779336145906], [-22.91268615722654, 54.045449124395184], [12.895632934570349, 35.135869069174184], [21.890032959, 43.0816377459838], [-20.581082153320306, 35.501163186848196]];
+        const action = loadAnnotations([{
+            type: "FeatureCollection",
+            features: [{geometry: { coordinates: [coordinates], type: "Polygon"}}]
+        }], true);
+        store.dispatch(action);
+
+    });
     it('load annotations and create layer', done => {
         store = mockStore({
             layers: {
