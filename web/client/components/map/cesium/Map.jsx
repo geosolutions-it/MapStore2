@@ -579,7 +579,7 @@ class CesiumMap extends React.Component {
                     roll: this.map.camera.roll
                 }
             },
-            getResolutions()[zoom]
+            getResolutions()[Math.round(zoom)]
         );
     };
 
