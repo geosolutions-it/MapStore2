@@ -2119,6 +2119,39 @@ describe('Test the annotations reducer', () => {
 
         expect(state.selected.properties).toNotEqual(state2.selected.properties);
     });
+    it('changeSelected, geometry type polygon', () => {
+        const selected = {
+            properties: {
+                canEdit: true,
+                id: "259d79d0-053e-11ea-b0b3-379d853a3ff4",
+                isValidFeature: true
+            },
+            geometry: {
+                type: "Polygon",
+                coordinates: [[30.732623291015646, 43.136779336145906], [-23.91268615722654, 54.045449124395184], [12.895632934570349, 35.135869069174184], [21.890032959, 43.0816377459838], [-20.581082153320306, 35.501163186848196]]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [selected],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const coordinates = [[30.732623291015646, 43.136779336145906], [-22.91268615722654, 54.045449124395184], [12.895632934570349, 35.135869069174184], [21.890032959, 43.0816377459838], [-20.581082153320306, 35.501163186848196]];
+        const state = annotations({
+            editing: featureColl,
+            selected,
+            featureType: "Polygon",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, 3567, null, "EPSG:3857"));
+
+        expect(state.selected.geometry.coordinates).toNotEqual(coordinates);
+        const [coordinate] = state.selected.geometry.coordinates;
+        expect(coordinate[0]).toEqual(coordinate[coordinate.length - 1]); // first and last vertices are equal
+    });
     it('UPDATE_SYMBOLS', () => {
         let annotationsState = annotations({}, updateSymbols());
         expect(annotationsState.symbolList.length).toBe(0);
