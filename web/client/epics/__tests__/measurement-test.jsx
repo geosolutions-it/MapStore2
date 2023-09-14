@@ -9,16 +9,22 @@
 import expect from 'expect';
 import { addTimeoutEpic, testEpic } from './epicTestUtils';
 import { addAnnotationFromMeasureEpic, addAsLayerEpic, openMeasureEpic, setMeasureStateFromAnnotationEpic, closeMeasureEpics, addCoordinatesEpic } from '../measurement';
-import {addAnnotation, addAsLayer, setAnnotationMeasurement} from '../../actions/measurement';
+import { addAnnotation, addAsLayer, setAnnotationMeasurement, CHANGE_MEASUREMENT_TOOL } from '../../actions/measurement';
 import { ADD_LAYER } from '../../actions/layers';
-import { clickOnMap } from '../../actions/map';
+import {
+    clickOnMap,
+    UNREGISTER_EVENT_LISTENER
+} from '../../actions/map';
+import { UPDATE_DOCK_PANELS } from '../../actions/maplayout';
 import {setControlProperty, toggleControl} from '../../actions/controls';
+import { EDIT_ANNOTATION } from '../../plugins/Annotations/actions/annotations';
 
 describe('measurement epics', () => {
     const testData = {
         "features": [
             {
                 "type": "Feature",
+                "id": "feature-01",
                 "geometry": {
                     "type": "LineString",
                     "coordinates": [
@@ -106,23 +112,44 @@ describe('measurement epics', () => {
             NUMBER_OF_ACTIONS, [
                 addAnnotation(features, textLabels, uom, false, {id: 1})
             ], actions => {
-                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                expect(actions[0].type).toBe("SET_CONTROL_PROPERTY");
-                expect(actions[1].type).toBe("ANNOTATIONS:NEW");
-                expect(actions[2].type).toBe("MEASUREMENT:SET_MEASUREMENT_CONFIG");
-                expect(actions[2].property).toBe("exportToAnnotation");
-                expect(actions[2].value).toBe(false);
-                expect(actions[3].type).toBe("ANNOTATIONS:SET_EDITING_FEATURE");
-                expect(actions[3].feature.features).toBeTruthy();
-                expect(actions[3].feature.features.length).toBe(4);
-                expect(actions[3].feature.features[0].geometry.type).toBe("LineString");
-                expect(actions[3].feature.features[1].geometry.type).toBe("Point");
-                expect(actions[3].feature.features[2].geometry.type).toBe("Point");
-                expect(actions[3].feature.features[3].geometry.type).toBe("Point");
-                expect(actions[3].feature.properties.id).toBe(1);
-                expect(actions[3].feature.visibility).toBe(true);
+                try {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+
+                    let dispatchedActions = [];
+
+                    actions.forEach(action => {
+                        if (action?.type) {
+                            dispatchedActions.push(action.type);
+                        } else {
+                            action((a) => {
+                                dispatchedActions.push(a.type);
+                                return a;
+                            });
+                        }
+                    });
+                    expect(dispatchedActions).toEqual([
+                        CHANGE_MEASUREMENT_TOOL,
+                        CHANGE_MEASUREMENT_TOOL,
+                        ADD_LAYER,
+                        EDIT_ANNOTATION
+                    ]);
+                    expect(actions[2].layer.features).toBeTruthy();
+                    expect(actions[2].layer.features.length).toBe(3);
+                    expect(actions[2].layer.features[0].geometry.type).toBe("LineString");
+                    expect(actions[2].layer.features[1].geometry.type).toBe("Point");
+                    expect(actions[2].layer.features[2].geometry.type).toBe("Point");
+                    expect(actions[2].layer.id).toBe('annotations:1');
+                    expect(actions[2].layer.visibility).toBe(true);
+                } catch (e) {
+                    done(e);
+                }
                 done();
-            }, null);
+            }, {
+                layers: {
+                    flat: [],
+                    selected: []
+                }
+            });
     });
     it('test addAnnotationFromMeasureEpic with textLabels', (done) => {
         const NUMBER_OF_ACTIONS = 4;
@@ -133,23 +160,46 @@ describe('measurement epics', () => {
             NUMBER_OF_ACTIONS, [
                 addAnnotation(features, textLabels, uom, true, {id: 1, visibility: false})
             ], actions => {
-                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                const resultFeatures = actions[3].feature.features;
-                const properties = actions[3].feature.properties;
-                const style = actions[3].feature.style;
-                expect(resultFeatures).toExist();
-                expect(properties).toExist();
-                expect(style).toExist();
-                expect(resultFeatures.length).toBe(4);
-                expect(resultFeatures[0].geometry).toExist();
-                expect(resultFeatures[0].geometry.textLabels).toExist();
-                expect(resultFeatures[0].geometry.textLabels[0].text).toBe("2,937,911.16 m | 061.17°");
-                expect(resultFeatures[0].geometry.textLabels[1].text).toBe("1,837,281.12 m | 140.72°");
-                expect(resultFeatures[0].properties).toExist();
-                expect(resultFeatures[0].properties.geometryGeodesic).toExist();
-                expect(actions[3].feature.visibility).toBe(false);
+                try {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+
+                    let dispatchedActions = [];
+
+                    actions.forEach(action => {
+                        if (action?.type) {
+                            dispatchedActions.push(action.type);
+                        } else {
+                            action((a) => {
+                                dispatchedActions.push(a.type);
+                                return a;
+                            });
+                        }
+                    });
+                    expect(dispatchedActions).toEqual([
+                        CHANGE_MEASUREMENT_TOOL,
+                        CHANGE_MEASUREMENT_TOOL,
+                        ADD_LAYER,
+                        EDIT_ANNOTATION
+                    ]);
+                    expect(actions[2].layer.features).toBeTruthy();
+                    expect(actions[2].layer.features.length).toBe(3);
+                    expect(actions[2].layer.features[0].geometry.type).toBe("LineString");
+                    expect(actions[2].layer.features[1].geometry.type).toBe("Point");
+                    expect(actions[2].layer.features[1].properties.label).toBe("2,937,911.16 m | 061.17°");
+                    expect(actions[2].layer.features[2].geometry.type).toBe("Point");
+                    expect(actions[2].layer.features[2].properties.label).toBe("1,837,281.12 m | 140.72°");
+                    expect(actions[2].layer.id).toBe('annotations:1');
+                    expect(actions[2].layer.visibility).toBe(false);
+                } catch (e) {
+                    done(e);
+                }
                 done();
-            }, null);
+            }, {
+                layers: {
+                    flat: [],
+                    selected: []
+                }
+            });
     });
     it('test addAsLayerEpic', (done) => {
         const NUMBER_OF_ACTIONS = 1;
@@ -201,7 +251,7 @@ describe('measurement epics', () => {
             }, state);
     });
     it('test setMeasureStateFromAnnotationEpic', (done) => {
-        const NUMBER_OF_ACTIONS = 4;
+        const NUMBER_OF_ACTIONS = 3;
         const state = {
             controls: {
                 measure: {
@@ -224,13 +274,11 @@ describe('measurement epics', () => {
                 expect(actions[2].control).toBe("annotations");
                 expect(actions[2].property).toBe("enabled");
                 expect(actions[2].value).toBe(false);
-                expect(actions[3].type).toBe("ANNOTATIONS:VISIBILITY");
-                expect(actions[3].visibility).toBe(false);
                 done();
             }, state);
     });
     it('test closeMeasureEpics', (done) => {
-        const NUMBER_OF_ACTIONS = 2;
+        const NUMBER_OF_ACTIONS = 3;
         const state = {
             controls: {
                 measure: {
@@ -245,8 +293,28 @@ describe('measurement epics', () => {
             NUMBER_OF_ACTIONS, [
                 toggleControl('measure', null)
             ], actions => {
-                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
-                expect(actions[1].type).toBe("ANNOTATIONS:CLEAN_HIGHLIGHT");
+                try {
+                    expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+                    let dispatchedActions = [];
+
+                    actions.forEach(action => {
+                        if (action?.type) {
+                            dispatchedActions.push(action.type);
+                        } else {
+                            action((a) => {
+                                dispatchedActions.push(a.type);
+                                return a;
+                            });
+                        }
+                    });
+                    expect(dispatchedActions).toEqual([
+                        CHANGE_MEASUREMENT_TOOL,
+                        UNREGISTER_EVENT_LISTENER,
+                        UPDATE_DOCK_PANELS
+                    ]);
+                } catch (e) {
+                    done(e);
+                }
                 done();
             }, state);
     });

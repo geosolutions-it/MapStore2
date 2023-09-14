@@ -109,7 +109,7 @@ export const updateMapLayoutEpic = (action$, store) =>
 
             const leftPanels = head([
                 get(state, "controls.queryPanel.enabled") && {left: mapLayout.left.lg} || null,
-                get(state, "controls.annotations.enabled") && {left: mapLayout.left.sm} || null,
+                get(state, "controls.annotations.enabled") && {left: mapLayout.left.lg} || null,
                 get(state, "controls.widgetBuilder.enabled") && {left: mapLayout.left.md} || null,
                 get(state, "layers.settings.expanded") && {left: mapLayout.left.md} || null,
                 get(state, "controls.drawer.enabled") && { left: resizedDrawer || mapLayout.left.sm} || null

@@ -20,13 +20,16 @@ const StringFormatter = ({value} = {}) => !isNil(value) ? reactStringReplace(val
 )) : null;
 const NumberFormatter = ({value} = {}) => !isNil(value) ? <NumberFormat value={value} numberParams={{maximumFractionDigits: 17}}/> : null;
 const DEFAULT_DATE_PART = "1970-01-01";
+const DATE_INPUT_FORAMAT = "YYYY-MM-DD[Z]";
 const dateTimeFormatter = ({value, format, type}) => {
     return !isNil(value)
         ? moment.utc(value).isValid() // geoserver sometimes returns UTC for time.
             ? moment.utc(value).format(format)
             : type === 'time'
                 ? moment(`${DEFAULT_DATE_PART}T${value}`).utc().format(format) // time format append default date part
-                : moment(value).format(format) // date or date-time formats
+                : type === "date" && value?.toLowerCase()?.endsWith("z")        // in case: date format and value ends with z
+                    ? moment(value, DATE_INPUT_FORAMAT).format(format)
+                    : moment(value).format(format)
         : null;
 };
 export const register = {};

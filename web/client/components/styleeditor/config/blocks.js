@@ -201,7 +201,16 @@ const getBlocks = ({
             glyph: '1-point',
             glyphAdd: '1-point-add',
             tooltipAddId: 'styleeditor.addMarkRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             params: {
                 wellKnownName: property.shape({
                     label: 'styleeditor.shape'
@@ -258,7 +267,16 @@ const getBlocks = ({
             glyph: 'point',
             glyphAdd: 'point-plus',
             tooltipAddId: 'styleeditor.addIconRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             hideMenu: true,
             params: {
                 image: property.image({
@@ -492,7 +510,16 @@ const getBlocks = ({
             glyphAdd: 'model-plus',
             disableAdd: () => !enable3dStyleOptions,
             tooltipAddId: 'styleeditor.addModelRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             hideMenu: true,
             params: {
                 model: property.model({

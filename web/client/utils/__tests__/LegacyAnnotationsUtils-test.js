@@ -47,7 +47,7 @@ import {
     getGeometryType,
     getGeometryGlyphInfo,
     modifySelectedInEdited
-} from '../AnnotationsUtils';
+} from '../LegacyAnnotationsUtils';
 
 const featureCollection = {
     features: [{

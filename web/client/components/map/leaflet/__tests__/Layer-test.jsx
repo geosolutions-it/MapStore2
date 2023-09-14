@@ -32,7 +32,7 @@ import '../plugins/VectorLayer';
 let mockAxios;
 
 import { setStore } from '../../../../utils/SecurityUtils';
-import { DEFAULT_ANNOTATIONS_STYLES } from '../../../../utils/AnnotationsUtils';
+import { DEFAULT_ANNOTATIONS_STYLES } from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 import { setConfigProp } from '../../../../utils/ConfigUtils';
 import { getResolutions } from '../../../../utils/MapUtils';
 

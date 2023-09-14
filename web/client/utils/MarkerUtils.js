@@ -34,6 +34,7 @@ const loadGlyphs = (font) => {
 
 const extraMarkers = {
     size: [36, 46],
+    margin: [3, 2],
     colors: ['red', 'orange-dark', 'orange', 'yellow', 'blue-dark', 'blue', 'cyan', 'purple', 'violet',
         'pink', 'green-dark', 'green', 'green-light', 'black'],
     shapes: ['circle', 'square', 'star', 'penta'],
@@ -42,8 +43,15 @@ const extraMarkers = {
 };
 
 const getOffsets = (color, shape) => {
-    return [-extraMarkers.colors.indexOf(color) * extraMarkers.size[0] - 2, -extraMarkers.shapes.indexOf(shape) * extraMarkers.size[1]];
+    return [
+        -extraMarkers.colors.indexOf(color) * extraMarkers.size[0],
+        -extraMarkers.shapes.indexOf(shape) * extraMarkers.size[1]
+    ];
 };
+const getGlyphOffset = (shape) => {
+    return ['square', 'penta'].includes(shape) ? 6 : 5;
+};
+
 const MarkerUtils = {
     extraMarkers: {
         ...extraMarkers,
@@ -51,16 +59,17 @@ const MarkerUtils = {
         markerToDataUrl: ({ iconColor, iconShape, iconGlyph }) => {
             if (MarkerUtils.extraMarkers.images) {
                 let canvas = document.createElement('canvas');
+                const margin = extraMarkers.margin;
                 const size = extraMarkers.size;
-                canvas.width = size[0];
-                canvas.height = size[1];
-                // const c = document.getElementById("container");
-                // c.insertBefore(canvas, c.children[0])
+                const width = size[0] - (margin[0] * 2);
+                const height = size[1] - (margin[1] * 2);
+                canvas.width = width;
+                canvas.height = height;
                 const ctx = canvas.getContext("2d");
                 if (iconShape) {
                     const offSet = getOffsets(iconColor, iconShape);
-                    ctx.drawImage(extraMarkers.images[0], 4, 31, 35, 16); // shadowImage
-                    ctx.drawImage(extraMarkers.images[1], Math.abs(offSet[0]), Math.abs(offSet[1]), size[0], size[1], 0, 0, size[0], size[1]); // iconImage
+                    ctx.drawImage(extraMarkers.images[0], 0, 0, width, height); // shadowImage
+                    ctx.drawImage(extraMarkers.images[1], Math.abs(offSet[0]), Math.abs(offSet[1]), size[0], size[1], -margin[0], -margin[1], size[0], size[1]); // iconImage
                 }
                 if (iconGlyph) {
                     // glyph
@@ -68,7 +77,7 @@ const MarkerUtils = {
                     ctx.fillStyle = "rgb(255,255,255)";
                     ctx.textBaseline = "middle";
                     ctx.textAlign = "center";
-                    ctx.fillText((MarkerUtils.getGlyphs("fontawesome"))[iconGlyph] || '', (size[0] / 2) - 2, (size[1] / 2) - 7);
+                    ctx.fillText((MarkerUtils.getGlyphs("fontawesome"))[iconGlyph] || '', (width / 2), (height / 2) - getGlyphOffset(iconShape));
                 }
                 const data = canvas.toDataURL("image/png");
                 canvas = null;

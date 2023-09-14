@@ -9,8 +9,8 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import CoordinatesEditor from './CoordinatesEditor';
-import { getComponents } from '../../../utils/AnnotationsUtils';
+import CoordinatesEditor from '../../../components/mapcontrols/annotations/CoordinatesEditor';
+import { getComponents } from '../utils/AnnotationsUtils';
 
 class GeometryEditor extends React.Component {
     static propTypes = {
@@ -31,7 +31,8 @@ class GeometryEditor extends React.Component {
         aeronauticalOptions: PropTypes.object,
         onChangeText: PropTypes.func,
         renderer: PropTypes.string,
-        onValidateFeature: PropTypes.func
+        onValidateFeature: PropTypes.func,
+        enableHeightField: PropTypes.bool
     };
 
     static defaultProps = {
@@ -51,7 +52,8 @@ class GeometryEditor extends React.Component {
             transitionEnterTimeout: 300,
             transitionLeaveTimeout: 300
         },
-        onValidateFeature: () => {}
+        onValidateFeature: () => {},
+        enableHeightField: false
     };
 
     render() {
@@ -59,6 +61,7 @@ class GeometryEditor extends React.Component {
             {...this.props.options}
             items={[]}
             isDraggable
+            enableHeightField={this.props.enableHeightField}
             type={this.props.featureType}
             components={this.props.selected && this.props.selected.geometry && this.props.selected.geometry.coordinates && this.props.selected.geometry.coordinates.length ? getComponents(this.props.selected.geometry) : []}
             properties={this.props.selected && this.props.selected.properties || {}}
@@ -74,7 +77,7 @@ class GeometryEditor extends React.Component {
             renderer={this.props.renderer}
             onValidateFeature={this.props.onValidateFeature}
             onChange={(components, radius, text, crs) => {
-                let coords = components.map(c => [c.lon, c.lat]);
+                let coords = components.map(c => [c.lon, c.lat, ...(c.height !== undefined ? [c.height] : [])]);
                 this.props.onChange(coords, radius, text, crs);
                 this.props.onValidateFeature();
             }}/>);

@@ -257,7 +257,8 @@ const RulesEditor = forwardRef(({
                         ruleId,
                         kind: ruleKind,
                         errorId: ruleErrorId,
-                        msgParams: ruleMsgParams
+                        msgParams: ruleMsgParams,
+                        mandatory
                     } = rule;
 
                     const {
@@ -324,14 +325,14 @@ const RulesEditor = forwardRef(({
                                         zoom={zoom}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     />}
-                                    <Button
+                                    {!mandatory && <Button
                                         className="square-button-md no-border"
                                         tooltipId="styleeditor.removeRule"
                                         onClick={() => handleRemove(ruleId)}>
                                         <Glyphicon
                                             glyph="trash"
                                         />
-                                    </Button>
+                                    </Button>}
                                 </>
                             }
                         >

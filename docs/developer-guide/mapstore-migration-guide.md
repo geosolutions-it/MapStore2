@@ -20,9 +20,9 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-# Migration from 2023.02.xx to 2024.00.01
+## Migration from 2023.02.xx to 2024.01.00
 
-## MapFish Print update
+### MapFish Print update
 
 MapFish Print library has been updated to be aligned to the one used by GeoServer and be able to build with Java 11. (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)
 For this reason, you may have to update your project by changing he version of the mapfish-print dependency:
@@ -38,6 +38,19 @@ For this reason, you may have to update your project by changing he version of t
 ```
 
 This library is actually hosted on [https://maven.geo-solutions.it/](https://maven.geo-solutions.it/).
+
+### Annotations plugin refactor
+
+The Annotation plugin has been updated to be supported also in 3D maps. This update introduced some changes:
+
+- All the configurations related to the "Annotations" plugin has been removed from `localConfig.json` `defaultState` entry and moved to the `cfg` property of the plugin
+- The annotations reducers is not needed anymore inside the default reducers of the app
+
+Please update by:
+
+- Removing `annotations` entry from your `localConfig.json` `defaultState`
+- If you customized the app, you can remove the `annotations` reducer from default reducers.
+- If some customizations were applied to the Annotations plugin in `defaultState`, apply these changes to the plugin configuration, following the documentation of the plugin.
 
 ## Migration from 2023.01.xx to 2023.02.00
 

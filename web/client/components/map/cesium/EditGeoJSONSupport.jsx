@@ -49,6 +49,7 @@ function EditGeoJSONSupport({
         return () => {
             if (modify.current) {
                 modify.current.remove();
+                modify.current = null;
             }
         };
     }, [map, active]);
@@ -56,7 +57,6 @@ function EditGeoJSONSupport({
     useEffect(() => {
         if (modify.current) {
             modify.current.setGeoJSON(geojson);
-            modify.current = null;
         }
     }, [geojson]);
 
