@@ -74,6 +74,7 @@ import { getLayerTitle } from '../utils/LayersUtils';
 import { bboxToFeatureGeometry } from '../utils/CoordinatesUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
+import { toWKT } from '../utils/ogc/WKT';
 import {extractGeometryAttributeName} from "../utils/WFSLayerUtils";
 
 const DOWNLOAD_FORMATS_LOOKUP = {
@@ -339,8 +340,8 @@ export const startFeatureExportDownload = (action$, store) =>
                 ROI: cropToROI ? {
                     type: 'TEXT',
                     data: {
-                        mimeType: 'application/json',
-                        data: JSON.stringify(bboxToFeatureGeometry(mapBbox.bounds))
+                        mimeType: 'application/wkt',
+                        data: toWKT(bboxToFeatureGeometry(mapBbox.bounds))
                     }
                 } : undefined,
                 roiCRS: cropToROI ? (mapBbox.crs || 'EPSG:4326') : undefined,

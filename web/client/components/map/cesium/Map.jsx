@@ -274,12 +274,14 @@ class CesiumMap extends React.Component {
             const cartesian = this.map.camera.pickEllipsoid(movement.endPosition, this.map.scene.globe.ellipsoid);
             let cartographic = ClickUtils.getMouseXYZ(this.map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
+                const intersectedFeatures = this.getIntersectedFeatures(this.map, movement.endPosition);
                 const elevation = Math.round(cartographic.height);
                 this.props.onMouseMove({
                     y: cartographic.latitude * 180.0 / Math.PI,
                     x: cartographic.longitude * 180.0 / Math.PI,
                     z: elevation,
-                    crs: "EPSG:4326"
+                    crs: "EPSG:4326",
+                    intersectedFeatures
                 });
             }
         }

@@ -26,7 +26,7 @@ function StyleBasedLegend({ style }) {
             fillOpacity,
             image,
             rotate
-        } = parseSymbolizerExpressions(symbolizer);
+        } = parseSymbolizerExpressions(symbolizer, { properties: {} });
         switch (symbolizer.kind) {
         case 'Line':
             let displayWidth = width;

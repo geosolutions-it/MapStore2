@@ -29,6 +29,7 @@
         "collapse": "Zuklappen",
         "Links": "Links",
         "Forbidden": "Verboten",
+        "height": "Höhe",
         "layerNameChangeError": {
             "title": "Namensänderungsfehler",
             "message": "Die Ebene konnte nicht mit einem geänderten Namen neu geladen werden"
@@ -1284,7 +1285,10 @@
             },
             "geometryError": "Geometriekonfiguration ist ungültig",
             "annotationSaveGeometryError": "Das Speichern ist aufgrund einer ungültigen Geometrie deaktiviert. Bitte korrigieren Sie dies, um die Anmerkung zu speichern",
-            "resolveAllErrors": "Bitte beheben Sie alle Validierungsfehler, bevor Sie andere Geometrien bearbeiten"
+            "resolveAllErrors": "Bitte beheben Sie alle Validierungsfehler, bevor Sie andere Geometrien bearbeiten",
+            "selectAnnotationFeature": "Wählen Sie im linken Bereich ein Anmerkungsfeature aus, um Koordinaten und Stile zu bearbeiten",
+            "properties": "Eigenschaften",
+            "deactivatedMapInteraction": "Die Interaktionen zum Zeichnen von Anmerkungen wurden deaktiviert, da das Plugin '{pluginName}' aktiviert wurde. Bitte schließen Sie das Plugin '{pluginName}', um die Interaktionen zum Zeichnen von Anmerkungen zu aktivieren."
         },
         "user":{
             "login": "Login",

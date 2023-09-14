@@ -201,7 +201,6 @@ class OpenlayersMap extends React.Component {
                     }
 
                     let layerInfo;
-                    let groupIntersectedFeatures = {};
                     this.markerPresent = false;
                     /*
                      * Handle special case for vector features with handleClickOnLayer=true
@@ -219,17 +218,8 @@ class OpenlayersMap extends React.Component {
                                 coords = { x: arr[0], y: arr[1] };
                             }
                         }
-                        if (layer?.get('msId')) {
-                            const geoJSONFeature = geoJSONFormat.writeFeatureObject(feature, {
-                                featureProjection: this.props.projection,
-                                dataProjection: 'EPSG:4326'
-                            });
-                            groupIntersectedFeatures[layer.get('msId')] = groupIntersectedFeatures[layer.get('msId')]
-                                ? [ ...groupIntersectedFeatures[layer.get('msId')], geoJSONFeature ]
-                                : [ geoJSONFeature ];
-                        }
                     });
-                    const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+                    const intersectedFeatures = this.getIntersectedFeatures(map, event?.pixel);
                     const tLng = normalizeLng(coords.x);
                     const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                     this.props.onClick({
@@ -390,6 +380,23 @@ class OpenlayersMap extends React.Component {
         return view.getProjection().getExtent() || msGetProjection(props.projection).extent;
     };
 
+    getIntersectedFeatures = (map, pixel) => {
+        let groupIntersectedFeatures = {};
+        map.forEachFeatureAtPixel(pixel, (feature, layer) => {
+            if (layer?.get('msId')) {
+                const geoJSONFeature = geoJSONFormat.writeFeatureObject(feature, {
+                    featureProjection: this.props.projection,
+                    dataProjection: 'EPSG:4326'
+                });
+                groupIntersectedFeatures[layer.get('msId')] = groupIntersectedFeatures[layer.get('msId')]
+                    ? [ ...groupIntersectedFeatures[layer.get('msId')], geoJSONFeature ]
+                    : [ geoJSONFeature ];
+            }
+        });
+        const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+        return intersectedFeatures;
+    };
+
     render() {
         const map = this.map;
         const children = map ? React.Children.map(this.props.children, child => {
@@ -423,6 +430,7 @@ class OpenlayersMap extends React.Component {
             } else if (tLng > 180) {
                 tLng = tLng - 360;
             }
+            const intersectedFeatures = this.getIntersectedFeatures(this.map, event?.pixel);
             this.props.onMouseMove({
                 y: coords[1] || 0.0,
                 x: tLng || 0.0,
@@ -439,7 +447,8 @@ class OpenlayersMap extends React.Component {
                 },
                 lat: coords[1],
                 lng: tLng,
-                rawPos: event.coordinate.slice()
+                rawPos: event.coordinate.slice(),
+                intersectedFeatures
             });
         }
     };
@@ -505,7 +514,12 @@ class OpenlayersMap extends React.Component {
             projection: normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom,
-            minZoom: limits.minZoom
+            minZoom: limits.minZoom,
+            // allow to zoom to level 0 and see world wrapping
+            multiWorld: true,
+            // does not allow intermediary zoom levels
+            // we need this at true to set correctly the scale box
+            constrainResolution: true
         }, newOptions || {});
         return new View(viewOptions);
     };

@@ -15,7 +15,7 @@ import { isArray, find, filter, isEqual } from 'lodash';
 import axios from 'axios';
 import Slider from '../../../misc/Slider';
 import Message from '../../../I18N/Message';
-import { DEFAULT_SHAPE, DEFAULT_PATH, checkSymbolsError } from '../../../../utils/AnnotationsUtils';
+import { DEFAULT_SHAPE, DEFAULT_PATH, checkSymbolsError } from '../../../../utils/LegacyAnnotationsUtils';
 
 /**
  * Styler for the layout of the symbol

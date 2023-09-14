@@ -177,7 +177,7 @@
       "title": "plugins.Annotations.title",
       "description": "plugins.Annotations.description",
       "dependencies": [
-        "SidebarMenu"
+        "TOC"
       ]
     },
     {

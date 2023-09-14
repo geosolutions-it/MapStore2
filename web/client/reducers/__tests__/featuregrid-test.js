@@ -91,9 +91,14 @@ import {isViewportFilterActive, paginationSelector, useLayerFilterSelector} from
 import { featureTypeLoaded, createQuery, updateQuery } from '../../actions/wfsquery';
 import { changeDrawingStatus } from '../../actions/draw';
 import { configureMap } from '../../actions/config';
+import { getApi, setApi } from '../../api/userPersistedStorage';
+
 import museam from '../../test-resources/wfs/museam.json';
 describe('Test the featuregrid reducer', () => {
-
+    beforeEach(() => {
+        setApi("localStorage");
+        getApi().removeItem("showPopoverSync");
+    });
     it('returns original state on unrecognized action', () => {
         let state = featuregrid(1, {type: 'UNKNOWN'});
         expect(state).toBe(1);

@@ -125,21 +125,26 @@ describe('Test the mapConfig reducer', () => {
                     type: "FeatureCollection",
                     features: [{
                         type: "Feature",
+                        id: 'feature-01',
                         geometry: {
                             type: "MultiPoint",
                             coordinates: [[1, 2], [4, 5]]
                         },
                         properties: {
+                            id: 'feature-01',
                             useGeodesicLines: true
                         }
                     },
                     {
                         type: "Feature",
+                        id: 'feature-02',
                         geometry: {
                             type: "LineString",
                             coordinates: [[1, 2], [4, 5]]
                         },
-                        properties: {},
+                        properties: {
+                            id: 'feature-02'
+                        },
                         style: [{
                             color: "#303030"
                         }]
@@ -148,15 +153,24 @@ describe('Test the mapConfig reducer', () => {
             }] }}});
         expect(state.map).toExist();
         expect(state.layers).toExist();
-        const newAnnotationsFeature = state.layers[0].features[0].features[0];
-        const otherLineString = state.layers[0].features[0].features[1];
+        const newAnnotationsFeature = state.layers[0].features[0];
+        const otherLineString = state.layers[0].features[1];
         expect(newAnnotationsFeature.geometry).toEqual({
             type: "MultiPoint",
             coordinates: [[1, 2], [4, 5]]
         });
-        expect(newAnnotationsFeature.properties.geometryGeodesic.type).toBe("LineString");
-        expect(newAnnotationsFeature.properties.geometryGeodesic.coordinates.length).toBe(100);
-        expect(otherLineString.properties).toEqual({});
+        expect(newAnnotationsFeature.properties).toEqual({
+            geodesic: true,
+            id: 'feature-01',
+            annotationType: 'MultiPoint',
+            name: 'MultiPoint'
+        });
+        expect(otherLineString.properties).toEqual({
+            geodesic: false,
+            id: 'feature-02',
+            annotationType: 'LineString',
+            name: 'LineString'
+        });
         expect(otherLineString.geometry).toEqual({
             type: "LineString",
             coordinates: [[1, 2], [4, 5]]

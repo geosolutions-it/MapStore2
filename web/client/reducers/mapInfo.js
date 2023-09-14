@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import assign from 'object-assign';
-import buffer from 'turf-buffer';
-import intersect from 'turf-intersect';
 import { findIndex, isUndefined, isEmpty } from 'lodash';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -24,7 +22,6 @@ import {
     HIDE_MAPINFO_MARKER,
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE,
-    GET_VECTOR_INFO,
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
@@ -340,84 +337,6 @@ function mapInfo(state = initState, action) {
                 trigger: "click"
             }
         });
-    }
-    case GET_VECTOR_INFO: {
-        const point = {
-            "type": "Feature",
-            "properties": {},
-            "geometry": {
-                "type": "Point",
-                "coordinates": [action.request.lng, action.request.lat]
-            }
-        };
-        let unit = action.metadata && action.metadata.units;
-        switch (unit) {
-        case "m":
-            unit = "meters";
-            break;
-        case "deg":
-            unit = "degrees";
-            break;
-        case "mi":
-            unit = "miles";
-            break;
-        default:
-            unit = "meters";
-        }
-        let resolution = action.metadata && action.metadata.resolution || 1;
-        let bufferedPoint = buffer(point, (action.metadata.buffer || 1) * resolution, unit);
-        const intersected = (action.layer.features || []).filter(
-            (feature) => {
-                try {
-                    // TODO: instead of create a fixed buffer, we should check the feature style to create the proper buffer.
-
-                    if (feature.type === "FeatureCollection" && feature.features && feature.features.length) {
-                        return feature.features.reduce((p, c) => {
-                            // if required use the geodesic geometry
-                            let ft = c.properties.useGeodesicLines && c.properties.geometryGeodesic ? {...c,
-                                geometry: c.properties.geometryGeodesic
-                            } : c;
-                            return p || intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(ft, 1, "meters") : ft);
-                        }, false);
-                    }
-                    return intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(feature, 1, "meters") : feature);
-
-                } catch (e) {
-                    return false;
-                }
-            }
-
-        );
-        let responses = state.responses || [];
-        // Display feature info in popup
-        const isHover = state?.configuration?.trigger === 'hover' || state?.showInMapPopup;
-        const vectorResponse = {
-            response: {
-                crs: null,
-                features: intersected,
-                totalFeatures: "unknown",
-                type: "FeatureCollection"
-            },
-            queryParams: action.request,
-            layerMetadata: action.metadata,
-            format: 'JSON'
-        };
-        let vectorAction;
-        // Add response such that it doesn't replace other layer response's index
-        if (!isHover) {
-            responses[state.requests.length] = vectorResponse;
-            // To identify vector request index
-            vectorAction = {reqId: state.requests.length};
-        } else {
-            responses = [...responses, vectorResponse];
-            vectorAction = {reqId: 0};
-        }
-        const requests = [...state.requests, {}];
-        return receiveResponse(assign({}, state, {
-            requests,
-            queryableLayers: action.queryableLayers,
-            responses: [...responses]
-        }), vectorAction, "vector");
     }
     case UPDATE_CENTER_TO_MARKER: {
         return assign({}, state, {

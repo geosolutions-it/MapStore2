@@ -14,7 +14,7 @@ import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import uuidv1 from 'uuid/v1';
 
-import { getGeometryGlyphInfo } from '../../../utils/AnnotationsUtils';
+import { getGeometryGlyphInfo } from '../../../utils/LegacyAnnotationsUtils';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import Message from '../../I18N/Message';
 import BorderLayout from '../../layout/BorderLayout';

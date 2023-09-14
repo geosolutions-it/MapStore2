@@ -28,6 +28,7 @@ const testUom = {
 describe('MeasurementUtils', () => {
     const features = [{
         type: "Feature",
+        id: 'measure-01',
         geometry: {
             type: "LineString",
             coordinates: [
@@ -42,6 +43,7 @@ describe('MeasurementUtils', () => {
             ]
         },
         properties: {
+            id: 'measure-01',
             values: [
                 {
                     value: 2456862.991,
@@ -56,38 +58,33 @@ describe('MeasurementUtils', () => {
         }
     }];
     it('convertMeasuresToAnnotation with LineString', () => {
-        const geoJson = convertMeasuresToAnnotation(features, [], testUom, 'id');
-
-        expect(geoJson).toBeTruthy();
-        expect(geoJson.type).toBe('FeatureCollection');
-        expect(geoJson.properties).toBeTruthy();
-        expect(geoJson.properties.id).toBe('id');
-        expect(geoJson.properties.title).toBe('Measure Length');
-        expect(geoJson.properties.type).toBe('Measure');
-        expect(geoJson.properties.iconGlyph).toBe('1-measure-length');
-        expect(geoJson.features).toBeTruthy();
-        expect(geoJson.features.length).toBe(2);
-        expect(geoJson.features[0].type).toBe('Feature');
-        expect(geoJson.features[0].geometry).toBeTruthy();
-        expect(geoJson.features[0].geometry.type).toBe('LineString');
-        expect(geoJson.features[0].geometry.coordinates).toEqual(features[0].geometry.coordinates);
-        expect(geoJson.features[0].properties).toBeTruthy();
-        expect(geoJson.features[0].properties.geometryGeodesic).toBeTruthy();
-        expect(geoJson.features[0].properties.id).toBeTruthy();
-        expect(geoJson.features[0].properties.id.length).toBe(36);
-        expect(geoJson.features[0].properties.useGeodesicLines).toBe(true);
-        expect(geoJson.features[0].properties.isValidFeature).toBe(true);
-        expect(geoJson.features[0].style).toBeTruthy();
-        expect(geoJson.features[1].type).toBe('Feature');
-        expect(geoJson.features[1].geometry).toBeTruthy();
-        expect(geoJson.features[1].geometry.type).toBe('Point');
-        expect(geoJson.features[1].geometry.coordinates).toEqual(features[0].properties.values[0].position);
-        expect(geoJson.features[1].properties).toBeTruthy();
-        expect(geoJson.features[1].properties.id).toBeTruthy();
-        expect(geoJson.features[1].properties.id.length).toBe(36);
-        expect(geoJson.features[1].properties.isText).toBe(true);
-        expect(geoJson.features[1].properties.isValidFeature).toBe(true);
-        expect(geoJson.features[1].properties.valueText).toBe(features[0].properties.values[0].formattedValue);
+        const layer = convertMeasuresToAnnotation(features, [], testUom, 'id');
+        expect(layer).toBeTruthy();
+        expect(layer.id).toBe('annotations:id');
+        expect(layer.type).toBe('vector');
+        expect(layer.title).toBe('Measure');
+        expect(layer.rowViewer).toBe('annotations');
+        expect(layer.features.length).toBe(1);
+        expect(layer.features[0].type).toBe('Feature');
+        expect(layer.features[0].geometry).toBeTruthy();
+        expect(layer.features[0].geometry.type).toBe('LineString');
+        expect(layer.features[0].geometry.coordinates).toEqual(features[0].geometry.coordinates);
+        const { id, ...properties } = layer.features[0].properties;
+        expect(properties).toEqual({
+            label: '2,456,862.99 m',
+            geodesic: true,
+            length: 2456862.991,
+            lengthUom: 'm',
+            lengthTargetUom: 'm',
+            type: 'measurement',
+            measureType: 'length',
+            annotationType: 'LineString',
+            name: 'length'
+        });
+        expect(layer.style.body.rules.length).toBe(5);
+        expect(layer.style.body.rules.map(({ symbolizers }) => symbolizers[0].kind)).toEqual([
+            'Mark', 'Mark', 'Line', 'Text', 'Text'
+        ]);
     });
 
     it('getGeomTypeSelected', ()=>{
@@ -611,6 +608,7 @@ describe('MeasurementUtils', () => {
             geodesic: true,
             length: 1953.316,
             lengthUom: 'm',
+            lengthTargetUom: 'm',
             type: 'measurement',
             measureType: MeasureTypes.LENGTH
         });
@@ -799,8 +797,10 @@ describe('MeasurementUtils', () => {
             geodesic: false,
             length: 7614.5289999999995,
             lengthUom: 'm',
+            lengthTargetUom: 'm',
             area: 1644850.6921266892,
             areaUom: 'sqm',
+            areaTargetUom: 'sqm',
             type: 'measurement',
             measureType: MeasureTypes.AREA
         });
@@ -872,6 +872,7 @@ describe('MeasurementUtils', () => {
             geodesic: false,
             bearing: 311.0662463199936,
             bearingUom: 'deg',
+            bearingTargetUom: 'deg',
             type: 'measurement',
             measureType: MeasureTypes.BEARING
         });

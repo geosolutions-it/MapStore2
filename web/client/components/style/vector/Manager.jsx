@@ -15,7 +15,7 @@ import { Grid } from 'react-bootstrap';
 import tinycolor from 'tinycolor2';
 import uuidv1 from 'uuid/v1';
 
-import { DEFAULT_PATH, DEFAULT_SHAPE, checkSymbolsError } from '../../../utils/AnnotationsUtils';
+import { DEFAULT_PATH, DEFAULT_SHAPE, checkSymbolsError } from '../../../utils/LegacyAnnotationsUtils';
 import { arrayUpdate } from '../../../utils/ImmutableUtils';
 import {
     addOpacityToColor,

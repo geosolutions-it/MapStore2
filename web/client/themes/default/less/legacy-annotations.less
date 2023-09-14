@@ -1,0 +1,864 @@
+//
+// Copyright 2021, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+#ms-components-theme(@theme-vars) {
+
+    .annotations-edit-error {
+        .color-var(@theme-vars[danger]);
+    }
+
+    .ms-marker-shape-content,
+    .ms-marker-icon-content,
+    #mapstore-annotations-panel {
+        .background-color-var(@theme-vars[main-bg]);
+    }
+
+    .ms-marker-selected {
+        .border-color-var(@theme-vars[focus-color]);
+    }
+
+    .mapstore-annotations-info-viewer-marker-selected {
+        .border-color-var(@theme-vars[danger]);
+    }
+
+    .mapstore-annotations-info-viewer>.annotations-edit-error {
+        .border-color-var(@theme-vars[main-border-color]);
+    }
+
+    .ql-disabled {
+        .background-color-var(@theme-vars[main-variant-bg]);
+    }
+
+    .mapstore-annotations-info-viewer {
+        .mapstore-annotations-info-viewer-items {
+            .geometry-card {
+                &.ms-selected {
+                    .border-color-var(@theme-vars[focus-color]);
+                }
+                &.ms-disabled {
+                    cursor: not-allowed;
+                    .background-color-var(@theme-vars[disabled-bg]);
+                }
+            }
+        }
+
+        .mapstore-annotations-info-viewer-expanded {
+            .border-right-color-var(@theme-vars[main-border-color]);
+
+            .panel {
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+
+            .ms-dragg:first-child {
+                .border-top-color-var(@theme-vars[main-border-color]);
+            }
+
+            .ms-dragg+.ms-dragg {
+                .border-top-color-var(@theme-vars[main-border-color]);
+            }
+
+            .ms-dragg:last-child {
+                .border-bottom-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+
+    .ms-annotations-panel {
+        .ms2-border-layout-content {
+            .ms-preview {
+                h4 {
+                    .border-bottom-color-var(@theme-vars[main-border-color]);
+                }
+            }
+        }
+    }
+
+    .mapstore-annotations-info-viewer .container-fluid .container-fluid .row {
+        .row:hover {
+
+            input,
+            select,
+            .col-xs-5 span {
+                .color-var(@theme-vars[primary]);
+            }
+        }
+    }
+
+    .ms-dragg.ms-below .coordinateRow,
+    .ms-dragg.ms-above .coordinateRow {
+        & {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        &:hover {
+
+            input,
+            select,
+            .col-xs-5 span {
+                .color-var(@theme-vars[primary]);
+            }
+        }
+    }
+
+    .mapstore-identify-viewer {
+        .mapstore-annotations-info-viewer.hover-background:hover {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+
+        .mapstore-annotations-info-viewer+.mapstore-annotations-info-viewer {
+            .mapstore-annotations-info-viewer-buttons {
+                .border-top-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+
+    .ms-over {
+        .coordinateRow {
+            .border-color-var(@theme-vars[primary]);
+        }
+
+        &.ms-dragging {
+            .coordinateRow {
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
+}
+// **************
+// Layout
+// **************
+@annotation-feature-font-size: 13px;
+#mapstore-annotations-info-viewer-edit-buttons {
+    float: right;
+}
+
+.ms-property-picker-overlay {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+.ms-property-picker-cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.mapstore-annotations-info-viewer-marker {
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.mapstore-annotations-info-viewer-styler {
+    min-height: 600px;
+    .mapstore-switch-panel {
+        .shadow-soft;
+        border: none;
+        padding: 8px;
+    }
+    .mapstore-annotations-info-viewer-styler-container {
+        .ms2-border-layout-content {
+            overflow: auto;
+            position: relative;
+        }
+    }
+
+    .ms-style {
+        .Select {
+            border-radius: 0;
+            > * {
+                border-radius: 0;
+            }
+            width: 100%;
+            margin: 0;
+        }
+        .Select-menu-outer {
+            z-index: 2 !important;
+            .shadow-soft;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+.mapstore-annotations-info-viewer-styler .Select {
+    clear: both;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#mapstore-annotations-panel {
+    margin-bottom: 0;
+}
+#mapstore-annotations-panel .items-list.row {
+    margin: 5px 10px;
+}
+
+.mapstore-annotations-panel-cards {
+    height: ~'calc(100% - 50px)';
+    overflow: auto;
+}
+
+.mapstore-annotations-panel {
+    height: 100%;
+}
+.annotations-empty-panel{
+    padding: 10px;
+    font-style: italic;
+    text-align: center;
+}
+#ms-annotations-panel-card{
+    .msSideGrid{
+        margin: 0;
+        width: 100%;
+    }
+    .col-xs-12{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .mapstore-side-preview{
+        align-items: center;
+    }
+    .mapstore-annotations-panel-card{
+        width: 32px;
+        height: 32px;
+        margin: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+    }
+    .mapstore-side-card-info{
+        padding: 0;
+    }
+    .mapstore-side-card-title{
+        font-weight: normal;
+        margin-bottom: 0;
+    }
+    .mapstore-annotations-panel-card-title{
+        margin-top: 5px;
+        text-overflow: ellipsis;
+        width: 150px;
+        overflow: hidden;
+    }
+    .mapstore-side-card-desc{
+        border-bottom: none;
+        height: auto;
+    }
+    .mapstore-annotations-panel-card-description {
+        margin: 5px 0 0;
+        text-overflow: ellipsis;
+        width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+.mapstore-annotations-panel-card-thumbnail {
+    float: left;
+    width: 40px;
+    height: 100%;
+    padding-top: 15px;
+}
+
+.extra-marker .marker-selected:after {
+    font-family: 'mapstore2';
+    .glyphicon-record-content();
+    position: absolute;
+    top: -18px;
+    left: 8px;
+    font-size: 18px;
+    color: purple;
+    text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+}
+
+.mapstore-annotations-info-viewer .ql-editor {
+    max-height: 130px;
+}
+
+#mapstore-annotations-panel .mapstore-annotations-info-viewer {
+    height: 100%;
+}
+#mapstore-annotations-panel .ms2-border-layout-body {
+    height: 100%;
+}
+
+#mapstore-annotations-panel .ms2-border-layout-body {
+    overflow: hidden !important;
+}
+
+.mapstore-annotations-info-viewer-marker-group {
+    clear: both;
+}
+
+.mapstore-right-panel .ql-tooltip, #mapstore-annotations-panel .ql-tooltip {
+    left: 0 !important;
+    top: 0 !important;
+}
+
+.mapstore-right-panel .react-swipeable-view-container > div {
+    position: relative;
+    height: 100%;
+}
+
+.mapstore-right-panel .react-swipeable-view-container .panel.panel-default {
+    max-height: 100% !important;
+    height: 100%;
+    position: absolute;
+}
+.mapstore-right-panel .react-swipeable-view-container .panel.panel-default .panel-body {
+    height: ~'calc(100% - 60px)';
+}
+
+.mapstore-right-panel .mapstore-json-viewer, .mapstore-right-panel .mapstore-annotations-info-viewer {
+    height: 100%;
+}
+
+.mapstore-annotations-panel-card-thumbnail:before {
+    color: white;
+    font-size: 16px;
+    margin-left: 8px;
+    margin-left: 8px;
+    display: block;
+    margin-top: -7px;
+}
+
+.mapstore-annotations-panel .form-group .input-group .input-group-addon {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.mapstore-annotations-panel .form-group .input-group {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.extra-marker {
+    cursor: inherit;
+}
+
+.ms-marker-selected {
+    border-width: 2px;
+    border-style: solid;
+}
+
+.mapstore-annotations-info-viewer .annotations-edit-error {
+    margin-left: 10px;
+}
+
+.mapstore-annotations-info-viewer > .annotations-edit-error {
+    height: 22px;
+    border-bottom-width: 1px;
+    margin-bottom: 10px;
+}
+
+.mapstore-annotations-info-viewer {
+    font-size: 13px;
+    .measure-feature-select {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        justify-content: flex-end;
+    }
+    .coordinates-row-container {
+        font-size: @font-size-small;
+        flex: 1 1 auto;
+        overflow: hidden auto;
+        .glyphicon-menu-hamburger{
+            font-size: 14px;
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .coordinateRow.aeronautical{
+            span.react-numeric-input{
+                width: 100%
+            }
+            .input-group-addon {
+                padding: 4px 6px;
+            }
+        }
+    }
+    .mapstore-annotations-info-viewer-items {
+        padding: 8px;
+        height: ~'calc(100% - 50px)';
+        overflow: auto;
+        .geometries-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .geometry-card {
+            .shadow-soft;
+            display: flex;
+            position: relative;
+            width: 100%;
+            align-items: center;
+            margin: 8px 0;
+            padding-right: 8px;
+
+            &:hover {
+                cursor: pointer;
+                transition: 0.3s box-shadow;
+                .shadow-far;
+                z-index: 1;
+            }
+
+            &.ms-selected {
+                border-width: 2px;
+                border-style: solid;
+            }
+
+            .geometry-card-preview {
+                width: @square-btn-medium-size;
+                height: @square-btn-medium-size;
+                margin: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .glyphicon {
+                    font-size: (@square-btn-medium-size * 2 / 3);
+                }
+            }
+
+            .geometry-card-label {
+                flex: 1;
+                font-size: @annotation-feature-font-size;
+                overflow: hidden;
+                padding: 8px;
+
+                > * {
+                    font-size: @annotation-feature-font-size;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow-x: hidden;
+                    width: 150px;
+                }
+
+                > * * {
+                    display: inline-block;
+                    margin: 0;
+                }
+            }
+        }
+
+        .mapstore-annotations-info-viewer-item {
+            margin-bottom: 10px;
+            label {
+                font-size: @annotation-feature-font-size;
+            }
+        }
+
+        .mapstore-annotations-info-viewer-description {
+            .quill {
+                max-width: 315px;
+                .ql-toolbar {
+                    font-family: inherit;
+
+                    .ql-header {
+                        border-radius: 4px;
+                        border-width: 1px;
+                        border-style: solid;
+                    }
+
+                    .ql-formats {
+                        margin-right: 5px;
+                        margin-bottom: 5px;
+                    }
+
+                    button {
+                        border-width: 1px;
+                        border-style: solid;
+                        border-radius: 4px;
+                        margin-right: 4px;
+                    }
+                }
+
+                .ql-container {
+                    min-height: 130px;
+                    font-family: @font-family-base;
+                    font-size: @annotation-feature-font-size;
+                }
+            }
+        }
+    }
+    .mapstore-annotations-info-viewer-expanded {
+        flex: 1;
+        order: 2;
+        border-right-width: 1px;
+        border-right-style: solid;
+        display: flex;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        .tab-container{
+            flex: 1;
+            padding-top: 8px;
+            padding-right: 8px;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .ms-style-manager {
+            .Select *{
+                font-size: inherit !important;
+            }
+            .Select-value {
+                padding-left: 5px !important;
+            }
+            .Select-menu-outer {
+                z-index: 2 !important;
+            }
+            .ms-marker-preview canvas {
+                width: 100%;
+            }
+            .input-group-addon {
+                padding: 5px;
+            }
+            .Select-arrow-zone .Select-arrow {
+                margin-right: -10px;
+            }
+        }
+        .panel-title {
+            font-size: inherit;
+        }
+        .panel {
+            border-width: 1px;
+            border-style: solid;
+        }
+        .ms-dragg:first-child {
+            padding-top: 8px;
+            border-top-width: 1px;
+            border-top-style: solid;
+        }
+        .ms-dragg + .ms-dragg {
+            padding-top: 8px;
+            margin-top: 8px;
+            border-top-width: 1px;
+            border-top-style: solid;
+        }
+        .ms-dragg:last-child {
+            padding-bottom: 8px;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+        }
+        .coordinateRow.decimal {
+            input {
+                min-width: 100px;
+            }
+        }
+        .coordinateRow {
+            padding-left: 2px;
+            margin: 0;
+            .coordinate {
+                display: flex;
+                flex: 1;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                > div {
+                    flex: 1;
+                    padding: 4px 0;
+                    margin-right: 2px;
+                }
+                .input-group {
+                    width: 100%;
+                    .form-group{
+                        input#intl-numeric{
+                            float: unset;
+                        }
+                        .minutes, .degrees {
+                            min-width: 45px;
+                            flex: 1;
+                            display: flex;
+                        }
+                        .seconds {
+                            display: flex;
+                            flex: 1;
+                            min-width: 80px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.mapstore-annotations-info-viewer-buttons {
+    min-height: 45px;
+    box-shadow: none;
+}
+
+// ANNOTATIONS ADDITION -- JAN 2018
+.ms-annotations-panel {
+    .form-group {
+        margin: 0;
+    }
+    .ms-header {
+        z-index: 10;
+        .row {
+            margin-bottom: 15px;
+            &:first-child {
+                padding: 0;
+                display: flex;
+                .col-xs-2 {
+                    padding: 0;
+                    width: auto;
+                }
+                .col-xs-8 {
+                    flex: 1;
+                    padding: 0;
+                    align-self: center;
+                    text-align: center;
+                }
+            }
+        }
+        .shadow-soft;
+
+        .ms-style-header {
+            padding: 0;
+            .col-xs-12 {
+                padding: 0;
+            }
+        }
+    }
+
+    .ms2-border-layout-content {
+        .row {
+            &:first-child {
+                margin-top: 8px;
+            }
+            margin-bottom: 8px;
+        }
+        .noTopMargin.row {
+            &:first-child {
+                margin-top: 0px;
+            }
+        }
+
+        .msSideGrid {
+            height: ~'calc(100% - 171px)';
+            overflow: auto;
+            .mapstore-side-preview {
+                display: flex;
+                & > span {
+                    font-size: @icon-size * 2;
+                    margin: auto;
+                }
+            }
+            .mapstore-side-card-desc {
+                height: @square-btn-size;
+                overflow: hidden;
+            }
+        }
+
+        .ms-preview {
+            flex: 1;
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            h4 {
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
+            }
+            .ql-editor {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            .row {
+                &:last-child {
+                    flex: 1;
+                    overflow-y: auto;
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        .ms-edit {
+            flex: 1;
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            .row {
+                &:last-child {
+                    flex: 1;
+                    overflow-y: auto;
+
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+
+                    #ms-ann-description-editor {
+                        flex: 1;
+                        display: flex;
+                        .quill  {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            .ql-container {
+                                flex: 1;
+                                overflow-y: auto;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// TODO MOVE THIS TO A PROEPR LESS FILE
+.ms-thumb-geom {
+    svg {
+        margin: auto;
+    }
+    width: @square-btn-size;
+    height: @square-btn-size;
+}
+
+
+.mapstore-annotations-info-viewer-items .col-xs-6 .btn-group {
+    span button:nth-child(2) {
+        background-color: transparent;
+        cursor: auto;
+    }
+}
+
+.mapstore-annotations-info-viewer .container-fluid .container-fluid .row {
+    .row:hover{
+        cursor: pointer;
+    }
+}
+
+.ms-dragg.ms-below .coordinateRow, .ms-dragg.ms-above .coordinateRow {
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.mapstore-identify-viewer {
+    .mapstore-annotations-info-viewer {
+        .mapstore-annotations-info-viewer-buttons {
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+    }
+    .mapstore-annotations-info-viewer+.mapstore-annotations-info-viewer {
+        .mapstore-annotations-info-viewer-buttons {
+            border-top-width: 1px;
+            border-top-style: solid;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
+    }
+}
+
+.coordinateRow {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    border: 0;
+    font-family: @font-family-monospace;
+    .col-xs-5, .col-xs-1 {
+        padding: 0;
+        float: unset;
+        width: auto;
+        margin: 0 4px;
+    }
+    .form-group {
+        width: 100%;
+    }
+    .col-xs-5 {
+        flex: 1;
+        .form-group {
+            margin: 4px 0;
+        }
+    }
+    input {
+        font-size: @font-size-small;
+    }
+    .glyphicon-menu-hamburger {
+        width: 10px;
+        overflow: hidden;
+    }
+}
+
+.ms-dragging {
+    opacity: 0.5;
+}
+
+.ms-over {
+    box-sizing: border-box;
+    .coordinateRow {
+        border-width: 1px;
+        border-style: solid;
+    }
+    &.ms-above {
+        .coordinateRow {
+            border-bottom-width: 2px;
+        }
+
+    }
+    &.ms-below {
+        .coordinateRow {
+            border-top-width: 2px;
+        }
+    }
+    &.ms-dragging {
+        .coordinateRow {
+            border-width: 1px;
+            border-style: solid;
+        }
+    }
+}
+
+.modal-dialog-container{
+    border: none;
+}
+
+.label-texts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 600;
+    padding: 10px;
+}
+
+.marker-container{
+    .marker-icon, .marker-shape {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 4px 0;
+    }
+}

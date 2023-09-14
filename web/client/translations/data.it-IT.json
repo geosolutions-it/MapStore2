@@ -30,6 +30,7 @@
         "expand": "Espandi",
         "Links": "Collegamenti",
         "Forbidden": "Vietato",
+        "height": "Altezza",
         "layerNameChangeError": {
             "title": "Errore di modifica del nome",
             "message": "Il livello non è stato ricaricato con un nome modificato"
@@ -1245,7 +1246,10 @@
             },
             "geometryError": "La configurazione della geometria non è valida",
             "annotationSaveGeometryError": "Il salvataggio è disabilitato a causa di una geometria non valida, correggilo per salvare l'annotazione",
-            "resolveAllErrors": "Si prega di correggere gli errori prima di modificare altre geometrie"
+            "resolveAllErrors": "Si prega di correggere gli errori prima di modificare altre geometrie",
+            "selectAnnotationFeature": "Selezionare una geometria annotation nel pannello di sinistra per editare coordinate e stili",
+            "properties": "Proprietà",
+            "deactivatedMapInteraction": "Le interazioni di disegno delle annotazioni sono state disattivate perchè il '{pluginName}' plugin è stato attivato. Chiudere il '{pluginName}' plugin per attivare le interazioni di disegno delle annotazioni"
         },
         "user":{
             "login": "Login",

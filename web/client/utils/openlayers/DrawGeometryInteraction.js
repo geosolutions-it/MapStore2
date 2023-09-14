@@ -21,7 +21,7 @@ import CircleStyle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import tinycolor from 'tinycolor2';
-
+import { never } from 'ol/events/condition';
 import { transformLineToArcs, reproject } from '../CoordinatesUtils';
 import { generateEditingStyle } from '../DrawUtils';
 
@@ -228,6 +228,7 @@ class OpenLayersDrawGeometryInteraction {
             type: geometryType,
             maxPoints: coordinatesLength,
             stopClick: true,
+            freehandCondition: never,
             geometryFunction: geometryFunction ? geometryFunction({ map: this._map, onDrawing }) : undefined,
             style: (olFeature) => {
                 const olGeometryType = olFeature.getGeometry().getType();

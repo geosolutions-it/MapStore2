@@ -30,7 +30,7 @@ import {
     getGeometryGlyphInfo,
     getGeometryType,
     validateCoords
-} from '../../../utils/AnnotationsUtils';
+} from '../../../utils/LegacyAnnotationsUtils';
 import { MEASURE_TYPE } from '../../../utils/MeasurementUtils';
 import { handleExpression } from '../../../utils/PluginsUtils';
 import Message from '../../I18N/Message';
@@ -40,7 +40,7 @@ import Toolbar from '../../misc/toolbar/Toolbar';
 import Manager from '../../style/vector/Manager';
 import defaultConfig from './AnnotationsConfig';
 import FeaturesList from './FeaturesList';
-import GeometryEditor from './GeometryEditor';
+import GeometryEditor from '../../../plugins/Annotations/components/GeometryEditor';
 import { getApi } from '../../../api/userPersistedStorage';
 
 /**
