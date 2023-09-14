@@ -103,7 +103,7 @@ function getThumbnailFromDc(dc, options) {
     }
     return thumbURL;
 }
-function getCatalogRecord3DTiles(record) {
+function getCatalogRecord3DTiles(record, metadata) {
     const dc = record.dc;
     let bbox = {
         crs: record.boundingBox.crs,
@@ -120,7 +120,8 @@ function getCatalogRecord3DTiles(record) {
         bbox,
         format: dc && dc.format || "",
         references: [],
-        catalogType: 'csw'
+        catalogType: 'csw',
+        metadata
     };
 }
 
@@ -233,7 +234,7 @@ export const getCatalogRecords = (records, options, locales) => {
                 : undefined;
             let catRecord;
             if (dc && dc.format === "3D Tiles") {
-                catRecord = getCatalogRecord3DTiles(record);
+                catRecord = getCatalogRecord3DTiles(record, metadata);
 
             } else {
                 catRecord = {
