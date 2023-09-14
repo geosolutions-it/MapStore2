@@ -1020,6 +1020,17 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
     return [lc[0], lc[1], uc[0], uc[1]];
 };
 
+export const getCesiumBoundFromOWS = (extent) => {
+    let [minx, miny, maxx, maxy] = extent ? [...extent] : [-180, -90, 180, 90];
+    return {
+        minx,
+        miny,
+        maxx,
+        maxy
+    };
+
+};
+
 
 /**
  * helper use to create a geojson Feature with a Polygon geometry

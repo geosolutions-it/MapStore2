@@ -302,7 +302,34 @@ describe('Test correctness of the CSW catalog APIs', () => {
         }, {});
         expect(records.length).toBe(1);
     });
-
+    it('csw with DC URI 3D Tiles', ()=>{
+        const records = [{
+            boundingBox: {
+                "extent": [
+                    43.718, 11.348, 43.84, 11.145
+                ],
+                "crs": "EPSG:4326"
+            },
+            dc: {
+                URI: {
+                    TYPE_NAME: "DC_1_1.URI",
+                    description: "access point",
+                    protocol: "https://registry.geodati.gov.it/metadata-codelist/ProtocolValue/www-download",
+                    value: "https://3d-layers.s3.eu-central-1.amazonaws.com/3dtiles/centro_storico_di_firenze_-_brass_city_model/tileset.json"
+                }, format: '3D Tiles', identifier: "test:20230829_test_3dtile_01", title: "3D Tiles layer for test"
+            }
+        }];
+        const catalogRecords = getCatalogRecords({records});
+        expect(catalogRecords.length).toBe(1);
+        expect(catalogRecords[0].bbox).toEqual({ bounds: {minx: 43.718, miny: 11.348, maxx: 43.84, maxy: 11.145}, crs: 'EPSG:4326' });
+        expect(catalogRecords[0].url).toEqual("https://3d-layers.s3.eu-central-1.amazonaws.com/3dtiles/centro_storico_di_firenze_-_brass_city_model/tileset.json");
+        expect(catalogRecords[0].identifier).toEqual("test:20230829_test_3dtile_01");
+        expect(catalogRecords[0].title).toEqual("3D Tiles layer for test");
+        expect(catalogRecords[0].serviceType).toEqual("3dtiles");
+        expect(catalogRecords[0].isValid).toEqual(true);
+        expect(catalogRecords[0].format).toEqual('3D Tiles');
+        expect(catalogRecords[0].catalogType).toEqual('csw');
+    });
     it('csw with DC references', () => {
         const records = getCatalogRecords({
             records: [{

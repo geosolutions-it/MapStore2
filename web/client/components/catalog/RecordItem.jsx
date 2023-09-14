@@ -218,6 +218,7 @@ class RecordItem extends React.Component {
                 caption={
                     <div>
                         {!this.props.hideIdentifier && <div className="identifier">{record && record.identifier}</div>}
+                        {record?.serviceType === '3dtiles' && record?.catalogType === 'csw' && <small className="text-info">(3D tile layer)</small>}
                         <div>{!record.isValid && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}</div>
                         {!this.props.hideExpand &&
                                 <div

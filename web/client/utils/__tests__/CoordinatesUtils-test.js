@@ -37,7 +37,7 @@ import {
     makeNumericEPSG,
     getPolygonFromCircle,
     checkIfLayerFitsExtentForProjection,
-    getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian
+    getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian, getCesiumBoundFromOWS
 } from '../CoordinatesUtils';
 
 import Proj4js from 'proj4';
@@ -765,6 +765,18 @@ describe('CoordinatesUtils', () => {
         const lc = [4, 2];
         const uc = [2, 4];
         expect(makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
+    });
+    it('getCesiumBoundFromOWS passing extent', ()=>{
+        const extent = [1, 1, 5, 5];
+        expect(getCesiumBoundFromOWS(extent)).toEqual({
+            minx: 1, miny: 1, maxx: 5, maxy: 5
+        });
+    });
+    it('getCesiumBoundFromOWS passing extent', ()=>{
+        const extent = undefined;
+        expect(getCesiumBoundFromOWS(extent)).toEqual({
+            minx: -180, miny: -90, maxx: 180, maxy: 90
+        });
     });
     it('extractCrsFromURN #1', () => {
         const urn = 'urn:ogc:def:crs:EPSG:6.6:4326';

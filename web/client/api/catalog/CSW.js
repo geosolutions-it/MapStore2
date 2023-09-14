@@ -9,6 +9,7 @@
 import { head, isString, includes, castArray, sortBy, uniq } from 'lodash';
 import { getLayerFromRecord as getLayerFromWMSRecord } from './WMS';
 import { getMessageById } from '../../utils/LocaleUtils';
+import { getCesiumBoundFromOWS } from '../../utils/CoordinatesUtils';
 import { extractEsriReferences, extractOGCServicesReferences } from '../../utils/CatalogUtils';
 import CSW, { getLayerReferenceFromDc } from '../CSW';
 import {
@@ -101,6 +102,26 @@ function getThumbnailFromDc(dc, options) {
         }
     }
     return thumbURL;
+}
+function getCatalogRecord3DTiles(record) {
+    const dc = record.dc;
+    let bbox = {
+        crs: record.boundingBox.crs,
+        bounds: getCesiumBoundFromOWS(record.boundingBox.extent)
+    };
+    return {
+        serviceType: '3dtiles',
+        isValid: true,
+        description: dc && isString(dc.abstract) && dc.abstract || '',
+        title: dc && isString(dc.title) && dc.title || '',
+        identifier: dc && isString(dc.identifier) && dc.identifier || '',
+        url: dc?.URI?.value || "",
+        thumbnail: null,
+        bbox,
+        format: dc && dc.format || "",
+        references: [],
+        catalogType: 'csw'
+    };
 }
 
 const recordToLayer = (record, options) => {
@@ -210,22 +231,29 @@ export const getCatalogRecords = (records, options, locales) => {
             const ogcReferences = layerType && layerType !== 'esri'
                 ? parsedReferences[layerType]
                 : undefined;
-            return {
-                serviceType: 'csw',
-                layerType,
-                isValid: !!layerType,
-                boundingBox: record.boundingBox,
-                description: dc && isString(dc.abstract) && dc.abstract || '',
-                layerOptions: options && options.layerOptions || {},
-                identifier: dc && isString(dc.identifier) && dc.identifier || '',
-                references: references,
-                thumbnail: getThumbnailFromDc(dc, options),
-                title: dc && isString(dc.title) && dc.title || '',
-                tags: dc && dc.tags || '',
-                metadata,
-                capabilities: record.capabilities,
-                ogcReferences
-            };
+            let catRecord;
+            if (dc && dc.format === "3D Tiles") {
+                catRecord = getCatalogRecord3DTiles(record);
+
+            } else {
+                catRecord = {
+                    serviceType: 'csw',
+                    layerType,
+                    isValid: !!layerType,
+                    boundingBox: record.boundingBox,
+                    description: dc && isString(dc.abstract) && dc.abstract || '',
+                    layerOptions: options && options.layerOptions || {},
+                    identifier: dc && isString(dc.identifier) && dc.identifier || '',
+                    references: references,
+                    thumbnail: getThumbnailFromDc(dc, options),
+                    title: dc && isString(dc.title) && dc.title || '',
+                    tags: dc && dc.tags || '',
+                    metadata,
+                    capabilities: record.capabilities,
+                    ogcReferences
+                };
+            }
+            return catRecord;
         });
     }
     return null;
