@@ -53,7 +53,7 @@ const UserMenu = ({
     return initialized ? (
         <React.Fragment>
             <DropDown
-
+                dropup
                 id="longitudinal-tool"
                 className={className}
                 pullRight
