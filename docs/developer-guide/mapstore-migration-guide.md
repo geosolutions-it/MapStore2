@@ -25,7 +25,9 @@ This is a list of things to check if you want to update from a previous version 
 ### MapFish Print update
 
 MapFish Print library has been updated to be aligned to the one used by GeoServer and be able to build with Java 11. (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)
-For this reason, you may have to update your project by changing he version of the mapfish-print dependency:
+For this reason, if you are using mapfish-print, you may have to update your project
+
+- by changing he version of the mapfish-print dependency:
 
 ```diff
                 <!-- mapfish-print -->
@@ -35,6 +37,19 @@ For this reason, you may have to update your project by changing he version of t
 -                    <version>geosolutions-2.3-SNAPSHOT</version>
 +                    <version>2.3-SNAPSHOT</version>
 
+```
+
+And adding the repository where this library is hosted in the `repositories` section of the same `pom.xml`
+
+```diff
+        <repository>
+            <id>osgeo-snapshot</id>
+            <name>Open Source Geospatial Foundation Repository</name>
+            <url>https://repo.osgeo.org/repository/snapshot/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
 ```
 
 This library is actually hosted on [https://maven.geo-solutions.it/](https://maven.geo-solutions.it/).
