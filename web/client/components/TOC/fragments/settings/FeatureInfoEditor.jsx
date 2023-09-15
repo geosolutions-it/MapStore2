@@ -97,8 +97,10 @@ const FeatureInfoEditor = ({
                             const images = document.querySelectorAll(".DraftEditor-editorContainer img");
                             const newHTML = draftJSEditorStateToHtml(newEditorState);
                             for (const img of images) {
+                                // an alt value is needed for firefox to show the ::after and ::after pseudo elements
+                                // empty space to avoid to show the alt value
+                                // this is a different behaviour from chrome
                                 img.alt = " ";
-                                // an alt value iss needed for firefox to show the ::after and ::after pseudo elements, empty space because otherwise it would show the alt value, very different behaviour from chrome
 
                             }
                             if (newHTML !== previousHTML) {

@@ -91,7 +91,7 @@
             "groupProperties": "Proprietà del gruppo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
-            "guideText": "Sono supportati Url o URI Base64. Inserisci $\\{properties.TUO_ATTRIBUTO\\} per ottenere il valore da un'attributo di una feature",
+            "guideText": "Nell'URL dell'immagine puoi utilizzare del testo come $\\{properties.YOUR_ATTRIBUTE\\}  per rendere parametrico l'URL, a seconda degli attributi della feature. Supporta sia URL che \"URI dati\" codificati in base64",
             "imageNotFound": "Questa immagine può necessitare di una richiesta informazioni sulle feature per essere renderizzata correttamente",
             "legenderror": "Legenda non disponibile",
             "editCustomFormat": "Edita formato",
