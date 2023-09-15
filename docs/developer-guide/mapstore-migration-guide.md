@@ -24,8 +24,8 @@ This is a list of things to check if you want to update from a previous version 
 
 ### MapFish Print update
 
-MapFish Print library has been updated to be aligned to the one used by GeoServer and be able to build with Java 11. (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)
-For this reason, if you are using mapfish-print, you may have to update your project
+**MapFish Print** library has been updated to be aligned to the one used by GeoServer and be able to build with Java 11. (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)
+For this reason, if you are using mapfish-print, you have to update your project
 
 - by changing he version of the mapfish-print dependency:
 
@@ -39,7 +39,7 @@ For this reason, if you are using mapfish-print, you may have to update your pro
 
 ```
 
-And adding the repository where this library is hosted in the `repositories` section of the same `pom.xml`
+And adding the repository where this library is hosted in the `repositories` section of the same `pom.xml` (usually in `web` folder of a project)
 
 ```diff
         <repository>
