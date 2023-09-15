@@ -651,7 +651,7 @@
     },
     {
       "name": "GeoProcessing",
-      "glyph": "layer-info",
+      "glyph": "globe-settings",
       "title": "plugins.GeoProcessing.title",
       "description": "plugins.GeoProcessing.description",
       "dependencies": [

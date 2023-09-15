@@ -42,7 +42,7 @@ const PanelComp = ({
                 bsStyle="primary"
                 title={<Message msgId="GeoProcessing.title"/>}
                 onClose={onClose}
-                glyph="layer-info"
+                glyph="globe-settings"
                 style={dockStyle}
             >
                 <BorderLayout

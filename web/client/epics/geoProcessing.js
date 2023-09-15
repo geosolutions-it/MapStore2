@@ -39,7 +39,10 @@ import {
     GPT_INTERSECTION_HIGHLIGHT_ID,
     GPT_SOURCE_HIGHLIGHT_ID,
     GPT_CONTROL_NAME,
+    GPT_INTERSECTION_GROUP_ID,
+    GPT_BUFFER_GROUP_ID,
 
+    setSelectedLayerType,
     CHECK_WPS_AVAILABILITY,
     checkingIntersectionWPSAvailability,
     checkingWPSAvailability,
@@ -74,7 +77,8 @@ import {addLayer, addGroup, UPDATE_NODE} from '../actions/layers';
 import {
     zoomToExtent,
     CLICK_ON_MAP,
-    registerEventListener
+    registerEventListener,
+    unRegisterEventListener
 } from "../actions/map";
 import {
     hideMapinfoMarker,
@@ -421,7 +425,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                 executeBufferProcess$(wktGeom, feature4326)
                     .switchMap((geom) => {
                         const groups = groupsSelector(state);
-                        const groupExist = find(groups, ({id}) => id === "buffered.layers");
+                        const groupExist = find(groups, ({id}) => id === GPT_BUFFER_GROUP_ID);
                         const features = [
                             reprojectGeoJson({
                                 id: 0,
@@ -433,7 +437,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                             features,
                             type: "FeatureCollection"
                         });
-                        return (!groupExist ? Rx.Observable.of( addGroup("Buffered layers", null, {id: "buffered.layers"}, true)) : Rx.Observable.empty())
+                        return (!groupExist ? Rx.Observable.of( addGroup("Buffered layers", null, {id: GPT_BUFFER_GROUP_ID}, true)) : Rx.Observable.empty())
                             .concat(
                                 Rx.Observable.of(
                                     increaseBufferedCounter(),
@@ -443,7 +447,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                                         name: "Buffer Layer " + counter,
                                         title: "Buffer Layer " + counter,
                                         visibility: true,
-                                        group: "buffered.layers",
+                                        group: GPT_BUFFER_GROUP_ID,
                                         bbox: {
                                             crs: "EPSG:4326",
                                             bounds: {
@@ -560,6 +564,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         const sourceFeature = sourceFeatureSelector(state);
         const executeOptions = {};
         const intersectionFeature = intersectionFeatureSelector(state);
+        const counter = intersectedLayersCounterSelector(state);
         let sourceFC$;
         let intersectionFC$;
         if (isEmpty(sourceFeature)) {
@@ -589,7 +594,6 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         }
         return Rx.Observable.forkJoin(sourceFC$, intersectionFC$)
             .switchMap(([firstGeom, secondGeom]) => {
-                const counter = intersectedLayersCounterSelector(state);
 
                 const executeProcess$ = executeProcess(
                     layerUrl,
@@ -611,9 +615,9 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                 const intersection$ = executeProcess$
                     .switchMap((featureCollection) => {
                         const groups = groupsSelector(state);
-                        const groupExist = find(groups, ({id}) => id === "intersection.layers");
+                        const groupExist = find(groups, (g) => g.id === GPT_INTERSECTION_GROUP_ID);
                         const extent = getGeoJSONExtent(featureCollection);
-                        return (!groupExist ? Rx.Observable.of( addGroup("Intersected Layers", null, {id: "intersection.layer"}, true)) : Rx.Observable.empty())
+                        return (!groupExist ? Rx.Observable.of( addGroup("Intersected Layers", null, {id: GPT_INTERSECTION_GROUP_ID}, true)) : Rx.Observable.empty())
                             .concat(
                                 Rx.Observable.of(
                                     increaseIntersectedCounter(),
@@ -621,7 +625,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                                         id: uuidV1(),
                                         type: "vector",
                                         name: "Intersection Layer " + counter,
-                                        group: "intersection.layer",
+                                        group: GPT_INTERSECTION_GROUP_ID,
                                         title: "Intersection Layer " + counter,
                                         visibility: true,
                                         features: featureCollection.features,
@@ -706,13 +710,23 @@ export const toggleHighlightLayersOnOpenCloseGPTEpic = (action$, store) => actio
                         ...bufferLayer.options,
                         visibility: isGPTEnabled ? showHighlightLayers : false
                     }
-                )
-            ) : Rx.Observable.empty();
+                ),
+                unRegisterEventListener('click', GPT_CONTROL_NAME),
+                ...(!isGPTEnabled ? [changeMapInfoState(true), setSelectedLayerType("")] : [])
+            ) : Rx.Observable.of(
+                unRegisterEventListener('click', GPT_CONTROL_NAME),
+                ...(!isGPTEnabled ? [changeMapInfoState(true), setSelectedLayerType("")] : [])
+            );
         }
         // INTERSECTION enabled any
-        return Rx.Observable.of(mergeOptionsByOwner("gpt", {
-            visibility: isGPTEnabled ? showHighlightLayers : false
-        }));
+        return Rx.Observable.of(
+            mergeOptionsByOwner("gpt", {
+                visibility: isGPTEnabled ? showHighlightLayers : false
+            })
+        ).concat(
+            Rx.Observable.of(unRegisterEventListener('click', GPT_CONTROL_NAME)),
+            ...(!isGPTEnabled ? [changeMapInfoState(true), setSelectedLayerType("")] : [])
+        );
     });
 
 /**

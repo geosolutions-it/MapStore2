@@ -62,7 +62,7 @@ const GeoProcessing = createPlugin(
                 doNotHide: true,
                 tooltip: "GeoProcessing.tooltip.siderBarBtn",
                 text: <Message msgId="GeoProcessing.title" />,
-                icon: <Glyphicon glyph="layer-info" />,
+                icon: <Glyphicon glyph="globe-settings" />,
                 action: toggleControl.bind(null, 'GeoProcessing', null),
                 priority: 10,
                 toggle: true

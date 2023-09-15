@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 import { createSelector } from 'reselect';
 
+import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import SwitchButton from '../../components/misc/switch/SwitchButton';
 import Message from '../../components/I18N/Message';
 import FormControl from '../../components/misc/DebouncedFormControl';
@@ -41,6 +42,8 @@ import {
     runningProcessSelector,
     showHighlightLayersSelector
 } from '../../selectors/geoProcessing';
+import tooltip from '../../components/misc/enhancers/tooltip';
+const Addon = tooltip(InputGroup.Addon);
 
 const Buffer = ({
     areAllWPSAvailableForSourceLayer,
@@ -145,7 +148,13 @@ const Buffer = ({
                             value={quadrantSegments}
                             onChange={handleOnChangeBufferQuadrantSegments}
                         />
-
+                        <Addon>
+                            <InfoPopover
+                                bsStyle={"info"}
+                                placement="left"
+                                text={<Message msgId={"GeoProcessing.quadrantSegmentsTooltip"}/>}
+                            />
+                        </Addon>
                     </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -154,17 +163,27 @@ const Buffer = ({
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
-                    <Select
-                        disabled={runningProcess}
-                        clearable
-                        value={capStyle}
-                        noResultsText={<Message msgId="GeoProcessing.noMatchedStyle" />}
-                        onChange={handleOnChangeBufferCapStyle}
-                        options={[
-                            {value: "Round", label: <Message msgId="GeoProcessing.round" />},
-                            {value: "Flat", label: <Message msgId="GeoProcessing.flat" />},
-                            {value: "Square", label: <Message msgId="GeoProcessing.square" />}
-                        ]} />
+                    <InputGroup>
+                        <Select
+                            disabled={runningProcess}
+                            clearable
+                            value={capStyle}
+                            noResultsText={<Message msgId="GeoProcessing.noMatchedStyle" />}
+                            onChange={handleOnChangeBufferCapStyle}
+                            options={[
+                                {value: "Round", label: <Message msgId="GeoProcessing.round" />},
+                                {value: "Flat", label: <Message msgId="GeoProcessing.flat" />},
+                                {value: "Square", label: <Message msgId="GeoProcessing.square" />}
+                            ]}
+                        />
+                        <Addon>
+                            <InfoPopover
+                                bsStyle={"info"}
+                                placement="left"
+                                text={<Message msgId={"GeoProcessing.capStyleTooltip"}/>}
+                            />
+                        </Addon>
+                    </InputGroup>
                 </FormGroup>
             </SwitchPanel>
             <FormGroup className="highlight">

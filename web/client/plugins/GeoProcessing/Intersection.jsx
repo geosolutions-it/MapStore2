@@ -17,6 +17,7 @@ import Select from 'react-select';
 import { createSelector } from 'reselect';
 
 import SwitchButton from '../../components/misc/switch/SwitchButton';
+import InfoPopover from '../../components/widgets/widget/InfoPopover';
 import Message from '../../components/I18N/Message';
 import FormControl from '../../components/misc/DebouncedFormControl';
 import SwitchPanel from '../../components/misc/switch/SwitchPanel';
@@ -49,6 +50,8 @@ import {
     sourceFeatureSelector,
     intersectionFeatureSelector
 } from '../../selectors/geoProcessing';
+import tooltip from '../../components/misc/enhancers/tooltip';
+const Addon = tooltip(InputGroup.Addon);
 
 const Intersection = ({
     areAllWPSAvailableForIntersectionLayer,
@@ -131,6 +134,13 @@ const Intersection = ({
                             value={firstAttributeToRetain}
                             onChange={handleOnChangeFirstAttributeToRetain}
                         />
+                        <Addon>
+                            <InfoPopover
+                                placement="left"
+                                bsStyle={"info"}
+                                text={<Message msgId={"GeoProcessing.firstAttributeToRetainTooltip"}/>}
+                            />
+                        </Addon>
                     </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -146,6 +156,13 @@ const Intersection = ({
                             value={secondAttributeToRetain}
                             onChange={handleOnChangeSecondAttributeToRetain}
                         />
+                        <Addon>
+                            <InfoPopover
+                                placement="left"
+                                bsStyle={"info"}
+                                text={<Message msgId={"GeoProcessing.secondAttributeToRetainTooltip"}/>}
+                            />
+                        </Addon>
                     </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -154,18 +171,27 @@ const Intersection = ({
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
-                    <Select
-                        disabled={runningProcess}
-                        clearable
-                        value={intersectionMode}
-                        noResultsText={<Message msgId="GeoProcessing.noMatchedMode" />}
-                        onChange={handleOnChangeIntersectionMode}
-                        options={[
-                            {value: "INTERSECTION", label: <Message msgId="GeoProcessing.INTERSECTION" />},
-                            {value: "FIRST", label: <Message msgId="GeoProcessing.FIRST" />},
-                            {value: "SECOND", label: <Message msgId="GeoProcessing.SECOND" />}
-                        ]}
-                    />
+                    <InputGroup>
+                        <Select
+                            disabled={runningProcess}
+                            clearable
+                            value={intersectionMode}
+                            noResultsText={<Message msgId="GeoProcessing.noMatchedMode" />}
+                            onChange={handleOnChangeIntersectionMode}
+                            options={[
+                                {value: "INTERSECTION", label: <Message msgId="GeoProcessing.INTERSECTION" />},
+                                {value: "FIRST", label: <Message msgId="GeoProcessing.FIRST" />},
+                                {value: "SECOND", label: <Message msgId="GeoProcessing.SECOND" />}
+                            ]}
+                        />
+                        <Addon>
+                            <InfoPopover
+                                placement="left"
+                                bsStyle={"info"}
+                                text={<Message msgId={"GeoProcessing.intersectionModeTooltip"}/>}
+                            />
+                        </Addon>
+                    </InputGroup>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
@@ -173,16 +199,25 @@ const Intersection = ({
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
-                    <Select
-                        disabled={runningProcess}
-                        clearable={false}
-                        value={percentagesEnabled}
-                        onChange={handleOnChangePercentagesEnabled}
-                        options={[
-                            {value: "true", label: <Message msgId="GeoProcessing.true" />},
-                            {value: "false", label: <Message msgId="GeoProcessing.false" />}
-                        ]}
-                    />
+                    <InputGroup>
+                        <Select
+                            disabled={runningProcess}
+                            clearable={false}
+                            value={percentagesEnabled}
+                            onChange={handleOnChangePercentagesEnabled}
+                            options={[
+                                {value: "true", label: <Message msgId="GeoProcessing.true" />},
+                                {value: "false", label: <Message msgId="GeoProcessing.false" />}
+                            ]}
+                        />
+                        <Addon>
+                            <InfoPopover
+                                placement="left"
+                                bsStyle={"info"}
+                                text={<Message msgId={"GeoProcessing.percentagesEnabledTooltip"}/>}
+                            />
+                        </Addon>
+                    </InputGroup>
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel>
@@ -190,16 +225,25 @@ const Intersection = ({
                     </ControlLabel>
                 </FormGroup>
                 <FormGroup>
-                    <Select
-                        disabled={runningProcess}
-                        clearable={false}
-                        value={areasEnabled}
-                        onChange={handleOnChangeAreasEnabled}
-                        options={[
-                            {value: "true", label: <Message msgId="GeoProcessing.true" />},
-                            {value: "false", label: <Message msgId="GeoProcessing.false" />}
-                        ]}
-                    />
+                    <InputGroup>
+                        <Select
+                            disabled={runningProcess}
+                            clearable={false}
+                            value={areasEnabled}
+                            onChange={handleOnChangeAreasEnabled}
+                            options={[
+                                {value: "true", label: <Message msgId="GeoProcessing.true" />},
+                                {value: "false", label: <Message msgId="GeoProcessing.false" />}
+                            ]}
+                        />
+                        <Addon>
+                            <InfoPopover
+                                placement="left"
+                                bsStyle={"info"}
+                                text={<Message msgId={"GeoProcessing.areasEnabledTooltip"}/>}
+                            />
+                        </Addon>
+                    </InputGroup>
                 </FormGroup>
             </SwitchPanel>
             <FormGroup className="highlight">
