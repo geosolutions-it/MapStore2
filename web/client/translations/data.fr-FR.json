@@ -3884,7 +3884,7 @@
           "noMatchedFeature": "Aucune caractéristique ne correspond au filtre actuel",
           "intersectionLayer": "Couche d'intersection",
           "intersectionFeature": "Caractéristique d'intersection",
-          "advancedSettingsTooltip": "Réglages avancés",
+          "advancedSettings": "Réglages avancés",
           "quadrantSegments": "quadrantSegments",
           "quadrantSegmentsTooltip": "Segments du quadrant",
           "capStyle": "capStyle",
