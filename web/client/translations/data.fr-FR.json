@@ -30,6 +30,7 @@
         "expand": "étendre",
         "Links": "Liens",
         "Forbidden": "Interdit",
+        "height": "Hauteur",
         "layerNameChangeError": {
             "title": "Erreur de changement de nom",
             "message": "Échec du rechargement de la couche avec un nom modifié"
@@ -1243,7 +1244,10 @@
             },
             "geometryError": "La configuration de la géométrie n'est pas valide",
             "annotationSaveGeometryError": "L'enregistrement est désactivé en raison d'une géométrie non valide, veuillez le corriger pour enregistrer l'annotation",
-            "resolveAllErrors": "Veuillez corriger les erreurs de validation avant de modifier d'autres géométries"
+            "resolveAllErrors": "Veuillez corriger les erreurs de validation avant de modifier d'autres géométries",
+            "selectAnnotationFeature": "Sélectionnez une entité d'annotation sur le panneau de gauche pour modifier les coordonnées et les styles",
+            "properties": "Propriétés",
+            "deactivatedMapInteraction": "Les interactions de dessin d'annotations ont été désactivées car le plugin '{pluginName}' a été activé. Veuillez fermer le plugin '{pluginName}' pour activer les interactions de dessin d'annotations"
         },
         "user": {
             "login": "Connexion",
@@ -2494,7 +2498,23 @@
             "startPoint": "Point de départ",
             "endPoint": "Point final",
             "line": "Ligne",
-            "geodesicLine": "Ligne géodésique"
+            "geodesicLine": "Ligne géodésique",
+            "geodesic": "Géodésique",
+            "outlineStyle": "Style de contour",
+            "strokeStyle": "Style de trait",
+            "anchor": "Point d'ancrage",
+            "addCircleRule": "Ajouter une règle de cercle",
+            "left": "Gauche",
+            "right": "Droit",
+            "topLeft": "En haut à gauche",
+            "top": "Haut",
+            "topRight": "En haut à droite",
+            "bottomLeft": "En bas à gauche",
+            "bottom": "En bas",
+            "bottomRight": "En bas à droite",
+            "glyph": "Glyphe",
+            "marker": "Marqueur",
+            "filterByName": "Filtrer par nom..."
         },
         "playback": {
             "settings": {

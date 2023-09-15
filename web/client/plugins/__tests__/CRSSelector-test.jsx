@@ -192,10 +192,7 @@ describe('CRSSelector Plugin', () => {
     it('CRSSelector is not rendered when Annotations Editing is enabled', () => {
         const { Plugin } = getPluginForTest(CRSSelectorPlugin, {
             annotations: {
-                editing: {
-                    type: "FeatureCollection",
-                    features: []
-                }
+                editing: true
             },
             map: {
                 projection: "EPSG:900913"

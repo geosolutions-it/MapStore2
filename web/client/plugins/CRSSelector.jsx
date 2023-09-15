@@ -21,7 +21,8 @@ import Message from '../components/I18N/Message';
 import CrsSelectorMenu from '../components/mapcontrols/crsselectormenu/CrsSelectorMenu';
 import tooltip from '../components/misc/enhancers/tooltip';
 import crsselectorReducers from '../reducers/crsselector';
-import { editingSelector } from '../selectors/annotations';
+import annotationsReducers from './Annotations/reducers/annotations';
+import { editingSelector } from '../plugins/Annotations/selectors/annotations';
 import { measureSelector, printSelector, queryPanelSelector } from '../selectors/controls';
 import { crsInputValueSelector } from '../selectors/crsselector';
 import { modeSelector } from '../selectors/featuregrid';
@@ -199,6 +200,9 @@ export default {
             priority: 1
         }
     }),
-    reducers: {crsselector: crsselectorReducers},
+    reducers: {
+        crsselector: crsselectorReducers,
+        annotations: annotationsReducers
+    },
     epics: {}
 };

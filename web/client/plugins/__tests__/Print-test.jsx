@@ -441,4 +441,45 @@ describe('Print Plugin', () => {
             }
         });
     });
+
+    it("test configuration with not round zoom level", (done) => {
+        const actions = {
+            onPrint: () => {}
+        };
+        let spy = expect.spyOn(actions, "onPrint");
+        getPrintPlugin({
+            layers: [
+                {visibility: true, type: "osm"},
+                {id: "test", url: "/test", name: "test", type: "wms", visibility: true, maxResolution: 500000}
+            ],
+            projection: "EPSG:4326",
+            state: {
+                ...initialState,
+                map: {
+                    ...initialState.map,
+                    zoom: 5.1
+                }
+            }
+        }).then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin
+                    pluginCfg={{
+                        onPrint: actions.onPrint
+                    }}
+                    defaultBackground={["osm", "empty"]}
+                />, document.getElementById("container"));
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                ReactTestUtils.Simulate.click(submit);
+                setTimeout(() => {
+                    expect(spy.calls.length).toBe(1);
+                    expect(spy.calls[0].arguments[1].layers.length).toBe(1);
+                    expect(spy.calls[0].arguments[1].layers[0].layers).toEqual(["test"]);
+                    done();
+                }, 0);
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
 });

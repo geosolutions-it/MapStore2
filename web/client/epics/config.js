@@ -7,12 +7,13 @@
  */
 import { Observable } from 'rxjs';
 import axios from '../libs/ajax';
-import { get, merge, isNaN } from 'lodash';
+import { get, merge, isNaN, find } from 'lodash';
 import {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
     MAP_CONFIG_LOADED,
     LOAD_MAP_INFO,
+    MAP_INFO_LOADED,
     configureMap,
     configureError,
     mapInfoLoadStart,
@@ -23,12 +24,14 @@ import {
 } from '../actions/config';
 import {zoomToExtent} from '../actions/map';
 import Persistence from '../api/persistence';
+import GeoStoreApi from '../api/GeoStoreDAO';
 import { isLoggedIn, userSelector } from '../selectors/security';
-import { projectionDefsSelector } from '../selectors/map';
+import { mapIdSelector, projectionDefsSelector } from '../selectors/map';
 import {loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, saveMapConfig} from '../actions/usersession';
+import { detailsLoaded, openDetailsPanel } from '../actions/details';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
-
+import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
 
 const prepareMapConfiguration = (data, override, state) => {
     const queryParamsMap = getRequestParameterValue('map', state);
@@ -169,3 +172,43 @@ export const loadMapInfoEpic = action$ =>
                 .catch((e) => Observable.of(mapInfoLoadError(mapId, e)))
                 .startWith(mapInfoLoadStart(mapId))
         );
+
+/**
+ * Incerpt MAP_INFO_LOADED and load detail resource linked to the map
+ * Epic is placed here to better intercept and load details info,
+ * when loading context with map that has a linked resource
+ * and to avoid race condition when loading plugins and map configuration
+ * @memberof epics.config
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ * @return {external:Observable}
+ */
+export const storeDetailsInfoEpic = (action$, store) =>
+    action$.ofType(MAP_INFO_LOADED)
+        .switchMap(() => {
+            const mapId = mapIdSelector(store.getState());
+            const isTutorialRunning = store.getState()?.tutorial?.run;
+            return !mapId
+                ? Observable.empty()
+                : Observable.fromPromise(
+                    GeoStoreApi.getResourceAttributes(mapId)
+                ).switchMap((attributes) => {
+                    let details = find(attributes, {name: 'details'});
+                    const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
+                    let detailsSettings = {};
+                    if (!details || details.value === EMPTY_RESOURCE_VALUE) {
+                        return Observable.empty();
+                    }
+
+                    try {
+                        detailsSettings = JSON.parse(detailsSettingsAttribute.value);
+                    } catch (e) {
+                        detailsSettings = {};
+                    }
+
+                    return Observable.of(
+                        detailsLoaded(mapId, details.value, detailsSettings),
+                        ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
+                    );
+                });
+        });

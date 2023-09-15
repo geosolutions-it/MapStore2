@@ -30,6 +30,7 @@
         "expand": "Expand",
         "Links": "Links",
         "Forbidden": "Forbidden",
+        "height": "Height",
         "layerNameChangeError": {
             "title": "Name change error",
             "message": "The layer failed to reload with a changed name"
@@ -1173,7 +1174,7 @@
             "empty": "No annotations yet, click on [+] to add annotations",
             "add": "New",
             "filter": "Filter annotations...",
-            "undo": "Are you sure you want to abandon the annotation editing session?",
+            "undo": "Are you sure you want to abandon the annotation editing session? Invalid features will be removed after closing",
             "titleUndoGeom": "The geometry has changed",
             "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",
             "confirmGeom": "Confirm",
@@ -1243,7 +1244,10 @@
             },
             "geometryError": "Geometry configuration is invalid",
             "annotationSaveGeometryError": "Saving is disabled due to invalid geometry, please fix it to save the annotation",
-            "resolveAllErrors": "Please fix any validation errors before editing other geometries"
+            "resolveAllErrors": "Please fix any validation errors before editing other geometries",
+            "selectAnnotationFeature": "Select an annotation feature on the left panel to edit coordinates and styles",
+            "properties": "Properties",
+            "deactivatedMapInteraction": "The annotation drawing interactions has been deactivated because the '{pluginName}' plugin has been activated. Please close the '{pluginName}' plugin to activate the annotations drawing interactions"
         },
         "user":{
             "login": "Login",
@@ -2504,7 +2508,23 @@
             "startPoint": "Start point",
             "endPoint": "End point",
             "line": "Line",
-            "geodesicLine": "Geodesic line"
+            "geodesicLine": "Geodesic line",
+            "geodesic": "Geodesic",
+            "outlineStyle": "Outline style",
+            "strokeStyle": "Stroke style",
+            "anchor": "Anchor point",
+            "addCircleRule": "Add circle rule",
+            "left": "Left",
+            "right": "Right",
+            "topLeft": "Top left",
+            "top": "Top",
+            "topRight": "Top right",
+            "bottomLeft": "Bottom left",
+            "bottom": "Bottom",
+            "bottomRight": "Bottom right",
+            "glyph": "Glyph",
+            "marker": "Marker",
+            "filterByName": "Filter by name..."
         },
         "playback": {
             "settings": {

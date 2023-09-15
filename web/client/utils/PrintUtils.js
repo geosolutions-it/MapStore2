@@ -11,7 +11,6 @@ import { reproject, getUnits, reprojectGeoJson, normalizeSRS } from './Coordinat
 import {addAuthenticationParameter} from './SecurityUtils';
 import { calculateExtent, getGoogleMercatorScales, getResolutionsForProjection, getScales, reprojectZoom } from './MapUtils';
 import { optionsToVendorParams } from './VendorParamsUtils';
-import { annotationsToPrint } from './AnnotationsUtils';
 import { colorToHexStr } from './ColorUtils';
 import { getLayerConfig } from './TileConfigProvider';
 import { extractValidBaseURL } from './TileProviderUtils';
@@ -45,10 +44,6 @@ const printStyleParser = new PrintStyleParser();
 export const getGeomType = function(layer) {
     return layer.features && layer.features[0] && layer.features[0].geometry ? layer.features[0].geometry.type :
         layer.features && layer.features[0].features && layer.features[0].style && layer.features[0].style.type ? layer.features[0].style.type : undefined;
-};
-
-export const isAnnotationLayer = (layer) => {
-    return layer.id === "annotations" || layer.name === "Measurements";
 };
 
 /**
@@ -351,6 +346,9 @@ export function resetDefaultPrintingService() {
  * @example
  * // add a transformer to append a new property to the spec
  * addTransformer("mytransform", (state, spec) => ({...spec, newprop: state.print.myprop}))
+ *
+ * If you need to use addTransformer in an extension, use action ADD_PRINT_TRANSFORMER from print module
+ * Otherwise, the let userTransformerChain are copy to your extension and not override the reference in the print module of MapStore2 framework
  */
 export function addTransformer(name, transformer, position) {
     userTransformerChain = addOrReplaceTransformers(userTransformerChain, [{name, transformer, position}]);
@@ -595,11 +593,9 @@ export const specCreators = {
             },
             geoJson: reprojectGeoJson({
                 type: "FeatureCollection",
-                features: (isAnnotationLayer(layer) || !layer.style)
-                    ? annotationsToPrint(layer.features)
-                    : layer?.style?.format === 'geostyler' && layer?.style?.body
-                        ? printStyleParser.writeStyle(layer.style.body, true)({ layer, spec })
-                        : layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
+                features: layer?.style?.format === 'geostyler' && layer?.style?.body
+                    ? printStyleParser.writeStyle(layer.style.body, true)({ layer, spec })
+                    : layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
             },
             "EPSG:4326",
             spec.projection)

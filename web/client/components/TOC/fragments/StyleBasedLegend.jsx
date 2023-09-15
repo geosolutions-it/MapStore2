@@ -9,6 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MarkIcon from './MarkIcon';
 import { Glyphicon } from 'react-bootstrap';
+import { parseSymbolizerExpressions } from '../../../utils/styleparser/StyleParserUtils';
 
 function StyleBasedLegend({ style }) {
     const renderIcon = (symbolizer) => {
@@ -25,7 +26,7 @@ function StyleBasedLegend({ style }) {
             fillOpacity,
             image,
             rotate
-        } = symbolizer;
+        } = parseSymbolizerExpressions(symbolizer, { properties: {} });
         switch (symbolizer.kind) {
         case 'Line':
             let displayWidth = width;
@@ -50,6 +51,16 @@ function StyleBasedLegend({ style }) {
                 <path d="M 1 1 L 1 49 L 49 49 L 49 1 L 1 1"
                     fill={color}
                     opacity={fillOpacity}
+                    stroke={outlineColor}
+                    strokeWidth={outlineWidth}
+                    strokeOpacity={outlineOpacity}
+                />
+            </svg>);
+        case 'Circle':
+            return (<svg viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="25"
+                    fill={color}
+                    opacity={opacity}
                     stroke={outlineColor}
                     strokeWidth={outlineWidth}
                     strokeOpacity={outlineOpacity}

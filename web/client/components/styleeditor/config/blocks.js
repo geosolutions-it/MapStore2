@@ -57,6 +57,54 @@ const pointGeometryTransformation = () => ({
     })
 });
 
+const anchorProperty = () => ({
+    anchor: property.select({
+        label: 'styleeditor.anchor',
+        key: 'anchor',
+        setValue: (value) => {
+            return value ? value : 'center';
+        },
+        getOptions: () => [
+            {
+                value: 'top-left',
+                labelId: 'styleeditor.topLeft'
+            },
+            {
+                value: 'top',
+                labelId: 'styleeditor.top'
+            },
+            {
+                value: 'top-right',
+                labelId: 'styleeditor.topRight'
+            },
+            {
+                value: 'left',
+                labelId: 'styleeditor.left'
+            },
+            {
+                value: 'center',
+                labelId: 'styleeditor.center'
+            },
+            {
+                value: 'right',
+                labelId: 'styleeditor.right'
+            },
+            {
+                value: 'bottom-left',
+                labelId: 'styleeditor.bottomLeft'
+            },
+            {
+                value: 'bottom',
+                labelId: 'styleeditor.bottom'
+            },
+            {
+                value: 'bottom-right',
+                labelId: 'styleeditor.bottomRight'
+            }
+        ]
+    })
+});
+
 const lineGeometryTransformation = () => ({
     msGeometry: property.select({
         label: 'styleeditor.geometryTransformation',
@@ -153,7 +201,16 @@ const getBlocks = ({
             glyph: '1-point',
             glyphAdd: '1-point-add',
             tooltipAddId: 'styleeditor.addMarkRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             params: {
                 wellKnownName: property.shape({
                     label: 'styleeditor.shape'
@@ -172,6 +229,12 @@ const getBlocks = ({
                 strokeWidth: property.width({
                     key: 'strokeWidth',
                     label: 'styleeditor.strokeWidth'
+                }),
+                ...(!shouldHideVectorStyleOptions && {
+                    strokeDasharray: property.dasharray({
+                        label: 'styleeditor.strokeStyle',
+                        key: 'strokeDasharray'
+                    })
                 }),
                 radius: property.size({
                     key: 'radius',
@@ -204,7 +267,16 @@ const getBlocks = ({
             glyph: 'point',
             glyphAdd: 'point-plus',
             tooltipAddId: 'styleeditor.addIconRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             hideMenu: true,
             params: {
                 image: property.image({
@@ -215,7 +287,7 @@ const getBlocks = ({
                     label: 'styleeditor.format',
                     key: 'format',
                     isVisible: (value, { image } = {}, format) => {
-                        return format !== 'css'
+                        return value?.name !== 'msMarkerIcon' && format !== 'css'
                         && !isObject(image)
                         && !['png', 'jpg', 'svg', 'gif', 'jpeg'].includes(image.split('.').pop());
                     },
@@ -231,6 +303,7 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
+                ...(!shouldHideVectorStyleOptions && anchorProperty()),
                 ...(!shouldHideVectorStyleOptions && point3dStyleOptions({
                     isDisabled: () => !enable3dStyleOptions
                 })),
@@ -343,6 +416,12 @@ const getBlocks = ({
                     key: 'outlineWidth',
                     label: 'styleeditor.outlineWidth'
                 }),
+                ...(!shouldHideVectorStyleOptions && {
+                    outlineDasharray: property.dasharray({
+                        label: 'styleeditor.outlineStyle',
+                        key: 'outlineDasharray'
+                    })
+                }),
                 ...(!shouldHideVectorStyleOptions && vector3dStyleOptions({
                     label: 'styleeditor.clampOutlineToGround',
                     isDisabled: () => !enable3dStyleOptions
@@ -431,7 +510,16 @@ const getBlocks = ({
             glyphAdd: 'model-plus',
             disableAdd: () => !enable3dStyleOptions,
             tooltipAddId: 'styleeditor.addModelRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             hideMenu: true,
             params: {
                 model: property.model({
@@ -539,6 +627,7 @@ const getBlocks = ({
                     label: 'styleeditor.fontWeight',
                     key: 'fontWeight'
                 }),
+                ...(!shouldHideVectorStyleOptions && anchorProperty()),
                 haloColor: property.color({
                     label: 'styleeditor.haloColor',
                     key: 'haloColor',
@@ -594,6 +683,59 @@ const getBlocks = ({
                 kind: 'Raster',
                 opacity: 1,
                 contrastEnhancement: {}
+            }
+        },
+        Circle: {
+            kind: 'Circle',
+            glyph: '1-circle',
+            glyphAdd: '1-circle-add',
+            tooltipAddId: 'styleeditor.addCircleRule',
+            supportedTypes: [],
+            params: {
+                color: property.color({
+                    key: 'color',
+                    opacityKey: 'opacity',
+                    label: 'styleeditor.color'
+                }),
+                outlineColor: property.color({
+                    key: 'outlineColor',
+                    opacityKey: 'outlineOpacity',
+                    label: 'styleeditor.outlineColor',
+                    stroke: true
+                }),
+                outlineWidth: property.width({
+                    key: 'outlineWidth',
+                    label: 'styleeditor.outlineWidth'
+                }),
+                outlineDasharray: property.dasharray({
+                    label: 'styleeditor.outlineStyle',
+                    key: 'outlineDasharray'
+                }),
+                radius: property.number({
+                    key: 'radius',
+                    label: 'styleeditor.radius',
+                    uom: 'm',
+                    fallbackValue: 0,
+                    maxWidth: 125
+                }),
+                geodesic: property.bool({
+                    key: 'geodesic',
+                    label: 'styleeditor.geodesic'
+                }),
+                ...(!shouldHideVectorStyleOptions && vector3dStyleOptions({
+                    label: 'styleeditor.clampOutlineToGround',
+                    isDisabled: () => !enable3dStyleOptions
+                })),
+                ...(!shouldHideVectorStyleOptions && polygon3dStyleOptions({
+                    isDisabled: (value, properties) => !properties?.msClampToGround || !enable3dStyleOptions
+                }))
+            },
+            defaultProperties: {
+                kind: 'Circle',
+                color: '#dddddd',
+                opacity: 1,
+                outlineColor: '#777777',
+                outlineWidth: 1
             }
         }
     };

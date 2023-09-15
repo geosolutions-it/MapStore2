@@ -25,8 +25,8 @@ import {
 import { warning } from '../actions/notifications';
 import { zoomToExtent } from '../actions/map';
 import { addLayer } from '../actions/layers';
-import { loadAnnotations } from '../actions/annotations';
-import { annotationsLayerSelector } from '../selectors/annotations';
+import { loadAnnotations } from '../plugins/Annotations/actions/annotations';
+import { annotationsLayerSelector } from '../plugins/Annotations/selectors/annotations';
 import { toggleControl } from '../actions/controls';
 import assign from 'object-assign';
 import { Glyphicon } from 'react-bootstrap';

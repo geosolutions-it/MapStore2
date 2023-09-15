@@ -20,7 +20,6 @@ import map from '../../reducers/map';
 import maptype from '../../reducers/maptype';
 import layers from '../../reducers/layers';
 import controls from '../../reducers/controls';
-import annotations from '../../reducers/annotations';
 import context from '../../reducers/context';
 import security from '../../reducers/security';
 import localConfig from "../../reducers/localConfig";
@@ -33,7 +32,6 @@ const rootReducers = {
     layers,
     controls,
     maptype,
-    annotations,
     context,
     security,
     localConfig

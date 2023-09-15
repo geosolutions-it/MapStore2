@@ -300,7 +300,7 @@ export const LPonAddMarkerEpic = (action$) =>
                                             image: defaultIcon,
                                             opacity: 1,
                                             size: 32,
-                                            anchor: [0.5, 1],
+                                            anchor: "bottom",
                                             offset: [0, -16],
                                             rotate: 0,
                                             msBringToFront: true,

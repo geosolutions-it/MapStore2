@@ -23,9 +23,9 @@ describe('Test the MarkerUtils', () => {
         MarkerUtils.extraMarkers.images[1] = old;
     });
     it('extraMarker offsets', () => {
-        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[0], MarkerUtils.extraMarkers.shapes[0])).toEqual([-2, 0]);
-        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[1], MarkerUtils.extraMarkers.shapes[0])).toEqual([-(MarkerUtils.extraMarkers.size[0] + 2), 0]);
-        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[1], MarkerUtils.extraMarkers.shapes[1])).toEqual([-(MarkerUtils.extraMarkers.size[0] + 2), -MarkerUtils.extraMarkers.size[1]]);
+        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[0], MarkerUtils.extraMarkers.shapes[0])).toEqual([-0, -0]);
+        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[1], MarkerUtils.extraMarkers.shapes[0])).toEqual([-(MarkerUtils.extraMarkers.size[0]), 0]);
+        expect(MarkerUtils.extraMarkers.getOffsets(MarkerUtils.extraMarkers.colors[1], MarkerUtils.extraMarkers.shapes[1])).toEqual([-(MarkerUtils.extraMarkers.size[0]), -MarkerUtils.extraMarkers.size[1]]);
     });
 
     it('extraMarker matches', () => {

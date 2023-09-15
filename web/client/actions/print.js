@@ -10,6 +10,7 @@ export const PRINT_CAPABILITIES_ERROR = 'PRINT_CAPABILITIES_ERROR';
 
 export const SET_PRINT_PARAMETER = 'SET_PRINT_PARAMETER';
 export const ADD_PRINT_PARAMETER = 'ADD_PRINT_PARAMETER';
+export const ADD_PRINT_TRANSFORMER = 'ADD_PRINT_TRANSFORMER';
 export const CONFIGURE_PRINT_MAP = 'CONFIGURE_PRINT_MAP';
 export const CHANGE_PRINT_ZOOM_LEVEL = 'CHANGE_PRINT_ZOOM_LEVEL';
 export const CHANGE_MAP_PRINT_PREVIEW = 'CHANGE_MAP_PRINT_PREVIEW';
@@ -111,6 +112,15 @@ export function addPrintParameter(name, value) {
         type: ADD_PRINT_PARAMETER,
         name,
         value
+    };
+}
+
+export function addPrintTransformer(name, transformer, position) {
+    return {
+        type: ADD_PRINT_TRANSFORMER,
+        name,
+        transformer,
+        position
     };
 }
 

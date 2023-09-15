@@ -14,7 +14,7 @@ import OverlayTrigger from '../../misc/OverlayTrigger';
 import cs from 'classnames';
 import Message from '../../I18N/Message';
 import {get} from 'lodash';
-import {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} from '../../../utils/AnnotationsUtils';
+import {DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring, getGeometryGlyphInfo, getGeometryType} from '../../../utils/LegacyAnnotationsUtils';
 
 /**
  * Feature List component for Annotation Viewer.

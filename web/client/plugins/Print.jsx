@@ -22,6 +22,7 @@ import { configurePrintMap, printError, printSubmit, printSubmitting, addPrintPa
 import Message from '../components/I18N/Message';
 import Dialog from '../components/misc/Dialog';
 import printReducers from '../reducers/print';
+import printEpics from '../epics/print';
 import { printSpecificationSelector } from "../selectors/print";
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
@@ -392,9 +393,10 @@ export default {
                     };
                     getPreviewResolution = (zoom, projection) => {
                         const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
+                        const roundZoom = Math.round(zoom);
                         const scale = this.props.useFixedScales
-                            ? getPrintScales(this.props.capabilities)[zoom]
-                            : this.props.scales[zoom];
+                            ? getPrintScales(this.props.capabilities)[roundZoom]
+                            : this.props.scales[roundZoom];
                         return scale / dpu;
                     };
                     getLayout = (props) => {
@@ -692,5 +694,6 @@ export default {
             priority: 2
         }
     }),
-    reducers: {print: printReducers}
+    reducers: {print: printReducers},
+    epics: {...printEpics}
 };

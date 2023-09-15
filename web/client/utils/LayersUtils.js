@@ -21,6 +21,7 @@ import isNil from 'lodash/isNil';
 import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
+import { isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 
 let LayersUtils;
 
@@ -652,6 +653,7 @@ export const saveLayer = (layer) => {
     layer.tileGrids ? { tileGrids: layer.tileGrids } : {},
     layer.tileGridStrategy ? { tileGridStrategy: layer.tileGridStrategy } : {},
     layer.tileGridCacheSupport ? { tileGridCacheSupport: layer.tileGridCacheSupport } : {},
+    isString(layer.rowViewer) ? { rowViewer: layer.rowViewer } : {},
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
     !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {});
 };
@@ -863,6 +865,12 @@ export const hasWFSService = ({type, search = {}} = {}) =>
     type === 'wfs' // pure WFS layer
         || (type === 'wms' && search.type === 'wfs'); // WMS backed by WFS (search)
 
+export const getLayerTypeGlyph = (layer) => {
+    if (isAnnotationLayer(layer)) {
+        return 'comment';
+    }
+    return '';
+};
 
 LayersUtils = {
     getGroupByName,

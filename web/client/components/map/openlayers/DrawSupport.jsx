@@ -25,16 +25,18 @@ import axios from '../../../libs/ajax';
 import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
-import {transformPolygonToCircle, VECTOR, TILE, IMAGE} from '../../../utils/openlayers/DrawSupportUtils';
-import {isCompletePolygon} from '../../../utils/AnnotationsUtils';
+import {transformPolygonToCircle} from '../../../utils/openlayers/DrawSupportUtils';
+import {isCompletePolygon} from '../../../plugins/Annotations/utils/AnnotationsUtils';
 import { parseStyles, getStyle, defaultStyles, getMarkerStyle, getMarkerStyleLegacy } from './VectorStyle';
 
 import {GeoJSON} from 'ol/format';
 import Feature from 'ol/Feature';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
+import ImageLayer from 'ol/layer/Image';
+import TileLayer from 'ol/layer/Tile';
 import Draw from 'ol/interaction/Draw';
-import DrawHole from './hole/DrawHole';
+import DrawHole from '../../../utils/openlayers/hole/DrawHole';
 import { Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, Circle} from 'ol/geom';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import {Style, Stroke, Fill, Text} from 'ol/style';
@@ -471,6 +473,34 @@ export default class DrawSupport extends React.Component {
         }
     }
 
+    createSnapInteraction = ({
+        snapConfig,
+        snappingLayerInstance,
+        mapLayerInstance,
+        layerType
+    }) => {
+        // type is not exposed anymore
+        // we need to compare the layer instances
+        // we cannot read the constructor name because it changes while minified
+        if (mapLayerInstance instanceof VectorLayer) {
+            return new Snap({...snapConfig, source: mapLayerInstance.getSource()});
+        }
+        if ((mapLayerInstance instanceof TileLayer || mapLayerInstance instanceof ImageLayer)
+            && layerType === 'wms') {
+            const source = this.getWMSSnapSource(snappingLayerInstance, snapConfig);
+            this.snapLayer = new VectorLayer({
+                source,
+                style: new Style({
+                    stroke: new Stroke({
+                        color: 'rgba(255,255,0,0)'
+                    })
+                })
+            });
+            this.props.map.addLayer(this.snapLayer);
+            return new Snap({...snapConfig, source});
+        }
+        return null;
+    }
 
     /**
      * Handler that activates snap interaction for snapping layer and draw data.
@@ -483,37 +513,16 @@ export default class DrawSupport extends React.Component {
         if (!snapping) return;
         const mapLayerInstance = this.getLayerInstance(snappingLayerInstance.id);
         const layerType = snappingLayerInstance.type;
-        // type is not exposed anymore
-        // we could take the name from the constructor instead
-        const mapLayerInstanceType = (mapLayerInstance?.constructor?.name);
         this.removeSnapInteraction();
-        if (mapLayerInstance) {
-            switch (mapLayerInstanceType) {
-            case VECTOR:
-                this.snapInteraction = new Snap({...snapConfig, source: mapLayerInstance.getSource()});
-                break;
-            case TILE:
-            case IMAGE:
-                if (layerType === 'wms') {
-                    const source = this.getWMSSnapSource(snappingLayerInstance, snapConfig);
-                    this.snapLayer = new VectorLayer({
-                        source,
-                        style: new Style({
-                            stroke: new Stroke({
-                                color: 'rgba(255,255,0,0)'
-                            })
-                        })
-                    });
-                    this.props.map.addLayer(this.snapLayer);
-                    this.snapInteraction = new Snap({...snapConfig, source});
-                }
-                break;
-            default:
-                break;
-            }
-            if (this.snapInteraction) {
-                this.props.map.addInteraction(this.snapInteraction);
-            }
+        const snapInteraction = this.createSnapInteraction({
+            snapConfig,
+            snappingLayerInstance,
+            mapLayerInstance,
+            layerType
+        });
+        if (snapInteraction) {
+            this.snapInteraction = snapInteraction;
+            this.props.map.addInteraction(this.snapInteraction);
         }
     };
     toMulti = (geometry) => {

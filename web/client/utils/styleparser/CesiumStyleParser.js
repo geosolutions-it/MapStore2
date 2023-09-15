@@ -13,9 +13,12 @@ import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
     drawIcons,
-    getImageIdFromSymbolizer
+    getImageIdFromSymbolizer,
+    parseSymbolizerExpressions
 } from './StyleParserUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
+import EllipseGeometryLibrary from '@cesium/engine/Source/Core/EllipseGeometryLibrary';
+import CylinderGeometryLibrary from '@cesium/engine/Source/Core/CylinderGeometryLibrary';
 
 const getGeometryFunction = geometryFunctionsLibrary.cesium({ Cesium });
 
@@ -282,8 +285,63 @@ const GRAPHIC_KEYS = [
     'wall'
 ];
 
+const anchorToOrigin = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'top':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'top-right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'center':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'bottom-left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    case 'bottom':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    case 'bottom-right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    default:
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    }
+};
+
 const getGraphics = ({
-    symbolizer,
+    symbolizer: _symbolizer,
     images,
     entity,
     globalOpacity,
@@ -291,6 +349,7 @@ const getGraphics = ({
     map,
     sampleTerrain
 }) => {
+    const symbolizer = parseSymbolizerExpressions(_symbolizer, { properties });
     if (symbolizer.kind === 'Mark') {
         modifyPointHeight({ entity, symbolizer, properties });
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
@@ -336,6 +395,7 @@ const getGraphics = ({
                 billboard: new Cesium.BillboardGraphics({
                     image,
                     scale,
+                    ...anchorToOrigin(symbolizer.anchor),
                     pixelOffset: symbolizer.offset ? new Cesium.Cartesian2(symbolizer.offset[0], symbolizer.offset[1]) : null,
                     rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
                     disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
@@ -368,6 +428,7 @@ const getGraphics = ({
                     color: symbolizer.color,
                     opacity: 1 * globalOpacity
                 }),
+                ...anchorToOrigin(symbolizer.anchor),
                 disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
                 heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'],
                 pixelOffset: new Cesium.Cartesian2(symbolizer?.offset?.[0] ?? 0, symbolizer?.offset?.[1] ?? 0),
@@ -485,10 +546,16 @@ const getGraphics = ({
         // this only for the footprint
         if (symbolizer.outlineColor && symbolizer.outlineWidth !== 0) {
             polyline = new Cesium.PolylineGraphics({
-                material: getCesiumColor({
-                    color: symbolizer.outlineColor,
-                    opacity: symbolizer.outlineOpacity * globalOpacity
-                }),
+                material: symbolizer?.outlineDasharray
+                    ? getCesiumDashArray({
+                        color: symbolizer.outlineColor,
+                        opacity: symbolizer.outlineOpacity * globalOpacity,
+                        dasharray: symbolizer.outlineDasharray
+                    })
+                    : getCesiumColor({
+                        color: symbolizer.outlineColor,
+                        opacity: symbolizer.outlineOpacity * globalOpacity
+                    }),
                 width: symbolizer.outlineWidth,
                 positions: entity._msStoredCoordinates.polygon.getValue().positions,
                 clampToGround: symbolizer.msClampToGround,
@@ -504,6 +571,104 @@ const getGraphics = ({
         }
         return Promise.resolve({
             polygon,
+            ...(polyline && { polyline })
+        });
+    }
+    if (symbolizer.kind === 'Circle') {
+
+        const radius = symbolizer.radius;
+        const geodesic = symbolizer.geodesic;
+        const slices = 128;
+        const center = entity.position.getValue(Cesium.JulianDate.now()).clone();
+        let positions;
+        let polyline;
+        let polygon;
+        if (geodesic) {
+            const { outerPositions } = EllipseGeometryLibrary.computeEllipsePositions({
+                granularity: 0.02,
+                semiMajorAxis: radius,
+                semiMinorAxis: radius,
+                rotation: 0,
+                center
+            }, false, true);
+            positions = Cesium.Cartesian3.unpackArray(outerPositions);
+            positions = [...positions, positions[0]];
+        } else {
+            const modelMatrix = Cesium.Matrix4.multiplyByTranslation(
+                Cesium.Transforms.eastNorthUpToFixedFrame(
+                    center
+                ),
+                new Cesium.Cartesian3(0, 0, 0),
+                new Cesium.Matrix4()
+            );
+            positions = CylinderGeometryLibrary.computePositions(0.0, radius, radius, slices, false);
+            positions = Cesium.Cartesian3.unpackArray(positions);
+            positions = [...positions.splice(0, Math.ceil(positions.length / 2))];
+            positions = positions.map((cartesian) =>
+                Cesium.Matrix4.multiplyByPoint(modelMatrix, cartesian, new Cesium.Cartesian3())
+            );
+            positions = [...positions, positions[0]];
+        }
+
+        if (positions) {
+            polygon = new Cesium.PolygonGraphics({
+                material: getCesiumColor({
+                    color: symbolizer.color,
+                    opacity: symbolizer.opacity * globalOpacity
+                }),
+                hierarchy: new Cesium.PolygonHierarchy(positions),
+                ...(geodesic
+                    ? {
+                        perPositionHeight: !symbolizer.msClampToGround,
+                        ...(!symbolizer.msClampToGround ? undefined : {classificationType: symbolizer.msClassificationType === 'terrain' ?
+                            Cesium.ClassificationType.TERRAIN :
+                            symbolizer.msClassificationType === '3d' ?
+                                Cesium.ClassificationType.CESIUM_3D_TILE :
+                                Cesium.ClassificationType.BOTH} ),
+                        arcType: Cesium.ArcType.GEODESIC
+                    }
+                    : {
+                        perPositionHeight: true,
+                        arcType: Cesium.ArcType.NONE
+                    })
+            });
+        }
+
+        // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
+        // this is a workaround to visualize the outline with the correct side
+        // this only for the footprint
+        if (positions && symbolizer.outlineColor && symbolizer.outlineWidth !== 0) {
+            polyline = new Cesium.PolylineGraphics({
+                material: symbolizer?.outlineDasharray
+                    ? getCesiumDashArray({
+                        color: symbolizer.outlineColor,
+                        opacity: symbolizer.outlineOpacity * globalOpacity,
+                        dasharray: symbolizer.outlineDasharray
+                    })
+                    : getCesiumColor({
+                        color: symbolizer.outlineColor,
+                        opacity: symbolizer.outlineOpacity * globalOpacity
+                    }),
+                width: symbolizer.outlineWidth,
+                positions,
+                ...(geodesic
+                    ? {
+                        clampToGround: symbolizer.msClampToGround,
+                        ...(!symbolizer.msClampToGround ? undefined : {classificationType: symbolizer.msClassificationType === 'terrain' ?
+                            Cesium.ClassificationType.TERRAIN :
+                            symbolizer.msClassificationType === '3d' ?
+                                Cesium.ClassificationType.CESIUM_3D_TILE :
+                                Cesium.ClassificationType.BOTH} ),
+                        arcType: Cesium.ArcType.GEODESIC
+                    }
+                    : {
+                        clampToGround: false,
+                        arcType: Cesium.ArcType.NONE
+                    })
+            });
+        }
+        return Promise.resolve({
+            ...(polygon && { polygon }),
             ...(polyline && { polyline })
         });
     }
@@ -556,12 +721,20 @@ function getStyleFuncFromRules({
                     symbolizer.kind === 'Fill' && entity._msStoredCoordinates.polygon
                 );
 
+                const circleGeometrySymbolizers = entitySymbolizers.filter((symbolizer) =>
+                    symbolizer.kind === 'Circle' && entity.position
+                );
+
                 const additionalPointSymbolizers = entitySymbolizers.filter((symbolizer, idx) =>
                     ['Mark', 'Icon', 'Text', 'Model'].includes(symbolizer.kind)
                     && (
                         entity._msStoredCoordinates.polygon
                         || entity._msStoredCoordinates.polyline
-                        || entity.position && idx < pointGeometrySymbolizers.length - 1
+                        || entity.position && (
+                            circleGeometrySymbolizers.length === 0
+                                ? idx < pointGeometrySymbolizers.length - 1
+                                : true
+                        )
                     )
                 );
 
@@ -612,8 +785,10 @@ function getStyleFuncFromRules({
                     }
                     return Promise.resolve(null);
                 };
-
-                const symbolizer = pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
+                // if the circle symbolizer exists it should be prioritize over point symbolizers
+                // point symobolizer will be added as additional entities
+                const symbolizer = circleGeometrySymbolizers[circleGeometrySymbolizers.length - 1]
+                    || pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
                     || polylineGeometrySymbolizers[polylineGeometrySymbolizers.length - 1]
                     || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1];
 
@@ -671,7 +846,10 @@ function getStyleFuncFromRules({
             entity._msGlobalOpacity = undefined;
             return resolve(entity);
         }))
-    );
+    // map.scene.requestRender(); does not work without a setTimeout
+    // it seems there is need of a small delay to correctly request the next map rendering
+    // requestRender is used by layer to update the style
+    ).then((response) => new Promise((resolve) => setTimeout(() => resolve(response))));
 }
 
 class CesiumStyleParser {

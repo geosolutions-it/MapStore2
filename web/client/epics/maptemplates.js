@@ -16,13 +16,13 @@ import { isLoggedIn } from '../selectors/security';
 import { setTemplates, setMapTemplatesLoaded, setTemplateData, setTemplateLoading, CLEAR_MAP_TEMPLATES, OPEN_MAP_TEMPLATES_PANEL,
     MERGE_TEMPLATE, REPLACE_TEMPLATE, SET_ALLOWED_TEMPLATES } from '../actions/maptemplates';
 import {templatesSelector, allTemplatesSelector, isActiveSelector} from '../selectors/maptemplates';
-import { mapSelector } from '../selectors/map';
+import { mapInfoSelector, mapSelector } from '../selectors/map';
 import { layersSelector, groupsSelector } from '../selectors/layers';
 import { backgroundListSelector } from '../selectors/backgroundselector';
 import { textSearchConfigSelector, bookmarkSearchConfigSelector } from '../selectors/searchconfig';
 import { mapOptionsToSaveSelector } from '../selectors/mapsave';
 import {SET_CONTROL_PROPERTY, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
-import { configureMap } from '../actions/config';
+import { configureMap, mapInfoLoaded } from '../actions/config';
 import { wrapStartStop } from '../observables/epics';
 import { toMapConfig } from '../utils/ogc/WMC';
 import {hideMapinfoMarker, purgeMapInfoResults} from "../actions/mapInfo";
@@ -99,6 +99,11 @@ export const mergeTemplateEpic = (action$, store) => action$
         const templates = templatesSelector(state);
         const template = find(templates, t => t.id === id);
 
+        // Preserve original map id when "merging" map template
+        // to load linked resources related to the original resource(map)
+        const originalMapInfo = mapInfoSelector(state);
+        const mapId = originalMapInfo?.id ?? null;
+
         return (template.dataLoaded ? Observable.of(template.data) :
             Observable.defer(() => Api.getData(id))).switchMap(data => {
             if (isObject(data) && data.map !== undefined || isString(data)) {
@@ -115,7 +120,8 @@ export const mergeTemplateEpic = (action$, store) => action$
                 return (isString(data) ? Observable.defer(() => toMapConfig(data, false)) : Observable.of(data))
                     .switchMap(config => Observable.of(
                         ...(!template.dataLoaded ? [setTemplateData(id, data)] : []),
-                        configureMap(cloneDeep(omit(MapUtils.mergeMapConfigs(currentConfig, MapUtils.addRootParentGroup(config, template.name)), 'widgetsConfig')), null)
+                        configureMap(cloneDeep(omit(MapUtils.mergeMapConfigs(currentConfig, MapUtils.addRootParentGroup(config, template.name)), 'widgetsConfig')), mapId),
+                        ...(originalMapInfo ? [mapInfoLoaded({...originalMapInfo}, mapId)] : [])
                     ));
             }
 
@@ -143,6 +149,11 @@ export const replaceTemplateEpic = (action$, store) => action$
         const template = find(templates, t => t.id === id);
         const {zoom, center} = mapSelector(state);
 
+        // Preserve original map id when "replacing" map template
+        // to load linked resources related to the original resource(map)
+        const originalMapInfo = mapInfoSelector(state);
+        const mapId = originalMapInfo?.id ?? null;
+
         return (template.dataLoaded ? Observable.of(template.data) : Observable.defer(() => Api.getData(id)))
             .switchMap(data => (isString(data) ?
                 Observable.defer(() => toMapConfig(data)) :
@@ -159,8 +170,10 @@ export const replaceTemplateEpic = (action$, store) => action$
                                 zoom: config.map.zoom || zoom,
                                 center: config.map.center || center
                             }
-                        }), null, !config.map.zoom && (config.map.bbox || config.map.maxExtent))
-                    ] : []))))
+                        }), mapId, !config.map.zoom && (config.map.bbox || config.map.maxExtent))
+                    ] : []),
+                    ...(originalMapInfo ? [mapInfoLoaded({...originalMapInfo}, mapId)] : [])
+                )))
             .let(wrapStartStop(
                 setTemplateLoading(id, true),
                 setTemplateLoading(id, false),

@@ -9,6 +9,8 @@
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
 import uniqBy from 'lodash/uniqBy';
+import EllipseGeometryLibrary from '@cesium/engine/Source/Core/EllipseGeometryLibrary';
+import CylinderGeometryLibrary from '@cesium/engine/Source/Core/CylinderGeometryLibrary';
 
 /**
  * return a cesium color
@@ -35,10 +37,15 @@ export const createPolylinePrimitive = ({
     depthFailColor,
     depthFailOpacity,
     dashLength,
-    clampToGround
+    clampToGround,
+    allowPicking = false,
+    geodesic,
+    id,
+    modelMatrix
 }) => {
     return new Cesium[clampToGround ? 'GroundPolylinePrimitive' : 'Primitive']({
         geometryInstances: new Cesium.GeometryInstance({
+            id,
             geometry: clampToGround
                 ? new Cesium.GroundPolylineGeometry({
                     positions: [...coordinates],
@@ -47,8 +54,9 @@ export const createPolylinePrimitive = ({
                 : new Cesium.PolylineGeometry({
                     positions: [...coordinates],
                     width,
-                    arcType: Cesium.ArcType.NONE
-                })
+                    arcType: geodesic ? Cesium.ArcType.GEODESIC : Cesium.ArcType.NONE
+                }),
+            modelMatrix
         }),
         appearance: new Cesium.PolylineMaterialAppearance({
             material: !dashLength
@@ -84,7 +92,7 @@ export const createPolylinePrimitive = ({
                     })
             })
         }),
-        allowPicking: false,
+        allowPicking,
         asynchronous: false
     });
 };
@@ -93,17 +101,21 @@ export const createPolylinePrimitive = ({
  * create a polygon primitive
  */
 export const createPolygonPrimitive = ({
+    id,
     coordinates,
     color = '#ff00ffAA',
     opacity = 1.0,
     depthFailColor,
-    depthFailOpacity
+    depthFailOpacity,
+    allowPicking = false,
+    geodesic
 }) => {
     return new Cesium.Primitive({
         geometryInstances: new Cesium.GeometryInstance({
+            id,
             geometry: new Cesium.PolygonGeometry({
                 polygonHierarchy: new Cesium.PolygonHierarchy([...coordinates]),
-                perPositionHeight: true
+                perPositionHeight: !geodesic
             })
         }),
         appearance: new Cesium.MaterialAppearance({
@@ -126,8 +138,211 @@ export const createPolygonPrimitive = ({
                 faceForward: true
             })
         }),
-        allowPicking: false,
+        allowPicking,
         asynchronous: false
+    });
+};
+
+/**
+ * create an ellipse polyline primitive
+ */
+export const createEllipsePolylinePrimitive = ({
+    width = 4,
+    coordinates,
+    color = '#ff00ff',
+    opacity = 1.0,
+    depthFailColor,
+    depthFailOpacity,
+    dashLength,
+    clampToGround,
+    allowPicking = false,
+    id,
+    radius,
+    semiMajorAxis,
+    semiMinorAxis,
+    geodesic
+}) => {
+    const { outerPositions } = EllipseGeometryLibrary.computeEllipsePositions({
+        granularity: 0.02,
+        semiMajorAxis: radius || semiMajorAxis,
+        semiMinorAxis: radius || semiMinorAxis,
+        rotation: 0,
+        center: coordinates
+    }, false, true);
+    const ellipseCoordinates = Cesium.Cartesian3.unpackArray(outerPositions);
+    return createPolylinePrimitive({
+        coordinates: [...ellipseCoordinates, ellipseCoordinates[0]],
+        width,
+        color,
+        opacity,
+        depthFailColor,
+        depthFailOpacity,
+        dashLength,
+        clampToGround,
+        allowPicking,
+        id,
+        geodesic
+    });
+};
+
+/**
+ * create an ellipse primitive
+ */
+export const createEllipsePrimitive = ({
+    id,
+    coordinates,
+    color = '#ff00ffAA',
+    opacity = 1.0,
+    depthFailColor,
+    depthFailOpacity,
+    allowPicking = false,
+    clampToGround,
+    radius,
+    semiMajorAxis,
+    semiMinorAxis
+}) => {
+    return new Cesium[clampToGround ? 'GroundPrimitive' : 'Primitive']({
+        geometryInstances: new Cesium.GeometryInstance({
+            id,
+            geometry: new Cesium.EllipseGeometry({
+                center: coordinates,
+                semiMajorAxis: radius || semiMajorAxis,
+                semiMinorAxis: radius || semiMinorAxis
+            })
+        }),
+        appearance: new Cesium.MaterialAppearance({
+            material: Cesium.Material.fromType('Color', {
+                color: getCesiumColor({
+                    color,
+                    opacity
+                })
+            }),
+            faceForward: true
+        }),
+        ...(depthFailColor && {
+            depthFailAppearance: new Cesium.MaterialAppearance({
+                material: Cesium.Material.fromType('Color', {
+                    color: getCesiumColor({
+                        color: depthFailColor,
+                        opacity: depthFailOpacity
+                    })
+                }),
+                faceForward: true
+            })
+        }),
+        allowPicking,
+        asynchronous: false
+    });
+};
+
+/**
+ * create a cylinder primitive
+ */
+export const createCylinderPrimitive = ({
+    id,
+    coordinates,
+    color = '#ff00ffAA',
+    opacity = 1.0,
+    depthFailColor,
+    depthFailOpacity,
+    allowPicking = false,
+    length,
+    radius,
+    topRadius,
+    bottomRadius
+}) => {
+    return new Cesium.Primitive({
+        geometryInstances: new Cesium.GeometryInstance({
+            id,
+            geometry: new Cesium.CylinderGeometry({
+                length: length ?? 0.1,
+                topRadius: topRadius ?? radius,
+                bottomRadius: bottomRadius ?? radius
+            }),
+            modelMatrix: Cesium.Matrix4.multiplyByTranslation(
+                Cesium.Transforms.eastNorthUpToFixedFrame(
+                    coordinates
+                ),
+                new Cesium.Cartesian3(0, 0, 0),
+                new Cesium.Matrix4()
+            )
+        }),
+        appearance: new Cesium.MaterialAppearance({
+            material: Cesium.Material.fromType('Color', {
+                color: getCesiumColor({
+                    color,
+                    opacity
+                })
+            }),
+            faceForward: true
+        }),
+        ...(depthFailColor && {
+            depthFailAppearance: new Cesium.MaterialAppearance({
+                material: Cesium.Material.fromType('Color', {
+                    color: getCesiumColor({
+                        color: depthFailColor,
+                        opacity: depthFailOpacity
+                    })
+                }),
+                faceForward: true
+            })
+        }),
+        allowPicking,
+        asynchronous: false
+    });
+};
+
+/**
+ * create a cylinder polyline primitive
+ */
+export const createCylinderPolylinePrimitive = ({
+    id,
+    coordinates,
+    color = '#ff00ffAA',
+    opacity = 1.0,
+    depthFailColor,
+    depthFailOpacity,
+    allowPicking = false,
+    length,
+    radius,
+    dashLength,
+    clampToGround,
+    geodesic,
+    width,
+    slices = 128,
+    topRadius,
+    bottomRadius
+}) => {
+    const modelMatrix = Cesium.Matrix4.multiplyByTranslation(
+        Cesium.Transforms.eastNorthUpToFixedFrame(
+            coordinates
+        ),
+        new Cesium.Cartesian3(0, 0, 0),
+        new Cesium.Matrix4()
+    );
+    const positions = CylinderGeometryLibrary.computePositions(
+        length ?? 0.0,
+        topRadius ?? radius,
+        bottomRadius ?? radius,
+        slices,
+        false
+    );
+    const cylinderGeometryCoordinates = Cesium.Cartesian3.unpackArray(positions);
+    return createPolylinePrimitive({
+        coordinates: !length
+            ? [...cylinderGeometryCoordinates.splice(0, Math.ceil(cylinderGeometryCoordinates.length / 2)), cylinderGeometryCoordinates[0]]
+            : cylinderGeometryCoordinates,
+        width,
+        color,
+        opacity,
+        depthFailColor,
+        depthFailOpacity,
+        dashLength,
+        clampToGround,
+        allowPicking,
+        id,
+        geodesic,
+        modelMatrix
     });
 };
 
@@ -154,7 +369,7 @@ export const createCircleMarkerImage = (size, { stroke, strokeWidth = 1, fill = 
     canvas.setAttribute('height', fullSize);
     const ctx = canvas.getContext('2d');
     ctx.beginPath();
-    if (fill) { ctx.fillStyle = '#ffffff'; }
+    if (fill) { ctx.fillStyle = fill; }
     if (stroke) {
         ctx.strokeStyle = stroke;
         ctx.lineWidth = strokeWidth;

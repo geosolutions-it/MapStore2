@@ -68,7 +68,7 @@ class IntlNumberFormControl extends React.Component {
                     allow !== null && e.preventDefault();
                 }}
                 componentClass={"input"}
-                className="form-control"
+                className="form-control intl-numeric"
             />
         );
     }
