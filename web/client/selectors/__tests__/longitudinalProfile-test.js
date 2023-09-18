@@ -11,7 +11,8 @@ import {
     CONTROL_NAME,
     CONTROL_DOCK_NAME,
     CONTROL_PROPERTIES_NAME,
-    LONGITUDINAL_VECTOR_LAYER_ID
+    LONGITUDINAL_VECTOR_LAYER_ID,
+    DEFAULT_NODATA_THRESHOLD
 } from '../../plugins/longitudinalProfile/constants';
 
 import {
@@ -28,6 +29,7 @@ import {
     pointsSelector,
     projectionSelector,
     configSelector,
+    noDataThresholdSelector,
     referentialSelector,
     chartTitleSelector,
     distanceSelector,
@@ -175,6 +177,15 @@ describe('Test longitudinalProfile selectors', () => {
             config: {referential: ""}
         };
         expect(referentialSelector({longitudinalProfile})).toEqual("");
+    });
+    it('noDataThresholdSelector', () => {
+        expect(noDataThresholdSelector({longitudinalProfile: {
+            config: {noDataThreshold: 1234}
+        }})).toEqual(1234);
+
+        expect(noDataThresholdSelector({longitudinalProfile: {
+            config: {}
+        }})).toEqual(DEFAULT_NODATA_THRESHOLD);
     });
     it('chartTitleSelector', () => {
         const longitudinalProfile = {
