@@ -1599,7 +1599,8 @@
             "allowUnsecureLayers": {
               "label": "Permitir capas no seguras",
               "tooltip": "Agregar una capa al mapa con esta opción habilitada obliga a la aplicación a aplicar proxy"
-            }
+            },
+            "3dTileLayerIndicator":"Capa de mosaico 3D"
         },
         "uploader": {
             "filename": "Nombre del fichero",

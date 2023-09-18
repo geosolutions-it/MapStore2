@@ -1598,7 +1598,8 @@
             "helpTooltip": "This option is used to split content across multiple subdomains",
             "addAliasTooltip": "Add alias",
             "removeAliasTooltip": "Remove alias"
-          }
+          },
+          "3dTileLayerIndicator":"3D Tile Layer"
         },
         "uploader": {
             "filename": "File Name",

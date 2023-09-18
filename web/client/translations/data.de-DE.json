@@ -1636,7 +1636,8 @@
           "allowUnsecureLayers": {
               "label": "Nicht sichere Ebenen zulassen",
               "tooltip": "Das Hinzufügen einer Ebene zur Karte mit aktivierter Option zwingt die Anwendung, Proxy anzuwenden"
-          }
+          },
+          "3dTileLayerIndicator":"3D -Fliesenschicht"
         },
         "uploader": {
             "filename": "Dateiname",
