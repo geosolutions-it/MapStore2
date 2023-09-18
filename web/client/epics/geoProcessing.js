@@ -737,6 +737,7 @@ export const toggleHighlightLayersOnOpenCloseGPTEpic = (action$, store) => actio
 export const disableIdentifyGPTEpic = (action$, {getState}) =>
     action$
         .ofType(SET_SELECTED_LAYER_TYPE)
+        .filter(({source}) => !!source)
         .switchMap(({source}) => {
             const state = getState();
             return Rx.Observable.from([
