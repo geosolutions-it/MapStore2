@@ -15,6 +15,11 @@
           "https://gs-stable.geosolutionsgroup.com:443/geoserver",
           "http://gs-stable.geosolutionsgroup.com/geoserver",
           "http://gs-stable.geosolutionsgroup.com:443/geoserver",
+          "http://gs-main.geosolutionsgroup.com/geoserver/",
+          "http://gs-main.geosolutionsgroup.com:443/geoserver/",
+          "https://gs-main.geosolutionsgroup.com/geoserver/",
+          "https://gs-main.geosolutionsgroup.com:443/geoserver/",
+          "https://geoqualif.cnr-france.com/geoserver/",
           "https://tile.googleapis.com"
         ]
     },
@@ -810,12 +815,23 @@
               "containerPosition": "columns"
             }
           },
-          { "name": "QueryPanel",
+          { "name": "QueryPanelWithMap",
             "cfg": {
               "toolsOptions": {
-                "hideCrossLayer": true,
-                "hideSpatialFilter": true
+                "hideCrossLayer": true
               },
+              "spatialPanelExpanded": false,
+              "spatialOperations": [
+                  {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+                  {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+                  {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
+              ],
+              "spatialMethodOptions": [
+                  {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
+                  {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+                  {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+                  {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
+              ],
               "containerPosition": "columns"
             }
           },

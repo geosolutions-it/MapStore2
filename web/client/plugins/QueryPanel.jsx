@@ -76,6 +76,8 @@ import layerFilterReducers from '../reducers/layerFilter';
 import queryReducers from '../reducers/query';
 import queryformReducers from '../reducers/queryform';
 import { isDashboardAvailable } from '../selectors/dashboard';
+// import BaseMap from '../components/map/BaseMap';
+
 import { groupsSelector, selectedLayerLoadingErrorSelector } from '../selectors/layers';
 import { mapSelector } from '../selectors/map';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
@@ -88,8 +90,6 @@ import {
 import { sortLayers, sortUsing, toggleByType } from '../utils/LayersUtils';
 import Message from './locale/Message';
 import {typeNameSelector} from "../selectors/query";
-
-// include application component
 
 
 const onReset = reset.bind(null, "query");
@@ -185,6 +185,7 @@ const SmartQueryForm = connect((state) => {
 
 const tocSelector = createSelector(
     [
+        mapSelector,
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         (state) => state.layers && state.layers.settings,
@@ -196,7 +197,8 @@ const tocSelector = createSelector(
         (state) => state && state.query && state.query.isLayerFilter,
         selectedLayerLoadingErrorSelector,
         typeNameSelector
-    ], (enabled, groups, settings, queryPanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError, selectedLayer) => ({
+    ], (map, enabled, groups, settings, queryPanelEnabled, layoutHeight, dashboardAvailable, appliedFilter, storedFilter, advancedToolbar, loadingError, selectedLayer) => ({
+        map,
         enabled,
         groups,
         settings,
@@ -214,6 +216,7 @@ class QueryPanel extends React.Component {
     static propTypes = {
         id: PropTypes.number,
         buttonContent: PropTypes.node,
+        map: PropTypes.object,
         groups: PropTypes.array,
         settings: PropTypes.object,
         queryPanelEnabled: PropTypes.bool,
@@ -284,10 +287,16 @@ class QueryPanel extends React.Component {
             this.props.onInit();
         }
     }
+    onToggle = () => {
+        if (this.props.advancedToolbar && !isEqual(this.props.appliedFilter, this.props.storedFilter)) {
+            this.setState(() => ({showModal: true}));
+        } else {
+            this.props.onToggleQuery();
+        }
+    }
     getNoBackgroundLayers = (group) => {
         return group.name !== 'background';
     };
-
     renderSidebar = () => {
         return (
             <Sidebar
@@ -295,6 +304,7 @@ class QueryPanel extends React.Component {
                 sidebar={this.renderQueryPanel()}
                 sidebarClassName="query-form-panel-container"
                 touch={false}
+                rootClassName="query-form-root"
                 styles={{
                     sidebar: {
                         ...this.props.layout,
@@ -319,23 +329,6 @@ class QueryPanel extends React.Component {
             </Sidebar>
         );
     };
-    onToggle = () => {
-        if (this.props.advancedToolbar && !isEqual(this.props.appliedFilter, this.props.storedFilter)) {
-            this.setState(() => ({showModal: true}));
-        } else {
-            this.props.onToggleQuery();
-        }
-    }
-    restoreAndClose = () => {
-        this.setState(() => ({showModal: false}));
-        this.props.onRestoreFilter();
-        this.props.onToggleQuery();
-    }
-    storeAndClose = () => {
-        this.setState(() => ({showModal: false}));
-        this.props.onSaveFilter();
-        this.props.onToggleQuery();
-    }
     renderQueryPanel = () => {
         return (<div className="mapstore-query-builder">
             <SmartQueryForm
@@ -353,6 +346,7 @@ class QueryPanel extends React.Component {
                 selectedLayer={this.props.selectedLayer}
                 standardItems={standardItems}
             />
+            <div className="mapstore-query-map"/>
             <Portal>
                 <ResizableModal
                     fade
@@ -385,6 +379,16 @@ class QueryPanel extends React.Component {
 
     render() {
         return this.renderSidebar();
+    }
+    restoreAndClose = () => {
+        this.setState(() => ({showModal: false}));
+        this.props.onRestoreFilter();
+        this.props.onToggleQuery();
+    }
+    storeAndClose = () => {
+        this.setState(() => ({showModal: false}));
+        this.props.onSaveFilter();
+        this.props.onToggleQuery();
     }
 }
 

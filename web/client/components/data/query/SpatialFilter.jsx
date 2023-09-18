@@ -211,15 +211,17 @@ class SpatialFilter extends React.Component {
         </Panel>);
     };
     renderSpatialPanel = (operationRow, drawLabel, selectedOperation) => {
+        const zoneFields = this.renderZoneFields();
+        const roiField = this.props.spatialField.method
+        && this.getMethodFromId(this.props.spatialField.method)
+        && this.getMethodFromId(this.props.spatialField.method).type === "wfsGeocoder"
+            ? this.renderRoiPanel()
+            : null;
         return (
-            <Panel className="spatial-panel">
+            <Panel className="spatial-panel0">
                 {this.props.spatialMethodOptions.length > 1 ? this.renderSpatialHeader() : <span/>}
-                {this.renderZoneFields()}
-                {this.props.spatialField.method
-                     && this.getMethodFromId(this.props.spatialField.method)
-                     && this.getMethodFromId(this.props.spatialField.method).type === "wfsGeocoder"
-                    ? this.renderRoiPanel()
-                    : null}
+                {zoneFields}
+                {roiField}
                 {this.props.spatialOperations.length > 1 ?
                     <Panel>
                         <div>

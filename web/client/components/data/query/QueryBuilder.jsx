@@ -216,7 +216,7 @@ class QueryBuilder extends React.Component {
                 {this.renderItems('layers', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
                 {this.renderItems('end', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
             </BorderLayout>
-            : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
+            : <div className="spinner-panel"style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
     }
 
     filterItem = (target, layerName) => (el) => {

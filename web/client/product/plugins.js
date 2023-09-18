@@ -125,6 +125,7 @@ export const plugins = {
     OmniBarPlugin: toModulePlugin('OmniBar', () => import(/* webpackChunkName: 'plugins/omniBar' */ '../plugins/OmniBar')),
     PlaybackPlugin: toModulePlugin('Playback', () => import(/* webpackChunkName: 'plugins/playback' */ '../plugins/Playback')),
     QueryPanelPlugin: toModulePlugin('QueryPanel', () => import(/* webpackChunkName: 'plugins/queryPanel' */ '../plugins/QueryPanel')),
+    QueryPanelWithMapPlugin: toModulePlugin('QueryPanelWithMap', () => import(/* webpackChunkName: 'plugins/queryPanelWithMap' */ '../plugins/QueryPanelWithMap')),
     RedirectPlugin: toModulePlugin('Redirect', () => import(/* webpackChunkName: 'plugins/redirect' */ '../plugins/Redirect')),
     RedoPlugin: toModulePlugin('Redo', () => import(/* webpackChunkName: 'plugins/history' */ '../plugins/History')),
     SavePlugin: toModulePlugin('Save', () => import(/* webpackChunkName: 'plugins/save' */ '../plugins/Save')),

@@ -24,6 +24,7 @@ export const shareSelector = (state) => get(state, "controls.share.enabled");
 export const measureSelector = (state) => get(state, "controls.measure.enabled");
 export const versionInfoSelector = (state) => get(state, "controls.version.enabled");
 export const queryPanelSelector = (state) => get(state, "controls.queryPanel.enabled");
+export const queryPanelWithMapSelector = (state) => get(state, "controls.queryPanelWithMap.enabled");
 export const printSelector = (state) => get(state, "controls.print.enabled");
 export const wfsDownloadSelector = state => !!get(state, "controls.layerdownload.enabled");
 export const widgetBuilderAvailable = state => get(state, "controls.widgetBuilder.available", false);

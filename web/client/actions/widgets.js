@@ -12,6 +12,7 @@ export const NEW = "WIDGETS:NEW";
 export const EDIT = "WIDGETS:EDIT";
 export const EDIT_NEW = "WIDGETS:EDIT_NEW";
 export const EDITOR_CHANGE = "WIDGETS:EDITOR_CHANGE";
+export const CHANGE_MAP_EDITOR = "WIDGETS:CHANGE_MAP_EDITOR";
 export const EDITOR_SETTING_CHANGE = "WIDGETS:EDITOR_SETTING_CHANGE";
 export const UPDATE = "WIDGETS:UPDATE";
 export const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
@@ -185,6 +186,15 @@ export const onEditorChange = (key, value) => ({
     type: EDITOR_CHANGE,
     key,
     value
+});
+/**
+ * Changes the entry in the widget editor
+  * @param  {object} mapData the new map data
+ * @return {object}       The action of type `WIDGETS:EDITOR_CHANGE` with key and value
+ */
+export const changeMapEditor = (mapData) => ({
+    type: CHANGE_MAP_EDITOR,
+    mapData
 });
 
 /**

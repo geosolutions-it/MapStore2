@@ -1,5 +1,17 @@
+/*
+ * Copyright 2023, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
+
 import Rx from 'rxjs';
 import { endsWith, has, get, includes, isEqual, omit, omitBy } from 'lodash';
+import { LOCATION_CHANGE } from 'connected-react-router';
+import { saveAs } from 'file-saver';
+import converter from 'json-2-csv';
 
 import {
     EXPORT_CSV,
@@ -9,6 +21,7 @@ import {
     WIDGET_SELECTED,
     EDITOR_SETTING_CHANGE,
     onEditorChange,
+    changeMapEditor,
     updateWidgetLayer,
     clearWidgets,
     loadDependencies,
@@ -22,6 +35,7 @@ import {
 } from '../actions/widgets';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
+import { SET_CONTROL_PROPERTY } from '../actions/controls';
 
 import {
     availableDependenciesSelector,
@@ -30,18 +44,18 @@ import {
     getFloatingWidgets,
     getWidgetLayer
 } from '../selectors/widgets';
-
 import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } from '../actions/layers';
+import { zoomToExtent } from '../actions/map';
+
 import { getLayerFromId } from '../selectors/layers';
 import { pathnameSelector } from '../selectors/router';
 import { isDashboardEditing } from '../selectors/dashboard';
 import { MAP_CREATED, SAVING_MAP, MAP_ERROR } from '../actions/maps';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
-import { LOCATION_CHANGE } from 'connected-react-router';
-import { saveAs } from 'file-saver';
 import {downloadCanvasDataURL} from '../utils/FileUtils';
-import converter from 'json-2-csv';
-import { updateDependenciesMapOfMapList } from "../utils/WidgetsUtils";
+
+import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/WidgetsUtils";
+import { transformExtentToArray } from "../utils/CoordinatesUtils";
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
@@ -301,7 +315,39 @@ export const onWidgetCreationFromMap = (action$, store) =>
             const state = store.getState();
             const layer = getWidgetLayer(state);
             if (layer) {
-                observable$ = Rx.Observable.of(onEditorChange('chart-layers', [layer]));
+                observable$ = Rx.Observable.of(
+                    onEditorChange('chart-layers', [layer])
+                );
+            }
+            return observable$;
+        });
+
+
+export const onLayerSelectedEpic = (action$, store) =>
+    action$.ofType(EDITOR_CHANGE)
+        .filter(({key}) => key === 'chart-layers' && isDashboardEditing(store.getState()))
+        .switchMap(() => {
+            let observable$ = Rx.Observable.empty();
+            const state = store.getState();
+            const layer = getWidgetLayer(state);
+            if (layer?.bbox) {
+                observable$ = Rx.Observable.of(
+                    changeMapEditor({
+                        ...DEFAULT_MAP_SETTINGS,
+                        bbox: layer.bbox,
+                        center: {
+                            crs: layer.bbox.crs,
+                            x: (layer.bbox.bounds.maxx + layer.bbox.bounds.minx) / 2,
+                            y: (layer.bbox.bounds.maxy + layer.bbox.bounds.miny) / 2
+                        }
+                    })
+                ).concat(
+                    action$.ofType(SET_CONTROL_PROPERTY)
+                        .filter(({control, property, value}) => control === "queryPanelWithMap" && property === "enabled" && value)
+                        .switchMap(() => {
+                            return Rx.Observable.of(zoomToExtent(transformExtentToArray(layer.bbox.bounds), layer.bbox.crs, 21));
+                        })
+                );
             }
             return observable$;
         });
@@ -315,5 +361,6 @@ export default {
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
     updateDependenciesMapOnMapSwitch,
-    onWidgetCreationFromMap
+    onWidgetCreationFromMap,
+    onLayerSelectedEpic
 };
