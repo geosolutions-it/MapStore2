@@ -91,7 +91,7 @@
             "groupProperties": "Gruppeneigenschaften",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Antwortformat festlegen",
-            "guideText": "In der URL des Bildes können Sie Platzhalter wie $\\{properties.YOUR_ATTRIBUTE\\} verwenden, um die URL abhängig von den Feature-Attributen parametrisch zu machen. Es unterstützt sowohl URLs als auch „Daten-URIs“, die in Base64 codiert sind",
+            "guideText": "In der URL des Bildes können Sie Platzhalter wie $\\{properties.YOUR_ATTRIBUTE\\} verwenden, um die URL abhängig von den Feature-Attributen parametrisch zu machen. Es unterstützt sowohl URLs als auch „Data URI“, die in Base64 codiert sind",
             "imageNotFound": "Für die korrekte Darstellung dieses Bildes ist möglicherweise eine Feature-Info-Anfrage erforderlich",
             "legenderror": "Legende ist nicht verfügbar",
             "editCustomFormat": "Bearbeiten Sie das benutzerdefinierte Format",
