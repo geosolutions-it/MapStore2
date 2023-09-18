@@ -391,10 +391,7 @@
               }
             }
           }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Notifications", "BackgroundSelector", "Swipe", {
-            "name": "Annotations",
-            "cfg": {
-              "measurementAnnotationEdit": false
-            }
+            "name": "Annotations"
           },
             {
               "name": "Share",

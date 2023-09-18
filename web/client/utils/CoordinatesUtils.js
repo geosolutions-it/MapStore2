@@ -1023,7 +1023,7 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
 /**
  * helper use to transform extent to bound object { minx, miny, maxx, maxy }
  * if there is aprovided param extent it will return the default bound object of wgs84
- * @param {extent} extent is an array of 4 ordered coordinates [minx, miny, maxx, maxy]
+ * @param {number[]} extent is an array of 4 ordered coordinates [minx, miny, maxx, maxy]
  */
 export const transformExtentToObj = (extent) => {
     let [minx, miny, maxx, maxy] = extent ? [...extent] : [-180, -90, 180, 90];
