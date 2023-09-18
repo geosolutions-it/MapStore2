@@ -306,7 +306,7 @@ describe('Test correctness of the CSW catalog APIs', () => {
         const records = [{
             boundingBox: {
                 "extent": [
-                    43.718, 11.348, 43.84, 11.145
+                    43.718, 11.1, 43.84, 11.348
                 ],
                 "crs": "EPSG:4326"
             },
@@ -321,7 +321,7 @@ describe('Test correctness of the CSW catalog APIs', () => {
         }];
         const catalogRecords = getCatalogRecords({records});
         expect(catalogRecords.length).toBe(1);
-        expect(catalogRecords[0].bbox).toEqual({ bounds: {minx: 43.718, miny: 11.348, maxx: 43.84, maxy: 11.145}, crs: 'EPSG:4326' });
+        expect(catalogRecords[0].bbox).toEqual({ bounds: {minx: 43.718, miny: 11.1, maxx: 43.84, maxy: 11.348}, crs: 'EPSG:4326' });
         expect(catalogRecords[0].url).toEqual("https://hostname/3dtiles/layername/tileset.json");
         expect(catalogRecords[0].identifier).toEqual("test:layername");
         expect(catalogRecords[0].title).toEqual("3D Tiles layer for test");

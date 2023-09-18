@@ -37,7 +37,7 @@ import {
     makeNumericEPSG,
     getPolygonFromCircle,
     checkIfLayerFitsExtentForProjection,
-    getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian, getCesiumBoundFromOWS
+    getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian, transformExtentToObj
 } from '../CoordinatesUtils';
 
 import Proj4js from 'proj4';
@@ -766,16 +766,19 @@ describe('CoordinatesUtils', () => {
         const uc = [2, 4];
         expect(makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
     });
-    it('getCesiumBoundFromOWS passing extent', ()=>{
-        const extent = [1, 1, 5, 5];
-        expect(getCesiumBoundFromOWS(extent)).toEqual({
-            minx: 1, miny: 1, maxx: 5, maxy: 5
+    describe('test transformExtentToObj to return bound obj', ()=>{
+
+        it('with provided extent ', ()=>{
+            const extent = [1, 1, 5, 5];
+            expect(transformExtentToObj(extent)).toEqual({
+                minx: 1, miny: 1, maxx: 5, maxy: 5
+            });
         });
-    });
-    it('getCesiumBoundFromOWS passing extent', ()=>{
-        const extent = undefined;
-        expect(getCesiumBoundFromOWS(extent)).toEqual({
-            minx: -180, miny: -90, maxx: 180, maxy: 90
+        it('with no extent passed', ()=>{
+            const extent = undefined;
+            expect(transformExtentToObj(extent)).toEqual({
+                minx: -180, miny: -90, maxx: 180, maxy: 90
+            });
         });
     });
     it('extractCrsFromURN #1', () => {

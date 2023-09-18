@@ -9,7 +9,7 @@
 import { head, isString, includes, castArray, sortBy, uniq } from 'lodash';
 import { getLayerFromRecord as getLayerFromWMSRecord } from './WMS';
 import { getMessageById } from '../../utils/LocaleUtils';
-import { getCesiumBoundFromOWS } from '../../utils/CoordinatesUtils';
+import { transformExtentToObj} from '../../utils/CoordinatesUtils';
 import { extractEsriReferences, extractOGCServicesReferences } from '../../utils/CatalogUtils';
 import CSW, { getLayerReferenceFromDc } from '../CSW';
 import {
@@ -107,7 +107,7 @@ function getCatalogRecord3DTiles(record, metadata) {
     const dc = record.dc;
     let bbox = {
         crs: record.boundingBox.crs,
-        bounds: getCesiumBoundFromOWS(record.boundingBox.extent)
+        bounds: transformExtentToObj(record.boundingBox.extent)
     };
     return {
         serviceType: '3dtiles',
