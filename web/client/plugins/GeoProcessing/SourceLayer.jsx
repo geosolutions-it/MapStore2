@@ -171,7 +171,7 @@ Source.propTypes = {
     sourceCurrentPage: PropTypes.number,
     isSourceFeaturesLoading: PropTypes.bool,
     isSourceLayerInvalid: PropTypes.bool,
-    selectedLayerType: PropTypes.bool,
+    selectedLayerType: PropTypes.string,
     sourceLayerId: PropTypes.string,
     onCheckWPSAvailability: PropTypes.func,
     onSetSourceLayerId: PropTypes.func,

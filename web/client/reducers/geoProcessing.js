@@ -42,7 +42,10 @@ import {
     SET_SELECTED_LAYER_TYPE,
     TOGGLE_HIGHLIGHT_LAYERS
 } from '../actions/geoProcessing';
-
+import {
+    RESET_CONTROLS
+} from '../actions/controls';
+import { LOCATION_CHANGE } from 'connected-react-router';
 import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingUtils';
 
 /**
@@ -134,7 +137,7 @@ function geoProcessing( state = {
             }
         };
     }
-    case RESET: {
+    case RESET: case RESET_CONTROLS: case LOCATION_CHANGE: {
         return {
             ...state,
             ...initialState,
@@ -272,7 +275,7 @@ function geoProcessing( state = {
     case SET_SOURCE_LAYER_ID: {
         return {
             ...state,
-            selectedLayerId: action.layerId,
+            selectedLayerId: state.selectedLayerType === "source" ? action.layerId : state.selectedLayerId,
             source: {
                 ...state.source,
                 layerId: action.layerId,
@@ -313,7 +316,7 @@ function geoProcessing( state = {
     case SET_INTERSECTION_LAYER_ID: {
         return {
             ...state,
-            selectedLayerId: action.layerId,
+            selectedLayerId: state.selectedLayerType === "intersection" ? action.layerId : state.selectedLayerId,
             intersection: {
                 ...state.intersection,
                 layerId: action.layerId,

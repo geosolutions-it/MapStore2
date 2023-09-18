@@ -226,7 +226,7 @@ describe('Test Geo Processing Tools reducer', () => {
         const layerId = "id";
         const action = setSourceLayerId(layerId);
         let state = geoProcessing({}, action);
-        expect(state.selectedLayerId).toEqual(layerId);
+        expect(state.selectedLayerId).toEqual(undefined);
         expect(state.source.layerId).toEqual(layerId);
         expect(state.source.features).toEqual([]);
         expect(state.source.feature).toEqual(undefined);
@@ -234,13 +234,14 @@ describe('Test Geo Processing Tools reducer', () => {
 
         state = geoProcessing({
             ...state,
+            selectedLayerId: "old layer",
             source: {
                 features: [{type: "Feature"}],
                 feature: {type: "Feature"},
                 featureId: "ft"
             }
         }, setSourceLayerId("layerId"));
-        expect(state.selectedLayerId).toEqual("layerId");
+        expect(state.selectedLayerId).toEqual("old layer");
         expect(state.source.layerId).toEqual("layerId");
         expect(state.source.features).toEqual([]);
         expect(state.source.features).toEqual([]);
@@ -293,7 +294,7 @@ describe('Test Geo Processing Tools reducer', () => {
         const layerId = "id";
         const action = setIntersectionLayerId(layerId);
         let state = geoProcessing({}, action);
-        expect(state.selectedLayerId).toEqual(layerId);
+        expect(state.selectedLayerId).toEqual(undefined);
         expect(state.intersection.layerId).toEqual(layerId);
         expect(state.intersection.features).toEqual([]);
         expect(state.intersection.feature).toEqual(undefined);
@@ -301,13 +302,14 @@ describe('Test Geo Processing Tools reducer', () => {
 
         state = geoProcessing({
             ...state,
+            selectedLayerId: "old layer",
             intersection: {
                 features: [{type: "Feature"}],
                 feature: {type: "Feature"},
                 featureId: "ft"
             }
         }, setIntersectionLayerId("layerId"));
-        expect(state.selectedLayerId).toEqual("layerId");
+        expect(state.selectedLayerId).toEqual("old layer");
         expect(state.intersection.layerId).toEqual("layerId");
         expect(state.intersection.features).toEqual([]);
         expect(state.intersection.feature).toEqual(undefined);

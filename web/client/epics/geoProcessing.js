@@ -724,8 +724,10 @@ export const toggleHighlightLayersOnOpenCloseGPTEpic = (action$, store) => actio
                 visibility: isGPTEnabled ? showHighlightLayers : false
             })
         ).concat(
-            Rx.Observable.of(unRegisterEventListener('click', GPT_CONTROL_NAME)),
-            ...(!isGPTEnabled ? [changeMapInfoState(true), setSelectedLayerType("")] : [])
+            Rx.Observable.of(
+                unRegisterEventListener('click', GPT_CONTROL_NAME),
+                ...(!isGPTEnabled ? [changeMapInfoState(true), setSelectedLayerType("")] : [])
+            )
         );
     });
 
