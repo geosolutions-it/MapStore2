@@ -91,6 +91,8 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identify response format",
+            "guideText": "In the URL of the image you can use placeholders like $\\{properties.YOUR_ATTRIBUTE\\} to make the URL parametric, depending by the feature attributes. It supports both URLs or \"Data URIs\" encoded in base64",
+            "imageNotFound": "This image may need a feature info request to be rendered correctly",
             "legenderror": "Legend is not available",
             "editCustomFormat": "Edit custom format",
             "exampleOfResponse": "Example",

@@ -91,6 +91,8 @@
             "groupProperties": "Propiedades del grupo",
             "featureInfo": "Información de la capa",
             "featureInfoFormatLbl": "Identificar el formato de respuesta",
+            "guideText": "En la URL de la imagen, puede utilizar marcadores de posición como $\\{properties.YOUR_ATTRIBUTE\\} para hacer que la URL sea paramétrica, según los atributos de la característica. Admite URL o \"Data URI\" codificados en base64",
+            "imageNotFound": "Es posible que esta imagen necesite una solicitud de información de función para renderizarse correctamente",
             "legenderror": "La leyenda no está disponible",
             "editCustomFormat": "Editar formato personalizado",
             "exampleOfResponse": "Ejemplo",

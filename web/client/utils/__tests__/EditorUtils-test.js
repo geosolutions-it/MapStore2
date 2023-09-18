@@ -37,7 +37,7 @@ describe('Test the EditorUtils', () => {
             }
         };
 
-        const expectedResult = '<img src="http://src" alt="alternative" style="height: 128px; width: 128px; display: block; margin: 0 auto 0 auto;" />';
+        const expectedResult = '<img title="http://src" src="http://src" alt="alternative" style="height: 128px; width: 128px; display: block; margin: 0 auto 0 auto;"/>';
         const result = customEntityTransform(entity);
 
         expect(result).toBe(expectedResult);
@@ -54,7 +54,7 @@ describe('Test the EditorUtils', () => {
             }
         };
 
-        const expectedResult = '<img src="http://src" alt="alternative" style="height: 128px; width: 128px; display: block; margin: 0 auto 0 auto;" />';
+        const expectedResult = '<img title="http://src" src="http://src" alt="alternative" style="height: 128px; width: 128px; display: block; margin: 0 auto 0 auto;"/>';
         const result = customEntityTransform(entity);
 
         expect(result).toBe(expectedResult);
@@ -71,7 +71,7 @@ describe('Test the EditorUtils', () => {
             }
         };
 
-        const expectedResult = '<img src="http://src" alt="alternative" style="height: 128px; width: 128px; float: left;" />';
+        const expectedResult = '<img title="http://src" src="http://src" alt="alternative" style="height: 128px; width: 128px; float: left;"/>';
         const result = customEntityTransform(entity);
 
         expect(result).toBe(expectedResult);
@@ -88,7 +88,7 @@ describe('Test the EditorUtils', () => {
             }
         };
 
-        const expectedResult = '<img src="http://src" alt="alternative" style="height: 128px; width: 128px; float: right;" />';
+        const expectedResult = '<img title="http://src" src="http://src" alt="alternative" style="height: 128px; width: 128px; float: right;"/>';
         const result = customEntityTransform(entity);
 
         expect(result).toBe(expectedResult);
