@@ -94,11 +94,11 @@ const UserMenu = ({
                     </ul>
                 </div>
                 <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
-                    <Glyphicon glyph="pencil"/>
+                    <Glyphicon glyph="1-line"/>
                     <Message msgId="longitudinalProfile.title"/>
                 </MenuItem></> :
                 <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
-                    <Glyphicon glyph="pencil"/>
+                    <Glyphicon glyph="1-line"/>
                     <Message msgId="longitudinalProfile.title"/>
                 </MenuItem> }
         </>);
