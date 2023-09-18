@@ -1020,6 +1020,22 @@ export const makeBboxFromOWS = (lcOWS, ucOWS) => {
     return [lc[0], lc[1], uc[0], uc[1]];
 };
 
+/**
+ * helper use to transform the extent array to bound object { minx, miny, maxx, maxy }
+ * if there is no provided param extent it will return the default bound object of wgs84
+ * @param {number[]} extent is an array of 4 ordered coordinates [minx, miny, maxx, maxy]
+ */
+export const transformExtentToObj = (extent) => {
+    let [minx, miny, maxx, maxy] = extent ? [...extent] : [-180, -90, 180, 90];
+    return {
+        minx,
+        miny,
+        maxx,
+        maxy
+    };
+
+};
+
 
 /**
  * helper use to create a geojson Feature with a Polygon geometry

@@ -142,3 +142,8 @@ export const getCapabilities = (url) => {
             return extractCapabilities(data).then((properties) => ({ tileset: data, ...properties }));
         });
 };
+
+/**
+ *  constant of 3D tiles 'format'
+ */
+export const THREE_D_TILES = "3D Tiles";
