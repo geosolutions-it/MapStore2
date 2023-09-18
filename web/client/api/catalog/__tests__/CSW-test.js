@@ -11,6 +11,7 @@ import { map, clone } from 'lodash';
 import {
     getCatalogRecords
 } from '../CSW';
+import { THREE_D_TILES } from '../../ThreeDTiles';
 
 describe('Test correctness of the CSW catalog APIs', () => {
     it('csw empty', () => {
@@ -316,7 +317,7 @@ describe('Test correctness of the CSW catalog APIs', () => {
                     description: "access point",
                     protocol: "https://hostname/ProtocolValue/www-download",
                     value: "https://hostname/3dtiles/layername/tileset.json"
-                }, format: '3D Tiles', identifier: "test:layername", title: "3D Tiles layer for test"
+                }, format: THREE_D_TILES, identifier: "test:layername", title: "3D Tiles layer for test"
             }
         }];
         const catalogRecords = getCatalogRecords({records});

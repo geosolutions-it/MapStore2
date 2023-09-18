@@ -17,7 +17,7 @@ import {
     testService as commonTestService,
     preprocess as commonPreprocess
 } from './common';
-
+import { THREE_D_TILES } from '../ThreeDTiles';
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
 };
@@ -233,7 +233,7 @@ export const getCatalogRecords = (records, options, locales) => {
                 ? parsedReferences[layerType]
                 : undefined;
             let catRecord;
-            if (dc && dc.format === "3D Tiles") {
+            if (dc && dc.format === THREE_D_TILES) {
                 catRecord = getCatalogRecord3DTiles(record, metadata);
 
             } else {
