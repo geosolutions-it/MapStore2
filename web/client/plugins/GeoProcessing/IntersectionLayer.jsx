@@ -74,8 +74,11 @@ const Intersection = ({
     const handleOnChangeIntersectionFeatureId = (sel) => {
         onSetIntersectionFeatureId(sel?.value || "");
     };
+    const isDisableClickSelectFeature = !intersectionLayerId || isIntersectionFeaturesLoading || checkingWPSAvailabilityIntersection;
     const handleOnClickToSelectIntersectionFeature = () => {
-        onSetSelectedLayerType(selectedLayerType === "intersection" ? "" : "intersection");
+        if (!isDisableClickSelectFeature) {
+            onSetSelectedLayerType(selectedLayerType === "intersection" ? "" : "intersection");
+        }
     };
     return (
         <>
@@ -143,7 +146,7 @@ const Intersection = ({
                             className={!intersectionFeatureId ? "text-info" : !isIntersectionLayerInvalid ? "text-success" : "text-danger"}/>}
                     </Addon>
                     <Addon
-                        disabled={!intersectionLayerId || isIntersectionFeaturesLoading || checkingWPSAvailabilityIntersection}
+                        disabled={isDisableClickSelectFeature}
                         onClick={handleOnClickToSelectIntersectionFeature}
                         tooltipId={"GeoProcessing.tooltip.clickToSelectFeature"}
                         tooltipPosition="left"

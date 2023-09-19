@@ -51,8 +51,9 @@ import {
     intersectionFeatureSelector
 } from '../../selectors/geoProcessing';
 import tooltip from '../../components/misc/enhancers/tooltip';
-const Addon = tooltip(InputGroup.Addon);
+import { getMessageById } from '../../utils/LocaleUtils';
 
+const Addon = tooltip(InputGroup.Addon);
 const Intersection = ({
     areAllWPSAvailableForIntersectionLayer,
     areAllWPSAvailableForSourceLayer,
@@ -78,7 +79,7 @@ const Intersection = ({
     onSetIntersectionAreasEnabled,
     onToggleHighlightLayers,
     onRunProcess
-}) => {
+}, {messages}) => {
     const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
     const [showWarning, onShowWarning] = useState(false);
 
@@ -91,21 +92,24 @@ const Intersection = ({
     const handleOnChangeIntersectionMode = (sel) => {
         onSetIntersectionMode(sel?.value || "");
     };
-    const handleOnChangePercentagesEnabled = (val) => {
-        onSetIntersectionPercentagesEnabled(val);
+    const handleOnChangePercentagesEnabled = (sel) => {
+        onSetIntersectionPercentagesEnabled(sel?.value || "");
     };
-    const handleOnChangeAreasEnabled = (val) => {
-        onSetIntersectionAreasEnabled(val);
+    const handleOnChangeAreasEnabled = (sel) => {
+        onSetIntersectionAreasEnabled(sel?.value || "");
     };
     const handleOnToggleHighlightLayers = () => {
         onToggleHighlightLayers();
     };
+    // confirm modal
     const handleConfirmRunProcess = () => {
         if (showHighlightLayers) {
             onToggleHighlightLayers();
         }
-        process.run();
-        onShowWarning(false);
+        process.actions.runProcessConfirm({
+            onShowWarning,
+            onRunProcess
+        });
     };
     const handleCloseWarningModal = () => {
         onShowWarning(false);
@@ -138,7 +142,7 @@ const Intersection = ({
                             <InfoPopover
                                 placement="left"
                                 bsStyle={"info"}
-                                text={<Message msgId={"GeoProcessing.firstAttributeToRetainTooltip"}/>}
+                                text={getMessageById(messages, "GeoProcessing.firstAttributeToRetainTooltip")}
                             />
                         </Addon>
                     </InputGroup>
@@ -160,7 +164,7 @@ const Intersection = ({
                             <InfoPopover
                                 placement="left"
                                 bsStyle={"info"}
-                                text={<Message msgId={"GeoProcessing.secondAttributeToRetainTooltip"}/>}
+                                text={getMessageById(messages, "GeoProcessing.secondAttributeToRetainTooltip")}
                             />
                         </Addon>
                     </InputGroup>
@@ -188,7 +192,7 @@ const Intersection = ({
                             <InfoPopover
                                 placement="left"
                                 bsStyle={"info"}
-                                text={<Message msgId={"GeoProcessing.intersectionModeTooltip"}/>}
+                                text={getMessageById(messages, "GeoProcessing.intersectionModeTooltip")}
                             />
                         </Addon>
                     </InputGroup>
@@ -214,7 +218,7 @@ const Intersection = ({
                             <InfoPopover
                                 placement="left"
                                 bsStyle={"info"}
-                                text={<Message msgId={"GeoProcessing.percentagesEnabledTooltip"}/>}
+                                text={getMessageById(messages, "GeoProcessing.percentagesEnabledTooltip")}
                             />
                         </Addon>
                     </InputGroup>
@@ -240,7 +244,7 @@ const Intersection = ({
                             <InfoPopover
                                 placement="left"
                                 bsStyle={"info"}
-                                text={<Message msgId={"GeoProcessing.areasEnabledTooltip"}/>}
+                                text={getMessageById(messages, "GeoProcessing.areasEnabledTooltip")}
                             />
                         </Addon>
                     </InputGroup>
@@ -270,6 +274,7 @@ const Intersection = ({
                 showHighlightLayers={showHighlightLayers}
                 sourceFeature={sourceFeature}
                 sourceLayerId={sourceLayerId}
+                messages={messages}
                 isIntersectionEnabled={isIntersectionEnabled}
                 {...process.actions}
             />
@@ -284,13 +289,13 @@ const Intersection = ({
 };
 
 Intersection.propTypes = {
-    areasEnabled: PropTypes.bool,
+    areasEnabled: PropTypes.string,
     firstAttributeToRetain: PropTypes.string,
     intersectionMode: PropTypes.string,
     isIntersectionLayerInvalid: PropTypes.bool,
     isSourceLayerInvalid: PropTypes.bool,
     isIntersectionEnabled: PropTypes.bool,
-    percentagesEnabled: PropTypes.bool,
+    percentagesEnabled: PropTypes.string,
     runningProcess: PropTypes.bool,
     process: PropTypes.object,
     sourceLayerId: PropTypes.string,
@@ -379,5 +384,10 @@ const IntersectionConnected = connect(
         onToggleHighlightLayers: toggleHighlightLayers,
         onRunProcess: runProcess
     })(Intersection);
+
+
+Intersection.contextTypes = {
+    messages: PropTypes.object
+};
 
 export default IntersectionConnected;

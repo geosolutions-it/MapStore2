@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
+import isEmpty from 'lodash/isEmpty';
 import {
     GPT_TOOL_BUFFER,
     GPT_TOOL_INTERSECTION
@@ -9,7 +10,7 @@ import Loader from '../../components/misc/Loader';
 import Message from '../../components/I18N/Message';
 import Button from '../../components/misc/Button';
 import InfoPopover from '../../components/widgets/widget/InfoPopover';
-
+import { getMessageById } from '../../utils/LocaleUtils';
 
 /* add here new processes */
 export const processes = [
@@ -29,7 +30,7 @@ export const processes = [
                 if (props.showHighlightLayers) {
                     props.onToggleHighlightLayers();
                 }
-                if (!props.sourceFeature) {
+                if (isEmpty(props.sourceFeature)) {
                     props.onShowWarning(true);
                 } else {
                     props.onRunProcess(GPT_TOOL_BUFFER);
@@ -54,10 +55,7 @@ export const processes = [
                 <InfoPopover
                     bsStyle={props.isSourceLayerInvalid ? "danger" : "info"}
                     text={
-                        props.isSourceLayerInvalid ?
-                            <Message msgId={"GeoProcessing.tooltip.invalidLayers"}
-                            /> : <Message msgId={"GeoProcessing.tooltip.fillRequiredDataBuffer"}
-                            />
+                        props.isSourceLayerInvalid ? getMessageById(props.messages, "GeoProcessing.tooltip.invalidLayers") : getMessageById(props.messages, "GeoProcessing.tooltip.fillRequiredDataBuffer")
                     }
                 />
             </div>);
@@ -95,11 +93,16 @@ export const processes = [
                 if (props.showHighlightLayers) {
                     props.onToggleHighlightLayers();
                 }
-                if (!props.sourceFeature || !props.intersectionFeature) {
+                if (isEmpty(props.sourceFeature) || isEmpty(props.intersectionFeature)) {
                     props.onShowWarning(true);
                 } else {
                     props.onRunProcess(GPT_TOOL_INTERSECTION);
                 }
+            },
+            runProcessConfirm: (props) => {
+                props.onShowWarning(false);
+                props.onRunProcess(GPT_TOOL_INTERSECTION);
+
             }
         },
         RunComponent: (props) => {
@@ -115,9 +118,7 @@ export const processes = [
                     bsStyle={props.isIntersectionLayerInvalid || props.isSourceLayerInvalid ? "danger" : "info"}
                     text={
                         props.isIntersectionLayerInvalid || props.isSourceLayerInvalid  ?
-                            <Message msgId={"GeoProcessing.tooltip.invalidLayers"}
-                            /> : <Message msgId={"GeoProcessing.tooltip.fillRequiredDataIntersection"}
-                            />
+                            getMessageById(props.messages, "GeoProcessing.tooltip.invalidLayers") : getMessageById(props.messages, "GeoProcessing.tooltip.fillRequiredDataIntersection")
                     }
                 />
             </div>);

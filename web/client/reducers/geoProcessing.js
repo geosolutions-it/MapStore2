@@ -62,6 +62,7 @@ const initialState = {
         counter: 0
     },
     selectedLayerId: "",
+    selectedLayerType: "",
     intersection: {
         counter: 0,
         intersectionMode: "INTERSECTION"
@@ -186,7 +187,7 @@ function geoProcessing( state = {
             ...state,
             buffer: {
                 ...state.buffer,
-                quadrantSegments: action.quadrantSegments
+                quadrantSegments: Number(action.quadrantSegments)
             }
         };
     }
@@ -275,6 +276,7 @@ function geoProcessing( state = {
     case SET_SOURCE_LAYER_ID: {
         return {
             ...state,
+            selectedLayerType: !action.layerId && state.selectedLayerType === "source" ? "" : state.selectedLayerType,
             selectedLayerId: state.selectedLayerType === "source" ? action.layerId : state.selectedLayerId,
             source: {
                 ...state.source,
@@ -316,6 +318,7 @@ function geoProcessing( state = {
     case SET_INTERSECTION_LAYER_ID: {
         return {
             ...state,
+            selectedLayerType: !action.layerId && state.selectedLayerType === "intersection" ? "" : state.selectedLayerType,
             selectedLayerId: state.selectedLayerType === "intersection" ? action.layerId : state.selectedLayerId,
             intersection: {
                 ...state.intersection,

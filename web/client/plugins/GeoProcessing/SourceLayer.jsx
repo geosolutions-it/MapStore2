@@ -75,8 +75,11 @@ const Source = ({
     const handleOnChangeSourceFeatureId = (sel) => {
         onSetSourceFeatureId(sel?.value || "");
     };
+    const isDisableClickSelectFeature = !sourceLayerId || isSourceFeaturesLoading || checkingWPSAvailability;
     const handleOnClickToSelectSourceFeature = () => {
-        onSetSelectedLayerType(selectedLayerType === "source" ? "" : "source");
+        if (!isDisableClickSelectFeature) {
+            onSetSelectedLayerType(selectedLayerType === "source" ? "" : "source");
+        }
     };
     return (<>
         <FormGroup>
@@ -143,7 +146,7 @@ const Source = ({
                         className={!sourceFeatureId ? "text-info" : !isSourceLayerInvalid ? "text-success" : "text-danger"}/>}
                 </Addon>
                 <Addon
-                    disabled={!sourceLayerId || isSourceFeaturesLoading || checkingWPSAvailability}
+                    disabled={isDisableClickSelectFeature}
                     onClick={handleOnClickToSelectSourceFeature}
                     tooltipId={"GeoProcessing.tooltip.clickToSelectFeature"}
                     tooltipPosition="left"

@@ -40,8 +40,8 @@ export const intersectedLayersCounterSelector = state => state?.geoProcessing?.i
 export const firstAttributeToRetainSelector = state => state?.geoProcessing?.intersection?.firstAttributeToRetain;
 export const secondAttributeToRetainSelector = state => state?.geoProcessing?.intersection?.secondAttributeToRetain;
 export const intersectionModeSelector = state => state?.geoProcessing?.intersection?.intersectionMode;
-export const percentagesEnabledSelector = state => !!state?.geoProcessing?.intersection?.percentagesEnabled;
-export const areasEnabledSelector = state => !!state?.geoProcessing?.intersection?.areasEnabled;
+export const percentagesEnabledSelector = state => state?.geoProcessing?.intersection?.percentagesEnabled;
+export const areasEnabledSelector = state => state?.geoProcessing?.intersection?.areasEnabled;
 export const isIntersectionLayerInvalidSelector = state => {
     const id = intersectionLayerIdSelector(state);
     return !!state?.geoProcessing?.flags?.invalid?.[id];

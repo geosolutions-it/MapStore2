@@ -43,8 +43,9 @@ import {
     showHighlightLayersSelector
 } from '../../selectors/geoProcessing';
 import tooltip from '../../components/misc/enhancers/tooltip';
-const Addon = tooltip(InputGroup.Addon);
+import { getMessageById } from '../../utils/LocaleUtils';
 
+const Addon = tooltip(InputGroup.Addon);
 const Buffer = ({
     areAllWPSAvailableForSourceLayer,
     distance,
@@ -63,7 +64,7 @@ const Buffer = ({
     onSetBufferQuadrantSegments,
     onSetBufferCapStyle,
     onToggleHighlightLayers
-}) => {
+}, {messages}) => {
     const [showBufferAdvancedSettings, setShowBufferAdvancedSettings] =
     useState(false);
     const [showWarning, onShowWarning] = useState(false);
@@ -152,7 +153,7 @@ const Buffer = ({
                             <InfoPopover
                                 bsStyle={"info"}
                                 placement="left"
-                                text={<Message msgId={"GeoProcessing.quadrantSegmentsTooltip"}/>}
+                                text={getMessageById(messages, "GeoProcessing.quadrantSegmentsTooltip")}
                             />
                         </Addon>
                     </InputGroup>
@@ -180,7 +181,7 @@ const Buffer = ({
                             <InfoPopover
                                 bsStyle={"info"}
                                 placement="left"
-                                text={<Message msgId={"GeoProcessing.capStyleTooltip"}/>}
+                                text={getMessageById(messages, "GeoProcessing.capStyleTooltip")}
                             />
                         </Addon>
                     </InputGroup>
@@ -207,6 +208,7 @@ const Buffer = ({
                 onRunProcess={onRunProcess}
                 onToggleHighlightLayers={onToggleHighlightLayers}
                 onShowWarning={onShowWarning}
+                messages={messages}
                 {...process.actions}
             />
             <process.ConfirmModal
@@ -284,5 +286,9 @@ const BufferConnected = connect(
         onToggleHighlightLayers: toggleHighlightLayers,
         onRunProcess: runProcess
     })(Buffer);
+
+Buffer.contextTypes = {
+    messages: PropTypes.object
+};
 
 export default BufferConnected;

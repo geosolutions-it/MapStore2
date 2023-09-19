@@ -251,7 +251,7 @@ export const getFeaturesGPTEpic = (action$, store) => action$
         const layer = getLayerFromIdSelector(state, layerId);
         const maxFeatures = maxFeaturesSelector(state);
         const filterObj = null;
-        if (isNil(layer.describeFeatureType)) {
+        if (isNil(layer?.describeFeatureType)) {
             // throw error and notify user that a failure has happened
             return Rx.Observable.of(errorLoadingDFT(layerId));
         }
@@ -730,6 +730,16 @@ export const toggleHighlightLayersOnOpenCloseGPTEpic = (action$, store) => actio
             )
         );
     });
+
+export const unRegisterEventListenerOnReset = action$ =>
+    action$
+        .ofType(RESET) // add location change
+        .switchMap(() => {
+            return Rx.Observable.of(
+                unRegisterEventListener('click', GPT_CONTROL_NAME)
+            );
+        });
+
 
 /**
  * activate feature selection from map
