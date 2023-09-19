@@ -129,8 +129,6 @@ const Intersection = ({
                     <ControlLabel>
                         <Message msgId="GeoProcessing.firstAttributeToRetain" />
                     </ControlLabel>
-                </FormGroup>
-                <FormGroup>
                     <InputGroup>
                         <FormControl
                             disabled={runningProcess}
@@ -151,8 +149,6 @@ const Intersection = ({
                     <ControlLabel>
                         <Message msgId="GeoProcessing.secondAttributeToRetain" />
                     </ControlLabel>
-                </FormGroup>
-                <FormGroup>
                     <InputGroup>
                         <FormControl
                             disabled={runningProcess}
@@ -173,8 +169,6 @@ const Intersection = ({
                     <ControlLabel>
                         <Message msgId="GeoProcessing.intersectionMode" />
                     </ControlLabel>
-                </FormGroup>
-                <FormGroup>
                     <InputGroup>
                         <Select
                             disabled={runningProcess}
@@ -201,8 +195,6 @@ const Intersection = ({
                     <ControlLabel>
                         <Message msgId="GeoProcessing.percentagesEnabled" />
                     </ControlLabel>
-                </FormGroup>
-                <FormGroup>
                     <InputGroup>
                         <Select
                             disabled={runningProcess}
@@ -227,8 +219,6 @@ const Intersection = ({
                     <ControlLabel>
                         <Message msgId="GeoProcessing.areasEnabled" />
                     </ControlLabel>
-                </FormGroup>
-                <FormGroup>
                     <InputGroup>
                         <Select
                             disabled={runningProcess}

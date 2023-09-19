@@ -86,8 +86,6 @@ const Source = ({
             <ControlLabel>
                 <Message msgId="GeoProcessing.sourceLayer" />
             </ControlLabel>
-        </FormGroup>
-        <FormGroup>
             <InputGroup>
                 <Select
                     disabled={runningProcess}
@@ -113,8 +111,6 @@ const Source = ({
             <ControlLabel>
                 <Message msgId="GeoProcessing.sourceFeature" />
             </ControlLabel>
-        </FormGroup>
-        <FormGroup>
             <InputGroup className="infinite-select-scroll">
                 <Select
                     disabled={checkingWPSAvailability || isSourceFeaturesLoading || runningProcess || isSourceLayerInvalid}

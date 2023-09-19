@@ -107,8 +107,6 @@ const Buffer = ({
                         <ControlLabel>
                             <Message msgId="GeoProcessing.distance" />
                         </ControlLabel>
-                    </FormGroup>
-                    <FormGroup>
                         <InputGroup className="distance">
                             <FormControl
                                 disabled={runningProcess}
@@ -140,8 +138,6 @@ const Buffer = ({
                     <ControlLabel>
                         <Message msgId="GeoProcessing.quadrantSegments" />
                     </ControlLabel>
-                </FormGroup>
-                <FormGroup>
                     <InputGroup>
                         <FormControl
                             disabled={runningProcess}
@@ -162,8 +158,6 @@ const Buffer = ({
                     <ControlLabel>
                         <Message msgId="GeoProcessing.capStyle" />
                     </ControlLabel>
-                </FormGroup>
-                <FormGroup>
                     <InputGroup>
                         <Select
                             disabled={runningProcess}

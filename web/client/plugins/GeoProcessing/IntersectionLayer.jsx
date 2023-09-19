@@ -87,8 +87,6 @@ const Intersection = ({
                 <ControlLabel>
                     <Message msgId="GeoProcessing.intersectionLayer" />
                 </ControlLabel>
-            </FormGroup>
-            <FormGroup>
                 <InputGroup>
                     <Select
                         disabled={runningProcess}
@@ -114,8 +112,6 @@ const Intersection = ({
                 <ControlLabel>
                     <Message msgId="GeoProcessing.intersectionFeature" />
                 </ControlLabel>
-            </FormGroup>
-            <FormGroup>
                 <InputGroup>
                     <Select
                         disabled={checkingWPSAvailabilityIntersection || isIntersectionFeaturesLoading || runningProcess || isIntersectionLayerInvalid}
