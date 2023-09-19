@@ -1590,8 +1590,7 @@
             "allowUnsecureLayers": {
               "label": "Consenti livelli non sicuri",
               "tooltip": "L'aggiunta di un livello da mappare con questa opzione abilitata, costringe l'applicazione ad applicare il proxy"
-            },
-            "3dTileLayerIndicator":"Livello 3D tile"
+            }
         },
         "uploader": {
             "filename": "File Name",
