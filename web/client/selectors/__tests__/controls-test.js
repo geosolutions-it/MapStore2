@@ -18,7 +18,7 @@ import {
     showCoordinateEditorSelector,
     shareSelector,
     showConfirmDeleteMapModalSelector,
-    isGeoProcessingToolsEnabledSelector
+    isGeoProcessingEnabledSelector
 } from '../controls';
 
 const state = {
@@ -107,13 +107,13 @@ describe('Test controls selectors', () => {
         const showConfirmDelete = showConfirmDeleteMapModalSelector(state);
         expect(showConfirmDelete).toBe(true);
     });
-    it('isGeoProcessingToolsEnabledSelector', () => {
+    it('isGeoProcessingEnabledSelector', () => {
         const controls = {
-            GeoProcessingTools: {
+            GeoProcessing: {
                 enabled: true
             }
         };
-        expect(isGeoProcessingToolsEnabledSelector({
+        expect(isGeoProcessingEnabledSelector({
             controls
         })).toEqual(true);
     });

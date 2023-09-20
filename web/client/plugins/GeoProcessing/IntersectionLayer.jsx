@@ -26,7 +26,7 @@ import {
     setIntersectionFeatureId,
     setSelectedLayerType,
     getFeatures
-} from '../../actions/geoProcessingTools';
+} from '../../actions/geoProcessing';
 import {
     areAllWPSAvailableForIntersectionLayerSelector,
     checkingWPSAvailabilityIntersectionSelector,
@@ -40,7 +40,7 @@ import {
     isIntersectionFeaturesLoadingSelector,
     selectedLayerTypeSelector,
     wfsBackedLayersSelector
-} from '../../selectors/geoProcessingTools';
+} from '../../selectors/geoProcessing';
 
 const Addon = tooltip(InputGroup.Addon);
 const Intersection = ({
@@ -74,31 +74,31 @@ const Intersection = ({
     const handleOnChangeIntersectionFeatureId = (sel) => {
         onSetIntersectionFeatureId(sel?.value || "");
     };
+    const isDisableClickSelectFeature = !intersectionLayerId || isIntersectionFeaturesLoading || checkingWPSAvailabilityIntersection;
     const handleOnClickToSelectIntersectionFeature = () => {
-        onSetSelectedLayerType(selectedLayerType === "intersection" ? "" : "intersection");
+        if (!isDisableClickSelectFeature) {
+            onSetSelectedLayerType(selectedLayerType === "intersection" ? "" : "intersection");
+        }
     };
     return (
         <>
 
             <FormGroup>
                 <ControlLabel>
-                    <Message msgId="GeoProcessingTools.intersectionLayer" />
+                    <Message msgId="GeoProcessing.intersectionLayer" />
                 </ControlLabel>
-            </FormGroup>
-            <FormGroup>
                 <InputGroup>
                     <Select
                         disabled={runningProcess}
                         clearable
                         value={intersectionLayerId}
-                        noResultsText={<Message msgId="GeoProcessingTools.noMatchedLayer" />}
+                        noResultsText={<Message msgId="GeoProcessing.noMatchedLayer" />}
                         onChange={handleOnChangeIntersectionLayer}
                         options={layers.map(f => ({value: f.id, label: f.title || f.name || f.id }))} />
                     <Addon
                         tooltipId={
-                            !intersectionLayerId ? "GeoProcessingTools.tooltip.selectLayer" : areAllWPSAvailableForIntersectionLayer && !isIntersectionLayerInvalid ? "GeoProcessingTools.tooltip.validLayer" : "GeoProcessingTools.tooltip.invalidLayer"}
+                            !intersectionLayerId ? "GeoProcessing.tooltip.selectLayer" : areAllWPSAvailableForIntersectionLayer && !isIntersectionLayerInvalid ? "GeoProcessing.tooltip.validLayer" : "GeoProcessing.tooltip.invalidLayer"}
                         tooltipPosition="left"
-                        className="btn"
                         bsStyle="primary"
                     >
                         {checkingWPSAvailabilityIntersection ? <Loader size={14} style={{margin: '0 auto'}}/> : <Glyphicon
@@ -110,16 +110,14 @@ const Intersection = ({
             </FormGroup>
             <FormGroup>
                 <ControlLabel>
-                    <Message msgId="GeoProcessingTools.intersectionFeature" />
+                    <Message msgId="GeoProcessing.intersectionFeature" />
                 </ControlLabel>
-            </FormGroup>
-            <FormGroup>
                 <InputGroup>
                     <Select
-                        disabled={runningProcess || isIntersectionLayerInvalid}
+                        disabled={checkingWPSAvailabilityIntersection || isIntersectionFeaturesLoading || runningProcess || isIntersectionLayerInvalid}
                         clearable
                         value={intersectionFeatureId}
-                        noResultsText={<Message msgId="GeoProcessingTools.noMatchedFeature" />}
+                        noResultsText={<Message msgId="GeoProcessing.noMatchedFeature" />}
                         onChange={handleOnChangeIntersectionFeatureId}
                         options={intersectionFeatures.map(f => ({value: f.id, label: f.id }))}
                         onOpen={() => {
@@ -135,9 +133,8 @@ const Intersection = ({
                     />
                     <Addon
                         tooltipId={
-                            !intersectionFeatureId ? "GeoProcessingTools.tooltip.selectFeature" : areAllWPSAvailableForIntersectionLayer ? "GeoProcessingTools.tooltip.validFeature" : "GeoProcessingTools.tooltip.invalidFeature"}
+                            !intersectionFeatureId ? "GeoProcessing.tooltip.selectFeature" : areAllWPSAvailableForIntersectionLayer ? "GeoProcessing.tooltip.validFeature" : "GeoProcessing.tooltip.invalidFeature"}
                         tooltipPosition="left"
-                        className="btn"
                         bsStyle="primary"
                     >
                         {isIntersectionFeaturesLoading ? <Loader size={14} style={{margin: '0 auto'}}/> : <Glyphicon
@@ -145,9 +142,9 @@ const Intersection = ({
                             className={!intersectionFeatureId ? "text-info" : !isIntersectionLayerInvalid ? "text-success" : "text-danger"}/>}
                     </Addon>
                     <Addon
-                        disabled={!intersectionLayerId}
+                        disabled={isDisableClickSelectFeature}
                         onClick={handleOnClickToSelectIntersectionFeature}
-                        tooltipId={"GeoProcessingTools.tooltip.clickToSelectFeature"}
+                        tooltipId={"GeoProcessing.tooltip.clickToSelectFeature"}
                         tooltipPosition="left"
                         className="btn"
                         bsStyle={selectedLayerType === "intersection" ? "success" : "primary"}

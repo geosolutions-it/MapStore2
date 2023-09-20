@@ -18,8 +18,7 @@ import {
     increaseBufferedCounter, INCREASE_BUFFERED_COUNTER,
     increaseIntersectedCounter, INCREASE_INTERSECT_COUNTER,
     runningProcess, RUNNING_PROCESS,
-    runBufferProcess, RUN_BUFFER_PROCESS,
-    runIntersectionProcess, RUN_INTERSECTION_PROCESS,
+    runProcess, RUN_PROCESS,
     setBufferDistance, SET_BUFFER_DISTANCE,
     setBufferDistanceUom, SET_BUFFER_DISTANCE_UOM,
     setBufferQuadrantSegments, SET_BUFFER_QUADRANT_SEGMENTS,
@@ -43,7 +42,7 @@ import {
     setIntersectionAreasEnabled, SET_INTERSECTION_AREAS_ENABLED,
     setSelectedLayerType, SET_SELECTED_LAYER_TYPE,
     toggleHighlightLayers, TOGGLE_HIGHLIGHT_LAYERS
-} from '../geoProcessingTools';
+} from '../geoProcessing';
 
 describe('Test Geo Processing Tools related actions', () => {
     it('checkWPSAvailability', () => {
@@ -121,15 +120,11 @@ describe('Test Geo Processing Tools related actions', () => {
         });
     });
     it('runBufferProcess', () => {
-        const action = runBufferProcess();
+        const process = "test";
+        const action = runProcess(process);
         expect(action).toEqual({
-            type: RUN_BUFFER_PROCESS
-        });
-    });
-    it('runIntersectionProcess', () => {
-        const action = runIntersectionProcess();
-        expect(action).toEqual({
-            type: RUN_INTERSECTION_PROCESS
+            type: RUN_PROCESS,
+            process
         });
     });
     it('setBufferDistance', () => {

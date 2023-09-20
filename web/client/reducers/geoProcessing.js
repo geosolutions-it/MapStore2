@@ -16,6 +16,7 @@ import {
     INIT_PLUGIN,
     INCREASE_BUFFERED_COUNTER,
     INCREASE_INTERSECT_COUNTER,
+    RESET,
     RUNNING_PROCESS,
     SET_BUFFER_DISTANCE,
     SET_BUFFER_DISTANCE_UOM,
@@ -40,22 +41,28 @@ import {
     SET_INTERSECTION_AREAS_ENABLED,
     SET_SELECTED_LAYER_TYPE,
     TOGGLE_HIGHLIGHT_LAYERS
-} from '../actions/geoProcessingTools';
-
-import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingToolsUtils';
+} from '../actions/geoProcessing';
+import {
+    RESET_CONTROLS
+} from '../actions/controls';
+import { LOCATION_CHANGE } from 'connected-react-router';
+import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingUtils';
 
 /**
- * reducer for geoProcessingTools
+ * reducer for GeoProcessing
  * @memberof reducers
- * @param  {Object} action the action
- * @return {Object}        the new state
+ * @param  {object} action the action
+ * @return {object}        the new state
  *
  */
-function geoProcessingTools( state = {
-    selectedTool: GPT_TOOL_BUFFER || GPT_TOOL_INTERSECTION,
+
+const initialState = {
+    source: {},
     buffer: {
         counter: 0
     },
+    selectedLayerId: "",
+    selectedLayerType: "",
     intersection: {
         counter: 0,
         intersectionMode: "INTERSECTION"
@@ -65,6 +72,11 @@ function geoProcessingTools( state = {
         isIntersectionEnabled: true,
         runningProcess: false
     }
+};
+function geoProcessing( state = {
+    selectedTool: GPT_TOOL_BUFFER || GPT_TOOL_INTERSECTION,
+    ...initialState
+
 }, action) {
     switch (action.type) {
     case CHECKING_WPS_AVAILABILITY: {
@@ -97,6 +109,7 @@ function geoProcessingTools( state = {
         return {
             ...state,
             ...action.cfg,
+            cfg: action.cfg,
             buffer: {
                 ...state.buffer,
                 ...(action.cfg.buffer || {})
@@ -122,6 +135,23 @@ function geoProcessingTools( state = {
             intersection: {
                 ...state.intersection,
                 counter: state.intersection.counter + 1
+            }
+        };
+    }
+    case RESET: case RESET_CONTROLS: case LOCATION_CHANGE: {
+        return {
+            ...state,
+            ...initialState,
+            buffer: {
+                ...(state.cfg.buffer || {}),
+                ...initialState.buffer
+            },
+            intersection: {
+                ...(state.cfg.intersection || {}),
+                ...initialState.intersection
+            },
+            source: {
+                ...initialState.source
             }
         };
     }
@@ -157,7 +187,7 @@ function geoProcessingTools( state = {
             ...state,
             buffer: {
                 ...state.buffer,
-                quadrantSegments: action.quadrantSegments
+                quadrantSegments: Number(action.quadrantSegments)
             }
         };
     }
@@ -246,7 +276,8 @@ function geoProcessingTools( state = {
     case SET_SOURCE_LAYER_ID: {
         return {
             ...state,
-            selectedLayerId: action.layerId,
+            selectedLayerType: !action.layerId && state.selectedLayerType === "source" ? "" : state.selectedLayerType,
+            selectedLayerId: state.selectedLayerType === "source" ? action.layerId : state.selectedLayerId,
             source: {
                 ...state.source,
                 layerId: action.layerId,
@@ -287,7 +318,8 @@ function geoProcessingTools( state = {
     case SET_INTERSECTION_LAYER_ID: {
         return {
             ...state,
-            selectedLayerId: action.layerId,
+            selectedLayerType: !action.layerId && state.selectedLayerType === "intersection" ? "" : state.selectedLayerType,
+            selectedLayerId: state.selectedLayerType === "intersection" ? action.layerId : state.selectedLayerId,
             intersection: {
                 ...state.intersection,
                 layerId: action.layerId,
@@ -391,4 +423,4 @@ function geoProcessingTools( state = {
     }
 }
 
-export default geoProcessingTools;
+export default geoProcessing;

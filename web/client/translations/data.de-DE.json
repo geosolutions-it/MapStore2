@@ -3090,9 +3090,9 @@
             "description": "Ermöglicht das Hinzufügen eines Filters zu einer Ebene",
             "title": "Ebenenfilter"
           },
-          "GeoProcessingTools": {
+          "GeoProcessing": {
             "description": "Ermöglicht die Geoverarbeitung von Layern zur Generierung eines neuen Layers mithilfe von WPS-Prozessen für Puffer und Schnittpunkte",
-            "title": "Geo-Verarbeitungstools"
+            "title": "Geoverarbeitung"
           },
           "HelpLink": {
             "description": "Eine Schaltfläche für den Zugriff auf die MapStore-Dokumentation",
@@ -3904,13 +3904,13 @@
             "dxfGeometryNotSupported": "Es wird nur LWPOLYLINE unterstützt"
           }
         },
-        "GeoProcessingTools": {
-          "title": "Geoverarbeitungswerkzeuge",
-          "emptyTitle": "Diese WPS-Prozesse müssen in Geoserver installiert sein, um dieses Tool verwenden zu können:",
+        "GeoProcessing": {
+          "title": "Geoverarbeitung",
+          "emptyTitle": "Diese WPS-Prozesse müssen im Geoserver installiert sein, um diesen Prozess nutzen zu können:",
           "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
           "sourceLayer": "Quellebene",
           "sourceFeature": "Quellfunktion",
-          "tool": "Wählen Sie ein zu verwendendes Werkzeug aus",
+          "tool": "Wählen Sie einen Prozess aus, den Sie verwenden möchten",
           "highlight": "Markieren Sie Funktionen",
           "bufferTool": "Puffer",
           "distance": "Distanz",
@@ -3924,16 +3924,23 @@
           "intersectionLayer": "Schnittebene",
           "intersectionFeature": "Kreuzungsfunktion",
           "advancedSettings": "Erweiterte Einstellungen",
-          "quadrantSegments": "Quadrantensegmente",
-          "capStyle": "Stil für die Pufferendkappen",
+          "quadrantSegments": "quadrantSegments",
+          "quadrantSegmentsTooltip": "Quadrantensegmente",
+          "capStyle": "capStyle",
+          "capStyleTooltip": "Stil für die Pufferendkappen",
           "round": "Runden",
           "flat": "Wohnung",
           "square": "Quadrat",
-          "firstAttributeToRetain": "Erstes einzuschließendes Feature-Sammlungsattribut",
-          "secondAttributeToRetain": "Zweites einzuschließendes Feature-Sammlungsattribut",
-          "intersectionMode": "Gibt die für sich überschneidende Features berechnete Geometrie an",
-          "percentagesEnabled": "Gibt an, ob Prozentsätze der Feature-Fläche ausgegeben werden sollen",
-          "areasEnabled": "Gibt an, ob Featurebereiche ausgegeben werden sollen",
+          "firstAttributeToRetain": "firstAttributeToRetain",
+          "secondAttributeToRetain": "secondAttributeToRetain",
+          "intersectionMode": "intersectionMode",
+          "percentagesEnabled": "percentagesEnabled",
+          "areasEnabled": "areasEnabled",
+          "firstAttributeToRetainTooltip": "Erstes einzuschließendes Feature-Sammlungsattribut",
+          "secondAttributeToRetainTooltip": "Zweites einzuschließendes Feature-Sammlungsattribut",
+          "intersectionModeTooltip": "Gibt die für sich überschneidende Features berechnete Geometrie an",
+          "percentagesEnabledTooltip": "Gibt an, ob Prozentsätze der Feature-Fläche ausgegeben werden sollen",
+          "areasEnabledTooltip": "Gibt an, ob Featurebereiche ausgegeben werden sollen",
           "noMatchedMode": "Kein Modus entspricht dem aktuellen Filter",
           "INTERSECTION": "ÜBERSCHNEIDUNG",
           "FIRST": "ERSTE",
@@ -3958,16 +3965,16 @@
           "warningCancel": "Abbrechen",
           "tooltip": {
             "clickToSelectFeature": "Klicken, um Funktion auszuwählen",
-             "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Werkzeug nicht verwendet werden",
-             "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
-             "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
-             "siderBarBtn": "GeoProcessing Tools",
-             "selectFeature": "Bitte wählen Sie eine Funktion aus",
-             "validFeature": "Diese Funktion ist gültig",
-             "invalidFeature": "Diese Funktion ist ungültig",
-             "selectLayer": "Bitte wählen Sie eine Ebene aus",
-             "validLayer": "Diese Ebene ist gültig und kann in diesem Tool verwendet werden",
-             "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\noch handelt es sich um einen Raster-Layer."
+            "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Prozess nicht verwendet werden",
+            "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
+            "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
+            "siderBarBtn": "Geoverarbeitung",
+            "selectFeature": "Bitte wählen Sie eine Funktion aus",
+            "validFeature": "Diese Funktion ist gültig",
+            "invalidFeature": "Diese Funktion ist ungültig",
+            "selectLayer": "Bitte wählen Sie eine Ebene aus",
+            "validLayer": "Diese Ebene ist gültig und kann in diesem Prozess verwendet werden",
+            "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\noch handelt es sich um einen Raster-Layer."
           }
         }
     }
