@@ -671,7 +671,10 @@ function getStyleFuncFromRules({
             entity._msGlobalOpacity = undefined;
             return resolve(entity);
         }))
-    );
+    // map.scene.requestRender(); does not work without a setTimeout
+    // it seems there is need of a small delay to correctly request the next map rendering
+    // requestRender is used by layer to update the style
+    ).then((response) => new Promise((resolve) => setTimeout(() => resolve(response))));
 }
 
 class CesiumStyleParser {
