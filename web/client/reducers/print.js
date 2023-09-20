@@ -37,7 +37,8 @@ const initialSpec = {
     resolution: 96,
     name: '',
     description: '',
-    outputFormat: "pdf"
+    outputFormat: "pdf",
+    rotation: 0
 };
 
 const getSheetName = (name = '') => {
