@@ -177,7 +177,7 @@
       "title": "plugins.Annotations.title",
       "description": "plugins.Annotations.description",
       "dependencies": [
-        "SidebarMenu"
+        "TOC"
       ]
     },
     {
@@ -650,10 +650,10 @@
       ]
     },
     {
-      "name": "GeoProcessingTools",
-      "glyph": "star",
-      "title": "plugins.GeoProcessingTools.title",
-      "description": "plugins.GeoProcessingTools.description",
+      "name": "GeoProcessing",
+      "glyph": "globe-settings",
+      "title": "plugins.GeoProcessing.title",
+      "description": "plugins.GeoProcessing.description",
       "dependencies": [
         "SidebarMenu"
       ]

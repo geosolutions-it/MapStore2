@@ -11,7 +11,6 @@ import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { createPlugin } from '../utils/PluginsUtils';
-import { highlightPoint } from '../actions/annotations';
 import { setControlProperty, toggleControl } from '../actions/controls';
 import {
     addAnnotation,
@@ -152,7 +151,7 @@ const Measure = connect(
         toggleMeasure: changeMeasurement,
         onAddAnnotation: addAnnotation,
         onChangeUom: changeUom,
-        onHighlightPoint: highlightPoint,
+        // onHighlightPoint: highlightPoint,
         onChangeFormat: changeFormatMeasurement,
         onChangeCoordinates: changeCoordinates,
         onChangeCurrentFeature: setCurrentFeature,

@@ -463,7 +463,7 @@ class LeafletMap extends React.Component {
             this.props.id,
             this.props.projection,
             viewerOptions, // viewerOptions
-            this.getResolutions()[zoom] // resolution
+            this.getResolutions()[Math.round(zoom)] // resolution
         );
     };
 
@@ -476,6 +476,7 @@ class LeafletMap extends React.Component {
 
     mouseMoveEvent = (event) => {
         let pos = event.latlng.wrap();
+        const intersectedFeatures = this.getIntersectedFeatures(this.map, event.latlng);
         this.props.onMouseMove({
             x: pos.lng || 0.0,
             y: pos.lat || 0.0,
@@ -490,7 +491,8 @@ class LeafletMap extends React.Component {
                 lng: event.latlng.lng,
                 z: this.elevationLayer && this.elevationLayer.getElevation(event.latlng, event.containerPoint) || undefined
             },
-            rawPos: [event.latlng.lat, event.latlng.lng]
+            rawPos: [event.latlng.lat, event.latlng.lng],
+            intersectedFeatures
         });
     };
 

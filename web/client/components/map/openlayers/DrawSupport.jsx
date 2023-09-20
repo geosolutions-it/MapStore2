@@ -26,7 +26,7 @@ import {isSimpleGeomType, getSimpleGeomType} from '../../../utils/MapUtils';
 import {reprojectGeoJson, calculateDistance, reproject} from '../../../utils/CoordinatesUtils';
 import {createStylesAsync} from '../../../utils/VectorStyleUtils';
 import {transformPolygonToCircle} from '../../../utils/openlayers/DrawSupportUtils';
-import {isCompletePolygon} from '../../../utils/AnnotationsUtils';
+import {isCompletePolygon} from '../../../plugins/Annotations/utils/AnnotationsUtils';
 import { parseStyles, getStyle, defaultStyles, getMarkerStyle, getMarkerStyleLegacy } from './VectorStyle';
 
 import {GeoJSON} from 'ol/format';
@@ -36,7 +36,7 @@ import VectorLayer from 'ol/layer/Vector';
 import ImageLayer from 'ol/layer/Image';
 import TileLayer from 'ol/layer/Tile';
 import Draw from 'ol/interaction/Draw';
-import DrawHole from './hole/DrawHole';
+import DrawHole from '../../../utils/openlayers/hole/DrawHole';
 import { Point, MultiPoint, LineString, MultiLineString, Polygon, MultiPolygon, Circle} from 'ol/geom';
 import GeometryCollection from 'ol/geom/GeometryCollection';
 import {Style, Stroke, Fill, Text} from 'ol/style';

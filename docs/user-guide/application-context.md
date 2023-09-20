@@ -32,11 +32,11 @@ This first step allows to configure the **Name** and the **Window title** of the
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to **Import** an application context  by selecting the <img src="../img/button/import_button.jpg" class="ms-docbutton" /> button. The import screen appears so that it is possible to drag and drop a previously exported context file there or select it from the local machine through the <img src="../img/button/select-files.jpg" class="ms-docbutton"/> button.
 
-<img src="../img/application-context/import_context.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/application-context/import_context.mp4" /></video>
 
 Once a valid context name is specified in *General settings*, it is possible to **Export** the context with all the configurations introduced up to that point; this is possible through the <img src="../img/button/export_button.jpg" class="ms-docbutton" /> button. The export screen appears and the user exports the context, in `JSON` format, by clicking the <img src="../img/button/export_button.jpg" class="ms-docbutton"/> button.
 
-<img src="../img/application-context/export_context.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/application-context/export_context.mp4" /></video>
 
 !!! note
     The <img src="../img/button/import_button.jpg" class="ms-docbutton"/> button is only available on the first step of the application context wizard (the *General settings*) while the <img src="../img/button/export_button.jpg" class="ms-docbutton"/> button is always available with the only condition that a valid context name has been specified.
@@ -82,11 +82,11 @@ In particular, the admin can:
 
 * Add an extension from the *Available Plugins* list to the *Enabled Plugins* list, using the **Add Extension** button <img src="../img/button/add_arrow_button.jpg" class="ms-docbutton"/>. Instead, remove an extension from the *Enabled Plugins* list using the **Remove Extension** button <img src="../img/button/remove_button.jpg" class="ms-docbutton"/>, as follows:
 
-<img src="../img/application-context/extension-in-out.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/application-context/extension-in-out.mp4" /></video>
 
 * Bring all extensions from one list to another using the **Add all extensions** button <img src="../img/button/add-all-button.jpg" class="ms-docbutton"/> or remove all extensions using the **Remove all extensions** button <img src="../img/button/remove-all-button.jpg" class="ms-docbutton"/>, as follows:
 
-<img src="../img/application-context/extensions-in-out.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/application-context/extensions-in-out.mp4" /></video>
 
 To search for an extension listed, the admin can use the **Search bar**.
 
@@ -193,7 +193,7 @@ After selecting a theme from the drop-down, it is also possible to customize it 
 
 Once **Custom Variables** is enabled, the context editor can modify main, primary and secondary colors for both backgrounds and texts (an helper clarifies the UI elements involved for each field in the form). Clicking on the *Change Color* button <img src="../img/button/color-picker.jpg" class="ms-docbutton"/> a color picker is displayed to allow the selection of the desire color, as follows:
 
-<img src="../img/application-context/color_picker_theme.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/application-context/color_picker_theme.mp4" /></video>
 
 The colors that can be customized are the following ones:
 

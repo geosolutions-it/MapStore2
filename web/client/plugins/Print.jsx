@@ -10,6 +10,7 @@ import './print/print.css';
 
 import head from 'lodash/head';
 import castArray from "lodash/castArray";
+import isNil from "lodash/isNil";
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -28,7 +29,7 @@ import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapSelector, scalesSelector } from '../selectors/map';
 import { mapTypeSelector } from '../selectors/maptype';
-import { normalizeSRS, reprojectBbox } from '../utils/CoordinatesUtils';
+import { normalizeSRS, reprojectBbox, convertDegreesToRadian } from '../utils/CoordinatesUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
@@ -454,6 +455,7 @@ export default {
                             notAllowedLayers: this.isBackgroundIgnored(this.props.layers, map?.projection),
                             actionConfig: this.props.submitConfig,
                             validations: this.props.printingService.validate(),
+                            rotation: !isNil(this.props.printSpec.rotation) ? convertDegreesToRadian(Number(this.props.printSpec.rotation)) : 0,
                             actions: {
                                 print: this.print,
                                 addParameter: this.addParameter

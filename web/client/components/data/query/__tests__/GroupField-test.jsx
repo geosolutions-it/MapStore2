@@ -122,7 +122,7 @@ describe('GroupField', () => {
         const boolean = groupfield.getOperator({type: "boolean"});
         expect(boolean).toEqual(["="]);
         const noType = groupfield.getOperator();
-        expect(noType).toEqual(["=", ">", "<", ">=", "<=", "<>", "><"]);
+        expect(noType).toEqual(["=", ">", "<", ">=", "<=", "<>", "><", "isNull"]);
 
         const noSelected = groupfield.getComboValues();
         expect(noSelected).toBe(null);

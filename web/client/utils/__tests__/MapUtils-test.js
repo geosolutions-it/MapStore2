@@ -40,7 +40,8 @@ import {
     addRootParentGroup,
     mapUpdated,
     getZoomFromResolution,
-    getResolutionObject
+    getResolutionObject,
+    reprojectZoom
 } from '../MapUtils';
 import { VisualizationModes } from '../MapTypeUtils';
 
@@ -2131,6 +2132,10 @@ describe('Test the MapUtils', () => {
     it('addRootParentGroup', () => {
         const resolution = 1000; // ~zoom 7 in Web Mercator
         expect(getZoomFromResolution(resolution)).toBe(7);
+    });
+    it('reprojectZoom', () => {
+        expect(reprojectZoom(5, 'EPSG:3857', 'EPSG:4326')).toBe(4);
+        expect(reprojectZoom(5.2, 'EPSG:3857', 'EPSG:4326')).toBe(4);
     });
     describe("getResolutionObject tests", () => {
         const resolutions =  [156543, 78271, 39135, 19567, 9783, 4891, 2445, 1222];

@@ -11,7 +11,6 @@ import { reproject, getUnits, reprojectGeoJson, normalizeSRS } from './Coordinat
 import {addAuthenticationParameter} from './SecurityUtils';
 import { calculateExtent, getGoogleMercatorScales, getResolutionsForProjection, getScales, reprojectZoom } from './MapUtils';
 import { optionsToVendorParams } from './VendorParamsUtils';
-import { annotationsToPrint } from './AnnotationsUtils';
 import { colorToHexStr } from './ColorUtils';
 import { getLayerConfig } from './TileConfigProvider';
 import { extractValidBaseURL } from './TileProviderUtils';
@@ -32,6 +31,7 @@ import { printSpecificationSelector } from "../selectors/print";
 import assign from 'object-assign';
 import sortBy from "lodash/sortBy";
 import head from "lodash/head";
+import isNil from "lodash/isNil";
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
 
@@ -45,10 +45,6 @@ const printStyleParser = new PrintStyleParser();
 export const getGeomType = function(layer) {
     return layer.features && layer.features[0] && layer.features[0].geometry ? layer.features[0].geometry.type :
         layer.features && layer.features[0].features && layer.features[0].style && layer.features[0].style.type ? layer.features[0].style.type : undefined;
-};
-
-export const isAnnotationLayer = (layer) => {
-    return layer.id === "annotations" || layer.name === "Measurements";
 };
 
 /**
@@ -266,7 +262,7 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
                     projectedCenter.y
                 ],
                 "scale": reprojectedScale,
-                "rotation": 0
+                "rotation": !isNil(spec.rotation) ? -Number(spec.rotation) : 0 // negate the rotation value to match rotation in map preview and printed output
             }
         ],
         "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'legend'),
@@ -598,11 +594,9 @@ export const specCreators = {
             },
             geoJson: reprojectGeoJson({
                 type: "FeatureCollection",
-                features: (isAnnotationLayer(layer) || !layer.style)
-                    ? annotationsToPrint(layer.features)
-                    : layer?.style?.format === 'geostyler' && layer?.style?.body
-                        ? printStyleParser.writeStyle(layer.style.body, true)({ layer, spec })
-                        : layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
+                features: layer?.style?.format === 'geostyler' && layer?.style?.body
+                    ? printStyleParser.writeStyle(layer.style.body, true)({ layer, spec })
+                    : layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
             },
             "EPSG:4326",
             spec.projection)

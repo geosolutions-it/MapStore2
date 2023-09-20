@@ -21,7 +21,7 @@ import OpacitySlider from './fragments/OpacitySlider';
 import ToggleFilter from './fragments/ToggleFilter';
 import tooltip from '../misc/enhancers/tooltip';
 import localizedProps from '../misc/enhancers/localizedProps';
-import { isInsideResolutionsLimits } from '../../utils/LayersUtils';
+import { isInsideResolutionsLimits, getLayerTypeGlyph } from '../../utils/LayersUtils';
 import StyleBasedLegend from './fragments/StyleBasedLegend';
 
 const GlyphIndicator = localizedProps('tooltip')(tooltip(Glyphicon));
@@ -175,11 +175,13 @@ class DefaultLayer extends React.Component {
                 || ['wfs', 'vector'].includes(this.props.node.type) && this.props.node?.style?.format === 'geostyler'
             )
         );
+        const glyph = getLayerTypeGlyph(this.props.node);
         const head = (isDummy ?
             <div style={{padding: 0, height: 10}} className="toc-default-layer-head"/> :
             <div className="toc-default-layer-head">
                 {grab}
                 {this.renderVisibility()}
+                {glyph && <Glyphicon glyph={glyph} />}
                 <ToggleFilter node={this.props.node} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title
                     tooltipOptions={this.props.tooltipOptions}
@@ -210,7 +212,7 @@ class DefaultLayer extends React.Component {
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
         const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
-        const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
+        const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="grab-handle"/> : <span className="toc-layer-tool toc-grab"/>;
         const isDummy = !!this.props.node.dummy;
         const filteredNode = !isDummy && this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, warning, isDummy, other) : null;
         const tocListItem = (
@@ -227,7 +229,7 @@ class DefaultLayer extends React.Component {
     filterLayers = (layer) => {
         const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
         const title = translation || layer.name;
-        return title.toLowerCase().indexOf(this.props.filterText.toLowerCase()) !== -1;
+        return (title || '').toLowerCase().indexOf(this.props.filterText.toLowerCase()) !== -1;
     };
 
 }

@@ -19,7 +19,7 @@ import {
     TOGGLE_MAXIMIZE,
     TOGGLE_MODE
 } from "../actions/longitudinalProfile";
-import { LONGITUDINAL_DISTANCES } from '../plugins/longitudinalProfile/constants';
+import { LONGITUDINAL_DISTANCES, DEFAULT_NODATA_THRESHOLD } from '../plugins/longitudinalProfile/constants';
 
 const DEFAULT_STATE = {
     initialized: false,
@@ -107,6 +107,7 @@ export default function longitudinalProfile(state = DEFAULT_STATE, action) {
             ...state,
             config: {
                 ...state.config,
+                noDataThreshold: DEFAULT_NODATA_THRESHOLD,
                 ...action.config
             }
         };

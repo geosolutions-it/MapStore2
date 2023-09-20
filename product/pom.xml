@@ -349,7 +349,7 @@
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
-            <version>geosolutions-2.3-SNAPSHOT</version>
+            <version>2.3-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
@@ -473,6 +473,15 @@
             <id>osgeo</id>
             <name>Open Source Geospatial Foundation Repository</name>
             <url>https://repo.osgeo.org/repository/release/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <!-- OSGEO snapshot (mapfish-print)-->
+        <repository>
+            <id>osgeo-snapshot</id>
+            <name>Open Source Geospatial Foundation Repository</name>
+            <url>https://repo.osgeo.org/repository/snapshot/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

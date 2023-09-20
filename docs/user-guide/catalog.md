@@ -24,7 +24,7 @@ By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docb
 !!! note
     For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. In order to access the complete information, the user can expand the card using the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton" style="max-height:20px;"/> button:
 
-    <img src="../img/catalog/expand_card.gif" class="ms-docimage" style="max-width:400px;"/>
+    <video class="ms-docimage" style="max-width:400px;" controls><source src="../img/catalog/expand_card.mp4"></video>
 
 ## Managing Remote Services
 
@@ -149,7 +149,7 @@ In this case it is possible to add a text like the following, in order to presen
 
 Inserting this text and saving, the result should be that each layer will show its properties in catalog with the format we set:
 
-<img src="../img/catalog/metadata-det.gif" class="ms-docimage"  style="max-width:500px;"/>
+<video class="ms-docimage"  style="max-width:500px;" controls><source src="../img/catalog/metadata-det.mp4"></video>
 
 !!! note
     If some metadata are missing, the server response will be `source Not Available`
@@ -340,6 +340,12 @@ MapStore allows to publish 3D Tiles contents in its 3D mode on top of the [Cesiu
 In **general settings of** 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.
 
 <img src="../img/catalog/3dtiles_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+!!! warning
+    MapStore allows you to load also [Google Photorealistic 3D Tiles](https://cloud.google.com/blog/products/maps-platform/create-immersive-3d-map-experiences-photorealistic-3d-tiles) and some constraints need to be respected in this case.
+    Since the Google Photorealistic 3D Tiles are not ‘survey-grade’ at this time, the use of certain MapStore tools could be considered derivative and, for this reason, prohibited. Please, make sure you have read the [Google conditions of use](https://developers.google.com/maps/documentation/tile/policies)
+    (some [FAQs](https://cloud.google.com/blog/products/maps-platform/commonly-asked-questions-about-our-recently-launched-photorealistic-3d-tiles) are also available online for this purpose) before providing Google Photorealistic 3D Tile in your MapStore maps in order to enable only allowed tools (e.g. *Measurement* and *Identify* tools should be probably disabled).
+    For this purpose it is possible to appropriately set the [configuration of MapStore plugins](../../developer-guide/maps-configuration/#map-options)  to exclude tools that could conflict with Google policies. Alternatively, it is possible to use a dedicated [application context](application-context.md#configure-plugins) to show Photorealistic 3D Tiles by including only the permitted tools within it.
 
 ### Cloud Optimized GeoTIFF
 

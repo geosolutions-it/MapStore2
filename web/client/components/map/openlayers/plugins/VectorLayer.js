@@ -19,14 +19,14 @@ Layers.registerType('vector', {
         let features = [];
 
         const source = new VectorSource({
-            features: features
+            features: features,
             // spatial index is removing feature that are not currently in view
             // usually vector layer has a low count of features (eg annotation)
             // so we could disable it (doc states it improve performance at false with low count of features)
             // this helps also to make the circle style visible even if the center is out of the view
             // when the spatial index is active the renderBuffer of vector layer is used to filter features
-            // we could implement a different loading strategy to visualize correctly the Circle style
-            // useSpatialIndex: false
+            // we could implement a different loading strategy to visualize correctly the Circle style and Geodesic lines
+            useSpatialIndex: false
         });
 
         const layer = new VectorLayer({

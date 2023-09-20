@@ -143,12 +143,16 @@ describe('processFiles enhancer', () => {
                     .take(1)
                     .switchMap(({ onDrop = () => { } }) => getAnnotationGeoJsonFile().map((file) => onDrop([file]))).ignoreElements()))
         )(createSink(props => {
-            expect(props).toBeTruthy();
-            if (props.files) {
-                expect(props.files.layers.length).toBe(1);
-                expect(props.files.layers[0].name).toBe("Annotations");
-                expect(props.files.layers[0].features).toBeTruthy();
-                done();
+            try {
+                expect(props).toBeTruthy();
+                if (props.files) {
+                    expect(props.files.layers.length).toBe(1);
+                    expect(props.files.layers[0].name).toBe("Annotations");
+                    expect(props.files.layers[0].features).toBeTruthy();
+                    done();
+                }
+            } catch (e) {
+                done(e);
             }
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
