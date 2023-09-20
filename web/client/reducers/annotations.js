@@ -71,6 +71,7 @@ import {
     getAvailableStyler,
     getBaseCoord,
     getComponents, getGeometryType,
+    isCompletePolygon,
     updateAllStyles,
     validateCoordsArray,
     validateFeature
@@ -115,13 +116,18 @@ function annotations(state = {validationErrors: {}}, action) {
         }
         if (!isNil(coordinates)) {
 
-            validCoordinates = coordinates;// .filter(validateCoordsArray);
+            validCoordinates = coordinates;
             switch (ftChanged.geometry.type) {
-            case "Polygon": ftChanged = assign({}, ftChanged, {
-                geometry: assign({}, ftChanged.geometry, {
-                    coordinates: fixCoordinates(validCoordinates, ftChanged.geometry.type)
-                })
-            }); break;
+            case "Polygon":
+                let _coordinates = fixCoordinates(validCoordinates, ftChanged.geometry.type);
+                const isComplete = isCompletePolygon(_coordinates);
+                _coordinates = isComplete ? _coordinates : [[..._coordinates[0], _coordinates[0][0]]];
+                coordinates = _coordinates[0];
+                ftChanged = assign({}, ftChanged, {
+                    geometry: assign({}, ftChanged.geometry, {
+                        coordinates: _coordinates
+                    })
+                }); break;
             case "LineString": case "MultiPoint": ftChanged = assign({}, ftChanged, {
                 geometry: assign({}, ftChanged.geometry, {
                     coordinates: fixCoordinates(validCoordinates, ftChanged.geometry.type)
