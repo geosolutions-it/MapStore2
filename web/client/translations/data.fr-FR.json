@@ -1593,8 +1593,7 @@
             "allowUnsecureLayers": {
               "label": "Autoriser les couches non sécurisées",
               "tooltip": "L'ajout d'une couche à la carte avec cette option activée force l'application à appliquer un proxy"
-            },
-            "3dTileLayerIndicator":"Couche de carreaux 3D"
+            }
         },
         "uploader": {
             "filename": "Nom du fichier",
