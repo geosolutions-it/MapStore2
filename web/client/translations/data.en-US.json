@@ -704,6 +704,7 @@
                 "iconsSize": "Icons size:",
                 "dpi": "Dpi:"
             },
+            "rotation": "Rotation",
             "layoutWarning": "Not allowed layout",
             "scale": "Scale",
             "includeScale": "Include in print",

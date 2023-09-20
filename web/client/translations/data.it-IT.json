@@ -704,6 +704,7 @@
                 "iconsSize": "Dimensione icone:",
                 "dpi": "Dpi:"
             },
+            "rotation": "Rotation",
             "layoutWarning": "Layout non consentito",
             "scale": "Scala",
             "includeScale": "Includi nella stampa",

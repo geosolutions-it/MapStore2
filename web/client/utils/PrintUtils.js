@@ -31,6 +31,7 @@ import { printSpecificationSelector } from "../selectors/print";
 import assign from 'object-assign';
 import sortBy from "lodash/sortBy";
 import head from "lodash/head";
+import isNil from "lodash/isNil";
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
 
@@ -261,7 +262,7 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
                     projectedCenter.y
                 ],
                 "scale": reprojectedScale,
-                "rotation": 0
+                "rotation": !isNil(spec.rotation) ? -Number(spec.rotation) : 0 // negate the rotation value to match rotation in map preview and printed output
             }
         ],
         "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'legend'),

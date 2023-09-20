@@ -743,6 +743,7 @@
                 "iconsSize": "Symbolgröße:",
                 "dpi": "dpi:"
             },
+            "rotation": "Rotation",
             "layoutWarning": "Layout nicht erlaubt",
             "scale": "Maßstab",
             "includeScale": "in Druck einschließen",

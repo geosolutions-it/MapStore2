@@ -304,8 +304,8 @@ class OpenlayersMap extends React.Component {
             }, 0);
         }
 
-        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.props.limits !== newProps.limits) {
-            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits) {
+        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.haveRotationChanged(newProps) || this.props.limits !== newProps.limits) {
+            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits || this.haveRotationChanged(newProps)) {
                 let mapProjection = newProps.projection;
                 const center = reproject([
                     newProps.center.x,
@@ -500,6 +500,12 @@ class OpenlayersMap extends React.Component {
         const resolutions = this.props.mapOptions && this.props.mapOptions.view ? this.props.mapOptions.view.resolutions : undefined;
         const newResolutions = newProps.mapOptions && newProps.mapOptions.view ? newProps.mapOptions.view.resolutions : undefined;
         return !isEqual(resolutions, newResolutions);
+    };
+
+    haveRotationChanged = (newProps) => {
+        const rotation = this.props.mapOptions && this.props.mapOptions.view ? this.props.mapOptions.view.rotation : undefined;
+        const newRotation = newProps.mapOptions && newProps.mapOptions.view ? newProps.mapOptions.view.rotation : undefined;
+        return !isEqual(rotation, newRotation);
     };
 
     createView = (center, zoom, projection, options, limits = {}) => {
