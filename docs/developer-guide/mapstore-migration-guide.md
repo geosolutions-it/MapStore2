@@ -24,10 +24,10 @@ This is a list of things to check if you want to update from a previous version 
 
 ### MapFish Print update
 
-**MapFish Print** library has been updated to be aligned to the one used by GeoServer and be able to build with Java 11. (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)
-For this reason, if you are using mapfish-print, you have to update your project
+The **MapFish Print** library has been updated to work with the latest GeoTools version and Java 11 as well as being aligned with the same dependency used by the official GeoServer printing extension (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)
+For this reason, if you are using the printing plugin in your project you have to update it by following the following steps:
 
-- by changing he version of the mapfish-print dependency:
+- Change the version of the mapfish-print dependency in the project `pom.xml` file:
 
 ```diff
                 <!-- mapfish-print -->
@@ -39,7 +39,7 @@ For this reason, if you are using mapfish-print, you have to update your project
 
 ```
 
-And adding the repository where this library is hosted in the `repositories` section of the same `pom.xml` (usually in `web` folder of a project)
+- Add the mvn repository where this library is hosted in the `repositories` section of the same `pom.xml` (usually in `web` folder of a project)
 
 ```diff
         <repository>
@@ -51,8 +51,6 @@ And adding the repository where this library is hosted in the `repositories` sec
             </snapshots>
         </repository>
 ```
-
-This library is actually hosted on [https://maven.geo-solutions.it/](https://maven.geo-solutions.it/).
 
 ### Annotations plugin refactor
 
