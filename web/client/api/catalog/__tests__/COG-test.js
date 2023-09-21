@@ -9,7 +9,7 @@ import { getLayerFromRecord, getCatalogRecords, validate, COG_LAYER_TYPE} from '
 import expect from 'expect';
 
 
-const record = {url: "some.tif", title: "some", options: []};
+const record = {sources: [{url: "some.tif"}], title: "some", options: []};
 describe('COG (Abstraction) API', () => {
     beforeEach(done => {
         setTimeout(done);
@@ -23,7 +23,7 @@ describe('COG (Abstraction) API', () => {
         expect(layer.title).toBe(record.title);
         expect(layer.visibility).toBeTruthy();
         expect(layer.type).toBe(COG_LAYER_TYPE);
-        expect(layer.url).toBe(record.url);
+        expect(layer.sources).toEqual(record.sources);
         expect(layer.name).toBe(record.title);
     });
     it('test getLayerFromRecord as promise', () => {
@@ -31,7 +31,7 @@ describe('COG (Abstraction) API', () => {
             expect(layer.title).toBe(record.title);
             expect(layer.visibility).toBeTruthy();
             expect(layer.type).toBe(COG_LAYER_TYPE);
-            expect(layer.url).toBe(record.url);
+            expect(layer.sources).toEqual(record.sources);
             expect(layer.name).toBe(record.title);
         });
     });
@@ -41,11 +41,11 @@ describe('COG (Abstraction) API', () => {
     });
     it('test getCatalogRecords', () => {
         const records = getCatalogRecords({records: [record]});
-        const [{serviceType, isValid, title, url, options }] = records;
+        const [{serviceType, isValid, title, sources, options }] = records;
         expect(serviceType).toBe(COG_LAYER_TYPE);
         expect(isValid).toBeFalsy();
         expect(title).toBe(record.title);
-        expect(url).toBe(record.url);
+        expect(sources).toEqual(record.sources);
         expect(options).toEqual(record.options);
     });
     it('test validate with invalid url', () => {

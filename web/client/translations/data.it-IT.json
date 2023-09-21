@@ -594,6 +594,7 @@
             "notVisibleZoomIn": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom in per mostrare il layer",
             "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
             "notVisibleSwitchTo3D": "Passa alla modalità mappa 3D per vedere questo layer",
+            "notVisibleSwitchTo2D": "Passa alla modalità mappa 2D per vedere questo layer",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",

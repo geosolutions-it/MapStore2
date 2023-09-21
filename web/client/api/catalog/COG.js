@@ -38,7 +38,7 @@ export const getRecords = (url, startPosition, maxRecords, text, info = {}) => {
                 ...service,
                 title,
                 type: COG_LAYER_TYPE,
-                url: _url,
+                sources: [{url: _url}],
                 options: service.options || {}
             };
         });
@@ -77,9 +77,9 @@ export const getCatalogRecords = (data) => {
         return data.records.map(record => {
             return {
                 serviceType: COG_LAYER_TYPE,
-                isValid: isValidURL(record.url),
+                isValid: record.sources?.every(source => isValidURL(source.url)),
                 title: record.title || record.provider,
-                url: record.url,
+                sources: record.sources,
                 options: record.options,
                 references: []
             };
@@ -95,7 +95,7 @@ export const cogToLayer = (record) => {
     return {
         type: COG_LAYER_TYPE,
         visibility: true,
-        url: record.url,
+        sources: record.sources,
         title: record.title,
         options: record.options,
         name: record.title

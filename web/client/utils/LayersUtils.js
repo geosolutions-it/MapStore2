@@ -600,6 +600,7 @@ export const saveLayer = (layer) => {
         search: layer.search,
         fields: layer.fields,
         source: layer.source,
+        sources: layer.sources,
         name: layer.name,
         opacity: layer.opacity,
         provider: layer.provider,

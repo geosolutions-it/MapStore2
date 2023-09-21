@@ -1162,7 +1162,10 @@ i.e.
     "group": "background",
     "visibility": false,
     "name": "Name",
-    "url": ['https://host-sample/cog1.tif', 'https://host-sample/cog1.tif']
+    "sources": [
+        { "url": "https://host-sample/cog1.tif" }, 
+        { "url": "https://host-sample/cog2.tif" }
+    ]
 }
 ```
 

@@ -19,11 +19,7 @@ function create(options) {
         visible: options.visibility,
         source: new GeoTIFF({
             convertToRGB: 'auto', // CMYK, YCbCr, CIELab, and ICCLab images will automatically be converted to RGB
-            sources: [
-                {
-                    url: options.url
-                }
-            ],
+            sources: options.sources,
             wrapX: true
         }),
         zIndex: options.zIndex,
