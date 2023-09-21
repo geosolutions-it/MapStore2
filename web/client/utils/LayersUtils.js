@@ -600,7 +600,6 @@ export const saveLayer = (layer) => {
         search: layer.search,
         fields: layer.fields,
         source: layer.source,
-        sources: layer.sources,
         name: layer.name,
         opacity: layer.opacity,
         provider: layer.provider,
@@ -645,6 +644,7 @@ export const saveLayer = (layer) => {
         tileSize: layer.tileSize,
         version: layer.version
     },
+    layer.sources ? { sources: layer.sources } : {},
     layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
     layer.params ? { params: layer.params } : {},
     layer.extendedParams ? { extendedParams: layer.extendedParams } : {},
