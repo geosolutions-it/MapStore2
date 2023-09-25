@@ -352,7 +352,7 @@ In **General Settings** of 3D Tiles service, the user can specify the title to a
 
 A **Cloud Optimized GeoTIFF** ([COG](https://www.cogeo.org)) is a regular GeoTIFF file, aimed at being hosted on a HTTP file server, with an internal organization that enables more efficient workflows on the cloud environment. It does this by leveraging the ability of clients issuing ​HTTP GET range requests to ask for just the parts of a file they need.
 
-MapStore allows to add COG as layers and backgrounds through the *Catalog* tool, a specific source type can be configured as follows by specifying the URL of a reachable `geotiff.tif`
+MapStore allows to add COG layers (also as a background) through its *Catalog* tool where a specific source type can be configured as follows by specifying the URL of a reachable COG `.tif` resource.
 
 In **General Settings** of COG service, the user can specify the title to assign to this service and the URL of the service.
 
