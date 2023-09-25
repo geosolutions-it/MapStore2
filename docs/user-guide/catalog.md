@@ -354,6 +354,6 @@ A **Cloud Optimized GeoTIFF** ([COG](https://www.cogeo.org)) is a regular GeoTIF
 
 MapStore allows to add COG layers (also as a background) through its *Catalog* tool where a specific source type can be configured as follows by specifying the URL of a reachable COG `.tif` resource.
 
-In **General Settings** of COG service, the user can specify the title to assign to this service and the URL of the service.
+In **General Settings** of a COG source type, it is possible to specify the service `Title` and its `URL`.
 
 <img src="../img/catalog/cog_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
