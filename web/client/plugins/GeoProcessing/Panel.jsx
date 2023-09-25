@@ -13,10 +13,10 @@ import { createSelector } from 'reselect';
 import Message from '../../components/I18N/Message';
 import BorderLayout from '../../components/layout/BorderLayout';
 import ResponsivePanel from "../../components/misc/panels/ResponsivePanel";
-import GeoProcessingToolsMain from './Main';
+import GeoProcessingMain from './Main';
 import { toggleControl } from '../../actions/controls';
-import { initPlugin } from '../../actions/geoProcessingTools';
-import { isGeoProcessingToolsEnabledSelector } from '../../selectors/controls';
+import { initPlugin } from '../../actions/geoProcessing';
+import { isGeoProcessingEnabledSelector } from '../../selectors/controls';
 import { dockStyleSelector } from '../../selectors/maplayout';
 
 const PanelComp = ({
@@ -34,22 +34,22 @@ const PanelComp = ({
             <ResponsivePanel
                 containerStyle={dockStyle}
                 containerClassName="dock-container"
-                containerId="GeoProcessingTools-root"
+                containerId="GeoProcessing-root"
                 open={enabled}
                 size={550}
                 dock
                 position="right"
                 bsStyle="primary"
-                title={<Message msgId="GeoProcessingTools.title"/>}
+                title={<Message msgId="GeoProcessing.title"/>}
                 onClose={onClose}
-                glyph="star"
+                glyph="globe-settings"
                 style={dockStyle}
             >
                 <BorderLayout
                     key="gpt-BorderLayout"
                     className="geo-processing-tool-panel"
                 >
-                    <GeoProcessingToolsMain/>
+                    <GeoProcessingMain/>
                 </BorderLayout>
             </ResponsivePanel>
         ) : null;
@@ -66,7 +66,7 @@ PanelComp.propTypes = {
 const PanelCompConnected = connect(
     createSelector(
         [
-            isGeoProcessingToolsEnabledSelector,
+            isGeoProcessingEnabledSelector,
             dockStyleSelector
         ],
         (
@@ -78,7 +78,7 @@ const PanelCompConnected = connect(
         })),
     {
         onMount: initPlugin,
-        onClose: toggleControl.bind(null, 'GeoProcessingTools', null)
+        onClose: toggleControl.bind(null, 'GeoProcessing', null)
     })(PanelComp);
 
 export default PanelCompConnected;

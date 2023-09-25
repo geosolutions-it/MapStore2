@@ -34,7 +34,15 @@ import {
     TOGGLE_CONTROL
 } from "../actions/controls";
 import {
+    GPT_TOOL_BUFFER,
+    GPT_TOOL_INTERSECTION,
+    GPT_INTERSECTION_HIGHLIGHT_ID,
+    GPT_SOURCE_HIGHLIGHT_ID,
     GPT_CONTROL_NAME,
+    GPT_INTERSECTION_GROUP_ID,
+    GPT_BUFFER_GROUP_ID,
+
+    setSelectedLayerType,
     CHECK_WPS_AVAILABILITY,
     checkingIntersectionWPSAvailability,
     checkingWPSAvailability,
@@ -44,8 +52,8 @@ import {
     getFeatures,
     increaseBufferedCounter,
     increaseIntersectedCounter,
-    RUN_BUFFER_PROCESS,
-    RUN_INTERSECTION_PROCESS,
+    RESET,
+    RUN_PROCESS,
     runningProcess,
     SET_INTERSECTION_FEATURE_ID,
     SET_INTERSECTION_LAYER_ID,
@@ -61,7 +69,7 @@ import {
     SET_SELECTED_LAYER_TYPE,
     setWPSAvailability,
     TOGGLE_HIGHLIGHT_LAYERS
-} from '../actions/geoProcessingTools';
+} from '../actions/geoProcessing';
 import {
     getDescribeLayer
 } from '../actions/layerCapabilities';
@@ -69,7 +77,8 @@ import {addLayer, addGroup, UPDATE_NODE} from '../actions/layers';
 import {
     zoomToExtent,
     CLICK_ON_MAP,
-    registerEventListener
+    registerEventListener,
+    unRegisterEventListener
 } from "../actions/map";
 import {
     hideMapinfoMarker,
@@ -88,6 +97,7 @@ import { describeProcess } from '../observables/wps/describe';
 import executeProcess from '../observables/wps/execute';
 import intersectXML from '../observables/wps/intersectionFeatureCollection';
 import {
+    selectedToolSelector,
     sourceFeaturesSelector,
     sourceTotalCountSelector,
     intersectionTotalCountSelector,
@@ -107,9 +117,10 @@ import {
     selectedLayerIdSelector,
     sourceFeatureSelector,
     showHighlightLayersSelector
-} from '../selectors/geoProcessingTools';
+} from '../selectors/geoProcessing';
 import {getLayerFromId as getLayerFromIdSelector, groupsSelector} from '../selectors/layers';
-import {isGeoProcessingToolsEnabledSelector} from '../selectors/controls';
+import {additionalLayersSelector} from '../selectors/additionallayers';
+import {isGeoProcessingEnabledSelector} from '../selectors/controls';
 import {mapSelector} from '../selectors/map';
 import {highlightStyleSelector, applyMapInfoStyle, mapInfoEnabledSelector} from '../selectors/mapInfo';
 
@@ -132,6 +143,9 @@ const DEACTIVATE_ACTIONS = [
 /**
  * checks if a layer is a valid one that can be used in the gpt tool.
  * also checks if it is a raster using describe layer
+ *
+ * this is a unique epics for two layer fields "source" and "intersection" that are used in
+ * these two process "buffer" and "intersection", no need to generalize this now
  */
 export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
     .ofType(CHECK_WPS_AVAILABILITY)
@@ -207,6 +221,9 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
     });
 /**
  * fetch all features ids
+ *
+ * this is a unique epic for fetching features of two layer fields "source" and "intersection"
+ * that are used in these two process "buffer" and "intersection", no need to generalize this now
  */
 export const getFeaturesGPTEpic = (action$, store) => action$
     .ofType(GET_FEATURES)
@@ -234,7 +251,7 @@ export const getFeaturesGPTEpic = (action$, store) => action$
         const layer = getLayerFromIdSelector(state, layerId);
         const maxFeatures = maxFeaturesSelector(state);
         const filterObj = null;
-        if (isNil(layer.describeFeatureType)) {
+        if (isNil(layer?.describeFeatureType)) {
             // throw error and notify user that a failure has happened
             return Rx.Observable.of(errorLoadingDFT(layerId));
         }
@@ -262,6 +279,9 @@ export const getFeaturesGPTEpic = (action$, store) => action$
     });
 /**
  * fetch the source feature geom by id
+ *
+ * this is a unique epic related to the "source" layer
+ * that are used in these two process "buffer" and "intersection", no need to generalize this
  */
 export const getFeatureDataGPTEpic = (action$, store) => action$
     .ofType(SET_SOURCE_FEATURE_ID)
@@ -283,7 +303,7 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
                 return Rx.Observable.from([
                     setSourceFeature(head(features)),
                     updateAdditionalLayer(
-                        "gpt-layer",
+                        GPT_SOURCE_HIGHLIGHT_ID,
                         "gpt",
                         "overlay",
                         {
@@ -299,7 +319,7 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
             .catch(() => {
                 return Rx.Observable.of(showErrorNotification({
                     title: "errorTitleDefault",
-                    message: "GeoProcessingTools.notifications.errorGetFeature",
+                    message: "GeoProcessing.notifications.errorGetFeature",
                     autoDismiss: 6,
                     position: "tc"
                 }));
@@ -307,6 +327,9 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
     });
 /**
  * fetch the intersection feature geom by id
+ *
+ * this is a unique epic related to the "intersection" layer
+ * that are used in this process "intersection"
  */
 export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
     .ofType(SET_INTERSECTION_FEATURE_ID)
@@ -328,7 +351,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
                 return Rx.Observable.from([
                     setIntersectionFeature(head(features)),
                     updateAdditionalLayer(
-                        "gpt-layer-intersection",
+                        GPT_INTERSECTION_HIGHLIGHT_ID,
                         "gpt",
                         "overlay",
                         {
@@ -344,7 +367,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
             .catch(() => {
                 return Rx.Observable.of(showErrorNotification({
                     title: "errorTitleDefault",
-                    message: "GeoProcessingTools.notifications.errorGetFeature",
+                    message: "GeoProcessing.notifications.errorGetFeature",
                     autoDismiss: 6,
                     position: "tc"
                 }));
@@ -354,7 +377,8 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
  * run buffer process and update toc with new layer geom
  */
 export const runBufferProcessGPTEpic = (action$, store) => action$
-    .ofType(RUN_BUFFER_PROCESS)
+    .ofType(RUN_PROCESS)
+    .filter(({process}) => process === GPT_TOOL_BUFFER )
     .switchMap(({}) => {
         const state = store.getState();
         const layerId = sourceLayerIdSelector(state);
@@ -389,7 +413,8 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                     geometry3857: wktGeom,
                     distance,
                     quadrantSegments,
-                    capStyle }),
+                    capStyle
+                }),
                 executeOptions, {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
                 });
@@ -400,8 +425,19 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                 executeBufferProcess$(wktGeom, feature4326)
                     .switchMap((geom) => {
                         const groups = groupsSelector(state);
-                        const groupExist = find(groups, ({id}) => id === "buffered.layers");
-                        return (!groupExist ? Rx.Observable.of( addGroup("Buffered layers", null, {id: "buffered.layers"})) : Rx.Observable.empty())
+                        const groupExist = find(groups, ({id}) => id === GPT_BUFFER_GROUP_ID);
+                        const features = [
+                            reprojectGeoJson({
+                                id: 0,
+                                geometry: geom,
+                                type: "Feature"
+                            }, "EPSG:3857", "EPSG:4326" )
+                        ];
+                        const extent = getGeoJSONExtent({
+                            features,
+                            type: "FeatureCollection"
+                        });
+                        return (!groupExist ? Rx.Observable.of( addGroup("Buffered layers", null, {id: GPT_BUFFER_GROUP_ID}, true)) : Rx.Observable.empty())
                             .concat(
                                 Rx.Observable.of(
                                     increaseBufferedCounter(),
@@ -411,13 +447,17 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                                         name: "Buffer Layer " + counter,
                                         title: "Buffer Layer " + counter,
                                         visibility: true,
-                                        group: "buffered.layers",
-                                        features: [
-                                            reprojectGeoJson({
-                                                id: 0,
-                                                geometry: geom,
-                                                type: "Feature"
-                                            }, "EPSG:3857", "EPSG:4326" )],
+                                        group: GPT_BUFFER_GROUP_ID,
+                                        bbox: {
+                                            crs: "EPSG:4326",
+                                            bounds: {
+                                                minx: extent[0],
+                                                miny: extent[1],
+                                                maxx: extent[2],
+                                                maxy: extent[3]
+                                            }
+                                        },
+                                        features,
                                         style: {
                                             format: "geostyler",
                                             body: {
@@ -426,18 +466,20 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                                                     symbolizers: [
                                                         {
                                                             "kind": "Fill",
-                                                            "outlineColor": "#3075e9",
-                                                            "fillOpacity": 0,
-                                                            "width": 3
+                                                            "outlineWidth": 3,
+                                                            "outlineColor": "#ffac12",
+                                                            "color": "#ffffff",
+                                                            "fillOpacity": 0.3
                                                         }
                                                     ]
                                                 }]
                                             }
                                         }
                                     }),
+                                    zoomToExtent(extent, "EPSG:4326"),
                                     showSuccessNotification({
                                         title: "notification.success",
-                                        message: "GeoProcessingTools.notifications.successfulBuffer",
+                                        message: "GeoProcessing.notifications.successfulBuffer",
                                         autoDismiss: 6,
                                         position: "tc"
                                     })
@@ -447,7 +489,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                     .catch(() => {
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
-                            message: "GeoProcessingTools.notifications.errorBuffer",
+                            message: "GeoProcessing.notifications.errorBuffer",
                             autoDismiss: 6,
                             position: "tc"
                         }));
@@ -465,7 +507,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                 }).catch(() => {
                 return Rx.Observable.of(showErrorNotification({
                     title: "errorTitleDefault",
-                    message: "GeoProcessingTools.notifications.errorBuffer",
+                    message: "GeoProcessing.notifications.errorBuffer",
                     autoDismiss: 6,
                     position: "tc"
                 }));
@@ -497,7 +539,7 @@ export const resetSourceHighlightGPTEpic = (action$) => action$
     .ofType(SET_SOURCE_LAYER_ID, SET_SOURCE_FEATURE_ID)
     .filter(a => a.layerId === "" || a.featureId === "")
     .switchMap(({}) => {
-        return Rx.Observable.of(removeAdditionalLayer({id: "gpt-layer"}));
+        return Rx.Observable.of(removeAdditionalLayer({id: GPT_SOURCE_HIGHLIGHT_ID}));
     });
 /**
  * clear intersection highlight feature
@@ -506,13 +548,14 @@ export const resetIntersectHighlightGPTEpic = (action$) => action$
     .ofType(SET_INTERSECTION_LAYER_ID, SET_INTERSECTION_FEATURE_ID)
     .filter(a => a.layerId === "" || a.featureId === "")
     .switchMap(({}) => {
-        return Rx.Observable.of(removeAdditionalLayer({id: "gpt-layer-intersection"}));
+        return Rx.Observable.of(removeAdditionalLayer({id: GPT_INTERSECTION_HIGHLIGHT_ID}));
     });
 /**
  * run intersection process and update toc with new layer geom
  */
 export const runIntersectProcessGPTEpic = (action$, store) => action$
-    .ofType(RUN_INTERSECTION_PROCESS)
+    .ofType(RUN_PROCESS)
+    .filter(({process}) => process === GPT_TOOL_INTERSECTION )
     .switchMap(({}) => {
         const state = store.getState();
         const layerId = sourceLayerIdSelector(state);
@@ -521,6 +564,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         const sourceFeature = sourceFeatureSelector(state);
         const executeOptions = {};
         const intersectionFeature = intersectionFeatureSelector(state);
+        const counter = intersectedLayersCounterSelector(state);
         let sourceFC$;
         let intersectionFC$;
         if (isEmpty(sourceFeature)) {
@@ -550,7 +594,6 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         }
         return Rx.Observable.forkJoin(sourceFC$, intersectionFC$)
             .switchMap(([firstGeom, secondGeom]) => {
-                const counter = intersectedLayersCounterSelector(state);
 
                 const executeProcess$ = executeProcess(
                     layerUrl,
@@ -572,8 +615,9 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                 const intersection$ = executeProcess$
                     .switchMap((featureCollection) => {
                         const groups = groupsSelector(state);
-                        const groupExist = find(groups, ({id}) => id === "intersection.layers");
-                        return (!groupExist ? Rx.Observable.of( addGroup("Intersected Layers", null, {id: "intersection.layer"})) : Rx.Observable.empty())
+                        const groupExist = find(groups, (g) => g.id === GPT_INTERSECTION_GROUP_ID);
+                        const extent = getGeoJSONExtent(featureCollection);
+                        return (!groupExist ? Rx.Observable.of( addGroup("Intersected Layers", null, {id: GPT_INTERSECTION_GROUP_ID}, true)) : Rx.Observable.empty())
                             .concat(
                                 Rx.Observable.of(
                                     increaseIntersectedCounter(),
@@ -581,10 +625,19 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                                         id: uuidV1(),
                                         type: "vector",
                                         name: "Intersection Layer " + counter,
-                                        group: "intersection.layer",
+                                        group: GPT_INTERSECTION_GROUP_ID,
                                         title: "Intersection Layer " + counter,
                                         visibility: true,
                                         features: featureCollection.features,
+                                        bbox: {
+                                            crs: "EPSG:4326",
+                                            bounds: {
+                                                minx: extent[0],
+                                                miny: extent[1],
+                                                maxx: extent[2],
+                                                maxy: extent[3]
+                                            }
+                                        },
                                         style: {
                                             format: "geostyler",
                                             body: {
@@ -593,18 +646,20 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                                                     symbolizers: [
                                                         {
                                                             "kind": "Fill",
-                                                            "outlineColor": "#880000",
-                                                            "fillOpacity": 0.5,
-                                                            "width": 5
+                                                            "outlineWidth": 3,
+                                                            "outlineColor": "#ffac12",
+                                                            "color": "#ffffff",
+                                                            "fillOpacity": 0.3
                                                         }
                                                     ]
                                                 }]
                                             }
                                         }
                                     }),
+                                    zoomToExtent(extent, "EPSG:4326"),
                                     showSuccessNotification({
                                         title: "notification.success",
-                                        message: "GeoProcessingTools.notifications.successfulIntersection",
+                                        message: "GeoProcessing.notifications.successfulIntersection",
                                         autoDismiss: 6,
                                         position: "tc"
                                     })
@@ -613,7 +668,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                     .catch(() => {
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
-                            message: "GeoProcessingTools.notifications.errorIntersectGFI",
+                            message: "GeoProcessing.notifications.errorIntersectGFI",
                             autoDismiss: 6,
                             position: "tc"
                         }));
@@ -635,22 +690,64 @@ export const toggleHighlightLayersGPTEpic = (action$, store) => action$
             visibility: showHighlightLayers
         }));
     });
-export const toggleHighlightLayersOnOpencloseGPTEpic = (action$, store) => action$
+export const toggleHighlightLayersOnOpenCloseGPTEpic = (action$, store) => action$
     .ofType(TOGGLE_CONTROL)
     .filter(action => action.control === GPT_CONTROL_NAME)
     .switchMap(() => {
-        const showHighlightLayers = showHighlightLayersSelector(store.getState());
-        const isGPTEnabled = isGeoProcessingToolsEnabledSelector(store.getState());
-        return Rx.Observable.of(mergeOptionsByOwner("gpt", {
-            visibility: isGPTEnabled ? showHighlightLayers : false
-        }));
+        const state = store.getState();
+        const showHighlightLayers = showHighlightLayersSelector(state);
+        const isGPTEnabled = isGeoProcessingEnabledSelector(state);
+        const selectedTool = selectedToolSelector(state);
+        if (selectedTool === GPT_TOOL_BUFFER) {
+            const additionalLayers = additionalLayersSelector(state);
+            const bufferLayer = find(additionalLayers, ({id}) => id === GPT_SOURCE_HIGHLIGHT_ID );
+            return bufferLayer?.id ? Rx.Observable.of(
+                updateAdditionalLayer(
+                    bufferLayer.id,
+                    bufferLayer.owner,
+                    bufferLayer.actionType,
+                    {
+                        ...bufferLayer.options,
+                        visibility: isGPTEnabled ? showHighlightLayers : false
+                    }
+                ),
+                unRegisterEventListener('click', GPT_CONTROL_NAME),
+                ...(!isGPTEnabled ? [changeMapInfoState(true), setSelectedLayerType("")] : [])
+            ) : Rx.Observable.of(
+                unRegisterEventListener('click', GPT_CONTROL_NAME),
+                ...(!isGPTEnabled ? [changeMapInfoState(true), setSelectedLayerType("")] : [])
+            );
+        }
+        // INTERSECTION enabled any
+        return Rx.Observable.of(
+            mergeOptionsByOwner("gpt", {
+                visibility: isGPTEnabled ? showHighlightLayers : false
+            })
+        ).concat(
+            Rx.Observable.of(
+                unRegisterEventListener('click', GPT_CONTROL_NAME),
+                ...(!isGPTEnabled ? [changeMapInfoState(true), setSelectedLayerType("")] : [])
+            )
+        );
     });
+
+export const unRegisterEventListenerOnReset = action$ =>
+    action$
+        .ofType(RESET) // add location change
+        .switchMap(() => {
+            return Rx.Observable.of(
+                unRegisterEventListener('click', GPT_CONTROL_NAME)
+            );
+        });
+
+
 /**
  * activate feature selection from map
  */
 export const disableIdentifyGPTEpic = (action$, {getState}) =>
     action$
         .ofType(SET_SELECTED_LAYER_TYPE)
+        .filter(({source}) => !!source)
         .switchMap(({source}) => {
             const state = getState();
             return Rx.Observable.from([
@@ -694,7 +791,7 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
                                 updateFeatureId(features[0].id),
                                 showSuccessNotification({
                                     title: "notification.success",
-                                    message: "GeoProcessingTools.notifications.featureFound",
+                                    message: "GeoProcessing.notifications.featureFound",
                                     autoDismiss: 10,
                                     position: "tc"
                                 })
@@ -702,7 +799,7 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
                         }
                         return Rx.Observable.of(showWarningNotification({
                             title: "notification.warning",
-                            message: "GeoProcessingTools.notifications.noFeatureInPoint",
+                            message: "GeoProcessing.notifications.noFeatureInPoint",
                             autoDismiss: 10,
                             position: "tc"
                         }));
@@ -710,7 +807,7 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
                     .catch(() => {
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
-                            message: "GeoProcessingTools.notifications.errorGFI",
+                            message: "GeoProcessing.notifications.errorGFI",
                             autoDismiss: 6,
                             position: "tc"
                         }));
@@ -740,7 +837,7 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
  */
 export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
     action$.ofType(UPDATE_MAP_LAYOUT)
-        .filter(({source}) => isGeoProcessingToolsEnabledSelector(store.getState()) && source !== GPT_CONTROL_NAME)
+        .filter(({source}) => isGeoProcessingEnabledSelector(store.getState()) && source !== GPT_CONTROL_NAME)
         .map(({layout}) => {
             const action = updateMapLayout({
                 ...layout,
@@ -754,3 +851,16 @@ export const LPlongitudinalMapLayoutGPTEpic = (action$, store) =>
             return { ...action, source: GPT_CONTROL_NAME }; // add an argument to avoid infinite loop.
         });
 
+
+/**
+ * hide intersection Feature when switching to Buffer
+ * show intersection Feature when switching to intersection if flag highlight is true
+ */
+export const removeHighlightsOnResetGPTEpic = (action$) =>
+    action$.ofType(RESET)
+        .switchMap(() => {
+            return Rx.Observable.of(
+                removeAdditionalLayer({id: GPT_SOURCE_HIGHLIGHT_ID}),
+                removeAdditionalLayer({id: GPT_INTERSECTION_HIGHLIGHT_ID})
+            );
+        });

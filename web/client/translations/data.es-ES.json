@@ -3032,9 +3032,9 @@
             "description": "Permite agregar un filtro a una capa",
             "title": "Capa de filtro"
           },
-          "GeoProcessingTools": {
+          "GeoProcessing": {
             "description": "Permite geoprocesar capas para generar una nueva, utilizando procesos wps buffer e intersección",
-            "title": "Herramientas de procesamiento geográfico"
+            "title": "Geoprocesamiento"
           },
           "HelpLink": {
             "description": "Un botón para acceder a la documentación de MapStore",
@@ -3846,13 +3846,13 @@
             "dxfGeometryNotSupported": "Solo se admite LWPOLYLINE"
           }
         },
-        "GeoProcessingTools": {
-          "title": "Herramientas de geoprocesamiento",
-          "emptyTitle": "Estos procesos WPS deben estar instalados en Geoserver para poder utilizar esta herramienta:",
+        "GeoProcessing": {
+          "title": "Geoprocesamiento",
+          "emptyTitle": "Estos procesos WPS deben estar instalados en Geoserver para poder utilizar este proceso:",
           "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
           "sourceLayer": "Capa de origen",
           "sourceFeature": "Característica de origen",
-          "tool": "Seleccione una herramienta para usar",
+          "tool": "Seleccione un proceso para usar",
           "highlight": "Características destacadas",
           "bufferTool": "Buffer",
           "distance": "Distancia",
@@ -3866,16 +3866,23 @@
           "intersectionLayer": "Capa de intersección",
           "intersectionFeature": "Característica de intersección",
           "advancedSettings": "Ajustes avanzados",
-          "quadrantSegments": "Segmentos de cuadrante",
-          "capStyle": "Estilo para las tapas de los extremos del búfer",
+          "quadrantSegments": "quadrantSegments",
+          "quadrantSegmentsTooltip": "Segmentos de cuadrante",
+          "capStyle": "capStyle",
+          "capStyleTooltip": "Estilo para las tapas de los extremos del búfer",
           "round": "Redonda",
           "flat": "Plana",
           "square": "Cuadrada",
-          "firstAttributeToRetain": "Primer atributo de colección de características para incluir",
-          "secondAttributeToRetain": "Segundo atributo de colección de características a incluir",
-          "intersectionMode": "Especifica la geometría calculada para las entidades de intersección",
-          "percentagesEnabled": "Indica si se deben generar porcentajes de áreas de características",
-          "areasEnabled": "Indica si generar áreas de características",
+          "firstAttributeToRetain": "firstAttributeToRetain",
+          "secondAttributeToRetain": "secondAttributeToRetain",
+          "intersectionMode": "intersectionMode",
+          "percentagesEnabled": "percentagesEnabled",
+          "areasEnabled": "areasEnabled",
+          "firstAttributeToRetainTooltip": "Primer atributo de colección de características para incluir",
+          "secondAttributeToRetainTooltip": "Segundo atributo de colección de características a incluir",
+          "intersectionModeTooltip": "Especifica la geometría calculada para las entidades de intersección",
+          "percentagesEnabledTooltip": "Indica si se deben generar porcentajes de áreas de características",
+          "areasEnabledTooltip": "Indica si generar áreas de características",
           "noMatchedMode": "Ningún modo coincide con el filtro actual",
           "INTERSECTION": "INTERSECCIÓN",
           "FIRST": "PRIMERA",
@@ -3900,15 +3907,15 @@
           "warningCancel": "Cancelar",
           "tooltip": {
             "clickToSelectFeature": "Haga clic para seleccionar la característica",
-            "invalidLayers": "Una de las capas que ha seleccionado no se puede usar dentro de esta herramienta",
+            "invalidLayers": "Una de las capas que ha seleccionado no se puede utilizar dentro de este proceso",
             "fillRequiredDataIntersection": "Seleccione al menos la capa de origen y la capa de intersección",
             "fillRequiredDataBuffer": "Seleccione al menos la capa de origen",
-            "siderBarBtn": "Herramientas de geoprocesamiento",
+            "siderBarBtn": "Geoprocesamiento",
             "selectFeature": "Seleccione una función",
             "validFeature": "Esta función es válida",
             "invalidFeature": "Esta función no es válida",
             "selectLayer": "Seleccione una capa",
-            "validLayer": "Esta capa es válida y se puede usar en esta herramienta",
+            "validLayer": "Esta capa es válida y se puede utilizar en este proceso.",
             "invalidLayer": "Esta capa no soporta los procesos wps necesarios \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\ni es una capa Raster"
           }
         }

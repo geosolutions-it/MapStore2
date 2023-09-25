@@ -3033,9 +3033,9 @@
             "description": "Permet d'ajouter un filtre à une couche",
             "title": "Filtre de couche"
           },
-          "GeoProcessingTools": {
+          "GeoProcessing": {
             "description": "Permet de géo-traiter les couches pour en générer une nouvelle, en utilisant le tampon et l'intersection des processus wps",
-            "title": "Outils de traitement géographique"
+            "title": "Géotraitement"
           },
           "HelpLink": {
             "description": "Un bouton pour accéder à la documentation MapStore",
@@ -3846,13 +3846,13 @@
             "dxfGeometryNotSupported": "Seul LWPOLYLINE est pris en charge"
           }
         },
-        "GeoProcessingTools": {
-          "title": "Outils de géotraitement",
-          "emptyTitle": "Ces processus WPS doivent être installés dans Geoserver afin d'utiliser cet outil:",
+        "GeoProcessing": {
+          "title": "Géotraitement",
+          "emptyTitle": "Ces processus WPS doivent être installés dans Geoserver pour pouvoir utiliser ce processus:",
           "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
           "sourceLayer": "Couche source",
           "sourceFeature": "Caractéristique source",
-          "tool": "Sélectionnez un outil à utiliser",
+          "tool": "Sélectionnez un processus à utiliser",
           "highlight": "Mettre en évidence les fonctionnalités",
           "bufferTool": "Tampon",
           "distance": "Distance",
@@ -3866,16 +3866,23 @@
           "intersectionLayer": "Couche d'intersection",
           "intersectionFeature": "Caractéristique d'intersection",
           "advancedSettings": "Réglages avancés",
-          "quadrantSegments": "Segments du quadrant",
-          "capStyle": "Style pour les embouts de tampon",
+          "quadrantSegments": "quadrantSegments",
+          "quadrantSegmentsTooltip": "Segments du quadrant",
+          "capStyle": "capStyle",
+          "capStyleTooltip": "Style pour les embouts de tampon",
           "round": "Ronde",
           "flat": "Plate",
           "square": "Carré",
-          "firstAttributeToRetain": "Premier attribut de collection d'entités à inclure",
-          "secondAttributeToRetain": "Deuxième attribut de collection d'entités à inclure",
-          "intersectionMode": "Spécifie la géométrie calculée pour les entités d'intersection",
-          "percentagesEnabled": "Indique s'il faut générer des pourcentages de surface d'entité",
-          "areasEnabled": "Indique s'il faut sortir les zones de caractéristiques",
+          "firstAttributeToRetain": "firstAttributeToRetain",
+          "secondAttributeToRetain": "secondAttributeToRetain",
+          "intersectionMode": "intersectionMode",
+          "percentagesEnabled": "percentagesEnabled",
+          "areasEnabled": "areasEnabled",
+          "firstAttributeToRetainTooltip": "Premier attribut de collection d'entités à inclure",
+          "secondAttributeToRetainTooltip": "Deuxième attribut de collection d'entités à inclure",
+          "intersectionModeTooltip": "Spécifie la géométrie calculée pour les entités d'intersection",
+          "percentagesEnabledTooltip": "Indique s'il faut générer des pourcentages de surface d'entité",
+          "areasEnabledTooltip": "Indique s'il faut sortir les zones de caractéristiques",
           "noMatchedMode": "Aucun mode ne correspond au filtre actuel",
           "INTERSECTION": "INTERSECTION",
           "FIRST": "D'ABORD",
@@ -3900,15 +3907,15 @@
           "warningCancel": "Annuler",
           "tooltip": {
             "clickToSelectFeature": "Cliquez pour sélectionner une fonctionnalité",
-            "invalidLayers": "L'un des calques que vous avez sélectionnés ne peut pas être utilisé dans cet outil",
+            "invalidLayers": "L'un des calques que vous avez sélectionnés ne peut pas être utilisé dans ce processus",
             "fillRequiredDataIntersection": "Veuillez sélectionner au moins la couche source et la couche d'intersection",
             "fillRequiredDataBuffer": "Veuillez sélectionner au moins la couche source",
-            "siderBarBtn": "Outils de géotraitement",
+            "siderBarBtn": "Géotraitement",
             "selectFeature": "Veuillez sélectionner une fonctionnalité",
             "validFeature": "Cette fonctionnalité est valide",
             "invalidFeature": "Cette fonctionnalité n'est pas valide",
             "selectLayer": "Veuillez sélectionner un calque",
-            "validLayer": "Cette couche est valide et peut être utilisée dans cet outil",
+            "validLayer": "Cette couche est valide et peut être utilisée dans ce processus",
             "invalidLayer": "Cette couche ne prend pas en charge les processus wps nécessaires \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\ni c'est une couche raster"
           }
         }

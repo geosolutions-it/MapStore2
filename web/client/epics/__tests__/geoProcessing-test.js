@@ -20,12 +20,15 @@ import {
     resetSourceHighlightGPTEpic,
     resetIntersectHighlightGPTEpic,
     runIntersectProcessGPTEpic,
+    toggleHighlightLayersOnOpenCloseGPTEpic,
     toggleHighlightLayersGPTEpic,
     disableIdentifyGPTEpic,
     clickToSelectFeatureGPTEpic,
     LPlongitudinalMapLayoutGPTEpic
-} from '../geoProcessingTools';
+} from '../geoProcessing';
 import {
+    GPT_TOOL_INTERSECTION,
+    GPT_TOOL_BUFFER,
     GPT_CONTROL_NAME,
     SET_FEATURES,
     checkWPSAvailability,
@@ -46,11 +49,10 @@ import {
     setSourceFeature,
     setIntersectionFeature,
     setSelectedLayerType,
-    runBufferProcess,
-    runIntersectionProcess,
+    runProcess,
     runningProcess,
     toggleHighlightLayers
-} from '../../actions/geoProcessingTools';
+} from '../../actions/geoProcessing';
 import {
     mergeOptionsByOwner,
     updateAdditionalLayer,
@@ -64,6 +66,9 @@ import {
 import {
     updateMapLayout
 } from '../../actions/maplayout';
+import {
+    toggleControl
+} from '../../actions/controls';
 import {
     registerEventListener,
     zoomToExtent,
@@ -85,7 +90,7 @@ import {
     purgeMapInfoResults,
     changeMapInfoState
 } from "../../actions/mapInfo";
-describe('geoProcessingTools epics', () => {
+describe('geoProcessing epics', () => {
     let mockAxios;
     beforeEach(() => {
         mockAxios = new MockAdapter(axios);
@@ -319,7 +324,7 @@ describe('geoProcessingTools epics', () => {
                     }
                 }]
             },
-            geoProcessingTools: {
+            geoProcessing: {
                 source: {
                     layerId: "id"
                 },
@@ -353,7 +358,7 @@ describe('geoProcessingTools epics', () => {
                     }
                 }]
             },
-            geoProcessingTools: {
+            geoProcessing: {
                 source: {
                     layerId: "id"
                 },
@@ -391,7 +396,7 @@ describe('geoProcessingTools epics', () => {
                     }
                 }]
             },
-            geoProcessingTools: {
+            geoProcessing: {
                 intersection: {
                     layerId: "id"
                 },
@@ -425,7 +430,7 @@ describe('geoProcessingTools epics', () => {
                     }
                 }]
             },
-            geoProcessingTools: {
+            geoProcessing: {
                 intersection: {
                     layerId: "id"
                 },
@@ -436,13 +441,13 @@ describe('geoProcessingTools epics', () => {
         });
     });
     it('runBufferProcess with geom collect', (done) => {
-        const NUM_ACTIONS = 6;
+        const NUM_ACTIONS = 7;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
         mockAxios.onPost("mockUrl?service=WPS&version=1.0.0&REQUEST=Execute").reply(200, COLLECT_GEOM, {
             "content-type": "application/json"
         });
 
-        const startActions = [runBufferProcess()];
+        const startActions = [runProcess(GPT_TOOL_BUFFER)];
         testEpic(addTimeoutEpic(runBufferProcessGPTEpic, 100), NUM_ACTIONS, startActions, actions => {
             expect(actions.length).toBe(NUM_ACTIONS);
             const [
@@ -451,14 +456,16 @@ describe('geoProcessingTools epics', () => {
                 action3,
                 action4,
                 action5,
-                action6
+                action6,
+                action7
             ] = actions;
             expect(action1).toEqual(runningProcess(true));
             expect(action2.type).toEqual(addGroup().type);
             expect(action3.type).toEqual(increaseBufferedCounter().type);
             expect(action4.type).toEqual(addLayer().type);
-            expect(action5.type).toEqual(showSuccessNotification().type);
-            expect(action6).toEqual(runningProcess(false));
+            expect(action5.type).toEqual(zoomToExtent().type);
+            expect(action6.type).toEqual(showSuccessNotification().type);
+            expect(action7).toEqual(runningProcess(false));
             done();
         }, {
             layers: {
@@ -471,7 +478,7 @@ describe('geoProcessingTools epics', () => {
                     }
                 }]
             },
-            geoProcessingTools: {
+            geoProcessing: {
                 source: {
                     layerId: "id"
                 },
@@ -482,12 +489,12 @@ describe('geoProcessingTools epics', () => {
         });
     });
     it('runBufferProcess without geom collect', (done) => {
-        const NUM_ACTIONS = 6;
+        const NUM_ACTIONS = 7;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
         mockAxios.onPost("mockUrl?service=WPS&version=1.0.0&REQUEST=Execute").reply(200, COLLECT_GEOM, {
             "content-type": "application/json"
         });
-        const startActions = [runBufferProcess()];
+        const startActions = [runProcess(GPT_TOOL_BUFFER)];
         testEpic(addTimeoutEpic(runBufferProcessGPTEpic, 100), NUM_ACTIONS, startActions, actions => {
             expect(actions.length).toBe(NUM_ACTIONS);
             const [
@@ -496,14 +503,17 @@ describe('geoProcessingTools epics', () => {
                 action3,
                 action4,
                 action5,
-                action6
+                action6,
+                action7
             ] = actions;
             expect(action1).toEqual(runningProcess(true));
             expect(action2.type).toEqual(addGroup().type);
             expect(action3.type).toEqual(increaseBufferedCounter().type);
             expect(action4.type).toEqual(addLayer().type);
-            expect(action5.type).toEqual(showSuccessNotification().type);
-            expect(action6).toEqual(runningProcess(false));
+            expect(action5.type).toEqual(zoomToExtent().type);
+            expect(action6.type).toEqual(showSuccessNotification().type);
+
+            expect(action7).toEqual(runningProcess(false));
             done();
         }, {
             layers: {
@@ -516,7 +526,7 @@ describe('geoProcessingTools epics', () => {
                     }
                 }]
             },
-            geoProcessingTools: {
+            geoProcessing: {
                 source: {
                     layerId: "id",
                     featureId: "ft-id",
@@ -592,7 +602,7 @@ describe('geoProcessingTools epics', () => {
         }, {});
     });
     it('runIntersectProcessGPTEpic with double geom collect', (done) => {
-        const NUM_ACTIONS = 6;
+        const NUM_ACTIONS = 7;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
         mockAxios.onPost("mockUrl?service=WPS&version=1.0.0&REQUEST=Execute").reply(200, COLLECT_GEOM, {
             "content-type": "application/json"
@@ -602,7 +612,7 @@ describe('geoProcessingTools epics', () => {
             "content-type": "application/json"
         });
 
-        const startActions = [runIntersectionProcess()];
+        const startActions = [runProcess(GPT_TOOL_INTERSECTION)];
         testEpic(addTimeoutEpic(runIntersectProcessGPTEpic, 100), NUM_ACTIONS, startActions, actions => {
             expect(actions.length).toBe(NUM_ACTIONS);
             const [
@@ -611,14 +621,16 @@ describe('geoProcessingTools epics', () => {
                 action3,
                 action4,
                 action5,
-                action6
+                action6,
+                action7
             ] = actions;
             expect(action1).toEqual(runningProcess(true));
             expect(action2.type).toEqual(addGroup().type);
             expect(action3.type).toEqual(increaseIntersectedCounter().type);
             expect(action4.type).toEqual(addLayer().type);
-            expect(action5.type).toEqual(showSuccessNotification().type);
-            expect(action6).toEqual(runningProcess(false));
+            expect(action5.type).toEqual(zoomToExtent().type);
+            expect(action6.type).toEqual(showSuccessNotification().type);
+            expect(action7).toEqual(runningProcess(false));
             done();
         }, {
             layers: {
@@ -639,7 +651,7 @@ describe('geoProcessingTools epics', () => {
                     }
                 }]
             },
-            geoProcessingTools: {
+            geoProcessing: {
                 source: {
                     layerId: "id"
                 },
@@ -704,7 +716,7 @@ describe('geoProcessingTools epics', () => {
 
             done();
         }, {
-            geoProcessingTools: {
+            geoProcessing: {
                 selectedLayerId: "id",
                 selectedLayerType: "source",
                 source: {
@@ -755,8 +767,82 @@ describe('geoProcessingTools epics', () => {
             done();
         }, {
             controls: {
-                GeoProcessingTools: {
+                GeoProcessing: {
                     enabled: true
+                }
+            }
+        });
+    });
+
+    it('toggleHighlightLayersOnOpenCloseGPTEpic closing tool', (done) => {
+        const NUM_ACTIONS = 1;
+        const startActions = [toggleControl(GPT_CONTROL_NAME)];
+        testEpic(toggleHighlightLayersOnOpenCloseGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1
+            ] = actions;
+            expect(action1.type).toEqual(mergeOptionsByOwner().type);
+            expect(action1.options.visibility).toEqual(false);
+            done();
+        }, {
+            additionallayers: [{
+                id: "gpt-layer-intersection",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: true
+                }
+            }
+            ],
+            controls: {
+                GeoProcessing: {
+                    enabled: false
+                }
+            },
+            geoProcessing: {
+                flags: {
+                    showHighlightLayers: true
+                }
+            }
+        });
+    });
+    it('toggleHighlightLayersOnOpenCloseGPTEpic closing tool', (done) => {
+        const NUM_ACTIONS = 1;
+        const startActions = [toggleControl(GPT_CONTROL_NAME)];
+        testEpic(toggleHighlightLayersOnOpenCloseGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1
+            ] = actions;
+            expect(action1.type).toEqual(updateAdditionalLayer().type);
+            expect(action1.options.visibility).toEqual(true);
+            done();
+        }, {
+            additionallayers: [{
+                id: "gpt-layer-intersection",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: false
+                }
+            }, {
+                id: "gpt-layer",
+                owner: "gpt",
+                actionType: "overlay",
+                options: {
+                    visibility: true
+                }
+            }],
+            controls: {
+                GeoProcessing: {
+                    enabled: true
+                }
+            },
+            geoProcessing: {
+                selectedTool: GPT_TOOL_BUFFER,
+                flags: {
+                    showHighlightLayers: true
                 }
             }
         });
