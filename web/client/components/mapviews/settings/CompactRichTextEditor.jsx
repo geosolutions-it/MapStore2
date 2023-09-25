@@ -79,7 +79,7 @@ function CompactRichTextEditor({
                     }),
                     previewImage: true,
                     inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
-                    alt: { present: false, mandatory: false },
+                    alt: props.alt || { present: false, mandatory: false },
                     defaultSize: {
                         height: 'auto',
                         width: '100%'
