@@ -13,7 +13,8 @@ import ReactTestUtils from 'react-dom/test-utils';
 import {createSink} from  'recompose';
 
 import Toolbar from '../../../../misc/toolbar/Toolbar';
-import {withLocalMapState, withMapEditingAndLocalMapState, withToolbar} from '../map';
+import withMapEnhancer, { withLocalMapState, withMapEditingAndLocalMapState, withToolbar } from '../map';
+import { Provider } from 'react-redux';
 
 describe("geostory media map component enhancers", () => {
     beforeEach((done) => {
@@ -24,6 +25,20 @@ describe("geostory media map component enhancers", () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
+    });
+    it('withMapEnhancer generate correct props', (done) => {
+        const resources = [{id: "1", type: "map", data: {id: "2", layers: [], context: "1"}}];
+        const store = {
+            subscribe: () => {}, getState: () => ({geostory: {currentStory: {resources}}})
+        };
+        const resourceId = "1";
+        const Sink = withMapEnhancer(createSink( props => {
+            expect(props).toBeTruthy();
+            expect(props.map).toBeTruthy();
+            expect(props.map).toEqual({id: "2", layers: []});
+            done();
+        }));
+        ReactDOM.render(<Provider store={store}><Sink resourceId={resourceId} map={{}}/></Provider>, document.getElementById("container"));
     });
     it('withLocalMapState generate correct props', (done) => {
         const Sink = withLocalMapState(createSink( props => {
