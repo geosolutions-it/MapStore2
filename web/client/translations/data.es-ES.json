@@ -701,6 +701,7 @@
                 "iconsSize": "Tamaño de los iconos:",
                 "dpi": "ppp:"
             },
+            "rotation": "Rotation",
             "layoutWarning": "Lienzo no permitido",
             "scale": "escala",
             "includeScale": "incluir en la impresión",

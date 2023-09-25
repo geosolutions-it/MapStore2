@@ -712,6 +712,83 @@ describe('OpenlayersMap', () => {
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
     });
 
+    it('check result of "haveRotationChanged()" when receiving new props', () => {
+        let map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+            />
+            , document.getElementById("map"));
+
+        let origProps = assign({}, map.props);
+        function testProps(newProps) {
+            // update original props with newProps
+            return assign({}, origProps, newProps);
+        }
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={undefined}
+            />
+            , document.getElementById("map"));
+
+        expect(map.haveRotationChanged(testProps({mapOptions: undefined}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: undefined}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 0}}}))).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 20}}}))).toBe(true);
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{}}
+            />
+            , document.getElementById("map"));
+        expect(map.haveRotationChanged(testProps({mapOptions: undefined}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: undefined}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 0}}}))).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 20}}}))).toBe(true);
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{view: {}}}
+            />
+            , document.getElementById("map"));
+        expect(map.haveRotationChanged(testProps({mapOptions: undefined}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: undefined}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 0}}}))).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 20}}}))).toBe(true);
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{view: {rotation: 1}}}
+                maxExtent= {[-180, -90, 180, 80]}
+            />
+            , document.getElementById("map"));
+        expect(map.haveRotationChanged(testProps({mapOptions: undefined})) ).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {}})) ).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {}}})) ).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: undefined}}})) ).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 1}}})) ).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 20}}})) ).toBe(true);
+    });
+
     it('check if the map has "auto" cursor as default', () => {
         const map = ReactDOM.render(
             <OpenlayersMap
