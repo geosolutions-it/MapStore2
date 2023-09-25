@@ -97,7 +97,9 @@ class DefaultLayer extends React.Component {
     };
 
     getVisibilityMessage = () => {
-        if (this.props.node.exclusiveMapType) return this.props.node?.type === '3dtiles' && 'toc.notVisibleSwitchTo3D';
+        if (this.props.node.exclusiveMapType) {
+            return this.props.node?.type === '3dtiles' ? 'toc.notVisibleSwitchTo3D' : this.props.node?.type === 'cog' ? 'toc.notVisibleSwitchTo2D' : '';
+        }
         const maxResolution = this.props.node.maxResolution || Infinity;
         return this.props.resolution >=  maxResolution
             ? 'toc.notVisibleZoomIn'

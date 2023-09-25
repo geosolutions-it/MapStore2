@@ -304,6 +304,7 @@ describe('Test the MapUtils', () => {
                     visibility: true,
                     catalogURL: "url",
                     origin: [100000, 100000],
+                    sources: [{url: "url"}],
                     extendedParams: {
                         fromExtension1: {
                             testBool: true
@@ -418,6 +419,7 @@ describe('Test the MapUtils', () => {
                         visibility: true,
                         catalogURL: "url",
                         origin: [100000, 100000],
+                        sources: [{url: "url"}],
                         extendedParams: {
                             fromExtension1: {
                                 testBool: true

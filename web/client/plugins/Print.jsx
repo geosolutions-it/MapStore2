@@ -225,6 +225,11 @@ function mergeItems(standard, overrides) {
         .map(handleRemoved);
 }
 
+function filterLayer(layer = {}) {
+    // Skip layer with error and type cog
+    return !layer.loadingError && layer.type !== "cog";
+}
+
 export default {
     PrintPlugin: assign({
         loadPlugin: (resolve) => {
@@ -633,7 +638,7 @@ export default {
                     error,
                     map,
                     layers: [
-                        ...layers.filter(l => !l.loadingError),
+                        ...layers.filter(filterLayer),
                         ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(
                             l => {
                                 const isVector = l.type === 'vector';
