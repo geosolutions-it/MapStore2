@@ -33,6 +33,7 @@ export function getOffsetTop( elem ) {
         if ( !isNaN( elem.offsetTop ) ) {
             offsetTop += elem.offsetTop;
         }
+    // eslint-disable-next-line no-param-reassign, no-cond-assign
     } while ( elem = elem.offsetParent );
     return offsetTop;
 }
