@@ -594,6 +594,7 @@
             "notVisibleZoomIn": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom in per mostrare il layer",
             "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
             "notVisibleSwitchTo3D": "Passa alla modalità mappa 3D per vedere questo layer",
+            "notVisibleSwitchTo2D": "Passa alla modalità mappa 2D per vedere questo layer",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -1536,6 +1537,10 @@
             },
             "tileprovider": {
               "tooltip": "x, y, z sono la posizione della tile, s è il sottodominio (impostazione predefinita)"
+            },
+            "urls": "URL(s)",
+            "cog": {
+                "urlTemplateHint": "È possibile aggiungere più URL separandoli con virgole. Ogni URL verrà trattato come un livello individuale"
             },
             "missingReference": "Metadati di riferimento OGC mancanti",
             "showDescription": "Mostra descrizione completa",

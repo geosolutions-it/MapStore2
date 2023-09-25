@@ -208,6 +208,7 @@ In the case of the background the `thumbURL` is used to show a preview of the la
 - `empty`: special type for empty background
 - `3dtiles`: 3d tiles layers
 - `terrain`: layers that define the elevation profile of the terrain
+- `cog`: Cloud Optimized GeoTIFF layers
 
 #### WMS
 
@@ -1147,6 +1148,24 @@ In order to use these layers they need to be added to the `additionalLayers` in 
             "crs": "CRS:84"
         }]
     }
+}
+```
+
+#### Cloud Optimized GeoTIFF (COG)
+
+i.e.
+
+```javascript
+{
+    "type": "cog",
+    "title": "Title",
+    "group": "background",
+    "visibility": false,
+    "name": "Name",
+    "sources": [
+        { "url": "https://host-sample/cog1.tif" }, 
+        { "url": "https://host-sample/cog2.tif" }
+    ]
 }
 ```
 
