@@ -274,15 +274,15 @@ When the user saves this custom catalog service and clicks on search, he will se
 <img src="../img/catalog/custom_tms_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse custom TMS service. It contains only one result</p>
 
-## Sample custom
+##### Sample custom
 
 ```text
 url: https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png
 ```
 
-## Sample custom with advanced options
+##### Sample custom with advanced options
 
- ```text
+```text
 url: https://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg
 ```
 
@@ -299,7 +299,7 @@ url: https://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg
 }
 ```
 
-### TMS 1.0.0
+#### TMS 1.0.0
 
 Selecting the "TMS 1.0.0" provider the user can insert the URL of the Tile Map Service (see [TMS Specification](https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification)). For instance, in GeoServer, it is the URL of the "TMS" link in the home page.
 
@@ -314,7 +314,7 @@ When saved this, the user will be allowed to browse and add to the map the TMS l
 <img src="../img/catalog/tms100_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse TMS 1.0.0 layers</p>
 
-#### sample TMS 1.0.0 services
+##### Sample TMS 1.0.0 services
 
 ```text
 https://public.sig.rennesmetropole.fr/geowebcache/service/tms/1.0.0
@@ -322,7 +322,7 @@ https://osm.geobretagne.fr/gwc01/service/tms/1.0.0
 https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/tms/1.0.0
 ```
 
-#### TMS Known Services
+##### TMS Known Services
 
 The other known services are listed as providers below "custom" and "TMS 1.0.0". They are a static list configured inside the application. Selecting one of the provider listed and saving the new catalog service allows to browse al the variants known for that service. For more information about the list of available providers, see the developer documentation about [Tile Providers](../../developer-guide/maps-configuration/#tileprovider)
 
@@ -334,10 +334,11 @@ The other known services are listed as providers below "custom" and "TMS 1.0.0".
 
 ### 3D Tiles Catalog
 
-3D Tiles is an [OGC specification](https://www.ogc.org/standards/3DTiles) designed for streaming and rendering massive 3D geospatial content such as Photogrammetry, 3D Buildings, BIM/CAD, and Point Clouds across desktop, web and mobile applications.
-MapStore allows to publish 3D Tiles contents in its 3D mode on top of the [CesiumJS capabilities](https://github.com/CesiumGS/3d-tiles). Through the Catalog tool, a specific source type to load 3D Tiles in the Cesium Map can be configured as follows by specifying the URL of a reachable *tileset.json*.
+**3D Tiles** is an [OGC specification](https://www.ogc.org/standards/3DTiles) designed for streaming and rendering massive 3D geospatial content such as Photogrammetry, 3D Buildings, BIM/CAD, and Point Clouds across desktop, web and mobile applications.
 
-In **general settings of** 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.
+MapStore allows to publish 3D Tiles contents in its 3D mode on top of the [CesiumJS capabilities](https://github.com/CesiumGS/3d-tiles). Through the *Catalog* tool, a specific source type to load 3D Tiles in the Cesium Map can be configured as follows by specifying the URL of a reachable `tileset.json`.
+
+In **General Settings** of 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.
 
 <img src="../img/catalog/3dtiles_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
@@ -347,7 +348,12 @@ In **general settings of** 3D Tiles service, the user can specify the title to a
     (some [FAQs](https://cloud.google.com/blog/products/maps-platform/commonly-asked-questions-about-our-recently-launched-photorealistic-3d-tiles) are also available online for this purpose) before providing Google Photorealistic 3D Tile in your MapStore maps in order to enable only allowed tools (e.g. *Measurement* and *Identify* tools should be probably disabled).
     For this purpose it is possible to appropriately set the [configuration of MapStore plugins](../../developer-guide/maps-configuration/#map-options)  to exclude tools that could conflict with Google policies. Alternatively, it is possible to use a dedicated [application context](application-context.md#configure-plugins) to show Photorealistic 3D Tiles by including only the permitted tools within it.
 
-### Cloud Optimized GeoTIFF
+### COG Catalog
 
-A Cloud Optimized GeoTIFF (COG) is a regular GeoTIFF file, aimed at being hosted on a HTTP file server, with an internal organization that enables more efficient workflows on the cloud. It does this by leveraging the ability of clients issuing ​HTTP GET range requests to ask for just the parts of a file they need.
-MapStore allows to add COG as layers and backgrounds. Through the Catalog tool, a multiple url sources of COG are obtained and converted to layers as each url corresponds to a layer
+A **Cloud Optimized GeoTIFF** ([COG](https://www.cogeo.org)) is a regular GeoTIFF file, aimed at being hosted on a HTTP file server, with an internal organization that enables more efficient workflows on the cloud environment. It does this by leveraging the ability of clients issuing ​HTTP GET range requests to ask for just the parts of a file they need.
+
+MapStore allows to add COG as layers and backgrounds through the *Catalog* tool, a specific source type can be configured as follows by specifying the URL of a reachable `geotiff.tif`
+
+In **General Settings** of COG service, the user can specify the title to assign to this service and the URL of the service.
+
+<img src="../img/catalog/cog_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
