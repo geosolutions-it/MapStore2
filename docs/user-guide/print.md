@@ -20,6 +20,8 @@ Through this window it is possible to:
 
 * Change the **Coordinates System** (`EPSG:3857`, `EPSG:4326`)
 
+* Change the **Rotation** of the map (value in degrees)
+
 * Change the **Resolution** of the print (`96 dpi`, `150 dpi`, `300 dpi`)
 
 * Accessing **Layout** settings
