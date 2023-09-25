@@ -304,7 +304,6 @@ export const LPonAddMarkerEpic = (action$) =>
                                             opacity: 1,
                                             size: 32,
                                             anchor: "bottom",
-                                            offset: [0, -16],
                                             rotate: 0,
                                             msBringToFront: true,
                                             msHeightReference: 'none',
