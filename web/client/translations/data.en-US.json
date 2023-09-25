@@ -591,6 +591,7 @@
             "notVisibleZoomIn": "The layer is not visible because it is outside the resolution limits. Zoom in to show the layer",
             "notVisibleZoomOut": "The layer is not visible because it is outside the resolution limits. Zoom out to show the layer",
             "notVisibleSwitchTo3D": "Switch to 3D map mode in order to see this layer",
+            "notVisibleSwitchTo2D": "Switch to 2D map mode in order to see this layer",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -1527,6 +1528,10 @@
               "customTMSConfigurationHint": "<p>Options can contain:<br/><ul><li><code>\"subdomains\": ['a', 'b']</code>: used for multiple domains, replacingthe <code>{s}</code> in URL template</li><li><code>\"maxNativeZoom\": 20</code>: max zoom from the server</li></ul></p>",
               "forceDefaultTileGrid": "Force default tile grid",
               "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resolutions."
+            },
+            "urls": "URL(s)",
+            "cog": {
+                "urlTemplateHint": "Multiple urls can be added by comma separation. Each url will be treated as an individual layer"
             },
             "tileprovider": {
               "tooltip": "x,y,z are tile position, s is the sub-domain (default)"

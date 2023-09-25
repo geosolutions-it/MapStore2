@@ -630,6 +630,7 @@
             "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
             "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
             "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",
+            "notVisibleSwitchTo2D": "Wechseln Sie in den 2D-Kartenmodus, um diesen Layer anzuzeigen",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -1568,6 +1569,10 @@
             },
             "tileprovider": {
               "tooltip": "x, y, z sind Kachelpositionen, s ist die Unterdomäne (Standard)"
+            },
+            "urls": "URL(s)",
+            "cog": {
+                "urlTemplateHint": "Mehrere URLs können durch Komma-Trennung hinzugefügt werden. Jede URL wird als einzelne Ebene behandelt"
             },
             "missingReference": "Fehlende OGC-Referenzmetadaten",
             "showDescription": "Vollständige Beschreibung anzeigen",
