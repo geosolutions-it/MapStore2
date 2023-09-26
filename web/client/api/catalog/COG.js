@@ -10,6 +10,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { Observable } from 'rxjs';
 import { isValidURL } from '../../utils/URLUtils';
+import { fromUrl } from 'geotiff';
 
 export const COG_LAYER_TYPE = 'cog';
 const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
@@ -67,29 +68,25 @@ export const getRecords = (url, startPosition, maxRecords, text, info = {}) => {
                 options: service.options || {}
             };
             if (service.fetchMetadata) {
-                return new Promise((resolve) => {
-                    require.ensure(['geotiff'], () => {
-                        const { fromUrl } = require('geotiff');
-                        return resolve(fromUrl(record.url)
-                            .then(geotiff => geotiff.getImage())
-                            .then(image => {
-                                const crs = getProjectionFromGeoKeys(image);
-                                const extent = image.getBoundingBox();
-                                return {
-                                    ...layer,
-                                    ...(!isEmpty(extent) && {bbox: {
-                                        crs,
-                                        bounds: {
-                                            minx: extent[0],
-                                            miny: extent[1],
-                                            maxx: extent[2],
-                                            maxy: extent[3]
-                                        }
-                                    }})
-                                };
-                            }).catch(() => ({...layer})));
-                    });
-                });
+                return fromUrl(record.url)
+                    .then(geotiff => geotiff.getImage())
+                    .then(image => {
+                        const crs = getProjectionFromGeoKeys(image);
+                        const extent = image.getBoundingBox();
+                        return {
+                            ...layer,
+                            ...(!isEmpty(extent) && {
+                                bbox: {
+                                    crs,
+                                    bounds: {
+                                        minx: extent[0],
+                                        miny: extent[1],
+                                        maxx: extent[2],
+                                        maxy: extent[3]
+                                    }
+                                }})
+                        };
+                    }).catch(() => ({...layer}));
             }
             return Promise.resolve(layer);
         });
