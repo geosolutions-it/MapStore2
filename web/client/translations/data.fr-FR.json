@@ -3901,7 +3901,7 @@
           "flat": "Plate",
           "square": "Carré",
           "firstAttributeToRetain": "Premier attribut à inclure",
-          "secondAttributeToRetain": "Deuxième attribut à retenir",
+          "secondAttributeToRetain": "Deuxième attribut à inclure",
           "intersectionMode": "Mode intersection",
           "percentagesEnabled": "Pourcentages activés",
           "areasEnabled": "Zones activées",
