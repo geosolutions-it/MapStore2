@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, GeoSolutions Sas.
+ * Copyright 2023, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -8,10 +8,12 @@
 
 import expect from 'expect';
 
-import axios from '../../../libs/ajax';
 import MockAdapter from "axios-mock-adapter";
+
+import axios from '../../../libs/ajax';
 import {INFO_FORMATS} from "../../FeatureInfoUtils";
 import {getFeatureInfo} from "../../../api/identify";
+import wms from '../wms';
 
 describe('mapinfo wms utils', () => {
     let mockAxios;
@@ -107,5 +109,39 @@ describe('mapinfo wms utils', () => {
                 return done(error);
             }
         );
+    });
+    it('test intercept ogc error in wms if success', (done)=>{
+        mockAxios.onGet().reply(() => {
+            return [200, {
+                "type": "FeatureCollection",
+                "features": [],
+                "totalFeatures": "unknown",
+                "numberReturned": 0,
+                "timeStamp": "2023-09-22T08:50:30.808Z",
+                "crs": null
+            }];
+        });
+        wms
+            .getIdentifyFlow(undefined, "/", { features: [] })
+            .subscribe((response) => {
+                expect(response?.data?.features).toEqual([]);
+                done();
+            }, error => {
+                done(error);
+            });
+    });
+    it('test intercept ogc error in wms if failed', (done)=>{
+        mockAxios.onGet().reply(() => {
+            return [404, {}];
+        });
+        wms
+            .getIdentifyFlow(undefined, "/", { features: [] })
+            .subscribe((response) => {
+                expect(response?.data?.features).toEqual([]);
+                done();
+            }, error => {
+                expect(error.status).toEqual(404);
+                done();
+            });
     });
 });
