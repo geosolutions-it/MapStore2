@@ -196,7 +196,7 @@ const ChartData = ({
                         bsStyle="primary"
                         disabled={isTainted}
                         onClick={() => {
-                            toPng(document.querySelector('canvas.ol-unselectable'))
+                            toPng(document.querySelector('.ol-unselectable canvas'))
                                 .then(function(dataUrlMap) {
                                     generateChartImageUrl()
                                         .then((dataUrlChart) => {
