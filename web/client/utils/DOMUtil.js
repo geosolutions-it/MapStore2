@@ -30,11 +30,11 @@ export const scrollIntoViewId = (viewId) => {
 export function getOffsetTop( elem ) {
     var offsetTop = 0;
     do {
-        if ( !isNaN( elem.offsetTop ) ) {
+        if ( !isNaN( elem?.offsetTop ) ) {
             offsetTop += elem.offsetTop;
         }
     // eslint-disable-next-line no-param-reassign, no-cond-assign
-    } while ( elem = elem.offsetParent );
+    } while ( elem = elem?.offsetParent );
     return offsetTop;
 }
 /**
