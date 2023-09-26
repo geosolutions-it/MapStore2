@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {DropdownButton, Glyphicon, MenuItem, NavDropdown} from 'react-bootstrap';
 import {connect} from "react-redux";
@@ -23,6 +23,8 @@ import {
     isParametersOpenSelector
 } from "../../selectors/longitudinalProfile";
 import { isCesium } from '../../selectors/maptype';
+import { getOffsetTop, getOffsetBottom } from '../../utils/DOMUtil';
+
 
 const TNavDropdown = tooltip(NavDropdown);
 const TDropdownButton = tooltip(DropdownButton);
@@ -45,13 +47,19 @@ const UserMenu = ({
     onToggleSourceMode
 }) => {
     let DropDown = nav ? TNavDropdown : TDropdownButton;
-
+    const [dropUp, setDropUp ] = useState(false);
     const onToggleTool = useCallback((toolName) => () => {
         onActivateTool();
         onToggleSourceMode(toolName);
     }, []);
+    useEffect(() => {
+        const ButtonElement = document.getElementById("longitudinal-tool");
+        const offsetTop = getOffsetTop(ButtonElement);
+        const offsetBottom = getOffsetBottom(ButtonElement);
+        const dropUpVal = offsetTop > 2000 && offsetBottom < 130;
+        setDropUp(dropUpVal);
+    }, []);
     const [open, setMenuOpen ] = useState(false);
-
     const body = (<>
         {showDrawOption ? <MenuItem active={dataSourceMode === 'draw'} key="draw" onClick={onToggleTool('draw')}>
             <Glyphicon glyph="pencil"/><Message msgId="longitudinalProfile.draw"/>
@@ -68,7 +76,7 @@ const UserMenu = ({
         </MenuItem>
     </>);
     const DropDownMenu = (<DropDown
-        dropup
+        dropup={dropUp}
         open={open}
         onToggle={(val) => setMenuOpen(val)}
         id="longitudinal-tool"
