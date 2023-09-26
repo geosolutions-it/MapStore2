@@ -8,7 +8,11 @@
  */
 export const GPT_TOOL_BUFFER = "buffer";
 export const GPT_TOOL_INTERSECTION = "intersection";
-export const GPT_CONTROL_NAME = "GeoProcessingTools";
+export const GPT_CONTROL_NAME = "GeoProcessing";
+export const GPT_SOURCE_HIGHLIGHT_ID = "gpt-layer";
+export const GPT_INTERSECTION_HIGHLIGHT_ID = "gpt-layer-intersection";
+export const GPT_INTERSECTION_GROUP_ID = "intersection.layer";
+export const GPT_BUFFER_GROUP_ID = "buffered.layer";
 
 export const CHECK_WPS_AVAILABILITY = "GPT:CHECK_WPS_AVAILABILITY";
 export const CHECKING_WPS_AVAILABILITY = "GPT:CHECKING_WPS_AVAILABILITY";
@@ -20,8 +24,8 @@ export const INIT_PLUGIN = "GPT:INIT_PLUGIN";
 export const INCREASE_BUFFERED_COUNTER = "GPT:INCREASE_BUFFERED_COUNTER";
 export const INCREASE_INTERSECT_COUNTER = "GPT:INCREASE_INTERSECT_COUNTER";
 export const RUNNING_PROCESS = "GPT:RUNNING_PROCESS";
-export const RUN_BUFFER_PROCESS = "GPT:RUN_BUFFER_PROCESS";
-export const RUN_INTERSECTION_PROCESS = "GPT:RUN_INTERSECTION_PROCESS";
+export const RESET = "GPT:RESET";
+export const RUN_PROCESS = "GPT:RUN_PROCESS";
 export const SET_BUFFER_DISTANCE = "GPT:SET_BUFFER_DISTANCE";
 export const SET_BUFFER_DISTANCE_UOM = "GPT:SET_BUFFER_DISTANCE_UOM";
 export const SET_BUFFER_QUADRANT_SEGMENTS = "GPT:SET_BUFFER_QUADRANT_SEGMENTS";
@@ -49,12 +53,12 @@ export const TOGGLE_HIGHLIGHT_LAYERS = "GPT:TOGGLE_HIGHLIGHT_LAYERS";
 /**
  * Actions for Geo Processing Tools
  * @memberof actions
- * @name GeoProcessingTools
+ * @name GeoProcessing
  */
 
 /**
  * action for checking WPS availability
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} layerId the layer id
  * @param {string} source can be "source" or "intersection"
  */
@@ -66,7 +70,7 @@ export const checkWPSAvailability = (layerId, source) => ({
 
 /**
  * action for setting the WPS availability
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {boolean} status the status
  */
 export const checkingWPSAvailability = (status) => ({
@@ -75,7 +79,7 @@ export const checkingWPSAvailability = (status) => ({
 });
 /**
  * action for setting the WPS availability
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {boolean} status the status
  */
 export const checkingIntersectionWPSAvailability = (status) => ({
@@ -84,7 +88,7 @@ export const checkingIntersectionWPSAvailability = (status) => ({
 });
 /**
  * action for setting the error loading the describe feature type
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {boolean} layerId the layerId
  */
 export const errorLoadingDFT = (layerId) => ({
@@ -93,7 +97,7 @@ export const errorLoadingDFT = (layerId) => ({
 });
 /**
  * action for triggering the get feature request given a source
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param {string} layerId the layer id
  * @param {string} source can be "source" or "intersection"
  */
@@ -105,7 +109,7 @@ export const getFeatures = (layerId, source, page = 0) => ({
 });
 /**
  * action for initializing config of the plugin
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
   */
 export const initPlugin = (cfg) => ({
     type: INIT_PLUGIN,
@@ -113,44 +117,45 @@ export const initPlugin = (cfg) => ({
 });
 /**
  * action for triggering the increase of the number of buffered layers
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
   */
 export const increaseBufferedCounter = () => ({
     type: INCREASE_BUFFERED_COUNTER
 });
 /**
  * action for triggering the increase of the number of intersected layers
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
   */
 export const increaseIntersectedCounter = () => ({
     type: INCREASE_INTERSECT_COUNTER
 });
 /**
+ * action that clears current status
+ * @memberof actions.geoProcessing
+  */
+export const reset = () => ({
+    type: RESET
+});
+/**
  * action for changing the flag of the process running
  * @param {boolean} status the status
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  */
 export const runningProcess = (status) => ({
     type: RUNNING_PROCESS,
     status
 });
 /**
- * action for executing buffer process
- * @memberof actions.geoProcessingTools
+ * action for executing any process
+ * @memberof actions.geoProcessing
  */
-export const runBufferProcess = () => ({
-    type: RUN_BUFFER_PROCESS
-});
-/**
- * action for executing intersection process
- * @memberof actions.geoProcessingTools
- */
-export const runIntersectionProcess = () => ({
-    type: RUN_INTERSECTION_PROCESS
+export const runProcess = (process) => ({
+    type: RUN_PROCESS,
+    process
 });
 /**
  * action for triggering the set of the distance for the buffering
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param {number} distance the distance in uom
  */
 export const setBufferDistance = (distance) => ({
@@ -159,7 +164,7 @@ export const setBufferDistance = (distance) => ({
 });
 /**
  * action for triggering the set of the uom of the distance for the buffering
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param {string} uom the distance in uom
  */
 export const setBufferDistanceUom = (uom) => ({
@@ -168,7 +173,7 @@ export const setBufferDistanceUom = (uom) => ({
 });
 /**
  * action for triggering the set of the quadrantSegments for the buffering
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param {number} quadrantSegments the quadrantSegments
  */
 export const setBufferQuadrantSegments = (quadrantSegments) => ({
@@ -177,7 +182,7 @@ export const setBufferQuadrantSegments = (quadrantSegments) => ({
 });
 /**
  * action for triggering the set of the capStyle for the buffering
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param {string} capStyle the capStyle
  */
 export const setBufferCapStyle = (capStyle) => ({
@@ -187,7 +192,7 @@ export const setBufferCapStyle = (capStyle) => ({
 
 /**
  * action for triggering the set feature request given a source
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param {string} layerId the layer id
  * @param {string} source can be "source" or "intersection"
  * @param {object[]|object} data list of features or error
@@ -201,7 +206,7 @@ export const setFeatures = (layerId, source, data, nextPage) => ({
 });
 /**
  * action for the loading flag of the features
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param {string} status the status
  */
 export const setFeatureSourceLoading = (status) => ({
@@ -210,7 +215,7 @@ export const setFeatureSourceLoading = (status) => ({
 });
 /**
  * action for the loading flag of the features of intersection layer
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param {string} status the status
  */
 export const setFeatureIntersectionLoading = (status) => ({
@@ -219,7 +224,7 @@ export const setFeatureIntersectionLoading = (status) => ({
 });
 /**
  * action for setting the layer to be invalid
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} layerId the layer id
  * @param {string} status the status
  */
@@ -231,7 +236,7 @@ export const setInvalidLayer = (layerId, status) => ({
 
 /**
  * action that sets if needed WPS are available (geo:Buffer and gs:IntersectionFeatureCollection, gs:CollectGeometries)
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} layerId the layer id
  * @param  {boolean} status the status
  * @param  {string} source the source
@@ -244,7 +249,7 @@ export const setWPSAvailability = (layerId, status, source) => ({
 });
 /**
  * action that sets the tool to use "buffer", or "intersection"
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} tool the tool id
  */
 export const setSelectedTool = (tool) => ({
@@ -253,7 +258,7 @@ export const setSelectedTool = (tool) => ({
 });
 /**
  * action that sets the source layer id
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} layerId the layer id
  */
 export const setSourceLayerId = (layerId) => ({
@@ -262,7 +267,7 @@ export const setSourceLayerId = (layerId) => ({
 });
 /**
  * action that sets the source feature id
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} featureId the feature id
  */
 export const setSourceFeatureId = (featureId) => ({
@@ -271,7 +276,7 @@ export const setSourceFeatureId = (featureId) => ({
 });
 /**
  * action that sets the source feature
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} feature the feature obj with geom inside
  */
 export const setSourceFeature = (feature) => ({
@@ -280,7 +285,7 @@ export const setSourceFeature = (feature) => ({
 });
 /**
  * action that sets the intersection layer id
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} layerId the layer id
  */
 export const setIntersectionLayerId = (layerId) => ({
@@ -289,7 +294,7 @@ export const setIntersectionLayerId = (layerId) => ({
 });
 /**
  * action that sets the intersection feature id
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} featureId the layer id
  */
 export const setIntersectionFeatureId = (featureId) => ({
@@ -298,7 +303,7 @@ export const setIntersectionFeatureId = (featureId) => ({
 });
 /**
  * action that sets the intersection feature
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} feature the feature obj with geom inside
  */
 export const setIntersectionFeature = (feature) => ({
@@ -307,7 +312,7 @@ export const setIntersectionFeature = (feature) => ({
 });
 /**
  * action that sets the intersection firstAttributeToRetain
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} firstAttributeToRetain First feature collection attribute to include
  */
 export const setIntersectionFirstAttribute = (firstAttributeToRetain) => ({
@@ -316,7 +321,7 @@ export const setIntersectionFirstAttribute = (firstAttributeToRetain) => ({
 });
 /**
  * action that sets the intersection secondAttributeToRetain
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} secondAttributeToRetain Second feature collection attribute to include
  */
 export const setIntersectionSecondAttribute = (secondAttributeToRetain) => ({
@@ -325,7 +330,7 @@ export const setIntersectionSecondAttribute = (secondAttributeToRetain) => ({
 });
 /**
  * action that sets the intersectionMode
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} intersectionMode Specifies geometry computed for intersecting features. INTERSECTION (default) computes the spatial intersection of the inputs. FIRST copies geometry A. SECOND copies geometry B.
  */
 export const setIntersectionMode = (intersectionMode) => ({
@@ -334,7 +339,7 @@ export const setIntersectionMode = (intersectionMode) => ({
 });
 /**
  * action that sets the percentageEnabled
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {boolean} percentagesEnabled Indicates whether to output feature area percentages (attributes percentageA and percentageB)
  */
 export const setIntersectionPercentagesEnabled = (percentagesEnabled) => ({
@@ -344,7 +349,7 @@ export const setIntersectionPercentagesEnabled = (percentagesEnabled) => ({
 
 /**
  * action that sets the areasEnabled
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {boolean} areasEnabled Indicates whether to output feature areas (attributes areaA and areaB)
  */
 export const setIntersectionAreasEnabled = (areasEnabled) => ({
@@ -353,7 +358,7 @@ export const setIntersectionAreasEnabled = (areasEnabled) => ({
 });
 /**
  * action that sets the owner were the selection of the features must be done
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
  * @param  {string} source
  */
 export const setSelectedLayerType = (source) => ({
@@ -362,7 +367,7 @@ export const setSelectedLayerType = (source) => ({
 });
 /**
  * action that toggles on / off highlight layers
- * @memberof actions.geoProcessingTools
+ * @memberof actions.geoProcessing
   */
 export const toggleHighlightLayers = () => ({
     type: TOGGLE_HIGHLIGHT_LAYERS

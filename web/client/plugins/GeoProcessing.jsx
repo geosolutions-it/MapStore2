@@ -9,10 +9,10 @@ import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
 import Message from '../components/I18N/Message';
-import GeoProcessingToolsPanel from './GeoProcessingTools/Panel';
+import GeoProcessingPanel from './GeoProcessing/Panel';
 import { toggleControl } from '../actions/controls';
-import * as epics  from '../epics/geoProcessingTools';
-import geoProcessingTools from '../reducers/geoProcessingTools';
+import * as epics  from '../epics/geoProcessing';
+import geoProcessing from '../reducers/geoProcessing';
 
 import { createPlugin } from '../utils/PluginsUtils';
 
@@ -24,7 +24,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  * - "intersection" of two layers
  * the result is a new vector layer that is added in the TOC
  *
- * @name GeoProcessingTools
+ * @name GeoProcessing
  * @memberof plugins
  * @class
 *
@@ -40,7 +40,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @example
  *
  * {
- *   "name": "GeoProcessingTools",
+ *   "name": "GeoProcessing",
  *   "cfg": {
  *     "selectedTool": "buffer",
  *     "buffer": {
@@ -51,27 +51,27 @@ import { createPlugin } from '../utils/PluginsUtils';
  * }
  *
  */
-const GeoProcessingTools = createPlugin(
-    "GeoProcessingTools",
+const GeoProcessing = createPlugin(
+    "GeoProcessing",
     {
-        component: GeoProcessingToolsPanel,
+        component: GeoProcessingPanel,
         containers: {
             SidebarMenu: {
-                name: 'GeoProcessingTools',
+                name: 'GeoProcessing',
                 position: 2100,
                 doNotHide: true,
-                tooltip: "GeoProcessingTools.tooltip.siderBarBtn",
-                text: <Message msgId="GeoProcessingTools.title" />,
-                icon: <Glyphicon glyph="star" />, // [ ] change this
-                action: toggleControl.bind(null, 'GeoProcessingTools', null),
+                tooltip: "GeoProcessing.tooltip.siderBarBtn",
+                text: <Message msgId="GeoProcessing.title" />,
+                icon: <Glyphicon glyph="globe-settings" />,
+                action: toggleControl.bind(null, 'GeoProcessing', null),
                 priority: 10,
                 toggle: true
             }
         },
         reducers: {
-            geoProcessingTools
+            geoProcessing
         },
         epics
     });
 
-export default GeoProcessingTools;
+export default GeoProcessing;

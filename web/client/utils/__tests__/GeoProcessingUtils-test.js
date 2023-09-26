@@ -9,10 +9,10 @@ import expect from 'expect';
 
 import {
     checkIfIntersectionIsPossible
-} from '../GeoProcessingToolsUtils';
+} from '../GeoProcessingUtils';
 
 
-describe('GeoProcessingToolsUtils', () => {
+describe('GeoProcessingUtils', () => {
     const pointFT = {
         type: "Feature",
         geometry: {
