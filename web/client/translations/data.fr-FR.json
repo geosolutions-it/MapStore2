@@ -3900,7 +3900,7 @@
           "round": "Ronde",
           "flat": "Plate",
           "square": "Carré",
-          "firstAttributeToRetain": "Premier attribut à conserver",
+          "firstAttributeToRetain": "Premier attribut à inclure",
           "secondAttributeToRetain": "Deuxième attribut à retenir",
           "intersectionMode": "Mode intersection",
           "percentagesEnabled": "Pourcentages activés",
