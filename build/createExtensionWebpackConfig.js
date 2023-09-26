@@ -39,8 +39,7 @@ module.exports = ({ prod = true, name, exposes, sharedLibrariesEager = true, ali
             https: false,
             zlib: false,
             timers: false,
-            stream: false,
-            fs: false
+            stream: false
         },
         extensions: [".js", ".jsx"],
         alias
