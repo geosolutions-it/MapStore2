@@ -3907,7 +3907,7 @@
           "quadrantSegments": "Quadrant segments",
           "quadrantSegmentsTooltip": "Number of segments",
           "capStyle": "Cap style",
-          "capStyleTooltip": "Stil für die Pufferendkappen",
+          "capStyleTooltip": "Style for the buffer end caps",
           "round": "Round",
           "flat": "Flat",
           "square": "Square",
