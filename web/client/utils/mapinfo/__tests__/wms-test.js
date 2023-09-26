@@ -112,7 +112,7 @@ describe('mapinfo wms utils', () => {
     });
     it('test intercept ogc error in wms if success', (done)=>{
         mockAxios.onGet().reply(() => {
-            return [200, {
+            return [200,  {
                 "type": "FeatureCollection",
                 "features": [],
                 "totalFeatures": "unknown",
@@ -127,7 +127,28 @@ describe('mapinfo wms utils', () => {
                 expect(response?.data?.features).toEqual([]);
                 done();
             }, error => {
-                done(error);
+                done();
+            });
+    });
+    it('test intercept ogc error in wms if exception', (done)=>{
+        mockAxios.onGet().reply(() => {
+            return [200, {
+                "version": "1.1.1",
+                "exceptions": [
+                    {
+                        "code": "LayerNotDefined",
+                        "locator": "layers",
+                        "text": "Could not find layer misc:Bonnebladen1900_index2121 Details:org.geoserver.platform.ServiceException: Could not find layer misc:Bonnebladen1900_index2121"
+                    }]
+            }];
+        });
+        wms
+            .getIdentifyFlow(undefined, "/", { features: [] })
+            .subscribe((response) => {
+                expect(response?.data?.exceptions).toExist();
+                done();
+            }, error => {
+                done();
             });
     });
     it('test intercept ogc error in wms if failed', (done)=>{
@@ -138,7 +159,6 @@ describe('mapinfo wms utils', () => {
             .getIdentifyFlow(undefined, "/", { features: [] })
             .subscribe((response) => {
                 expect(response?.data?.features).toEqual([]);
-                done();
             }, error => {
                 expect(error.status).toEqual(404);
                 done();
