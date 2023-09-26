@@ -3901,7 +3901,7 @@
           "flat": "Piatto",
           "square": "Squadrato",
           "firstAttributeToRetain": "Primo attributo da includere",
-          "secondAttributeToRetain": "Secondo attributo da conservare",
+          "secondAttributeToRetain": "Secondo attributo da includere",
           "intersectionMode": "Modalità di intersezione",
           "percentagesEnabled": "Percentuiali abilitate",
           "areasEnabled": "Aree abilitate",
