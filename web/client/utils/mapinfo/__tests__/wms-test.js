@@ -126,8 +126,6 @@ describe('mapinfo wms utils', () => {
             .subscribe((response) => {
                 expect(response?.data?.features).toEqual([]);
                 done();
-            }, error => {
-                done();
             });
     });
     it('test intercept ogc error in wms if exception', (done)=>{
@@ -146,8 +144,6 @@ describe('mapinfo wms utils', () => {
             .getIdentifyFlow(undefined, "/", { features: [] })
             .subscribe((response) => {
                 expect(response?.data?.exceptions).toExist();
-                done();
-            }, error => {
                 done();
             });
     });
