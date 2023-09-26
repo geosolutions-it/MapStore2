@@ -36,7 +36,7 @@ describe('Test the DOMUtils', () => {
     it('test getOffsetBottom', function() {
         document.body.innerHTML = `
         <div id="container">
-            <div id="content"}>
+            <div id="content">
             test
             </div>
         </div>`;
