@@ -423,9 +423,9 @@
                 "noMapAvailable": "Aucune carte disponible",
                 "createNewOne": "Créer une nouvelle carte",
                 "unsavedMapConfirmTitle": "Modifications non enregistrées",
-                "unsavedMapConfirmMessage": "Êtes-vous sûr de vouloir laisser des modifications non enregistrées ?",
-                "unsavedMapConfirmButtonText": "Laisser",
-                "unsavedMapCancelButtonText": "Fermer"
+                "unsavedMapConfirmMessage": "Êtes-vous sûr de vouloir quitter la carte sans enregistrer les modifications ?",
+                "unsavedMapConfirmButtonText": "Quitter sans enregistrer",
+                "unsavedMapCancelButtonText": "Annuler"
             },
             "geostories": {
                 "newGeostory": "Nouvelle GeoStory",
@@ -2882,7 +2882,7 @@
             "cancel": "Annuler",
             "saveSuccessTitle": "Succès",
             "saveSuccessMessage": "Enregistré avec succès",
-            "saveTooltip": "Salvar",
+            "saveTooltip": "Enregistrer",
             "saveAsTooltip": "Enregistrer sous"
         },
         "mapEditor": {
@@ -2906,7 +2906,7 @@
                 "selectService": "Sélectionner un service",
                 "add": "Ajouter",
                 "back": "Retour",
-                "save": "Salvar",
+                "save": "Enregistrer",
                 "edit": "Modifier",
                 "sourcePlaceholder": "Entrer une source",
                 "source": "Source",
@@ -3801,7 +3801,7 @@
           "infos": "Information",
           "preferences": "Préférences",
           "CRS": "CRS",
-          "uom": "Unités de mesure",
+          "uom": "Unité de mesure",
           "fileSelected": "Fichier sélectionné: ",
           "uomMeters": "mètres",
           "source": "Source",
@@ -3809,11 +3809,11 @@
           "downloadPNG": "PNG",
           "downloadPDF": "PDF",
           "info": {
-            "points": " points:",
+            "points": " points",
             "totalPoints": "Nombre de points traités:",
-            "layer":"Layer:",
+            "layer":"Couche:",
             "line":"Distance:",
-            "up":"Gain d'altitude cumulé.",
+            "up":"Gain d'altitude cumulé:",
             "down":"Perte d'altitude cumulée:",
             "noInfos": "Aucune information disponible"
           },
@@ -3834,7 +3834,7 @@
             "outsideCoverage": "La ligne fournie est en dehors de la couverture du profil",
             "loadingError": "Erreur lors du chargement des données pour le profil longitudinal",
             "unableToSetupPlugin": "Impossible de configurer l'extension du profil longitudinal.",
-            "defaultReferentialNotFound": "Le référentiel par défaut est configuré mais introuvable dans la liste des référentiels. Veuillez mettre à jour la configuration de l'extension.",
+            "defaultReferentialNotFound": "Le référentiel par défaut est configuré mais introuvable dans la liste des référentiels. Veuillez mettre à jour la configuration de l'extension Profil en long.",
             "projectionNotSupported": "Le référentiel avec projection prise en charge par la carte est introuvable. Veuillez mettre à jour la configuration de l'extension ou ajouter la projection souhaitée dans la configuration de l'application.",
             "cannotDownloadPDF": "Il n'est pas possible d'imprimer la carte actuelle car elle contient des références à un domaine externe, veuillez les supprimer, enregistrer la carte, actualiser la page et réessayer.",
             "cannotDownloadPNG": "Impossible de télécharger le graphique en tant qu'image."

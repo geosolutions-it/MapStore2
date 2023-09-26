@@ -20,6 +20,8 @@ export const FILE_TYPE_ALLOWED = [
     "application/x-zip-compressed",
     "application/zip"
 ];
+export const DEFAULT_NODATA_THRESHOLD = 999999;
+
 export const LONGITUDINAL_DISTANCES = [
     1,
     5,
