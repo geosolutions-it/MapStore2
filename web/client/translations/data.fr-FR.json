@@ -1501,7 +1501,7 @@
             "autoload": "Recherche sur la sélection du service",
             "fetchMetadata": {
                 "label": "Télécharger les métadonnées du fichier lors de la recherche",
-                "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche lors de l'ajout. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
+                "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
             },
             "clearValueText": "Effacer la sélection",
             "noResultsText": "Aucun résultat trouvé",
