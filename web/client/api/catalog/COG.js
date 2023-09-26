@@ -7,12 +7,12 @@
  */
 
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import { Observable } from 'rxjs';
 import { isValidURL } from '../../utils/URLUtils';
 
 export const COG_LAYER_TYPE = 'cog';
 const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
-
     const filteredLayers = layers
         .filter(({ title = "" } = {}) => !text
             || title.toLowerCase().indexOf(text.toLowerCase()) !== -1
@@ -26,29 +26,77 @@ const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
         records
     };
 };
+/**
+ * Get projection code from geokeys
+ * @param {Object} image
+ * @returns {string} projection code
+ */
+export const getProjectionFromGeoKeys = (image) => {
+    const geoKeys = image.geoKeys;
+    if (!geoKeys) {
+        return null;
+    }
+
+    if (
+        geoKeys.ProjectedCSTypeGeoKey &&
+        geoKeys.ProjectedCSTypeGeoKey !== 32767
+    ) {
+        return "EPSG:" + geoKeys.ProjectedCSTypeGeoKey;
+    }
+
+    if (
+        geoKeys.GeographicTypeGeoKey &&
+        geoKeys.GeographicTypeGeoKey !== 32767
+    ) {
+        return "EPSG:" + geoKeys.GeographicTypeGeoKey;
+    }
+
+    return null;
+};
 export const getRecords = (url, startPosition, maxRecords, text, info = {}) => {
     const service = get(info, 'options.service');
     let layers = [];
-    if (service.url) {
-        const urls = service.url?.split(',')?.map(_url => _url?.trim());
-        // each url corresponds to a layer
-        layers = urls.map((_url, index) => {
-            const title = _url.split('/')?.pop()?.replace('.tif', '') || `COG_${index}`;
-            return {
+    if (service.records) {
+        // each record/url corresponds to a layer
+        layers = service.records?.map((record) => {
+            let layer = {
                 ...service,
-                title,
+                title: record.title,
                 type: COG_LAYER_TYPE,
-                sources: [{url: _url}],
+                sources: [{url: record.url}],
                 options: service.options || {}
             };
+            if (service.fetchMetadata) {
+                return new Promise((resolve) => {
+                    require.ensure(['geotiff'], () => {
+                        const { fromUrl } = require('geotiff');
+                        return resolve(fromUrl(record.url)
+                            .then(geotiff => geotiff.getImage())
+                            .then(image => {
+                                const crs = getProjectionFromGeoKeys(image);
+                                const extent = image.getBoundingBox();
+                                return {
+                                    ...layer,
+                                    ...(!isEmpty(extent) && {bbox: {
+                                        crs,
+                                        bounds: {
+                                            minx: extent[0],
+                                            miny: extent[1],
+                                            maxx: extent[2],
+                                            maxy: extent[3]
+                                        }
+                                    }})
+                                };
+                            }).catch(() => ({...layer})));
+                    });
+                });
+            }
+            return Promise.resolve(layer);
         });
     }
-    // fake request with generated layers
-    return new Promise((resolve) => {
-        resolve(searchAndPaginate(layers, startPosition, maxRecords, text));
+    return Promise.all([...layers]).then((_layers) => {
+        return searchAndPaginate(_layers, startPosition, maxRecords, text);
     });
-
-
 };
 
 export const textSearch = (url, startPosition, maxRecords, text, info = {}) => {
@@ -56,8 +104,7 @@ export const textSearch = (url, startPosition, maxRecords, text, info = {}) => {
 };
 
 const validateCog = (service) => {
-    const urls = service.url?.split(',');
-    const isValid = urls.every(url => isValidURL(url?.trim()));
+    const isValid = service.records?.every(record => isValidURL(record?.url));
     if (service.title && isValid) {
         return Observable.of(service);
     }
@@ -76,6 +123,7 @@ export const getCatalogRecords = (data) => {
     if (data && data.records) {
         return data.records.map(record => {
             return {
+                ...record,
                 serviceType: COG_LAYER_TYPE,
                 isValid: record.sources?.every(source => isValidURL(source.url)),
                 title: record.title || record.provider,
@@ -93,6 +141,7 @@ export const getCatalogRecords = (data) => {
  */
 export const cogToLayer = (record) => {
     return {
+        ...record,
         type: COG_LAYER_TYPE,
         visibility: true,
         sources: record.sources,

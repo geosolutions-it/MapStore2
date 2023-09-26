@@ -1499,6 +1499,10 @@
             "title": "Catálogo",
             "tooltip": "agregar capas al mapa",
             "autoload": "Buscar en la selección de servicios",
+            "fetchMetadata": {
+                "label": "Descargar metadatos de archivos en la búsqueda",
+                "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa al agregarla. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
+            },
             "clearValueText": "Borrar selección",
             "noResultsText": "No se encontraron resultados",
             "addToMap": "Añadir al mapa",

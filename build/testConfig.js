@@ -134,7 +134,8 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
                 stream: false,
                 http: false,
                 https: false,
-                zlib: false
+                zlib: false,
+                fs: false
             },
             alias: assign({}, {
                 jsonix: '@boundlessgeo/jsonix',
