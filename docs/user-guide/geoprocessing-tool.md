@@ -29,7 +29,7 @@ The buffer layer is added in [TOC](toc.md) inside a new group created for the pu
 
 ### Advanced Settings
 
-Enabling the *Advanced options* the editor can include the following to the *Buffer* operation:
+Enabling the *Advanced options* the user can include further (not mandatory) parameters for the *Buffer* process:
 
 <img src="../img/geoprocessing-tool/buffer-advanced-options.jpg" class="ms-docimage" width="400px" />
 
