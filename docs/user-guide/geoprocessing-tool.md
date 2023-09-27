@@ -45,7 +45,7 @@ The user can then:
 
 * Select the **Source Layer** from the drop down menu.
 
-* Select the layer's features from the **Source Feature**. The feature can be selected directly from the drop down menu or by clicking on the map, activating the <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> button.
+* Select the layer feature from the **Source Feature**. The feature can be selected from the drop down menu or by clicking directly on the map by activating the <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> button
 
 <video class="ms-docimage" controls><source src="../img/geoprocessing-tool/select-feature.mp4"/></video>
 
