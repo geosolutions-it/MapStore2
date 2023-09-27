@@ -25,7 +25,7 @@ When all mandatory process parameters have been provided, it is possible to clic
 
 <video class="ms-docimage" controls><source src="../img/geoprocessing-tool/run_buffer-layer.mp4"/></video>
 
-The buffer layer is now present in the [TOC](toc.md) and visible in the map viewer.
+The buffer layer is added in [TOC](toc.md) inside a new group created for the purpose.
 
 ### Advanced Settings
 
