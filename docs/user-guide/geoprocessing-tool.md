@@ -1,6 +1,6 @@
 # GeoProcessing Tool
 
-This tool allows to perform geographic operations using one or more layers and saving the result of the operations as new layers.
+This tool aims to provide a set of geo-processing utilities on layers present in map. WPS calls are made by the tool to produce the result to be displayed in the map. Supported WPS processes are _geo:buffer_ and _gs:IntersectionFeatureCollection_ (the [WPS plugin](https://docs.geoserver.org/latest/en/user/services/wps/install.html) need to be installed for your GeoServer version in order to use this tool).
 
 !!! note
     The **GeoProcessing Tool** is not included by default in the MapStore configuration but it can be configured within an [application contexts](application-context.md#configure-plugins) if needed.
