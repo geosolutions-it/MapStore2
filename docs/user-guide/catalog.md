@@ -361,7 +361,7 @@ In **General Settings** of a COG source type, it is possible to specify the serv
 <img src="../img/catalog/cog_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 !!! Note
-    To be able to view COG layers in different projections it is necessary to add the reference systems supported by the GOG in the MapStore [projectionDefs configuration](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/local-config/#projectiondefs-configuration)
+    To properly display COG in your MapStore map, it is necessary to add the reference system definition supported by the GOG in the MapStore [projectionDefs configuration](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/local-config/#projectiondefs-configuration)
 
 #### Advanced Settings
 
