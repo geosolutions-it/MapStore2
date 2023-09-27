@@ -21,7 +21,7 @@ The **Buffer** tool allows to create a buffer around the input geometries and wh
 
 * Insert the desired **Distance** for the buffer.
 
-The editor can now click <img src="../img/button/run_button.jpg" class="ms-docbutton"/> to start the process and generate the new buffer layer.
+When all mandatory process parameters have been provided, it is possible to click on  <img src="../img/button/run_button.jpg" class="ms-docbutton"/> button to start the process to generate and visualize the buffer layer.
 
 <video class="ms-docimage" controls><source src="../img/geoprocessing-tool/run_buffer-layer.mp4"/></video>
 
