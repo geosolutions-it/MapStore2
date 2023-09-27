@@ -59,7 +59,7 @@ The new layer, result of the intersection of the features selected, will be adde
 
 ### Advanced Settings
 
-Enabling the *Advanced options* the editor can include the following to the *Intersection* operation:
+Enabling the *Advanced options* the user can include further (not mandatory) parameters for the *Intersection* process:
 
 <img src="../img/geoprocessing-tool/intersection-advanced-options.jpg" class="ms-docimage" width="400px"/>
 
