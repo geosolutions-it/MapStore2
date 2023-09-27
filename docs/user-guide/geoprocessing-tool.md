@@ -15,7 +15,7 @@ The **Buffer** tool allows to create a buffer around the input geometries and wh
 
 * Select a layer from the **Source Layer** option drop down menu. The dropdown shows the layers available for the process from the ones present in TOC
 
-* Select one of the layer's features from the **Source Feature**. The feature can be selected directly by the dropdown menu or from the map, activating the <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> button.
+* Select one of the layer features from the **Source Feature** option. The feature can be selected from the dropdown menu or directly clicking on map by activating the <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> button.
 
 <video class="ms-docimage" controls><source src="../img/geoprocessing-tool/select-buffer-feature.mp4"/></video>
 
