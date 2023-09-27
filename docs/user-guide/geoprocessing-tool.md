@@ -41,7 +41,7 @@ Enabling the *Advanced options* the user can include further (not mandatory) par
 
 Once **Intersection** is selected as a process to be used from the first dropdown, the user can also select the layer to use as **Source Layer** for the intersection as well as the layer to be intersected with the given source (**Intersection Layer** option). For both options it is possible to select a feature to use for the intersection process; this is possible by enabling the <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> buttons in order to select the layer features directly with a click on the map. If no layer feature is provided for one of the to layer options, the operation will be performed on the entire layer.
 
-Once the **Intersection** has been chosen as a process, the editor can select a layer to intersect with the following operations:
+The user can then:
 
 * Select the **Source Layer** from the drop down menu.
 
