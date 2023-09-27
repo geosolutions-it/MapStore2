@@ -9,8 +9,10 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { Observable } from 'rxjs';
-import { isValidURL } from '../../utils/URLUtils';
 import { fromUrl } from 'geotiff';
+
+import { isValidURL } from '../../utils/URLUtils';
+import ConfigUtils from '../../utils/ConfigUtils';
 
 export const COG_LAYER_TYPE = 'cog';
 const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
@@ -54,28 +56,36 @@ export const getProjectionFromGeoKeys = (image) => {
 
     return null;
 };
-export const getRecords = (url, startPosition, maxRecords, text, info = {}) => {
+let capabilitiesCache = {};
+
+export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => {
     const service = get(info, 'options.service');
     let layers = [];
     if (service.records) {
         // each record/url corresponds to a layer
         layers = service.records?.map((record) => {
+            const url = record.url;
             let layer = {
                 ...service,
                 title: record.title,
                 type: COG_LAYER_TYPE,
-                sources: [{url: record.url}],
+                sources: [{url}],
                 options: service.options || {}
             };
             if (service.fetchMetadata) {
-                return fromUrl(record.url)
+                const cached = capabilitiesCache[url];
+                if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+                    return {...cached.data};
+                }
+                return fromUrl(url)
                     .then(geotiff => geotiff.getImage())
                     .then(image => {
                         const crs = getProjectionFromGeoKeys(image);
                         const extent = image.getBoundingBox();
-                        return {
+                        layer = {
                             ...layer,
-                            ...(!isEmpty(extent) && {
+                            // skip adding bbox when geokeys or extent is empty
+                            ...(!isEmpty(extent) && !isEmpty(crs) && {
                                 bbox: {
                                     crs,
                                     bounds: {
@@ -84,8 +94,14 @@ export const getRecords = (url, startPosition, maxRecords, text, info = {}) => {
                                         maxx: extent[2],
                                         maxy: extent[3]
                                     }
-                                }})
+                                }
+                            })
                         };
+                        capabilitiesCache[url] = {
+                            timestamp: new Date().getTime(),
+                            data: {...layer}
+                        };
+                        return layer;
                     }).catch(() => ({...layer}));
             }
             return Promise.resolve(layer);
