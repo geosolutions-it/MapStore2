@@ -13,7 +13,7 @@ By clicking the **GeoProcessing Tool** <img src="../img/button/geoprocessing-but
 
 The **Buffer** tool allows to create a buffer around the input geometries and when it is selected, the user can:
 
-* Select a layer from the **Source Layer** option drop down menu. The dropdown will show the layers available for the process.
+* Select a layer from the **Source Layer** option drop down menu. The dropdown shows the layers available for the process from the ones present in TOC
 
 * Select one of the layer's features from the **Source Feature**. The feature can be selected directly by the dropdown menu or from the map, activating the <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> button.
 
