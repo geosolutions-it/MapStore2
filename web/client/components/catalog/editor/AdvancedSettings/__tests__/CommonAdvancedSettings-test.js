@@ -85,4 +85,28 @@ describe('Test common advanced settings', () => {
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[1].arguments).toEqual([ 'allowUnsecureLayers', false ]);
     });
+    it('test component onChangeServiceProperty fetchMetadata', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+        ReactDOM.render(<CommonAdvancedSettings
+            onChangeServiceProperty={action.onChangeServiceProperty}
+            service={{type: "cog", fetchMetadata: false}}
+        />, document.getElementById("container"));
+        const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingsPanel).toBeTruthy();
+        const fetchMetadata = document.querySelectorAll('input[type="checkbox"]')[1];
+        const formGroup = document.querySelectorAll('.form-group')[2];
+        expect(formGroup.textContent.trim()).toBe('catalog.fetchMetadata.label');
+        expect(fetchMetadata).toExist();
+        TestUtils.Simulate.change(fetchMetadata, { "target": { "checked": true }});
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'fetchMetadata', true ]);
+
+        // Unset fetchMetadata
+        TestUtils.Simulate.change(fetchMetadata, { "target": { "checked": false }});
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[1].arguments).toEqual([ 'fetchMetadata', false ]);
+    });
 });
