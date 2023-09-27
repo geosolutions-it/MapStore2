@@ -111,7 +111,7 @@ const TmsURLEditor = ({ serviceTypes = [], onChangeServiceProperty, service = {}
     </FormGroup>);
 };
 
-const COGEditor = ({ service = {}, onChangeUrl = () => { } }) => {
+const COGEditor = ({ service = {}, onChangeServiceProperty = () => { } }) => {
     return (
         <FormGroup controlId="URL">
             <Col xs={12}>
@@ -122,8 +122,17 @@ const COGEditor = ({ service = {}, onChangeUrl = () => { } }) => {
                         textOverflow: "ellipsis"
                     }}
                     placeholder={defaultPlaceholder(service)}
-                    value={service && service.url}
-                    onChange={(e) => onChangeUrl(e.target.value)}/>
+                    value={service && service.records && service.records.map(record => record?.url)?.join(',')}
+                    onChange={(e) => {
+                        let urls = e.target.value || "";
+                        urls = urls?.split(',')
+                            ?.map(url => url?.trim())
+                            ?.map((url, i) => ({
+                                url,
+                                title: url?.split('/')?.pop()?.replace('.tif', '') || `COG_${i}`
+                            }));
+                        onChangeServiceProperty("records", urls);
+                    }}/>
             </Col>
         </FormGroup>
 

@@ -1498,6 +1498,10 @@
             "title": "Catalog",
             "tooltip": "Add layers to the map",
             "autoload": "Search on service selection",
+            "fetchMetadata": {
+                "label": "Download file metadata on search",
+                "tooltip": "This option will fetch metadata to support the zoom to layer. It may slow down the search operation if the images are too big or too many."
+            },
             "clearValueText": "Clear selection",
             "noResultsText": "No Result",
             "addToMap": "Add To Map",

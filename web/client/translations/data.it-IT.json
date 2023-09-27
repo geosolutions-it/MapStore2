@@ -1497,6 +1497,10 @@
             "notAvailable": "Non disponibile",
             "title": "Catalogo",
             "autoload": "Ricerca alla selezione del servizio",
+            "fetchMetadata": {
+                "label": "Scarica i metadati dei file durante la ricerca",
+                "tooltip": "Questa opzione recupererà i metadati per supportare lo zoom a livello. Potrebbe rallentare l'operazione di ricerca se le immagini sono troppo grandi o troppe."
+            },
             "clearValueText": "Cancella selezione",
             "noResultsText": "Nessun risultato trovato",
             "tooltip": "Sfoglia Catalogo",
