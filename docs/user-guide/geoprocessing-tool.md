@@ -53,7 +53,7 @@ In the same way it is possible to select the **Intersection Layer** and the corr
 
 <video class="ms-docimage" controls><source src="../img/geoprocessing-tool/run_intersection-layer.mp4"/></video>
 
-The new layer, result of the intersection of the features selected, will be added to the [TOC](toc.md) and visible in the map viewer.
+The new layer, result of the intersection of the features selected, will be added to the [TOC](toc.md) inside a dedicated group and visible in the map viewer.
 
 <img src="../img/geoprocessing-tool/intersection-layer.jpg" class="ms-docimage" />
 
