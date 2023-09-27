@@ -1539,7 +1539,7 @@
             "autoload": "Suche in Dienstauswahl",
             "fetchMetadata": {
                 "label": "Laden Sie Dateimetadaten bei der Suche herunter",
-                "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf die Ebene beim Hinzufügen zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
+                "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
             },
             "clearValueText": "Auswahl aufheben",
             "noResultsText": "keine Ergebnisse gefunden",
