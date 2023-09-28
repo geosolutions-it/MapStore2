@@ -130,20 +130,21 @@ describe('mapinfo wms utils', () => {
     });
     it('test intercept ogc error in wms if exception', (done)=>{
         mockAxios.onGet().reply(() => {
-            return [200, {
-                "version": "1.1.1",
-                "exceptions": [
-                    {
-                        "code": "LayerNotDefined",
-                        "locator": "layers",
-                        "text": "Could not find layer misc:Bonnebladen1900_index2121 Details:org.geoserver.platform.ServiceException: Could not find layer misc:Bonnebladen1900_index2121"
-                    }]
-            }];
+            return [200, `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+            <!DOCTYPE ServiceExceptionReport SYSTEM "https://geobretagne.fr/geoserver/schemas/wms/1.1.1/WMS_exception_1_1_1.dtd">
+            <ServiceExceptionReport version="1.1.1" >
+                <ServiceException>
+                  java.lang.NumberFormatException: For input string: &quot;asd&quot;
+            For input string: &quot;asd&quot;
+            </ServiceException>
+            </ServiceExceptionReport>`];
         });
         wms
             .getIdentifyFlow(undefined, "/", { features: [] })
             .subscribe((response) => {
                 expect(response?.data?.exceptions).toExist();
+            }, error=>{
+                expect(error.name).toEqual('OGCError');
                 done();
             });
     });
