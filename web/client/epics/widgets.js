@@ -339,6 +339,10 @@ export const onLayerSelectedEpic = (action$, store) =>
                         }
                     })
                 );
+            } else {
+                observable$ = Rx.Observable.of(
+                    changeMapEditor(null)
+                );
             }
             return observable$;
         });

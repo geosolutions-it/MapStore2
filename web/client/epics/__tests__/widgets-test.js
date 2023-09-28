@@ -672,7 +672,7 @@ describe('widgets Epics', () => {
             [onEditorChange("widgetType", "chart")],
             checkActions, state);
     });
-    it('onLayerSelectedEpic', (done) => {
+    it('onLayerSelectedEpic by selecting a map', (done) => {
         const checkActions = actions => {
             expect(actions.length).toBe(1);
             expect(actions[0].type).toBe(CHANGE_MAP_EDITOR);
@@ -730,6 +730,27 @@ describe('widgets Epics', () => {
         testEpic(onLayerSelectedEpic,
             1,
             [onEditorChange("chart-layers", {})],
+            checkActions, state);
+    });
+    it('onLayerSelectedEpic by clearing map state used by queryform in dashboard', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_MAP_EDITOR);
+            expect(actions[0].mapData).toEqual(null);
+            done();
+        };
+        const state = {
+            layers: {},
+            dashboard: {
+                editor: {
+                    available: false
+                },
+                editing: true
+            }
+        };
+        testEpic(onLayerSelectedEpic,
+            1,
+            [onEditorChange("chart-layers")],
             checkActions, state);
     });
 });
