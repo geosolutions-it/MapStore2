@@ -198,6 +198,8 @@ WMS and WMTS Services are [OGC Standards](https://www.ogc.org/standards) protoco
 
 In **General Settings** the user can set the title he wants to assign to this service and the URL of the service to configure the service and its URL.
 
+#### Advanced Settings
+
 In addition to the standard options, only for WMS catalog sources, through the **Advanced Settings** the user can configure also the following options:
 
 <img src="../img/catalog/advanced_settings_wms.jpg" class="ms-docimage"  style="max-width:500px;" />
@@ -357,3 +359,14 @@ MapStore allows to add COG layers (also as a background) through its *Catalog* t
 In **General Settings** of a COG source type, it is possible to specify the service `Title` and its `URL`.
 
 <img src="../img/catalog/cog_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+!!! Note
+    To properly display COG layers in your MapStore map, it is necessary to add the reference system definition supported by the COG in the MapStore [projectionDefs configuration](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/local-config/#projectiondefs-configuration)
+
+#### Advanced Settings
+
+In addition to the standard options, only for COG catalog sources, through the **Advanced Settings** the user can configure also the following option:
+
+<img src="../img/catalog/advanced_settings_cog.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+* *Download file metadata on search*: this option will fetch metadata to support the zoom to layer when the layer is added to the [TOC](toc.md#table-of-contents).
