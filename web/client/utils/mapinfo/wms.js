@@ -6,16 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import {Observable} from "rxjs";
 import {getCurrentResolution} from '../MapUtils';
 import {reproject, getProjectedBBox, normalizeSRS} from '../CoordinatesUtils';
 import {getLayerUrl} from '../LayersUtils';
 import {isObject, isNil} from 'lodash';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 import { generateEnvString } from '../LayerLocalizationUtils';
-
+import axios from "../../libs/ajax";
+// import {parseString} from "xml2js";
+// import {stripPrefix} from "xml2js/lib/processors";
 import {addAuthenticationToSLD} from '../SecurityUtils';
 import assign from 'object-assign';
-
+import { interceptOGCError } from '../ObservableUtils';
 export default {
     /**
      * Creates the request object and it's metadata for WMS GetFeatureInfo.
@@ -59,7 +62,6 @@ export default {
                 service: 'WMS',
                 version: '1.1.1',
                 request: 'GetFeatureInfo',
-                exceptions: 'application/json',
                 id: layer.id,
                 layers: layer.name,
                 query_layers: queryLayers,
@@ -88,5 +90,14 @@ export default {
             },
             url: getLayerUrl(layer).replace(/[?].*$/g, '')
         };
-    }
+    },
+    /**
+     * Returns an Observable that emits the response when ready.
+     * @param {object} layer the layer
+     * @param {string} baseURL the URL for the request
+     * @param {object} params for the request
+     */
+    getIdentifyFlow: (layer, basePath, params) =>
+        Observable.defer(() => axios.get(basePath, { params }))
+            .let(interceptOGCError)
 };
