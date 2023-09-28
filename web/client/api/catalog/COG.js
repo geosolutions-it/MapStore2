@@ -13,6 +13,7 @@ import { fromUrl } from 'geotiff';
 
 import { isValidURL } from '../../utils/URLUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
+import { isProjectionAvailable } from '../../utils/ProjectionUtils';
 
 export const COG_LAYER_TYPE = 'cog';
 const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
@@ -82,10 +83,11 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                     .then(image => {
                         const crs = getProjectionFromGeoKeys(image);
                         const extent = image.getBoundingBox();
+                        const isProjectionDefined = isProjectionAvailable(crs);
                         layer = {
                             ...layer,
                             // skip adding bbox when geokeys or extent is empty
-                            ...(!isEmpty(extent) && !isEmpty(crs) && {
+                            ...(!isEmpty(extent) && !isEmpty(crs) && isProjectionDefined && {
                                 bbox: {
                                     crs,
                                     bounds: {
