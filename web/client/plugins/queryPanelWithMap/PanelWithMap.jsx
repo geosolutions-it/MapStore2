@@ -128,9 +128,7 @@ class PanelWithMap extends React.Component {
                 toolsOptions={this.props.toolsOptions}
             />
             <div className="mapstore-query-map">
-                <MapComponent map={this.props.map} style={{
-                    margin: 0
-                }}/>
+                <MapComponent map={this.props.map}/>
             </div>
             <Portal>
                 <ResizableModal

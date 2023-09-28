@@ -188,9 +188,9 @@ export const onEditorChange = (key, value) => ({
     value
 });
 /**
- * Changes the entry in the widget editor
-  * @param  {object} mapData the new map data
- * @return {object}       The action of type `WIDGETS:EDITOR_CHANGE` with key and value
+ * Changes the map config in the widget editor to be used by query form for creating spatial filters
+ * @param  {object} mapData the new map data
+ * @return {object} The action of type `WIDGETS:CHANGE_MAP_EDITOR` with map data
  */
 export const changeMapEditor = (mapData) => ({
     type: CHANGE_MAP_EDITOR,

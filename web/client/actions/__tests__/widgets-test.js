@@ -9,6 +9,7 @@
 import expect from 'expect';
 
 import {
+    CHANGE_MAP_EDITOR,
     NEW,
     INSERT,
     UPDATE,
@@ -27,8 +28,9 @@ import {
     DEPENDENCY_SELECTOR_KEY,
     TOGGLE_TRAY,
     TOGGLE_MAXIMIZE,
-    createChart,
     NEW_CHART,
+    changeMapEditor,
+    createChart,
     exportCSV,
     exportImage,
     openFilterEditor,
@@ -54,6 +56,13 @@ import {
 
 describe('Test correctness of the widgets actions', () => {
 
+    it('changeMapEditor', () => {
+        const map = {id: "map-id"};
+        const retval = changeMapEditor(map);
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_MAP_EDITOR);
+        expect(retval.mapData).toBe(map);
+    });
     it('exportCSV', () => {
         const data = [{a: "a"}];
         const retval = exportCSV({data, title: "TITLE"});

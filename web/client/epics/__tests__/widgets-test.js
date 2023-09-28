@@ -16,10 +16,12 @@ import {
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
     updateDependenciesMapOnMapSwitch,
-    onWidgetCreationFromMap
+    onWidgetCreationFromMap,
+    onLayerSelectedEpic
 } from '../widgets';
 
 import {
+    CHANGE_MAP_EDITOR,
     CLEAR_WIDGETS,
     insertWidget,
     toggleConnection,
@@ -40,6 +42,9 @@ import { changeLayerProperties, layerLoad, layerError } from '../../actions/laye
 import { onLocationChanged } from 'connected-react-router';
 import { ActionsObservable } from 'redux-observable';
 import Rx from 'rxjs';
+
+import { DEFAULT_MAP_SETTINGS } from '../../utils/WidgetsUtils';
+
 
 describe('widgets Epics', () => {
     it('clearWidgetsOnLocationChange triggers CLEAR_WIDGETS on LOCATION_CHANGE', (done) => {
@@ -665,6 +670,66 @@ describe('widgets Epics', () => {
         testEpic(onWidgetCreationFromMap,
             1,
             [onEditorChange("widgetType", "chart")],
+            checkActions, state);
+    });
+    it('onLayerSelectedEpic', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(CHANGE_MAP_EDITOR);
+            expect(actions[0].mapData).toEqual({
+                ...DEFAULT_MAP_SETTINGS,
+                bbox: {
+                    crs: "EPSG:4326",
+                    bounds: {
+                        minx: -18, miny: -9, maxx: 18, maxy: 9
+                    }
+                },
+                center: {
+                    crs: "EPSG:4326",
+                    x: 0,
+                    y: 0
+                }
+            });
+            done();
+        };
+        const state = {
+            layers: {
+                flat: [{
+                    id: "1",
+                    name: "layer",
+                    bbox: {
+                        crs: "EPSG:4326",
+                        bounds: {
+                            minx: -18, miny: -9, maxx: 18, maxy: 9
+                        }
+                    }
+                }, {
+                    id: "2",
+                    name: "layer2"
+                }, {
+                    id: "3",
+                    name: "layer3"
+                }],
+                selected: ["1"]
+            },
+            dashboard: {
+                editor: {
+                    layer: {
+                        bbox: {
+                            crs: "EPSG:4326",
+                            bounds: {
+                                minx: -18, miny: -9, maxx: 18, maxy: 9
+                            }
+                        }
+                    },
+                    available: false
+                },
+                editing: true
+            }
+        };
+        testEpic(onLayerSelectedEpic,
+            1,
+            [onEditorChange("chart-layers", {})],
             checkActions, state);
     });
 });

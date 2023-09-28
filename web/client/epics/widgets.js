@@ -9,9 +9,6 @@
 
 import Rx from 'rxjs';
 import { endsWith, has, get, includes, isEqual, omit, omitBy } from 'lodash';
-import { LOCATION_CHANGE } from 'connected-react-router';
-import { saveAs } from 'file-saver';
-import converter from 'json-2-csv';
 
 import {
     EXPORT_CSV,
@@ -35,7 +32,6 @@ import {
 } from '../actions/widgets';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
-import { SET_CONTROL_PROPERTY } from '../actions/controls';
 
 import {
     availableDependenciesSelector,
@@ -45,17 +41,18 @@ import {
     getWidgetLayer
 } from '../selectors/widgets';
 import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } from '../actions/layers';
-import { zoomToExtent } from '../actions/map';
 
 import { getLayerFromId } from '../selectors/layers';
 import { pathnameSelector } from '../selectors/router';
 import { isDashboardEditing } from '../selectors/dashboard';
 import { MAP_CREATED, SAVING_MAP, MAP_ERROR } from '../actions/maps';
 import { DASHBOARD_LOADED } from '../actions/dashboard';
+import { LOCATION_CHANGE } from 'connected-react-router';
+import { saveAs } from 'file-saver';
 import {downloadCanvasDataURL} from '../utils/FileUtils';
+import converter from 'json-2-csv';
 
 import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/WidgetsUtils";
-import { transformExtentToArray } from "../utils/CoordinatesUtils";
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
@@ -341,12 +338,6 @@ export const onLayerSelectedEpic = (action$, store) =>
                             y: (layer.bbox.bounds.maxy + layer.bbox.bounds.miny) / 2
                         }
                     })
-                ).concat(
-                    action$.ofType(SET_CONTROL_PROPERTY)
-                        .filter(({control, property, value}) => control === "queryPanelWithMap" && property === "enabled" && value)
-                        .switchMap(() => {
-                            return Rx.Observable.of(zoomToExtent(transformExtentToArray(layer.bbox.bounds), layer.bbox.crs, 21));
-                        })
                 );
             }
             return observable$;

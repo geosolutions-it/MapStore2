@@ -15,11 +15,6 @@
           "https://gs-stable.geosolutionsgroup.com:443/geoserver",
           "http://gs-stable.geosolutionsgroup.com/geoserver",
           "http://gs-stable.geosolutionsgroup.com:443/geoserver",
-          "http://gs-main.geosolutionsgroup.com/geoserver/",
-          "http://gs-main.geosolutionsgroup.com:443/geoserver/",
-          "https://gs-main.geosolutionsgroup.com/geoserver/",
-          "https://gs-main.geosolutionsgroup.com:443/geoserver/",
-          "https://geoqualif.cnr-france.com/geoserver/",
           "https://tile.googleapis.com"
         ]
     },

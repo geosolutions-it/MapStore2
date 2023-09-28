@@ -10,6 +10,7 @@ import expect from 'expect';
 
 import {
     queryPanelSelector,
+    queryPanelWithMapSelector,
     wfsDownloadSelector,
     widgetBuilderAvailable,
     widgetBuilderSelector,
@@ -25,6 +26,9 @@ const state = {
     controls: {
         queryPanel: {
             enabled: true
+        },
+        queryPanelWithMap: {
+            enabled: false
         },
         layerdownload: {
             available: true,
@@ -57,7 +61,10 @@ describe('Test controls selectors', () => {
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
-
+    it('test queryPanelWithMapSelector', () => {
+        const retVal = queryPanelWithMapSelector(state);
+        expect(retVal).toBeFalsy();
+    });
     it('test wfsDownloadSelector', () => {
         const retVal = wfsDownloadSelector(state);
         expect(retVal).toExist();

@@ -105,10 +105,7 @@ function widgetsReducer(state = emptyState, action) {
             ...state,
             builder: {
                 ...state.builder,
-                map: {
-                    ...state.builder.map,
-                    ...action.mapData
-                }
+                map: action.mapData
             }
         };
     }

@@ -345,12 +345,8 @@ export default ({
                                 />
                             </Col>
                         </FormGroup> : null}
-                    {formOptions.advancedOptions && data.widgetType === "chart"
-                        ? <ChartAdvancedOptions
-                            data={data}
-                            classificationAttribute={classificationAttribute}
-                            onChange={onChange}
-                        />
+                    {formOptions.advancedOptions && data.widgetType === "chart" && (data.type === "bar" || data.type === "line")
+                        ? <ChartAdvancedOptions data={data} classificationAttribute={classificationAttribute} onChange={onChange} />
                         : null}
 
                 </Form>

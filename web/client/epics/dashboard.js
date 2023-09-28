@@ -77,7 +77,6 @@ export const closeDashboardEditorOnExit = (action$, {getState = () => {}} = {}) 
 
 /**
      * Manages interaction with QueryPanel and Dashboard
-     * [ ] EDIT ALSO HERE
      */
 export const handleDashboardWidgetsFilterPanel = (action$, {getState = () => {}} = {}) => action$.ofType(OPEN_FILTER_EDITOR)
     .filter(() => isDashboardAvailable(getState()))
