@@ -1,11 +1,16 @@
 const assign = require('object-assign');
 const nodePath = require('path');
+const os = require('os');
 const webpack = require('webpack');
 const ProvidePlugin = require("webpack/lib/ProvidePlugin");
 
 const {
     VERSION_INFO_DEFINE_PLUGIN
 } = require('./BuildUtils');
+
+const output = {
+    path: nodePath.join(os.tmpdir(), '_karma_webpack_') + Math.floor(Math.random() * 1000000)
+};
 
 module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singleRun, basePath = ".", alias = {}}) => ({
     browsers,
@@ -23,7 +28,14 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     files: [
         ...files,
         // add all assets needed for Cesium library
-        { pattern: './node_modules/cesium/Build/CesiumUnminified/**/*', included: false }
+        { pattern: './node_modules/cesium/Build/CesiumUnminified/**/*', included: false },
+        // see https://github.com/ryanclark/karma-webpack/issues/498#issuecomment-790040818
+        // this is needed in combination with the webpack output to load resources with url-loader such as png
+        {
+            pattern: `${output.path}/**/*`,
+            watched: false,
+            included: false
+        }
     ],
 
     plugins: [
@@ -66,7 +78,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     webpack: {
         devtool: 'eval',
         mode: 'development',
-
+        output,
         module: {
             rules: [
                 {
