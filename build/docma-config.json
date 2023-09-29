@@ -247,6 +247,7 @@
                 "web/client/plugins/FilterLayer.jsx",
                 "web/client/plugins/FloatingLegend.jsx",
                 "web/client/plugins/FullScreen.jsx",
+                "web/client/plugins/GeoProcessing.jsx",
                 "web/client/plugins/GeoStory.jsx",
                 "web/client/plugins/GeoStories.jsx",
                 "web/client/plugins/GeoStoryEditor.jsx",
