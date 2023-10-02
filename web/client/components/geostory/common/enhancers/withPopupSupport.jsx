@@ -16,8 +16,6 @@ import {
     withHandlers
 } from 'recompose';
 import uuidv1 from 'uuid/v1';
-import buffer from "turf-buffer";
-import intersect from "turf-intersect";
 import MapInfoViewer from '../../../common/MapInfoViewer';
 import { getDefaultInfoFormat } from '../../../common/enhancers/withIdentifyPopup';
 import { isEqual } from "lodash";
@@ -39,74 +37,16 @@ function isGeoStoryVectorLayer(layerInfo) {
     return layerInfo && layerInfo.indexOf('geostory-vector') === 0;
 }
 
-export const getIntersectedFeature = (layer, request, metadata) => {
-    const point = {
-        "type": "Feature",
-        "properties": {},
-        "geometry": {
-            "type": "Point",
-            "coordinates": [request.lng, request.lat]
-        }
-    };
-    let unit = metadata && metadata.units;
-    switch (unit) {
-    case "m":
-        unit = "meters";
-        break;
-    case "deg":
-        unit = "degrees";
-        break;
-    case "mi":
-        unit = "miles";
-        break;
-    default:
-        unit = "meters";
-    }
-    let resolution = metadata && metadata.resolution || 1;
-    let bufferedPoint = buffer(point, (metadata.buffer || 1) * resolution, unit);
-    const intersected = (layer.features || []).filter(
-        (feature) => {
-            try {
-                if (feature.type === "FeatureCollection" && feature.features && feature.features.length) {
-                    return feature.features.reduce((p, c) => {
-                        // if required use the geodesic geometry
-                        let ft = c.properties.useGeodesicLines && c.properties.geometryGeodesic ? {...c,
-                            geometry: c.properties.geometryGeodesic
-                        } : c;
-                        return p || intersect(bufferedPoint, resolution && metadata.buffer && unit ? buffer(ft, 1, "meters") : ft);
-                    }, false);
-                }
-                return intersect(bufferedPoint, resolution && metadata.buffer && unit ? buffer(feature, 1, "meters") : feature);
-
-            } catch (e) {
-                return false;
-            }
-        }
-
-    );
-    return {
-        data: {
-            crs: null,
-            features: intersected,
-            totalFeatures: "unknown",
-            type: "FeatureCollection"
-        },
-        queryParams: request,
-        layerMetadata: metadata
-    };
-};
-
 export const withCarouselMarkerInteraction = compose(
     connect((state)=>({sections: getAllGeoCarouselSections(state)}), {onClickMarker: update}),
     withHandlers({
-        onClickMarker: ({onClickMarker = () => {}, sections = {}}) => (responses, layerInfo, popups) => {
-            const {response: { features: [{contentRefId} = {}] = []} = {}} = find(responses,
-                ({queryParams: {request} = {}, layerMetadata: {title} = {}} = {})=> !request && title.toLowerCase() === layerInfo) || {};
-            const result = find(sections, ({contents}) => find(contents, {id: contentRefId}));
+        onClickMarker: ({onClickMarker = () => {}}) => (responses, layerInfo, popups) => {
+            const {response: { features: [selectedFeature] = []} = {}} = find(responses,
+                ({queryParams: {request} = {}, layerMetadata: {layerId} = {}} = {})=> !request && layerId.toLowerCase() === layerInfo) || {};
             let _popup = {popups: []};
-            if (result) {
-                const {id: contentId, title = ''} = find(result.contents, {id: contentRefId}) || {};
-                onClickMarker(`sections[{"id":"${result.id}"}].contents[{"id":"${contentId}"}].carouselToggle`, true);
+            if (selectedFeature?.properties) {
+                const { sectionId, contentId, title } = selectedFeature?.properties;
+                onClickMarker(`sections[{"id":"${sectionId}"}].contents[{"id":"${contentId}"}].carouselToggle`, true);
                 if (title) {
                     _popup = {popups: popups.map((popup) => ({...popup, component: ()=> (<div className={"ms-geostory-carousel-viewer"}>{title}</div>)}))};
                 }
@@ -175,7 +115,7 @@ const withIdentifyRequest  = mapPropsStream(props$ => {
                                         featuresCrs: response.featuresCrs
                                     }
                                 })
-                        ) : Observable.of(getIntersectedFeature(layer, request, metadata))
+                        ) : Observable.empty()
                     )
                         .catch((e) => ({
                             error: e.data || e.statusText || e.status,

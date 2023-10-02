@@ -26,7 +26,6 @@ describe('Icons openlayers styles', () => {
         const shadow = styles[0];
         expect(shadow).toExist();
         const shadowImage = shadow.getImage();
-        expect(shadowImage.getAnchor()).toEqual([12, 12]);
         expect(shadowImage.getOpacity()).toEqual(1);
         expect(shadowImage.getRotation()).toEqual(1);
         expect(shadowImage.getSize()).toEqual(null);

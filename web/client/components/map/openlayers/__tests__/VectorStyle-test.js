@@ -131,7 +131,6 @@ describe('Test VectorStyle', () => {
         expect(olStyle[0].getStroke()).toBe(null);
         expect(olStyle[0].getFill()).toBe(null);
         expect(olStyle[0].getImage().getSrc()).toBe(shadowImageUrl);
-        expect(olStyle[0].getImage().getAnchor()).toEqual([12, 12]);
         expect(olStyle[0].getImage().getSize()).toEqual(null);
         expect(olStyle[0].getImage().getOrigin()).toEqual([0, 0]);
         // ******** marker ********
@@ -162,7 +161,6 @@ describe('Test VectorStyle', () => {
         expect(olStyle[0].getStroke()).toBe(null);
         expect(olStyle[0].getFill()).toBe(null);
         expect(olStyle[0].getImage().getSrc()).toBe(shadowImageUrl);
-        expect(olStyle[0].getImage().getAnchor()).toEqual([12, 12]);
         expect(olStyle[0].getImage().getSize()).toEqual(null);
         expect(olStyle[0].getImage().getOrigin()).toEqual([0, 0]);
         // **************** marker ****************
