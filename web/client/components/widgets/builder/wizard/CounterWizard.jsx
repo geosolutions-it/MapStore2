@@ -9,6 +9,7 @@
 import {isNil} from 'lodash';
 import React from 'react';
 import { compose, lifecycle } from 'recompose';
+import PropTypes from 'prop-types';
 
 import loadingEnhancer from '../../../misc/enhancers/loadingState';
 import {wizardHandlers} from '../../../misc/wizard/enhancers';
@@ -70,7 +71,14 @@ const Wizard = wizardHandlers(WizardContainer);
 
 
 const Preview = enhancePreview(Counter);
-const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid = () => { }, hasAggregateProcess }) =>
+const CounterPreview = ({
+    data = {},
+    layer,
+    dependencies = {},
+    valid,
+    setValid = () => {},
+    hasAggregateProcess
+}) =>
     !isCounterOptionsValid(data.options, { hasAggregateProcess })
         ? <Counter
             {...sampleProps}
@@ -85,6 +93,8 @@ const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid =
             dependencies={dependencies}
             setValid={setValid}
             type={data.type}
+            counterOpts={data.counterOpts}
+            formula={data.formula}
             legend={data.legend}
             layer={data.layer || layer}
             filter={data.filter}
@@ -138,3 +148,13 @@ export default enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setP
                 setValid={v => setValid(v && isCounterOptionsValid(data.options, { hasAggregateProcess }))} />}
         />
     </Wizard>));
+
+CounterPreview.propTypes = {
+    data: PropTypes.object,
+    dependencies: PropTypes.object,
+    hasAggregateProcess: PropTypes.bool,
+    layer: PropTypes.object,
+    setValid: PropTypes.func,
+    valid: PropTypes.bool,
+    value: PropTypes.string
+};

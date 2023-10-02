@@ -8,8 +8,12 @@
 import React, {useEffect, useState} from 'react';
 import { head, get} from 'lodash';
 import { Row, Col, Form, FormGroup, FormControl, ControlLabel, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import Message from '../../../../I18N/Message';
+import PropTypes from 'prop-types';
 import Select from 'react-select';
+import classNames from 'classnames';
+import uuid from 'uuid';
+
+import Message from '../../../../I18N/Message';
 import ColorRamp from '../../../../styleeditor/ColorRamp';
 import { generateRandomHexColor } from '../../../../../utils/ColorUtils';
 import Button from '../../../../misc/Button';
@@ -17,10 +21,9 @@ import ConfirmModal from '../../../../../components/resources/modals/ConfirmModa
 import StepHeader from '../../../../misc/wizard/StepHeader';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import ChartAdvancedOptions from './ChartAdvancedOptions';
+import CounterAdvancedOptions from './CounterAdvancedOptions';
 import ColorClassModal from '../chart/ColorClassModal';
 import { defaultColorGenerator } from '../../../../charts/WidgetChart';
-import classNames from 'classnames';
-import uuid from 'uuid';
 
 const DEFAULT_CUSTOM_COLOR_OPTIONS = {
     base: 190,
@@ -101,7 +104,7 @@ const formatAutoColorOptions = (classification, attributeType) => (
     ))
 );
 
-export default ({
+const WPSWidgetOptions = ({
     hasAggregateProcess,
     data = { options: {}, autoColorOptions: {} },
     onChange = () => { },
@@ -116,7 +119,8 @@ export default ({
     },
     aggregationOptions = [],
     sampleChart,
-    layer }) => {
+    layer
+}) => {
 
     const [showModal, setShowModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -346,12 +350,34 @@ export default ({
                             </Col>
                         </FormGroup> : null}
                     {formOptions.advancedOptions && data.widgetType === "chart" && (data.type === "bar" || data.type === "line")
-                        ? <ChartAdvancedOptions data={data} classificationAttribute={classificationAttribute} onChange={onChange} />
+                        ? <ChartAdvancedOptions
+                            data={data}
+                            classificationAttribute={classificationAttribute}
+                            onChange={onChange}
+                        />
                         : null}
-
+                    {formOptions.advancedOptions && data.widgetType === "counter"
+                        ? <CounterAdvancedOptions
+                            data={data}
+                            onChange={onChange}
+                        />
+                        : null}
                 </Form>
 
             </Col>
         </Row>
     );
 };
+
+WPSWidgetOptions.propTypes = {
+    aggregationOptions: PropTypes.array,
+    data: PropTypes.object,
+    formOptions: PropTypes.object,
+    hasAggregateProcess: PropTypes.bool,
+    layer: PropTypes.object,
+    onChange: PropTypes.func,
+    options: PropTypes.array,
+    sampleChart: PropTypes.node,
+    showTitle: PropTypes.bool
+};
+export default WPSWidgetOptions;
