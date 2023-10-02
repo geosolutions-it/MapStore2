@@ -368,6 +368,11 @@ export const getStyleParser = (format = 'sld') => {
 };
 
 function msStyleToSymbolizer(style, feature) {
+    const geometryProperty = style.geometry && {
+        msGeometry: {
+            name: style.geometry
+        }
+    };
     if (isTextStyle(style) && feature?.properties?.valueText) {
         const fontParts = (style.font || '').split(' ');
         return Promise.resolve({
@@ -395,7 +400,8 @@ function msStyleToSymbolizer(style, feature) {
             radius: style.radius ?? 10,
             wellKnownName: 'Circle',
             msHeightReference: 'none',
-            msBringToFront: true
+            msBringToFront: true,
+            ...geometryProperty
         });
     }
     if (isAttrPresent(style, ['iconUrl']) && !style.iconGlyph && !style.iconShape) {
@@ -412,7 +418,8 @@ function msStyleToSymbolizer(style, feature) {
                 msLeaderLineColor: '#333333',
                 msLeaderLineOpacity: 1,
                 msLeaderLineWidth: 1
-            })
+            }),
+            ...geometryProperty
         });
     }
     if (isMarkerStyle(style)) {
@@ -423,7 +430,8 @@ function msStyleToSymbolizer(style, feature) {
             opacity: 1,
             rotate: 0,
             msHeightReference: 'none',
-            msBringToFront: true
+            msBringToFront: true,
+            ...geometryProperty
         });
     }
     if (isSymbolStyle(style)) {
@@ -441,7 +449,8 @@ function msStyleToSymbolizer(style, feature) {
                     opacity: 1,
                     rotate: 0,
                     msHeightReference: 'none',
-                    msBringToFront: true
+                    msBringToFront: true,
+                    ...geometryProperty
                 };
             })
             .catch(() => ({}));
@@ -543,7 +552,7 @@ export function layerToGeoStylerStyle(layer) {
         return Promise.all(
             flatten(filteredFeatures.map((feature) => {
                 const styles = castArray(feature.style);
-                return styles.map((style) =>
+                return styles.filter(style => style.filtering !== false).map((style) =>
                     msStyleToSymbolizer(style, feature)
                         .then((symbolizer) => ({ symbolizer, filter: ['==', 'id', feature.properties.id] }))
                 );

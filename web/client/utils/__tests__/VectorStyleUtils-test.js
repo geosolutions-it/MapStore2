@@ -638,4 +638,75 @@ describe("VectorStyleUtils ", () => {
             });
     });
 
+    it('should parse mapstore annotation style with filtering and marker to geostyler style with layerToGeoStylerStyle', (done) => {
+
+        const layer = {
+            type: 'vector',
+            features: [
+                {
+                    type: 'FeatureCollection',
+                    features: [
+                        {
+                            type: 'Feature',
+                            properties: {
+                                id: 'annotation-id'
+                            },
+                            geometry: {
+                                type: 'Polygon',
+                                coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                            },
+                            style: [
+                                {
+                                    fillColor: '#ff0000',
+                                    fillOpacity: 0.5,
+                                    color: '#00ff00',
+                                    opacity: 0.25,
+                                    weight: 2
+                                },
+                                {
+                                    iconGlyph: 'comment',
+                                    iconShape: 'square',
+                                    iconColor: 'blue',
+                                    iconAnchor: [
+                                        0.5,
+                                        0.5
+                                    ],
+                                    type: 'Point',
+                                    title: 'StartPoint Style',
+                                    geometry: 'startPoint',
+                                    filtering: true
+                                },
+                                {
+                                    iconGlyph: 'comment',
+                                    iconShape: 'square',
+                                    iconColor: 'blue',
+                                    highlight: false,
+                                    iconAnchor: [
+                                        0.5,
+                                        0.5
+                                    ],
+                                    type: 'Point',
+                                    title: 'EndPoint Style',
+                                    geometry: 'endPoint',
+                                    filtering: false
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        layerToGeoStylerStyle(layer)
+            .then((style) => {
+                expect(style).toBeTruthy();
+                expect(style.body.rules.length).toBe(2);
+                expect(style.body.rules[0].symbolizers[0].kind).toBe('Fill');
+                expect(style.body.rules[1].symbolizers[0].kind).toBe('Icon');
+                expect(style.body.rules[1].symbolizers[0].msGeometry.name).toBe('startPoint');
+                done();
+            }).catch(done);
+    });
+
+
 });
