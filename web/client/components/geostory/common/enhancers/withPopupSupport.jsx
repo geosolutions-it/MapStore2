@@ -99,14 +99,13 @@ export const getIntersectedFeature = (layer, request, metadata) => {
 export const withCarouselMarkerInteraction = compose(
     connect((state)=>({sections: getAllGeoCarouselSections(state)}), {onClickMarker: update}),
     withHandlers({
-        onClickMarker: ({onClickMarker = () => {}, sections = {}}) => (responses, layerInfo, popups) => {
-            const {response: { features: [{contentRefId} = {}] = []} = {}} = find(responses,
-                ({queryParams: {request} = {}, layerMetadata: {title} = {}} = {})=> !request && title.toLowerCase() === layerInfo) || {};
-            const result = find(sections, ({contents}) => find(contents, {id: contentRefId}));
+        onClickMarker: ({onClickMarker = () => {}}) => (responses, layerInfo, popups) => {
+            const {response: { features: [selectedFeature] = []} = {}} = find(responses,
+                ({queryParams: {request} = {}, layerMetadata: {layerId} = {}} = {})=> !request && layerId.toLowerCase() === layerInfo) || {};
             let _popup = {popups: []};
-            if (result) {
-                const {id: contentId, title = ''} = find(result.contents, {id: contentRefId}) || {};
-                onClickMarker(`sections[{"id":"${result.id}"}].contents[{"id":"${contentId}"}].carouselToggle`, true);
+            if (selectedFeature?.properties) {
+                const { sectionId, contentId, title } = selectedFeature?.properties;
+                onClickMarker(`sections[{"id":"${sectionId}"}].contents[{"id":"${contentId}"}].carouselToggle`, true);
                 if (title) {
                     _popup = {popups: popups.map((popup) => ({...popup, component: ()=> (<div className={"ms-geostory-carousel-viewer"}>{title}</div>)}))};
                 }

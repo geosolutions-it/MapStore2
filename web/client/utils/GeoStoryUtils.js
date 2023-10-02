@@ -648,6 +648,12 @@ export function getVectorLayerFromContents({
                 (content?.features || [])
                     .map((feature) => ({
                         ...feature,
+                        properties: {
+                            ...feature.properties,
+                            title: content.title,
+                            sectionId: id,
+                            contentId: content.id
+                        },
                         contentRefId: content.id,
                         ...(featureStyle && {
                             style: featureStyle({ content, feature }, idx)
