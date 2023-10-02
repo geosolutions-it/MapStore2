@@ -296,8 +296,6 @@
     "stream": "0.0.2",
     "tinycolor2": "1.4.1",
     "turf-bbox": "3.0.10",
-    "turf-buffer": "3.0.10",
-    "turf-intersect": "3.0.10",
     "turf-point": "2.0.1",
     "turf-point-on-surface": "3.0.10",
     "turf-union": "3.0.10",

@@ -56,21 +56,22 @@ export default {
     extra: {
         getIcon: (options = {}) => {
             const rotation = !isNil(options.style && options.style.rotation) ? options.style.rotation : 0;
-            return [new Style({
+            return [ new Style({
                 image: new Icon(({
                     rotation,
-                    anchor: [12, 12],
-                    anchorXUnits: 'pixels',
-                    anchorYUnits: 'pixels',
-                    src: extraMarkerShadow
+                    anchor: [0.5, 1],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    src: extraMarkerShadow,
+                    size: markers.shadowSize
                 }))
             }), new Style({
                 image: new Icon({
                     rotation,
                     src: extraMarker,
-                    anchor: [markers.size[0] / 2, markers.size[1]],
-                    anchorXUnits: 'pixels',
-                    anchorYUnits: 'pixels',
+                    anchor: [0.5, 1],
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
                     size: markers.size,
                     offset: [markers.colors.indexOf(options.style.iconColor || 'blue') * markers.size[0], markers.shapes.indexOf(options.style.iconShape || 'circle') * markers.size[1]]
                 }),
