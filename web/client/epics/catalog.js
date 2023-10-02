@@ -176,7 +176,7 @@ export default (API) => ({
                         const layerOptionsParam = get(options, i, searchOptionsSelector(state));
                         // use the selected layer text as title for 3d tiles
                         // because currently we get only a single record for this service type
-                        const layerOptions = format === '3dtiles' || format === 'geojson'
+                        const layerOptions = format === '3dtiles' || format === 'geojson' || format === 'cog'
                             ? {
                                 ...layerOptionsParam,
                                 title: isObject(layerOptionsParam?.title)
