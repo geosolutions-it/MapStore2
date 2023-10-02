@@ -62,7 +62,8 @@ export default {
                     anchor: [0.5, 1],
                     anchorXUnits: 'fraction',
                     anchorYUnits: 'fraction',
-                    src: extraMarkerShadow
+                    src: extraMarkerShadow,
+                    size: markers.shadowSize
                 }))
             }), new Style({
                 image: new Icon({
