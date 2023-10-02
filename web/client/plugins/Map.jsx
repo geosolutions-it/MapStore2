@@ -226,7 +226,8 @@ class MapPlugin extends React.Component {
         currentLocaleLanguage: PropTypes.string,
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
-        onMapTypeLoaded: PropTypes.func
+        onMapTypeLoaded: PropTypes.func,
+        pluginsCreator: PropTypes.func
     };
 
     static defaultProps = {
@@ -265,7 +266,8 @@ class MapPlugin extends React.Component {
         onResolutionsChange: () => {},
         items: [],
         onLoadingMapPlugins: () => {},
-        onMapTypeLoaded: () => {}
+        onMapTypeLoaded: () => {},
+        pluginsCreator
     };
     state = {
         canRender: true
@@ -357,7 +359,8 @@ class MapPlugin extends React.Component {
             });
         }
         const plugins = this.state.plugins;
-        return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
+        // all layers must have a valid id to avoid useless re-render
+        return [...this.props.layers, ...this.props.additionalLayers.map(({ id, ...layer }, idx) => ({ ...layer, id: id ? id : `additional-layers-${idx}` }))].filter(this.filterLayer).map((layer, index) => {
             return (
                 <plugins.Layer
                     type={layer.type}
@@ -460,7 +463,7 @@ class MapPlugin extends React.Component {
         props.onLoadingMapPlugins(true);
         // reset the map plugins to avoid previous map library in children
         this.setState({plugins: undefined });
-        pluginsCreator(props.mapType, props.actions).then((plugins) => {
+        this.props.pluginsCreator(props.mapType, props.actions).then((plugins) => {
             // #6652 fix mismatch on multiple concurrent plugins loading
             // to make the last mapType match the list of plugins
             if (this._isMounted && plugins.mapType === this.currentMapType) {
