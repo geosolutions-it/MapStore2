@@ -38,7 +38,11 @@ If stable release (YYYY.XX.00) follow these sub-steps:
 - [ ] Check that [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository is aligned and working
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
   - [ ] Test **everything**, not only the new features
-  - [ ] Test the creation of a standard project starting in from the stable branch and with the internal backend, so `npm start:app`, then check that an empty homepage loads correctly
+  - [ ] Test the creation of a standard project starting in from the stable branch and with the internal backend, so:
+      - [ ] `node ./createProject.js` (and insert the entries. On base branch, insert the release branch (e.g. `YYYY.XX.xx`), for project folder insert `../test_release_<release_number>` )
+      - [ ] `cd ../test_release_<release_number>`
+      - [ ] `npm install`
+      - [ ] `npm run start:app`, then check that an empty homepage loads correctly
   - [ ] Test [Binary](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/) (take the mapstore2-<RELEASE_BRANCH>-qa-bin.zip, from latest build)
 
 ## Release
