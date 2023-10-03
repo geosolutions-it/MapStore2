@@ -10,16 +10,13 @@ try {
     const today = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
 
     const changelog = `
-    ## [${newReleaseNumber}](https://github.com/geosolutions-it/MapStore2/tree/v${newReleaseNumber}) (${today})
+## [${newReleaseNumber}](https://github.com/geosolutions-it/MapStore2/tree/v${newReleaseNumber}) (${today})
 
-    - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v${oldReleaseNumber}...v${newReleaseNumber})**
-
-    - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${newReleaseNumber}%22+is%3Aclosed+label%3Aenhancement)**
-
-    - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${newReleaseNumber}%22+is%3Aclosed+label%3Abug)**
-
-    - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${newReleaseNumber}%22+is%3Aclosed)**
-    `;
+- **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v${oldReleaseNumber}...v${newReleaseNumber})**
+- **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${newReleaseNumber}%22+is%3Aclosed+label%3Aenhancement)**
+- **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${newReleaseNumber}%22+is%3Aclosed+label%3Abug)**
+- **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${newReleaseNumber}%22+is%3Aclosed)**
+`;
     console.log(changelog);
 } catch (error) {
     console.log(' ');
