@@ -39,7 +39,10 @@ If stable release (YYYY.XX.00) follow these sub-steps:
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
   - [ ] Test **everything**, not only the new features
   - [ ] Test the creation of a standard project starting in from the stable branch and with the internal backend, so:
-      - [ ] `node ./createProject.js` (and insert the entries. On base branch, insert the release branch (e.g. `YYYY.XX.xx`), for project folder insert `../test_release_<release_number>` )
+      - [ ] `node ./createProject.js` and insert the entries (for the rest simply press enter:
+          - **project name**: `release_project_test`
+          - **base branch**: insert the release branch (e.g. `YYYY.XX.xx`)
+          - **project folder** insert `../test_release_<release_number>` )
       - [ ] `cd ../test_release_<release_number>`
       - [ ] `npm install`
       - [ ] `npm run start:app`, then check that an empty homepage loads correctly
