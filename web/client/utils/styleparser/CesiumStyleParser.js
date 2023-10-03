@@ -23,6 +23,9 @@ import CylinderGeometryLibrary from '@cesium/engine/Source/Core/CylinderGeometry
 const getGeometryFunction = geometryFunctionsLibrary.cesium({ Cesium });
 
 function getCesiumColor({ color, opacity }) {
+    if (!color) {
+        return new Cesium.Color(0, 0, 0, 0);
+    }
     const [r, g, b, a] = chroma(color).gl();
     if (opacity !== undefined) {
         return new Cesium.Color(r, g, b, opacity);
@@ -56,17 +59,10 @@ function getCesiumDashArray({ color, opacity, dasharray }) {
     });
 }
 
-const getNumberAttributeValue = (value, properties) => {
+const getNumberAttributeValue = (value) => {
     const constantHeight = parseFloat(value);
-
     if (!isNaN(constantHeight) && isNumber(constantHeight)) {
         return constantHeight;
-    }
-
-    const attributeValue = value?.type === "attribute" && parseFloat(properties[value.name]);
-
-    if (!isNaN(attributeValue) && isNumber(attributeValue)) {
-        return attributeValue;
     }
     return null;
 };
@@ -240,13 +236,12 @@ function addLeaderLineGraphic({
         });
 }
 
-function modifyPointHeight({ entity, symbolizer, properties }) {
+function modifyPointHeight({ entity, symbolizer }) {
     // store the initial position of the feature created from the GeoJSON feature
     if (!entity._msPosition) {
         entity._msPosition = entity.position.getValue(Cesium.JulianDate.now());
     }
-
-    const height = getNumberAttributeValue(symbolizer.msHeight, properties);
+    const height = getNumberAttributeValue(symbolizer.msHeight);
 
     if (height === null) {
         entity.position.setValue(entity._msPosition);
@@ -351,7 +346,7 @@ const getGraphics = ({
 }) => {
     const symbolizer = parseSymbolizerExpressions(_symbolizer, { properties });
     if (symbolizer.kind === 'Mark') {
-        modifyPointHeight({ entity, symbolizer, properties });
+        modifyPointHeight({ entity, symbolizer });
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
         if (image) {
             const side = width > height ? width : height;
@@ -379,7 +374,7 @@ const getGraphics = ({
         }
     }
     if (symbolizer.kind === 'Icon') {
-        modifyPointHeight({ entity, symbolizer, properties });
+        modifyPointHeight({ entity, symbolizer });
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
         if (image) {
             const side = width > height ? width : height;
@@ -409,7 +404,7 @@ const getGraphics = ({
         }
     }
     if (symbolizer.kind === 'Text') {
-        modifyPointHeight({ entity, symbolizer, properties });
+        modifyPointHeight({ entity, symbolizer });
         return addLeaderLineGraphic({
             map,
             symbolizer,
@@ -464,7 +459,7 @@ const getGraphics = ({
                     url: symbolizer?.model
                 })
             });
-        modifyPointHeight({ entity, symbolizer, properties });
+        modifyPointHeight({ entity, symbolizer });
         const position = entity._msPosition;
         const heading = Cesium.Math.toRadians(symbolizer?.heading ?? 0);
         const pitch = Cesium.Math.toRadians(symbolizer?.pitch ?? 0);
@@ -677,15 +672,14 @@ const getGraphics = ({
 
 function getStyleFuncFromRules({
     rules = []
-} = {}, {
-    images = []
-}) {
+} = {}) {
     return ({
         entities,
         map,
         opacity: globalOpacity = 1,
-        sampleTerrain = Cesium.sampleTerrain
-    }) => Promise.all(
+        sampleTerrain = Cesium.sampleTerrain,
+        features
+    }) => drawIcons({ rules }, { features }).then((images) => Promise.all(
         ([...(entities || [])]).map((entity) => new Promise(resolve => {
             if (entity._msAdditional) {
                 entity.entityCollection.remove(entity);
@@ -849,7 +843,7 @@ function getStyleFuncFromRules({
     // map.scene.requestRender(); does not work without a setTimeout
     // it seems there is need of a small delay to correctly request the next map rendering
     // requestRender is used by layer to update the style
-    ).then((response) => new Promise((resolve) => setTimeout(() => resolve(response))));
+    )).then((response) => new Promise((resolve) => setTimeout(() => resolve(response))));
 }
 
 class CesiumStyleParser {
@@ -867,11 +861,8 @@ class CesiumStyleParser {
     writeStyle(geoStylerStyle) {
         return new Promise((resolve, reject) => {
             try {
-                drawIcons(geoStylerStyle)
-                    .then((images = []) => {
-                        const styleFunc = getStyleFuncFromRules(geoStylerStyle, { images });
-                        resolve(styleFunc);
-                    });
+                const styleFunc = getStyleFuncFromRules(geoStylerStyle);
+                resolve(styleFunc);
             } catch (error) {
                 reject(error);
             }

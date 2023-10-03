@@ -596,7 +596,7 @@ export function layerToGeoStylerStyle(layer) {
     return Promise.resolve(layer.style);
 }
 
-export function getStyle({ style }, parserFormat) {
+export function getStyle({ style, features }, parserFormat) {
     const { format = 'geostyler', body } = style || {};
     if (!format || !body) {
         return Promise.resolve(null);
@@ -612,6 +612,6 @@ export function getStyle({ style }, parserFormat) {
         .then(([inParser, outParser]) =>
             inParser
                 .readStyle(body)
-                .then(parsedStyle => outParser.writeStyle(parsedStyle))
+                .then(parsedStyle => outParser.writeStyle(parsedStyle, { features }))
         );
 }

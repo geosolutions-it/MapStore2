@@ -282,11 +282,11 @@ class PrintStyleParser {
         }
         return new Promise((resolve, reject) => {
             try {
-                drawIcons(geoStylerStyle)
+                const styleFunc = (options) => drawIcons(geoStylerStyle)
                     .then((images = []) => {
-                        const styleFunc = getPrintStyleFuncFromRules(geoStylerStyle, { images });
-                        resolve(styleFunc);
+                        return getPrintStyleFuncFromRules(geoStylerStyle, { images })(options);
                     });
+                resolve(styleFunc);
             } catch (error) {
                 reject(error);
             }

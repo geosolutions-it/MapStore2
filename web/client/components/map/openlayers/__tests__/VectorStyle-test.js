@@ -661,8 +661,10 @@ describe('Test VectorStyle', () => {
         }, true);
         stylePromise.then(style => {
             expect(style).toBeTruthy();
-            expect(style()()[0].getImage()).toBeTruthy();
-            done();
+            style().then((olStyle) => {
+                expect(olStyle()[0].getImage()).toBeTruthy();
+                done();
+            }).catch(done);
         }).catch(done);
     });
 });

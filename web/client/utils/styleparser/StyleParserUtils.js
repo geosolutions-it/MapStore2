@@ -94,7 +94,7 @@ export const isGeoStylerStringFunction = (got) => [
 export const isGeoStylerUnknownFunction = (got) => [
     'property'
 ].includes(got?.name);
-export const isGeoStylerMapStoreFunction = (got) => [
+export const isGeoStylerMapStoreFunction = (got) => got?.type === 'attribute' || [
     'msMarkerIcon'
 ].includes(got?.name);
 export const isGeoStylerFunction = (got) =>
@@ -297,6 +297,12 @@ export const expressionsUtils = {
         }
     },
     evaluateMapStoreFunction: (func, feature) => {
+        if (func.type === 'attribute') {
+            return expressionsUtils.evaluateFunction({
+                name: 'property',
+                args: [func.name]
+            }, feature);
+        }
         const args = func.args.map(arg => {
             if (isGeoStylerFunction(arg)) {
                 return expressionsUtils.evaluateFunction(arg, feature);
@@ -433,7 +439,7 @@ export const resolveAttributeTemplate = (
 
     const properties = getFeatureProperties(feature);
 
-    let _template = template;
+    let _template = template || '';
     let attributeTemplatePrefix = '\\{\\{';
     let attributeTemplateSuffix = '\\}\\}';
 
@@ -597,7 +603,7 @@ export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
     const hasStroke = !!symbolizer?.strokeWidth
         && !!symbolizer?.strokeOpacity;
     const hasFill = !!symbolizer?.fillOpacity
-        && !symbolizer.wellKnownName.includes('shape://');
+        && !(symbolizer.wellKnownName || '').includes('shape://');
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const radius = symbolizer.radius;
@@ -834,14 +840,50 @@ export const getWellKnownNameImageFromSymbolizer = (symbolizer) => {
     });
 };
 
+export const parseSymbolizerExpressions = (symbolizer, feature) => {
+    if (!symbolizer) {
+        return {};
+    }
+    return Object.keys(symbolizer).reduce((acc, key) => ({
+        ...acc,
+        [key]: isGeoStylerFunction(symbolizer[key])
+            ? expressionsUtils.evaluateFunction(symbolizer[key], feature)
+            : symbolizer[key]
+    }), {});
+};
+
+
 /**
  * prefetch all image or mark symbol in a geostyler style
  * @param {object} geoStylerStyle geostyler style
  * @returns {promise} all the prefetched images
  */
-export const drawIcons = (geoStylerStyle) => {
+export const drawIcons = (geoStylerStyle, options) => {
     const { rules = [] } = geoStylerStyle || {};
-    const symbolizers = rules.reduce((acc, rule) => [...acc, ...(rule?.symbolizers || [])], []);
+    const symbolizers = rules.reduce((acc, rule) => {
+        const markIconSymbolizers = (rule?.symbolizers || []).filter(({ kind }) => ['Mark', 'Icon'].includes(kind));
+        const symbolizerHasExpression = markIconSymbolizers
+            .some(properties => Object.keys(properties).some(key => !!properties[key]?.name));
+        if (!symbolizerHasExpression) {
+            return [
+                ...acc,
+                ...markIconSymbolizers
+            ];
+        }
+        const features = options.features || [];
+        const supportedFeatures = rule.filter === undefined
+            ? features
+            : features.filter((feature) => geoStylerStyleFilter(feature, rule.filter));
+        return [
+            ...acc,
+            ...markIconSymbolizers.reduce((newSymbolizers, symbolizer) => {
+                return [
+                    ...newSymbolizers,
+                    ...(supportedFeatures || []).map((feature) => parseSymbolizerExpressions(symbolizer, feature))
+                ];
+            }, [])
+        ];
+    }, []);
     const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
     const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
     return new Promise((resolve) => {
@@ -853,19 +895,7 @@ export const drawIcons = (geoStylerStyle) => {
                 resolve(images);
             });
         } else {
-            resolve(null);
+            resolve([]);
         }
     });
-};
-
-export const parseSymbolizerExpressions = (symbolizer, feature) => {
-    if (!symbolizer) {
-        return {};
-    }
-    return Object.keys(symbolizer).reduce((acc, key) => ({
-        ...acc,
-        [key]: isGeoStylerFunction(symbolizer[key])
-            ? expressionsUtils.evaluateFunction(symbolizer[key], feature)
-            : symbolizer[key]
-    }), {});
 };

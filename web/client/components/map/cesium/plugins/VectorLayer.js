@@ -44,7 +44,8 @@ const createLayer = (options, map) => {
                                 styleFunc({
                                     entities: dataSource?.entities?.values,
                                     map,
-                                    opacity: options.opacity ?? 1
+                                    opacity: options.opacity ?? 1,
+                                    features: options.features
                                 }).then(() => {
                                     map.scene.requestRender();
                                 });
@@ -92,7 +93,8 @@ Layers.registerType('vector', {
                                 styleFunc({
                                     entities: layer.dataSource.entities.values,
                                     map,
-                                    opacity: newOptions.opacity ?? 1
+                                    opacity: newOptions.opacity ?? 1,
+                                    features: newOptions.features
                                 }).then(() => {
                                     map.scene.requestRender();
                                 });

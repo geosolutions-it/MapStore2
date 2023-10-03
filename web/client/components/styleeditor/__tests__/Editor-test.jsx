@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import Editor from '../Editor';
 import TestUtils from 'react-dom/test-utils';
 import expect from 'expect';
+import { waitFor } from '@testing-library/dom';
 
 describe('test Editor module component (Style Editor)', () => {
     beforeEach((done) => {
@@ -25,10 +26,11 @@ describe('test Editor module component (Style Editor)', () => {
         setTimeout(done);
     });
 
-    it('test Editor creation', () => {
+    it('test Editor creation', (done) => {
         const comp = ReactDOM.render(<Editor />, document.getElementById("container"));
-        expect(comp).toExist();
-        expect(comp.editor).toExist();
+        expect(comp).toBeTruthy();
+        waitFor(() => expect(comp.editor).toBeTruthy())
+            .then(() => done());
     });
 
     it('test Editor geocss mode, highlight values', () => {
