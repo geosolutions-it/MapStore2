@@ -1,4 +1,21 @@
 # Change Log
+ 
+[41m [37m CHANGELOG GENERATOR - PROCESS ERROR [0m
+ 
+Error: 
+
+Wrong usage, use two parameters
+usage: npm run generate:changelog <oldReleaseNumber> <newReleaseNumber>
+example: npm run generate:changelog 2022.01.00 2022.02.00
+
+    at Object.<anonymous> (/home/offtherailz/work/projects/MapStore2/build/generateChangelog.js:5:15)
+    at Module._compile (node:internal/modules/cjs/loader:1198:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1252:10)
+    at Module.load (node:internal/modules/cjs/loader:1076:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:911:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)
+    at node:internal/main/run_main_module:22:47
+ 
 
 ## [2023.01.02](https://github.com/geosolutions-it/MapStore2/tree/v2023.01.02) (2023-6-21)
 
