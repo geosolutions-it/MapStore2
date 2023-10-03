@@ -39,7 +39,7 @@ const Format = ({
             </Col>
             <Col sm={4}>
                 <ControlLabel><Message msgId="widgets.advanced.suffix" /></ControlLabel>
-                <FormControl placeholder="e.g.: W" disabled={data.yAxis === false} value={data?.[prefix]?.tickSuffix} type="text" onChange={e => onChange(prefix + ".tickSuffix", e.target.value)} />
+                <FormControl placeholder="e.g.: W" disabled={data.yAxis === false} value={data?.[prefix]?.tickSuffix || data?.options?.seriesOptions?.[0].uom} type="text" onChange={e => onChange(prefix + ".tickSuffix", e.target.value)} />
             </Col>
 
         </>);

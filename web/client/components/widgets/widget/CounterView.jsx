@@ -65,7 +65,7 @@ const Counter = ({
             {val}
         </span>
         <span style={{fontSize: "75%"}}>
-            {uom ? uom : counterOpts?.tickSuffix}
+            {counterOpts?.tickSuffix || uom}
         </span>
     </Textfit>);
 };
