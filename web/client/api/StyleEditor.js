@@ -116,6 +116,9 @@ const getRasterClassificationError = (params, errorMsg) => {
  * @returns {object} return classification
  */
 const updateRulesWithColors = (data, params) => {
+    if (data.classification) {
+        return { classification: data.classification };
+    }
     const _rules = get(data, 'Rules.Rule');
     const _rulesRaster = _rules && get(_rules, 'RasterSymbolizer.ColorMap.ColorMapEntry');
     const intervalsForUnique = params.type === "classificationRaster"
@@ -201,6 +204,20 @@ const API = {
 export function updateStyleService({ baseUrl, styleService }) {
     return API.geoserver.updateStyleService({ baseUrl, styleService });
 }
+
+const defaultClassificationRequest = ({
+    layer,
+    params,
+    styleService
+}) => {
+    const paramSLDService = {
+        intervals: params.intervals,
+        method: params.method,
+        attribute: params.attribute,
+        intervalsForUnique: params.intervalsForUnique
+    };
+    return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService, styleService));
+};
 /**
  * Update rules of a style for a vector layer using external SLD services
  * @memberof API.StyleEditor
@@ -210,6 +227,7 @@ export function updateStyleService({ baseUrl, styleService }) {
  * @param {array} rules rules of a style object
  * @param {object} layer layer configuration object
  * @param {object} styleService style service configuration object
+ * @param {function} classificationRequest a function that allow to override the classification promise, it should return a valid classification object
  * @returns {promise} return new rules with updated property and classification
  */
 export function classificationVector({
@@ -217,7 +235,8 @@ export function classificationVector({
     properties,
     rules,
     layer,
-    styleService
+    styleService,
+    classificationRequest = defaultClassificationRequest
 }) {
 
     let paramsKeys = [
@@ -272,13 +291,11 @@ export function classificationVector({
     };
 
     if (needsRequest) {
-        const paramSLDService = {
-            intervals: params.intervals,
-            method: params.method,
-            attribute: params.attribute,
-            intervalsForUnique: params.intervalsForUnique
-        };
-        return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService, styleService))
+        return classificationRequest({
+            layer,
+            params,
+            styleService
+        })
             .then(({ data }) => {
                 return updateRules(ruleId, rules, (rule) => ({
                     ...rule,

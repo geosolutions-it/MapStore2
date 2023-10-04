@@ -96,7 +96,8 @@ const RulesEditor = forwardRef(({
         format,
         simple,
         svgSymbolsPath,
-        lineDashOptions
+        lineDashOptions,
+        supportedSymbolizerMenuOptions
     } = config;
 
     // needed for slider
@@ -346,10 +347,12 @@ const RulesEditor = forwardRef(({
                                     glyph={ruleGlyph}
                                     classificationType={classificationType}
                                     config={classification || {}}
+                                    supportedSymbolizerMenuOptions={supportedSymbolizerMenuOptions}
                                     params={ruleParams}
                                     methods={methods}
                                     getColors={getColors}
                                     bands={bands}
+                                    fonts={fonts}
                                     attributes={attributes && attributes.map((attribute) => ({
                                         ...attribute,
                                         ...( rule.method === "customInterval"
@@ -373,6 +376,7 @@ const RulesEditor = forwardRef(({
                                             tools={
                                                 (!simple && <SymbolizerMenu
                                                     hide={hideMenu}
+                                                    supportedOptions={supportedSymbolizerMenuOptions}
                                                     symbolizerKind={kind}
                                                     ruleBlock={ruleBlock}
                                                     symbolizerBlock={symbolizerBlock}

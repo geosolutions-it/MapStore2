@@ -166,10 +166,11 @@ export function SymbolizerMenu({
     symbolizerBlock,
     getSelected = defaultGetSelected,
     getOptions = defaultGetOptions,
-    onSelect
+    onSelect,
+    supportedOptions
 }) {
 
-    const options = getOptions({ ruleBlock, symbolizerBlock, kind: symbolizerKind });
+    const options = getOptions({ ruleBlock, symbolizerBlock, kind: symbolizerKind }).filter(option => !supportedOptions || supportedOptions.includes(option.value));
 
     const { defaultProperties, params = {} } = symbolizerKind
         ? symbolizerBlock[symbolizerKind]

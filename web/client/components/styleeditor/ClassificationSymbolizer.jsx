@@ -27,6 +27,8 @@ function ClassificationSymbolizer({
     symbolizerBlock = {},
     bands,
     config,
+    supportedSymbolizerMenuOptions,
+    fonts,
     ...props
 }) {
 
@@ -92,6 +94,7 @@ function ClassificationSymbolizer({
                 onSelect={onReplace}
                 ruleBlock={ruleBlock}
                 symbolizerBlock={symbolizerBlock}
+                supportedOptions={supportedSymbolizerMenuOptions}
             />}>
             <Fields
                 properties={props}
@@ -102,7 +105,8 @@ function ClassificationSymbolizer({
                     getColors: handleColors,
                     bands,
                     method,
-                    methodEdit: props?.methodEdit
+                    methodEdit: props?.methodEdit,
+                    fonts
                 }}
                 params={mergedParams}
                 onChange={(values) => onUpdate({
