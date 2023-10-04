@@ -21,13 +21,15 @@ This steps have to be followed always when preparing a new release.
 
 **Only** if you are need to create a new stable major release (YYYY.XX.00), you need first to create a branch for it. Follow the following:
 
-- [ ] Run the `Cut Release Branch` workflow on github.
+- [ ] Run the [`Cut Release Branch`](https://github.com/geosolutions-it/MapStore2/actions/workflows/cut_major_branch.yml) workflow on github.
       With the following Parameters:
         - Use workflow from branch `master`
         - MapStore branch name to use: `YYYY.XX.xx`
         - Version of *MapFish Print*, *GeoStore* and *HTTP-Proxy* accordingly to the release calendar
         - use the default value for the other parameters
-- [ ] Wait for the end of the process
+- [ ] Wait for the end of the process. At the end
+    - A Pull request will be created to the master
+    - A new branch named `YYYY.XX.xx` with fixed versions
 - [ ] Merge the incoming PR created by the workflow
 - [ ] Create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] create a branch with the same name (`YYYY.XX.xx`) in [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository.
@@ -48,9 +50,9 @@ This steps have to be followed always when preparing a new release.
       - [ ] `npm run start:app`, then check that an empty homepage loads correctly
   - [ ] Test [Binary](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/) (take the mapstore2-<RELEASE_BRANCH>-qa-bin.zip, from latest build)
 
-## Release
+## Prepare Release
 
-- [ ] Run `Create Release` workflow on github actions with the following parameters
+- [ ] Run [`Prepare Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/pre_release.yml) workflow on github actions with the following parameters:
   - Use workflow from `branch` **YYYY.XX.xx** (the release branch)
   - Version to release **YYYY.XX.mm** (the effective number of the release)
   - MapStore version for changelog generation **YYYY.XX.mm** (the effective number of the previous release)
@@ -58,8 +60,7 @@ This steps have to be followed always when preparing a new release.
   - use the default value for the other parameters
 - [ ] Wait for the end of the process.At the end of this process:
     - a new commit will be added to the release branch tagged as `vYYYY.XX.mm`. This commit will contain the changelog and the updated version of the java modules.
-    - a draft release will be created on github with the same name and tag
-    - a pull request will be created on master with the changelog update
+    - a pull request will be created on master with the changelog updates
 - [ ] Merge the incoming PR created by the workflow for updating changelog on Master
 
 ## MapStore Stable deploy
@@ -77,13 +78,24 @@ This steps have to be followed always when preparing a new release.
 
 ## Build and publishing release
 
-- [ ] Launch [MapStore2-Stable-Releaser](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Releaser/) Jenkins job with **YYYY.XX.mm** for the version and **YYYY.XX.xx** for the branch to build and  **wait the end**. **Note:** Using the MapStore2 Releaser allows to write the correct version number into the binary packages. In the overview of this job you can find and download :
-- [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
-- [ ] Update the link to Docker in the release notes
-- [ ] Update the description of the release with details
+- [ ] Run [`Create Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/create_release.yml) workflow on github actions with the following parameters:
+  - Use workflow from `branch` **YYYY.XX.xx** (the release branch)
+  - Version to release **YYYY.XX.mm** (the effective number of the release)
+- [ ] Launch [MapStore2-Stable-Releaser](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Releaser/) Jenkins job with
+   - **YYYY.XX.mm** for the version
+   - **YYYY.XX.xx** for the branch to build
+- [ ] Wait the end of the 2 process
+
+When the processes are finished, the release is ready to be published on github in draft mode.
+
+- [ ] Open the new release in draft from [here](https://github.com/geosolutions-it/MapStore2/releases)
+- [ ] Update the link to Docker in the release notes with the link to the latest stable release (search the new tag on [docker hub](https://hub.docker.com/r/geosolutionsit/mapstore2/tags) )
+- [ ] Update the description of the release details
 - [ ] Publish the release
+- [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
 
 ## Build and publish MapStoreExtension release
+
 - [ ] [Create a draft release](https://github.com/geosolutions-it/MapStoreExtension/releases/new) for [MapstoreExtension](https://github.com/geosolutions-it/MapStoreExtension) with the same name and tag
   - [ ] target of the release is **stable branch** aligned to latest commit in stable branch of main mapstore repo
   - [ ] tag is **vYYYY.XX.mm**
@@ -95,7 +107,8 @@ This steps have to be followed always when preparing a new release.
   - [ ] Link the MapStore extension release in the MapStore release
 
 ## Finalize Release
-- [ ] Run the `Post Release` workflow on github with the following parameters:
+
+- [ ] Run the [`Post Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/post_release.yml) workflow on github with the following parameters:
     - Use workflow from branch `YYYY.XX.xx` (the release branch)
     - Version of Java Packages to restore accordingly with release calendar with `-SNAPSHOT` E.g. `1.7-SNAPSHOT`
 - [ ] Write to the mailing list about the current release news and the next release major changes

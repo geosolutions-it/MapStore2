@@ -3,16 +3,16 @@ on:
   workflow_dispatch:
     inputs:
       release-branch:
-        description: MapStore branch name to use (YYYY.MM.xx). E.g. 2025.01.xx
+        description: MapStore branch name to use (YYYY.MM.xx). E.g. 2024.01.xx
         required: true
       mapfish-version:
         description: Mapfish print version to use (e.g. 2.3-SNAPSHOT)
         required: true
         default: '2.3-SNAPSHOT'
       geostore-version:
-        description: GeoStore version to use (e.g. 2.2).
+        description: GeoStore version to use (e.g. 2.0.0).
         required: true
-        default: '2.0'
+        default: '2.0.0'
       http-proxy-version:
         description: Http proxy version to use (e.g. 2.4).
         required: true
