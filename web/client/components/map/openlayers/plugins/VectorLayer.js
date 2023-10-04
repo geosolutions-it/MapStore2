@@ -42,10 +42,14 @@ Layers.registerType('vector', {
         getStyle(applyDefaultStyleToVectorLayer({ ...options, asPromise: true }))
             .then((style) => {
                 if (style) {
-                    const olStyle = style.__geoStylerStyle
-                        ? style({ map })
-                        : style;
-                    layer.setStyle(olStyle);
+                    if (style.__geoStylerStyle) {
+                        style({ map, features: options.features })
+                            .then((olStyle) => {
+                                layer.setStyle(olStyle);
+                            });
+                    } else {
+                        layer.setStyle(style);
+                    }
                 }
             });
 
@@ -64,10 +68,14 @@ Layers.registerType('vector', {
             getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, asPromise: true }))
                 .then((style) => {
                     if (style) {
-                        const olStyle = style.__geoStylerStyle
-                            ? style({ map })
-                            : style;
-                        layer.setStyle(olStyle);
+                        if (style.__geoStylerStyle) {
+                            style({ map, features: newOptions.features })
+                                .then((olStyle) => {
+                                    layer.setStyle(olStyle);
+                                });
+                        } else {
+                            layer.setStyle(style);
+                        }
                     }
                 });
         }

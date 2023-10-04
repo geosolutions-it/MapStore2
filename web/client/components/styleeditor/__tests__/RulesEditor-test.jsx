@@ -836,8 +836,7 @@ describe('RulesEditor', () => {
             'styleeditor.haloColor',
             'styleeditor.haloWidth',
             'styleeditor.rotation',
-            'styleeditor.offsetX',
-            'styleeditor.offsetY'
+            'styleeditor.offset'
         ]);
 
         const optionsNodes = rulesNode[0].querySelectorAll('.ms-symbolizer-tools .dropdown-menu li a span');

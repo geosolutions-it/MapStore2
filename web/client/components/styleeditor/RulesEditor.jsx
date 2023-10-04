@@ -97,7 +97,8 @@ const RulesEditor = forwardRef(({
         simple,
         svgSymbolsPath,
         lineDashOptions,
-        supportedSymbolizerMenuOptions
+        supportedSymbolizerMenuOptions,
+        enableFieldExpression
     } = config;
 
     // needed for slider
@@ -395,7 +396,8 @@ const RulesEditor = forwardRef(({
                                                     attributes,
                                                     fonts,
                                                     svgSymbolsPath,
-                                                    lineDashOptions
+                                                    lineDashOptions,
+                                                    enableFieldExpression
                                                 }}
                                                 onChange={(values) => handleChanges({ values, ruleId, symbolizerId })}
                                             />

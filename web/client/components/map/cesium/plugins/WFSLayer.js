@@ -51,6 +51,7 @@ const createLayer = (options, map) => {
                     markerSize: 0
                 }).then(() => {
                     map.dataSources.add(dataSource);
+                    dataSource['@wfsFeatureCollection'] = collection;
                     layerToGeoStylerStyle(options)
                         .then((style) => {
                             getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
@@ -59,7 +60,8 @@ const createLayer = (options, map) => {
                                         styleFunc({
                                             entities: dataSource?.entities?.values,
                                             map,
-                                            opacity: options.opacity ?? 1
+                                            opacity: options.opacity ?? 1,
+                                            features: collection.features
                                         }).then(() => {
                                             map.scene.requestRender();
                                         });
@@ -110,7 +112,8 @@ Layers.registerType('wfs', {
                                 styleFunc({
                                     entities: layer.dataSource.entities.values,
                                     map,
-                                    opacity: newOptions.opacity ?? 1
+                                    opacity: newOptions.opacity ?? 1,
+                                    features: layer?.dataSource?.['@wfsFeatureCollection']?.features
                                 }).then(() => {
                                     map.scene.requestRender();
                                 });

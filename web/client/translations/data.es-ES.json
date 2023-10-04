@@ -2526,7 +2526,16 @@
             "bottomRight": "Abajo derecha",
             "glyph": "Glifo",
             "marker": "Marcador",
-            "filterByName": "Filtrar por nombre..."
+            "filterByName": "Filtrar por nombre...",
+            "fillOpacity": "Rellenar opacidad",
+            "outlineColorOpacity": "Opacidad del contorno",
+            "strokeColorOpacity": "Opacidad del trazo",
+            "selectProperty": "Seleccionar propiedad",
+            "leaderLineColorOpacity": "Opacidad de la línea guía",
+            "colorOpacity": "Opacidad",
+            "offset": "Desplazamiento",
+            "propertyValue": "Valor de la propiedad",
+            "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\""
         },
         "playback": {
             "settings": {

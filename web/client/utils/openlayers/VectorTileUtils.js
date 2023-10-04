@@ -17,9 +17,16 @@ export const OL_VECTOR_FORMATS = {
     'application/json;type=topojson': TopoJSON
 };
 
-export const applyStyle = (vectorStyle, layer) => {
+export const applyStyle = (vectorStyle, layer, map) => {
     getStyle({ asPromise: true, style: vectorStyle }).then((style) => {
-        layer.setStyle(style);
+        if (style?.__geoStylerStyle) {
+            style({ map })
+                .then((olStyle) => {
+                    layer.setStyle(olStyle);
+                });
+        } else {
+            layer.setStyle(style);
+        }
     }).catch(() => {
         // TODO: error notifications
     });

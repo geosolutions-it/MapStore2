@@ -242,7 +242,8 @@ function VectorStyleEditor({
             config={{
                 simple: !['wfs', 'vector'].includes(layer?.type),
                 supportedSymbolizerMenuOptions: ['Simple', 'Classification'],
-                fonts
+                fonts,
+                enableFieldExpression: ['vector', 'wfs'].includes(layer.type)
             }}
         />
     );

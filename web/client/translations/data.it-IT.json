@@ -2527,7 +2527,16 @@
             "bottomRight": "In basso a destra",
             "glyph": "Glifo",
             "marker": "Marker",
-            "filterByName": "Filtra per nome..."
+            "filterByName": "Filtra per nome...",
+            "fillOpacity": "Opacità di riempimento",
+            "outlineColorOpacity": "Opacità del contorno",
+            "strokeColorOpacity": "Opacità del tratto",
+            "selectProperty": "Seleziona proprietà",
+            "leaderLineColorOpacity": "Opacità linea guida",
+            "colorOpacity": "Opacità",
+            "offset": "Offset",
+            "propertyValue": "Valore della proprietà",
+            "colorPropertyInfoMessage": "Il valore della proprietà colore deve essere una stringa esadecimale. Esempio: \"#ffffff\""
         },
         "playback": {
             "settings": {

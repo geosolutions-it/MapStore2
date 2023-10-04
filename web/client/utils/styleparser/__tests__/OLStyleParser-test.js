@@ -31,14 +31,11 @@ describe('OLStyleParser', () => {
                 ]
             };
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    try {
-                        expect(parsed()()[0].fill_.color_).toBe('rgba(255, 0, 0, 0.5)');
-                    } catch (e) {
-                        done(e);
-                    }
+                    expect(parsed()[0].fill_.color_).toBe('rgba(255, 0, 0, 0.5)');
                     done();
-                });
+                }).catch(done);
         });
         it('should apply correctly the fill opacity', (done) => {
             const style = {
@@ -59,14 +56,11 @@ describe('OLStyleParser', () => {
                 ]
             };
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    try {
-                        expect(parsed()()[0].image_.scale_).toBe(32);
-                    } catch (e) {
-                        done(e);
-                    }
+                    expect(parsed()[0].image_.scale_).toBe(32);
                     done();
-                });
+                }).catch(done);
         });
         it('should write a style function with fill symbolizer', (done) => {
             const style = {
@@ -90,8 +84,9 @@ describe('OLStyleParser', () => {
                 ]
             };
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    const olStyle = parsed()();
+                    const olStyle = parsed();
                     const fill = olStyle[0].getFill();
                     expect(fill.getColor()).toBe('rgba(255, 0, 0, 0.5)');
                     const stroke = olStyle[0].getStroke();
@@ -122,8 +117,9 @@ describe('OLStyleParser', () => {
                 ]
             };
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    const olStyle = parsed()();
+                    const olStyle = parsed();
                     const stroke = olStyle[0].getStroke();
                     expect(stroke.getColor()).toBe('rgba(255, 0, 0, 0.5)');
                     expect(stroke.getWidth()).toBe(2);
@@ -151,8 +147,9 @@ describe('OLStyleParser', () => {
                 ]
             };
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    const olStyle = parsed()();
+                    const olStyle = parsed();
                     const stroke = olStyle[0].getStroke();
                     expect(stroke.getColor()).toBe('rgba(255, 0, 0, 0.5)');
                     expect(stroke.getWidth()).toBe(2);
@@ -187,8 +184,9 @@ describe('OLStyleParser', () => {
             };
 
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    const olStyle = parsed()();
+                    const olStyle = parsed();
                     const image = olStyle[0].getImage();
                     expect(image.getSrc()).toBeTruthy();
                     expect(image.getScale()).toBe(1);
@@ -221,8 +219,9 @@ describe('OLStyleParser', () => {
             };
 
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    const olStyle = parsed()();
+                    const olStyle = parsed();
                     const image = olStyle[0].getImage();
                     expect(image.getSrc()).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
                     expect(image.getOpacity()).toBe(0.5);
@@ -262,8 +261,9 @@ describe('OLStyleParser', () => {
             };
 
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    const olStyle = parsed()({ getProperties: () => ({ text: 'Hello' }) });
+                    const olStyle = parsed({ getProperties: () => ({ text: 'Hello' }) });
                     const text = olStyle[0].getText();
                     expect(text.getText()).toBe('Hello World!');
                     expect(text.getOffsetX()).toBe(16);
@@ -305,8 +305,9 @@ describe('OLStyleParser', () => {
                 ]
             };
             parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
                 .then((parsed) => {
-                    const olStyle = parsed()();
+                    const olStyle = parsed();
                     const fill = olStyle[0].getFill();
                     expect(fill.getColor()).toBe('rgba(255, 0, 0, 0.5)');
                     const stroke = olStyle[0].getStroke();
@@ -317,6 +318,52 @@ describe('OLStyleParser', () => {
                     done();
                 })
                 .catch(done);
+        });
+        it('should be able to use feature properties as style value', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: {
+                                    name: 'property',
+                                    args: ['color']
+                                },
+                                fillOpacity: {
+                                    name: 'property',
+                                    args: ['opacity']
+                                },
+                                outlineColor: '#00ff00',
+                                outlineOpacity: 0.25,
+                                outlineWidth: {
+                                    name: 'property',
+                                    args: ['size']
+                                },
+                                outlineDasharray: [10, 10]
+                            }
+                        ]
+                    }
+                ]
+            };
+            parser.writeStyle(style)
+                .then(stylePromise => stylePromise())
+                .then((parsed) => {
+                    const olStyle = parsed({ getProperties: () => ({
+                        color: '#ff0000',
+                        opacity: 0.5,
+                        size: 2
+                    }) });
+                    const fill = olStyle[0].getFill();
+                    expect(fill.getColor()).toBe('rgba(255, 0, 0, 0.5)');
+                    const stroke = olStyle[0].getStroke();
+                    expect(stroke.getColor()).toBe('rgba(0, 255, 0, 0.25)');
+                    expect(stroke.getWidth()).toBe(2);
+                    done();
+                }).catch(done);
         });
     });
 });
