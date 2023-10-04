@@ -97,6 +97,7 @@ const RulesEditor = forwardRef(({
         simple,
         svgSymbolsPath,
         lineDashOptions,
+        supportedSymbolizerMenuOptions,
         enableFieldExpression
     } = config;
 
@@ -347,10 +348,12 @@ const RulesEditor = forwardRef(({
                                     glyph={ruleGlyph}
                                     classificationType={classificationType}
                                     config={classification || {}}
+                                    supportedSymbolizerMenuOptions={supportedSymbolizerMenuOptions}
                                     params={ruleParams}
                                     methods={methods}
                                     getColors={getColors}
                                     bands={bands}
+                                    fonts={fonts}
                                     attributes={attributes && attributes.map((attribute) => ({
                                         ...attribute,
                                         ...( rule.method === "customInterval"
@@ -374,6 +377,7 @@ const RulesEditor = forwardRef(({
                                             tools={
                                                 (!simple && <SymbolizerMenu
                                                     hide={hideMenu}
+                                                    supportedOptions={supportedSymbolizerMenuOptions}
                                                     symbolizerKind={kind}
                                                     ruleBlock={ruleBlock}
                                                     symbolizerBlock={symbolizerBlock}

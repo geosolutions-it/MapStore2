@@ -50,23 +50,21 @@ const getCustomClassification = (classification) => {
     return {};
 };
 
-const standardColors = [{
-    name: 'red',
-    colors: ['#000', '#f00']
-}, {
-    name: 'green',
-    colors: ['#000', '#008000', '#0f0']
-}, {
-    name: 'blue',
-    colors: ['#000', '#00f']
-}, {
-    name: 'gray',
-    colors: ['#333', '#eee']
-}, {
-    name: 'jet',
-    colors: ['#00f', '#ff0', '#f00']
-},
-...supportedColorBrewer];
+export const defaultClassificationColors = {
+    red: ['#000', '#f00'],
+    green: ['#000', '#008000', '#0f0'],
+    blue: ['#000', '#00f'],
+    gray: ['#333', '#eee'],
+    jet: ['#00f', '#ff0', '#f00']
+};
+
+const standardColors = [
+    ...Object.keys(defaultClassificationColors).map(name => ({
+        name,
+        colors: defaultClassificationColors[name]
+    })),
+    ...supportedColorBrewer
+];
 
 const getColor = (layer, name, intervals, customRamp) => {
     const chosenColors = layer
@@ -431,9 +429,10 @@ const API = {
 
         return colors.map((color) => !isString(color.colors) && color.colors.length >= samples
             ? color
-            : assign({}, color, {
-                colors: chroma.scale(color.colors).colors(samples)
-            }));
+            : {
+                ...color,
+                colors: chroma.scale(color.colors.length === 1 ? [color.colors[0], color.colors[0]] : color.colors).colors(samples)
+            });
     },
     /**
      * Checks if the given layer has a thematic style applied on it (SLD param not empty)
