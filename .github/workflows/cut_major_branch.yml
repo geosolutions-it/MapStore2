@@ -28,11 +28,11 @@ jobs:
     name: Create release branch and PRs into main main branch
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          ref: master
+          ref: ${{ github.event.inputs.main-branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create release branch and generate PR body
         id: create-branch
         env:
