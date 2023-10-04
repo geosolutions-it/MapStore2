@@ -21,7 +21,8 @@ const parentFiltersSel = createSelector(workspaceSelector, (workspace) => ({
 }));
 const selector = createSelector([filterSelector, parentFiltersSel], (filter, parentsFilter) => ({
     selected: filter.layer,
-    parentsFilter
+    parentsFilter,
+    anyFieldVal: filter.layerAny
 }));
 
 export default compose(
@@ -37,7 +38,8 @@ export default compose(
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingLayers"
-        }
+        },
+        anyFilterRuleMode: 'layerAny'
     }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {

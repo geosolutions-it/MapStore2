@@ -55,7 +55,10 @@ class PagedCombobox extends React.Component {
         stopPropagation: PropTypes.bool,
         clearable: PropTypes.bool,
         onReset: PropTypes.func,
-        attribute: PropTypes.string
+        attribute: PropTypes.string,
+        anyFilterRuleMode: PropTypes.bool,
+        onFilterChange: PropTypes.func,
+        anyFieldVal: PropTypes.bool
     };
 
     static contextTypes = {
@@ -94,7 +97,9 @@ class PagedCombobox extends React.Component {
             placement: "top"
         },
         valueField: "value",
-        clearable: false
+        clearable: false,
+        anyFilterRuleMode: false,
+        onFilterChange: ()=>{}
     };
 
     componentDidUpdate(prevProps) {
@@ -182,16 +187,21 @@ class PagedCombobox extends React.Component {
         return this.props.tooltip && this.props.tooltip.enabled ? this.renderWithTooltip(field) : field;
     }
     render() {
-        const {selectedValue: v, disabled, onReset, label: l, clearable} = this.props;
+        const {selectedValue: v, disabled, onReset, label: l, clearable, onFilterChange, anyFieldVal } = this.props;
         let label = l ? (<label>{l}</label>) : (<span/>); // TODO change "the else case" value with null ?
         return (
-            <div className="autocompleteField">
-                {label}
+            <div className={`autocompleteField ${this.props.anyFilterRuleMode ? 'd-flex' : ''}`}>
+                <div className="d-flex"> {label} { this.props.anyFilterRuleMode &&
+                <input onChange={(evt)=>{
+                    onFilterChange({column: {key: evt.target.name}, filterTerm: !evt.target.checked});
+                }} type="checkbox" disabled={v ? false : true} checked={typeof anyFieldVal === 'boolean' && !anyFieldVal ? true : false} title={'filter-mode'} name={this.props.anyFilterRuleMode} />}
+                </div>
                 {clearable ? (
                     <div className={`rw-combo-clearable ${disabled && 'disabled' || ''}`}>
                         {this.renderField()}
                         <span className={`rw-combo-clear ${!v && 'hidden' || ''}`} onClick={onReset}>x</span>
-                    </div>) : this.renderField()
+                    </div>) :
+                    this.renderField()
                 }
             </div>);
     }

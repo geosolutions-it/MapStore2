@@ -16,7 +16,8 @@ import { createSelector } from 'reselect';
 import { filterSelector } from '../../../../../selectors/rulesmanager';
 import { error } from '../../../../../actions/notifications';
 const selector = createSelector(filterSelector, (filter) => ({
-    selected: filter.username
+    selected: filter.username,
+    anyFieldVal: filter.anyUser
 }));
 
 export default compose(
@@ -32,7 +33,8 @@ export default compose(
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingUsers"
-        }
+        },
+        anyFilterRuleMode: 'userAny'
     }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {

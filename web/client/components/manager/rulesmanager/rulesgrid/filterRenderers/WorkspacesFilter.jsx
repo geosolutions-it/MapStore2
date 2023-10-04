@@ -17,7 +17,8 @@ import { createSelector } from 'reselect';
 import { filterSelector } from '../../../../../selectors/rulesmanager';
 
 const selector = createSelector(filterSelector, (filter) => ({
-    selected: filter.workspace
+    selected: filter.workspace,
+    anyFieldVal: filter.workspaceAny
 }));
 
 
@@ -35,7 +36,8 @@ export default compose(
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingWorkspaces"
-        }
+        },
+        anyFilterRuleMode: 'workspaceAny'
     }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {

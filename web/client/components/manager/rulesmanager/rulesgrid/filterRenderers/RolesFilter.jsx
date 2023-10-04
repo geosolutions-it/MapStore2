@@ -16,7 +16,8 @@ import { createSelector } from 'reselect';
 import { error } from '../../../../../actions/notifications';
 import { filterSelector } from '../../../../../selectors/rulesmanager';
 const selector = createSelector(filterSelector, (filter) => ({
-    selected: filter.rolename
+    selected: filter.rolename,
+    anyFieldVal: filter.groupAny
 }));
 
 export default compose(
@@ -32,7 +33,8 @@ export default compose(
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingRoles"
-        }
+        },
+        anyFilterRuleMode: 'groupAny'
     }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {

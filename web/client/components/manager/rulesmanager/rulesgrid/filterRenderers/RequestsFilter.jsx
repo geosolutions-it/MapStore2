@@ -22,7 +22,8 @@ const selector = createSelector([filterSelector, parentFiltersSel, servicesConfi
     disabled: !filter.service,
     service: filter.service,
     parentsFilter,
-    services
+    services,
+    anyFieldVal: filter.requestAny
 }));
 
 
@@ -52,7 +53,8 @@ export default compose(
                 "GetMap",
                 "GetStyles"
             ]
-        }
+        },
+        anyFilterRuleMode: 'requestAny'
     }),
     withPropsOnChange(["service", "services"], ({services = {}, service}) => {
         return {

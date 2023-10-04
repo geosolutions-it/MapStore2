@@ -159,4 +159,34 @@ describe("This test for PagedCombobox component", () => {
             done();
         }, 50);
     });
+    it('tests PagedCombobox anyFilter Mode', (done) => {
+        const actions = {
+            onSelect: () => {}
+        };
+        const spy = expect.spyOn(actions, "onSelect");
+        const data = [{
+            label: "label", value: "value"
+        }];
+        const comp = ReactDOM.render(<PagedCombobox onSelect={actions.onSelect} anyFieldVal={false} anyFilterRuleMode={"userAny"} data={data}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const checkbox = domNode.getElementsByTagName("input");
+        expect(checkbox.length).toEqual(2);
+        expect(checkbox[0].checked).toEqual(true);
+        expect(checkbox[0].name).toEqual('userAny');
+
+        const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-i rw-i-caret-down")[0]);
+        tool.click();
+        // this tests if the option list is opened
+        const firstOption = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-list-option")[0]);
+        expect(firstOption).toExist();
+        const valueOption = firstOption.getElementsByTagName("span")[0];
+        expect(valueOption).toExist();
+        TestUtils.Simulate.click(firstOption);
+        setTimeout(() => {
+            expect(spy.calls.length).toEqual(1);
+            done();
+        }, 50);
+    });
 });

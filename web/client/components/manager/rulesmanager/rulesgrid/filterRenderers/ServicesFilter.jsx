@@ -16,7 +16,8 @@ import { filterSelector, servicesSelector } from '../../../../../selectors/rules
 
 const selector = createSelector(filterSelector, servicesSelector, (filter, services) => ({
     selected: filter.service,
-    services
+    services,
+    anyFieldVal: filter.serviceAny
 }));
 
 export default compose(
@@ -32,7 +33,8 @@ export default compose(
             {value: "WMS", label: "WMS"},
             {value: "WFS", label: "WFS"},
             {value: "WCS", label: "WCS"}
-        ]
+        ],
+        anyFilterRuleMode: 'serviceAny'
     }),
     withPropsOnChange(["services"], ({services, data}) => ({data: services || data})),
     withHandlers({

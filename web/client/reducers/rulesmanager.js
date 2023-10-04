@@ -106,7 +106,7 @@ function rulesmanager(state = defaultState, action) {
         return assign({}, state, {loading: action.loading});
     case SET_FILTER: {
         const {key, value} = action;
-        if (value) {
+        if (value || key?.includes('Any')) {
             return assign({}, state, {filters: {...state.filters, [key]: value}});
         }
         const {[key]: omit, ...newFilters} = state.filters;
