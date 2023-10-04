@@ -23,7 +23,7 @@ function PropertyField({ children, label, tools, divider, invalid, warning, disa
             className={'ms-symbolizer-field' + disabledClassName}>
             <div className="ms-symbolizer-label">
                 <Message msgId={label} />
-                {infoMessageId && <>&nbsp;<InfoPopover text={<Message msgId={infoMessageId} />}/></>}
+                {infoMessageId ? <>&nbsp;<InfoPopover text={<Message msgId={infoMessageId} />}/></> : null}
             </div>
             <div
                 className={'ms-symbolizer-value' + validationClassName + warningClassName}

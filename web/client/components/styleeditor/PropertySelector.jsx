@@ -9,6 +9,7 @@
 
 import React from 'react';
 import Select from 'react-select';
+import PropTypes from 'prop-types';
 import PropertyField from './PropertyField';
 import localizedProps from '../misc/enhancers/localizedProps';
 import DebouncedFormControl from '../misc/DebouncedFormControl';
@@ -17,13 +18,13 @@ const LocalizedSelect = localizedProps('placeholder')(Select);
 
 const PropertySelector = ({
     label: labelProp,
-    attributes = [],
+    attributes,
     value,
     onChange,
     fieldKey,
     config,
     disableAlpha: disableAlphaProp,
-    properties = {},
+    properties,
     valueType
 }) => {
     const disableAlpha = !!(disableAlphaProp || config?.disableAlpha);
@@ -75,6 +76,23 @@ const PropertySelector = ({
             </PropertyField>}
         </div>
     );
+};
+
+PropertySelector.propTypes = {
+    label: PropTypes.string,
+    attributes: PropTypes.array,
+    value: PropTypes.object,
+    onChange: PropTypes.func,
+    fieldKey: PropTypes.string,
+    config: PropTypes.object,
+    disableAlpha: PropTypes.bool,
+    properties: PropTypes.object,
+    valueType: PropTypes.string
+};
+
+PropertySelector.defaultProps = {
+    attributes: [],
+    properties: {}
 };
 
 export default PropertySelector;
