@@ -11,12 +11,12 @@ import shuffle from 'lodash/shuffle';
 import { classifyGeoJSON } from '../GeoJSONClassification';
 
 describe('GeoJSONClassification APIs', () => {
-    const goejson = {
+    const geojson = {
         type: 'FeatureCollection',
         features: shuffle([...new Array(50).keys()]).map(value => ({ type: 'Feature', properties: { value, category: `category-${value % 2}` }, geometry: null }))
     };
     it('classify GeoJSON with quantile method', (done) => {
-        classifyGeoJSON(goejson, { attribute: 'value', method: 'quantile', ramp: 'viridis', intervals: 5  })
+        classifyGeoJSON(geojson, { attribute: 'value', method: 'quantile', ramp: 'viridis', intervals: 5  })
             .then(({ data }) => {
                 expect(data.classification).toEqual([
                     { color: '#440154', min: 0, max: 9.5 },
@@ -30,7 +30,7 @@ describe('GeoJSONClassification APIs', () => {
             .catch(done);
     });
     it('classify GeoJSON with jenks method', (done) => {
-        classifyGeoJSON(goejson, { attribute: 'value', method: 'jenks', ramp: 'viridis', intervals: 5  })
+        classifyGeoJSON(geojson, { attribute: 'value', method: 'jenks', ramp: 'viridis', intervals: 5  })
             .then(({ data }) => {
                 expect(data.classification).toEqual([
                     { color: '#440154', min: 0, max: 10 },
@@ -44,7 +44,7 @@ describe('GeoJSONClassification APIs', () => {
             .catch(done);
     });
     it('classify GeoJSON with equalInterval method', (done) => {
-        classifyGeoJSON(goejson, { attribute: 'value', method: 'equalInterval', ramp: 'viridis', intervals: 5  })
+        classifyGeoJSON(geojson, { attribute: 'value', method: 'equalInterval', ramp: 'viridis', intervals: 5  })
             .then(({ data }) => {
                 expect(data.classification).toEqual([
                     { color: '#440154', min: 0, max: 9.8 },
@@ -58,7 +58,7 @@ describe('GeoJSONClassification APIs', () => {
             .catch(done);
     });
     it('classify GeoJSON with uniqueInterval method', (done) => {
-        classifyGeoJSON(goejson, { attribute: 'category', method: 'uniqueInterval', ramp: 'viridis'  })
+        classifyGeoJSON(geojson, { attribute: 'category', method: 'uniqueInterval', ramp: 'viridis'  })
             .then(({ data }) => {
                 expect(data.classification).toEqual([
                     { color: '#440154', unique: 'category-0' },
