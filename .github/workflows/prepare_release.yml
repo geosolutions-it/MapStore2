@@ -1,0 +1,219 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release. (format: `YYYY.MM.mm`)'
+        required: true
+      previous-ms-version:
+        description: 'previous MapStore version for changelog generation. (format: `YYYY.MM.mm`)'
+        required: true
+      java-modules-version:
+        description: 'version to fix for the java module, accordingly with release schedule (e.g. `1.7.0`)'
+        required: true
+jobs:
+  ################
+  # Fix versions
+  ###############
+  fix-version:
+    concurrency: ci-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+    ################
+    # Protect master branch
+    ################
+    - name: Check branch
+      if: ${{ github.repository != 'geosolutions-it/MapStore2' || github.ref == 'master' }}
+      uses: actions/github-script@v3
+      with:
+        script: |
+            core.setFailed('This workflow can not run on master branch')
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+        cache: maven
+    - name: 'Fix versions, commit and push new tag'
+      env:
+          LAST_MS_VERSION: ${{ github.event.inputs.previous-ms-version }}
+          NEW_MS_VERSION: ${{ github.event.inputs.version }}
+          JAVA_MODULES_NEW_VERSION: ${{ github.event.inputs.java-modules-version }}
+      run: |
+
+        ## Generate changelog
+        function update_changelog () {
+            echo "Update changelog"
+            markdown_text=$(npm -s run generate:changelog $1 $2)
+            # Text file path
+            file_path="CHANGELOG.md"
+            # read old content, excluding the title
+            existing_content=$(cat "$file_path" | tail -n +2)
+
+            # add again the title and the new content concatenated to the old one
+            new_content="# Change Log\n${markdown_text}\n${existing_content}"
+
+            # overwrite the file with the new content
+            echo -e "$new_content" > "$file_path"
+
+            echo "Changelog updated"
+        }
+        # read snapshot version
+        CURRENT_JAVA_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo "current java version: $CURRENT_JAVA_VERSION"
+
+        # Update snapshot version
+        echo "updating modules to version: $JAVA_MODULES_NEW_VERSION"
+        mvn versions:set -DnewVersion=$JAVA_MODULES_NEW_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,binary,printingbundle
+
+        # Update project dependency
+        echo "updating project pom.xml dependency from mapstore packages to version: $JAVA_MODULES_NEW_VERSION"
+        mvn versions:use-dep-version -f project/standard/templates/web/pom.xml -Dincludes=it.geosolutions.mapstore -DdepVersion=$JAVA_MODULES_NEW_VERSION -DforceVersion=true -DgenerateBackupPoms=false
+
+        echo "Initializing git"
+        # Optional
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+        # Commit changes
+        find . -name 'pom.xml' | xargs git add
+        git commit -m "Version Release ${{ inputs.version }}"
+        git tag v${{ inputs.version }} # create tag
+        git push origin ${{ github.ref_name }} --tags
+
+  ################
+  # Build
+  ################
+  build:
+    # The type of runner that the job will run on
+    needs: fix-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checking out"
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: "setting up npm"
+        uses: actions/setup-node@v2
+        with:
+            node-version: '12.x'
+      - name: "setting up Java"
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.x'
+      ############
+      # CACHING
+      ##########
+      - name: "cache node modules"
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: "cache maven dependencies"
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            mapstore-${{ runner.os }}-maven-
+      - name: Build
+        id: "build"
+        run: "./build.sh ${{ github.event.inputs.version }} binary,printingbundle"
+      - name: "Upload war"
+        uses: actions/upload-artifact@v3
+        with:
+          name: war
+          path: product/target/mapstore.war
+      - name: "Upload binary"
+        uses: actions/upload-artifact@v3
+        with:
+          name: binary
+          path: "binary/target/mapstore2-${{ github.event.inputs.version }}-bin.zip"
+      - name: "Upload printing"
+        uses: actions/upload-artifact@v3
+        with:
+          name: printing
+          path: "java/printing/target/mapstore-printing.zip"
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: "Download war"
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts/
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: artifacts
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - name: create_release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          commitish: ${{ github.ref }}
+          tag_name: "v${{ github.event.inputs.version }}"
+          release_name: "v${{ github.event.inputs.version }}"
+          body: |
+            ## Main Features
+
+            - ...
+
+            ## Main Improvements
+
+            - ...
+
+            ## Useful links related to [v${{ github.event.inputs.version }}](https://github.com/geosolutions-it/MapStore2/tree/v${{ github.event.inputs.version }})**
+            - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v${{ github.event.inputs.previousVersion }}...v${{ github.event.inputs.version }})**
+            - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed+label%3Aenhancement)**
+            - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed+label%3Abug)**
+            - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed)**
+            - **[MapStore Extension release v${{ github.event.inputs.version }}](https://github.com/geosolutions-it/MapStoreExtension/releases/tag/v${{ github.event.inputs.version }})**
+            - **[Docker image v${{ github.event.inputs.version }}](xxx)** `< TODO: add this link manually`
+            - [MapStore documentation v${{ github.event.inputs.version }}](https://docs.mapstore.geosolutionsgroup.com/en/v${{ github.event.inputs.version }}/)**
+          draft: true
+          prerelease: false
+      - name: Upload Release war
+        id: upload-release-war
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: artifacts/war/mapstore.war
+          asset_name: mapstore.war
+          asset_content_type: application/zip
+      - name: Upload Release binary
+        id: upload-release-binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: "artifacts/binary/mapstore2-${{github.event.inputs.version}}-bin.zip"
+          asset_name: "mapstore2-${{github.event.inputs.version}}-bin.zip"
+          asset_content_type: application/zip
+      - name: Upload Release printing
+        id: upload-release-printing
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: artifacts/printing/mapstore-printing.zip
+          asset_name: mapstore-printing.zip
+          asset_content_type: application/zip
