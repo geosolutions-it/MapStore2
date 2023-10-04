@@ -69,7 +69,7 @@ describe('GeoJSONClassification APIs', () => {
             .catch(done);
     });
     it('classify GeoJSON with uniqueInterval method and reverse equal to true', (done) => {
-        classifyGeoJSON(goejson, { attribute: 'category', method: 'uniqueInterval', ramp: 'viridis', reverse: true })
+        classifyGeoJSON(geojson, { attribute: 'category', method: 'uniqueInterval', ramp: 'viridis', reverse: true })
             .then(({ data }) => {
                 expect(data.classification).toEqual([
                     { color: '#fee825', unique: 'category-0' },
