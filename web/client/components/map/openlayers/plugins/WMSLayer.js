@@ -306,7 +306,7 @@ const createLayer = (options, map) => {
     if (vectorFormat) {
         layer.set('wmsSource', wmsSource);
         if (options.vectorStyle) {
-            applyStyle(options.vectorStyle, layer);
+            applyStyle(options.vectorStyle, layer, map);
         }
     }
     if (options.useForElevation) {
@@ -344,7 +344,7 @@ Layers.registerType('wms', {
         }
         let needsRefresh = false;
         if (newIsVector && newOptions.vectorStyle && !isEqual(newOptions.vectorStyle, oldOptions.vectorStyle || {})) {
-            applyStyle(newOptions.vectorStyle, layer);
+            applyStyle(newOptions.vectorStyle, layer, map);
             needsRefresh = true;
         }
 

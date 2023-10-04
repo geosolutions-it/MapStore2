@@ -334,33 +334,20 @@ export class OlStyleParser {
      * @return The Promise resolving with one of above mentioned style types.
      */
     writeStyle(geoStylerStyle) {
-        return drawIcons(geoStylerStyle)
-            .then((images) => {
-                this._getImages = () => images;
-                this._computeIconScaleBasedOnSymbolizer = (symbolizer) => {
-                    const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
-                    if (image && width && height) {
-                        const side = width > height ? width : height;
-                        const scale = symbolizer.size / side;
-                        return scale;
-                    }
-                    return symbolizer.size;
-                };
-                return new Promise((resolve) => {
-                    const unsupportedProperties = this.checkForUnsupportedProperties(geoStylerStyle);
-                    try {
-                        const olStyle = this.getOlStyleTypeFromGeoStylerStyle(geoStylerStyle);
-                        resolve(olStyle, {
-                            unsupportedProperties,
-                            warnings: unsupportedProperties && ['Your style contains unsupportedProperties!']
-                        });
-                    } catch (error) {
-                        resolve({
-                            errors: [error]
-                        });
-                    }
+        return new Promise((resolve) => {
+            const unsupportedProperties = this.checkForUnsupportedProperties(geoStylerStyle);
+            try {
+                const olStyle = this.getOlStyleTypeFromGeoStylerStyle(geoStylerStyle);
+                resolve(olStyle, {
+                    unsupportedProperties,
+                    warnings: unsupportedProperties && ['Your style contains unsupportedProperties!']
                 });
-            });
+            } catch (error) {
+                resolve({
+                    errors: [error]
+                });
+            }
+        });
     }
 
     checkForUnsupportedProperties(geoStylerStyle) {
@@ -423,66 +410,79 @@ export class OlStyleParser {
      */
     geoStylerStyleToOlParserStyleFct(geoStylerStyle) {
         const rules = geoStylerStyle.rules;
-        const olStyle = ({ map } = {}) => (feature, resolution) => {
-            this._getMap = () => map;
-            const styles = [];
-
-            // calculate scale for resolution (from ol-util MapUtil)
-            const units = map
-                ? map.getView().getProjection().getUnits()
-                : 'm';
-            const dpi = 25.4 / 0.28;
-            const mpu = METERS_PER_UNIT[units];
-            const inchesPerMeter = 39.37;
-            const scale = resolution * mpu * inchesPerMeter * dpi;
-
-            rules.forEach((rule) => {
-                // handling scale denominator
-                let minScale = rule?.scaleDenominator?.min;
-                let maxScale = rule?.scaleDenominator?.max;
-                let isWithinScale = true;
-                if (minScale || maxScale) {
-                    minScale = isGeoStylerFunction(minScale) ? expressionsUtils.evaluateNumberFunction(minScale) : minScale;
-                    maxScale = isGeoStylerFunction(maxScale) ? expressionsUtils.evaluateNumberFunction(maxScale) : maxScale;
-                    if (minScale && scale < minScale) {
-                        isWithinScale = false;
+        const olStyle = ({ map, features } = {}) => drawIcons(geoStylerStyle, { features })
+            .then((images) => {
+                this._getImages = () => images;
+                this._computeIconScaleBasedOnSymbolizer = (symbolizer) => {
+                    const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
+                    if (image && width && height) {
+                        const side = width > height ? width : height;
+                        const scale = symbolizer.size / side;
+                        return scale;
                     }
-                    if (maxScale && scale >= maxScale) {
-                        isWithinScale = false;
-                    }
-                }
+                    return symbolizer.size;
+                };
+                return (feature, resolution) => {
+                    this._getMap = () => map;
+                    const styles = [];
 
-                // handling filter
-                let matchesFilter = false;
-                if (!rule.filter) {
-                    matchesFilter = true;
-                } else {
-                    try {
-                        matchesFilter = geoStylerStyleFilter(feature, rule.filter);
-                    } catch (e) {
-                        matchesFilter = false;
-                    }
-                }
+                    // calculate scale for resolution (from ol-util MapUtil)
+                    const units = map
+                        ? map.getView().getProjection().getUnits()
+                        : 'm';
+                    const dpi = 25.4 / 0.28;
+                    const mpu = METERS_PER_UNIT[units];
+                    const inchesPerMeter = 39.37;
+                    const scale = resolution * mpu * inchesPerMeter * dpi;
 
-                if (isWithinScale && matchesFilter) {
-                    rule.symbolizers.forEach((symb) => {
-                        const olSymbolizer = this.getOlSymbolizerFromSymbolizer(symb, feature);
+                    rules.forEach((rule) => {
+                        // handling scale denominator
+                        let minScale = rule?.scaleDenominator?.min;
+                        let maxScale = rule?.scaleDenominator?.max;
+                        let isWithinScale = true;
+                        if (minScale || maxScale) {
+                            minScale = isGeoStylerFunction(minScale) ? expressionsUtils.evaluateNumberFunction(minScale) : minScale;
+                            maxScale = isGeoStylerFunction(maxScale) ? expressionsUtils.evaluateNumberFunction(maxScale) : maxScale;
+                            if (minScale && scale < minScale) {
+                                isWithinScale = false;
+                            }
+                            if (maxScale && scale >= maxScale) {
+                                isWithinScale = false;
+                            }
+                        }
 
-                        // either an OlStyle or an ol.StyleFunction. OpenLayers only accepts an array
-                        // of OlStyles, not ol.StyleFunctions.
-                        // So we have to check it and in case of an ol.StyleFunction call that function
-                        // and add the returned style to const styles.
-                        if (typeof olSymbolizer !== 'function') {
-                            styles.push(olSymbolizer);
+                        // handling filter
+                        let matchesFilter = false;
+                        if (!rule.filter) {
+                            matchesFilter = true;
                         } else {
-                            const styleFromFct = olSymbolizer(feature, resolution);
-                            styles.push(styleFromFct);
+                            try {
+                                matchesFilter = geoStylerStyleFilter(feature, rule.filter);
+                            } catch (e) {
+                                matchesFilter = false;
+                            }
+                        }
+
+                        if (isWithinScale && matchesFilter) {
+                            rule.symbolizers.forEach((symb) => {
+                                const olSymbolizer = this.getOlSymbolizerFromSymbolizer(symb, feature);
+
+                                // either an OlStyle or an ol.StyleFunction. OpenLayers only accepts an array
+                                // of OlStyles, not ol.StyleFunctions.
+                                // So we have to check it and in case of an ol.StyleFunction call that function
+                                // and add the returned style to const styles.
+                                if (typeof olSymbolizer !== 'function') {
+                                    styles.push(olSymbolizer);
+                                } else {
+                                    const styleFromFct = olSymbolizer(feature, resolution);
+                                    styles.push(styleFromFct);
+                                }
+                            });
                         }
                     });
-                }
+                    return styles;
+                };
             });
-            return styles;
-        };
         const olStyleFct = olStyle;
         olStyleFct.__geoStylerStyle = geoStylerStyle;
         return olStyleFct;
@@ -548,7 +548,8 @@ export class OlStyleParser {
      * @param markSymbolizer A GeoStyler-Style MarkSymbolizer.
      * @return The OL Style object
      */
-    getOlPointSymbolizerFromMarkSymbolizer(markSymbolizer, feature) {
+    getOlPointSymbolizerFromMarkSymbolizer(_markSymbolizer, feature) {
+        const markSymbolizer = {..._markSymbolizer};
         for (const key of Object.keys(markSymbolizer)) {
             if (isGeoStylerFunction(markSymbolizer[key])) {
                 markSymbolizer[key] = expressionsUtils.evaluateFunction(markSymbolizer[key], feature);
@@ -572,7 +573,7 @@ export class OlStyleParser {
                 ...geometryFunc
             });
         }
-        return null;
+        return new this.OlStyleConstructor();
     }
 
     /**

@@ -80,9 +80,7 @@ const anchorToTransform = (anchor) => {
     }
 };
 
-function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
-    images
-}) {
+function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }) {
 
     // the last rules of the array should the one we'll apply
     // in case we have multiple symbolizers on the same features
@@ -91,8 +89,9 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
     const rules = [...geoStylerStyleRules].reverse();
     return ({
         opacity: globalOpacity = 1,
-        layer = {}
-    } = {}) => {
+        layer = {},
+        features
+    } = {}) => drawIcons({ rules: geoStylerStyleRules }, { features }).then((images = []) =>  {
 
         if (layer._msAdditionalLayers) {
             layer._msAdditionalLayers.forEach((additionalLayer) => {
@@ -318,7 +317,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                 };
             }
         };
-    };
+    });
 }
 
 class LeafletStyleParser {
@@ -336,11 +335,8 @@ class LeafletStyleParser {
     writeStyle(geoStylerStyle) {
         return new Promise((resolve, reject) => {
             try {
-                drawIcons(geoStylerStyle)
-                    .then((images = []) => {
-                        const styleFunc = getStyleFuncFromRules(geoStylerStyle, { images });
-                        resolve(styleFunc);
-                    });
+                const styleFunc = getStyleFuncFromRules(geoStylerStyle);
+                resolve(styleFunc);
             } catch (error) {
                 reject(error);
             }

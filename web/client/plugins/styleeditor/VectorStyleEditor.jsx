@@ -205,7 +205,8 @@ function VectorStyleEditor({
             enable3dStyleOptions={enable3dStyleOptions}
             config={{
                 simple: true,
-                fonts
+                fonts,
+                enableFieldExpression: ['vector', 'wfs'].includes(layer.type)
             }}
         />
     );

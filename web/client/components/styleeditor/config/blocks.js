@@ -20,12 +20,11 @@ const vector3dStyleOptions = ({ label = 'styleeditor.clampToGround', isDisabled 
     })
 });
 
-const INITIAL_OPTION_VALUE = '@ms-INITIAL_OPTION_VALUE';
-
 const pointGeometryTransformation = () => ({
     msGeometry: property.select({
         label: 'styleeditor.geometryTransformation',
         key: 'msGeometry',
+        disablePropertySelection: true,
         setValue: (value) => {
             if (!value) {
                 return 'unset';
@@ -109,6 +108,7 @@ const lineGeometryTransformation = () => ({
     msGeometry: property.select({
         label: 'styleeditor.geometryTransformation',
         key: 'msGeometry',
+        disablePropertySelection: true,
         setValue: (value) => {
             if (!value) {
                 return 'unset';
@@ -141,22 +141,12 @@ const heightPoint3dOptions = ({ isDisabled }) =>  ({
         label: "styleeditor.heightReferenceFromGround",
         isDisabled
     }),
-    msHeight: property.multiInput({
-        label: "styleeditor.height",
-        key: "msHeight",
-        isDisabled: (value, properties) => isDisabled() || properties?.msHeightReference === 'clamp',
-        initialOptionValue: INITIAL_OPTION_VALUE,
-        getSelectOptions: ({ attributes }) => {
-            const numberAttributes = attributes
-                ?.map(({ label, attribute, type }) =>
-                    type === "number" ? { label, value: attribute } : null
-                )
-                .filter((x) => !!x) || [];
-            return [
-                { labelId: 'styleeditor.pointHeight', value: INITIAL_OPTION_VALUE },
-                ...numberAttributes
-            ];
-        }
+    msHeight: property.number({
+        key: 'msHeight',
+        label: 'styleeditor.height',
+        uom: 'm',
+        placeholderId: 'styleeditor.pointHeight',
+        isDisabled: (value, properties) => isDisabled() || properties?.msHeightReference === 'clamp'
     }),
     msLeaderLineColor: property.color({
         key: 'msLeaderLineColor',
@@ -287,7 +277,7 @@ const getBlocks = ({
                     label: 'styleeditor.format',
                     key: 'format',
                     isVisible: (value, { image } = {}, format) => {
-                        return value?.name !== 'msMarkerIcon' && format !== 'css'
+                        return image !== undefined && value?.name !== 'msMarkerIcon' && format !== 'css'
                         && !isObject(image)
                         && !['png', 'jpg', 'svg', 'gif', 'jpeg'].includes(image.split('.').pop());
                     },
@@ -587,6 +577,7 @@ const getBlocks = ({
                 label: property.select({
                     key: 'label',
                     label: 'styleeditor.label',
+                    disablePropertySelection: true,
                     selectProps: {
                         creatable: true
                     },
@@ -600,6 +591,7 @@ const getBlocks = ({
                 font: property.select({
                     key: 'font',
                     label: 'styleeditor.fontFamily',
+                    disablePropertySelection: true,
                     selectProps: {
                         multi: true
                     },
@@ -641,13 +633,8 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
-                offsetX: property.offset({
-                    label: 'styleeditor.offsetX',
-                    axis: 'x'
-                }),
-                offsetY: property.offset({
-                    label: 'styleeditor.offsetY',
-                    axis: 'y'
+                offset: property.offset({
+                    label: 'styleeditor.offset'
                 }),
                 ...(!shouldHideVectorStyleOptions && point3dStyleOptions({
                     isDisabled: () => !enable3dStyleOptions

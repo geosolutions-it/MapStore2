@@ -2536,7 +2536,16 @@
             "bottomRight": "Bottom right",
             "glyph": "Glyph",
             "marker": "Marker",
-            "filterByName": "Filter by name..."
+            "filterByName": "Filter by name...",
+            "fillOpacity": "Fill opacity",
+            "outlineColorOpacity": "Outline opacity",
+            "strokeColorOpacity": "Stroke opacity",
+            "selectProperty": "Select property",
+            "leaderLineColorOpacity": "Leader line opacity",
+            "colorOpacity": "Opacity",
+            "offset": "Offset",
+            "propertyValue": "Property value",
+            "colorPropertyInfoMessage": "The color property value must be an hexadecimal string. Example: \"#ffffff\""
         },
         "playback": {
             "settings": {

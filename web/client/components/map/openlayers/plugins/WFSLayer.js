@@ -35,6 +35,8 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
         if (response.status === 200) {
             source.addFeatures(
                 source.getFormat().readFeatures(response.data));
+            source.set('@wfsFeatureCollection', response.data);
+            options.onLoadEnd();
         } else {
             onError();
         }
@@ -52,10 +54,15 @@ const getWFSStyle = (layer, options, geometryType, map) => {
     return getStyle(applyDefaultStyleToVectorLayer({ ...options, style: { ...(options.style || {}), type: geometryType }, asPromise: true }))
         .then((style) => {
             if (style) {
-                const olStyle = style.__geoStylerStyle
-                    ? style({ map })
-                    : style;
-                layer.setStyle(olStyle);
+                if (style.__geoStylerStyle) {
+                    const collection = layer.getSource().get('@wfsFeatureCollection') || {};
+                    style({ map, features: collection.features })
+                        .then((olStyle) => {
+                            layer.setStyle(olStyle);
+                        });
+                } else {
+                    layer.setStyle(style);
+                }
             }
         });
 };
@@ -83,9 +90,16 @@ Layers.registerType('wfs', {
         const source = new VectorSource({
             format: new GeoJSON()
         });
-        source.setLoader(createLoader(source, options));
-
-        const layer = new VectorLayer({
+        let layer;
+        source.setLoader(
+            createLoader(source, {
+                ...options,
+                onLoadEnd: () => {
+                    updateStyle(layer, options, map);
+                }
+            })
+        );
+        layer = new VectorLayer({
             msId: options.id,
             source: source,
             visible: options.visibility !== false,

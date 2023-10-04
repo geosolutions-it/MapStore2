@@ -2563,7 +2563,16 @@
             "bottomRight": "Unten rechts",
             "glyph": "Glyphe",
             "marker": "Marker",
-            "filterByName": "Nach name filtern..."
+            "filterByName": "Nach name filtern...",
+            "fillOpacity": "Deckkraft füllen",
+            "outlineColorOpacity": "Umrissdeckkraft",
+            "strokeColorOpacity": "Stroke-Deckkraft",
+            "selectProperty": "Eigenschaft auswählen",
+            "leaderLineColorOpacity": "Deckkraft der Führungslinie",
+            "colorOpacity": "Deckkraft",
+            "offset": "Offset",
+            "propertyValue": "Eigenschaftswert",
+            "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\""
         },
         "playback": {
             "settings": {

@@ -362,5 +362,62 @@ describe('PrintStyleParser', () => {
                 strokeDashstyle: '10 10'
             });
         });
+        it('should be able to use feature properties as style value', () => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: {
+                                    name: 'property',
+                                    args: ['color']
+                                },
+                                fillOpacity: {
+                                    name: 'property',
+                                    args: ['opacity']
+                                },
+                                outlineColor: '#00ff00',
+                                outlineOpacity: 0.25,
+                                outlineWidth: {
+                                    name: 'property',
+                                    args: ['size']
+                                },
+                                outlineDasharray: [10, 10]
+                            }
+                        ]
+                    }
+                ]
+            };
+            const layer = {
+                features: [
+                    {
+                        "type": "Feature",
+                        "properties": {
+                            "color": "#ff0000",
+                            "opacity": 0.5,
+                            "size": 2
+                        },
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [[[0, 0], [0, 1], [1, 1], [0, 0]]]
+                        }
+                    }
+                ]
+            };
+            const printFeaturesWithStyle = parser.writeStyle(style, true)({ layer });
+            expect(printFeaturesWithStyle.length).toBe(1);
+            expect(printFeaturesWithStyle[0].properties.ms_style).toEqual({
+                strokeColor: '#00ff00',
+                strokeOpacity: 0.25,
+                strokeWidth: 2,
+                strokeDashstyle: '10 10',
+                fillColor: '#ff0000',
+                fillOpacity: 0.5
+            });
+        });
     });
 });

@@ -60,16 +60,18 @@ const createLayer = (options) => {
 
     getStyle(applyDefaultStyleToVectorLayer(options), 'leaflet')
         .then((styleUtils) => {
-            const {
-                style: styleFunc,
-                pointToLayer = () => null,
-                filter: filterFunc = () => true
-            } = styleUtils && styleUtils({ opacity: options.opacity, layer }) || {};
-            layer.clearLayers();
-            layer.options.pointToLayer = pointToLayer;
-            layer.options.filter = filterFunc;
-            layer.addData(options.features);
-            layer.setStyle(styleFunc);
+            styleUtils({ opacity: options.opacity, layer, features: options.features })
+                .then(({
+                    style: styleFunc,
+                    pointToLayer = () => null,
+                    filter: filterFunc = () => true
+                } = {}) => {
+                    layer.clearLayers();
+                    layer.options.pointToLayer = pointToLayer;
+                    layer.options.filter = filterFunc;
+                    layer.addData(options.features);
+                    layer.setStyle(styleFunc);
+                });
         });
     return layer;
 };
@@ -91,16 +93,18 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     || newOptions.opacity !== oldOptions.opacity) {
         getStyle(applyDefaultStyleToVectorLayer(newOptions), 'leaflet')
             .then((styleUtils) => {
-                const {
-                    style: styleFunc,
-                    pointToLayer = () => null,
-                    filter: filterFunc = () => true
-                } = styleUtils && styleUtils({ opacity: newOptions.opacity, layer }) || {};
-                layer.clearLayers();
-                layer.options.pointToLayer = pointToLayer;
-                layer.options.filter = filterFunc;
-                layer.addData(newOptions.features);
-                layer.setStyle(styleFunc);
+                styleUtils({ opacity: newOptions.opacity, layer, features: newOptions.features })
+                    .then(({
+                        style: styleFunc,
+                        pointToLayer = () => null,
+                        filter: filterFunc = () => true
+                    } = {}) => {
+                        layer.clearLayers();
+                        layer.options.pointToLayer = pointToLayer;
+                        layer.options.filter = filterFunc;
+                        layer.addData(newOptions.features);
+                        layer.setStyle(styleFunc);
+                    });
             });
     }
     return null;

@@ -12,7 +12,8 @@ import { Glyphicon } from 'react-bootstrap';
 import { parseSymbolizerExpressions } from '../../../utils/styleparser/StyleParserUtils';
 
 function StyleBasedLegend({ style }) {
-    const renderIcon = (symbolizer) => {
+    const renderIcon = (_symbolizer) => {
+        const symbolizer = parseSymbolizerExpressions(_symbolizer, { properties: {} });
         const {
             color,
             outlineColor,
@@ -26,7 +27,7 @@ function StyleBasedLegend({ style }) {
             fillOpacity,
             image,
             rotate
-        } = parseSymbolizerExpressions(symbolizer, { properties: {} });
+        } = symbolizer;
         switch (symbolizer.kind) {
         case 'Line':
             let displayWidth = width;
