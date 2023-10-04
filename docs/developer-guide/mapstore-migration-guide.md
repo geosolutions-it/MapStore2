@@ -65,7 +65,7 @@ Please update by:
 - If you customized the app, you can remove the `annotations` reducer from default reducers.
 - If some customizations were applied to the Annotations plugin in `defaultState`, apply these changes to the plugin configuration, following the documentation of the plugin.
 
-## Migration from 2023.01.xx to 2023.02.00
+## Migration from 2023.01.02 to 2023.02.00
 
 ### About plugin cfg changes
 
