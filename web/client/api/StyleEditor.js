@@ -204,7 +204,20 @@ const API = {
 export function updateStyleService({ baseUrl, styleService }) {
     return API.geoserver.updateStyleService({ baseUrl, styleService });
 }
-
+/**
+ * Default classification promise that uses the SLD service
+ * @param {object} config configuration properties
+ * @param {object} config.layer WMS layer options
+ * @param {object} config.params parameters for a SLD service classification { intervals, method, attribute, intervalsForUnique }
+ * @param {object} config.params.intervals number of intervals of the classification
+ * @param {object} config.params.method classification method
+ * @param {object} config.params.attribute feature attribute to classify
+ * @param {object} config.params.intervalsForUnique maximum of number of interval for `uniqueInterval` method
+ * @param {object} config.styleService the style service information { baseUrl, isStatic }
+ * @param {string} config.styleService.baseUrl base url of a GeoServer supporting sldservice rest endpoint
+ * @param {string} config.styleService.isStatic if false it tries to request the layer info based on WMS layer object, if true uses the baseUrl
+ * @returns {promise} return classification from an SLD service
+ */
 const defaultClassificationRequest = ({
     layer,
     params,

@@ -150,4 +150,4 @@ export const classifyGeoJSON = (geojson, params) => {
     return methods[params.method](features, params);
 };
 
-classifyGeoJSON.availableMethods = Object.keys(methods);
+export const availableMethods = Object.keys(methods);

@@ -28,7 +28,7 @@ import { getCapabilities } from '../../api/ThreeDTiles';
 import { describeFeatureType } from '../../api/WFS';
 import { classificationVector } from '../../api/StyleEditor';
 import SLDService from '../../api/SLDService';
-import { classifyGeoJSON } from '../../api/GeoJSONClassification';
+import { classifyGeoJSON, availableMethods } from '../../api/GeoJSONClassification';
 import { getLayerJSONFeature } from '../../observables/wfs';
 
 const { getColors } = SLDService;
@@ -229,7 +229,7 @@ function VectorStyleEditor({
             exactMatchGeometrySymbol
             enable3dStyleOptions={enable3dStyleOptions}
             getColors={getColors}
-            methods={classifyGeoJSON.availableMethods}
+            methods={availableMethods}
             styleUpdateTypes={{
                 classificationVector: (options) => {
                     return classificationVector({
