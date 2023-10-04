@@ -28,7 +28,7 @@ If stable release (YYYY.XX.00) follow these sub-steps:
 - [ ] on MapStore **master branch**
     - [ ] increase version of java modules. (`mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false`). Where `<SNAPSHOT_VERSION>` increases the major number. (e.g. `1.3-SNAPSHOT` --> `1.4-SNAPSHOT`)
     - [ ] Manually update project pom templates to use `mapstore-services` of `<SNAPSHOT_VERSION>` to the new one. (`projects/templates/web/pom.xml`).
-    - [ ] Increment version of `package.json` on master **0.&lt;x-incremented&gt;.0**
+    - [ ] Increment version of `package.json` on master **0.&lt;x-incremented&gt;.0** with the command `npm version minor --git-tag-version=false`
 - [ ] Create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] create a branch with the same name (`YYYY.XX.xx`) in [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository.
 
@@ -38,21 +38,24 @@ If stable release (YYYY.XX.00) follow these sub-steps:
 - [ ] Check that [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository is aligned and working
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
   - [ ] Test **everything**, not only the new features
-  - [ ] Test the creation of a standard project starting in from the stable branch and with the internal backend, so `npm start:app`, then check that an empty homepage loads correctly
+  - [ ] Test the creation of a standard project starting in from the stable branch and with the internal backend, so:
+      - [ ] `node ./createProject.js` and insert the entries (for the rest simply press enter:
+          - **project name**: `release_project_test`
+          - **base branch**: insert the release branch (e.g. `YYYY.XX.xx`)
+          - **project folder** insert `../test_release_<release_number>` )
+      - [ ] `cd ../test_release_<release_number>`
+      - [ ] `npm install`
+      - [ ] `npm run start:app`, then check that an empty homepage loads correctly
   - [ ] Test [Binary](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/) (take the mapstore2-<RELEASE_BRANCH>-qa-bin.zip, from latest build)
 
 ## Release
 
-- [ ] on **master branch** do and merge a PR for updating:
-  - [ ] **Only on major release** `stableBranch` in particular the `utility/projects/projectLib.js` file and commit (used in `createProject.js`) - This can be removed from this list as step as #9002 is merged
-  - [ ] Update `CHANGELOG.md` [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
 - [ ] On **stable** branch, do and merge a PR for updating:
-  - [ ] **Only on major release** `stableBranch` in particular the `utility/projects/projectLib.js` file (used in `createProject.js`) - This can be removed from this list as step as #9002 is merged
   - [ ] Update `CHANGELOG.md` [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
   - [ ] Update the version of java modules on the stable branch to a stable, incremental version. Run `mvn versions:set -DnewVersion=<SNAPSHOT_VERSION> -DprocessAllModules -DgenerateBackupPoms=false` to update package version, where `<VERSION>` is the version of the java packages (e.g. `1.3.1`). (`mvn:release:prepare` may also work. TODO: check this command)
   - [ ] Manually update project pom templates to use `mapstore-services` of `<VERSION>`. `project/standard/templates/web/pom.xml`
-- [ ] Release a stable `mapstore-services` and `mapstore-webapp`
-  - [ ] Run `mvn clean install deploy -f java/pom.xml` to deploy `mapstore-services` and `mapstore-webapp` on maven.geo-solutions.it.
+- [ ] on **master branch** do and merge a PR for updating:
+  - [ ] Update `CHANGELOG.md` [Instructions](https://mapstore.readthedocs.io/en/latest/developer-guide/release/#changelog-generation)
 
 ## MapStore Stable deploy
 
