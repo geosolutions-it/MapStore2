@@ -3,7 +3,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-binary</artifactId>
   <packaging>pom</packaging>
-  <version>${mapstore2.version}</version>
+  <version>1.7-SNAPSHOT</version>
   <name>MapStore 2 Binary Module</name>
   <description>Project to create the binary package</description>
   <url>http://www.geo-solutions.it</url>
@@ -11,7 +11,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>8.5.86</tomcat.version>
-    <binary.number>${project.version}</binary.number>
+    <binary.number>${mapstore2.version}</binary.number>
   </properties>
   <dependencies>
     <dependency>
