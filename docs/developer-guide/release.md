@@ -139,3 +139,11 @@ For instance if after tag creation we notice some problem or we have some failur
 For testing and fixing the release procedure it is possible to run the release procedure on your fork.
 anyway "Create, Prepare and Post Release" actions are configured to run only on the main repository. This is done to avoid that the release procedure is triggered automatically by forks in some cases.
 So on your fork you will need to manually edit the workflow files to enable the actions to run on your fork.
+
+In particular you will need to edit some lines like this:
+
+```yaml
+if:  ${{ github.event_name == 'push' && github.repository == 'geosolutions-it/MapStore2' }}
+```
+
+Removing the condition or changing the repository name.
