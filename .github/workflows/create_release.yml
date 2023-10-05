@@ -110,14 +110,14 @@ jobs:
 
             - ...
 
-            ## Useful links related to [v${{ github.event.inputs.version }}](https://github.com/geosolutions-it/MapStore2/tree/v${{ github.event.inputs.version }})**
+            ## Useful links related to **[v${{ github.event.inputs.version }}](https://github.com/geosolutions-it/MapStore2/tree/v${{ github.event.inputs.version }})**
             - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v${{ github.event.inputs.previousVersion }}...v${{ github.event.inputs.version }})**
             - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed+label%3Aenhancement)**
             - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed+label%3Abug)**
             - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%22${{ github.event.inputs.version }}%22+is%3Aclosed)**
             - **[MapStore Extension release v${{ github.event.inputs.version }}](https://github.com/geosolutions-it/MapStoreExtension/releases/tag/v${{ github.event.inputs.version }})**
             - **[Docker image v${{ github.event.inputs.version }}](xxx)** `< TODO: add this link manually`
-            - [MapStore documentation v${{ github.event.inputs.version }}](https://docs.mapstore.geosolutionsgroup.com/en/v${{ github.event.inputs.version }}/)**
+            - **[MapStore documentation v${{ github.event.inputs.version }}](https://docs.mapstore.geosolutionsgroup.com/en/v${{ github.event.inputs.version }}/)**
           draft: true
           prerelease: false
       - name: Upload Release war
