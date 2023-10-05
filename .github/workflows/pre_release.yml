@@ -73,10 +73,7 @@ jobs:
 
         # Update snapshot version
         echo "updating modules to version: $JAVA_MODULES_NEW_VERSION"
-        mvn versions:set -DnewVersion=$JAVA_MODULES_NEW_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,printingbundle # note: this do not set binary profile version it is used to generate artifact name ( to be fixed in the future )
-
-        # Update binary version
-        mvn versions:use-dep-version -f binary/bin-war/pom.xml -Dincludes=it.geosolutions.mapstore -DdepVersion=$JAVA_MODULES_NEW_VERSION -DforceVersion=true -DgenerateBackupPoms=false
+        mvn versions:set -DnewVersion=$JAVA_MODULES_NEW_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,binary,printingbundle # note: this do not set binary profile version it is used to generate artifact name ( to be fixed in the future )
 
         # Update project dependency
         echo "updating project pom.xml dependency from mapstore packages to version: $JAVA_MODULES_NEW_VERSION"
