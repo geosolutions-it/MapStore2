@@ -38,7 +38,7 @@ jobs:
       - name: "setting up Java"
         uses: actions/setup-java@v1
         with:
-          java-version: '8.x'
+          java-version: '11.x'
       ############
       # CACHING
       ##########
