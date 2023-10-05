@@ -133,3 +133,9 @@ This produces some text that can be used to update the changelog file.
 If in a certain point we notice some errors, the separation of the tasks allows to restart the process from the point where the error occurred.
 
 For instance if after tag creation we notice some problem or we have some failures, we can fix the problem, delete and recreate the tag manually and recreate the release by running the `Create Release` action.
+
+### Testing and fixing release procedure
+
+For testing and fixing the release procedure it is possible to run the release procedure on your fork.
+anyway "Create, Prepare and Post Release" actions are configured to run only on the main repository. This is done to avoid that the release procedure is triggered automatically by forks in some cases.
+So on your fork you will need to manually edit the workflow files to enable the actions to run on your fork.
