@@ -12,7 +12,7 @@ on:
 jobs:
   set-versions:
     # if: ${{ github.repository == 'geosolutions-it/geostore' && github.ref != 'master' }}
-    concurrency: ci-${{ github.ref }}
+    concurrency: post-release-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
     - name: Check branch

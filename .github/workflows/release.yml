@@ -24,7 +24,7 @@ jobs:
   # Fix versions
   ###############
   fix-version:
-    concurrency: ci-${{ github.ref }}
+    concurrency: release-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
     ################
@@ -90,8 +90,8 @@ jobs:
         echo "Committing changes"
         find . -name 'pom.xml' | xargs git add
         git add CHANGELOG.md
-        git commit -m "Version Release ${{ inputs.version }}"
-        git tag v${{ inputs.version }} # create tag
+        git commit -m "Version Release ${NEW_MS_VERSION}"
+        git tag v${NEW_MS_VERSION} # create tag
         git push origin ${{ github.ref_name }} --tags # push tag
 
   ################
