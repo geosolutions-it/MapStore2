@@ -7,17 +7,6 @@ To create a new MapStore release, you need to:
 
 Here below some details about changelog generation and naming conventions.
 
-## Changelog generation
-
-Generate new changelog by running this:
-
-```sh
-npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
-
-# usage
-# generate:changelog 2022.01.00 2022.02.00
-```
-
 ## Release Checklist
 
 ### naming conventions
@@ -125,3 +114,22 @@ gitGraph TB:
     checkout 2023.02.xx
     cherry-pick id:"fix-3"
 ```
+
+### Changelog generation
+
+The changelog generation is now automated. Anyway it is possible to generate the changelog manually by running the following command:
+
+```sh
+npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
+
+# usage
+# generate:changelog 2022.01.00 2022.02.00
+```
+
+This produces some text that can be used to update the changelog file.
+
+### Handling errors
+
+If in a certain point we notice some errors, the separation of the tasks allows to restart the process from the point where the error occurred.
+
+For instance if after tag creation we notice some problem or we have some failures, we can fix the problem, delete and recreate the tag manually and recreate the release by running the `Create Release` action.
