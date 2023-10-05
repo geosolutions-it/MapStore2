@@ -527,7 +527,11 @@ export const toPlotly = (props) => {
  * @prop {number} [xAxisOpts.nTicks] max number of ticks. Can be used to force to display all labels, instead of skipping.
  * @prop {number} [xAxisAngle] the angle, in degrees, of xAxisAngle.
  * @prop {object|boolean} [yAxis=true] if false, hide the yAxis. true by default. (should contain future options for yAxis)
- * @prop {object} [yAxisOpts] options for yAxis: `type`, `tickPrefix`, `tickPostfix`, `format`, `formula`
+ * @prop {object} [counterOpts] options for counter widgets that manipulates the value:  `tickPrefix`, `tickPostfix`, `format`, `formula`)
+ * @prop {string} [counterOpts.format] format. See {@link https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/}
+ * @prop {string} [counterOpts.tickPrefix] the prefix.
+ * @prop {string} [counterOpts.tickSuffix] the suffix.
+ * @prop {object} [yAxisOpts] options for yAxis: `type`, `tickPrefix`, `tickPostfix`, `format`, `formula`)
  * @prop {string} [yAxisOpts.type] determine the type of the y axis of `date`, `-` (automatic), `log`, `linear`, `category`, `date`.
  * @prop {string} [yAxisOpts.format] format for y axis value. See {@link https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/}
  * @prop {string} [yAxisOpts.tickPrefix] the prefix on y value

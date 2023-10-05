@@ -89,8 +89,9 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, 
     >
         {enabled ? <Builder formOptions={{
             showColorRamp: false,
-            showUom: true,
+            showUom: false,
             showGroupBy: false,
-            showLegend: false
+            showLegend: false,
+            advancedOptions: true
         }} dependencies={dependencies} {...props} /> : null}
     </BorderLayout>));
