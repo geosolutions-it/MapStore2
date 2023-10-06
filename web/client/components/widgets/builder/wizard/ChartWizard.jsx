@@ -80,6 +80,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         dependenciesMap={data.dependenciesMap}
         type={data.type}
         xAxisOpts={data.xAxisOpts}
+        textinfo={data.textinfo}
         yAxisOpts={data.yAxisOpts}
         barChartType={data.barChartType}
         formula={data.formula}
@@ -230,7 +231,7 @@ const ChartWizard = ({
         hideButtons
         className={"chart-options"}>
         {[ChartOptions, WidgetOptions].map(component =>
-            <>
+            (<>
                 <StepHeader step={step}/>
                 <ChartSwitcher
                     key="chart-switcher"
@@ -244,7 +245,7 @@ const ChartWizard = ({
                 >
                     {component}
                 </ChartSwitcher>
-            </>
+            </>)
         )}
     </Wizard>);
 };

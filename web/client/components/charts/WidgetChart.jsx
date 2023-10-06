@@ -1,11 +1,10 @@
 import React, { Suspense } from 'react';
 import {every, includes, isNumber, isString, union, orderBy, flatten} from 'lodash';
+import {format} from 'd3-format';
 
 import LoadingView from '../misc/LoadingView';
-
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
-
 /*
  * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
@@ -262,6 +261,7 @@ function getData({
     data: dataUnsorted,
     formula,
     yAxisOpts,
+    textinfo,
     classificationAttr,
     yAxisLabel,
     autoColorOptions,
@@ -293,12 +293,28 @@ function getData({
     switch (type) {
 
     case 'pie':
+        if (formula) {
+            y = preProcessValues(formula, y);
+        }
+        let text = y;
+        if (yAxisOpts?.format) {
+            try {
+                const formatter = format(yAxisOpts.format);
+                text = y.map(val => formatter(val));
+            } catch (e) {
+                console.error(e);
+            }
+        }
         let pieChartTrace = {
             name: yAxisLabel || yDataKey,
             hovertemplate: `%{label}<br>${yDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
             type,
+            textinfo: textinfo,
+            // hide labels with textinfo = "none", in this case we have to omit texttemplate which would win over this.
+            texttemplate: textinfo === "none" ? null : `${yAxisOpts?.tickPrefix || ""}${yAxisOpts?.format ? "%{text}" : "%{percent}"}${yAxisOpts?.tickSuffix || ""}`,
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
             values: y,
+            text,
             pull: 0.005
         };
         /* pie chart is classified colored */
@@ -455,6 +471,7 @@ export const toPlotly = (props) => {
         xAxis,
         series = [],
         yAxisLabel,
+        textinfo,
         type = 'line',
         height,
         width,
@@ -484,7 +501,7 @@ export const toPlotly = (props) => {
             uirevision: true
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, classificationType });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, textinfo, yAxisLabel, autoColorOptions, customColorEnabled, classificationType });
             const chartData = allData ? allData?.x?.map((axis, index) => {
                 return { xAxis: axis, yAxis: allData.y[index]};
             }) : {};
