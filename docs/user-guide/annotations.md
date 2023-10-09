@@ -1,23 +1,17 @@
 # Annotations
 
 [Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
-Those features make up the so called **Annotations** layers.
+Those features make up the so-called **Annotations** layers.
 
-Starting from a new map or an already existing one, the editor can access the **Annotations** <img src="../img/button/annotations2.jpg" class="ms-docbutton" style="max-height:30px;"/> button from the [TOC](toc.md) <img src="../img/button/show-layers.jpg" class="ms-docbutton" style="max-height:30px;"/> panel on the top-left corner of the map viewer.
+Starting from a new map or an already existing one, the editor can access the **Annotations** <img src="../img/button/annotations2.jpg" class="ms-docbutton" style="max-height:30px;"/> button from the [TOC](toc.md) <img src="../img/button/show-layers.jpg" class="ms-docbutton" style="max-height:30px;"/> panel in the top-left corner of the map viewer.
 
 <img src="../img/annotations/annotations_on_toc.jpg" class="ms-docimage" style="max-width:500px;" />
 
- The annotation panel will open:
+ The annotation panel will open and the editor can insert a **Title** (required) and a **Description** (optional).
 
 <img src="../img/annotations/annotation_tool.jpg" class="ms-docimage" style="max-width:500px;" />
 
-## Add new Annotation
-
-To begin, from the annotation panel, the editor can open the new annotation panel by selecting the <img src="../img/button/+++.jpg" class="ms-docbutton" /> button.
-
-<img src="../img/annotations/annotation_form_filled.jpg" class="ms-docimage"  style="max-width:500px;"/>
-
-From here the editor can insert a **Title** (required), a **Description** (optional) and choose between five different types of **Geometries**:
+From the *Geometries* tab, the editor can choose between five different types of **Geometries**:
 
 * **Marker** <img src="../img/button/marker2.jpg" class="ms-docbutton" />
 * **Line** <img src="../img/button/line2.jpg" class="ms-docbutton" />
@@ -25,11 +19,13 @@ From here the editor can insert a **Title** (required), a **Description** (optio
 * **Text** <img src="../img/button/text2.jpg" class="ms-docbutton" />
 * **Circle** <img src="../img/button/circle2.jpg" class="ms-docbutton" />
 
+<img src="../img/annotations/geometries-tab.jpg" class="ms-docimage"  style="max-width:500px;"/>
+
 After selecting a geometry type, the editor can:
 
 * Draw a *Geometry* on the map.
 
-<video class="ms-docimage" style="max-width:700px;"controls><source src="../img/annotations/polygon_annotation_drawing.mp4" ></video>
+<video class="ms-docimage" style="max-width:700px;"controls><source src="../img/annotations/line_annotation_drawing.mp4" ></video>
 
 * Enter the vertices of the geometry or modify the existing ones through the **Coordinates editor** using `Decimal` or `Aeronautical` formats.
 
@@ -42,103 +38,135 @@ After selecting a geometry type, the editor can:
 !!! note
     If the vertices are invalid, they are notified with a red exclamation point.
     <img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
-    In this case, it is not possible to add new geometry or save the annotation until a valid value is entered. It is still possible to interact with the geometries already present in the annotation, by zooming in on it or deleting it, as follows:
+    In this case, the geometries on the map is red and it is not possible to save it as an annotation, as follows:
     <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/annotations/invalid_vertex2.mp4" ></video>
 
 * Customize the **Style** of the annotation, as explained in the following paragraph.
 
-Once the geometry has been saved through the **Save** <img src="../img/button/save_button.jpg" class="ms-docbutton" /> button, for each geometry created, the editor can perform the following operations:
+For each geometry created, the editor can perform the following operations:
 
-* **Zoom** to the geometry annotation on map through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton" /> button
+* **Zoom** to the geometry annotation on map through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton" /> button
 
-* **Delete** the geometry annotation through the <img src="../img/button/delete_white_button.jpg" class="ms-docbutton" /> button
+* **Delete** the geometry annotation through the <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> button
 
-Once all the *Geometries* have been created, the editor can save the annotation through the **Save** <img src="../img/button/save_button.jpg" class="ms-docbutton" /> button that will be visible in the annotation list:
-
-<img src="../img/annotations/annotation1.jpg" class="ms-docimage" />
-
-Then, if not present, a new **Annotations**  layer will be created and added to the [TOC](toc.md)
+Once all the geometries have been created, the editor can return to the [TOC](toc.md) by clicking the <img src="../img/button/x2.jpg" class="ms-docbutton" /> button. A new annotation layer will appear here.
 
 <img src="../img/annotations/annotation2.jpg" class="ms-docimage" />
 
+From the [TOC](toc.md), the *Annotations toolbar* allows the user to:
+
+<img src="../img/annotations/annotation3.jpg" class="ms-docimage" />
+
+* **Delete** the annotation through the <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> button
+
+* Enable the [**Compare tool**](toc.md#toolbar-options) through the <img src="../img/button/compare_tool_button.jpg" class="ms-docbutton" /> button
+
+* **Edit** the annotation through the <img src="../img/button/edit_button.jpg" class="ms-docbutton" /> button
+
+* **Download** the annotation through the <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" /> button
+
 ## Styling Annotations
 
-Based on which type of annotation was chosen, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer. During the style editing a preview placed on top of the styler form shows a preview of the edited style.
+Based on which type of annotation was chosen, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer.
 
 <img src="../img/annotations/annotations_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 ***Marker***
 
-MapStore provides two types of *Marker* annotations, so you have to choose what type do you prefer using the *Type* combo box (*Marker* is the default):
+MapStore provides different *Marker* annotation style:
+
+* The *Mark* types: clicking on the <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button, a mark panel appears.
 
 <img src="../img/annotations/marker_type_selection.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* *Marker* types can be customized through the following editor:
+The mark can have different `Shape`, `Color`, `Stroke` with different `Color`, `Width` and `Style` and customizable `Radius` and `Rotation`. Take a look at the following example.
 
 <img src="../img/annotations/marker_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-Choose the `Shape`, `Color` and `Icon` that best fit your needs.
+* The *Icon* types: clicking on the <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button, an icon panel appears.
+The icon can have different `Image`. Clicking on it, the user can choose a *Marker* and a *Glyph*, as follows:
 
-* *Symbol* types can  have different `Shape` and `Size`, a `Fill color` with a customizable `Opacity` level (%), a `Stroke` of different types (continuous, dashed, etc) and customizable `Color`, `Opacity` and `Width`. Only few symbols are provided by default in MapStore but a custom list of symbols can be configured.
+<video class="ms-docimage" controls><source src="../img/annotations/icon_style_editor.mp4" ></video>
 
-<img src="../img/annotations/symbol_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
+The icon is also customizable with different `Opacity`, `Size`, `Rotation` and `Anchor point`.
 
-***Polyline***
+***Line***
 
-*Polyline* annotations can be styled using the following editor:
+*Line* annotations, have customizable `Stroke` with different `Color`, `Width` and `Style` and different `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). Take a look at the following example.
 
 <img src="../img/annotations/polyline_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-You can customize the `Stroke` in order to consider the `Line/Dash` type (continuous, dashed, dotted, etc), `Color`, `Opacity` and `Width`. You can also have styled *Start*/*End Points*: enable the StartPoint *Style*/*EndPoint Style* panel using the corresponding check box, the editor will be the same used for *Marker*/*Symbol annotations*.
+The line is also customizable by clicking the mark <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button or the icon <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button and choose *Start Point*, *Center* or *End Point* from the `Geometry transformation` option.
+
+<video class="ms-docimage" controls><source src="../img/annotations/start_point_option.mp4" ></video>
 
 ***Polygon***
 
-With polygonal annotations changing the style means choose the `Shape` and the size the `Size` of the polygon, its `Fill color` (with custom `Opacity`), the type of the `Stroke` (continuous, dashed, dotted, etc), its `Color`, `Opacity` and `Width`.
-See the example below to better understand these options.
+*Polygon* annotations, can have different `Fill` color and `Outline` with different `Color`, `Width` and `Style`. Take a look at the following example.
 
 <img src="../img/annotations/polygon_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
+Also for the polygon is possible to add a *Mark* <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> and an *Icon* <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/>.
+
 ***Text***
 
-*Text* annotations are a bit different from the geometric ones. They display a formatted text on a given point of the map.
-The style editor allows you to customize the text `Font` (`Family`, `Size`, `Style`, `Weight`), the `Alignment` (`left`, `center` or `right`) and `Rotation`.
-You can also choose the text `Fill color` and its `Opacity`, the `Stroke` type, its `Color`, `Opacity` and `Width`. Take a look at the following example.
+*Text* annotations are a bit different from the geometric ones. They display a formatted text on a given point of the map the user can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Anchor point`(*Center*, *Bottom left*, etc), `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
 
 <img src="../img/annotations/text_annotation_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 ***Circle***
 
-Circle annotations can have custom `Fill color` (with custom `Opacity`), `Stroke` type (continuous, dashed, dotted, etc) with custom `Color`, `Opacity` and `Width`. The *Center* can be also customized through the same editor described for *Marker* annotations.
-See the example below.
+*Circle* annotations, can have different `Color` color and `Outline` with different `Color`, `Width` and `Style`. Take a look at the following example.
 
 <img src="../img/annotations/circle_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-Click on <img src="../img/button/apply_button.jpg" class="ms-docbutton"/> to apply the style.
+The *Center* can be also customized adding a *Mark* <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> or an *Icon* <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/>.
 
-## Managing Annotations
+## Settings Annotations
 
-Once annotations are added to the [TOC](toc.md), the editor can **Manage** them by clicking to <img src="../img/button/edit_button.jpg" class="ms-docbutton" /> button from the TOC toolbar and the *Main Annotations panel* will be open.
+Once all the *Geometries* have been created, the user can enable the **Visibility limits** clicking on the *Settings* tab.
 
-<img src="../img/annotations/annotations_main_panel.jpg" class="ms-docimage" style="max-width:500px;" />
+<img src="../img/annotations/settings_tab.jpg" class="ms-docimage" style="max-width:500px;" />
 
-From it, the editor is allowed to:
+The **Visibility limits** allow the annotation to be displayed only within certain scale limits. The user can set the *Max value* and the *Min value* and select the *Limits type* choosing between `Scale` or `Resolution`.
 
-* **Download** a file with all the existing annotations by clicking on <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" > button
+## Annotations on the 3D navigation
 
-* **Upload** annotations from a valid `json` file by clicking on <img src="../img/button/upload_annotation_button.jpg" class="ms-docbutton" > button
+Thanks to the new improvements, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the visualization of the *Annotations* also for the [3D Navigation](navigation-toolbar.md#3d-navigation).
 
-* **Zoom** an annotation on map by clicking on <img src="../img/button/white-zoom.jpg" class="ms-docbutton" /> button
+<img src="../img/annotations/3d_annotations.jpg" class="ms-docimage" style="max-width:500px;" />
 
-* **Show/Hide** an annotation on the map by clicking on <img src="../img/button/eyeon.jpg" class="ms-docbutton" /> button
+### Geometries on 3D
 
-From the *Main Annotations Panel*, by selecting an annotation from the list, the editor is returned to the *Annotation Viewer* where the annotation can be edited.
+On the [3D Navigation](navigation-toolbar.md#3d-navigation), after selecting a geometry type and drawing the geometry on the map, the editor can also modify the geometry by changing the **Height** of each of the vertices.
 
-<img src="../img/annotations/annotation_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/annotations/height_switcher.mp4" ></video>
 
-In particular, the editor can:
+### Styling on 3D
 
-* Change the *Coordinates* and the *Style* by clicking a geometry from list of geometries.
+As *Marker* annotation on the [3D Navigation](navigation-toolbar.md#3d-navigation), the **3D model** type is also available.
+From the *Style* tab, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model option opens to allow adding a 3D model (based on [glTF](https://github.com/KhronosGroup/glTF), GLB is also allowed) as an external graphic by specifying its *URL* (see also the [Cesium documentation](https://cesium.com/learn/cesiumjs/ref-doc/ModelGraphics.html?classFilter=Model)). Furthermore, it is possible to customize the 3D model `Scale`, `Rotation` and `Color`. Take a look at the following example.
 
-<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/annotations/editing_annotations.mp4" ></video>
+<img src="../img/annotations/3d_model_type.jpg" class="ms-docimage" style="max-width:500px;" />
 
-* **Download** the annotation in `json` format and reused in other maps by clicking on <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" > button
+Furthermore, for the [3D Navigation](navigation-toolbar.md#3d-navigation), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds some additional styling options such as:
+
+* **Bring to front** (available for Point and Text geometries) to bring in front and so to make visible (if set to *true*) the annotation covered by 3D Tile layers and the Terrain layer (for this last case when the *depth test against terrain* option is enabled in Global Settings).
+
+<img src="../img/annotations/bring-to-front.jpg" class="ms-docimage">
+
+* **Height reference from ground** (available for Point and Text geometries) to indicate the reference for the point height between `None` (to the absolute zero of the ground), `Relative` (to the terrain layer level) or `Clamp` (the annotation is clamped to the Terrain, if present, or to the ground). It is also possible to finely configure the **Height** value of the point.
+
+<img src="../img/annotations/height-reference.jpg" class="ms-docimage">
+
+* **Leader line** (available for Point and Text geometries) to add a line to connect the point symbol with the Terrain/Ground to have a more clear reference of the effective point position when the camera orientation change. The editor can choose the **Width** of the line and the **Color** through the usual *color picker*.
+
+<img src="../img/annotations/leader-line.jpg" class="ms-docimage">
+
+* **Clamp to ground** to enable/disable the boolean property specifying whether the line or polygon should be clamped to the ground (this option is available for Line and Polygon geometries).
+
+<img src="../img/annotations/clamp-to-ground.jpg" class="ms-docimage">
+
+* **Clamp to ground reference** to choose whether the drape effect, should affect `3D Tiles`, `Terrain` or `Both`. This option is available for Line, Polygon and Circle geometries and it is only enabled when the *Clamp to ground* option is set to `True`.
+
+<img src="../img/annotations/polygon-type.jpg" class="ms-docimage">
