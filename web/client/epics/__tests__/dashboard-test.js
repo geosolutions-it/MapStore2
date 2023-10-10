@@ -245,7 +245,7 @@ describe('openDashboardWidgetEditor epic', () => {
             actions.map((action) => {
                 switch (action.type) {
                 case SET_CONTROL_PROPERTY:
-                    if (action.control === "queryPanelWithMap") {
+                    if (action.control === "queryPanel") {
                         expect(action.property).toBe("enabled");
                     }
                     break;

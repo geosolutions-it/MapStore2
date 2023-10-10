@@ -85,12 +85,12 @@ export const handleDashboardWidgetsFilterPanel = (action$, {getState = () => {}}
         Rx.Observable.of(
             featureTypeSelected(...getFTSelectedArgs(getState())),
             loadFilter(getEditingWidgetFilter(getState())),
-            setControlProperty('queryPanelWithMap', "enabled", true)
+            setControlProperty('queryPanel', "enabled", true)
             // wait for any filter update(search) or query form close event
         ).concat(
             Rx.Observable.race(
                 action$.ofType(QUERY_FORM_SEARCH).take(1),
-                action$.ofType(TOGGLE_CONTROL).filter(({control, property} = {}) => control === "queryPanelWithMap" && (!property || property === "enabled")).take(1)
+                action$.ofType(TOGGLE_CONTROL).filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled")).take(1)
             )
             // then close the query panel, open widget form and update the current filter for the widget in editing
                 .switchMap( action =>
@@ -108,7 +108,7 @@ export const handleDashboardWidgetsFilterPanel = (action$, {getState = () => {}}
                 .merge(action$.ofType(TOGGLE_CONTROL).filter(({control, property} = {}) => control === "widgetBuilder" && (!property === false))))
             .concat(
                 Rx.Observable.of(// drawSupportReset(),
-                    setControlProperty('queryPanelWithMap', "enabled", false)
+                    setControlProperty('queryPanel', "enabled", false)
                 )
             )
     );

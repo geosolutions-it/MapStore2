@@ -20,6 +20,9 @@ import { changeDrawingStatus } from '../actions/draw';
 import { getLayerCapabilities } from '../actions/layerCapabilities';
 import { queryPanelSelector } from '../selectors/controls';
 import { applyFilter, discardCurrentFilter, storeCurrentFilter } from '../actions/layerFilter';
+import MapComp from './queryPanelWithMap/MapComp';
+import SpatialFilterCustom from './queryPanelWithMap/SpatialFilter';
+
 import {
     changeGroupProperties,
     changeLayerProperties,
@@ -74,6 +77,7 @@ import queryFormEpics from '../epics/queryform';
 import {featureTypeSelectedEpic, redrawSpatialFilterEpic, viewportSelectedEpic, wfsQueryEpic} from '../epics/wfsquery';
 import layerFilterReducers from '../reducers/layerFilter';
 import queryReducers from '../reducers/query';
+import drawReducers from '../reducers/draw';
 import queryformReducers from '../reducers/queryform';
 import { isDashboardAvailable } from '../selectors/dashboard';
 import { groupsSelector, selectedLayerLoadingErrorSelector } from '../selectors/layers';
@@ -206,47 +210,30 @@ const tocSelector = createSelector(
         storedFilter,
         advancedToolbar,
         loadingError,
-        selectedLayer
+        selectedLayer,
+        mapComp: MapComp
     })
 );
 
 class QueryPanel extends React.Component {
     static propTypes = {
-        id: PropTypes.number,
-        buttonContent: PropTypes.node,
-        groups: PropTypes.array,
-        settings: PropTypes.object,
-        queryPanelEnabled: PropTypes.bool,
-        groupStyle: PropTypes.object,
-        groupPropertiesChangeHandler: PropTypes.func,
-        layerPropertiesChangeHandler: PropTypes.func,
-        onToggleGroup: PropTypes.func,
-        onToggleLayer: PropTypes.func,
-        onToggleQuery: PropTypes.func,
-        onZoomToExtent: PropTypes.func,
-        retrieveLayerData: PropTypes.func,
-        onSort: PropTypes.func,
-        onInit: PropTypes.func,
-        onSettings: PropTypes.func,
-        hideSettings: PropTypes.func,
-        updateSettings: PropTypes.func,
-        updateNode: PropTypes.func,
-        removeNode: PropTypes.func,
-        activateRemoveLayer: PropTypes.bool,
-        activateLegendTool: PropTypes.bool,
-        activateZoomTool: PropTypes.bool,
-        activateSettingsTool: PropTypes.bool,
-        visibilityCheckType: PropTypes.string,
-        settingsOptions: PropTypes.object,
-        layout: PropTypes.object,
-        toolsOptions: PropTypes.object,
-        appliedFilter: PropTypes.object,
-        storedFilter: PropTypes.object,
         advancedToolbar: PropTypes.bool,
-        onSaveFilter: PropTypes.func,
-        onRestoreFilter: PropTypes.func,
+        appliedFilter: PropTypes.object,
         items: PropTypes.array,
-        selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+        layout: PropTypes.object,
+        loadingError: PropTypes.bool,
+        mapComp: PropTypes.node,
+        onInit: PropTypes.func,
+        onRestoreFilter: PropTypes.func,
+        onSaveFilter: PropTypes.func,
+        onToggleQuery: PropTypes.func,
+        queryPanelEnabled: PropTypes.bool,
+        selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        spatialMethodOptions: PropTypes.array,
+        spatialOperations: PropTypes.array,
+        storedFilter: PropTypes.object,
+        toolsOptions: PropTypes.object,
+        useEmbeddedMap: PropTypes.bool
     };
 
     static defaultProps = {
@@ -273,7 +260,8 @@ class QueryPanel extends React.Component {
         onSaveFilter: () => {},
         onRestoreFilter: () => {},
         items: [],
-        selectedLayer: false
+        selectedLayer: false,
+        useEmbeddedMap: false
     };
     constructor(props) {
         super(props);
@@ -284,41 +272,7 @@ class QueryPanel extends React.Component {
             this.props.onInit();
         }
     }
-    getNoBackgroundLayers = (group) => {
-        return group.name !== 'background';
-    };
 
-    renderSidebar = () => {
-        return (
-            <Sidebar
-                open={this.props.queryPanelEnabled}
-                sidebar={this.renderQueryPanel()}
-                sidebarClassName="query-form-panel-container"
-                touch={false}
-                styles={{
-                    sidebar: {
-                        ...this.props.layout,
-                        zIndex: 1024,
-                        width: 600
-                    },
-                    overlay: {
-                        zIndex: 1023,
-                        width: 0
-                    },
-                    root: {
-                        right: this.props.queryPanelEnabled ? 0 : 'auto',
-                        width: '0',
-                        overflow: 'visible'
-                    },
-                    content: {
-                        overflowY: 'auto'
-                    }
-                }}
-            >
-                <div/>
-            </Sidebar>
-        );
-    };
     onToggle = () => {
         if (this.props.advancedToolbar && !isEqual(this.props.appliedFilter, this.props.storedFilter)) {
             this.setState(() => ({showModal: true}));
@@ -326,17 +280,21 @@ class QueryPanel extends React.Component {
             this.props.onToggleQuery();
         }
     }
-    restoreAndClose = () => {
-        this.setState(() => ({showModal: false}));
-        this.props.onRestoreFilter();
-        this.props.onToggleQuery();
-    }
-    storeAndClose = () => {
-        this.setState(() => ({showModal: false}));
-        this.props.onSaveFilter();
-        this.props.onToggleQuery();
-    }
+
+    getNoBackgroundLayers = (group) => {
+        return group.name !== 'background';
+    };
+
     renderQueryPanel = () => {
+        const MapComponent = this.props.mapComp;
+        if (this.props.useEmbeddedMap) {
+            standardItems.spatial = [{
+                id: "spatialFilter",
+                plugin: SpatialFilterCustom,
+                cfg: {},
+                position: 1
+            }];
+        }
         return (<div className="mapstore-query-builder">
             <SmartQueryForm
                 queryPanelEnabled={this.props.queryPanelEnabled}
@@ -353,6 +311,11 @@ class QueryPanel extends React.Component {
                 selectedLayer={this.props.selectedLayer}
                 standardItems={standardItems}
             />
+            {this.props.useEmbeddedMap ?
+                <div className="mapstore-query-map">
+                    <MapComponent/>
+                </div>
+                : null}
             <Portal>
                 <ResizableModal
                     fade
@@ -381,10 +344,52 @@ class QueryPanel extends React.Component {
             </Portal>
         </div>);
     };
-
+    renderSidebar = () => {
+        return (
+            <Sidebar
+                open={this.props.queryPanelEnabled}
+                sidebar={this.renderQueryPanel()}
+                sidebarClassName="query-form-panel-container"
+                touch={false}
+                rootClassName="query-form-root"
+                styles={{
+                    sidebar: {
+                        ...this.props.layout,
+                        zIndex: 1024,
+                        width: 600
+                    },
+                    overlay: {
+                        zIndex: 1023,
+                        width: 0
+                    },
+                    root: {
+                        right: this.props.queryPanelEnabled ? 0 : 'auto',
+                        width: '0',
+                        overflow: 'visible'
+                    },
+                    content: {
+                        overflowY: 'auto'
+                    }
+                }}
+            >
+                <div/>
+            </Sidebar>
+        );
+    };
 
     render() {
         return this.renderSidebar();
+    }
+
+    restoreAndClose = () => {
+        this.setState(() => ({showModal: false}));
+        this.props.onRestoreFilter();
+        this.props.onToggleQuery();
+    }
+    storeAndClose = () => {
+        this.setState(() => ({showModal: false}));
+        this.props.onSaveFilter();
+        this.props.onToggleQuery();
     }
 }
 
@@ -517,6 +522,7 @@ const QueryPanelPlugin = connect(tocSelector, {
 export default {
     QueryPanelPlugin,
     reducers: {
+        draw: drawReducers,
         queryform: queryformReducers,
         query: queryReducers,
         layerFilter: layerFilterReducers

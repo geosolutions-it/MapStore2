@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {connect} from "react-redux";
-import {getMapConfigSelector} from "../../selectors/widgets";
+import {getMapConfigSelector} from "../../selectors/queryform";
 import {bindActionCreators} from "redux";
 import {
     changeDwithinValue,

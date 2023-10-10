@@ -810,8 +810,9 @@
               "containerPosition": "columns"
             }
           },
-          { "name": "QueryPanelWithMap",
+          { "name": "QueryPanel",
             "cfg": {
+              "useEmbeddedMap": true,
               "toolsOptions": {
                 "hideCrossLayer": true
               },

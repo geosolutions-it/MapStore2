@@ -8,7 +8,7 @@
 import { compose, withStateHandlers, defaultProps, withPropsOnChange, withProps } from 'recompose';
 import { isEmpty } from 'lodash';
 
-import { getCenterForExtent, getZoomForExtent } from '../../../utils/MapUtils';
+import { getCenterForExtent, getZoomForExtent, createRegisterHooks, ZOOM_TO_EXTENT_HOOK } from '../../../utils/MapUtils';
 import { reprojectBbox, getExtentFromViewport } from '../../../utils/CoordinatesUtils';
 
 const defaultBaseLayer = {
@@ -33,15 +33,28 @@ const mapEnhancer = compose(
     withPropsOnChange("baseLayer", props => {
         return {layers: [props.baseLayer]};
     }),
+    withPropsOnChange(["id"],
+        ({hookRegister = null}) => ({
+            hookRegister: hookRegister || createRegisterHooks()
+        })),
     withStateHandlers(() => ({
         initialized: false
     }),
     {
         onMapViewChanges: () => (map) => ( {map}),
-        onLayerLoad: ({map, initialized}, {onMapReady, baseLayer}) => (layerId) => {
+        onLayerLoad: ({map, initialized}, {onMapReady, baseLayer, hookRegister, layer}) => (layerId) => {
             // Map is ready when background is loaded just first load
             if (!initialized && layerId === baseLayer.id) {
                 onMapReady(map);
+                const bounds4326 = layer.bbox.bounds;
+                const hook = hookRegister.getHook(ZOOM_TO_EXTENT_HOOK);
+                if (hook) {
+                    // trigger "internal" zoom to extent
+                    hook(bounds4326, {
+                        crs: layer.bbox.crs,
+                        maxZoom: 21
+                    });
+                }
                 return {initialized: true};
             }
             return {};

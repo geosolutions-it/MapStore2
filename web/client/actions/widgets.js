@@ -12,7 +12,6 @@ export const NEW = "WIDGETS:NEW";
 export const EDIT = "WIDGETS:EDIT";
 export const EDIT_NEW = "WIDGETS:EDIT_NEW";
 export const EDITOR_CHANGE = "WIDGETS:EDITOR_CHANGE";
-export const CHANGE_MAP_EDITOR = "WIDGETS:CHANGE_MAP_EDITOR";
 export const EDITOR_SETTING_CHANGE = "WIDGETS:EDITOR_SETTING_CHANGE";
 export const UPDATE = "WIDGETS:UPDATE";
 export const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
@@ -186,15 +185,6 @@ export const onEditorChange = (key, value) => ({
     type: EDITOR_CHANGE,
     key,
     value
-});
-/**
- * Changes the map config in the widget editor to be used by query form for creating spatial filters
- * @param  {object} mapData the new map data
- * @return {object} The action of type `WIDGETS:CHANGE_MAP_EDITOR` with map data
- */
-export const changeMapEditor = (mapData) => ({
-    type: CHANGE_MAP_EDITOR,
-    mapData
 });
 
 /**

@@ -22,7 +22,7 @@ import queryReducers from '../reducers/query';
 import draw from '../reducers/draw';
 import mapReducers from '../reducers/map';
 import queryformReducers from '../reducers/queryform';
-import { queryPanelWithMapSelector } from '../selectors/controls';
+import { queryPanelSelector } from '../selectors/controls';
 import { isDashboardAvailable } from '../selectors/dashboard';
 import { groupsSelector, selectedLayerLoadingErrorSelector } from '../selectors/layers';
 import { mapSelector } from '../selectors/map';
@@ -146,7 +146,7 @@ const QueryPanelWithMapPlugin = connect(
             mapSelector,
             (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
             groupsSelector,
-            queryPanelWithMapSelector,
+            queryPanelSelector,
             state => mapLayoutValuesSelector(state, {height: true}),
             isDashboardAvailable,
             appliedFilterSelector,

@@ -18,7 +18,6 @@ import {
     getEditingWidgetLayer,
     getEditingWidgetFilter,
     getEditorSettings,
-    getMapConfigSelector,
     getWidgetLayer,
     getWidgetAttributeFilter,
     dependenciesSelector,
@@ -79,10 +78,6 @@ describe('widgets selectors', () => {
         const state = set(`widgets.builder.settings`, { flag: true }, {});
         expect(getEditorSettings(state)).toExist();
         expect(getEditorSettings(state).flag).toBe(true);
-    });
-    it('getMapConfigSelector ', () => {
-        const state = set(`widgets.builder.map`, { id: "map-id" }, {});
-        expect(getMapConfigSelector(state)).toEqual({ id: "map-id" });
     });
     it('returnToFeatureGridSelector', () => {
         const state = set(`widgets.builder.editor`, { returnToFeatureGrid: true }, {});

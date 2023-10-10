@@ -21,7 +21,10 @@ import {
 } from '../widgets';
 
 import {
-    CHANGE_MAP_EDITOR,
+    CHANGE_MAP_EDITOR
+} from '../../actions/queryform';
+
+import {
     CLEAR_WIDGETS,
     insertWidget,
     toggleConnection,
@@ -678,17 +681,12 @@ describe('widgets Epics', () => {
             expect(actions[0].type).toBe(CHANGE_MAP_EDITOR);
             expect(actions[0].mapData).toEqual({
                 ...DEFAULT_MAP_SETTINGS,
-                bbox: {
-                    crs: "EPSG:4326",
-                    bounds: {
-                        minx: -18, miny: -9, maxx: 18, maxy: 9
-                    }
-                },
                 center: {
                     crs: "EPSG:4326",
                     x: 0,
                     y: 0
-                }
+                },
+                zoom: 21
             });
             done();
         };

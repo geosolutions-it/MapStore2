@@ -35,16 +35,17 @@ const MapWithDraw = ({
     layer = {},
     onMapReady = () => {}
 }) => {
-    return (
+    return map ? (
         <Portal container={document.querySelector(containerSelector)}>
             <MapWitDrawComp
                 map={map}
                 mapStateSource={mapStateSource}
                 onMapReady={onMapReady}
+                zoomControl
                 options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
                 layer={layer}
                 tools={["draw"]}/>
-        </Portal>);
+        </Portal>) : null;
 };
 
 MapWithDraw.propTypes = {

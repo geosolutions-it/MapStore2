@@ -83,11 +83,20 @@ import {
     changeSpatialFilterValue,
     updateCrossLayerFilterFieldOptions,
     upsertFilters,
-    removeFilters
+    changeMapEditor,
+    removeFilters,
+    CHANGE_MAP_EDITOR
 } from '../queryform';
 
 describe('Test correctness of the queryform actions', () => {
 
+    it('changeMapEditor', () => {
+        var retval = changeMapEditor(null);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_MAP_EDITOR);
+        expect(retval.mapData).toBe(null);
+    });
     it('addFilterField', () => {
         let groupId = 1;
 

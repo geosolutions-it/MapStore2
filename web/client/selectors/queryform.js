@@ -12,6 +12,7 @@ import { layersSelector } from './layers';
 import { currentLocaleSelector } from './locale';
 import { getLocalizedProp } from '../utils/LocaleUtils';
 
+export const getMapConfigSelector = state => get(state, "queryform.map");
 export const crossLayerFilterSelector = state => get(state, "queryform.crossLayerFilter");
 // TODO we should also check if the layer are from the same source to allow cross layer filtering
 export const availableCrossLayerFilterLayersSelector = state =>(layersSelector(state) || []).filter(({type, group} = {}) => type === "wms" && group !== "background").map(({title, ...layer}) => ({...layer, title: getLocalizedProp(currentLocaleSelector(state), title)}));

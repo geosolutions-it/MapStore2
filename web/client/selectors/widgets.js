@@ -18,7 +18,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
 import { getAttributesNames } from "../utils/FeatureGridUtils";
 
-export const getMapConfigSelector = state => get(state, "widgets.builder.map");
+
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
 export const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k => getDependenciesMap(s)[k]);

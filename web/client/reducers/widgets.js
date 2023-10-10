@@ -14,7 +14,6 @@ import {
     UPDATE_LAYER,
     DELETE,
     EDITOR_CHANGE,
-    CHANGE_MAP_EDITOR,
     EDITOR_SETTING_CHANGE,
     CHANGE_LAYOUT,
     CLEAR_WIDGETS,
@@ -99,15 +98,6 @@ function widgetsReducer(state = emptyState, action) {
     }
     case EDITOR_CHANGE: {
         return editorChange(action, state);
-    }
-    case CHANGE_MAP_EDITOR: {
-        return {
-            ...state,
-            builder: {
-                ...state.builder,
-                map: action.mapData
-            }
-        };
     }
     case INSERT: {
         let widget = {...action.widget};

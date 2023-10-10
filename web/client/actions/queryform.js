@@ -58,7 +58,18 @@ export const LOAD_FILTER = 'QUERYFORM:LOAD_FILTER';
 export const UPSERT_FILTERS = 'QUERYFORM:UPSERT_FILTERS';
 export const REMOVE_FILTERS = 'QUERYFORM:REMOVE_FILTERS';
 
+export const CHANGE_MAP_EDITOR = "QUERYFORM:CHANGE_MAP_EDITOR";
+
 import axios from '../libs/ajax';
+
+/**
+ * Changes the map config to be used by query form for creating spatial filters
+ * @param  {object} mapData the new map data
+ */
+export const changeMapEditor = (mapData) => ({
+    type: CHANGE_MAP_EDITOR,
+    mapData
+});
 
 export function addFilterField(groupId) {
     return {

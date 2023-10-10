@@ -11,9 +11,11 @@ import { createSelector } from 'reselect';
 
 import MapWithDraw from './MapWithDraw';
 import {
-    getWidgetLayer,
-    getMapConfigSelector
+    getWidgetLayer
 } from '../../selectors/widgets';
+import {
+    getMapConfigSelector
+} from '../../selectors/queryform';
 
 const MapComp = connect(
     createSelector([

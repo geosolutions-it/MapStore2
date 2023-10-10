@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {
-    changeMapEditor,
     editWidget,
     editNewWidget,
     changeEditorSetting,
@@ -43,10 +42,6 @@ describe('Test the widgets reducer', () => {
         expect(state.dependencies.viewport).toBe("map.bbox");
         expect(state.dependencies.center).toBe("map.center");
         expect(state.dependencies.zoom).toBe("map.zoom");
-    });
-    it('CHANGE_MAP_EDITOR', () => {
-        const state = widgets(undefined, changeMapEditor({bbox: {}}));
-        expect(state.builder.map).toEqual({bbox: {}});
     });
     it('editNewWidget', () => {
         const state = widgets(undefined, editNewWidget({a: "A"}, {step: 0}));
