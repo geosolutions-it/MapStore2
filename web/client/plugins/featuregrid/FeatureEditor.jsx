@@ -186,8 +186,6 @@ const FeatureDock = (props = {
     };
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
-    // ensure to avoid re-rendering of the feature grid (lost focus on every render) in any case if for some
-    // reason the describeFeatureType or fields are generated but equal.
     const filterRenderers = useMemo(() => getFilterRenderers(props.describe, props.fields), [props.describe, props.fields]);
     return (
         <div className={"feature-grid-wrapper"}>
