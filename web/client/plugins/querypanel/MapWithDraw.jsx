@@ -6,7 +6,6 @@
 * LICENSE file in the root directory of this source tree.
 */
 import React from 'react';
-import { Portal } from 'react-overlays';
 import { compose } from 'recompose';
 import PropTypes from 'prop-types';
 
@@ -29,27 +28,24 @@ const MapWitDrawComp = compose(
 
 
 const MapWithDraw = ({
-    containerSelector,
     map,
     mapStateSource,
     layer = {},
     onMapReady = () => {}
 }) => {
     return map ? (
-        <Portal container={document.querySelector(containerSelector)}>
-            <MapWitDrawComp
-                map={map}
-                mapStateSource={mapStateSource}
-                onMapReady={onMapReady}
-                zoomControl
-                options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
-                layer={layer}
-                tools={["draw"]}/>
-        </Portal>) : null;
+        <MapWitDrawComp
+            map={map}
+            mapStateSource={mapStateSource}
+            onMapReady={onMapReady}
+            zoomControl
+            options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
+            layer={layer}
+            tools={["draw"]}/>
+    ) : null;
 };
 
 MapWithDraw.propTypes = {
-    containerSelector: PropTypes.string,
     map: PropTypes.object,
     mapStateSource: PropTypes.string,
     onMapReady: PropTypes.bool,

@@ -29,14 +29,13 @@ export const MapComponent = connect(
         return {
             layer,
             map,
-            mapStateSource: "wizardMap",
-            containerSelector: ".mapstore-query-map"
+            mapStateSource: "wizardMap"
         };
     }
     ), {} )(MapWithDraw);
 
-export default ({useEmbeddedMap, ...props}) =>
-    useEmbeddedMap ?
+export default ({useEmbeddedMap, hideSpatialFilter, ...props}) =>
+    useEmbeddedMap && !hideSpatialFilter ?
         (<div className="mapstore-query-map">
             <MapComponent {...props}/>
         </div>)
