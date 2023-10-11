@@ -92,7 +92,7 @@
             "featureInfo": "Informations attributaires de l'objet",
             "featureInfoFormatLbl": "Information, format de la réponse",
             "guideText": "Dans l'URL de l'image, vous pouvez utiliser des espaces réservés comme $\\{properties.YOUR_ATTRIBUTE\\} pour rendre l'URL paramétrique, en fonction des attributs de la fonctionnalité. Il prend en charge à la fois les URL ou les « Data URI » codés en base64.",
-            "imageNotFound": "Cette image peut nécessiter une demande d'informations sur les fonctionnalités pour être rendue correctement",
+            "imageNotFound": "Cette image nécessite une demande d\\'informations sur les fonctionnalités pour être rendue correctement",
             "legenderror": "La légende n'est pas disponible",
             "editCustomFormat": "Modifier le format personnalisé",
             "exampleOfResponse": "Exemple",
@@ -3899,7 +3899,7 @@
           "distanceUom": "Unités de mesure",
           "km": "km",
           "m": "m",
-          "run": "Courir",
+          "run": "Exécuter",
           "intersectionTool": "Intersection",
           "noMatchedLayer": "Aucun calque ne correspond au filtre actuel",
           "noMatchedFeature": "Aucune caractéristique ne correspond au filtre actuel",
@@ -3910,8 +3910,8 @@
           "quadrantSegmentsTooltip": "Nombre de segments",
           "capStyle": "Style",
           "capStyleTooltip": "Style pour les embouts de tampon",
-          "round": "Ronde",
-          "flat": "Plate",
+          "round": "Rond",
+          "flat": "Plat",
           "square": "Carré",
           "firstAttributeToRetain": "Premier attribut à inclure",
           "secondAttributeToRetain": "Deuxième attribut à inclure",
@@ -3925,9 +3925,9 @@
           "areasEnabledTooltip": "Indique s'il faut sortir les zones de caractéristiques",
           "noMatchedMode": "Aucun mode ne correspond au filtre actuel",
           "INTERSECTION": "INTERSECTION",
-          "FIRST": "D'ABORD",
+          "FIRST": "PREMIER",
           "SECOND": "SECONDE",
-          "true": "vraie",
+          "true": "vrai",
           "false": "faux",
           "notifications": {
             "errorIntersectGFI": "Une erreur s'est produite lors de l'intersection des entités. Il n'a pas été possible de créer la couche d'intersection.",
@@ -3956,7 +3956,7 @@
             "invalidFeature": "Cette fonctionnalité n'est pas valide",
             "selectLayer": "Veuillez sélectionner un calque",
             "validLayer": "Cette couche est valide et peut être utilisée dans ce processus",
-            "invalidLayer": "Cette couche ne prend pas en charge les processus wps nécessaires \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\ni c'est une couche raster"
+            "invalidLayer": "Cette couche ne prend pas en charge les processus wps nécessaires \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\nou est une couche raster"
           }
         }
     }
