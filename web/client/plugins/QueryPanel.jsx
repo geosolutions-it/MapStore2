@@ -20,7 +20,6 @@ import { changeDrawingStatus } from '../actions/draw';
 import { getLayerCapabilities } from '../actions/layerCapabilities';
 import { queryPanelSelector } from '../selectors/controls';
 import { applyFilter, discardCurrentFilter, storeCurrentFilter } from '../actions/layerFilter';
-import MapComp from './querypanel/MapComp';
 
 import {
     changeGroupProperties,
@@ -209,8 +208,7 @@ const tocSelector = createSelector(
         storedFilter,
         advancedToolbar,
         loadingError,
-        selectedLayer,
-        mapComp: MapComp
+        selectedLayer
     })
 );
 
@@ -221,7 +219,6 @@ class QueryPanel extends React.Component {
         items: PropTypes.array,
         layout: PropTypes.object,
         loadingError: PropTypes.bool,
-        mapComp: PropTypes.node,
         onInit: PropTypes.func,
         onRestoreFilter: PropTypes.func,
         onSaveFilter: PropTypes.func,
@@ -231,8 +228,7 @@ class QueryPanel extends React.Component {
         spatialMethodOptions: PropTypes.array,
         spatialOperations: PropTypes.array,
         storedFilter: PropTypes.object,
-        toolsOptions: PropTypes.object,
-        useEmbeddedMap: PropTypes.bool
+        toolsOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -259,19 +255,55 @@ class QueryPanel extends React.Component {
         onSaveFilter: () => {},
         onRestoreFilter: () => {},
         items: [],
-        selectedLayer: false,
-        useEmbeddedMap: false
+        selectedLayer: false
     };
     constructor(props) {
         super(props);
         this.state = {showModal: false};
     }
+
     UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.queryPanelEnabled === true && this.props.queryPanelEnabled === false) {
             this.props.onInit();
         }
     }
 
+    getNoBackgroundLayers = (group) => {
+        return group.name !== 'background';
+    };
+
+    renderSidebar = () => {
+        return (
+            <Sidebar
+                open={this.props.queryPanelEnabled}
+                sidebar={this.renderQueryPanel()}
+                sidebarClassName="query-form-panel-container"
+                touch={false}
+                rootClassName="query-form-root"
+                styles={{
+                    sidebar: {
+                        ...this.props.layout,
+                        zIndex: 1024,
+                        width: 600
+                    },
+                    overlay: {
+                        zIndex: 1023,
+                        width: 0
+                    },
+                    root: {
+                        right: this.props.queryPanelEnabled ? 0 : 'auto',
+                        width: '0',
+                        overflow: 'visible'
+                    },
+                    content: {
+                        overflowY: 'auto'
+                    }
+                }}
+            >
+                <div/>
+            </Sidebar>
+        );
+    };
     onToggle = () => {
         if (this.props.advancedToolbar && !isEqual(this.props.appliedFilter, this.props.storedFilter)) {
             this.setState(() => ({showModal: true}));
@@ -279,10 +311,16 @@ class QueryPanel extends React.Component {
             this.props.onToggleQuery();
         }
     }
-
-    getNoBackgroundLayers = (group) => {
-        return group.name !== 'background';
-    };
+    restoreAndClose = () => {
+        this.setState(() => ({showModal: false}));
+        this.props.onRestoreFilter();
+        this.props.onToggleQuery();
+    }
+    storeAndClose = () => {
+        this.setState(() => ({showModal: false}));
+        this.props.onSaveFilter();
+        this.props.onToggleQuery();
+    }
 
     renderQueryPanel = () => {
         return (<div className="mapstore-query-builder">
@@ -329,52 +367,10 @@ class QueryPanel extends React.Component {
             </Portal>
         </div>);
     };
-    renderSidebar = () => {
-        return (
-            <Sidebar
-                open={this.props.queryPanelEnabled}
-                sidebar={this.renderQueryPanel()}
-                sidebarClassName="query-form-panel-container"
-                touch={false}
-                rootClassName="query-form-root"
-                styles={{
-                    sidebar: {
-                        ...this.props.layout,
-                        zIndex: 1024,
-                        width: 600
-                    },
-                    overlay: {
-                        zIndex: 1023,
-                        width: 0
-                    },
-                    root: {
-                        right: this.props.queryPanelEnabled ? 0 : 'auto',
-                        width: '0',
-                        overflow: 'visible'
-                    },
-                    content: {
-                        overflowY: 'auto'
-                    }
-                }}
-            >
-                <div/>
-            </Sidebar>
-        );
-    };
+
 
     render() {
         return this.renderSidebar();
-    }
-
-    restoreAndClose = () => {
-        this.setState(() => ({showModal: false}));
-        this.props.onRestoreFilter();
-        this.props.onToggleQuery();
-    }
-    storeAndClose = () => {
-        this.setState(() => ({showModal: false}));
-        this.props.onSaveFilter();
-        this.props.onToggleQuery();
     }
 }
 
