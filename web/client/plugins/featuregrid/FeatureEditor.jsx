@@ -28,6 +28,7 @@ import {gridTools, gridEvents, pageEvents, toolbarEvents} from './index';
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 
+
 const Dock = connect(createSelector(
     getDockSize,
     state => mapLayoutValuesSelector(state, {transform: true}),
