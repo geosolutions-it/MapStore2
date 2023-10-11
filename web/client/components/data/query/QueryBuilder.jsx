@@ -207,7 +207,7 @@ class QueryBuilder extends React.Component {
             /></div>);
         const { spatialMethodOptions, toolsOptions, spatialOperations} = this.props;
         return this.props.attributes.length > 0 ?
-            <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
+            <><BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
                 {this.renderItems('start', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
                 {this.renderItems('attributes', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
                 {this.renderItems('afterAttributes', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
@@ -216,6 +216,8 @@ class QueryBuilder extends React.Component {
                 {this.renderItems('layers', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
                 {this.renderItems('end', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
             </BorderLayout>
+            {this.renderItems('map', { spatialOperations, spatialMethodOptions, ...toolsOptions })}
+            </>
             : <div className="spinner-panel" style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
     }
 
