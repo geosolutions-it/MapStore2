@@ -9,6 +9,9 @@ import React from 'react';
 
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import Portal from '../../components/misc/Portal';
+
+import withContainer from '../../components/misc/WithContainer';
 
 import MapWithDraw from './MapWithDraw';
 import {
@@ -34,10 +37,18 @@ export const MapComponent = connect(
     }
     ), {} )(MapWithDraw);
 
-export default ({useEmbeddedMap, hideSpatialFilter, ...props}) =>
-    useEmbeddedMap && !hideSpatialFilter ?
-        (<div className="mapstore-query-map">
-            <MapComponent {...props}/>
-        </div>)
+export default withContainer((props) => {
+    const {
+        container,
+        useEmbeddedMap,
+        hideSpatialFilter,
+        queryPanelEnabled
+    } = props;
+    return useEmbeddedMap && !hideSpatialFilter && queryPanelEnabled ?
+        (<Portal container={container}>
+            <div className="mapstore-query-map">
+                <MapComponent {...props}/>
+            </div>
+        </Portal>)
         : null;
-
+});

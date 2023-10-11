@@ -39,7 +39,7 @@ const MapWithDraw = ({
             mapStateSource={mapStateSource}
             onMapReady={onMapReady}
             zoomControl
-            options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
+            options={{ style: { height: 'calc(100% - 20px)' }}}
             layer={layer}
             tools={["draw"]}/>
     ) : null;
