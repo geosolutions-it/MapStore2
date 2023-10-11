@@ -28,16 +28,6 @@ import {gridTools, gridEvents, pageEvents, toolbarEvents} from './index';
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 
-/**
- * Custom check for filterRenderers useMemo function
- * @param {object} prevProps previous props
- * @param {object} nextProps next props
- * @returns {boolean}
- */
-export const checkFilterRendererProps = (prevProps, nextProps) => {
-    return isEqual(prevProps.describe, nextProps.describe) && isEqual(prevProps.fields, nextProps.fields);
-};
-
 const Dock = connect(createSelector(
     getDockSize,
     state => mapLayoutValuesSelector(state, {transform: true}),
@@ -198,7 +188,7 @@ const FeatureDock = (props = {
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
     // ensure to avoid re-rendering of the feature grid (lost focus on every render) in any case if for some
     // reason the describeFeatureType or fields are generated but equal.
-    const filterRenderers = useMemo(() => getFilterRenderers(props.describe, props.fields), checkFilterRendererProps);
+    const filterRenderers = useMemo(() => getFilterRenderers(props.describe, props.fields), [props.describe, props.fields]);
     return (
         <div className={"feature-grid-wrapper"}>
             <Dock  {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>

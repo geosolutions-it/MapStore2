@@ -1,6 +1,6 @@
 
 import expect from 'expect';
-import {selector, checkFilterRendererProps } from '../FeatureEditor';
+import {selector } from '../FeatureEditor';
 
 
 describe('FeatureEditor plugin component', () => {
@@ -104,25 +104,7 @@ describe('FeatureEditor plugin component', () => {
             expect(result.fields).toEqual(FIELDS);
         });
     });
-    describe('utility functions', () => {
-        it('checkFilterRendererProps', () => {
-            // check if the function returns true if the props are the same
-            expect(checkFilterRendererProps({
-                describe: {},
-                fields: []
-            }, {
-                describe: {},
-                fields: []
-            })).toBe(true);
-            expect(checkFilterRendererProps({
-                describe: {},
-                fields: []
-            }, {
-                describe: {},
-                fields: [{name: 'name', type: 'string'}]
-            })).toBe(false);
-        });
-    });
+
 });
 
 
