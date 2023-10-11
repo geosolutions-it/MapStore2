@@ -104,7 +104,6 @@ describe('FeatureEditor plugin component', () => {
             expect(result.fields).toEqual(FIELDS);
         });
     });
-
 });
 
 
