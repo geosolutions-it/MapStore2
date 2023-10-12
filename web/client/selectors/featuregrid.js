@@ -112,7 +112,7 @@ export const getTitleSelector = state => {
     const title = getTitle(getLayerById(state, selectedLayerIdSelector(state)));
     return isObject(title) ? title[currentLocaleSelector(state)] || title.default || '' : title;
 };
-
+const STANDARD_FIELDS = [];
 /**
  * Returns the current selected layer (featuregrid) fields, if any.
  * @param {*} state
@@ -120,7 +120,7 @@ export const getTitleSelector = state => {
  */
 export const selectedLayerFieldsSelector = state => {
     const layer = getLayerById(state, selectedLayerIdSelector(state));
-    const fields = get(layer, "fields", []);
+    const fields = get(layer, "fields", STANDARD_FIELDS);
     return fields;
 };
 export const getCustomizedAttributes = state => {
