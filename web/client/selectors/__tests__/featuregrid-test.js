@@ -671,6 +671,20 @@ describe('Test featuregrid selectors', () => {
             }
         };
         expect(selectedLayerFieldsSelector(state)).toEqual([FIELD]);
+        // check that fields are memoized when applying defaults
+        const stateEmptyFields = {
+            featuregrid: {
+                selectedLayer: 'TEST_LAYER'
+            },
+            layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    name: 'editing:polygons.test'
+                }]
+            }
+        };
+        expect(selectedLayerFieldsSelector(stateEmptyFields)).toBe(selectedLayerFieldsSelector(stateEmptyFields));
     });
     it('editingAllowedGroupsSelector', () => {
         const editingAllowedGroups = ['test'];
