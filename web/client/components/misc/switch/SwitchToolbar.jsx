@@ -40,7 +40,7 @@ class SwitchToolbar extends React.Component {
             }}
             btnGroupProps={{
                 style: {
-                    margin: 10
+                    margin: 5
                 }
             }}
             buttons={[
