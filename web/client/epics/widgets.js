@@ -28,11 +28,13 @@ import {
     replaceWidgets,
     WIDGETS_MAPS_REGEX,
     EDITOR_CHANGE,
-    EDIT
+    OPEN_FILTER_EDITOR
 } from '../actions/widgets';
 
 import { changeMapEditor } from '../actions/queryform';
 import { MAP_CONFIG_LOADED } from '../actions/config';
+import { TOGGLE_CONTROL } from '../actions/controls';
+import { queryPanelSelector } from '../selectors/controls';
 
 import {
     availableDependenciesSelector,
@@ -51,9 +53,9 @@ import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
 import {downloadCanvasDataURL} from '../utils/FileUtils';
-import {transformExtentToArray} from '../utils/CoordinatesUtils';
+import {reprojectBbox} from '../utils/CoordinatesUtils';
 import converter from 'json-2-csv';
-import { getZoomForExtent } from '../utils/MapUtils';
+import { defaultGetZoomForExtent } from '../utils/MapUtils';
 import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/WidgetsUtils";
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
@@ -322,44 +324,30 @@ export const onWidgetCreationFromMap = (action$, store) =>
         });
 
 
-const getMapConfig = (layer) => {
-    return {
-        ...DEFAULT_MAP_SETTINGS,
-        // bbox: layer.bbox,
-        zoom: getZoomForExtent(transformExtentToArray(layer.bbox), DEFAULT_MAP_SETTINGS.size, 0, 21),
-        center: {
-            crs: layer.bbox.crs,
-            x: (layer.bbox.bounds.maxx + layer.bbox.bounds.minx) / 2,
-            y: (layer.bbox.bounds.maxy + layer.bbox.bounds.miny) / 2
-        }
-    };
-};
-export const onLayerSelectedEpic = (action$, store) =>
-    action$.ofType(EDITOR_CHANGE)
-        .filter(({key}) => key === 'chart-layers' && isDashboardEditing(store.getState()))
+export const onOpenFilterEditorEpic = (action$, store) =>
+    action$.ofType(OPEN_FILTER_EDITOR)
         .switchMap(() => {
             const state = store.getState();
             const layer = getWidgetLayer(state);
-            if (layer?.bbox) {
-                return Rx.Observable.of(
-                    changeMapEditor(getMapConfig(layer))
-                );
-            }
-            return Rx.Observable.of(
-                changeMapEditor(null)
-            );
+            const zoom = defaultGetZoomForExtent(reprojectBbox(layer.bbox.bounds, "EPSG:4326", "EPSG:3857", true), DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
+            const map = {
+                ...DEFAULT_MAP_SETTINGS,
+                zoom,
+                center: {
+                    crs: layer.bbox.crs,
+                    x: (layer.bbox.bounds.maxx + layer.bbox.bounds.minx) / 2,
+                    y: (layer.bbox.bounds.maxy + layer.bbox.bounds.miny) / 2
+                }
+            };
+            const mapData = layer?.bbox ? map : null;
+            return Rx.Observable.of( changeMapEditor(mapData) );
         });
-export const onEditWidgetEpic = (action$, store) =>
-    action$.ofType(EDIT)
-        .filter(() => isDashboardEditing(store.getState()))
+
+
+export const onResetMapEpic = (action$, store) =>
+    action$.ofType(TOGGLE_CONTROL)
+        .filter((type, control) => !queryPanelSelector(store.getState()) && control === "queryPanel" || isDashboardEditing(store.getState()))
         .switchMap(() => {
-            const state = store.getState();
-            const layer = getWidgetLayer(state);
-            if (layer?.bbox) {
-                return Rx.Observable.of(
-                    changeMapEditor(getMapConfig(layer))
-                );
-            }
             return Rx.Observable.of(
                 changeMapEditor(null)
             );
@@ -375,6 +363,6 @@ export default {
     updateLayerOnLoadingErrorChange,
     updateDependenciesMapOnMapSwitch,
     onWidgetCreationFromMap,
-    onLayerSelectedEpic,
-    onEditWidgetEpic
+    onOpenFilterEditorEpic,
+    onResetMapEpic
 };

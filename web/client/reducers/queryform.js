@@ -50,12 +50,11 @@ import {
     UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS,
     UPSERT_FILTERS,
     REMOVE_FILTERS,
-    CHANGE_MAP_EDITOR
+    CHANGE_MAP_EDITOR,
+    QUERY_FORM_SEARCH
 } from '../actions/queryform';
 
 import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../actions/draw';
-import { INSERT } from '../actions/widgets';
-import { SET_EDITING } from '../actions/dashboard';
 import assign from 'object-assign';
 import union from 'turf-union';
 import bbox from 'turf-bbox';
@@ -112,20 +111,11 @@ function queryform(state = initialState, action) {
             map: action.mapData
         };
     }
-    case INSERT: {
+    case QUERY_FORM_SEARCH: {
         return {
             ...state,
             map: null
         };
-    }
-    case SET_EDITING: {
-        if (!action.editing) {
-            return {
-                ...state,
-                map: null
-            };
-        }
-        return state;
     }
     case ADD_FILTER_FIELD: {
         //
@@ -393,7 +383,8 @@ function queryform(state = initialState, action) {
         return assign({}, state, initialState, {
             spatialField,
             crossLayerFilter,
-            filters: []
+            filters: [],
+            map: state.map
         });
     }
     case SHOW_GENERATED_FILTER: {

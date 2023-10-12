@@ -263,7 +263,7 @@ class QueryPanel extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
-        if (newProps.queryPanelEnabled === true && this.props.queryPanelEnabled === false) {
+        if (!newProps.toolsOptions.useEmbeddedMap && newProps.queryPanelEnabled === true && this.props.queryPanelEnabled === false) {
             this.props.onInit();
         }
     }

@@ -2150,6 +2150,7 @@
             },
             "mapSync": "Live-Filter nach Ansichtsfenster",
             "displayLegend": {
+                "default": "Legende anzeigen",
                 "line": "Legende anzeigen",
                 "pie": "Legende anzeigen",
                 "bar": "Legende anzeigen",

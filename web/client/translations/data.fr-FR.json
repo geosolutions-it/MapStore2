@@ -2113,6 +2113,7 @@
             },
             "mapSync": "Live Filter par viewport",
             "displayLegend": {
+                "default": "Afficher la légende",
                 "line": "Afficher la légende",
                 "pie": "Afficher la légende",
                 "bar": "Afficher la légende",

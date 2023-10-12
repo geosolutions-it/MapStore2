@@ -22,6 +22,44 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.xx to 2024.01.00
 
+### Adding spatial filter to dashboard widgets
+
+In order to enable the possibility to add in and the spatial filter to the widgets [#9098](https://github.com/geosolutions-it/MapStore2/issues/9098) you have to edit the QueryPanel config in `localConfig.json` file adding:
+
+- **useEmbeddedMap** flag,
+- **spatialOperations**
+- **spatialMethodOptions**
+
+  *Note: these props can vary, for example you can limit the spatial filtering operation to intersect only*
+
+```json
+...
+dashboard: [
+...
+{ 
+    "name": "QueryPanel",
+    "cfg": {
+        "toolsOptions": {
+            "hideCrossLayer": true,
+            "useEmbeddedMap": true
+        },
+        "spatialPanelExpanded": false,
+        "spatialOperations": [
+            {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+            {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+            {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
+        ],
+        "spatialMethodOptions": [
+            {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+            {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+            {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
+        ],
+        "containerPosition": "columns"
+    }
+}
+
+```
+
 ### MapFish Print update
 
 The **MapFish Print** library has been updated to work with the latest GeoTools version and Java 11 as well as being aligned with the same dependency used by the official GeoServer printing extension (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)

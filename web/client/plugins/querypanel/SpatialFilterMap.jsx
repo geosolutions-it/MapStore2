@@ -20,6 +20,9 @@ import {
 import {
     getMapConfigSelector
 } from '../../selectors/queryform';
+import {
+    initQueryPanel
+} from '../../actions/wfsquery';
 
 /**
  * Component connected to the widgetLayer
@@ -35,7 +38,9 @@ export const MapComponent = connect(
             mapStateSource: "wizardMap"
         };
     }
-    ), {} )(MapWithDraw);
+    ), {
+        onMapReady: initQueryPanel
+    } )(MapWithDraw);
 
 export default withContainer((props) => {
     const {
