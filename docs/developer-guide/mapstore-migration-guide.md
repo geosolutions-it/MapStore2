@@ -30,7 +30,6 @@ In order to enable the possibility to add in and the spatial filter to the widge
 - **spatialOperations**
 - **spatialMethodOptions**
 
-  *Note: these props can vary, for example you can limit the spatial filtering operation to intersect only*
 
 ```json
 ...
