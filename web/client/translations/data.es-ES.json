@@ -2113,6 +2113,7 @@
             },
             "mapSync": "Filtro dinámico por extensión de la vista actual",
             "displayLegend": {
+                "default": "Mostrar leyenda",
                 "line": "Mostrar leyenda",
                 "pie": "Mostrar leyenda",
                 "bar": "Mostrar leyenda",

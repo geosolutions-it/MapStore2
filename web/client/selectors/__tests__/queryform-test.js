@@ -8,11 +8,14 @@
 
 import expect from 'expect';
 
+import { set } from '../../utils/ImmutableUtils';
+
 import {
     availableCrossLayerFilterLayersSelector,
     spatialFieldSelector,
     spatialFieldGeomSelector,
     spatialFieldGeomTypeSelector,
+    getMapConfigSelector,
     spatialFieldGeomProjSelector,
     spatialFieldGeomCoordSelector,
     spatialFieldMethodSelector,
@@ -97,6 +100,10 @@ const initialState = {
 };
 
 describe('Test queryform selectors', () => {
+    it('getMapConfigSelector ', () => {
+        const state = set(`queryform.map`, { id: "map-id" }, {});
+        expect(getMapConfigSelector(state)).toEqual({ id: "map-id" });
+    });
     it('spatialFieldSelector', () => {
         const spatialfield = spatialFieldSelector(initialState);
         expect(spatialfield).toExist();

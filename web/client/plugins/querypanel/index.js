@@ -1,6 +1,7 @@
 import AttributeFilter from "./AttributeFilter";
 import SpatialFilter from "./SpatialFilter";
 import CrossLayerFilter from "./CrossLayerFilter";
+import SpatialFilterMap from './SpatialFilterMap';
 
 const standardItems = {
     start: [],
@@ -30,7 +31,13 @@ const standardItems = {
             position: 1
         }
     ],
-    end: []
+    end: [],
+    map: [{
+        id: "spatialFilterMap",
+        plugin: SpatialFilterMap,
+        cfg: {},
+        position: 1
+    }]
 };
 
 export default standardItems;

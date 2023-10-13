@@ -2114,6 +2114,7 @@
             },
             "mapSync": "Filtra dati sull'area visibile",
             "displayLegend": {
+                "default": "Mostra legenda",
                 "line": "Mostra legenda",
                 "pie": "Mostra legenda",
                 "bar": "Mostra legenda",

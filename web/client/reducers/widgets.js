@@ -54,6 +54,7 @@ const emptyState = {
         }
     },
     builder: {
+        map: null,
         settings: {
             step: 0
         }

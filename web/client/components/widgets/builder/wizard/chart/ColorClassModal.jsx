@@ -140,14 +140,14 @@ const ColorClassModal = ({
 
 ColorClassModal.propTypes = {
     modalClassName: PropTypes.string,
-    show: PropTypes.boolean,
+    show: PropTypes.bool,
     onClose: PropTypes.func,
     onSaveClassification: PropTypes.func,
     onChangeClassAttribute: PropTypes.func,
     classificationAttribute: PropTypes.string,
     onUpdateClasses: PropTypes.func,
     options: PropTypes.array,
-    placeHolder: PropTypes.string,
+    placeHolder: PropTypes.oneOfType(PropTypes.string, PropTypes.object),
     classification: PropTypes.array,
     rangeClassification: PropTypes.array,
     defaultCustomColor: PropTypes.string,

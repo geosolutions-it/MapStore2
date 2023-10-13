@@ -23,13 +23,28 @@ import {
     removeCrossLayerFilterField,
     changeSpatialFilterValue,
     upsertFilters,
-    removeFilters
+    removeFilters,
+    changeMapEditor
 } from '../../actions/queryform';
 
 import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../../actions/draw';
+import { setEditing } from '../../actions/dashboard';
+import { insertWidget } from '../../actions/widgets';
 
 describe('Test the queryform reducer', () => {
 
+    it('CHANGE_MAP_EDITOR', () => {
+        const state = queryform(undefined, changeMapEditor(null));
+        expect(state.map).toEqual(null);
+    });
+    it('DASHBOARD:SET_EDITING', () => {
+        const state = queryform(undefined, setEditing(false));
+        expect(state.map).toEqual(null);
+    });
+    it('WIDGETS:INSERT', () => {
+        const state = queryform(undefined, insertWidget({}));
+        expect(state.map).toEqual(null);
+    });
     it('returns the initial state on unrecognized action', () => {
 
         const initialState = {
