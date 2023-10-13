@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {useState} from 'react';
-import Spinner from "react-spinkit";
+import Loader from '../misc/Loader';
 
 import { FormGroup, Form, Col } from "react-bootstrap";
 
@@ -93,7 +93,7 @@ export default ({
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>
                     <Button style={buttonStyle} disabled={saving || !valid} onClick={() => onAddService()} key="catalog_add_service_button">
-                        {saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /> : null}
+                        {saving ? <Loader size={12} style={{display: 'inline-block'}} /> : null}
                         <Message msgId="save" />
                     </Button>
                     {service && !service.isNew
