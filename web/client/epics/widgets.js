@@ -346,7 +346,7 @@ export const onOpenFilterEditorEpic = (action$, store) =>
 
 export const onResetMapEpic = (action$, store) =>
     action$.ofType(TOGGLE_CONTROL)
-        .filter((type, control) => !queryPanelSelector(store.getState()) && control === "queryPanel" || isDashboardEditing(store.getState()))
+        .filter((type, control) => !queryPanelSelector(store.getState()) && control === "queryPanel" && isDashboardEditing(store.getState()))
         .switchMap(() => {
             return Rx.Observable.of(
                 changeMapEditor(null)
