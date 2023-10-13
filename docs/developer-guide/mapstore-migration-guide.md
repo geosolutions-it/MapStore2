@@ -34,7 +34,7 @@ In order to enable the possibility to add in and the spatial filter to the widge
 
 ```json
 ...
-dashboard: [
+"dashboard": [
 ...
 { 
     "name": "QueryPanel",
