@@ -30,7 +30,6 @@ In order to enable the possibility to add in and the spatial filter to the widge
 - **spatialOperations**: The list of spatial operations allowed for this plugin
 - **spatialMethodOptions**: the list of spatial methods to use.
 
-
 ```json
 ...
 "dashboard": [
