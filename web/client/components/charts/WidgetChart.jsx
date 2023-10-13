@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import {round, every, includes, isNumber, isString, union, orderBy, flatten} from 'lodash';
+import {every, includes, isNumber, isString, union, orderBy, flatten} from 'lodash';
 import {format} from 'd3-format';
 
 import LoadingView from '../misc/LoadingView';
