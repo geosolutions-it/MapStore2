@@ -26,9 +26,9 @@ This is a list of things to check if you want to update from a previous version 
 
 In order to enable the possibility to add in and the spatial filter to the widgets [#9098](https://github.com/geosolutions-it/MapStore2/issues/9098) you have to edit the QueryPanel config in `localConfig.json` file adding:
 
-- **useEmbeddedMap** flag,
-- **spatialOperations**
-- **spatialMethodOptions**
+- **useEmbeddedMap**: flag to enable the embedded map
+- **spatialOperations**: The list of spatial operations allowed for this plugin
+- **spatialMethodOptions**: the list of spatial methods to use.
 
 
 ```json
