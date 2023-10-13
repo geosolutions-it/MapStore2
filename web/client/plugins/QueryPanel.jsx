@@ -263,6 +263,8 @@ class QueryPanel extends React.Component {
     }
 
     UNSAFE_componentWillReceiveProps(newProps) {
+        // triggering the init only if not using the embedded map since this was happening too early
+        // making the redraw of spatial filter not happening
         if (!newProps.toolsOptions.useEmbeddedMap && newProps.queryPanelEnabled === true && this.props.queryPanelEnabled === false) {
             this.props.onInit();
         }
