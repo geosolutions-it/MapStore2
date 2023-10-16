@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import {connect} from 'react-redux';
-import { createSelector } from 'reselect';
 import {
     ChartWidget,
     CounterWidget,
@@ -16,7 +14,6 @@ import {
     TextWidget,
     LegendWidget
 } from './enhancedWidgets';
-import { isDashboardAvailable } from '../../../selectors/dashboard';
 
 const getWidgetOpts = (w) => w?.widgetOpts?.[w.widgetType];
 
@@ -30,7 +27,6 @@ const DefaultWidget = ({
     exportImage = () => {},
     onDelete = () => {},
     onEdit = () => {},
-    isDashboardOpened,
     ...w
 } = {}) => w.widgetType === "text"
     ? (<TextWidget {...w}
@@ -45,7 +41,6 @@ const DefaultWidget = ({
             dependencies={dependencies}
             onDelete={onDelete}
             onEdit={onEdit}
-            isDashboardOpened={isDashboardOpened}
         />
         : w.widgetType === "counter"
             ? <CounterWidget {...w}
@@ -76,4 +71,4 @@ const DefaultWidget = ({
                         exportImage={exportImage}
                         onDelete={onDelete}
                         onEdit={onEdit} />);
-export default connect(createSelector(isDashboardAvailable, (isDashboardOpened)=>({ isDashboardOpened })))(DefaultWidget);
+export default DefaultWidget;
