@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
 import {every, includes, isNumber, isString, union, orderBy, flatten} from 'lodash';
-import {format} from 'd3-format';
 
 import LoadingView from '../misc/LoadingView';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
@@ -296,25 +295,16 @@ function getData({
         if (formula) {
             y = preProcessValues(formula, y);
         }
-        let text = y;
-        if (yAxisOpts?.format) {
-            try {
-                const formatter = format(yAxisOpts.format);
-                text = y.map(val => `${yAxisOpts?.tickPrefix || ""} ${formatter(val)} ${yAxisOpts?.tickSuffix || ""}`);
-            } catch (e) {
-                console.error(e);
-            }
-        }
+
         let pieChartTrace = {
             name: yAxisLabel || yDataKey,
-            hovertemplate: `%{label}<br>${yDataKey}<br>%{text}<br>%{percent}<extra></extra>`,
+            hovertemplate: `%{label}<br>${yDataKey}<br>${yAxisOpts?.tickPrefix ?? ""}%{value${yAxisOpts?.format ? `:${yAxisOpts?.format}` : ''}}${yAxisOpts?.tickSuffix ?? ""}<br>%{percent}<extra></extra>`,
             type,
             textinfo: textinfo || "%{percent}",
             // hide labels with textinfo = "none", in this case we have to omit texttemplate which would win over this.
             texttemplate: textinfo === "none" ? null : "%{percent}",
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
             values: y,
-            text,
             pull: 0.005
         };
         /* pie chart is classified colored */
