@@ -260,7 +260,6 @@ function getData({
     data: dataUnsorted,
     formula,
     yAxisOpts,
-    textinfo,
     classificationAttr,
     yAxisLabel,
     autoColorOptions,
@@ -300,9 +299,9 @@ function getData({
             name: yAxisLabel || yDataKey,
             hovertemplate: `%{label}<br>${yDataKey}<br>${yAxisOpts?.tickPrefix ?? ""}%{value${yAxisOpts?.format ? `:${yAxisOpts?.format}` : ''}}${yAxisOpts?.tickSuffix ?? ""}<br>%{percent}<extra></extra>`,
             type,
-            textinfo: textinfo || "%{percent}",
+            textinfo: yAxisOpts?.textinfo,
             // hide labels with textinfo = "none", in this case we have to omit texttemplate which would win over this.
-            texttemplate: textinfo === "none" ? null : "%{percent}",
+            texttemplate: yAxisOpts?.textinfo === "none" ? null : "%{percent}",
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
             values: y,
             pull: 0.005
@@ -461,7 +460,6 @@ export const toPlotly = (props) => {
         xAxis,
         series = [],
         yAxisLabel,
-        textinfo,
         type = 'line',
         height,
         width,
@@ -491,7 +489,7 @@ export const toPlotly = (props) => {
             uirevision: true
         },
         data: series.map(({ dataKey: yDataKey }) => {
-            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, textinfo, yAxisLabel, autoColorOptions, customColorEnabled, classificationType });
+            let allData = getData({ ...props, xDataKey, yDataKey, classificationAttr, type, yAxisLabel, autoColorOptions, customColorEnabled, classificationType });
             const chartData = allData ? allData?.x?.map((axis, index) => {
                 return { xAxis: axis, yAxis: allData.y[index]};
             }) : {};

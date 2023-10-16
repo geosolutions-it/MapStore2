@@ -80,7 +80,6 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         dependenciesMap={data.dependenciesMap}
         type={data.type}
         xAxisOpts={data.xAxisOpts}
-        textinfo={data.textinfo}
         yAxisOpts={data.yAxisOpts}
         barChartType={data.barChartType}
         formula={data.formula}

@@ -40,8 +40,8 @@ function PieChartAdvancedOptions({
             </Col>
             <Col sm={6}>
                 <SwitchButton
-                    checked={data?.textinfo === "none"}
-                    onChange={(val) => { onChange("textinfo", val ? "none" : "%{percent}"); }}
+                    checked={data?.yAxisOpts?.textinfo === "none"}
+                    onChange={(val) => { onChange("yAxisOpts.textinfo", val ? "none" : null); }}
                 />
             </Col>
         </FormGroup>
