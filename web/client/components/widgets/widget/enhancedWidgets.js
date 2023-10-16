@@ -21,6 +21,7 @@ import dependenciesToWidget from '../enhancers/dependenciesToWidget';
 import dependenciesToExtent from '../enhancers/dependenciesToExtent';
 import dependenciesToLayers from '../enhancers/dependenciesToLayers';
 import dependenciesToMapProp from '../enhancers/dependenciesToMapProp';
+import dependenciesToZoomTo from '../enhancers/dependenciesToZoomTo';
 
 
 import BaseChartWidget from './ChartWidget';
@@ -73,6 +74,8 @@ export const MapWidget = compose(
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
     dependenciesToExtent,
+    // add hoc register
+    dependenciesToZoomTo,
     mapWidget
 )(BaseMapWidget);
 

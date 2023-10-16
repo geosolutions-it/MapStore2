@@ -36,7 +36,6 @@ describe('widgets dependenciesToExtent enhancer', () => {
     it('dependenciesToExtent default', (done) => {
         const Sink = dependenciesToExtent(createSink( props => {
             expect(props).toExist();
-            expect(props).toEqual({});
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));

@@ -10,11 +10,17 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
+import {Provider} from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 
 import tableWidget from '../tableWidget';
 
+const mockStore = configureMockStore();
+
 describe('widgets tableWidget enhancer', () => {
+    let store;
     beforeEach((done) => {
+        store = mockStore();
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
@@ -34,9 +40,9 @@ describe('widgets tableWidget enhancer', () => {
             props.gridEvents.onAddFilter(someFilter);
             done();
         }));
-        ReactDOM.render(<Sink updateProperty={(path, filter) => {
+        ReactDOM.render( <Provider store={store}><Sink updateProperty={(path, filter) => {
             expect(path).toBe("quickFilters.state");
             expect(filter).toBe(someFilter);
-        }}/>, document.getElementById("container"));
+        }}/></Provider>, document.getElementById("container"));
     });
 });
