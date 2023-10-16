@@ -3932,6 +3932,7 @@
           "false": "faux",
           "notifications": {
             "errorIntersectGFI": "Une erreur s'est produite lors de l'intersection des entités. Il n'a pas été possible de créer la couche d'intersection.",
+            "errorIntersectGFIPointSource": "La première couche doit être polygonale ou linéaire.",
             "errorGFI": "Une erreur s'est produite lors du chargement de la fonctionnalité",
             "errorGetFeature": "Une erreur s'est produite lors du chargement de l'entité afin d'obtenir sa géométrie",
             "layerNotSupported": "La couche sélectionnée n'est pas prise en charge. Veuillez sélectionner une couche WMS, WFS ou vectorielle.",

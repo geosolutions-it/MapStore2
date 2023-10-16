@@ -3969,6 +3969,7 @@
           "false": "falsch",
           "notifications": {
             "errorIntersectGFI": "Beim Überschneiden der Features ist ein Fehler aufgetreten. Der Schnittpunkt-Layer konnte nicht erstellt werden.",
+            "errorIntersectGFIPointSource": "Die erste Schicht muss polygonal oder linear sein.",
             "errorGFI": "Beim Laden der Funktion ist ein Fehler aufgetreten",
             "errorGetFeature": "Beim Laden des Features zum Abrufen seiner Geometrie ist ein Fehler aufgetreten",
             "layerNotSupported": "Ausgewählte Ebene wird nicht unterstützt. Bitte wählen Sie WMS, WFS oder Vektorebene aus.",

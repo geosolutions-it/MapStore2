@@ -665,7 +665,16 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                                     })
                                 ));
                     })
-                    .catch(() => {
+                    .catch((e) => {
+                        console.error(e);
+                        if (e.message.includes("First feature collection must be polygonal or linear")) {
+                            return Rx.Observable.of(showErrorNotification({
+                                title: "errorTitleDefault",
+                                message: "GeoProcessing.notifications.errorIntersectGFIPointSource",
+                                autoDismiss: 6,
+                                position: "tc"
+                            }));
+                        }
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessing.notifications.errorIntersectGFI",

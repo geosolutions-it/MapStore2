@@ -3932,6 +3932,7 @@
           "false": "falsa",
           "notifications": {
             "errorIntersectGFI": "Hubo un error al cruzar las entidades. No fue posible crear la capa de intersección.",
+            "errorIntersectGFIPointSource": "La primera capa debe ser poligonal o lineal.",
             "errorGFI": "Hubo un error al cargar la característica",
             "errorGetFeature": "Hubo un error al cargar la función para obtener su geometría",
             "layerNotSupported": "La capa seleccionada no es compatible. Seleccione WMS, WFS o capa vectorial.",

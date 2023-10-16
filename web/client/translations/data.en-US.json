@@ -3943,6 +3943,7 @@
           "false": "false",
           "notifications": {
             "errorIntersectGFI": "There was an error intersecting the features. It was not possible to create the intersection layer.",
+            "errorIntersectGFIPointSource": "First feature collection must be polygonal or linear.",
             "errorGFI": "There was an error loading the feature",
             "errorGetFeature": "There was an error loading the feature in order to obtain its geometry",
             "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
