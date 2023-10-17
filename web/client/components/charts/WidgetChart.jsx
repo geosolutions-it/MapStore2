@@ -2,10 +2,8 @@ import React, { Suspense } from 'react';
 import {every, includes, isNumber, isString, union, orderBy, flatten} from 'lodash';
 
 import LoadingView from '../misc/LoadingView';
-
 import { sameToneRangeColors } from '../../utils/ColorUtils';
 import { parseExpression } from '../../utils/ExpressionUtils';
-
 /*
  * Copyright 2020, GeoSolutions Sas.
  * All rights reserved.
@@ -293,10 +291,17 @@ function getData({
     switch (type) {
 
     case 'pie':
+        if (formula) {
+            y = preProcessValues(formula, y);
+        }
+
         let pieChartTrace = {
             name: yAxisLabel || yDataKey,
-            hovertemplate: `%{label}<br>${yDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
+            hovertemplate: `%{label}<br>${yDataKey}<br>${yAxisOpts?.tickPrefix ?? ""}%{value${yAxisOpts?.format ? `:${yAxisOpts?.format}` : ''}}${yAxisOpts?.tickSuffix ?? ""}<br>%{percent}<extra></extra>`,
             type,
+            textinfo: yAxisOpts?.textinfo,
+            // hide labels with textinfo = "none", in this case we have to omit texttemplate which would win over this.
+            texttemplate: yAxisOpts?.textinfo === "none" ? null : "%{percent}",
             textposition: 'inside', // this avoids text to overflow the chart div when rendered outside
             values: y,
             pull: 0.005

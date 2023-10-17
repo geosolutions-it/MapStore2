@@ -22,6 +22,7 @@ import StepHeader from '../../../../misc/wizard/StepHeader';
 import SwitchButton from '../../../../misc/switch/SwitchButton';
 import ChartAdvancedOptions from './ChartAdvancedOptions';
 import CounterAdvancedOptions from './CounterAdvancedOptions';
+import PieChartAdvancedOptions from './PieChartAdvancedOptions';
 import ColorClassModal from '../chart/ColorClassModal';
 import { defaultColorGenerator } from '../../../../charts/WidgetChart';
 
@@ -362,6 +363,13 @@ const WPSWidgetOptions = ({
                             onChange={onChange}
                         />
                         : null}
+
+
+                    {formOptions.advancedOptions && data.widgetType === "chart" && data.type === "pie"
+                        ? <PieChartAdvancedOptions data={data} classificationAttribute={classificationAttribute} onChange={onChange} />
+                        : null
+                    }
+
                 </Form>
 
             </Col>
