@@ -2161,6 +2161,7 @@
                 "xAxis": "X-Achse",
                 "xAxisAngle": "Beschriftungsdrehung",
                 "hideLabels": "Beschriftung ausblenden",
+                "includeLegendPercent": "Include percentages in legend",
                 "format": "Format",
                 "prefix": "Präfix",
                 "suffix": "Suffix",
