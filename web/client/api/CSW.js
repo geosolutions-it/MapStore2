@@ -13,8 +13,9 @@ import assign from 'object-assign';
 
 import axios from '../libs/ajax';
 import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
-import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG } from '../utils/CoordinatesUtils';
+import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG, getExtentFromNormalized } from '../utils/CoordinatesUtils';
 import WMS from "../api/WMS";
+import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
@@ -303,125 +304,136 @@ const Api = {
                 }
                 resolve(axios.post(parseUrl(url), body, { headers: {
                     'Content-Type': 'application/xml'
-                }}).then(
-                    (response) => {
-                        if (response) {
-                            let json = unmarshaller.unmarshalString(response.data);
-                            if (json && json.name && json.name.localPart === "GetRecordsResponse" && json.value && json.value.searchResults) {
-                                let rawResult = json.value;
-                                let rawRecords = rawResult.searchResults.abstractRecord || rawResult.searchResults.any;
-                                let result = {
-                                    numberOfRecordsMatched: rawResult.searchResults.numberOfRecordsMatched,
-                                    numberOfRecordsReturned: rawResult.searchResults.numberOfRecordsReturned,
-                                    nextRecord: rawResult.searchResults.nextRecord
-                                    // searchStatus: rawResult.searchStatus
-                                };
-                                let records = [];
-                                let _dcRef;
-                                if (rawRecords) {
-                                    for (let i = 0; i < rawRecords.length; i++) {
-                                        let rawRec = rawRecords[i].value;
-                                        let obj = {
-                                            dateStamp: rawRec.dateStamp && rawRec.dateStamp.date,
-                                            fileIdentifier: rawRec.fileIdentifier && rawRec.fileIdentifier.characterString && rawRec.fileIdentifier.characterString.value,
-                                            identificationInfo: rawRec.abstractMDIdentification && rawRec.abstractMDIdentification.value
+                }}).then(async(response) => {
+                    if (response) {
+                        let json = unmarshaller.unmarshalString(response.data);
+                        if (json && json.name && json.name.localPart === "GetRecordsResponse" && json.value && json.value.searchResults) {
+                            let rawResult = json.value;
+                            let rawRecords = rawResult.searchResults.abstractRecord || rawResult.searchResults.any;
+                            let result = {
+                                numberOfRecordsMatched: rawResult.searchResults.numberOfRecordsMatched,
+                                numberOfRecordsReturned: rawResult.searchResults.numberOfRecordsReturned,
+                                nextRecord: rawResult.searchResults.nextRecord
+                                // searchStatus: rawResult.searchStatus
+                            };
+                            let records = [];
+                            let _dcRef;
+                            if (rawRecords) {
+                                for (let i = 0; i < rawRecords.length; i++) {
+                                    let rawRec = rawRecords[i].value;
+                                    let obj = {
+                                        dateStamp: rawRec.dateStamp && rawRec.dateStamp.date,
+                                        fileIdentifier: rawRec.fileIdentifier && rawRec.fileIdentifier.characterString && rawRec.fileIdentifier.characterString.value,
+                                        identificationInfo: rawRec.abstractMDIdentification && rawRec.abstractMDIdentification.value
+                                    };
+                                    if (rawRec.boundingBox) {
+                                        let bbox;
+                                        let crs;
+                                        let el;
+                                        if (Array.isArray(rawRec.boundingBox)) {
+                                            el = head(rawRec.boundingBox);
+                                        } else {
+                                            el = rawRec.boundingBox;
+                                        }
+                                        if (el && el.value) {
+                                            const crsValue = el.value?.crs ?? '';
+                                            const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];
+                                            const epsg = makeNumericEPSG(crsValue.match(/EPSG:[0-9]+/)?.[0]);
+
+                                            let lc = el.value.lowerCorner;
+                                            let uc = el.value.upperCorner;
+
+                                            const extractedCrs = epsg || (extractCrsFromURN(urn) || last(crsValue.split(':')));
+
+                                            if (!extractedCrs) {
+                                                crs = 'EPSG:4326';
+                                            } else if (extractedCrs.slice(0, 5) === 'EPSG:') {
+                                                crs = makeNumericEPSG(extractedCrs);
+                                            } else {
+                                                crs = makeNumericEPSG(`EPSG:${extractedCrs}`);
+                                            }
+
+                                            // Usually switched, GeoServer sometimes doesn't. See https://docs.geoserver.org/latest/en/user/services/wfs/axis_order.html#axis-ordering
+                                            if (crs === 'EPSG:4326' && extractedCrs !== 'CRS84' && extractedCrs !== 'OGC:CRS84') {
+                                                lc = [lc[1], lc[0]];
+                                                uc = [uc[1], uc[0]];
+                                            }
+                                            bbox = makeBboxFromOWS(lc, uc);
+                                        }
+                                        obj.boundingBox = {
+                                            extent: bbox,
+                                            crs: 'EPSG:4326'
                                         };
-                                        if (rawRec.boundingBox) {
-                                            let bbox;
-                                            let crs;
-                                            let el;
-                                            if (Array.isArray(rawRec.boundingBox)) {
-                                                el = head(rawRec.boundingBox);
-                                            } else {
-                                                el = rawRec.boundingBox;
-                                            }
-                                            if (el && el.value) {
-                                                const crsValue = el.value?.crs ?? '';
-                                                const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];
-                                                const epsg = makeNumericEPSG(crsValue.match(/EPSG:[0-9]+/)?.[0]);
-
-                                                let lc = el.value.lowerCorner;
-                                                let uc = el.value.upperCorner;
-
-                                                const extractedCrs = epsg || (extractCrsFromURN(urn) || last(crsValue.split(':')));
-
-                                                if (!extractedCrs) {
-                                                    crs = 'EPSG:4326';
-                                                } else if (extractedCrs.slice(0, 5) === 'EPSG:') {
-                                                    crs = makeNumericEPSG(extractedCrs);
-                                                } else {
-                                                    crs = makeNumericEPSG(`EPSG:${extractedCrs}`);
-                                                }
-
-                                                // Usually switched, GeoServer sometimes doesn't. See https://docs.geoserver.org/latest/en/user/services/wfs/axis_order.html#axis-ordering
-                                                if (crs === 'EPSG:4326' && extractedCrs !== 'CRS84' && extractedCrs !== 'OGC:CRS84') {
-                                                    lc = [lc[1], lc[0]];
-                                                    uc = [uc[1], uc[0]];
-                                                }
-                                                bbox = makeBboxFromOWS(lc, uc);
-                                            }
-                                            obj.boundingBox = {
-                                                extent: bbox,
-                                                crs: 'EPSG:4326'
-                                            };
-                                        }
-                                        // dcElement is an array of objects, each item is a dc tag in the XML
-                                        let dcElement = rawRec.dcElement;
-                                        if (dcElement) {
-                                            let dc = {
-                                                references: []
-                                            };
-                                            for (let j = 0; j < dcElement.length; j++) {
-                                                let dcel = dcElement[j];
-                                                // here the element name is taken (i.e. "URI", "title", "description", etc)
-                                                let elName = dcel.name.localPart;
-                                                let finalEl = {};
-                                                /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
-                                                * Usually they publish the WMS URL at dct:"references" with scheme=OGC:WMS
-                                                * So we place references as they are.
-                                                */
-                                                if (elName === "references" && dcel.value) {
-                                                    let urlString = dcel.value.content && cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
-                                                    finalEl = {
-                                                        value: urlString,
-                                                        scheme: dcel.value.scheme
-                                                    };
-                                                } else {
-                                                    finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
-                                                }
-                                                /**
-                                                    grouping all tags with same property together (i.e <dc:subject>mobilità</dc:subject> <dc:subject>traffico</dc:subject>)
-                                                    will become { subject: ["mobilità", "traffico"] }
-                                                **/
-                                                if (dc[elName] && Array.isArray(dc[elName])) {
-                                                    dc[elName].push(finalEl);
-                                                } else if (dc[elName]) {
-                                                    dc[elName] = [dc[elName], finalEl];
-                                                } else {
-                                                    dc[elName] = finalEl;
-                                                }
-                                            }
-                                            const URIs = castArray(dc.references.length > 0 ? dc.references : dc.URI);
-                                            if (!_dcRef) {
-                                                _dcRef = URIs;
-                                            } else {
-                                                _dcRef = _dcRef.concat(URIs);
-                                            }
-                                            obj.dc = dc;
-                                        }
-                                        records.push(obj);
                                     }
+                                    // dcElement is an array of objects, each item is a dc tag in the XML
+                                    let dcElement = rawRec.dcElement;
+                                    if (dcElement) {
+                                        let dc = {
+                                            references: []
+                                        };
+                                        for (let j = 0; j < dcElement.length; j++) {
+                                            let dcel = dcElement[j];
+                                            // here the element name is taken (i.e. "URI", "title", "description", etc)
+                                            let elName = dcel.name.localPart;
+                                            let finalEl = {};
+                                            /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
+                                            * Usually they publish the WMS URL at dct:"references" with scheme=OGC:WMS
+                                            * So we place references as they are.
+                                            */
+                                            if (elName === "references" && dcel.value) {
+                                                let urlString = dcel.value.content && cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
+                                                finalEl = {
+                                                    value: urlString,
+                                                    scheme: dcel.value.scheme
+                                                };
+                                            } else {
+                                                finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
+                                            }
+                                            /**
+                                                grouping all tags with same property together (i.e <dc:subject>mobilità</dc:subject> <dc:subject>traffico</dc:subject>)
+                                                will become { subject: ["mobilità", "traffico"] }
+                                            **/
+                                            if (dc[elName] && Array.isArray(dc[elName])) {
+                                                dc[elName].push(finalEl);
+                                            } else if (dc[elName]) {
+                                                dc[elName] = [dc[elName], finalEl];
+                                            } else {
+                                                dc[elName] = finalEl;
+                                            }
+                                        }
+                                        const URIs = castArray(dc.references.length > 0 ? dc.references : dc.URI);
+                                        if (!_dcRef) {
+                                            _dcRef = URIs;
+                                        } else {
+                                            _dcRef = _dcRef.concat(URIs);
+                                        }
+                                        obj.dc = dc;
+                                    }
+                                    // if it is 3D layer ---> get layer extent from tilesetJson
+                                    if (obj.dc.format === THREE_D_TILES) {
+                                        let tilesetJsonURL = obj.dc?.URI?.value;
+                                        if (tilesetJsonURL) {
+                                            let data = await getCapabilities(tilesetJsonURL);
+                                            let bbox = getExtentFromNormalized(data.bbox.bounds, data.bbox.crs);
+                                            obj.boundingBox = {
+                                                extent: bbox.extent,
+                                                crs: data.bbox.crs
+                                            };
+                                        }
+                                    }
+                                    records.push(obj);
                                 }
-                                result.records = records;
-                                return addCapabilitiesToRecords(_dcRef, result, options);
-                            } else if (json && json.name && json.name.localPart === "ExceptionReport") {
-                                return {
-                                    error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'
-                                };
                             }
+                            result.records = records;
+                            return addCapabilitiesToRecords(_dcRef, result, options);
+                        } else if (json && json.name && json.name.localPart === "ExceptionReport") {
+                            return {
+                                error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'
+                            };
                         }
-                        return null;
-                    }));
+                    }
+                    return null;
+                }));
             });
         });
     },
