@@ -49,7 +49,7 @@ function PieChartAdvancedOptions({
             </Col>
             <Col sm={6}>
                 <SwitchButton
-                    checked={data?.includeLegendPercent ?? false}
+                    checked={data?.yAxisOpts?.includeLegendPercent ?? false}
                     onChange={(val) => { onChange("yAxisOpts.includeLegendPercent", val); }}
                 />
             </Col>
