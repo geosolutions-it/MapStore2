@@ -410,7 +410,7 @@ const Api = {
                                         obj.dc = dc;
                                     }
                                     // if it is 3D layer ---> get layer extent from tilesetJson
-                                    if (obj.dc.format === THREE_D_TILES) {
+                                    if (obj?.dc?.format === THREE_D_TILES) {
                                         let tilesetJsonURL = obj.dc?.URI?.value;
                                         if (tilesetJsonURL) {
                                             let data = await getCapabilities(tilesetJsonURL);
