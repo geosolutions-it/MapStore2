@@ -22,6 +22,14 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.xx to 2024.01.00
 
+### Fixing background config
+
+From this version in order to fix default 3d background config a change is needed here
+- `localConfig.json` by adding **visibility: false**  to the Empty Background entry in intialState.defaultState.catalog.default.staticServices.default_map_backgrounds.backgrounds
+- `new.json` by adding **visibility: false**  to the Empty Background entry
+
+see this PR [9614](https://github.com/geosolutions-it/MapStore2/pull/9614/files) for more details
+
 ### Adding spatial filter to dashboard widgets
 
 In order to enable the possibility to add in and the spatial filter to the widgets ( see [#9098](https://github.com/geosolutions-it/MapStore2/issues/9098) ) you have to edit the `QueryPanel` config in the `plugins.dashboard` array of the `localConfig.json` file by adding:
