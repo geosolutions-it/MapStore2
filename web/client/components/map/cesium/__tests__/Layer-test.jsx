@@ -98,7 +98,9 @@ describe('Cesium layer', () => {
     });
 
     it('creates a osm layer for cesium map', () => {
-        var options = {};
+        var options = {
+            visibility: true
+        };
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
@@ -113,7 +115,8 @@ describe('Cesium layer', () => {
             "source": "osm",
             "title": "Open Street Map",
             "name": "mapnik",
-            "group": "background"
+            "group": "background",
+            "visibility": true
         };
         // create layer
         var layer = ReactDOM.render(
@@ -455,7 +458,8 @@ describe('Cesium layer', () => {
             "title": "Bing Aerial",
             "name": "Aerial",
             "group": "background",
-            "apiKey": "required"
+            "apiKey": "required",
+            "visibility": true
         };
         // create layers
         var layer = ReactDOM.render(
@@ -472,7 +476,7 @@ describe('Cesium layer', () => {
                 options={{}} position={0} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
-        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers.length).toBe(0);
         // not visibile layers are removed from the leaflet maps
         layer = ReactDOM.render(
             <CesiumLayer type="osm"
