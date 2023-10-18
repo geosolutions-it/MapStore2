@@ -25,10 +25,8 @@ This is a list of things to check if you want to update from a previous version 
 ### Fixing background config
 
 From this version in order to fix default 3d background config a change is needed here
-- `localConfig.json` by adding **visibility: false**  to the Empty Background entry in intialState.defaultState.catalog.default.staticServices.default_map_backgrounds.backgrounds
-- `new.json` by adding **visibility: false**  to the Empty Background entry
-
-see this PR [9614](https://github.com/geosolutions-it/MapStore2/pull/9614/files) for more details
+- update `localConfig.json` by adding **visibility: false**  to the Empty Background entry in intialState.defaultState.catalog.default.staticServices.default_map_backgrounds.backgrounds
+- update `new.json` by adding **visibility: false**  to the Empty Background entry
 
 ### Adding spatial filter to dashboard widgets
 
