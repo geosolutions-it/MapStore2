@@ -26,8 +26,7 @@ class CesiumLayer extends React.Component {
 
     componentDidMount() {
         this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map, this.props.securityToken);
-        let mapHasDefaultBackgroundLayer = this.props.map.scene.imageryLayers.length;          // TO CHECK IF THERE IS AN EXISTING ACTIVE BACKGROUND LAYER IF NOT ADD THIS LAYER BE THE DEFAULT
-        if (this.props.options && this.layer && this.getVisibilityOption(this.props) && !mapHasDefaultBackgroundLayer) {
+        if (this.props.options && this.layer && this.getVisibilityOption(this.props)) {
             this.addLayer(this.props);
             this.updateZIndex();
         }
@@ -168,7 +167,7 @@ class CesiumLayer extends React.Component {
                 return false;
             }
         }
-        return visibility !== false;
+        return visibility;
     };
 
     setLayerOpacity = (opacity) => {
