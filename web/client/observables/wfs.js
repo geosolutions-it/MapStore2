@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import { castArray, isNil, isObject } from 'lodash';
+import { isArray, castArray, isNil, isObject } from 'lodash';
 import Rx from 'rxjs';
 import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
@@ -259,7 +259,7 @@ export const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {so
                     } : getFeature(
                         query(name,
                             [
-                                sortBy(pn[0]),
+                                sortBy(isArray(pn) ? pn[0] : pn),
                                 ...(pn ? [propertyName(pn)] : []),
                                 ...(filter ? castArray(filter) : [])
                             ]),

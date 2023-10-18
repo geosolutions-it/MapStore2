@@ -3940,7 +3940,10 @@
             "noLayerSelected": "Veuillez d'abord sélectionner le calque.",
             "successfulIntersection": "L'opération d'intersection a réussi et une nouvelle couche a été créée et ajoutée à la table des matières",
             "successfulBuffer": "L'opération Buffer a réussi et une nouvelle couche a été créée et ajoutée à la table des matières",
-            "errorBuffer": "L'opération Buffer a échoué"
+            "errorBuffer": "L'opération Buffer a échoué",
+            "emptyIntersection": "Il n'y a pas d'intersection entre les ensembles de données donnés.",
+            "errorGettingFC": "Il n'a pas été possible de collecter la géométrie du calque {layerName}",
+            "errorGettingFeaturesList": "Il n'a pas été possible de récupérer la liste des entités de la couche {layerName}"
           },
           "warningTitle": "Avertissement",
           "warningBody": "Vous n'avez pas sélectionné de fonctionnalité et cela peut ralentir les performances de geoserver. Voulez-vous continuer ?",
