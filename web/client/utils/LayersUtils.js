@@ -643,7 +643,7 @@ export const saveLayer = (layer) => {
         legendOptions: layer.legendOptions,
         tileSize: layer.tileSize,
         version: layer.version,
-        expanded: layer.expanded
+        expanded: layer.expanded || false
     },
     layer.sources ? { sources: layer.sources } : {},
     layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
