@@ -3954,6 +3954,7 @@
             "invalidLayers": "L'un des calques que vous avez sélectionnés ne peut pas être utilisé dans ce processus",
             "fillRequiredDataIntersection": "Veuillez sélectionner au moins la couche source et la couche d'intersection",
             "fillRequiredDataBuffer": "Veuillez sélectionner au moins la couche source",
+            "pointAndPolygon": "Vous pouvez sélectionner un point uniquement en tant qu'entité d'intersection, tandis que la couche source est une couche de polygones.",
             "siderBarBtn": "Géotraitement",
             "selectFeature": "Veuillez sélectionner une fonctionnalité",
             "validFeature": "Cette fonctionnalité est valide",

@@ -3991,6 +3991,7 @@
             "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Prozess nicht verwendet werden",
             "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
             "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
+            "pointAndPolygon": "Sie können einen Punkt nur als Schnittpunkt-Feature auswählen, während der Quell-Layer ein Polygon-Layer ist",
             "siderBarBtn": "Geoverarbeitung",
             "selectFeature": "Bitte wählen Sie eine Funktion aus",
             "validFeature": "Diese Funktion ist gültig",

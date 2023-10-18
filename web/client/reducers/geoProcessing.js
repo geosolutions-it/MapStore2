@@ -46,7 +46,6 @@ import {
     RESET_CONTROLS
 } from '../actions/controls';
 import { LOCATION_CHANGE } from 'connected-react-router';
-import { checkIfIntersectionIsPossible } from '../utils/GeoProcessingUtils';
 
 /**
  * reducer for GeoProcessing
@@ -208,6 +207,10 @@ function geoProcessing( state = {
                 features: (state[action.source].features || []).concat(action.data.features || []),
                 totalCount: action.data.totalFeatures,
                 currentPage: action.nextPage
+            },
+            flags: {
+                ...state.flags,
+                isIntersectionEnabled: action.source === "source" ? !action.geometryProperty?.type?.includes("Point") : state.flags.isIntersectionEnabled
             }
         } : {
             ...state,
@@ -308,10 +311,6 @@ function geoProcessing( state = {
                 ...state.source,
                 feature: action.feature,
                 features: find(state.source.features, ft => ft.id === action.feature.id) ? state.source.features : [action.feature]
-            },
-            flags: {
-                ...state.flags,
-                isIntersectionEnabled: checkIfIntersectionIsPossible(action?.feature, state?.intersection?.feature)
             }
         };
     }
@@ -350,10 +349,6 @@ function geoProcessing( state = {
                 ...state.intersection,
                 feature: action.feature,
                 features: find(state.intersection.features, ft => ft.id === action.feature.id) ? state.intersection.features : [action.feature]
-            },
-            flags: {
-                ...state.flags,
-                isIntersectionEnabled: checkIfIntersectionIsPossible(state?.source?.feature, action?.feature)
             }
         };
     }

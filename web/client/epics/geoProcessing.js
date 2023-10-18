@@ -133,7 +133,7 @@ import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {logError} from "../utils/DebugUtils";
 import {getFeatureInfo} from "../api/identify";
 import {getFeatureSimple} from '../api/WFS';
-import {findNonGeometryProperty} from '../utils/ogc/WFS/base';
+import {findNonGeometryProperty, findGeometryProperty} from '../utils/ogc/WFS/base';
 import toWKT from '../utils/ogc/WKT/toWKT';
 
 const OFFSET = 550;
@@ -261,6 +261,7 @@ export const getFeaturesGPTEpic = (action$, store) => action$
             startIndex: page * maxFeatures,
             maxFeatures
         };
+        const geometryProperty = findGeometryProperty(layer.describeFeatureType);
         return Rx.Observable.merge(
             getLayerJSONFeature({
                 ...layer,
@@ -270,11 +271,11 @@ export const getFeaturesGPTEpic = (action$, store) => action$
                     url: layer.url
                 }
             }, filterObj, options)
-                .map(data => setFeatures(layerId, source, data, page))
+                .map(data => setFeatures(layerId, source, data, page, geometryProperty))
                 .catch(e => {
                     logError(e);
                     return Rx.Observable.of(
-                        setFeatures(layerId, source, e, page),
+                        setFeatures(layerId, source, e, page, geometryProperty),
                         showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessing.notifications.errorGettingFeaturesList",
@@ -631,9 +632,9 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         }
         return Rx.Observable.forkJoin(sourceFC$, intersectionFC$)
             .switchMap(([firstGeom, secondGeom]) => {
-                if (firstGeom.error) {
+                if (firstGeom?.error || secondGeom?.error) {
                     const errorActions = [];
-                    if (firstGeom.error.message.includes("Failed to retrieve value for input features")) {
+                    if (firstGeom?.error?.message?.includes("Failed to retrieve value for input features")) {
                         logError(firstGeom.error);
                         errorActions.push(showErrorNotification({
                             title: "errorTitleDefault",
@@ -643,7 +644,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                             values: {layerName: firstGeom.layerName + " - " + firstGeom.layerTitle}
                         }));
                     }
-                    if (secondGeom.error.message.includes("Failed to retrieve value for input features")) {
+                    if (secondGeom?.error?.message?.includes("Failed to retrieve value for input features")) {
                         logError(secondGeom.error);
                         errorActions.push(showErrorNotification({
                             title: "errorTitleDefault",
@@ -655,7 +656,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                     }
                     errorActions.push(showErrorNotification({
                         title: "errorTitleDefault",
-                        message: "GeoProcessing.notifications.errorBuffer",
+                        message: "GeoProcessing.notifications.errorIntersectGFI",
                         autoDismiss: 6,
                         position: "tc"
                     }));
