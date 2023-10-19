@@ -27,7 +27,7 @@ import {
     DATASET_WITH_DATES,
     SPLIT_DATASET_4
 } from './sample_data';
-import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
+import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS, renderLabels } from '../WidgetChart';
 
 describe('WidgetChart', () => {
     beforeEach((done) => {
@@ -900,6 +900,20 @@ describe('Widget Chart: data conversions ', () => {
             // xaxis
             expect(layout.xaxis.automargin).toBeTruthy();
             expect(layout.xaxis.tickangle).toEqual('auto');
+        });
+    });
+    it('renderLabels', () => {
+        const tests = [
+            [["a", "b", "c"], [3, 5, 2], ['a - 30.0%', 'b - 50.0%', 'c - 20.0%']],
+            [["a", "b", "c"], [3, 7], ['a - 30.0%', 'b - 70.0%', 'c']], // handle undefined values
+            [["a", "b", "c"], [3, 7, null], ['a - 30.0%', 'b - 70.0%', 'c']], // handle null values
+            [["a", "b", "c"], [0, 0, 0], ["a", "b", "c"]], // handle 0 sum
+            [["a", "b", "c"], [0, 0, 1], ['a - 0.00%', 'b - 0.00%', 'c - 100%']], // check 100% rendering
+            [["a", "b", "c"], [1, 1, 1], ['a - 33.3%', 'b - 33.3%', 'c - 33.3%']] // check 3 digits rendering
+        ];
+        tests.forEach(([keys, values, expectedPercent]) => {
+            expect(renderLabels(keys, values)).toEqual(keys); // remains the same
+            expect(renderLabels(keys, values, {includeLegendPercent: true})).toEqual(expectedPercent);
         });
     });
 });

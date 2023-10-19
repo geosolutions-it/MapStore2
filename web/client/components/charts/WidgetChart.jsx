@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import {round, every, includes, isNumber, isString, union, orderBy, flatten} from 'lodash';
+import {isNull, every, includes, isNumber, isString, union, orderBy, flatten} from 'lodash';
 
 import LoadingView from '../misc/LoadingView';
 import { sameToneRangeColors } from '../../utils/ColorUtils';
@@ -25,7 +25,38 @@ export const defaultColorGenerator = (total, colorOptions) => {
     const { base, range, ...opts } = colorOptions;
     return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
 };
-
+//
+/**
+ * Returns the labels for the pie chart, adds % to the labels, for legend, if the prop `includeLegendPercent` is true
+ * @param {string|number[]} keys the values of the chart ["California", "Ohio", ...]
+ * @param {number[]} y array of values to be used to calculate the percentage of the label
+ * @param {*} opts.includeLegendPercent if true, it adds the % on the label legend
+ * @returns {string[]} the labels for the pie chart
+ */
+export const renderLabels = (keys = [], y = [], {includeLegendPercent} = {}) => {
+    if (!includeLegendPercent) {
+        return keys;
+    }
+    const total = y.reduce((p, c) => {
+        if (isNumber(c) && !isNaN(p)) {
+            return p + c;
+        }
+        return p;
+    }, 0);
+    if (includeLegendPercent && isNumber(total) && total !== 0) {
+        return keys.map((v, i) => {
+            if (!isNull(y[i])) { // avoid implicit conversion of null to 0
+                const percent = (y[i] / total * 100).toPrecision(3); // use precision to be consistent with formatting of plotlyJS (3 digits)
+                if (!isNaN(percent)) {
+                    return v + " - " + percent + "%";
+                }
+            }
+            return v;
+        });
+    }
+    // prevent cases when division by zero
+    return keys;
+};
 /**
  * Checks the parameters and return the color classification type for the chart. Classification type can be:
  * - 'value' for classifications based on exact value. Used if the type of `classificationAttr` is "string".
@@ -294,10 +325,11 @@ function getData({
         if (formula) {
             y = preProcessValues(formula, y);
         }
-
+        // if includeLegendPercent is true, the percent is already included in the label
+        const percentHover = !yAxisOpts?.includeLegendPercent ? '%{percent}' : '';
         let pieChartTrace = {
             name: yAxisLabel || yDataKey,
-            hovertemplate: `%{label}<br>${yDataKey}<br>${yAxisOpts?.tickPrefix ?? ""}%{value${yAxisOpts?.format ? `:${yAxisOpts?.format}` : ''}}${yAxisOpts?.tickSuffix ?? ""}<br>%{percent}<extra></extra>`,
+            hovertemplate: `%{label}<br>${yDataKey}<br>${yAxisOpts?.tickPrefix ?? ""}%{value${yAxisOpts?.format ? `:${yAxisOpts?.format}` : ''}}${yAxisOpts?.tickSuffix ?? ""}<br>${percentHover}<extra></extra>`,
             type,
             textinfo: yAxisOpts?.textinfo,
             // hide labels with textinfo = "none", in this case we have to omit texttemplate which would win over this.
@@ -306,9 +338,7 @@ function getData({
             values: y,
             pull: 0.005
         };
-        const total = y.reduce((p, c) => {
-            return p + c;
-        }, 0);
+
         /* pie chart is classified colored */
         if (classificationType !== 'default' && classificationColors.length) {
             const legendLabels = classifications.map((item, index) => {
@@ -322,7 +352,7 @@ function getData({
             });
             pieChartTrace = {
                 ...pieChartTrace,
-                labels: !yAxisOpts?.includeLegendPercent ? legendLabels : legendLabels.map((v, i) => v + " - " + round(y[i] / total, 2) + " %"),
+                labels: renderLabels(legendLabels, y, yAxisOpts),
                 marker: {colors: classificationColors}
             };
             return pieChartTrace;
@@ -331,7 +361,7 @@ function getData({
         return {
             ...(yDataKey && { legendgroup: yDataKey }),
             ...pieChartTrace,
-            labels: !yAxisOpts?.includeLegendPercent ? x : x.map((v, i) => v + " - " + round(y[i] / total * 100, 2) + "%"),
+            labels: renderLabels(x, y, yAxisOpts),
             ...(customColorEnabled ? { marker: {colors: x.reduce((acc) => ([...acc, autoColorOptions?.defaultCustomColor || '#0888A1']), [])} } : {})
         };
 
