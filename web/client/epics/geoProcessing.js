@@ -140,6 +140,53 @@ const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),
     changeDrawingStatus("clean", '', GPT_CONTROL_NAME)
 ];
+
+const getGeom = (geomType) => {
+    switch (geomType) {
+    case "Point": case "MultiPoint": return "point";
+    case "LineString": case "MultiLineString": return "line";
+    case "Polygon": case "MultiPolygon": return "polygon";
+    default:
+        return geomType;
+    }
+};
+
+const styleRules = [
+    {
+        filter: [ '==', 'geomType', 'polygon' ],
+        symbolizers: [
+            {
+                "kind": "Fill",
+                "outlineWidth": 3,
+                "outlineColor": "#ffac12",
+                "color": "#ffffff",
+                "opacity": 1,
+                "fillOpacity": 0.3
+            }
+        ]
+    }, {
+        filter: [ '==', 'geomType', 'line' ],
+        symbolizers: [{
+            "kind": "Line",
+            "width": 3,
+            "color": "#ffffff",
+            "opacity": 0.3
+        }]
+    }, {
+        filter: [ '==', 'geomType', 'point' ],
+        symbolizers: [{
+            "kind": "Mark",
+            "wellKnownName": "Circle",
+            "strokeColor": "#f5a623",
+            "color": "#ffffff",
+            "fillOpacity": 0.3,
+            "strokeWidth": 3,
+            "strokeOpacity": 1,
+            "radius": 8
+        }]
+    }
+];
+
 /**
  * checks if a layer is a valid one that can be used in the gpt tool.
  * also checks if it is a raster using describe layer
@@ -457,22 +504,18 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                                                 maxy: extent[3]
                                             }
                                         },
-                                        features,
+                                        features: features.map(f => ({
+                                            ...f,
+                                            properties: {
+                                                ...f.properties,
+                                                geomType: getGeom(f.geometry.type)
+                                            }
+                                        })),
                                         style: {
                                             format: "geostyler",
                                             body: {
                                                 name: "",
-                                                rules: [{
-                                                    symbolizers: [
-                                                        {
-                                                            "kind": "Fill",
-                                                            "outlineWidth": 3,
-                                                            "outlineColor": "#ffac12",
-                                                            "color": "#ffffff",
-                                                            "fillOpacity": 0.3
-                                                        }
-                                                    ]
-                                                }]
+                                                rules: styleRules
                                             }
                                         }
                                     }),
@@ -628,7 +671,13 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                                         group: GPT_INTERSECTION_GROUP_ID,
                                         title: "Intersection Layer " + counter,
                                         visibility: true,
-                                        features: featureCollection.features,
+                                        features: featureCollection.features.map(f => ({
+                                            ...f,
+                                            properties: {
+                                                ...f.properties,
+                                                geomType: getGeom(f.geometry.type)
+                                            }
+                                        })),
                                         bbox: {
                                             crs: "EPSG:4326",
                                             bounds: {
@@ -642,17 +691,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                                             format: "geostyler",
                                             body: {
                                                 name: "",
-                                                rules: [{
-                                                    symbolizers: [
-                                                        {
-                                                            "kind": "Fill",
-                                                            "outlineWidth": 3,
-                                                            "outlineColor": "#ffac12",
-                                                            "color": "#ffffff",
-                                                            "fillOpacity": 0.3
-                                                        }
-                                                    ]
-                                                }]
+                                                rules: styleRules
                                             }
                                         }
                                     }),
