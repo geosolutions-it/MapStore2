@@ -3977,7 +3977,10 @@
              "noLayerSelected": "Bitte wählen Sie zuerst die Ebene aus.",
              "successfulIntersection": "Der Schnittvorgang war erfolgreich und ein neuer Layer wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
              "successfulBuffer": "Der Puffervorgang war erfolgreich und eine neue Ebene wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
-             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen"
+             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen",
+             "emptyIntersection": "Es gibt keine Schnittmenge zwischen den angegebenen Datensätzen.",
+             "errorGettingFC": "Es war nicht möglich, die Geometrie aus der Ebene zu erfassen {layerName}",
+             "errorGettingFeaturesList": "Es war nicht möglich, die Liste der Features aus dem Layer abzurufen {layerName}"
           },
           "warningTitle": "Warnung",
           "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
@@ -3988,6 +3991,7 @@
             "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Prozess nicht verwendet werden",
             "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
             "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
+            "pointAndPolygon": "Sie können einen Punktlayer nur für den Schnittpunktlayer auswählen",
             "siderBarBtn": "Geoverarbeitung",
             "selectFeature": "Bitte wählen Sie eine Funktion aus",
             "validFeature": "Diese Funktion ist gültig",

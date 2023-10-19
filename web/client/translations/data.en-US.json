@@ -3951,7 +3951,10 @@
             "noLayerSelected": "Please select layer first.",
             "successfulIntersection": "The intersection operation was successful and a new layer has ben created and added to the TOC",
             "successfulBuffer": "The Buffer operation was successful and a new layer has ben created and added to the TOC",
-            "errorBuffer": "The Buffer operation has failed"
+            "errorBuffer": "The Buffer operation has failed",
+            "emptyIntersection": "There is no intersection between the given datasets.",
+            "errorGettingFC": "It was not possible to collect the geometry from the layer {layerName}",
+            "errorGettingFeaturesList": "It was not possible to fetch the list of features from the layer {layerName}"
           },
           "warningTitle": "Warning",
           "warningBody": "You have not selected a feature and this may slow down performances in geoserver. Do you want to continue?",
@@ -3962,6 +3965,7 @@
             "invalidLayers": "One of the layers you have selected cannot be used within this process",
             "fillRequiredDataIntersection": "Please select at least the source layer and the intersection layer",
             "fillRequiredDataBuffer": "Please select at least the source layer",
+            "pointAndPolygon": "You can select a point layer only for the intersection layer",
             "siderBarBtn": "GeoProcessing",
             "selectFeature": "Please select a feature",
             "validFeature": "This feature is valid",
