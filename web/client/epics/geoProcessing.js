@@ -160,8 +160,8 @@ const styleRules = [
                 "kind": "Fill",
                 "outlineWidth": 3,
                 "outlineColor": "#ffac12",
+                "outlineOpacity": 1,
                 "color": "#ffffff",
-                "opacity": 1,
                 "fillOpacity": 0.3
             }
         ]
@@ -170,7 +170,7 @@ const styleRules = [
         symbolizers: [{
             "kind": "Line",
             "width": 3,
-            "color": "#ffffff",
+            "color": "#ffac12",
             "opacity": 0.3
         }]
     }, {
@@ -178,11 +178,11 @@ const styleRules = [
         symbolizers: [{
             "kind": "Mark",
             "wellKnownName": "Circle",
-            "strokeColor": "#f5a623",
             "color": "#ffffff",
             "fillOpacity": 0.3,
-            "strokeWidth": 3,
+            "strokeColor": "#ffac12",
             "strokeOpacity": 1,
+            "strokeWidth": 3,
             "radius": 8
         }]
     }
