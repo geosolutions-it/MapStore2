@@ -16,6 +16,7 @@ import {
     processOGCCrossLayerFilter,
     cqlBooleanField,
     cqlStringField,
+    ogcStringField,
     ogcBooleanField,
     getCrossLayerCqlFilter,
     composeAttributeFilters,
@@ -1238,6 +1239,14 @@ describe('FilterUtils', () => {
         expect(cqlStringField("attribute_1", "ilike", "*A*")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
         // test LIKE wrapped with wildcard
         expect(cqlStringField("attribute_1", "like", "*A*")).toBe("\"attribute_1\" LIKE '%A%'");
+    });
+    it('Check if ogcStringField(attribute, operator, value, ns)', () => {
+        // testing operator =
+        expect(ogcStringField("attribute_1", "=", "Alabama", "ogc")).toBe("<ogc:PropertyIsEqualTo><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>Alabama</ogc:Literal></ogc:PropertyIsEqualTo>");
+        expect(ogcStringField("attribute_1", "<>", "Alabama", "ogc")).toBe("<ogc:PropertyIsNotEqualTo><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>Alabama</ogc:Literal></ogc:PropertyIsNotEqualTo>");
+        expect(ogcStringField("attribute_1", "like", "Alabama", "ogc")).toBe("<ogc:PropertyIsLike matchCase=\"true\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\"><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>*Alabama*</ogc:Literal></ogc:PropertyIsLike>");
+        expect(ogcStringField("attribute_1", "ilike", "Alabama", "ogc")).toBe("<ogc:PropertyIsLike matchCase=\"false\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\"><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>*Alabama*</ogc:Literal></ogc:PropertyIsLike>");
+        expect(ogcStringField("attribute_1", "isNull", "", "ogc")).toBe("<ogc:PropertyIsNull><ogc:PropertyName>attribute_1</ogc:PropertyName></ogc:PropertyIsNull>");
     });
     it('Check if ogcBooleanField(attribute, operator, value, nsplaceholder)', () => {
         // testing operators
