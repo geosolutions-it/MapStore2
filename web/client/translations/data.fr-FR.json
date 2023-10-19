@@ -3910,7 +3910,10 @@
             "noLayerSelected": "Veuillez d'abord sélectionner le calque.",
             "successfulIntersection": "L'opération d'intersection a réussi et une nouvelle couche a été créée et ajoutée à la table des matières",
             "successfulBuffer": "L'opération Buffer a réussi et une nouvelle couche a été créée et ajoutée à la table des matières",
-            "errorBuffer": "L'opération Buffer a échoué"
+            "errorBuffer": "L'opération Buffer a échoué",
+            "emptyIntersection": "Il n'y a pas d'intersection entre les ensembles de données donnés.",
+            "errorGettingFC": "Il n'a pas été possible de collecter la géométrie du calque {layerName}",
+            "errorGettingFeaturesList": "Il n'a pas été possible de récupérer la liste des entités de la couche {layerName}"
           },
           "warningTitle": "Avertissement",
           "warningBody": "Vous n'avez pas sélectionné de fonctionnalité et cela peut ralentir les performances de geoserver. Voulez-vous continuer ?",
@@ -3921,6 +3924,7 @@
             "invalidLayers": "L'un des calques que vous avez sélectionnés ne peut pas être utilisé dans ce processus",
             "fillRequiredDataIntersection": "Veuillez sélectionner au moins la couche source et la couche d'intersection",
             "fillRequiredDataBuffer": "Veuillez sélectionner au moins la couche source",
+            "pointAndPolygon": "Vous pouvez sélectionner une couche de points uniquement pour la couche d'intersection",
             "siderBarBtn": "Géotraitement",
             "selectFeature": "Veuillez sélectionner une fonctionnalité",
             "validFeature": "Cette fonctionnalité est valide",

@@ -115,10 +115,11 @@ export const processes = [
                     {props.runningProcess ? <Loader size={14} style={{margin: '0 auto'}}/> : null}
                 </Button>
                 <InfoPopover
-                    bsStyle={props.isIntersectionLayerInvalid || props.isSourceLayerInvalid ? "danger" : "info"}
+                    bsStyle={!props.isIntersectionEnabled || props.isIntersectionLayerInvalid || props.isSourceLayerInvalid ? "danger" : "info"}
                     text={
-                        props.isIntersectionLayerInvalid || props.isSourceLayerInvalid  ?
-                            getMessageById(props.messages, "GeoProcessing.tooltip.invalidLayers") : getMessageById(props.messages, "GeoProcessing.tooltip.fillRequiredDataIntersection")
+                        !props.isIntersectionEnabled ? getMessageById(props.messages, "GeoProcessing.tooltip.pointAndPolygon") :
+                            props.isIntersectionLayerInvalid || props.isSourceLayerInvalid  ?
+                                getMessageById(props.messages, "GeoProcessing.tooltip.invalidLayers") : getMessageById(props.messages, "GeoProcessing.tooltip.fillRequiredDataIntersection")
                     }
                 />
             </div>);

@@ -130,9 +130,10 @@ import {
     calculateDistance
 } from "../utils/CoordinatesUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
+import {logError} from "../utils/DebugUtils";
 import {getFeatureInfo} from "../api/identify";
 import {getFeatureSimple} from '../api/WFS';
-import {findNonGeometryProperty} from '../utils/ogc/WFS/base';
+import {findNonGeometryProperty, findGeometryProperty} from '../utils/ogc/WFS/base';
 import toWKT from '../utils/ogc/WKT/toWKT';
 
 const OFFSET = 550;
@@ -211,7 +212,7 @@ export const checkWPSAvailabilityGPTEpic = (action$, store) => action$
                     );
             })
             .catch((e) => {
-                console.error(e);
+                logError(e);
                 return Rx.Observable.of(
                     setWPSAvailability(layerId, false, source),
                     checkingWPS(false)
@@ -260,6 +261,7 @@ export const getFeaturesGPTEpic = (action$, store) => action$
             startIndex: page * maxFeatures,
             maxFeatures
         };
+        const geometryProperty = findGeometryProperty(layer.describeFeatureType);
         return Rx.Observable.merge(
             getLayerJSONFeature({
                 ...layer,
@@ -269,9 +271,19 @@ export const getFeaturesGPTEpic = (action$, store) => action$
                     url: layer.url
                 }
             }, filterObj, options)
-                .map(data => setFeatures(layerId, source, data, page))
-                .catch(error => {
-                    return Rx.Observable.of(setFeatures(layerId, source, error, page));
+                .map(data => setFeatures(layerId, source, data, page, geometryProperty))
+                .catch(e => {
+                    logError(e);
+                    return Rx.Observable.of(
+                        setFeatures(layerId, source, e, page, geometryProperty),
+                        showErrorNotification({
+                            title: "errorTitleDefault",
+                            message: "GeoProcessing.notifications.errorGettingFeaturesList",
+                            autoDismiss: 6,
+                            position: "tc",
+                            values: {layerName: layer.name + " - " + layer.title}
+                        })
+                    );
                 })
                 .startWith(setFeatureLoading(true))
                 .concat(Rx.Observable.of(setFeatureLoading(false))));
@@ -316,7 +328,8 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
                 ]);
 
             })
-            .catch(() => {
+            .catch((e) => {
+                logError(e);
                 return Rx.Observable.of(showErrorNotification({
                     title: "errorTitleDefault",
                     message: "GeoProcessing.notifications.errorGetFeature",
@@ -364,7 +377,8 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
                 ]);
 
             })
-            .catch(() => {
+            .catch((e) => {
+                logError(e);
                 return Rx.Observable.of(showErrorNotification({
                     title: "errorTitleDefault",
                     message: "GeoProcessing.notifications.errorGetFeature",
@@ -486,7 +500,8 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                                 )
                             );
                     })
-                    .catch(() => {
+                    .catch((e) => {
+                        logError(e);
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessing.notifications.errorBuffer",
@@ -504,19 +519,34 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
-                }).catch(() => {
-                return Rx.Observable.of(showErrorNotification({
-                    title: "errorTitleDefault",
-                    message: "GeoProcessing.notifications.errorBuffer",
-                    autoDismiss: 6,
-                    position: "tc"
-                }));
-            });
+                })
+                .catch((e) => {
+                    logError(e);
+                    return Rx.Observable.of({error: e, layerName: layer.name, layerTitle: layer.title});
+                });
             return executeCollectProcess$
-                .switchMap((geom) => {
+                .switchMap((result) => {
+                    if (result.error) {
+                        if (result.error.message.includes("Failed to retrieve value for input features")) {
+                            console.error("layerName " + result.layerName + " - " + result.layerTitle);
+                            return Rx.Observable.of(showErrorNotification({
+                                title: "errorTitleDefault",
+                                message: "GeoProcessing.notifications.errorGettingFC",
+                                autoDismiss: 6,
+                                position: "tc",
+                                values: {layerName: result.layerName + " - " + result.layerTitle}
+                            }));
+                        }
+                        return Rx.Observable.of(showErrorNotification({
+                            title: "errorTitleDefault",
+                            message: "GeoProcessing.notifications.errorBuffer",
+                            autoDismiss: 6,
+                            position: "tc"
+                        }));
+                    }
                     const ft = {
                         type: "Feature",
-                        geometry: geom
+                        geometry: result
                     };
                     const featureReprojected = reprojectGeoJson(ft, "EPSG:4326", "EPSG:3857");
                     const geometry3857 = toWKT(featureReprojected.geometry);
@@ -574,6 +604,10 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
+                })
+                .catch((e) => {
+                    logError(e);
+                    return Rx.Observable.of({error: e, layerName: layer.name, layerTitle: layer.title});
                 });
         } else {
             sourceFC$ = Rx.Observable.of(sourceFeature.geometry);
@@ -588,12 +622,46 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
+                })
+                .catch((e) => {
+                    logError(e);
+                    return Rx.Observable.of({error: e, layerName: intersectionLayer.name, layerTitle: intersectionLayer.title});
                 });
         } else {
             intersectionFC$ = Rx.Observable.of(intersectionFeature.geometry);
         }
         return Rx.Observable.forkJoin(sourceFC$, intersectionFC$)
             .switchMap(([firstGeom, secondGeom]) => {
+                if (firstGeom?.error || secondGeom?.error) {
+                    const errorActions = [];
+                    if (firstGeom?.error?.message?.includes("Failed to retrieve value for input features")) {
+                        logError(firstGeom.error);
+                        errorActions.push(showErrorNotification({
+                            title: "errorTitleDefault",
+                            message: "GeoProcessing.notifications.errorGettingFC",
+                            autoDismiss: 6,
+                            position: "tc",
+                            values: {layerName: firstGeom.layerName + " - " + firstGeom.layerTitle}
+                        }));
+                    }
+                    if (secondGeom?.error?.message?.includes("Failed to retrieve value for input features")) {
+                        logError(secondGeom.error);
+                        errorActions.push(showErrorNotification({
+                            title: "errorTitleDefault",
+                            message: "GeoProcessing.notifications.errorGettingFC",
+                            autoDismiss: 6,
+                            position: "tc",
+                            values: {layerName: secondGeom.layerName + " - " + secondGeom.layerTitle}
+                        }));
+                    }
+                    errorActions.push(showErrorNotification({
+                        title: "errorTitleDefault",
+                        message: "GeoProcessing.notifications.errorIntersectGFI",
+                        autoDismiss: 6,
+                        position: "tc"
+                    }));
+                    return Rx.Observable.from(errorActions);
+                }
 
                 const executeProcess$ = executeProcess(
                     layerUrl,
@@ -616,7 +684,16 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                     .switchMap((featureCollection) => {
                         const groups = groupsSelector(state);
                         const groupExist = find(groups, (g) => g.id === GPT_INTERSECTION_GROUP_ID);
-                        const extent = getGeoJSONExtent(featureCollection);
+                        let extent = getGeoJSONExtent(featureCollection);
+                        if (extent.some(coord => coord === Infinity )) {
+                            // intersection is empty, return a message
+                            return Rx.Observable.of(showErrorNotification({
+                                title: "errorTitleDefault",
+                                message: "GeoProcessing.notifications.emptyIntersection",
+                                autoDismiss: 6,
+                                position: "tc"
+                            }));
+                        }
                         return (!groupExist ? Rx.Observable.of( addGroup("Intersected Layers", null, {id: GPT_INTERSECTION_GROUP_ID}, true)) : Rx.Observable.empty())
                             .concat(
                                 Rx.Observable.of(
@@ -665,7 +742,8 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                                     })
                                 ));
                     })
-                    .catch(() => {
+                    .catch((e) => {
+                        logError(e);
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessing.notifications.errorIntersectGFI",
@@ -804,7 +882,8 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
                             position: "tc"
                         }));
                     })
-                    .catch(() => {
+                    .catch((e) => {
+                        logError(e);
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessing.notifications.errorGFI",
