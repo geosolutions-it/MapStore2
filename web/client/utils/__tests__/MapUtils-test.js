@@ -384,7 +384,8 @@ describe('Test the MapUtils', () => {
                                 maxx: '-73.907005',
                                 maxy: '40.878178'
                             }
-                        }
+                        },
+                        expanded: false
                     },
                     {
                         "allowedSRS": {
@@ -397,7 +398,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         catalogURL: "url",
-                        version: '1.3.0'
+                        version: '1.3.0',
+                        expanded: false
                     },
                     {
                         search: {},
@@ -407,7 +409,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         search: {},
@@ -427,7 +430,8 @@ describe('Test the MapUtils', () => {
                             fromPlugin2: {
                                 name: "plugin"
                             }
-                        }
+                        },
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -566,7 +570,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer002",
@@ -575,7 +580,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer003",
@@ -584,7 +590,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer004",
@@ -594,7 +601,8 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        origin: [100000, 100000]
+                        origin: [100000, 100000],
+                        expanded: false
                     },
                     {
                         group: "background",
@@ -605,7 +613,8 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        origin: [100000, 100000]
+                        origin: [100000, 100000],
+                        expanded: false
                     },
                     {
                         group: "background",
@@ -616,7 +625,8 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: false,
                         catalogURL: "url",
-                        origin: [100000, 100000]
+                        origin: [100000, 100000],
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -727,7 +737,8 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        legendOptions: { legendWidth: "", legendHeight: 40}
+                        legendOptions: { legendWidth: "", legendHeight: 40},
+                        expanded: false
                     },
                     {
                         id: "layer002",
@@ -736,7 +747,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer003",
@@ -748,7 +760,8 @@ describe('Test the MapUtils', () => {
                         catalogURL: "url",
                         tooltipOptions: "both",
                         tooltipPlacement: "right",
-                        legendOptions: { legendWidth: 20, legendHeight: 40}
+                        legendOptions: { legendWidth: 20, legendHeight: 40},
+                        expanded: false
                     }]),
                     mapOptions: {
                         view: {
@@ -878,7 +891,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "http:url001",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer002",
@@ -887,7 +901,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "http:url001",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer003",
@@ -896,7 +911,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "http:url001",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1016,7 +1032,9 @@ describe('Test the MapUtils', () => {
                         type: 'vector',
                         url: '',
                         visibility: true,
-                        catalogURL: 'url'} ]),
+                        catalogURL: 'url',
+                        expanded: false
+                    } ]),
                     groups: [ {
                         id: 'Default',
                         title: 'Default',
@@ -1130,7 +1148,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "http:url001",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1249,7 +1268,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "http:url001",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1384,7 +1404,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer002",
@@ -1393,7 +1414,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer003",
@@ -1402,7 +1424,8 @@ describe('Test the MapUtils', () => {
                         type: "wms",
                         url: "",
                         visibility: true,
-                        catalogURL: "url"
+                        catalogURL: "url",
+                        expanded: false
                     },
                     {
                         id: "layer004",
@@ -1412,7 +1435,8 @@ describe('Test the MapUtils', () => {
                         url: "",
                         visibility: true,
                         catalogURL: "url",
-                        origin: [100000, 100000]
+                        origin: [100000, 100000],
+                        expanded: false
                     }]),
                     mapOptions: {},
                     maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1490,6 +1514,209 @@ describe('Test the MapUtils', () => {
                 version: 2
             });
         });
+        it('save map configuration with expaneded layers in legend', () => {
+
+            const flat = [
+                {
+                    id: "layer001",
+                    loading: true,
+                    name: "layer001",
+                    search: {},
+                    thumbURL: "THUMB_URL",
+                    title: "layer001",
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    bbox: {
+                        crs: 'EPSG:4326',
+                        bounds: {
+                            minx: '-74.02722',
+                            miny: '40.684221',
+                            maxx: '-73.907005',
+                            maxy: '40.878178'
+                        }
+                    },
+                    expanded: true
+                },
+                {
+                    "allowedSRS": {
+                        "EPSG:3857": true
+                    },
+                    id: "layer002",
+                    loading: true,
+                    name: "layer002",
+                    search: {},
+                    title: "layer002",
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    version: '1.3.0'
+                },
+                {
+                    id: "layer003",
+                    loading: true,
+                    name: "layer003",
+                    search: {},
+                    title: "layer003",
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url"
+                },
+                {
+                    id: "layer004",
+                    loading: true,
+                    name: "layer004",
+                    search: {},
+                    title: "layer004",
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    origin: [100000, 100000],
+                    sources: [{url: "url"}],
+                    extendedParams: {
+                        fromExtension1: {
+                            testBool: true
+                        },
+                        fromPlugin2: {
+                            name: "plugin"
+                        }
+                    }
+                }
+            ];
+            const groups = [
+                {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
+                {
+                    expanded: false,
+                    id: 'custom',
+                    name: 'custom',
+                    title: 'custom',
+                    description: 'custom-description',
+                    tooltipOptions: 'both',
+                    tooltipPlacement: 'right',
+                    nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
+                    ]}
+            ];
+
+            const mapConfig = {
+                center: {x: 0, y: 0, crs: 'EPSG:4326'},
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                units: 'm',
+                mapInfoControl: true,
+                zoom: 10
+            };
+
+            const saved = saveMapConfiguration(mapConfig, flat, groups, [], '', {});
+            expect(saved).toEqual({
+                map: {
+                    center: {crs: 'EPSG:4326', x: 0, y: 0},
+                    backgrounds: [],
+                    mapInfoControl: true,
+                    groups: [{
+                        id: 'Default',
+                        title: 'Default',
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
+                    }, {
+                        id: 'custom',
+                        title: 'custom',
+                        expanded: false,
+                        description: 'custom-description',
+                        tooltipOptions: 'both',
+                        tooltipPlacement: 'right'
+                    }, {
+                        id: 'custom.nested001',
+                        title: 'nested001',
+                        expanded: true,
+                        description: undefined,
+                        tooltipOptions: undefined,
+                        tooltipPlacement: undefined
+                    }],
+                    layers: applyLayerDefaults([{
+                        thumbURL: "THUMB_URL",
+                        id: "layer001",
+                        search: {},
+                        name: "layer001",
+                        title: "layer001",
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url",
+                        bbox: {
+                            crs: 'EPSG:4326',
+                            bounds: {
+                                minx: '-74.02722',
+                                miny: '40.684221',
+                                maxx: '-73.907005',
+                                maxy: '40.878178'
+                            }
+                        },
+                        expanded: true
+                    },
+                    {
+                        "allowedSRS": {
+                            "EPSG:3857": true
+                        },
+                        search: {},
+                        id: "layer002",
+                        name: "layer002",
+                        title: "layer002",
+                        type: "wms",
+                        url: "",
+                        catalogURL: "url",
+                        version: '1.3.0',
+                        expanded: false
+                    },
+                    {
+                        search: {},
+                        id: "layer003",
+                        name: "layer003",
+                        title: "layer003",
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url",
+                        expanded: false
+                    },
+                    {
+                        search: {},
+                        id: "layer004",
+                        name: "layer004",
+                        title: "layer004",
+                        type: "wms",
+                        url: "",
+                        visibility: true,
+                        catalogURL: "url",
+                        origin: [100000, 100000],
+                        sources: [{url: "url"}],
+                        extendedParams: {
+                            fromExtension1: {
+                                testBool: true
+                            },
+                            fromPlugin2: {
+                                name: "plugin"
+                            }
+                        },
+                        expanded: false
+                    }]),
+                    mapOptions: {},
+                    maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                    projection: 'EPSG:900913',
+                    text_search_config: '',
+                    bookmark_search_config: {},
+                    units: 'm',
+                    zoom: 10
+                },
+                version: 2
+            });
+        });
+
     });
 
     it('test getIdFromUri ', () => {
