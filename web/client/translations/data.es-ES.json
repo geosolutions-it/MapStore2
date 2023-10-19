@@ -3954,7 +3954,7 @@
             "invalidLayers": "Una de las capas que ha seleccionado no se puede utilizar dentro de este proceso",
             "fillRequiredDataIntersection": "Seleccione al menos la capa de origen y la capa de intersección",
             "fillRequiredDataBuffer": "Seleccione al menos la capa de origen",
-            "pointAndPolygon": "Puede seleccionar un punto solo como una entidad de intersección, mientras que la capa de origen es una capa de polígono.",
+            "pointAndPolygon": "Puede seleccionar una capa de puntos solo para la capa de intersección",
             "siderBarBtn": "Geoprocesamiento",
             "selectFeature": "Seleccione una función",
             "validFeature": "Esta función es válida",

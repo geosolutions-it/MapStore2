@@ -3954,7 +3954,7 @@
              "invalidLayers": "Uno dei livelli che hai selezionato non può essere utilizzato all'interno di questo processo",
              "fillRequiredDataIntersection": "Seleziona almeno il livello di origine e il livello di intersezione",
              "fillRequiredDataBuffer": "Seleziona almeno il livello di origine",
-             "pointAndPolygon": "Puoi selezionare un punto solo come feature di intersezion, mentre il livello sorgente è un livello poligonale",
+             "pointAndPolygon": "Puoi selezionare un livello puntuale solo per il livello di intersezione",
              "siderBarBtn": "Strumenti di geoelaborazione",
              "selectFeature": "Seleziona una funzione",
              "validFeature": "Questa feature è valida",
