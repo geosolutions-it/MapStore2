@@ -288,7 +288,6 @@ describe('Test Geo Processing Tools reducer', () => {
         }, action);
         expect(state.source.feature).toEqual(feature);
         expect(state.source.features).toEqual([feature]);
-        expect(state.flags.isIntersectionEnabled).toEqual(true);
     });
     it('SET_INTERSECTION_LAYER_ID', () => {
         const layerId = "id";
@@ -354,7 +353,6 @@ describe('Test Geo Processing Tools reducer', () => {
             }
         }, action);
         expect(state.intersection.feature).toEqual(feature);
-        expect(state.flags.isIntersectionEnabled).toEqual(true);
     });
     it('SET_INTERSECTION_FIRST_ATTRIBUTE', () => {
         const firstAttributeToRetain = "attr";

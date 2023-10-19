@@ -3910,7 +3910,10 @@
             "noLayerSelected": "Seleziona prima il livello.",
             "successfulIntersection": "L'operazione di intersezione è andata a buon fine e un nuovo livello è stato creato e aggiunto alla tabella dei contenuti",
             "successfulBuffer": "L'operazione Buffer è andata a buon fine e un nuovo livello è stato creato e aggiunto alla tabella dei contenuti",
-            "errorBuffer": "L'operazione Buffer è fallita"
+            "errorBuffer": "L'operazione Buffer è fallita",
+            "emptyIntersection": "Non c'è una interesezione tra i dati utilizzati.",
+            "errorGettingFC": "Non è stato possibile ottenere la collezione di geometrie dal layer {layerName}",
+            "errorGettingFeaturesList": "Non è stato possibile ottenere la lista di features dal layer {layerName}"
           },
           "warningTitle": "Attenzione",
           "warningBody": "Non hai selezionato una funzione e questo potrebbe rallentare le prestazioni del geoserver. Vuoi continuare?",
@@ -3921,6 +3924,7 @@
              "invalidLayers": "Uno dei livelli che hai selezionato non può essere utilizzato all'interno di questo processo",
              "fillRequiredDataIntersection": "Seleziona almeno il livello di origine e il livello di intersezione",
              "fillRequiredDataBuffer": "Seleziona almeno il livello di origine",
+             "pointAndPolygon": "Puoi selezionare un livello puntuale solo per il livello di intersezione",
              "siderBarBtn": "Strumenti di geoelaborazione",
              "selectFeature": "Seleziona una funzione",
              "validFeature": "Questa feature è valida",

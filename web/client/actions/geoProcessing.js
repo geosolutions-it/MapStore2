@@ -197,12 +197,13 @@ export const setBufferCapStyle = (capStyle) => ({
  * @param {string} source can be "source" or "intersection"
  * @param {object[]|object} data list of features or error
  */
-export const setFeatures = (layerId, source, data, nextPage) => ({
+export const setFeatures = (layerId, source, data, nextPage, geometryProperty) => ({
     type: SET_FEATURES,
     layerId,
     source,
     data,
-    nextPage
+    nextPage,
+    geometryProperty
 });
 /**
  * action for the loading flag of the features

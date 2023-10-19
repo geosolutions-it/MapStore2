@@ -164,14 +164,16 @@ describe('Test Geo Processing Tools related actions', () => {
         const source = "";
         const data = {};
         const nextPage = 2;
+        const geometryProperty = {};
 
-        const action = setFeatures(layerId, source, data, nextPage);
+        const action = setFeatures(layerId, source, data, nextPage, geometryProperty);
         expect(action).toEqual({
             type: SET_FEATURES,
             layerId,
             source,
             data,
-            nextPage
+            nextPage,
+            geometryProperty
         });
     });
     it('setFeatureSourceLoading', () => {
