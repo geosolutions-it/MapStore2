@@ -30,7 +30,7 @@ export const defaultColorGenerator = (total, colorOptions) => {
  * Returns the labels for the pie chart, adds % to the labels, for legend, if the prop `includeLegendPercent` is true
  * @param {string|number[]} keys the values of the chart ["California", "Ohio", ...]
  * @param {number[]} y array of values to be used to calculate the percentage of the label
- * @param {*} opts.includeLegendPercent if true, it adds the % on the label legend
+ * @param {boolean} opts.includeLegendPercent if true, it adds the % on the label legend
  * @returns {string[]} the labels for the pie chart
  */
 export const renderLabels = (keys = [], y = [], {includeLegendPercent} = {}) => {
