@@ -159,7 +159,7 @@ export const  ogcStringField = (attribute, operator, value, nsplaceholder) => {
                         attribute +
                     propertyTagReference[nsplaceholder].endTag
                 );
-        } else if (operator === "=") {
+        } else if (operator === "=" || operator === "<>") {
             fieldFilter =
                 ogcComparisonOperators[operator](nsplaceholder,
                     propertyTagReference[nsplaceholder].startTag +
