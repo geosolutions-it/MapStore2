@@ -44,6 +44,16 @@ function PieChartAdvancedOptions({
                     onChange={(val) => { onChange("yAxisOpts.textinfo", val ? "none" : null); }}
                 />
             </Col>
+            <Col componentClass={ControlLabel} sm={6}>
+                <Message msgId="widgets.advanced.includeLegendPercent" />
+            </Col>
+            <Col sm={6}>
+                <SwitchButton
+                    checked={data?.yAxisOpts?.includeLegendPercent ?? false}
+                    onChange={(val) => { onChange("yAxisOpts.includeLegendPercent", val); }}
+                />
+            </Col>
+
         </FormGroup>
     </SwitchPanel>);
 }

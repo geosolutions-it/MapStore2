@@ -2124,6 +2124,7 @@
               "xAxis": "X axis",
               "xAxisAngle": "Label rotation",
               "hideLabels": "Hide labels",
+              "includeLegendPercent": "Include percentages in legend",
               "format": "Format",
               "prefix": "Prefix",
               "suffix": "Suffix",

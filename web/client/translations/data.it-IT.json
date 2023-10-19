@@ -2125,6 +2125,7 @@
               "xAxis": "Asse X",
               "xAxisAngle": "Rotazione etichetta",
               "hideLabels": "Nascondi etichette",
+              "includeLegendPercent": "Includi percentuali nella legenda",
               "format": "Formato",
               "prefix": "Prefisso",
               "suffix": "Suffisso",
