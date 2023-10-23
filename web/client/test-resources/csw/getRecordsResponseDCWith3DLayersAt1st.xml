@@ -1,0 +1,79 @@
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="2016-05-11T13:00:06" />
+  <csw:SearchResults numberOfRecordsMatched="100" numberOfRecordsReturned="1" elementSet="full" nextRecord="3">
+       <csw:Record xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <dc:identifier>test:20230829_test_3dtile_01</dc:identifier>
+      <dc:date>2023-09-22</dc:date>
+      <dc:title>Metadato di test per 3D-tile</dc:title>
+      <dct:abstract>Breve descrizione della risorsa</dct:abstract>
+      <dc:description>Breve descrizione della risorsa</dc:description>
+      <dc:type>dataset</dc:type>
+      <dc:subject>Zone a rischio naturale</dc:subject>
+      <dc:subject>health</dc:subject>
+      <dc:format>3D Tiles</dc:format>
+      <dc:contributor>Nome dell'ufficio responsabile del dato</dc:contributor>
+      <dc:rights>otherRestrictions</dc:rights>
+      <dc:rights>otherRestrictions</dc:rights>
+      <dc:language>ita</dc:language>
+      <dc:source>Descrizione della provenienza e del processo di produzione del dato (storia, ciclo di vita, rilevazione, acquisizione, forma attuale, qualità richiesta per garantirne l'interoperabilità)</dc:source>
+      <ows:BoundingBox crs="urn:ogc:def:crs:::WGS84">
+        <ows:LowerCorner>11.331132423112592 43.72700677229733</ows:LowerCorner>
+        <ows:UpperCorner>11.154076443108027 43.82471910604458</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dct:temporal>start=2009-01-01; end=2013-12-31</dct:temporal>
+      <dc:URI protocol="https://registry.geodati.gov.it/metadata-codelist/ProtocolValue/www-download" profile="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/other" description="access point">https://server.org/name/tileset.json</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:geonet="http://www.fao.org/geonetwork" xmlns:ows="http://www.opengis.net/ows" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+      <dc:title>c1020047_title</dc:title>
+      <dc:type>dataset</dc:type>
+      <dc:subject>sub1, sub2, sub3</dc:subject>
+      <dc:subject>sub4</dc:subject>
+      <dc:format />
+      <dct:abstract>Abstract</dct:abstract>
+      <dc:language />
+      <dc:source />
+      <dc:format />
+      <dct:references scheme="OGC:WMS">base/web/client/test-resources/csw/getCapability.xml</dct:references>
+      <dct:alternative>workspace:layer_name1</dct:alternative>
+      <ows:BoundingBox crs="urn:ogc:def:crs:EPSG:6.6:4326">
+        <ows:LowerCorner>12.718 45.542</ows:LowerCorner>
+        <ows:UpperCorner>11.874 46.026</ows:UpperCorner>
+      </ows:BoundingBox>
+    </csw:Record>
+   
+    <csw:Record xmlns:geonet="http://www.fao.org/geonetwork" xmlns:ows="http://www.opengis.net/ows" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+      <dc:identifier>d698f693-6e7e-47a9-a138-918068d0b082</dc:identifier>
+      <dc:title>Title2</dc:title>
+      <dc:type>dataset</dc:type>
+      <dc:subject>geoscientificInformation</dc:subject>
+      <dc:format />
+      <dct:abstract />
+      <dc:language />
+      <dc:source />
+      <dc:format />
+      <ows:BoundingBox crs="urn:ogc:def:crs:OGC:1.3:CRS84">
+        <ows:LowerCorner>12.002717999999996 46.187282</ows:LowerCorner>
+        <ows:UpperCorner>12.429282000000002 45.760718</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="workspace:layer_name2" description="desc2">http://ows.domain.it:80/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="thumbnail">resources.get?id=187049&amp;fname=d698f693-6e7e-47a9-a138-918068d0b082_s.png&amp;access=public</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/">
+      <dc:identifier>urn:isogeo:metadata:uuid:01ca64b3-6d69-43b7-b953-7743e11daafe</dc:identifier>
+      <dc:title>Title3</dc:title>
+      <dc:type>dataset</dc:type>
+      <dc:subject>infoMapAccessService</dc:subject>
+      <dc:format />
+      <dct:abstract />
+      <dc:language />
+      <dc:source />
+      <dc:format />
+      <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::RGF93 / Lambert-93 (EPSG:2154)">
+        <ows:LowerCorner>-4.1149 47.93257</ows:LowerCorner>
+        <ows:UpperCorner>-4.14168 47.959353362144</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="workspace:layer_name3" description="desc2">http://ows.domain.it:80/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png">http://geowww.agrocampus-ouest.fr/img/metadata/KBZ.png</dc:URI>
+    </csw:Record>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>
