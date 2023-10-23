@@ -10,8 +10,10 @@ import expect from 'expect';
 import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 import GRDCResponse from 'raw-loader!../../test-resources/csw/getRecordsResponseDC.xml';
+import GRDCResponseWith3DLayers from 'raw-loader!../../test-resources/csw/getRecordsResponseDCWith3DLayers.xml';
+import API, {constructXMLBody, getLayerReferenceFromDc } from '../CSW';
 
-import API, {constructXMLBody, getLayerReferenceFromDc} from '../CSW';
+import tileSetResponse from '../../test-resources/3dtiles/tileSetSample2.json';
 
 describe('Test correctness of the CSW APIs', () => {
     it('getRecords ISO Metadata Profile', (done) => {
@@ -280,5 +282,112 @@ describe("getLayerReferenceFromDc", () => {
         expect(layerRef.params.name).toBe('some_layer');
         expect(layerRef.type).toBe('arcgis');
         expect(layerRef.url).toBe('http://esri_url');
+    });
+
+});
+
+describe("getLayerReferenceFromDc", () => {
+    const threeDLayerRecord = {
+        "boundingBox": {
+            "extent": [
+                11.244154369601063,
+                43.75907090685874,
+                11.265929832205956,
+                43.78084636946362
+            ],
+            "crs": "EPSG:4326"
+        },
+        "dc": {
+            "references": [],
+            "identifier": "test:20230829_test_3dtile_01",
+            "date": "2023-09-22",
+            "title": "Metadato di test per 3D-tile",
+            "abstract": "Breve descrizione della risorsa",
+            "description": "Breve descrizione della risorsa",
+            "type": "dataset",
+            "subject": [
+                "Zone a rischio naturale",
+                "health"
+            ],
+            "format": "3D Tiles",
+            "contributor": "Nome dell'ufficio responsabile del dato",
+            "rights": [
+                "otherRestrictions",
+                "otherRestrictions"
+            ],
+            "language": "ita",
+            "source": "Descrizione della provenienza e del processo di produzione del dato (storia, ciclo di vita, rilevazione, acquisizione, forma attuale, qualità richiesta per garantirne l'interoperabilità)",
+            "temporal": "start=2009-01-01; end=2013-12-31",
+            "URI": {
+                "TYPE_NAME": "DC_1_1.URI",
+                "protocol": "https://registry.geodati.gov.it/metadata-codelist/ProtocolValue/www-download",
+                "description": "access point",
+                "value": "https://3d-layers.s3.eu-central-1.amazonaws.com/3dtiles/centro_storico_di_firenze_-_brass_city_model/tileset.json"
+            }
+        }
+    };
+    let mockAxios;
+    beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+    afterEach((done) => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+    it('test getBboxFor3DLayersToRecords function that handles getting bbox for 3D tile layers from ', (done) => {
+        mockAxios.onPost().replyOnce(()=>{
+            return [200, GRDCResponseWith3DLayers];
+        });
+        mockAxios.onGet().reply(()=>{
+            return [200, tileSetResponse];
+        });
+        mockAxios.onGet().reply(()=>{
+            return [200, tileSetResponse];
+        });
+        API.getRecords('base/web/client/test-resources/csw/getRecordsResponseDCWith3DLayers.xml', 1, 2).then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.records).toExist();
+                expect(result.records.length).toBe(5);
+                const [rec0, rec1, rec2, rec3, rec4] = result.records;
+
+                expect(rec0.dc).toExist();
+                expect(rec0.boundingBox).toExist();
+                expect(rec0.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec0.boundingBox.extent).toEqual([45.542, 11.874, 46.026, 12.718]);
+                expect(rec1.dc.format).toEqual("3D Tiles");
+                expect(rec1.boundingBox).toExist();
+                expect(rec1.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec1.boundingBox.extent[0]).toEqual(threeDLayerRecord.boundingBox.extent[0]);
+                expect(rec1.boundingBox.extent[1]).toEqual(threeDLayerRecord.boundingBox.extent[1]);
+                expect(rec1.boundingBox.extent[2]).toEqual(threeDLayerRecord.boundingBox.extent[2]);
+                expect(rec1.boundingBox.extent[3]).toEqual(threeDLayerRecord.boundingBox.extent[3]);
+                expect(rec2.dc.URI).toExist();
+                expect(rec2.dc.URI[0]).toExist();
+                const uri = rec2.dc.URI[0];
+                expect(uri.name).toExist();
+                expect(uri.value).toExist();
+                expect(uri.description).toExist();
+                expect(rec2.boundingBox).toExist();
+                expect(rec2.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec2.boundingBox.extent).toEqual([ 12.002717999999996, 45.760718, 12.429282000000002, 46.187282]);
+                expect(rec3.boundingBox).toExist();
+                expect(rec3.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec3.boundingBox.extent).toEqual([ -4.14168, 47.93257, -4.1149, 47.959353362144 ]);
+                expect(rec4.dc.format).toEqual("3D Tiles");
+                expect(rec4.boundingBox).toExist();
+                expect(rec4.boundingBox.crs).toBe('EPSG:4326');
+                expect(rec4.boundingBox.extent[0]).toEqual(threeDLayerRecord.boundingBox.extent[0]);
+                expect(rec4.boundingBox.extent[1]).toEqual(threeDLayerRecord.boundingBox.extent[1]);
+                expect(rec4.boundingBox.extent[2]).toEqual(threeDLayerRecord.boundingBox.extent[2]);
+                expect(rec4.boundingBox.extent[3]).toEqual(threeDLayerRecord.boundingBox.extent[3]);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+        done();
+
     });
 });

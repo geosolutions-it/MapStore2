@@ -19,11 +19,11 @@ import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
-    return urlUtil.format(assign({}, parsed, {search: null}, {
+    return urlUtil.format(assign({}, parsed, { search: null }, {
         query: assign({
             service: "CSW",
             version: "2.0.2"
-        }, parsed.query, {request: undefined})
+        }, parsed.query, { request: undefined })
     }));
 };
 
@@ -74,13 +74,13 @@ export const cswGetRecordsXml = '<csw:GetRecords xmlns:csw="http://www.opengis.n
  * @param {object} filter.dynamicFilter filter when search text is present and is applied in conjunction with static filter
  * @return {string} constructed xml string
  */
-export const constructXMLBody = (startPosition, maxRecords, searchText, {filter} = {}) => {
+export const constructXMLBody = (startPosition, maxRecords, searchText, { filter } = {}) => {
     const staticFilter = filter?.staticFilter || defaultStaticFilter;
     const dynamicFilter = `<ogc:And>
-        ${template(filter?.dynamicFilter || defaultDynamicFilter)({searchText})}
+        ${template(filter?.dynamicFilter || defaultDynamicFilter)({ searchText })}
         ${staticFilter}
     </ogc:And>`;
-    return template(cswGetRecordsXml)({filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords});
+    return template(cswGetRecordsXml)({ filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords });
 };
 
 // Extract the relevant information from the wms URL for (RNDT / INSPIRE)
@@ -93,7 +93,7 @@ const extractWMSParamsFromURL = wms => {
             ...wms,
             protocol: 'OGC:WMS',
             name: layerName,
-            value: `${wms.value.match( /[^\?]+[\?]+/g)}SERVICE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
+            value: `${wms.value.match(/[^\?]+[\?]+/g)}SERVICE=WMS${wmsVersion && `&VERSION=${wmsVersion}`}`
         };
     }
     return false;
@@ -138,7 +138,7 @@ export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
     const URI = dc?.URI && castArray(dc.URI);
     // look in URI objects for wms and thumbnail
     if (URI) {
-        const wms = head(URI.map( uri => {
+        const wms = head(URI.map(uri => {
             if (uri.protocol) {
                 if (REGEX_WMS_EXPLICIT.some(regex => uri.protocol.match(regex))) {
                     /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
@@ -170,7 +170,7 @@ export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
                 return ref.scheme && ref.scheme === "WWW:DOWNLOAD-REST_MAP";
             }));
             if (esri) {
-                return toReference('arcgis', {...esri, name: dc.alternative}, options);
+                return toReference('arcgis', { ...esri, name: dc.alternative }, options);
             }
         }
     }
@@ -198,9 +198,9 @@ const addCapabilitiesToRecords = (_dcRef, result, options) => {
         return result;
     }
     const { value: _url } = _dcRef?.find(t =>
-        REGEX_WMS_ALL.some(regex=> t?.scheme?.match(regex) || t?.protocol?.match(regex))) || {}; // Get WMS URL from references
+        REGEX_WMS_ALL.some(regex => t?.scheme?.match(regex) || t?.protocol?.match(regex))) || {}; // Get WMS URL from references
     const [parsedUrl] = _url && _url.split('?') || [];
-    if (!parsedUrl) return {...result}; // Return record when no url found
+    if (!parsedUrl) return { ...result }; // Return record when no url found
 
     const cached = capabilitiesCache[parsedUrl];
     const isCached = !isEmpty(cached);
@@ -208,8 +208,8 @@ const addCapabilitiesToRecords = (_dcRef, result, options) => {
         isCached
             ? cached
             : WMS.getCapabilities(parsedUrl + '?version=')
-                .then((caps)=> WMS.flatLayers(caps.Capability))
-                .catch(()=> []))
+                .then((caps) => WMS.flatLayers(caps.Capability))
+                .catch(() => []))
         .then((layers) => {
             if (!isCached) {
                 capabilitiesCache[parsedUrl] = layers;
@@ -217,22 +217,48 @@ const addCapabilitiesToRecords = (_dcRef, result, options) => {
             // Add visibility limits scale data of the layer to the record
             return {
                 ...result,
-                records: result?.records?.map(record=> {
+                records: result?.records?.map(record => {
                     const name = get(getLayerReferenceFromDc(record?.dc, null, false), 'params.name', '');
                     const {
                         MinScaleDenominator,
                         MaxScaleDenominator
-                    } = layers.find(l=> l.Name === name) || {};
+                    } = layers.find(l => l.Name === name) || {};
                     return {
                         ...record,
                         ...((!isNil(MinScaleDenominator) || !isNil(MaxScaleDenominator))
-                        && {capabilities: {MaxScaleDenominator, MinScaleDenominator}})
+                            && { capabilities: { MaxScaleDenominator, MinScaleDenominator } })
                     };
                 })
             };
         });
 };
-
+/**
+ * handle getting bbox from capabilities in case of 3D tile layer for CSW records
+ * @param {object} result csw results object
+ * @return {object} csw records
+ */
+const getBboxFor3DLayersToRecords = async(result)=> {
+    if (!result) return result;
+    let { records } = result;
+    if (records?.length) {
+        let records3D = records.filter(rec=>rec?.dc?.format === THREE_D_TILES);
+        let records3DPromisesForCapabilities = records3D.map(rec=>{
+            let tilesetJsonURL = rec.dc?.URI?.value;
+            return getCapabilities(tilesetJsonURL);
+        });
+        if (!records3DPromisesForCapabilities.length) return result;
+        let res = await Promise.all(records3DPromisesForCapabilities);
+        res.forEach((recCapabilities, idx)=>{
+            let bbox = getExtentFromNormalized(recCapabilities.bbox.bounds, recCapabilities.bbox.crs);
+            records3D[idx].boundingBox = {
+                extent: bbox.extent,
+                crs: recCapabilities.bbox.crs
+            };
+        });
+        return result;
+    }
+    return result;
+};
 /**
  * API for local config
  */
@@ -244,7 +270,7 @@ const Api = {
                 resolve(axios.get(catalogURL)
                     .then((response) => {
                         if (response) {
-                            const {unmarshaller} = require('../utils/ogc/CSW');
+                            const { unmarshaller } = require('../utils/ogc/CSW');
                             const json = unmarshaller.unmarshalString(response.data);
                             if (json && json.name && json.name.localPart === "GetRecordByIdResponse" && json.value && json.value.abstractRecord) {
                                 let dcElement = json.value.abstractRecord[0].value.dcElement;
@@ -277,7 +303,7 @@ const Api = {
                                             dc[elName] = finalEl;
                                         }
                                     }
-                                    return {dc};
+                                    return { dc };
                                 }
                             } else if (json && json.name && json.name.localPart === "ExceptionReport") {
                                 return {
@@ -294,7 +320,7 @@ const Api = {
     getRecords: function(url, startPosition, maxRecords, filter, options) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
-                const {CSW, marshaller, unmarshaller } = require('../utils/ogc/CSW');
+                const { CSW, marshaller, unmarshaller } = require('../utils/ogc/CSW');
                 let body = marshaller.marshalString({
                     name: "csw:GetRecords",
                     value: CSW.getRecords(startPosition, maxRecords, typeof filter !== "string" && filter)
@@ -302,9 +328,11 @@ const Api = {
                 if (!filter || typeof filter === "string") {
                     body = constructXMLBody(startPosition, maxRecords, filter, options);
                 }
-                resolve(axios.post(parseUrl(url), body, { headers: {
-                    'Content-Type': 'application/xml'
-                }}).then(async(response) => {
+                resolve(axios.post(parseUrl(url), body, {
+                    headers: {
+                        'Content-Type': 'application/xml'
+                    }
+                }).then((response) => {
                     if (response) {
                         let json = unmarshaller.unmarshalString(response.data);
                         if (json && json.name && json.name.localPart === "GetRecordsResponse" && json.value && json.value.searchResults) {
@@ -409,18 +437,6 @@ const Api = {
                                         }
                                         obj.dc = dc;
                                     }
-                                    // if it is 3D layer ---> get layer extent from tilesetJson
-                                    if (obj?.dc?.format === THREE_D_TILES) {
-                                        let tilesetJsonURL = obj.dc?.URI?.value;
-                                        if (tilesetJsonURL) {
-                                            let data = await getCapabilities(tilesetJsonURL);
-                                            let bbox = getExtentFromNormalized(data.bbox.bounds, data.bbox.crs);
-                                            obj.boundingBox = {
-                                                extent: bbox.extent,
-                                                crs: data.bbox.crs
-                                            };
-                                        }
-                                    }
                                     records.push(obj);
                                 }
                             }
@@ -433,7 +449,7 @@ const Api = {
                         }
                     }
                     return null;
-                }));
+                }).then(results=>getBboxFor3DLayersToRecords(results)));         // handle getting bbox from capabilities in case of 3D tile layer
             });
         });
     },
@@ -445,7 +461,7 @@ const Api = {
     workspaceSearch: function(url, startPosition, maxRecords, text, workspace) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
-                const {Filter} = require('../utils/ogc/Filter');
+                const { Filter } = require('../utils/ogc/Filter');
                 const workspaceTerm = workspace || "%";
                 const layerNameTerm = text && "%" + text + "%" || "%";
                 const ops = Filter.propertyIsLike("dc:identifier", workspaceTerm + ":" + layerNameTerm);
@@ -454,7 +470,7 @@ const Api = {
             });
         });
     },
-    reset: () => {}
+    reset: () => { }
 };
 
 export default Api;
