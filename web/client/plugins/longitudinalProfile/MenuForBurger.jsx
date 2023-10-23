@@ -5,9 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-import {Glyphicon, MenuItem} from 'react-bootstrap';
+import Overlay from '../../components/misc/Overlay';
+
+import {Glyphicon, MenuItem, Popover} from 'react-bootstrap';
 import {connect} from "react-redux";
 
 import Message from '../../components/I18N/Message';
@@ -36,11 +38,19 @@ const UserMenu = ({
     onToggleParameters,
     onToggleSourceMode
 }) => {
+
+    const [open, setMenuOpen ] = useState(false);
+    useEffect(() => {
+        return () => {
+            setMenuOpen(false);
+        };
+    }, []);
     const onToggleTool = useCallback((toolName) => () => {
         onActivateTool();
+        setMenuOpen(false);
         onToggleSourceMode(toolName);
     }, []);
-    const [open, setMenuOpen ] = useState(false);
+    const ref = useRef();
     const body = (<>
         {showDrawOption ? <MenuItem active={dataSourceMode === 'draw'} key="draw" onClick={onToggleTool('draw')}>
             <Glyphicon glyph="pencil"/><Message msgId="longitudinalProfile.draw"/>
@@ -58,21 +68,25 @@ const UserMenu = ({
     </>);
 
     // inside extra tools
-    const Menu = (<> {
-        open ? <>
-            <div className="open dropup btn-group btn-group-tray" style={{ position: "absolute", display: "inline"}}>
-                <ul role="menu" className="dropdown-menu dropdown-menu-right" aria-labelledby="longitudinal-tool">
+    const Menu = (<>
+        {open && <Overlay
+            show={open}
+            target={ref.current}
+            placement="left"
+            container={this}
+            containerPadding={20}
+        >
+            <Popover id="longitudinal-profile-burger-menu" placement="left" style={{margin: 0, padding: 0}}>
+                <div className="dropdown-menu open" style={{display: "block", position: "relative"}}>
                     {body}
-                </ul>
-            </div>
-            <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
-                <Glyphicon glyph="1-line"/>
-                <Message msgId="longitudinalProfile.title"/>
-            </MenuItem></> :
-            <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
-                <Glyphicon glyph="1-line"/>
-                <Message msgId="longitudinalProfile.title"/>
-            </MenuItem> }
+                </div>
+            </Popover>
+        </Overlay>
+        }
+        <MenuItem ref={ref} active={menuIsActive || open} key="menu" onClick={() => { setMenuOpen(!open);}}>
+            <Glyphicon glyph="1-line"/>
+            <Message msgId="longitudinalProfile.title"/>
+        </MenuItem>
     </>);
 
     return initialized ? Menu : false;
