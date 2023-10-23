@@ -159,9 +159,9 @@ The user can customize the bars by choosing between:
 !!! Note
     By default, the bar chart type is **Stacked**
 
-#### Advanced Options
+#### Advanced Options for Bar and Line Charts
 
-In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
+In addition [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
 
 <img src="../img/widgets/advanced_options.jpg" class="ms-docimage"/>
 
@@ -193,6 +193,29 @@ Through this section, the user is allowed to:
 
 !!! Warning
     In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
+
+#### Advanced Options for Pie Charts
+
+Also for the *Pie Charts* [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
+
+<img src="../img/widgets/advanced_options_pie_chart.jpg" class="ms-docimage"/>
+
+Through this section, the user is allowed to:
+
+* Customize the labels by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`).
+
+* Configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more).
+
+!!! Note
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
+
+* Choose to completely hide labels through the *Hide labels* option.
+
+* View percentages in the legend using the *Include percentages in legend* option.
+
+<img src="../img/widgets/percentages_in_legend.jpg" class="ms-docimage"/>
+
+#### Publish Charts
 
 Once the settings are done, the next step of the chart widget creation/configuration is displayed as follows:
 
@@ -323,6 +346,21 @@ Also in this case the toolbar and the information to be inserted are similar to 
 An example of counter widget could be:
 
 <img src="../img/widgets/counter-ex.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+#### Advanced Options
+
+From the *Configure data* step, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
+
+<img src="../img/widgets/advanced_options_counter.jpg" class="ms-docimage"/>
+
+Through this section, the user is allowed to:
+
+* Customize the labels by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`).
+
+* Configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more).
+
+!!! Note
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
 
 ## Manage existing widgets
 
