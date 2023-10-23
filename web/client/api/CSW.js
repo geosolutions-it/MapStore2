@@ -1,4 +1,4 @@
-/**
+ /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -241,21 +241,34 @@ const getBboxFor3DLayersToRecords = async(result)=> {
     if (!result) return result;
     let { records } = result;
     if (records?.length) {
-        let records3D = records.filter(rec=>rec?.dc?.format === THREE_D_TILES);
-        let records3DPromisesForCapabilities = records3D.map(rec=>{
-            let tilesetJsonURL = rec.dc?.URI?.value;
-            return getCapabilities(tilesetJsonURL);
+        let records3DPromisesForCapabilities = records.map((rec)=>{
+            if (rec?.dc?.format === THREE_D_TILES) {
+                let tilesetJsonURL = rec.dc?.URI?.value;
+                return getCapabilities(tilesetJsonURL);
+            }
+            return Promise.resolve(null);
         });
-        if (!records3DPromisesForCapabilities.length) return result;
-        let res = await Promise.all(records3DPromisesForCapabilities);
-        res.forEach((recCapabilities, idx)=>{
-            let bbox = getExtentFromNormalized(recCapabilities.bbox.bounds, recCapabilities.bbox.crs);
-            records3D[idx].boundingBox = {
-                extent: bbox.extent,
-                crs: recCapabilities.bbox.crs
-            };
-        });
-        return result;
+        let allPromises = await Promise.all(records3DPromisesForCapabilities);
+
+        const newRecords = records.map(
+            (record, idx) => {
+                const capabilityResult = allPromises[idx];
+                if (!capabilityResult) {
+                    return record;
+                }
+                let bbox = getExtentFromNormalized(capabilityResult.bbox.bounds, capabilityResult.bbox.crs);
+                return {
+                    ...record,
+                    boundingBox: {
+                        extent: bbox.extent,
+                        crs: capabilityResult.bbox.crs
+                    }
+                };
+            });
+        return {
+            ...result,
+            records: newRecords
+        };
     }
     return result;
 };
@@ -449,7 +462,7 @@ const Api = {
                         }
                     }
                     return null;
-                }).then(results=>getBboxFor3DLayersToRecords(results)));         // handle getting bbox from capabilities in case of 3D tile layer
+                }).then(results => getBboxFor3DLayersToRecords(results)));         // handle getting bbox from capabilities in case of 3D tile layer
             });
         });
     },
