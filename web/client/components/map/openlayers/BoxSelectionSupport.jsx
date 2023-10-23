@@ -34,8 +34,8 @@ const BoxSelectionSupport = (props) => {
                 onBoxEnd({
                     boxExtent: dragBox.getGeometry().getExtent(),
                     modifiers: {
-                        ctrl: event.mapBrowserEvent.pointerEvent.ctrlKey,
-                        metaKey: event.mapBrowserEvent.pointerEvent.metaKey // MAC OS
+                        ctrl: event.mapBrowserEvent.originalEvent.ctrlKey,
+                        metaKey: event.mapBrowserEvent.originalEvent.metaKey // MAC OS
                     }
                 });
             });
