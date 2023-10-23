@@ -440,9 +440,9 @@ describe('CesiumMap', () => {
         act(() => {
             ReactDOM.render(
                 <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                    <CesiumLayer type="wms" position={6} options={{ url: '/wms', name: 'layer03' }} />
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
+                    <CesiumLayer type="wms" position={6} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
                 </CesiumMap>,
                 document.getElementById('container')
             );
@@ -455,9 +455,9 @@ describe('CesiumMap', () => {
         act(() => {
             ReactDOM.render(
                 <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                    <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03' }} />
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
+                    <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
                 </CesiumMap>,
                 document.getElementById('container')
             );
@@ -468,9 +468,9 @@ describe('CesiumMap', () => {
         act(() => {
             ReactDOM.render(
                 <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                    <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03' }} />
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
+                    <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
                 </CesiumMap>,
                 document.getElementById('container')
             );

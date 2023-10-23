@@ -20,6 +20,87 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2023.02.xx to 2024.01.00
+
+### Adding spatial filter to dashboard widgets
+
+In order to enable the possibility to add in and the spatial filter to the widgets ( see [#9098](https://github.com/geosolutions-it/MapStore2/issues/9098) ) you have to edit the `QueryPanel` config in the `plugins.dashboard` array of the `localConfig.json` file by adding:
+
+- **useEmbeddedMap**: flag to enable the embedded map
+- **spatialOperations**: The list of spatial operations allowed for this plugin
+- **spatialMethodOptions**: the list of spatial methods to use.
+
+```json
+...
+"dashboard": [
+...
+{ 
+    "name": "QueryPanel",
+    "cfg": {
+        "toolsOptions": {
+            "hideCrossLayer": true,
+            "useEmbeddedMap": true
+        },
+        "spatialPanelExpanded": false,
+        "spatialOperations": [
+            {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+            {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+            {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
+        ],
+        "spatialMethodOptions": [
+            {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+            {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+            {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
+        ],
+        "containerPosition": "columns"
+    }
+}
+
+```
+
+### MapFish Print update
+
+The **MapFish Print** library has been updated to work with the latest GeoTools version and Java 11 as well as being aligned with the same dependency used by the official GeoServer printing extension (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)
+For this reason, if you are using the printing plugin in your project you have to update it by following the following steps:
+
+- Change the version of the mapfish-print dependency in the project `pom.xml` file:
+
+```diff
+                <!-- mapfish-print -->
+                <dependency>
+                    <groupId>org.mapfish.print</groupId>
+                    <artifactId>print-lib</artifactId>
+-                    <version>geosolutions-2.3-SNAPSHOT</version>
++                    <version>2.3-SNAPSHOT</version>
+
+```
+
+- Add the mvn repository where this library is hosted in the `repositories` section of the same `pom.xml` (usually in `web` folder of a project)
+
+```diff
+        <repository>
+            <id>osgeo-snapshot</id>
+            <name>Open Source Geospatial Foundation Repository</name>
+            <url>https://repo.osgeo.org/repository/snapshot/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+```
+
+### Annotations plugin refactor
+
+The Annotation plugin has been updated to be supported also in 3D maps. This update introduced some changes:
+
+- All the configurations related to the "Annotations" plugin has been removed from `localConfig.json` `defaultState` entry and moved to the `cfg` property of the plugin
+- The annotations reducers is not needed anymore inside the default reducers of the app
+
+Please update by:
+
+- Removing `annotations` entry from your `localConfig.json` `defaultState`
+- If you customized the app, you can remove the `annotations` reducer from default reducers.
+- If some customizations were applied to the Annotations plugin in `defaultState`, apply these changes to the plugin configuration, following the documentation of the plugin.
+
 ## Migration from 2023.01.02 to 2023.02.00
 
 ### About plugin cfg changes
