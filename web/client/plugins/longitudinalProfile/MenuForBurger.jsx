@@ -41,6 +41,10 @@ const UserMenu = ({
 
     const [open, setMenuOpen ] = useState(false);
     useEffect(() => {
+        const burgerButton = document.querySelector("#mapstore-burger-menu-container");
+        burgerButton?.addEventListener("click", () => {
+            setMenuOpen(false);
+        });
         return () => {
             setMenuOpen(false);
         };
