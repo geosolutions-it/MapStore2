@@ -75,7 +75,24 @@ const Menu = ({
             <Glyphicon glyph="cog"/> <Message msgId="longitudinalProfile.parameters"/>
         </MenuItem>
     </>);
-    const DropDownMenu = (<DropDown
+    if (!initialized) {
+        return false;
+    }
+    if (menuItem) {
+        // inside extra tools
+        return (<>
+            {open &&
+                <div className="open dropup btn-group btn-group-tray" style={{display: "inline"}}>
+                    <ul role="menu" className="dropdown-menu dropdown-menu-right" aria-labelledby="longitudinal-tool">
+                        {body}
+                    </ul>
+                </div>}
+            <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
+                <Glyphicon glyph="1-line"/>
+                <Message msgId="longitudinalProfile.title"/>
+            </MenuItem></>);
+    }
+    return  (<DropDown
         dropup={dropUp}
         open={open}
         onToggle={(val) => setMenuOpen(val)}
@@ -91,30 +108,7 @@ const Menu = ({
         {body}
     </DropDown>);
 
-    let MenuComp;
-    if (menuItem) {
-        // inside extra tools
-        MenuComp = (<> {
-            open ? <>
-                <div className="open dropup btn-group btn-group-tray" style={{display: "inline"}}>
-                    <ul role="menu" className="dropdown-menu dropdown-menu-right" aria-labelledby="longitudinal-tool">
-                        {body}
-                    </ul>
-                </div>
-                <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
-                    <Glyphicon glyph="1-line"/>
-                    <Message msgId="longitudinalProfile.title"/>
-                </MenuItem></> :
-                <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
-                    <Glyphicon glyph="1-line"/>
-                    <Message msgId="longitudinalProfile.title"/>
-                </MenuItem> }
-        </>);
-    } else {
-        MenuComp = DropDownMenu;
-    }
 
-    return initialized ? MenuComp : false;
 };
 
 Menu.propTypes = {
