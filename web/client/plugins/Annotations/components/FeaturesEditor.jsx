@@ -167,6 +167,7 @@ export function FeaturesEditor({
     }
 
     function handleAddFeature(type, properties) {
+        onSelectTab('coordinates', selected);
         const id = uuid();
         handleOnChange((prevCollection) => {
             const newFeature = {
