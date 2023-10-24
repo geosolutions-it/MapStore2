@@ -12,7 +12,8 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 
 export default ({data = [], ...props} = {}) => {
-    const cols = Object.keys(data.reduce((a, c) => ({...a, ...c}), {}));
+    const traceData = data[0];
+    const cols = Object.keys(traceData.reduce((a, c) => ({...a, ...c}), {}));
     return (<div className="mapstore-widget-table">
         <Table striped>
             <thead>
@@ -21,7 +22,7 @@ export default ({data = [], ...props} = {}) => {
                 </tr>
             </thead>
             <tbody>
-                {data.map( d => (<tr>
+                {traceData.map( d => (<tr>
                     {cols.map( k => <td>{d[k]}</td>)}
                 </tr>))}
             </tbody>

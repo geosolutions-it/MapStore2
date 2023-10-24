@@ -396,3 +396,20 @@ div#sync-popover.popover {
     float: unset;
 
 }
+
+.form-group-flex {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    .checkbox,
+    .control-label {
+        flex: 1;
+        font-weight: normal;
+    }
+    .input-group {
+        flex: 1;
+    }
+    input {
+        z-index: 0;
+    }
+}

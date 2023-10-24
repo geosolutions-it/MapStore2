@@ -25,51 +25,68 @@ describe('multiProtocolChart enhancer', () => {
     it('multiProtocolChart WFS data fetch', (done) => {
         const Sink = multiProtocolChart(createSink( ({data, loading} = {}) => {
             if (!loading) {
-                expect(data).toExist();
-                expect(data.length).toBe(18);
-                data.map(({ STATE_NAME, LAND_KM}) => {
-                    expect(STATE_NAME).toBeTruthy();
-                    expect(LAND_KM).toBeTruthy();
-                });
+                try {
+                    expect(data).toBeTruthy();
+                    expect(data.length).toBe(1);
+                    expect(data[0].length).toBe(18);
+                    data[0].map(({ STATE_NAME, LAND_KM}) => {
+                        expect(STATE_NAME).toBeTruthy();
+                        expect(LAND_KM).toBeTruthy();
+                    });
+                } catch (e) {
+                    done(e);
+                }
                 done();
             }
         }));
         const props = {
-            layer: {
-                name: "test",
-                url: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
-                wpsUrl: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
-                search: { url: 'base/web/client/test-resources/wfs/Arizona_18_results.json'}},
-            options: {
-                aggregationAttribute: "LAND_KM",
-                groupByAttributes: "STATE_NAME"
-            }
+            traces: [{
+                layer: {
+                    name: "test",
+                    url: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
+                    wpsUrl: 'base/web/client/test-resources/wfs/Arizona_18_results.json',
+                    search: { url: 'base/web/client/test-resources/wfs/Arizona_18_results.json'}
+                },
+                options: {
+                    aggregationAttribute: "LAND_KM",
+                    groupByAttributes: "STATE_NAME"
+                }
+            }]
+
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
     it('multiProtocolChart WPS data fetch', (done) => {
         const Sink = multiProtocolChart(createSink(({ data, loading } = {}) => {
             if (!loading) {
-                expect(data).toExist();
-                data.map(({ District_N: x, "Sum(Shape_Area)": y }) => {
-                    expect(x).toBeTruthy();
-                    expect(y).toBeTruthy();
-                });
+                try {
+                    expect(data).toBeTruthy();
+                    expect(data.length).toBe(1);
+                    expect(data[0].length).toBe(6);
+                    data[0].map(({ District_N: x, "Sum(Shape_Area)": y }) => {
+                        expect(x).toBeTruthy();
+                        expect(y).toBeTruthy();
+                    });
+                } catch (e) {
+                    done(e);
+                }
                 done();
             }
         }));
         const props = {
-            layer: {
-                name: "test",
-                url: 'base/web/client/test-resources/widgetbuilder/aggregate',
-                wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate',
-                search: { url: 'base/web/client/test-resources/widgetbuilder/aggregate' }
-            },
-            options: {
-                aggregateFunction: "Count",
-                aggregationAttribute: "test",
-                groupByAttributes: "test"
-            }
+            traces: [{
+                layer: {
+                    name: "test",
+                    url: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                    wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                    search: { url: 'base/web/client/test-resources/widgetbuilder/aggregate' }
+                },
+                options: {
+                    aggregateFunction: "Count",
+                    aggregationAttribute: "test",
+                    groupByAttributes: "test"
+                }
+            }]
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });

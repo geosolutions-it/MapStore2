@@ -6,35 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { FormGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-
-import Message from '../../../../I18N/Message';
 import Format from './Format';
 import Formula from './Formula';
-import SwitchPanel from '../../../../misc/switch/SwitchPanel';
-
-function Header({}) {
-    return (<span>
-        <span style={{ cursor: "pointer" }}><Message msgId="widgets.advanced.title"/></span>
-    </span>);
-}
-
+import Message from '../../../../I18N/Message';
 function CounterAdvancedOptions({
     data,
     onChange = () => {}
 }) {
-    return (<SwitchPanel id="displayCartesian"
-        header={<Header data={data}/>}
-        collapsible
-        expanded={data.panel}
-        onSwitch={(val) => { onChange("panel", val); }}
-    >
-        <FormGroup controlId="AdvancedOptions">
+    return (
+        <>
+            <div className="ms-wizard-form-separator">
+                <Message msgId="widgets.advanced.valueFormatting" />
+            </div>
             <Format prefix="counterOpts" data={data} onChange={onChange}/>
             <Formula data={data} onChange={onChange}/>
-        </FormGroup>
-    </SwitchPanel>);
+        </>
+    );
 }
 
 CounterAdvancedOptions.propTypes = {

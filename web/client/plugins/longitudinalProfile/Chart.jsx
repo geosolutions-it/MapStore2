@@ -36,7 +36,7 @@ const Plot = React.lazy(() => import('../../components/charts/PlotlyChart'));
  * @prop {string} [yAxisLabel] the label of yAxis, to show in the legend and aside of the axis
  * @prop {string} [xAxisLabel] the label of xAxis, to show underneath the axis
  * @prop {boolean} [cartesian] show the cartesian grid behind the chart
- * @prop {object} [autoColorOptions] options to generate the colors of the chart.
+ * @prop {object} [style] options to generate the colors of the chart.
  * @prop {object[]} series descriptor for every series. Contains the y axis (or value) `dataKey`
  */
 export default function Chart({

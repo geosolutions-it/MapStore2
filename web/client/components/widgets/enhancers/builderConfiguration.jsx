@@ -11,14 +11,16 @@ import pingAggregateProcess from '../../../observables/widgets/pingAggregateProc
 import {Message, HTML} from "../../I18N/I18N";
 const TYPES = "ALL";
 import {findGeometryProperty} from '../../../utils/ogc/WFS/base';
+import { extractTraceData } from '../../../utils/WidgetsUtils';
 
-const setGeomProp = ({onEditorChange, geomProp, editorData} = {}) => {
-    let key = 'geomProp';
-    if (editorData?.selectedChartId) { // Update geomProp for multi-charts
-        key = `charts[${editorData?.selectedChartId}].geomProp`;
+const getGeometryKey = (editorData) => {
+    if (editorData?.selectedChartId) {
+        const selectedTrace = extractTraceData(editorData);
+        return `charts[${editorData?.selectedChartId}].traces[${selectedTrace.id}].geomProp`;
     }
-    return onEditorChange(key, geomProp);
+    return 'geomProp';
 };
+
 /**
  * Enhancer that retrieves information about the featureType attributes and the aggregate process
  * to find out proper information
@@ -38,7 +40,7 @@ export default ({needsWPS} = {}) => compose(
                         const geomProp = get(findGeometryProperty(result.data || {}), "name");
                         if (geomProp) {
                         // set the geometry property (needed for synchronization with a map or any other sort of spatial filter)
-                            setGeomProp({onEditorChange, editorData, geomProp});
+                            onEditorChange(getGeometryKey(editorData), geomProp);
                         }
                     })
                     .map(([result, hasAggregateProcess]) => ({

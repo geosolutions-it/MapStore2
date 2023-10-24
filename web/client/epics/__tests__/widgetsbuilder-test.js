@@ -190,8 +190,8 @@ describe('widgetsbuilder epic', () => {
                     expect(action.widget.widgetType).toBe('chart');
                     expect(action.widget.charts.length).toBe(1);
                     expect(action.widget.charts[0].chartId).toBe(action.widget.selectedChartId);
-                    expect(action.widget.charts[0].type).toBe('bar');
-                    expect(action.widget.charts[0].name).toBe('Chart-1');
+                    expect(action.widget.charts[0].traces.length).toBe(1);
+                    expect(action.widget.charts[0].traces[0].type).toBe('bar');
                     break;
                 case EDITOR_CHANGE:
                     expect(action.key).toBe('returnToFeatureGrid');

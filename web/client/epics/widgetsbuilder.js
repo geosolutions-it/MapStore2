@@ -27,6 +27,7 @@ import { featureTypeSelected } from '../actions/wfsquery';
 import { getWidgetLayer, getEditingWidgetFilter, getWidgetFilterKey } from '../selectors/widgets';
 import { wfsFilter } from '../selectors/query';
 import { widgetBuilderAvailable } from '../selectors/controls';
+import { generateNewTrace } from '../utils/WidgetsUtils';
 const getFTSelectedArgs = (state) => {
     let layer = getWidgetLayer(state);
     let url = layer.search && layer.search.url;
@@ -68,14 +69,15 @@ export const initEditorOnNewChart = (action$, {getState = () => {}} = {}) => act
                 widgetType: 'chart',
                 charts: [
                     {
-                        name: 'Chart-1',
                         chartId,
-                        type: 'bar',
                         legend: false,
                         cartesian: true,
-                        yAxis: true,
-                        layer,
-                        filter: wfsFilter(state)
+                        traces: [
+                            generateNewTrace({
+                                layer,
+                                filter: wfsFilter(state)
+                            })
+                        ]
                     }
                 ]
             }, {step: 0}),
