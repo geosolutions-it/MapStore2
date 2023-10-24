@@ -10,7 +10,8 @@ import { createSelector } from 'reselect';
 
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
 import Main from './longitudinalProfile/Main';
-import UserMenuConnected from './longitudinalProfile/Menu';
+import MenuConnected from './longitudinalProfile/Menu';
+import MenuForBurger from './longitudinalProfile/MenuForBurger';
 import { setControlProperty } from "../actions/controls";
 import {
     addMarker,
@@ -97,10 +98,9 @@ import { createPlugin } from '../utils/PluginsUtils';
  *      "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
  *      "additionalCRS": {
  *        "EPSG:3003": { "label": "EPSG:3003" }
- *       },
+ *       }
  *    }
  * }
- * `
  */
 const MainComponent = connect(
     createSelector(
@@ -202,8 +202,15 @@ export default createPlugin(
                 name: 'LongitudinalProfileTool',
                 position: 2100,
                 doNotHide: true,
-                tool: UserMenuConnected,
+                tool: MenuConnected,
                 priority: 1
+            },
+            BurgerMenu: {
+                tool: MenuForBurger,
+                name: 'LongitudinalProfileTool',
+                position: 2100,
+                doNotHide: true,
+                priority: 2
             },
             Toolbar: {
                 name: "LongitudinalProfileTool-spinner",
