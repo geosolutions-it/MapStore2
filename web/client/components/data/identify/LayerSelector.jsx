@@ -21,7 +21,7 @@ const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, e
     useEffect(()=>{
         if (!isEmpty(responses)) {
             setOptions(responses.map((opt, idx)=> {
-                const value = opt?.layerMetadata?.title;
+                const value = opt?.layerMetadata?.title || opt?.layer?.name;
                 // Display only valid responses in the drop down if showAllResponses is false,
                 // otherwise all response are visible and the first layer in toc is present in here
                 const valid = !!validator(format)?.getValidResponses([opt]).length;
@@ -37,7 +37,7 @@ const LayerSelector = ({ responses, index, loaded, setIndex, missingResponses, e
     }, [responses]);
 
     useEffect(()=>{
-        loaded && setTitle(responses[index]?.layerMetadata?.title || "");
+        loaded && setTitle(responses[index]?.layerMetadata?.title || responses[index]?.layer?.name || "");
     }, [responses, index, loaded]);
 
     const onChange = (event) => {
