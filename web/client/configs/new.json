@@ -10,7 +10,7 @@
 			20037508.34, 20037508.34
 		],
 		"layers": [
-            {
+			{
                 "format": "image/jpeg",
                 "group": "background",
                 "name": "osm:osm_simple_light",
@@ -128,5 +128,5 @@
                 "visibility": false
             }
         ]
-      }
+    }
 }
