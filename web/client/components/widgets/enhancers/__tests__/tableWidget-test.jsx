@@ -45,4 +45,43 @@ describe('widgets tableWidget enhancer', () => {
             expect(filter).toBe(someFilter);
         }}/></Provider>, document.getElementById("container"));
     });
+
+    it('tableWidget with gridTools including zoom icon for dashboard viewer', (done) => {
+        const Sink = tableWidget(createSink( props => {
+            expect(props).toExist();
+            expect(props.gridTools.length).toEqual(1);
+            props.gridTools[0].events.onClick(
+                {
+                    bbox: [-10, 0, 0, -10]
+                }, {}, "", { crs: "", maxZoom: null }
+            );
+            done();
+        }));
+        ReactDOM.render( <Provider store={store}><Sink id="123456" mapSync={"true"} widgetType={"table"} isDashboardOpened={"true"} updateProperty={(id, path, value) => {
+            expect(path).toBe("dependencies.extentObj");
+            expect(id).toBe("123456");
+            expect(value).toEqual({
+                bbox: [-10, 0, 0, -10]
+            }, {}, "", { crs: "EPSG:4326", maxZoom: null });
+        }}/></Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toExist();
+
+    });
+    it('tableWidget with gridTools including zoom icon for mapViewer', (done) => {
+        const Sink = tableWidget(createSink( props => {
+            expect(props).toExist();
+            expect(props.gridTools.length).toEqual(1);
+            props.gridTools[0].events.onClick(
+                {
+                    bbox: [-10, 0, 0, -10]
+                }, {}, "", { crs: "", maxZoom: null }
+            );
+            done();
+        }));
+        ReactDOM.render( <Provider store={store}><Sink id="123456" widgetType={"table"} /></Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toExist();
+
+    });
 });

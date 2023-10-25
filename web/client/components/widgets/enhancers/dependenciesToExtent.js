@@ -8,7 +8,7 @@
 import xml2js from 'xml2js';
 
 import { Observable } from 'rxjs';
-import { mapPropsStream, compose, branch, withPropsOnChange, defaultProps } from 'recompose';
+import { mapPropsStream, compose, branch, withPropsOnChange } from 'recompose';
 import { isEmpty, isEqual } from 'lodash';
 import { composeFilterObject } from './utils';
 import wpsBounds from '../../../observables/wps/bounds';
@@ -22,9 +22,7 @@ import { createRegisterHooks, ZOOM_TO_EXTENT_HOOK } from '../../../utils/MapUtil
  * @returns {object} the map with center and zoom updated
  */
 export default compose(
-    defaultProps({
-        hookRegister: createRegisterHooks()     // it is for zoomTo HOC
-    }),
+
     branch(
         ({mapSync, dependencies} = {}) => {
             return mapSync && (!isEmpty(dependencies.quickFilters) || !isEmpty(dependencies.filter));

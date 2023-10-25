@@ -15,9 +15,6 @@ import MockAdapter from 'axios-mock-adapter';
 
 import dependenciesToZoomTo from '../dependenciesToZoomTo';
 
-import MapUtils from '../../../../utils/MapUtils';
-
-
 describe('widgets dependenciesToZoomTo enhancer', () => {
     let mockAxios;
     const widgetsProps = [{
@@ -30,13 +27,18 @@ describe('widgets dependenciesToZoomTo enhancer', () => {
                 maxZoom: 21
             }
         },
+        dependenciesMap: {
+            mapSync: "MapID[id]"
+        },
         geomProp: "the_geom",
         mapSync: true
     },
     {
-        id: "123Map",
+        id: "MapID",
         widgetType: "map",
-        maps: [{}],
+        maps: [{
+            mapStateSource: "MapID"
+        }],
         mapSync: true
     }];
     beforeEach((done) => {
@@ -60,19 +62,14 @@ describe('widgets dependenciesToZoomTo enhancer', () => {
     });
 
     it('dependenciesToZoomTo triggering zoom to extent', (done) => {
-        let hookRegisterProps = MapUtils.createRegisterHooks();
         const Sink = dependenciesToZoomTo(createSink(({
-            hookRegister = hookRegisterProps, widgets = widgetsProps
+            widgets = widgetsProps
         }) => {
-            expect(hookRegister).toExist();
-            const hook = hookRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK);
-            expect(hook).toExist();
             expect(widgets).toExist();
             expect(widgets).toEqual(widgetsProps);
             done();
         }));
-        hookRegisterProps.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, {hookName: MapUtils.ZOOM_TO_EXTENT_HOOK});
-        ReactDOM.render(<Sink hookRegister={hookRegisterProps} widgets={widgetsProps} updateProperty={(path) => {
+        ReactDOM.render(<Sink widgets={widgetsProps} updateProperty={(path) => {
             expect(path).toBe("dependencies.extentObj");
             done();
         }}/>, document.getElementById("container"));

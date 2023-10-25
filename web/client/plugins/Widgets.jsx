@@ -22,7 +22,8 @@ import {
     getFloatingWidgetsLayout,
     getMaximizedState,
     getVisibleFloatingWidgets,
-    isTrayEnabled
+    isTrayEnabled,
+    getTblWidgetZoomLoader
 } from '../selectors/widgets';
 import {
     changeLayout,
@@ -56,7 +57,8 @@ compose(
             (state) => mapLayoutValuesSelector(state, { right: true}),
             state => state.browser && state.browser.mobile,
             getFloatingWidgets,
-            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets) => ({
+            getTblWidgetZoomLoader,
+            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading) => ({
                 id,
                 widgets,
                 layouts,
@@ -64,7 +66,8 @@ compose(
                 dependencies,
                 mapLayout,
                 isMobileAgent,
-                dropdownWidgets
+                dropdownWidgets,
+                recordZoomLoading
             })
         ), {
             editWidget,
