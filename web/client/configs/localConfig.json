@@ -750,7 +750,7 @@
           {
             "name": "Dashboard",
             "cfg": {
-              "enableZoomInTblWidget": false
+              "enableZoomInTblWidget": true
               }
           },
           "Notifications",
