@@ -30,13 +30,11 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
-            'widgets.advanced.side',
-            'widgets.advanced.anchor',
-
             'widgets.advanced.prefix',
             'widgets.advanced.format ',
             'widgets.advanced.suffix',
-
+            'widgets.advanced.side',
+            'widgets.advanced.anchor',
             // x
             'widgets.advanced.xAxisType',
             'styleeditor.color',
@@ -81,13 +79,11 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
-            'widgets.advanced.side',
-            'widgets.advanced.anchor',
-
             'widgets.advanced.prefix',
             'widgets.advanced.format ',
             'widgets.advanced.suffix',
-
+            'widgets.advanced.side',
+            'widgets.advanced.anchor',
             // x
             'widgets.advanced.xAxisType',
             'styleeditor.color',

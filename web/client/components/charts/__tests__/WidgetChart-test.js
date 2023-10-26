@@ -287,7 +287,7 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual(['#08306b', '#3787c0', '#abd0e6', '#f7fbff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 25, b: 8, l: 8, r: 8, pad: 4}); // Modified margin based on width
+            expect(layout.margin).toEqual({t: 25, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // Modified margin based on width
             expect(layout.legend).toBeTruthy();
             expect(layout.legend).toEqual({x: 1.05, y: 0.5}); // Legend option to right and centered based on width
         });
@@ -352,7 +352,7 @@ describe('Widget Chart: data conversions ', () => {
         // colors are those defined by the user
         expect(data[0].marker.colors).toEqual(['#00ff00', '#00ff00']);
         // LAYOUT
-        expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4}); // fixed margins
+        expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
     });
     describe('1) Pie chart - Color coded custom classifications with absolute values', () => {
         it('custom classified colors - using custom labels and colors only 1', () => {
@@ -381,7 +381,7 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual(['#ff0000', '#0000ff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using default labels and colors', () => {
             const autoColorOptions = {
@@ -415,7 +415,7 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual(['#ff0000', '#0000ff', '#00ff00', '#00ff00']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using default labels and colors, wrong order', () => {
             const classification = UNLABELLED_CLASSIFICATION_5_ORDERED;
@@ -449,7 +449,7 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual([ '#0000ff', '#0000ff', '#00FF00', '#00FF00', '#ff0000', '#ff0000']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using templatized labels and custom colors only - pie charts', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", classification: PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
@@ -477,7 +477,7 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual([ '#ff0000', '#0000ff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom color ramp', () => {
             const autoColorOptions = {
@@ -530,7 +530,7 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual([ '#ff0000', '#0000ff', '#0000ff', '#0000ff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using default labels and colors', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", rangeClassification: UNLABELLED_RANGE_CLASSIFICATION, name: 'global.colors.custom' };
@@ -558,7 +558,7 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual([ '#ff0000', '#0000ff', '#0000ff', '#0000ff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using templatized labels and custom colors only - pie charts', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", rangeClassification: PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION, name: 'global.colors.custom' };
@@ -586,7 +586,7 @@ describe('Widget Chart: data conversions ', () => {
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual([ '#ff0000', '#00ff00', '#00ff00', '#00ff00' ]);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
     });
     describe('Line/Bar chart common features', () => {
@@ -610,7 +610,7 @@ describe('Widget Chart: data conversions ', () => {
                 // LAYOUT
 
                 // minimal margins, bottom automatic
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
 
                 // colors generated are the defaults, generated on series (1 color for series, so 1)
                 // expect(layout.colorway).toEqual(defaultColorGenerator(1, COLOR_DEFAULTS));
@@ -640,7 +640,7 @@ describe('Widget Chart: data conversions ', () => {
             }, ({ layout }) => {
                 // bottom margin is optimized
                 expect(layout.yaxis.showgrid).toBe(true);
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
 
         });
@@ -702,7 +702,7 @@ describe('Widget Chart: data conversions ', () => {
                 // colors are those defined by the user
                 const classColor = LABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0].color;
                 expect(trace.marker.color).toBe(classColor);
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
         it('custom classified colors - using default labels and colors', () => {
@@ -736,7 +736,7 @@ describe('Widget Chart: data conversions ', () => {
                 // colors are those defined by the user
                 const classColor = classification.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
                 expect(trace.marker.color).toBe(classColor);
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
         it('custom classified colors - using default labels and colors, wrong order', () => {
@@ -771,7 +771,7 @@ describe('Widget Chart: data conversions ', () => {
                 // colors are those defined by the user
                 const classColor = classification.filter(item => item.value === SPLIT_DATASET_5_ORDERED.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
                 expect(trace.marker.color).toBe(classColor);
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
 
@@ -802,7 +802,7 @@ describe('Widget Chart: data conversions ', () => {
                 // colors are those defined by the user
                 const classColor = TEMPLATE_LABELS_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0].color;
                 expect(trace.marker.color).toBe(classColor);
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
         it('custom bar color', () => {
@@ -860,7 +860,7 @@ describe('Widget Chart: data conversions ', () => {
                     ({min, max}) => trace.y[0] >= min && trace.y[0] < max
                 )[0].color;
                 expect(trace.marker.color).toBe(classColor);
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
         it('custom classified colors - using default labels and colors', () => {
@@ -894,7 +894,7 @@ describe('Widget Chart: data conversions ', () => {
                 // colors are those defined by the user
                 const classColor = UNLABELLED_RANGE_CLASSIFICATION[i].color;
                 expect(trace.marker.color).toBe(classColor);
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
 
@@ -929,12 +929,12 @@ describe('Widget Chart: data conversions ', () => {
                 // colors are those defined by the user
                 const classColor = TEMPLATE_LABELS_RANGE_CLASSIFICATION[i].color;
                 expect(trace.marker.color).toBe(classColor);
-                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
     });
     describe('color coded/custom classified Bar chart - common features', () => {
-        it('default classified bar chart type is stacked', () => {
+        it('default classified bar chart type is group', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
             const { data, layout } = toPlotly({
                 type: 'bar',
@@ -947,7 +947,9 @@ describe('Widget Chart: data conversions ', () => {
                 ...DATASET_2
             });
             expect(data.length).toBe(2);
-            expect(layout.barmode).toBe('stack');
+            // we change in group because in some cases is not possible to use stack
+            // in particular when using multiple traces
+            expect(layout.barmode).toBe('group');
         });
         it('change classified bar chart type to grouped', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };

@@ -15,14 +15,81 @@ import {
     extractTraceData,
     getAggregationAttributeDataKey,
     generateNewTrace,
-    defaultChartStyle
+    defaultChartStyle,
+    isChartOptionsValid
 } from '../../../../../utils/WidgetsUtils';
+import { getChromaScaleByName } from '../../../../../utils/ClassificationUtils';
 import tooltip from '../../../../misc/enhancers/tooltip';
 import Message from "../../../../I18N/Message";
+import chroma from 'chroma-js';
 
 const Button = tooltip(ButtonRB);
 
 const Select = localizedProps(["noResultsText"])(ReactSelect);
+
+const TraceMarkerStyle = ({ trace }) => {
+    const style = {
+        width: '1.6em',
+        height: '0.8em',
+        marginRight: '0.4em',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative'
+    };
+    if (trace.valid === false) {
+        return (
+            <div style={style}>
+                <Glyphicon glyph="warning-sign" className="text-danger" />
+            </div>
+        );
+    }
+
+    if (trace.type === 'pie' || (trace.type === 'bar' && trace?.style?.msMode === 'classification')) {
+        const scale = getChromaScaleByName(trace?.style?.msClassification?.ramp || 'viridis');
+        const colorClasses = chroma.scale(scale).colors(5);
+        const gradient = colorClasses
+            .map((color, idx) => `${color} ${idx / 5 * 100}%`);
+        return (
+            <div style={{
+                ...style,
+                background: `linear-gradient(90deg,${gradient.join(',')} 100%)`,
+                border: `1px solid ${trace.style?.marker?.line?.width > 0 ? trace.style?.marker?.line?.color || '' : 'transparent'}`
+            }}/>
+        );
+    }
+
+    if (trace.type === 'line') {
+        const mode = trace?.style?.mode || 'lines';
+        return (
+            <div style={{
+                ...style
+            }}>
+                {mode !== 'markers' && <div style={{
+                    width: '100%',
+                    height: 2,
+                    position: 'absolute',
+                    background: trace?.style?.line?.color
+                }}></div>}
+                {mode !== 'lines' && <div style={{
+                    width: '0.6em',
+                    height: '0.6em',
+                    borderRadius: '50%',
+                    position: 'absolute',
+                    background: trace?.style?.marker?.color
+                }} />}
+            </div>
+        );
+    }
+
+    return (
+        <div style={{
+            ...style,
+            background: trace.style?.marker?.color,
+            border: `1px solid ${trace.style?.marker?.line?.width > 0 ? trace.style?.marker?.line?.color || 'rgb(0, 0, 0)' : 'transparent'}`
+        }}/>
+    );
+};
 
 const chartTypes = [{
     type: "bar",
@@ -55,12 +122,14 @@ function ChartTraceEditSelector({
     children,
     disableMultiChart,
     tab = 'traces',
-    setTab = () => {}
+    setTab = () => {},
+    hasAggregateProcess,
+    error
 }) {
     const [editChartName, setChartEditName] = useState(false);
     const [editTraceName, setTraceEditName] = useState(false);
     const selectedChart = (data?.charts || []).find((chart) => chart.chartId === data.selectedChartId);
-    const traces = selectedChart?.traces || [];
+    const traces = (selectedChart?.traces || []).map((trace) => ({ ...trace, valid: isChartOptionsValid(trace?.options, { hasAggregateProcess }) }));
     const tracesTypes = traces.map(trace => trace.type);
     const selectedTrace = extractTraceData(data) || {};
     const chartPath = `charts[${selectedChart?.chartId}]`;
@@ -68,9 +137,10 @@ function ChartTraceEditSelector({
     const tracePath = `${tracesPath}[${selectedTrace.id}]`;
     const isNestedPieChart = selectedTrace.type === 'pie' && selectedTrace?.options?.classificationAttribute
         && selectedTrace?.options?.classificationAttribute !== selectedTrace?.options?.groupByAttributes;
+    const invalidCharts = (data?.charts || []).some(chart => chart.traces.some(trace => !isChartOptionsValid(trace?.options, { hasAggregateProcess })));
     return (
         <>
-            {!disableMultiChart && <FormGroup className="form-group-flex" style={{ marginBottom: 0 }}>
+            {!disableMultiChart && <FormGroup className="form-group-flex" validationState={invalidCharts || error ? 'warning' : ''} style={{ marginBottom: 0 }}>
                 <InputGroup>
                     {editChartName
                         ? <DebouncedFormControl
@@ -83,7 +153,11 @@ function ChartTraceEditSelector({
                             value={data.selectedChartId}
                             clearable={false}
                             options={(data?.charts || []).map((chart, idx) => ({
-                                label: `[Chart ${idx + 1}] ${chart?.name || ''}`,
+                                label: <><div style={{ display: 'inline-block', marginRight: '0.4em' }}>{
+                                    chart.traces.some(trace => !isChartOptionsValid(trace?.options, { hasAggregateProcess }))
+                                        ? <Glyphicon glyph="warning-sign" className="text-danger"/>
+                                        : <Glyphicon glyph="ok" className="text-success"/>
+                                }</div>{`[Chart ${idx + 1}] ${chart?.name || ''}`}</>,
                                 value: chart.chartId
                             }))}
                             onChange={(option) => {
@@ -94,6 +168,7 @@ function ChartTraceEditSelector({
                         <Button
                             bsStyle="primary"
                             onClick={() => setChartEditName(!editChartName)}
+                            tooltipId={'widgets.builder.editChartTitle'}
                         >
                             <Glyphicon glyph={editChartName ? 'ok' : 'pencil'} />
                         </Button>
@@ -104,7 +179,7 @@ function ChartTraceEditSelector({
                                 bsStyle="primary"
                                 disabled={editChartName}
                                 onClick={() => onAddChart()}
-                                tooltipId={'widgets.builder.addNewLayers'}
+                                tooltipId={'widgets.builder.addNewCharts'}
                             >
                                 <Glyphicon glyph="plus" />
                             </Button>
@@ -132,9 +207,9 @@ function ChartTraceEditSelector({
                 onSelect={setTab}
             >
                 <Tab key="traces" eventKey="traces" title={<Message msgId="widgets.advanced.traces" />} />
-                <Tab key="axis" eventKey="axis" title={<Message msgId="widgets.advanced.axis" />} />
+                <Tab key="axis" eventKey="axis" title={<Message msgId="widgets.advanced.axes" />} />
             </Tabs>}
-            {editing && (selectedTrace.type === 'pie' || tab !== 'axis') && <FormGroup className="form-group-flex" style={{ marginBottom: 0, marginTop: 8 }}>
+            {editing && (selectedTrace.type === 'pie' || tab !== 'axis') && <FormGroup validationState={error || traces.some(trace => !trace.valid) ? 'warning' : ''} className="form-group-flex" style={{ marginBottom: 0, marginTop: 8 }}>
                 <InputGroup>
                     <div style={{ display: 'flex' }}>
                         <div style={{ minWidth: 130 }}>
@@ -167,9 +242,9 @@ function ChartTraceEditSelector({
                                 />
                                 : <Select
                                     noResultsText="widgets.selectChartType.noResults"
-                                    options={traces.map((trace, value) => ({
+                                    options={traces.map((trace, idx) => ({
                                         value: trace.id,
-                                        label: `[ ${`Trace ${value + 1}`} ] ${trace.name || getAggregationAttributeDataKey(trace.options) || ''}`
+                                        label: <><TraceMarkerStyle trace={trace} />{trace.valid ? trace.name || getAggregationAttributeDataKey(trace.options) || '' : `[Trace ${idx + 1}]`}</>
                                     }))}
                                     onChange={(option) => option?.value !== undefined && onChange('selectedTraceId', option.value)}
                                     value={selectedTrace.id}
@@ -181,6 +256,7 @@ function ChartTraceEditSelector({
                         <Button
                             bsStyle="primary"
                             onClick={() => setTraceEditName(!editTraceName)}
+                            tooltipId={'widgets.builder.editTraceTitle'}
                         >
                             <Glyphicon glyph={editTraceName ? 'ok' : 'pencil'} />
                         </Button>
@@ -189,6 +265,7 @@ function ChartTraceEditSelector({
                         <Button
                             bsStyle="primary"
                             disabled={editTraceName || isNestedPieChart}
+                            tooltipId={'widgets.builder.addNewTrace'}
                             onClick={() => {
                                 const newTrace = generateNewTrace({
                                     type: selectedTrace?.type,
@@ -210,6 +287,7 @@ function ChartTraceEditSelector({
                         <Button
                             disabled={editTraceName || traces.length < 2}
                             bsStyle="primary"
+                            tooltipId={'widgets.builder.deleteTrace'}
                             onClick={() => {
                                 const filteredTraces = traces.filter(trace => trace.id !== selectedTrace.id);
                                 onChange(tracesPath, filteredTraces);

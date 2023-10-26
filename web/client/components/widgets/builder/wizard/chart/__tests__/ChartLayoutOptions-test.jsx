@@ -41,10 +41,7 @@ describe('ChartLayoutOptions', () => {
             }]
         }}/>, document.getElementById('container'));
         const checkboxNodes = document.querySelectorAll('.checkbox');
-        expect([...checkboxNodes].map(node => node.innerText)).toEqual([
-            'widgets.advanced.includeLegendPercent',
-            'widgets.displayLegend.default'
-        ]);
+        expect([...checkboxNodes].map(node => node.innerText)).toEqual(['widgets.displayLegend.default']);
     });
     it('should render bar fields', () => {
         ReactDOM.render(<ChartLayoutOptions data={{
@@ -56,12 +53,26 @@ describe('ChartLayoutOptions', () => {
                 }]
             }]
         }}/>, document.getElementById('container'));
-        const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
-            'widgets.advanced.yAxis',
-            'widgets.advanced.xAxis',
-            'widgets.advanced.barChartType'
+        const checkboxNodes = document.querySelectorAll('.checkbox');
+        expect([...checkboxNodes].map(node => node.innerText)).toEqual([
+            'widgets.advanced.displayCartesian',
+            'widgets.displayLegend.default'
         ]);
+    });
+    it('should render multiple bar fields', () => {
+        ReactDOM.render(<ChartLayoutOptions data={{
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{
+                    type: 'bar'
+                }, {
+                    type: 'bar'
+                }]
+            }]
+        }}/>, document.getElementById('container'));
+        const controlLabelsNodes = document.querySelectorAll('.control-label');
+        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([ 'widgets.advanced.barChartType' ]);
         const checkboxNodes = document.querySelectorAll('.checkbox');
         expect([...checkboxNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.displayCartesian',
@@ -78,11 +89,6 @@ describe('ChartLayoutOptions', () => {
                 }]
             }]
         }}/>, document.getElementById('container'));
-        const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
-            'widgets.advanced.yAxis',
-            'widgets.advanced.xAxis'
-        ]);
         const checkboxNodes = document.querySelectorAll('.checkbox');
         expect([...checkboxNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.displayCartesian',
@@ -109,11 +115,6 @@ describe('ChartLayoutOptions', () => {
             done();
         }}
         />, document.getElementById('container'));
-        const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
-            'widgets.advanced.yAxis',
-            'widgets.advanced.xAxis'
-        ]);
         const checkboxNodes = document.querySelectorAll('.checkbox');
         expect([...checkboxNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.displayCartesian',

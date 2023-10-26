@@ -20,7 +20,9 @@ import {
     legacyChartToChartWithTraces,
     extractTraceData,
     generateClassifiedData,
-    parsePieNoAggregationFunctionData
+    parsePieNoAggregationFunctionData,
+    isChartOptionsValid,
+    enableBarChartStack
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -668,5 +670,41 @@ describe('Test WidgetsUtils', () => {
             { color: '#ffff00', label: 'Others', index: 3 }
         ]);
         expect(sortByKey).toBe('value');
+    });
+    describe('isChartOptionsValid', () => {
+        it('mandatory operation if process present', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B"
+            }, { hasAggregateProcess: true })).toBeFalsy();
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B",
+                aggregateFunction: "SUM"
+            }, { hasAggregateProcess: true })).toBeTruthy();
+        });
+        it('operation not needed if WPS not present', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B"
+            }, { hasAggregateProcess: false })).toBeTruthy();
+        });
+        it('only classification attribute present ', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B",
+                classificationAttribute: "C"
+            }, {hasAggregateProcess: false})).toBeTruthy();
+        });
+    });
+    it('enableBarChartStack', () => {
+        expect(enableBarChartStack()).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }] })).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar', style: { msMode: 'classification' } }] })).toBe(true);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }] })).toBe(true);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], yAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }, { id: 'axis-1' }], yAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }], yAxisOpts: [{ id: 0 }] })).toBe(true);
     });
 });

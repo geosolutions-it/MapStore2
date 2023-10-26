@@ -7,12 +7,15 @@
   */
 import React from 'react';
 import { get } from 'lodash';
-import { InputGroup, FormGroup, FormControl, ControlLabel, Button, Glyphicon } from 'react-bootstrap';
+import { InputGroup, FormGroup, FormControl, ControlLabel, Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 
 import Message from '../../../../I18N/Message';
 import CounterAdvancedOptions from './CounterAdvancedOptions';
+import tooltip from '../../../../misc/enhancers/tooltip';
+
+const Button = tooltip(ButtonRB);
 
 const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type || data.widgetType || "default"}`;
 
@@ -34,7 +37,8 @@ const WPSWidgetOptions = ({
     aggregationOptions = [],
     sampleChart,
     onChangeLayer,
-    onFilterLayer = () => {}
+    onFilterLayer = () => {},
+    error
 }) => {
 
     return (
@@ -55,6 +59,7 @@ const WPSWidgetOptions = ({
                             <Button
                                 bsStyle="primary"
                                 onClick={() => onChangeLayer()}
+                                tooltipId={'widgets.builder.selectLayer'}
                             >
                                 <Glyphicon glyph="cog" />
                             </Button>
@@ -63,6 +68,7 @@ const WPSWidgetOptions = ({
                             <Button
                                 bsStyle={data?.filter ? 'success' : 'primary'}
                                 onClick={() => onFilterLayer()}
+                                tooltipId={'widgets.builder.filterLayer'}
                             >
                                 <Glyphicon glyph="filter" />
                             </Button>
@@ -70,7 +76,8 @@ const WPSWidgetOptions = ({
                     </InputGroup>
                 </FormGroup>}
                 {formOptions.showGroupBy ? (
-                    <FormGroup controlId="groupByAttributes" className="form-group-flex">
+                    <FormGroup controlId="groupByAttributes" className="form-group-flex"
+                        validationState={error || !data?.options?.groupByAttributes ? 'error' : ''}>
                         <ControlLabel>
                             <Message msgId={getLabelMessageId("groupByAttributes", data)} />
                         </ControlLabel>
@@ -85,7 +92,8 @@ const WPSWidgetOptions = ({
                             />
                         </InputGroup>
                     </FormGroup>) : null}
-                <FormGroup controlId="aggregationAttribute" className="form-group-flex">
+                <FormGroup controlId="aggregationAttribute" className="form-group-flex"
+                    validationState={error || !data?.options?.aggregationAttribute ? 'error' : ''}>
                     <ControlLabel>
                         <Message msgId={getLabelMessageId("aggregationAttribute", data)} />
                     </ControlLabel>
@@ -100,7 +108,8 @@ const WPSWidgetOptions = ({
                         />
                     </InputGroup>
                 </FormGroup>
-                {hasAggregateProcess ? <FormGroup controlId="aggregateFunction" className="form-group-flex">
+                {hasAggregateProcess ? <FormGroup controlId="aggregateFunction" className="form-group-flex"
+                    validationState={error || !data?.options?.aggregateFunction ? 'error' : ''}>
                     <ControlLabel>
                         <Message msgId={getLabelMessageId("aggregateFunction", data)} />
                     </ControlLabel>

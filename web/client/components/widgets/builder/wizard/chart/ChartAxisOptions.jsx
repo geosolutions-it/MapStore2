@@ -10,15 +10,16 @@ import { isNil, castArray } from 'lodash';
 import uuidv1 from "uuid/v1";
 import Select from 'react-select';
 import ColorSelector from '../../../../style/ColorSelector';
-import { FormGroup, Radio, ControlLabel, InputGroup, Checkbox, Button, Glyphicon, FormControl } from 'react-bootstrap';
+import { FormGroup, Radio, ControlLabel, InputGroup, Checkbox, Button as ButtonRB, Glyphicon, FormControl } from 'react-bootstrap';
 import ChartValueFormatting from './ChartValueFormatting';
 import Message from '../../../../I18N/Message';
 
 import InfoPopover from '../../../widget/InfoPopover';
-
+import tooltip from '../../../../misc/enhancers/tooltip';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
 
+const Button = tooltip(ButtonRB);
 const AxisTypeSelect = localizedProps('options')(Select);
 
 const AXIS_TYPES = [{
@@ -53,7 +54,8 @@ const AxisSelector = ({
     onChange = () => {},
     onSelect = () => {},
     axisKey = 'x',
-    selectedAxisId
+    selectedAxisId,
+    defaultAddOptions
 }) => {
     const [editTitle, setEditTitle] = useState(false);
     const axisOptsKey = `${axisKey}AxisOpts`;
@@ -88,6 +90,7 @@ const AxisSelector = ({
                     <Button
                         bsStyle="primary"
                         onClick={() => setEditTitle(!editTitle)}
+                        tooltipId="widgets.builder.editAxisTitle"
                     >
                         <Glyphicon glyph={editTitle ? 'ok' : 'pencil'}/>
                     </Button>
@@ -96,8 +99,12 @@ const AxisSelector = ({
                     <Button
                         bsStyle="primary"
                         disabled={axisOpts.length >= chart?.traces?.length}
+                        tooltipId="widgets.builder.addNewAxis"
                         onClick={() => {
-                            const newAxis = { id: uuidv1() };
+                            const newAxis = {
+                                ...defaultAddOptions,
+                                id: uuidv1()
+                            };
                             onChange(`charts[${chart?.chartId}].${axisOptsKey}`, [...axisOpts, newAxis]);
                             onSelect(traceAxisKey, newAxis.id);
                         }}
@@ -109,6 +116,7 @@ const AxisSelector = ({
                     <Button
                         bsStyle="primary"
                         disabled={selectedAxisId === 0}
+                        tooltipId="widgets.builder.removeAxis"
                         onClick={() => {
                             const newOptions = axisOpts.filter((axis) => axis.id !== selectedAxisId);
                             onChange(`charts[${chart?.chartId}].${axisOptsKey}`, newOptions);
@@ -131,7 +139,8 @@ function AxisOptions({
     sides = [{ value: 'left', labelId: 'widgets.advanced.left' }, { value: 'right', labelId: 'widgets.advanced.right' }],
     anchors = [{ value: 'y', label: 'Y' }, { value: 'free', labelId: 'widgets.advanced.free' }],
     hideForceTicksOption,
-    hideValueFormatting
+    hideValueFormatting,
+    defaultAddOptions
 }) {
     const axisOptsKey = `${axisKey}AxisOpts`;
     const axisOpts = castArray(chart?.[axisOptsKey] || { id: 0 });
@@ -149,16 +158,17 @@ function AxisOptions({
         <>
             <div className="ms-wizard-form-separator">
                 <Message msgId={`widgets.advanced.${axisKey}Axis`} />
-                <AxisSelector
-                    axisKey={axisKey}
-                    chart={chart}
-                    selectedAxisId={selectedAxisId}
-                    onChange={onChange}
-                    onSelect={(key, value) => {
-                        onChange(`${chartPath}.${key}`, value);
-                    }}
-                />
             </div>
+            <AxisSelector
+                axisKey={axisKey}
+                chart={chart}
+                selectedAxisId={selectedAxisId}
+                defaultAddOptions={defaultAddOptions}
+                onChange={onChange}
+                onSelect={(key, value) => {
+                    onChange(`${chartPath}.${key}`, value);
+                }}
+            />
             <FormGroup className="form-group-flex">
                 <ControlLabel>
                     <Message msgId={`widgets.advanced.${axisKey}AxisType`} />
@@ -196,6 +206,7 @@ function AxisOptions({
                         min={1}
                         step={1}
                         fallbackValue={12}
+                        style={{ zIndex: 0 }}
                         onChange={(value) => {
                             handleChange('fontSize', value);
                         }}
@@ -203,6 +214,11 @@ function AxisOptions({
                     <InputGroup.Addon>px</InputGroup.Addon>
                 </InputGroup>
             </FormGroup>
+            {!hideValueFormatting && <ChartValueFormatting
+                options={options}
+                hideFormula
+                onChange={handleChange}
+            />}
             <FormGroup className="form-group-flex">
                 <ControlLabel>
                     <Message msgId="widgets.advanced.side" />
@@ -250,7 +266,7 @@ function AxisOptions({
                         min={0}
                         step={1}
                         fallbackValue={0}
-                        style={{ maxWidth: 65, marginLeft: 'auto' }}
+                        style={{ maxWidth: 65, marginLeft: 'auto', zIndex: 0 }}
                         onChange={(value) => {
                             handleChange('positionPx', value);
                         }}
@@ -302,12 +318,6 @@ function AxisOptions({
                     <Message msgId="widgets.advanced.hideLabels" />
                 </Checkbox>
             </FormGroup>
-            {!hideValueFormatting && <ChartValueFormatting
-                title={<Message msgId={`widgets.advanced.${axisKey}AxisValueFormatting`} />}
-                options={options}
-                hideFormula
-                onChange={handleChange}
-            />}
         </>
     );
 }
@@ -334,6 +344,9 @@ function ChartAxisOptions({
                 anchors={[{ value: 'x', label: 'X' }, { value: 'free', labelId: 'widgets.advanced.free' }]}
                 hideForceTicksOption
                 hideValueFormatting={false}
+                defaultAddOptions={{
+                    side: 'right'
+                }}
             />
             <AxisOptions
                 key={`x-axis-${selectedChart?.chartId}`}

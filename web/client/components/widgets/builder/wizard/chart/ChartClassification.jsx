@@ -11,7 +11,7 @@ import chroma from 'chroma-js';
 import uuid from 'uuid/v1';
 import ColorSelector from '../../../../style/ColorSelector';
 import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
-import { FormGroup, ControlLabel, InputGroup, Checkbox, Button, Glyphicon } from 'react-bootstrap';
+import { FormGroup, ControlLabel, InputGroup, Checkbox, Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 import Select from "react-select";
 import Message from "../../../../I18N/Message";
 import ColorRamp from '../../../../styleeditor/ColorRamp';
@@ -21,6 +21,7 @@ import ThemeClassesEditor from '../../../../style/ThemaClassesEditor';
 import { availableMethods } from '../../../../../api/GeoJSONClassification';
 import { standardClassificationScales } from '../../../../../utils/ClassificationUtils';
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
+import Loader from '../../../../misc/Loader';
 import withClassifyGeoJSONSync from '../../../../charts/withClassifyGeoJSONSync';
 import HTML from '../../../../I18N/HTML';
 import {
@@ -28,6 +29,9 @@ import {
     getAggregationAttributeDataKey,
     parsePieNoAggregationFunctionData
 } from '../../../../../utils/WidgetsUtils';
+import tooltip from '../../../../misc/enhancers/tooltip';
+
+const Button = tooltip(ButtonRB);
 
 const RAMP_PREVIEW_CLASSES = 5;
 
@@ -43,7 +47,8 @@ const ComputeClassification = withClassifyGeoJSONSync(
         traces,
         chartType,
         classifyGeoJSONSync,
-        onChangeStyle = () => {}
+        onChangeStyle = () => {},
+        loading
     }) => {
         const msClassification = traces?.[0]?.style?.msClassification || {};
         const groupByAttributesKey =  traces?.[0]?.options?.groupByAttributes;
@@ -54,8 +59,9 @@ const ComputeClassification = withClassifyGeoJSONSync(
                 ? parsePieNoAggregationFunctionData(data[0], traces?.[0]?.options)
                 : data?.[0]);
         const classes = msClassification?.classes;
-        if (!classes && !(classifyGeoJSONSync && traceData && classificationDataKey)) {
-            return null;
+        const loader = loading ? <div style={{ display: 'flex', justifyContent: 'center' }}><Loader size={30} /></div> : null;
+        if (!classes && !(classifyGeoJSONSync && traceData && classificationDataKey) || loading) {
+            return loader;
         }
         const { classes: computedClasses } = !classes ? generateClassifiedData({
             type: traces?.[0]?.type,
@@ -88,19 +94,19 @@ const ComputeClassification = withClassifyGeoJSONSync(
                                 : `widgets.builder.wizard.classAttributes.${chartType}RangeClassChartCustomLabelsExample`} />}
                         />
                     </div>
-                    <Button
-                        className="no-border"
-                        disabled={!classes}
-                        onClick={() => onChangeStyle('msClassification.classes', undefined)}
-                    >
-                        <Glyphicon glyph="trash" />
-                    </Button>
+                    <div style={{ width: 30 }} />
                 </div>
                 <ThemeClassesEditor
                     classification={classes || (computedClasses || []).map(({ insideClass, index, label, ...entry }) => ({
                         ...entry,
                         id: uuid()
                     }))}
+                    uniqueValuesClasses={!msClassification?.method || msClassification?.method === 'uniqueInterval'}
+                    autoCompleteOptions={traces?.[0]?.layer && {
+                        classificationAttribute: classificationDataKey,
+                        dropUpAutoComplete: true,
+                        layer: traces[0].layer
+                    }}
                     customLabels
                     onUpdateClasses={(newClasses) => onChangeStyle('msClassification.classes', newClasses)}
                 />
@@ -201,17 +207,25 @@ const CustomClassification = ({
                             />}
                         </div>
                     </FormGroup>
+                    <div className="ms-wizard-chart-custom-classification-footer">
+                        <Button
+                            disabled={!msClassification?.classes}
+                            onClick={() => onChangeStyle('msClassification.classes', undefined)}
+                        >
+                            <Message msgId="widgets.builder.wizard.classAttributes.removeCustomColors" />
+                        </Button>
+                    </div>
                 </div>
             }
         >
-            {/* using a default button to access the node ref */}
-            <button
+            <Button
                 disabled={disabled}
-                ref={node}
-                className={`btn btn-${msClassification?.classes ? 'success' : 'primary'}`}
+                bsStyle={msClassification?.classes ? 'success' : 'primary'}
+                tooltipId="widgets.builder.wizard.classAttributes.editCustomColors"
             >
-                <Glyphicon glyph="pencil" />
-            </button>
+                {/* using a default button to access the node ref */}
+                <span className="glyphicon glyphicon-pencil" ref={node}/>
+            </Button>
         </ControlledPopover>
     );
 };
@@ -286,7 +300,7 @@ const ChartClassification = ({
                 <InputGroup>
                     <Select
                         disabled={classesAvailable || selectedAttribute?.type === 'string'}
-                        value={msClassification?.method}
+                        value={msClassification?.method || 'uniqueInterval'}
                         clearable={false}
                         options={availableMethods.map((value) => ({
                             value,

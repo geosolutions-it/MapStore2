@@ -188,7 +188,8 @@ const multiProtocolChart = (Component) => {
             })) {
                 const dataRequests = traces.map((trace) => {
                     const serviceType = getDataServiceType(trace);
-                    const notSupportedService = () => Promise.reject(new Error('Missing configuration'));
+                    // return an empty data array if the single trace is not correctly configured
+                    const notSupportedService = () => Promise.resolve([]);
                     const dataServiceRequest = dataServiceRequests[serviceType] || notSupportedService;
                     return { trace, dataServiceRequest };
                 });

@@ -1985,7 +1985,8 @@
                         "editCustomColors": "Modifie Couleurs Personnalisées",
                         "maxValue": "Valeur maximum",
                         "minValue": "Valeur minimum",
-                        "title": "Paramètres de Couleurs Personnalisées"
+                        "title": "Paramètres de Couleurs Personnalisées",
+                        "removeCustomColors": "Effacer les classes personnalisées"
                     }
                 },
                 "errors": {
@@ -2000,7 +2001,17 @@
                 },
                 "setupFilter": "Configurer un filtre pour les données du widget",
                 "addNewLayers": "Ajouter de nouveaux calques",
-                "deleteChart": "Supprimer le graphique actuel"
+                "deleteChart": "Supprimer le graphique actuel",
+                "editTraceTitle": "Modifier le titre de la trace",
+                "addNewTrace": "Ajouter une nouvelle trace",
+                "deleteTrace": "Supprimer la trace actuelle",
+                "selectLayer": "Sélectionner un calque",
+                "filterLayer": "Filtrer le calque actuel",
+                "editChartTitle": "Modifier le titre du graphique",
+                "addNewCharts": "Ajouter de nouveaux graphiques",
+                "editAxisTitle": "Modifier le titre de l'axe",
+                "addNewAxis": "Ajouter un nouvel axe",
+                "removeAxis": "Supprimer l'axe actuel"
             },
             "widget": {
                 "menu": {
@@ -2143,11 +2154,13 @@
               "barChartType": "Type de Graphique à Barres",
               "groupedBarChart": "Groupé",
               "stackedBarChart": "Empilé",
-              "valueFormatting": "Formatage des valeurs",
-              "yAxisValueFormatting": "Formatage de la valeur de l'axe Y",
+              "valueFormatting": "Formatage des valeurs de trace",
+              "traceAxes": "Haches de trace",
+              "traceData": "Données de trace",
+              "traceLegendOptions": "Options de légende de trace",
               "traces": "Traces",
-              "axis": "Axe",
-              "style": "Style",
+              "axes": "Haches",
+              "traceStyle": "Style de trace",
               "mode": "Mode",
               "lineColor": "Couleur de la ligne",
               "lineWidth": "Largeur de ligne",

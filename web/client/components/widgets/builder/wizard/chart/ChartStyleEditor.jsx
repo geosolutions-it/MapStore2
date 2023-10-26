@@ -177,7 +177,7 @@ function ChartStyleEditor(props) {
     }
     return (
         <>
-            <div className="ms-wizard-form-separator"><Message msgId="widgets.advanced.style" /></div>
+            <div className="ms-wizard-form-separator"><Message msgId="widgets.advanced.traceStyle" /></div>
             <Component
                 {...props}
                 onChangeStyle={(path, value) => {

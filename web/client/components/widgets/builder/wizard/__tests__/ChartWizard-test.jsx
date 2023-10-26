@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import expect from 'expect';
-import ChartWizard, { isChartOptionsValid } from '../ChartWizard';
+import ChartWizard from '../ChartWizard';
 
 const featureTypeProperties = [{
     "name": "the_geom",
@@ -159,31 +159,5 @@ describe('ChartWizard component', () => {
         const domNode = container.querySelector('.ms-wizard');
         expect(domNode).toBeTruthy();
         expect(domNode.querySelectorAll('input').length).toBe(2);
-    });
-    describe('isChartOptionsValid', () => {
-        it('mandatory operation if process present', () => {
-            expect(isChartOptionsValid({
-                aggregationAttribute: "A",
-                groupByAttributes: "B"
-            }, { hasAggregateProcess: true })).toBeFalsy();
-            expect(isChartOptionsValid({
-                aggregationAttribute: "A",
-                groupByAttributes: "B",
-                aggregateFunction: "SUM"
-            }, { hasAggregateProcess: true })).toBeTruthy();
-        });
-        it('operation not needed if WPS not present', () => {
-            expect(isChartOptionsValid({
-                aggregationAttribute: "A",
-                groupByAttributes: "B"
-            }, { hasAggregateProcess: false })).toBeTruthy();
-        });
-        it('only classification attribute present ', () => {
-            expect(isChartOptionsValid({
-                aggregationAttribute: "A",
-                groupByAttributes: "B",
-                classificationAttribute: "C"
-            }, {hasAggregateProcess: false})).toBeTruthy();
-        });
     });
 });

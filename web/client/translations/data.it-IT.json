@@ -1986,7 +1986,8 @@
                         "editCustomColors": "Modifica Colori Personalizzati",
                         "maxValue": "Valore Massimo",
                         "minValue": "Valore Minimo",
-                        "title": "Impostazioni dei Colori Personalizzati"
+                        "title": "Impostazioni dei Colori Personalizzati",
+                        "removeCustomColors": "Rimuovere classi personalizzate"
                     }
                 },
                 "errors": {
@@ -2001,7 +2002,17 @@
                 },
                 "setupFilter": "Configura un filtro per il livello selezionato",
                 "addNewLayers": "Aggiungi nuovi livelli",
-                "deleteChart": "Elimina il grafico corrente"
+                "deleteChart": "Elimina il grafico corrente",
+                "editTraceTitle": "Modifica titolo della traccia",
+                "addNewTrace": "Aggiungi nuova traccia",
+                "deleteTrace": "Elimina la traccia corrente",
+                "selectLayer": "Seleziona layer",
+                "filterLayer": "Filtra il layer corrente",
+                "editChartTitle": "Modifica titolo del grafico",
+                "addNewCharts": "Aggiungi nuovo grafico",
+                "editAxisTitle": "Modifica titolo asse",
+                "addNewAxis": "Aggiungi nuovo asse",
+                "removeAxis": "Rimouvi asse corrente"
             },
             "widget": {
                 "menu": {
@@ -2144,11 +2155,13 @@
               "barChartType": "Tipo di Grafico a Barre",
               "groupedBarChart": "Raggruppato",
               "stackedBarChart": "Impilato",
-              "valueFormatting": "Formattazione valore",
-              "yAxisValueFormatting": "Formattazione valore sull'asse y",
+              "valueFormatting": "Formattazione valore della traccia",
+              "traceAxes": "Assi traccia",
+              "traceData": "Dati traccia",
+              "traceLegendOptions": "Opzioni di legenda della traccia",
               "traces": "Tracce",
-              "axis": "Assi",
-              "style": "Stili",
+              "axes": "Assi",
+              "traceStyle": "Stile traccia",
               "mode": "Modalità",
               "lineColor": "Colore linea",
               "lineWidth": "Spessore linea",

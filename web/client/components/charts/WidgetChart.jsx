@@ -16,7 +16,8 @@ import {
     generateClassifiedData,
     legacyChartToChartWithTraces,
     parseNumber,
-    parsePieNoAggregationFunctionData
+    parsePieNoAggregationFunctionData,
+    enableBarChartStack
 } from '../../utils/WidgetsUtils';
 
 const Plot = React.lazy(() => import('./PlotlyChart'));
@@ -351,7 +352,8 @@ function getMargins({ isModeBarVisible }) {
         b: margin,
         l: margin,
         r: margin,
-        pad
+        pad,
+        autoexpand: true
     };
 }
 
@@ -359,7 +361,7 @@ function getLayoutOptions({
     cartesian,
     xAxisOpts = [],
     yAxisOpts = [],
-    barChartType = 'stack',
+    barChartType,
     height,
     width
 }) {
@@ -454,7 +456,7 @@ function getLayoutOptions({
     }, {});
 
     return {
-        barmode: barChartType,
+        ...(barChartType && { barmode: barChartType}),
         ...yAxises,
         ...xAxises
     };
@@ -492,7 +494,8 @@ export const toPlotly = (_props) => {
         height,
         width,
         legend,
-        classifyGeoJSONSync
+        classifyGeoJSONSync,
+        cartesian
     } = props;
     const isModeBarVisible = width > 350;
     const traces = props.traces || [];
@@ -507,6 +510,10 @@ export const toPlotly = (_props) => {
     };
     const xAxisOpts = castArray(props.xAxisOpts || [{ id: 0 }]).map((opts, idx) => idx === 0 ? opts : { ...opts, xaxis: `x${idx + 1}` });
     const yAxisOpts = castArray(props.yAxisOpts || [{ id: 0 }]).map((opts, idx) => idx === 0 ? opts : { ...opts, yaxis: `y${idx + 1}` });
+    const isBarChartStackEnabled = enableBarChartStack({ traces, xAxisOpts, yAxisOpts });
+    const barChartType = isBarChartStackEnabled
+        ? props.barChartType || 'group'
+        : 'group';
     return {
         layout: {
             showlegend: legend ?? false, // Set false when legend is undefined, else pie-chart attempts to display legend
@@ -514,15 +521,14 @@ export const toPlotly = (_props) => {
             // automargin: true ok for big widgets.
             // small widgets should be adapted accordingly
             ...getLayoutOptions({
-                cartesian: props.cartesian,
+                cartesian,
                 xAxisOpts,
                 yAxisOpts,
-                barChartType: props.barChartType,
+                barChartType,
                 height,
                 width
             }),
             margin: getMargins({ isModeBarVisible }),
-            autoexpand: false,
             autosize: false,
             height,
             width,
@@ -577,7 +583,20 @@ export const toPlotly = (_props) => {
                 ...domainProperty
             });
             return [ ...acc, ...(isArray(data) ? data : [data]) ];
-        }, []),
+        }, []).map((trace, idx) => {
+            if (traces.length > 1 && !isBarChartStackEnabled && trace?.type === 'bar') {
+                // in case isBarChartStackEnabled is false we currently have two condition
+                // - a single bar trace is available
+                // - multiple bar traces with multiple axis are available
+                // in the second case we should add an group offset to correctly position them
+                // and visualize them overlapping
+                return {
+                    ...trace,
+                    offsetgroup: idx + 1
+                };
+            }
+            return trace;
+        }),
         config: {
             displayModeBar: isModeBarVisible, // minimal to display 8 tools.
             modeBarButtonsToRemove: [

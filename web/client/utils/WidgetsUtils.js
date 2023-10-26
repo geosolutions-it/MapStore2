@@ -884,3 +884,45 @@ export const parsePieNoAggregationFunctionData = (data, options = {}) => {
     }
     return data;
 };
+/**
+ * Verify validity of a chart
+ * @param {string} options.groupByAttributes group by attribute
+ * @param {string} options.aggregationAttribute aggregation attribute
+ * @param {string} options.aggregateFunction aggregate function
+ * @param {string} options.classificationAttribute classification function
+ * @param {boolean} props.hasAggregateProcess true if the associated service has aggregation
+ * @returns {boolean} true if valid
+ */
+export const isChartOptionsValid = (options = {}, { hasAggregateProcess }) => {
+    return !!(
+        options.aggregationAttribute
+        && options.groupByAttributes
+        // if aggregate process is not present, the aggregateFunction is not necessary. if present, is mandatory
+        && (!hasAggregateProcess || hasAggregateProcess && options.aggregateFunction)
+        || options.classificationAttribute
+    );
+};
+/**
+ * Verify if the bar chart stack option can be enabled
+ * @param {string} chart a widget chart configuration
+ * @returns {boolean} true if the option can be enabled
+ */
+export const enableBarChartStack = (chart = {}) => {
+    const barTraces = (chart?.traces || [])?.filter(trace => trace.type === 'bar');
+    // if there is only one bar chart
+    // allow the stack selection only for classification
+    if (barTraces.length === 1) {
+        return barTraces[0]?.style?.msMode === 'classification';
+    }
+    // if there is a single x/y axis
+    // and multiple bar charts
+    // allow the stack option
+    if (barTraces.length > 1
+        && (chart.xAxisOpts || [{ id: 0 }]).length === 1
+        && (chart.yAxisOpts || [{ id: 0 }]).length === 1) {
+        return true;
+    }
+    // in other all other cases allow only group
+    // the reason is related to the overlay behavior for each new axis added
+    return false;
+};

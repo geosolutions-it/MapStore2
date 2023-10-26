@@ -33,6 +33,9 @@ import emptyChartState from '../../enhancers/emptyChartState';
 import errorChartState from '../../enhancers/errorChartState';
 import ChartStyleEditor from './chart/ChartStyleEditor';
 import ChartTraceEditSelector from './chart/ChartTraceEditSelector';
+import TraceAxesOptions from './chart/TraceAxesOptions';
+import TraceLegendOptions from './chart/TraceLegendOptions';
+import { isChartOptionsValid } from '../../../../utils/WidgetsUtils';
 
 const loadingState = loadingEnhancer(({ loading, data }) => loading || !data, { width: 500, height: 200 });
 const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type = "" } = {}) => type.indexOf("gml:") !== 0).length === 0;
@@ -52,16 +55,6 @@ const enhancePreview = compose(
 );
 const PreviewChart = enhancePreview(withResizeDetector(SimpleChart));
 const SampleChart = sampleData(withResizeDetector(SimpleChart));
-
-export const isChartOptionsValid = (options = {}, { hasAggregateProcess }) => {
-    return (
-        options.aggregationAttribute
-        && options.groupByAttributes
-        // if aggregate process is not present, the aggregateFunction is not necessary. if present, is mandatory
-        && (!hasAggregateProcess || hasAggregateProcess && options.aggregateFunction)
-        || options.classificationAttribute
-    );
-};
 
 const Wizard = wizardHandlers(WizardContainer);
 
@@ -100,7 +93,7 @@ const renderPreview = ({
 
 const StepHeader = ({step} = {}) => (
     <div className="ms-wizard-form-separator">
-        <Message msgId={`widgets.${step === 0 ? 'chartOptionsTitle' : 'widgetOptionsTitle'}`}/>
+        <Message msgId={`widgets.${step === 0 ? 'advanced.traceData' : 'widgetOptionsTitle'}`}/>
     </div>
 );
 
@@ -158,11 +151,13 @@ const ChartWizard = ({
             <ChartTraceEditSelector
                 data={data}
                 editing={step === 0}
+                error={!!errors?.[selectedTrace?.layer?.name]}
                 onChange={onChange}
                 onAddChart={() => toggleLayerSelector(true)}
                 disableMultiChart={!dashBoardEditing}
                 tab={tab}
                 setTab={setTab}
+                hasAggregateProcess={hasAggregateProcess}
             >
                 <div className="ms-wizard-chart-preview" style={{
                     position: 'relative',
@@ -201,6 +196,7 @@ const ChartWizard = ({
                     layer={selectedTrace?.layer}
                     disableLayerSelection={!dashBoardEditing}
                     showTitle={false}
+                    error={!!errors?.[selectedTrace?.layer?.name]}
                     onChangeLayer={dashBoardEditing ? () => toggleLayerSelector({
                         key: 'chart-layer-replace',
                         chartId: selectedChart?.chartId,
@@ -217,7 +213,7 @@ const ChartWizard = ({
                         onChange(`charts[${selectedChart?.chartId}].traces[${selectedTrace.id}].${key}`, value)
                     }
                 />
-                <ChartLayoutOptions
+                <TraceAxesOptions
                     data={data}
                     onChange={onChange}
                 />
@@ -227,6 +223,14 @@ const ChartWizard = ({
                     onChange={(key, value) =>
                         onChange(`charts[${selectedChart?.chartId}].traces[${selectedTrace.id}].${key}`, value)
                     }
+                />
+                <TraceLegendOptions
+                    data={data}
+                    onChange={onChange}
+                />
+                <ChartLayoutOptions
+                    data={data}
+                    onChange={onChange}
                 />
             </>
         ),

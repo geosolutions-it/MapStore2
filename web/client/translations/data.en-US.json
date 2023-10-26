@@ -1985,7 +1985,8 @@
                         "editCustomColors": "Edit Custom Colors",
                         "maxValue": "Max Value",
                         "minValue": "Min Value",
-                        "title": "Custom Colors Settings"
+                        "title": "Custom Colors Settings",
+                        "removeCustomColors": "Remove custom classes"
                     }
                 },
                 "errors": {
@@ -2000,7 +2001,17 @@
                 },
                 "setupFilter": "Configure a filter for the widget data",
                 "addNewLayers": "Add new layer(s)",
-                "deleteChart": "Delete current chart"
+                "deleteChart": "Delete current chart",
+                "editTraceTitle": "Edit trace title",
+                "addNewTrace": "Add new trace",
+                "deleteTrace": "Delete current trace",
+                "selectLayer": "Select layer",
+                "filterLayer": "Filter current layer",
+                "editChartTitle": "Edit chart title",
+                "addNewCharts": "Add new chart(s)",
+                "editAxisTitle": "Edit axis title",
+                "addNewAxis": "Add new axis",
+                "removeAxis": "Remove current axis"
             },
             "widget": {
                 "menu": {
@@ -2143,11 +2154,13 @@
               "barChartType": "Bar Chart Type",
               "groupedBarChart": "Grouped",
               "stackedBarChart": "Stacked",
-              "valueFormatting": "Value formatting",
-              "yAxisValueFormatting": "Y axis value formatting",
+              "valueFormatting": "Trace value formatting",
+              "traceAxes": "Trace axes",
+              "traceData": "Trace data",
+              "traceLegendOptions": "Trace legend options",
               "traces": "Traces",
-              "axis": "Axis",
-              "style": "Style",
+              "axes": "Axes",
+              "traceStyle": "Trace style",
               "mode": "Mode",
               "lineColor": "Line color",
               "lineWidth": "Line width",

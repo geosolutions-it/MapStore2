@@ -7,10 +7,11 @@
  */
 import React from 'react';
 import { FormGroup, ControlLabel, InputGroup, Checkbox, Radio } from 'react-bootstrap';
-import { castArray } from 'lodash';
 import Message from '../../../../I18N/Message';
-import { extractTraceData } from '../../../../../utils/WidgetsUtils';
-import Select from "react-select";
+import {
+    extractTraceData,
+    enableBarChartStack
+} from '../../../../../utils/WidgetsUtils';
 
 const BAR_CHART_TYPES = [{
     id: 'stacked',
@@ -22,15 +23,6 @@ const BAR_CHART_TYPES = [{
     labelId: 'widgets.advanced.groupedBarChart'
 }];
 
-const getTraceAxisId = ({
-    axisKey,
-    trace,
-    chart
-}) => {
-    const axisOpts = castArray(chart?.[`${axisKey}AxisOpts`] || { id: 0 });
-    const selectedAxisId = trace[`${axisKey}axis`] || 0;
-    return axisOpts.some(opts => opts.id === selectedAxisId) ? selectedAxisId : 0;
-};
 /**
  * ChartLayoutOptions. A component that renders field to change the chart layout
  * @prop {object} data the widget chart data
@@ -43,68 +35,9 @@ function ChartLayoutOptions({
     const selectedChart = (data?.charts || []).find((chart) => chart.chartId === data.selectedChartId) || {};
     const selectedTrace = extractTraceData(data) || {};
     const chartPath = `charts[${selectedChart?.chartId}]`;
-    const yAxisOpts = castArray(selectedChart?.yAxisOpts || { id: 0 });
-    const xAxisOpts = castArray(selectedChart?.xAxisOpts || { id: 0 });
     return (
         <>
             <div className="ms-wizard-form-separator"><Message msgId="widgets.advanced.layout" /></div>
-            {selectedTrace.type === 'pie' && <FormGroup className="form-group-flex" style={{ marginBottom: 0 }}>
-                <Checkbox
-                    disabled={!selectedChart.legend}
-                    checked={!!selectedTrace.includeLegendPercent}
-                    onChange={(event) => onChange(`${chartPath}.traces[${selectedTrace.id}].includeLegendPercent`, event?.target?.checked)}
-                >
-                    <Message msgId="widgets.advanced.includeLegendPercent" />
-                </Checkbox>
-            </FormGroup>}
-            {['bar', 'line'].includes(selectedTrace.type) && <>
-                <FormGroup className="form-group-flex">
-                    <ControlLabel>
-                        <Message msgId="widgets.advanced.yAxis" />
-                    </ControlLabel>
-                    <InputGroup>
-                        <Select
-                            clearable={false}
-                            disabled={yAxisOpts.length === 1}
-                            value={getTraceAxisId({
-                                axisKey: 'y',
-                                trace: selectedTrace,
-                                chart: selectedChart
-                            })}
-                            options={yAxisOpts.map((axisOptions, idx) => ({
-                                value: axisOptions.id,
-                                label: `[ Y ${idx} ] ${axisOptions.title || ''}`
-                            }))}
-                            onChange={(option) => {
-                                onChange(`${chartPath}.traces[${selectedTrace.id}].yaxis`, option?.value);
-                            }}
-                        />
-                    </InputGroup>
-                </FormGroup>
-                <FormGroup className="form-group-flex">
-                    <ControlLabel>
-                        <Message msgId="widgets.advanced.xAxis" />
-                    </ControlLabel>
-                    <InputGroup>
-                        <Select
-                            clearable={false}
-                            disabled={xAxisOpts.length === 1}
-                            value={getTraceAxisId({
-                                axisKey: 'x',
-                                trace: selectedTrace,
-                                chart: selectedChart
-                            })}
-                            options={xAxisOpts.map((axisOptions, idx) => ({
-                                value: axisOptions.id,
-                                label: `[ X ${idx} ] ${axisOptions.title || ''}`
-                            }))}
-                            onChange={(option) => {
-                                onChange(`${chartPath}.traces[${selectedTrace.id}].xaxis`, option?.value);
-                            }}
-                        />
-                    </InputGroup>
-                </FormGroup>
-            </>}
             {selectedTrace.type !== 'pie' && <FormGroup className="form-group-flex" style={{ marginBottom: 0 }}>
                 <Checkbox
                     checked={selectedChart.cartesian || selectedChart.cartesian === false ? !selectedChart.cartesian : false}
@@ -121,7 +54,7 @@ function ChartLayoutOptions({
                     <Message msgId="widgets.displayLegend.default" />
                 </Checkbox>
             </FormGroup>
-            {selectedTrace.type === 'bar' && <FormGroup className="form-group-flex">
+            {enableBarChartStack(selectedChart) && <FormGroup className="form-group-flex">
                 <ControlLabel>
                     <Message msgId="widgets.advanced.barChartType" />
                 </ControlLabel>
@@ -131,7 +64,7 @@ function ChartLayoutOptions({
                             name="barChartType"
                             id={chartType.id}
                             value={chartType.value}
-                            checked={(selectedChart.barChartType || 'stack') === chartType.value}
+                            checked={(selectedChart.barChartType || 'group') === chartType.value}
                             onChange={ e => {
                                 const { value } = e.target;
                                 onChange(`${chartPath}.barChartType`, value);
