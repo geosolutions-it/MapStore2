@@ -15,6 +15,7 @@ import {
     DELETE,
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
+    INIT,
     CHANGE_LAYOUT,
     CLEAR_WIDGETS,
     DEFAULT_TARGET,
@@ -82,6 +83,9 @@ const emptyState = {
  */
 function widgetsReducer(state = emptyState, action) {
     switch (action.type) {
+    case INIT: {
+        return set(`defaults`, action.cfg, state);
+    }
     case EDITOR_SETTING_CHANGE: {
         return set(`builder.settings.${action.key}`, action.value, state);
     }
@@ -104,10 +108,17 @@ function widgetsReducer(state = emptyState, action) {
         if (widget.widgetType === 'chart') {
             widget = omit(widget, ["layer", "url"]);
         }
+        const w = state?.defaults?.initialSize?.w ?? 1;
+        const h = state?.defaults?.initialSize?.h ?? 1;
         return arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...widget,
-            dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
+            dataGrid: action.id && {
+                w,
+                h,
+                x: 0,
+                y: 0
+            }
         }, {
             id: action.widget.id || action.id
         }, state);

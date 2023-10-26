@@ -13,6 +13,7 @@ export const EDIT = "WIDGETS:EDIT";
 export const EDIT_NEW = "WIDGETS:EDIT_NEW";
 export const EDITOR_CHANGE = "WIDGETS:EDITOR_CHANGE";
 export const EDITOR_SETTING_CHANGE = "WIDGETS:EDITOR_SETTING_CHANGE";
+export const INIT = "WIDGETS:INIT";
 export const UPDATE = "WIDGETS:UPDATE";
 export const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
 export const UPDATE_LAYER = "WIDGETS:UPDATE_LAYER";
@@ -135,7 +136,6 @@ export const deleteWidget = (widget, target = DEFAULT_TARGET) => ({
     target,
     widget
 });
-
 /**
  * Removes all the widget from the containers
  * @return {object}   action of type CLEAR_WIDGETS
@@ -174,6 +174,15 @@ export const editNewWidget = (widget, settings) => ({
     type: EDIT_NEW,
     widget,
     settings
+});
+
+/**
+ * init widgets plugin
+ * @param  {object} cfg the config to push inside the plugin
+ */
+export const init = (cfg) => ({
+    type: INIT,
+    cfg
 });
 
 /**
