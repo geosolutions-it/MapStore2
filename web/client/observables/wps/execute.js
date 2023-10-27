@@ -216,7 +216,10 @@ export const executeProcess = (url, payload, executeOptions = {}, requestOptions
         Observable.defer(() => new Promise((resolve, reject) => parseString(xml, {tagNameProcessors: [stripPrefix]}, (err, xmlObj) => err ? reject(err) : resolve(xmlObj))));
 
     return executeProcessRequest(url, payload, requestOptions)
-        .catch(() => {
+        .catch((error) => {
+            if (error.__CANCEL__) {
+                throw error;
+            }
             throw new WPSExecuteError('ExecuteProcessXHRFailed');
         })
         .switchMap(result => {

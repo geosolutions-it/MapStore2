@@ -2022,7 +2022,8 @@
                         "editCustomColors": "Benutzerdefinierte Farben bearbeiten",
                         "maxValue": "Höchster Wert",
                         "minValue": "Mindestwert",
-                        "title": "Benutzerdefinierte Farbeinstellungen"
+                        "title": "Benutzerdefinierte Farbeinstellungen",
+                        "removeCustomColors": "Benutzerdefinierte Klassen entfernen"
                     }
                 },
                 "errors": {
@@ -2037,7 +2038,17 @@
                 },
                 "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten",
                 "addNewLayers": "Neue Ebene(n) hinzufügen",
-                "deleteChart": "Aktuelles Diagramm löschen"
+                "deleteChart": "Aktuelles Diagramm löschen",
+                "editTraceTitle": "Trace-Titel bearbeiten",
+                "addNewTrace": "Neuen Trace hinzufügen",
+                "deleteTrace": "Aktuellen Trace löschen",
+                "selectLayer": "Ebene auswählen",
+                "filterLayer": "Aktuelle Ebene filtern",
+                "editChartTitle": "Diagrammtitel bearbeiten",
+                "addNewCharts": "Neue Diagramm(e) hinzufügen",
+                "editAxisTitle": "Achsentitel bearbeiten",
+                "addNewAxis": "Neue Achse hinzufügen",
+                "removeAxis": "Aktuelle Achse entfernen"
             },
             "widget": {
                 "menu": {
@@ -2180,6 +2191,28 @@
                 "barChartType": "Balkendiagrammtyp",
                 "groupedBarChart": "Gruppiert",
                 "stackedBarChart": "Gestapelt",
+                "valueFormatting": "Wertformatierung verfolgen",
+                "traceAxes": "Achsen verfolgen",
+                "traceData": "Trace-Daten",
+                "traceLegendOptions": "Optionen für Tracelegende",
+                "traces": "Spuren",
+                "axes": "Achsen",
+                "traceStyle": "Trace-Stil",
+                "mode": "Modus",
+                "lineColor": "Linienfarbe",
+                "lineWidth": "Linienbreite",
+                "markerColor": "Markerfarbe",
+                "markerSize": "Markergröße",
+                "layout": "Layout",
+                "left": "Links",
+                "right": "Richtig",
+                "free": "Frei",
+                "top": "Top",
+                "bottom": "Unten",
+                "side": "Seite",
+                "anchor": "Anker",
+                "sortBy": "Sortieren nach",
+                "reverseRampColor": "Rampenfarbe umkehren",
                 "axisTypes": {
                   "auto": "Auto",
                   "linear": "linear",

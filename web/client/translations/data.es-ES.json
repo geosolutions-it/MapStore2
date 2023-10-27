@@ -1985,7 +1985,8 @@
                         "editCustomColors": "Editar Colores Personalizados",
                         "maxValue": "Valor máximo",
                         "minValue": "Valor mínimo",
-                        "title": "Configuración de Colores Personalizados"
+                        "title": "Configuración de Colores Personalizados",
+                        "removeCustomColors": "Eliminar clases personalizadas"
                     }
                 },
                 "errors": {
@@ -2000,7 +2001,17 @@
                 },
                 "setupFilter": "Configurar un filtro para los datos del widget",
                 "addNewLayers": "Agregar nuevas capas",
-                "deleteChart": "Eliminar gráfico actual"
+                "deleteChart": "Eliminar gráfico actual",
+                "editTraceTitle": "Editar título de seguimiento",
+                "addNewTrace": "Agregar nuevo trace",
+                "deleteTrace": "Eliminar el seguimiento actual",
+                "selectLayer": "Seleccionar capa",
+                "filterLayer": "Filtrar capa actual",
+                "editChartTitle": "Editar título del gráfico",
+                "addNewCharts": "Agregar nuevos gráficos",
+                "editAxisTitle": "Editar título del eje",
+                "addNewAxis": "Agregar nuevo ej",
+                "removeAxis": "Eliminar el eje actual"
             },
             "widget": {
                 "menu": {
@@ -2143,6 +2154,28 @@
               "barChartType": "Tipo de Gráfico de Barras",
               "groupedBarChart": "Agrupado",
               "stackedBarChart": "Apilado",
+              "valueFormatting": "Formato del valor de trace",
+              "traceAxes": "Trazar ejes",
+              "traceData": "Datos de trace",
+              "traceLegendOptions": "Opciones de leyenda de trace",
+              "traces": "Traces",
+              "axes": "Ejes",
+              "traceStyle": "Estilo de trace",
+              "mode": "Modo",
+              "lineColor": "Color de línea",
+              "lineWidth": "Ancho de línea",
+              "markerColor": "Color del marcador",
+              "markerSize": "Tamaño del marcador",
+              "layout": "Diseño",
+              "left": "Izquierda",
+              "right": "Bien",
+              "free": "Free",
+              "top": "Arriba",
+              "bottom": "Abajo",
+              "side": "Lado",
+              "anchor": "Ancla",
+              "sortBy": "Ordenar por",
+              "reverseRampColor": "Color de rampa inversa",
               "axisTypes": {
                 "auto": "Auto",
                 "linear": "Lineal",

@@ -9,16 +9,11 @@
 import { urlParts } from '../utils/URLUtils';
 
 import url from 'url';
-import { sortBy, head, castArray, isNumber, isString, uniq } from 'lodash';
+import { sortBy, head, castArray, isNumber, isString } from 'lodash';
 import assign from 'object-assign';
 import chroma from 'chroma-js';
 import { getLayerUrl } from '../utils/LayersUtils';
-
-const supportedColorBrewer = uniq(Object.keys(chroma.brewer).map((key) => key.toLocaleLowerCase()))
-    .map((key) => ({
-        name: key,
-        colors: key
-    }));
+import { standardClassificationScales as standardColors } from '../utils/ClassificationUtils';
 
 const isAttributeAllowed = (type) => ['Integer', 'Long', 'Double', 'Float', 'BigDecimal'].indexOf(type) !== -1;
 const getSimpleType = () => {
@@ -49,22 +44,6 @@ const getCustomClassification = (classification) => {
     }
     return {};
 };
-
-export const defaultClassificationColors = {
-    red: ['#000', '#f00'],
-    green: ['#000', '#008000', '#0f0'],
-    blue: ['#000', '#00f'],
-    gray: ['#333', '#eee'],
-    jet: ['#00f', '#ff0', '#f00']
-};
-
-const standardColors = [
-    ...Object.keys(defaultClassificationColors).map(name => ({
-        name,
-        colors: defaultClassificationColors[name]
-    })),
-    ...supportedColorBrewer
-];
 
 const getColor = (layer, name, intervals, customRamp) => {
     const chosenColors = layer

@@ -8,7 +8,7 @@
 import React, {useState} from 'react';
 import HTML from '../../../../I18N/HTML';
 
-import {Col, FormControl, ControlLabel, FormGroup} from 'react-bootstrap';
+import { FormControl, ControlLabel, FormGroup, InputGroup } from 'react-bootstrap';
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
 import Message from '../../../../I18N/Message';
 import {isNil, isNaN, isError} from 'lodash';
@@ -53,7 +53,7 @@ function getValidationState(isValid, value) {
  * Input for formula. Provides validation, and change the value
  * only if the value is valid.
  */
-export default function FormulaInput({onChange, value, ...props}) {
+export default function FormulaInput({onChange, value, className, ...props}) {
     const [initialValid, initialValidationValue] = validate(value);
     const [isValid, setValid] = useState(initialValid);
     const [validationValue, setValidationValue] = useState(initialValidationValue);
@@ -70,11 +70,13 @@ export default function FormulaInput({onChange, value, ...props}) {
         }
         setLocalValue(e.target.value);
     };
-    return (<FormGroup validationState={getValidationState(isValid, localValue)}>
-        <Col xs={12}>
-            <ControlLabel><Message msgId="widgets.advanced.formula" /></ControlLabel>
+    return (<FormGroup validationState={getValidationState(isValid, localValue)} className={className}>
+        <ControlLabel>
+            <Message msgId="widgets.advanced.formula" />{' '}
             <DisposablePopover placement="top" title={<Message msgId="widgets.advanced.formula" />} text={<HTML msgId="widgets.advanced.formulaExamples" />} />
+        </ControlLabel>
+        <InputGroup>
             <FormControl placeholder="e.g. value / 100" feedback={getFeedback(isValid, validationValue)} {...props} type="text" value={localValue} onChange={validateAndChange} />
-        </Col>
+        </InputGroup>
     </FormGroup>);
 }

@@ -25,10 +25,26 @@ describe('WidgetsBuilder component', () => {
         ReactDOM.render(<WidgetBuilder />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toBeTruthy();
+        expect(el).toBeFalsy();
     });
     it('WidgetsBuilder rendering chart options', () => {
-        ReactDOM.render(<WidgetBuilder step={0} />, document.getElementById("container"));
+        ReactDOM.render(<WidgetBuilder
+            step={0}
+            featureTypeProperties={[
+                { type: 'xsd:string', localType: 'string', name: 'STATE_NAME' }
+            ]}
+            editorData={{
+                selectedChartId: 'chart-01',
+                charts: [{
+                    chartId: 'chart-01',
+                    traces: [{
+                        type: 'bar',
+                        layer: {},
+                        options: {}
+                    }]
+                }]
+            }}
+        />, document.getElementById("container"));
         const container = document.getElementById('container');
         const elChartOption = container.querySelector('.chart-options');
         expect(elChartOption).toBeTruthy();

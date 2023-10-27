@@ -76,6 +76,24 @@
             .background-color-var(@theme-vars[main-bg]);
         }
     }
+    .form-group-flex {
+        &.has-success {
+            .Select-control {
+                .border-color-var(@theme-vars[success], true);
+            }
+        }
+        &.has-error {
+            .Select-control {
+                .border-color-var(@theme-vars[danger], true);
+            }
+        }
+        &.has-warning {
+            .Select-control {
+                .border-color-var(@theme-vars[warning], true);
+            }
+        }
+    }
+    
 }
 
 // **************
@@ -395,4 +413,22 @@ div#sync-popover.popover {
 .form-control.intl-numeric {
     float: unset;
 
+}
+
+.form-group-flex {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    .checkbox,
+    .control-label {
+        flex: 1;
+        font-weight: normal;
+    }
+    .input-group {
+        flex: 1;
+    }
+    input {
+        z-index: 0;
+    }
+    margin-bottom: 8px;
 }
