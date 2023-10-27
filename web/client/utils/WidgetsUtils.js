@@ -708,7 +708,7 @@ const parseClasses = (classes, {
     return classes.map((entry, idx, arr) => ({
         ...entry,
         index: idx,
-        ...(entry.unique
+        ...(entry.unique !== undefined
             ? {
                 label: entry.title || entry.unique,
                 insideClass: (value) => value === entry.unique

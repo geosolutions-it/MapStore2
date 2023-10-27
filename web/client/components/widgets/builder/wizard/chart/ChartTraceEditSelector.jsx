@@ -27,7 +27,7 @@ const Button = tooltip(ButtonRB);
 
 const Select = localizedProps(["noResultsText"])(ReactSelect);
 
-const TraceMarkerStyle = ({ trace }) => {
+const TraceMarkerStyle = ({ trace, error }) => {
     const style = {
         width: '1.6em',
         height: '0.8em',
@@ -40,7 +40,7 @@ const TraceMarkerStyle = ({ trace }) => {
     if (trace.valid === false) {
         return (
             <div style={style}>
-                <Glyphicon glyph="warning-sign" className="text-danger" />
+                {error ? <Glyphicon glyph="warning-sign" className="text-danger" /> : <Glyphicon glyph="pencil" />}
             </div>
         );
     }
@@ -137,10 +137,9 @@ function ChartTraceEditSelector({
     const tracePath = `${tracesPath}[${selectedTrace.id}]`;
     const isNestedPieChart = selectedTrace.type === 'pie' && selectedTrace?.options?.classificationAttribute
         && selectedTrace?.options?.classificationAttribute !== selectedTrace?.options?.groupByAttributes;
-    const invalidCharts = (data?.charts || []).some(chart => chart.traces.some(trace => !isChartOptionsValid(trace?.options, { hasAggregateProcess })));
     return (
         <>
-            {!disableMultiChart && <FormGroup className="form-group-flex" validationState={invalidCharts || error ? 'warning' : ''} style={{ marginBottom: 0 }}>
+            {!disableMultiChart && <FormGroup className="form-group-flex" validationState={error ? 'error' : ''} style={{ marginBottom: 0 }}>
                 <InputGroup>
                     {editChartName
                         ? <DebouncedFormControl
@@ -154,9 +153,11 @@ function ChartTraceEditSelector({
                             clearable={false}
                             options={(data?.charts || []).map((chart, idx) => ({
                                 label: <><div style={{ display: 'inline-block', marginRight: '0.4em' }}>{
-                                    chart.traces.some(trace => !isChartOptionsValid(trace?.options, { hasAggregateProcess }))
-                                        ? <Glyphicon glyph="warning-sign" className="text-danger"/>
-                                        : <Glyphicon glyph="ok" className="text-success"/>
+                                    chart.traces.some(trace => isChartOptionsValid(trace?.options, { hasAggregateProcess }))
+                                        ? <Glyphicon glyph="ok" className="text-success"/>
+                                        : error
+                                            ? <Glyphicon glyph="warning-sign" className="text-danger" />
+                                            : <Glyphicon glyph="pencil"/>
                                 }</div>{`[Chart ${idx + 1}] ${chart?.name || ''}`}</>,
                                 value: chart.chartId
                             }))}
@@ -209,7 +210,7 @@ function ChartTraceEditSelector({
                 <Tab key="traces" eventKey="traces" title={<Message msgId="widgets.advanced.traces" />} />
                 <Tab key="axis" eventKey="axis" title={<Message msgId="widgets.advanced.axes" />} />
             </Tabs>}
-            {editing && (selectedTrace.type === 'pie' || tab !== 'axis') && <FormGroup validationState={error || traces.some(trace => !trace.valid) ? 'warning' : ''} className="form-group-flex" style={{ marginBottom: 0, marginTop: 8 }}>
+            {editing && (selectedTrace.type === 'pie' || tab !== 'axis') && <FormGroup validationState={error ? 'error' : ''} className="form-group-flex" style={{ marginBottom: 0, marginTop: 8 }}>
                 <InputGroup>
                     <div style={{ display: 'flex' }}>
                         <div style={{ minWidth: 130 }}>
@@ -244,7 +245,13 @@ function ChartTraceEditSelector({
                                     noResultsText="widgets.selectChartType.noResults"
                                     options={traces.map((trace, idx) => ({
                                         value: trace.id,
-                                        label: <><TraceMarkerStyle trace={trace} />{trace.valid ? trace.name || getAggregationAttributeDataKey(trace.options) || '' : `[Trace ${idx + 1}]`}</>
+                                        label: <><TraceMarkerStyle error={error} trace={trace} />{
+                                            trace?.name
+                                                ? trace.name
+                                                : trace.valid
+                                                    ? getAggregationAttributeDataKey(trace.options) || ''
+                                                    : `[Trace ${idx + 1}]`
+                                        }</>
                                     }))}
                                     onChange={(option) => option?.value !== undefined && onChange('selectedTraceId', option.value)}
                                     value={selectedTrace.id}

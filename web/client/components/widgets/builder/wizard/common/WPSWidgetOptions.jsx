@@ -77,7 +77,7 @@ const WPSWidgetOptions = ({
                 </FormGroup>}
                 {formOptions.showGroupBy ? (
                     <FormGroup controlId="groupByAttributes" className="form-group-flex"
-                        validationState={error || !data?.options?.groupByAttributes ? 'error' : ''}>
+                        validationState={error ? 'error' :  !data?.options?.groupByAttributes ? 'warning' : ''}>
                         <ControlLabel>
                             <Message msgId={getLabelMessageId("groupByAttributes", data)} />
                         </ControlLabel>
@@ -93,7 +93,7 @@ const WPSWidgetOptions = ({
                         </InputGroup>
                     </FormGroup>) : null}
                 <FormGroup controlId="aggregationAttribute" className="form-group-flex"
-                    validationState={error || !data?.options?.aggregationAttribute ? 'error' : ''}>
+                    validationState={error ? 'error' :  !data?.options?.aggregationAttribute ? 'warning' : ''}>
                     <ControlLabel>
                         <Message msgId={getLabelMessageId("aggregationAttribute", data)} />
                     </ControlLabel>
@@ -109,7 +109,7 @@ const WPSWidgetOptions = ({
                     </InputGroup>
                 </FormGroup>
                 {hasAggregateProcess ? <FormGroup controlId="aggregateFunction" className="form-group-flex"
-                    validationState={error || !data?.options?.aggregateFunction ? 'error' : ''}>
+                    validationState={error ? 'error' :  !data?.options?.aggregateFunction ? 'warning' : ''}>
                     <ControlLabel>
                         <Message msgId={getLabelMessageId("aggregateFunction", data)} />
                     </ControlLabel>

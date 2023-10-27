@@ -86,7 +86,9 @@ const chartDataTypes = {
         const labelDataKey = options?.groupByAttributes;
         const valueDataKey = getAggregationAttributeDataKey(options);
         const classificationDataKey = options?.classificationAttribute || labelDataKey;
-        const isNestedPieChart = !(classificationDataKey === labelDataKey);
+        const isNestedPieChart = !(classificationDataKey === labelDataKey)
+            // if there is ${groupByValue} means the custom classes are combined in a single pie chart
+            && !style?.msClassification?.classes?.some(({ title }) => (title || '').includes('${groupByValue}'));
         const data = parsePieNoAggregationFunctionData(
             formula ? processDataProperties(formula, valueDataKey, dataProp) : dataProp,
             options
@@ -108,7 +110,9 @@ const chartDataTypes = {
                     .filter((entry) => entry.index === idx)
                     .sort((a, b) => sortByKey === valueDataKey
                         ? a.properties[sortByKey] > b.properties[sortByKey] ? -1 : 1
-                        : a.properties[sortByKey] > b.properties[sortByKey] ? 1 : -1);
+                        : a.properties[sortByKey] > b.properties[sortByKey] ? 1 : -1)
+                    // index in label is needed to associate the class to the other pie chart when nested
+                    .map((entry) => isNestedPieChart ? ({ ...entry, label: `${entry.index + 1}) ${entry.label}` }) : entry);
                 if (isNestedPieChart && includeLegendPercent) {
                     const partialSum = filteredData.reduce((sum, {properties}) => sum + parseNumber(properties[valueDataKey]), 0);
                     return [...acc, ...filteredData.map((d) => ({ ...d, label: applyPercentageToLabel(d.label, partialSum, total)}))];
@@ -119,9 +123,14 @@ const chartDataTypes = {
         const colors = sortedData.map((entry) => entry?.color);
         const values = sortedData.map(({ properties }) => properties[valueDataKey]);
         const classificationLabels = sortedData.map((entry) => entry?.label);
-        const labels = sortedData.map(({ properties }) => properties[labelDataKey]);
+        // the index in the label has two roles
+        // - associate the entry to the class
+        // - create a unique identifier when some label are presented in different class categories
+        const labels = sortedData.map(({ properties, index }) => isNestedPieChart ? `${properties[labelDataKey]} (${index + 1})` : properties[labelDataKey]);
         const outerLabels = renderPieLabelsWithPercentage(
-            isNestedPieChart ? labels : classificationLabels,
+            isNestedPieChart
+                ? labels
+                : classificationLabels,
             values,
             total,
             { includeLegendPercent }
@@ -149,7 +158,7 @@ const chartDataTypes = {
                         name: classificationDataKey,
                         legendgroup: `${id}-${classificationDataKey}`,
                         legendgrouptitle: {
-                            text: classificationDataKey
+                            text: classificationDataKey === valueDataKey ? classificationDataKey : `${valueDataKey} | ${classificationDataKey}`
                         },
                         hovertemplate: `%{label}<br>${classificationDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
                         domain: {
@@ -554,12 +563,12 @@ export const toPlotly = (_props) => {
             includeLegendPercent
         }, idx) => {
             const traceData = dataProp[idx];
-            const domainProperty = type === 'pie' && {
+            const domainProperty = type === 'pie' && piesLength > 1 ? {
                 domain: {
-                    row: idx / 2,
-                    column: idx % 2
+                    row: Math.floor(idx / (gridProperty.grid.columns)),
+                    column: idx % (gridProperty.grid.columns)
                 }
-            };
+            } : {};
             const traceXAxisOpts = xAxisOpts.find(opts => opts.id === xaxis) || xAxisOpts[0] || {};
             const traceYAxisOpts = yAxisOpts.find(opts => opts.id === yaxis) || yAxisOpts[0] || {};
             // classification for bar charts generates an array of trace

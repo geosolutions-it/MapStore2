@@ -377,7 +377,8 @@ describe('Widget Chart: data conversions ', () => {
             // original labels
             expect(DATASET_2.data.map(d => d[DATASET_2.xAxis.dataKey])).toEqual(['Page A', 'Page B']);
             // data labels mapped and sorted
-            expect(data[0].labels).toEqual(['Class 1', 'Class 2']);
+            expect(data[0].labels).toEqual([ '1) Class 1', '2) Class 2' ]);
+            expect(data[1].labels).toEqual([ 'Page A (1)', 'Page B (2)' ]);
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual(['#ff0000', '#0000ff']);
             // LAYOUT
@@ -411,7 +412,8 @@ describe('Widget Chart: data conversions ', () => {
             // original labels
             expect(DATASET_3.data.map(d => d[DATASET_3.xAxis.dataKey])).toEqual(['Page A', 'Page B', 'Page E', 'Page F']);
             // data labels mapped and sorted
-            expect(data[0].labels).toEqual(['class1', 'class2', 'Default label', 'Default label']);
+            expect(data[0].labels).toEqual(['1) class1', '2) class2', '3) Default label', '3) Default label']);
+            expect(data[1].labels).toEqual(['Page A (1)', 'Page B (2)', 'Page F (3)', 'Page E (3)']);
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual(['#ff0000', '#0000ff', '#00ff00', '#00ff00']);
             // LAYOUT
@@ -445,7 +447,8 @@ describe('Widget Chart: data conversions ', () => {
             // original labels
             expect(DATASET_5_ORDERED.data.map(d => d[CLASSIFICATIONS.dataKey])).toEqual([ '1', '1', '2', '2', '3', '3' ]);
             // data labels mapped and sorted
-            expect(data[0].labels).toEqual(['1', '1', '2', '2', '3', '3']);
+            expect(data[0].labels).toEqual(['1) 1', '1) 1', '2) 2', '2) 2', '3) 3', '3) 3']);
+            expect(data[1].labels).toEqual(['Page A (1)', 'Page B (1)', 'Page B (2)', 'Page A (2)', 'Page B (3)', 'Page A (3)']);
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual([ '#0000ff', '#0000ff', '#00FF00', '#00FF00', '#ff0000', '#ff0000']);
             // LAYOUT
@@ -463,7 +466,7 @@ describe('Widget Chart: data conversions ', () => {
                 classifyGeoJSONSync,
                 ...DATASET_2
             });
-            expect(data.length).toBe(2);
+            expect(data.length).toBe(1);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
             // original values
@@ -526,7 +529,8 @@ describe('Widget Chart: data conversions ', () => {
             // original labels
             expect(DATASET_4.data.map(d => d[RANGE_CLASSIFICATIONS.dataKey])).toEqual([ 0, 100, 500, 900 ]);
             // data labels mapped and sorted
-            expect(data[0].labels).toEqual(['Between 0 and 100', 'Between 100 and 1000', 'Between 100 and 1000', 'Between 100 and 1000']);
+            expect(data[0].labels).toEqual(['1) Between 0 and 100', '2) Between 100 and 1000', '2) Between 100 and 1000', '2) Between 100 and 1000']);
+            expect(data[1].labels).toEqual(['Page A (1)', 'Page D (2)', 'Page C (2)', 'Page B (2)']);
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual([ '#ff0000', '#0000ff', '#0000ff', '#0000ff']);
             // LAYOUT
@@ -554,7 +558,8 @@ describe('Widget Chart: data conversions ', () => {
             // original labels
             expect(DATASET_4.data.map(d => d[RANGE_CLASSIFICATIONS.dataKey])).toEqual([ 0, 100, 500, 900 ]);
             // data labels mapped and sorted
-            expect(data[0].labels).toEqual(['>= 0<br>< 100', '>= 100<br><= 1000', '>= 100<br><= 1000', '>= 100<br><= 1000']);
+            expect(data[0].labels).toEqual(['1) >= 0<br>< 100', '2) >= 100<br><= 1000', '2) >= 100<br><= 1000', '2) >= 100<br><= 1000']);
+            expect(data[1].labels).toEqual(['Page A (1)', 'Page D (2)', 'Page C (2)', 'Page B (2)']);
             // colors are those defined by the user
             expect(data[0].marker.colors).toEqual([ '#ff0000', '#0000ff', '#0000ff', '#0000ff']);
             // LAYOUT
@@ -572,7 +577,7 @@ describe('Widget Chart: data conversions ', () => {
                 classifyGeoJSONSync,
                 ...DATASET_4
             });
-            expect(data.length).toBe(2);
+            expect(data.length).toBe(1);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
             // original values

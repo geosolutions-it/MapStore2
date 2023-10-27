@@ -63,6 +63,7 @@ const ComputeClassification = withClassifyGeoJSONSync(
         if (!classes && !(classifyGeoJSONSync && traceData && classificationDataKey) || loading) {
             return loader;
         }
+        const method = msClassification.method || 'uniqueInterval';
         const { classes: computedClasses } = !classes ? generateClassifiedData({
             type: traces?.[0]?.type,
             sortBy: traces?.[0]?.sortBy,
@@ -77,7 +78,7 @@ const ComputeClassification = withClassifyGeoJSONSync(
             <>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ flex: 1 }}><Message msgId="widgets.builder.wizard.classAttributes.classColor"/></div>
-                    {msClassification.method === 'uniqueInterval' ?
+                    {method === 'uniqueInterval' ?
                         <div style={{ flex: 1 }}><Message msgId="widgets.builder.wizard.classAttributes.classValue"/></div>
                         : <>
                             <div style={{ flex: 1 }}><Message msgId="widgets.builder.wizard.classAttributes.minValue"/></div>
@@ -89,7 +90,7 @@ const ComputeClassification = withClassifyGeoJSONSync(
                             popoverClassName="chart-color-class-popover"
                             placement="top"
                             title={<Message msgId="widgets.builder.wizard.classAttributes.customLabels" />}
-                            text={<HTML msgId={msClassification.method === 'uniqueInterval'
+                            text={<HTML msgId={method === 'uniqueInterval'
                                 ? `widgets.builder.wizard.classAttributes.${chartType}ChartCustomLabelsExample`
                                 : `widgets.builder.wizard.classAttributes.${chartType}RangeClassChartCustomLabelsExample`} />}
                         />
@@ -101,7 +102,7 @@ const ComputeClassification = withClassifyGeoJSONSync(
                         ...entry,
                         id: uuid()
                     }))}
-                    uniqueValuesClasses={!msClassification?.method || msClassification?.method === 'uniqueInterval'}
+                    uniqueValuesClasses={method === 'uniqueInterval'}
                     autoCompleteOptions={traces?.[0]?.layer && {
                         classificationAttribute: classificationDataKey,
                         dropUpAutoComplete: true,
@@ -184,7 +185,7 @@ const CustomClassification = ({
                                 placement="top"
                                 title={<Message msgId="widgets.builder.wizard.classAttributes.customLabels" />}
                                 text={<HTML msgId={
-                                    msClassification.method === 'uniqueInterval'
+                                    msClassification?.method === 'uniqueInterval' || !msClassification?.method
                                         ? `widgets.builder.wizard.classAttributes.${chartType}ChartCustomLabelsExample`
                                         : `widgets.builder.wizard.classAttributes.${chartType}RangeDefaultChartCustomLabelsExample`
                                 } />}
@@ -278,6 +279,7 @@ const ChartClassification = ({
                         disabled={classesAvailable}
                         value={classificationAttribute}
                         options={options}
+                        clearable={false}
                         onChange={(option) => {
                             onChangeStyle('msClassification', {
                                 intervals: 5,
@@ -288,7 +290,7 @@ const ChartClassification = ({
                                     ? 'uniqueInterval'
                                     : selectedAttribute.type === 'string'
                                         ? 'jenks'
-                                        : msClassification.method || 'jenks'
+                                        : msClassification?.method || 'jenks'
                             });
                             onChange('options.classificationAttribute', option?.value);
                         }}
