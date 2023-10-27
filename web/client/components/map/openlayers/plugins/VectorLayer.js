@@ -64,7 +64,19 @@ Layers.registerType('vector', {
             });
         }
 
-        if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
+        /**
+         * we need to also check when features changes because there could be styles depending of features
+         * so when the latter changes we have to redraw to redo the checks and apply correct style based on new feature props
+        */
+        const areFeaturesChanged = !isEqual(oldOptions.features, newOptions.features);
+
+        const isStyleChanged = !isEqual(oldOptions.style, newOptions.style);
+        const isStyleNameChanged = oldOptions.styleName !== newOptions.styleName;
+        if (
+            isStyleChanged ||
+            isStyleNameChanged ||
+            areFeaturesChanged
+        ) {
             getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, asPromise: true }))
                 .then((style) => {
                     if (style) {
