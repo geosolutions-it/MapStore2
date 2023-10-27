@@ -58,7 +58,15 @@ const historyCollectionReducer = undoable(reducer, {
 
 const DEFAULT_VALUE = {};
 
-function parseBlocks({ symbolizerBlock, ruleBlock }) {
+
+/**
+ * it overrides default styler config in order to customize certain blocks
+ * that in turn will make UI to change accordingly
+ * @param {object} symbolizerBlock the symbolyzer block
+ * @param {object} ruleBlock the rule block
+ * @param {object} selected the features annotation selected
+ */
+function parseBlocks({ symbolizerBlock, ruleBlock}, selected) {
     return {
         symbolizerBlock: Object.keys(symbolizerBlock)
             .reduce((config, kind) => ({
@@ -69,13 +77,17 @@ function parseBlocks({ symbolizerBlock, ruleBlock }) {
                     params: Object.keys(symbolizerBlock[kind].params)
                         .reduce((acc, key) => {
                             const value = symbolizerBlock[kind].params[key];
-                            if (['Circle'].includes(kind) && ['geodesic', 'radius', 'msClampToGround'].includes(key)) {
+                            if (['Circle'].includes(kind) && ['geodesic', 'radius', 'msClampToGround', "msGeometry"].includes(key)) {
                                 return acc;
                             }
-                            if (['Text'].includes(kind) && ['label'].includes(key)) {
+                            if (['Text'].includes(kind) && ['label', "msGeometry"].includes(key)) {
                                 return acc;
                             }
                             if (['Line', 'Fill'].includes(kind) && ['msGeometry'].includes(key)) {
+                                return acc;
+                            }
+                            // check selected annotation type
+                            if (['Point', "Circle"].includes(selected?.properties?.annotationType) && ['msGeometry'].includes(key)) {
                                 return acc;
                             }
                             return {
@@ -129,10 +141,13 @@ export function FeaturesEditor({
     const [collectionHistory, dispatch] = useReducer(historyCollectionReducer, { present: value, past: [], future: [] });
     const collection = collectionHistory?.present || collectionHistory || DEFAULT_VALUE;
     const selected = (collection?.features || []).find((feature) => feature?.id === selectedId);
-    const { symbolizerBlock, ruleBlock } = parseBlocks(getBlocks({
-        exactMatchGeometrySymbol: true,
-        enable3dStyleOptions
-    }));
+    const { symbolizerBlock, ruleBlock } = parseBlocks(
+        getBlocks({
+            exactMatchGeometrySymbol: true,
+            enable3dStyleOptions
+        }),
+        selected
+    );
 
     const MapInteractionsSupport = mapInteractionsSupport;
 
