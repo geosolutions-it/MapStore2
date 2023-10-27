@@ -651,6 +651,7 @@ export const toPlotly = (_props) => {
  */
 function WidgetChart({
     onInitialized,
+    onHover,
     ...props
 }) {
     const { data, layout, config } = toPlotly(props);
@@ -658,6 +659,7 @@ function WidgetChart({
         <Suspense fallback={<LoadingView />}>
             <Plot
                 onInitialized={onInitialized}
+                onHover={onHover}
                 data={data.flat()}
                 layout={layout}
                 config={config}
