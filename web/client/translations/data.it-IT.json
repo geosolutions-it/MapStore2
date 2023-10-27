@@ -156,6 +156,21 @@
                 "scale": "Scala",
                 "resolution": "Risoluzione"
             },
+            "3dTiles": {
+                "format": "Formato",
+                "3dModel": "Modello 3D",
+                "pointCloud": "Nuvola di punti",
+                "pointCloudShading": {
+                    "title": "Opzioni di visualizzazione",
+                    "attenuationInfo": "Applica una attenuazione della nuvola di punti basata sul punto di vista corrente",
+                    "attenuation": "Abilita attenuazione",
+                    "maximumAttenuation": "Massima attenuazione",
+                    "eyeDomeLightingInfo": "Abilita l'illuminazione di tipo eye dome per migliorare la visualizzazione della nuvola di punti. Questa non rappresenta l'attuale illuminazione del sole",
+                    "eyeDomeLighting": "Abilita illuminazione",
+                    "eyeDomeLightingStrength": "Intensità luminosa",
+                    "eyeDomeLightingRadius": "Raggio di illuminazione"
+                }
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Titolo",
@@ -2508,7 +2523,8 @@
             "startPoint": "Punto iniziale",
             "endPoint": "Punto finale",
             "line": "Linea",
-            "geodesicLine": "Linea geodesica"
+            "geodesicLine": "Linea geodesica",
+            "pointCloudSizeInfo": "Il raggio della nuvola di punti viene applicato solo quando le opzioni di attenuazione sono disabilitate. L'opzione di attenuazione ha la precedenza su questa proprietà."
         },
         "playback": {
             "settings": {

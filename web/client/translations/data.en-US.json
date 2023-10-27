@@ -156,6 +156,21 @@
                 "scale": "Scale",
                 "resolution": "Resolution"
             },
+            "3dTiles": {
+                "format": "Format",
+                "3dModel": "3D Model",
+                "pointCloud": "Point Cloud",
+                "pointCloudShading": {
+                    "title": "Visualization options",
+                    "attenuationInfo": "Perform point attenuation based on the distance from the current view point",
+                    "attenuation": "Enable attenuation",
+                    "maximumAttenuation": "Maximum attenuation",
+                    "eyeDomeLightingInfo": "This enable an eye dome lighting to improve visualization of the point cloud. This does not represent the real sun lighting",
+                    "eyeDomeLighting": "Enable lighting",
+                    "eyeDomeLightingStrength": "Lighting strength",
+                    "eyeDomeLightingRadius": "Lighting radius"
+                }
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
@@ -2517,7 +2532,8 @@
             "startPoint": "Start point",
             "endPoint": "End point",
             "line": "Line",
-            "geodesicLine": "Geodesic line"
+            "geodesicLine": "Geodesic line",
+            "pointCloudSizeInfo": "The point cloud radius is applied only when the attenuation options is disabled. The attenuation option takes precedence over this property."
         },
         "playback": {
             "settings": {

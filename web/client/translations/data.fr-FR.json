@@ -156,6 +156,21 @@
                 "scale": "Échelle",
                 "resolution": "Résolution"
             },
+            "3dTiles": {
+                "format": "Formater",
+                "3dModel": "Modèle 3D",
+                "pointCloud": "Nuage de points",
+                "pointCloudShading": {
+                    "title": "Options de visualisation",
+                    "attenuationInfo": "Effectuer une atténuation de point en fonction de la distance du point de vue actuel",
+                    "attenuation": "Activer l'atténuation",
+                    "maximumAttenuation": "Atténuation maximale",
+                    "eyeDomeLightingInfo": "Cela permet à un éclairage du dôme oculaire d'améliorer la visualisation du nuage de points. Cela ne représente pas l'éclairage réel du soleil",
+                    "eyeDomeLighting": "Activer l'éclairage",
+                    "eyeDomeLightingStrength": "Force d'éclairage",
+                    "eyeDomeLightingRadius": "Rayon d'éclairage"
+                }
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -2507,7 +2522,8 @@
             "startPoint": "Point de départ",
             "endPoint": "Point final",
             "line": "Ligne",
-            "geodesicLine": "Ligne géodésique"
+            "geodesicLine": "Ligne géodésique",
+            "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété."
         },
         "playback": {
             "settings": {
