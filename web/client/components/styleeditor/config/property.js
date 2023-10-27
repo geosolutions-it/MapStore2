@@ -175,7 +175,7 @@ const property = {
         },
         isDisabled
     }),
-    size: ({ key = 'radius', label = 'Radius', range, fallbackValue = 1 }) => ({
+    size: ({ key = 'radius', label = 'Radius', range, fallbackValue = 1, infoMessageId }) => ({
         type: 'input',
         valueType: 'number',
         label,
@@ -185,7 +185,8 @@ const property = {
             maxWidth: 105,
             uom: 'px',
             min: range?.min ?? 0,
-            max: range?.max
+            max: range?.max,
+            infoMessageId
         },
         setValue: (value = 1) => {
             return value === undefined ? fallbackValue : parseFloat(value);

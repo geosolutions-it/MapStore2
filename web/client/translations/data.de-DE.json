@@ -157,6 +157,21 @@
                 "scale": "Maßstab",
                 "resolution": "Auflösung"
             },
+            "3dTiles": {
+                "format": "Format",
+                "3dModel": "3D-Modell",
+                "pointCloud": "Punktwolke",
+                "pointCloudShading": {
+                    "title": "Visualisierungsoptionen",
+                    "attenuationInfo": "Punktabschwächung basierend auf der Entfernung vom aktuellen Blickpunkt durchführen",
+                    "attenuation": "Dämpfung aktivieren",
+                    "maximumAttenuation": "Maximale Dämpfung",
+                    "eyeDomeLightingInfo": "Dies ermöglicht eine Augenkuppelbeleuchtung, um die Visualisierung der Punktwolke zu verbessern. Dies stellt nicht das echte Sonnenlicht dar",
+                    "eyeDomeLighting": "Beleuchtung aktivieren",
+                    "eyeDomeLightingStrength": "Lichtstärke",
+                    "eyeDomeLightingRadius": "Beleuchtungsradius"
+                }
+            },
             "tooltip": {
                 "label": "QuickInfo",
                 "title": "Titel",
@@ -2607,7 +2622,8 @@
             "colorOpacity": "Deckkraft",
             "offset": "Offset",
             "propertyValue": "Eigenschaftswert",
-            "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\""
+            "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\"",
+            "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft."
         },
         "playback": {
             "settings": {
