@@ -154,6 +154,21 @@
                 "scale": "Escala",
                 "resolution": "Resolución"
             },
+            "3dTiles": {
+                "format": "Formato",
+                "3dModel": "Modelo 3D",
+                "pointCloud": "Nube de puntos",
+                "pointCloudShading": {
+                    "title": "Opciones de visualización",
+                    "attenuationInfo": "Realiza atenuación de puntos según la distancia desde el punto de vista actual",
+                    "attenuation": "Habilitar atenuación",
+                    "maximumAttenuation": "Atenuación máxima",
+                    "eyeDomeLightingInfo": "Esto habilita una iluminación de domo ocular para mejorar la visualización de la nube de puntos. Esto no representa la iluminación solar real",
+                    "eyeDomeLighting": "Habilitar iluminación",
+                    "eyeDomeLightingStrength": "Intensidad de iluminación",
+                    "eyeDomeLightingRadius": "Radio de iluminación"
+                }
+            },
             "tooltip": {
                 "label": "Información sobre herramientas",
                 "title": "Título",
@@ -2570,7 +2585,8 @@
             "colorOpacity": "Opacidad",
             "offset": "Desplazamiento",
             "propertyValue": "Valor de la propiedad",
-            "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\""
+            "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\"",
+            "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad."
         },
         "playback": {
             "settings": {

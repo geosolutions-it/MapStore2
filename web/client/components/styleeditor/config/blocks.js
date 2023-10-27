@@ -449,7 +449,8 @@ const getBlocks = ({
                     range: {
                         min: 1,
                         max: 10
-                    }
+                    },
+                    infoMessageId: 'styleeditor.pointCloudSizeInfo'
                 })
             },
             defaultProperties: {
