@@ -205,6 +205,8 @@ const ChartWizard = ({
                     onFilterLayer={() => openFilterEditor()}
                 />}
                 <ChartStyleEditorComp
+                    // force the re-rendering on trace change
+                    key={selectedTrace?.id}
                     data={selectedTrace}
                     layer={selectedTrace?.layer}
                     featureTypeProperties={featureTypeProperties}
