@@ -58,7 +58,8 @@ function CompactRichTextEditor({
                     urlEnabled: true,
                     // disable the upload at the moment
                     // it will increase the size of the map too much
-                    uploadEnabled: false,
+                    // allows to set enable imge upload on/off via props
+                    uploadEnabled: props.uploadEnabled || false,
                     alignmentEnabled: false,
                     uploadCallback: (file) => new Promise((resolve, reject) => {
                         const reader = new FileReader();
