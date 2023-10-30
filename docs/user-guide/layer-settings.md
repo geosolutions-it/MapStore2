@@ -114,11 +114,15 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 !!!Warning
     On the *Display* tab, only the following options are available for a **3D Tile** layer:
 
+    <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
     * The **Visibility limits** to display the layer only within certain scale limits, as reported above.
 
     * The **Height Offset** above the ground.
 
-    <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
+    * The **Format** choosing between `3D Model` and `Point Cloud`. The *Point Cloud* option allows the user to customize the `Maximum Attenuation` of the points based on the distance from the current viewpoint and customize the `Lighting strength` and the `Lighting radius` to improve visualization of the point cloud.
+
+    <img src="../img/layer-settings/display-point-cloud.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 ## Fields
 
