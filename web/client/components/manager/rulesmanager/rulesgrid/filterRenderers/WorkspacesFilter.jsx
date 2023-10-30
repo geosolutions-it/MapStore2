@@ -32,7 +32,9 @@ export default compose(
         loadData: getWorkspaces,
         parentsFilter: {},
         filter: "startsWith",
-        placeholder: "rulesmanager.placeholders.filter",
+        placeholder: "rulesmanager.placeholders.filterAny",
+        checkedTooltip: "Show all eligible rules",
+        unCheckedTooltip: "Filter list using selected value",
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingWorkspaces"
@@ -44,6 +46,6 @@ export default compose(
             onFilterChange({column, filterTerm});
         }
     }),
-    localizedProps(["placeholder"]),
+    localizedProps(["placeholder", "loadingErroMsg", "checkedTooltip", "unCheckedTooltip"]),
     autoComplete
 )(PagedCombo);

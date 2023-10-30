@@ -2667,7 +2667,8 @@
                 "layer": "Ebenen suchen",
                 "access": "Zugriff suchen",
                 "ip": "###.###.###.###/##",
-                "priority": "Priorität festlegen"
+                "priority": "Priorität festlegen",
+                "filterAny": "beliebig"
             },
             "menutitle": "GeoFence-Regeln Verwalten",
             "tooltip": {
@@ -2678,7 +2679,9 @@
                 "deleteT": "Entferne ausgewählte Regeln",
                 "cacheT": "Cache leeren",
                 "save": "Aktuelle Regel speichern",
-                "close": "Beenden Sie die Regelerstellung"
+                "close": "Beenden Sie die Regelerstellung",
+                "filterRuleList": "Toon alle in aanmerking komende regels",
+                "showAllRules": "Filterlijst met geselecteerde waarde"
             },
             "navItems": {
                 "main": "Allgemeine Regel",

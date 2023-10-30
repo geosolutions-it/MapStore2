@@ -2630,7 +2630,8 @@
                 "layer": "Escriba para buscar Capas",
                 "access": "Escriba para buscar Acceso",
                 "ip": "###.###.###.###/##",
-                "priority": "Seleccionar prioridad"
+                "priority": "Seleccionar prioridad",
+                "filterAny": "Cualquier"
             },
             "menutitle": "Administrar reglas de GeoFence",
             "tooltip": {
@@ -2641,7 +2642,9 @@
                 "deleteT": "Eliminar las reglas seleccionadas",
                 "cacheT": "Limpiar cache",
                 "save": "Guardar la regla actual",
-                "close": "Salir de crear regla"
+                "close": "Salir de crear regla",
+                "filterRuleList": "Mostrar todas las reglas elegibles",
+                "showAllRules": "Lista de filtros usando un valor seleccionado"
             },
             "navItems": {
                 "main": "Regla general",

@@ -29,7 +29,9 @@ export default compose(
         loadData: getRoles,
         parentsFilter: {},
         filter: false,
-        placeholder: "rulesmanager.placeholders.filter",
+        placeholder: "rulesmanager.placeholders.filterAny",
+        checkedTooltip: "Show all eligible rules",
+        unCheckedTooltip: "Filter list using selected value",
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingRoles"
@@ -41,6 +43,6 @@ export default compose(
             onFilterChange({column, filterTerm});
         }
     }),
-    localizedProps(["placeholder", "loadingErroMsg"]),
+    localizedProps(["placeholder", "loadingErroMsg", "checkedTooltip", "unCheckedTooltip"]),
     autoComplete
 )(PagedCombo);

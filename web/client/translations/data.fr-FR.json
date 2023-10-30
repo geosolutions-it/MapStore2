@@ -2630,7 +2630,8 @@
                 "layer": "Rechercher des couches",
                 "access": "Rechercher des accès",
                 "ip": "###.###.###.###/##",
-                "priority": "Sélectionner la priorité"
+                "priority": "Sélectionner la priorité",
+                "filterAny": "n'importe quel"
             },
             "menutitle": "Gérer les règles d'accès",
             "tooltip": {
@@ -2641,7 +2642,9 @@
                 "deleteT": "Supprimer les règles sélectionnées",
                 "cacheT": "Vider le cache",
                 "save": "Enregistrer la règle actuelle",
-                "close": "Fermer la règle"
+                "close": "Fermer la règle",
+                "filterRuleList": "Montrer toutes les règles éligibles",
+                "showAllRules": "Liste de filtre à l'aide d'une valeur sélectionnée"
             },
             "navItems": {
                 "main": "Règle générale",
