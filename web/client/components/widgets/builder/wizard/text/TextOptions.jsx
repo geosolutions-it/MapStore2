@@ -5,8 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import React, { useState } from "react";
+import React from "react";
 import { Col, Form, FormControl, FormGroup } from "react-bootstrap";
 import localizedProps from "../../../../misc/enhancers/localizedProps";
 import {
@@ -24,9 +23,7 @@ const DescriptorEditor = withDebounceOnCallback(
 )(CompactRichTextEditor);
 
 function TextOptions({ data = {}, onChange = () => {} }) {
-    const [editorState, setEditorState] = useState(
-        htmlToDraftJSEditorState(data.text || "")
-    );
+    const editorState = htmlToDraftJSEditorState(data.text || "");
 
     return (
         <div>
