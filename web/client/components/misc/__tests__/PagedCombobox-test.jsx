@@ -171,10 +171,11 @@ describe("This test for PagedCombobox component", () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const checkbox = domNode.getElementsByTagName("input");
-        expect(checkbox.length).toEqual(2);
-        expect(checkbox[0].checked).toEqual(true);
-        expect(checkbox[0].name).toEqual('userAny');
+        const inputs = domNode.getElementsByTagName("input");
+        const checkbox = inputs[1];
+        expect(inputs.length).toEqual(2);
+        expect(checkbox.checked).toEqual(true);
+        expect(checkbox.name).toEqual('userAny');
 
         const tool = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(comp, "rw-i rw-i-caret-down")[0]);
         tool.click();
