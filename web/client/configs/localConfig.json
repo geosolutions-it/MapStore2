@@ -353,7 +353,8 @@
                         "alwaysVisible": false
                     }
                 }
-            }, "Login",
+            },
+            "Login",
             "OmniBar", "BurgerMenu", "Expander", "GlobeViewSwitcher", {
               "name": "Cookie",
               "cfg": {
@@ -556,7 +557,14 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
+            "OmniBar",
+            {
+              "name": "Login",
+              "cfg": {
+                "autoFocus": false
+              }
+            },
+            "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
             "WidgetsTray",
             {
               "name": "Timeline",

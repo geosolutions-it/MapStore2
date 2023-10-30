@@ -9,7 +9,7 @@ import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { changePassword, login, loginFail, logout } from '../../actions/security';
 import {onShowLogin, closeLogin, onLogout, openIDLogin} from '../../actions/login';
-
+import { find } from 'lodash';
 
 import { setControlProperty } from '../../actions/controls';
 
@@ -22,6 +22,8 @@ import { unsavedMapSelector, unsavedMapSourceSelector } from '../../selectors/co
 import ConfigUtils from '../../utils/ConfigUtils';
 import { connect } from '../../utils/PluginsUtils';
 import { userSelector, authProviderSelector } from '../../selectors/security';
+import { pluginsSelectorCreator } from '../../selectors/localConfig';
+import { getPluginConfig } from '../../utils/PluginsUtils';
 
 
 const checkUnsavedMapChanges = (action) => {
@@ -57,12 +59,16 @@ export const PasswordReset = connect((state) => ({
     onClose: setControlProperty.bind(null, "ResetPassword", "enabled", false, false)
 })(PasswordResetModalComp);
 
-export const Login = connect((state) => ({
-    providers: ConfigUtils.getConfigProp("authenticationProviders"),
-    show: state.controls.LoginForm && state.controls.LoginForm.enabled,
-    user: userSelector(state),
-    loginError: state.security && state.security.loginError
-}), {
+
+export const Login = connect((state) => {
+    return ({
+        ...getPluginConfig("Login").cfg,
+        providers: ConfigUtils.getConfigProp("authenticationProviders"),
+        show: state.controls.LoginForm && state.controls.LoginForm.enabled,
+        user: userSelector(state),
+        loginError: state.security && state.security.loginError
+    });
+}, {
     onLoginSuccess: setControlProperty.bind(null, 'LoginForm', 'enabled', false, false),
     openIDLogin,
     onClose: closeLogin,

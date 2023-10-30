@@ -43,6 +43,7 @@ class LoginModal extends React.Component {
         loginError: PropTypes.object,
         show: PropTypes.bool,
         options: PropTypes.object,
+        autoFocus: PropTypes.bool,
 
         // CALLBACKS
         onLoginSuccess: PropTypes.func,
@@ -71,7 +72,8 @@ class LoginModal extends React.Component {
         closeGlyph: "",
         style: {},
         buttonSize: "large",
-        includeCloseButton: true
+        includeCloseButton: true,
+        autoFocus: false
     };
 
     getForm = () => {
@@ -81,6 +83,7 @@ class LoginModal extends React.Component {
                 role="body"
                 ref="loginForm"
                 showSubmitButton={false}
+                autoFocus={this.props.autoFocus}
                 user={this.props.user}
                 loginError={this.props.loginError}
                 onLoginSuccess={this.props.onLoginSuccess}
