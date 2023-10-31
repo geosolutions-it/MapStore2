@@ -160,7 +160,7 @@ describe('test rules manager reducer', () => {
         });
         expect(state.filters).toEqual({
             workspace: undefined,
-            workspaceAny: true,
+            workspaceAny: undefined,
             layer: "layer1"
         });
     });
