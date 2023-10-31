@@ -95,15 +95,21 @@ gitGraph TB:
     commit id: "fix-1"
     checkout 2023.01.xx
     cherry-pick id:"fix-1"
+    commit id: "fix-versions-1+changelog"
     commit id: "2023.01.00-release" tag: "v2023.02.00"
+    commit id: "restore-snaphots-1"
     checkout main
+    commit id: "Changelog for version v2023.01.00"
     commit id: "fix-2"
     commit id: "feature-2"
     commit id: "feature-3"
     checkout 2023.01.xx
     cherry-pick id:"fix-2"
+    commit id: "fix-versions-2+changelog"
     commit id: "2023.01.01-release" tag: "v2023.02.01"
+    commit id: "restore-snaphots-2"
     checkout main
+    commit id: "Changelog for version v2023.02.01"
     commit
     commit
     branch 2023.02.xx
