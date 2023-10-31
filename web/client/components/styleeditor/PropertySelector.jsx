@@ -21,6 +21,7 @@ const PropertySelector = ({
     attributes,
     value,
     onChange,
+    disabled,
     fieldKey,
     config,
     disableAlpha: disableAlphaProp,
@@ -36,6 +37,7 @@ const PropertySelector = ({
     return (
         <div className="ms-symbolizer-property-selector" style={{ width: '100%' }}>
             <PropertyField
+                disabled={disabled}
                 label={labelProp}
                 invalid={value?.args?.[0] === undefined}
                 infoMessageId={config?.propertySelectorInfoMessageId}>
