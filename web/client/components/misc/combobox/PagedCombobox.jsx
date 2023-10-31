@@ -60,8 +60,8 @@ class PagedCombobox extends React.Component {
         onFilterChange: PropTypes.func,
         anyFieldVal: PropTypes.bool,
         column: PropTypes.object,
-        checkedTooltip: PropTypes.string,
-        unCheckedTooltip: PropTypes.string
+        checkedAnyField: PropTypes.string,
+        unCheckedAnyField: PropTypes.string
     };
 
     static contextTypes = {
@@ -104,8 +104,8 @@ class PagedCombobox extends React.Component {
         anyFilterRuleMode: '',
         onFilterChange: ()=>{},
         column: {},
-        checkedTooltip: "",
-        unCheckedTooltip: ""
+        checkedAnyField: "",
+        unCheckedAnyField: ""
     };
 
     componentDidUpdate(prevProps) {
@@ -129,6 +129,21 @@ class PagedCombobox extends React.Component {
         </OverlayTrigger>);
     };
 
+    renderTooltipCheckbox = () => {
+        const { onFilterChange, anyFieldVal } = this.props;
+
+        let checkboxInput = (
+            <input onChange={(evt)=>{
+                onFilterChange({column: {key: evt.target.name}, filterTerm: !evt.target.checked});
+            }} type="checkbox" checked={!!(typeof anyFieldVal === 'boolean' && !anyFieldVal)}
+            name={this.props.anyFilterRuleMode} />
+        );
+        const tooltip = (<Tooltip id={this.props.tooltip.id + anyFieldVal ? "checked" : "unchecked"}>
+            { !!(typeof anyFieldVal === 'boolean' && !anyFieldVal) ? this.props.checkedAnyField : this.props.unCheckedAnyField }</Tooltip>);
+        return (<OverlayTrigger key={this.props.tooltip.overlayTriggerKey} placement={this.props.tooltip.placement} overlay={tooltip}>
+            { checkboxInput }
+        </OverlayTrigger>);
+    }
 
     renderPagination = () => {
         const firstPage = this.props.pagination.firstPage;
@@ -193,7 +208,7 @@ class PagedCombobox extends React.Component {
         return this.props.tooltip && this.props.tooltip.enabled ? this.renderWithTooltip(field) : field;
     }
     render() {
-        const {selectedValue: v, disabled, onReset, label: l, clearable, onFilterChange, anyFieldVal } = this.props;
+        const {selectedValue: v, disabled, onReset, label: l, clearable, onFilterChange } = this.props;
         let label = l ? (<label>{l}</label>) : (<span/>); // TODO change "the else case" value with null ?
         return (
             <div className={`autocompleteField ${this.props.anyFilterRuleMode ? 'd-flex' : ''}`}>
@@ -215,10 +230,7 @@ class PagedCombobox extends React.Component {
                 <div>
                     {label}
                     { this.props.anyFilterRuleMode ?
-                        <input onChange={(evt)=>{
-                            onFilterChange({column: {key: evt.target.name}, filterTerm: !evt.target.checked});
-                        }} type="checkbox" checked={!!(typeof anyFieldVal === 'boolean' && !anyFieldVal)} title={anyFieldVal ? this.props.unCheckedTooltip : this.props.checkedTooltip}
-                        name={this.props.anyFilterRuleMode} /> : null}
+                        this.renderTooltipCheckbox() : null}
                 </div>
             </div>);
     }

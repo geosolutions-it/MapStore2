@@ -2680,8 +2680,8 @@
                 "cacheT": "Cache leeren",
                 "save": "Aktuelle Regel speichern",
                 "close": "Beenden Sie die Regelerstellung",
-                "filterRuleList": "Toon alle in aanmerking komende regels",
-                "showAllRules": "Filterlijst met geselecteerde waarde"
+                "showAllRules": "Toon alle in aanmerking komende regels",
+                "filterRuleList": "Filterlijst met geselecteerde waarde"
             },
             "navItems": {
                 "main": "Allgemeine Regel",

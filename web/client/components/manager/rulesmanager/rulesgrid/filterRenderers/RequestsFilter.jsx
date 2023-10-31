@@ -36,8 +36,8 @@ export default compose(
         parentsFilter: {},
         filter: "startsWith",
         placeholder: "rulesmanager.placeholders.filterAny",
-        checkedTooltip: "Show all eligible rules",
-        unCheckedTooltip: "Filter list using selected value",
+        unCheckedAnyField: "rulesmanager.tooltip.filterRuleList",
+        checkedAnyField: "rulesmanager.tooltip.showAllRules",
         services: {
             "WFS": [
                 "DescribeFeatureType",
@@ -68,6 +68,6 @@ export default compose(
             onFilterChange({column, filterTerm});
         }
     }),
-    localizedProps(["placeholder", "checkedTooltip", "unCheckedTooltip"]),
+    localizedProps(["placeholder", "checkedAnyField", "unCheckedAnyField"]),
     fixedOptions
 )(PagedCombo);

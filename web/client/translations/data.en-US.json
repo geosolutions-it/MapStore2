@@ -2653,8 +2653,8 @@
                 "cacheT": "Clear cache",
                 "save": "Save current rule",
                 "close": "Exit from create rule",
-                "filterRuleList": "Show all eligible rules",
-                "showAllRules": "Filter list using selected value"
+                "showAllRules": "Show all eligible rules",
+                "filterRuleList": "Filter list using selected value"
             },
             "navItems": {
                 "main": "General Rule",

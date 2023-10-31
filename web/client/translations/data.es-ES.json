@@ -2643,8 +2643,8 @@
                 "cacheT": "Limpiar cache",
                 "save": "Guardar la regla actual",
                 "close": "Salir de crear regla",
-                "filterRuleList": "Mostrar todas las reglas elegibles",
-                "showAllRules": "Lista de filtros usando un valor seleccionado"
+                "showAllRules": "Mostrar todas las reglas elegibles",
+                "filterRuleList": "Lista de filtros usando un valor seleccionado"
             },
             "navItems": {
                 "main": "Regla general",
