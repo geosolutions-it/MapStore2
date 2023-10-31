@@ -30,9 +30,8 @@ const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, 
 */
 export default compose(
     compose(connect(null, (dispatch, ownProps)=>{
-        let enableZoomTblWidget = ownProps?.enableZoomTblWidget;
-        let isTblDashboard = enableZoomTblWidget?.dashboard && ownProps?.mapSync && ownProps?.widgetType === 'table' && ownProps?.isDashboardOpened;
-        let isTblWidgetInMapViewer = ownProps?.widgetType && !isTblDashboard && enableZoomTblWidget?.mapViewer;
+        let isTblDashboard = ownProps?.enableZoomInTblWidgetInDashboard && ownProps?.mapSync && ownProps?.widgetType === 'table' && ownProps?.isDashboardOpened;
+        let isTblWidgetInMapViewer = ownProps?.widgetType && !isTblDashboard && ownProps?.enableZoomInTblWidgetInMapViewer;
         let isTblSyncWithMap = ownProps?.mapSync;
         return {
             gridTools: (isTblSyncWithMap && isTblDashboard) || (isTblWidgetInMapViewer) ? gridTools.map((t) => ({
@@ -41,7 +40,7 @@ export default compose(
                     onClick: async(p, opts, describe, {crs, maxZoom} = {}) => {
                         if (ownProps?.recordZoomLoading) return;
                         try {
-                            // fetch feature with geomnetry and zoom to it if geometry not exist
+                            // fetch feature with geometry and zoom to it if geometry not exist
                             if (!p?.bbox) {
                                 ownProps?.updateProperty(ownProps.id, `dependencies.zoomLoader`, true);     // show loader instead of zoom icon
                                 let { data: featureData } = await getFeature(ownProps?.layer?.search?.url, ownProps?.layer?.name, {
@@ -73,10 +72,10 @@ export default compose(
                             }
                         } catch (err) {
                             dispatch(error({
-                                title: "warning",
-                                message: "Error loading GF Geom", // TODO add tranlations
+                                title: "notification.warning",
+                                message: "notification.errorLoadingGF",
                                 action: {
-                                    label: "warning" // TODO add tranlations
+                                    label: "notification.warning"
                                 },
                                 autoDismiss: 3,
                                 position: "tc"

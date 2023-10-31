@@ -10,7 +10,6 @@ import React from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import {compose, withProps} from 'recompose';
 import { isGeometryType } from '../../../../../utils/ogc/WFS/base';
-
 import AttributeTable from '../../../../data/featuregrid/AttributeTable';
 import Message from '../../../../I18N/Message';
 import { applyDefaultToLocalizedString } from '../../../../I18N/LocalizedString';

@@ -491,9 +491,7 @@ class OpenlayersMap extends React.Component {
                 this.props.id,
                 this.props.projection,
                 undefined, // viewerOptions,
-                view.getResolution(), // resolution
-                undefined,
-                this.zoomToExtentHandler
+                view.getResolution() // resolution
             );
         }
     };

@@ -23,8 +23,7 @@ import {
     getMaximizedState,
     getVisibleFloatingWidgets,
     isTrayEnabled,
-    getTblWidgetZoomLoader,
-    getFlagOfShowingTblWidgetZoom
+    getTblWidgetZoomLoader
 } from '../selectors/widgets';
 import {
     changeLayout,
@@ -59,8 +58,7 @@ compose(
             state => state.browser && state.browser.mobile,
             getFloatingWidgets,
             getTblWidgetZoomLoader,
-            getFlagOfShowingTblWidgetZoom,
-            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading, enableZoomTblWidget) => ({
+            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading) => ({
                 id,
                 widgets,
                 layouts,
@@ -69,8 +67,7 @@ compose(
                 mapLayout,
                 isMobileAgent,
                 dropdownWidgets,
-                recordZoomLoading,
-                enableZoomTblWidget
+                recordZoomLoading
             })
         ), {
             editWidget,
@@ -279,13 +276,15 @@ compose(
 
 class Widgets extends React.Component {
     static propTypes = {
-        enabled: PropTypes.bool
+        enabled: PropTypes.bool,
+        enableZoomInTblWidget: PropTypes.bool
     };
     static defaultProps = {
-        enabled: true
+        enabled: true,
+        enableZoomInTblWidget: true
     };
     render() {
-        return this.props.enabled ? <WidgetsView {...this.props /* pass options to the plugin */ } /> : null;
+        return this.props.enabled ? <WidgetsView enableZoomInTblWidgetInMapViewer={this.props.enableZoomInTblWidget} {...this.props /* pass options to the plugin */ } /> : null;
     }
 }
 /**

@@ -190,15 +190,3 @@ export const getTblWidgetZoomLoader = state => {
     let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
-
-export const getFlagOfShowingTblWidgetZoom = state => {
-    let widgetPluginMapViewer = state?.localConfig?.plugins?.desktop?.find(pl=>pl.name === "Widgets");
-    let flagShownZoomInTblWidgetMapViewer = widgetPluginMapViewer?.cfg?.enableZoomInTblWidget || false;
-
-    let dashboardPluginDashboardViewer = state?.localConfig?.plugins?.dashboard?.find(pl=>pl.name === "Dashboard");
-    let flagShownZoomInTblWidgetDashboardViewer = dashboardPluginDashboardViewer?.cfg?.enableZoomInTblWidget || false;
-    return {
-        mapViewer: flagShownZoomInTblWidgetMapViewer,
-        dashboard: flagShownZoomInTblWidgetDashboardViewer
-    };
-};

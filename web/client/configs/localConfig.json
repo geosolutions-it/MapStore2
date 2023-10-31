@@ -558,7 +558,7 @@
             "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", {
               "name": "Widgets",
               "cfg": {
-                "enableZoomInTblWidget": true
+                "enableZoomInTblWidget": false
                 }
             },
             "WidgetsTray",

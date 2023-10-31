@@ -57,9 +57,7 @@ describe('widgets tableWidget enhancer', () => {
             );
             done();
         }));
-        ReactDOM.render( <Provider store={store}><Sink enableZoomTblWidget={{
-            dashboard: true
-        }} id="123456" mapSync={"true"} widgetType={"table"} isDashboardOpened={"true"} updateProperty={(id, path, value) => {
+        ReactDOM.render( <Provider store={store}><Sink enableZoomInTblWidgetInDashboard ={"true"} id="123456" mapSync={"true"} widgetType={"table"} isDashboardOpened={"true"} updateProperty={(id, path, value) => {
             expect(path).toBe("dependencies.extentObj");
             expect(id).toBe("123456");
             expect(value).toEqual({
@@ -76,9 +74,7 @@ describe('widgets tableWidget enhancer', () => {
             expect(props.gridTools.length).toEqual(0);
             done();
         }));
-        ReactDOM.render( <Provider store={store}><Sink enableZoomTblWidget={{
-            dashboard: false
-        }} id="123456" mapSync={"true"} widgetType={"table"} isDashboardOpened={"true"} updateProperty={(id, path, value) => {
+        ReactDOM.render( <Provider store={store}><Sink enableZoomInTblWidgetInDashboard={false} id="123456" mapSync={"true"} widgetType={"table"} isDashboardOpened={"true"} updateProperty={(id, path, value) => {
             expect(path).toBe("dependencies.extentObj");
             expect(id).toBe("123456");
             expect(value).toEqual({
@@ -100,9 +96,7 @@ describe('widgets tableWidget enhancer', () => {
             );
             done();
         }));
-        ReactDOM.render( <Provider store={store}><Sink enableZoomTblWidget={{
-            mapViewer: true
-        }} id="123456" widgetType={"table"} /></Provider>, document.getElementById("container"));
+        ReactDOM.render( <Provider store={store}><Sink enableZoomInTblWidgetInMapViewer={"true"} id="123456" widgetType={"table"} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toExist();
 
@@ -113,9 +107,7 @@ describe('widgets tableWidget enhancer', () => {
             expect(props.gridTools.length).toEqual(0);
             done();
         }));
-        ReactDOM.render( <Provider store={store}><Sink enableZoomTblWidget={{
-            mapViewer: false
-        }} id="123456" widgetType={"table"} /></Provider>, document.getElementById("container"));
+        ReactDOM.render( <Provider store={store}><Sink enableZoomInTblWidgetInMapViewer={false} id="123456" widgetType={"table"} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toExist();
 
