@@ -55,7 +55,7 @@ function TextOptions({ data = {}, onChange = () => {} }) {
                         setEditorState(newEditorState);
                     }
                 }}
-                // Array of custom or built in fonts can be set up here via props
+                // Array of custom or built in fonts can be set via props
                 // fonts={["Arial", "Impact", "Roman"]}
             />
         </div>
