@@ -87,7 +87,7 @@ function CompactRichTextEditor({
                     }
                 },
                 fontFamily: {
-                    options: DEFAULT_FONT_FAMILIES
+                    options: props.fonts || DEFAULT_FONT_FAMILIES
                 },
                 link: {
                     inDropdown: false,

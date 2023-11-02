@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { Col, Form, FormControl, FormGroup } from "react-bootstrap";
 import localizedProps from "../../../../misc/enhancers/localizedProps";
 import {
@@ -24,7 +24,7 @@ const DescriptorEditor = withDebounceOnCallback(
 )(CompactRichTextEditor);
 
 function TextOptions({ data = {}, onChange = () => {} }) {
-    const editorState = htmlToDraftJSEditorState(data.text || "");
+    const [editorState, setEditorState] = useState(htmlToDraftJSEditorState(data.text || ''));
 
     return (
         <div>
@@ -48,8 +48,15 @@ function TextOptions({ data = {}, onChange = () => {} }) {
             <DescriptorEditor
                 editorState={editorState}
                 onEditorStateChange={(newEditorState) => {
-                    onChange("text", draftJSEditorStateToHtml(newEditorState));
+                    const previousHTML = draftJSEditorStateToHtml(editorState);
+                    const newHTML = draftJSEditorStateToHtml(newEditorState);
+                    if (newHTML !== previousHTML) {
+                        onChange("text", draftJSEditorStateToHtml(newEditorState));
+                        setEditorState(newEditorState);
+                    }
                 }}
+                // Array of custom or built in fonts can be set up here via props
+                // fonts={["Arial", "Impact", "Roman"]}
             />
         </div>
     );
