@@ -11,7 +11,7 @@ import { Col, Form, FormControl, FormGroup } from "react-bootstrap";
 import localizedProps from "../../../../misc/enhancers/localizedProps";
 import {
     htmlToDraftJSEditorState,
-    draftJSEditorStateToHtml,
+    draftJSEditorStateToHtml
 } from "../../../../../utils/EditorUtils";
 
 import withDebounceOnCallback from "../../../../misc/enhancers/withDebounceOnCallback";
