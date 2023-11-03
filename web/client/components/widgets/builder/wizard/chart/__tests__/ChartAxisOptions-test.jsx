@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import ChartAxisOptions from '../ChartAxisOptions';
 import { Simulate } from 'react-dom/test-utils';
 
-describe.only('ChartAxisOptions', () => {
+describe('ChartAxisOptions', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);

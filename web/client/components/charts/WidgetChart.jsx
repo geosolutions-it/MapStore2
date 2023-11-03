@@ -404,8 +404,6 @@ function getLayoutOptions({
     const bottom = bottomPx === 0 ? 0 : bottomPx / height;
     const top = topPX === 0 ? 1 : 1 - (topPX / height);
 
-    const defaultFontSize = 12;
-    const defaultFontFamily = "Noto Sans";
 
     const yAxises = (yAxisOpts).reduce((acc, options, idx) => {
         return {
@@ -428,13 +426,13 @@ function getLayoutOptions({
                 title: {
                     text: options.title,
                     font: {
-                        size: options.fontSize || layout.fontSize  || defaultFontSize,
-                        family: options.fontFamily || layout.fontFamily || defaultFontFamily
+                        size: options.fontSize || layout.fontSize  || FONT.SIZE,
+                        family: options.fontFamily || layout.fontFamily || FONT.FAMILY
                     }
                 },
                 tickfont: {
-                    size: options.fontSize || layout.fontSize  || defaultFontSize,
-                    family: options.fontFamily || layout.fontFamily || defaultFontFamily
+                    size: options.fontSize || layout.fontSize  || FONT.SIZE,
+                    family: options.fontFamily || layout.fontFamily || FONT.FAMILY
                 },
                 tickformat: options?.format,
                 tickprefix: options?.tickPrefix,
@@ -471,13 +469,13 @@ function getLayoutOptions({
                 title: {
                     text: options.title,
                     font: {
-                        size: options.fontSize || layout.fontSize  || defaultFontSize,
-                        family: options.fontFamily || layout.fontFamily || defaultFontFamily
+                        size: options.fontSize || layout.fontSize  || FONT.SIZE,
+                        family: options.fontFamily || layout.fontFamily || FONT.FAMILY
                     }
                 },
                 tickfont: {
-                    size: options.fontSize || layout.fontSize  || defaultFontSize,
-                    family: options.fontFamily || layout.fontFamily || defaultFontFamily
+                    size: options.fontSize || layout.fontSize  || FONT.SIZE,
+                    family: options.fontFamily || layout.fontFamily || FONT.FAMILY
                 },
 
                 ...(idx !== 0

@@ -59,7 +59,7 @@ describe('ChartLayoutOptions', () => {
             'widgets.displayLegend.default'
         ]);
     });
-    it.only('should render multiple bar fields', () => {
+    it('should render multiple bar fields', () => {
         ReactDOM.render(<ChartLayoutOptions data={{
             selectedChartId: 'chart-01',
             charts: [{
