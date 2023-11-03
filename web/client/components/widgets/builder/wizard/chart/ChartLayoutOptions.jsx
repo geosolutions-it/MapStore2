@@ -10,8 +10,10 @@ import { FormGroup, ControlLabel, InputGroup, Checkbox, Radio } from 'react-boot
 import Message from '../../../../I18N/Message';
 import {
     extractTraceData,
-    enableBarChartStack
+    enableBarChartStack,
+    FONT
 } from '../../../../../utils/WidgetsUtils';
+import Font from '../common/Font';
 
 const BAR_CHART_TYPES = [{
     id: 'stacked',
@@ -75,6 +77,16 @@ function ChartLayoutOptions({
                     ))}
                 </InputGroup>
             </FormGroup>}
+            <div className="ms-wizard-form-separator"><Message msgId="widgets.advanced.hoverlabel" /></div>
+            <Font
+                color={selectedChart?.layout?.color || FONT.COLOR}
+                fontSize={selectedChart?.layout?.fontSize || FONT.SIZE}
+                fontFamily={selectedChart?.layout?.fontFamily || FONT.FAMILY}
+                disabled={false}
+                onChange={(key, val) => {
+                    onChange(`${chartPath}.layout.${key}`, val);
+                }}
+            />
         </>
     );
 }

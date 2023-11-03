@@ -37,7 +37,7 @@ const CounterOptions = compose(
     }),
     wfsChartOptions,
     noAttributes(({ options = [] }) => options.length === 0)
-)(WPSChartOptions);
+)(WPSChartOptions); // todo add a wrapper, that contains WPSChartOptions, move counter adv options in counter folder
 
 export const isCounterOptionsValid = (options = {}, { hasAggregateProcess }) => options.aggregateFunction && options.aggregationAttribute && hasAggregateProcess;
 const triggerSetValid = compose(
@@ -95,6 +95,7 @@ const CounterPreview = ({
             type={data.type}
             counterOpts={data.counterOpts}
             formula={data.formula}
+            layout={data.layout}
             legend={data.legend}
             layer={data.layer || layer}
             filter={data.filter}

@@ -9,6 +9,8 @@
 import React, { useState } from 'react';
 import { FormGroup, InputGroup, Button as ButtonRB, Glyphicon, Tabs, Tab } from 'react-bootstrap';
 import ReactSelect from 'react-select';
+import chroma from 'chroma-js';
+
 import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
 import localizedProps from "../../../../misc/enhancers/localizedProps";
 import {
@@ -21,7 +23,6 @@ import {
 import { getChromaScaleByName } from '../../../../../utils/ClassificationUtils';
 import tooltip from '../../../../misc/enhancers/tooltip';
 import Message from "../../../../I18N/Message";
-import chroma from 'chroma-js';
 
 const Button = tooltip(ButtonRB);
 
@@ -202,15 +203,16 @@ function ChartTraceEditSelector({
                 </InputGroup>
             </FormGroup>}
             {children}
-            {editing && selectedTrace?.type !== 'pie' && <Tabs
+            {editing && <Tabs
                 activeKey={tab}
                 animation={false}
                 onSelect={setTab}
             >
                 <Tab key="traces" eventKey="traces" title={<Message msgId="widgets.advanced.traces" />} />
-                <Tab key="axis" eventKey="axis" title={<Message msgId="widgets.advanced.axes" />} />
+                {selectedTrace?.type !== 'pie' ? <Tab key="axis" eventKey="axis" title={<Message msgId="widgets.advanced.axes" />} /> : null}
+                <Tab key="layout" eventKey="layout" title={<Message msgId="widgets.advanced.layout" />} />
             </Tabs>}
-            {editing && (selectedTrace.type === 'pie' || tab !== 'axis') && <FormGroup validationState={error ? 'error' : ''} className="form-group-flex" style={{ marginBottom: 0, marginTop: 8 }}>
+            {editing && tab === 'traces' && <FormGroup validationState={error ? 'error' : ''} className="form-group-flex" style={{ marginBottom: 0, marginTop: 8 }}>
                 <InputGroup>
                     <div style={{ display: 'flex' }}>
                         <div style={{ minWidth: 130 }}>

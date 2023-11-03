@@ -2146,6 +2146,7 @@
                 "gauge": "Afficher les étiquettes"
             },
             "advanced": {
+              "hoverlabel": "Style contextuel",
               "displayCartesian": "Masquer la grille",
               "xAxis": "Axe X",
               "xAxisAngle": "Rotation des étiquettes",

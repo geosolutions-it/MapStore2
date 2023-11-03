@@ -18,6 +18,7 @@ import errorChartState from '../enhancers/errorChartState';
 import emptyChartState from '../enhancers/emptyChartState';
 
 import { parseExpression } from '../../../utils/ExpressionUtils';
+import { FONT } from '../../../utils/WidgetsUtils';
 
 const loadingState = loadingStateFactory();
 const processFormula = (v, formula = "") => {
@@ -51,6 +52,14 @@ const Counter = ({
             console.error(e);
         }
     }
+    const layoutStyle = {
+        fontFamily: counterOpts?.layout?.fontFamily || FONT.FAMILY,
+        color: counterOpts?.layout?.color || FONT.COLOR
+    };
+    const prefixSuffixStyle = {
+        fontSize: "75%",
+        ...layoutStyle
+    };
     return (<Textfit
         mode="single"
         forceSingleModeWidth={false}
@@ -58,13 +67,13 @@ const Counter = ({
         throttle={20}
         {...props}
     >
-        <span style={{fontSize: "75%"}}>
+        <span style={prefixSuffixStyle}>
             {counterOpts?.tickPrefix ? counterOpts.tickPrefix : null}
         </span>
-        <span className="value">
+        <span className="value" style={layoutStyle}>
             {val}
         </span>
-        <span style={{fontSize: "75%"}}>
+        <span style={prefixSuffixStyle}>
             {counterOpts?.tickSuffix || uom}
         </span>
     </Textfit>);

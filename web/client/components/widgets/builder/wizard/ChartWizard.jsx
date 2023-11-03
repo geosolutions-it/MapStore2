@@ -139,6 +139,11 @@ const ChartWizard = ({
             data
         };
     });
+    useEffect(() => {
+        if (selectedTrace?.type === "pie" && tab === "axis") {
+            setTab("traces");
+        }
+    }, [selectedTrace?.type]);
 
     if (!selectedTrace) {
         return null;
@@ -230,14 +235,16 @@ const ChartWizard = ({
                     data={data}
                     onChange={onChange}
                 />
-                <ChartLayoutOptions
-                    data={data}
-                    onChange={onChange}
-                />
             </>
         ),
         axis: (
             <ChartAxisOptions
+                data={data}
+                onChange={onChange}
+            />
+        ),
+        layout: (
+            <ChartLayoutOptions
                 data={data}
                 onChange={onChange}
             />
@@ -247,7 +254,7 @@ const ChartWizard = ({
     const ChartOptions = (
         <>
             {sampleChart}
-            {tabContents[selectedTrace?.type === 'pie' ? 'traces' : (tab || 'traces')]}
+            {tabContents[tab || 'traces']}
         </>
     );
     const WidgetOptions = !noAttributes ? (

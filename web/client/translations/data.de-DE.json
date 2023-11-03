@@ -2183,6 +2183,7 @@
                 "gauge": "Legende anzeigen"
             },
             "advanced": {
+                "hoverlabel": "Popup-Stil",
                 "displayCartesian": "Gitter ausblenden",
                 "xAxis": "X-Achse",
                 "xAxisAngle": "Beschriftungsdrehung",

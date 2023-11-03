@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom';
 import ChartAxisOptions from '../ChartAxisOptions';
 import { Simulate } from 'react-dom/test-utils';
 
-describe('ChartAxisOptions', () => {
+describe.only('ChartAxisOptions', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -30,6 +30,7 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
+            'styleeditor.fontFamily',
             'widgets.advanced.prefix',
             'widgets.advanced.format ',
             'widgets.advanced.suffix',
@@ -39,6 +40,7 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.xAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
+            'styleeditor.fontFamily',
             'widgets.advanced.side',
             'widgets.advanced.anchor'
         ]);
@@ -79,6 +81,7 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
+            'styleeditor.fontFamily',
             'widgets.advanced.prefix',
             'widgets.advanced.format ',
             'widgets.advanced.suffix',
@@ -88,6 +91,7 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.xAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
+            'styleeditor.fontFamily',
             'widgets.advanced.side',
             'widgets.advanced.anchor'
         ]);

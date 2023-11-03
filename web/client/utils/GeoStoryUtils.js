@@ -560,6 +560,7 @@ export const extractFontNames = (fontFamilies) => {
 
 export const DEFAULT_FONT_FAMILIES = [
     'inherit',
+    'Noto Sans',
     'Arial',
     'Georgia',
     'Impact',

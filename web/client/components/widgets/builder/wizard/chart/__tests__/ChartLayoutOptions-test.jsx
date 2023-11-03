@@ -59,7 +59,7 @@ describe('ChartLayoutOptions', () => {
             'widgets.displayLegend.default'
         ]);
     });
-    it('should render multiple bar fields', () => {
+    it.only('should render multiple bar fields', () => {
         ReactDOM.render(<ChartLayoutOptions data={{
             selectedChartId: 'chart-01',
             charts: [{
@@ -72,7 +72,7 @@ describe('ChartLayoutOptions', () => {
             }]
         }}/>, document.getElementById('container'));
         const controlLabelsNodes = document.querySelectorAll('.control-label');
-        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([ 'widgets.advanced.barChartType' ]);
+        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([ 'widgets.advanced.barChartType', 'styleeditor.color', 'styleeditor.fontSize', 'styleeditor.fontFamily' ]);
         const checkboxNodes = document.querySelectorAll('.checkbox');
         expect([...checkboxNodes].map(node => node.innerText)).toEqual([
             'widgets.advanced.displayCartesian',
