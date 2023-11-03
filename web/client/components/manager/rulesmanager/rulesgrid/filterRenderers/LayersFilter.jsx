@@ -21,7 +21,8 @@ const parentFiltersSel = createSelector(workspaceSelector, (workspace) => ({
 }));
 const selector = createSelector([filterSelector, parentFiltersSel], (filter, parentsFilter) => ({
     selected: filter.layer,
-    parentsFilter
+    parentsFilter,
+    anyFieldVal: filter.layerAny
 }));
 
 export default compose(
@@ -33,17 +34,20 @@ export default compose(
         loadData: loadLayers,
         parentsFilter: {},
         filter: false,
-        placeholder: "rulesmanager.placeholders.filter",
+        placeholder: "rulesmanager.placeholders.filterAny",
+        unCheckedAnyField: "rulesmanager.tooltip.filterRuleList",
+        checkedAnyField: "rulesmanager.tooltip.showAllRules",
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingLayers"
-        }
+        },
+        anyFilterRuleMode: 'layerAny'
     }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {
             onFilterChange({column, filterTerm});
         }
     }),
-    localizedProps(["placeholder"]),
+    localizedProps(["placeholder", "loadingErroMsg", "checkedAnyField", "unCheckedAnyField"]),
     autoComplete
 )(PagedCombo);
