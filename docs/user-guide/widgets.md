@@ -374,10 +374,17 @@ Also in this case the toolbar is similar to the one present in [Chart section](#
 
 * Select the **Operation** to perform
 
-* Set the **Unit of measure** that will be displayed
+From the **Trace value formatting** section, the user is allowed to:
+
+* Customize the labels by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`).
+
+* Configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more).
+
+!!! Note
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
 
 !!! warning
-    In order to move forward to the next step, only the **Use** and the **Count** are considered as mandatory fields.
+    In order to move forward to the next step, only the **Use** and the **Operation** are considered as mandatory fields.
 
 Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clicked, the panel of the last step appears:
 
