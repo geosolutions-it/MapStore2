@@ -160,10 +160,7 @@ const chartDataTypes = {
                         name: classificationDataKey,
                         legendgroup: `${id}-${classificationDataKey}`,
                         legendgrouptitle: {
-                            text: classificationDataKey === valueDataKey ? classificationDataKey : `${valueDataKey} | ${classificationDataKey}`,
-                            color: layout.color || FONT.COLOR,
-                            family: layout.fontFamily || FONT.FAMILY,
-                            size: layout.fontSize || FONT.SIZE
+                            text: classificationDataKey === valueDataKey ? classificationDataKey : `${valueDataKey} | ${classificationDataKey}`
                         },
                         hovertemplate: `%{label}<br>${classificationDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
                         hoverlabel: {
