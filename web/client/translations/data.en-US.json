@@ -2700,7 +2700,8 @@
                 "access": "Type to search Access",
                 "ip": "###.###.###.###/##",
                 "priority": "Select Priority",
-                "filter": "Filter styles..."
+                "filter": "Filter styles...",
+                "filterAny": "ANY"
             },
             "menutitle": "Manage Access Rules",
             "tooltip": {
@@ -2711,7 +2712,9 @@
                 "deleteT": "Remove selected rules",
                 "cacheT": "Clear cache",
                 "save": "Save current rule",
-                "close": "Exit from create rule"
+                "close": "Exit from create rule",
+                "showAllRules": "Show all eligible rules",
+                "filterRuleList": "Filter list using selected value"
             },
             "navItems": {
                 "main": "General Rule",

@@ -17,7 +17,8 @@ import { createSelector } from 'reselect';
 import { filterSelector } from '../../../../../selectors/rulesmanager';
 
 const selector = createSelector(filterSelector, (filter) => ({
-    selected: filter.workspace
+    selected: filter.workspace,
+    anyFieldVal: filter.workspaceAny
 }));
 
 
@@ -31,17 +32,20 @@ export default compose(
         loadData: getWorkspaces,
         parentsFilter: {},
         filter: "startsWith",
-        placeholder: "rulesmanager.placeholders.filter",
+        placeholder: "rulesmanager.placeholders.filterAny",
+        unCheckedAnyField: "rulesmanager.tooltip.filterRuleList",
+        checkedAnyField: "rulesmanager.tooltip.showAllRules",
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingWorkspaces"
-        }
+        },
+        anyFilterRuleMode: 'workspaceAny'
     }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {
             onFilterChange({column, filterTerm});
         }
     }),
-    localizedProps(["placeholder"]),
+    localizedProps(["placeholder", "loadingErroMsg", "checkedAnyField", "unCheckedAnyField"]),
     autoComplete
 )(PagedCombo);
