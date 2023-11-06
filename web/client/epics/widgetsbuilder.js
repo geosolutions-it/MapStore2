@@ -23,17 +23,17 @@ import { QUERY_FORM_SEARCH, loadFilter } from '../actions/queryform';
 import { setControlProperty, TOGGLE_CONTROL } from '../actions/controls';
 import { ADD_LAYER } from '../actions/layers';
 import { LOCATION_CHANGE } from 'connected-react-router';
-// import { featureTypeSelected } from '../actions/wfsquery';
+import { featureTypeSelected } from '../actions/wfsquery';
 import { getWidgetLayer, getEditingWidgetFilter, getWidgetFilterKey } from '../selectors/widgets';
 import { wfsFilter } from '../selectors/query';
 import { widgetBuilderAvailable } from '../selectors/controls';
 import { generateNewTrace } from '../utils/WidgetsUtils';
-// const getFTSelectedArgs = (state) => {
-//     let layer = getWidgetLayer(state);
-//     let url = layer.search && layer.search.url;
-//     let typeName = layer.name;
-//     return [url, typeName, layer.fields];
-// };
+const getFTSelectedArgs = (state) => {
+    let layer = getWidgetLayer(state);
+    let url = layer.search && layer.search.url;
+    let typeName = layer.name;
+    return [url, typeName, layer.fields];
+};
 
 export const openWidgetEditor = (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT, NEW_CHART)
     .filter(() => widgetBuilderAvailable(getState()))
@@ -93,7 +93,7 @@ export const handleWidgetsFilterPanel = (action$, {getState = () => {}} = {}) =>
         .switchMap(() =>
             // open and setup query form
             Rx.Observable.of(
-                // featureTypeSelected(...getFTSelectedArgs(getState())),
+                featureTypeSelected(...getFTSelectedArgs(getState())),
                 loadFilter(getEditingWidgetFilter(getState())),
                 setControlProperty("widgetBuilder", "enabled", false),
                 setControlProperty('queryPanel', "enabled", true)
