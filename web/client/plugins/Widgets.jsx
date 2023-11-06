@@ -284,7 +284,7 @@ class Widgets extends React.Component {
         enableZoomInTblWidget: true
     };
     render() {
-        return this.props.enabled ? <WidgetsView enableZoomInTblWidgetInMapViewer={this.props.enableZoomInTblWidget} {...this.props /* pass options to the plugin */ } /> : null;
+        return this.props.enabled ? <WidgetsView {...this.props /* pass options to the plugin */ } /> : null;
     }
 }
 /**
