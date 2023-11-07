@@ -10,7 +10,6 @@ import { createSelector } from 'reselect';
 
 import { connect } from 'react-redux';
 import { rightPanelOpenSelector, bottomPanelOpenSelector } from '../../selectors/maplayout';
-import { init } from '../../actions/widgets';
 
 /**
  * enhances the component disabling it (setting `enabled` property to `false`) when rightPanel or when bottomPanel are open
@@ -22,6 +21,6 @@ const autoDisableWidgets = connect(
         (rightPanel, bottomPanel) => ({
             enabled: !rightPanel && !bottomPanel
         })
-    ), {onMount: init}
+    ), {}
 );
 export default autoDisableWidgets;

@@ -12,7 +12,6 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {compose, defaultProps, withHandlers, withProps, withPropsOnChange, withState} from 'recompose';
 
-
 import {createPlugin} from '../utils/PluginsUtils';
 
 import {mapIdSelector} from '../selectors/map';
@@ -33,7 +32,8 @@ import {
     toggleCollapse,
     toggleCollapseAll,
     toggleMaximize,
-    updateWidgetProperty
+    updateWidgetProperty,
+    init
 } from '../actions/widgets';
 import editOptions from './widgets/editOptions';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
@@ -331,7 +331,9 @@ class Widgets extends React.Component {
  * ```
  *
  */
-const WidgetsPlugin = autoDisableWidgets(Widgets);
+
+const WidgetsPlugin = connect(null, {onMount: init}
+)(autoDisableWidgets(Widgets));
 
 export default createPlugin("WidgetsPlugin", {
     component: WidgetsPlugin,
