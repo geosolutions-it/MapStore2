@@ -897,7 +897,33 @@
           "Attribution",
           "Home",
           {
-            "name": "GeoStory"
+            "name": "GeoStory",
+            "cfg": {
+                "fontFamilies": [
+                    {
+                        "family": "Arial"
+                    },
+                    {
+                        "family": "Georgia"
+                    },
+                    {
+                        "family": "Impact"
+                    },
+                    {
+                        "family": "Tahoma"
+                    },
+                    {
+                        "family": "Times New Roman"
+                    },
+                    {
+                        "family": "Titillium Web",
+                        "src": "https://fonts.googleapis.com/css2?family=Titillium+Web"
+                    },
+                    {
+                        "family": "Verdana"
+                    }
+                ]
+            }
           },
           { "name": "DeleteGeoStory" },
           { "name": "GeoStoryExport" },
