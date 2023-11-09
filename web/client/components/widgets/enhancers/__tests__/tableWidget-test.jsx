@@ -68,6 +68,23 @@ describe('widgets tableWidget enhancer', () => {
         expect(container).toExist();
 
     });
+    it('tableWidget with gridTools including zoom icon for dashboard viewer in case of just table is added [No maps added]', (done) => {
+        const Sink = tableWidget(createSink( props => {
+            expect(props).toExist();
+            expect(props.gridTools.length).toEqual(0);
+            done();
+        }));
+        ReactDOM.render( <Provider store={store}><Sink enableZoomInTblWidget={"true"} id="123456" mapSync={false} widgetType={"table"} isDashboardOpened={"true"} updateProperty={(id, path, value) => {
+            expect(path).toBe("dependencies.extentObj");
+            expect(id).toBe("123456");
+            expect(value).toEqual({
+                bbox: [-10, 0, 0, -10]
+            }, {}, "", { crs: "EPSG:4326", maxZoom: null });
+        }}/></Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container).toExist();
+
+    });
     it('tableWidget with gridTools including zoom icon for dashboard viewer [not enable zoom in config]', (done) => {
         const Sink = tableWidget(createSink( props => {
             expect(props).toExist();
