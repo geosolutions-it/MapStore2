@@ -8,8 +8,10 @@
 
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import isNil from 'lodash/isNil';
 import { Observable } from 'rxjs';
-import { fromUrl } from 'geotiff';
+import { GeoTIFF } from 'geotiff';
+import { makeRemoteSource } from 'geotiff-remote';
 
 import { isValidURL } from '../../utils/URLUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
@@ -57,8 +59,22 @@ export const getProjectionFromGeoKeys = (image) => {
 
     return null;
 };
+const abortError = (reject) => reject(new DOMException("Aborted", "AbortError"));
+/**
+ * getImage with abort fetching of data slices
+ */
+const getImage = (geotiff, signal) => {
+    if (signal?.aborted) {
+        return abortError(Promise.reject);
+    }
+    return new Promise((resolve, reject) => {
+        signal?.addEventListener("abort", () => abortError(reject));
+        return geotiff.getImage() // Fetch and read first image to get medatadata of the tif
+            .then((image) => resolve(image))
+            .catch(()=> abortError(reject));
+    });
+};
 let capabilitiesCache = {};
-
 export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => {
     const service = get(info, 'options.service');
     let layers = [];
@@ -73,19 +89,35 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                 sources: [{url}],
                 options: service.options || {}
             };
-            if (service.fetchMetadata) {
+            const controller = get(info, 'options.controller');
+            const isSave = get(info, 'options.save', false);
+            // Fetch metadata only on saving the service (skip on search)
+            if ((isNil(service.fetchMetadata) || service.fetchMetadata) && isSave) {
                 const cached = capabilitiesCache[url];
                 if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
                     return {...cached.data};
                 }
-                return fromUrl(url)
-                    .then(geotiff => geotiff.getImage())
+                const signal = controller?.signal;
+                // geotiff's `fromUrl` & `getImage` function doesn't pass down signal parameter properly. Known issue (https://github.com/geotiffjs/geotiff.js/issues/330)
+                // Hence `fromSource` is called directly with source formulated
+                return GeoTIFF.fromSource(makeRemoteSource(url, {}), {}, signal)
+                    .then(geotiff => getImage(geotiff, signal))
                     .then(image => {
                         const crs = getProjectionFromGeoKeys(image);
                         const extent = image.getBoundingBox();
                         const isProjectionDefined = isProjectionAvailable(crs);
                         layer = {
                             ...layer,
+                            sourceMetadata: {
+                                crs,
+                                extent: extent,
+                                width: image.getWidth(),
+                                height: image.getHeight(),
+                                tileWidth: image.getTileWidth(),
+                                tileHeight: image.getTileHeight(),
+                                origin: image.getOrigin(),
+                                resolution: image.getResolution()
+                            },
                             // skip adding bbox when geokeys or extent is empty
                             ...(!isEmpty(extent) && !isEmpty(crs) && isProjectionDefined && {
                                 bbox: {
