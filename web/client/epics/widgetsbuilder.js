@@ -93,7 +93,7 @@ export const handleWidgetsFilterPanel = (action$, {getState = () => {}} = {}) =>
         .switchMap(() =>
             // open and setup query form
             Rx.Observable.of(
-                featureTypeSelected(...getFTSelectedArgs(getState())),
+                featureTypeSelected(...getFTSelectedArgs(getState()).concat(["widgets"])),
                 loadFilter(getEditingWidgetFilter(getState())),
                 setControlProperty("widgetBuilder", "enabled", false),
                 setControlProperty('queryPanel', "enabled", true)
