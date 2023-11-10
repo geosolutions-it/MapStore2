@@ -32,12 +32,16 @@ describe('GeoStory Plugin', () => {
         ReactDOM.render(<Plugin webFont={{load: () => {}}} />, document.getElementById("container"));
         expect(document.getElementsByClassName('ms-geostory').length).toBe(1);
     });
-    it('Dispatches update action and sets fontFamilies', () => {
+    it('should handle Update Action, sets fontFamilies in merge mode', () => {
         const { Plugin, actions, store } = getPluginForTest(GeoStory, stateMocker({geostory}));
         const fontFamilies = [{family: "test", src: "test"}];
+        const updateAction = {type: 'UPDATE', path: 'currentPage.title', element: 'New Title', mode: 'merge', options: { uniqueByKey: 'id' }};
+        const mockInitialState = {mode: 'view', isCollapsed: false, focusedContent: {}, currentPage: {title: 'Old Title', id: 1}, settings: {}, oldSettings: {}, updateUrlOnScroll: false};
+        const newState = geostory(mockInitialState, updateAction);
+
         ReactDOM.render(<Plugin webFont={{load: () => {}}} fontFamilies={fontFamilies} />, document.getElementById("container"));
 
-        // expect to have dispatched update action once from useEffect(callback, [])
+        expect(newState).toEqual(mockInitialState);
         expect(actions.length).toEqual(1);
         expect(store.getState().geostory.currentStory.settings.theme.fontFamilies).toEqual(fontFamilies);
     });
