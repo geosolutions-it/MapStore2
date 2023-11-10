@@ -408,7 +408,17 @@ div#sync-popover.popover {
         position: absolute;
         transform: translate(-50%, 0px);
     }
-    }
+}
+
+// forced to avoid conflicts with no-image display for not found at link
+.rdw-link-decorator-icon
+{
+    width: 15px !important;
+    min-width: 10px !important;
+    min-height: 15px !important;
+    position: static !important;
+    vertical-align: text-top;
+}
 
 .form-control.intl-numeric {
     float: unset;
