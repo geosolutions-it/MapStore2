@@ -24,12 +24,10 @@ import {
     toggleHighlightLayersGPTEpic,
     disableIdentifyGPTEpic,
     clickToSelectFeatureGPTEpic,
-    LPlongitudinalMapLayoutGPTEpic,
-    createFC,
-    getCounter
+    LPlongitudinalMapLayoutGPTEpic
 } from '../geoProcessing';
+
 import {
-    GPT_BUFFER_GROUP_ID,
     GPT_TOOL_INTERSECTION,
     GPT_TOOL_BUFFER,
     GPT_CONTROL_NAME,
@@ -101,38 +99,7 @@ describe('geoProcessing epics', () => {
     afterEach(() => {
         mockAxios.restore();
     });
-    it('test createFC', () => {
-        const features = [{
-            type: "Feature",
-            id: "ft-id",
-            geometry: {
-                type: "Point",
-                coordinates: [1, 2]
-            }
-        }];
-        const ftColl = createFC(features);
-        expect(ftColl).toEqual({ type: 'FeatureCollection', features: [ { type: 'Feature', id: 'ft-id', geometry: { type: 'Point', coordinates: [ 1, 2 ] } } ] });
-    });
-    it('test getCounter', () => {
-        const layers = [{
-            group: GPT_BUFFER_GROUP_ID,
-            name: "Buffer Layer 0"
-        }];
-        const counter = getCounter(layers, GPT_BUFFER_GROUP_ID);
-        expect(counter).toEqual(1);
-        const counter2 = getCounter([
-            ...layers,
-            {
-                group: GPT_BUFFER_GROUP_ID,
-                name: "Buffer Layer 3"
-            },
-            {
-                group: GPT_BUFFER_GROUP_ID,
-                name: "Buffer Layer 4"
-            }
-        ], GPT_BUFFER_GROUP_ID);
-        expect(counter2).toEqual(5);
-    });
+
     it('checkWPSAvailabilityGPTEpic for a vector layer', (done) => {
         const layerId = "id";
         const source = "source";

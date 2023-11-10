@@ -12,8 +12,7 @@ import get from 'lodash/get';
 import head from 'lodash/head';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
-import last from 'lodash/last';
-import sortBy from 'lodash/sortBy';
+
 import Rx from 'rxjs';
 import uuidV1 from 'uuid/v1';
 import {parseString} from 'xml2js';
@@ -129,6 +128,11 @@ import {
     reprojectGeoJson,
     calculateDistance
 } from "../utils/CoordinatesUtils";
+import {
+    getGeom,
+    createFC,
+    getCounter
+} from "../utils/GeoProcessingUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {logError} from "../utils/DebugUtils";
 import {getFeatureInfo} from "../api/identify";
@@ -141,41 +145,6 @@ const DEACTIVATE_ACTIONS = [
     changeDrawingStatus("stop"),
     changeDrawingStatus("clean", '', GPT_CONTROL_NAME)
 ];
-
-const getGeom = (geomType) => {
-    switch (geomType) {
-    case "Point": case "MultiPoint": return "point";
-    case "LineString": case "MultiLineString": return "line";
-    case "Polygon": case "MultiPolygon": return "polygon";
-    default:
-        return geomType;
-    }
-};
-
-/**
- * generator utility for creating a FeatureCollection GeoJSON from an array of features typically from a mapstore vector layer
- * @param {object[]} features the list of single GeoJSON Feature
- * @return {object} the GeoJSON representation of a FeatureCollection
- */
-export const createFC = (features) => {
-    return {
-        type: "FeatureCollection",
-        features
-    };
-};
-
-/**
- * function used to get latest id of a list of buffered or intersected layers in order to always have the
- * counter increased by 1 based on the maximum number found
- * @param {object[]} layers list of layers to check
- * @param {string} groupName the related group to compare
- * @return {number} the counter value
- */
-export const getCounter = (layers, groupName) => {
-    const allLayers = sortBy(layers?.filter(({group}) => group === groupName), ["name"]);
-    const counter = allLayers.length ? Number(last(allLayers).name.match(/\d/)[0]) + 1 : 0;
-    return counter;
-};
 
 const styleRules = [
     {
