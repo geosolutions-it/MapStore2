@@ -86,6 +86,9 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                         const isProjectionDefined = isProjectionAvailable(crs);
                         layer = {
                             ...layer,
+                            sourceMetadata: {
+                                crs
+                            },
                             // skip adding bbox when geokeys or extent is empty
                             ...(!isEmpty(extent) && !isEmpty(crs) && isProjectionDefined && {
                                 bbox: {

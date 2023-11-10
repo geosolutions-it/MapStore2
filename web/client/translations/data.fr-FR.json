@@ -588,6 +588,7 @@
             "browseData": "Ouvrir la table d'attribut",
             "removeLayer": "Supprimer la couche",
             "loadingerror": "La couche n'a pas été chargée correctement ou n'est pas disponible.",
+            "sourceCRSNotCompatible": "La définition de projection des données sources de la couche {sourceCRS} n'est pas disponible dans l'application de reprojection des données dans la carte actuelle",
             "measure": "Mesurer",
             "layers": "Couches",
             "drawerButton": "Couches",
