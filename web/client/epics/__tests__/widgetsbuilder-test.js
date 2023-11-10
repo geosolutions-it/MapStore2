@@ -236,6 +236,7 @@ describe('widgetsbuilder epic', () => {
                         type: "string",
                         alias: "X alias"
                     }]);
+                    expect(action.owner).toEqual("widgets");
                     break;
                 case LOAD_FILTER:
                     break;
