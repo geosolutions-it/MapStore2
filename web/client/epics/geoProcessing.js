@@ -678,10 +678,10 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         } else {
             sourceFC$ = Rx.Observable.of(sourceFeature.geometry);
         }
+        const intersectionLayerId = intersectionLayerIdSelector(state);
+        const intersectionLayer = getLayerFromIdSelector(state, intersectionLayerId);
+        const intersectionLayerUrl = wpsUrlSelector(state) || head(castArray(intersectionLayer.url));
         if (isEmpty(intersectionFeature)) {
-            const intersectionLayerId = intersectionLayerIdSelector(state);
-            const intersectionLayer = getLayerFromIdSelector(state, intersectionLayerId);
-            const intersectionLayerUrl = wpsUrlSelector(state) || head(castArray(intersectionLayer.url));
             intersectionFC$ = executeProcess(
                 intersectionLayerUrl,
                 collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
@@ -806,6 +806,22 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                     })
                     .catch((e) => {
                         logError(e);
+                        let misconfiguredLayers = [];
+                        if (!layerUrl) {
+                            misconfiguredLayers.push(layer.name + " - " + layer.title);
+                        }
+                        if (!intersectionLayerUrl) {
+                            misconfiguredLayers.push(intersectionLayer.name + " - " + intersectionLayer.title);
+                        }
+                        if (misconfiguredLayers.length) {
+                            return Rx.Observable.of(showErrorNotification({
+                                title: "errorTitleDefault",
+                                message: "GeoProcessing.notifications.errorMissingUrl",
+                                autoDismiss: 6,
+                                position: "tc",
+                                values: {layerName: misconfiguredLayers.join(", ")}
+                            }));
+                        }
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessing.notifications.errorIntersectGFI",
