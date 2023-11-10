@@ -552,6 +552,26 @@ class OpenlayersMap extends React.Component {
         }
     };
 
+    zoomToExtentHandler = (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {})=> {
+        let bounds = reprojectBbox(extent, crs, this.props.projection);
+        // TODO: improve this to manage all degenerated bounding boxes.
+        if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
+        crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
+            bounds = this.map.getView().getProjection().getExtent();
+        }
+        let maxZoom = zoomLevel;
+        if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
+            maxZoom = 21; // TODO: allow to this maxZoom to be customizable
+        }
+        this.map.getView().fit(bounds, {
+            size: this.map.getSize(),
+            padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
+            maxZoom,
+            duration,
+            nearest
+        });
+    }
+
     registerHooks = () => {
         this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, (srs) => {
             return this.getResolutions(srs);
@@ -581,27 +601,7 @@ class OpenlayersMap extends React.Component {
         this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {}) => {
-            let bounds = reprojectBbox(extent, crs, this.props.projection);
-            // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
-            // TODO: improve this to manage all degenerated bounding boxes.
-            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
-                crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
-                bounds = this.map.getView().getProjection().getExtent();
-            }
-            let maxZoom = zoomLevel;
-            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
-                maxZoom = 21; // TODO: allow to this maxZoom to be customizable
-            }
-
-            this.map.getView().fit(bounds, {
-                size: this.map.getSize(),
-                padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
-                maxZoom,
-                duration,
-                nearest
-            });
-        });
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, this.zoomToExtentHandler);
     };
 }
 

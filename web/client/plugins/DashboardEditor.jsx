@@ -15,7 +15,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 
 
 import { dashboardHasWidgets, getWidgetsDependenciesGroups } from '../selectors/widgets';
-import { isDashboardEditing, showConnectionsSelector, isDashboardLoading, buttonCanEdit } from '../selectors/dashboard';
+import { isDashboardEditing, showConnectionsSelector, isDashboardLoading, buttonCanEdit, isDashboardAvailable } from '../selectors/dashboard';
 import { dashboardSelector, dashboardsLocalizedSelector } from './widgetbuilder/commons';
 
 import { createWidget, toggleConnection } from '../actions/widgets';
@@ -152,7 +152,8 @@ const Plugin = connect(
     createSelector(
         isDashboardEditing,
         isDashboardLoading,
-        (editing, loading) => ({ editing, loading })
+        isDashboardAvailable,
+        (editing, loading, isDashboardOpened) => ({ editing, loading, isDashboardOpened })
     ), {
         setEditing,
         onMount: () => setEditorAvailable(true),
