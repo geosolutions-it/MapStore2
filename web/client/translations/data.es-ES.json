@@ -238,7 +238,8 @@
             "warningSaveUpdatedMap": "Algunas capas no han sido actualizadas correctamente",
             "saveUpdatedMap": "Todas las capas han sido actulizadas correctamente",
             "incompatibleBackgroundAndProjection":"La proyección que seleccionó no es compatible con el fondo, cambie a un fondo compatible -o un vacío-, luego seleccione esta proyección!",
-            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa"
+            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa",
+            "errorLoadingGF":"Error de carga de GF Geometry"
         },
         "dock": {
             "row": "{rowsSelected} fila seleccionada",
@@ -2690,7 +2691,8 @@
                 "layer": "Escriba para buscar Capas",
                 "access": "Escriba para buscar Acceso",
                 "ip": "###.###.###.###/##",
-                "priority": "Seleccionar prioridad"
+                "priority": "Seleccionar prioridad",
+                "filterAny": "Cualquier"
             },
             "menutitle": "Administrar reglas de GeoFence",
             "tooltip": {
@@ -2701,7 +2703,9 @@
                 "deleteT": "Eliminar las reglas seleccionadas",
                 "cacheT": "Limpiar cache",
                 "save": "Guardar la regla actual",
-                "close": "Salir de crear regla"
+                "close": "Salir de crear regla",
+                "showAllRules": "Mostrar todas las reglas elegibles",
+                "filterRuleList": "Lista de filtros usando un valor seleccionado"
             },
             "navItems": {
                 "main": "Regla general",

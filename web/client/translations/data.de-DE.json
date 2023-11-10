@@ -238,7 +238,8 @@
             "warningSaveUpdatedMap": "Einige Ebenen wurden nicht korrekt aktualisiert",
             "saveUpdatedMap": "Alle Ebenen wurden erfolgreich aktualisiert",
             "incompatibleBackgroundAndProjection":"Die von Ihnen ausgewählte Projektion ist nicht mit der Hintergrundkarte kompatibel. Wechseln Sie zu einer kompatiblen oder leeren Hintergrundkarte und wählen Sie danach diese Projektion aus!",
-            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt"
+            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt",
+            "errorLoadingGF":"Fehler laden GF GEOM"
         },
         "dock": {
             "row": "{rowsSelected}. Zeile ausgewählt",
@@ -2727,7 +2728,8 @@
                 "layer": "Ebenen suchen",
                 "access": "Zugriff suchen",
                 "ip": "###.###.###.###/##",
-                "priority": "Priorität festlegen"
+                "priority": "Priorität festlegen",
+                "filterAny": "beliebig"
             },
             "menutitle": "GeoFence-Regeln Verwalten",
             "tooltip": {
@@ -2738,7 +2740,9 @@
                 "deleteT": "Entferne ausgewählte Regeln",
                 "cacheT": "Cache leeren",
                 "save": "Aktuelle Regel speichern",
-                "close": "Beenden Sie die Regelerstellung"
+                "close": "Beenden Sie die Regelerstellung",
+                "showAllRules": "Toon alle in aanmerking komende regels",
+                "filterRuleList": "Filterlijst met geselecteerde waarde"
             },
             "navItems": {
                 "main": "Allgemeine Regel",

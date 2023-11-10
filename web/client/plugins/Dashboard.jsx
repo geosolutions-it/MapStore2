@@ -30,7 +30,8 @@ import {
     dashboardResource,
     isBrowserMobile,
     isDashboardLoading,
-    showConnectionsSelector
+    showConnectionsSelector,
+    isDashboardAvailable
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -65,8 +66,9 @@ const WidgetsView = compose(
             localizedLayerStylesEnvSelector,
             getMaximizedState,
             currentLocaleSelector,
+            isDashboardAvailable,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale) => ({
+                env, maximized, currentLocale, isDashboardOpened) => ({
                 resource,
                 loading,
                 canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
@@ -80,7 +82,8 @@ const WidgetsView = compose(
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
                 maximized,
-                currentLocale
+                currentLocale,
+                isDashboardOpened
             })
         ), {
             editWidget,
@@ -156,11 +159,13 @@ class DashboardPlugin extends React.Component {
         rowHeight: PropTypes.number,
         cols: PropTypes.object,
         minLayoutWidth: PropTypes.number,
-        widgetOpts: PropTypes.object
+        widgetOpts: PropTypes.object,
+        enableZoomInTblWidget: PropTypes.bool
     };
     static defaultProps = {
         enabled: true,
-        minLayoutWidth: 480
+        minLayoutWidth: 480,
+        enableZoomInTblWidget: true
     };
     render() {
         return this.props.enabled
@@ -170,6 +175,7 @@ class DashboardPlugin extends React.Component {
                 rowHeight={this.props.rowHeight}
                 cols={this.props.cols}
                 minLayoutWidth={this.props.minLayoutWidth}
+                enableZoomInTblWidget={this.props.enableZoomInTblWidget}
                 widgetOpts={this.props.widgetOpts}
             />
             : null;

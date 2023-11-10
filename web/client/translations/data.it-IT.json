@@ -238,7 +238,8 @@
             "warningSaveUpdatedMap": "Alcuni layer non sono stati aggiornati correttamente",
             "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo",
             "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
-            "incompatibleDataAndProjection":"Uno o più livelli non sono completamente compatibili con la proiezione selezionata. I dati potrebbero essere (tutti o in parte) non visibili in mappa"
+            "incompatibleDataAndProjection":"Uno o più livelli non sono completamente compatibili con la proiezione selezionata. I dati potrebbero essere (tutti o in parte) non visibili in mappa",
+            "errorLoadingGF":"Errore di caricamento della geometria"
         },
         "dock": {
             "row": "{rowsSelected} riga selezionata",
@@ -2691,7 +2692,8 @@
                 "layer": "Cerca Layers",
                 "access": "Cerca Permesso",
                 "ip": "###.###.###.###/##",
-                "priority": "Seleziona Priorità"
+                "priority": "Seleziona Priorità",
+                "filterAny": "Qualsiasi"
             },
             "menutitle": "Configura Regole di Accesso",
             "tooltip": {
@@ -2702,7 +2704,9 @@
                 "deleteT": "Rimuovi regole selezionate",
                 "cacheT": "Pulisci la cache",
                 "save": "Salva regola corrente",
-                "close": "Esci da modifica regola"
+                "close": "Esci da modifica regola",
+                "showAllRules": "Mostra tutte le regole applicabili",
+                "filterRuleList": "Filtra la lista usando il valore selezionato"
             },
             "navItems": {
                 "main": "Regola Generica",

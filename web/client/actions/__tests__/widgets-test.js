@@ -49,11 +49,22 @@ import {
     toggleTray,
     toggleMaximize,
     replaceWidgets,
-    REPLACE
+    REPLACE,
+    init, INIT
 } from '../widgets';
 
 describe('Test correctness of the widgets actions', () => {
 
+    it('init', () => {
+        const defaults = {ratio_md: {
+            w: 4,
+            h: 4
+        }};
+        const retval = init(defaults);
+        expect(retval).toExist();
+        expect(retval.type).toBe(INIT);
+        expect(retval.cfg).toEqual(defaults);
+    });
     it('exportCSV', () => {
         const data = [{a: "a"}];
         const retval = exportCSV({data, title: "TITLE"});

@@ -83,7 +83,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
             .then( (response) => {
                 return toJSONPromise(response.data);
             }
-            ).then(({RuleList = {}}) => ({rules: RuleList.rule || []}));
+            ).then(({RuleList = {}}) => ({rules: [].concat(RuleList.rule || [])}));
     },
 
     getRulesCount: (rulesFiltersValues) => {

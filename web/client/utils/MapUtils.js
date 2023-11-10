@@ -842,7 +842,7 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
  * used to override default ones in order to have a local hooks object
  * one for each map widget
  */
-export const createRegisterHooks = () => {
+export const createRegisterHooks = (id) => {
     let hooksCustom = {};
     return {
         registerHook: (name, hook) => {
@@ -858,7 +858,8 @@ export const createRegisterHooks = () => {
                 return dontExistCallback();
             }
             return null;
-        }
+        },
+        id
     };
 };
 
