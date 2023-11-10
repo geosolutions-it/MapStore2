@@ -78,7 +78,7 @@
   </dependencies>
 
   <build>
-    <finalName>__PROJECTNAME__</finalName>
+    <finalName>mapstore</finalName>
     <plugins>
         <plugin>
             <artifactId>maven-resources-plugin</artifactId>
@@ -91,7 +91,7 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+                        <outputDirectory>${basedir}/target/mapstore</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
