@@ -567,6 +567,19 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                     })
                     .catch((e) => {
                         logError(e);
+                        let misconfiguredLayers = [];
+                        if (!layerUrl) {
+                            misconfiguredLayers.push(layer.name + " - " + layer.title);
+                        }
+                        if (misconfiguredLayers.length) {
+                            return Rx.Observable.of(showErrorNotification({
+                                title: "errorTitleDefault",
+                                message: "GeoProcessing.notifications.errorMissingUrl",
+                                autoDismiss: 6,
+                                position: "tc",
+                                values: {layerName: misconfiguredLayers.join(", ")}
+                            }));
+                        }
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessing.notifications.errorBuffer",
@@ -730,7 +743,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                 }
 
                 const executeProcess$ = executeProcess(
-                    layerUrl,
+                    layerUrl || intersectionLayerUrl,
                     intersectXML({
                         firstFC: {
                             type: "FeatureCollection",
