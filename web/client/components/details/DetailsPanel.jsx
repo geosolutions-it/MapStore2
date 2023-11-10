@@ -22,7 +22,8 @@ class DetailsPanel extends React.Component {
         panelClassName: PropTypes.string,
         style: PropTypes.object,
         onClose: PropTypes.func,
-        width: PropTypes.number
+        width: PropTypes.number,
+        isDashboard: PropTypes.bool
     };
 
     static contextTypes = {
@@ -41,7 +42,8 @@ class DetailsPanel extends React.Component {
         },
         active: false,
         panelClassName: "details-panel",
-        width: 550
+        width: 550,
+        isDashboard: false
     };
 
     render() {
@@ -58,9 +60,10 @@ class DetailsPanel extends React.Component {
                 onClose={() => this.props.onClose()}
                 glyph="sheet"
                 style={this.props.dockStyle}
+                isDashboard={this.props.isDashboard}
             >
                 <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                    <BorderLayout>
+                    <BorderLayout isDashboard={this.props.isDashboard}>
                         {this.props.children}
                     </BorderLayout>
                 </Panel>

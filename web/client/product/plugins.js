@@ -158,7 +158,9 @@ export const plugins = {
     WidgetsTrayPlugin: toModulePlugin('WidgetsTray', () => import(/* webpackChunkName: 'plugins/widgetsTray' */ '../plugins/WidgetsTray')),
     ZoomAllPlugin: toModulePlugin('ZoomAll', () => import(/* webpackChunkName: 'plugins/zoomAll' */ '../plugins/ZoomAll')),
     ZoomInPlugin: toModulePlugin('ZoomIn', () => import(/* webpackChunkName: 'plugins/zoomIn' */ '../plugins/ZoomIn')),
-    ZoomOutPlugin: toModulePlugin('ZoomOut', () => import(/* webpackChunkName: 'plugins/zoomOut' */ '../plugins/ZoomOut'))
+    ZoomOutPlugin: toModulePlugin('ZoomOut', () => import(/* webpackChunkName: 'plugins/zoomOut' */ '../plugins/ZoomOut')),
+    AddWidgetDashboardPlugin: toModulePlugin('AddWidgetDashboard', () => import(/* webpackChunkName: 'plugins/zoomOut' */ '../plugins/dashboard/dashboardWidgets/AddWidgetDashboard')),
+    MapConnectionDashboardPlugin: toModulePlugin('MapConnectionDashboard', () => import(/* webpackChunkName: 'plugins/zoomOut' */ '../plugins/dashboard/dashboardWidgets/MapConnectionDashboard'))
 };
 
 const pluginsDefinition = {

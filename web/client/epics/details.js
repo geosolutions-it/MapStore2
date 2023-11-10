@@ -18,8 +18,10 @@ import {
 import { toggleControl, setControlProperty } from '../actions/controls';
 
 import {
+    mapIdSelector,
     mapInfoDetailsUriFromIdSelector
 } from '../selectors/map';
+import { getDashboardId, dashbaordInfoDetailsUriFromIdSelector } from '../selectors/dashboard';
 
 import GeoStoreApi from '../api/GeoStoreDAO';
 
@@ -31,13 +33,16 @@ export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
         .switchMap(() => {
             const state = store.getState();
-            const detailsUri = mapInfoDetailsUriFromIdSelector(state);
+            const mapId = mapIdSelector(state);
+            const dashboardId = getDashboardId(state);
+            const detailsUri = dashboardId && dashbaordInfoDetailsUriFromIdSelector(state, dashboardId) ||  mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
             const detailsId = getIdFromUri(detailsUri);
+            const resourceId = dashboardId || mapId;
             return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
                 .then(data => data))
                 .switchMap((details) => {
                     return Rx.Observable.of(
-                        updateDetails(details)
+                        updateDetails(details, resourceId)
                     );
                 }).startWith(toggleControl("details", "enabled"))
                 .catch(() => {

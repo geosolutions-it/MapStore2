@@ -17,6 +17,7 @@ import {bindActionCreators} from "redux";
 import ToolsContainer from "./containers/ToolsContainer";
 import SidebarElement from "../components/sidebarmenu/SidebarElement";
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
+import { isDashboardLoading } from '../selectors/dashboard';
 import tooltip from "../components/misc/enhancers/tooltip";
 import {setControlProperty} from "../actions/controls";
 import {createPlugin} from "../utils/PluginsUtils";
@@ -26,6 +27,7 @@ import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
+import LoadingSpinner from '../components/misc/LoadingSpinner';
 
 const TDropdownButton = tooltip(DropdownButton);
 
@@ -229,7 +231,7 @@ class SidebarMenu extends React.Component {
 
     render() {
         return this.state.hidden ? false : (
-            <div id="mapstore-sidebar-menu-container" className="shadow-soft" style={this.getStyle(this.props.style)}>
+            <div id="mapstore-sidebar-menu-container" className={`shadow-soft ${this.props.did ? "fullHightSideBar" : ""}`} style={this.getStyle(this.props.style)}>
                 <ContainerDimensions>
                     { ({ height }) =>
                         <ToolsContainer id={this.props.id}
@@ -243,6 +245,7 @@ class SidebarMenu extends React.Component {
                             panels={this.getPanels(this.props.items)}
                         /> }
                 </ContainerDimensions>
+                {this.props.loading ? <LoadingSpinner style={{ position: 'fixed', bottom: 0}} /> : null}
             </div>
 
         );
@@ -270,12 +273,14 @@ const sidebarMenuSelector = createSelector([
     state => state,
     state => lastActiveToolSelector(state),
     state => mapLayoutValuesSelector(state, {dockSize: true, bottom: true, height: true}),
-    sidebarIsActiveSelector
-], (state, lastActiveTool, style, isActive) => ({
+    sidebarIsActiveSelector,
+    isDashboardLoading
+], (state, lastActiveTool, style, isActive, loading ) => ({
     style,
     lastActiveTool,
     state,
-    isActive
+    isActive,
+    loading
 }));
 
 /**

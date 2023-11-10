@@ -27,9 +27,10 @@ import { CONTEXT_TUTORIALS } from '../actions/contextcreator';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi } from '../api/userPersistedStorage';
-import { mapSelector } from '../selectors/map';
+import { mapIdSelector, mapInfoDetailsSettingsFromIdSelector } from '../selectors/map';
 import {REDUCERS_LOADED} from "../actions/storemanager";
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
+import { dashboardInfoDetailsSettingsFromIdSelector, getDashboardId } from '../selectors/dashboard';
 
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
@@ -168,7 +169,14 @@ export const getActionsFromStepEpic = (action$) =>
 
 export const openDetailsPanelEpic = (action$, store) =>
     action$.ofType(CLOSE_TUTORIAL)
-        .filter(() => mapSelector(store.getState())?.info?.detailsSettings?.showAtStartup )
+        .filter(() => {
+            const state = store.getState();
+            const mapId = mapIdSelector(state);
+            const dashboardId = getDashboardId(state);
+            let detailsSettings = dashboardId && dashboardInfoDetailsSettingsFromIdSelector(state, dashboardId) ||  mapId && mapInfoDetailsSettingsFromIdSelector(state, mapId);
+            if (detailsSettings && typeof detailsSettings === 'string') detailsSettings = JSON.parse(detailsSettings);
+            return detailsSettings?.showAtStartup;
+        })
         .switchMap( () => {
             return Rx.Observable.of(openDetailsPanel());
         });

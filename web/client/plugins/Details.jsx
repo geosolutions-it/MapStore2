@@ -32,6 +32,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import details from '../reducers/details';
 import * as epics from '../epics/details';
 import {createStructuredSelector} from "reselect";
+import { dashbaordInfoDetailsUriFromIdSelector, dashboardInfoDetailsSettingsFromIdSelector, getDashboardId } from '../selectors/dashboard';
 
 /**
  * Allow to show details for the map.
@@ -51,7 +52,8 @@ const DetailsPlugin = ({
     dockStyle,
     detailsText,
     showAsModal = false,
-    onClose = () => {}
+    onClose = () => {},
+    isDashboard
 }) => {
     const viewer = (<DetailsViewer
         className="ms-details-preview-container"
@@ -71,6 +73,7 @@ const DetailsPlugin = ({
             {viewer}
         </ResizableModal> :
         <DetailsPanel
+            isDashboard={isDashboard}
             width={550}
             dockStyle={dockStyle}
             active={active}
@@ -81,10 +84,24 @@ const DetailsPlugin = ({
 
 export default createPlugin('Details', {
     component: connect(createStructuredSelector({
+        isDashboard: (state) => {
+            return getDashboardId(state) ? true : false;
+        },
         active: state => get(state, "controls.details.enabled"),
-        dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
+        dockStyle: state => {
+            const isDashbaord = getDashboardId(state);
+            let layoutValues = mapLayoutValuesSelector(state, { height: true, right: true }, true);
+            if (isDashbaord) layoutValues.right = 0;
+            return layoutValues;
+        },
         detailsText: detailsTextSelector,
-        showAsModal: state => mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal
+        showAsModal: state => {
+            const mapId = mapIdSelector(state);
+            const dashboardId = getDashboardId(state);
+            let detailsSettings = dashboardId && dashboardInfoDetailsSettingsFromIdSelector(state, dashboardId) ||  mapId && mapInfoDetailsSettingsFromIdSelector(state, mapId);
+            if (detailsSettings && typeof detailsSettings === 'string') detailsSettings = JSON.parse(detailsSettings);
+            return  detailsSettings?.showAsModal;
+        }
     }), {
         onClose: closeDetailsPanel
     })(DetailsPlugin),
@@ -100,7 +117,8 @@ export default createPlugin('Details', {
             action: openDetailsPanel,
             selector: (state) => {
                 const mapId = mapIdSelector(state);
-                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                const dashboardId = getDashboardId(state);
+                const detailsUri = dashboardId && dashbaordInfoDetailsUriFromIdSelector(state, dashboardId) ||  mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
                 if (detailsUri) {
                     return {};
                 }
@@ -118,7 +136,8 @@ export default createPlugin('Details', {
             action: openDetailsPanel,
             selector: (state) => {
                 const mapId = mapIdSelector(state);
-                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                const dashboardId = getDashboardId(state);
+                const detailsUri = dashboardId && dashbaordInfoDetailsUriFromIdSelector(state, dashboardId) ||  mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
                 if (detailsUri) {
                     return {};
                 }
@@ -135,7 +154,8 @@ export default createPlugin('Details', {
             action: openDetailsPanel,
             selector: (state) => {
                 const mapId = mapIdSelector(state);
-                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                const dashboardId = getDashboardId(state);
+                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId) || dashboardId && dashbaordInfoDetailsUriFromIdSelector(state, dashboardId);
                 if (detailsUri) {
                     return {
                         bsStyle: state.controls.details && state.controls.details.enabled ? 'primary' : 'tray',

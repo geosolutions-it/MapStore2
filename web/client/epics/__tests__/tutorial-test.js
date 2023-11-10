@@ -584,7 +584,7 @@ describe('tutorial Epics', () => {
         });
     });
     describe('openDetailsPanelEpic tests', () => {
-        it('should open the details panel if it has showAtStartup set to true', (done) => {
+        it('should open the details panel if it is a (Map) and it has showAtStartup set to true', (done) => {
             const NUM_ACTIONS = 1;
 
             testEpic(openDetailsPanelEpic, NUM_ACTIONS, closeTutorial(), (actions) => {
@@ -595,6 +595,7 @@ describe('tutorial Epics', () => {
             }, {
                 map: {
                     present: {
+                        mapId: "123",
                         info: {
                             detailsSettings: {
                                 showAtStartup: true
@@ -604,7 +605,28 @@ describe('tutorial Epics', () => {
                 }
             });
         });
-        it('should open the details panel if it has showAtStartup set to false', (done) => {
+        it('should open the details panel if it is a (Dashboard) and it has showAtStartup set to true', (done) => {
+            const NUM_ACTIONS = 1;
+
+            testEpic(openDetailsPanelEpic, NUM_ACTIONS, closeTutorial(), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [action] = actions;
+                expect(action.type).toBe(OPEN_DETAILS_PANEL);
+                done();
+            }, {
+                dashboard: {
+                    resource: {
+                        id: "123",
+                        attributes: {
+                            detailsSettings: {
+                                showAtStartup: true
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        it('should open the details panel if it is a(Map) and it has showAtStartup set to false', (done) => {
             const NUM_ACTIONS = 1;
 
             testEpic(addTimeoutEpic(openDetailsPanelEpic, 100), NUM_ACTIONS, closeTutorial(), (actions) => {
@@ -615,7 +637,29 @@ describe('tutorial Epics', () => {
             }, {
                 map: {
                     present: {
+                        mapId: "123",
                         info: {
+                            detailsSettings: {
+                                showAtStartup: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        it('should open the details panel if it is a (Dashboard) and it has showAtStartup set to false', (done) => {
+            const NUM_ACTIONS = 1;
+
+            testEpic(addTimeoutEpic(openDetailsPanelEpic, 100), NUM_ACTIONS, closeTutorial(), (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [action] = actions;
+                expect(action.type).toBe(TEST_TIMEOUT);
+                done();
+            }, {
+                dashboard: {
+                    resource: {
+                        id: "123",
+                        attributes: {
                             detailsSettings: {
                                 showAtStartup: false
                             }

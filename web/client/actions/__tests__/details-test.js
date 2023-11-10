@@ -34,7 +34,7 @@ describe('details actions tests', () => {
         const a = detailsLoaded(mapId, detailsUri);
         expect(a.type).toBe(DETAILS_LOADED);
         expect(a.detailsUri).toBe(detailsUri);
-        expect(a.mapId).toBe(mapId);
+        expect(a.id).toBe(mapId);
     });
     it('updateDetails', () => {
         const a = updateDetails('text');
