@@ -476,7 +476,19 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
             distance = distance * 1000;
         }
         const counter = getCounter(layers, GPT_BUFFER_GROUP_ID);
-
+        let misconfiguredLayers = [];
+        if (!layerUrl) {
+            misconfiguredLayers.push(layer.name + " - " + layer.title);
+        }
+        if (misconfiguredLayers.length) {
+            return Rx.Observable.of(showErrorNotification({
+                title: "errorTitleDefault",
+                message: "GeoProcessing.notifications.errorMissingUrl",
+                autoDismiss: 6,
+                position: "tc",
+                values: {layerName: misconfiguredLayers.join(", ")}
+            }));
+        }
         const executeBufferProcess$ = (wktGeom, feature4326) => {
             const centroid = centroidTurf(feature4326);
             const reprojectedCentroid = reprojectGeoJson(centroid, "EPSG:4326", "EPSG:3857");
@@ -567,19 +579,6 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                     })
                     .catch((e) => {
                         logError(e);
-                        let misconfiguredLayers = [];
-                        if (!layerUrl) {
-                            misconfiguredLayers.push(layer.name + " - " + layer.title);
-                        }
-                        if (misconfiguredLayers.length) {
-                            return Rx.Observable.of(showErrorNotification({
-                                title: "errorTitleDefault",
-                                message: "GeoProcessing.notifications.errorMissingUrl",
-                                autoDismiss: 6,
-                                position: "tc",
-                                values: {layerName: misconfiguredLayers.join(", ")}
-                            }));
-                        }
                         return Rx.Observable.of(showErrorNotification({
                             title: "errorTitleDefault",
                             message: "GeoProcessing.notifications.errorBuffer",
