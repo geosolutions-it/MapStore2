@@ -177,7 +177,7 @@ class MetadataExplorerComponent extends React.Component {
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
-        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, { name: "cog", label: "COG" }],
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }],
         active: false,
         wrap: false,
         modal: true,
@@ -285,7 +285,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
  * @name MetadataExplorer
  * @memberof plugins
  * @prop {string} cfg.hideThumbnail shows/hides thumbnail
- * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" }, { name: "cog", label: "COG" }]`.
+ * @prop {object[]} cfg.serviceTypes Service types available to add a new catalog. default: `[{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders },{ name: "wfs", label: "WFS" }]`.
  * `allowedProviders` is a whitelist of tileProviders from ConfigProvider.js. you can set a global variable allowedProviders in localConfig.json to set it up globally. You can configure it to "ALL" to get all the list (at your own risk, some services could change or not be available anymore)
  * @prop {object} cfg.hideIdentifier shows/hides identifier
  * @prop {boolean} cfg.hideExpand shows/hides full description button
