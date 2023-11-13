@@ -12,7 +12,7 @@ import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createPlugin } from '../utils/PluginsUtils';
-import { isDashboardEditing, isDashboardLoading } from '../selectors/dashboard';
+import { isDashboardEditing, isDashboardLoading, isDashboardAvailable } from '../selectors/dashboard';
 import { dashboardSelector, dashboardsLocalizedSelector } from './widgetbuilder/commons';
 
 import { toggleConnection } from '../actions/widgets';
