@@ -102,7 +102,7 @@ export const featureTypeSelectedEpic = (action$, store) =>
                 const info = extractInfo(layerDescribeSelector(state, action.typeName), action.fields);
                 const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
 
-                return Rx.Observable.of(featureTypeLoaded(action.typeName, info), changeSpatialAttribute(geometry), Rx.Scheduler.async); // async scheduler is needed to allow invokers of `FEATURE_TYPE_SELECTED` to intercept `FEATURE_TYPE_LOADED` action as response.
+                return Rx.Observable.of(featureTypeLoaded(action.typeName, info, action.owner), changeSpatialAttribute(geometry), Rx.Scheduler.async); // async scheduler is needed to allow invokers of `FEATURE_TYPE_SELECTED` to intercept `FEATURE_TYPE_LOADED` action as response.
             }
 
             const selectedLayer = selectedLayerSelector(state);

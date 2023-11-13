@@ -99,7 +99,8 @@ const Plugin = connect(
     createSelector(
         isDashboardEditing,
         isDashboardLoading,
-        (editing, loading) => ({ editing, loading })
+        isDashboardAvailable,
+        (editing, loading, isDashboardOpened) => ({ editing, loading, isDashboardOpened })
     ), {
         setEditing,
         onMount: () => setEditorAvailable(true),

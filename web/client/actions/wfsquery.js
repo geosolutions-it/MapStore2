@@ -46,19 +46,21 @@ export function initQueryPanel() {
         type: INIT_QUERY_PANEL
     };
 }
-export function featureTypeSelected(url, typeName, fields = []) {
+export function featureTypeSelected(url, typeName, fields = [], owner) {
     return {
         type: FEATURE_TYPE_SELECTED,
         url,
         typeName,
-        fields
+        fields,
+        owner
     };
 }
-export function featureTypeLoaded(typeName, featureType) {
+export function featureTypeLoaded(typeName, featureType, owner) {
     return {
         type: FEATURE_TYPE_LOADED,
         typeName,
-        featureType
+        featureType,
+        owner
     };
 }
 
@@ -142,11 +144,12 @@ export function loadFeature(baseUrl, typeName) {
         });
     };
 }
-export function createQuery(searchUrl, filterObj) {
+export function createQuery(searchUrl, filterObj, owner) {
     return {
         type: QUERY_CREATE,
         searchUrl,
-        filterObj
+        filterObj,
+        owner
     };
 }
 

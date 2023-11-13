@@ -238,7 +238,8 @@
             "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
             "saveUpdatedMap": "Toutes les couches ont bien été mises à jour",
             "incompatibleBackgroundAndProjection": "La projection que vous avez choisie n'est pas compatible avec le fond de plan. Changez pour un fond de plan compatible ou retirez le fond de plan, puis sélectionnez à nouveau la projection.",
-            "incompatibleDataAndProjection": "La/les couche(s) actuelle(s) et la projection cartographique ne sont pas totalement compatibles. Certaines données voire toutes les données risquent de ne pas apparaître sur la carte."
+            "incompatibleDataAndProjection": "La/les couche(s) actuelle(s) et la projection cartographique ne sont pas totalement compatibles. Certaines données voire toutes les données risquent de ne pas apparaître sur la carte.",
+            "errorLoadingGF":"Erreur Chargement GF Geom"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionnée",

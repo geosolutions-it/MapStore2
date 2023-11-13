@@ -21,7 +21,8 @@ import {
     getFloatingWidgetsLayout,
     getMaximizedState,
     getVisibleFloatingWidgets,
-    isTrayEnabled
+    isTrayEnabled,
+    getTblWidgetZoomLoader
 } from '../selectors/widgets';
 import {
     changeLayout,
@@ -56,7 +57,8 @@ compose(
             (state) => mapLayoutValuesSelector(state, { right: true}),
             state => state.browser && state.browser.mobile,
             getFloatingWidgets,
-            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets) => ({
+            getTblWidgetZoomLoader,
+            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading) => ({
                 id,
                 widgets,
                 layouts,
@@ -64,7 +66,8 @@ compose(
                 dependencies,
                 mapLayout,
                 isMobileAgent,
-                dropdownWidgets
+                dropdownWidgets,
+                recordZoomLoading
             })
         ), {
             editWidget,
@@ -275,10 +278,12 @@ compose(
 
 class Widgets extends React.Component {
     static propTypes = {
-        enabled: PropTypes.bool
+        enabled: PropTypes.bool,
+        enableZoomInTblWidget: PropTypes.bool
     };
     static defaultProps = {
-        enabled: true
+        enabled: true,
+        enableZoomInTblWidget: true
     };
     componentDidMount() {
         this.props.onMount(this.props.pluginCfg?.defaults);

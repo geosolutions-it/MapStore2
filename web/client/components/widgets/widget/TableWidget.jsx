@@ -52,7 +52,8 @@ export default getWidgetFilterRenderers(({
     virtualScroll = true,
     gridOpts = defaultGridOpts,
     options = {},
-    dateFormats
+    dateFormats,
+    gridTools
 }) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
@@ -97,6 +98,7 @@ export default getWidgetFilterRenderers(({
                 pagination={pagination}
                 gridOpts={gridOpts}
                 options={options}
+                tools={gridTools}       // if geom prop is existing show zoom icon
                 dateFormats={dateFormats}/>
         </BorderLayout>
     </WidgetContainer>

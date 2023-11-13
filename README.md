@@ -183,3 +183,4 @@ Here below is a small list of organizations using MapStore either directly or th
 - [County of Milan - Italy](https://inlineainfrastrutture.cittametropolitana.mi.it/mapstore)
 - [Nordeste Municipality - Portugal](https://sigweb.cmnordeste.pt/mapstore/#/)
 - [Corvo Muncipality - Portugal](https://geocorvo.pt/mapstore/#/)
+- [Lajes das Flores Municipality - Portal](https://sigweb.cmlajesdasflores.pt/#/)
