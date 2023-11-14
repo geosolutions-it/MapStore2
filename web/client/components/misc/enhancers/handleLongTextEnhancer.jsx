@@ -10,7 +10,7 @@ import React from "react";
 import OverlayTrigger from "../OverlayTrigger";
 import { Tooltip } from "react-bootstrap";
 
-export const handleLongTextEnhancer = (props, RenderFormatter) => {
+export  const handleLongTextEnhancer = (RenderFormatter) => (props) => {
     const { value } = props;
     const cellRef = React.useRef(null);
     const contentRef = React.useRef(null);

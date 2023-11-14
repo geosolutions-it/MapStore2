@@ -148,7 +148,7 @@ export const featureTypeToGridColumns = (
             editable,
             filterable,
             editor: getEditor(desc, field),
-            formatter: (props)=>handleLongTextEnhancer(props, getFormatter(desc, field)),
+            formatter: handleLongTextEnhancer(getFormatter(desc, field)),
             filterRenderer: getFilterRenderer(desc, field)
         };
     });
