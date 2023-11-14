@@ -144,10 +144,10 @@ compose(
             } : {};
             const widthOptions = width ? {width: viewWidth - 1} : {};
             const baseHeight = isSingleWidgetLayout
-                ? rowHeight
+                ? rowHeight || rowHeightRecalculated
                 : Math.floor((height - 100) / (rowHeightRecalculated + 10)) * (rowHeightRecalculated + 10);
             return ({
-                rowHeight: isSingleWidgetLayout ? rowHeightRecalculated : rowHeight,
+                rowHeight: isSingleWidgetLayout ? rowHeightRecalculated : rowHeight || rowHeightRecalculated,
                 className: "on-map",
                 breakpoints: isSingleWidgetLayout ? { xxs: 0 } : { md: 0 },
                 cols: cols || { md: 6, xxs: 1 },

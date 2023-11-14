@@ -557,10 +557,7 @@
                 }
             },
             "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", {
-              "name": "Widgets",
-              "cfg": {
-                "enableZoomInTblWidget": true
-                }
+              "name": "Widgets"
             },
             "WidgetsTray",
             {
@@ -749,10 +746,7 @@
         "dashboard": [
           "BurgerMenu",
           {
-            "name": "Dashboard",
-            "cfg": {
-              "enableZoomInTblWidget": true
-              }
+            "name": "Dashboard"
           },
           "Notifications",
           "Login",
