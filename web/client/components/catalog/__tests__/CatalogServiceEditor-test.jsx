@@ -150,6 +150,21 @@ describe('Test CatalogServiceEditor', () => {
         let placeholder = defaultPlaceholder(service);
         expect(placeholder).toBe("e.g. https://mydomain.com/geoserver/wms");
     });
+    it('test save and delete button when saving', () => {
+        ReactDOM.render(<CatalogServiceEditor
+            service={givenWmsService}
+            layerOptions={{tileSize: 256}}
+            saving
+        />, document.getElementById("container"));
+        let buttons = document.querySelectorAll('.form-group button');
+        let saveBtn; let deleteBtn;
+        buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
+        buttons.forEach(btn => {if (btn.textContent === 'catalog.delete') deleteBtn = btn;});
+        expect(saveBtn).toBeTruthy();
+        expect(deleteBtn).toBeTruthy();
+        expect(saveBtn.classList.contains("disabled")).toBeTruthy();
+        expect(deleteBtn.classList.contains("disabled")).toBeTruthy();
+    });
     it('test saving service for COG type', () => {
         const actions = {
             onAddService: () => {}

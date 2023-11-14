@@ -111,7 +111,7 @@ const CatalogServiceEditor = ({
                         <Message msgId="save" />
                     </Button>
                     {service && !service.isNew
-                        ? <Button style={buttonStyle} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
+                        ? <Button style={buttonStyle} disabled={saving} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
                             <Message msgId="catalog.delete" />
                         </Button>
                         : null

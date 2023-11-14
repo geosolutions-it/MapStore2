@@ -10,8 +10,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 import { Observable } from 'rxjs';
-import { GeoTIFF } from 'geotiff';
-import { makeRemoteSource } from 'geotiff-remote';
+import { fromUrl as fromGeotiffUrl } from 'geotiff';
 
 import { isValidURL } from '../../utils/URLUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
@@ -61,15 +60,16 @@ export const getProjectionFromGeoKeys = (image) => {
 };
 const abortError = (reject) => reject(new DOMException("Aborted", "AbortError"));
 /**
- * getImage with abort fetching of data slices
+ * fromUrl with abort fetching of data and data slices
  */
-const getImage = (geotiff, signal) => {
+const fromUrl = (url, signal) => {
     if (signal?.aborted) {
         return abortError(Promise.reject);
     }
     return new Promise((resolve, reject) => {
         signal?.addEventListener("abort", () => abortError(reject));
-        return geotiff.getImage() // Fetch and read first image to get medatadata of the tif
+        return fromGeotiffUrl(url)
+            .then((image)=> image.getImage()) // Fetch and read first image to get medatadata of the tif
             .then((image) => resolve(image))
             .catch(()=> abortError(reject));
     });
@@ -97,11 +97,7 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                 if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
                     return {...cached.data};
                 }
-                const signal = controller?.signal;
-                // geotiff's `fromUrl` & `getImage` function doesn't pass down signal parameter properly. Known issue (https://github.com/geotiffjs/geotiff.js/issues/330)
-                // Hence `fromSource` is called directly with source formulated
-                return GeoTIFF.fromSource(makeRemoteSource(url, {}), {}, signal)
-                    .then(geotiff => getImage(geotiff, signal))
+                return fromUrl(url, controller?.signal)
                     .then(image => {
                         const crs = getProjectionFromGeoKeys(image);
                         const extent = image.getBoundingBox();
