@@ -5,7 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+import React from "react";
+import ReactDOM from "react-dom";
 import expect from 'expect';
+
 import {
     updatePages,
     gridUpdateToQueryUpdate,
@@ -18,6 +21,18 @@ import {
 
 
 describe('FeatureGridUtils', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(
+            document.getElementById("container")
+        );
+        document.body.innerHTML = "";
+        setTimeout(done);
+    });
     it('Test updatePages when needPages * size is less then features', () => {
         const oldFeatures = Array(350);
         const features = Array(60);
@@ -331,6 +346,32 @@ describe('FeatureGridUtils', () => {
         expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": "XX"}}])[0].title.default).toEqual('XX');
         // test localized alias with empty default
         expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": ""}}])[0].title.default).toEqual('Test1');
+
+    });
+    it('featureTypeToGridColumns formatters', () => {
+        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}, {name: 'Test3', type: "xsd:string"}]}]};
+        const columnSettings = {name: 'Test1', hide: false};
+        const fields = [{name: 'Test1', type: "xsd:number", alias: 'Test1 alias'}];
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, fields);
+        expect(featureGridColumns.length).toBe(3);
+        expect(featureGridColumns[0].title).toBe('Test1 alias');
+        // test alias empty string
+        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: ""}])[0].title).toEqual('Test1');
+        // test localized alias
+        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": "XX"}}])[0].title.default).toEqual('XX');
+        // test localized alias with empty default
+        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": ""}}])[0].title.default).toEqual('Test1');
+        const values = [123456, 12.3256, "test"];
+        featureGridColumns.forEach((fgColumns, index)=>{
+            const Formatter = fgColumns.formatter;
+            ReactDOM.render(
+                <Formatter value={values[index]} />,
+                document.getElementById("container")
+            );
+            expect(document.getElementById("container").innerHTML).toExist();
+            expect(document.getElementsByTagName('span').length).toEqual(2);
+            expect(document.getElementsByTagName('span')[1].innerHTML).toExist();
+        });
 
     });
     describe("supportsFeatureEditing", () => {
