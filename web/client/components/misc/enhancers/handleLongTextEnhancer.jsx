@@ -15,7 +15,7 @@ import { Tooltip } from "react-bootstrap";
  * @name handleLongTextEnhancer
  * @memberof components.misc.enhancers
  * Wraps [wrapped component with content] to add tooltip for long content if shown content less than the main content
- * @param {Component} Wrapped the wrapper to add tooltip for its long content
+ * @param {Component} Wrapped the component wrapped with a tooltip when its content is too long
  * @param {object} props the props that contains value content
  * @return {Component} the rendered component that renders the content with the tooltip if the content is long or renders the content with no tooltip if not long
  * @example
