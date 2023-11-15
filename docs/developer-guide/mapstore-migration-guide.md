@@ -29,7 +29,8 @@ From this version we limited the load of the font to FontAwesome.
 If you have changed the property **fonts** inside Map plugin it will not longer load the font. A possible fix would be to add the font to the `*.html` files in your application.
 
 - make sure that the `localConfig.json` does not have **fonts** property in  **Map**  plugin
-- add `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>` inside the *head* tag for every .html file you have in your project
+
+The following css is added automatically if needed `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>` inside the *head* tag.
 
 ### Fixing background config
 
