@@ -25,10 +25,10 @@ describe("handleLongTextEnhancer enhancer", () => {
         setTimeout(done);
     });
 
-    it('handleLongTextEnhancer with defaults [with no formatter]', () => {
-        const Enhancer = handleLongTextEnhancer();
+    it('handleLongTextEnhancer by passing formatter as wrapper', () => {
+        const EnhancerWithFormatter = ()=> handleLongTextEnhancer(StringFormatter)({ value: "test12334567899999" });
         ReactDOM.render(
-            <Enhancer value={"test12334567899999"} />,
+            <EnhancerWithFormatter />,
             document.getElementById("container")
         );
         expect(document.getElementById("container").innerHTML).toExist();
@@ -36,10 +36,37 @@ describe("handleLongTextEnhancer enhancer", () => {
         expect(document.getElementsByTagName('span')[1].innerHTML).toExist();
     });
 
-    it('handleLongTextEnhancer with formatter', () => {
-        const EnhancerWithFormatter = handleLongTextEnhancer(StringFormatter);
+    it('handleLongTextEnhancer with by passing td as wrapper', () => {
+        const wrapper = () => (<td>15234568965</td>);
+        const EnhancerWithFormatter = ()=> handleLongTextEnhancer(wrapper)({ value: "15234568965" });
         ReactDOM.render(
-            <EnhancerWithFormatter value={"test12334567899999"} />,
+            <EnhancerWithFormatter />,
+            document.getElementById("container")
+        );
+        expect(document.getElementById("container").innerHTML).toExist();
+        expect(document.getElementsByTagName('span').length).toEqual(2);
+        expect(document.getElementsByTagName('span')[1].innerHTML).toExist();
+    });
+
+
+    it('handleLongTextEnhancer with by passing span as wrapper', () => {
+        const wrapper = () => (<span>15234568965</span>);
+        const EnhancerWithFormatter = ()=> handleLongTextEnhancer(wrapper)({ value: "15234568965" });
+        ReactDOM.render(
+            <EnhancerWithFormatter />,
+            document.getElementById("container")
+        );
+        expect(document.getElementById("container").innerHTML).toExist();
+        expect(document.getElementsByTagName('span').length).toEqual(3);
+        expect(document.getElementsByTagName('span')[1].innerHTML).toExist();
+    });
+
+
+    it('handleLongTextEnhancer with by passing td div wrapper', () => {
+        const wrapper = () => (<div>test</div>);
+        const EnhancerWithFormatter = ()=> handleLongTextEnhancer(wrapper)({ value: "test" });
+        ReactDOM.render(
+            <EnhancerWithFormatter />,
             document.getElementById("container")
         );
         expect(document.getElementById("container").innerHTML).toExist();
