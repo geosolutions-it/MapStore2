@@ -18,24 +18,24 @@ import {
 import { toggleControl, setControlProperty } from '../actions/controls';
 
 import {
-    mapIdSelector,
-    mapInfoDetailsUriFromIdSelector
+    stateMapIdSelector
 } from '../selectors/map';
-import { getDashboardId, dashbaordInfoDetailsUriFromIdSelector } from '../selectors/dashboard';
+import { getDashboardId } from '../selectors/dashboard';
 
 import GeoStoreApi from '../api/GeoStoreDAO';
 
 import { getIdFromUri } from '../utils/MapUtils';
 import { basicError } from '../utils/NotificationUtils';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
+import { detailsUriSelector } from '../selectors/details';
 
 export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
         .switchMap(() => {
             const state = store.getState();
-            const mapId = mapIdSelector(state);
+            const mapId = stateMapIdSelector(state);
             const dashboardId = getDashboardId(state);
-            const detailsUri = dashboardId && dashbaordInfoDetailsUriFromIdSelector(state, dashboardId) ||  mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+            const detailsUri = detailsUriSelector(state);
             const detailsId = getIdFromUri(detailsUri);
             const resourceId = dashboardId || mapId;
             return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)

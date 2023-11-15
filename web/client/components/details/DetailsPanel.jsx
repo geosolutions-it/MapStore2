@@ -50,7 +50,7 @@ class DetailsPanel extends React.Component {
         return (
             <ResponsivePanel
                 containerId="details-container"
-                containerClassName="dock-container"
+                containerClassName={` dock-container ${this.props.isDashboard ? "leftZeroPanel" : ""}`}
                 containerStyle={this.props.dockStyle}
                 open={this.props.active}
                 size={this.props.width}
@@ -60,10 +60,9 @@ class DetailsPanel extends React.Component {
                 onClose={() => this.props.onClose()}
                 glyph="sheet"
                 style={this.props.dockStyle}
-                isDashboard={this.props.isDashboard}
             >
                 <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                    <BorderLayout isDashboard={this.props.isDashboard}>
+                    <BorderLayout>
                         {this.props.children}
                     </BorderLayout>
                 </Panel>

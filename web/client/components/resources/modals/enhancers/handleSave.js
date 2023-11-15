@@ -18,11 +18,12 @@ export default mapPropsStream(props$ => {
             .withLatestFrom(props$)
             .switchMap(([resource, props]) =>
                 updateResource(resource)
-                    .flatMap(rid => updateResourceAttribute({
-                        id: rid,
-                        name: 'detailsSettings',
-                        value: JSON.stringify(resource.attributes?.detailsSettings || {})
-                    }))
+                    .flatMap(rid => (['MAP', 'DASHBOARD'].includes(resource.categoryName)) ?
+                        updateResourceAttribute({
+                            id: rid,
+                            name: 'detailsSettings',
+                            value: JSON.stringify(resource.attributes?.detailsSettings || {})
+                        }) : Rx.Observable.of(rid))
                     .do(() => {
                         if (props) {
                             if (props.onClose) {

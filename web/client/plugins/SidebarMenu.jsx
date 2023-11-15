@@ -17,17 +17,15 @@ import {bindActionCreators} from "redux";
 import ToolsContainer from "./containers/ToolsContainer";
 import SidebarElement from "../components/sidebarmenu/SidebarElement";
 import {mapLayoutValuesSelector} from "../selectors/maplayout";
-import { isDashboardLoading } from '../selectors/dashboard';
 import tooltip from "../components/misc/enhancers/tooltip";
 import {setControlProperty} from "../actions/controls";
 import {createPlugin} from "../utils/PluginsUtils";
 import sidebarMenuReducer from "../reducers/sidebarmenu";
 
 import './sidebarmenu/sidebarmenu.less';
-import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
+import {lastActiveToolSelector, sidebarIsActiveSelector, isSidebarWithFullHeight} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
-import LoadingSpinner from '../components/misc/LoadingSpinner';
 
 const TDropdownButton = tooltip(DropdownButton);
 
@@ -42,7 +40,7 @@ class SidebarMenu extends React.Component {
         sidebarWidth: PropTypes.number,
         state: PropTypes.object,
         setLastActiveItem: PropTypes.func,
-        lastActiveTool: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+        isSidebarFullHeight: PropTypes.bool
     };
 
     static contextTypes = {
@@ -62,7 +60,8 @@ class SidebarMenu extends React.Component {
         stateSelector: 'sidebarMenu',
         tool: SidebarElement,
         toolCfg: {},
-        sidebarWidth: 40
+        sidebarWidth: 40,
+        isSidebarFullHeight: false
     };
 
     constructor() {
@@ -92,7 +91,8 @@ class SidebarMenu extends React.Component {
             }
             return prev;
         }, []).length > 0 : false;
-        return newSize || newItems || newVisibleItems || newHeight || burgerMenuState || markedAsInactive;
+        const nextIsSideBarFullHeight = !this.props.isSidebarFullHeight && nextProps.isSidebarFullHeight;
+        return newSize || newItems || newVisibleItems || newHeight || burgerMenuState || markedAsInactive || nextIsSideBarFullHeight;
     }
 
     componentDidUpdate(prevProps) {
@@ -231,7 +231,7 @@ class SidebarMenu extends React.Component {
 
     render() {
         return this.state.hidden ? false : (
-            <div id="mapstore-sidebar-menu-container" className={`shadow-soft ${this.props.did ? "fullHightSideBar" : ""}`} style={this.getStyle(this.props.style)}>
+            <div id="mapstore-sidebar-menu-container" className={`shadow-soft ${this.props.isSidebarFullHeight ? "fullHeightSideBar" : ""}`} style={this.getStyle(this.props.style)}>
                 <ContainerDimensions>
                     { ({ height }) =>
                         <ToolsContainer id={this.props.id}
@@ -245,7 +245,6 @@ class SidebarMenu extends React.Component {
                             panels={this.getPanels(this.props.items)}
                         /> }
                 </ContainerDimensions>
-                {this.props.loading ? <LoadingSpinner style={{ position: 'fixed', bottom: 0}} /> : null}
             </div>
 
         );
@@ -274,13 +273,13 @@ const sidebarMenuSelector = createSelector([
     state => lastActiveToolSelector(state),
     state => mapLayoutValuesSelector(state, {dockSize: true, bottom: true, height: true}),
     sidebarIsActiveSelector,
-    isDashboardLoading
-], (state, lastActiveTool, style, isActive, loading ) => ({
+    isSidebarWithFullHeight
+], (state, lastActiveTool, style, isActive, isSidebarFullHeight ) => ({
     style,
     lastActiveTool,
     state,
     isActive,
-    loading
+    isSidebarFullHeight
 }));
 
 /**

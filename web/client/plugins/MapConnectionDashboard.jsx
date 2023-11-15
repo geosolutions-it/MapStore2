@@ -7,17 +7,15 @@
  */
 
 import React from 'react';
-// import { Glyphicon } from 'react-bootstrap';
 
 import PropTypes from 'prop-types';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
-// import Message from '../../../components/I18N/Message';
-import ToolbarButton from '../../../components/misc/toolbar/ToolbarButton';
-import { buttonCanEdit, showConnectionsSelector } from '../../../selectors/dashboard';
-import { dashboardHasWidgets, getWidgetsDependenciesGroups } from '../../../selectors/widgets';
-import { triggerShowConnections } from '../../../actions/dashboard';
-import { createPlugin } from '../../../utils/PluginsUtils';
+import ToolbarButton from '../components/misc/toolbar/ToolbarButton';
+import { buttonCanEdit, showConnectionsSelector } from '../selectors/dashboard';
+import { dashboardHasWidgets, getWidgetsDependenciesGroups } from '../selectors/widgets';
+import { triggerShowConnections } from '../actions/dashboard';
+import { createPlugin } from '../utils/PluginsUtils';
 
 class MapConnectionDashboard extends React.Component {
     static propTypes = {
@@ -70,7 +68,7 @@ export default createPlugin('MapConnectionDashboard', {
         SidebarMenu: {
             name: "MapConnectionDashboard",
             tool: ConnectedMapAddWidget,
-            position: 2000,
+            position: 10,
             priority: 0
         }
     }

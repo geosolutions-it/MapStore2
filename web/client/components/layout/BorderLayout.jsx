@@ -19,14 +19,14 @@ import React from 'react';
  *  /></BorderLayout>
  *
  */
-export default ({id, children, header, footer, columns, height, style = {}, className, bodyClassName = "ms2-border-layout-body", isDashboard }) =>
+export default ({id, children, header, footer, columns, height, style = {}, className, bodyClassName = "ms2-border-layout-body" }) =>
     (<div id={id} className={className} style={{
         display: "flex",
         flexDirection: "column",
         width: "100%",
         height: "100%",
         overflow: "hidden",
-        paddingRight: isDashboard ? "1rem" : "auto",
+        paddingRight: "auto",
         ...style
     }}>
         {header}

@@ -56,10 +56,9 @@ export default withState('fullscreen', 'onFullscreen', false)(
         onFullscreen = () => {},
         fixed = false,
         resizable = false,
-        hideHeader,
-        isDashboard
+        hideHeader
     }) =>
-        <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') +  (!resizable ? 'react-dock-no-resize ' : '') + (isDashboard ? 'ms-dashboard-opened ' : '') + className}>
+        <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') +  (!resizable ? 'react-dock-no-resize ' : '') + className}>
             <Dock
                 fluid={fluid || fullscreen}
                 position={position}

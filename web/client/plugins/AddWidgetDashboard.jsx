@@ -11,12 +11,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
-import ToolbarButton from '../../../components/misc/toolbar/ToolbarButton';
-import { buttonCanEdit, isDashboardEditing } from '../../../selectors/dashboard';
-import { setEditing } from '../../../actions/dashboard';
-import { createWidget } from '../../../actions/widgets';
-// import { assign } from 'lodash';
-import { createPlugin } from '../../../utils/PluginsUtils';
+import ToolbarButton from '../components/misc/toolbar/ToolbarButton';
+import { buttonCanEdit, isDashboardEditing } from '../selectors/dashboard';
+import { setEditing } from '../actions/dashboard';
+import { createWidget } from '../actions/widgets';
+import { createPlugin } from '../utils/PluginsUtils';
 
 class AddWidgetDashboard extends React.Component {
     static propTypes = {
@@ -36,7 +35,8 @@ class AddWidgetDashboard extends React.Component {
         return  (<ToolbarButton
             glyph={'plus'}
             tooltipId={'dashboard.editor.addACardToTheDashboard'}
-            bsStyle={'primary'}
+            bsStyle={ this.props.editing ? 'primary' : 'tray'}
+            disabled={this.props.editing}
             onClick={() => {
  				if (this.props.editing) this.props.setEditing(false);
  				else {
@@ -45,7 +45,7 @@ class AddWidgetDashboard extends React.Component {
  			}}
             id={'ms-add-card-dashboard'}
             tooltipPosition={'left'}
-            btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary' }}/>);
+            btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: this.props.editing ? 'primary' : 'tray' }}/>);
     }
 }
 
@@ -69,7 +69,7 @@ export default createPlugin('AddWidgetDashboard', {
     containers: {
         SidebarMenu: {
             name: "AddWidgetDashboard",
-            position: 2000,
+            position: 10,
             tool: ConnectedAddWidget,
             priority: 0
         }
