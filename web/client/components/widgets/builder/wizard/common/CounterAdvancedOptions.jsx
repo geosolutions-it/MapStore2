@@ -27,9 +27,9 @@ function CounterAdvancedOptions({
             <Formula data={data} onChange={onChange}/>
             <Font
                 color={data?.counterOpts?.layout?.color || FONT.COLOR}
-                showFontSize={false}
-                fontFamily={data?.counterOpts?.layout?.fontFamily || FONT.FAMILY}
                 disabled={false}
+                fontFamily={data?.counterOpts?.layout?.fontFamily || FONT.FAMILY}
+                options={["color",  "family"]}
                 onChange={(key, val) => {
                     onChange(`counterOpts.layout.${key}`, val);
                 }}

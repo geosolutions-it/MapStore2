@@ -30,7 +30,7 @@ import { arrayUpsert } from "../utils/ImmutableUtils";
 
 
 export const FONT = {
-    FAMILY: "Noto Sans",
+    FAMILY: "inherit",
     SIZE: 12,
     COLOR: "#000000"
 };

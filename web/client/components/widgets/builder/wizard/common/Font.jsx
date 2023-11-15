@@ -21,16 +21,29 @@ const getSelectOptions = (opts) => {
 import { DEFAULT_FONT_FAMILIES } from '../../../../../utils/GeoStoryUtils';
 import { FONT } from '../../../../../utils/WidgetsUtils';
 
+/**
+ * Font component that will render a few input field for customizing:
+ * - color
+ * - fontSize
+ * - fontFamily
+ * within a widget
+ * @param {string} color the value in rgb format
+ * @param {boolean} disabled when all fields are disabled
+ * @param {number} fontSize
+ * @param {string} fontFamily
+ * @param {string[]} options array used to show partially the attributes, for example if you pass it as options=["color"], only the color field will be rendered
+ * @param {function} onChange handler used to dispatch change of value, with dedicated key for each field
+ */
 const Font = ({
     color,
+    disabled,
     fontSize,
     fontFamily,
-    showFontSize = true,
-    disabled,
+    options = ["color", "size", "family"],
     onChange
 }) => {
     return (<>
-        <FormGroup className="form-group-flex">
+        {options.includes("color") ? <FormGroup className="form-group-flex">
             <ControlLabel><Message msgId={'styleeditor.color'} /></ControlLabel>
             <InputGroup>
                 <ColorSelector
@@ -40,8 +53,8 @@ const Font = ({
                     onChangeColor={(colorVal) => colorVal && onChange('color', colorVal)}
                 />
             </InputGroup>
-        </FormGroup>
-        {showFontSize ? <FormGroup className="form-group-flex">
+        </FormGroup> : null}
+        {options.includes("size") ? <FormGroup className="form-group-flex">
             <ControlLabel><Message msgId={'styleeditor.fontSize'} /></ControlLabel>
             <InputGroup style={{ maxWidth: 90 }}>
                 <DebouncedFormControl
@@ -59,10 +72,11 @@ const Font = ({
                 <InputGroup.Addon>px</InputGroup.Addon>
             </InputGroup>
         </FormGroup> : null}
-        <FormGroup className="form-group-flex">
+        { options.includes("family") ? <FormGroup className="form-group-flex">
             <ControlLabel><Message msgId={'styleeditor.fontFamily'} /></ControlLabel>
             <InputGroup>
                 <Select
+                    clearable={false}
                     value={fontFamily}
                     onChange={val => {
                         onChange("fontFamily", val.value);
@@ -70,7 +84,7 @@ const Font = ({
                     options={getSelectOptions(DEFAULT_FONT_FAMILIES)}
                 />
             </InputGroup>
-        </FormGroup>
+        </FormGroup> : null}
     </>);
 };
 

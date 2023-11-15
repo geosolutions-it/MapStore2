@@ -18,6 +18,7 @@ import InfoPopover from '../../../widget/InfoPopover';
 import tooltip from '../../../../misc/enhancers/tooltip';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
+import { FONT } from '../../../../../utils/WidgetsUtils';
 
 const Button = tooltip(ButtonRB);
 const AxisTypeSelect = localizedProps('options')(Select);
@@ -186,9 +187,9 @@ function AxisOptions({
                 </InputGroup>
             </FormGroup>
             <Font
-                color={options?.color || chart?.layout?.color || '#000000'}
-                fontSize={options?.fontSize || chart?.layout?.fontSize || 12}
-                fontFamily={options?.fontFamily || chart?.layout?.fontFamily || "Noto Sans"}
+                color={options?.color || chart?.layout?.color || FONT.COLOR}
+                fontSize={options?.fontSize || chart?.layout?.fontSize || FONT.SIZE}
+                fontFamily={options?.fontFamily || chart?.layout?.fontFamily || FONT.FAMILY}
                 disabled={!!options.hide}
                 onChange={handleChange}
             />

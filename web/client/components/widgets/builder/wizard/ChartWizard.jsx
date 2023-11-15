@@ -139,15 +139,12 @@ const ChartWizard = ({
             data
         };
     });
-    useEffect(() => {
-        if (selectedTrace?.type === "pie" && tab === "axis") {
-            setTab("traces");
-        }
-    }, [selectedTrace?.type]);
 
     if (!selectedTrace) {
         return null;
     }
+    const selectedTab = selectedTrace?.type === "pie" && tab === "axis" ? "traces" : (tab);
+
     if (noAttributes) {
         return <NoAttributeComp featureTypeProperties={featureTypeProperties}/>;
     }
@@ -254,7 +251,7 @@ const ChartWizard = ({
     const ChartOptions = (
         <>
             {sampleChart}
-            {tabContents[tab || 'traces']}
+            {tabContents[selectedTab || 'traces']}
         </>
     );
     const WidgetOptions = !noAttributes ? (

@@ -79,6 +79,7 @@ function ChartLayoutOptions({
             </FormGroup>}
             <div className="ms-wizard-form-separator"><Message msgId="widgets.advanced.hoverlabel" /></div>
             <Font
+                options={selectedTrace.type !== 'pie' ? undefined : ["size", "family"] }
                 color={selectedChart?.layout?.color || FONT.COLOR}
                 fontSize={selectedChart?.layout?.fontSize || FONT.SIZE}
                 fontFamily={selectedChart?.layout?.fontFamily || FONT.FAMILY}

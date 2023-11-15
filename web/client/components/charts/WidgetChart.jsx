@@ -561,6 +561,11 @@ export const toPlotly = (_props) => {
                 height,
                 width
             }),
+            font: {
+                color: layout.color  || FONT.COLOR,
+                size: layout.fontSize  || FONT.SIZE,
+                family: layout.fontFamily || FONT.FAMILY
+            },
             margin: getMargins({ isModeBarVisible }),
             autosize: false,
             height,
