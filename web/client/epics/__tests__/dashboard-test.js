@@ -339,8 +339,6 @@ describe('saveDashboard', () => {
         const startActions = [saveDashboard(RESOURCE)];
         testEpic(saveDashboardMethod, actionsCount, startActions, actions => {
             expect(actions.length).toBe(2);
-            // expect(actions[0].type).toBe(DASHBOARD_LOADING);
-            // expect(actions[0].value).toBe(true);
             expect(actions[0].type).toBe(SAVE_ERROR);
             expect(
                 actions[0].error.status === 403
@@ -365,8 +363,6 @@ describe('saveDashboard', () => {
         const startActions = [saveDashboard(withoutMetadata)];
         testEpic(saveDashboardMethod, actionsCount, startActions, actions => {
             expect(actions.length).toBe(2);
-            // expect(actions[0].type).toBe(DASHBOARD_LOADING);
-            // expect(actions[0].value).toBe(true);
             expect(actions[0].type).toBe(SAVE_ERROR);
             expect(typeof(actions[0].error) === 'string').toBeTruthy();
             expect(actions[1].type).toBe(DASHBOARD_LOADING);
