@@ -562,9 +562,9 @@ export const toPlotly = (_props) => {
                 width
             }),
             font: {
-                color: layout.color  || FONT.COLOR,
-                size: layout.fontSize  || FONT.SIZE,
-                family: layout.fontFamily || FONT.FAMILY
+                color: layout?.color || FONT.COLOR,
+                size: layout?.fontSize || FONT.SIZE,
+                family: layout?.fontFamily || FONT.FAMILY
             },
             margin: getMargins({ isModeBarVisible }),
             autosize: false,
