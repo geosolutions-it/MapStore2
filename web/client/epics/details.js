@@ -18,7 +18,7 @@ import {
 import { toggleControl, setControlProperty } from '../actions/controls';
 
 import {
-    stateMapIdSelector
+    mapIdSelector
 } from '../selectors/map';
 import { getDashboardId } from '../selectors/dashboard';
 
@@ -33,7 +33,7 @@ export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
         .switchMap(() => {
             const state = store.getState();
-            const mapId = stateMapIdSelector(state);
+            const mapId = mapIdSelector(state);
             const dashboardId = getDashboardId(state);
             const detailsUri = detailsUriSelector(state);
             const detailsId = getIdFromUri(detailsUri);

@@ -7,12 +7,12 @@
 */
 
 import { dashboardInfoDetailsSettingsFromIdSelector, getDashboardId, dashbaordInfoDetailsUriFromIdSelector  } from "./dashboard";
-import { stateMapIdSelector, mapInfoDetailsSettingsFromIdSelector, mapInfoDetailsUriFromIdSelector } from "./map";
+import { mapIdSelector, mapInfoDetailsSettingsFromIdSelector, mapInfoDetailsUriFromIdSelector } from "./map";
 
 export const detailsTextSelector = state => state?.details?.detailsText;
 
 export const detailsUriSelector = state => {
- 	const mapId = stateMapIdSelector(state);
+ 	const mapId = mapIdSelector(state);
     const dashboardId = getDashboardId(state);
     // todo: this is now for map and dashboard only, in the future if something else needs to use this like geostory, an additional contional should be added
     let detailsUri = dashboardId && dashbaordInfoDetailsUriFromIdSelector(state, dashboardId) ||  mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
@@ -20,7 +20,7 @@ export const detailsUriSelector = state => {
 };
 
 export const detailsSettingsSelector = state => {
-    const mapId = stateMapIdSelector(state);
+    const mapId = mapIdSelector(state);
    	const dashboardId = getDashboardId(state);
     // todo: this is now for map and dashboard only, in the future if something else needs to use this like geostory, an additional contional should be added
     let detailsSettings = dashboardId && dashboardInfoDetailsSettingsFromIdSelector(state, dashboardId) ||  mapId && mapInfoDetailsSettingsFromIdSelector(state, mapId);
