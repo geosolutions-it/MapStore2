@@ -190,3 +190,8 @@ export const getWidgetFilterKey = (state) => {
     // Set chart key if editor widget type is chart
     return `charts[${selectedChartId}].traces[${selectedTrace?.id}].filter`;
 };
+
+export const getTblWidgetZoomLoader = state => {
+    let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
+    return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
+};

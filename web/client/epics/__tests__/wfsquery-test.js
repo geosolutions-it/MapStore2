@@ -517,4 +517,152 @@ describe('wfsquery Epics', () => {
                 }, mockState);
         });
     });
+
+
+    describe('featureTypeSelectedEpic with owner', () => {
+        const expectedResult = require('../../test-resources/vector/feature-collection-vector.json');
+        const flatLayers = [{
+            id: 'layer1',
+            name: 'layer1 name',
+            title: 'layer1 title',
+            description: 'layer1 description',
+            type: 'vector',
+            features: expectedResult
+        }];
+        const wmsLayer = [{
+            id: 'layer2',
+            name: 'poi',
+            title: 'layer2 title',
+            description: 'layer2 description',
+            type: 'wms',
+            fields: [{
+                name: "NAME",
+                alias: "Name Alias",
+                type: "string"
+            }]
+        }];
+        it('vector layer', (done) => {
+            const mockState = {
+                query: {
+                    data: {},
+                    featureTypes: [],
+                    typeName: 'layer1',
+                    url: '/dummy'},
+                featuregrid: {
+                    timeSync: true,
+                    pagination: {
+                        size: 10
+                    },
+                    open: true,
+                    selectedLayer: "layer1",
+                    changes: [],
+                    mode: 'VIEW'
+                },
+                layers: {
+                    flat: flatLayers,
+                    layerMetadata: {
+                        expanded: false,
+                        maskLoading: false
+                    },
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    }
+                }
+            };
+            mockAxios.onPost().reply(() => {return [200, expectedResult];});
+            testEpic(addTimeoutEpic(wfsQueryEpic, 500), 4, [
+                query("base/web/client/test-resources/vector/feature-collection-vector.json", {pagination: {} }),
+                featureTypeSelected('/dummy', 'layer1', [], "widgets")
+            ], actions => {
+                expect(actions.length).toBe(4);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case QUERY_RESULT:
+                        expect(action.result.features).toEqual(expectedResult);
+                        expect(action.result.totalFeatures).toEqual(expectedResult.length);
+                        expect(action.result.numberMatched).toEqual(expectedResult.length);
+                        expect(action.result.numberReturned).toEqual(expectedResult.length);
+                        break;
+                    case FEATURE_LOADING:
+                        break;
+                    case LAYER_LOAD:
+                        break;
+                    default:
+                        expect(false).toBe(true);
+                    }
+                });
+                done();
+            },
+            mockState
+            );
+        });
+
+        it('wms layer', (done) => {
+            const mockState = {
+                query: {
+                    data: {},
+                    featureTypes: [],
+                    typeName: 'layer1',
+                    url: '/dummy'},
+                featuregrid: {
+                    timeSync: true,
+                    pagination: {
+                        size: 10
+                    },
+                    open: true,
+                    selectedLayer: "layer1",
+                    changes: [],
+                    mode: 'VIEW'
+                },
+                layers: {
+                    flat: wmsLayer,
+                    layerMetadata: {
+                        expanded: false,
+                        maskLoading: false
+                    },
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    }
+                }
+            };
+            const wfsResults = require('../../test-resources/wfs/describe-pois.json');
+            mockAxios.onGet().reply(() => [200, wfsResults]);
+            testEpic(featureTypeSelectedEpic, 2,
+                featureTypeSelected('/dummy', 'poi', wmsLayer[0].fields), ([changeSpatialAttribute, featureTypeLoaded]) => {
+                    try {
+                        expect(featureTypeLoaded.type).toBe(FEATURE_TYPE_LOADED);
+                        expect(changeSpatialAttribute.type).toBe(CHANGE_SPATIAL_ATTRIBUTE);
+                        expect(featureTypeLoaded.featureType.attributes).toEqual([{
+                            label: "Name Alias",
+                            attribute: "NAME",
+                            type: "string",
+                            valueId: "id",
+                            valueLabel: "name",
+                            values: []
+                        },
+                        {
+                            label: "THUMBNAIL",
+                            attribute: "THUMBNAIL",
+                            type: "string",
+                            valueId: "id",
+                            valueLabel: "name",
+                            values: []
+                        },
+                        {
+                            label: "MAINPAGE", attribute: "MAINPAGE", type: "string", valueId: "id", valueLabel: "name", values: []
+                        }]);
+
+                    } catch (error) {
+                        done(error);
+                    }
+                    done();
+                }, mockState);
+        });
+    });
 });
