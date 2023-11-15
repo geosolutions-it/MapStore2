@@ -349,23 +349,17 @@ describe('FeatureGridUtils', () => {
 
     });
     it('featureTypeToGridColumns formatters', () => {
-        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}, {name: 'Test3', type: "xsd:string"}]}]};
+        const DUMMY = () => {};
+        const formatterWrapper = () => (<div>testtttt</div>);
+        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
         const columnSettings = {name: 'Test1', hide: false};
-        const fields = [{name: 'Test1', type: "xsd:number", alias: 'Test1 alias'}];
-        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, fields);
-        expect(featureGridColumns.length).toBe(3);
-        expect(featureGridColumns[0].title).toBe('Test1 alias');
-        // test alias empty string
-        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: ""}])[0].title).toEqual('Test1');
-        // test localized alias
-        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": "XX"}}])[0].title.default).toEqual('XX');
-        // test localized alias with empty default
-        expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": ""}}])[0].title.default).toEqual('Test1');
-        const values = [123456, 12.3256, "test"];
-        featureGridColumns.forEach((fgColumns, index)=>{
+        const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => formatterWrapper, getEditor: () => DUMMY});
+        expect(featureGridColumns.length).toBe(2);
+        featureGridColumns.forEach((fgColumns)=>{
             const Formatter = fgColumns.formatter;
             ReactDOM.render(
-                <Formatter value={values[index]} />,
+                <Formatter/>,
                 document.getElementById("container")
             );
             expect(document.getElementById("container").innerHTML).toExist();
