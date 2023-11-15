@@ -853,6 +853,26 @@ export const parseSymbolizerExpressions = (symbolizer, feature) => {
 };
 
 
+const loadFontAwesome = () => {
+    return new Promise((resolve) => {
+        const fontAwesomeHref = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+        if (!document.querySelector(`link[href='${fontAwesomeHref}']`)) {
+            const fontAwesome = document.createElement('link');
+            fontAwesome.setAttribute('rel', 'stylesheet');
+            fontAwesome.setAttribute('href', fontAwesomeHref);
+            document.head.appendChild(fontAwesome);
+            fontAwesome.onload = () => {
+                resolve();
+            };
+            fontAwesome.onerror = () => {
+                resolve();
+            };
+        } else {
+            resolve();
+        }
+    });
+};
+
 /**
  * prefetch all image or mark symbol in a geostyler style
  * @param {object} geoStylerStyle geostyler style
@@ -886,16 +906,19 @@ export const drawIcons = (geoStylerStyle, options) => {
     }, []);
     const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
     const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
-    return new Promise((resolve) => {
-        if (marks.length > 0 || icons.length > 0) {
-            Promise.all([
-                ...marks.map(getWellKnownNameImageFromSymbolizer),
-                ...icons.map(getImageFromSymbolizer)
-            ]).then((images) => {
-                resolve(images);
-            });
-        } else {
-            resolve([]);
-        }
-    });
+    return loadFontAwesome()
+        .then(
+            () => new Promise((resolve) => {
+                if (marks.length > 0 || icons.length > 0) {
+                    Promise.all([
+                        ...marks.map(getWellKnownNameImageFromSymbolizer),
+                        ...icons.map(getImageFromSymbolizer)
+                    ]).then((images) => {
+                        resolve(images);
+                    });
+                } else {
+                    resolve([]);
+                }
+            })
+        );
 };
