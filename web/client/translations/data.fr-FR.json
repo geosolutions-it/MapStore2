@@ -1516,7 +1516,7 @@
             "tooltip": "Ajouter des couches à la carte",
             "autoload": "Recherche sur la sélection du service",
             "fetchMetadata": {
-                "label": "Télécharger les métadonnées du fichier lors de la recherche",
+                "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
                 "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
             },
             "clearValueText": "Effacer la sélection",

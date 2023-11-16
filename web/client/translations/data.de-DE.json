@@ -1554,7 +1554,7 @@
             "tooltip": "Fügen Sie der Karte Ebenen hinzu",
             "autoload": "Suche in Dienstauswahl",
             "fetchMetadata": {
-                "label": "Laden Sie Dateimetadaten bei der Suche herunter",
+                "label": "Dateimetadaten beim Speichern herunterladen",
                 "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
             },
             "clearValueText": "Auswahl aufheben",

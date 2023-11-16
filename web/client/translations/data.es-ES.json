@@ -1516,7 +1516,7 @@
             "tooltip": "agregar capas al mapa",
             "autoload": "Buscar en la selección de servicios",
             "fetchMetadata": {
-                "label": "Descargar metadatos de archivos en la búsqueda",
+                "label": "Descargar metadatos del archivo al guardar",
                 "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
             },
             "clearValueText": "Borrar selección",
