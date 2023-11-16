@@ -33,6 +33,7 @@ export default ({
     formatOptions,
     buttonStyle,
     saving,
+    showFormatError,
     onChangeServiceFormat = () => {},
     onChangeMetadataTemplate = () => {},
     onToggleAdvancedSettings = () => { },
@@ -86,6 +87,7 @@ export default ({
                 currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}
                 selectedService={selectedService}
                 onFormatOptionsFetch={onFormatOptionsFetch}
+                showFormatError={showFormatError}
                 formatsLoading={formatsLoading}
                 infoFormatOptions={infoFormatOptions}
                 autoSetVisibilityLimits={autoSetVisibilityLimits}

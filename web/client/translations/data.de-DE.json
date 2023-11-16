@@ -117,6 +117,7 @@
             "heightOffset": "Höhenversatz (m)",
             "wmsLayerTileSize": "Kachelgröße (WMS)",
             "serverType": "Servertyp",
+            "formatError": "Es war nicht möglich, Format und Informationsblattformat vom konfigurierten Dienst abzurufen. Wahrscheinlich verwenden Sie einen No-Vendor-Dienst und dieser wird nicht unterstützt (z. B. GeoNetwork).",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"

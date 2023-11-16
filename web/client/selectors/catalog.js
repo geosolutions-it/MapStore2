@@ -62,3 +62,4 @@ export const getSupportedFormatsSelector = (state) => modeSelector(state) === 'e
 export const getSupportedGFIFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.infoFormats", getDefaultSupportedGetFeatureInfoFormats());
 export const getFormatUrlUsedSelector = (state) => get(state, "catalog.newService.formatUrlUsed", '');
 export const getNewServiceStatusSelector = (state) => get(state, "catalog.isNewServiceAdded", false);
+export const showFormatErrorSelector = (state) => get(state, "catalog.showFormatError", false);

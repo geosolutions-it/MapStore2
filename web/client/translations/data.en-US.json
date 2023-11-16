@@ -117,6 +117,7 @@
             "heightOffset": "Height offset (m)",
             "wmsLayerTileSize": "Tile size (WMS)",
             "serverType": "Server Type",
+            "formatError": "It was not possible to fetch format and information sheet format from the service configured. Probably you are using a No Vendor service and this is not supported (e.g. GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"

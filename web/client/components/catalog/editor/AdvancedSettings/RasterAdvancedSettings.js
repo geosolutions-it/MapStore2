@@ -8,20 +8,20 @@
 import React, {useEffect} from 'react';
 import {FormGroup, Col, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon } from "react-bootstrap";
 import RS from 'react-select';
-import localizedProps from '../../../misc/enhancers/localizedProps';
-const Select = localizedProps('noResultsText')(RS);
-
-import CommonAdvancedSettings from './CommonAdvancedSettings';
 import {isNil, camelCase} from "lodash";
+
+import localizedProps from '../../../misc/enhancers/localizedProps';
+import CommonAdvancedSettings from './CommonAdvancedSettings';
 import ReactQuill from '../../../../libs/quill/react-quill-suspense';
 import { ServerTypes } from '../../../../utils/LayersUtils';
-
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 import CSWFilters from "./CSWFilters";
 import Message from "../../../I18N/Message";
 import WMSDomainAliases from "./WMSDomainAliases";
 import tooltip from '../../../misc/enhancers/buttonTooltip';
+
 const Button = tooltip(ButtonRB);
+const Select = localizedProps('noResultsText')(RS);
 
 /**
  * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
@@ -58,6 +58,7 @@ const getServerTypeOptions = () => {
  *
  */
 export default ({
+    showFormatError,
     service,
     formatOptions = [],
     infoFormatOptions = [],
@@ -161,54 +162,67 @@ export default ({
             </Col>
         </FormGroup>)}
         <FormGroup style={advancedRasterSettingsStyles}>
-            <Col xs={6}>
-                <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
+            <Col xs={6} >
+                <ControlLabel><Message msgId="layerProperties.serverType" /></ControlLabel>
             </Col >
-            <Col xs={6} style={{marginBottom: '5px', display: 'flex', alignItems: 'center' }}>
-                <div style={{ flex: 1 }}>
-                    <Select
-                        isLoading={props.formatsLoading}
-                        onOpen={() => onFormatOptionsFetch(service.url)}
-                        value={service && service.format}
-                        clearable
-                        noResultsText={props.formatsLoading
-                            ? "catalog.format.loading" : "catalog.format.noOption"}
-                        options={props.formatsLoading ? [] : formatOptions.map((format) => format?.value ? format : ({ value: format, label: format }))}
-                        onChange={event => onChangeServiceFormat(event && event.value)} />
-                </div>
-                <Button
-                    disabled={props.formatsLoading}
-                    tooltipId="catalog.format.refresh"
-                    className="square-button-md no-border"
-                    onClick={() => onFormatOptionsFetch(service.url, true)}
-                    key="format-refresh">
-                    <Glyphicon glyph="refresh" />
-                </Button>
+            <Col xs={6} style={{marginBottom: '5px'}}>
+                <Select
+                    value={service.layerOptions?.serverType}
+                    options={serverTypeOptions}
+                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
             </Col >
         </FormGroup>
-        <FormGroup style={advancedRasterSettingsStyles}>
-            <Col xs={6}>
-                <ControlLabel><Message msgId="infoFormatLbl" /></ControlLabel>
-            </Col >
-            <Col xs={6} style={{marginBottom: '5px', display: 'flex', alignItems: 'center' }}>
-                <div style={{ flex: 1 }}>
-                    <Select
-                        isLoading={props.formatsLoading}
-                        onOpen={() => onFormatOptionsFetch(service.url)}
-                        value={service && service.infoFormat}
-                        clearable
-                        options={props.formatsLoading ? [] : infoFormatOptions.map((format) => ({ value: format, label: format }))}
-                        onChange={event => onChangeServiceProperty("infoFormat", event && event.value)} />
-                </div>
-                <Button
-                    disabled={props.formatsLoading}
-                    tooltipId="catalog.format.refresh"
-                    className="square-button-md no-border"
-                    onClick={() => onFormatOptionsFetch(service.url, true)}
-                    key="format-refresh">
-                    <Glyphicon glyph="refresh" />
-                </Button>
-            </Col >
+        <FormGroup style={advancedRasterSettingsStyles} className="catalog-formats">
+            <div className="format-labels">
+                <Col xs={12}>
+                    <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
+                </Col >
+                <Col xs={12}>
+                    <ControlLabel><Message msgId="infoFormatLbl" /></ControlLabel>
+                </Col >
+            </div>
+            <div className="format-tools">
+                <div className="format-fields"  style={{ flex: 1 }}>
+                    <Col xs={12} style={{marginBottom: '5px',  alignItems: 'center' }}>
+                        <Select
+                            disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                            isLoading={props.formatsLoading}
+                            onOpen={() => onFormatOptionsFetch(service.url)}
+                            value={service && service.format}
+                            clearable
+                            noResultsText={props.formatsLoading
+                                ? "catalog.format.loading" : "catalog.format.noOption"}
+                            options={props.formatsLoading ? [] : formatOptions.map((format) => format?.value ? format : ({ value: format, label: format }))}
+                            onChange={event => onChangeServiceFormat(event && event.value)} />
+                    </Col >
+                    <Col xs={12} style={{marginBottom: '5px',  alignItems: 'center' }}>
+                        <Select
+                            disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                            isLoading={props.formatsLoading}
+                            onOpen={() => onFormatOptionsFetch(service.url)}
+                            value={service && service.infoFormat}
+                            clearable
+                            options={props.formatsLoading ? [] : infoFormatOptions.map((format) => ({ value: format, label: format }))}
+                            onChange={event => onChangeServiceProperty("infoFormat", event && event.value)} />
+                    </Col >
+                </div >
+                <div className="format-toolbar">
+                    <Button
+                        disabled={props.formatsLoading}
+                        tooltipId="catalog.format.refresh"
+                        className="square-button-md no-border"
+                        onClick={() => onFormatOptionsFetch(service.url, true)}
+                        key="format-refresh">
+                        <Glyphicon glyph="refresh" />
+                    </Button>
+                    {showFormatError ? <InfoPopover
+                        bsStyle="danger"
+                        placement="top"
+                        showOnRender
+                        title={<Message msgId="errorTitleDefault"/>}
+                        text={<Message msgId="layerProperties.formatError" />} /> : null}
+                </div >
+            </div >
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles}>
             <Col xs={6} >
@@ -219,17 +233,6 @@ export default ({
                     value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
                     options={tileSelectOptions}
                     onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, tileSize: event && event.value })} />
-            </Col >
-        </FormGroup>
-        <FormGroup style={advancedRasterSettingsStyles}>
-            <Col xs={6} >
-                <ControlLabel><Message msgId="layerProperties.serverType" /></ControlLabel>
-            </Col >
-            <Col xs={6} style={{marginBottom: '5px'}}>
-                <Select
-                    value={service.layerOptions?.serverType}
-                    options={serverTypeOptions}
-                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
             </Col >
         </FormGroup>
         {!isNil(service.type) && service.type === "csw" &&

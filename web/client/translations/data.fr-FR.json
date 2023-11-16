@@ -117,6 +117,7 @@
             "heightOffset": "Décalage en hauteur (m)",
             "wmsLayerTileSize": "Taille de la tuile (WMS)",
             "serverType": "Type de serveur",
+            "formatError": "Il n'a pas été possible de récupérer le format et le format de la fiche d'information à partir du service configuré. Vous utilisez probablement un service No Vendor et celui-ci n'est pas pris en charge (par exemple GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
