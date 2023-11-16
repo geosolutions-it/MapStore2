@@ -93,6 +93,7 @@ When the processes are finished, the release is ready to be published on github 
 - [ ] Update the description of the release details
 - [ ] Publish the release
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
+- [ ] Update `Default version` to point the release version in the `Advanced Settings` menu of the [ReadTheDocs](https://readthedocs.org/dashboard/mapstore/advanced/) admin panel
 
 ## Build and publish MapStoreExtension release
 
