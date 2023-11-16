@@ -61,6 +61,8 @@ export const getProjectionFromGeoKeys = (image) => {
 const abortError = (reject) => reject(new DOMException("Aborted", "AbortError"));
 /**
  * fromUrl with abort fetching of data and data slices
+ * Note: The abort action will not cancel data fetch request but just the promise,
+ * because of the issue in geotiff.js https://github.com/geotiffjs/geotiff.js/issues/408
  */
 const fromUrl = (url, signal) => {
     if (signal?.aborted) {
@@ -115,15 +117,17 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                                 resolution: image.getResolution()
                             },
                             // skip adding bbox when geokeys or extent is empty
-                            ...(!isEmpty(extent) && !isEmpty(crs) && isProjectionDefined && {
+                            ...(!isEmpty(extent) && !isEmpty(crs) && {
                                 bbox: {
                                     crs,
-                                    bounds: {
-                                        minx: extent[0],
-                                        miny: extent[1],
-                                        maxx: extent[2],
-                                        maxy: extent[3]
-                                    }
+                                    ...(isProjectionDefined && {
+                                        bounds: {
+                                            minx: extent[0],
+                                            miny: extent[1],
+                                            maxx: extent[2],
+                                            maxy: extent[3]
+                                        }}
+                                    )
                                 }
                             })
                         };
