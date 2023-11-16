@@ -62,7 +62,7 @@ const abortError = (reject) => reject(new DOMException("Aborted", "AbortError"))
 /**
  * fromUrl with abort fetching of data and data slices
  * Note: The abort action will not cancel data fetch request but just the promise,
- * because of the issue in geotiff.js https://github.com/geotiffjs/geotiff.js/issues/408
+ * because of the issue in https://github.com/geotiffjs/geotiff.js/issues/408
  */
 const fromUrl = (url, signal) => {
     if (signal?.aborted) {
