@@ -88,6 +88,7 @@ If stable release (YYYY.XX.00) follow these sub-steps:
     - [ ] `mapstore-printing.zip` on github release
 - [ ] Publish the release
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
+- [ ] Update `Default version` to point the release version in the `Advanced Settings` menu of the [ReadTheDocs](https://readthedocs.org/dashboard/mapstore/advanced/) admin panel
 
 
 ## Build and publish MapStoreExtension release

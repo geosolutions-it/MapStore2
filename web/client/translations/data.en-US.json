@@ -238,7 +238,8 @@
             "warningSaveUpdatedMap": "Some layers haven't been updated correctly.",
             "saveUpdatedMap": "All the layers have been successfully updated.",
             "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background. Switch to a compatible -or an empty- background, then select this projection.",
-            "incompatibleDataAndProjection":"The current layer(s) and map projection are not completely compatible. Parts or all of the data might not appear in the map."
+            "incompatibleDataAndProjection":"The current layer(s) and map projection are not completely compatible. Parts or all of the data might not appear in the map.",
+            "errorLoadingGF":"Error loading GF Geom"
         },
         "dock": {
             "row": "{rowsSelected} row selected",
@@ -349,7 +350,7 @@
         },
         "home":{
             "open": "Open",
-            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and ReactJS.<br/> <small>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and ReactJS.<br/> <small>Visit the <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
             "Applications": "Applications",
@@ -1515,7 +1516,7 @@
             "tooltip": "Add layers to the map",
             "autoload": "Search on service selection",
             "fetchMetadata": {
-                "label": "Download file metadata on search",
+                "label": "Download file metadata on save",
                 "tooltip": "This option will fetch metadata to support the zoom to layer. It may slow down the search operation if the images are too big or too many."
             },
             "clearValueText": "Clear selection",

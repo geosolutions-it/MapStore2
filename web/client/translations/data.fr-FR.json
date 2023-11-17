@@ -238,7 +238,8 @@
             "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
             "saveUpdatedMap": "Toutes les couches ont bien été mises à jour",
             "incompatibleBackgroundAndProjection": "La projection que vous avez choisie n'est pas compatible avec le fond de plan. Changez pour un fond de plan compatible ou retirez le fond de plan, puis sélectionnez à nouveau la projection.",
-            "incompatibleDataAndProjection": "La/les couche(s) actuelle(s) et la projection cartographique ne sont pas totalement compatibles. Certaines données voire toutes les données risquent de ne pas apparaître sur la carte."
+            "incompatibleDataAndProjection": "La/les couche(s) actuelle(s) et la projection cartographique ne sont pas totalement compatibles. Certaines données voire toutes les données risquent de ne pas apparaître sur la carte.",
+            "errorLoadingGF":"Erreur Chargement GF Geom"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionnée",
@@ -349,7 +350,7 @@
         },
         "home": {
             "open": "Ouvrir",
-            "shortDescription": "Application cartographique en ligne moderne Modern propulsée par OpenLayers, Leaflet et ReactJS.<br/> <small>Consultez la page de <a href=\"https://mapstore.readthedocs.io/en/latest/\"> documentation </a></ small>",
+            "shortDescription": "Application cartographique en ligne moderne Modern propulsée par OpenLayers, Leaflet et ReactJS.<br/> <small>Consultez la page de <a href=\"https://docs.mapstore.geosolutionsgroup.com/\"> documentation </a></ small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore a été développé pour créer, sauvegarder et partager de façon simple et intuitive des cartes simple ou élaboréess créés à partir de services comme OpenStreetMap, Google Maps ou tout autres services fournis par des organisations utilisant des protocoles ouverts comme OGC WMS, WFS, WMTS ou TMS et bien d'autres...<br/>Visitez notre <a href=\"https://mapstore.readthedocs.io/en/latest/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
@@ -1516,7 +1517,7 @@
             "tooltip": "Ajouter des couches à la carte",
             "autoload": "Recherche sur la sélection du service",
             "fetchMetadata": {
-                "label": "Télécharger les métadonnées du fichier lors de la recherche",
+                "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
                 "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
             },
             "clearValueText": "Effacer la sélection",

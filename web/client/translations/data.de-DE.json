@@ -238,7 +238,8 @@
             "warningSaveUpdatedMap": "Einige Ebenen wurden nicht korrekt aktualisiert",
             "saveUpdatedMap": "Alle Ebenen wurden erfolgreich aktualisiert",
             "incompatibleBackgroundAndProjection":"Die von Ihnen ausgewählte Projektion ist nicht mit der Hintergrundkarte kompatibel. Wechseln Sie zu einer kompatiblen oder leeren Hintergrundkarte und wählen Sie danach diese Projektion aus!",
-            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt"
+            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt",
+            "errorLoadingGF":"Fehler laden GF GEOM"
         },
         "dock": {
             "row": "{rowsSelected}. Zeile ausgewählt",
@@ -349,7 +350,7 @@
         },
         "home":{
             "open": "Öffnen",
-            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://mapstore.readthedocs.io/en/latest/\">dokumentationsseite</a></small>",
+            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">dokumentationsseite</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"https://mapstore.readthedocs.io/en/latest/\">Homepage</a> für mehr Details.",
             "Applications": "Anwendungen",
@@ -1554,7 +1555,7 @@
             "tooltip": "Fügen Sie der Karte Ebenen hinzu",
             "autoload": "Suche in Dienstauswahl",
             "fetchMetadata": {
-                "label": "Laden Sie Dateimetadaten bei der Suche herunter",
+                "label": "Dateimetadaten beim Speichern herunterladen",
                 "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
             },
             "clearValueText": "Auswahl aufheben",

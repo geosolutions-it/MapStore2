@@ -8,6 +8,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
+import TestUtils from 'react-dom/test-utils';
 import CatalogServiceEditor from '../CatalogServiceEditor';
 import {defaultPlaceholder} from "../editor/MainFormUtils";
 
@@ -148,5 +149,94 @@ describe('Test CatalogServiceEditor', () => {
         };
         let placeholder = defaultPlaceholder(service);
         expect(placeholder).toBe("e.g. https://mydomain.com/geoserver/wms");
+    });
+    it('test save and delete button when saving', () => {
+        ReactDOM.render(<CatalogServiceEditor
+            service={givenWmsService}
+            layerOptions={{tileSize: 256}}
+            saving
+        />, document.getElementById("container"));
+        let buttons = document.querySelectorAll('.form-group button');
+        let saveBtn; let deleteBtn;
+        buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
+        buttons.forEach(btn => {if (btn.textContent === 'catalog.delete') deleteBtn = btn;});
+        expect(saveBtn).toBeTruthy();
+        expect(deleteBtn).toBeTruthy();
+        expect(saveBtn.classList.contains("disabled")).toBeTruthy();
+        expect(deleteBtn.classList.contains("disabled")).toBeTruthy();
+    });
+    it('test saving service for COG type', () => {
+        const actions = {
+            onAddService: () => {}
+        };
+        const spyOnAdd = expect.spyOn(actions, 'onAddService');
+        ReactDOM.render(<CatalogServiceEditor
+            format="cog"
+            onAddService={actions.onAddService}
+        />, document.getElementById("container"));
+        let buttons = document.querySelectorAll('.form-group button');
+        let saveBtn;
+        buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
+        expect(saveBtn).toBeTruthy();
+        TestUtils.Simulate.click(saveBtn);
+        expect(spyOnAdd).toHaveBeenCalled();
+        let arg = spyOnAdd.calls[0].arguments[0];
+        expect(arg.save).toBe(true);
+        expect(arg.controller).toBeTruthy();
+
+        ReactDOM.render(<CatalogServiceEditor
+            format="csw"
+            onAddService={actions.onAddService}
+        />, document.getElementById("container"));
+        buttons = document.querySelectorAll('.form-group button');
+        buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
+        expect(saveBtn).toBeTruthy();
+        TestUtils.Simulate.click(saveBtn);
+        expect(spyOnAdd).toHaveBeenCalled();
+        arg = spyOnAdd.calls[1].arguments[0];
+        expect(arg.save).toBeTruthy();
+        expect(arg.controller).toBeFalsy();
+    });
+    it('test cancel service', () => {
+        const actions = {
+            onChangeCatalogMode: () => {},
+            onAddService: () => {}
+        };
+        const spyOnCancel = expect.spyOn(actions, 'onChangeCatalogMode');
+        ReactDOM.render(<CatalogServiceEditor
+            format="csw"
+            onChangeCatalogMode={actions.onChangeCatalogMode}
+        />, document.getElementById("container"));
+        let buttons = document.querySelectorAll('.form-group button');
+        let cancelBtn;
+        buttons.forEach(btn => {if (btn.textContent === 'cancel') cancelBtn = btn;});
+        expect(cancelBtn).toBeTruthy();
+        TestUtils.Simulate.click(cancelBtn);
+        expect(spyOnCancel).toHaveBeenCalled();
+        let arg = spyOnCancel.calls[0].arguments[0];
+        expect(arg).toBe('view');
+
+        const spyOnAdd = expect.spyOn(actions, 'onAddService');
+        ReactDOM.render(<CatalogServiceEditor
+            format="cog"
+            onChangeCatalogMode={actions.onChangeCatalogMode}
+            onAddService={actions.onAddService}
+        />, document.getElementById("container"));
+        buttons = document.querySelectorAll('.form-group button');
+        let saveBtn;
+        buttons.forEach(btn => {if (btn.textContent === 'save') saveBtn = btn;});
+        TestUtils.Simulate.click(saveBtn);
+        expect(spyOnAdd).toHaveBeenCalled();
+
+        ReactDOM.render(<CatalogServiceEditor
+            format="cog"
+            saving
+            onChangeCatalogMode={actions.onChangeCatalogMode}
+            onAddService={actions.onAddService}
+        />, document.getElementById("container"));
+        buttons = document.querySelectorAll('.form-group button');
+        buttons.forEach(btn => {if (btn.textContent === 'cancel') cancelBtn = btn;});
+        TestUtils.Simulate.click(cancelBtn);
+        expect(spyOnCancel.calls[1]).toBeFalsy();
     });
 });

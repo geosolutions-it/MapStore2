@@ -238,7 +238,8 @@
             "warningSaveUpdatedMap": "Algunas capas no han sido actualizadas correctamente",
             "saveUpdatedMap": "Todas las capas han sido actulizadas correctamente",
             "incompatibleBackgroundAndProjection":"La proyección que seleccionó no es compatible con el fondo, cambie a un fondo compatible -o un vacío-, luego seleccione esta proyección!",
-            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa"
+            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa",
+            "errorLoadingGF":"Error de carga de GF Geometry"
         },
         "dock": {
             "row": "{rowsSelected} fila seleccionada",
@@ -349,7 +350,7 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Webmapping moderno con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentación</a></small>",
+            "shortDescription": "Webmapping moderno con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentación</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"https://mapstore.readthedocs.io/en/latest/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
@@ -1516,7 +1517,7 @@
             "tooltip": "agregar capas al mapa",
             "autoload": "Buscar en la selección de servicios",
             "fetchMetadata": {
-                "label": "Descargar metadatos de archivos en la búsqueda",
+                "label": "Descargar metadatos del archivo al guardar",
                 "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
             },
             "clearValueText": "Borrar selección",
