@@ -108,7 +108,7 @@ function rulesmanager(state = defaultState, action) {
         const {key, value, isResetField} = action;
         if (isResetField) {
             if (key === "rolename") {
-                return assign({}, state, {filters: {...state.filters, [key]: value, ['groupAny']: undefined}});
+                return assign({}, state, {filters: {...state.filters, [key]: value, ['roleAny']: undefined}});
             } else if (key === "username") {
                 return assign({}, state, {filters: {...state.filters, [key]: value, ['userAny']: undefined}});
             }

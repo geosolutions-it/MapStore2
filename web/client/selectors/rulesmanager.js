@@ -21,7 +21,7 @@ export const rulesSelector = (state) => {
         assign(formattedRule, {'id': rule.id});
         assign(formattedRule, {'priority': rule.priority});
         assign(formattedRule, {'roleName': rule.roleName ? rule.roleName : '*'});
-        assign(formattedRule, {'groupAny': rule.groupAny ? rule.groupAny : '*'});
+        assign(formattedRule, {'roleAny': rule.roleAny ? rule.roleAny : '*'});
         assign(formattedRule, {'userName': rule.userName ? rule.userName : '*'});
         assign(formattedRule, {'userAny': rule.userAny ? rule.userAny : '*'});
         assign(formattedRule, {'service': rule.service ? rule.service : '*'});
