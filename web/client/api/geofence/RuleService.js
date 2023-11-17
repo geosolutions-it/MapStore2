@@ -43,6 +43,8 @@ const normalizeKey = (key) => {
         return 'userName';
     case 'rolename':
         return 'groupName';
+    case 'roleAny':
+        return 'groupAny';
     default:
         return key;
     }
