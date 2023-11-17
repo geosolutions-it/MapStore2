@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(12);
+        expect(fields.length).toBe(11);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
@@ -41,7 +41,7 @@ describe('Test Raster advanced settings', () => {
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
         const cswFilters = document.getElementsByClassName("catalog-csw-filters");
-        expect(fields.length).toBe(10);
+        expect(fields.length).toBe(9);
         expect(cswFilters).toBeTruthy();
     });
     it('test component onChangeServiceProperty autoload', () => {
@@ -159,7 +159,7 @@ describe('Test Raster advanced settings', () => {
             service={{type: "wms"}}/>, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const format = document.querySelectorAll('input[role="combobox"]')[0];
+        const format = document.querySelectorAll('input[role="combobox"]')[1];
         expect(format).toBeTruthy();
         TestUtils.Simulate.change(format, { target: { value: 'image/png' } });
         TestUtils.Simulate.keyDown(format, { keyCode: 9, key: 'Tab' });
@@ -176,7 +176,7 @@ describe('Test Raster advanced settings', () => {
             service={{type: "wms", layerOptions: {tileSize: 256}}}/>, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const layerOption = document.querySelectorAll('input[role="combobox"]')[2];
+        const layerOption = document.querySelectorAll('input[role="combobox"]')[3];
         expect(layerOption).toBeTruthy();
         TestUtils.Simulate.change(layerOption, { target: { value: "512" }});
         TestUtils.Simulate.keyDown(layerOption, { keyCode: 9, key: 'Tab' });
@@ -237,7 +237,7 @@ describe('Test Raster advanced settings', () => {
         />, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const serverTypeOption = document.querySelectorAll('input[role="combobox"]')[3];
+        const serverTypeOption = document.querySelectorAll('input[role="combobox"]')[0];
         expect(serverTypeOption).toBeTruthy();
         TestUtils.Simulate.change(serverTypeOption, { target: { value: "geoserver" }});
         TestUtils.Simulate.keyDown(serverTypeOption, { keyCode: 9, key: 'Tab' });
@@ -255,7 +255,7 @@ describe('Test Raster advanced settings', () => {
             service={{ type: "wms" }}/>, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const infoFormatOption = document.querySelectorAll('input[role="combobox"]')[1];
+        const infoFormatOption = document.querySelectorAll('input[role="combobox"]')[2];
         expect(infoFormatOption).toBeTruthy();
         TestUtils.Simulate.change(infoFormatOption, { target: { value: "application/json" }});
         TestUtils.Simulate.keyDown(infoFormatOption, { keyCode: 9, key: 'Tab' });
