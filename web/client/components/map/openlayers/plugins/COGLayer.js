@@ -10,6 +10,7 @@ import Layers from '../../../../utils/openlayers/Layers';
 
 import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
+import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 
 function create(options) {
     return new TileLayer({
@@ -41,5 +42,8 @@ Layers.registerType('cog', {
             layer.setMaxResolution(newOptions.maxResolution === undefined ? Infinity : newOptions.maxResolution);
         }
         return null;
+    },
+    isCompatible: (layer) => {
+        return isProjectionAvailable(layer?.sourceMetadata?.crs);
     }
 });
