@@ -58,7 +58,7 @@ export default ({
                 <Col xs={12}>
                     <Checkbox
                         onChange={(e) => onChangeServiceProperty("fetchMetadata", e.target.checked)}
-                        checked={!isNil(service.fetchMetadata) ? service.fetchMetadata : false}>
+                        checked={!isNil(service.fetchMetadata) ? service.fetchMetadata : true}>
                         <Message msgId="catalog.fetchMetadata.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.fetchMetadata.tooltip" />} />
                     </Checkbox>
                 </Col>

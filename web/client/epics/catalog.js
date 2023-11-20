@@ -292,7 +292,7 @@ export default (API) => ({
     */
     newCatalogServiceAdded: (action$, store) =>
         action$.ofType(ADD_SERVICE)
-            .switchMap(() => {
+            .switchMap(({options} = {}) => {
                 const state = store.getState();
                 const newService = newServiceSelector(state);
                 const maxRecords = pageSizeSelector(state);
@@ -310,7 +310,7 @@ export default (API) => ({
                                 startPosition: 1,
                                 maxRecords,
                                 text: "",
-                                options: {service, isNewService: true}
+                                options: {service, isNewService: true, ...options}
                             })
                         );
                     })
