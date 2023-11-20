@@ -627,6 +627,7 @@
             "browseData": "Attributtabelle der ausgewählten Ebene öffnen",
             "removeLayer": "Ebene entfernen",
             "loadingerror": "Diese Ebene wurde nicht korrekt geladen oder ist nicht verfügbar",
+            "sourceCRSNotCompatible": "Die Quelldatenprojektionsdefinition {sourceCRS} des Layers ist in der Anwendung nicht für die Neuprojektion der Daten in der aktuellen Karte verfügbar",
             "measure": "Messen",
             "backgroundSwitcher": "Hintergrund",
             "layers": "Ebenen",

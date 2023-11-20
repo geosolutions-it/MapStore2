@@ -589,6 +589,7 @@
             "browseData": "Open Attribute Table",
             "removeLayer": "Remove layer",
             "loadingerror": "The layer has not been loaded correctly or not available.",
+            "sourceCRSNotCompatible": "The layer's source data projection definition {sourceCRS} is not available in the application for reprojecting the data in the current map",
             "measure": "Measure",
             "layers": "Layers",
             "drawerButton": "Layers",
