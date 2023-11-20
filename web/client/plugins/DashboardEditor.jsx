@@ -48,7 +48,6 @@ class DashboardEditorComponent extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         editing: PropTypes.bool,
-        loading: PropTypes.bool,
         limitDockHeight: PropTypes.bool,
         fluid: PropTypes.bool,
         zIndex: PropTypes.number,
@@ -68,7 +67,6 @@ class DashboardEditorComponent extends React.Component {
         id: "dashboard-editor",
         editing: false,
         dockSize: 500,
-        loading: true,
         limitDockHeight: true,
         zIndex: 10000,
         fluid: false,
@@ -100,7 +98,7 @@ const Plugin = connect(
         isDashboardEditing,
         isDashboardLoading,
         isDashboardAvailable,
-        (editing, loading, isDashboardOpened) => ({ editing, loading, isDashboardOpened })
+        (editing, isDashboardOpened) => ({ editing, isDashboardOpened })
     ), {
         setEditing,
         onMount: () => setEditorAvailable(true),

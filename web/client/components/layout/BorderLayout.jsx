@@ -26,7 +26,6 @@ export default ({id, children, header, footer, columns, height, style = {}, clas
         width: "100%",
         height: "100%",
         overflow: "hidden",
-        paddingRight: "auto",
         ...style
     }}>
         {header}

@@ -69,6 +69,7 @@ export const DashboardSave = createPlugin('DashboardSave', {
             text: <Message msgId="save"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: triggerSave.bind(null, true),
+            tooltip: "saveDialog.saveTooltip",
             // display the BurgerMenu button only if the map can be edited
             selector: createSelector(
                 isLoggedIn,
@@ -84,6 +85,7 @@ export const DashboardSave = createPlugin('DashboardSave', {
             text: <Message msgId="save"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: triggerSave.bind(null, true),
+            tooltip: "saveDialog.saveTooltip",
             // display the BurgerMenu button only if the map can be edited
             selector: createSelector(
                 isLoggedIn,
