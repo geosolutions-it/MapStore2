@@ -22,7 +22,8 @@ const selector = createSelector([filterSelector, parentFiltersSel, servicesConfi
     disabled: !filter.service,
     service: filter.service,
     parentsFilter,
-    services
+    services,
+    anyFieldVal: filter.requestAny
 }));
 
 
@@ -34,7 +35,9 @@ export default compose(
         valueField: "value",
         parentsFilter: {},
         filter: "startsWith",
-        placeholder: "rulesmanager.placeholders.filter",
+        placeholder: "rulesmanager.placeholders.filterAny",
+        unCheckedAnyField: "rulesmanager.tooltip.filterRuleList",
+        checkedAnyField: "rulesmanager.tooltip.showAllRules",
         services: {
             "WFS": [
                 "DescribeFeatureType",
@@ -52,7 +55,8 @@ export default compose(
                 "GetMap",
                 "GetStyles"
             ]
-        }
+        },
+        anyFilterRuleMode: 'requestAny'
     }),
     withPropsOnChange(["service", "services"], ({services = {}, service}) => {
         return {
@@ -64,6 +68,6 @@ export default compose(
             onFilterChange({column, filterTerm});
         }
     }),
-    localizedProps(["placeholder"]),
+    localizedProps(["placeholder", "checkedAnyField", "unCheckedAnyField"]),
     fixedOptions
 )(PagedCombo);

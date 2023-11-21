@@ -2611,7 +2611,8 @@
                 "layer": "Cerca Layers",
                 "access": "Cerca Permesso",
                 "ip": "###.###.###.###/##",
-                "priority": "Seleziona Priorità"
+                "priority": "Seleziona Priorità",
+                "filterAny": "Qualsiasi"
             },
             "menutitle": "Configura Regole di Accesso",
             "tooltip": {
@@ -2622,7 +2623,9 @@
                 "deleteT": "Rimuovi regole selezionate",
                 "cacheT": "Pulisci la cache",
                 "save": "Salva regola corrente",
-                "close": "Esci da modifica regola"
+                "close": "Esci da modifica regola",
+                "showAllRules": "Mostra tutte le regole applicabili",
+                "filterRuleList": "Filtra la lista usando il valore selezionato"
             },
             "navItems": {
                 "main": "Regola Generica",
