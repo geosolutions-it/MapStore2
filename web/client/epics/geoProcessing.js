@@ -373,9 +373,10 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
             });
         })
             .switchMap(({features}) => {
-                const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(features[0].geometry), "EPSG:4326")] : [];
+                const ft = find(features, f => f.id === featureId);
+                const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(ft.geometry), "EPSG:4326")] : [];
                 return Rx.Observable.from([
-                    setSourceFeature(find(features, f => f.id === featureId)),
+                    setSourceFeature(ft),
                     updateAdditionalLayer(
                         GPT_SOURCE_HIGHLIGHT_ID,
                         "gpt",
@@ -427,9 +428,10 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
             });
         })
             .switchMap(({features}) => {
-                const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(features[0].geometry), "EPSG:4326")] : [];
+                const ft = find(features, f => f.id === featureId);
+                const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(ft.geometry), "EPSG:4326")] : [];
                 return Rx.Observable.from([
-                    setIntersectionFeature(find(features, f => f.id === featureId)),
+                    setIntersectionFeature(ft),
                     updateAdditionalLayer(
                         GPT_INTERSECTION_HIGHLIGHT_ID,
                         "gpt",
@@ -644,7 +646,8 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
  */
 export const resetSourceHighlightGPTEpic = (action$) => action$
     .ofType(SET_SOURCE_LAYER_ID, SET_SOURCE_FEATURE_ID)
-    .filter(a => a.layerId === "" || a.featureId === "")
+    // reset only if layer selection is cleared or is different from previous one, or when feature is cleared
+    .filter(a => a.type === SET_SOURCE_LAYER_ID || a.featureId === "")
     .switchMap(({}) => {
         return Rx.Observable.of(removeAdditionalLayer({id: GPT_SOURCE_HIGHLIGHT_ID}));
     });
@@ -653,7 +656,7 @@ export const resetSourceHighlightGPTEpic = (action$) => action$
  */
 export const resetIntersectHighlightGPTEpic = (action$) => action$
     .ofType(SET_INTERSECTION_LAYER_ID, SET_INTERSECTION_FEATURE_ID)
-    .filter(a => a.layerId === "" || a.featureId === "")
+    .filter(a => a.type === SET_INTERSECTION_LAYER_ID || a.featureId === "")
     .switchMap(({}) => {
         return Rx.Observable.of(removeAdditionalLayer({id: GPT_INTERSECTION_HIGHLIGHT_ID}));
     });
@@ -696,7 +699,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         if (isEmpty(intersectionFeature)) {
             intersectionFC$ = executeProcess(
                 intersectionLayerUrl,
-                collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
+                collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (intersectionLayer.type === "vector") ? createFC(intersectionLayer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}

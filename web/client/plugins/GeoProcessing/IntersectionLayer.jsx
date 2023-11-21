@@ -69,10 +69,14 @@ const Intersection = ({
     }, [intersectionLayerId]);
 
     const handleOnChangeIntersectionLayer = (sel) => {
-        onSetIntersectionLayerId(sel?.value ?? "");
+        if (sel?.value !== intersectionLayerId) {
+            onSetIntersectionLayerId(sel?.value ?? "");
+        }
     };
     const handleOnChangeIntersectionFeatureId = (sel) => {
-        onSetIntersectionFeatureId(sel?.value ?? "");
+        if (sel?.value !== intersectionFeatureId) {
+            onSetIntersectionFeatureId(sel?.value ?? "");
+        }
     };
     const isDisableClickSelectFeature = !intersectionLayerId || isIntersectionFeaturesLoading || checkingWPSAvailabilityIntersection;
     const handleOnClickToSelectIntersectionFeature = () => {

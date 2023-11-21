@@ -70,10 +70,14 @@ const Source = ({
     }, [sourceLayerId]);
 
     const handleOnChangeSource = (sel) => {
-        onSetSourceLayerId(sel?.value ?? "");
+        if (sel?.value !== sourceLayerId) {
+            onSetSourceLayerId(sel?.value ?? "");
+        }
     };
     const handleOnChangeSourceFeatureId = (sel) => {
-        onSetSourceFeatureId(sel?.value ?? "");
+        if (sel?.value !== sourceFeatureId) {
+            onSetSourceFeatureId(sel?.value ?? "");
+        }
     };
     const isDisableClickSelectFeature = !sourceLayerId || isSourceFeaturesLoading || checkingWPSAvailability;
     const handleOnClickToSelectSourceFeature = () => {
