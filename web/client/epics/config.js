@@ -7,7 +7,7 @@
  */
 import { Observable } from 'rxjs';
 import axios from '../libs/ajax';
-import { get, merge, isNaN, find } from 'lodash';
+import { get, merge, isNaN, find, head } from 'lodash';
 import {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
@@ -34,6 +34,8 @@ import { detailsLoaded, openDetailsPanel } from '../actions/details';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
+import { changeLayerProperties } from '../actions/layers';
+import { createBackgroundsList, setCurrentBackgroundLayer } from '../actions/backgroundselector';
 
 const prepareMapConfiguration = (data, override, state) => {
     const queryParamsMap = getRequestParameterValue('map', state);
@@ -242,4 +244,39 @@ export const storeDetailsInfoDashboardEpic = (action$, store) =>
                         ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
                     );
                 });
+        });
+
+/**
+ * Incerpt MAP_CONFIG_LOADED and update background layers thumbnail
+ * Epic is placed here to better intercept and update background layers thumbnail info,
+ * when loading context with map and to avoid race condition
+ * when loading plugins and map configuration
+ * @memberof epics.config
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ * @return {external:Observable}
+ */
+export const backgroundsListInitEpic = (action$) =>
+    action$.ofType(MAP_CONFIG_LOADED)
+        .switchMap(({config}) => {
+            const backgrounds = config.map && config.map.backgrounds || [];
+            const backgroundLayers = (config.map && config.map.layers || []).filter(layer => layer.group === 'background');
+            const layerUpdateActions = backgrounds.filter(background => !!background.thumbnail).map(background => {
+                const toBlob = (data) => {
+                    const bytes = atob(data.split(',')[1]);
+                    const mimeType = data.split(',')[0].split(':')[1].split(';')[0];
+                    let buffer = new ArrayBuffer(bytes.length);
+                    let byteArray = new Uint8Array(buffer);
+                    for (let i = 0; i < bytes.length; ++i) {
+                        byteArray[i] = bytes.charCodeAt(i);
+                    }
+                    return URL.createObjectURL(new Blob([buffer], {type: mimeType}));
+                };
+                return changeLayerProperties(background.id, {thumbURL: toBlob(background.thumbnail)});
+            });
+            const currentBackground = head(backgroundLayers.filter(layer => layer.visibility));
+            return Observable.of(
+                ...layerUpdateActions.concat(createBackgroundsList(backgrounds)),
+                ...(currentBackground ? [setCurrentBackgroundLayer(currentBackground.id)] : [])
+            );
         });
