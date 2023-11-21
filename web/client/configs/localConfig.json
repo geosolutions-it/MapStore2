@@ -671,8 +671,18 @@
           "FeedbackMask"
         ],
         "dashboard": [
-          "BurgerMenu",
-          "Dashboard",
+          "Details",
+          "AddWidgetDashboard",
+          "MapConnectionDashboard",
+          {
+            "name": "SidebarMenu",
+            "cfg" : {
+              "containerPosition": "columns"
+              }
+          },                  
+          {
+            "name": "Dashboard"
+          },
           "Notifications",
           "Login",
           {

@@ -46,6 +46,8 @@ import {
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
 import widgetsEpics from '../epics/widgets';
+import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
+import { createPlugin } from '../utils/PluginsUtils';
 
 const WidgetsView = compose(
     connect(
@@ -177,14 +179,24 @@ class DashboardPlugin extends React.Component {
     }
 }
 
-export default {
-    DashboardPlugin: withResizeDetector(DashboardPlugin),
+export default createPlugin("Dashboard", {
+    component: withResizeDetector(DashboardPlugin),
     reducers: {
         dashboard: dashboardReducers,
         widgets: widgetsReducers
+    },
+    containers: {
+        SidebarMenu: {
+            name: "Dashboard-spinner",
+            alwaysVisible: true,
+            position: 2000,
+            tool: connect((state) => ({
+                loading: isDashboardLoading(state)
+            }))(GlobalSpinner)
+        }
     },
     epics: {
         ...dashboardEpics,
         ...widgetsEpics
     }
-};
+});

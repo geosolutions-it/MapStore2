@@ -27,6 +27,8 @@ import Persistence from '../api/persistence';
 import GeoStoreApi from '../api/GeoStoreDAO';
 import { isLoggedIn, userSelector } from '../selectors/security';
 import { mapIdSelector, projectionDefsSelector } from '../selectors/map';
+import { getDashboardId } from '../selectors/dashboard';
+import { DASHBOARD_LOADED } from '../actions/dashboard';
 import {loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, saveMapConfig} from '../actions/usersession';
 import { detailsLoaded, openDetailsPanel } from '../actions/details';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
@@ -208,6 +210,35 @@ export const storeDetailsInfoEpic = (action$, store) =>
 
                     return Observable.of(
                         detailsLoaded(mapId, details.value, detailsSettings),
+                        ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
+                    );
+                });
+        });
+export const storeDetailsInfoDashboardEpic = (action$, store) =>
+    action$.ofType(DASHBOARD_LOADED)
+        .switchMap(() => {
+            const dashboardId = getDashboardId(store.getState());
+            const isTutorialRunning = store.getState()?.tutorial?.run;
+            return !dashboardId
+                ? Observable.empty()
+                : Observable.fromPromise(
+                    GeoStoreApi.getResourceAttributes(dashboardId)
+                ).switchMap((attributes) => {
+                    let details = find(attributes, {name: 'details'});
+                    const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
+                    let detailsSettings = {};
+                    if (!details || details.value === EMPTY_RESOURCE_VALUE) {
+                        return Observable.empty();
+                    }
+
+                    try {
+                        detailsSettings = JSON.parse(detailsSettingsAttribute.value);
+                    } catch (e) {
+                        detailsSettings = {};
+                    }
+
+                    return Observable.of(
+                        detailsLoaded(dashboardId, details.value, detailsSettings),
                         ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
                     );
                 });

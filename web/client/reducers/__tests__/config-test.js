@@ -75,7 +75,7 @@ describe('Test the mapConfig reducer', () => {
         expect(state.map.info).toExist();
         expect(state.map.info.canEdit).toBe(true);
     });
-    it('DETAILS_LOADED', () => {
+    it('DETAILS_LOADED Map', () => {
         const detailsUri = "details/uri";
         var state = mapConfig({
             map: {
@@ -83,10 +83,23 @@ describe('Test the mapConfig reducer', () => {
                     mapId: 1
                 }
             }
-        }, {type: DETAILS_LOADED, mapId: 1, detailsUri});
+        }, {type: DETAILS_LOADED, id: 1, detailsUri});
         expect(state.map).toExist();
         expect(state.map.info).toExist();
         expect(state.map.info.details).toBe(detailsUri);
+    });
+    it('DETAILS_LOADED Dahboard', () => {
+        const detailsUri = "details/uri";
+        var state = mapConfig({
+            dashboard: {
+                resource: {
+                    id: "1", attributes: {}
+                }
+            }
+        }, {type: DETAILS_LOADED, id: "1", detailsUri});
+        expect(state.dashboard).toExist();
+        expect(state.dashboard.resource).toExist();
+        expect(state.dashboard.resource.attributes.details).toBe(detailsUri);
     });
 
     it('map created', () => {

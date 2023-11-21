@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { createSelector } from 'reselect';
+import {get} from 'lodash';
 import { pathnameSelector } from './router';
 
 export const getDashboardId = state => state?.dashboard?.resource?.id;
@@ -27,3 +28,7 @@ export const selectedDashboardServiceSelector = state => state && state.dashboar
 export const dashboardCatalogModeSelector = state => state && state.dashboard && state.dashboard.mode || "view";
 export const dashboardIsNewServiceSelector = state => state.dashboard?.isNew || false;
 export const dashboardSaveServiceSelector =  state => state.dashboard?.saveServiceLoading || false;
+export const dashboardResourceInfoSelector = state => get(state, "dashboard.resource");
+export const dashbaordInfoDetailsUriFromIdSelector = state => state?.dashboard?.resource?.attributes?.details;
+export const dashboardInfoDetailsSettingsFromIdSelector = state => get(dashboardResource(state), "attributes.detailsSettings");
+
