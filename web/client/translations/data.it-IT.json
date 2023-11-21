@@ -572,6 +572,7 @@
             "browseData": "Apri tabella degli attributi",
             "removeLayer": "Rimuovi livello",
             "loadingerror": "Il livello non è stato caricato correttamente o non disponible.",
+            "sourceCRSNotCompatible": "La definizione di proiezione dei dati di origine del layer {sourceCRS} non è disponibile nell'applicazione per riproiettare i dati nella mappa corrente",
             "measure": "Misure",
             "layers": "Livelli",
             "drawerButton": "Livelli",

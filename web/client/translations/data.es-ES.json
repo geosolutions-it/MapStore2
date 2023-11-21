@@ -572,6 +572,7 @@
             "browseData": "Abrir la tabla de atributos",
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
+            "sourceCRSNotCompatible": "La definición de proyección de datos de origen de la capa {sourceCRS} no está disponible en la aplicación para reproyectar los datos en el mapa actual",
             "measure": "Medir",
             "layers": "Capas",
             "drawerButton": "Capas",
