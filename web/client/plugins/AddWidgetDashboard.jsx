@@ -69,7 +69,7 @@ export default createPlugin('AddWidgetDashboard', {
     containers: {
         SidebarMenu: {
             name: "AddWidgetDashboard",
-            position: 10,
+            position: 3,
             tool: ConnectedAddWidget,
             priority: 0
         }
