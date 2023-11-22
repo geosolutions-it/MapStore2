@@ -199,6 +199,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Tile",
+                "information": "Fiche d'information",
                 "refresh": "Récupérer les formats pris en charge",
                 "loading": "Chargement...",
                 "noOption": "Pas d'option",

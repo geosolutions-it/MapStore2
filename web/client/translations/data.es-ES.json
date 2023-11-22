@@ -199,6 +199,8 @@
             },
             "format": {
                 "title": "Formato",
+                "tile": "Teja",
+                "information": "Identificar el formato de respuesta",
                 "refresh": "Obtener formatos admitidos",
                 "loading": "Cargando...",
                 "noOption": "Sin opcion",

@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(11);
+        expect(fields.length).toBe(13);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
@@ -41,7 +41,7 @@ describe('Test Raster advanced settings', () => {
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
         const cswFilters = document.getElementsByClassName("catalog-csw-filters");
-        expect(fields.length).toBe(9);
+        expect(fields.length).toBe(11);
         expect(cswFilters).toBeTruthy();
     });
     it('test component onChangeServiceProperty autoload', () => {

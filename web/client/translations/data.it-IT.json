@@ -199,6 +199,8 @@
             },
             "format": {
                 "title": "Formato",
+                "tile": "Tile",
+                "information": "Risposte interrogazioni su mappa",
                 "refresh": "Recupera i formati supportati",
                 "loading": "Caricamento in corso...",
                 "noOption": "Nessuna opzione",

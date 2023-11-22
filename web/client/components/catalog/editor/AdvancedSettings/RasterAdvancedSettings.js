@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {useEffect} from 'react';
-import {FormGroup, Col, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon } from "react-bootstrap";
+import {FormGroup, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon } from "react-bootstrap";
 import RS from 'react-select';
 import {isNil, camelCase} from "lodash";
 
@@ -83,52 +83,42 @@ export default ({
     const serverTypeOptions = getServerTypeOptions();
     return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
         {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
-            <Col xs={12}>
-                <Checkbox data-qa="service-lacalized-layer-styles-option"
-                    onChange={(e) => onChangeServiceProperty("localizedLayerStyles", e.target.checked)}
-                    checked={!isNil(service.localizedLayerStyles) ? service.localizedLayerStyles : false}>
-                    <Message msgId="catalog.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.enableLocalizedLayerStyles.tooltip" />} />
-                </Checkbox>
-            </Col>
+            <Checkbox data-qa="service-lacalized-layer-styles-option"
+                onChange={(e) => onChangeServiceProperty("localizedLayerStyles", e.target.checked)}
+                checked={!isNil(service.localizedLayerStyles) ? service.localizedLayerStyles : false}>
+                <Message msgId="catalog.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.enableLocalizedLayerStyles.tooltip" />} />
+            </Checkbox>
         </FormGroup>)}
         <FormGroup controlId="autoSetVisibilityLimits" key="autoSetVisibilityLimits">
-            <Col xs={12}>
-                <Checkbox
-                    onChange={(e) => onChangeServiceProperty("autoSetVisibilityLimits", e.target.checked)}
-                    checked={!isNil(service.autoSetVisibilityLimits) ? service.autoSetVisibilityLimits : false}>
-                    <Message msgId="catalog.autoSetVisibilityLimits.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.autoSetVisibilityLimits.tooltip" />} />
-                </Checkbox>
-            </Col>
+            <Checkbox
+                onChange={(e) => onChangeServiceProperty("autoSetVisibilityLimits", e.target.checked)}
+                checked={!isNil(service.autoSetVisibilityLimits) ? service.autoSetVisibilityLimits : false}>
+                <Message msgId="catalog.autoSetVisibilityLimits.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.autoSetVisibilityLimits.tooltip" />} />
+            </Checkbox>
         </FormGroup>
         {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="singleTile" key="singleTile">
-            <Col xs={12}>
-                <Checkbox
-                    onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, singleTile: e.target.checked })}
-                    checked={!isNil(service?.layerOptions?.singleTile) ? service.layerOptions.singleTile : false}>
-                    <Message msgId="layerProperties.singleTile" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
-                </Checkbox>
-            </Col>
+            <Checkbox
+                onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, singleTile: e.target.checked })}
+                checked={!isNil(service?.layerOptions?.singleTile) ? service.layerOptions.singleTile : false}>
+                <Message msgId="layerProperties.singleTile" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
+            </Checkbox>
         </FormGroup>}
         {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="allowUnsecureLayers" key="allowUnsecureLayers">
-            <Col xs={12}>
-                <Checkbox
-                    onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
-                    checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
-                    <Message msgId="catalog.allowUnsecureLayers.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.allowUnsecureLayers.tooltip" />} />
-                </Checkbox>
-            </Col>
+            <Checkbox
+                onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
+                checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
+                <Message msgId="catalog.allowUnsecureLayers.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.allowUnsecureLayers.tooltip" />} />
+            </Checkbox>
         </FormGroup>}
         {(!isNil(service.type) ? (service.type === "csw" && !service.excludeShowTemplate) : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
-            <Col xs={12}>
-                <Checkbox
-                    onChange={() => onToggleTemplate()}
-                    checked={service && service.showTemplate}>
-                    <Message msgId="catalog.showTemplate" />
-                </Checkbox>
-                <br />
-            </Col>
+            <Checkbox
+                onChange={() => onToggleTemplate()}
+                checked={service && service.showTemplate}>
+                <Message msgId="catalog.showTemplate" />
+            </Checkbox>
+            <br />
             {service && service.showTemplate &&
-            (<Col xs={12}>
+            (<div>
                 <span>
                     <p>
                         <Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: "{ }" }} />
@@ -139,8 +129,8 @@ export default ({
                         <Message msgId="catalog.templateFormatDescriptionExample" />{" ${ description }"}
                     </pre>
                 </span>
-            </Col>)}
-            <Col xs={12}>
+            </div>)}
+            <div>
                 {service && service.showTemplate && <ReactQuill
                     modules={{
                         toolbar: [
@@ -159,81 +149,66 @@ export default ({
                         }
                     }} />
                 }
-            </Col>
-        </FormGroup>)}
-        <FormGroup style={advancedRasterSettingsStyles}>
-            <Col xs={6} >
-                <ControlLabel><Message msgId="layerProperties.serverType" /></ControlLabel>
-            </Col >
-            <Col xs={6} style={{marginBottom: '5px'}}>
-                <Select
-                    value={service.layerOptions?.serverType}
-                    options={serverTypeOptions}
-                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
-            </Col >
-        </FormGroup>
-        <FormGroup style={advancedRasterSettingsStyles} className="catalog-formats">
-            <div className="format-labels">
-                <Col xs={12}>
-                    <ControlLabel><Message msgId="layerProperties.format.title" /></ControlLabel>
-                </Col >
-                <Col xs={12}>
-                    <ControlLabel><Message msgId="infoFormatLbl" /></ControlLabel>
-                </Col >
             </div>
-            <div className="format-tools">
-                <div className="format-fields"  style={{ flex: 1 }}>
-                    <Col xs={12} style={{marginBottom: '5px',  alignItems: 'center' }}>
-                        <Select
-                            disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
-                            isLoading={props.formatsLoading}
-                            onOpen={() => onFormatOptionsFetch(service.url)}
-                            value={service && service.format}
-                            clearable
-                            noResultsText={props.formatsLoading
-                                ? "catalog.format.loading" : "catalog.format.noOption"}
-                            options={props.formatsLoading ? [] : formatOptions.map((format) => format?.value ? format : ({ value: format, label: format }))}
-                            onChange={event => onChangeServiceFormat(event && event.value)} />
-                    </Col >
-                    <Col xs={12} style={{marginBottom: '5px',  alignItems: 'center' }}>
-                        <Select
-                            disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
-                            isLoading={props.formatsLoading}
-                            onOpen={() => onFormatOptionsFetch(service.url)}
-                            value={service && service.infoFormat}
-                            clearable
-                            options={props.formatsLoading ? [] : infoFormatOptions.map((format) => ({ value: format, label: format }))}
-                            onChange={event => onChangeServiceProperty("infoFormat", event && event.value)} />
-                    </Col >
-                </div >
-                <div className="format-toolbar">
-                    <Button
-                        disabled={props.formatsLoading}
-                        tooltipId="catalog.format.refresh"
-                        className="square-button-md no-border"
-                        onClick={() => onFormatOptionsFetch(service.url, true)}
-                        key="format-refresh">
-                        <Glyphicon glyph="refresh" />
-                    </Button>
-                    {showFormatError ? <InfoPopover
-                        bsStyle="danger"
-                        placement="top"
-                        showOnRender
-                        title={<Message msgId="errorTitleDefault"/>}
-                        text={<Message msgId="layerProperties.formatError" />} /> : null}
-                </div >
-            </div >
+        </FormGroup>)}
+        <FormGroup style={advancedRasterSettingsStyles}  className="form-group-flex">
+            <ControlLabel className="strong"><Message msgId="layerProperties.serverType" /></ControlLabel>
+            <Select
+                value={service.layerOptions?.serverType}
+                options={serverTypeOptions}
+                onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
         </FormGroup>
-        <FormGroup style={advancedRasterSettingsStyles}>
-            <Col xs={6} >
-                <ControlLabel><Message msgId="layerProperties.wmsLayerTileSize" /></ControlLabel>
-            </Col >
-            <Col xs={6} style={{marginBottom: '5px'}}>
-                <Select
-                    value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
-                    options={tileSelectOptions}
-                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, tileSize: event && event.value })} />
-            </Col >
+        <hr style={{margin: "8px 0"}}/>
+        <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
+            <ControlLabel className="strong"><Message msgId="layerProperties.format.title" /></ControlLabel>
+            <div className="format-toolbar">
+                {showFormatError ? <InfoPopover
+                    bsStyle="danger"
+                    placement="top"
+                    showOnRender
+                    title={<Message msgId="errorTitleDefault"/>}
+                    text={<Message msgId="layerProperties.formatError" />} /> : null}
+                <Button
+                    disabled={props.formatsLoading || service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                    tooltipId="catalog.format.refresh"
+                    className="square-button-md no-border"
+                    onClick={() => onFormatOptionsFetch(service.url, true)}
+                    key="format-refresh">
+                    <Glyphicon glyph="refresh" />
+                </Button>
+            </div>
+        </FormGroup>
+        <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
+            <ControlLabel className="strong"><Message msgId="layerProperties.format.tile" /></ControlLabel>
+            <Select
+                disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                isLoading={props.formatsLoading}
+                onOpen={() => onFormatOptionsFetch(service.url)}
+                value={service && service.format}
+                clearable
+                noResultsText={props.formatsLoading
+                    ? "catalog.format.loading" : "catalog.format.noOption"}
+                options={props.formatsLoading ? [] : formatOptions.map((format) => format?.value ? format : ({ value: format, label: format }))}
+                onChange={event => onChangeServiceFormat(event && event.value)} />
+        </FormGroup>
+        <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
+            <ControlLabel className="strong"><Message msgId="layerProperties.format.information" /></ControlLabel>
+            <Select
+                disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                isLoading={props.formatsLoading}
+                onOpen={() => onFormatOptionsFetch(service.url)}
+                value={service && service.infoFormat}
+                clearable
+                options={props.formatsLoading ? [] : infoFormatOptions.map((format) => ({ value: format, label: format }))}
+                onChange={event => onChangeServiceProperty("infoFormat", event && event.value)} />
+        </FormGroup>
+        <hr style={{margin: "8px 0"}}/>
+        <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
+            <ControlLabel className="strong"><Message msgId="layerProperties.wmsLayerTileSize" /></ControlLabel>
+            <Select
+                value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
+                options={tileSelectOptions}
+                onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, tileSize: event && event.value })} />
         </FormGroup>
         {!isNil(service.type) && service.type === "csw" &&
         <CSWFilters filter={service?.filter} onChangeServiceProperty={onChangeServiceProperty}/>
