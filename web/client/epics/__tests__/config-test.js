@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import {head} from 'lodash';
-import {loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic} from '../config';
+import {loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic} from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
     loadMapConfig,
@@ -18,7 +18,8 @@ import {
     MAP_INFO_LOADED,
     MAP_INFO_LOAD_START,
     loadMapInfo,
-    mapInfoLoaded
+    mapInfoLoaded,
+    configureMap
 } from '../../actions/config';
 
 import { TEST_TIMEOUT, addTimeoutEpic, testEpic } from './epicTestUtils';
@@ -480,6 +481,83 @@ describe('config epics', () => {
                     attributes: {}
                 }
             }});
+        }, {});
+    });
+    describe("backgroundsListInitEpic", () => {
+        const base64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
+        it('test layer update with thumbnail on background init', (done) => {
+            testEpic(addTimeoutEpic(backgroundsListInitEpic), 3, configureMap({
+                map: {
+                    backgrounds: [{id: "1", thumbnail: base64}],
+                    layers: [{id: "1", group: "background", name: "layer_1", visibility: true}]
+                }
+            }), actions => {
+                expect(actions.length).toBe(3);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case "CHANGE_LAYER_PROPERTIES":
+                        expect(action.newProperties.thumbURL).toBeTruthy();
+                        expect(action.layer).toBe("1");
+                        break;
+                    case "BACKGROUND_SELECTOR:CREATE_BACKGROUNDS_LIST":
+                        expect(action.backgrounds.length).toBe(1);
+                        expect(action.backgrounds[0].id).toBe("1");
+                        expect(action.backgrounds[0].thumbnail).toBe(base64);
+                        break;
+                    case "BACKGROUND_SELECTOR:SET_CURRENT_BACKGROUND_LAYER":
+                        expect(action.layerId).toBe("1");
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            });
+        });
+        it('test layer update with thumbnail with layer not visible', (done) => {
+            testEpic(addTimeoutEpic(backgroundsListInitEpic), 2, configureMap({
+                map: {
+                    backgrounds: [{id: "1", thumbnail: base64}],
+                    layers: [{id: "1", group: "background", name: "layer_1", visibility: false}]
+                }
+            }), actions => {
+                expect(actions.length).toBe(2);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case "CHANGE_LAYER_PROPERTIES":
+                        expect(action.newProperties.thumbURL).toBeTruthy();
+                        expect(action.layer).toBe("1");
+                        break;
+                    case "BACKGROUND_SELECTOR:CREATE_BACKGROUNDS_LIST":
+                        expect(action.backgrounds.length).toBe(1);
+                        expect(action.backgrounds[0].id).toBe("1");
+                        expect(action.backgrounds[0].thumbnail).toBe(base64);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {});
+        });
+        it('test backgroundsListInitEpic with no background layer', (done) => {
+            testEpic(addTimeoutEpic(backgroundsListInitEpic), 1, configureMap({
+                map: {
+                    layers: [{id: "1", name: "layer_1", visibility: false}]
+                }
+            }), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case "BACKGROUND_SELECTOR:CREATE_BACKGROUNDS_LIST":
+                        expect(action.backgrounds.length).toBe(0);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {});
         });
     });
 });
