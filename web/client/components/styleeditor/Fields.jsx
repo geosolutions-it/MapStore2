@@ -113,7 +113,8 @@ export const fields = {
         return (
             <PropertyField
                 label={label}
-                disabled={disabled}>
+                disabled={disabled}
+                infoMessageId={config.infoMessageId}>
                 <FormGroup>
                     <InputGroup style={config?.maxWidth ? { maxWidth: config?.maxWidth } : {}}>
                         <DebouncedFormControl
