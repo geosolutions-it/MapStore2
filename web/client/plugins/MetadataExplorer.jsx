@@ -73,7 +73,8 @@ import {
     formatsLoadingSelector,
     getSupportedFormatsSelector,
     getSupportedGFIFormatsSelector,
-    getNewServiceStatusSelector
+    getNewServiceStatusSelector,
+    showFormatErrorSelector
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
@@ -87,6 +88,7 @@ export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen
 
 const metadataExplorerSelector = createStructuredSelector({
     searchOptions: searchOptionsSelector,
+    showFormatError: showFormatErrorSelector,
     result: resultSelector,
     loadingError: loadingErrorSelector,
     selectedService: selectedServiceSelector,

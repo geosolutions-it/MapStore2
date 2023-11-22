@@ -39,6 +39,7 @@ import {
     SET_FORMAT_OPTIONS,
     ADD_LAYER_AND_DESCRIBE,
     addLayerAndDescribe,
+    SHOW_FORMAT_ERROR,
     DESCRIBE_ERROR,
     SAVING_SERVICE,
     NEW_SERVICE_STATUS,
@@ -748,7 +749,7 @@ describe('catalog Epics', () => {
             });
     });
     it('getSupportedFormatsEpic wms', (done) => {
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 4;
         const url = "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml";
         testEpic(addTimeoutEpic(getSupportedFormatsEpic, 0), NUM_ACTIONS, formatOptionsFetch(url), (actions) => {
             expect(actions.length).toBe(NUM_ACTIONS);
@@ -759,6 +760,9 @@ describe('catalog Epics', () => {
                         expect(action.formats).toBeTruthy();
                         expect(action.formats.imageFormats).toEqual(['image/png', 'image/gif', 'image/jpeg', 'image/png8', 'image/png; mode=8bit', 'image/vnd.jpeg-png']);
                         expect(action.formats.infoFormats).toEqual(['text/plain', 'text/html', 'application/json']);
+                        break;
+                    case SHOW_FORMAT_ERROR:
+                        expect(action.status).toBeFalsy();
                         break;
                     case FORMAT_OPTIONS_LOADING:
                         break;

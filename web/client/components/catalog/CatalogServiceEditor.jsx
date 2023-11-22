@@ -46,6 +46,7 @@ const CatalogServiceEditor = ({
     formatOptions,
     buttonStyle,
     saving,
+    showFormatError,
     onChangeServiceFormat = () => {},
     onChangeMetadataTemplate = () => {},
     onToggleAdvancedSettings = () => { },
@@ -100,6 +101,7 @@ const CatalogServiceEditor = ({
                 currentWMSCatalogLayerSize={layerOptions.tileSize ? layerOptions.tileSize : 256}
                 selectedService={selectedService}
                 onFormatOptionsFetch={onFormatOptionsFetch}
+                showFormatError={showFormatError}
                 formatsLoading={formatsLoading}
                 infoFormatOptions={infoFormatOptions}
                 autoSetVisibilityLimits={autoSetVisibilityLimits}

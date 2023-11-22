@@ -58,12 +58,9 @@ describe('Test CatalogServiceEditor', () => {
             layerOptions={{tileSize: 256}}
         />, document.getElementById("container"));
 
-        const formatFormGroups = [...document.querySelectorAll('.form-group')].filter(fg => {
-            const labels = [...fg.querySelectorAll('label')];
-            return labels.length === 1 && labels[0].textContent === 'layerProperties.format.title';
-        });
-        expect(formatFormGroups.length).toBe(1);
-        const formatSelect = formatFormGroups[0].querySelector('.Select-value-label');
+        const formatFormGroups = [...document.querySelectorAll('.form-group-flex')];
+        expect(formatFormGroups.length).toBe(5);
+        const formatSelect = formatFormGroups[2].querySelector('.Select-value-label');
         expect(formatSelect).toExist();
         expect(formatSelect.textContent).toBe('image/png8');
         // expect(formatSelect.props.options).toEqual(formatOptions); TODO: test properties are passed to select
