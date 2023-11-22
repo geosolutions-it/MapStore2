@@ -18,6 +18,7 @@ import {
 } from './ogc/WFS/base';
 
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
+import { handleLongTextEnhancer } from '../components/misc/enhancers/handleLongTextEnhancer';
 
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
@@ -115,6 +116,7 @@ export const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, si
     return { startIndex: nPs[0] * size, maxFeatures: needPages * size };
 };
 
+
 /**
  * Utility function to get from a describeFeatureType response the columns to use in the react-data-grid
  * @param {object} describe describeFeatureType response
@@ -146,7 +148,7 @@ export const featureTypeToGridColumns = (
             editable,
             filterable,
             editor: getEditor(desc, field),
-            formatter: getFormatter(desc, field),
+            formatter: handleLongTextEnhancer(getFormatter(desc, field)),
             filterRenderer: getFilterRenderer(desc, field)
         };
     });
