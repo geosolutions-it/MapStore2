@@ -435,7 +435,7 @@ describe('geoProcessing epics', () => {
         });
     });
     it('setSourceFeatureId', (done) => {
-        const featureId = "ft-id";
+        const featureId = "INCENDI_INTERFACCIA.2955";
         const NUM_ACTIONS = 3;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
 
@@ -506,7 +506,7 @@ describe('geoProcessing epics', () => {
             }
         });
     });
-    it('setIntersectionFeatureId', (done) => {
+    it('setIntersectionFeatureId as vector', (done) => {
         const featureId = "ft-id2";
         const secondFt = {
             type: "Feature",
@@ -572,7 +572,7 @@ describe('geoProcessing epics', () => {
         });
     });
     it('setIntersectionFeatureId', (done) => {
-        const featureId = "ft-id";
+        const featureId = "INCENDI_INTERFACCIA.2955";
         const NUM_ACTIONS = 3;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
 
