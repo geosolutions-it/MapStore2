@@ -68,7 +68,7 @@ export default createPlugin('MapConnectionDashboard', {
         SidebarMenu: {
             name: "MapConnectionDashboard",
             tool: ConnectedMapAddWidget,
-            position: 10,
+            position: 3,
             priority: 0
         }
     }
