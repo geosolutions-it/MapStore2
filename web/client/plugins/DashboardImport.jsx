@@ -84,6 +84,18 @@ const DashboardImportPlugin = createPlugin('DashboardImport', {
                 toggle: true,
                 doNotHide: true
             };
+        }, SidebarMenu: () => {
+            return {
+                name: "import",
+                position: 4,
+                tooltip: "mapImport.title",
+                text: <Message msgId="mapImport.title" />,
+                icon: <Glyphicon glyph="upload" />,
+                action: () => toggleControl('import'),
+                priority: 2,
+                toggle: true,
+                doNotHide: true
+            };
         }
     }
 });
