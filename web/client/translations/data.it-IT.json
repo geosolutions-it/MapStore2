@@ -117,6 +117,7 @@
             "heightOffset": "Spostamento in altezza (m)",
             "wmsLayerTileSize": "Dimensione tile (WMS)",
             "serverType": "Tipo di Server",
+            "formatError": "Non è stato possibile recuperare le informazioni sui formati dal servizio configurato. Probabilmente stai usando un servizio \"No Vendor\" e questo non è supportato (es. GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -198,6 +199,8 @@
             },
             "format": {
                 "title": "Formato",
+                "tile": "Tile",
+                "information": "Risposte interrogazioni su mappa",
                 "refresh": "Recupera i formati supportati",
                 "loading": "Caricamento in corso...",
                 "noOption": "Nessuna opzione",

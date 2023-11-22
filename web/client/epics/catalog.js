@@ -11,6 +11,7 @@ import axios from 'axios';
 import xpathlib from 'xpath';
 import { DOMParser } from 'xmldom';
 import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
+
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -32,6 +33,7 @@ import {
     textSearch,
     changeSelectedService,
     formatsLoading,
+    showFormatError,
     setSupportedFormats,
     ADD_LAYER_AND_DESCRIBE,
     describeError,
@@ -513,14 +515,22 @@ export default (API) => ({
             .filter((action)=> action.force || getFormatUrlUsedSelector(getState()) !== action?.url)
             .switchMap(({url = ''} = {})=> {
                 return Rx.Observable.defer(() => getSupportedFormat(url, true))
-                    .switchMap((supportedFormats) => Rx.Observable.of(setSupportedFormats(supportedFormats, url)))
+                    .switchMap((supportedFormats) => {
+                        return Rx.Observable.of(
+                            setSupportedFormats(supportedFormats, url),
+                            showFormatError(supportedFormats.imageFormats.length === 0 && supportedFormats.infoFormats.length === 0)
+                        );
+                    })
                     .let(
                         wrapStartStop(
                             formatsLoading(true),
                             formatsLoading(false),
                             () => {
                                 return Rx.Observable.of(
-                                    error({ title: "layerProperties.format.error.title", message: 'layerProperties.format.error.message' }),
+                                    error({
+                                        title: "layerProperties.format.error.title",
+                                        message: 'layerProperties.format.error.message'
+                                    }),
                                     formatsLoading(false)
                                 );
                             }
@@ -530,7 +540,7 @@ export default (API) => ({
 
     /**
     * Sets control property to currently selected group when catalogue is open
-    * Sets the currently selected group as the detination of new layers in catalogue
+    * Sets the currently selected group as the destination of new layers in catalogue
     * if a layer instead of a group is selected it resets the groupId to Default
     *  Action performed: setControlProperty (only if catalogue is open)
     * @memberof epics.layers

@@ -117,6 +117,7 @@
             "heightOffset": "Höhenversatz (m)",
             "wmsLayerTileSize": "Kachelgröße (WMS)",
             "serverType": "Servertyp",
+            "formatError": "Es war nicht möglich, Format und Informationsblattformat vom konfigurierten Dienst abzurufen. Wahrscheinlich verwenden Sie einen No-Vendor-Dienst und dieser wird nicht unterstützt (z. B. GeoNetwork).",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -198,6 +199,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Fliese",
+                "information": "Infoblatt",
                 "refresh": "Unterstützte Formate abrufen",
                 "loading": "Wird geladen...",
                 "noOption": "Keine Option",
@@ -1591,7 +1594,8 @@
               "urlTemplate": "URL-Vorlage",
               "urlTemplateHint": "<p> Vorlagen-URL für Ihren benutzerdefinierten TMS-Dienst mit der Möglichkeit, Variablen einzufügen (ausgedrückt in geschweiften Klammern, z. B. <code> {var_name} </ code>), die von der Anwendung ersetzt werden. <br />. Die Variablen <code> {x} </ code>, <code> {y} </ code> und <code> {z} </ code> sind für Kachelgitterkoordinatenwerte reserviert. Sie können auch Variablen verwenden <code> {s} </ code> für Subdomains. Jede andere in der URL angegebene Variable muss auch in den Optionen unter \"Benutzerdefinierte TMS-Konfiguration\" (Erweiterte Einstellungen) angegeben werden.</p>",
               "customTMSConfiguration": "Benutzerdefinierte TMS-Konfiguration",
-              "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",                  "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
+              "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",
+              "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
               "forceDefaultTileGridDescription": "Verwenden Sie das Kachelraster der globalen Projektion anstelle des vom Server bereitgestellten Ursprungs und der vom Server bereitgestellten Auflösungen. Dies ist nützlich für einige TMS-Dienste, die falsche Ursprünge oder Ergebnisse anzeigen."
             },
             "tileprovider": {
