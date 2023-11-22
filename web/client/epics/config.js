@@ -247,7 +247,7 @@ export const storeDetailsInfoDashboardEpic = (action$, store) =>
         });
 
 /**
- * Incerpt MAP_CONFIG_LOADED and update background layers thumbnail
+ * Intercept MAP_CONFIG_LOADED and update background layers thumbnail
  * Epic is placed here to better intercept and update background layers thumbnail info,
  * when loading context with map and to avoid race condition
  * when loading plugins and map configuration
