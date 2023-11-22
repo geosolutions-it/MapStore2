@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import {createSelector, createStructuredSelector} from 'reselect';
 import {bindActionCreators} from 'redux';
 import { get, pick, isEqual } from 'lodash';
-import {compose, lifecycle} from 'recompose';
+import {compose, lifecycle, defaultProps } from 'recompose';
 import ReactDock from 'react-dock';
 import ContainerDimensions from 'react-container-dimensions';
 
@@ -187,7 +187,9 @@ const FeatureDock = (props = {
     };
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
-    const filterRenderers = useMemo(() => getFilterRenderers(props.describe, props.fields), [props.describe, props.fields]);
+    const filterRenderers = useMemo(() => {
+        return getFilterRenderers(props.describe, props.fields, props.isShownOperators);
+    }, [props.describe, props.fields]);
     return (
         <div className={"feature-grid-wrapper"}>
             <Dock  {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
@@ -209,6 +211,7 @@ const FeatureDock = (props = {
                                 footer={getFooter(props)}>
                                 {getDialogs(props.tools)}
                                 <Grid
+                                    isShownOperators
                                     showCheckbox={props.showCheckbox}
                                     editingAllowedRoles={props.editingAllowedRoles}
                                     customEditorsOptions={props.customEditorsOptions}
@@ -273,6 +276,9 @@ export const selector = createStructuredSelector({
 });
 
 const EditorPlugin = compose(
+    defaultProps({
+        isShownOperators: true      // a flag to show/hide operators in attribute table
+    }),
     connect(() => ({}),
         (dispatch) => ({
             onMount: bindActionCreators(setUp, dispatch),

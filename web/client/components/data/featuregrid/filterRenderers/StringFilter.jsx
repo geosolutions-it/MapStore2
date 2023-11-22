@@ -8,12 +8,12 @@ export default compose(
         placeholderMsgId: "featuregrid.filter.placeholders.string"
     }),
     withHandlers({
-        onChange: props => ({value, attribute} = {}) => {
+        onChange: props => ({value, attribute, inputOperator} = {}) => {
             props.onValueChange(value);
             props.onChange({
                 rawValue: value,
                 value: trim(value) ? trim(value) : undefined,
-                operator: "ilike",
+                operator: inputOperator || "ilike",      // need to read operator from redux beased on operator selected option
                 type: 'string',
                 attribute
             });

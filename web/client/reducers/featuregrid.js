@@ -39,6 +39,7 @@ import {
     OPEN_FEATURE_GRID,
     CLOSE_FEATURE_GRID,
     UPDATE_FILTER,
+    UPDATE_OPERATOR_QUICK_FILTER,
     INIT_PLUGIN,
     SIZE_CHANGE,
     STORE_ADVANCED_SEARCH_FILTER,
@@ -363,6 +364,22 @@ function featuregrid(state = emptyResultsState, action) {
         if (action.status === "clean") {
             return assign({}, state, {
                 drawing: false
+            });
+        }
+        return state;
+    }
+    case UPDATE_OPERATOR_QUICK_FILTER : {
+        const {attribute, operator} = (action || {});
+        if (attribute) {
+            const filter = state.filters[attribute];
+            return assign({}, state, {
+                filters: {
+                    [attribute]: {
+                        ...filter,
+                        operator: operator,
+                        value: undefined
+                    }
+                }
             });
         }
         return state;

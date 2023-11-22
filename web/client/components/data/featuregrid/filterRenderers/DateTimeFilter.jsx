@@ -15,7 +15,7 @@ export default compose(
         value: null
     }),
     withHandlers({
-        onChange: props => ({ value, attribute, stringValue } = {}) => {
+        onChange: props => ({ value, attribute, stringValue, inputOperator } = {}) => {
             const match = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?(.*)/.exec(stringValue);
             const operator = match[1];
             let enhancedOperator = match[1] || '=';
@@ -28,7 +28,7 @@ export default compose(
             props.onValueChange(value);
             props.onChange({
                 value: { startDate: value, operator },
-                operator: enhancedOperator,
+                operator: inputOperator || enhancedOperator,
                 type: props.type,
                 attribute
             });
