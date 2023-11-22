@@ -353,7 +353,7 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Webmapping moderno con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentación</a></small>",
+            "shortDescription": "Webmapping moderno con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentación</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"https://mapstore.readthedocs.io/en/latest/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
@@ -592,6 +592,7 @@
             "browseData": "Abrir la tabla de atributos",
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
+            "sourceCRSNotCompatible": "La definición de proyección de datos de origen de la capa {sourceCRS} no está disponible en la aplicación para reproyectar los datos en el mapa actual",
             "measure": "Medir",
             "layers": "Capas",
             "drawerButton": "Capas",
@@ -1519,7 +1520,7 @@
             "tooltip": "agregar capas al mapa",
             "autoload": "Buscar en la selección de servicios",
             "fetchMetadata": {
-                "label": "Descargar metadatos de archivos en la búsqueda",
+                "label": "Descargar metadatos del archivo al guardar",
                 "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
             },
             "clearValueText": "Borrar selección",

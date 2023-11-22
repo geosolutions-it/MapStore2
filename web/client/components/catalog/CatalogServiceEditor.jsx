@@ -17,7 +17,20 @@ import Message from "../I18N/Message";
 import AdvancedSettings from './editor/AdvancedSettings';
 import MainForm from './editor/MainForm';
 
-export default ({
+const withAbort = (Component) => {
+    return (props) => {
+        const [abortController, setAbortController] = useState(null);
+        const onSave = () => {
+            // Currently abort request on saving is applicable only for COG service
+            const controller = props.format === 'cog' ? new AbortController() : null;
+            setAbortController(controller);
+            return props.onAddService({save: true, controller});
+        };
+        const onCancel = () => abortController && props.saving ? abortController?.abort() : props.onChangeCatalogMode("view");
+        return <Component {...props} onCancel={onCancel} onSaveService={onSave} disabled={!abortController && props.saving} />;
+    };
+};
+const CatalogServiceEditor = ({
     service = {
         title: "",
         type: "wms",
@@ -40,9 +53,9 @@ export default ({
     onChangeServiceProperty = () => {},
     onToggleTemplate = () => {},
     onToggleThumbnail = () => {},
-    onAddService = () => {},
     onDeleteService = () => {},
-    onChangeCatalogMode = () => {},
+    onCancel = () => {},
+    onSaveService = () => {},
     onFormatOptionsFetch = () => {},
     selectedService,
     isLocalizedLayerStylesEnabled,
@@ -51,7 +64,8 @@ export default ({
     layerOptions = {},
     infoFormatOptions,
     services,
-    autoSetVisibilityLimits = false
+    autoSetVisibilityLimits = false,
+    disabled
 }) => {
     const [valid, setValid] = useState(true);
     return (<BorderLayout
@@ -94,17 +108,17 @@ export default ({
             />
             <FormGroup controlId="buttons" key="buttons">
                 <Col xs={12}>
-                    <Button style={buttonStyle} disabled={saving || !valid} onClick={() => onAddService()} key="catalog_add_service_button">
+                    <Button style={buttonStyle} disabled={saving || !valid} onClick={onSaveService} key="catalog_add_service_button">
                         {saving ? <Loader size={12} style={{display: 'inline-block'}} /> : null}
                         <Message msgId="save" />
                     </Button>
                     {service && !service.isNew
-                        ? <Button style={buttonStyle} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
+                        ? <Button style={buttonStyle} disabled={saving} onClick={() => onDeleteService(service, services)} key="catalog_delete_service_button">
                             <Message msgId="catalog.delete" />
                         </Button>
                         : null
                     }
-                    <Button style={buttonStyle} disabled={saving} onClick={() => onChangeCatalogMode("view")} key="catalog_back_view_button">
+                    <Button style={buttonStyle} disabled={disabled} onClick={onCancel} key="catalog_back_view_button">
                         <Message msgId="cancel" />
                     </Button>
                 </Col>
@@ -112,3 +126,5 @@ export default ({
         </Form>
     </BorderLayout>);
 };
+
+export default withAbort(CatalogServiceEditor);

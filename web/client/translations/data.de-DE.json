@@ -353,7 +353,7 @@
         },
         "home":{
             "open": "Öffnen",
-            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://mapstore.readthedocs.io/en/latest/\">dokumentationsseite</a></small>",
+            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">dokumentationsseite</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"https://mapstore.readthedocs.io/en/latest/\">Homepage</a> für mehr Details.",
             "Applications": "Anwendungen",
@@ -630,6 +630,7 @@
             "browseData": "Attributtabelle der ausgewählten Ebene öffnen",
             "removeLayer": "Ebene entfernen",
             "loadingerror": "Diese Ebene wurde nicht korrekt geladen oder ist nicht verfügbar",
+            "sourceCRSNotCompatible": "Die Quelldatenprojektionsdefinition {sourceCRS} des Layers ist in der Anwendung nicht für die Neuprojektion der Daten in der aktuellen Karte verfügbar",
             "measure": "Messen",
             "backgroundSwitcher": "Hintergrund",
             "layers": "Ebenen",
@@ -1557,7 +1558,7 @@
             "tooltip": "Fügen Sie der Karte Ebenen hinzu",
             "autoload": "Suche in Dienstauswahl",
             "fetchMetadata": {
-                "label": "Laden Sie Dateimetadaten bei der Suche herunter",
+                "label": "Dateimetadaten beim Speichern herunterladen",
                 "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
             },
             "clearValueText": "Auswahl aufheben",
