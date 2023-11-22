@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {useEffect} from 'react';
-import {FormGroup, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon } from "react-bootstrap";
+import {FormGroup, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon, InputGroup } from "react-bootstrap";
 import RS from 'react-select';
 import {isNil, camelCase} from "lodash";
 
@@ -153,10 +153,12 @@ export default ({
         </FormGroup>)}
         <FormGroup style={advancedRasterSettingsStyles}  className="form-group-flex">
             <ControlLabel className="strong"><Message msgId="layerProperties.serverType" /></ControlLabel>
-            <Select
-                value={service.layerOptions?.serverType}
-                options={serverTypeOptions}
-                onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
+            <InputGroup>
+                <Select
+                    value={service.layerOptions?.serverType}
+                    options={serverTypeOptions}
+                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
+            </InputGroup>
         </FormGroup>
         <hr style={{margin: "8px 0"}}/>
         <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
@@ -179,36 +181,42 @@ export default ({
             </div>
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
-            <ControlLabel className="strong"><Message msgId="layerProperties.format.tile" /></ControlLabel>
-            <Select
-                disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
-                isLoading={props.formatsLoading}
-                onOpen={() => onFormatOptionsFetch(service.url)}
-                value={service && service.format}
-                clearable
-                noResultsText={props.formatsLoading
-                    ? "catalog.format.loading" : "catalog.format.noOption"}
-                options={props.formatsLoading ? [] : formatOptions.map((format) => format?.value ? format : ({ value: format, label: format }))}
-                onChange={event => onChangeServiceFormat(event && event.value)} />
+            <ControlLabel><Message msgId="layerProperties.format.tile" /></ControlLabel>
+            <InputGroup>
+                <Select
+                    disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                    isLoading={props.formatsLoading}
+                    onOpen={() => onFormatOptionsFetch(service.url)}
+                    value={service && service.format}
+                    clearable
+                    noResultsText={props.formatsLoading
+                        ? "catalog.format.loading" : "catalog.format.noOption"}
+                    options={props.formatsLoading ? [] : formatOptions.map((format) => format?.value ? format : ({ value: format, label: format }))}
+                    onChange={event => onChangeServiceFormat(event && event.value)} />
+            </InputGroup>
         </FormGroup>
         <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
-            <ControlLabel className="strong"><Message msgId="layerProperties.format.information" /></ControlLabel>
-            <Select
-                disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
-                isLoading={props.formatsLoading}
-                onOpen={() => onFormatOptionsFetch(service.url)}
-                value={service && service.infoFormat}
-                clearable
-                options={props.formatsLoading ? [] : infoFormatOptions.map((format) => ({ value: format, label: format }))}
-                onChange={event => onChangeServiceProperty("infoFormat", event && event.value)} />
+            <ControlLabel><Message msgId="layerProperties.format.information" /></ControlLabel>
+            <InputGroup>
+                <Select
+                    disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                    isLoading={props.formatsLoading}
+                    onOpen={() => onFormatOptionsFetch(service.url)}
+                    value={service && service.infoFormat}
+                    clearable
+                    options={props.formatsLoading ? [] : infoFormatOptions.map((format) => ({ value: format, label: format }))}
+                    onChange={event => onChangeServiceProperty("infoFormat", event && event.value)} />
+            </InputGroup>
         </FormGroup>
         <hr style={{margin: "8px 0"}}/>
         <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
             <ControlLabel className="strong"><Message msgId="layerProperties.wmsLayerTileSize" /></ControlLabel>
-            <Select
-                value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
-                options={tileSelectOptions}
-                onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, tileSize: event && event.value })} />
+            <InputGroup>
+                <Select
+                    value={getTileSizeSelectOptions([service.layerOptions?.tileSize || 256])[0]}
+                    options={tileSelectOptions}
+                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, tileSize: event && event.value })} />
+            </InputGroup>
         </FormGroup>
         {!isNil(service.type) && service.type === "csw" &&
         <CSWFilters filter={service?.filter} onChangeServiceProperty={onChangeServiceProperty}/>
