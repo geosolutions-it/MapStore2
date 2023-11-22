@@ -149,7 +149,7 @@ class CoordinatesEditor extends React.Component {
                             if (this.isValid(this.props.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray), uom);
                             } else if (radius !== "") {
-                                this.props.onChangeRadius(parseFloat(radius), [], uom);
+                                this.props.onChangeRadius(parseFloat(radius), [[0, 0]], uom);
                             } else {
                                 this.props.onChangeRadius(null, this.props.components.map(coordToArray), uom);
                                 this.props.onSetInvalidSelected("radius", this.props.components.map(coordToArray));
