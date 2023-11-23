@@ -157,7 +157,7 @@ const ChartWizard = ({
                 onChange={onChange}
                 onAddChart={() => toggleLayerSelector(true)}
                 disableMultiChart={!dashBoardEditing}
-                tab={tab}
+                tab={selectedTab}
                 setTab={setTab}
                 hasAggregateProcess={hasAggregateProcess}
             >
