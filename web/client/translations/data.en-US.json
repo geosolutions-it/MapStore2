@@ -57,8 +57,8 @@
             "404": "Translation file not found"
         },
         "details": {
-            "title": "About this map",
-            "tooltip": "About this map"
+            "title": "About this content",
+            "tooltip": "About this content"
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",

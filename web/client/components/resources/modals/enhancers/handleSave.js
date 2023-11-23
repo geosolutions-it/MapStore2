@@ -18,7 +18,7 @@ export default mapPropsStream(props$ => {
             .withLatestFrom(props$)
             .switchMap(([resource, props]) =>
                 updateResource(resource)
-                    .flatMap(rid => (['MAP', 'DASHBOARD'].includes(resource.categoryName)) ?
+                    .flatMap(rid => (['MAP', 'DASHBOARD'].includes(resource.category)) ?
                         updateResourceAttribute({
                             id: rid,
                             name: 'detailsSettings',

@@ -36,7 +36,7 @@ class MapConnectionDashboard extends React.Component {
         return  (<ToolbarButton
             glyph={showConnections ? 'bulb-on' : 'bulb-off'}
             tooltipId={showConnections ? 'dashboard.editor.hideConnections' : 'dashboard.editor.showConnections'}
-            bsStyle={showConnections ? 'success' : 'primary'}
+            bsStyle={showConnections ? 'success' : 'tray'}
             onClick={()=>onShowConnections(!showConnections)}
             tooltipPosition={'left'}
             id={'ms-map-connection-card-dashboard'}
