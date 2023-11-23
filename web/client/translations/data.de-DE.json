@@ -57,8 +57,8 @@
             "404": "Übersetzungsdatei nicht gefunden"
         },
         "details": {
-            "title": "Infos zu dieser Karte",
-            "tooltip": "Infos zu dieser Karte"
+            "title": "Infos zu dieser Inhalt",
+            "tooltip": "Infos zu dieser Inhalt"
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
