@@ -58,8 +58,8 @@
             "404": "File di traduzione non trovato"
         },
         "details": {
-            "title": "Info su questa mappa",
-            "tooltip": "Info su questa mappa"
+            "title": "Info su questo contenuto",
+            "tooltip": "Info su questo contenuto"
         },
         "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
         "remove": "Rimuovi",
@@ -117,6 +117,7 @@
             "heightOffset": "Spostamento in altezza (m)",
             "wmsLayerTileSize": "Dimensione tile (WMS)",
             "serverType": "Tipo di Server",
+            "formatError": "Non è stato possibile recuperare le informazioni sui formati dal servizio configurato. Probabilmente stai usando un servizio \"No Vendor\" e questo non è supportato (es. GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -198,6 +199,8 @@
             },
             "format": {
                 "title": "Formato",
+                "tile": "Tile",
+                "information": "Risposte interrogazioni su mappa",
                 "refresh": "Recupera i formati supportati",
                 "loading": "Caricamento in corso...",
                 "noOption": "Nessuna opzione",
@@ -350,7 +353,7 @@
         },
         "home":{
             "open": "Apri",
-            "shortDescription": "Modern webmapping con OpenLayers, Leaflet e React<br/><small>visita la pagina di <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentazione</a></small>",
+            "shortDescription": "Modern webmapping con OpenLayers, Leaflet e React<br/><small>visita la pagina di <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentazione</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> per maggiori dettagli.",
             "Applications": "Applicazioni",
@@ -589,6 +592,7 @@
             "browseData": "Apri tabella degli attributi",
             "removeLayer": "Rimuovi livello",
             "loadingerror": "Il livello non è stato caricato correttamente o non disponible.",
+            "sourceCRSNotCompatible": "La definizione di proiezione dei dati di origine del layer {sourceCRS} non è disponibile nell'applicazione per riproiettare i dati nella mappa corrente",
             "measure": "Misure",
             "layers": "Livelli",
             "drawerButton": "Livelli",
@@ -1514,7 +1518,7 @@
             "title": "Catalogo",
             "autoload": "Ricerca alla selezione del servizio",
             "fetchMetadata": {
-                "label": "Scarica i metadati dei file durante la ricerca",
+                "label": "Scarica i metadati del file al salvataggio",
                 "tooltip": "Questa opzione recupererà i metadati per supportare lo zoom a livello. Potrebbe rallentare l'operazione di ricerca se le immagini sono troppo grandi o troppe."
             },
             "clearValueText": "Cancella selezione",

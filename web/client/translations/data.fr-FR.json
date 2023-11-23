@@ -58,8 +58,8 @@
             "404": "Fichier de traduction introuvable"
         },
         "details": {
-            "title": "À propos de cette carte",
-            "tooltip": "À propos de cette carte"
+            "title": "À propos de cette contenu",
+            "tooltip": "À propos de cette contenu"
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
@@ -117,6 +117,7 @@
             "heightOffset": "Décalage en hauteur (m)",
             "wmsLayerTileSize": "Taille de la tuile (WMS)",
             "serverType": "Type de serveur",
+            "formatError": "Il n'a pas été possible de récupérer le format et le format de la fiche d'information à partir du service configuré. Vous utilisez probablement un service No Vendor et celui-ci n'est pas pris en charge (par exemple GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -198,6 +199,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Tile",
+                "information": "Fiche d'information",
                 "refresh": "Récupérer les formats pris en charge",
                 "loading": "Chargement...",
                 "noOption": "Pas d'option",
@@ -350,7 +353,7 @@
         },
         "home": {
             "open": "Ouvrir",
-            "shortDescription": "Application cartographique en ligne moderne Modern propulsée par OpenLayers, Leaflet et ReactJS.<br/> <small>Consultez la page de <a href=\"https://mapstore.readthedocs.io/en/latest/\"> documentation </a></ small>",
+            "shortDescription": "Application cartographique en ligne moderne Modern propulsée par OpenLayers, Leaflet et ReactJS.<br/> <small>Consultez la page de <a href=\"https://docs.mapstore.geosolutionsgroup.com/\"> documentation </a></ small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore a été développé pour créer, sauvegarder et partager de façon simple et intuitive des cartes simple ou élaboréess créés à partir de services comme OpenStreetMap, Google Maps ou tout autres services fournis par des organisations utilisant des protocoles ouverts comme OGC WMS, WFS, WMTS ou TMS et bien d'autres...<br/>Visitez notre <a href=\"https://mapstore.readthedocs.io/en/latest/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
@@ -589,6 +592,7 @@
             "browseData": "Ouvrir la table d'attribut",
             "removeLayer": "Supprimer la couche",
             "loadingerror": "La couche n'a pas été chargée correctement ou n'est pas disponible.",
+            "sourceCRSNotCompatible": "La définition de projection des données sources de la couche {sourceCRS} n'est pas disponible dans l'application de reprojection des données dans la carte actuelle",
             "measure": "Mesurer",
             "layers": "Couches",
             "drawerButton": "Couches",
@@ -1516,7 +1520,7 @@
             "tooltip": "Ajouter des couches à la carte",
             "autoload": "Recherche sur la sélection du service",
             "fetchMetadata": {
-                "label": "Télécharger les métadonnées du fichier lors de la recherche",
+                "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
                 "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
             },
             "clearValueText": "Effacer la sélection",

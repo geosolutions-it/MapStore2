@@ -31,7 +31,7 @@ describe('test rules manager selectors', () => {
             id: 'rules1',
             priority: 1,
             roleName: 'role1',
-            groupAny: '*',
+            roleAny: '*',
             userName: '*',
             userAny: '*',
             service: '*',

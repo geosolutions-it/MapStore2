@@ -37,7 +37,8 @@ const SaveBaseDialog = compose(
         onSave: saveDashboard
     }),
     withProps({
-        category: "DASHBOARD"
+        category: "DASHBOARD",
+        enableDetails: true         // to enable details in dashboard
     }),
     handleSaveModal
 )(Save);
@@ -68,6 +69,23 @@ export const DashboardSave = createPlugin('DashboardSave', {
             text: <Message msgId="save"/>,
             icon: <Glyphicon glyph="floppy-open"/>,
             action: triggerSave.bind(null, true),
+            tooltip: "saveDialog.saveTooltip",
+            // display the BurgerMenu button only if the map can be edited
+            selector: createSelector(
+                isLoggedIn,
+                dashboardResource,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && id && canEdit ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
+                })
+            )
+        },
+        SidebarMenu: {
+            name: 'dashboardSave',
+            position: 30,
+            text: <Message msgId="save"/>,
+            icon: <Glyphicon glyph="floppy-open"/>,
+            action: triggerSave.bind(null, true),
+            tooltip: "saveDialog.saveTooltip",
             // display the BurgerMenu button only if the map can be edited
             selector: createSelector(
                 isLoggedIn,
@@ -107,6 +125,21 @@ export const DashboardSaveAs = createPlugin('DashboardSaveAs',  {
     },
     containers: {
         BurgerMenu: {
+            name: 'dashboardSaveAs',
+            position: 31,
+            tooltip: "saveAs",
+            text: <Message msgId="saveAs"/>,
+            icon: <Glyphicon glyph="floppy-open"/>,
+            action: triggerSaveAs.bind(null, true),
+            // always display on the BurgerMenu button if logged in
+            selector: createSelector(
+                isLoggedIn,
+                (loggedIn) => ({
+                    style: loggedIn ? {} : { display: "none" }// the resource is new (no resource) or if present, is editable
+                })
+            )
+        },
+        SidebarMenu: {
             name: 'dashboardSaveAs',
             position: 31,
             tooltip: "saveAs",

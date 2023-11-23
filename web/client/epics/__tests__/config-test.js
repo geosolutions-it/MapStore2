@@ -8,7 +8,9 @@
 
 import expect from 'expect';
 import {head} from 'lodash';
-import {loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoEpic} from '../config';
+import {
+    loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic,    getSupportedFormatsEpic
+} from '../config';
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
     loadMapConfig,
@@ -18,7 +20,8 @@ import {
     MAP_INFO_LOADED,
     MAP_INFO_LOAD_START,
     loadMapInfo,
-    mapInfoLoaded
+    mapInfoLoaded,
+    configureMap
 } from '../../actions/config';
 
 import { TEST_TIMEOUT, addTimeoutEpic, testEpic } from './epicTestUtils';
@@ -30,13 +33,51 @@ import testConfigEPSG31468 from "raw-loader!../../test-resources/testConfigEPSG3
 import ConfigUtils from "../../utils/ConfigUtils";
 import { DETAILS_LOADED } from '../../actions/details';
 import { EMPTY_RESOURCE_VALUE } from '../../utils/MapInfoUtils';
-
+import { dashboardLoaded } from '../../actions/dashboard';
+import {
+    formatOptionsFetch,
+    FORMAT_OPTIONS_LOADING,
+    SET_FORMAT_OPTIONS,
+    SHOW_FORMAT_ERROR
+} from '../../actions/catalog';
 const api = {
     getResource: () => Promise.resolve({mapId: 1234})
 };
 let mockAxios;
 
 describe('config epics', () => {
+    it('getSupportedFormatsEpic wms', (done) => {
+        const NUM_ACTIONS = 4;
+        const url = "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml";
+        testEpic(addTimeoutEpic(getSupportedFormatsEpic, 0), NUM_ACTIONS, formatOptionsFetch(url), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                    case SET_FORMAT_OPTIONS:
+                        expect(action.formats).toBeTruthy();
+                        expect(action.formats.imageFormats).toEqual(['image/png', 'image/gif', 'image/jpeg', 'image/png8', 'image/png; mode=8bit', 'image/vnd.jpeg-png']);
+                        expect(action.formats.infoFormats).toEqual(['text/plain', 'text/html', 'application/json']);
+                        break;
+                    case SHOW_FORMAT_ERROR:
+                        expect(action.status).toBeFalsy();
+                        break;
+                    case FORMAT_OPTIONS_LOADING:
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }, {
+            catalog: {}
+        });
+    });
     describe('loadMapConfigAndConfigureMap', () => {
         beforeEach(done => {
             ConfigUtils.setConfigProp("userSessions", {
@@ -345,7 +386,7 @@ describe('config epics', () => {
 
                     switch (action.type) {
                     case DETAILS_LOADED:
-                        expect(action.mapId).toBe(mapId);
+                        expect(action.id).toBe(mapId);
                         expect(action.detailsUri).toBe("rest/geostore/data/1/raw?decode=datauri");
                         break;
                     default:
@@ -377,6 +418,185 @@ describe('config epics', () => {
             }, {mapInitialConfig: {
                 "mapId": mapId
             }});
+        });
+    });
+
+    describe("storeDetailsInfoDashboardEpic", () => {
+        beforeEach(done => {
+            mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+
+        afterEach(done => {
+            mockAxios.restore();
+            setTimeout(done);
+        });
+        const dashboardId = 1;
+        const dashboardAttributesEmptyDetails = {
+            "AttributeList": {
+                "Attribute": [
+                    {
+                        "name": "details",
+                        "type": "STRING",
+                        "value": EMPTY_RESOURCE_VALUE
+                    }
+                ]
+            }
+        };
+
+        const dashboardAttributesWithoutDetails = {
+            "AttributeList": {
+                "Attribute": []
+            }
+        };
+
+        const dashboardAttributesWithDetails = {
+            AttributeList: {
+                Attribute: [
+                    {
+                        name: 'details',
+                        type: 'STRING',
+                        value: 'rest\/geostore\/data\/1\/raw?decode=datauri'
+                    },
+                    {
+                        name: "thumbnail",
+                        type: "STRING",
+                        value: 'rest\/geostore\/data\/1\/raw?decode=datauri'
+                    },
+                    {
+                        name: 'owner',
+                        type: 'STRING',
+                        value: 'admin'
+                    }
+                ]
+            }
+        };
+        it('test storeDetailsInfoDashboardEpic', (done) => {
+            mockAxios.onGet().reply(200, dashboardAttributesWithDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoDashboardEpic), 1, dashboardLoaded("RES", "DATA"), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+
+                    switch (action.type) {
+                    case DETAILS_LOADED:
+                        expect(action.id).toBe(dashboardId);
+                        expect(action.detailsUri).toBe("rest/geostore/data/1/raw?decode=datauri");
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {dashboard: {
+                resource: {
+                    id: dashboardId,
+                    attributes: {}
+                }
+            }});
+        });
+        it('test storeDetailsInfoDashboardEpic when api returns NODATA value', (done) => {
+            // const mock = new MockAdapter(axios);
+            mockAxios.onGet().reply(200, dashboardAttributesWithoutDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoDashboardEpic), 1, dashboardLoaded("RES", "DATA"), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+                done();
+            }, {dashboard: {
+                resource: {
+                    id: dashboardId,
+                    attributes: {}
+                }
+            }});
+        });
+        it('test storeDetailsInfoDashboardEpic when api doesnt return details', (done) => {
+            mockAxios.onGet().reply(200, dashboardAttributesEmptyDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoDashboardEpic), 1, dashboardLoaded("RES", "DATA"), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+                done();
+            }, {dashboard: {
+                resource: {
+                    id: dashboardId,
+                    attributes: {}
+                }
+            }});
+        }, {});
+    });
+    describe("backgroundsListInitEpic", () => {
+        const base64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
+        it('test layer update with thumbnail on background init', (done) => {
+            testEpic(addTimeoutEpic(backgroundsListInitEpic), 3, configureMap({
+                map: {
+                    backgrounds: [{id: "1", thumbnail: base64}],
+                    layers: [{id: "1", group: "background", name: "layer_1", visibility: true}]
+                }
+            }), actions => {
+                expect(actions.length).toBe(3);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case "CHANGE_LAYER_PROPERTIES":
+                        expect(action.newProperties.thumbURL).toBeTruthy();
+                        expect(action.layer).toBe("1");
+                        break;
+                    case "BACKGROUND_SELECTOR:CREATE_BACKGROUNDS_LIST":
+                        expect(action.backgrounds.length).toBe(1);
+                        expect(action.backgrounds[0].id).toBe("1");
+                        expect(action.backgrounds[0].thumbnail).toBe(base64);
+                        break;
+                    case "BACKGROUND_SELECTOR:SET_CURRENT_BACKGROUND_LAYER":
+                        expect(action.layerId).toBe("1");
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            });
+        });
+        it('test layer update with thumbnail with layer not visible', (done) => {
+            testEpic(addTimeoutEpic(backgroundsListInitEpic), 2, configureMap({
+                map: {
+                    backgrounds: [{id: "1", thumbnail: base64}],
+                    layers: [{id: "1", group: "background", name: "layer_1", visibility: false}]
+                }
+            }), actions => {
+                expect(actions.length).toBe(2);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case "CHANGE_LAYER_PROPERTIES":
+                        expect(action.newProperties.thumbURL).toBeTruthy();
+                        expect(action.layer).toBe("1");
+                        break;
+                    case "BACKGROUND_SELECTOR:CREATE_BACKGROUNDS_LIST":
+                        expect(action.backgrounds.length).toBe(1);
+                        expect(action.backgrounds[0].id).toBe("1");
+                        expect(action.backgrounds[0].thumbnail).toBe(base64);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {});
+        });
+        it('test backgroundsListInitEpic with no background layer', (done) => {
+            testEpic(addTimeoutEpic(backgroundsListInitEpic), 1, configureMap({
+                map: {
+                    layers: [{id: "1", name: "layer_1", visibility: false}]
+                }
+            }), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case "BACKGROUND_SELECTOR:CREATE_BACKGROUNDS_LIST":
+                        expect(action.backgrounds.length).toBe(0);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {});
         });
     });
 });

@@ -113,7 +113,7 @@ export default ({
                 edit,
                 nameFieldFilter,
                 category: categoryName,
-                enableDetails: categoryName === 'MAP',
+                enableDetails: categoryName === 'MAP' || categoryName === 'DASHBOARD',
                 onResourceLoad
                 // resource
             })}

@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {FormControl, FormGroup, Col, ControlLabel, Glyphicon, Button} from "react-bootstrap";
+import {FormControl, FormGroup, ControlLabel, Glyphicon, Button} from "react-bootstrap";
 import {debounce, size, map, omit, toInteger} from "lodash";
 import Message from "../../../I18N/Message";
 import InfoPopover from "../../../widgets/widget/InfoPopover";
@@ -45,7 +45,7 @@ export default ({
     };
 
     const elements = map(aliases, (el, k) => (
-        <Col xs={12} className="form-group alias-item">
+        <div className="form-group alias-item">
             <FormControl id={`alias-${k}`} key={`alias-${k}`} type="text" value={el} onChange={onChange(k)}/>
             {toInteger(k) !== 0 &&
             <TooltipButton
@@ -57,26 +57,22 @@ export default ({
                 <Glyphicon glyph="minus" />
             </TooltipButton>
             }
-        </Col>
+        </div>
     ));
     return (
         <FormGroup key="domain-aliases" className="mapstore-catalog-domain-aliases">
-            <Col xs={12}>
-                <ControlLabel><Message msgId="catalog.domainAliases.title" /></ControlLabel>
+            <ControlLabel><Message msgId="catalog.domainAliases.title" /></ControlLabel>
                 &nbsp;
-                <InfoPopover text={<Message msgId="catalog.domainAliases.helpTooltip" />} />
-            </Col>
+            <InfoPopover text={<Message msgId="catalog.domainAliases.helpTooltip" />} />
             {elements}
-            <Col xs={12}>
-                <TooltipButton
-                    className="add-alias"
-                    tooltip={<Message msgId="catalog.domainAliases.addAliasTooltip" />}
-                    tooltipid="add-alias-button"
-                    tooltipPosition="right"
-                    onClick={onCreateAlias}>
-                    <Glyphicon glyph={"plus"} />
-                </TooltipButton>
-            </Col>
+            <TooltipButton
+                className="add-alias"
+                tooltip={<Message msgId="catalog.domainAliases.addAliasTooltip" />}
+                tooltipid="add-alias-button"
+                tooltipPosition="right"
+                onClick={onCreateAlias}>
+                <Glyphicon glyph={"plus"} />
+            </TooltipButton>
         </FormGroup>
     );
 };

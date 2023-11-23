@@ -58,8 +58,8 @@
             "404": "Translation file not found"
         },
         "details": {
-            "title": "About this map",
-            "tooltip": "About this map"
+            "title": "About this content",
+            "tooltip": "About this content"
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",
@@ -117,6 +117,7 @@
             "heightOffset": "Height offset (m)",
             "wmsLayerTileSize": "Tile size (WMS)",
             "serverType": "Server Type",
+            "formatError": "It was not possible to fetch format and information sheet format from the service configured. Probably you are using a No Vendor service and this is not supported (e.g. GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -198,6 +199,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Tile",
+                "information": "Information sheet",
                 "refresh": "Fetch supported formats",
                 "loading": "Loading...",
                 "noOption": "No option",
@@ -350,7 +353,7 @@
         },
         "home":{
             "open": "Open",
-            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and ReactJS.<br/> <small>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and ReactJS.<br/> <small>Visit the <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
             "Applications": "Applications",
@@ -589,6 +592,7 @@
             "browseData": "Open Attribute Table",
             "removeLayer": "Remove layer",
             "loadingerror": "The layer has not been loaded correctly or not available.",
+            "sourceCRSNotCompatible": "The layer's source data projection definition {sourceCRS} is not available in the application for reprojecting the data in the current map",
             "measure": "Measure",
             "layers": "Layers",
             "drawerButton": "Layers",
@@ -1515,7 +1519,7 @@
             "tooltip": "Add layers to the map",
             "autoload": "Search on service selection",
             "fetchMetadata": {
-                "label": "Download file metadata on search",
+                "label": "Download file metadata on save",
                 "tooltip": "This option will fetch metadata to support the zoom to layer. It may slow down the search operation if the images are too big or too many."
             },
             "clearValueText": "Clear selection",

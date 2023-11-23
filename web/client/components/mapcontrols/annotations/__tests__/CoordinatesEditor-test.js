@@ -551,7 +551,7 @@ describe("test the CoordinatesEditor Panel", () => {
         inputRadius.value = 10000;
         TestUtils.Simulate.change(inputRadius);
         expect(spyOnChangeRadius).toHaveBeenCalled();
-        expect(spyOnChangeRadius).toHaveBeenCalledWith(10000, [], mapProjection);
+        expect(spyOnChangeRadius).toHaveBeenCalledWith(10000, [[0, 0]], mapProjection);
         expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
     });
 
