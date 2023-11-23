@@ -1803,6 +1803,26 @@
                     }
                 }
             },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "date": "Tapez la date à filtrer...",
+                    "number": "Tapez un nombre..."
+                },
+                "tooltips": {
+                    "editMode": "La recherche rapide n'est pas disponible en mode édition",
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "number": "Tapez un nombre...",
+                    "date": "Tapez une date. Utilisez {format} pour la date.",
+                    "geometry": {
+                        "disabled": "Filtrer en cliquant sur la carte / Alt + glisser la souris pour dessiner un filtre de boîte. Maintenez également la touche Ctrl pour ajouter plus de fonctionnalités au filtre actuel",
+                        "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
+                        "applied": "Nettoyer la sélection"
+                    }
+                }
+            },
             "toolbar": {
                 "synchPopoverTitle": "Synchroniser la carte avec un filtre ",
                 "synchPopoverText": "Utilisez cet outil pour synchroniser la carte avec le filtre sélectionné",

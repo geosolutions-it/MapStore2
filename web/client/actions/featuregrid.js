@@ -30,7 +30,6 @@ export const SET_FEATURES = 'SET_FEATURES';
 export const SORT_BY = 'FEATUREGRID:SORT_BY';
 export const SET_LAYER = 'FEATUREGRID:SET_LAYER';
 export const UPDATE_FILTER = 'QUERY:UPDATE_FILTER';
-export const UPDATE_OPERATOR_QUICK_FILTER = 'UPDATE_OPERATOR_QUICK_FILTER';
 export const CHANGE_PAGE = 'FEATUREGRID:CHANGE_PAGE';
 export const GEOMETRY_CHANGED = 'FEATUREGRID:GEOMETRY_CHANGED';
 export const DOCK_SIZE_FEATURES = 'DOCK_SIZE_FEATURES';
@@ -233,13 +232,6 @@ export function updateFilter(update, append = false) {
         type: UPDATE_FILTER,
         update,
         append
-    };
-}
-export function updateOperatorQuickFilter(operator, attribute) {
-    return {
-        type: UPDATE_FILTER,
-        operator,
-        attribute
     };
 }
 export function toggleTool(tool, value) {

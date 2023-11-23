@@ -1840,6 +1840,26 @@
                     }
                 }
             },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Beispiele...",
+                    "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "date": "Geben Sie das zu filternde Datum ein...",
+                    "number": "Geben Sie eine Zahl ..."
+                },
+                "tooltips": {
+                    "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
+                    "default": "Beispiele...",
+                    "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "number": "Geben Sie eine Zahl ...",
+                    "date": "Geben Sie ein Datum. Verwenden Sie {format} für das Datum.",
+                    "geometry": {
+                        "disabled": "Klicken Sie auf die Karte, um zu filtern / Alt + Maus ziehen, um einen Box-Filter zu zeichnen. Halten Sie auch die Strg-Taste gedrückt, um dem aktuellen Filter weitere Funktionen hinzuzufügen",
+                        "enabled": "Klicken Sie auf die Karte, um ein Feature auszuwählen / Alt + Maus ziehen, um einen Boxfilter zu zeichnen. Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere Features auszuwählen",
+                        "applied": "Auswahl bereinigen"
+                    }
+                }
+            },
             "toolbar": {
                 "synchPopoverTitle": "Karte mit Filter synchronisieren ",
                 "synchPopoverText": "Verwenden Sie dieses Werkzeug, um die Karte mit dem ausgewählten Filter zu synchronisieren",

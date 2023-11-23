@@ -129,7 +129,7 @@ export const featureTypeToGridColumns = (
     columnSettings = {},
     fields = [],
     {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
-    {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}, isShownOperators = false} = {}) =>
+    {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}, isWithinAttrTbl = false} = {}) =>
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
         const field = fields.find(f => f.name === desc.name);
@@ -147,9 +147,9 @@ export const featureTypeToGridColumns = (
             filterable,
             editor: getEditor(desc, field),
             formatter: getFormatter(desc, field),
-            filterRenderer: getFilterRenderer(desc, field, isShownOperators)
+            filterRenderer: getFilterRenderer(desc, field, isWithinAttrTbl)
         };
-        if (isShownOperators) columnProp.width = 300;
+        if (isWithinAttrTbl) columnProp.width = 300;
         return columnProp;
     });
 /**

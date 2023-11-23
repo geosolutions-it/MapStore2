@@ -57,7 +57,7 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
             }
         }
         let resultDate = dateToParse;
-        if (dateToParse) {
+        if (isDate(dateToParse)) {
             switch (type) {
             case "time": {
                 timePart = getUTCTimePart(dateToParse);
@@ -87,7 +87,7 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
         };
     }),
     withHandlers({
-        [setDateProp]: ({[setDateProp]: changeVal,  datePropFormat = "short", [dateTypeProp]: type, useUTCOffset = true} = {}) => (date, stringDate) => {
+        [setDateProp]: ({[setDateProp]: changeVal,  datePropFormat = "short", [dateTypeProp]: type, useUTCOffset = true} = {}) => (date, stringDate, order) => {
             if (!date) {
                 changeVal(null);
             } else {
@@ -105,25 +105,25 @@ export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetD
 
                 switch (datePropFormat) {
                 case "full-iso": {
-                    changeVal(resultDate.toISOString(), stringDate);
+                    changeVal(resultDate.toISOString(), stringDate, order);
                     break;
                 }
                 case "short": {
                     switch (type) {
                     case "time": {
-                        changeVal(`${getUTCTimePart(resultDate)}Z`, stringDate);
+                        changeVal(`${getUTCTimePart(resultDate)}Z`, stringDate, order);
                         break;
                     }
                     case "date": {
-                        changeVal(`${getUTCDatePart(resultDate)}Z`, stringDate);
+                        changeVal(`${getUTCDatePart(resultDate)}Z`, stringDate, order);
                         break;
                     }
                     case "date-time": {
-                        changeVal(resultDate.toISOString(), stringDate);
+                        changeVal(resultDate.toISOString(), stringDate, order);
                         break;
                     }
                     default: {
-                        changeVal(resultDate, stringDate);
+                        changeVal(resultDate, stringDate, order);
                         break;
                     }
                     }

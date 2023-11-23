@@ -74,7 +74,7 @@ const featuresToGrid = compose(
         editors,
         dataStreamFactory,
         virtualScroll: true,
-        isShownOperators: false
+        isWithinAttrTbl: false
     }),
     withPropsOnChange("showDragHandle", ({showDragHandle = true} = {}) => ({
         className: showDragHandle ? 'feature-grid-drag-handle-show' : 'feature-grid-drag-handle-hide'
@@ -172,7 +172,7 @@ const featuresToGrid = compose(
                         },
                         getFilterRenderer: getFilterRendererFunc,
                         getFormatter: (desc) => getFormatter(desc, (props.fields ?? []).find(f => f.name === desc.name), {dateFormats: props.dateFormats}),
-                        isShownOperators: props.isShownOperators
+                        isWithinAttrTbl: props.isWithinAttrTbl
                     }))
             });
             return result;

@@ -193,7 +193,7 @@ export const getEmptyRowsView = () => {
  * @param {object[]} fields array of fields (with `filterRenderer` property)
  * @returns {object} object with field name as key and filterRenderer as value
  */
-export const getFilterRenderers =  (describe, fields = [], isShownOperators) => {
+export const getFilterRenderers =  (describe, fields = [], isWithinAttrTbl) => {
     if (describe) {
         return (getFeatureTypeProperties(describe) || []).reduce( (out, cur) => {
             const field = fields.find(f => f.name === cur.name);
@@ -218,7 +218,7 @@ export const getFilterRenderers =  (describe, fields = [], isShownOperators) => 
                             } : {};
                             return mode === "EDIT" ? {...props, ...editProps} : props;
                         }
-                    ))(getFilterRenderer({type: isGeometryType(cur) ? 'geometry' : cur.localType, name: field?.filterRenderer?.name, options: field?.filterRenderer?.options, isShownOperators}))
+                    ))(getFilterRenderer({type: isGeometryType(cur) ? 'geometry' : cur.localType, name: field?.filterRenderer?.name, options: field?.filterRenderer?.options, isWithinAttrTbl}))
             };
         }, {});
     }

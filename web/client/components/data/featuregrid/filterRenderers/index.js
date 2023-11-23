@@ -15,13 +15,41 @@ import NumberFilter from './NumberFilter';
 import StringFilter from './StringFilter';
 
 const types = {
-    "defaultFilter": (props) => withProps(() =>({type: props.type, isShownOperators: props.isShownOperators || false}))(DefaultFilter),
-    "string": (props) => withProps(() =>({type: 'string', isShownOperators: props.isShownOperators || false}))(StringFilter),
-    "number": (props) => withProps(() =>({type: 'number', isShownOperators: props.isShownOperators || false}))(NumberFilter),
-    "int": (props) => withProps(() =>({type: 'integer', isShownOperators: props.isShownOperators || false}))(NumberFilter),
-    "date": (props) => withProps(() =>({type: "date", isShownOperators: props.isShownOperators || false}))(DateTimeFilter),
-    "time": (props) => withProps(() =>({type: "time", isShownOperators: props.isShownOperators || false}))(DateTimeFilter),
-    "date-time": (props) => withProps(() =>({type: "date-time", isShownOperators: props.isShownOperators || false}))(DateTimeFilter),
+    "defaultFilter": (props) => withProps(() =>{
+        let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.default" : '';
+        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.default" : "";
+        return { type: props.type, isWithinAttrTbl: props.isWithinAttrTbl || false, placeholderMsgId, tooltipMsgId };
+    })(DefaultFilter),
+    "string": (props) => withProps(() =>{
+        let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.string" : '';
+        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.string" : "";
+        return { type: 'string', isWithinAttrTbl: props.isWithinAttrTbl || false, placeholderMsgId, tooltipMsgId };
+    })(StringFilter),
+    "number": (props) => withProps(() =>{
+        let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.number" : '';
+        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.number" : "";
+        return { type: 'number', isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
+    })(NumberFilter),
+    "int": (props) => withProps(() =>{
+        let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.number" : '';
+        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.number" : "";
+        return { type: 'integer', isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
+    })(NumberFilter),
+    "date": (props) => withProps(() =>{
+        let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.date" : '';
+        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.date" : "";
+        return { type: "date", isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
+    })(DateTimeFilter),
+    "time": (props) => withProps(() =>{
+        let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.date" : '';
+        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.date" : "";
+        return { type: "time", isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
+    })(DateTimeFilter),
+    "date-time": (props) => withProps(() =>{
+        let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.date" : '';
+        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.date" : "";
+        return { type: "date-time", isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
+    })(DateTimeFilter),
     "geometry": () => GeometryFilter
 };
 
@@ -46,11 +74,11 @@ export const getFilterRendererByName = (name) => {
  * @param {string} [params.type] the type of the filter renderer. The available types are: "defaultFilter", "string", "number", "int", "date", "time", "date-time", "geometry".
  * @returns {React.Component} the filter renderer
  */
-export const getFilterRenderer = ({name, type, isShownOperators}) => {
+export const getFilterRenderer = ({name, type, isWithinAttrTbl}) => {
     if (name) {
         return getFilterRendererByName(name);
     }
-    return types[type] ? types[type]({type, isShownOperators}) : types.defaultFilter({type, isShownOperators});
+    return types[type] ? types[type]({type, isWithinAttrTbl}) : types.defaultFilter({type, isWithinAttrTbl});
 };
 
 

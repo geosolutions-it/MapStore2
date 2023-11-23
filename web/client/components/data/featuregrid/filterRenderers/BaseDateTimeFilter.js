@@ -69,6 +69,7 @@ class DateFilter extends AttributeFilter {
         if (operator === '><') {
             return (
                 <UTCDateTimePickerWithRange
+                    isWithinAttrTbl={this.props.isWithinAttrTbl}
                     key={inputKey}
                     disabled={this.props.disabled}
                     format={format}
@@ -79,11 +80,12 @@ class DateFilter extends AttributeFilter {
                     type={this.props.type}
                     time={this.props.type === 'time'}
                     calendar={this.props.type === 'date-time' || this.props.type === 'date'}
-                    onChange={(date, stringDate) => this.handleChange(date, stringDate)}
+                    onChange={(date, stringDate, order) => this.handleChangeRangeFilter(date, stringDate, order)}
                 />
             );
         }
         return (<UTCDateTimePicker
+            isWithinAttrTbl={this.props.isWithinAttrTbl}
             key={inputKey}
             disabled={this.props.disabled}
             format={format}
@@ -99,6 +101,21 @@ class DateFilter extends AttributeFilter {
     }
     handleChange = (value, stringValue) => {
         this.props.onChange({ value, stringValue, attribute: this.props.column && this.props.column.name, inputOperator: this.state.operator || this.props.operator });
+    }
+    handleChangeRangeFilter = (value, stringValue, order = 'start') => {
+        let reqVal = {};
+        if (order === 'end') {
+            reqVal = {
+                startDate: this.props.value?.startDate,
+                endDate: value
+            };
+        } else {
+            reqVal = {
+                startDate: value,
+                endDate: this.props.value?.endDate
+            };
+        }
+        this.props.onChange({ value: reqVal, stringValue, attribute: this.props.column && this.props.column.name, inputOperator: this.state.operator || this.props.operator });
     }
 }
 

@@ -188,7 +188,7 @@ const FeatureDock = (props = {
     const items = props?.items ?? [];
     const toolbarItems = items.filter(({target}) => target === 'toolbar');
     const filterRenderers = useMemo(() => {
-        return getFilterRenderers(props.describe, props.fields, props.isShownOperators);
+        return getFilterRenderers(props.describe, props.fields, props.isWithinAttrTbl);
     }, [props.describe, props.fields]);
     return (
         <div className={"feature-grid-wrapper"}>
@@ -211,7 +211,7 @@ const FeatureDock = (props = {
                                 footer={getFooter(props)}>
                                 {getDialogs(props.tools)}
                                 <Grid
-                                    isShownOperators
+                                    isWithinAttrTbl
                                     showCheckbox={props.showCheckbox}
                                     editingAllowedRoles={props.editingAllowedRoles}
                                     customEditorsOptions={props.customEditorsOptions}
@@ -277,7 +277,7 @@ export const selector = createStructuredSelector({
 
 const EditorPlugin = compose(
     defaultProps({
-        isShownOperators: true      // a flag to show/hide operators in attribute table
+        isWithinAttrTbl: true      // a flag to show/hide operators in attribute table
     }),
     connect(() => ({}),
         (dispatch) => ({

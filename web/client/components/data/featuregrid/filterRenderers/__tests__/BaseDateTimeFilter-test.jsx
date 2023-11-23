@@ -53,4 +53,24 @@ describe('Test for BaseDateTimeFilter component', () => {
         expect(el).toExist();
 
     });
+    it('render with range operator ><', () => {
+        // for type date
+        ReactDOM.render(<BaseDateTimeFilter type="date" value={{ operator: '><'}} isWithinAttrTbl={"true"} />, document.getElementById("container"));
+        let el = document.getElementsByTagName("input")[0];
+        expect(el).toExist();
+        let dateTimePickerWithRangeElement = document.getElementsByClassName('rw-datetimepicker range-time-input rw-widget')[0];
+        expect(dateTimePickerWithRangeElement).toExist();
+        // for time date
+        ReactDOM.render(<BaseDateTimeFilter type="time" value={{ operator: '><'}} isWithinAttrTbl={"true"} />, document.getElementById("container"));
+        el = document.getElementsByTagName("input")[0];
+        expect(el).toExist();
+        dateTimePickerWithRangeElement = document.getElementsByClassName('rw-datetimepicker range-time-input rw-widget')[0];
+        expect(dateTimePickerWithRangeElement).toExist();
+        // for type date-time
+        ReactDOM.render(<BaseDateTimeFilter type="date-time" value={{ operator: '><'}} isWithinAttrTbl={"true"} />, document.getElementById("container"));
+        el = document.getElementsByTagName("input")[0];
+        expect(el).toExist();
+        dateTimePickerWithRangeElement = document.getElementsByClassName('rw-datetimepicker range-time-input rw-widget')[0];
+        expect(dateTimePickerWithRangeElement).toExist();
+    });
 });

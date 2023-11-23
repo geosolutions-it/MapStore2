@@ -66,7 +66,8 @@ class DateTimePicker extends Component {
         culture: PropTypes.string,
         toolTip: PropTypes.string,
         tabIndex: PropTypes.string,
-        options: PropTypes.object
+        options: PropTypes.object,
+        isWithinAttrTbl: PropTypes.bool
     }
 
     static defaultProps = {
@@ -75,7 +76,8 @@ class DateTimePicker extends Component {
         time: true,
         onChange: () => { },
         value: null,
-        popupPosition: 'bottom'
+        popupPosition: 'bottom',
+        isWithinAttrTbl: false
     }
 
     state = {
@@ -95,6 +97,7 @@ class DateTimePicker extends Component {
         if (prevProps.value !== this.props.value || prevProps.operator !== this.props.operator) {
             const { value, operator } = this.props;
             this.setDateFromValueProp(value, operator);
+            if (this.props.operator === 'isNull') this.setState({ inputValue: '' });
         }
     }
 
@@ -105,12 +108,15 @@ class DateTimePicker extends Component {
     }
 
     renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible) => {
+        let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
+        let isNullOperator = this.props.operator === 'isNull';
+        if (isNullOperator) inputV = '';
         if (toolTip) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{toolTip}</Tooltip>}>
-                <input type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={`${operator}${inputValue}`} className="rw-input" onChange={this.handleValueChange} />
+                <input type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className="rw-input" onChange={this.handleValueChange} disabled={isNullOperator} />
             </OverlayTrigger>);
         }
-        return (<input type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={`${operator}${inputValue}`} className="rw-input" onChange={this.handleValueChange} />);
+        return (<input type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className="rw-input" onChange={this.handleValueChange} disabled={isNullOperator} />);
     }
 
     render() {
@@ -127,7 +133,10 @@ class DateTimePicker extends Component {
         }, {});
         const calendarVisible = open === 'date';
         const timeVisible = open === 'time';
-
+        let calendarVal;
+        if ( this.props.value && typeof this.props.value === 'object')  {
+            calendarVal = this.props.value?.startDate;
+        } else if (this.props.value && typeof this.props.value === 'string') calendarVal = this.props.value;
         return (
             <div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${focused ? 'rw-state-focus' : ''}`}>
                 {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible)}
@@ -159,7 +168,7 @@ class DateTimePicker extends Component {
                             onMouseDown={this.handleMouseDown}
                             onChange={this.handleCalendarChange}
                             {...props}
-                            value={!isNil(this.props.value) ? new Date(this.props.value) : undefined}
+                            value={!isNil(calendarVal) ? new Date(calendarVal) : undefined}
                         />
                     </div>
                 </div>

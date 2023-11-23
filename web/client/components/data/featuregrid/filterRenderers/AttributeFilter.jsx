@@ -25,7 +25,7 @@ class AttributeFilter extends React.PureComponent {
         tooltipMsgId: PropTypes.string,
         operator: PropTypes.string,
         type: PropTypes.string,
-        isShownOperators: PropTypes.bool
+        isWithinAttrTbl: PropTypes.bool
     };
 
     static contextTypes = {
@@ -39,7 +39,7 @@ class AttributeFilter extends React.PureComponent {
         column: {},
         placeholderMsgId: "featuregrid.filter.placeholders.default",
         operator: "=",
-        isShownOperators: false
+        isWithinAttrTbl: false
     };
     constructor(props) {
         super(props);
@@ -50,7 +50,7 @@ class AttributeFilter extends React.PureComponent {
             booleanOperators: ["="],
             defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "isNull"],
             timeDateOperators: ["=", ">", "<", ">=", "<=", "<>", "><", "isNull"],
-            operator: this.props.operator || "="
+            operator: this.props.isWithinAttrTbl ? "=" : ""
         };
     }
     getOperator = (type) => {
@@ -83,14 +83,17 @@ class AttributeFilter extends React.PureComponent {
         }
         const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Search";
         let inputKey = 'header-filter-' + this.props.column.key;
+        let isValueExist = this.state?.value ?? this.props.value;
+        if (['date', 'time', 'date-time'].includes(this.props.type)) isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
+        let isNullOperator = this.state.operator === 'isNull';
         return (<div className="rw-widget">
             <input
-                disabled={this.props.disabled || this.state.operator === 'isNull'}
+                disabled={this.props.disabled || isNullOperator}
                 key={inputKey}
                 type="text"
                 className="form-control input-sm"
                 placeholder={placeholder}
-                value={this.state?.value ?? this.props.value}
+                value={isValueExist}
                 onChange={this.handleChange}/>
         </div>);
     }
@@ -111,21 +114,23 @@ class AttributeFilter extends React.PureComponent {
                 fieldName="operator"
                 fieldRowId={1}
                 onSelect={(selectedOperator)=>{
-                    this.setState({ operator: selectedOperator, value: selectedOperator === 'isNull' ? undefined : this.state?.value ?? this.props.value });
-                    let isNullOperatorSelected = selectedOperator === 'isNull';
+                    if (selectedOperator === this.state.operator) return;
                     let isValueExist = this.state?.value ?? this.props.value;
+                    if (['date', 'time', 'date-time'].includes(this.props.type)) isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
+                    this.setState({ operator: selectedOperator, value: selectedOperator === 'isNull' ? undefined : isValueExist });
+                    let isNullOperatorSelected = selectedOperator === 'isNull';
                     let isOperatorChangedFromIsNullAndValueNotExist = this.state.operator === 'isNull' && this.state.operator !== selectedOperator && !isValueExist;
-                    if (isValueExist || isNullOperatorSelected || isOperatorChangedFromIsNullAndValueNotExist ) this.props.onChange({value: this.state?.value ?? this.props.value, attribute: this.props.column && this.props.column.key, inputOperator: selectedOperator});
+                    if (isValueExist || isNullOperatorSelected || isOperatorChangedFromIsNullAndValueNotExist ) this.props.onChange({value: isNullOperatorSelected ? null : isValueExist, attribute: this.props.column && this.props.column.key, inputOperator: selectedOperator});
                 }}
                 fieldValue={this.state.operator}
-                onUpdateField={this.updateFieldElement}/>
+                onUpdateField={() => {}}/>
         );
     };
     render() {
         let inputKey = 'header-filter--' + this.props.column.key;
         return (
             <div key={inputKey} className={`form-group${(this.props.valid ? "" : " has-error")}`}>
-                {this.props.isShownOperators ? this.renderOperatorField() : null}
+                {this.props.isWithinAttrTbl ? this.renderOperatorField() : null}
                 {this.renderTooltip(this.renderInput())}
             </div>
         );

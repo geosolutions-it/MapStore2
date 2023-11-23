@@ -1802,6 +1802,26 @@
                     }
                 }
             },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Cerca...",
+                    "string": "Digita testo da cercare...",
+                    "date": "Digita data da cercare...",
+                    "number": "Digita numero..."
+                },
+                "tooltips": {
+                    "editMode": "La ricerca veloce non è disponibile in modalità editing",
+                    "default": "Cerca...",
+                    "string": "Digita il testo da cercare...",
+                    "number": "Digita un numero...",
+                    "date":"Digita una data. Utilizza {format} per la data",
+                    "geometry": {
+                      "disabled": "Filtra facendo click sulla mappa / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
+                      "enabled": "Clicca per selezionare le features / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
+                      "applied": "Pulisci la selezione"
+                    }
+                }
+            },
             "toolbar": {
                 "synchPopoverTitle": "Sincronizza la mappa con il filtro ",
                 "synchPopoverText": "Usa questa icona per sincronizzare la mappa con il filtro selezionato",

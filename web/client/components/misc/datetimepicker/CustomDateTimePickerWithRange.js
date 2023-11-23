@@ -1,5 +1,5 @@
 /*
- * Copyright 2019, GeoSolutions Sas.
+ * Copyright 2023, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -81,12 +81,19 @@ class DateTimePicker extends Component {
     state = {
         openRangeContainer: false,
         openRangeInputs: 'start',			// start, end
-        openDateTCalendar: false,				// start, end
-        openDateTTime: false,					// start, end
+        openDateTCalendar: false,
+        openTime: false,
         focused: false,
-        inputValue: '',
+	 	mainInputValue: '',
+        inputValue: {			// what's shown on input for user
+            startDate: '',
+            endDate: ''
+        },
         operator: '',
-        date: null
+        date: {				// stored values
+            startDate: null,
+            endDate: null
+        }
     }
 
     componentDidMount() {
@@ -95,7 +102,7 @@ class DateTimePicker extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.value !== this.props.value || prevProps.operator !== this.props.operator) {
+        if (prevProps.value?.startDate !== this.props.value?.startDate || prevProps.value?.endDate !== this.props.value?.endDate ) {
             const { value, operator } = this.props;
             this.setDateFromValueProp(value, operator);
         }
@@ -108,16 +115,17 @@ class DateTimePicker extends Component {
     }
 
     renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, disabled, isFullWidth) => {
+        let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
         if (toolTip) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{toolTip}</Tooltip>}>
-                <input type="text" id="rw_1_input" disabled={disabled} role="combobox" onBlur={this.handleInputBlur} style={{width: isFullWidth ? '100%' : ''}} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={`${operator}${inputValue}`} className="rw-input" onChange={this.handleValueChange} />
+                <input type="text" id="rw_1_input" disabled={'true'} role="combobox" style={{width: isFullWidth ? '100%' : ''}} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className="rw-input" onChange={this.handleValueChange} />
             </OverlayTrigger>);
         }
-        return (<input type="text" id="rw_1_input" disabled={disabled} role="combobox" onBlur={this.handleInputBlur} style={{width: isFullWidth ? '100%' : ''}} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={`${operator}${inputValue}`} className="rw-input" onChange={this.handleValueChange} />);
+        return (<input type="text" id="rw_1_input" disabled={'true'} role="combobox" style={{width: isFullWidth ? '100%' : ''}} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className="rw-input" onChange={this.handleValueChange} />);
     }
 	renderHoursRange = () =>{
-	    const { inputValue, operator, focused, openRangeInputs } = this.state;
-	    const { toolTip, placeholder, tabIndex } = this.props;
+	    const { inputValue, operator, focused, openRangeInputs, openTime } = this.state;
+	    const { placeholder, tabIndex } = this.props;
 	    const props = Object.keys(this.props).reduce((acc, key) => {
 	        if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
 	            // remove these props because they might have undesired effects to the subsequent components
@@ -127,45 +135,43 @@ class DateTimePicker extends Component {
 	        return acc;
 
 	    }, {});
-	    // const calendarVisible = open === 'date';
-	    // const timeVisible = open === 'time';
 	    return (
 	        <div style={{display: 'flex', flexDirection: 'column', border: 'solid 5px'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
 	                <div onClick={this.toggleStart} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>Start</strong>
 	                    <span>
-							Please Enter ...
+	                        {inputValue.startDate || 'Please Enter ...' }
 	                    </span>
 	                </div>
 	                <div onClick={this.toggleEnd} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>End</strong>
 	                    <span>
-							Please Enter ...
+	                        {inputValue.endDate || 'Please Enter ...' }
 	                    </span>
 	                </div>
 	            </div>
 	            <div style={{display: 'flex', flexDirection: 'column'}}>
 	                <div tabIndex="-1" style={{ display: openRangeInputs === 'start' ? 'block' : 'none'}} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
-	                    {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, false, true)}
+	                    {this.renderInput(inputValue.startDate, operator, '', placeholder, tabIndex, false, true)}
 	                    <span className="rw-select">
-	                        <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleStart}>
+	                        <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                            <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
 	                        </button>
 	                    </span>
-	                    <div style={{display: openRangeInputs === 'start' ? 'block' : 'none'}}>
-	                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+	                    <div style={{display: openTime ? 'block' : 'none'}}>
+	                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={(evt) => this.handleTimeSelect(evt, 'start')} />
 	                    </div>
 	                </div>
 	                <div tabIndex="-1" style={{ display: openRangeInputs === 'end' ? 'block' : 'none'}} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
-	                    {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, false, true)}
+	                    {this.renderInput(inputValue.endDate, operator, '', placeholder, tabIndex, false, true)}
 	                    <span className="rw-select">
-	                        <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleEnd}>
+	                        <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                            <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
 	                        </button>
 	                    </span>
-	                    <div style={{display: openRangeInputs === 'end' ? 'block' : 'none'}}>
-	                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+	                    <div style={{display: openTime ? 'block' : 'none'}}>
+	                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={(evt) => this.handleTimeSelect(evt, 'end')} />
 	                    </div>
 	                </div>
 	            </div>
@@ -175,20 +181,10 @@ class DateTimePicker extends Component {
 	renderHours = () =>{
 	 	const { inputValue, operator, focused, openRangeContainer } = this.state;
      	const { toolTip, placeholder, tabIndex, popupPosition } = this.props;
-     	// const props = Object.keys(this.props).reduce((acc, key) => {
-	    //  	if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
-	    //  	// remove these props because they might have undesired effects to the subsequent components
-	    // 	 	return acc;
-	    //  	}
-	    //  	acc[key] = this.props[key];
-	    //  	return acc;
-
-     	// }, {});
-     	// const calendarVisible = open === 'date';
-     	// const timeVisible = open === 'time';
+     	let shownVal = (inputValue.endDate || inputValue.startDate) ? Object.values(inputValue).join(" : ") : '';
 	 	return (
-		 	<div tabIndex="-1" onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
-			 	{this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, false, true, true)}
+		 	<div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
+			 	{this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, false, true, true)}
 			 	<span className="rw-select">
 				 	<button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleHandler}>
 					 	<span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
@@ -204,8 +200,7 @@ class DateTimePicker extends Component {
 	 	);
 	}
 	renderCalendarRange = () =>{
-	    const { openRangeInputs } = this.state;
-	    // const { popupPosition } = this.props;
+	    const { openRangeInputs, inputValue } = this.state;
 	    const props = Object.keys(this.props).reduce((acc, key) => {
 	        if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
 	            // remove these props because they might have undesired effects to the subsequent components
@@ -215,21 +210,19 @@ class DateTimePicker extends Component {
 	        return acc;
 
 	    }, {});
-	    // const calendarVisible = type === 'date';
-	    // const timeVisible = open === 'time';
 	    return (
 	        <div style={{display: 'flex', flexDirection: 'column', border: 'solid 5px'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
 	                <div onClick={this.toggleStart} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>Start</strong>
 	                    <span>
-							Please Enter ...
+	                        {inputValue.startDate || 'Please Enter ...'}
 	                    </span>
 	                </div>
 	                <div onClick={this.toggleEnd} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>End</strong>
 	                    <span>
-							Please Enter ...
+	                        {inputValue.endDate || 'Please Enter ...'}
 	                    </span>
 	                </div>
 	            </div>
@@ -239,20 +232,20 @@ class DateTimePicker extends Component {
 	                        tabIndex="-1"
 	                        ref={this.attachCalRef}
 	                        onMouseDown={this.handleMouseDown}
-	                        onChange={this.handleCalendarChange}
+	                        onChange={(value) => this.handleCalendarChange(value, 'start')}
 	                        {...props}
-	                        value={!isNil(this.props.value) ? new Date(this.props.value) : undefined}
+	                        value={!isNil(this.state.date?.startDate || this.props.value?.startDate) ? new Date(this.state.date?.startDate || this.props.value?.startDate) : undefined}
 	                        />
 	                </div>
 	                <div style={{display: openRangeInputs === 'end' ? 'block' : 'none'}}>
 	                    <Calendar
-	                                tabIndex="-1"
-	                                ref={this.attachCalRef}
-	                                onMouseDown={this.handleMouseDown}
-	                                onChange={this.handleCalendarChange}
-	                                {...props}
-	                                value={!isNil(this.props.value) ? new Date(this.props.value) : undefined}
-	                            />
+	                        tabIndex="-1"
+	                        ref={this.attachCalRef}
+	                        onMouseDown={this.handleMouseDown}
+	                        onChange={(value) => this.handleCalendarChange(value, 'end')}
+	                        {...props}
+	                        value={!isNil(this.state.date?.endDate || this.props.value?.endDate) ? new Date(this.state.date?.endDate || this.props.value?.endDate) : undefined}
+	                    />
 	                </div>
 	            </div>
 	        </div>
@@ -261,20 +254,11 @@ class DateTimePicker extends Component {
 	renderCalendar = () =>{
 	    const { inputValue, operator, focused, openRangeContainer, popupPosition } = this.state;
 	    const { toolTip, placeholder, tabIndex } = this.props;
-	    // const props = Object.keys(this.props).reduce((acc, key) => {
-	    //     if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
-	    //         // remove these props because they might have undesired effects to the subsequent components
-	    //         return acc;
-	    //     }
-	    //     acc[key] = this.props[key];
-	    //     return acc;
+	    let shownVal = (inputValue.endDate || inputValue.startDate) ? Object.values(inputValue).join(" : ") : '';
 
-	    // }, {});
-	    // const calendarVisible = type === 'date';
-	    // const timeVisible = open === 'time';
 	    return (
-	        <div tabIndex="-1" onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
-	            {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, true, false, true)}
+	        <div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
+	            {this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, true, false, true)}
 	            <span className="rw-select">
 	                <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
 	                    <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
@@ -289,10 +273,9 @@ class DateTimePicker extends Component {
 	    );
 	}
 	renderDateTimeRange = () =>{
-	    const { inputValue, operator, openRangeInputs, openDateTTime } = this.state;
-	    const { toolTip, placeholder, tabIndex } = this.props;
+	    const { inputValue, operator, openRangeInputs, openTime } = this.state;
+	    const { placeholder, tabIndex } = this.props;
 
-	    // const { popupPosition } = this.props;
 	    const props = Object.keys(this.props).reduce((acc, key) => {
 	        if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
 	            // remove these props because they might have undesired effects to the subsequent components
@@ -302,21 +285,19 @@ class DateTimePicker extends Component {
 	        return acc;
 
 	    }, {});
-	    // const calendarVisible = type === 'date';
-	    // const timeVisible = open === 'time';
 	    return (
 	        <div style={{display: 'flex', flexDirection: 'column', border: 'solid 5px', maxHeight: '360px', overflowY: 'auto'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
 	                <div onClick={this.toggleStart} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>Start</strong>
 	                    <span>
-							Please Enter ...
+	                        {inputValue.startDate || 'Please Enter ...'}
 	                    </span>
 	                </div>
 	                <div onClick={this.toggleEnd} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>End</strong>
 	                    <span>
-							Please Enter ...
+	                        {inputValue.endDate || 'Please Enter ...'}
 	                    </span>
 	                </div>
 	            </div>
@@ -326,44 +307,44 @@ class DateTimePicker extends Component {
 	                        tabIndex="-1"
 	                        ref={this.attachCalRef}
 	                        onMouseDown={this.handleMouseDown}
-	                        onChange={this.handleCalendarChange}
+	                        onChange={(evt) => this.handleCalendarChange(evt, 'start')}
 	                        {...props}
-	                        value={!isNil(this.props.value) ? new Date(this.props.value) : undefined}
+	                        value={!isNil(this.state.date?.startDate || this.props.value?.startDate) ? new Date(this.state.date?.startDate || this.props.value?.startDate) : undefined}
 	                        />
 	                	<div style={{ display: openRangeInputs === 'start' ? 'block' : 'none'}}>
 	                        <div style={{display: 'flex'}}>
-	                    {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, false, true, false, true)}
+	                    {this.renderInput(inputValue.startDate, operator, '', placeholder, tabIndex, false, true, false, true)}
 	                            <span className="">
-	                                <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTimeInDateTime}>
+	                                <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                                    <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
 	                                </button>
 	                            </span>
 	                        </div>
-	                    <div style={{display: openDateTTime ? 'block' : 'none'}}>
-	                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+	                    <div style={{display: openTime ? 'block' : 'none'}}>
+	                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={(evt) => this.handleTimeSelect(evt, 'start')} />
 	                    </div>
 	                </div>
 	                </div>
 	                <div style={{display: openRangeInputs === 'end' ? 'block' : 'none'}}>
 	                    <Calendar
-	                                tabIndex="-1"
-	                                ref={this.attachCalRef}
-	                                onMouseDown={this.handleMouseDown}
-	                                onChange={this.handleCalendarChange}
-	                                {...props}
-	                                value={!isNil(this.props.value) ? new Date(this.props.value) : undefined}
-	                            />
+	                        tabIndex="-1"
+	                        ref={this.attachCalRef}
+	                        onMouseDown={this.handleMouseDown}
+	                        onChange={(evt) => this.handleCalendarChange(evt, 'end')}
+	                        {...props}
+	                        value={!isNil(this.state.date?.endDate || this.props.value?.endDate) ? new Date(this.state.date?.endDate || this.props.value?.endDate) : undefined}
+	                    />
 	                	<div style={{ display: openRangeInputs === 'end' ? 'block' : 'none'}}>
 	                        <div style={{display: 'flex'}}>
-	                            {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, false, true, false, true)}
+	                            {this.renderInput(inputValue.endDate, operator, '', placeholder, tabIndex, false, true, false, true)}
 	                            <span className="">
-	                                <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTimeInDateTime}>
+	                                <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                                    <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
 	                                </button>
 	                            </span>
 	                        </div>
-	                        <div style={{display: openDateTTime ? 'block' : 'none'}}>
-	                            <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+	                        <div style={{display: openTime ? 'block' : 'none'}}>
+	                            <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={(evt) => this.handleTimeSelect(evt, 'end')} />
 	                        </div>
 	                	</div>
 	                </div>
@@ -374,20 +355,11 @@ class DateTimePicker extends Component {
 	renderCalendarTimeDate = () =>{
 	    const { openRangeContainer, inputValue, operator, focused } = this.state;
 	    const { toolTip, placeholder, tabIndex, popupPosition } = this.props;
-	    // const props = Object.keys(this.props).reduce((acc, key) => {
-	    //     if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
-	    //         // remove these props because they might have undesired effects to the subsequent components
-	    //         return acc;
-	    //     }
-	    //     acc[key] = this.props[key];
-	    //     return acc;
+	    let shownVal = (inputValue.endDate || inputValue.startDate) ? Object.values(inputValue).join(" : ") : '';
 
-	    // }, {});
-	    // const calendarVisible = open === 'date';
-	    // const timeVisible = open === 'time';
 	    return (
-	        <div tabIndex="-1" onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget rw-has-both ${focused ? 'rw-state-focus' : ''}`}>
-	            {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, true, true, true)}
+	        <div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget ${focused ? 'rw-state-focus' : ''}`}>
+	            {this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, true, true, true)}
 	            <span className="rw-select">
 	                <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
 	                    <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
@@ -403,19 +375,7 @@ class DateTimePicker extends Component {
 	}
 
 	render() {
-	    // const { open } = this.state;
 	    const { type } = this.props;
-	    // const props = Object.keys(this.props).reduce((acc, key) => {
-	    //     if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
-	    //         // remove these props because they might have undesired effects to the subsequent components
-	    //         return acc;
-	    //     }
-	    //     acc[key] = this.props[key];
-	    //     return acc;
-
-	    // }, {});
-	    // const calendarVisible = open === 'date';
-	    // const timeVisible = open === 'time';
 	    if (type === 'time') return this.renderHours();
 	    else if (type === 'date') return this.renderCalendar();
 	    return this.renderCalendarTimeDate();
@@ -445,19 +405,19 @@ class DateTimePicker extends Component {
 
     toggleStart = () => {
         if (this.state.openRangeInputs !== 'start') {
-            this.setState({ openRangeInputs: 'start', openDateTTime: false, openDateTCalendar: false });
+            this.setState({ openRangeInputs: 'start', openTime: false, openDateTCalendar: false });
         }
     }
 	toggleEnd = () => {
 	 	if (this.state.openRangeInputs !== 'end') {
-		  	this.setState({ openRangeInputs: 'end', openDateTTime: false, openDateTCalendar: false });
+		  	this.setState({ openRangeInputs: 'end', openTime: false, openDateTCalendar: false });
 	 	}
 	}
-	toggleTimeInDateTime = () => {
-	    this.setState(prev => ({ openDateTTime: !prev.openDateTTime }));
+	toggleTime = () => {
+	    this.setState(prev => ({ openTime: !prev.openTime }));
 	}
 	toggleHandler = () => {
-	    this.setState(prevState => ({ openRangeContainer: !prevState.openRangeContainer, openDateTTime: false, openDateTCalendar: false }));
+	    this.setState(prevState => ({ openRangeContainer: !prevState.openRangeContainer, openTime: false, openDateTCalendar: false }));
 	}
 
     handleInputBlur = () => {
@@ -473,11 +433,22 @@ class DateTimePicker extends Component {
             this.props.onChange(parsed, `${this.state.operator}${dateStr}`);
         }
     }
-
+	handleKeyDown = e => {
+	    if (e.key === 'Escape') {
+	        // escape key should close the calendar or time popup
+	        this.close();
+	        return;
+	    }
+	}
     setDateFromValueProp = (value, operator) => {
         if (isDate(value)) {
-            const inputValue = this.format(value);
-            this.setState(prevState => ({ date: value, inputValue, operator: operator || prevState.operator }));
+            let startValue = this.format(value?.startDate);
+            let endValue = this.format(value?.endDate);
+            let inputValue = {
+                startDate: startValue,
+                endDate: endValue
+            };
+            this.setState(prevState => ({ date: { ...value }, inputValue, operator: operator || prevState.operator }));
         }
     }
 
@@ -501,7 +472,7 @@ class DateTimePicker extends Component {
     }
 
     close = () => {
-        this.setState({ open: '' });
+        this.setState({ openRangeContainer: '' });
     }
 
     openHandler = () => {
@@ -509,77 +480,47 @@ class DateTimePicker extends Component {
         return !calendar && time ? this.setState({ open: 'time' }) : calendar && !time ? this.setState({ open: 'date' }) : '';
     }
 
-    handleKeyDown = e => {
-        const { open } = this.state;
-        const timeVisible = open === 'time';
-        const calVisible = open === 'date';
-
-        if (e.defaultPrevented) return;
-
-        if (e.key === 'Escape') {
-            // escape key should close the calendar or time popup
-            this.close();
-            return;
-        }
-        if (e.altKey && e.key === 'ArrowDown') {
-            // user press control/option key for mac together with arrow down
-            // this should open the popup
-            e.preventDefault();
-            this.open();
-            return;
-        }
-
-        if (e.altKey && e.key === 'ArrowUp') {
-            // user press control/option key for mac together with arrow up
-            // this should close the popup
-            e.preventDefault();
-            this.close();
-            return;
-        }
-
-        if (timeVisible) {
-            this.timeRef.handleKeyDown(e);
-        }
-
-        if (calVisible) {
-            this.calRef.refs.inner.handleKeyDown(e);
-        }
-
-        if (!timeVisible && !calVisible && e.key === 'Enter') {
-            // enter key is pressed while hours and calendar are not visible
-            // date has changed
-            const parsed = this.parse(this.state.inputValue);
-            const dateStr = this.format(parsed);
-            this.setState({
-                inputValue: dateStr,
-                date: parsed
-            });
-            this.inputFlush = false;
-            this.props.onChange(parsed, `${this.state.operator}${dateStr}`);
-        }
-    }
-
 
     handleValueChange = (event) => {
         const { value } = event.target;
         const match = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?(.*)/.exec(value);
-        this.setState({ inputValue: match[2], operator: match[1] || '' });
+        this.setState({ mainInputValue: match[2], operator: match[1] || '' });
         this.inputFlush = true;
     }
 
-    handleCalendarChange = value => {
-        const date = setTime(value, this.state.date || new Date());
+    handleCalendarChange = (value, order) => {
+        const date = setTime(value, new Date(value));
         const inputValue = this.format(date);
-        this.setState({ date, inputValue, open: '' });
-        this.props.onChange(date, `${this.state.operator}${inputValue}`);
+        let inputValueClone = { ...this.state.inputValue};
+        if (order === 'start') inputValueClone.startDate = inputValue;
+        else inputValueClone.endDate = inputValue;
+        let upadtedDate = {
+            startDate: order === 'start' ? date : this.state.date.startDate,
+            endDate: order === 'end' ? date : this.state.date.endDate
+        };
+        this.setState({
+            date: upadtedDate,
+            inputValue: inputValueClone
+        });
+        if (order === 'start') this.props.onChange(date, inputValueClone.startDate, 'start');
+        else if (order === 'end') this.props.onChange(date, inputValueClone.endDate, 'end');
     }
 
-    handleTimeSelect = time => {
-        const selectedDate = this.state.date || new Date();
+    handleTimeSelect = (time, order, type) => {
+        const selectedDate = (order === 'start' ? this.state.date.startDate : this.state.date.endDate ) || new Date();
         const date = setTime(selectedDate, time.date);
         const inputValue = this.format(date);
-        this.setState({ date, inputValue, open: '' });
-        this.props.onChange(date, `${this.state.operator}${inputValue}`);
+        let inputValueClone = { ...this.state.inputValue};
+        if (order === 'start') inputValueClone.startDate = inputValue;
+        else inputValueClone.endDate = inputValue;
+        let upadtedDate = {
+            startDate: order === 'start' ? date : this.state.date.startDate,
+            endDate: order === 'end' ? date : this.state.date.endDate
+        };
+        if (type === 'time') this.setState({ date: upadtedDate, inputValue: inputValueClone});
+        else this.setState({ inputValue: inputValueClone});
+        if (order === 'start') this.props.onChange(date, inputValueClone.startDate, 'start');
+        else if (order === 'end') this.props.onChange(date, inputValueClone.endDate, 'end');
     }
 
     attachTimeRef = ref => (this.timeRef = ref)

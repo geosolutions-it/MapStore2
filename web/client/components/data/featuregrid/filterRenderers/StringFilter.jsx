@@ -13,7 +13,7 @@ export default compose(
             props.onChange({
                 rawValue: value,
                 value: trim(value) ? trim(value) : undefined,
-                operator: inputOperator || "ilike",      // need to read operator from redux beased on operator selected option
+                operator: inputOperator || "ilike",
                 type: 'string',
                 attribute
             });
