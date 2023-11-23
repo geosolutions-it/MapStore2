@@ -367,22 +367,6 @@ function featuregrid(state = emptyResultsState, action) {
         }
         return state;
     }
-    case UPDATE_OPERATOR_QUICK_FILTER : {
-        const {attribute, operator} = (action || {});
-        if (attribute) {
-            const filter = state.filters[attribute];
-            return assign({}, state, {
-                filters: {
-                    [attribute]: {
-                        ...filter,
-                        operator: operator,
-                        value: undefined
-                    }
-                }
-            });
-        }
-        return state;
-    }
     case UPDATE_FILTER : {
         const {attribute} = (action.update || {});
         if (attribute && action.append) {
