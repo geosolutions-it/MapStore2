@@ -58,8 +58,8 @@
             "404": "File di traduzione non trovato"
         },
         "details": {
-            "title": "Info su questa contenuto",
-            "tooltip": "Info su questa contenuto"
+            "title": "Info su questo contenuto",
+            "tooltip": "Info su questo contenuto"
         },
         "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
         "remove": "Rimuovi",
