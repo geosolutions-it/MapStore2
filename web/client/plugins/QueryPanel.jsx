@@ -285,7 +285,7 @@ class QueryPanel extends React.Component {
                 styles={{
                     sidebar: {
                         ...this.props.layout,
-                        zIndex: 1024,
+                        zIndex: 1044,
                         width: 600
                     },
                     overlay: {
