@@ -113,6 +113,7 @@
             "heightOffset": "Desplazamiento de altura (m)",
             "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
             "serverType": "Tipo de servidor",
+            "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -197,6 +198,8 @@
             },
             "format": {
                 "title": "Formato",
+                "tile": "Teja",
+                "information": "Identificar el formato de respuesta",
                 "refresh": "Obtener formatos admitidos",
                 "loading": "Cargando...",
                 "noOption": "Sin opcion",
