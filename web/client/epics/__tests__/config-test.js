@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import {head} from 'lodash';
-import {loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic} from '../config';
+import {loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic, getSupportedFormatsEpic} from '../config';
 
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
@@ -34,12 +34,50 @@ import { DETAILS_LOADED } from '../../actions/details';
 import { EMPTY_RESOURCE_VALUE } from '../../utils/MapInfoUtils';
 import { dashboardLoaded } from '../../actions/dashboard';
 
+import {
+    formatOptionsFetch,
+    FORMAT_OPTIONS_LOADING,
+    SET_FORMAT_OPTIONS,
+    SHOW_FORMAT_ERROR
+} from '../../actions/catalog';
 const api = {
     getResource: () => Promise.resolve({mapId: 1234})
 };
 let mockAxios;
 
 describe('config epics', () => {
+    it('getSupportedFormatsEpic wms', (done) => {
+        const NUM_ACTIONS = 4;
+        const url = "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml";
+        testEpic(addTimeoutEpic(getSupportedFormatsEpic, 0), NUM_ACTIONS, formatOptionsFetch(url), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                    case SET_FORMAT_OPTIONS:
+                        expect(action.formats).toBeTruthy();
+                        expect(action.formats.imageFormats).toEqual(['image/png', 'image/gif', 'image/jpeg', 'image/png8', 'image/png; mode=8bit', 'image/vnd.jpeg-png']);
+                        expect(action.formats.infoFormats).toEqual(['text/plain', 'text/html', 'application/json']);
+                        break;
+                    case SHOW_FORMAT_ERROR:
+                        expect(action.status).toBeFalsy();
+                        break;
+                    case FORMAT_OPTIONS_LOADING:
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        }, {
+            catalog: {}
+        });
+    });
     describe('loadMapConfigAndConfigureMap', () => {
         beforeEach(done => {
             ConfigUtils.setConfigProp("userSessions", {

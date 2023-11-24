@@ -212,6 +212,7 @@ class PagedCombobox extends React.Component {
         let label = l ? (<label>{l}</label>) : (<span/>); // TODO change "the else case" value with null ?
         return (
             <div className={`autocompleteField ${this.props.anyFilterRuleMode ? 'd-flex' : ''}`}>
+                {label}
                 {clearable ? (
                     <div className={`rw-combo-clearable ${disabled && 'disabled' || ''}`}>
                         {this.renderField()}
@@ -226,12 +227,15 @@ class PagedCombobox extends React.Component {
                     </div>) :
                     this.renderField()
                 }
-                 &nbsp;
-                <div>
-                    {label}
-                    { this.props.anyFilterRuleMode ?
-                        this.renderTooltipCheckbox() : null}
-                </div>
+                { this.props.anyFilterRuleMode ?
+                    <>
+                        &nbsp;
+                        <div>
+                            {
+                                this.renderTooltipCheckbox()
+                            }
+                        </div>
+                    </> : null}
             </div>);
     }
 }

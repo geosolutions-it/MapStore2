@@ -36,6 +36,18 @@ import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
 import { changeLayerProperties } from '../actions/layers';
 import { createBackgroundsList, setCurrentBackgroundLayer } from '../actions/backgroundselector';
+import {
+    FORMAT_OPTIONS_FETCH,
+    formatsLoading,
+    showFormatError,
+    setSupportedFormats
+} from '../actions/catalog';
+import {
+    getFormatUrlUsedSelector
+} from '../selectors/catalog';
+import { getSupportedFormat } from '../api/WMS';
+import { wrapStartStop } from '../observables/epics';
+import { error } from '../actions/notifications';
 
 const prepareMapConfiguration = (data, override, state) => {
     const queryParamsMap = getRequestParameterValue('map', state);
@@ -279,4 +291,40 @@ export const storeDetailsInfoDashboardEpic = (action$, store) =>
                         ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
                     );
                 });
+        });
+/**
+     * this epic is moved here because it needs to work also in dashboards
+     * Fetch all supported formats of a WMS service configured (infoFormats and imageFormats)
+     * Dispatches an action that sets the supported formats of the service.
+     * @param {Observable} action$ the actions triggered
+     * @param {object} getState store object
+     * @memberof epics.catalog
+     * @return {external:Observable}
+     */
+export const getSupportedFormatsEpic = (action$, {getState = ()=> {}} = {}) =>
+    action$.ofType(FORMAT_OPTIONS_FETCH)
+        .filter((action)=> action.force || getFormatUrlUsedSelector(getState()) !== action?.url)
+        .switchMap(({url = ''} = {})=> {
+            return Observable.defer(() => getSupportedFormat(url, true))
+                .switchMap((supportedFormats) => {
+                    return Observable.of(
+                        setSupportedFormats(supportedFormats, url),
+                        showFormatError(supportedFormats.imageFormats.length === 0 && supportedFormats.infoFormats.length === 0)
+                    );
+                })
+                .let(
+                    wrapStartStop(
+                        formatsLoading(true),
+                        formatsLoading(false),
+                        () => {
+                            return Observable.of(
+                                error({
+                                    title: "layerProperties.format.error.title",
+                                    message: 'layerProperties.format.error.message'
+                                }),
+                                formatsLoading(false)
+                            );
+                        }
+                    )
+                );
         });
