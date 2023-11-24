@@ -338,16 +338,14 @@ describe('saveDashboard', () => {
 
         const startActions = [saveDashboard(RESOURCE)];
         testEpic(saveDashboardMethod, actionsCount, startActions, actions => {
-            expect(actions.length).toBe(actionsCount);
-            expect(actions[0].type).toBe(DASHBOARD_LOADING);
-            expect(actions[0].value).toBe(true);
-            expect(actions[1].type).toBe(SAVE_ERROR);
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SAVE_ERROR);
             expect(
-                actions[1].error.status === 403
-                 || actions[1].error.status === 404
+                actions[0].error.status === 403
+                 || actions[0].error.status === 404
             ).toBeTruthy();
-            expect(actions[2].type).toBe(DASHBOARD_LOADING);
-            expect(actions[2].value).toBe(false);
+            expect(actions[1].type).toBe(DASHBOARD_LOADING);
+            expect(actions[1].value).toBe(false);
         }, BASE_STATE, done);
     });
 
@@ -364,13 +362,11 @@ describe('saveDashboard', () => {
 
         const startActions = [saveDashboard(withoutMetadata)];
         testEpic(saveDashboardMethod, actionsCount, startActions, actions => {
-            expect(actions.length).toBe(3);
-            expect(actions[0].type).toBe(DASHBOARD_LOADING);
-            expect(actions[0].value).toBe(true);
-            expect(actions[1].type).toBe(SAVE_ERROR);
-            expect(typeof(actions[1].error) === 'string').toBeTruthy();
-            expect(actions[2].type).toBe(DASHBOARD_LOADING);
-            expect(actions[2].value).toBe(false);
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(SAVE_ERROR);
+            expect(typeof(actions[0].error) === 'string').toBeTruthy();
+            expect(actions[1].type).toBe(DASHBOARD_LOADING);
+            expect(actions[1].value).toBe(false);
         }, BASE_STATE, done);
     });
 });

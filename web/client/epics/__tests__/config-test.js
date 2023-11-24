@@ -8,7 +8,8 @@
 
 import expect from 'expect';
 import {head} from 'lodash';
-import {loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoEpic, backgroundsListInitEpic} from '../config';
+import {loadMapConfigAndConfigureMap, loadMapInfoEpic, storeDetailsInfoDashboardEpic, storeDetailsInfoEpic, backgroundsListInitEpic} from '../config';
+
 import {LOAD_USER_SESSION} from '../../actions/usersession';
 import {
     loadMapConfig,
@@ -31,6 +32,7 @@ import testConfigEPSG31468 from "raw-loader!../../test-resources/testConfigEPSG3
 import ConfigUtils from "../../utils/ConfigUtils";
 import { DETAILS_LOADED } from '../../actions/details';
 import { EMPTY_RESOURCE_VALUE } from '../../utils/MapInfoUtils';
+import { dashboardLoaded } from '../../actions/dashboard';
 
 const api = {
     getResource: () => Promise.resolve({mapId: 1234})
@@ -346,7 +348,7 @@ describe('config epics', () => {
 
                     switch (action.type) {
                     case DETAILS_LOADED:
-                        expect(action.mapId).toBe(mapId);
+                        expect(action.id).toBe(mapId);
                         expect(action.detailsUri).toBe("rest/geostore/data/1/raw?decode=datauri");
                         break;
                     default:
@@ -455,6 +457,108 @@ describe('config epics', () => {
                 });
                 done();
             }, {});
+        });
+    });
+
+    describe("storeDetailsInfoDashboardEpic", () => {
+        beforeEach(done => {
+            mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+
+        afterEach(done => {
+            mockAxios.restore();
+            setTimeout(done);
+        });
+        const dashboardId = 1;
+        const dashboardAttributesEmptyDetails = {
+            "AttributeList": {
+                "Attribute": [
+                    {
+                        "name": "details",
+                        "type": "STRING",
+                        "value": EMPTY_RESOURCE_VALUE
+                    }
+                ]
+            }
+        };
+
+        const dashboardAttributesWithoutDetails = {
+            "AttributeList": {
+                "Attribute": []
+            }
+        };
+
+        const dashboardAttributesWithDetails = {
+            AttributeList: {
+                Attribute: [
+                    {
+                        name: 'details',
+                        type: 'STRING',
+                        value: 'rest\/geostore\/data\/1\/raw?decode=datauri'
+                    },
+                    {
+                        name: "thumbnail",
+                        type: "STRING",
+                        value: 'rest\/geostore\/data\/1\/raw?decode=datauri'
+                    },
+                    {
+                        name: 'owner',
+                        type: 'STRING',
+                        value: 'admin'
+                    }
+                ]
+            }
+        };
+        it('test storeDetailsInfoDashboardEpic', (done) => {
+            mockAxios.onGet().reply(200, dashboardAttributesWithDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoDashboardEpic), 1, dashboardLoaded("RES", "DATA"), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+
+                    switch (action.type) {
+                    case DETAILS_LOADED:
+                        expect(action.id).toBe(dashboardId);
+                        expect(action.detailsUri).toBe("rest/geostore/data/1/raw?decode=datauri");
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {dashboard: {
+                resource: {
+                    id: dashboardId,
+                    attributes: {}
+                }
+            }});
+        });
+        it('test storeDetailsInfoDashboardEpic when api returns NODATA value', (done) => {
+            // const mock = new MockAdapter(axios);
+            mockAxios.onGet().reply(200, dashboardAttributesWithoutDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoDashboardEpic), 1, dashboardLoaded("RES", "DATA"), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+                done();
+            }, {dashboard: {
+                resource: {
+                    id: dashboardId,
+                    attributes: {}
+                }
+            }});
+        });
+        it('test storeDetailsInfoDashboardEpic when api doesnt return details', (done) => {
+            mockAxios.onGet().reply(200, dashboardAttributesEmptyDetails);
+            testEpic(addTimeoutEpic(storeDetailsInfoDashboardEpic), 1, dashboardLoaded("RES", "DATA"), actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => expect(action.type).toBe(TEST_TIMEOUT));
+                done();
+            }, {dashboard: {
+                resource: {
+                    id: dashboardId,
+                    attributes: {}
+                }
+            }});
         });
     });
 });
