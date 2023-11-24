@@ -36,7 +36,7 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
             source.addFeatures(
                 source.getFormat().readFeatures(response.data));
             source.set('@wfsFeatureCollection', response.data);
-            options.onLoadEnd();
+            options.onLoadEnd && options.onLoadEnd();
         } else {
             onError();
         }
