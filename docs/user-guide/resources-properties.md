@@ -45,16 +45,16 @@ How to manage users and groups is a topic present in the [Managing Users](managi
 
 ## Details
 
-Only for resources of type map, it is possible to add details to the map. This is useful to associate some information to the map or an overview description of its content. In this case the *Edit properties* window is the following:
+For *Map* and *Dashboard* resources, it is possible to add details. This is useful to associate some information to the map/dashboard or an overview description of its content. In this case the *Edit properties* window is the following:
 
 <img src="../img/resource-properties/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-With a click on the **Add new details** button <img src="../img/button/add_details_button.jpg" class="ms-docbutton"/> it opens a panel where the user can write the details of the map.
+With a click on the **Add new details** button <img src="../img/button/add_details_button.jpg" class="ms-docbutton"/> it opens a panel where the user can write the details.
 
 <img src="../img/resource-properties/details_panel.jpg" class="ms-docimage"/>
 
 The text can be edited and some links and images can be added through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar).
-Once the editing is done, the map details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other buttons appear on the *Edit properties* panel.
+Once the editing is done, the details can be saved with the **Save** button <img src="../img/button/save_large_button.jpg" class="ms-docbutton"/> and other buttons appear on the *Edit properties* panel.
 
 <img src="../img/resource-properties/details_sheet_buttons.jpg" class="ms-docimage"/>
 
@@ -69,16 +69,16 @@ Here, the user is allowed to:
 <img src="../img/resource-properties/show-as-modal.jpg" class="ms-docimage"/>
 
 !!! note
-    If the **Show as modal** button is not activated once the user opens the *About this map* button, the details are displayed on a panel. <img src="../img/resource-properties/show-as-panel.jpg" class="ms-docimage"/>
+    If the **Show as modal** button is not activated once the user opens the *About this map/dashboard* button, the details are displayed on a panel. <img src="../img/resource-properties/show-as-panel.jpg" class="ms-docimage"/>
 
 !!! warning
-    The *About this map* button is visible in the [Side Toolbar](mapstore-toolbars.md#side-toolbar) only when the details are present on the map.
+    The *About this map/dashboard* button is visible in the [Side Toolbar](mapstore-toolbars.md#side-toolbar) only when the details are present on the map/dashboard.
 
-* Enable the **Show at startup** <img src="../img/button/show-at-starup-button.jpg" class="ms-docbutton"/> button. If active, as soon as the user opens the map, the details panel is visualized.
+* Enable the **Show at startup** <img src="../img/button/show-at-starup-button.jpg" class="ms-docbutton"/> button. If active, as soon as the user opens the map/dashboard, the details panel is visualized.
 
 * **Delete** the details sheet <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>
 
-Once the details are saved, the **Show details** button <img src="../img/button/details_button.jpg" class="ms-docbutton"/> appears also on the map card in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/)
+Once the details are saved, the **Show details** button <img src="../img/button/details_button.jpg" class="ms-docbutton"/> appears also on the map/dashboard card in [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
 <img src="../img/resource-properties/card-map-details-button.jpg" class="ms-docimage" style="max-width:400px;"/>
 
