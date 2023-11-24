@@ -2147,7 +2147,7 @@
                 "gauge": "Mostra etichette"
             },
             "advanced": {
-              "hoverlabel": "Stile del popup",
+              "font": "Font",
               "displayCartesian": "Nascondi griglia",
               "xAxis": "Asse X",
               "xAxisAngle": "Rotazione etichetta",

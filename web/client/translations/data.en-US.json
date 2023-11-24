@@ -2146,7 +2146,7 @@
                 "gauge": "Display labels"
             },
             "advanced": {
-              "hoverlabel": "Popup style",
+              "font": "Font",
               "displayCartesian": "Hide Grid",
               "xAxis": "X axis",
               "xAxisAngle": "Label rotation",
