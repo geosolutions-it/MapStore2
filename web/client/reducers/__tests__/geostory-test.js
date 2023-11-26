@@ -121,6 +121,22 @@ describe('geostory reducer', () => {
     });
     describe('update contents', () => {
         const STATE_STORY = geostory(undefined, setCurrentStory(TEST_STORY));
+        it('should handle UPDATE action with fontFamilies and mode merge', () => {
+            const initialState = {
+                currentStory: {
+                    fontFamilies: ['Arial', 'Helvetica']
+                }
+            };
+            const action = {
+                type: 'UPDATE',
+                path: 'fontFamilies',
+                mode: 'merge',
+                element: ['Times New Roman', 'Arial', 'Verdana'],
+                options: { uniqueByKey: 'id' }
+            };
+            const newState = geostory(initialState, action);
+            expect(newState).toBe(initialState);
+        });
         it('update with index path', () => {
             const TEST_CONTENT = "<h1>UNIT TEST CONTENT</h1>";
             const pathToContentHtml = `sections[0].contents[0].html`;
