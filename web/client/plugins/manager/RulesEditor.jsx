@@ -47,6 +47,12 @@ class RuleEditor extends React.Component {
         onDelete: () => {},
         type: ""
     }
+    constructor(props) {
+        super(props);
+        this.state = {
+            editedAttributes: []
+        };
+    }
     render() {
         const { loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties, disableDetails} = this.props;
         const {modalProps} = this.state || {};
@@ -68,9 +74,15 @@ class RuleEditor extends React.Component {
                 <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"}/>
                 <StylesEditor styles={styles} key="styles-editor" constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
                 <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule && activeRule.constraints} active={activeEditor === "3"}/>
-                <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption}/>
+                <AttributesEditor editedAttributes={this.state.editedAttributes} setEditedAttributes={this.handleSetEditedAttrbiutes.bind(this)} key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule && activeRule.constraints} setOption={setConstraintsOption}/>
                 <ModalDialog {...modalProps}/>
             </BorderLayout>);
+    }
+    clearHighlighedEditsInAttributes() {
+        this.setState({ editedAttributes: [] });
+    }
+    handleSetEditedAttrbiutes(attr) {
+        this.setState({ editedAttributes: [...this.state.editedAttributes, attr] });
     }
     cancelEditing = () => {
         const {activeRule, initRule, onExit} = this.props;
@@ -84,7 +96,11 @@ class RuleEditor extends React.Component {
                 {
                     text: <Message msgId="yes"/>,
                     bsStyle: 'primary',
-                    onClick: onExit
+                    onClick: () => {
+                        // check if there is edits in attributes clear highlight
+                        this.state.editedAttributes.length && this.clearHighlighedEditsInAttributes();
+                        onExit();
+                    }
                 }
                 ], closeAction: this.cancel, msg: "map.details.sureToClose"}}));
         } else {
@@ -97,6 +113,8 @@ class RuleEditor extends React.Component {
     save = () => {
         const {activeRule, onSave} = this.props;
         if (isRuleValid(activeRule)) {
+            // check if there is edits in attributes clear highlight
+            this.state.editedAttributes.length && this.clearHighlighedEditsInAttributes();
             onSave(activeRule);
         } else {
             this.setState( () => ({modalProps: {title: "featuregrid.toolbar.saveChanges",
