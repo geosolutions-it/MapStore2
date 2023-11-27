@@ -2151,6 +2151,7 @@
                 "gauge": "Mostrar etiquetas"
             },
             "advanced": {
+              "font": "Fuente",
               "displayCartesian": "Ocultar cuadrícula",
               "xAxis": "Eje X",
               "xAxisAngle": "Rotación de etiquetas",

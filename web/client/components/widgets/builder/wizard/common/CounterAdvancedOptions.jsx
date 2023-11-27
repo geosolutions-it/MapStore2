@@ -10,6 +10,10 @@ import PropTypes from 'prop-types';
 import Format from './Format';
 import Formula from './Formula';
 import Message from '../../../../I18N/Message';
+import Font from './Font';
+import { FONT } from '../../../../../utils/WidgetsUtils';
+
+
 function CounterAdvancedOptions({
     data,
     onChange = () => {}
@@ -21,6 +25,15 @@ function CounterAdvancedOptions({
             </div>
             <Format prefix="counterOpts" data={data} onChange={onChange}/>
             <Formula data={data} onChange={onChange}/>
+            <Font
+                color={data?.counterOpts?.layout?.color || FONT.COLOR}
+                disabled={false}
+                fontFamily={data?.counterOpts?.layout?.fontFamily || FONT.FAMILY}
+                options={["color",  "family"]}
+                onChange={(key, val) => {
+                    onChange(`counterOpts.layout.${key}`, val);
+                }}
+            />
         </>
     );
 }

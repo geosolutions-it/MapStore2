@@ -2189,6 +2189,7 @@
                 "gauge": "Legende anzeigen"
             },
             "advanced": {
+                "font": "Schriftart",
                 "displayCartesian": "Gitter ausblenden",
                 "xAxis": "X-Achse",
                 "xAxisAngle": "Beschriftungsdrehung",

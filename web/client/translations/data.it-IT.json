@@ -2152,6 +2152,7 @@
                 "gauge": "Mostra etichette"
             },
             "advanced": {
+              "font": "Font",
               "displayCartesian": "Nascondi griglia",
               "xAxis": "Asse X",
               "xAxisAngle": "Rotazione etichetta",

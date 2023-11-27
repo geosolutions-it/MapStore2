@@ -9,15 +9,16 @@ import React, { useState } from 'react';
 import { isNil, castArray } from 'lodash';
 import uuidv1 from "uuid/v1";
 import Select from 'react-select';
-import ColorSelector from '../../../../style/ColorSelector';
 import { FormGroup, Radio, ControlLabel, InputGroup, Checkbox, Button as ButtonRB, Glyphicon, FormControl } from 'react-bootstrap';
+
 import ChartValueFormatting from './ChartValueFormatting';
 import Message from '../../../../I18N/Message';
-
+import Font from '../common/Font';
 import InfoPopover from '../../../widget/InfoPopover';
 import tooltip from '../../../../misc/enhancers/tooltip';
 import localizedProps from '../../../../misc/enhancers/localizedProps';
 import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
+import { FONT } from '../../../../../utils/WidgetsUtils';
 
 const Button = tooltip(ButtonRB);
 const AxisTypeSelect = localizedProps('options')(Select);
@@ -185,35 +186,13 @@ function AxisOptions({
                     />
                 </InputGroup>
             </FormGroup>
-            <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId={'styleeditor.color'} /></ControlLabel>
-                <InputGroup>
-                    <ColorSelector
-                        disabled={!!options.hide}
-                        format="rgb"
-                        color={options?.color || '#000000'}
-                        onChangeColor={(color) => color && handleChange('color', color)}
-                    />
-                </InputGroup>
-            </FormGroup>
-            <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId={'styleeditor.fontSize'} /></ControlLabel>
-                <InputGroup style={{ maxWidth: 90 }}>
-                    <DebouncedFormControl
-                        type="number"
-                        disabled={!!options.hide}
-                        value={options.fontSize || 12}
-                        min={1}
-                        step={1}
-                        fallbackValue={12}
-                        style={{ zIndex: 0 }}
-                        onChange={(value) => {
-                            handleChange('fontSize', value);
-                        }}
-                    />
-                    <InputGroup.Addon>px</InputGroup.Addon>
-                </InputGroup>
-            </FormGroup>
+            <Font
+                color={options?.color || chart?.layout?.color || FONT.COLOR}
+                fontSize={options?.fontSize || chart?.layout?.fontSize || FONT.SIZE}
+                fontFamily={options?.fontFamily || chart?.layout?.fontFamily || FONT.FAMILY}
+                disabled={!!options.hide}
+                onChange={handleChange}
+            />
             {!hideValueFormatting && <ChartValueFormatting
                 options={options}
                 hideFormula

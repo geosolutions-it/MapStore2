@@ -2151,6 +2151,7 @@
                 "gauge": "Afficher les étiquettes"
             },
             "advanced": {
+              "font": "Police de caractère",
               "displayCartesian": "Masquer la grille",
               "xAxis": "Axe X",
               "xAxisAngle": "Rotation des étiquettes",

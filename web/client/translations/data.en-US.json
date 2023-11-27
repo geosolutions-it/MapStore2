@@ -2151,6 +2151,7 @@
                 "gauge": "Display labels"
             },
             "advanced": {
+              "font": "Font",
               "displayCartesian": "Hide Grid",
               "xAxis": "X axis",
               "xAxisAngle": "Label rotation",

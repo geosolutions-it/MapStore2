@@ -17,7 +17,8 @@ import {
     legacyChartToChartWithTraces,
     parseNumber,
     parsePieNoAggregationFunctionData,
-    enableBarChartStack
+    enableBarChartStack,
+    FONT
 } from '../../utils/WidgetsUtils';
 
 const Plot = React.lazy(() => import('./PlotlyChart'));
@@ -76,6 +77,7 @@ const chartDataTypes = {
         name: traceName,
         classifyGeoJSON,
         textinfo,
+        layout = {},
         tickPrefix,
         format,
         tickSuffix,
@@ -161,6 +163,13 @@ const chartDataTypes = {
                             text: classificationDataKey === valueDataKey ? classificationDataKey : `${valueDataKey} | ${classificationDataKey}`
                         },
                         hovertemplate: `%{label}<br>${classificationDataKey}<br>%{value}<br>%{percent}<extra></extra>`,
+                        hoverlabel: {
+                            font: {
+                                color: layout.color || FONT.COLOR,
+                                family: layout.fontFamily || FONT.FAMILY,
+                                size: layout.fontSize || FONT.SIZE
+                            }
+                        },
                         domain: {
                             x: [0.2, 0.8],
                             y: [0.2, 0.8]
@@ -180,6 +189,13 @@ const chartDataTypes = {
                 legendgroup: id,
                 legendgrouptitle: {
                     text: name
+                },
+                hoverlabel: {
+                    font: {
+                        color: layout?.color || FONT.COLOR,
+                        family: layout?.fontFamily || FONT.FAMILY,
+                        size: layout?.fontSize || FONT.SIZE
+                    }
                 },
                 hovertemplate: `%{label}<br>${valueDataKey}<br>${tickPrefix ?? ""}%{value${format ? `:${format}` : ''}}${tickSuffix ?? ""}<br>%{percent}<extra></extra>`,
                 domain,
@@ -324,6 +340,7 @@ const getData = ({
     name,
     classifyGeoJSONSync,
     textinfo,
+    layout,
     tickPrefix,
     format,
     tickSuffix,
@@ -344,6 +361,7 @@ const getData = ({
         yAxisOpts,
         xAxisOpts,
         textinfo,
+        layout,
         tickPrefix,
         format,
         tickSuffix,
@@ -371,6 +389,7 @@ function getLayoutOptions({
     xAxisOpts = [],
     yAxisOpts = [],
     barChartType,
+    layout = {},
     height,
     width
 }) {
@@ -385,7 +404,6 @@ function getLayoutOptions({
     const bottom = bottomPx === 0 ? 0 : bottomPx / height;
     const top = topPX === 0 ? 1 : 1 - (topPX / height);
 
-    const defaultFontSize = 12;
 
     const yAxises = (yAxisOpts).reduce((acc, options, idx) => {
         return {
@@ -397,7 +415,7 @@ function getLayoutOptions({
                 showticklabels: !options.hide,
                 nticks: options.nTicks, // max number of ticks, to avoid performance issues
                 showgrid: cartesian,
-                color: options.color,
+                color: options.color || layout.color,
                 side: options.side,
                 anchor: options.anchor || 'x',
                 ...(options.anchor === 'free' && {
@@ -408,11 +426,13 @@ function getLayoutOptions({
                 title: {
                     text: options.title,
                     font: {
-                        size: options.fontSize || defaultFontSize
+                        size: options.fontSize || layout.fontSize  || FONT.SIZE,
+                        family: options.fontFamily || layout.fontFamily || FONT.FAMILY
                     }
                 },
                 tickfont: {
-                    size: options.fontSize || defaultFontSize
+                    size: options.fontSize || layout.fontSize  || FONT.SIZE,
+                    family: options.fontFamily || layout.fontFamily || FONT.FAMILY
                 },
                 tickformat: options?.format,
                 tickprefix: options?.tickPrefix,
@@ -438,7 +458,7 @@ function getLayoutOptions({
                 showticklabels: !options.hide,
                 nticks: options.nTicks, // max number of ticks, to avoid performance issues
                 showgrid: cartesian,
-                color: options.color,
+                color: options.color || layout.color,
                 side: options.side,
                 anchor: options.anchor || 'y',
                 ...(options.anchor === 'free' && {
@@ -449,11 +469,13 @@ function getLayoutOptions({
                 title: {
                     text: options.title,
                     font: {
-                        size: options.fontSize || defaultFontSize
+                        size: options.fontSize || layout.fontSize  || FONT.SIZE,
+                        family: options.fontFamily || layout.fontFamily || FONT.FAMILY
                     }
                 },
                 tickfont: {
-                    size: options.fontSize || defaultFontSize
+                    size: options.fontSize || layout.fontSize  || FONT.SIZE,
+                    family: options.fontFamily || layout.fontFamily || FONT.FAMILY
                 },
 
                 ...(idx !== 0
@@ -504,7 +526,8 @@ export const toPlotly = (_props) => {
         width,
         legend,
         classifyGeoJSONSync,
-        cartesian
+        cartesian,
+        layout
     } = props;
     const isModeBarVisible = width > 350;
     const traces = props.traces || [];
@@ -534,9 +557,15 @@ export const toPlotly = (_props) => {
                 xAxisOpts,
                 yAxisOpts,
                 barChartType,
+                layout,
                 height,
                 width
             }),
+            font: {
+                color: layout?.color || FONT.COLOR,
+                size: layout?.fontSize || FONT.SIZE,
+                family: layout?.fontFamily || FONT.FAMILY
+            },
             margin: getMargins({ isModeBarVisible }),
             autosize: false,
             height,
@@ -583,6 +612,7 @@ export const toPlotly = (_props) => {
                 name,
                 classifyGeoJSONSync,
                 textinfo,
+                layout,
                 tickPrefix,
                 format,
                 tickSuffix,
