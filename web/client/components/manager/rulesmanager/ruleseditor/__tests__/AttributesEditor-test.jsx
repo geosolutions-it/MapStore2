@@ -51,5 +51,15 @@ describe('Attributes Editor component', () => {
         expect(rows).toExist();
         expect(rows.length).toBe(3);
     });
+    it('render attributes with highlighted DD', () => {
+        ReactDOM.render(<AttributesEditor editedAttributes={["cat"]} attributes={attributes} active constraints={constraints} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const rows = container.querySelectorAll('.row');
+        const highlights = container.querySelectorAll('.highlighted-dd');
+        expect(rows).toExist();
+        expect(highlights).toExist();
+        expect(rows.length).toBe(3);
+        expect(highlights.length).toBe(1);
+    });
 
 });
