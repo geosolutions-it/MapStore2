@@ -9,7 +9,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect, createPlugin } from '../utils/PluginsUtils';
-import { loadFont } from '../utils/AgentUtils';
 import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
@@ -108,8 +107,6 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  *    {
  *      "name": "Map",
  *      "cfg": {
- *        "shouldLoadFont": true,
- *        "fonts": ['FontAwesome'],
  *        "tools": ["overview", "scalebar", "draw", {
  *          "leaflet": {
  *            "name": "test",
@@ -128,20 +125,8 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
  *
- * You can also specify a list of fonts that have to be loaded before map rendering
- * if the shouldLoadFont is true
- * This font pre-load list is required if you're using canvas based mapping libraries (e.g. OpenLayers) and you need to show markers with symbols (e.g. Annotations).
- * For each font you must specify the font name used in the `@font-face` inside the "fonts" array property. Note: the `@font-face` declaration must be present in css of the page, otherwise the font can not be loaded anyway.
- * ```
- * {
- *    "name": "Map",
- *    "cfg": {
- *      "shouldLoadFont": true,
- *      "fonts": ['FontAwesome']
- *    }
- *  }
- * ```
- * For more info on metadata visit [fontfaceobserver](https://github.com/bramstein/fontfaceobserver)
+ * You can no longer specify a list of fonts that have to be loaded before map rendering, we are now only loading FontAwesome for the icons
+ * We will pre-load FontAwesome only if needed, i.e you need to show markers with symbols (e.g. Annotations).
  *
  * An additional feature to is limit the area and/or the minimum level of zoom in the localConfig.json file using "mapConstraints" property
  *
@@ -210,7 +195,6 @@ class MapPlugin extends React.Component {
         loadingSpinner: PropTypes.bool,
         loadingError: PropTypes.string,
         tools: PropTypes.array,
-        fonts: PropTypes.array,
         options: PropTypes.object,
         mapOptions: PropTypes.object,
         projectionDefs: PropTypes.array,
@@ -219,7 +203,6 @@ class MapPlugin extends React.Component {
         actions: PropTypes.object,
         features: PropTypes.array,
         securityToken: PropTypes.string,
-        shouldLoadFont: PropTypes.bool,
         elevationEnabled: PropTypes.bool,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         localizedLayerStylesName: PropTypes.string,
@@ -239,7 +222,6 @@ class MapPlugin extends React.Component {
         tools: ["scalebar", "draw", "highlight", "popup", "box"],
         options: {},
         mapOptions: {},
-        fonts: ['FontAwesome'],
         toolsOptions: {
             measurement: {},
             locate: {},
@@ -261,7 +243,6 @@ class MapPlugin extends React.Component {
         },
         securityToken: '',
         additionalLayers: [],
-        shouldLoadFont: false,
         elevationEnabled: false,
         onResolutionsChange: () => {},
         items: [],
@@ -274,25 +255,7 @@ class MapPlugin extends React.Component {
     };
 
     UNSAFE_componentWillMount() {
-        const {shouldLoadFont, fonts} = this.props;
-
-        // load each font before rendering (see issue #3155)
-        if (shouldLoadFont && fonts) {
-            this.setState({canRender: false});
-
-            Promise.all(
-                fonts.map(f =>
-                    loadFont(f, {
-                        timeoutAfter: 5000 // 5 seconds in milliseconds
-                    }).catch((error) => {
-                        console.warn("Fonts loading check for map style responded slowly or with an error. Fonts in map may not be rendered correctly. This is not necessarily an issue.", error);  // eslint-disable-line no-console
-                    }
-                    ))
-            ).then(() => {
-                this.setState({canRender: true});
-            });
-
-        }
+        // moved the font load of FontAwesome only to styleParseUtils (#9653)
         this.updatePlugins(this.props);
         this._isMounted = true;
     }

@@ -22,6 +22,16 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.xx to 2024.01.00
 
+### Removing possibility to add custom fonts to the Map
+
+From this version we limited the load of the font to FontAwesome.
+
+If you have changed the property **fonts** inside Map plugin it will not longer load the font. A possible fix would be to add the font to the `*.html` files in your application.
+
+- make sure that the `localConfig.json` does not have **fonts** property in  **Map**  plugin
+
+The following css is added automatically if needed `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>` inside the *head* tag.
+
 ### Fixing background config
 
 From this version in order to fix default 3d background config a change is needed here:
