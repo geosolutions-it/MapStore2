@@ -16,7 +16,6 @@ const {
     autoSearchEpic,
     openCatalogEpic,
     recordSearchEpic,
-    getSupportedFormatsEpic,
     updateGroupSelectedMetadataExplorerEpic,
     newCatalogServiceAdded
 } = catalog(API);
@@ -34,9 +33,6 @@ import {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     SET_LOADING,
-    formatOptionsFetch,
-    FORMAT_OPTIONS_LOADING,
-    SET_FORMAT_OPTIONS,
     ADD_LAYER_AND_DESCRIBE,
     addLayerAndDescribe,
     DESCRIBE_ERROR,
@@ -746,35 +742,6 @@ describe('catalog Epics', () => {
                     pageSize: 2
                 }
             });
-    });
-    it('getSupportedFormatsEpic wms', (done) => {
-        const NUM_ACTIONS = 3;
-        const url = "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml";
-        testEpic(addTimeoutEpic(getSupportedFormatsEpic, 0), NUM_ACTIONS, formatOptionsFetch(url), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            try {
-                actions.map((action) => {
-                    switch (action.type) {
-                    case SET_FORMAT_OPTIONS:
-                        expect(action.formats).toBeTruthy();
-                        expect(action.formats.imageFormats).toEqual(['image/png', 'image/gif', 'image/jpeg', 'image/png8', 'image/png; mode=8bit', 'image/vnd.jpeg-png']);
-                        expect(action.formats.infoFormats).toEqual(['text/plain', 'text/html', 'application/json']);
-                        break;
-                    case FORMAT_OPTIONS_LOADING:
-                        break;
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(true).toBe(false);
-                    }
-                });
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, {
-            catalog: {}
-        });
     });
 
     it('updateGroupSelectedMetadataExplorerEpic allows clicking on group to set destination to current group', done => {

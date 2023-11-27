@@ -22,7 +22,10 @@ import {
     selectedDashboardServiceSelector,
     dashboardCatalogModeSelector,
     dashboardIsNewServiceSelector,
-    dashboardSaveServiceSelector
+    dashboardSaveServiceSelector,
+    dashboardResourceInfoSelector,
+    dashbaordInfoDetailsUriFromIdSelector,
+    dashboardInfoDetailsSettingsFromIdSelector
 } from '../dashboard';
 
 describe('dashboard selectors', () => {
@@ -122,5 +125,28 @@ describe('dashboard selectors', () => {
     it("getDashboardId should return undefined in case resource does not exists", () => {
         expect(getDashboardId({dashboard: {resource: {}}})).toBe(undefined);
     });
-
+    it("test dashboardResourceInfoSelector", () => {
+        const resource = {};
+        expect(dashboardResourceInfoSelector({dashboard: {
+            resource: resource
+        }})).toBe(resource);
+    });
+    it("test dashbaordInfoDetailsUriFromIdSelector", () => {
+        expect(dashbaordInfoDetailsUriFromIdSelector({dashboard: {
+            resource: {
+                attributes: {
+                    details: "Details"
+                }
+            }
+        }})).toBe("Details");
+    });
+    it("test dashboardInfoDetailsSettingsFromIdSelector", () => {
+        expect(dashboardInfoDetailsSettingsFromIdSelector({dashboard: {
+            resource: {
+                attributes: {
+                    detailsSettings: "detailsSettings"
+                }
+            }
+        }})).toBe("detailsSettings");
+    });
 });

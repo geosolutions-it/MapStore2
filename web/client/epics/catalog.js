@@ -11,6 +11,7 @@ import axios from 'axios';
 import xpathlib from 'xpath';
 import { DOMParser } from 'xmldom';
 import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
+
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -19,7 +20,6 @@ import {
     GET_METADATA_RECORD_BY_ID,
     TEXT_SEARCH,
     CATALOG_CLOSE,
-    FORMAT_OPTIONS_FETCH,
     addCatalogService,
     setLoading,
     deleteCatalogService,
@@ -31,8 +31,6 @@ import {
     resetCatalog,
     textSearch,
     changeSelectedService,
-    formatsLoading,
-    setSupportedFormats,
     ADD_LAYER_AND_DESCRIBE,
     describeError,
     addLayer,
@@ -53,7 +51,6 @@ import {
     selectedCatalogSelector,
     searchOptionsSelector,
     catalogSearchInfoSelector,
-    getFormatUrlUsedSelector,
     isActiveSelector, servicesSelectorWithBackgrounds
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
@@ -64,11 +61,11 @@ import {
     buildSRSMap,
     extractOGCServicesReferences
 } from '../utils/CatalogUtils';
-import { getSupportedFormat, getCapabilities, describeLayers, flatLayers } from '../api/WMS';
+import { getCapabilities, describeLayers, flatLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace} from '../utils/LayersUtils';
-import { wrapStartStop } from '../observables/epics';
+
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
 import { projectionSelector } from '../selectors/map';
@@ -501,36 +498,8 @@ export default (API) => ({
             }),
 
     /**
-     * Fetch all supported formats of a WMS service configured (infoFormats and imageFormats)
-     * Dispatches an action that sets the supported formats of the service.
-     * @param {Observable} action$ the actions triggered
-     * @param {object} getState store object
-     * @memberof epics.catalog
-     * @return {external:Observable}
-     */
-    getSupportedFormatsEpic: (action$, {getState = ()=> {}} = {}) =>
-        action$.ofType(FORMAT_OPTIONS_FETCH)
-            .filter((action)=> action.force || getFormatUrlUsedSelector(getState()) !== action?.url)
-            .switchMap(({url = ''} = {})=> {
-                return Rx.Observable.defer(() => getSupportedFormat(url, true))
-                    .switchMap((supportedFormats) => Rx.Observable.of(setSupportedFormats(supportedFormats, url)))
-                    .let(
-                        wrapStartStop(
-                            formatsLoading(true),
-                            formatsLoading(false),
-                            () => {
-                                return Rx.Observable.of(
-                                    error({ title: "layerProperties.format.error.title", message: 'layerProperties.format.error.message' }),
-                                    formatsLoading(false)
-                                );
-                            }
-                        )
-                    );
-            }),
-
-    /**
     * Sets control property to currently selected group when catalogue is open
-    * Sets the currently selected group as the detination of new layers in catalogue
+    * Sets the currently selected group as the destination of new layers in catalogue
     * if a layer instead of a group is selected it resets the groupId to Default
     *  Action performed: setControlProperty (only if catalogue is open)
     * @memberof epics.layers

@@ -57,8 +57,8 @@
             "404": "Fichier de traduction introuvable"
         },
         "details": {
-            "title": "À propos de cette carte",
-            "tooltip": "À propos de cette carte"
+            "title": "À propos de cette contenu",
+            "tooltip": "À propos de cette contenu"
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
@@ -116,6 +116,7 @@
             "heightOffset": "Décalage en hauteur (m)",
             "wmsLayerTileSize": "Taille de la tuile (WMS)",
             "serverType": "Type de serveur",
+            "formatError": "Il n'a pas été possible de récupérer le format et le format de la fiche d'information à partir du service configuré. Vous utilisez probablement un service No Vendor et celui-ci n'est pas pris en charge (par exemple GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -156,6 +157,21 @@
                 "scale": "Échelle",
                 "resolution": "Résolution"
             },
+            "3dTiles": {
+                "format": "Formater",
+                "3dModel": "Modèle 3D",
+                "pointCloud": "Nuage de points",
+                "pointCloudShading": {
+                    "title": "Options de visualisation",
+                    "attenuationInfo": "Effectuer une atténuation de point en fonction de la distance du point de vue actuel",
+                    "attenuation": "Activer l'atténuation",
+                    "maximumAttenuation": "Atténuation maximale",
+                    "eyeDomeLightingInfo": "Cela permet à un éclairage du dôme oculaire d'améliorer la visualisation du nuage de points. Cela ne représente pas l'éclairage réel du soleil",
+                    "eyeDomeLighting": "Activer l'éclairage",
+                    "eyeDomeLightingStrength": "Force d'éclairage",
+                    "eyeDomeLightingRadius": "Rayon d'éclairage"
+                }
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -182,6 +198,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Tile",
+                "information": "Fiche d'information",
                 "refresh": "Récupérer les formats pris en charge",
                 "loading": "Chargement...",
                 "noOption": "Pas d'option",
@@ -222,7 +240,8 @@
             "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
             "saveUpdatedMap": "Toutes les couches ont bien été mises à jour",
             "incompatibleBackgroundAndProjection": "La projection que vous avez choisie n'est pas compatible avec le fond de plan. Changez pour un fond de plan compatible ou retirez le fond de plan, puis sélectionnez à nouveau la projection.",
-            "incompatibleDataAndProjection": "La/les couche(s) actuelle(s) et la projection cartographique ne sont pas totalement compatibles. Certaines données voire toutes les données risquent de ne pas apparaître sur la carte."
+            "incompatibleDataAndProjection": "La/les couche(s) actuelle(s) et la projection cartographique ne sont pas totalement compatibles. Certaines données voire toutes les données risquent de ne pas apparaître sur la carte.",
+            "errorLoadingGF":"Erreur Chargement GF Geom"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionnée",
@@ -2507,7 +2526,8 @@
             "startPoint": "Point de départ",
             "endPoint": "Point final",
             "line": "Ligne",
-            "geodesicLine": "Ligne géodésique"
+            "geodesicLine": "Ligne géodésique",
+            "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété."
         },
         "playback": {
             "settings": {

@@ -57,8 +57,8 @@
             "404": "Archivo de traducción no encontrado"
         },
         "details": {
-            "title": "Información en este mapa",
-            "tooltip": "Información en este mapa"
+            "title": "Información en este contenido",
+            "tooltip": "Información en este contenido"
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
@@ -113,6 +113,7 @@
             "heightOffset": "Desplazamiento de altura (m)",
             "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
             "serverType": "Tipo de servidor",
+            "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -153,6 +154,21 @@
                 "scale": "Escala",
                 "resolution": "Resolución"
             },
+            "3dTiles": {
+                "format": "Formato",
+                "3dModel": "Modelo 3D",
+                "pointCloud": "Nube de puntos",
+                "pointCloudShading": {
+                    "title": "Opciones de visualización",
+                    "attenuationInfo": "Realiza atenuación de puntos según la distancia desde el punto de vista actual",
+                    "attenuation": "Habilitar atenuación",
+                    "maximumAttenuation": "Atenuación máxima",
+                    "eyeDomeLightingInfo": "Esto habilita una iluminación de domo ocular para mejorar la visualización de la nube de puntos. Esto no representa la iluminación solar real",
+                    "eyeDomeLighting": "Habilitar iluminación",
+                    "eyeDomeLightingStrength": "Intensidad de iluminación",
+                    "eyeDomeLightingRadius": "Radio de iluminación"
+                }
+            },
             "tooltip": {
                 "label": "Información sobre herramientas",
                 "title": "Título",
@@ -182,6 +198,8 @@
             },
             "format": {
                 "title": "Formato",
+                "tile": "Teja",
+                "information": "Identificar el formato de respuesta",
                 "refresh": "Obtener formatos admitidos",
                 "loading": "Cargando...",
                 "noOption": "Sin opcion",
@@ -222,7 +240,8 @@
             "warningSaveUpdatedMap": "Algunas capas no han sido actualizadas correctamente",
             "saveUpdatedMap": "Todas las capas han sido actulizadas correctamente",
             "incompatibleBackgroundAndProjection":"La proyección que seleccionó no es compatible con el fondo, cambie a un fondo compatible -o un vacío-, luego seleccione esta proyección!",
-            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa"
+            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa",
+            "errorLoadingGF":"Error de carga de GF Geometry"
         },
         "dock": {
             "row": "{rowsSelected} fila seleccionada",
@@ -2507,7 +2526,8 @@
             "startPoint": "Punto de inicio",
             "endPoint": "Punto final",
             "line": "Línea",
-            "geodesicLine": "Línea geodésica"
+            "geodesicLine": "Línea geodésica",
+            "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad."
         },
         "playback": {
             "settings": {

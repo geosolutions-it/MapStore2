@@ -57,8 +57,8 @@
             "404": "Translation file not found"
         },
         "details": {
-            "title": "About this map",
-            "tooltip": "About this map"
+            "title": "About this content",
+            "tooltip": "About this content"
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",
@@ -116,6 +116,7 @@
             "heightOffset": "Height offset (m)",
             "wmsLayerTileSize": "Tile size (WMS)",
             "serverType": "Server Type",
+            "formatError": "It was not possible to fetch format and information sheet format from the service configured. Probably you are using a No Vendor service and this is not supported (e.g. GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -156,6 +157,21 @@
                 "scale": "Scale",
                 "resolution": "Resolution"
             },
+            "3dTiles": {
+                "format": "Format",
+                "3dModel": "3D Model",
+                "pointCloud": "Point Cloud",
+                "pointCloudShading": {
+                    "title": "Visualization options",
+                    "attenuationInfo": "Perform point attenuation based on the distance from the current view point",
+                    "attenuation": "Enable attenuation",
+                    "maximumAttenuation": "Maximum attenuation",
+                    "eyeDomeLightingInfo": "This enable an eye dome lighting to improve visualization of the point cloud. This does not represent the real sun lighting",
+                    "eyeDomeLighting": "Enable lighting",
+                    "eyeDomeLightingStrength": "Lighting strength",
+                    "eyeDomeLightingRadius": "Lighting radius"
+                }
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
@@ -182,6 +198,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Tile",
+                "information": "Information sheet",
                 "refresh": "Fetch supported formats",
                 "loading": "Loading...",
                 "noOption": "No option",
@@ -222,7 +240,8 @@
             "warningSaveUpdatedMap": "Some layers haven't been updated correctly.",
             "saveUpdatedMap": "All the layers have been successfully updated.",
             "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background. Switch to a compatible -or an empty- background, then select this projection.",
-            "incompatibleDataAndProjection":"The current layer(s) and map projection are not completely compatible. Parts or all of the data might not appear in the map."
+            "incompatibleDataAndProjection":"The current layer(s) and map projection are not completely compatible. Parts or all of the data might not appear in the map.",
+            "errorLoadingGF":"Error loading GF Geom"
         },
         "dock": {
             "row": "{rowsSelected} row selected",
@@ -2517,7 +2536,8 @@
             "startPoint": "Start point",
             "endPoint": "End point",
             "line": "Line",
-            "geodesicLine": "Geodesic line"
+            "geodesicLine": "Geodesic line",
+            "pointCloudSizeInfo": "The point cloud radius is applied only when the attenuation options is disabled. The attenuation option takes precedence over this property."
         },
         "playback": {
             "settings": {

@@ -22,7 +22,8 @@ class DetailsPanel extends React.Component {
         panelClassName: PropTypes.string,
         style: PropTypes.object,
         onClose: PropTypes.func,
-        width: PropTypes.number
+        width: PropTypes.number,
+        isDashboard: PropTypes.bool
     };
 
     static contextTypes = {
@@ -41,14 +42,15 @@ class DetailsPanel extends React.Component {
         },
         active: false,
         panelClassName: "details-panel",
-        width: 550
+        width: 550,
+        isDashboard: false
     };
 
     render() {
         return (
             <ResponsivePanel
                 containerId="details-container"
-                containerClassName="dock-container"
+                containerClassName={` dock-container ${this.props.isDashboard ? "leftZeroPanel" : ""}`}
                 containerStyle={this.props.dockStyle}
                 open={this.props.active}
                 size={this.props.width}

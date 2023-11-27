@@ -7,7 +7,7 @@
  */
 import { Observable } from 'rxjs';
 import axios from '../libs/ajax';
-import { get, merge, isNaN, find } from 'lodash';
+import { get, merge, isNaN, find, head } from 'lodash';
 import {
     LOAD_NEW_MAP,
     LOAD_MAP_CONFIG,
@@ -27,11 +27,27 @@ import Persistence from '../api/persistence';
 import GeoStoreApi from '../api/GeoStoreDAO';
 import { isLoggedIn, userSelector } from '../selectors/security';
 import { mapIdSelector, projectionDefsSelector } from '../selectors/map';
+import { getDashboardId } from '../selectors/dashboard';
+import { DASHBOARD_LOADED } from '../actions/dashboard';
 import {loadUserSession, USER_SESSION_LOADED, userSessionStartSaving, saveMapConfig} from '../actions/usersession';
 import { detailsLoaded, openDetailsPanel } from '../actions/details';
 import {userSessionEnabledSelector, buildSessionName} from "../selectors/usersession";
 import {getRequestParameterValue} from "../utils/QueryParamsUtils";
 import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
+import { changeLayerProperties } from '../actions/layers';
+import { createBackgroundsList, setCurrentBackgroundLayer } from '../actions/backgroundselector';
+import {
+    FORMAT_OPTIONS_FETCH,
+    formatsLoading,
+    showFormatError,
+    setSupportedFormats
+} from '../actions/catalog';
+import {
+    getFormatUrlUsedSelector
+} from '../selectors/catalog';
+import { getSupportedFormat } from '../api/WMS';
+import { wrapStartStop } from '../observables/epics';
+import { error } from '../actions/notifications';
 
 const prepareMapConfiguration = (data, override, state) => {
     const queryParamsMap = getRequestParameterValue('map', state);
@@ -211,4 +227,104 @@ export const storeDetailsInfoEpic = (action$, store) =>
                         ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
                     );
                 });
+        });
+/**
+ * Intercept MAP_CONFIG_LOADED and update background layers thumbnail
+ * Epic is placed here to better intercept and update background layers thumbnail info,
+ * when loading context with map and to avoid race condition
+ * when loading plugins and map configuration
+ * @memberof epics.config
+ * @param {Observable} action$ stream of actions
+ * @param {object} store redux store
+ * @return {external:Observable}
+ */
+export const backgroundsListInitEpic = (action$) =>
+    action$.ofType(MAP_CONFIG_LOADED)
+        .switchMap(({config}) => {
+            const backgrounds = config.map && config.map.backgrounds || [];
+            const backgroundLayers = (config.map && config.map.layers || []).filter(layer => layer.group === 'background');
+            const layerUpdateActions = backgrounds.filter(background => !!background.thumbnail).map(background => {
+                const toBlob = (data) => {
+                    const bytes = atob(data.split(',')[1]);
+                    const mimeType = data.split(',')[0].split(':')[1].split(';')[0];
+                    let buffer = new ArrayBuffer(bytes.length);
+                    let byteArray = new Uint8Array(buffer);
+                    for (let i = 0; i < bytes.length; ++i) {
+                        byteArray[i] = bytes.charCodeAt(i);
+                    }
+                    return URL.createObjectURL(new Blob([buffer], {type: mimeType}));
+                };
+                return changeLayerProperties(background.id, {thumbURL: toBlob(background.thumbnail)});
+            });
+            const currentBackground = head(backgroundLayers.filter(layer => layer.visibility));
+            return Observable.of(
+                ...layerUpdateActions.concat(createBackgroundsList(backgrounds)),
+                ...(currentBackground ? [setCurrentBackgroundLayer(currentBackground.id)] : [])
+            );
+        });
+
+export const storeDetailsInfoDashboardEpic = (action$, store) =>
+    action$.ofType(DASHBOARD_LOADED)
+        .switchMap(() => {
+            const dashboardId = getDashboardId(store.getState());
+            const isTutorialRunning = store.getState()?.tutorial?.run;
+            return !dashboardId
+                ? Observable.empty()
+                : Observable.fromPromise(
+                    GeoStoreApi.getResourceAttributes(dashboardId)
+                ).switchMap((attributes) => {
+                    let details = find(attributes, {name: 'details'});
+                    const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
+                    let detailsSettings = {};
+                    if (!details || details.value === EMPTY_RESOURCE_VALUE) {
+                        return Observable.empty();
+                    }
+
+                    try {
+                        detailsSettings = JSON.parse(detailsSettingsAttribute.value);
+                    } catch (e) {
+                        detailsSettings = {};
+                    }
+
+                    return Observable.of(
+                        detailsLoaded(dashboardId, details.value, detailsSettings),
+                        ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
+                    );
+                });
+        });
+/**
+     * this epic is moved here because it needs to work also in dashboards
+     * Fetch all supported formats of a WMS service configured (infoFormats and imageFormats)
+     * Dispatches an action that sets the supported formats of the service.
+     * @param {Observable} action$ the actions triggered
+     * @param {object} getState store object
+     * @memberof epics.catalog
+     * @return {external:Observable}
+     */
+export const getSupportedFormatsEpic = (action$, {getState = ()=> {}} = {}) =>
+    action$.ofType(FORMAT_OPTIONS_FETCH)
+        .filter((action)=> action.force || getFormatUrlUsedSelector(getState()) !== action?.url)
+        .switchMap(({url = ''} = {})=> {
+            return Observable.defer(() => getSupportedFormat(url, true))
+                .switchMap((supportedFormats) => {
+                    return Observable.of(
+                        setSupportedFormats(supportedFormats, url),
+                        showFormatError(supportedFormats.imageFormats.length === 0 && supportedFormats.infoFormats.length === 0)
+                    );
+                })
+                .let(
+                    wrapStartStop(
+                        formatsLoading(true),
+                        formatsLoading(false),
+                        () => {
+                            return Observable.of(
+                                error({
+                                    title: "layerProperties.format.error.title",
+                                    message: 'layerProperties.format.error.message'
+                                }),
+                                formatsLoading(false)
+                            );
+                        }
+                    )
+                );
         });
