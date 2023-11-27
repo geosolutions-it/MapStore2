@@ -1260,6 +1260,17 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.pointCloudShading).toBeTruthy();
                 }
+            ],
+            // Save sourceMetadata
+            [
+                {
+                    sourceMetadata: {
+                        crs: "EPSG:3946"
+                    }
+                },
+                l => {
+                    expect(l.sourceMetadata).toBeTruthy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
