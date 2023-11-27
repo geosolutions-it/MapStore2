@@ -167,11 +167,12 @@ export const toggleSettingsPanel = (withSave = false) => ({ type: TOGGLE_SETTING
  * @param {object} element the object to update
  * @param {string|object} [mode="replace"] "merge" or "replace", if "merge", the object passed as element will be merged with the original one (if present and if it is an object)
  */
-export const update = (path, element, mode = "replace") => ({
+export const update = (path, element, mode = "replace", options) => ({
     type: UPDATE,
     path,
     element,
-    mode
+    mode,
+    options
 });
 /**
  * updates the current page with current value of sectionId (future can be extended adding other info about current content).
