@@ -23,7 +23,7 @@ const getAttributeValue = (name, constraints) => {
 export default ({attributes = [], constraints = {}, setOption = () => {}, active = false, setEditedAttributes = () => {}, editedAttributes = []}) => {
     const onChange = (at) => {
         const {attributes: attrs} = constraints;
-        const attribute = (attrs && attrs.attribute?.length ? attrs.attribute : [attrs.attribute] || []).filter(e => e.name !== at.name).concat(at);
+        const attribute = ((attrs && attrs?.attribute?.length) ? attrs.attribute : (attrs?.attribute) ? [attrs.attribute] : [] || []).filter(e => e.name !== at.name).concat(at);
         setOption({key: "attributes", value: {attribute}});
         // add it to edited attribute
         if (!editedAttributes.includes(at.name)) setEditedAttributes(at.name);
