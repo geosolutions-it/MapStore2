@@ -71,7 +71,6 @@ Once the graph type has been chosen, the user can customize the trace with the f
 * **Trace style**
 * **Trace axes**
 * **Trace value formatting**
-* **Layout**
 
 ##### Trace Data
 
@@ -179,35 +178,6 @@ An example of a custom trace value tooltip can be the following:
 
 <img src="../img/widgets/custom_trace_value_tooltip.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-##### Layout
-
-For the *Bar Charts* and *Line Charts*, the *Layout* is displayed as follows:
-
-<img src="../img/widgets/layout.jpg" class="ms-docimage"  style="max-width:450px;"/>
-
-The user can:
-
-* Show/Hide the chart's grid in background with the **Hide Grid** control
-
-* Enable the chart's legend by activating **Display Legend** (available also for the *Pie Charts*)
-
-If the *Classification attribute* is added to the *Bar Chart*, in the [Trace Style](#trace-style),  the **Bar Chart Type** option is displayed.
-
-<img src="../img/widgets/bar_type.jpg" class="ms-docimage"/>
-
-The user can customize the bars by choosing between:
-
-* **Grouped**. An example can be the following:
-
-<img src="../img/widgets/grouped_chart.jpg" class="ms-docimage" style="max-width:450px;"/>
-
-* **Stacked**. An example can be the following:
-
-<img src="../img/widgets/stacked-chart.jpg" class="ms-docimage" style="max-width:450px;"/>
-
-!!! Note
-    By default, the bar chart type is **Stacked**
-
 ##### Trace legend options
 
 For the *Pie Charts*, the *Trace legend options* is available and is displayed as follows:
@@ -220,9 +190,9 @@ The user can:
 
 <img src="../img/widgets/percentages_in_legend.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-#### Customize Axes
+#### Axes
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the **Y axis** and the **X axis** for the *Bar Charts* and *Line Charts* through the *Axes*.
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the **Y axis** and the **X axis** for the *Bar Charts* and the *Line Charts* through the *Axes*.
 
 <img src="../img/widgets/axes_tab.jpg" class="ms-docimage"/>
 
@@ -239,6 +209,8 @@ Through this section, for each axis, the user is allowed to:
 * Change the **Color** through the color picker
 
 * Change the **Font size**
+
+* Select the **Font family** (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`)
 
 * Customize *Y axis* label by adding a **Prefix** (e.g. `~`), a custom **Format** (e.g. `0%: rounded percentage, '12%'` or more) or a **Suffix** (e.g. `Km`).
 
@@ -257,6 +229,41 @@ Through this section, for each axis, the user is allowed to:
 * Enable **Label rotation** to better adapt axis tick labels on the charts depending on the needs.
 
 * Choose to completely hide labels through the **Hide labels** control.
+
+#### Layout
+
+Through the *Layout* tab, the user can also customize the **Layout** of the chart and the default **Font** for all the texts present in the chart.
+
+<img src="../img/widgets/layout.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+Here the user can:
+
+* Show/Hide the chart's grid in background with the **Hide Grid** control (only for the *Bar Charts* and the *Line Charts*)
+
+* Enable the chart's legend by activating **Display Legend**
+
+* Choose the **Color** for all chart texts through the color picker (only for the *Bar Charts* and the *Line Charts*)
+
+* Change the **Font size** for all chart texts
+
+* Select the **Font family** (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) for all chart texts
+
+If the *Classification attribute* is added to the *Bar Chart*, in the [Trace Style](#trace-style),  the **Bar Chart Type** option is displayed.
+
+<img src="../img/widgets/bar_type.jpg" class="ms-docimage"/>
+
+The user can customize the bars by choosing between:
+
+* **Grouped**. An example can be the following:
+
+<img src="../img/widgets/grouped_chart.jpg" class="ms-docimage" style="max-width:450px;"/>
+
+* **Stacked**. An example can be the following:
+
+<img src="../img/widgets/stacked-chart.jpg" class="ms-docimage" style="max-width:450px;"/>
+
+!!! Note
+    By default, the bar chart type is **Stacked**
 
 #### Configure Chart Info
 
