@@ -501,11 +501,7 @@ export const getImageIdFromSymbolizer = ({
     wellKnownName
 }) => {
     if (image) {
-        return isObject(image?.args?.[0]) ? MarkerUtils.markers.extra.markerToDataUrl({
-            iconColor: image.args[0].color,
-            iconShape: image.args[0].shape,
-            iconGlyph: image.args[0].glyph
-        }) : image;
+        return image?.name === 'msMarkerIcon' ? `msMarkerIcon:${image?.args?.[0]?.color}:${image?.args?.[0]?.shape}:${image?.args?.[0]?.glyph}` : image;
     }
     return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, (strokeDasharray || []).join('_'), strokeWidth, radius].join(':');
 };
@@ -852,38 +848,21 @@ export const parseSymbolizerExpressions = (symbolizer, feature) => {
     }), {});
 };
 
-
-let loaded = false;
+let fontAwesomeLoaded = false;
 const loadFontAwesome = () => {
-    return new Promise((resolve) => {
-        const fontAwesomeHref = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-        if (!document.querySelector(`link[href='${fontAwesomeHref}']`)) {
-            const fontAwesome = document.createElement('link');
-            fontAwesome.setAttribute('rel', 'stylesheet');
-            fontAwesome.setAttribute('href', fontAwesomeHref);
-            document.head.appendChild(fontAwesome);
-            fontAwesome.onload = () => {
-                const font = document.createElement('link');
-                font.setAttribute('rel', 'preload');
-                font.setAttribute('as', 'font');
-                font.setAttribute('crossorigin', true);
-                font.setAttribute('href', "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0");
-                document.head.appendChild(font);
-                font.onload = () => {
-                    loaded = true;
-                    resolve();
-                };
-            };
-            fontAwesome.onerror = () => {
-                resolve();
-            };
-        } else {
-            if (loaded) {
-                // delaying the resolve to make sure the fontAwesome.onload is triggered before
-                resolve();
-            }
-        }
-    });
+    if (fontAwesomeLoaded) {
+        return Promise.resolve();
+    }
+    // async load of font awesome
+    return import('font-awesome/css/font-awesome.min.css')
+        .then(() => {
+            // ensure the font is loaded
+            return document.fonts.load('1rem FontAwesome')
+                .then(() => {
+                    fontAwesomeLoaded = true;
+                    return fontAwesomeLoaded;
+                });
+        });
 };
 
 /**
@@ -912,7 +891,15 @@ export const drawIcons = (geoStylerStyle, options) => {
             ...markIconSymbolizers.reduce((newSymbolizers, symbolizer) => {
                 return [
                     ...newSymbolizers,
-                    ...(supportedFeatures || []).map((feature) => parseSymbolizerExpressions(symbolizer, feature))
+                    ...(supportedFeatures || []).map((feature) => {
+                        const newSymbolizer = parseSymbolizerExpressions(symbolizer, feature);
+                        return {
+                            ...newSymbolizer,
+                            // exclude msMarkerIcon from parsing
+                            // the getImageFromSymbolizer is already taking into account this case
+                            ...(symbolizer?.image?.name === 'msMarkerIcon' && { image: symbolizer.image })
+                        };
+                    })
                 ];
             }, [])
         ];
