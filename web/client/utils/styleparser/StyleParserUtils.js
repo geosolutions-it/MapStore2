@@ -853,6 +853,7 @@ export const parseSymbolizerExpressions = (symbolizer, feature) => {
 };
 
 
+let loaded = false;
 const loadFontAwesome = () => {
     return new Promise((resolve) => {
         const fontAwesomeHref = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
@@ -862,13 +863,25 @@ const loadFontAwesome = () => {
             fontAwesome.setAttribute('href', fontAwesomeHref);
             document.head.appendChild(fontAwesome);
             fontAwesome.onload = () => {
-                resolve();
+                const font = document.createElement('link');
+                font.setAttribute('rel', 'preload');
+                font.setAttribute('as', 'font');
+                font.setAttribute('crossorigin', true);
+                font.setAttribute('href', "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff?v=4.7.0");
+                document.head.appendChild(font);
+                font.onload = () => {
+                    loaded = true;
+                    resolve();
+                };
             };
             fontAwesome.onerror = () => {
                 resolve();
             };
         } else {
-            resolve();
+            if (loaded) {
+                // delaying the resolve to make sure the fontAwesome.onload is triggered before
+                resolve();
+            }
         }
     });
 };
