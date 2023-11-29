@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {FormGroup, Glyphicon, MenuItem} from 'react-bootstrap';
-import {isEmpty, isUndefined} from 'lodash';
+import { isEmpty, isEqual, isUndefined, get } from 'lodash';
 
 import Message from '../../I18N/Message';
 import SearchBarMenu from './SearchBarMenu';
@@ -20,6 +20,49 @@ import SearchBarToolbar from '../../search/SearchBarToolbar';
 import { defaultSearchWrapper } from '../../search/SearchBarUtils';
 import BookmarkSelect, {BookmarkOptions} from "../searchbookmarkconfig/BookmarkSelect";
 import CoordinatesSearch, {CoordinateOptions} from "../searchcoordinates/CoordinatesSearch";
+import tooltip from '../../misc/enhancers/tooltip';
+
+const TMenuItem = tooltip(MenuItem);
+const SearchServicesSelectorMenu = ({activeTool, searchIcon, services = [], selectedService = -1, onServiceSelect = () => {}}) => {
+    if (services.length === 0) {
+        return null;
+    }
+    if (services.length === 1) {
+        return (
+            <MenuItem active={activeTool === "addressSearch"} onClick={() => onServiceSelect(-1)}>
+                <Glyphicon glyph={searchIcon}/>
+                <Message msgId="search.addressSearch"/>
+            </MenuItem>
+        );
+    }
+    return (<>
+        <TMenuItem
+            tooltipId="search.searchOnAllServices"
+            tooltipPosition="left"
+            active={activeTool === "addressSearch" && selectedService === -1}
+            onClick={() => onServiceSelect(-1)}
+        >
+            <Glyphicon glyph={searchIcon}/>
+            <Message msgId="search.addressSearch"/>
+        </TMenuItem>
+        {services.map((service, index) => {
+            const name = service.name || service.type;
+            return (<TMenuItem
+                tooltip={get(service, 'options.tooltip', `Search on ${name}`)}
+                tooltipPosition="left"
+                onClick={() => onServiceSelect(index)}
+                key={index}
+                active={activeTool === "addressSearch" && selectedService === index}
+            >
+                <span style={{marginLeft: 20}}>
+                    <Glyphicon glyph={searchIcon}/>
+                    {name}
+                </span>
+            </TMenuItem>);
+        })}
+        <MenuItem divider/>
+    </>);
+};
 
 export default ({
     activeSearchTool: activeTool = 'addressSearch',
@@ -61,8 +104,24 @@ export default ({
     items = [],
     ...props
 }) => {
+    const [selectedSearchService, setSearchServiceSelected] = useState(-1);
+    useEffect(() => {
+        // Reset selected service, when service changes
+        if (!isEqual(searchOptions?.services, searchOptions?.services)) {
+            setSearchServiceSelected(-1);
+        }
+    }, [searchOptions?.services]);
 
-    const search = defaultSearchWrapper({searchText, selectedItems, searchOptions, maxResults, onSearch, onSearchReset});
+    const selectedServices = searchOptions?.services?.filter((_, index) => selectedSearchService >= 0 ? selectedSearchService === index : true) ?? [];
+    const search = defaultSearchWrapper({
+        searchText,
+        selectedItems,
+        searchOptions: {
+            ...searchOptions,
+            services: selectedServices
+        },
+        maxResults, onSearch, onSearchReset
+    });
 
     const clearSearch = () => {
         onSearchReset();
@@ -78,14 +137,20 @@ export default ({
     let searchMenuOptions = [];
     if (showAddressSearchOption) {
         searchMenuOptions.push(
-            <MenuItem active={activeTool === "addressSearch"} onClick={()=>{
-                onClearCoordinatesSearch({owner: "search"});
-                onClearBookmarkSearch("selected");
-                onChangeActiveSearchTool("addressSearch");
-            }}
-            >
-                <Glyphicon glyph={searchIcon}/> <Message msgId="search.addressSearch"/>
-            </MenuItem>);
+            <SearchServicesSelectorMenu
+                searchIcon={searchIcon}
+                activeTool={activeTool}
+                selectedService={selectedSearchService}
+                onServiceSelect={(index) => {
+                    setSearchServiceSelected(index === -1 ? undefined : index);
+                    onClearCoordinatesSearch({owner: "search"});
+                    onClearBookmarkSearch("selected");
+                    onChangeActiveSearchTool("addressSearch");
+                    return;
+                }}
+                services={searchOptions?.services}
+            />
+        );
     }
     if (showCoordinatesSearchOption) {
         searchMenuOptions.push(
@@ -129,6 +194,16 @@ export default ({
         return null;
     };
 
+    const getPlaceholder = () => {
+        // when placeholder is present, nested service's placeholder is applied
+        if (!placeholder && selectedServices?.length === 1 && searchOptions?.services?.length > 1) {
+            const [service] = selectedServices;
+            const name = service.name || service.type;
+            return get(service, 'options.placeholder', `Search by ${name}`);
+        }
+        return placeholder;
+    };
+
     return (<SearchBarBase>
         <FormGroup>
             <div className="input-group" style={{display: "flex"}}>
@@ -140,7 +215,7 @@ export default ({
                     delay={delay}
                     typeAhead={typeAhead}
                     blurResetDelay={blurResetDelay}
-                    placeholder={placeholder}
+                    placeholder={getPlaceholder()}
                     placeholderMsgId={placeholderMsgId}
                     searchText={searchText}
                     selectedItems={selectedItems}
