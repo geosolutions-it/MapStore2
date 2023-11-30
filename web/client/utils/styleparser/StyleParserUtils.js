@@ -511,7 +511,8 @@ export const _getImageIdFromSymbolizer = ({
 };
 /**
  * generate an id based on a Mark symbolizer
- * @param {object} symbolizer mark symbolizer
+ * @param {object} parsedSymbolizer the parsed mark symbolizer
+ * @param {object} originalSymbolizer the original mark symbolizer
  * @returns {string} an id for the mark symbolizer
  */
 export const getImageIdFromSymbolizer = (parsedSymbolizer, originalSymbolizer) => {
