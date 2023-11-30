@@ -25,8 +25,11 @@ class CesiumLayer extends React.Component {
     };
 
     componentDidMount() {
-        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map, this.props.securityToken);
-        if (this.props.options && this.layer && this.getVisibilityOption(this.props)) {
+        // initial visibility should also take into account the visibility limits
+        // in particular for detached layers
+        const visibility = this.getVisibilityOption(this.props);
+        this.createLayer(this.props.type, { ...this.props.options, visibility }, this.props.position, this.props.map, this.props.securityToken);
+        if (this.props.options && this.layer && visibility) {
             this.addLayer(this.props);
             this.updateZIndex();
         }
@@ -129,20 +132,50 @@ class CesiumLayer extends React.Component {
         }
     };
 
+    setDetachedLayerVisibility = (visibility, props) => {
+        if (!this.layer?.detached) {
+            return;
+        }
+        // use internal setVisible
+        // if a detached layers implements setVisibility
+        if (this.layer?.setVisible) {
+            this.layer.setVisible(visibility);
+            return;
+        }
+        // if visible we will remove the layer and create a new one
+        if (visibility) {
+            this.removeLayer();
+            this.createLayer(props.type, {
+                ...props.options,
+                visibility
+            }, props.position, props.map, props.securityToken);
+            return;
+        }
+        // while hidden layers will be completely removed
+        this.removeLayer();
+        return;
+    };
+
+    setImageryLayerVisibility = (visibility, props) => {
+        if (!!this.layer?.detached) {
+            return;
+        }
+        // this type of layer will be added and removed from the imageryLayers array of Cesium
+        if (visibility) {
+            this.addLayer(props);
+            this.updateZIndex();
+            return;
+        }
+        this.removeLayer();
+        return;
+    }
+
     setLayerVisibility = (newProps) => {
         const oldVisibility = this.getVisibilityOption(this.props);
         const newVisibility = this.getVisibilityOption(newProps);
         if (newVisibility !== oldVisibility) {
-            if (this.layer?.detached && this.layer?.setVisible) {
-                this.layer.setVisible(newVisibility);
-            } else {
-                if (newVisibility) {
-                    this.addLayer(newProps);
-                    this.updateZIndex();
-                } else {
-                    this.removeLayer();
-                }
-            }
+            this.setDetachedLayerVisibility(newVisibility, newProps);
+            this.setImageryLayerVisibility(newVisibility, newProps);
             newProps.map.scene.requestRender();
         }
     };
@@ -167,7 +200,7 @@ class CesiumLayer extends React.Component {
                 return false;
             }
         }
-        return visibility;
+        return !!visibility;
     };
 
     setLayerOpacity = (opacity) => {

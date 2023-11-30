@@ -166,11 +166,19 @@ const cloneOriginalOverlay = (original, options) => {
 Layers.registerType('overlay', {
     create: (options, map) => {
 
+        if (!options.visibility) {
+            return {
+                detached: true,
+                info: undefined,
+                remove: () => {}
+            };
+        }
         const original = document.getElementById(options.id);
-        const cloned = cloneOriginalOverlay(original, options);
+        // use a div fallback to avoid error if the original element does not exist
+        const cloned = original ? cloneOriginalOverlay(original, options) : document.createElement('div');
 
         let infoWindow = new InfoWindow(map);
-        infoWindow.showAt(options.position.y, options.position.x, cloned);
+        infoWindow.showAt(options?.position?.y || 0, options?.position?.x || 0, cloned);
         infoWindow.setVisible(true);
         let info = map.scene.primitives.add(infoWindow);
 
@@ -183,12 +191,8 @@ Layers.registerType('overlay', {
         };
     },
     update: function(layer, newOptions, oldOptions, map) {
-        if (!isEqual(newOptions.position, oldOptions.position)
-        || newOptions.visibility !== oldOptions.visibility) {
-            layer.remove();
-            return newOptions.visibility
-                ? this.create(newOptions, map)
-                : null;
+        if (!isEqual(newOptions.position, oldOptions.position)) {
+            return this.create(newOptions, map);
         }
         return null;
     }
