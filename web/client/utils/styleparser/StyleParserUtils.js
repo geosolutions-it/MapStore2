@@ -489,7 +489,7 @@ let imagesCache = {};
  * @param {object} symbolizer mark symbolizer
  * @returns {string} an id for the mark symbolizer
  */
-export const getImageIdFromSymbolizer = ({
+export const _getImageIdFromSymbolizer = ({
     image,
     color,
     fillOpacity,
@@ -508,6 +508,14 @@ export const getImageIdFromSymbolizer = ({
         }) : image;
     }
     return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, (strokeDasharray || []).join('_'), strokeWidth, radius].join(':');
+};
+/**
+ * generate an id based on a Mark symbolizer
+ * @param {object} symbolizer mark symbolizer
+ * @returns {string} an id for the mark symbolizer
+ */
+export const getImageIdFromSymbolizer = (parsedSymbolizer, originalSymbolizer) => {
+    return _getImageIdFromSymbolizer(originalSymbolizer?.image?.name === 'msMarkerIcon' ? originalSymbolizer : parsedSymbolizer);
 };
 
 /**

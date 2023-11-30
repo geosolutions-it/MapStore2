@@ -347,7 +347,7 @@ const getGraphics = ({
     const symbolizer = parseSymbolizerExpressions(_symbolizer, { properties });
     if (symbolizer.kind === 'Mark') {
         modifyPointHeight({ entity, symbolizer });
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
+        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
         if (image) {
             const side = width > height ? width : height;
             const scale = (symbolizer.radius * 2) / side;
@@ -375,7 +375,7 @@ const getGraphics = ({
     }
     if (symbolizer.kind === 'Icon') {
         modifyPointHeight({ entity, symbolizer });
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
+        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
         if (image) {
             const side = width > height ? width : height;
             const scale = symbolizer.size / side;
