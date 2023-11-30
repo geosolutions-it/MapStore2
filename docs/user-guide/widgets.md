@@ -161,7 +161,7 @@ When the values of a classification attribute are numbers, the user can configur
 
 ##### Trace axes
 
-If *Axes* have been customized in the [Axes](#customize-axes) tab, the user can choose which custom axes to use for the current trace.
+If *Axes* have been customized in the [Axes](#axes) tab, the user can choose which custom axes to use for the current trace.
 
 <img src="../img/widgets/trace_axes.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
