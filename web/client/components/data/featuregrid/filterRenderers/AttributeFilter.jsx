@@ -85,7 +85,7 @@ class AttributeFilter extends React.PureComponent {
         const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Search";
         let inputKey = 'header-filter-' + this.props.column.key;
         let isValueExist = this.state?.value ?? this.props.value;
-        if (['date', 'time', 'date-time'].includes(this.props.type)) isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
+        if (['date', 'time', 'date-time'].includes(this.props.type) && this.props.isWithinAttrTbl) isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
         let isNullOperator = this.state.operator === 'isNull';
         return (<div className={`rw-widget ${this.state.isInputValid ? "" : "show-error"}`}>
             <input
@@ -154,10 +154,12 @@ class AttributeFilter extends React.PureComponent {
         const value = e.target.value;
         // todo: validate input based on type
         let isValid = true;
-        const match = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?(.*)/.exec(value);
-        if (match[1]) isValid = false;
-        if (match[2]) {
-            if (['integer', 'number'].includes(this.props.type) && isNaN(match[2])) isValid = false;
+        if (this.props.isWithinAttrTbl) {
+            const match = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?(.*)/.exec(value);
+            if (match[1]) isValid = false;
+            if (match[2]) {
+                if (['integer', 'number'].includes(this.props.type) && isNaN(match[2])) isValid = false;
+            }
         }
         this.setState({value, isInputValid: isValid});
         if (isValid) this.props.onChange({value, attribute: this.props.column && this.props.column.key, inputOperator: this.state.operator});
