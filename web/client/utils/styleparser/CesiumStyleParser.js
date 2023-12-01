@@ -159,6 +159,19 @@ function createLeaderLineCanvas({
     return canvas;
 }
 
+const translatePoint = (cartesian, symbolizer) => {
+    const { msTranslateX, msTranslateY } = symbolizer || {};
+    const x = getNumberAttributeValue(msTranslateX);
+    const y = getNumberAttributeValue(msTranslateY);
+    return (x || y)
+        ? Cesium.Matrix4.multiplyByPoint(
+            Cesium.Transforms.eastNorthUpToFixedFrame(cartesian),
+            new Cesium.Cartesian3(x || 0, y || 0, 0),
+            new Cesium.Cartesian3()
+        )
+        : cartesian;
+};
+
 function addLeaderLineGraphic({
     map,
     symbolizer,
@@ -172,7 +185,9 @@ function addLeaderLineGraphic({
         'msLeaderLineWidth',
         'msHeight',
         'msHeightReference',
-        'offset'
+        'offset',
+        'msTranslateX',
+        'msTranslateY'
     ];
     const shouldNotUpdateLeaderLine = entity._msSymbolizer
         && !isGlobalOpacityChanged(entity, globalOpacity)
@@ -195,15 +210,39 @@ function addLeaderLineGraphic({
     }
 
     const cartographic = Cesium.Cartographic.fromCartesian(entity.position.getValue(Cesium.JulianDate.now()));
+    const originalCartographic = Cesium.Cartographic.fromCartesian(entity._msPosition);
     const heightReference = symbolizer.msHeightReference;
     return (
         (
             symbolizer?.msHeight !== entity._msSymbolizer?.msHeight
             || symbolizer?.msHeightReference !== entity._msSymbolizer?.msHeightReference
+            || symbolizer?.msTranslateX !== entity._msSymbolizer?.msTranslateX
+            || symbolizer?.msTranslateY !== entity._msSymbolizer?.msTranslateY
             || !entity.polyline
         )
-            ? getLeaderLinePositions({ map, cartographic, heightReference, sampleTerrain })
-                .then((positions) => new Cesium.PolylineGraphics({ positions }))
+            ? getLeaderLinePositions({
+                map,
+                // we create a cartographic that include:
+                // the original longitude and latitude
+                // and the modified height
+                // later we can translate the coordinate connected to the entity
+                cartographic: new Cesium.Cartographic(
+                    originalCartographic.longitude,
+                    originalCartographic.latitude,
+                    cartographic.height),
+                heightReference,
+                sampleTerrain
+            })
+                .then((positions) => {
+                    return new Cesium.PolylineGraphics({
+                        positions: [
+                            // original position
+                            positions[0],
+                            // apply translation to the coordinate connected to the entity
+                            translatePoint(positions[1], symbolizer)
+                        ]
+                    });
+                })
             : Promise.resolve(entity.polyline)
     )
         .then((polyline) => {
@@ -244,13 +283,14 @@ function modifyPointHeight({ entity, symbolizer }) {
     const height = getNumberAttributeValue(symbolizer.msHeight);
 
     if (height === null) {
-        entity.position.setValue(entity._msPosition);
+        entity.position.setValue(translatePoint(entity._msPosition, symbolizer));
         return;
     }
 
     const cartographic = Cesium.Cartographic.fromCartesian(entity._msPosition);
     cartographic.height = height;
-    entity.position.setValue(Cesium.Cartographic.toCartesian(cartographic));
+    const cartesian = Cesium.Cartographic.toCartesian(cartographic);
+    entity.position.setValue(translatePoint(cartesian, symbolizer));
     return;
 }
 
@@ -742,9 +782,15 @@ function getStyleFuncFromRules({
                                     : getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...symbolizer });
                                 if (geometryFunction) {
                                     const additionalEntity = entity.entityCollection.add({
-                                        position: entity.position
-                                            ? entity.position.getValue(Cesium.JulianDate.now()).clone()
-                                            : new Cesium.Cartesian3(0, 0, 0)
+                                        // use the stored position when available
+                                        position: entity._msPosition
+                                            ? entity._msPosition
+                                            // if a point geometry we can access de initial value
+                                            : entity.position
+                                                ? entity.position.getValue(Cesium.JulianDate.now()).clone()
+                                                // for other computed point we use the geometry function
+                                                // so we can apply the origin cartesian
+                                                : new Cesium.Cartesian3(0, 0, 0)
                                     });
                                     additionalEntity._msStoredCoordinates = entity._msStoredCoordinates;
                                     additionalEntity._msAdditional = true;

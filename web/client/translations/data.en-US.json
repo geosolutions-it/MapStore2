@@ -2602,7 +2602,9 @@
             "offset": "Offset",
             "propertyValue": "Property value",
             "colorPropertyInfoMessage": "The color property value must be an hexadecimal string. Example: \"#ffffff\"",
-            "pointCloudSizeInfo": "The point cloud radius is applied only when the attenuation options is disabled. The attenuation option takes precedence over this property."
+            "pointCloudSizeInfo": "The point cloud radius is applied only when the attenuation options is disabled. The attenuation option takes precedence over this property.",
+            "msTranslateX": "Translate x",
+            "msTranslateY": "Translate y"
         },
         "playback": {
             "settings": {
