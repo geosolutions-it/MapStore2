@@ -50,7 +50,8 @@ class AttributeFilter extends React.PureComponent {
             booleanOperators: ["="],
             defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "isNull"],
             timeDateOperators: ["=", ">", "<", ">=", "<=", "<>", "><", "isNull"],
-            operator: this.props.isWithinAttrTbl ? "=" : ""
+            operator: this.props.isWithinAttrTbl ? "=" : "",
+            isInputValid: true
         };
     }
     getOperator = (type) => {
@@ -86,12 +87,12 @@ class AttributeFilter extends React.PureComponent {
         let isValueExist = this.state?.value ?? this.props.value;
         if (['date', 'time', 'date-time'].includes(this.props.type)) isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
         let isNullOperator = this.state.operator === 'isNull';
-        return (<div className="rw-widget">
+        return (<div className={`rw-widget ${this.state.isInputValid ? "" : "show-error"}`}>
             <input
                 disabled={this.props.disabled || isNullOperator}
                 key={inputKey}
                 type="text"
-                className="form-control input-sm"
+                className={"form-control input-sm"}
                 placeholder={placeholder}
                 value={isValueExist}
                 onChange={this.handleChange}/>
@@ -108,19 +109,33 @@ class AttributeFilter extends React.PureComponent {
     renderOperatorField = () => {
         return (
             <ComboField
-                style={{ width: '30%'}}
-                // dropUp={this.props.dropUp}
+                style={{ width: '90px'}}
                 fieldOptions= {this.getOperator(this.props.type)}
                 fieldName="operator"
                 fieldRowId={1}
                 onSelect={(selectedOperator)=>{
+                    // if select the same operator -> don't do anything
                     if (selectedOperator === this.state.operator) return;
-                    let isValueExist = this.state?.value ?? this.props.value;
-                    if (['date', 'time', 'date-time'].includes(this.props.type)) isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
-                    this.setState({ operator: selectedOperator, value: selectedOperator === 'isNull' ? undefined : isValueExist });
+                    let isValueExist;           // entered value
+                    if (['date', 'time', 'date-time'].includes(this.props.type)) {
+                        isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
+                    } else {
+                        isValueExist = this.state?.value ?? this.props.value;
+                    }
                     let isNullOperatorSelected = selectedOperator === 'isNull';
-                    let isOperatorChangedFromIsNullAndValueNotExist = this.state.operator === 'isNull' && this.state.operator !== selectedOperator && !isValueExist;
-                    if (isValueExist || isNullOperatorSelected || isOperatorChangedFromIsNullAndValueNotExist ) this.props.onChange({value: isNullOperatorSelected ? null : isValueExist, attribute: this.props.column && this.props.column.key, inputOperator: selectedOperator});
+                    let isOperatorChangedFromRange = this.state.operator === '><';
+                    // set the selected operator + value and reset the value in case of isNull
+                    this.setState({ operator: selectedOperator, value: (isNullOperatorSelected || isOperatorChangedFromRange) ? undefined : isValueExist });
+                    // get flag of being (operator was isNull then changes to other operator)
+                    let isOperatorChangedFromIsNull = this.state.operator === 'isNull' && selectedOperator !== 'isNull';
+                    // apply filter if value exists 'OR' operator = isNull 'OR' (prev operator was isNull and changes --> reset filter)
+                    if (isNullOperatorSelected || isOperatorChangedFromIsNull || isOperatorChangedFromRange) {
+                        // reset data --> operator = isNull 'OR' (prev operator was isNull and changes)
+                        this.props.onChange({value: null, attribute: this.props.column && this.props.column.key, inputOperator: selectedOperator});
+                    } else if (isValueExist) {
+                        // apply filter --> if value exists
+                        this.props.onChange({value: isValueExist, attribute: this.props.column && this.props.column.key, inputOperator: selectedOperator});
+                    }
                 }}
                 fieldValue={this.state.operator}
                 onUpdateField={() => {}}/>
@@ -129,7 +144,7 @@ class AttributeFilter extends React.PureComponent {
     render() {
         let inputKey = 'header-filter--' + this.props.column.key;
         return (
-            <div key={inputKey} className={`form-group${(this.props.valid ? "" : " has-error")}`}>
+            <div key={inputKey} className={`form-group${((this.state.isInputValid && this.props.valid) ? "" : " has-error")}`}>
                 {this.props.isWithinAttrTbl ? this.renderOperatorField() : null}
                 {this.renderTooltip(this.renderInput())}
             </div>
@@ -137,8 +152,15 @@ class AttributeFilter extends React.PureComponent {
     }
     handleChange = (e) => {
         const value = e.target.value;
-        this.setState({value});
-        this.props.onChange({value, attribute: this.props.column && this.props.column.key, inputOperator: this.state.operator});
+        // todo: validate input based on type
+        let isValid = true;
+        const match = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?(.*)/.exec(value);
+        if (match[1]) isValid = false;
+        if (match[2]) {
+            if (['integer', 'number'].includes(this.props.type) && isNaN(match[2])) isValid = false;
+        }
+        this.setState({value, isInputValid: isValid});
+        if (isValid) this.props.onChange({value, attribute: this.props.column && this.props.column.key, inputOperator: this.state.operator});
     }
 }
 

@@ -42,7 +42,7 @@ const formats = {
 };
 
 /**
- * @name DateTimePicker
+ * @name DateTimePickerWithRange
  * The revised react-widget datetimepicker to support operator in addition to date and time.
  * This component mimick the react-widget date time picker component behaviours and
  * props. Please see https://jquense.github.io/react-widgets/api/DateTimePicker/.
@@ -51,7 +51,7 @@ const formats = {
  * considered as operator by this component.
  *
  */
-class DateTimePicker extends Component {
+class DateTimePickerWithRange extends Component {
 
     static propTypes = {
         format: PropTypes.string,
@@ -89,11 +89,12 @@ class DateTimePicker extends Component {
             startDate: '',
             endDate: ''
         },
-        operator: '',
+        operator: '><',
         date: {				// stored values
             startDate: null,
             endDate: null
-        }
+        },
+        isInputValid: false
     }
 
     componentDidMount() {
@@ -114,20 +115,20 @@ class DateTimePicker extends Component {
         return format ? format : !time && calendar ? dateFormat : time && !calendar ? timeFormat : defaultFormat;
     }
 
-    renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, disabled, isFullWidth) => {
+    renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, style) => {
         let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
         if (toolTip) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{toolTip}</Tooltip>}>
-                <input type="text" id="rw_1_input" disabled={'true'} role="combobox" style={{width: isFullWidth ? '100%' : ''}} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className="rw-input" onChange={this.handleValueChange} />
+                <input style={style} type="text" id="rw_1_input" disabled={'true'} role="combobox" placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${this.state.isInputValid ? 'has-error' : ''}`} onChange={this.handleValueChange} />
             </OverlayTrigger>);
         }
-        return (<input type="text" id="rw_1_input" disabled={'true'} role="combobox" style={{width: isFullWidth ? '100%' : ''}} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className="rw-input" onChange={this.handleValueChange} />);
+        return (<input style={style} type="text" id="rw_1_input" disabled={'true'} role="combobox" placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${this.state.isInputValid ? 'has-error' : ''}`} onChange={this.handleValueChange} />);
     }
 	renderHoursRange = () =>{
 	    const { inputValue, operator, focused, openRangeInputs, openTime } = this.state;
 	    const { placeholder, tabIndex } = this.props;
 	    const props = Object.keys(this.props).reduce((acc, key) => {
-	        if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
+	        if (['placeholder', 'calendar', 'time', 'onChange', 'value', 'toolTip', 'onMouseOver'].includes(key)) {
 	            // remove these props because they might have undesired effects to the subsequent components
 	            return acc;
 	        }
@@ -136,23 +137,23 @@ class DateTimePicker extends Component {
 
 	    }, {});
 	    return (
-	        <div style={{display: 'flex', flexDirection: 'column', border: 'solid 5px'}}>
+	        <div onMouseDown={this.handleMouseDown} style={{display: 'flex', flexDirection: 'column', border: 'solid 5px'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
-	                <div onClick={this.toggleStart} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
+	                <div onClick={this.toggleStart} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>Start</strong>
 	                    <span>
 	                        {inputValue.startDate || 'Please Enter ...' }
 	                    </span>
 	                </div>
-	                <div onClick={this.toggleEnd} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
+	                <div onClick={this.toggleEnd} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>End</strong>
 	                    <span>
 	                        {inputValue.endDate || 'Please Enter ...' }
 	                    </span>
 	                </div>
 	            </div>
-	            <div style={{display: 'flex', flexDirection: 'column'}}>
-	                <div tabIndex="-1" style={{ display: openRangeInputs === 'start' ? 'block' : 'none'}} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
+	            <div style={{display: 'flex', flexDirection: 'column', overflow: 'hidden'}}>
+	                <div tabIndex="-1" style={{ display: openRangeInputs === 'start' ? 'block' : 'none'}} className={`rw-datetimepicker rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
 	                    {this.renderInput(inputValue.startDate, operator, '', placeholder, tabIndex, false, true)}
 	                    <span className="rw-select">
 	                        <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
@@ -163,7 +164,7 @@ class DateTimePicker extends Component {
 	                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={(evt) => this.handleTimeSelect(evt, 'start')} />
 	                    </div>
 	                </div>
-	                <div tabIndex="-1" style={{ display: openRangeInputs === 'end' ? 'block' : 'none'}} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
+	                <div tabIndex="-1" style={{ display: openRangeInputs === 'end' ? 'block' : 'none'}} className={`rw-datetimepicker rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
 	                    {this.renderInput(inputValue.endDate, operator, '', placeholder, tabIndex, false, true)}
 	                    <span className="rw-select">
 	                        <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
@@ -184,7 +185,7 @@ class DateTimePicker extends Component {
      	let shownVal = (inputValue.endDate || inputValue.startDate) ? Object.values(inputValue).join(" : ") : '';
 	 	return (
 		 	<div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
-			 	{this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, false, true, true)}
+			 	{this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, false, true)}
 			 	<span className="rw-select">
 				 	<button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleHandler}>
 					 	<span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
@@ -202,7 +203,7 @@ class DateTimePicker extends Component {
 	renderCalendarRange = () =>{
 	    const { openRangeInputs, inputValue } = this.state;
 	    const props = Object.keys(this.props).reduce((acc, key) => {
-	        if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
+	        if (['placeholder', 'calendar', 'time', 'onChange', 'value', 'toolTip', 'onMouseOver'].includes(key)) {
 	            // remove these props because they might have undesired effects to the subsequent components
 	            return acc;
 	        }
@@ -211,22 +212,22 @@ class DateTimePicker extends Component {
 
 	    }, {});
 	    return (
-	        <div style={{display: 'flex', flexDirection: 'column', border: 'solid 5px'}}>
+	        <div onMouseDown={this.handleMouseDown} style={{display: 'flex', flexDirection: 'column', border: 'solid 5px'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
-	                <div onClick={this.toggleStart} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
+	                <div onClick={this.toggleStart} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>Start</strong>
 	                    <span>
 	                        {inputValue.startDate || 'Please Enter ...'}
 	                    </span>
 	                </div>
-	                <div onClick={this.toggleEnd} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
+	                <div onClick={this.toggleEnd} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>End</strong>
 	                    <span>
 	                        {inputValue.endDate || 'Please Enter ...'}
 	                    </span>
 	                </div>
 	            </div>
-	            <div style={{display: 'flex', flexDirection: 'column'}}>
+	            <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
 	                <div style={{display: openRangeInputs === 'start' ? 'block' : 'none'}}>
 	                    <Calendar
 	                        tabIndex="-1"
@@ -258,7 +259,7 @@ class DateTimePicker extends Component {
 
 	    return (
 	        <div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
-	            {this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, true, false, true)}
+	            {this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, true, false)}
 	            <span className="rw-select">
 	                <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
 	                    <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
@@ -277,7 +278,7 @@ class DateTimePicker extends Component {
 	    const { placeholder, tabIndex } = this.props;
 
 	    const props = Object.keys(this.props).reduce((acc, key) => {
-	        if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
+	        if (['placeholder', 'calendar', 'time', 'onChange', 'value', 'toolTip', 'onMouseOver'].includes(key)) {
 	            // remove these props because they might have undesired effects to the subsequent components
 	            return acc;
 	        }
@@ -286,22 +287,22 @@ class DateTimePicker extends Component {
 
 	    }, {});
 	    return (
-	        <div style={{display: 'flex', flexDirection: 'column', border: 'solid 5px', maxHeight: '360px', overflowY: 'auto'}}>
+	        <div onMouseDown={this.handleMouseDown} style={{display: 'flex', flexDirection: 'column', border: 'solid 5px', maxHeight: '360px', overflowY: 'auto'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
-	                <div onClick={this.toggleStart} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
+	                <div onClick={this.toggleStart} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>Start</strong>
 	                    <span>
 	                        {inputValue.startDate || 'Please Enter ...'}
 	                    </span>
 	                </div>
-	                <div onClick={this.toggleEnd} style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
+	                <div onClick={this.toggleEnd} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
 	                    <strong style={{fontSize: '12px'}}>End</strong>
 	                    <span>
 	                        {inputValue.endDate || 'Please Enter ...'}
 	                    </span>
 	                </div>
 	            </div>
-	            <div style={{display: 'flex', flexDirection: 'column'}}>
+	            <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
 	                <div style={{display: openRangeInputs === 'start' ? 'block' : 'none'}}>
 	                    <Calendar
 	                        tabIndex="-1"
@@ -313,7 +314,7 @@ class DateTimePicker extends Component {
 	                        />
 	                	<div style={{ display: openRangeInputs === 'start' ? 'block' : 'none'}}>
 	                        <div style={{display: 'flex'}}>
-	                    {this.renderInput(inputValue.startDate, operator, '', placeholder, tabIndex, false, true, false, true)}
+	                    {this.renderInput(inputValue.startDate, operator, '', placeholder, tabIndex, false, true, {width: '100%'})}
 	                            <span className="">
 	                                <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                                    <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
@@ -336,7 +337,7 @@ class DateTimePicker extends Component {
 	                    />
 	                	<div style={{ display: openRangeInputs === 'end' ? 'block' : 'none'}}>
 	                        <div style={{display: 'flex'}}>
-	                            {this.renderInput(inputValue.endDate, operator, '', placeholder, tabIndex, false, true, false, true)}
+	                            {this.renderInput(inputValue.endDate, operator, '', placeholder, tabIndex, false, true, {width: '100%'})}
 	                            <span className="">
 	                                <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                                    <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
@@ -359,7 +360,7 @@ class DateTimePicker extends Component {
 
 	    return (
 	        <div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget ${focused ? 'rw-state-focus' : ''}`}>
-	            {this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, true, true, true)}
+	            {this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, true, true)}
 	            <span className="rw-select">
 	                <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
 	                    <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
@@ -394,7 +395,7 @@ class DateTimePicker extends Component {
         if (this.ignoreBlur) {
             return;
         }
-        this.setState({ open: '', focused: false });
+        this.setState({ openRangeContainer: '', focused: false });
     }
 	rangeContainerMouseLeaveHandler = () => {
 	    this.setState({ openRangeContainer: false });
@@ -498,15 +499,26 @@ class DateTimePicker extends Component {
             startDate: order === 'start' ? date : this.state.date.startDate,
             endDate: order === 'end' ? date : this.state.date.endDate
         };
+        let startTimeStamp = upadtedDate.startDate ? (upadtedDate.startDate).getTime() : 0;
+        let endTimeStamp = upadtedDate.endDate ? (upadtedDate.endDate).getTime() : 0;
+        if (upadtedDate.startDate && upadtedDate.endDate && endTimeStamp < startTimeStamp) {
+            this.setState({
+                date: upadtedDate,
+                inputValue: inputValueClone,
+                isInputValid: true
+            });
+            return;
+        }
         this.setState({
             date: upadtedDate,
-            inputValue: inputValueClone
+            inputValue: inputValueClone,
+            isInputValid: false
         });
         if (order === 'start') this.props.onChange(date, inputValueClone.startDate, 'start');
         else if (order === 'end') this.props.onChange(date, inputValueClone.endDate, 'end');
     }
 
-    handleTimeSelect = (time, order, type) => {
+    handleTimeSelect = (time, order) => {
         const selectedDate = (order === 'start' ? this.state.date.startDate : this.state.date.endDate ) || new Date();
         const date = setTime(selectedDate, time.date);
         const inputValue = this.format(date);
@@ -517,10 +529,15 @@ class DateTimePicker extends Component {
             startDate: order === 'start' ? date : this.state.date.startDate,
             endDate: order === 'end' ? date : this.state.date.endDate
         };
-        if (type === 'time') this.setState({ date: upadtedDate, inputValue: inputValueClone});
-        else this.setState({ inputValue: inputValueClone});
-        if (order === 'start') this.props.onChange(date, inputValueClone.startDate, 'start');
-        else if (order === 'end') this.props.onChange(date, inputValueClone.endDate, 'end');
+        let startTimeStamp = upadtedDate.startDate ? (upadtedDate.startDate).getTime() : 0;
+        let endTimeStamp = upadtedDate.endDate ? (upadtedDate.endDate).getTime() : 0;
+        if (upadtedDate.startDate && upadtedDate.endDate && endTimeStamp < startTimeStamp) {
+            this.setState({ inputValue: inputValueClone, date: upadtedDate, openTime: '', isInputValid: true});
+        } else {
+            this.setState({ inputValue: inputValueClone, openTime: '', date: upadtedDate, isInputValid: false});
+            if (order === 'start') this.props.onChange(date, inputValueClone.startDate, 'start');
+            else if (order === 'end') this.props.onChange(date, inputValueClone.endDate, 'end');
+        }
     }
 
     attachTimeRef = ref => (this.timeRef = ref)
@@ -528,5 +545,5 @@ class DateTimePicker extends Component {
     attachCalRef = ref => (this.calRef = ref)
 
 }
-export default DateTimePicker;
+export default DateTimePickerWithRange;
 

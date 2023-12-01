@@ -87,8 +87,32 @@
         }
         div.rw-datetimepicker.rw-widget span.rw-select{
             background: white;
+            height:30px;
         } 
+        div.range-tab:hover{
+            cursor:pointer;
+        }
+        input.rw-input.has-error{
+            outline: 2px auto var(--ms-danger, @ms-danger);
+        }
+        div.rw-datetimepicker.rw-widget.time-type, div.rw-datetimepicker.rw-widget.rw-has-both{
+            div.rw-popup-container.rw-hours-popup{
+                right: 0;
+                left: 0;
+                > div.rw-popup.rw-widget{
+                    left:0;
+                    right:0;
+                }
+            }
+        }
+        div.rw-datetimepicker.rw-widget:not(.rw-datetimepicker.range-time-input.rw-widget){
+            div.rw-popup-container.rw-calendar-popup:not(.rw-hours-popup){
+                right: -12px;
+                left:auto;
+            }
+        }
     }
+    
      
 }
 
