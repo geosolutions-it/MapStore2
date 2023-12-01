@@ -136,7 +136,7 @@ const lineGeometryTransformation = () => ({
     })
 });
 
-const heightPoint3dOptions = ({ isDisabled }) =>  ({
+const heightPoint3dOptions = ({ isDisabled, enableTranslation }) =>  ({
     msHeightReference: property.msHeightReference({
         label: "styleeditor.heightReferenceFromGround",
         isDisabled
@@ -147,6 +147,22 @@ const heightPoint3dOptions = ({ isDisabled }) =>  ({
         uom: 'm',
         placeholderId: 'styleeditor.pointHeight',
         isDisabled: (value, properties) => isDisabled() || properties?.msHeightReference === 'clamp'
+    }),
+    ...(enableTranslation && {
+        msTranslateX: property.number({
+            key: 'msTranslateX',
+            label: 'styleeditor.msTranslateX',
+            uom: 'm',
+            fallbackValue: 0,
+            isDisabled
+        }),
+        msTranslateY: property.number({
+            key: 'msTranslateY',
+            label: 'styleeditor.msTranslateY',
+            uom: 'm',
+            fallbackValue: 0,
+            isDisabled
+        })
     }),
     msLeaderLineColor: property.color({
         key: 'msLeaderLineColor',
@@ -556,7 +572,8 @@ const getBlocks = ({
                     isDisabled: () => !enable3dStyleOptions
                 }),
                 ...heightPoint3dOptions({
-                    isDisabled: () => !enable3dStyleOptions
+                    isDisabled: () => !enable3dStyleOptions,
+                    enableTranslation: true
                 }),
                 ...(!shouldHideVectorStyleOptions && pointGeometryTransformation({}))
             },

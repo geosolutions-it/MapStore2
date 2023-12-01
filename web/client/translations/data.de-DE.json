@@ -2630,7 +2630,9 @@
             "offset": "Offset",
             "propertyValue": "Eigenschaftswert",
             "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\"",
-            "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft."
+            "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft.",
+            "msTranslateX": "Versatz x",
+            "msTranslateY": "Versatz y"
         },
         "playback": {
             "settings": {

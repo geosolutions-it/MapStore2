@@ -2592,7 +2592,9 @@
             "offset": "Décalage",
             "propertyValue": "Valeur de la propriété",
             "colorPropertyInfoMessage": "La valeur de la propriété de couleur doit être une chaîne hexadécimale. Exemple : \"#ffffff\"",
-            "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété."
+            "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété.",
+            "msTranslateX": "Décalage x",
+            "msTranslateY": "Décalage y"
         },
         "playback": {
             "settings": {

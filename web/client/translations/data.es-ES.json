@@ -2592,7 +2592,9 @@
             "offset": "Desplazamiento",
             "propertyValue": "Valor de la propiedad",
             "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\"",
-            "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad."
+            "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad.",
+            "msTranslateX": "Desplazamiento x",
+            "msTranslateY": "Desplazamiento y"
         },
         "playback": {
             "settings": {

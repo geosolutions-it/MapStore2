@@ -2593,7 +2593,9 @@
             "offset": "Offset",
             "propertyValue": "Valore della proprietà",
             "colorPropertyInfoMessage": "Il valore della proprietà colore deve essere una stringa esadecimale. Esempio: \"#ffffff\"",
-            "pointCloudSizeInfo": "Il raggio della nuvola di punti viene applicato solo quando le opzioni di attenuazione sono disabilitate. L'opzione di attenuazione ha la precedenza su questa proprietà."
+            "pointCloudSizeInfo": "Il raggio della nuvola di punti viene applicato solo quando le opzioni di attenuazione sono disabilitate. L'opzione di attenuazione ha la precedenza su questa proprietà.",
+            "msTranslateX": "Offset x",
+            "msTranslateY": "Offset y"
         },
         "playback": {
             "settings": {
