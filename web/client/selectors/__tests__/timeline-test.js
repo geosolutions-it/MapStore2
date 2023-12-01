@@ -204,6 +204,31 @@ describe('timeline selector', () => {
         timeItems = getTimeItems(data, range, rangeData);
         expect(timeItems.length).toBe(1);
     });
+    it('getTimeItems should give priority to rangeData even when both domain and histogram are empty (so no data in the current viewport, with filter active)', () => {
+        const data = {
+            source: {
+                type: 'multidim-extension',
+                version: '1.2',
+                url: '/geoserver/gwc/service/wmts'
+            },
+            name: 'time',
+            domain: '2022-06-01T00:00:00.000Z/2023-06-01T00:00:00.000Z,2023-01-01T00:00:00.000Z/2023-06-01T00:00:00.000Z,2023-01-01T00:00:00.000Z/2023-12-31T00:00:00.000Z'
+        };
+        const range = {
+            start: '2022-06-01T00:00:00.000Z',
+            end: '2024-01-09T11:07:53.218Z'
+        };
+        let timeItems = getTimeItems(data, range);
+        expect(timeItems.length).toBe(3);
+        const rangeData = {
+            range: {
+                start: '2022-06-01T00:00:00.000Z',
+                end: '2024-01-09T11:07:53.218Z'
+            }
+        };
+        timeItems = getTimeItems(data, range, rangeData);
+        expect(timeItems.length).toBe(0);
+    });
     it('itemsSelector', () => {
         const histogramItems = itemsSelector(SAMPLE_STATE_HISTOGRAM);
         expect(histogramItems.length).toBe(31);

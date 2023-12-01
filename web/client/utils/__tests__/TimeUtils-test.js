@@ -16,7 +16,9 @@ import {
     filterDateArray,
     getNearestDate,
     getDatesInRange,
-    getLowestAndHighestDates
+    getLowestAndHighestDates,
+    getStartEndDomainValues,
+    roundRangeResolution
 } from '../TimeUtils';
 
 import { describeDomains } from '../../api/MultiDim';
@@ -108,5 +110,60 @@ describe('TimeUtils', () => {
     it('getLowestAndHighestDates', () => {
         expect(getLowestAndHighestDates([...DATES_ARRAY, DATES_INTERVAL_ARRAY])[0]).toBe('2021-10-01T22:00:00.000Z');
         expect(getLowestAndHighestDates([...DATES_ARRAY, DATES_INTERVAL_ARRAY])[1]).toBe('2021-12-29T23:00:00.000Z');
+    });
+    it('getStartEndDomainValues', () => {
+        expect(getStartEndDomainValues('2021-10-01T22:00:00.000Z')).toEqual(
+            ['2021-10-01T22:00:00.000Z', undefined]
+        );
+        expect(getStartEndDomainValues(DATES_ARRAY)).toEqual(
+            ['2021-10-01T22:00:00.000Z', '2021-12-29T23:00:00.000Z']
+        );
+        expect(getStartEndDomainValues(DATES_INTERVAL_ARRAY)).toEqual(
+            ['2021-11-02T23:00:00.000Z', '2021-12-29T23:00:00.000Z']
+        );
+        expect(getStartEndDomainValues([...DATES_ARRAY, ...DATES_INTERVAL_ARRAY])).toEqual(
+            ['2021-10-01T22:00:00.000Z', '2021-12-29T23:00:00.000Z']
+        );
+        const samples = [
+            // multiple values
+            {input: '2001-01-01T22:00:00.000Z,2021-12-29T23:00:00.000Z', expected: ['2001-01-01T22:00:00.000Z', '2021-12-29T23:00:00.000Z']},
+            {input: '2001-02-01T22:00:00.000Z,2021-12-29T23:00:00.000Z,2021-12-29T23:00:00.000Z', expected: ['2001-02-01T22:00:00.000Z', '2021-12-29T23:00:00.000Z']},
+            {input: '2001-03-01T22:00:00.000Z,2021-12-29T23:00:00.000Z,2021-12-29T23:00:00.000Z,2021-10-01T22:00:00.000Z', expected: ['2001-03-01T22:00:00.000Z', '2021-12-29T23:00:00.000Z']},
+            // interval
+            {input: '2001-10-01T22:00:00.000Z/2025-12-29T23:00:00.000Z', expected: ['2001-10-01T22:00:00.000Z', '2025-12-29T23:00:00.000Z']},
+            // multiple intervals
+            {input: '2001-10-01T22:00:00.000Z/2025-12-29T23:00:00.000Z,1999-12-29T23:00:00.000Z/2022-12-29T23:00:00.000Z', expected: ['1999-12-29T23:00:00.000Z', '2025-12-29T23:00:00.000Z']},
+            // domain interval
+            {input: '2001-01-01T22:00:00.000Z--2021-12-29T23:00:00.000Z', expected: ['2001-01-01T22:00:00.000Z', '2021-12-29T23:00:00.000Z']}
+        ];
+
+
+        samples.map(({input, expected}) => {
+            expect(getStartEndDomainValues(input)).toEqual(expected);
+        });
+    });
+    it('roundRangeResolution', () => {
+        // check if same start and end date are passed
+        expect(roundRangeResolution({ start: '2021-10-01T22:00:00.000Z', end: '2021-10-01T22:00:00.000Z'}, 20)).toEqual({
+            range: {
+                start: '2021-10-01T22:00:00.000Z',
+                end: '2021-10-01T22:00:00.000Z'
+            },
+            resolution: 'P0D'
+        }); // extreme case, to check if it works
+        expect(roundRangeResolution({ start: '2021-10-01T22:00:00.000Z', end: '2022-10-01T22:00:00.000Z'}, 12)).toEqual({
+            range: {
+                start: '2021-10-01T22:00:00.000Z',
+                end: '2022-10-01T22:00:00.000Z'
+            },
+            resolution: 'PT730H'
+        });
+        expect(roundRangeResolution({ start: '2021-10-01T22:00:00.000Z', end: '2021-10-01T23:00:00.000Z'}, 6)).toEqual({
+            range: {
+                start: '2021-10-01T22:00:00.000Z',
+                end: '2021-10-01T23:00:00.000Z'
+            },
+            resolution: 'PT10M'
+        });
     });
 });
