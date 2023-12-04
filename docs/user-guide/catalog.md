@@ -367,8 +367,8 @@ In **General Settings** of a COG source type, it is possible to specify the serv
     To properly display COG layers in your MapStore map, it is necessary to add the reference system definition supported by the COG in the MapStore [projectionDefs configuration](../../developer-guide/local-config/#projectiondefs-configuration)
 
 !!! warning
-    The feature is currently in experimental state, and won't be available in the default service types list of the catalog.
-    In order to enable this service, update the MetadataExplorer plugin's configuration in `localConfig.json` as shown below
+     The COG catalog type in MapStore is still in experimental state and for this reason not directly available in the default service types list of the Catalog tool.
+    In order to enable this service, update the default [Catalog tool configuration](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.MetadataExplorer) in `localConfig.json`  or inside the application context wizard as shown below:
 
     ```diff
     {
@@ -390,3 +390,10 @@ In addition to the standard options, only for COG catalog sources, through the *
 <img src="../img/catalog/advanced_settings_cog.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 * *Download file metadata on search*: this option will fetch metadata to support the zoom to layer when the layer is added to the [TOC](toc.md#table-of-contents).
+
+!!! Note
+    The tool capabilities currently available for  COG layers are:
+
+    * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and customize the *Opacity* value and the *Visibility limits* from the [Display](layer-settings.md#display) tab
+    * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
