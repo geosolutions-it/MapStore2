@@ -105,8 +105,16 @@ function rulesmanager(state = defaultState, action) {
     case LOADING:
         return assign({}, state, {loading: action.loading});
     case SET_FILTER: {
-        const {key, value} = action;
-        if (value) {
+        const {key, value, isResetField} = action;
+        if (isResetField) {
+            if (key === "rolename") {
+                return assign({}, state, {filters: {...state.filters, [key]: value, ['roleAny']: undefined}});
+            } else if (key === "username") {
+                return assign({}, state, {filters: {...state.filters, [key]: value, ['userAny']: undefined}});
+            }
+            return assign({}, state, {filters: {...state.filters, [key]: value, [key + 'Any']: undefined}});
+        }
+        if (value || key?.includes('Any')) {
             return assign({}, state, {filters: {...state.filters, [key]: value}});
         }
         const {[key]: omit, ...newFilters} = state.filters;

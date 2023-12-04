@@ -6,42 +6,47 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { Col, FormControl, ControlLabel } from 'react-bootstrap';
+import { InputGroup, ControlLabel, FormGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import Message from '../../../../I18N/Message';
 import HTML from '../../../../I18N/HTML';
 import DisposablePopover from '../../../../misc/popover/DisposablePopover';
+import DebouncedFormControl from '../../../../misc/DebouncedFormControl';
 
 const Format = ({
     data,
     onChange = () => {},
-    prefix = "yAxisOpts"
+    prefix = "yAxisOpts",
+    formGroupClassName = 'form-group-flex',
+    inputMaxWidth = 125
 }) => {
 
     return (
         <>
-            <Col componentClass={ControlLabel} sm={12}>
-                <Message msgId="widgets.advanced.format" />
-            </Col>
-            <Col sm={4}>
+            <FormGroup className={formGroupClassName}>
                 <ControlLabel>
                     <Message msgId="widgets.advanced.prefix" />
-                    <FormControl placeholder="e.g.: ~" disabled={data.yAxis === false} value={data?.[prefix]?.tickPrefix} type="text" onChange={e => onChange(prefix + ".tickPrefix", e.target.value)} />
                 </ControlLabel>
-            </Col>
-            <Col sm={4}>
+                <InputGroup style={{ maxWidth: inputMaxWidth }}>
+                    <DebouncedFormControl placeholder="e.g.: ~" value={data?.[prefix]?.tickPrefix} type="text" onChange={value => onChange(prefix + ".tickPrefix", value)} />
+                </InputGroup>
+            </FormGroup>
+            <FormGroup className={formGroupClassName}>
                 <ControlLabel>
-                    <Message msgId="widgets.advanced.format" />
+                    <Message msgId="widgets.advanced.format" />{' '}
+                    <DisposablePopover placement="top" title={<Message msgId="widgets.advanced.examples"/>} text={<HTML msgId="widgets.advanced.formatExamples" />} />
                 </ControlLabel>
-                <DisposablePopover placement="top" title={<Message msgId="widgets.advanced.examples"/>} text={<HTML msgId="widgets.advanced.formatExamples" />} />
-                <FormControl placeholder="e.g.: .2s" disabled={data.yAxis === false} value={data?.[prefix]?.format} type="text" onChange={e => onChange(prefix + ".format", e.target.value)} />
-            </Col>
-            <Col sm={4}>
+                <InputGroup style={{ maxWidth: inputMaxWidth }}>
+                    <DebouncedFormControl placeholder="e.g.: .2s" value={data?.[prefix]?.format} type="text" onChange={value => onChange(prefix + ".format", value)} />
+                </InputGroup>
+            </FormGroup>
+            <FormGroup className={formGroupClassName}>
                 <ControlLabel><Message msgId="widgets.advanced.suffix" /></ControlLabel>
-                <FormControl placeholder="e.g.: W" disabled={data.yAxis === false} value={data?.[prefix]?.tickSuffix || data?.options?.seriesOptions?.[0].uom} type="text" onChange={e => onChange(prefix + ".tickSuffix", e.target.value)} />
-            </Col>
-
+                <InputGroup style={{ maxWidth: inputMaxWidth }}>
+                    <DebouncedFormControl placeholder="e.g.: W" value={data?.[prefix]?.tickSuffix || data?.options?.seriesOptions?.[0].uom} type="text" onChange={value => onChange(prefix + ".tickSuffix", value)} />
+                </InputGroup>
+            </FormGroup>
         </>);
 };
 Format.propTypes = {

@@ -657,7 +657,9 @@ export const saveLayer = (layer) => {
     layer.tileGridCacheSupport ? { tileGridCacheSupport: layer.tileGridCacheSupport } : {},
     isString(layer.rowViewer) ? { rowViewer: layer.rowViewer } : {},
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
-    !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {});
+    !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
+    layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
+    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {});
 };
 
 /**

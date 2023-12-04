@@ -14,8 +14,9 @@ const defaultOptions = [
     {value: 'READWRITE', label: 'READ WRITE'}
 ];
 
-export default ({options = defaultOptions, attribute, value, onChange = () => {}}) => (
+export default ({options = defaultOptions, attribute, value, onChange = () => {}, className = ""}) => (
     <Select
+        className={className}
         name={`sel-${attribute.name}`}
         clearable={false}
         searchable={false}

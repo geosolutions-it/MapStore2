@@ -556,7 +556,9 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
+            "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", {
+              "name": "Widgets"
+            },
             "WidgetsTray",
             {
               "name": "Timeline",
@@ -742,8 +744,18 @@
           "FeedbackMask"
         ],
         "dashboard": [
-          "BurgerMenu",
-          "Dashboard",
+          "Details",
+          "AddWidgetDashboard",
+          "MapConnectionDashboard",
+          {
+            "name": "SidebarMenu",
+            "cfg" : {
+              "containerPosition": "columns"
+              }
+          },                  
+          {
+            "name": "Dashboard"
+          },
           "Notifications",
           "Login",
           {

@@ -133,7 +133,7 @@ export const getTimeItems = (data = {}, range, rangeData) => {
     // rangeData populates when some changes ara applied with map sync
     // we should use this when available
     // because represent the latest updated value
-    if (rangeData?.domain || rangeData?.histogram) {
+    if (rangeData) {
         return rangeDataToItems(rangeData, range);
     }
     if (data && data.values || data && data.domain && !isTimeDomainInterval(data.domain)) {

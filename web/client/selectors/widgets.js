@@ -12,7 +12,7 @@ import { mapSelector } from './map';
 import { getSelectedLayer } from './layers';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
-import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData } from '../utils/WidgetsUtils';
+import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData } from '../utils/WidgetsUtils';
 import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
@@ -25,8 +25,8 @@ export const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k
 export const getEditingWidget = state => get(state, "widgets.builder.editor");
 export const getSelectedChartId = state => get(getEditingWidget(state), 'selectedChartId');
 export const getEditingWidgetLayer = state => {
-    const { layer, charts, selectedChartId } = getEditingWidget(state) || {};
-    return layer ? layer : charts?.find(c => c.chartId === selectedChartId)?.layer;
+    const { layer, charts, selectedChartId, selectedTraceId } = getEditingWidget(state) || {};
+    return charts ? extractTraceData({ selectedChartId, selectedTraceId, charts })?.layer : layer;
 };
 export const getWidgetLayer = createSelector(
     getEditingWidgetLayer,
@@ -182,7 +182,16 @@ export const widgetsConfig = createStructuredSelector({
  * @param {object} state the state
  */
 export const getWidgetFilterKey = (state) => {
-    const selectedChartId = getSelectedChartId(state);
+    const { selectedChartId, charts = [],  selectedTraceId } = getEditingWidget(state) || {};
+    if (!selectedChartId) {
+        return 'filter';
+    }
+    const selectedTrace = extractTraceData({ selectedChartId, selectedTraceId, charts });
     // Set chart key if editor widget type is chart
-    return selectedChartId ? `charts[${selectedChartId}].filter` : "filter";
+    return `charts[${selectedChartId}].traces[${selectedTrace?.id}].filter`;
+};
+
+export const getTblWidgetZoomLoader = state => {
+    let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
+    return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };

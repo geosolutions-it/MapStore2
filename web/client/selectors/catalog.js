@@ -56,9 +56,12 @@ export const catalogSearchInfoSelector = createStructuredSelector({
     projection: projectionSelector
 });
 export const formatsLoadingSelector = (state) => get(state, "catalog.formatsLoading", false);
+export const getSupportedFormatsInNewServiceSelector = (state) => get(state, "catalog.newService.supportedFormats.imageFormats", []);
 export const getSupportedFormatsSelector = (state) => modeSelector(state) === 'edit'
-    ? get(state, "catalog.newService.supportedFormats.imageFormats", [])
+    ? getSupportedFormatsInNewServiceSelector(state)
     : selectedCatalogSelector(state)?.supportedFormats?.imageFormats || [];
+
 export const getSupportedGFIFormatsSelector = (state) => get(state, "catalog.newService.supportedFormats.infoFormats", getDefaultSupportedGetFeatureInfoFormats());
 export const getFormatUrlUsedSelector = (state) => get(state, "catalog.newService.formatUrlUsed", '');
 export const getNewServiceStatusSelector = (state) => get(state, "catalog.isNewServiceAdded", false);
+export const showFormatErrorSelector = (state) => get(state, "catalog.showFormatError", false);

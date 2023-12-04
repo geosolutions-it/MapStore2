@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import expect from 'expect';
-import ChartWizard, { isChartOptionsValid } from '../ChartWizard';
+import ChartWizard from '../ChartWizard';
 
 const featureTypeProperties = [{
     "name": "the_geom",
@@ -66,18 +66,22 @@ const data = {
         {
             legend: false,
             cartesian: true,
-            yAxis: true,
-            type: "bar",
             chartId: "1",
-            layer
+            traces: [{
+                type: "bar",
+                layer,
+                options: {}
+            }]
         },
         {
             legend: false,
             cartesian: true,
-            yAxis: true,
-            type: "bar",
             chartId: "2",
-            layer: {...layer, title: "Layer_2", name: "test:layer1"}
+            traces: [{
+                type: "bar",
+                layer: {...layer, title: "Layer_2", name: "test:layer1"},
+                options: {}
+            }]
         }
     ],
     selectedChartId: "1",
@@ -98,26 +102,26 @@ describe('ChartWizard component', () => {
         ReactDOM.render(<ChartWizard />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toBeTruthy();
-        expect(container.querySelector('.chart-option-title')).toBeTruthy();
-        expect(container.querySelector('.chart-type')).toBeFalsy();
+        expect(el).toBeFalsy();
     });
-    it('ChartWizard with featureTypeProperties', () => {
-        ReactDOM.render(<ChartWizard featureTypeProperties={featureTypeProperties} />, document.getElementById("container"));
+    it('ChartWizard with featureTypeProperties and traces', () => {
+        ReactDOM.render(<ChartWizard
+            featureTypeProperties={featureTypeProperties}
+            data={{
+                selectedChartId: 'chart-01',
+                charts: [{
+                    chartId: 'chart-01',
+                    traces: [{
+                        type: 'bar',
+                        layer: {},
+                        options: {}
+                    }]
+                }]
+            }}
+        />, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container).toBeTruthy();
-        expect(container.querySelector('.chart-option-title')).toBeTruthy();
-        expect(container.querySelector('.chart-type')).toBeTruthy();
-    });
-    it('ChartWizard rendering chart options', () => {
-        ReactDOM.render(<ChartWizard step={1}/>, document.getElementById("container"));
-        const container = document.getElementById('container');
-        const el = container.querySelector('.chart-options');
-        expect(el).toBeTruthy();
-    });
-    it('ChartWizard default step 0 ', () => {
-        ReactDOM.render(<ChartWizard step={0} />, document.getElementById("container"));
-        const container = document.getElementById('container');
+        expect(container.querySelector('.ms-wizard')).toBeTruthy();
         const elChartOption = container.querySelector('.chart-options');
         expect(elChartOption).toBeTruthy();
         const elChartOptionForm = container.querySelector('.chart-options-form');
@@ -133,45 +137,27 @@ describe('ChartWizard component', () => {
             selectedChart: {...data, layer},
             noAttributes: false
         };
-        const cmp = ReactDOM.render(<ChartWizard step={0} {...props}/>, document.getElementById("container"));
-        expect(cmp).toBeTruthy();
-        const domNode = ReactDOM.findDOMNode(cmp);
+        ReactDOM.render(<ChartWizard step={0} {...props}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const domNode = container.querySelector('.ms-wizard');
         expect(domNode).toBeTruthy();
-        expect(domNode.children.length).toBe(3);
-        const cOptionsFormEl = domNode.querySelector('.Select');
-        expect(cOptionsFormEl).toBeTruthy();
+        const selectInputs = domNode.querySelectorAll('.Select');
+        expect(selectInputs.length).toBe(8);
     });
     it('ChartWizard step 1', () => {
-        const cmp = ReactDOM.render(<ChartWizard step={1} />, document.getElementById("container"));
-        expect(cmp).toBeTruthy();
-        const domNode = ReactDOM.findDOMNode(cmp);
+        const props = {
+            featureTypeProperties,
+            data,
+            layer,
+            hasAggregateProcess: true,
+            withContainer: false,
+            selectedChart: {...data, layer},
+            noAttributes: false
+        };
+        ReactDOM.render(<ChartWizard step={1} {...props}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const domNode = container.querySelector('.ms-wizard');
         expect(domNode).toBeTruthy();
-        expect(domNode.children.length).toBe(3);
-    });
-    describe('isChartOptionsValid', () => {
-        it('mandatory operation if process present', () => {
-            expect(isChartOptionsValid({
-                aggregationAttribute: "A",
-                groupByAttributes: "B"
-            }, { hasAggregateProcess: true })).toBeFalsy();
-            expect(isChartOptionsValid({
-                aggregationAttribute: "A",
-                groupByAttributes: "B",
-                aggregateFunction: "SUM"
-            }, { hasAggregateProcess: true })).toBeTruthy();
-        });
-        it('operation not needed if WPS not present', () => {
-            expect(isChartOptionsValid({
-                aggregationAttribute: "A",
-                groupByAttributes: "B"
-            }, { hasAggregateProcess: false })).toBeTruthy();
-        });
-        it('only classification attribute present ', () => {
-            expect(isChartOptionsValid({
-                aggregationAttribute: "A",
-                groupByAttributes: "B",
-                classificationAttribute: "C"
-            }, {hasAggregateProcess: false})).toBeTruthy();
-        });
+        expect(domNode.querySelectorAll('input').length).toBe(2);
     });
 });

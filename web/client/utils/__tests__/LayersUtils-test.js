@@ -1246,6 +1246,31 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.disableFeaturesEditing).toBeTruthy();
                 }
+            ],
+            [
+                {
+                    pointCloudShading: {
+                        attenuation: true,
+                        maximumAttenuation: 4,
+                        eyeDomeLighting: true,
+                        eyeDomeLightingStrength: 1,
+                        eyeDomeLightingRadius: 1
+                    }
+                },
+                l => {
+                    expect(l.pointCloudShading).toBeTruthy();
+                }
+            ],
+            // Save sourceMetadata
+            [
+                {
+                    sourceMetadata: {
+                        crs: "EPSG:3946"
+                    }
+                },
+                l => {
+                    expect(l.sourceMetadata).toBeTruthy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );

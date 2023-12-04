@@ -190,8 +190,8 @@ describe('widgetsbuilder epic', () => {
                     expect(action.widget.widgetType).toBe('chart');
                     expect(action.widget.charts.length).toBe(1);
                     expect(action.widget.charts[0].chartId).toBe(action.widget.selectedChartId);
-                    expect(action.widget.charts[0].type).toBe('bar');
-                    expect(action.widget.charts[0].name).toBe('Chart-1');
+                    expect(action.widget.charts[0].traces.length).toBe(1);
+                    expect(action.widget.charts[0].traces[0].type).toBe('bar');
                     break;
                 case EDITOR_CHANGE:
                     expect(action.key).toBe('returnToFeatureGrid');
@@ -215,8 +215,8 @@ describe('widgetsbuilder epic', () => {
     });
     it('handleWidgetsFilterPanel', (done) => {
         const startActions = [openFilterEditor()];
-        testEpic(handleWidgetsFilterPanel, 4, startActions, actions => {
-            expect(actions.length).toBe(4);
+        testEpic(handleWidgetsFilterPanel, 3, startActions, actions => {
+            expect(actions.length).toBe(3);
             actions.map((action) => {
                 switch (action.type) {
                 case SET_CONTROL_PROPERTY:
@@ -236,6 +236,7 @@ describe('widgetsbuilder epic', () => {
                         type: "string",
                         alias: "X alias"
                     }]);
+                    expect(action.owner).toEqual("widgets");
                     break;
                 case LOAD_FILTER:
                     break;
@@ -274,8 +275,8 @@ describe('widgetsbuilder epic', () => {
         const startActions = [openFilterEditor(), search("TEST", {
 
         })];
-        testEpic(handleWidgetsFilterPanel, 8, startActions, actions => {
-            expect(actions.length).toBe(8);
+        testEpic(handleWidgetsFilterPanel, 7, startActions, actions => {
+            expect(actions.length).toBe(7);
             actions.map((action) => {
                 switch (action.type) {
                 case SET_CONTROL_PROPERTY:

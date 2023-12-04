@@ -1463,7 +1463,7 @@ describe('OpenlayersMap', () => {
             expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
         it("with custom hookRegister", () => {
-            const customHooRegister = MapUtils.createRegisterHooks();
+            const customHooRegister = MapUtils.createRegisterHooks("mymap");
             const map = ReactDOM.render(<OpenlayersMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
             expect(map).toBeTruthy();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');

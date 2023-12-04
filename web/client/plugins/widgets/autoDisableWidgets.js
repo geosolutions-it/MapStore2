@@ -21,6 +21,6 @@ const autoDisableWidgets = connect(
         (rightPanel, bottomPanel) => ({
             enabled: !rightPanel && !bottomPanel
         })
-    )
+    ), {}
 );
 export default autoDisableWidgets;

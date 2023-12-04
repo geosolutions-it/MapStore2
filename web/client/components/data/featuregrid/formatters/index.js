@@ -15,7 +15,7 @@ import NumberFormat from '../../../I18N/Number';
 import { dateFormats as defaultDateFormats } from "../../../../utils/FeatureGridUtils";
 
 const BooleanFormatter =  ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : null;
-const StringFormatter = ({value} = {}) => !isNil(value) ? reactStringReplace(value, /(https?:\/\/\S+)/g, (match, i) => (
+export const StringFormatter = ({value} = {}) => !isNil(value) ? reactStringReplace(value, /(https?:\/\/\S+)/g, (match, i) => (
     <a key={match + i} href={match} target={"_blank"}>{match}</a>
 )) : null;
 const NumberFormatter = ({value} = {}) => !isNil(value) ? <NumberFormat value={value} numberParams={{maximumFractionDigits: 17}}/> : null;

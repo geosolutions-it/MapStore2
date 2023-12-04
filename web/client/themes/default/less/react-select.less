@@ -183,7 +183,7 @@
 // Layout
 // **************
 @import '~react-select/less/select.less';
-
+@select-input-height: 30; // reduced height to align it to other inputs
 @select-input-border-radius: 0;
 @select-item-border-radius: 0;
 
@@ -194,4 +194,8 @@
     &.Select--multi .Select-value {
         margin-top: 3px;
     }
+}
+
+.Select.is-open {
+    z-index: 20;
 }
