@@ -365,7 +365,7 @@ In **General Settings** of a COG source type, it is possible to specify the serv
 
 !!! warning
      COG catalog types in MapStore is still in experimental state and won't be available in the default service types list of the Catalog tool.
-    In order to enable this service, update the [MetadataExplorer plugin's configuration](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.MetadataExplorer) in `localConfig.json` as shown below
+    In order to enable this service, update the default [Catalog tool configuration](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.MetadataExplorer) in `localConfig.json`  or inside the application context wizard as shown below:
 
     ```diff
     {
