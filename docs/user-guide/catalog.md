@@ -388,7 +388,7 @@ In addition to the standard options, only for COG catalog sources, through the *
 
 * *Download file metadata on search*: this option will fetch metadata to support the zoom to layer when the layer is added to the [TOC](toc.md#table-of-contents).
 
-!!! warning
+!!! Note
     For now, the implementation of the COG catalog on MapStore is experimental and the features currently available for the COG layers are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
