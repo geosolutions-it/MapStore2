@@ -363,6 +363,23 @@ In **General Settings** of a COG source type, it is possible to specify the serv
 !!! Note
     To properly display COG layers in your MapStore map, it is necessary to add the reference system definition supported by the COG in the MapStore [projectionDefs configuration](../../developer-guide/local-config/#projectiondefs-configuration)
 
+!!! warning
+    The feature is currently in experimental state, and won't be available in the default service types list of the catalog.
+    In order to enable this service, update the [MetadataExplorer plugin's configuration](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.MetadataExplorer) in `localConfig.json` as shown below
+
+    ```diff
+    {
+        "name": "MetadataExplorer",
+        "cfg": {
+            ...
+            serviceTypes: [
+                ...
+    +           { name: "cog", label: "COG" }
+            ]
+        }
+    }
+    ```
+
 #### Advanced Settings
 
 In addition to the standard options, only for COG catalog sources, through the **Advanced Settings** the user can configure also the following option:
