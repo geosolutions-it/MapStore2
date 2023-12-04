@@ -70,6 +70,7 @@ export const initEditorOnNewChart = (action$, {getState = () => {}} = {}) => act
                 charts: [
                     {
                         chartId,
+                        layer,
                         legend: false,
                         cartesian: true,
                         traces: [

@@ -158,9 +158,16 @@ function widgetsReducer(state = emptyState, action) {
                             // every chart stores the layer object configuration
                             // so we need to loop around them to update correctly the layer properties
                             // including the layerFilter
-                            return set("charts", w.charts.map((chart) =>
-                                get(chart, "layer.id") === action.layer.id ? set("layer", action.layer, chart) : chart
-                            ), w);
+                            let chartsCopy = w?.charts?.length ? [...w.charts] : [];
+                            chartsCopy = chartsCopy.map(chart=>{
+                                let chartItem = {...chart};
+                                chartItem = get(chart, "layer.id") === action.layer.id ? set("layer", action.layer, chart) : chart;
+                                chartItem.traces = chartItem?.traces?.map(trace=>
+                                    get(trace, "layer.id") === action.layer.id ? set("layer", action.layer, trace) : trace
+                                );
+                                return chartItem;
+                            });
+                            return set("charts", chartsCopy, w);
                         }
                         return get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w;
                     }), state);

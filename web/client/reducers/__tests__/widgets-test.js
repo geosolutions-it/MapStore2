@@ -148,6 +148,18 @@ describe('Test the widgets reducer', () => {
                                     name: "layer3",
                                     id: "3"
                                 }
+                            }, {
+                                layer: {
+                                    visibility: false,
+                                    name: "layer3",
+                                    id: "3"
+                                }, traces: [{
+                                    layer: {
+                                        visibility: false,
+                                        name: "layer3",
+                                        id: "3"
+                                    }, id: "traceId"
+                                }]
                             }
                         ]
                     }]
@@ -166,6 +178,8 @@ describe('Test the widgets reducer', () => {
         expect(widgetObjects[3].layer).toEqual(newTargetLayer);
         expect(widgetObjects[4].charts[0].layer).toEqual(newTargetLayer);
         expect(widgetObjects[4].charts[1].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[1].layer);
+        expect(widgetObjects[4].charts[2].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[1].layer);
+        expect(widgetObjects[4].charts[2].traces[0].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[2].traces[0].layer);
     });
     it('deleteWidget', () => {
         const state = {
