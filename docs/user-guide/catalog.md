@@ -364,7 +364,7 @@ In **General Settings** of a COG source type, it is possible to specify the serv
     To properly display COG layers in your MapStore map, it is necessary to add the reference system definition supported by the COG in the MapStore [projectionDefs configuration](../../developer-guide/local-config/#projectiondefs-configuration)
 
 !!! warning
-     COG catalog types in MapStore is still in experimental state and won't be available in the default service types list of the Catalog tool.
+     The COG catalog type in MapStore is still in experimental state and for this reason not directly available in the default service types list of the Catalog tool.
     In order to enable this service, update the default [Catalog tool configuration](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.MetadataExplorer) in `localConfig.json`  or inside the application context wizard as shown below:
 
     ```diff
