@@ -32,7 +32,10 @@ This steps have to be followed always when preparing a new release.
     - A new branch named `YYYY.XX.xx` with fixed versions
 - [ ] Merge the incoming PR created by the workflow
 - [ ] Create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
-- [ ] create a branch with the same name (`YYYY.XX.xx`) in [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository.
+- [ ] Run the [`Cut Release Branch`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/cut_release_branch.yml) workflow on MapStoreExtension project, indicating:
+    - [ ] Use workflow from branch `master`
+    - [ ] MapStore branch name to use: `YYYY.XX.xx`
+    - [ ] main branch `master` (default)
 
 ## Before the Release
 
