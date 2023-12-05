@@ -37,7 +37,11 @@ import {
     makeNumericEPSG,
     getPolygonFromCircle,
     checkIfLayerFitsExtentForProjection,
-    getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian, transformExtentToObj
+    getLonLatFromPoint,
+    convertRadianToDegrees,
+    convertDegreesToRadian,
+    transformExtentToObj,
+    transformExtentToArray
 } from '../CoordinatesUtils';
 
 import Proj4js from 'proj4';
@@ -780,6 +784,11 @@ describe('CoordinatesUtils', () => {
                 minx: -180, miny: -90, maxx: 180, maxy: 90
             });
         });
+    });
+    it('test transformExtentToArray', ()=>{
+        const extent = [1, 1, 5, 5];
+        const bounds = { minx: 1, miny: 1, maxx: 5, maxy: 5 };
+        expect(transformExtentToArray(bounds)).toEqual(extent);
     });
     it('extractCrsFromURN #1', () => {
         const urn = 'urn:ogc:def:crs:EPSG:6.6:4326';

@@ -811,5 +811,76 @@ describe('CesiumStyleParser', () => {
                     });
                 });
         });
+        it('should write a style function with model symbolizer with x/y translation', (done) => {
+
+            const translateDelta = 100;
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Model',
+                                model: '/path/to/file.glb',
+                                scale: 1,
+                                heading: 0,
+                                roll: 0,
+                                pitch: 0,
+                                color: '#ffffff',
+                                opacity: 0.5,
+                                msHeightReference: 'relative',
+                                height: 10,
+                                msTranslateX: translateDelta,
+                                msTranslateY: translateDelta,
+                                msLeaderLineColor: '#ff0000',
+                                msLeaderLineOpacity: 0.5,
+                                msLeaderLineWidth: 2
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const lng = 7;
+            const lat = 41;
+
+            parser.writeStyle(style)
+                .then((styleFunc) => {
+                    Cesium.GeoJsonDataSource.load({
+                        type: 'Feature',
+                        properties: {},
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [lng, lat]
+                        }
+                    }).then((dataSource) => {
+                        const entities = dataSource?.entities?.values;
+                        return styleFunc({ entities })
+                            .then(() => {
+                                const expectedTranslatedDistance = Math.round(Math.sqrt(2) * translateDelta);
+                                const distancePosition = Math.round(Cesium.Cartesian3.distance(
+                                    entities[0]._msPosition,
+                                    entities[0].position.getValue(Cesium.JulianDate.now())
+                                ));
+                                expect(distancePosition).toBe(expectedTranslatedDistance);
+                                const leaderLinePositions = entities[0].polyline.positions.getValue();
+                                const distanceLeaderLineA = Math.round(Cesium.Cartesian3.distance(
+                                    entities[0]._msPosition,
+                                    leaderLinePositions[0]
+                                ));
+                                expect(distanceLeaderLineA).toBe(0);
+                                const distanceLeaderLineB = Math.round(Cesium.Cartesian3.distance(
+                                    entities[0]._msPosition,
+                                    leaderLinePositions[1]
+                                ));
+                                expect(distanceLeaderLineB).toBe(expectedTranslatedDistance);
+                                done();
+                            })
+                            .catch(done);
+                    });
+                });
+        });
     });
 });

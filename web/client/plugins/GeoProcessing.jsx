@@ -66,6 +66,17 @@ const GeoProcessing = createPlugin(
                 action: toggleControl.bind(null, 'GeoProcessing', null),
                 priority: 10,
                 toggle: true
+            },
+            BurgerMenu: {
+                name: 'GeoProcessing',
+                position: 2100,
+                doNotHide: true,
+                tooltip: "GeoProcessing.tooltip.siderBarBtn",
+                text: <Message msgId="GeoProcessing.title" />,
+                icon: <Glyphicon glyph="globe-settings" />,
+                action: toggleControl.bind(null, 'GeoProcessing', null),
+                priority: 12,
+                toggle: true
             }
         },
         reducers: {

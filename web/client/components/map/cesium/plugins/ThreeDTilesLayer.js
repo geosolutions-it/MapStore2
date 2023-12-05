@@ -18,17 +18,27 @@ import tinycolor from 'tinycolor2';
 import googleOnWhiteLogo from '../img/google_on_white_hdpi.png';
 import googleOnNonWhiteLogo from '../img/google_on_non_white_hdpi.png';
 
-function getStyle({ style }) {
+const cleanStyle = (style, options) => {
+    if (style && options?.pointCloudShading?.attenuation) {
+        // remove pointSize if attenuation are applied
+        const { pointSize, ...others } = style;
+        return others;
+    }
+    return style;
+};
+
+function getStyle({ style, pointCloudShading = {} }) {
     const { format, body } = style || {};
     if (!format || !body) {
         return Promise.resolve(null);
     }
     if (format === '3dtiles') {
-        return Promise.resolve(body);
+        return Promise.resolve(cleanStyle(body, { pointCloudShading }));
     }
     if (format === 'geostyler') {
         return getStyleParser('3dtiles')
-            .then((parser) => parser.writeStyle(body));
+            .then((parser) => parser.writeStyle(body))
+            .then((parsedStyle) => cleanStyle(parsedStyle, { pointCloudShading }));
     }
     return Promise.all([
         getStyleParser(format),
@@ -38,6 +48,7 @@ function getStyle({ style }) {
             parser
                 .readStyle(body)
                 .then(parsedStyle => threeDTilesParser.writeStyle(parsedStyle))
+                .then((parsedStyle) => cleanStyle(parsedStyle, { pointCloudShading }))
         );
 }
 
@@ -106,6 +117,16 @@ function updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet) {
     return null;
 }
 
+function updateShading(tileSet, options, map) {
+    // point cloud
+    tileSet.pointCloudShading.attenuation = !!options?.pointCloudShading?.attenuation;
+    tileSet.pointCloudShading.maximumAttenuation = options?.pointCloudShading?.maximumAttenuation ?? 4;
+    tileSet.pointCloudShading.eyeDomeLighting = !!options?.pointCloudShading?.eyeDomeLighting;
+    tileSet.pointCloudShading.eyeDomeLightingStrength = options?.pointCloudShading?.eyeDomeLightingStrength ?? 1.0;
+    tileSet.pointCloudShading.eyeDomeLightingRadius = options?.pointCloudShading?.eyeDomeLightingRadius ?? 1.0;
+    setTimeout(() => map.scene.requestRender());
+}
+
 Layers.registerType('3dtiles', {
     create: (options, map) => {
         if (options.visibility && options.url) {
@@ -133,6 +154,7 @@ Layers.registerType('3dtiles', {
                 ensureReady(tileSet, () => {
                     updateModelMatrix(tileSet, options);
                     clip3DTiles(tileSet, options, map);
+                    updateShading(tileSet, options, map);
                     getStyle(options)
                         .then((style) => {
                             if (style) {
@@ -184,7 +206,10 @@ Layers.registerType('3dtiles', {
                 clip3DTiles(tileSet, newOptions, map);
             });
         }
-        if (!isEqual(newOptions.style, oldOptions.style) && tileSet) {
+        if ((
+            !isEqual(newOptions.style, oldOptions.style)
+            || newOptions?.pointCloudShading?.attenuation !== oldOptions?.pointCloudShading?.attenuation
+        ) && tileSet) {
             ensureReady(tileSet, () => {
                 getStyle(newOptions)
                     .then((style) => {
@@ -193,6 +218,11 @@ Layers.registerType('3dtiles', {
                             tileSet.style = new Cesium.Cesium3DTileStyle(style);
                         }
                     });
+            });
+        }
+        if (!isEqual(newOptions.pointCloudShading, oldOptions.pointCloudShading) && tileSet) {
+            ensureReady(tileSet, () => {
+                updateShading(tileSet, newOptions, map);
             });
         }
         if (tileSet && newOptions.heightOffset !== oldOptions.heightOffset) {

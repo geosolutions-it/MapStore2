@@ -27,7 +27,11 @@ import {
     DATASET_WITH_DATES,
     SPLIT_DATASET_4
 } from './sample_data';
-import WidgetChart, { toPlotly, defaultColorGenerator, COLOR_DEFAULTS } from '../WidgetChart';
+import WidgetChart, { toPlotly } from '../WidgetChart';
+import { createClassifyGeoJSONSync } from '../../../api/GeoJSONClassification';
+
+import * as simpleStatistics from 'simple-statistics';
+const classifyGeoJSONSync = createClassifyGeoJSONSync(simpleStatistics);
 
 describe('WidgetChart', () => {
     beforeEach((done) => {
@@ -41,18 +45,26 @@ describe('WidgetChart', () => {
     });
     it('rendering pie', (done) => {
         const check = ({ data, layout }, graphDiv) => {
-            expect(graphDiv).toExist();
-            expect(layout.showlegend).toBeFalsy();
-            expect(layout.autosize).toBeFalsy();
-            expect(layout.automargin).toBeFalsy();
-            expect(layout.legend).toBeFalsy();
-            expect(data.length).toEqual(1);
-            // use yAxis dataKey as default label
-            expect(data[0].name).toEqual(DATASET_1.series[0].dataKey);
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.xAxis.dataKey]));
+            try {
+                expect(graphDiv).toExist();
+                expect(layout.showlegend).toBeFalsy();
+                expect(layout.autosize).toBeFalsy();
+                expect(layout.automargin).toBeFalsy();
+                expect(layout.legend).toBeFalsy();
+                expect(data.length).toEqual(1);
+                // use yAxis dataKey as default label
+                expect(data[0].name).toEqual(DATASET_1.series[0].dataKey);
+                // original values
+                expect(DATASET_1.data.map(d => d[DATASET_1.series[0].dataKey])).toEqual([0, 1, 2, 3]);
+                // data values mapped and sorted
+                expect(data[0].values).toEqual([ 3, 2, 1, 0 ]);
+                // original labels
+                expect(DATASET_1.data.map(d => d[DATASET_1.xAxis.dataKey])).toEqual(['Page A', 'Page B', 'Page C', 'Page D']);
+                // data labels mapped and sorted
+                expect(data[0].labels).toEqual(['Page D', 'Page C', 'Page B', 'Page A']);
+            } catch (e) {
+                done(e);
+            }
             done();
         };
         ReactDOM.render(<WidgetChart onInitialized={check} {...DATASET_1} type="pie" />, document.getElementById("container"));
@@ -93,6 +105,94 @@ describe('WidgetChart', () => {
         };
         ReactDOM.render(<WidgetChart onInitialized={check} {...DATASET_1} type="bar" />, document.getElementById("container"));
     });
+    it('rendering multi traces', (done) => {
+        const check = ({ data, layout }, graphDiv) => {
+            try {
+                expect(graphDiv).toBeTruthy();
+                expect(data.length).toBe(2);
+                expect(data).toEqual([
+                    {
+                        mode: 'lines',
+                        name: 'population',
+                        hovertemplate: '%{y:d}<extra></extra>',
+                        x: [ 'A', 'B', 'C' ],
+                        y: [ 500, 1000, 600 ],
+                        line: {
+                            color: '#ff0000',
+                            width: 2
+                        }
+                    },
+                    {
+                        mode: 'lines',
+                        name: 'cars',
+                        hovertemplate: '%{y:d}<extra></extra>',
+                        x: [ 'A', 'B', 'C' ],
+                        y: [ 400, 600, 300 ],
+                        yaxis: 'y2',
+                        line: {
+                            color: '#0000ff',
+                            width: 2
+                        }
+                    }
+                ]);
+                expect(layout.yaxis).toBeTruthy();
+                expect(layout.yaxis2).toBeTruthy();
+                expect(layout.yaxis2.side).toBe('right');
+                expect(layout.xaxis).toBeTruthy();
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        ReactDOM.render(<WidgetChart
+            onInitialized={check}
+            yAxisOpts={[
+                { id: 0 },
+                { id: 'y-axis-1', side: 'right' }
+            ]}
+            data={[
+                [
+                    { population: 500, label: 'A' },
+                    { population: 1000, label: 'B' },
+                    { population: 600, label: 'C' }
+                ],
+                [
+                    { cars: 400, label: 'A' },
+                    { cars: 600, label: 'B' },
+                    { cars: 300, label: 'C' }
+                ]
+            ]}
+            traces={[
+                {
+                    type: 'line',
+                    options: {
+                        groupByAttributes: 'label',
+                        aggregationAttribute: 'population'
+                    },
+                    style: {
+                        line: {
+                            color: '#ff0000',
+                            width: 2
+                        }
+                    }
+                },
+                {
+                    type: 'line',
+                    yaxis: 'y-axis-1',
+                    options: {
+                        groupByAttributes: 'label',
+                        aggregationAttribute: 'cars'
+                    },
+                    style: {
+                        line: {
+                            color: '#0000ff',
+                            width: 2
+                        }
+                    }
+                }
+            ]}
+        />, document.getElementById("container"));
+    });
 });
 
 const TYPES = ['pie', 'line', 'bar'];
@@ -102,7 +202,8 @@ describe('Widget Chart: data conversions ', () => {
         function testAllTypes(props, handler) {
             TYPES.map(type => toPlotly({
                 type,
-                ...props
+                ...props,
+                classifyGeoJSONSync
             })).map(handler);
         }
         it('defaults', () => {
@@ -128,11 +229,11 @@ describe('Widget Chart: data conversions ', () => {
         it(`show toolbar only if witdth > ${THRESHOLD}, with correct margin`, () => {
             testAllTypes({ ...DATASET_1, width: THRESHOLD }, ({ config, layout }) => {
                 expect(config.displayModeBar).toEqual(false);
-                expect(layout.margin.t).toEqual(5);
+                expect(layout.margin.t).toEqual(8);
             });
             testAllTypes({ ...DATASET_1, width: THRESHOLD + 1 }, ({ config, layout }) => {
                 expect(config.displayModeBar).toEqual(true);
-                expect(layout.margin.t).toEqual(20);
+                expect(layout.margin.t).toEqual(25);
             });
         });
         it('show legend', () => {
@@ -143,54 +244,87 @@ describe('Widget Chart: data conversions ', () => {
     });
     describe('Pie chart', () => {
         it('basic chart options', () => {
-            const { data, layout } = toPlotly({
+            const { data } = toPlotly({
                 type: 'pie',
-                ...DATASET_1
+                ...DATASET_1,
+                classifyGeoJSONSync
             });
             // DATA
             expect(data.length).toBe(1);
             expect(data[0].type).toBe('pie');
             // this avoids text to overflow the chart div when rendered outside the widget
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.xAxis.dataKey]));
-            // LAYOUT
-            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
-            // colors generated are the defaults, generated on data (1 color for each entry)
-            expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, COLOR_DEFAULTS));
+            // original values
+            expect(DATASET_1.data.map(d => d[DATASET_1.series[0].dataKey])).toEqual([ 0, 1, 2, 3 ]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 3, 2, 1, 0 ]);
+            // original labels
+            expect(DATASET_1.data.map(d => d[DATASET_1.xAxis.dataKey])).toEqual(['Page A', 'Page B', 'Page C', 'Page D']);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual(['Page D', 'Page C', 'Page B', 'Page A']);
+            // colors are those defined by the user
+            expect(data[0].marker.colors).toEqual(['#08306b', '#3787c0', '#abd0e6', '#f7fbff']);
         });
         it('Pie chart with modified options', () => {
             const { data, layout } = toPlotly({
                 type: 'pie',
                 width: 500,
-                ...DATASET_1
+                ...DATASET_1,
+                classifyGeoJSONSync
             });
             // DATA
             expect(data.length).toBe(1);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.xAxis.dataKey]));
+            // original values
+            expect(DATASET_1.data.map(d => d[DATASET_1.series[0].dataKey])).toEqual([ 0, 1, 2, 3 ]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 3, 2, 1, 0 ]);
+            // original labels
+            expect(DATASET_1.data.map(d => d[DATASET_1.xAxis.dataKey])).toEqual(['Page A', 'Page B', 'Page C', 'Page D']);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual(['Page D', 'Page C', 'Page B', 'Page A']);
+            // colors are those defined by the user
+            expect(data[0].marker.colors).toEqual(['#08306b', '#3787c0', '#abd0e6', '#f7fbff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 20, b: 5, l: 2, r: 2, pad: 4}); // Modified margin based on width
-            // colors generated are the defaults, generated on data (1 color for each entry)
-            expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, COLOR_DEFAULTS));
+            expect(layout.margin).toEqual({t: 25, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // Modified margin based on width
             expect(layout.legend).toBeTruthy();
             expect(layout.legend).toEqual({x: 1.05, y: 0.5}); // Legend option to right and centered based on width
         });
 
         it('custom colors', () => {
-            const autoColorOptions = { base: 190, range: 20 };
-            const { data, layout } = toPlotly({
-                type: 'pie',
-                autoColorOptions,
-                ...DATASET_1
+            const { data } = toPlotly({
+                traces: [{
+                    type: 'pie',
+                    style: {
+                        ramp: 'spectral',
+                        method: 'uniqueInterval'
+                    },
+                    options: {
+                        groupByAttributes: DATASET_1.xAxis.dataKey,
+                        aggregationAttribute: DATASET_1.series[0].dataKey
+                    }
+                }],
+                classifyGeoJSONSync,
+                data: [DATASET_1.data]
             });
-            expect(layout.colorway).toEqual(defaultColorGenerator(data[0].values.length, autoColorOptions));
+            expect(data[0].marker.colors).toEqual([ '#fee825', '#39ad7a', '#365d8d', '#440154' ]);
+        });
+
+        it('should add percentage to label with includeLegendPercent', () => {
+            const { data } = toPlotly({
+                traces: [{
+                    type: 'pie',
+                    includeLegendPercent: true,
+                    options: {
+                        groupByAttributes: DATASET_1.xAxis.dataKey,
+                        aggregationAttribute: DATASET_1.series[0].dataKey
+                    }
+                }],
+                classifyGeoJSONSync,
+                data: [DATASET_1.data]
+            });
+            expect(data[0].labels).toEqual([ 'Page D - 50.0%', 'Page C - 33.3%', 'Page B - 16.7%', 'Page A - 0.00%' ]);
         });
     });
     it('color mapping classification is undefined - Pie Chart', () => {
@@ -201,24 +335,24 @@ describe('Widget Chart: data conversions ', () => {
             options: {
                 classificationAttributeType: 'string'
             },
+            classifyGeoJSONSync,
             ...DATASET_2
         });
         expect(data.length).toBe(1);
         expect(data[0].type).toBe('pie');
         expect(data[0].textposition).toEqual('inside');
-        // data values mapped
-        data[0].values.map((v, i) => expect(v).toBe(DATASET_2.data[i][DATASET_2.series[0].dataKey]));
-        // data labels mapped
-        data[0].labels.map((v, i) => {
-            const classLabel = DATASET_2.data[i].name;
-            expect(v).toBe(classLabel);
-        });
+        // original values
+        expect(DATASET_2.data.map(d => d[DATASET_2.series[0].dataKey])).toEqual([0, 1]);
+        // data values mapped and sorted
+        expect(data[0].values).toEqual([ 1, 0 ]);
+        // original labels
+        expect(DATASET_2.data.map(d => d[DATASET_2.xAxis.dataKey])).toEqual(['Page A', 'Page B']);
+        // data labels mapped and sorted
+        expect(data[0].labels).toEqual(['Default', 'Default']);
         // colors are those defined by the user
-        data[0].marker.colors.map((v) => {
-            expect(v).toBe(autoColorOptions.defaultCustomColor);
-        });
+        expect(data[0].marker.colors).toEqual(['#00ff00', '#00ff00']);
         // LAYOUT
-        expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+        expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
     });
     describe('1) Pie chart - Color coded custom classifications with absolute values', () => {
         it('custom classified colors - using custom labels and colors only 1', () => {
@@ -230,30 +364,30 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_2
             });
-            expect(data.length).toBe(1);
+            expect(data.length).toBe(2);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_2.data[i][DATASET_2.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => {
-                const classLabel = LABELLED_CLASSIFICATION.filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].title;
-                expect(v).toBe(classLabel);
-            });
+            // original values
+            expect(DATASET_2.data.map(d => d[DATASET_2.series[0].dataKey])).toEqual([0, 1]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 0, 1 ]);
+            // original labels
+            expect(DATASET_2.data.map(d => d[DATASET_2.xAxis.dataKey])).toEqual(['Page A', 'Page B']);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual([ '1) Class 1', '2) Class 2' ]);
+            expect(data[1].labels).toEqual([ 'Page A (1)', 'Page B (2)' ]);
             // colors are those defined by the user
-            data[0].marker.colors.map((v, i) => {
-                const classColor = LABELLED_CLASSIFICATION.filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].color;
-                expect(v).toBe(classColor);
-            });
+            expect(data[0].marker.colors).toEqual(['#ff0000', '#0000ff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using default labels and colors', () => {
             const autoColorOptions = {
                 defaultCustomColor: "#00ff00",
-                defaultClassLabel: "",
+                defaultClassLabel: "Default label",
                 classification: UNLABELLED_CLASSIFICATION,
                 name: 'global.colors.custom'
             };
@@ -265,24 +399,25 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_3
             });
-            expect(data.length).toBe(1);
+            expect(data.length).toBe(2);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_3.data[i][DATASET_3.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => {
-                expect(v).toBe(DATASET_3.data[i][DATASET_3.xAxis.dataKey]);
-            });
+            // original values
+            expect(DATASET_3.data.map(d => d[DATASET_3.series[0].dataKey])).toEqual([0, 1, 4, 5]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 0, 1, 5, 4 ]);
+            // original labels
+            expect(DATASET_3.data.map(d => d[DATASET_3.xAxis.dataKey])).toEqual(['Page A', 'Page B', 'Page E', 'Page F']);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual(['1) class1', '2) class2', '3) Default label', '3) Default label']);
+            expect(data[1].labels).toEqual(['Page A (1)', 'Page B (2)', 'Page F (3)', 'Page E (3)']);
             // colors are those defined by the user
-            data[0].marker.colors.map((v, i) => {
-                const classColor = UNLABELLED_CLASSIFICATION.filter(item => item.value === DATASET_3.data[i][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
-                expect(v).toBe(classColor);
-            });
+            expect(data[0].marker.colors).toEqual(['#ff0000', '#0000ff', '#00ff00', '#00ff00']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using default labels and colors, wrong order', () => {
             const classification = UNLABELLED_CLASSIFICATION_5_ORDERED;
@@ -295,29 +430,29 @@ describe('Widget Chart: data conversions ', () => {
             const { data, layout } = toPlotly({
                 type: 'pie',
                 autoColorOptions,
-                classificationAttr: "classValue",
                 classifications: CLASSIFICATIONS,
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_5_UNORDERED
             });
-            expect(data.length).toBe(1);
+            expect(data.length).toBe(2);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_5_ORDERED.data[i][DATASET_5_ORDERED.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => {
-                expect(v).toBe(DATASET_5_ORDERED.data[i][DATASET_5_ORDERED.xAxis.dataKey]);
-            });
+            // original values
+            expect(DATASET_5_ORDERED.data.map(d => d[DATASET_5_ORDERED.series[0].dataKey])).toEqual([1, 0, 1, 10, 1, 100]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 1, 0, 10, 1, 100, 1 ]);
+            // original labels
+            expect(DATASET_5_ORDERED.data.map(d => d[CLASSIFICATIONS.dataKey])).toEqual([ '1', '1', '2', '2', '3', '3' ]);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual(['1) 1', '1) 1', '2) 2', '2) 2', '3) 3', '3) 3']);
+            expect(data[1].labels).toEqual(['Page A (1)', 'Page B (1)', 'Page B (2)', 'Page A (2)', 'Page B (3)', 'Page A (3)']);
             // colors are those defined by the user
-            data[0].marker.colors.map((v, i) => {
-                const classColor = classification.filter(item => item.value === DATASET_5_ORDERED.data[i][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
-                expect(v).toBe(classColor);
-            });
+            expect(data[0].marker.colors).toEqual([ '#0000ff', '#0000ff', '#00FF00', '#00FF00', '#ff0000', '#ff0000']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using templatized labels and custom colors only - pie charts', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", classification: PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION, name: 'global.colors.custom' };
@@ -328,27 +463,24 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_2
             });
             expect(data.length).toBe(1);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_2.data[i][DATASET_2.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => {
-                const classLabel = PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION
-                    .filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].title
-                    .replace('${groupByValue}', DATASET_2.data[i].name);
-                expect(v).toBe(classLabel);
-            });
+            // original values
+            expect(DATASET_2.data.map(d => d[DATASET_2.series[0].dataKey])).toEqual([0, 1]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 0, 1 ]);
+            // original labels
+            expect(DATASET_2.data.map(d => d[CLASSIFICATIONS.dataKey])).toEqual([ 'class1', 'class2' ]);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual(['Page A - Class 1', 'Page B - Class 2']);
             // colors are those defined by the user
-            data[0].marker.colors.map((v, i) => {
-                const classColor = PIE_CHART_TEMPLATE_LABELS_CLASSIFICATION.filter(item => item.value === DATASET_2.data[i][CLASSIFICATIONS.dataKey])[0].color;
-                expect(v).toBe(classColor);
-            });
+            expect(data[0].marker.colors).toEqual([ '#ff0000', '#0000ff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom color ramp', () => {
             const autoColorOptions = {
@@ -363,6 +495,7 @@ describe('Widget Chart: data conversions ', () => {
             const { data } = toPlotly({
                 type: 'pie',
                 autoColorOptions,
+                classifyGeoJSONSync,
                 ...DATASET_2
             });
             expect(data.length).toBe(1);
@@ -383,29 +516,25 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'number'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_4
             });
-            expect(data.length).toBe(1);
+            expect(data.length).toBe(2);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_4.data[i][DATASET_4.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => {
-                const classLabel = LABELLED_RANGE_CLASSIFICATION.filter(
-                    ({ min, max }) => data[0].values[i] >= min && data[0].values[i] < max
-                )[0].title;
-                expect(v).toBe(classLabel);
-            });
+            // original values
+            expect(DATASET_4.data.map(d => d[DATASET_4.series[0].dataKey])).toEqual([0, 100, 500, 900]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 0, 900, 500, 100 ]);
+            // original labels
+            expect(DATASET_4.data.map(d => d[RANGE_CLASSIFICATIONS.dataKey])).toEqual([ 0, 100, 500, 900 ]);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual(['1) Between 0 and 100', '2) Between 100 and 1000', '2) Between 100 and 1000', '2) Between 100 and 1000']);
+            expect(data[1].labels).toEqual(['Page A (1)', 'Page D (2)', 'Page C (2)', 'Page B (2)']);
             // colors are those defined by the user
-            data[0].marker.colors.map((v, i) => {
-                const classColor = LABELLED_RANGE_CLASSIFICATION.filter(
-                    ({min, max}) => data[0].values[i] >= min && data[0].values[i] < max
-                )[0].color;
-                expect(v).toBe(classColor);
-            });
+            expect(data[0].marker.colors).toEqual([ '#ff0000', '#0000ff', '#0000ff', '#0000ff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using default labels and colors', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", rangeClassification: UNLABELLED_RANGE_CLASSIFICATION, name: 'global.colors.custom' };
@@ -416,33 +545,25 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'number'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_4
             });
-            expect(data.length).toBe(1);
+            expect(data.length).toBe(2);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_4.data[i][DATASET_4.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => {
-                const labelMinValue = UNLABELLED_RANGE_CLASSIFICATION.filter(
-                    ({min, max}) => data[0].values[i] >= min && data[0].values[i] < max
-                )[0].min;
-                const labelMaxValue = UNLABELLED_RANGE_CLASSIFICATION.filter(
-                    ({min, max}) => data[0].values[i] >= min && data[0].values[i] < max
-                )[0].max;
-                const classLabel = `${labelMinValue} - ${labelMaxValue}`;
-                expect(v).toBe(classLabel);
-            });
+            // original values
+            expect(DATASET_4.data.map(d => d[DATASET_4.series[0].dataKey])).toEqual([0, 100, 500, 900]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 0, 900, 500, 100 ]);
+            // original labels
+            expect(DATASET_4.data.map(d => d[RANGE_CLASSIFICATIONS.dataKey])).toEqual([ 0, 100, 500, 900 ]);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual(['1) >= 0<br>< 100', '2) >= 100<br><= 1000', '2) >= 100<br><= 1000', '2) >= 100<br><= 1000']);
+            expect(data[1].labels).toEqual(['Page A (1)', 'Page D (2)', 'Page C (2)', 'Page B (2)']);
             // colors are those defined by the user
-            data[0].marker.colors.map((v, i) => {
-                const classColor = UNLABELLED_RANGE_CLASSIFICATION.filter(
-                    ({min, max}) => data[0].values[i] >= min && data[0].values[i] < max
-                )[0].color;
-                expect(v).toBe(classColor);
-            });
+            expect(data[0].marker.colors).toEqual([ '#ff0000', '#0000ff', '#0000ff', '#0000ff']);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
         it('custom classified colors - using templatized labels and custom colors only - pie charts', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "", rangeClassification: PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION, name: 'global.colors.custom' };
@@ -453,41 +574,32 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'number'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_4
             });
             expect(data.length).toBe(1);
             expect(data[0].type).toBe('pie');
             expect(data[0].textposition).toEqual('inside');
-            // data values mapped
-            data[0].values.map((v, i) => expect(v).toBe(DATASET_4.data[i][DATASET_4.series[0].dataKey]));
-            // data labels mapped
-            data[0].labels.map((v, i) => {
-                const classLabel = PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION
-                    .filter(({ min, max }) => data[0].values[i] >= min && data[0].values[i] < max )[0].title
-                    .replace('${groupByValue}', DATASET_4.data[i].name)
-                    .replace('${legendValue}', DATASET_4.series[0].dataKey)
-                    .replace('${minValue}', PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION
-                        .filter(({ min, max }) => data[0].values[i] >= min && data[0].values[i] < max )[0].min)
-                    .replace('${maxValue}', PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION
-                        .filter(({ min, max }) => data[0].values[i] >= min && data[0].values[i] < max )[0].max);
-                expect(v).toBe(classLabel);
-            });
+            // original values
+            expect(DATASET_4.data.map(d => d[DATASET_4.series[0].dataKey])).toEqual([0, 100, 500, 900]);
+            // data values mapped and sorted
+            expect(data[0].values).toEqual([ 0, 900, 500, 100 ]);
+            // original labels
+            expect(DATASET_4.data.map(d => d[RANGE_CLASSIFICATIONS.dataKey])).toEqual([ 0, 100, 500, 900 ]);
+            // data labels mapped and sorted
+            expect(data[0].labels).toEqual(['Page A - value: Between 0 and 100', 'Page D - value: Between 100 and 1000', 'Page C - value: Between 100 and 1000', 'Page B - value: Between 100 and 1000']);
             // colors are those defined by the user
-            data[0].marker.colors.map((v, i) => {
-                const classColor = PIE_CHART_TEMPLATE_LABELS_RANGE_CLASSIFICATION.filter(
-                    ({min, max}) => data[0].values[i] >= min && data[0].values[i] < max
-                )[0].color;
-                expect(v).toBe(classColor);
-            });
+            expect(data[0].marker.colors).toEqual([ '#ff0000', '#00ff00', '#00ff00', '#00ff00' ]);
             // LAYOUT
-            expect(layout.margin).toEqual({t: 5, b: 5, l: 2, r: 2, pad: 4}); // fixed margins
+            expect(layout.margin).toEqual({t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true}); // fixed margins
         });
     });
     describe('Line/Bar chart common features', () => {
         function testAllTypes(props, handler) {
             ['line', 'bar'].map(type => toPlotly({
                 type,
-                ...props
+                ...props,
+                classifyGeoJSONSync
             })).map(handler);
         }
         it('basic line/bar options', () => {
@@ -503,14 +615,14 @@ describe('Widget Chart: data conversions ', () => {
                 // LAYOUT
 
                 // minimal margins, bottom automatic
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
 
                 // colors generated are the defaults, generated on series (1 color for series, so 1)
-                expect(layout.colorway).toEqual(defaultColorGenerator(1, COLOR_DEFAULTS));
+                // expect(layout.colorway).toEqual(defaultColorGenerator(1, COLOR_DEFAULTS));
 
                 // yaxis
                 expect(layout.yaxis.automargin).toBeTruthy();
-                expect(layout.yaxis.showticklabels).toBeFalsy();
+                expect(layout.yaxis.showticklabels).toBeTruthy();
                 expect(layout.yaxis.showgrid).toBeFalsy();
 
                 // xaxis
@@ -533,7 +645,7 @@ describe('Widget Chart: data conversions ', () => {
             }, ({ layout }) => {
                 // bottom margin is optimized
                 expect(layout.yaxis.showgrid).toBe(true);
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
 
         });
@@ -579,11 +691,11 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_2
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(2);
+            expect(data.length).toBe(2);
+            const traces = data;
             traces.forEach((trace, i) => {
                 expect(trace.type).toBe('bar');
                 // data values mapped
@@ -594,8 +706,8 @@ describe('Widget Chart: data conversions ', () => {
                 expect(trace.name).toBe(classLabel);
                 // colors are those defined by the user
                 const classColor = LABELLED_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0].color;
-                trace.marker.color.forEach(item => expect(item).toBe(classColor));
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(trace.marker.color).toBe(classColor);
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
         it('custom classified colors - using default labels and colors', () => {
@@ -613,11 +725,11 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_3
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(3);
+            expect(data.length).toBe(3);
+            const traces = data;
             traces.forEach((trace, i) => {
                 expect(trace.type).toBe('bar');
                 // data values mapped
@@ -628,8 +740,8 @@ describe('Widget Chart: data conversions ', () => {
                 expect(trace.name).toBe(classLabel);
                 // colors are those defined by the user
                 const classColor = classification.filter(item => item.value === SPLIT_DATASET_3.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
-                trace.marker.color.forEach(item => expect(item).toBe(classColor));
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(trace.marker.color).toBe(classColor);
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
         it('custom classified colors - using default labels and colors, wrong order', () => {
@@ -648,11 +760,11 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_5_UNORDERED
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(3);
+            expect(data.length).toBe(3);
+            const traces = data;
             traces.forEach((trace, i) => {
                 expect(trace.type).toBe('bar');
                 // data values mapped
@@ -663,8 +775,8 @@ describe('Widget Chart: data conversions ', () => {
                 expect(trace.name).toBe(classLabel);
                 // colors are those defined by the user
                 const classColor = classification.filter(item => item.value === SPLIT_DATASET_5_ORDERED.data[i][0][CLASSIFICATIONS.dataKey])[0]?.color ?? autoColorOptions.defaultCustomColor;
-                trace.marker.color.forEach(item => expect(item).toBe(classColor));
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(trace.marker.color).toBe(classColor);
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
 
@@ -677,11 +789,11 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_2
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(2);
+            expect(data.length).toBe(2);
+            const traces = data;
             traces.forEach((trace, i) => {
                 expect(trace.type).toBe('bar');
                 // data values mapped
@@ -694,8 +806,8 @@ describe('Widget Chart: data conversions ', () => {
                 expect(trace.name).toBe(classLabel);
                 // colors are those defined by the user
                 const classColor = TEMPLATE_LABELS_CLASSIFICATION.filter(item => item.value === SPLIT_DATASET_2.data[i][0][CLASSIFICATIONS.dataKey])[0].color;
-                trace.marker.color.forEach(item => expect(item).toBe(classColor));
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(trace.marker.color).toBe(classColor);
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
         it('custom bar color', () => {
@@ -708,14 +820,15 @@ describe('Widget Chart: data conversions ', () => {
                 s: 0.95,
                 v: 0.63
             };
-            const { data, layout } = toPlotly({
+            const { data } = toPlotly({
                 type: 'bar',
                 autoColorOptions,
+                classifyGeoJSONSync,
                 ...DATASET_2
             });
             expect(data.length).toBe(1);
             expect(data[0].type).toBe('bar');
-            expect(layout.colorway).toEqual([autoColorOptions.defaultCustomColor]);
+            expect(data[0].marker.color).toBe(autoColorOptions.defaultCustomColor);
         });
     });
     describe('4) color coded/custom classified Bar chart with range values', () => {
@@ -732,11 +845,11 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'number'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_4
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(2);
+            expect(data.length).toBe(2);
+            const traces = data;
             traces.forEach((trace, i) => {
                 expect(trace.type).toBe('bar');
                 // data values mapped
@@ -751,8 +864,8 @@ describe('Widget Chart: data conversions ', () => {
                 const classColor = LABELLED_RANGE_CLASSIFICATION.filter(
                     ({min, max}) => trace.y[0] >= min && trace.y[0] < max
                 )[0].color;
-                trace.marker.color.forEach(item => expect(item).toBe(classColor));
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(trace.marker.color).toBe(classColor);
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
         it('custom classified colors - using default labels and colors', () => {
@@ -764,11 +877,11 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'number'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_4
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(2);
+            expect(data.length).toBe(2);
+            const traces = data;
             traces.forEach((trace, i) => {
                 expect(trace.type).toBe('bar');
                 // data values mapped
@@ -781,12 +894,12 @@ describe('Widget Chart: data conversions ', () => {
                 expect(valuesInRange).toBe(true);
                 const labelMinValue = UNLABELLED_RANGE_CLASSIFICATION[i].min;
                 const labelMaxValue = UNLABELLED_RANGE_CLASSIFICATION[i].max;
-                const classLabel = `${labelMinValue} - ${labelMaxValue}`;
+                const classLabel = `>= ${labelMinValue}<br><${i === (traces.length - 1) ? '=' : ''} ${labelMaxValue}`;
                 expect(trace.name).toBe(classLabel);
                 // colors are those defined by the user
                 const classColor = UNLABELLED_RANGE_CLASSIFICATION[i].color;
-                trace.marker.color.forEach(item => expect(item).toBe(classColor));
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(trace.marker.color).toBe(classColor);
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
 
@@ -799,11 +912,11 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'number'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_4
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(2);
+            expect(data.length).toBe(2);
+            const traces = data;
             traces.forEach((trace, i) => {
                 expect(trace.type).toBe('bar');
                 // data values mapped
@@ -820,13 +933,13 @@ describe('Widget Chart: data conversions ', () => {
                 expect(trace.name).toBe(classLabel);
                 // colors are those defined by the user
                 const classColor = TEMPLATE_LABELS_RANGE_CLASSIFICATION[i].color;
-                trace.marker.color.forEach(item => expect(item).toBe(classColor));
-                expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
+                expect(trace.marker.color).toBe(classColor);
+                expect(layout.margin).toEqual({ t: 8, b: 8, l: 8, r: 8, pad: 4, autoexpand: true });
             });
         });
     });
     describe('color coded/custom classified Bar chart - common features', () => {
-        it('default classified bar chart type is stacked', () => {
+        it('default classified bar chart type is group', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
             const { data, layout } = toPlotly({
                 type: 'bar',
@@ -835,12 +948,13 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_2
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(2);
-            expect(layout.barmode).toBe('stack');
+            expect(data.length).toBe(2);
+            // we change in group because in some cases is not possible to use stack
+            // in particular when using multiple traces
+            expect(layout.barmode).toBe('group');
         });
         it('change classified bar chart type to grouped', () => {
             const autoColorOptions = { defaultCustomColor: "#00ff00", defaultClassLabel: "Default", classification: LABELLED_CLASSIFICATION, name: 'global.colors.custom' };
@@ -851,17 +965,17 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_2,
                 barChartType: 'group'
             });
-            expect(data.length).toBe(1);
-            const traces = data[0];
-            expect(traces.length).toBe(2);
+            expect(data.length).toBe(2);
             expect(layout.barmode).toBe('group');
         });
         it('expect data to be sorted in ascending order', () => {
             const { data } = toPlotly({
                 xAxis: 'xAxis',
+                classifyGeoJSONSync,
                 ...DATASET_WITH_DATES
             });
             expect(DATASET_WITH_DATES.type).toBe('line');
@@ -875,6 +989,7 @@ describe('Widget Chart: data conversions ', () => {
                 options: {
                     classificationAttributeType: 'string'
                 },
+                classifyGeoJSONSync,
                 ...DATASET_2
             });
             expect(data.length).toBe(1);
@@ -886,15 +1001,12 @@ describe('Widget Chart: data conversions ', () => {
             data[0].x.map((v, i) => expect(v).toBe(DATASET_1.data[i][DATASET_1.xAxis.dataKey]));
             // LAYOUT
 
-            // minimal margins, bottom automatic
-            expect(layout.margin).toEqual({ t: 5, b: 30, l: 5, r: 5, pad: 4 });
-
             // colors generated are the defaults, generated on series (1 color for series, so 1)
-            expect(layout.colorway).toEqual([autoColorOptions.defaultCustomColor]);
+            expect(data[0].marker.color).toBe(autoColorOptions.defaultCustomColor);
 
             // yaxis
             expect(layout.yaxis.automargin).toBeTruthy();
-            expect(layout.yaxis.showticklabels).toBeFalsy();
+            expect(layout.yaxis.showticklabels).toBeTruthy();
             expect(layout.yaxis.showgrid).toBeFalsy();
 
             // xaxis

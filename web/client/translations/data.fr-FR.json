@@ -58,8 +58,8 @@
             "404": "Fichier de traduction introuvable"
         },
         "details": {
-            "title": "À propos de cette carte",
-            "tooltip": "À propos de cette carte"
+            "title": "À propos de cette contenu",
+            "tooltip": "À propos de cette contenu"
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GetFeatureInfo",
         "remove": "Supprimer",
@@ -92,7 +92,7 @@
             "featureInfo": "Informations attributaires de l'objet",
             "featureInfoFormatLbl": "Information, format de la réponse",
             "guideText": "Dans l'URL de l'image, vous pouvez utiliser des espaces réservés comme $\\{properties.YOUR_ATTRIBUTE\\} pour rendre l'URL paramétrique, en fonction des attributs de la fonctionnalité. Il prend en charge à la fois les URL ou les « Data URI » codés en base64.",
-            "imageNotFound": "Cette image peut nécessiter une demande d'informations sur les fonctionnalités pour être rendue correctement",
+            "imageNotFound": "Cette image peut nécessiter une demande d\\'informations sur les fonctionnalités pour être rendue correctement",
             "legenderror": "La légende n'est pas disponible",
             "editCustomFormat": "Modifier le format personnalisé",
             "exampleOfResponse": "Exemple",
@@ -117,6 +117,7 @@
             "heightOffset": "Décalage en hauteur (m)",
             "wmsLayerTileSize": "Taille de la tuile (WMS)",
             "serverType": "Type de serveur",
+            "formatError": "Il n'a pas été possible de récupérer le format et le format de la fiche d'information à partir du service configuré. Vous utilisez probablement un service No Vendor et celui-ci n'est pas pris en charge (par exemple GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -157,6 +158,21 @@
                 "scale": "Échelle",
                 "resolution": "Résolution"
             },
+            "3dTiles": {
+                "format": "Formater",
+                "3dModel": "Modèle 3D",
+                "pointCloud": "Nuage de points",
+                "pointCloudShading": {
+                    "title": "Options de visualisation",
+                    "attenuationInfo": "Effectuer une atténuation de point en fonction de la distance du point de vue actuel",
+                    "attenuation": "Activer l'atténuation",
+                    "maximumAttenuation": "Atténuation maximale",
+                    "eyeDomeLightingInfo": "Cela permet à un éclairage du dôme oculaire d'améliorer la visualisation du nuage de points. Cela ne représente pas l'éclairage réel du soleil",
+                    "eyeDomeLighting": "Activer l'éclairage",
+                    "eyeDomeLightingStrength": "Force d'éclairage",
+                    "eyeDomeLightingRadius": "Rayon d'éclairage"
+                }
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -183,6 +199,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Tile",
+                "information": "Fiche d'information",
                 "refresh": "Récupérer les formats pris en charge",
                 "loading": "Chargement...",
                 "noOption": "Pas d'option",
@@ -223,7 +241,8 @@
             "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
             "saveUpdatedMap": "Toutes les couches ont bien été mises à jour",
             "incompatibleBackgroundAndProjection": "La projection que vous avez choisie n'est pas compatible avec le fond de plan. Changez pour un fond de plan compatible ou retirez le fond de plan, puis sélectionnez à nouveau la projection.",
-            "incompatibleDataAndProjection": "La/les couche(s) actuelle(s) et la projection cartographique ne sont pas totalement compatibles. Certaines données voire toutes les données risquent de ne pas apparaître sur la carte."
+            "incompatibleDataAndProjection": "La/les couche(s) actuelle(s) et la projection cartographique ne sont pas totalement compatibles. Certaines données voire toutes les données risquent de ne pas apparaître sur la carte.",
+            "errorLoadingGF":"Erreur Chargement GF Geom"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionnée",
@@ -334,7 +353,7 @@
         },
         "home": {
             "open": "Ouvrir",
-            "shortDescription": "Application cartographique en ligne moderne Modern propulsée par OpenLayers, Leaflet et ReactJS.<br/> <small>Consultez la page de <a href=\"https://mapstore.readthedocs.io/en/latest/\"> documentation </a></ small>",
+            "shortDescription": "Application cartographique en ligne moderne Modern propulsée par OpenLayers, Leaflet et ReactJS.<br/> <small>Consultez la page de <a href=\"https://docs.mapstore.geosolutionsgroup.com/\"> documentation </a></ small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore a été développé pour créer, sauvegarder et partager de façon simple et intuitive des cartes simple ou élaboréess créés à partir de services comme OpenStreetMap, Google Maps ou tout autres services fournis par des organisations utilisant des protocoles ouverts comme OGC WMS, WFS, WMTS ou TMS et bien d'autres...<br/>Visitez notre <a href=\"https://mapstore.readthedocs.io/en/latest/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
@@ -573,6 +592,7 @@
             "browseData": "Ouvrir la table d'attribut",
             "removeLayer": "Supprimer la couche",
             "loadingerror": "La couche n'a pas été chargée correctement ou n'est pas disponible.",
+            "sourceCRSNotCompatible": "La définition de projection des données sources de la couche {sourceCRS} n'est pas disponible dans l'application de reprojection des données dans la carte actuelle",
             "measure": "Mesurer",
             "layers": "Couches",
             "drawerButton": "Couches",
@@ -1459,7 +1479,7 @@
             "title": "Importer",
             "tooltip": "Importer un fichier de carte ou des données vectorielles.",
             "dropZone": {
-                "heading": "<p> <h4> Déposez votre contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
+                "heading": "<p> <h4> Déposez vos contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez des fichiers...",
                 "infoSupported": "<p><small>Fichiers de contextes pris en charge : format hérité MapStore, WMC<br />Fichiers vectoriels pris en charge : fichier de formes (doivent être contenus dans des archives zip), KML/KMZ, GeoJSON, Annotations ou GPX</small></p>",
                 "note": "<p><small><i><strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de contextes cartographiques</i></small></p>"
@@ -1500,7 +1520,7 @@
             "tooltip": "Ajouter des couches à la carte",
             "autoload": "Recherche sur la sélection du service",
             "fetchMetadata": {
-                "label": "Télécharger les métadonnées du fichier lors de la recherche",
+                "label": "Télécharger les métadonnées du fichier lors de l'enregistrement",
                 "tooltip": "Cette option récupérera les métadonnées pour prendre en charge le zoom sur la couche. Cela peut ralentir l'opération de recherche si les images sont trop grandes ou trop nombreuses."
             },
             "clearValueText": "Effacer la sélection",
@@ -1985,7 +2005,8 @@
                         "editCustomColors": "Modifie Couleurs Personnalisées",
                         "maxValue": "Valeur maximum",
                         "minValue": "Valeur minimum",
-                        "title": "Paramètres de Couleurs Personnalisées"
+                        "title": "Paramètres de Couleurs Personnalisées",
+                        "removeCustomColors": "Effacer les classes personnalisées"
                     }
                 },
                 "errors": {
@@ -2000,7 +2021,17 @@
                 },
                 "setupFilter": "Configurer un filtre pour les données du widget",
                 "addNewLayers": "Ajouter de nouveaux calques",
-                "deleteChart": "Supprimer le graphique actuel"
+                "deleteChart": "Supprimer le graphique actuel",
+                "editTraceTitle": "Modifier le titre de la trace",
+                "addNewTrace": "Ajouter une nouvelle trace",
+                "deleteTrace": "Supprimer la trace actuelle",
+                "selectLayer": "Sélectionner un calque",
+                "filterLayer": "Filtrer le calque actuel",
+                "editChartTitle": "Modifier le titre du graphique",
+                "addNewCharts": "Ajouter de nouveaux graphiques",
+                "editAxisTitle": "Modifier le titre de l'axe",
+                "addNewAxis": "Ajouter un nouvel axe",
+                "removeAxis": "Supprimer l'axe actuel"
             },
             "widget": {
                 "menu": {
@@ -2113,16 +2144,19 @@
             },
             "mapSync": "Live Filter par viewport",
             "displayLegend": {
+                "default": "Afficher la légende",
                 "line": "Afficher la légende",
                 "pie": "Afficher la légende",
                 "bar": "Afficher la légende",
                 "gauge": "Afficher les étiquettes"
             },
             "advanced": {
+              "font": "Police de caractère",
               "displayCartesian": "Masquer la grille",
               "xAxis": "Axe X",
               "xAxisAngle": "Rotation des étiquettes",
               "hideLabels": "Masquer les libellés",
+              "includeLegendPercent": "Include percentages in legend",
               "format": "Format",
               "prefix": "Prefix",
               "suffix": "Suffixe",
@@ -2141,6 +2175,28 @@
               "barChartType": "Type de Graphique à Barres",
               "groupedBarChart": "Groupé",
               "stackedBarChart": "Empilé",
+              "valueFormatting": "Formatage des valeurs de trace",
+              "traceAxes": "Haches de trace",
+              "traceData": "Données de trace",
+              "traceLegendOptions": "Options de légende de trace",
+              "traces": "Traces",
+              "axes": "Haches",
+              "traceStyle": "Style de trace",
+              "mode": "Mode",
+              "lineColor": "Couleur de la ligne",
+              "lineWidth": "Largeur de ligne",
+              "markerColor": "Couleur du marqueur",
+              "markerSize": "Taille du marqueur",
+              "layout": "Mise en page",
+              "left": "Gauche",
+              "right": "Droite",
+              "free": "Free",
+              "top": "Haut",
+              "bottom": "En bas",
+              "side": "Côté",
+              "anchor": "Ancre",
+              "sortBy": "Trier par",
+              "reverseRampColor": "Inverser la couleur de la rampe",
               "axisTypes": {
                 "auto": "Auto",
                 "linear": "Linear",
@@ -2535,7 +2591,10 @@
             "colorOpacity": "Opacité",
             "offset": "Décalage",
             "propertyValue": "Valeur de la propriété",
-            "colorPropertyInfoMessage": "La valeur de la propriété de couleur doit être une chaîne hexadécimale. Exemple : \"#ffffff\""
+            "colorPropertyInfoMessage": "La valeur de la propriété de couleur doit être une chaîne hexadécimale. Exemple : \"#ffffff\"",
+            "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété.",
+            "msTranslateX": "Décalage x",
+            "msTranslateY": "Décalage y"
         },
         "playback": {
             "settings": {
@@ -2639,7 +2698,8 @@
                 "layer": "Rechercher des couches",
                 "access": "Rechercher des accès",
                 "ip": "###.###.###.###/##",
-                "priority": "Sélectionner la priorité"
+                "priority": "Sélectionner la priorité",
+                "filterAny": "n'importe quel"
             },
             "menutitle": "Gérer les règles d'accès",
             "tooltip": {
@@ -2650,7 +2710,9 @@
                 "deleteT": "Supprimer les règles sélectionnées",
                 "cacheT": "Vider le cache",
                 "save": "Enregistrer la règle actuelle",
-                "close": "Fermer la règle"
+                "close": "Fermer la règle",
+                "showAllRules": "Montrer toutes les règles éligibles",
+                "filterRuleList": "Liste de filtre à l'aide d'une valeur sélectionnée"
             },
             "navItems": {
                 "main": "Règle générale",
@@ -3891,15 +3953,15 @@
           "emptyTitle": "Ces processus WPS doivent être installés dans Geoserver pour pouvoir utiliser ce processus:",
           "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
           "sourceLayer": "Couche source",
-          "sourceFeature": "Caractéristique source",
+          "sourceFeature": "Entité de la couche source",
           "tool": "Sélectionnez un processus à utiliser",
-          "highlight": "Mettre en évidence les fonctionnalités",
+          "highlight": "Mettre en surbillance les entités sélectionnées sur la carte",
           "bufferTool": "Tampon",
           "distance": "Distance",
           "distanceUom": "Unités de mesure",
           "km": "km",
           "m": "m",
-          "run": "Courir",
+          "run": "Exécuter",
           "intersectionTool": "Intersection",
           "noMatchedLayer": "Aucun calque ne correspond au filtre actuel",
           "noMatchedFeature": "Aucune caractéristique ne correspond au filtre actuel",
@@ -3910,8 +3972,8 @@
           "quadrantSegmentsTooltip": "Nombre de segments",
           "capStyle": "Style",
           "capStyleTooltip": "Style pour les embouts de tampon",
-          "round": "Ronde",
-          "flat": "Plate",
+          "round": "Rond",
+          "flat": "Plat",
           "square": "Carré",
           "firstAttributeToRetain": "Premier attribut à inclure",
           "secondAttributeToRetain": "Deuxième attribut à inclure",
@@ -3925,9 +3987,9 @@
           "areasEnabledTooltip": "Indique s'il faut sortir les zones de caractéristiques",
           "noMatchedMode": "Aucun mode ne correspond au filtre actuel",
           "INTERSECTION": "INTERSECTION",
-          "FIRST": "D'ABORD",
+          "FIRST": "PREMIER",
           "SECOND": "SECONDE",
-          "true": "vraie",
+          "true": "vrai",
           "false": "faux",
           "notifications": {
             "errorIntersectGFI": "Une erreur s'est produite lors de l'intersection des entités. Il n'a pas été possible de créer la couche d'intersection.",
@@ -3939,24 +4001,28 @@
             "noLayerSelected": "Veuillez d'abord sélectionner le calque.",
             "successfulIntersection": "L'opération d'intersection a réussi et une nouvelle couche a été créée et ajoutée à la table des matières",
             "successfulBuffer": "L'opération Buffer a réussi et une nouvelle couche a été créée et ajoutée à la table des matières",
-            "errorBuffer": "L'opération Buffer a échoué"
+            "errorBuffer": "L'opération Buffer a échoué",
+            "emptyIntersection": "Il n'y a pas d'intersection entre les ensembles de données donnés.",
+            "errorGettingFC": "Il n'a pas été possible de collecter la géométrie du calque {layerName}",
+            "errorGettingFeaturesList": "Il n'a pas été possible de récupérer la liste des entités de la couche {layerName}"
           },
           "warningTitle": "Avertissement",
           "warningBody": "Vous n'avez pas sélectionné de fonctionnalité et cela peut ralentir les performances de geoserver. Voulez-vous continuer ?",
           "warningConfirmText": "Oui",
           "warningCancel": "Annuler",
           "tooltip": {
-            "clickToSelectFeature": "Cliquez pour sélectionner une fonctionnalité",
+            "clickToSelectFeature": "Cliquez pour sélectionner sur la carte une entité de la couche source",
             "invalidLayers": "L'un des calques que vous avez sélectionnés ne peut pas être utilisé dans ce processus",
             "fillRequiredDataIntersection": "Veuillez sélectionner au moins la couche source et la couche d'intersection",
             "fillRequiredDataBuffer": "Veuillez sélectionner au moins la couche source",
+            "pointAndPolygon": "Vous pouvez sélectionner une couche de points uniquement pour la couche d'intersection",
             "siderBarBtn": "Géotraitement",
-            "selectFeature": "Veuillez sélectionner une fonctionnalité",
+            "selectFeature": "Veuillez sélectionner une entité de la couche source",
             "validFeature": "Cette fonctionnalité est valide",
             "invalidFeature": "Cette fonctionnalité n'est pas valide",
-            "selectLayer": "Veuillez sélectionner un calque",
+            "selectLayer": "Veuillez sélectionner une couche",
             "validLayer": "Cette couche est valide et peut être utilisée dans ce processus",
-            "invalidLayer": "Cette couche ne prend pas en charge les processus wps nécessaires \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\ni c'est une couche raster"
+            "invalidLayer": "Cette couche ne prend pas en charge les processus wps nécessaires \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\nou est une couche raster"
           }
         }
     }

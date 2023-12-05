@@ -104,7 +104,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }) {
         const pointToLayer = ({ symbolizer: _symbolizer, latlng, feature }) => {
             const symbolizer = parseSymbolizerExpressions(_symbolizer, feature);
             if (symbolizer.kind === 'Mark') {
-                const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
+                const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
                 if (image) {
                     const aspect = width / height;
                     const size = symbolizer.radius * 2;
@@ -125,7 +125,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }) {
                 }
             }
             if (symbolizer.kind === 'Icon') {
-                const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
+                const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
                 if (image) {
                     const aspect = width / height;
                     let iconSizeW = symbolizer.size;
@@ -158,7 +158,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }) {
                         font-style: ${symbolizer.fontStyle || 'normal'};
                         font-weight: ${symbolizer.fontWeight || 'normal'};
                         font-size: ${symbolizer.size}px;
-                        
+
                         position: absolute;
                         transform: translate(calc(${anchorH} + ${symbolizer?.offset?.[0] ?? 0}px), calc(${anchorV} + ${symbolizer?.offset?.[1] ?? 0}px)) rotateZ(${symbolizer?.rotate ?? 0}deg);
 

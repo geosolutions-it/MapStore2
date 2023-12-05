@@ -57,7 +57,6 @@ describe('Test controls selectors', () => {
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
-
     it('test wfsDownloadSelector', () => {
         const retVal = wfsDownloadSelector(state);
         expect(retVal).toExist();

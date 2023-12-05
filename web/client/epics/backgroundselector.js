@@ -18,7 +18,6 @@ import {
     BACKGROUND_EDITED,
     REMOVE_BACKGROUND,
     SYNC_CURRENT_BACKGROUND_LAYER,
-    createBackgroundsList,
     clearModalParameters,
     setBackgroundModalParams,
     setCurrentBackgroundLayer,
@@ -27,7 +26,6 @@ import {
 } from '../actions/backgroundselector';
 
 import { setControlProperty } from '../actions/controls';
-import { MAP_CONFIG_LOADED } from '../actions/config';
 import { changeSelectedService } from '../actions/catalog';
 import {ADD_LAYER, changeLayerProperties, removeNode} from '../actions/layers';
 import { getLayerFromId, currentBackgroundSelector } from '../selectors/layers';
@@ -56,29 +54,6 @@ const addBackgroundPropertiesEpic = (action$) =>
                         .catch(() => defaultAction)
                     )
                 : defaultAction;
-        });
-
-const backgroundsListInit = (action$) =>
-    action$.ofType(MAP_CONFIG_LOADED)
-        .switchMap(({config}) => {
-            const backgrounds = config.map && config.map.backgrounds || [];
-            const backgroundLayers = (config.map && config.map.layers || []).filter(layer => layer.group === 'background');
-            const layerUpdateActions = backgrounds.filter(background => !!background.thumbnail).map(background => {
-                const toBlob = (data) => {
-                    const bytes = atob(data.split(',')[1]);
-                    const mimeType = data.split(',')[0].split(':')[1].split(';')[0];
-                    let buffer = new ArrayBuffer(bytes.length);
-                    let byteArray = new Uint8Array(buffer);
-                    for (let i = 0; i < bytes.length; ++i) {
-                        byteArray[i] = bytes.charCodeAt(i);
-                    }
-                    return URL.createObjectURL(new Blob([buffer], {type: mimeType}));
-                };
-                return changeLayerProperties(background.id, {thumbURL: toBlob(background.thumbnail)});
-            });
-            const currentBackground = head(backgroundLayers.filter(layer => layer.visibility));
-            return Rx.Observable.of(...layerUpdateActions.concat(createBackgroundsList(backgrounds)),
-                ...(currentBackground ? [setCurrentBackgroundLayer(currentBackground.id)] : []));
         });
 
 const setCurrentBackgroundLayerEpic = (action$, store) =>
@@ -151,7 +126,6 @@ const syncSelectedBackgroundEpic = (action$) =>
 export default {
     accessMetadataExplorer,
     addBackgroundPropertiesEpic,
-    backgroundsListInit,
     setCurrentBackgroundLayerEpic,
     backgroundAddedEpic,
     backgroundEditedEpic,

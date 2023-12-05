@@ -32,7 +32,7 @@ const TDropdownButton = tooltip(DropdownButton);
 /**
  * A DropDown menu for longitudinal profile
  */
-const UserMenu = ({
+const Menu = ({
     className,
     dataSourceMode,
     initialized,
@@ -75,7 +75,24 @@ const UserMenu = ({
             <Glyphicon glyph="cog"/> <Message msgId="longitudinalProfile.parameters"/>
         </MenuItem>
     </>);
-    const DropDownMenu = (<DropDown
+    if (!initialized) {
+        return false;
+    }
+    if (menuItem) {
+        // inside extra tools
+        return (<>
+            {open &&
+                <div className="open dropup btn-group btn-group-tray" style={{display: "inline"}}>
+                    <ul role="menu" className="dropdown-menu dropdown-menu-right" aria-labelledby="longitudinal-tool">
+                        {body}
+                    </ul>
+                </div>}
+            <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
+                <Glyphicon glyph="1-line"/>
+                <Message msgId="longitudinalProfile.title"/>
+            </MenuItem></>);
+    }
+    return  (<DropDown
         dropup={dropUp}
         open={open}
         onToggle={(val) => setMenuOpen(val)}
@@ -91,33 +108,10 @@ const UserMenu = ({
         {body}
     </DropDown>);
 
-    let Menu;
-    if (menuItem) {
-        // inside extra tools
-        Menu = (<> {
-            open ? <>
-                <div className="open dropup btn-group btn-group-tray" style={{display: "inline"}}>
-                    <ul role="menu" className="dropdown-menu dropdown-menu-right" aria-labelledby="longitudinal-tool">
-                        {body}
-                    </ul>
-                </div>
-                <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
-                    <Glyphicon glyph="1-line"/>
-                    <Message msgId="longitudinalProfile.title"/>
-                </MenuItem></> :
-                <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
-                    <Glyphicon glyph="1-line"/>
-                    <Message msgId="longitudinalProfile.title"/>
-                </MenuItem> }
-        </>);
-    } else {
-        Menu = DropDownMenu;
-    }
 
-    return initialized ? Menu : false;
 };
 
-UserMenu.propTypes = {
+Menu.propTypes = {
     className: PropTypes.string,
     dataSourceMode: PropTypes.string,
     initialized: PropTypes.bool,
@@ -132,7 +126,7 @@ UserMenu.propTypes = {
     onToggleSourceMode: PropTypes.func
 };
 
-UserMenu.defaultProps = {
+Menu.defaultProps = {
     className: "square-button",
     menuIsActive: false,
     nav: false,
@@ -143,7 +137,7 @@ UserMenu.defaultProps = {
     tooltipPosition: 'left'
 };
 
-const UserMenuConnected =  connect((state) => ({
+const MenuConnected =  connect((state) => ({
     menuIsActive: isActiveMenuSelector(state),
     dataSourceMode: dataSourceModeSelector(state),
     isParametersOpen: isParametersOpenSelector(state),
@@ -153,6 +147,6 @@ const UserMenuConnected =  connect((state) => ({
     onActivateTool: setControlProperty.bind(null, "longitudinalProfileTool", "enabled", true),
     onToggleSourceMode: toggleMode,
     onToggleParameters: setControlProperty.bind(null, "LongitudinalProfileToolParameters", "enabled", true, true)
-})(UserMenu);
+})(Menu);
 
-export default UserMenuConnected;
+export default MenuConnected;

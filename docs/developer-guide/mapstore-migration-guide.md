@@ -22,6 +22,59 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.xx to 2024.01.00
 
+### Removing possibility to add custom fonts to the Map
+
+From this version we limited the load of the font to FontAwesome.
+
+If you have changed the property **fonts** inside Map plugin it will not longer load the font. A possible fix would be to add the font to the `*.html` files in your application.
+
+- make sure that the `localConfig.json` does not have **fonts** property in  **Map**  plugin
+
+The following css is added automatically if needed `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>` inside the *head* tag.
+
+### Fixing background config
+
+From this version in order to fix default 3d background config a change is needed here:
+
+- update `localConfig.json` by adding **visibility: false**  to the Empty Background entry in `intialState.defaultState.catalog.default.staticServices.default_map_backgrounds.backgrounds`
+- update `new.json` by adding **visibility: false**  to the Empty Background entry.
+
+### Adding spatial filter to dashboard widgets
+
+In order to enable the possibility to add in and the spatial filter to the widgets ( see [#9098](https://github.com/geosolutions-it/MapStore2/issues/9098) ) you have to edit the `QueryPanel` config in the `plugins.dashboard` array of the `localConfig.json` file by adding:
+
+- **useEmbeddedMap**: flag to enable the embedded map
+- **spatialOperations**: The list of spatial operations allowed for this plugin
+- **spatialMethodOptions**: the list of spatial methods to use.
+
+```json
+...
+"dashboard": [
+...
+{ 
+    "name": "QueryPanel",
+    "cfg": {
+        "toolsOptions": {
+            "hideCrossLayer": true,
+            "useEmbeddedMap": true
+        },
+        "spatialPanelExpanded": false,
+        "spatialOperations": [
+            {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+            {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+            {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
+        ],
+        "spatialMethodOptions": [
+            {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+            {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+            {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
+        ],
+        "containerPosition": "columns"
+    }
+}
+
+```
+
 ### MapFish Print update
 
 The **MapFish Print** library has been updated to work with the latest GeoTools version and Java 11 as well as being aligned with the same dependency used by the official GeoServer printing extension (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)

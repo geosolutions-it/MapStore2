@@ -76,6 +76,24 @@
             .background-color-var(@theme-vars[main-bg]);
         }
     }
+    .form-group-flex {
+        &.has-success {
+            .Select-control {
+                .border-color-var(@theme-vars[success], true);
+            }
+        }
+        &.has-error {
+            .Select-control {
+                .border-color-var(@theme-vars[danger], true);
+            }
+        }
+        &.has-warning {
+            .Select-control {
+                .border-color-var(@theme-vars[warning], true);
+            }
+        }
+    }
+
 }
 
 // **************
@@ -390,9 +408,40 @@ div#sync-popover.popover {
         position: absolute;
         transform: translate(-50%, 0px);
     }
-    }
+}
+
+// forced to avoid conflicts with no-image display for not found at link
+.rdw-link-decorator-icon
+{
+    width: 15px !important;
+    min-width: 10px !important;
+    min-height: 15px !important;
+    position: static !important;
+    vertical-align: text-top;
+}
 
 .form-control.intl-numeric {
     float: unset;
 
+}
+
+.form-group-flex {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    .checkbox,
+    .control-label {
+        flex: 1;
+        font-weight: normal;
+        &.strong{
+            font-weight: bold;
+        }
+    }
+    .input-group {
+        flex: 1;
+    }
+    input {
+        z-index: 0;
+    }
+    margin-bottom: 8px;
 }

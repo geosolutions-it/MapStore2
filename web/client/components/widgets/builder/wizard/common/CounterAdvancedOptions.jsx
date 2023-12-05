@@ -6,35 +6,36 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-import { FormGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-
-import Message from '../../../../I18N/Message';
 import Format from './Format';
 import Formula from './Formula';
-import SwitchPanel from '../../../../misc/switch/SwitchPanel';
+import Message from '../../../../I18N/Message';
+import Font from './Font';
+import { FONT } from '../../../../../utils/WidgetsUtils';
 
-function Header({}) {
-    return (<span>
-        <span style={{ cursor: "pointer" }}><Message msgId="widgets.advanced.title"/></span>
-    </span>);
-}
 
 function CounterAdvancedOptions({
     data,
     onChange = () => {}
 }) {
-    return (<SwitchPanel id="displayCartesian"
-        header={<Header data={data}/>}
-        collapsible
-        expanded={data.panel}
-        onSwitch={(val) => { onChange("panel", val); }}
-    >
-        <FormGroup controlId="AdvancedOptions">
+    return (
+        <>
+            <div className="ms-wizard-form-separator">
+                <Message msgId="widgets.advanced.valueFormatting" />
+            </div>
             <Format prefix="counterOpts" data={data} onChange={onChange}/>
             <Formula data={data} onChange={onChange}/>
-        </FormGroup>
-    </SwitchPanel>);
+            <Font
+                color={data?.counterOpts?.layout?.color || FONT.COLOR}
+                disabled={false}
+                fontFamily={data?.counterOpts?.layout?.fontFamily || FONT.FAMILY}
+                options={["color",  "family"]}
+                onChange={(key, val) => {
+                    onChange(`counterOpts.layout.${key}`, val);
+                }}
+            />
+        </>
+    );
 }
 
 CounterAdvancedOptions.propTypes = {

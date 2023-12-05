@@ -25,7 +25,8 @@ export default ({ step = 0, buttons, tocButtons = [], stepButtons = [], dashBoar
     const isEmptyMap = editorData?.widgetType === "map" && isEmpty(map);
     return (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
-        bsSize: "sm"
+        bsSize: "sm",
+        className: "square-button-md"
     }}
     buttons={buttons || [...(step === 0 ? tocButtons : []), {
         onClick: () => setPage(Math.max(step - 1, 0)),

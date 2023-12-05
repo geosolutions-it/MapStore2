@@ -7,7 +7,6 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Col } from 'react-bootstrap';
 
 import FormulaInput from './FormulaInput';
 
@@ -17,9 +16,7 @@ const Formula = ({
     onChange = () => {}
 }) => {
     return (
-        <Col sm={12}>
-            <FormulaInput disabled={data.yAxis === false} value={data.formula} type="text" onChange={e => onChange("formula", e.target.value)} />
-        </Col>
+        <FormulaInput className="form-group-flex" value={data.formula} type="text" onChange={e => onChange("formula", e.target.value)} />
     );
 };
 

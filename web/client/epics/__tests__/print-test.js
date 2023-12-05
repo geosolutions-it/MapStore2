@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 import {
-    addPrintTransformer
+    addPrintTransformer, PRINT_TRANSFORMER_ADDED
 } from '../../actions/print';
 
 import {
@@ -19,12 +19,13 @@ import {
     addPrintTransformerEpic
 } from '../print';
 
-import { testEpic} from './epicTestUtils';
+import { testEpic } from './epicTestUtils';
 
 
 describe('Test the print epics', () => {
 
     it('Epics Add transformer', function(done) {
+        const chainLengthBeforeTest = getSpecTransformerChain().length;
         testEpic(
             addPrintTransformerEpic,
             1,
@@ -32,8 +33,9 @@ describe('Test the print epics', () => {
             actions => {
                 try {
                     expect(actions.length).toEqual(1);
+                    expect(actions[0].type).toEqual(PRINT_TRANSFORMER_ADDED);
                     const chain = getSpecTransformerChain();
-                    expect(chain.length).toBe(4);
+                    expect(chain.length).toBe(chainLengthBeforeTest + 1);
                     expect(chain[3].name).toBe("transformer_mock");
                     expect(chain[3].transformer()).toBe("mycustom_transformer");
                     done();
@@ -45,17 +47,19 @@ describe('Test the print epics', () => {
     });
 
     it('Epics Add transformer with position', function(done) {
+        const chainLengthBeforeTest = getSpecTransformerChain().length;
         testEpic(
             addPrintTransformerEpic,
             1,
-            addPrintTransformer('transformer_mock', () => "mycustom_transformer", 1.5),
+            addPrintTransformer('transformer_mock_pos', () => "mycustom_transformer_pos", 1.5),
             actions => {
                 try {
                     expect(actions.length).toEqual(1);
+                    expect(actions[0].type).toEqual(PRINT_TRANSFORMER_ADDED);
                     const chain = getSpecTransformerChain();
-                    expect(chain.length).toBe(4);
-                    expect(chain[2].name).toBe("transformer_mock");
-                    expect(chain[2].transformer()).toBe("mycustom_transformer");
+                    expect(chain.length).toBe(chainLengthBeforeTest + 1);
+                    expect(chain[2].name).toBe("transformer_mock_pos");
+                    expect(chain[2].transformer()).toBe("mycustom_transformer_pos");
                     done();
                 } catch (e) {
                     done(e);

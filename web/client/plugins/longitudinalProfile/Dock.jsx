@@ -20,7 +20,7 @@ import tooltip from "../../components/misc/enhancers/tooltip";
 import LoadingView from "../../components/misc/LoadingView";
 import ResponsivePanel from "../../components/misc/panels/ResponsivePanel";
 import Toolbar from "../../components/misc/toolbar/Toolbar";
-import Chart from "./Chart";
+import Chart from "../../components/charts/WidgetChart";
 
 const NavItemT = tooltip(NavItem);
 
@@ -74,23 +74,36 @@ const ChartData = ({
         }
     }, [marker]);
 
-    const series = [{dataKey: "altitude", color: `#078aa3`}];
-    const xAxis = {dataKey: "distance", show: false, showgrid: true};
     const options = {
-        xAxisAngle: 0,
-        yAxis: true,
-        yAxisLabel: messages.longitudinalProfile.elevation,
+        traces: [{
+            id: 'longitudinal-profile-trace',
+            type: 'line',
+            style: {
+                line: {
+                    color: `#078aa3`
+                }
+            },
+            options: {
+                groupByAttributes: 'distance',
+                aggregationAttribute: 'altitude'
+            }
+        }],
+        xAxisOpts: [{
+            id: 0,
+            angle: 0,
+            hide: false,
+            title: messages.longitudinalProfile.distance,
+            fontSize: 11
+        }],
+        yAxisOpts: [{
+            id: 0,
+            title: messages.longitudinalProfile.elevation,
+            tickSuffix: ' m',
+            hide: false,
+            fontSize: 11
+        }],
         legend: false,
-        tooltip: false,
-        cartesian: true,
-        popup: false,
-        xAxisOpts: {
-            hide: false
-        },
-        yAxisOpts: {
-            tickSuffix: ' m'
-        },
-        xAxisLabel: messages.longitudinalProfile.distance
+        cartesian: true
     };
 
     const generateChartImageUrl = () => {
@@ -144,9 +157,8 @@ const ChartData = ({
                                 {...options}
                                 height={maximized ? height - 115 : 400}
                                 width={maximized ? width - (dockStyle?.right ?? 0) - (dockStyle?.left ?? 0) : 520 }
-                                data={data}
-                                series={series}
-                                xAxis={xAxis}
+                                // using multiple traces data is array of arrays of data
+                                data={[data]}
                             />
                             {config.referential && projection ? <table className="data-used">
                                 <tr>

@@ -241,7 +241,7 @@ function AnnotationsPanel({
                     <Glyphicon glyph={validateFeatures() ? 'ok-sign text-success' : 'exclamation-mark text-danger'}/>
                 </NavItem>
                 <NavItem
-                    key="geometries"
+                    key="settings"
                     eventKey="settings"
                     onClick={() => setTab('settings')}>
                     <Message msgId="settings"/>

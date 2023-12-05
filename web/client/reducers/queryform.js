@@ -49,7 +49,9 @@ import {
     LOAD_FILTER,
     UPDATE_CROSS_LAYER_FILTER_FIELD_OPTIONS,
     UPSERT_FILTERS,
-    REMOVE_FILTERS
+    REMOVE_FILTERS,
+    CHANGE_MAP_EDITOR,
+    QUERY_FORM_SEARCH
 } from '../actions/queryform';
 
 import { END_DRAWING, CHANGE_DRAWING_STATUS } from '../actions/draw';
@@ -85,7 +87,8 @@ const initialState = {
         operation: "INTERSECTS",
         geometry: null
     },
-    simpleFilterFields: []
+    simpleFilterFields: [],
+    map: null
 };
 
 const updateFilterField = (field = {}, action = {}) => {
@@ -102,6 +105,18 @@ const updateFilterField = (field = {}, action = {}) => {
 
 function queryform(state = initialState, action) {
     switch (action.type) {
+    case CHANGE_MAP_EDITOR: {
+        return {
+            ...state,
+            map: action.mapData
+        };
+    }
+    case QUERY_FORM_SEARCH: {
+        return {
+            ...state,
+            map: null
+        };
+    }
     case ADD_FILTER_FIELD: {
         //
         // Calculate the key number, this should be different for each new element
@@ -368,7 +383,8 @@ function queryform(state = initialState, action) {
         return assign({}, state, initialState, {
             spatialField,
             crossLayerFilter,
-            filters: []
+            filters: [],
+            map: state.map
         });
     }
     case SHOW_GENERATED_FILTER: {

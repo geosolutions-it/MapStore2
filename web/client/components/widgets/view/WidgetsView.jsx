@@ -33,7 +33,7 @@ export default pure(({
     widgets = [],
     layouts,
     dependencies,
-    verticalCompact = false,
+    compactType = null,
     compactMode,
     useDefaultWidthProvider = true,
     measureBeforeMount,
@@ -75,7 +75,7 @@ export default pure(({
         // TODO: this prop triggers a deprecation warning
         // we should remove it keeping the current behavior
         // a user should be able to move cards everywhere without force cards on first row
-        verticalCompact={verticalCompact}
+        compactType={compactType}
         compactMode={compactMode}
         breakpoints={breakpoints}
         cols={cols}

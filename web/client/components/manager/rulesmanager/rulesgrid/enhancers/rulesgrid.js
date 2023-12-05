@@ -77,14 +77,15 @@ export default compose(
             error: undefined,
             isEditing: editing
         }),
-        setFilters: (state, {filters = {}, setFilters}) => ({column, filterTerm}) => {
+        setFilters: (state, {filters = {}, setFilters}) => ({column, filterTerm, isResetField}) => {
             // Can add  some logic here to clean related filters
             if (column.key === "workspace" && filters.layer) {
                 setFilters("layer");
             } else if (column.key === "service" && filters.request) {
                 setFilters("request");
             }
-            setFilters(column.key, filterTerm);
+
+            setFilters(column.key, filterTerm, isResetField);
             return {rowsCount: 0, pages: {}};
         },
         incrementVersion: ({ version }) => () => ({

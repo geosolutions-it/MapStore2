@@ -1035,6 +1035,20 @@ export const transformExtentToObj = (extent) => {
     };
 
 };
+/**
+ * helper use to transform the extent object to array { minx, miny, maxx, maxy }
+ * if there is no provided param extent it will return the default bound object of wgs84
+ * @param {object} bounds is an object in the shape {minx, miny, maxx, maxy}
+ * @return {number[]} extent is an array of 4 ordered coordinates [minx, miny, maxx, maxy]
+ */
+export const transformExtentToArray = (bounds) => {
+    return [
+        bounds.minx,
+        bounds.miny,
+        bounds.maxx,
+        bounds.maxy
+    ];
+};
 
 
 /**

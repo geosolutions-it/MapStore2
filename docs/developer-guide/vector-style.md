@@ -210,6 +210,8 @@ The `symbolizer` could be of following `kinds`:
 | `opacity` | color opacity |  | x |
 | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
 | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
+| `msTranslateX` | move the model on the x axis with a value in meters (west negative value, east positive value) |  | x |
+| `msTranslateY` | move the model on the y axis with a value in meters (south negative value, north positive value) |  | x |
 | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
 | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
 | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |

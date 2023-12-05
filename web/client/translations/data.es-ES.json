@@ -58,8 +58,8 @@
             "404": "Archivo de traducción no encontrado"
         },
         "details": {
-            "title": "Información en este mapa",
-            "tooltip": "Información en este mapa"
+            "title": "Información en este contenido",
+            "tooltip": "Información en este contenido"
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
@@ -114,6 +114,7 @@
             "heightOffset": "Desplazamiento de altura (m)",
             "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
             "serverType": "Tipo de servidor",
+            "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -154,6 +155,21 @@
                 "scale": "Escala",
                 "resolution": "Resolución"
             },
+            "3dTiles": {
+                "format": "Formato",
+                "3dModel": "Modelo 3D",
+                "pointCloud": "Nube de puntos",
+                "pointCloudShading": {
+                    "title": "Opciones de visualización",
+                    "attenuationInfo": "Realiza atenuación de puntos según la distancia desde el punto de vista actual",
+                    "attenuation": "Habilitar atenuación",
+                    "maximumAttenuation": "Atenuación máxima",
+                    "eyeDomeLightingInfo": "Esto habilita una iluminación de domo ocular para mejorar la visualización de la nube de puntos. Esto no representa la iluminación solar real",
+                    "eyeDomeLighting": "Habilitar iluminación",
+                    "eyeDomeLightingStrength": "Intensidad de iluminación",
+                    "eyeDomeLightingRadius": "Radio de iluminación"
+                }
+            },
             "tooltip": {
                 "label": "Información sobre herramientas",
                 "title": "Título",
@@ -183,6 +199,8 @@
             },
             "format": {
                 "title": "Formato",
+                "tile": "Teja",
+                "information": "Identificar el formato de respuesta",
                 "refresh": "Obtener formatos admitidos",
                 "loading": "Cargando...",
                 "noOption": "Sin opcion",
@@ -223,7 +241,8 @@
             "warningSaveUpdatedMap": "Algunas capas no han sido actualizadas correctamente",
             "saveUpdatedMap": "Todas las capas han sido actulizadas correctamente",
             "incompatibleBackgroundAndProjection":"La proyección que seleccionó no es compatible con el fondo, cambie a un fondo compatible -o un vacío-, luego seleccione esta proyección!",
-            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa"
+            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa",
+            "errorLoadingGF":"Error de carga de GF Geometry"
         },
         "dock": {
             "row": "{rowsSelected} fila seleccionada",
@@ -334,7 +353,7 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Webmapping moderno con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentación</a></small>",
+            "shortDescription": "Webmapping moderno con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentación</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"https://mapstore.readthedocs.io/en/latest/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
@@ -573,6 +592,7 @@
             "browseData": "Abrir la tabla de atributos",
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
+            "sourceCRSNotCompatible": "La definición de proyección de datos de origen de la capa {sourceCRS} no está disponible en la aplicación para reproyectar los datos en el mapa actual",
             "measure": "Medir",
             "layers": "Capas",
             "drawerButton": "Capas",
@@ -1500,7 +1520,7 @@
             "tooltip": "agregar capas al mapa",
             "autoload": "Buscar en la selección de servicios",
             "fetchMetadata": {
-                "label": "Descargar metadatos de archivos en la búsqueda",
+                "label": "Descargar metadatos del archivo al guardar",
                 "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
             },
             "clearValueText": "Borrar selección",
@@ -1985,7 +2005,8 @@
                         "editCustomColors": "Editar Colores Personalizados",
                         "maxValue": "Valor máximo",
                         "minValue": "Valor mínimo",
-                        "title": "Configuración de Colores Personalizados"
+                        "title": "Configuración de Colores Personalizados",
+                        "removeCustomColors": "Eliminar clases personalizadas"
                     }
                 },
                 "errors": {
@@ -2000,7 +2021,17 @@
                 },
                 "setupFilter": "Configurar un filtro para los datos del widget",
                 "addNewLayers": "Agregar nuevas capas",
-                "deleteChart": "Eliminar gráfico actual"
+                "deleteChart": "Eliminar gráfico actual",
+                "editTraceTitle": "Editar título de seguimiento",
+                "addNewTrace": "Agregar nuevo trace",
+                "deleteTrace": "Eliminar el seguimiento actual",
+                "selectLayer": "Seleccionar capa",
+                "filterLayer": "Filtrar capa actual",
+                "editChartTitle": "Editar título del gráfico",
+                "addNewCharts": "Agregar nuevos gráficos",
+                "editAxisTitle": "Editar título del eje",
+                "addNewAxis": "Agregar nuevo ej",
+                "removeAxis": "Eliminar el eje actual"
             },
             "widget": {
                 "menu": {
@@ -2113,16 +2144,19 @@
             },
             "mapSync": "Filtro dinámico por extensión de la vista actual",
             "displayLegend": {
+                "default": "Mostrar leyenda",
                 "line": "Mostrar leyenda",
                 "pie": "Mostrar leyenda",
                 "bar": "Mostrar leyenda",
                 "gauge": "Mostrar etiquetas"
             },
             "advanced": {
+              "font": "Fuente",
               "displayCartesian": "Ocultar cuadrícula",
               "xAxis": "Eje X",
               "xAxisAngle": "Rotación de etiquetas",
               "hideLabels": "Ocultar etiquetas",
+              "includeLegendPercent": "Include percentages in legend",
               "format": "Formato",
               "prefix": "Prefijo",
               "suffix": "Sufijo",
@@ -2141,6 +2175,28 @@
               "barChartType": "Tipo de Gráfico de Barras",
               "groupedBarChart": "Agrupado",
               "stackedBarChart": "Apilado",
+              "valueFormatting": "Formato del valor de trace",
+              "traceAxes": "Trazar ejes",
+              "traceData": "Datos de trace",
+              "traceLegendOptions": "Opciones de leyenda de trace",
+              "traces": "Traces",
+              "axes": "Ejes",
+              "traceStyle": "Estilo de trace",
+              "mode": "Modo",
+              "lineColor": "Color de línea",
+              "lineWidth": "Ancho de línea",
+              "markerColor": "Color del marcador",
+              "markerSize": "Tamaño del marcador",
+              "layout": "Diseño",
+              "left": "Izquierda",
+              "right": "Bien",
+              "free": "Free",
+              "top": "Arriba",
+              "bottom": "Abajo",
+              "side": "Lado",
+              "anchor": "Ancla",
+              "sortBy": "Ordenar por",
+              "reverseRampColor": "Color de rampa inversa",
               "axisTypes": {
                 "auto": "Auto",
                 "linear": "Lineal",
@@ -2535,7 +2591,10 @@
             "colorOpacity": "Opacidad",
             "offset": "Desplazamiento",
             "propertyValue": "Valor de la propiedad",
-            "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\""
+            "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\"",
+            "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad.",
+            "msTranslateX": "Desplazamiento x",
+            "msTranslateY": "Desplazamiento y"
         },
         "playback": {
             "settings": {
@@ -2639,7 +2698,8 @@
                 "layer": "Escriba para buscar Capas",
                 "access": "Escriba para buscar Acceso",
                 "ip": "###.###.###.###/##",
-                "priority": "Seleccionar prioridad"
+                "priority": "Seleccionar prioridad",
+                "filterAny": "Cualquier"
             },
             "menutitle": "Administrar reglas de GeoFence",
             "tooltip": {
@@ -2650,7 +2710,9 @@
                 "deleteT": "Eliminar las reglas seleccionadas",
                 "cacheT": "Limpiar cache",
                 "save": "Guardar la regla actual",
-                "close": "Salir de crear regla"
+                "close": "Salir de crear regla",
+                "showAllRules": "Mostrar todas las reglas elegibles",
+                "filterRuleList": "Lista de filtros usando un valor seleccionado"
             },
             "navItems": {
                 "main": "Regla general",
@@ -3939,7 +4001,10 @@
             "noLayerSelected": "Por favor seleccione la capa primero.",
             "successfulIntersection": "La operación de intersección fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
             "successfulBuffer": "La operación de búfer fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
-            "errorBuffer": "La operación de búfer ha fallado"
+            "errorBuffer": "La operación de búfer ha fallado",
+            "emptyIntersection": "No hay intersección entre los conjuntos de datos dados.",
+            "errorGettingFC": "No fue posible recopilar la geometría de la capa {layerName}",
+            "errorGettingFeaturesList": "No fue posible recuperar la lista de entidades de la capa {layerName}"
           },
           "warningTitle": "Advertencia",
           "warningBody": "No ha seleccionado una función y esto puede ralentizar el rendimiento en el geoservidor. ¿Desea continuar?",
@@ -3950,6 +4015,7 @@
             "invalidLayers": "Una de las capas que ha seleccionado no se puede utilizar dentro de este proceso",
             "fillRequiredDataIntersection": "Seleccione al menos la capa de origen y la capa de intersección",
             "fillRequiredDataBuffer": "Seleccione al menos la capa de origen",
+            "pointAndPolygon": "Puede seleccionar una capa de puntos solo para la capa de intersección",
             "siderBarBtn": "Geoprocesamiento",
             "selectFeature": "Seleccione una función",
             "validFeature": "Esta función es válida",

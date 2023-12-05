@@ -33,6 +33,7 @@ export function ControlledPopover({
     children,
     open,
     onOpen = () => {},
+    onClick = () => {},
     disabled
 }) {
 
@@ -268,6 +269,7 @@ export function ControlledPopover({
                             event.stopPropagation();
                             const newOpen = !open;
                             onOpen(newOpen);
+                            onClick();
                         }
                     }
                 })}

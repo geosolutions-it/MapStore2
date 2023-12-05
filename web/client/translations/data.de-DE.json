@@ -58,8 +58,8 @@
             "404": "Übersetzungsdatei nicht gefunden"
         },
         "details": {
-            "title": "Infos zu dieser Karte",
-            "tooltip": "Infos zu dieser Karte"
+            "title": "Infos zu dieser Inhalt",
+            "tooltip": "Infos zu dieser Inhalt"
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
@@ -117,6 +117,7 @@
             "heightOffset": "Höhenversatz (m)",
             "wmsLayerTileSize": "Kachelgröße (WMS)",
             "serverType": "Servertyp",
+            "formatError": "Es war nicht möglich, Format und Informationsblattformat vom konfigurierten Dienst abzurufen. Wahrscheinlich verwenden Sie einen No-Vendor-Dienst und dieser wird nicht unterstützt (z. B. GeoNetwork).",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -157,6 +158,21 @@
                 "scale": "Maßstab",
                 "resolution": "Auflösung"
             },
+            "3dTiles": {
+                "format": "Format",
+                "3dModel": "3D-Modell",
+                "pointCloud": "Punktwolke",
+                "pointCloudShading": {
+                    "title": "Visualisierungsoptionen",
+                    "attenuationInfo": "Punktabschwächung basierend auf der Entfernung vom aktuellen Blickpunkt durchführen",
+                    "attenuation": "Dämpfung aktivieren",
+                    "maximumAttenuation": "Maximale Dämpfung",
+                    "eyeDomeLightingInfo": "Dies ermöglicht eine Augenkuppelbeleuchtung, um die Visualisierung der Punktwolke zu verbessern. Dies stellt nicht das echte Sonnenlicht dar",
+                    "eyeDomeLighting": "Beleuchtung aktivieren",
+                    "eyeDomeLightingStrength": "Lichtstärke",
+                    "eyeDomeLightingRadius": "Beleuchtungsradius"
+                }
+            },
             "tooltip": {
                 "label": "QuickInfo",
                 "title": "Titel",
@@ -183,6 +199,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Fliese",
+                "information": "Infoblatt",
                 "refresh": "Unterstützte Formate abrufen",
                 "loading": "Wird geladen...",
                 "noOption": "Keine Option",
@@ -223,7 +241,8 @@
             "warningSaveUpdatedMap": "Einige Ebenen wurden nicht korrekt aktualisiert",
             "saveUpdatedMap": "Alle Ebenen wurden erfolgreich aktualisiert",
             "incompatibleBackgroundAndProjection":"Die von Ihnen ausgewählte Projektion ist nicht mit der Hintergrundkarte kompatibel. Wechseln Sie zu einer kompatiblen oder leeren Hintergrundkarte und wählen Sie danach diese Projektion aus!",
-            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt"
+            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt",
+            "errorLoadingGF":"Fehler laden GF GEOM"
         },
         "dock": {
             "row": "{rowsSelected}. Zeile ausgewählt",
@@ -334,7 +353,7 @@
         },
         "home":{
             "open": "Öffnen",
-            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://mapstore.readthedocs.io/en/latest/\">dokumentationsseite</a></small>",
+            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">dokumentationsseite</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"https://mapstore.readthedocs.io/en/latest/\">Homepage</a> für mehr Details.",
             "Applications": "Anwendungen",
@@ -611,6 +630,7 @@
             "browseData": "Attributtabelle der ausgewählten Ebene öffnen",
             "removeLayer": "Ebene entfernen",
             "loadingerror": "Diese Ebene wurde nicht korrekt geladen oder ist nicht verfügbar",
+            "sourceCRSNotCompatible": "Die Quelldatenprojektionsdefinition {sourceCRS} des Layers ist in der Anwendung nicht für die Neuprojektion der Daten in der aktuellen Karte verfügbar",
             "measure": "Messen",
             "backgroundSwitcher": "Hintergrund",
             "layers": "Ebenen",
@@ -1538,7 +1558,7 @@
             "tooltip": "Fügen Sie der Karte Ebenen hinzu",
             "autoload": "Suche in Dienstauswahl",
             "fetchMetadata": {
-                "label": "Laden Sie Dateimetadaten bei der Suche herunter",
+                "label": "Dateimetadaten beim Speichern herunterladen",
                 "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
             },
             "clearValueText": "Auswahl aufheben",
@@ -1574,7 +1594,8 @@
               "urlTemplate": "URL-Vorlage",
               "urlTemplateHint": "<p> Vorlagen-URL für Ihren benutzerdefinierten TMS-Dienst mit der Möglichkeit, Variablen einzufügen (ausgedrückt in geschweiften Klammern, z. B. <code> {var_name} </ code>), die von der Anwendung ersetzt werden. <br />. Die Variablen <code> {x} </ code>, <code> {y} </ code> und <code> {z} </ code> sind für Kachelgitterkoordinatenwerte reserviert. Sie können auch Variablen verwenden <code> {s} </ code> für Subdomains. Jede andere in der URL angegebene Variable muss auch in den Optionen unter \"Benutzerdefinierte TMS-Konfiguration\" (Erweiterte Einstellungen) angegeben werden.</p>",
               "customTMSConfiguration": "Benutzerdefinierte TMS-Konfiguration",
-              "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",                  "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
+              "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",
+              "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
               "forceDefaultTileGridDescription": "Verwenden Sie das Kachelraster der globalen Projektion anstelle des vom Server bereitgestellten Ursprungs und der vom Server bereitgestellten Auflösungen. Dies ist nützlich für einige TMS-Dienste, die falsche Ursprünge oder Ergebnisse anzeigen."
             },
             "tileprovider": {
@@ -2022,7 +2043,8 @@
                         "editCustomColors": "Benutzerdefinierte Farben bearbeiten",
                         "maxValue": "Höchster Wert",
                         "minValue": "Mindestwert",
-                        "title": "Benutzerdefinierte Farbeinstellungen"
+                        "title": "Benutzerdefinierte Farbeinstellungen",
+                        "removeCustomColors": "Benutzerdefinierte Klassen entfernen"
                     }
                 },
                 "errors": {
@@ -2037,7 +2059,17 @@
                 },
                 "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten",
                 "addNewLayers": "Neue Ebene(n) hinzufügen",
-                "deleteChart": "Aktuelles Diagramm löschen"
+                "deleteChart": "Aktuelles Diagramm löschen",
+                "editTraceTitle": "Trace-Titel bearbeiten",
+                "addNewTrace": "Neuen Trace hinzufügen",
+                "deleteTrace": "Aktuellen Trace löschen",
+                "selectLayer": "Ebene auswählen",
+                "filterLayer": "Aktuelle Ebene filtern",
+                "editChartTitle": "Diagrammtitel bearbeiten",
+                "addNewCharts": "Neue Diagramm(e) hinzufügen",
+                "editAxisTitle": "Achsentitel bearbeiten",
+                "addNewAxis": "Neue Achse hinzufügen",
+                "removeAxis": "Aktuelle Achse entfernen"
             },
             "widget": {
                 "menu": {
@@ -2150,16 +2182,19 @@
             },
             "mapSync": "Live-Filter nach Ansichtsfenster",
             "displayLegend": {
+                "default": "Legende anzeigen",
                 "line": "Legende anzeigen",
                 "pie": "Legende anzeigen",
                 "bar": "Legende anzeigen",
                 "gauge": "Legende anzeigen"
             },
             "advanced": {
+                "font": "Schriftart",
                 "displayCartesian": "Gitter ausblenden",
                 "xAxis": "X-Achse",
                 "xAxisAngle": "Beschriftungsdrehung",
                 "hideLabels": "Beschriftung ausblenden",
+                "includeLegendPercent": "Include percentages in legend",
                 "format": "Format",
                 "prefix": "Präfix",
                 "suffix": "Suffix",
@@ -2178,6 +2213,28 @@
                 "barChartType": "Balkendiagrammtyp",
                 "groupedBarChart": "Gruppiert",
                 "stackedBarChart": "Gestapelt",
+                "valueFormatting": "Wertformatierung verfolgen",
+                "traceAxes": "Achsen verfolgen",
+                "traceData": "Trace-Daten",
+                "traceLegendOptions": "Optionen für Tracelegende",
+                "traces": "Spuren",
+                "axes": "Achsen",
+                "traceStyle": "Trace-Stil",
+                "mode": "Modus",
+                "lineColor": "Linienfarbe",
+                "lineWidth": "Linienbreite",
+                "markerColor": "Markerfarbe",
+                "markerSize": "Markergröße",
+                "layout": "Layout",
+                "left": "Links",
+                "right": "Richtig",
+                "free": "Frei",
+                "top": "Top",
+                "bottom": "Unten",
+                "side": "Seite",
+                "anchor": "Anker",
+                "sortBy": "Sortieren nach",
+                "reverseRampColor": "Rampenfarbe umkehren",
                 "axisTypes": {
                   "auto": "Auto",
                   "linear": "linear",
@@ -2572,7 +2629,10 @@
             "colorOpacity": "Deckkraft",
             "offset": "Offset",
             "propertyValue": "Eigenschaftswert",
-            "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\""
+            "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\"",
+            "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft.",
+            "msTranslateX": "Versatz x",
+            "msTranslateY": "Versatz y"
         },
         "playback": {
             "settings": {
@@ -2676,7 +2736,8 @@
                 "layer": "Ebenen suchen",
                 "access": "Zugriff suchen",
                 "ip": "###.###.###.###/##",
-                "priority": "Priorität festlegen"
+                "priority": "Priorität festlegen",
+                "filterAny": "beliebig"
             },
             "menutitle": "GeoFence-Regeln Verwalten",
             "tooltip": {
@@ -2687,7 +2748,9 @@
                 "deleteT": "Entferne ausgewählte Regeln",
                 "cacheT": "Cache leeren",
                 "save": "Aktuelle Regel speichern",
-                "close": "Beenden Sie die Regelerstellung"
+                "close": "Beenden Sie die Regelerstellung",
+                "showAllRules": "Toon alle in aanmerking komende regels",
+                "filterRuleList": "Filterlijst met geselecteerde waarde"
             },
             "navItems": {
                 "main": "Allgemeine Regel",
@@ -3976,7 +4039,10 @@
              "noLayerSelected": "Bitte wählen Sie zuerst die Ebene aus.",
              "successfulIntersection": "Der Schnittvorgang war erfolgreich und ein neuer Layer wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
              "successfulBuffer": "Der Puffervorgang war erfolgreich und eine neue Ebene wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
-             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen"
+             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen",
+             "emptyIntersection": "Es gibt keine Schnittmenge zwischen den angegebenen Datensätzen.",
+             "errorGettingFC": "Es war nicht möglich, die Geometrie aus der Ebene zu erfassen {layerName}",
+             "errorGettingFeaturesList": "Es war nicht möglich, die Liste der Features aus dem Layer abzurufen {layerName}"
           },
           "warningTitle": "Warnung",
           "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
@@ -3987,6 +4053,7 @@
             "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Prozess nicht verwendet werden",
             "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
             "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
+            "pointAndPolygon": "Sie können einen Punktlayer nur für den Schnittpunktlayer auswählen",
             "siderBarBtn": "Geoverarbeitung",
             "selectFeature": "Bitte wählen Sie eine Funktion aus",
             "validFeature": "Diese Funktion ist gültig",

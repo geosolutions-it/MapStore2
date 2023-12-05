@@ -28,15 +28,21 @@ describe('test rules manager selectors', () => {
         const rules = rulesSelector(state);
         expect(rules.length).toBe(1);
         expect(rules[0]).toEqual({
-            id: "rules1",
+            id: 'rules1',
             priority: 1,
-            roleName: "role1",
-            userName: "*",
-            service: "*",
-            request: "*",
-            workspace: "*",
-            layer: "*",
-            access: "ALLOW"
+            roleName: 'role1',
+            roleAny: '*',
+            userName: '*',
+            userAny: '*',
+            service: '*',
+            serviceAny: '*',
+            request: '*',
+            requestAny: '*',
+            workspace: '*',
+            workspaceAny: '*',
+            layer: '*',
+            layerAny: '*',
+            access: 'ALLOW'
         });
     });
 

@@ -70,8 +70,10 @@ export default ({
                         noResultsText="widgets.chartSwitcher.noResults"
                         options={isEmpty(options)
                             ? []
-                            : options.map(m => ({
-                                label: m?.name || (m?.layer?.title),
+                            : options.map((m, idx) => ({
+                                // layer cannot be used anymore as default
+                                // because a chart could contain multiple layers
+                                label: m?.name || `[Chart ${idx + 1}]`,
                                 value: m.chartId
                             }))
                         }
