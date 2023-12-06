@@ -65,6 +65,26 @@ class WFSOptionalProps extends React.Component {
                     />
                     <Label key="maxZoomLevel-label" className="slider-label" >{options.maxZoomLevel || 21}</Label>
                 </FormGroup>
+                <FormGroup>
+                    <ControlLabel>
+                        <Message msgId="search.s_placeholder" />
+                    </ControlLabel>
+                    <FormControl
+                        value={options.placeholder}
+                        key="placeholder"
+                        type="text"
+                        onChange={this.updateProp.bind(null, "placeholder")}/>
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>
+                        <Message msgId="search.s_tooltip" />
+                    </ControlLabel>
+                    <FormControl
+                        value={options.tooltip}
+                        key="tooltip"
+                        type="text"
+                        onChange={this.updateProp.bind(null, "tooltip")}/>
+                </FormGroup>
             </form>);
     }
 
