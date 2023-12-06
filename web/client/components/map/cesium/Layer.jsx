@@ -26,7 +26,7 @@ class CesiumLayer extends React.Component {
 
     componentDidMount() {
         // initial visibility should also take into account the visibility limits
-        // in particular for detached layers
+        // in particular for detached layers (eg. Vector, WFS, 3D Tiles, ...)
         const visibility = this.getVisibilityOption(this.props);
         this.createLayer(this.props.type, { ...this.props.options, visibility }, this.props.position, this.props.map, this.props.securityToken);
         if (this.props.options && this.layer && visibility) {
@@ -133,11 +133,8 @@ class CesiumLayer extends React.Component {
     };
 
     setDetachedLayerVisibility = (visibility, props) => {
-        if (!this.layer?.detached) {
-            return;
-        }
         // use internal setVisible
-        // if a detached layers implements setVisibility
+        // if a detached layers implements setVisible
         if (this.layer?.setVisible) {
             this.layer.setVisible(visibility);
             return;
@@ -157,9 +154,6 @@ class CesiumLayer extends React.Component {
     };
 
     setImageryLayerVisibility = (visibility, props) => {
-        if (!!this.layer?.detached) {
-            return;
-        }
         // this type of layer will be added and removed from the imageryLayers array of Cesium
         if (visibility) {
             this.addLayer(props);
@@ -174,8 +168,11 @@ class CesiumLayer extends React.Component {
         const oldVisibility = this.getVisibilityOption(this.props);
         const newVisibility = this.getVisibilityOption(newProps);
         if (newVisibility !== oldVisibility) {
-            this.setDetachedLayerVisibility(newVisibility, newProps);
-            this.setImageryLayerVisibility(newVisibility, newProps);
+            if (!!this.layer?.detached) {
+                this.setDetachedLayerVisibility(newVisibility, newProps);
+            } else {
+                this.setImageryLayerVisibility(newVisibility, newProps);
+            }
             newProps.map.scene.requestRender();
         }
     };
