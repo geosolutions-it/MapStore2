@@ -13,7 +13,6 @@ import {
     distanceUomSelector,
     quadrantSegmentsSelector,
     capStyleSelector,
-    bufferedLayersCounterSelector,
     sourceLayerIdSelector,
     sourceFeatureIdSelector,
     sourceFeatureSelector,
@@ -27,7 +26,6 @@ import {
     intersectionFeaturesSelector,
     intersectionTotalCountSelector,
     intersectionCurrentPageSelector,
-    intersectedLayersCounterSelector,
     firstAttributeToRetainSelector,
     secondAttributeToRetainSelector,
     intersectionModeSelector,
@@ -48,7 +46,8 @@ import {
     selectedLayerIdSelector,
     selectedLayerTypeSelector,
     wfsBackedLayersSelector,
-    maxFeaturesSelector
+    maxFeaturesSelector,
+    wpsUrlSelector
 } from '../geoProcessing';
 import {
     GPT_CONTROL_NAME
@@ -88,15 +87,6 @@ describe('Test Geo Processing Tools selectors', () => {
             }
         };
         expect(capStyleSelector({geoProcessing})).toEqual("Round");
-    });
-    it('bufferedLayersCounterSelector', () => {
-        const geoProcessing = {
-            buffer: {
-                counter: 1
-            }
-        };
-        expect(bufferedLayersCounterSelector({geoProcessing})).toEqual(1);
-        expect(bufferedLayersCounterSelector({})).toEqual(0);
     });
     it('sourceLayerIdSelector', () => {
         const geoProcessing = {
@@ -221,14 +211,6 @@ describe('Test Geo Processing Tools selectors', () => {
             }
         };
         expect(intersectionCurrentPageSelector({geoProcessing})).toEqual(5);
-    });
-    it('intersectedLayersCounterSelector', () => {
-        const geoProcessing = {
-            intersection: {
-                counter: 2
-            }
-        };
-        expect(intersectedLayersCounterSelector({geoProcessing})).toEqual(2);
     });
     it('firstAttributeToRetainSelector', () => {
         const geoProcessing = {
@@ -398,6 +380,12 @@ describe('Test Geo Processing Tools selectors', () => {
         };
         expect(maxFeaturesSelector({geoProcessing})).toEqual(10);
     });
+    it('wpsUrlSelector', () => {
+        const geoProcessing = {
+            wpsUrl: "url"
+        };
+        expect(wpsUrlSelector({geoProcessing})).toEqual("url");
+    });
     it('test wfsBackedLayersSelector', () => {
         let layers = wfsBackedLayersSelector({});
         expect(layers.length).toBeFalsy();
@@ -410,6 +398,10 @@ describe('Test Geo Processing Tools selectors', () => {
                     search: {
                         type: "wfs"
                     }
+                }, {
+                    name: "ws:layer_11",
+                    group: "buffer",
+                    type: "vector"
                 },
                 {
                     name: "ws:layer_3",
@@ -431,6 +423,11 @@ describe('Test Geo Processing Tools selectors', () => {
             search: {
                 type: "wfs"
             }
+        },
+        {
+            name: "ws:layer_11",
+            group: "buffer",
+            type: "vector"
         },
         {
             name: "ws:layer_3",

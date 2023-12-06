@@ -29,6 +29,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @class
 *
  * @prop {string} cfg.selectedTool the values are "buffer", "intersection", default is "buffer"
+ * @prop {string} cfg.wpsUrl the default value to use where to execute geoserver processes. It must support some mandatory wps processes like geo:buffer,gs:IntersectionFeatureCollection,gs:CollectGeometries
  * @prop {number} cfg.buffer.quadrantSegments Number determining the style and smoothness of buffer corners. Positive numbers create round corners with that number of segments per quarter-circle, 0 creates flat corners, default is unset.
  * @prop {string} cfg.buffer.capStyle Style for the buffer end caps. Values are: Round - rounded ends (default), Flat - flat ends; Square - square ends, default is unset
  * @prop {string} cfg.intersection.firstAttributeToRetain First feature collection attribute to include
@@ -42,6 +43,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  * {
  *   "name": "GeoProcessing",
  *   "cfg": {
+ *     "wpsUrl": "http://localhost:8080/geoserver/wps",
  *     "selectedTool": "buffer",
  *     "buffer": {
  *       "quadrantSegments": 200,

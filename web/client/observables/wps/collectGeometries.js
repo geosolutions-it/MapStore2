@@ -8,6 +8,9 @@
 import {
     processReference,
     processParameter,
+    processData,
+    complexData,
+    cdata,
     rawDataOutput,
     responseForm
 } from './common';
@@ -25,22 +28,30 @@ const {
  * the gs:CollectGeometries
  * @param {object} options the options to use
  * @param {string} options.name the layer typeName
+ * @param {object} options.featureCollection the GeoJSON fc, if present it will use it otherwise it will do an internal generic getFeature
  */
 export const collectGeometriesXML = ({
-    name
-}) => executeProcessXML(
-    'gs:CollectGeometries',
-    [
-        processParameter('features', processReference(
-            "test/xml",
-            "http://geoserver/wfs",
-            'POST',
-            getFeature(query(name))
-        ))
-    ],
-    responseForm(
-        rawDataOutput('result', "application/json")
-    )
-);
+    name,
+    featureCollection
+}) => {
+    let features = processReference(
+        "test/xml",
+        "http://geoserver/wfs",
+        'POST',
+        getFeature(query(name))
+    );
+    if (featureCollection) {
+        features = processData(complexData(cdata(JSON.stringify(featureCollection)), "application/json"));
+    }
+    return executeProcessXML(
+        'gs:CollectGeometries',
+        [
+            processParameter('features', features)
+        ],
+        responseForm(
+            rawDataOutput('result', "application/json")
+        )
+    );
+};
 
 export default collectGeometriesXML;

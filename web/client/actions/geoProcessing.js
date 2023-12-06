@@ -11,8 +11,8 @@ export const GPT_TOOL_INTERSECTION = "intersection";
 export const GPT_CONTROL_NAME = "GeoProcessing";
 export const GPT_SOURCE_HIGHLIGHT_ID = "gpt-layer";
 export const GPT_INTERSECTION_HIGHLIGHT_ID = "gpt-layer-intersection";
-export const GPT_INTERSECTION_GROUP_ID = "intersection.layer";
-export const GPT_BUFFER_GROUP_ID = "buffered.layer";
+export const GPT_INTERSECTION_GROUP_ID = "intersection_group";
+export const GPT_BUFFER_GROUP_ID = "buffered_group";
 
 export const CHECK_WPS_AVAILABILITY = "GPT:CHECK_WPS_AVAILABILITY";
 export const CHECKING_WPS_AVAILABILITY = "GPT:CHECKING_WPS_AVAILABILITY";
@@ -21,8 +21,6 @@ export const CHECKED_WPS_AVAILABILITY = "GPT:CHECKED_WPS_AVAILABILITY";
 export const GET_FEATURES = "GPT:GET_FEATURES";
 export const ERROR_LOADING_DFT = "GPT:ERROR_LOADING_DFT";
 export const INIT_PLUGIN = "GPT:INIT_PLUGIN";
-export const INCREASE_BUFFERED_COUNTER = "GPT:INCREASE_BUFFERED_COUNTER";
-export const INCREASE_INTERSECT_COUNTER = "GPT:INCREASE_INTERSECT_COUNTER";
 export const RUNNING_PROCESS = "GPT:RUNNING_PROCESS";
 export const RESET = "GPT:RESET";
 export const RUN_PROCESS = "GPT:RUN_PROCESS";
@@ -114,20 +112,6 @@ export const getFeatures = (layerId, source, page = 0) => ({
 export const initPlugin = (cfg) => ({
     type: INIT_PLUGIN,
     cfg
-});
-/**
- * action for triggering the increase of the number of buffered layers
- * @memberof actions.geoProcessing
-  */
-export const increaseBufferedCounter = () => ({
-    type: INCREASE_BUFFERED_COUNTER
-});
-/**
- * action for triggering the increase of the number of intersected layers
- * @memberof actions.geoProcessing
-  */
-export const increaseIntersectedCounter = () => ({
-    type: INCREASE_INTERSECT_COUNTER
 });
 /**
  * action that clears current status
