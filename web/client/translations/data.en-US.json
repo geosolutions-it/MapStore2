@@ -3935,6 +3935,7 @@
           "true": "true",
           "false": "false",
           "notifications": {
+            "errorMissingUrl": "A geoserver wps url must be provided to collect geometries for these layers {layerName}. You can configure wpsUrl property in GeoProcessing plugin",
             "errorIntersectGFI": "There was an error intersecting the features. It was not possible to create the intersection layer.",
             "errorGFI": "There was an error loading the feature",
             "errorGetFeature": "There was an error loading the feature in order to obtain its geometry",

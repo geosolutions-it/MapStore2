@@ -3924,6 +3924,7 @@
           "true": "Verdadera",
           "false": "falsa",
           "notifications": {
+            "errorMissingUrl": "Se debe proporcionar una URL de geoserver wps para recopilar geometrías para estas capas {layerName}. Puede configurar la propiedad wpsUrl en el complemento GeoProcessing",
             "errorIntersectGFI": "Hubo un error al cruzar las entidades. No fue posible crear la capa de intersección.",
             "errorGFI": "Hubo un error al cargar la característica",
             "errorGetFeature": "Hubo un error al cargar la función para obtener su geometría",

@@ -69,10 +69,14 @@ const Intersection = ({
     }, [intersectionLayerId]);
 
     const handleOnChangeIntersectionLayer = (sel) => {
-        onSetIntersectionLayerId(sel?.value || "");
+        if (sel?.value !== intersectionLayerId) {
+            onSetIntersectionLayerId(sel?.value ?? "");
+        }
     };
     const handleOnChangeIntersectionFeatureId = (sel) => {
-        onSetIntersectionFeatureId(sel?.value || "");
+        if (sel?.value !== intersectionFeatureId) {
+            onSetIntersectionFeatureId(sel?.value ?? "");
+        }
     };
     const isDisableClickSelectFeature = !intersectionLayerId || isIntersectionFeaturesLoading || checkingWPSAvailabilityIntersection;
     const handleOnClickToSelectIntersectionFeature = () => {
@@ -119,7 +123,7 @@ const Intersection = ({
                         value={intersectionFeatureId}
                         noResultsText={<Message msgId="GeoProcessing.noMatchedFeature" />}
                         onChange={handleOnChangeIntersectionFeatureId}
-                        options={intersectionFeatures.map(f => ({value: f.id, label: f.id }))}
+                        options={intersectionFeatures.map((f, i) => ({value: f.id ?? `id: ${f.id} Feature #${i}`, label: `id: ${f.id} Feature #${i}` }))}
                         onOpen={() => {
                             if (selectedLayerType !== "intersection" && intersectionFeatures.length === 0 ) {
                                 onGetFeatures(intersectionLayerId, "intersection", 0);

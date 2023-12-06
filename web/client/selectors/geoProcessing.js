@@ -17,7 +17,7 @@ export const distanceSelector = state => state?.geoProcessing?.buffer?.distance 
 export const distanceUomSelector = state => state?.geoProcessing?.buffer?.distanceUom || "m";
 export const quadrantSegmentsSelector = state => state?.geoProcessing?.buffer?.quadrantSegments;
 export const capStyleSelector = state => state?.geoProcessing?.buffer?.capStyle;
-export const bufferedLayersCounterSelector = state => state?.geoProcessing?.buffer?.counter ?? 0;
+
 // source
 export const sourceLayerIdSelector = state => state?.geoProcessing?.source?.layerId;
 export const sourceFeatureIdSelector = state => state?.geoProcessing?.source?.featureId;
@@ -36,7 +36,6 @@ export const intersectionFeatureSelector = state => state?.geoProcessing?.inters
 export const intersectionFeaturesSelector = state => state?.geoProcessing?.intersection?.features || [];
 export const intersectionTotalCountSelector = state => state?.geoProcessing?.intersection?.totalCount || 0;
 export const intersectionCurrentPageSelector = state => state?.geoProcessing?.intersection?.currentPage || 0;
-export const intersectedLayersCounterSelector = state => state?.geoProcessing?.intersection?.counter ?? 0;
 export const firstAttributeToRetainSelector = state => state?.geoProcessing?.intersection?.firstAttributeToRetain;
 export const secondAttributeToRetainSelector = state => state?.geoProcessing?.intersection?.secondAttributeToRetain;
 export const intersectionModeSelector = state => state?.geoProcessing?.intersection?.intersectionMode;
@@ -69,6 +68,10 @@ export const isListeningClickSelector = (state) => !!(get(mapSelector(state), 'e
 export const selectedLayerIdSelector = (state) => state?.geoProcessing?.selectedLayerId;
 export const selectedLayerTypeSelector = (state) => state?.geoProcessing?.selectedLayerType;
 export const maxFeaturesSelector = (state) => state?.geoProcessing?.maxFeatures || 10;
-export const wfsBackedLayersSelector = (state) => layersSelector(state)
-    .filter(l => l.group !== "background")
-    .filter(hasWFSService);
+export const wpsUrlSelector = (state) => state?.geoProcessing?.wpsUrl;
+export const wfsBackedLayersSelector = (state) => {
+    const layers = layersSelector(state);
+    return layers
+        .filter(l => l.group !== "background")
+        .filter(layer => hasWFSService(layer) || layer.type === "vector");
+};
