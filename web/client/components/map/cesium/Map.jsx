@@ -336,7 +336,15 @@ class CesiumMap extends React.Component {
     };
 
     getZoomFromHeight = (height) => {
-        return Math.log2(this.props.zoomToHeight / height) + 1;
+        let distance = height;
+        // when camera is tilted we could compute the height as the distance between the camera point of view and the viewed point on the map
+        // the viewed point or target is computed as the intersection of an imaginary vector based on the camera direction (ray) and the globe surface
+        // if the camera is orthogonal to the globe distance should match the height so this computation is still valid
+        const target = this.map.scene.globe.pick(new Cesium.Ray(this.map.camera.position, this.map.camera.direction), this.map.scene);
+        if (target) {
+            distance = Cesium.Cartesian3.distance(target, this.map.camera.position);
+        }
+        return Math.log2(this.props.zoomToHeight / distance) + 1;
     };
 
     getHeightFromZoom = (zoom) => {
