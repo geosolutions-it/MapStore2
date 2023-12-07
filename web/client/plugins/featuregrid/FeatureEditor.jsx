@@ -19,7 +19,7 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
 import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
 import {mapLayoutValuesSelector} from '../../selectors/maplayout';
-import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../../selectors/query';
+import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
@@ -273,15 +273,18 @@ export const selector = createStructuredSelector({
 });
 
 const EditorPlugin = compose(
-    connect(() => ({}),
-        (dispatch) => ({
-            onMount: bindActionCreators(setUp, dispatch),
-            setSyncTool: bindActionCreators(setSyncTool, dispatch)
-        })),
+    connect((state) => ({
+        isSyncWmsActive: isSyncWmsActive(state)
+    }),
+    (dispatch) => ({
+        onMount: bindActionCreators(setUp, dispatch),
+        setSyncTool: bindActionCreators(setSyncTool, dispatch)
+    })),
     lifecycle({
         componentDidMount() {
             // only the passed properties will be picked
-            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
+            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions', 'isSyncWmsActive']));
+            if (this.props.isSyncWmsActive) return;
             if (this.props.enableMapFilterSync) {
                 this.props.setSyncTool(true);
             } else {
@@ -292,11 +295,12 @@ const EditorPlugin = compose(
         // due to multiple renders of plugins in contexts (one with default props, then with context props)
         // the options have to be updated when change.
         componentDidUpdate(oldProps) {
-            const newOptions = pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
-            const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
+            const newOptions = pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions', 'isSyncWmsActive']);
+            const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions', 'isSyncWmsActive']);
             if (!isEqual(newOptions, oldOptions) ) {
                 this.props.onMount(newOptions);
             }
+            if (newOptions.isSyncWmsActive) return;
             if (this.props.enableMapFilterSync) {
                 this.props.setSyncTool(true);
             } else {
