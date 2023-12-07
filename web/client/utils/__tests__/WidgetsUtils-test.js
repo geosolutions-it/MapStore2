@@ -22,7 +22,9 @@ import {
     generateClassifiedData,
     parsePieNoAggregationFunctionData,
     isChartOptionsValid,
-    enableBarChartStack
+    enableBarChartStack,
+    getWidgetLayersName,
+    isChartCompatibleWithTableWidget
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -706,5 +708,37 @@ describe('Test WidgetsUtils', () => {
         expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], yAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
         expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }, { id: 'axis-1' }], yAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
         expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }], yAxisOpts: [{ id: 0 }] })).toBe(true);
+    });
+    it('getWidgetLayersName', () => {
+        expect(getWidgetLayersName()).toEqual([]);
+        expect(getWidgetLayersName({})).toEqual([]);
+        expect(getWidgetLayersName({widgetType: 'map'})).toEqual([]);
+        expect(getWidgetLayersName({widgetType: 'map', maps: [{layers: [{name: "test"}]}]})).toEqual(["test"]);
+        expect(getWidgetLayersName({widgetType: 'legend', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersName({widgetType: 'counter', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersName({widgetType: 'table', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersName({widgetType: 'chart'})).toEqual([]);
+        expect(getWidgetLayersName({widgetType: 'chart', charts: [{chartId: "1"}]})).toEqual([]);
+        expect(getWidgetLayersName({widgetType: 'chart', charts: [{chartId: "1", traces: []}]})).toEqual([]);
+        expect(getWidgetLayersName({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: ""}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersName({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersName({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "2", traces: [{layer: {name: "layer_1"}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersName({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "2", traces: [{layer: {name: "layer_2"}}]}]})).toEqual(["layer_1", "layer_2"]);
+    });
+    it('isChartCompatibleWithTableWidget', () => {
+        expect(isChartCompatibleWithTableWidget()).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'map'})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1"}]})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: []}]})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeTruthy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeTruthy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_2"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
     });
 });

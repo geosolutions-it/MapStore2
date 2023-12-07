@@ -259,9 +259,9 @@ describe('widgets selectors', () => {
                         charts: [
                             {
                                 chartId: "1",
-                                layer: {
-                                    name: "layername"
-                                }
+                                traces: [{
+                                    layer: { name: "layername" }
+                                }]
                             }
                         ],
                         widgetType: "chart",

@@ -7,7 +7,8 @@
  */
 
 import { compose } from 'recompose';
-import { get } from 'lodash';
+import get from 'lodash/get';
+import isNil from 'lodash/isNil';
 import { Textfit } from 'react-textfit';
 import PropTypes from 'prop-types';
 import {format} from 'd3-format';
@@ -71,7 +72,7 @@ const Counter = ({
             {counterOpts?.tickPrefix ? counterOpts.tickPrefix : null}
         </span>
         <span className="value" style={layoutStyle}>
-            {val}
+            {isNil(val) ? 0 : val}
         </span>
         <span style={prefixSuffixStyle}>
             {counterOpts?.tickSuffix || uom}

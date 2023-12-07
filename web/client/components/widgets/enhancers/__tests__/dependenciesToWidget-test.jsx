@@ -262,4 +262,143 @@ describe('dependenciesToWidget enhancer', () => {
         const response = buildDependencies(null, deps, originalWidgetId);
         expect(response).toBe(deps);
     });
+    it('Return dependencies if there is a parent table', () => {
+        const dependencyMap = {
+            "viewport": "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].viewport",
+            "layers": "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].layers",
+            "filter": "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].filter",
+            "quickFilters": "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].quickFilters",
+            "layer": "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].layer",
+            "options": "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].options",
+            "mapSync": "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].mapSync",
+            "dependenciesMap": "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].dependenciesMap"
+        };
+        const deps = {
+            "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].dependenciesMap": {
+                "filter": "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].filter",
+                "quickFilters": "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].quickFilters",
+                "layer": "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].layer",
+                "options": "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].options",
+                "dependenciesMap": "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].dependenciesMap",
+                "mapSync": "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].mapSync"
+            },
+            "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].mapSync": true,
+            "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].viewport": {
+                "bounds": {
+                    "minx": -10428653.241920743,
+                    "miny": 2596212.3657196583,
+                    "maxx": -8237050.76692817,
+                    "maxy": 3907260.274867002
+                },
+                "crs": "EPSG:3857",
+                "rotation": 0
+            },
+            "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].center": {
+                "x": -83.83843600000002,
+                "y": 28.021909206829974,
+                "crs": "EPSG:4326"
+            },
+            "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].zoom": 5,
+            "widgets[3d418c80-9030-11ee-b036-b16bb8d06c94].maps[3800a3a0-9030-11ee-b036-b16bb8d06c94].layers": [
+                {
+                    "type": "osm",
+                    "title": "Open Street Map",
+                    "name": "mapnik",
+                    "source": "osm",
+                    "group": "background",
+                    "visibility": true,
+                    "id": "mapnik__0"
+                },
+                {
+                    "type": "wms",
+                    "featureInfo": null,
+                    "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms",
+                    "visibility": true,
+                    "dimensions": [
+
+                    ],
+                    "name": "gs:us_states",
+                    "title": "States of US",
+                    "description": "",
+                    "bbox": {
+                        "crs": "EPSG:4326",
+                        "bounds": {
+                            "minx": -124.73142200000001,
+                            "miny": 24.955967,
+                            "maxx": -66.969849,
+                            "maxy": 49.371735
+                        }
+                    },
+                    "links": [],
+                    "params": {},
+                    "allowedSRS": {},
+                    "imageFormats": [],
+                    "infoFormats": [],
+                    "search": {
+                        "type": "wfs",
+                        "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wfs"
+                    },
+                    "id": "gs:us_states__3bb39980-9030-11ee-b036-b16bb8d06c94"
+                }
+            ],
+            "layers": [],
+            "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].quickFilters": {
+                "STATE_NAME": {
+                    "rawValue": "florida",
+                    "value": "florida",
+                    "operator": "ilike",
+                    "type": "string",
+                    "attribute": "STATE_NAME"
+                }
+            },
+            "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].mapSync": false,
+            "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].layer": {
+                "type": "wms",
+                "featureInfo": null,
+                "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wms",
+                "visibility": true,
+                "dimensions": [
+
+                ],
+                "name": "gs:us_states",
+                "title": "States of US",
+                "description": "",
+                "bbox": {
+                    "crs": "EPSG:4326",
+                    "bounds": {
+                        "minx": -124.73142200000001,
+                        "miny": 24.955967,
+                        "maxx": -66.969849,
+                        "maxy": 49.371735
+                    }
+                },
+                "links": [],
+                "params": {},
+                "allowedSRS": {},
+                "imageFormats": [],
+                "infoFormats": [],
+                "search": {
+                    "type": "wfs",
+                    "url": "https://gs-stable.geosolutionsgroup.com/geoserver/wfs"
+                }
+            },
+            "widgets[34792a90-9030-11ee-b036-b16bb8d06c94].options": {
+                "propertyName": [{"name": "STATE_NAME"}, {"name": "STATE_FIPS"}, {"name": "SUB_REGION"}, {"name": "STATE_ABBR"}, {"name": "LAND_KM"}, {"name": "WATER_KM"}, {"name": "PERSONS"}, {"name": "FAMILIES"}, {"name": "HOUSHOLD"}, {"name": "MALE"}, {"name": "FEMALE"}, {"name": "WORKERS"}, {"name": "DRVALONE"}, {"name": "CARPOOL"}, {"name": "PUBTRANS"}, {"name": "EMPLOYED"}, {"name": "UNEMPLOY"}, {"name": "SERVICE"}, {"name": "MANUAL"}, {"name": "P_MALE"}, {"name": "P_FEMALE"}, {"name": "SAMP_POP"}]
+            }
+        };
+        const response = buildDependencies(dependencyMap, deps, "e81849f0-9404-11ee-b8a8-2f8d898ee742");
+        expect(response).toEqual({
+            viewport: {bounds: {minx: -10428653.241920743, miny: 2596212.3657196583, maxx: -8237050.76692817, maxy: 3907260.274867002}, crs: 'EPSG:3857', rotation: 0},
+            layers: [
+                {type: 'osm', title: 'Open Street Map', name: 'mapnik', source: 'osm', group: 'background', visibility: true, id: 'mapnik__0'},
+                {type: 'wms', featureInfo: null, url: 'https://gs-stable.geosolutionsgroup.com/geoserver/wms', visibility: true, dimensions: [], name: 'gs:us_states', title: 'States of US', description: '', bbox: {crs: 'EPSG:4326', bounds: {minx: -124.73142200000001, miny: 24.955967, maxx: -66.969849, maxy: 49.371735}}, links: [], params: {}, allowedSRS: {}, imageFormats: [], infoFormats: [], search: {type: 'wfs', url: 'https://gs-stable.geosolutionsgroup.com/geoserver/wfs'}, id: 'gs:us_states__3bb39980-9030-11ee-b036-b16bb8d06c94'}
+            ],
+            filter: undefined,
+            quickFilters: {STATE_NAME: {rawValue: 'florida', value: 'florida', operator: 'ilike', type: 'string', attribute: 'STATE_NAME'}},
+            layer: {type: 'wms', featureInfo: null, url: 'https://gs-stable.geosolutionsgroup.com/geoserver/wms', visibility: true, dimensions: [], name: 'gs:us_states', title: 'States of US', description: '', bbox: {crs: 'EPSG:4326', bounds: {minx: -124.73142200000001, miny: 24.955967, maxx: -66.969849, maxy: 49.371735}}, links: [], params: {}, allowedSRS: {}, imageFormats: [], infoFormats: [], search: {type: 'wfs', url: 'https://gs-stable.geosolutionsgroup.com/geoserver/wfs'}},
+            options: {propertyName: [{name: 'STATE_NAME'}, {name: 'STATE_FIPS'}, {name: 'SUB_REGION'}, {name: 'STATE_ABBR'}, {name: 'LAND_KM'}, {name: 'WATER_KM'}, {name: 'PERSONS'}, {name: 'FAMILIES'}, {name: 'HOUSHOLD'}, {name: 'MALE'}, {name: 'FEMALE'}, {name: 'WORKERS'}, {name: 'DRVALONE'}, {name: 'CARPOOL'}, {name: 'PUBTRANS'}, {name: 'EMPLOYED'}, {name: 'UNEMPLOY'}, {name: 'SERVICE'}, {name: 'MANUAL'}, {name: 'P_MALE'}, {name: 'P_FEMALE'}, {name: 'SAMP_POP'}]},
+            mapSync: true,
+            dependenciesMap: undefined
+        });
+    });
 });

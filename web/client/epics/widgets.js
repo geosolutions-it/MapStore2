@@ -64,7 +64,7 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
-
+    const depToTheWidget = targetId.split(".maps")[0];
     const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => {
         if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
             return {
@@ -81,12 +81,12 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
             }
             return {
                 ...ov,
-                [k]: `${targetId.replace(/.map$/, "")}.${mappings[k]}`
+                [k]: `${depToTheWidget}.${mappings[k]}`
             };
         }
         return ov;
     }, {});
-    const depToTheWidget = targetId.split(".maps")[0];
+
     return active
         ? { ...cleanDependenciesMap, ...overrides, ["dependenciesMap"]: `${depToTheWidget}.dependenciesMap`, ["mapSync"]: `${depToTheWidget}.mapSync`}
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);

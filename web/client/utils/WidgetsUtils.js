@@ -933,3 +933,43 @@ export const enableBarChartStack = (chart = {}) => {
     // the reason is related to the overlay behavior for each new axis added
     return false;
 };
+
+/**
+ * Get layers name of the widget
+ * @param {object} widget current widget object
+ * @returns {string[]|[]} array of widget's layers name
+ */
+export const getWidgetLayersName = (widget) => {
+    const type = widget?.widgetType;
+    if (!isEmpty(widget)) {
+        if (type !== 'map') {
+            if (type === 'chart') {
+                return uniq(get(widget, 'charts', [])
+                    .map(c => get(c, 'traces', []).map(t => get(t, 'layer.name', '')))
+                    .flat()
+                    .filter(n => n)
+                );
+            }
+            return castArray(get(widget, 'layer.name', []));
+        }
+        return uniq(get(widget, 'maps', [])
+            .map(m => get(m, 'layers', []).map(t => get(t, 'name', '')))
+            .flat()
+            .filter(n => n)
+        );
+    }
+    return [];
+};
+
+/**
+ * Check if chart widget layers are compatible with table widget layer
+ * @param {object} widget current widget object
+ * @param {object} tableWidget depedant table widget object
+ * @returns {boolean} flag determines if compatible
+ */
+export const isChartCompatibleWithTableWidget = (widget, tableWidget) => {
+    const tableLayerName = tableWidget?.layer?.name;
+    return tableLayerName && get(widget, 'charts', [])
+        .every(({ traces = [] } = {}) => traces
+            .every(trace => get(trace, 'layer.name') === tableLayerName));
+};
