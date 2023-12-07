@@ -46,6 +46,7 @@ import {
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
 import widgetsEpics from '../epics/widgets';
+import { isChartCompatibleWithTableWidget } from '../utils/WidgetsUtils';
 
 const WidgetsView = compose(
     connect(
@@ -112,7 +113,7 @@ const WidgetsView = compose(
                     target.widgetType === "table" &&
                         (editingWidget.widgetType !== "map" &&
                             editingWidget.widgetType === "chart"
-                            ? (target.layer && editingWidget && editingWidget?.charts?.map(c => c?.layer?.name)?.includes(target.layer.name))
+                            ? (target.layer && editingWidget && editingWidget?.charts?.map(c => c?.layer?.name)?.includes(target.layer.name) && isChartCompatibleWithTableWidget(editingWidget, target))
                             : (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
                         || editingWidget.widgetType === "map") && !target.mapSync
                 ) && target.id !== editingWidget.id

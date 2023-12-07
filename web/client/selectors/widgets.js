@@ -12,7 +12,7 @@ import { mapSelector } from './map';
 import { getSelectedLayer } from './layers';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
-import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData } from '../utils/WidgetsUtils';
+import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, isChartCompatibleWithTableWidget } from '../utils/WidgetsUtils';
 import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
@@ -109,7 +109,7 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
                     .concat(
                         castArray(tableWidgets)
                             .filter(() => pathname.indexOf("viewer") === -1)
-                            .filter((w) => (!isChart && isArray(editingLayer)) || (isChart ? editingLayer.includes(w.layer.name) : editingLayer.name === w.layer.name))
+                            .filter((w) => (!isChart && isArray(editingLayer)) || (isChart ? isChartCompatibleWithTableWidget(editingWidget, w) : editingLayer.name === w.layer.name))
                             .filter((w) => editingWidget && editingWidget.id !== w.id)
                             .map(({id}) => `widgets[${id}]`)
                     )

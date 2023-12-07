@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { withProps, compose } from 'recompose';
+import isNil from 'lodash/isNil';
 
 /**
  * Returns an enhancer that add `stepButtons` for viewport connection to a wizard toolbar
@@ -20,21 +21,26 @@ export default (showCondition = () => true) => compose(
         canConnect,
         connected,
         ...props
-    }) => ({
-        stepButtons: [...stepButtons, {
-            onClick: () => toggleConnection(availableDependencies, props.widgets),
-            disabled: disableMultiDependencySupport,
-            visible: !!showCondition(props) && availableDependencies.length > 0,
-            bsStyle: (!disableMultiDependencySupport && connected) ? "success" : "primary",
-            glyph: connected ? "plug" : "unplug",
-            tooltipId: (disableMultiDependencySupport || !canConnect)
-                ? "widgets.builder.wizard.disableConnectToMap"
-                : connected
-                    ? "widgets.builder.wizard.clearConnection"
-                    : availableDependencies.length === 1
-                        ? "widgets.builder.wizard.connectToTheMap"
-                        : "widgets.builder.wizard.connectToAMap"
-        }
-        ]
-    }))
+    }) => {
+        const disableConnect = !isNil(disableMultiDependencySupport) ? disableMultiDependencySupport : !canConnect;
+        return {
+            stepButtons: [
+                ...stepButtons,
+                {
+                    onClick: () => toggleConnection(availableDependencies, props.widgets),
+                    disabled: disableConnect,
+                    visible: !!showCondition(props) && availableDependencies.length > 0,
+                    bsStyle: (!disableMultiDependencySupport && connected) ? "success" : "primary",
+                    glyph: connected ? "plug" : "unplug",
+                    tooltipId: disableConnect
+                        ? "widgets.builder.wizard.disableConnectToMap"
+                        : connected
+                            ? "widgets.builder.wizard.clearConnection"
+                            : availableDependencies.length === 1
+                                ? "widgets.builder.wizard.connectToTheMap"
+                                : "widgets.builder.wizard.connectToAMap"
+                }
+            ]
+        };
+    })
 );
