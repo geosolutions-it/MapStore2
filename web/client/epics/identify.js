@@ -16,7 +16,7 @@ import {
     PURGE_MAPINFO_RESULTS, EDIT_LAYER_FEATURES,
     UPDATE_FEATURE_INFO_CLICK_POINT,
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
-    exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
+    loadFeatureInfo, errorFeatureInfo,
     noQueryableLayers, newMapInfoRequest, getVectorInfo,
     showMapinfoMarker, hideMapinfoMarker, setCurrentEditFeatureQuery,
     SET_MAP_TRIGGER, CLEAR_WARNING
@@ -129,12 +129,8 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                             // this delay allows the panel to open and show the spinner for the first one
                             // this delay mitigates the freezing of the app when there are a great amount of queried layers at the same time
                             .delay(0)
-                            .map((response) =>
-                                response.data.exceptions
-                                    ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
-                                    : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs }, layer)
-                            )
-                            .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
+                            .map((response) =>loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs }, layer))
+                            .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e, requestParams, lMetaData)))
                             .concat(Rx.Observable.defer(() => {
                                 // update the layout only after the initial response
                                 // we don't need to trigger this for each query layer
