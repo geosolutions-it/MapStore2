@@ -12,26 +12,33 @@ import reactStringReplace from "react-string-replace";
 import moment from "moment";
 
 import NumberFormat from '../../../I18N/Number';
+import { handleLongTextEnhancer } from '../../../misc/enhancers/handleLongTextEnhancer';
+
 import { dateFormats as defaultDateFormats } from "../../../../utils/FeatureGridUtils";
 
-const BooleanFormatter =  ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : null;
+export const BooleanFormatter =  ({value} = {}) => !isNil(value) ? <span>{value.toString()}</span> : null;
 export const StringFormatter = ({value} = {}) => !isNil(value) ? reactStringReplace(value, /(https?:\/\/\S+)/g, (match, i) => (
     <a key={match + i} href={match} target={"_blank"}>{match}</a>
 )) : null;
-const NumberFormatter = ({value} = {}) => !isNil(value) ? <NumberFormat value={value} numberParams={{maximumFractionDigits: 17}}/> : null;
+export const NumberFormatter = ({value} = {}) => !isNil(value) ? <NumberFormat value={value} numberParams={{maximumFractionDigits: 17}}/> : null;
 const DEFAULT_DATE_PART = "1970-01-01";
-const DATE_INPUT_FORAMAT = "YYYY-MM-DD[Z]";
-const dateTimeFormatter = ({value, format, type}) => {
+const DATE_INPUT_FORMAT = "YYYY-MM-DD[Z]";
+export const DateTimeFormatter = ({value, format, type}) => {
     return !isNil(value)
         ? moment.utc(value).isValid() // geoserver sometimes returns UTC for time.
             ? moment.utc(value).format(format)
             : type === 'time'
                 ? moment(`${DEFAULT_DATE_PART}T${value}`).utc().format(format) // time format append default date part
                 : type === "date" && value?.toLowerCase()?.endsWith("z")        // in case: date format and value ends with z
-                    ? moment(value, DATE_INPUT_FORAMAT).format(format)
+                    ? moment(value, DATE_INPUT_FORMAT).format(format)
                     : moment(value).format(format)
         : null;
 };
+// add long text handling to formatters of string, date and number
+const EnhancedStringFormatter = handleLongTextEnhancer(StringFormatter);
+const EnhancedNumberFormatter = handleLongTextEnhancer(NumberFormatter);
+const enhancedDateTimeFormatter = handleLongTextEnhancer(DateTimeFormatter);
+
 export const register = {};
 
 /**
@@ -83,16 +90,16 @@ export const getFormatter = (desc, {featureGridFormatter} = {}, {dateFormats} = 
         return BooleanFormatter;
     case 'int':
     case 'number':
-        return NumberFormatter;
+        return EnhancedNumberFormatter;
     case 'string':
-        return StringFormatter;
+        return EnhancedStringFormatter;
     case 'Geometry':
         return () => null;
     case 'time':
     case 'date':
     case 'date-time':
         const format = get(dateFormats, desc.localType) ?? defaultDateFormats[desc.localType];
-        return ({value} = {}) => dateTimeFormatter({value, format, type: desc.localType});
+        return ({value} = {}) => enhancedDateTimeFormatter({value, format, type: desc.localType});
     default:
         return null;
     }
