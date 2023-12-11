@@ -146,7 +146,7 @@ const heightPoint3dOptions = ({ isDisabled, enableTranslation }) =>  ({
         label: 'styleeditor.height',
         uom: 'm',
         placeholderId: 'styleeditor.pointHeight',
-        isDisabled: (value, properties) => isDisabled() || properties?.msHeightReference === 'clamp'
+        isDisabled: (value, properties) => isDisabled(value, properties) || properties?.msHeightReference === 'clamp'
     }),
     ...(enableTranslation && {
         msTranslateX: property.number({
@@ -190,6 +190,57 @@ const point3dStyleOptions = ({ isDisabled }) =>  ({
 const polygon3dStyleOptions = ({ isDisabled }) =>  ({
     msClassificationType: property.msClassificationType({
         label: 'styleeditor.classificationtype',
+        isDisabled
+    })
+});
+
+const polygon3dExtrusion = ({ isDisabled }) => ({
+    msHeightReference: property.msHeightReference({
+        key: 'msHeightReference',
+        label: "styleeditor.heightReferenceFromGround",
+        isDisabled
+    }),
+    msHeight: property.number({
+        key: 'msHeight',
+        label: 'styleeditor.height',
+        uom: 'm',
+        placeholderId: 'styleeditor.geometryHeight',
+        isDisabled: (value, properties) => isDisabled(value, properties) || properties?.msHeightReference === 'clamp'
+    }),
+    msExtrusionRelativeToPolygon: property.bool({
+        key: 'msExtrusionRelativeToPolygon',
+        label: 'styleeditor.msExtrusionRelativeToPolygon',
+        isDisabled
+    }),
+    msExtrudedHeight: property.number({
+        key: 'msExtrudedHeight',
+        label: 'styleeditor.msExtrudedHeight',
+        uom: 'm',
+        fallbackValue: 0,
+        isDisabled
+    })
+});
+
+const line3dExtrusion = ({ isDisabled }) => ({
+    msExtrudedShapeName: property.shape({
+        label: 'styleeditor.msExtrudedShapeName',
+        key: 'msExtrudedShapeName',
+        isDisabled,
+        excludeSvg: true,
+        options: ['Circle', 'Square', 'Triangle', 'Star', 'Cross']
+    }),
+    msExtrudedShapeRadius: property.number({
+        key: 'msExtrudedShapeRadius',
+        label: 'styleeditor.msExtrudedShapeRadius',
+        fallbackValue: 0,
+        min: 0,
+        uom: 'm',
+        isDisabled
+    }),
+    msExtrusionColor: property.color({
+        key: 'msExtrusionColor',
+        opacityKey: 'msExtrusionOpacity',
+        label: 'styleeditor.msExtrusionColor',
         isDisabled
     })
 });
@@ -374,7 +425,10 @@ const getBlocks = ({
                     label: 'styleeditor.clampToGround',
                     isDisabled: () => !enable3dStyleOptions
                 })),
-                ...(!shouldHideVectorStyleOptions && lineGeometryTransformation({}))
+                ...(!shouldHideVectorStyleOptions && lineGeometryTransformation({})),
+                ...(!shouldHideVectorStyleOptions && line3dExtrusion({
+                    isDisabled: (value, properties) => !(!properties?.msClampToGround && enable3dStyleOptions)
+                }))
             },
             defaultProperties: {
                 kind: 'Line',
@@ -434,6 +488,9 @@ const getBlocks = ({
                 })),
                 ...(!shouldHideVectorStyleOptions && polygon3dStyleOptions({
                     isDisabled: (value, properties) => !properties?.msClampToGround || !enable3dStyleOptions
+                })),
+                ...(!shouldHideVectorStyleOptions && polygon3dExtrusion({
+                    isDisabled: (value, properties) => !(!properties?.msClampToGround && enable3dStyleOptions)
                 }))
             },
             defaultProperties: {

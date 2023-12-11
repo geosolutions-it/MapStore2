@@ -364,14 +364,10 @@ describe('CesiumMap', () => {
                 </CesiumMap>
                 , document.getElementById("container"));
         });
-        waitFor(() => expect(ref.map.dataSourceDisplay.ready).toBe(true), {
+        waitFor(() => expect(ref.map.scene.primitives.get(0).get(0).ready).toBe(true), {
             timeout: 5000
         })
             .then(() => {
-                expect(ref.map.dataSources.length).toBe(1);
-                const dataSource = ref.map.dataSources.get(0);
-                expect(dataSource).toBeTruthy();
-                expect(dataSource.entities.values.length).toBe(2);
                 const mapCanvas = ref.map.canvas;
                 const { width, height } = mapCanvas.getBoundingClientRect();
                 simulateClick(mapCanvas, {

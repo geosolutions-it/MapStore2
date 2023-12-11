@@ -7,7 +7,7 @@
  */
 
 import React, { useRef, useState } from 'react';
-import { FormGroup, InputGroup, Glyphicon, MenuItem, DropdownButton } from 'react-bootstrap';
+import { FormGroup, InputGroup, Glyphicon, MenuItem, DropdownButton, Checkbox } from 'react-bootstrap';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
@@ -181,6 +181,20 @@ export const fields = {
             </PropertyField>
         );
     },
+    checkbox: ({ label, value, config = {}, onChange = () => {}, disabled }) => {
+        return (
+            <PropertyField
+                label={label}
+                disabled={disabled}
+                infoMessageId={config.infoMessageId}>
+                <FormGroup>
+                    <Checkbox style={{ margin: 0 }} disabled={disabled} checked={!!value} onChange={(event) => onChange(!!event.target.checked)}>
+                        <Message msgId={!!value ? 'styleeditor.boolTrue' : 'styleeditor.boolFalse'} />
+                    </Checkbox>
+                </FormGroup>
+            </PropertyField>
+        );
+    },
     toolbar: ({
         label,
         value,
@@ -207,10 +221,11 @@ export const fields = {
                     }))}/>
         </PropertyField>
     ),
-    mark: ({ label, ...props }) => (
+    mark: ({ label, disabled, ...props }) => (
         <PropertyField
-            label={label}>
-            <MarkSelector { ...props }/>
+            label={label}
+            disabled={disabled}>
+            <MarkSelector { ...props } disabled={disabled}/>
         </PropertyField>
     ),
     image: (props) => {

@@ -50,7 +50,7 @@ const getFeatureCollectionSingleGeometryType = ({ features } = {}) => {
  * @param {string} geometryType one of 'GeometryCollection', 'Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon' or 'MultiPolygon'
  * @returns {object} style in geostyler format
  */
-const createDefaultStyle = ({
+export const createDefaultStyle = ({
     marker,
     fillColor = '#f2f2f2',
     fillOpacity = 0.3,

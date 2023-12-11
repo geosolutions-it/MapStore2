@@ -1,5 +1,5 @@
-/**
- * Copyright 2022, GeoSolutions Sas.
+/*
+ * Copyright 2023, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -9,9 +9,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
-import MarkIcon from '../MarkIcon';
+import RuleLegendIcon from '../RuleLegendIcon';
 
-describe('MarkIcon module component', () => {
+describe('RuleLegendIcon', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -23,23 +23,27 @@ describe('MarkIcon module component', () => {
         setTimeout(done);
     });
 
-    it('Should render empty svg due to asyncronous image making', () => {
+    it('should render empty svg due to async mark image making', () => {
         const symbolizer = {
-            "kind": "Icon",
-            "image": "https://url.to.image",
-            "opacity": 1,
-            "size": 32,
-            "rotate": 0,
-            "msBringToFront": false,
-            "symbolizerId": "d21a3951-42f8-11ed-b9d2-fbb7c629c7af"
+            "kind": "Mark",
+            "color": "rgba(0, 0, 255, 0.1)",
+            "fillOpacity": 0.1,
+            "strokeColor": "rgba(0, 0, 255, 1)",
+            "strokeOpacity": 1,
+            "strokeWidth": 1,
+            "radius": 10,
+            "wellKnownName": "Circle",
+            "msHeightReference": "none",
+            "msBringToFront": true,
+            "symbolizerId": "027a01c1-94f6-11ee-901f-a346ad8bfd94"
         };
-        ReactDOM.render(<MarkIcon symbolizer={symbolizer} />, document.getElementById('container'));
+        ReactDOM.render(<RuleLegendIcon rule={{ symbolizers: [symbolizer] }} />, document.getElementById('container'));
         const svgElements = document.querySelectorAll('svg');
         expect(svgElements.length).toBe(1);
         expect(svgElements[0].innerHTML).toBe('');
     });
 
-    it('Should render image', (done) => {
+    it('should render icon image', (done) => {
         const symbolizer = {
             "kind": "Icon",
             "image": "https://url.to.image",
@@ -49,7 +53,7 @@ describe('MarkIcon module component', () => {
             "msBringToFront": false,
             "symbolizerId": "d21a3951-42f8-11ed-b9d2-fbb7c629c7af"
         };
-        ReactDOM.render(<MarkIcon symbolizer={symbolizer} />, document.getElementById('container'));
+        ReactDOM.render(<RuleLegendIcon rule={{ symbolizers: [symbolizer] }} />, document.getElementById('container'));
         setTimeout(() => {
             const svgElements = document.querySelectorAll('svg');
             expect(svgElements.length).toBe(1);

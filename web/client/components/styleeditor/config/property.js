@@ -275,17 +275,10 @@ const property = {
         }
     }),
     msClampToGround: ({ key = 'msClampToGround', label = 'Clamp to ground', isDisabled, disablePropertySelection = true }) => ({
-        type: 'toolbar',
+        type: 'checkbox',
         valueType: 'string',
         label,
         config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }],
             disablePropertySelection
         },
         getValue: (value) => {
@@ -297,17 +290,10 @@ const property = {
         isDisabled
     }),
     msBringToFront: ({ key = 'msBringToFront', label = 'Arrange', isDisabled, disablePropertySelection = true }) => ({
-        type: 'toolbar',
+        type: 'checkbox',
         valueType: 'string',
         label,
         config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }],
             disablePropertySelection
         },
         getValue: (value) => {
@@ -368,15 +354,20 @@ const property = {
         },
         isDisabled
     }),
-    shape: ({ label, key = 'wellKnownName' }) => ({
+    shape: ({ label, key = 'wellKnownName', options, excludeSvg, isDisabled }) => ({
         type: 'mark',
         valueType: 'string',
         label,
+        config: {
+            options,
+            excludeSvg
+        },
         getValue: (value = '') => {
             return {
                 [key]: value
             };
-        }
+        },
+        isDisabled
     }),
     image: ({ label, key = 'image' }) => ({
         type: 'image',
@@ -443,17 +434,9 @@ const property = {
         label,
         isDisabled
     }) => ({
-        type: 'toolbar',
+        type: 'checkbox',
         label,
-        config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }]
-        },
+        config: {},
         isDisabled,
         getValue: (value) => {
             return {
