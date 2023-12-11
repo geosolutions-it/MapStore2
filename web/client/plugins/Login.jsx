@@ -19,7 +19,7 @@ import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/i
 import {connect} from "../utils/PluginsUtils";
 import {Glyphicon} from "react-bootstrap";
 import {burgerMenuSelector} from "../selectors/controls";
-import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
+import {pathnameSelector} from "../selectors/router";
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -81,7 +81,7 @@ export default {
             name: "login",
             position: 3,
             tool: connect((state) => ({
-                hidden: sidebarIsActiveSelector(state),
+                hidden: pathnameSelector(state).indexOf("viewer") !== -1,
                 renderButtonContent: () => {return <Glyphicon glyph="user" />; },
                 bsStyle: 'primary'
             }))(LoginNav),
