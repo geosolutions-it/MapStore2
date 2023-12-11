@@ -159,6 +159,10 @@ The `symbolizer` could be of following `kinds`:
 | `width` | stroke width of the line | x | x |
 | `dasharray` | array that represent the dashed line intervals | x | x |
 | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
+| `msExtrudedShapeName` | name of the extruded shape |  | x |
+| `msExtrudedShapeRadius` | radius in meter of the extruded shape, one of **Circle**, **Square**, **Triangle**, **Star** or **Cross** |  | x |
+| `msExtrusionColor` | color of the extruded shape |  | x |
+| `msExtrusionOpacity` | opacity of the extruded shape |  | x |
 
 ## `Fill` symbolizer properties
 
@@ -172,7 +176,10 @@ The `symbolizer` could be of following `kinds`:
 | `outlineWidth` | outline width of the polygon | x | x |
 | `outlineDasharray` | array that represent the dashed line intervals | x | x |
 | `msClassificationType` | allow setting **classificationType** value for the feature. This would only apply on polygon graphics in Cesium maps. |  | x |
-| `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
+| `msHeight` | polygon height, if undefined the polygon geometry height is used |  | x |
+| `msHeightReference` | reference to compute the distance of the polygon geometry, one of **none**, **ground** or **clamp**. This is applied also to the msExtrudedHeight property |  | x |
+| `msExtrudedHeight` | height of the extrusion |  | x |
+| `msExtrusionRelativeToPolygon` | if true the extrusion height is computed as z distance from the polygon surface. When false the extrude height is computed as absolute altitude |  | x |
 
 ## `Text` symbolizer properties
 
