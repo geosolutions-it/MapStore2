@@ -8,7 +8,9 @@
 import expect from 'expect';
 import {
     createFC,
-    getCounter
+    getCounter,
+    createFeatureId,
+    transformLineToArc
 } from '../GeoProcessingUtils';
 import {
     GPT_BUFFER_GROUP_ID
@@ -45,5 +47,24 @@ describe('GeoProcessing utils', () => {
             }
         ], GPT_BUFFER_GROUP_ID);
         expect(counter2).toEqual(5);
+    });
+    it('test createFeatureId', () => {
+        let id = createFeatureId({}, 0);
+        expect(id).toEqual("Feature #0");
+        id = createFeatureId({id: "test"}, 0);
+        expect(id).toEqual("test");
+    });
+    it('test transformLineToArc', () => {
+        let ft = transformLineToArc({}, 0);
+        expect(ft).toEqual({});
+        ft = transformLineToArc({
+            geometry: {
+                coordinates: [[1, 1], [2, 2]]
+            },
+            properties: {
+                geodesic: true
+            }
+        }, 0);
+        expect(ft.geometry.coordinates.length).toEqual(100);
     });
 });
