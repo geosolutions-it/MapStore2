@@ -81,8 +81,9 @@ export function computePositionInfo(map, movement, {
 
     const feature = scene.pick(position);
     const depthCartesian = scene.pickPosition(position);
-
-    if (!!(feature && depthCartesian)) {
+    if (!(feature?.primitive instanceof Cesium.GroundPrimitive)
+    && !(feature?.primitive instanceof Cesium.GroundPolylinePrimitive)
+    && !!(feature && depthCartesian)) {
         return {
             cartesian: depthCartesian,
             cartographic: Cesium.Cartographic.fromCartesian(depthCartesian),
