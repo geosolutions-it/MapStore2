@@ -7,6 +7,9 @@
  */
 import last from 'lodash/last';
 import sortBy from 'lodash/sortBy';
+import {
+    transformLineToArcs
+} from './CoordinatesUtils';
 
 export const getGeom = (geomType) => {
     switch (geomType) {
@@ -41,4 +44,31 @@ export const getCounter = (layers, groupName) => {
     const allLayers = sortBy(layers?.filter(({group}) => group === groupName), ["name"]);
     const counter = allLayers.length ? Number(last(allLayers).name.match(/\d/)[0]) + 1 : 0;
     return counter;
+};
+
+/**
+ * it creates an id of a feature if not existing
+ * @param {object} feature list of layers to check
+ * @param {string} index the index of the feature
+ * @return {string} a predictable id
+ */
+export const createFeatureId = (feature, index) => {
+    return feature.id || `Feature #${index}`;
+};
+/**
+ * it creates an arc line into a multiple segments, only for LineString ft
+ * @param {object} feature list of layers to check
+ * @return {object} the transformed feature if geodesic
+ */
+export const transformLineToArc = (feature) => {
+    if (feature?.properties?.geodesic) {
+        return {
+            ...feature,
+            geometry: {
+                ...feature.geometry,
+                coordinates: transformLineToArcs(feature.geometry.coordinates)
+            }
+        };
+    }
+    return feature;
 };

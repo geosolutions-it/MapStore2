@@ -41,6 +41,7 @@ import {
     selectedLayerTypeSelector,
     wfsBackedLayersSelector
 } from '../../selectors/geoProcessing';
+import { createFeatureId } from '../../utils/GeoProcessingUtils';
 
 const Addon = tooltip(InputGroup.Addon);
 const Intersection = ({
@@ -123,7 +124,7 @@ const Intersection = ({
                         value={intersectionFeatureId}
                         noResultsText={<Message msgId="GeoProcessing.noMatchedFeature" />}
                         onChange={handleOnChangeIntersectionFeatureId}
-                        options={intersectionFeatures.map((f, i) => ({value: f.id ?? `id: ${f.id} Feature #${i}`, label: `id: ${f.id} Feature #${i}` }))}
+                        options={intersectionFeatures.map((f, i) => ({value: createFeatureId(f, i), label: f?.properties?.measureType ? `${f?.properties?.measureType} #${i}` : createFeatureId(f, i) }))}
                         onOpen={() => {
                             if (selectedLayerType !== "intersection" && intersectionFeatures.length === 0 ) {
                                 onGetFeatures(intersectionLayerId, "intersection", 0);

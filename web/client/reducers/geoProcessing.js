@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { createFeatureId } from '../utils/GeoProcessingUtils';
+
 import find from "lodash/find";
 import {
     GPT_TOOL_BUFFER,
@@ -181,7 +183,8 @@ function geoProcessing( state = {
             ...state,
             [action.source]: {
                 ...state[action.source],
-                features: (state[action.source].features || []).concat(action.data.features || []),
+                features: (state[action.source].features || []).concat(action.data.features || []).filter(f => !f?.properties?.measureId).map((ft, i)  => ({...ft,
+                    id: createFeatureId(ft, i)})),
                 totalCount: action.data.totalFeatures,
                 currentPage: action.nextPage
             },
@@ -287,7 +290,7 @@ function geoProcessing( state = {
             source: {
                 ...state.source,
                 feature: action.feature,
-                features: find(state.source.features, ft => ft.id === action.feature.id) ? state.source.features : [action.feature]
+                features: find(state.source.features, ft => ft?.id === action.feature?.id) ? state.source.features : [action.feature]
             }
         };
     }

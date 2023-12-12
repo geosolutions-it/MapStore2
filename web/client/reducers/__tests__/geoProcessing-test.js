@@ -159,7 +159,8 @@ describe('Test Geo Processing Tools reducer', () => {
             geometry: {
                 type: "Feature",
                 coordinates: [0, 0]
-            }
+            },
+            id: 'Feature #0'
         }]);
     });
     it('SET_FEATURES add extra from pagination', () => {
@@ -187,7 +188,8 @@ describe('Test Geo Processing Tools reducer', () => {
             geometry: {
                 type: "Feature",
                 coordinates: [0, 0]
-            }
+            },
+            id: 'Feature #1'
         }]);
     });
     it('SET_FEATURES error', () => {
