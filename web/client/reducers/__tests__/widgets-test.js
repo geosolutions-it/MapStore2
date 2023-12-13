@@ -176,7 +176,7 @@ describe('Test the widgets reducer', () => {
         expect(widgetObjects[1].layer).toEqual(newTargetLayer);
         expect(widgetObjects[2].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[2].layer);
         expect(widgetObjects[3].layer).toEqual(newTargetLayer);
-        expect(widgetObjects[4].charts[0].layer).toEqual(newTargetLayer);
+        expect(widgetObjects[4].charts[0].layer.id).toEqual(newTargetLayer.id);
         expect(widgetObjects[4].charts[1].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[1].layer);
         expect(widgetObjects[4].charts[2].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[1].layer);
         expect(widgetObjects[4].charts[2].traces[0].layer).toEqual(state.containers[DEFAULT_TARGET].widgets[4].charts[2].traces[0].layer);

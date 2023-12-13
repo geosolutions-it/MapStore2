@@ -161,7 +161,6 @@ function widgetsReducer(state = emptyState, action) {
                             let chartsCopy = w?.charts?.length ? [...w.charts] : [];
                             chartsCopy = chartsCopy.map(chart=>{
                                 let chartItem = {...chart};
-                                chartItem = get(chart, "layer.id") === action.layer.id ? set("layer", action.layer, chart) : chart;
                                 chartItem.traces = chartItem?.traces?.map(trace=>
                                     get(trace, "layer.id") === action.layer.id ? set("layer", action.layer, trace) : trace
                                 );
