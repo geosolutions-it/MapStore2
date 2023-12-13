@@ -197,7 +197,7 @@ class CesiumLayer extends React.Component {
                 return false;
             }
         }
-        return !!visibility;
+        return visibility !== false;
     };
 
     setLayerOpacity = (opacity) => {
