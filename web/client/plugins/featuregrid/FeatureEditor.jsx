@@ -283,28 +283,23 @@ const EditorPlugin = compose(
     lifecycle({
         componentDidMount() {
             // only the passed properties will be picked
-            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions', 'isSyncWmsActive']));
-            if (this.props.isSyncWmsActive) return;
-            if (this.props.enableMapFilterSync) {
-                this.props.setSyncTool(true);
-            } else {
-                this.props.setSyncTool(false);
+            this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
+            if (!this.props.isSyncWmsActive) {
+                if (this.props.enableMapFilterSync) {
+                    this.props.setSyncTool(true);
+                } else {
+                    this.props.setSyncTool(false);
+                }
             }
         },
         // TODO: fix this in contexts
         // due to multiple renders of plugins in contexts (one with default props, then with context props)
         // the options have to be updated when change.
         componentDidUpdate(oldProps) {
-            const newOptions = pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions', 'isSyncWmsActive']);
-            const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions', 'isSyncWmsActive']);
+            const newOptions = pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
+            const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
             if (!isEqual(newOptions, oldOptions) ) {
                 this.props.onMount(newOptions);
-            }
-            if (newOptions.isSyncWmsActive) return;
-            if (this.props.enableMapFilterSync) {
-                this.props.setSyncTool(true);
-            } else {
-                this.props.setSyncTool(false);
             }
         }
     }),

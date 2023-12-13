@@ -1106,9 +1106,12 @@ export const deactivateSyncWmsFilterOnFeatureGridClose = (action$, store) =>
     action$.ofType(CLOSE_FEATURE_GRID)
         .switchMap(() => {
             let state = store.getState();
-            let isQueryPanelCloserGrid = state.featuregrid?.closer === 'queryPanel';
-            if (isQueryPanelCloserGrid && isSyncWmsActive(state)) return Rx.Observable.of(removeFilterFromWMSLayer(store.getState()));      // in case close grid by queryPanel, remove filter to dislay all feats on map
-            else if (isSyncWmsActive(state) && !isQueryPanelCloserGrid) return Rx.Observable.of(toggleSyncWms());       // if close feature grid by others---> reset wms sync
+            let isQueryPanelClosingFeatureGrid  = state.featuregrid?.closer === 'queryPanel';
+            if (isQueryPanelClosingFeatureGrid  && isSyncWmsActive(state)) {        // in case close grid by queryPanel, remove filter to dislay all feats on map
+                return Rx.Observable.of(removeFilterFromWMSLayer(store.getState()));
+            } else if (isSyncWmsActive(state) && !isQueryPanelClosingFeatureGrid ) {            // if close feature grid by others---> reset wms sync
+                return Rx.Observable.of(toggleSyncWms());
+            }
             return Rx.Observable.empty();
         });
 export const activateSyncWmsFilterOnFeatureGridOpen = (action$, store) =>
