@@ -13,7 +13,17 @@ import { Promise } from 'es6-promise';
 const DEFAULT_SIZE = 100;
 let elevationTiles = new LRUCache(DEFAULT_SIZE);
 
-const addElevationTile = (data, coords, key) => {
+export const getElevationKey = (x, y, z, id) => `${z}:${x}:${y}:${id}`;
+
+export function getTileRelativePixel(position, extent, tileSize) {
+    const ratioW = tileSize[0] / (extent[2] - extent[0]);
+    const ratioH = tileSize[1] / (extent[3] - extent[1]);
+    const x = Math.floor((position[0] - extent[0]) * ratioW);
+    const y = Math.floor((extent[3] - position[1]) * ratioH);
+    return { x, y };
+}
+
+export const addElevationTile = (data, coords, key) => {
     elevationTiles.set(key, {
         data: data,
         dataView: new DataView(data),

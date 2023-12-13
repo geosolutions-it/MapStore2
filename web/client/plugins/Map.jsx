@@ -419,7 +419,10 @@ class MapPlugin extends React.Component {
         </div>);
     }
     filterLayer = (layer) => {
-        return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
+        if (layer.useForElevation) {
+            return this.props.mapType === 'cesium' || this.props.elevationEnabled;
+        }
+        return layer.type !== 'elevation' || this.props.elevationEnabled;
     };
     updatePlugins = (props) => {
         this.currentMapType = props.mapType;

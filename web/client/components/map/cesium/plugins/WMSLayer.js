@@ -9,88 +9,8 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTerrainProvider';
-import assign from 'object-assign';
-import {isArray, isEqual} from 'lodash';
+import { isEqual } from 'lodash';
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
-import { getAuthenticationParam, getURLs, getWMSVendorParams } from '../../../../utils/LayersUtils';
-import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
-import { addAuthenticationToSLD, getAuthenticationHeaders } from '../../../../utils/SecurityUtils';
-
-import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-
-function getQueryString(parameters) {
-    return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
-}
-
-function wmsToCesiumOptionsSingleTile(options) {
-    const opacity = options.opacity !== undefined ? options.opacity : 1;
-    const params = optionsToVendorParams(options);
-    const parameters = assign({
-        styles: options.style || "",
-        format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
-        transparent: options.transparent !== undefined ? options.transparent : true,
-        opacity: opacity,
-        ...getWMSVendorParams(options),
-        layers: options.name,
-        width: options.size || 2000,
-        height: options.size || 2000,
-        bbox: "-180.0,-90,180.0,90",
-        srs: "EPSG:4326"
-    }, params || {}, getAuthenticationParam(options));
-
-    const url = (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
-        + getQueryString(addAuthenticationToSLD(parameters, options));
-    const headers = getAuthenticationHeaders(url, options.securityToken);
-    return {
-        url: new Cesium.Resource({
-            url,
-            headers,
-            proxy: WMSUtils.getProxy(options)
-        })
-    };
-}
-
-function wmsToCesiumOptions(options) {
-    var opacity = options.opacity !== undefined ? options.opacity : 1;
-    const params = optionsToVendorParams(options);
-    const cr = options.credits;
-    const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
-    // NOTE: can we use opacity to manage visibility?
-    const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
-    const headers = getAuthenticationHeaders(urls[0], options.securityToken);
-
-    return assign({
-        url: new Cesium.Resource({
-            url: "{s}",
-            headers,
-            proxy: WMSUtils.getProxy(options)
-        }),
-        // #7516 this helps Cesium to use CORS requests in a proper way, even when headers are not
-        // present in the Resource
-        tileDiscardPolicy: options.tileDiscardPolicy === "none" ?
-            undefined :
-            (options.tileDiscardPolicy ?? new Cesium.NeverTileDiscardPolicy()),
-        credit,
-        subdomains: urls,
-        layers: options.name,
-        enablePickFeatures: false,
-        parameters: assign({
-            styles: options.style || "",
-            format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
-            transparent: options.transparent !== undefined ? options.transparent : true,
-            opacity: opacity,
-            tiled: options.tiled !== undefined ? options.tiled : true,
-            width: options.tileSize || 256,
-            height: options.tileSize || 256
-
-        }, assign(
-            {},
-            (options._v_ ? {_v_: options._v_} : {}),
-            (params || {}),
-            getAuthenticationParam(options)
-        ))
-    });
-}
 
 const createLayer = (options) => {
     let layer;
@@ -98,15 +18,19 @@ const createLayer = (options) => {
         return new GeoServerBILTerrainProvider(WMSUtils.wmsToCesiumOptionsBIL(options));
     }
     if (options.singleTile) {
-        layer = new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(options));
+        layer = new Cesium.SingleTileImageryProvider(WMSUtils.wmsToCesiumOptionsSingleTile(options));
     } else {
-        layer = new Cesium.WebMapServiceImageryProvider(wmsToCesiumOptions(options));
+        layer = new Cesium.WebMapServiceImageryProvider(WMSUtils.wmsToCesiumOptions(options));
     }
 
     layer.updateParams = (params) => {
-        const newOptions = assign({}, options, {
-            params: assign({}, options.params || {}, params)
-        });
+        const newOptions = {
+            ...options,
+            params: {
+                ...(options.params || {}),
+                ...params
+            }
+        };
         return createLayer(newOptions);
     };
     return layer;

@@ -18,5 +18,6 @@ module.exports = {
     WFSLayer: require('./WFSLayer').default,
     WMSLayer: require('./WMSLayer'),
     WMTSLayer: require('./WMTSLayer'),
-    VectorLayer: require('./VectorLayer')
+    VectorLayer: require('./VectorLayer'),
+    ElevationLayer: require('./ElevationLayer')
 };
