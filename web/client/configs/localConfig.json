@@ -426,7 +426,13 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home", "FeatureEditor",
+            }, "Home",
+            {
+              "name": "FeatureEditor",
+              "cfg": {
+                "showPopoverSync": false
+              }
+            },
             "LayerDownload",
             {
               "name": "QueryPanel",
