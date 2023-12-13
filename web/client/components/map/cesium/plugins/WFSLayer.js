@@ -32,43 +32,54 @@ const requestFeatures = (options, params, cancelToken) => {
 
 const createLayer = (options, map) => {
 
-    let dataSource = new Cesium.GeoJsonDataSource(options?.id);
+    if (!options.visibility) {
+        return {
+            detached: true,
+            dataSource: undefined,
+            remove: () => {}
+        };
+    }
 
+    let dataSource = new Cesium.GeoJsonDataSource(options?.id);
+    dataSource.loadingEvent.addEventListener(() => {
+        // ensure it updates render on every loading
+        map.scene.requestRender();
+    });
     const params = optionsToVendorParams(options);
 
     const cancelToken = axios.CancelToken;
     const source = cancelToken.source();
-
-    if (options.visibility) {
-        requestFeatures(options, params, source.token)
-            .then(({ data: collection }) => {
-                dataSource.load(collection, {
-                    // ensure default style is not applied
-                    stroke: new Cesium.Color(0, 0, 0, 0),
-                    fill: new Cesium.Color(0, 0, 0, 0),
-                    markerColor: new Cesium.Color(0, 0, 0, 0),
-                    strokeWidth: 0,
-                    markerSize: 0
-                }).then(() => {
-                    map.dataSources.add(dataSource);
-                    layerToGeoStylerStyle(options)
-                        .then((style) => {
-                            getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
-                                .then((styleFunc) => {
-                                    if (styleFunc) {
-                                        styleFunc({
-                                            entities: dataSource?.entities?.values,
-                                            map,
-                                            opacity: options.opacity ?? 1
-                                        }).then(() => {
-                                            map.scene.requestRender();
-                                        });
-                                    }
-                                });
-                        });
-                });
+    requestFeatures(options, params, source.token)
+        .then(({ data: collection }) => {
+            dataSource.load(collection, {
+                // ensure default style is not applied
+                stroke: new Cesium.Color(0, 0, 0, 0),
+                fill: new Cesium.Color(0, 0, 0, 0),
+                markerColor: new Cesium.Color(0, 0, 0, 0),
+                strokeWidth: 0,
+                markerSize: 0
+            }).then(() => {
+                map.dataSources.add(dataSource);
+                dataSource['@wfsFeatureCollection'] = collection;
+                layerToGeoStylerStyle(options)
+                    .then((style) => {
+                        getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
+                            .then((styleFunc) => {
+                                if (styleFunc) {
+                                    styleFunc({
+                                        entities: dataSource?.entities?.values,
+                                        map,
+                                        opacity: options.opacity ?? 1,
+                                        features: collection.features
+                                    }).then(() => {
+                                        map.scene.requestRender();
+                                    });
+                                }
+                            });
+                    });
             });
-    }
+        });
+
 
     dataSource.show = !!options.visibility;
     dataSource.queryable = options.queryable === undefined || options.queryable;
@@ -84,16 +95,14 @@ const createLayer = (options, map) => {
                 map.dataSources.remove(dataSource);
                 dataSource = undefined;
             }
-        },
-        setVisible: () => {}
+        }
     };
 };
 
 Layers.registerType('wfs', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (needsReload(oldOptions, newOptions)
-        || newOptions.visibility !== oldOptions.visibility) {
+        if (needsReload(oldOptions, newOptions)) {
             return createLayer(newOptions, map);
         }
         if (layer?.dataSource?.entities?.values

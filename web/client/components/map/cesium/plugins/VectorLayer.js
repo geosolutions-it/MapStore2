@@ -18,41 +18,50 @@ import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 
 const createLayer = (options, map) => {
 
-    let dataSource = new Cesium.GeoJsonDataSource(options?.id);
+    if (!options.visibility) {
+        return {
+            detached: true,
+            dataSource: undefined,
+            remove: () => {}
+        };
+    }
 
+    let dataSource = new Cesium.GeoJsonDataSource(options?.id);
+    dataSource.loadingEvent.addEventListener(() => {
+        // ensure it updates render on every loading
+        map.scene.requestRender();
+    });
     const features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
     const collection = {
         type: 'FeatureCollection',
         features
     };
-
-    if (options.visibility) {
-        dataSource.load(collection, {
-            // ensure default style is not applied
-            stroke: new Cesium.Color(0, 0, 0, 0),
-            fill: new Cesium.Color(0, 0, 0, 0),
-            markerColor: new Cesium.Color(0, 0, 0, 0),
-            strokeWidth: 0,
-            markerSize: 0
-        }).then(() => {
-            map.dataSources.add(dataSource);
-            layerToGeoStylerStyle(options)
-                .then((style) => {
-                    getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
-                        .then((styleFunc) => {
-                            if (styleFunc) {
-                                styleFunc({
-                                    entities: dataSource?.entities?.values,
-                                    map,
-                                    opacity: options.opacity ?? 1
-                                }).then(() => {
-                                    map.scene.requestRender();
-                                });
-                            }
-                        });
-                });
-        });
-    }
+    dataSource.load(collection, {
+        // ensure default style is not applied
+        stroke: new Cesium.Color(0, 0, 0, 0),
+        fill: new Cesium.Color(0, 0, 0, 0),
+        markerColor: new Cesium.Color(0, 0, 0, 0),
+        strokeWidth: 0,
+        markerSize: 0
+    }).then(() => {
+        map.dataSources.add(dataSource);
+        layerToGeoStylerStyle(options)
+            .then((style) => {
+                getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
+                    .then((styleFunc) => {
+                        if (styleFunc) {
+                            styleFunc({
+                                entities: dataSource?.entities?.values,
+                                map,
+                                opacity: options.opacity ?? 1,
+                                features: options.features
+                            }).then(() => {
+                                map.scene.requestRender();
+                            });
+                        }
+                    });
+            });
+    });
 
     dataSource.show = !!options.visibility;
     dataSource.queryable = options.queryable === undefined || options.queryable;
@@ -65,16 +74,14 @@ const createLayer = (options, map) => {
                 map.dataSources.remove(dataSource);
                 dataSource = undefined;
             }
-        },
-        setVisible: () => {}
+        }
     };
 };
 
 Layers.registerType('vector', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (!isEqual(newOptions.features, oldOptions.features)
-        || newOptions.visibility !== oldOptions.visibility) {
+        if (!isEqual(newOptions.features, oldOptions.features)) {
             return createLayer(newOptions, map);
         }
 
