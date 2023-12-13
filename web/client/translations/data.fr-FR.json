@@ -832,6 +832,7 @@
             "aeronautical": "Aéronautique",
             "changeSearchInputField": "Changer l'outil de recherche",
             "addressSearch": "Recherche par nom de lieu",
+            "searchOnAllServices": "Recherchez tous les services ci-dessous",
             "coordinatesSearch": "Rechercher par coordonnées",
             "searchservicesbutton": "Configurer les services de recherche",
             "configpaneltitle": "Créer / modifier un service de recherche",
@@ -884,6 +885,8 @@
             "s_wfs_opt_props_label": "Propriétés optionnelles",
             "s_result_props_label": "Propriétés d'affichage des résultats",
             "s_priority_info": "Utilisé pour trier les résultats de recherche, les valeurs les plus élevées en premier. Les résultats Nominatim ont priorité = 5",
+            "s_placeholder": "Espace réservé de saisie de recherche",
+            "s_tooltip": "Info-bulle du menu Service",
             "serviceslistempty": "Aucun service personnalisé n'a été défini",
             "service_missing": "Le service {serviceType} n'est pas configuré",
             "generic_error": "Une erreur s'est produite lors de la recherche. Détails de l'erreur : {message}",
@@ -2171,6 +2174,7 @@
                 "gauge": "Afficher les étiquettes"
             },
             "advanced": {
+              "font": "Police de caractère",
               "displayCartesian": "Masquer la grille",
               "xAxis": "Axe X",
               "xAxisAngle": "Rotation des étiquettes",
@@ -2611,7 +2615,9 @@
             "offset": "Décalage",
             "propertyValue": "Valeur de la propriété",
             "colorPropertyInfoMessage": "La valeur de la propriété de couleur doit être une chaîne hexadécimale. Exemple : \"#ffffff\"",
-            "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété."
+            "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété.",
+            "msTranslateX": "Décalage x",
+            "msTranslateY": "Décalage y"
         },
         "playback": {
             "settings": {
@@ -4009,6 +4015,7 @@
           "true": "vrai",
           "false": "faux",
           "notifications": {
+            "errorMissingUrl": "Une URL wps de géoserveur doit être fournie pour collecter les géométries de ces couches {layerName}. Vous pouvez configurer la propriété wpsUrl dans le plugin GeoProcessing",
             "errorIntersectGFI": "Une erreur s'est produite lors de l'intersection des entités. Il n'a pas été possible de créer la couche d'intersection.",
             "errorGFI": "Une erreur s'est produite lors du chargement de la fonctionnalité",
             "errorGetFeature": "Une erreur s'est produite lors du chargement de l'entité afin d'obtenir sa géométrie",

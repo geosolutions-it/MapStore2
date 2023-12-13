@@ -18,7 +18,6 @@ import {
 } from './ogc/WFS/base';
 
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
-import { handleLongTextEnhancer } from '../components/misc/enhancers/handleLongTextEnhancer';
 
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
@@ -148,8 +147,8 @@ export const featureTypeToGridColumns = (
             editable,
             filterable,
             editor: getEditor(desc, field),
-            formatter: handleLongTextEnhancer(getFormatter(desc, field)),
-            filterRenderer: getFilterRenderer(desc, field, isWithinAttrTbl)
+            formatter: getFormatter(desc, field),
+            filterRenderer: getFilterRenderer(desc, field)
         };
         if (isWithinAttrTbl) columnProp.width = 300;
         return columnProp;

@@ -832,6 +832,7 @@
             "aeronautical": "Aeronáutica",
             "changeSearchInputField": "Cambiar la herramienta de búsqueda",
             "addressSearch": "Buscar por nombre de ubicación",
+            "searchOnAllServices": "Busque en todos los servicios a continuación",
             "coordinatesSearch": "buscar por coordenadas",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un servicio de búsqueda",
@@ -884,6 +885,8 @@
             "s_wfs_opt_props_label" : "Propiedades opcionales",
             "s_result_props_label": "Resultados de la visualización de las propiedades",
             "s_priority_info": "Usado para ordenar los resultados de búsqueda, de menor a mayor. Los resultados Nominatim tienen prioridad = 5",
+            "s_placeholder": "Marcador de posición de entrada de búsqueda",
+            "s_tooltip": "Información sobre herramientas del menú de servicio",
             "serviceslistempty": "No se ha definido ningún servicio personalizado",
             "service_missing": "el servicio {serviceType} no está configurado",
             "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
@@ -2171,6 +2174,7 @@
                 "gauge": "Mostrar etiquetas"
             },
             "advanced": {
+              "font": "Fuente",
               "displayCartesian": "Ocultar cuadrícula",
               "xAxis": "Eje X",
               "xAxisAngle": "Rotación de etiquetas",
@@ -2611,7 +2615,9 @@
             "offset": "Desplazamiento",
             "propertyValue": "Valor de la propiedad",
             "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\"",
-            "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad."
+            "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad.",
+            "msTranslateX": "Desplazamiento x",
+            "msTranslateY": "Desplazamiento y"
         },
         "playback": {
             "settings": {
@@ -4009,6 +4015,7 @@
           "true": "Verdadera",
           "false": "falsa",
           "notifications": {
+            "errorMissingUrl": "Se debe proporcionar una URL de geoserver wps para recopilar geometrías para estas capas {layerName}. Puede configurar la propiedad wpsUrl en el complemento GeoProcessing",
             "errorIntersectGFI": "Hubo un error al cruzar las entidades. No fue posible crear la capa de intersección.",
             "errorGFI": "Hubo un error al cargar la característica",
             "errorGetFeature": "Hubo un error al cargar la función para obtener su geometría",

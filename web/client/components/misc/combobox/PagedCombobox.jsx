@@ -230,7 +230,7 @@ class PagedCombobox extends React.Component {
                 { this.props.anyFilterRuleMode ?
                     <>
                         &nbsp;
-                        <div>
+                        <div className="checkbox-any-field">
                             {
                                 this.renderTooltipCheckbox()
                             }

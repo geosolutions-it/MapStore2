@@ -421,8 +421,6 @@ describe('FeatureGridUtils', () => {
                 document.getElementById("container")
             );
             expect(document.getElementById("container").innerHTML).toExist();
-            expect(document.getElementsByTagName('span').length).toEqual(2);
-            expect(document.getElementsByTagName('span')[1].innerHTML).toExist();
         });
 
     });

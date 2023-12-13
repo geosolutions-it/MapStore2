@@ -413,8 +413,8 @@ export class OlStyleParser {
         const olStyle = ({ map, features } = {}) => drawIcons(geoStylerStyle, { features })
             .then((images) => {
                 this._getImages = () => images;
-                this._computeIconScaleBasedOnSymbolizer = (symbolizer) => {
-                    const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
+                this._computeIconScaleBasedOnSymbolizer = (symbolizer, _symbolizer) => {
+                    const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
                     if (image && width && height) {
                         const side = width > height ? width : height;
                         const scale = symbolizer.size / side;
@@ -557,7 +557,7 @@ export class OlStyleParser {
         }
         const geometryFunc = getGeometryFunction(markSymbolizer, feature, this._getMap());
         const images = this._getImages();
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(markSymbolizer)) || {};
+        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(markSymbolizer, _markSymbolizer)) || {};
         if (image) {
             const side = width > height ? width : height;
             const scale = (markSymbolizer.radius * 2) / side;
@@ -597,7 +597,7 @@ export class OlStyleParser {
             src: symbolizer.image,
             crossOrigin: 'anonymous',
             opacity: symbolizer.opacity,
-            scale: this._computeIconScaleBasedOnSymbolizer(_symbolizer),
+            scale: this._computeIconScaleBasedOnSymbolizer(symbolizer, _symbolizer),
             // Rotation in openlayers is radians while we use degree
             rotation: (typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined),
             displacement: symbolizer.offset,

@@ -38,6 +38,9 @@ describe("StyleParserUtils ", () => {
             size: 32,
             rotate: 90
         })).toBe('path/to/image');
+        const parsedSymbolizer = {"symbolizerId": "df2715d2-8ecb-11ee-909e-8bd5d708e385", "kind": "Icon", "image": "data:image/png;base64,iVBORcmGtfaAAAAABJRU5ErkJggg==", "opacity": 1, "size": 46, "rotate": 0, "msBringToFront": false, "anchor": "bottom", "msHeightReference": "none"};
+        const originalSymbolizer = {"symbolizerId": "df2715d2-8ecb-11ee-909e-8bd5d708e385", "kind": "Icon", "image": {"name": "msMarkerIcon", "args": [{"glyph": "power-off", "color": "purple", "shape": "square"}]}, "opacity": 1, "size": 46, "rotate": 0, "msBringToFront": false, "anchor": "bottom", "msHeightReference": "none"};
+        expect(getImageIdFromSymbolizer(parsedSymbolizer, originalSymbolizer)).toEqual("msMarkerIcon:purple:square:power-off");
 
     });
 

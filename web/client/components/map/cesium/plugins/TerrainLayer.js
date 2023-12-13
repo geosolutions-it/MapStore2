@@ -48,8 +48,7 @@ const createLayer = (config, map) => {
         terrainProvider,
         remove: () => {
             map.terrainProvider = new Cesium.EllipsoidTerrainProvider();
-        },
-        setVisible: () => {}
+        }
     };
 };
 

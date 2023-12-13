@@ -489,7 +489,7 @@ let imagesCache = {};
  * @param {object} symbolizer mark symbolizer
  * @returns {string} an id for the mark symbolizer
  */
-export const getImageIdFromSymbolizer = ({
+export const _getImageIdFromSymbolizer = ({
     image,
     color,
     fillOpacity,
@@ -501,13 +501,18 @@ export const getImageIdFromSymbolizer = ({
     wellKnownName
 }) => {
     if (image) {
-        return isObject(image?.args?.[0]) ? MarkerUtils.markers.extra.markerToDataUrl({
-            iconColor: image.args[0].color,
-            iconShape: image.args[0].shape,
-            iconGlyph: image.args[0].glyph
-        }) : image;
+        return image?.name === 'msMarkerIcon' ? `msMarkerIcon:${image?.args?.[0]?.color}:${image?.args?.[0]?.shape}:${image?.args?.[0]?.glyph}` : image;
     }
     return [wellKnownName, color, fillOpacity, strokeColor, strokeOpacity, (strokeDasharray || []).join('_'), strokeWidth, radius].join(':');
+};
+/**
+ * generate an id based on a Mark symbolizer
+ * @param {object} parsedSymbolizer the parsed mark symbolizer
+ * @param {object} originalSymbolizer the original mark symbolizer
+ * @returns {string} an id for the mark symbolizer
+ */
+export const getImageIdFromSymbolizer = (parsedSymbolizer, originalSymbolizer) => {
+    return _getImageIdFromSymbolizer(originalSymbolizer?.image?.name === 'msMarkerIcon' ? originalSymbolizer : parsedSymbolizer);
 };
 
 /**
@@ -852,6 +857,22 @@ export const parseSymbolizerExpressions = (symbolizer, feature) => {
     }), {});
 };
 
+let fontAwesomeLoaded = false;
+const loadFontAwesome = () => {
+    if (fontAwesomeLoaded) {
+        return Promise.resolve();
+    }
+    // async load of font awesome
+    return import('font-awesome/css/font-awesome.min.css')
+        .then(() => {
+            // ensure the font is loaded
+            return document.fonts.load('1rem FontAwesome')
+                .then(() => {
+                    fontAwesomeLoaded = true;
+                    return fontAwesomeLoaded;
+                });
+        });
+};
 
 /**
  * prefetch all image or mark symbol in a geostyler style
@@ -879,23 +900,34 @@ export const drawIcons = (geoStylerStyle, options) => {
             ...markIconSymbolizers.reduce((newSymbolizers, symbolizer) => {
                 return [
                     ...newSymbolizers,
-                    ...(supportedFeatures || []).map((feature) => parseSymbolizerExpressions(symbolizer, feature))
+                    ...(supportedFeatures || []).map((feature) => {
+                        const newSymbolizer = parseSymbolizerExpressions(symbolizer, feature);
+                        return {
+                            ...newSymbolizer,
+                            // exclude msMarkerIcon from parsing
+                            // the getImageFromSymbolizer is already taking into account this case
+                            ...(symbolizer?.image?.name === 'msMarkerIcon' && { image: symbolizer.image })
+                        };
+                    })
                 ];
             }, [])
         ];
     }, []);
     const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
     const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
-    return new Promise((resolve) => {
-        if (marks.length > 0 || icons.length > 0) {
-            Promise.all([
-                ...marks.map(getWellKnownNameImageFromSymbolizer),
-                ...icons.map(getImageFromSymbolizer)
-            ]).then((images) => {
-                resolve(images);
-            });
-        } else {
-            resolve([]);
-        }
-    });
+    return loadFontAwesome()
+        .then(
+            () => new Promise((resolve) => {
+                if (marks.length > 0 || icons.length > 0) {
+                    Promise.all([
+                        ...marks.map(getWellKnownNameImageFromSymbolizer),
+                        ...icons.map(getImageFromSymbolizer)
+                    ]).then((images) => {
+                        resolve(images);
+                    });
+                } else {
+                    resolve([]);
+                }
+            })
+        );
 };

@@ -832,6 +832,7 @@
             "aeronautical": "Aeronautiche",
             "changeSearchInputField": "Cambia lo strumento di ricerca",
             "addressSearch": "Cerca un indirizzo",
+            "searchOnAllServices": "Cerca su tutti i servizi di seguito",
             "coordinatesSearch": "Cerca per coordinate",
             "searchservicesbutton": "Configura servizi di ricerca",
             "configpaneltitle": "Aggiungi/modifica un servizio di ricerca",
@@ -884,6 +885,8 @@
             "s_wfs_opt_props_label" : "Proprietà facoltative",
             "s_result_props_label": "Proprietà di visualizzazione dei risultati",
             "s_priority_info": "Usato per ordinare i risultati, i valori più alti vengono visualizzati per primi. Nominatim ha priorità = 5",
+            "s_placeholder": "Cerca segnaposto di input",
+            "s_tooltip": "Descrizione comando del menu di servizio",
             "serviceslistempty": "Nessun servizio definito",
             "service_missing": "Il servizio {serviceType} non è configurato",
             "generic_error": "Un errore e' occorso durante la ricerca: Dettagli errore: {message}",
@@ -2172,6 +2175,7 @@
                 "gauge": "Mostra etichette"
             },
             "advanced": {
+              "font": "Font",
               "displayCartesian": "Nascondi griglia",
               "xAxis": "Asse X",
               "xAxisAngle": "Rotazione etichetta",
@@ -2612,7 +2616,9 @@
             "offset": "Offset",
             "propertyValue": "Valore della proprietà",
             "colorPropertyInfoMessage": "Il valore della proprietà colore deve essere una stringa esadecimale. Esempio: \"#ffffff\"",
-            "pointCloudSizeInfo": "Il raggio della nuvola di punti viene applicato solo quando le opzioni di attenuazione sono disabilitate. L'opzione di attenuazione ha la precedenza su questa proprietà."
+            "pointCloudSizeInfo": "Il raggio della nuvola di punti viene applicato solo quando le opzioni di attenuazione sono disabilitate. L'opzione di attenuazione ha la precedenza su questa proprietà.",
+            "msTranslateX": "Offset x",
+            "msTranslateY": "Offset y"
         },
         "playback": {
             "settings": {
@@ -4009,6 +4015,7 @@
           "true": "vero",
           "false": "falso",
           "notifications": {
+            "errorMissingUrl": "È necessario fornire un URL wps del geoserver per esegurie il processo per i livelli {layerName}. È possibile configurare la proprietà wpsUrl nel plugin GeoProcessing",
             "errorIntersectGFI": "Si è verificato un errore durante l'intersezione delle geometrie. Non è stato possibile creare il livello di intersezione.",
             "errorGFI": "Si è verificato un errore durante il caricamento della feature",
             "errorGetFeature": "Si è verificato un errore durante il caricamento della feature per ottenerne la geometria",

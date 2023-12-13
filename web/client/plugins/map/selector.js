@@ -1,5 +1,5 @@
 import { mapSelector, projectionDefsSelector, isMouseMoveCoordinatesActiveSelector } from '../../selectors/map';
-import { mapTypeSelector, isOpenlayers } from '../../selectors/maptype';
+import { mapTypeSelector } from '../../selectors/maptype';
 import { layerSelectorWithMarkers } from '../../selectors/layers';
 import { highlighedFeatures } from '../../selectors/highlight';
 import { securityTokenSelector } from '../../selectors/security';
@@ -21,11 +21,10 @@ export default createShallowSelectorCreator(isEqual)(
     state => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
     securityTokenSelector,
     isMouseMoveCoordinatesActiveSelector,
-    isOpenlayers,
     isLocalizedLayerStylesEnabledSelector,
     localizedLayerStylesNameSelector,
     currentLocaleLanguageSelector,
-    (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, shouldLoadFont, isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage) => ({
+    (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage) => ({
         projectionDefs,
         map,
         mapType,
@@ -34,7 +33,6 @@ export default createShallowSelectorCreator(isEqual)(
         loadingError,
         securityToken,
         elevationEnabled,
-        shouldLoadFont,
         isLocalizedLayerStylesEnabled,
         localizedLayerStylesName,
         currentLocaleLanguage

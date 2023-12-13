@@ -143,6 +143,8 @@ const ChartWizard = ({
     if (!selectedTrace) {
         return null;
     }
+    const selectedTab = selectedTrace?.type === "pie" && tab === "axis" ? "traces" : (tab);
+
     if (noAttributes) {
         return <NoAttributeComp featureTypeProperties={featureTypeProperties}/>;
     }
@@ -155,7 +157,7 @@ const ChartWizard = ({
                 onChange={onChange}
                 onAddChart={() => toggleLayerSelector(true)}
                 disableMultiChart={!dashBoardEditing}
-                tab={tab}
+                tab={selectedTab}
                 setTab={setTab}
                 hasAggregateProcess={hasAggregateProcess}
             >
@@ -230,14 +232,16 @@ const ChartWizard = ({
                     data={data}
                     onChange={onChange}
                 />
-                <ChartLayoutOptions
-                    data={data}
-                    onChange={onChange}
-                />
             </>
         ),
         axis: (
             <ChartAxisOptions
+                data={data}
+                onChange={onChange}
+            />
+        ),
+        layout: (
+            <ChartLayoutOptions
                 data={data}
                 onChange={onChange}
             />
@@ -247,7 +251,7 @@ const ChartWizard = ({
     const ChartOptions = (
         <>
             {sampleChart}
-            {tabContents[selectedTrace?.type === 'pie' ? 'traces' : (tab || 'traces')]}
+            {tabContents[selectedTab || 'traces']}
         </>
     );
     const WidgetOptions = !noAttributes ? (

@@ -260,6 +260,9 @@ Here the user can:
 * Format the text through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar)
 
 !!! note
+    From the *Text Editor Toolbar* the user can also add an **URL Image** through the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button and add an **Embedded Link** through the <img src="../img/button/embedded_link_buttton.jpg" class="ms-docbutton"/> button.
+
+!!! note
     None of these options are mandatory, you can add the widget to the map without filling in these fields.
 
 An example of text widget could be:

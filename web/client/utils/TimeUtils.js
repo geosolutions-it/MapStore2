@@ -334,3 +334,42 @@ export const getBufferedTime = (timeString, timeBuffer, bufferType) => {
     const bufferedDate = bufferType === 'add' ? refDate.add(timeBuffer, 'seconds') : refDate.subtract(timeBuffer, 'seconds');
     return bufferedDate.toISOString();
 };
+
+/**
+ * Parse the parameter given in input to get the start and end time values.
+ * The value can be a string or an array of strings.
+ * In case of string it will parse the DescribeDomain possible outputs like:
+ * - "2016-02-23T06:00:00.000Z" (single value)
+ * - "2016-02-23T06:00:00.000Z,2017-02-23T06:00:00.000Z" (multiple values)
+ * - "2016-02-23T06:00:00.000Z/2017-02-23T06:00:00.000Z": (interval values)
+ * - "2016-02-23T06:00:00.000Z/2017-02-23T06:00:00.000Z,2018-02-23T06:00:00.000Z/2019-02-23T06:00:00.000Z" (multiple interval values)
+ * - "2016-02-23T06:00:00.000Z--2017-02-23T06:00:00.000Z" (domain interval)
+ * In case of array it will parse the values as dates.
+ * After extracting the dates from the input, it will return the start and end time values on all the data extracted (parsing also endTime of interval values)
+ * @param {string|array} value the domain attributes value or array of values
+ * @returns {string[]} start and end time values. **In case of single value, returns only the start value**
+ */
+export const getStartEndDomainValues = (value) => {
+    let values;
+
+    // convert to array
+    if (isString(value)) {
+        if (value.indexOf('--') > 0) {
+            values = value.split('--');
+        } else if (value.indexOf(',') > 0) {
+            values = value.split(',');
+        } else {
+            values = [value]; // single value is the last chance
+        }
+    } else {
+        values = value;
+    }
+    // if values are intervals (separated by /) spread them in the array
+    values = values.reduce((acc, v) => acc.concat(v.split('/')), []).sort();
+    if (values.length > 2) {
+        values = [values[0], values[values.length - 1]]; // more than 2 values, start and end are the first and last values
+    }
+
+    let [startTime, endTime] = values?.filter(v => !!v) || [];
+    return [startTime, endTime];
+};

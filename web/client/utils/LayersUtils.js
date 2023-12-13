@@ -658,7 +658,8 @@ export const saveLayer = (layer) => {
     isString(layer.rowViewer) ? { rowViewer: layer.rowViewer } : {},
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
     !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
-    layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {});
+    layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
+    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {});
 };
 
 /**

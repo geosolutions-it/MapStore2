@@ -871,6 +871,7 @@
             "aeronautical": "Luftfahrt",
             "changeSearchInputField": "Suchwerkzeug ändern",
             "addressSearch": "Suche nach Standortname",
+            "searchOnAllServices": "Suchen Sie unten nach allen Diensten",
             "coordinatesSearch": "Suche nach Koordinaten",
             "searchservicesbutton": "Suchdienste konfigurieren",
             "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",
@@ -923,6 +924,8 @@
             "s_wfs_opt_props_label" : "Optionale Eigenschaften",
             "s_result_props_label": "Ergebnisanzeigeeigenschaften",
             "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, niedrigere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
+            "s_placeholder": "Platzhalter für die Sucheingabe",
+            "s_tooltip": "Kurzinfo zum Servicemenü",
             "serviceslistempty": "Keine benutzerdefinierten Services definiert",
             "service_missing": "{serviceType} dienst ist nicht konfiguriert",
             "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}",
@@ -2209,6 +2212,7 @@
                 "gauge": "Legende anzeigen"
             },
             "advanced": {
+                "font": "Schriftart",
                 "displayCartesian": "Gitter ausblenden",
                 "xAxis": "X-Achse",
                 "xAxisAngle": "Beschriftungsdrehung",
@@ -2649,7 +2653,9 @@
             "offset": "Offset",
             "propertyValue": "Eigenschaftswert",
             "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\"",
-            "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft."
+            "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft.",
+            "msTranslateX": "Versatz x",
+            "msTranslateY": "Versatz y"
         },
         "playback": {
             "settings": {
@@ -4047,6 +4053,7 @@
           "true": "wahr",
           "false": "falsch",
           "notifications": {
+            "errorMissingUrl": "Um Geometrien für diese Layer {layerName} zu erfassen, muss eine Geoserver-WPS-URL angegeben werden. Sie können die wpsUrl-Eigenschaft im GeoProcessing-Plugin konfigurieren",
             "errorIntersectGFI": "Beim Überschneiden der Features ist ein Fehler aufgetreten. Der Schnittpunkt-Layer konnte nicht erstellt werden.",
             "errorGFI": "Beim Laden der Funktion ist ein Fehler aufgetreten",
             "errorGetFeature": "Beim Laden des Features zum Abrufen seiner Geometrie ist ein Fehler aufgetreten",

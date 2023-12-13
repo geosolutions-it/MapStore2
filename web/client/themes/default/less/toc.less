@@ -787,7 +787,17 @@
 
         }
     }
+    /* fix not align legend item content in one line in layer group */
+    .toc-group-children {
+        .toc-default-group{
+            .toc-group-children{
+                div.toc-title{
+                    width: calc(140px - 16px);
+                }
+            }
+        }
 
+    }
 
 }
 

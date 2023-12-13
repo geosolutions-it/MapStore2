@@ -28,6 +28,13 @@ import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
 import { arrayUpsert } from "../utils/ImmutableUtils";
 
+
+export const FONT = {
+    FAMILY: "inherit",
+    SIZE: 12,
+    COLOR: "#000000"
+};
+
 export const getDependentWidget = (k, widgets) => {
     const [match, id] = WIDGETS_REGEX.exec(k);
     if (match) {

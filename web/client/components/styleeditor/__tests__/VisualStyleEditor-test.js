@@ -526,6 +526,8 @@ describe('VisualStyleEditor', () => {
                     'styleeditor.color',
                     'styleeditor.heightReferenceFromGround',
                     'styleeditor.height',
+                    'styleeditor.msTranslateX',
+                    'styleeditor.msTranslateY',
                     'styleeditor.leaderLineColor',
                     'styleeditor.leaderLineWidth'
                 ]);

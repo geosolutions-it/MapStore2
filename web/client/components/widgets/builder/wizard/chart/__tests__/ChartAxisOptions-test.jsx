@@ -30,6 +30,7 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
+            'styleeditor.fontFamily',
             'widgets.advanced.prefix',
             'widgets.advanced.format ',
             'widgets.advanced.suffix',
@@ -39,6 +40,7 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.xAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
+            'styleeditor.fontFamily',
             'widgets.advanced.side',
             'widgets.advanced.anchor'
         ]);
@@ -79,6 +81,7 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.yAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
+            'styleeditor.fontFamily',
             'widgets.advanced.prefix',
             'widgets.advanced.format ',
             'widgets.advanced.suffix',
@@ -88,6 +91,7 @@ describe('ChartAxisOptions', () => {
             'widgets.advanced.xAxisType',
             'styleeditor.color',
             'styleeditor.fontSize',
+            'styleeditor.fontFamily',
             'widgets.advanced.side',
             'widgets.advanced.anchor'
         ]);

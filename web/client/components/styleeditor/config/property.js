@@ -363,8 +363,7 @@ const property = {
         },
         getValue: (value) => {
             return {
-                [key]: value,
-                ...(value === 'clamp' && { msHeight: undefined })
+                [key]: value
             };
         },
         isDisabled

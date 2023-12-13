@@ -16,6 +16,13 @@ import { isEqual } from 'lodash';
  */
 Layers.registerType('marker', {
     create: (options, map) => {
+        if (!options.visibility) {
+            return {
+                detached: true,
+                point: undefined,
+                remove: () => {}
+            };
+        }
         const style = {
             point: {
                 pixelSize: 5,
@@ -26,7 +33,7 @@ Layers.registerType('marker', {
             ...options.style
         };
         const point = map.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(options.point.lng, options.point.lat),
+            position: Cesium.Cartesian3.fromDegrees(options?.point?.lng || 0, options?.point?.lat || 0),
             ...style
         });
         return {
@@ -38,12 +45,8 @@ Layers.registerType('marker', {
         };
     },
     update: function(layer, newOptions, oldOptions, map) {
-        if (!isEqual(newOptions.point, oldOptions.point)
-        || newOptions.visibility !== oldOptions.visibility) {
-            layer.remove();
-            return newOptions.visibility
-                ? this.create(newOptions, map)
-                : null;
+        if (!isEqual(newOptions.point, oldOptions.point)) {
+            return this.create(newOptions, map);
         }
         return null;
     }
