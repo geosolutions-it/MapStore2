@@ -96,12 +96,12 @@ describe('widgets tableWidget enhancer', () => {
             {
                 widgetType: "table", id: "123456", mapSync: true
             }, {
-                widgetType: 'map', id: "connectedMapID1", dependenciesMap: {
+                widgetType: 'map', id: "connectedMapID1", mapSync: true, dependenciesMap: {
                     mapSync: "123456"
                 }
             },
             {
-                widgetType: 'map', id: "connectedMapID2", dependenciesMap: {
+                widgetType: 'map', id: "connectedMapID2", mapSync: true, dependenciesMap: {
                     mapSync: "123456"
                 }
             }, {
@@ -117,7 +117,7 @@ describe('widgets tableWidget enhancer', () => {
                 }, {}, "", { crs: "", maxZoom: null }
             );
             expect(props.widgets.length).toEqual(4);
-            let mapWidgetsConnectedWithTbl = props.widgets.filter(i=>i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(props.id)) || [];
+            let mapWidgetsConnectedWithTbl = props.widgets.filter(i=>i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(props.id) && i.mapSync) || [];
             expect(mapWidgetsConnectedWithTbl.length).toEqual(2);
             done();
         }));
@@ -144,7 +144,7 @@ describe('widgets tableWidget enhancer', () => {
             expect(props).toExist();
             expect(props.gridTools.length).toEqual(0);
             expect(props.widgets.length).toEqual(2);
-            let mapWidgetsConnectedWithTbl = props.widgets.filter(i=>i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(props.id)) || [];
+            let mapWidgetsConnectedWithTbl = props.widgets.filter(i=>i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(props.id) && i.mapSync) || [];
             expect(mapWidgetsConnectedWithTbl.length).toEqual(0);
             done();
         }));
