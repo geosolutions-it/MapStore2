@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, head} from "lodash";
+import {get, head, memoize} from "lodash";
 
 import {GPT_CONTROL_NAME} from "../actions/geoProcessing";
 import {mapSelector} from "../selectors/map";
@@ -70,7 +70,8 @@ export const selectedLayerIdSelector = (state) => state?.geoProcessing?.selected
 export const selectedLayerTypeSelector = (state) => state?.geoProcessing?.selectedLayerType;
 export const maxFeaturesSelector = (state) => state?.geoProcessing?.maxFeatures || 10;
 export const wpsUrlSelector = (state) => state?.geoProcessing?.wpsUrl;
-export const wfsBackedLayersSelector = (state) => {
+
+export const availableLayersSelector = memoize((state) => {
     const layers = layersSelector(state);
     return layers
         .filter(l => l.group !== "background")
@@ -81,10 +82,11 @@ export const wfsBackedLayersSelector = (state) => {
                 features: layer?.features?.map(densifyGeodesicFeature)
             } : layer;
         });
-};
+}, (state) => JSON.stringify(layersSelector(state)));
 
 export const getLayerFromIdSelector = (state, id) => {
-    const layer = head(wfsBackedLayersSelector(state).filter(l => l.id === id));
+    const layer = head(availableLayersSelector(state).filter(l => l.id === id));
+    // filtering out the features with measureId because they are not the measures, the LineString for length and bering or the Polygon for the area one. We do not want to do the buffer on the point where the measure text label is stored
     return {
         ...layer,
         features: layer?.features?.filter(f => !f?.properties?.measureId)

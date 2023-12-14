@@ -116,7 +116,7 @@ import {
     sourceFeatureSelector,
     showHighlightLayersSelector,
     wpsUrlSelector,
-    wfsBackedLayersSelector
+    availableLayersSelector
 } from '../selectors/geoProcessing';
 import {groupsSelector} from '../selectors/layers';
 import {additionalLayersSelector} from '../selectors/additionallayers';
@@ -468,7 +468,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
         const state = store.getState();
         const layerId = sourceLayerIdSelector(state);
         const layer = getLayerFromIdSelector(state, layerId);
-        const layers = wfsBackedLayersSelector(state);
+        const layers = availableLayersSelector(state);
         const layerUrl = wpsUrlSelector(state) || head(castArray(layer.url));
         const quadrantSegments = quadrantSegmentsSelector(state);
         const capStyle = capStyleSelector(state);
@@ -671,7 +671,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         const state = store.getState();
         const layerId = sourceLayerIdSelector(state);
         const layer = getLayerFromIdSelector(state, layerId);
-        const layers = wfsBackedLayersSelector(state);
+        const layers = availableLayersSelector(state);
         const layerUrl = wpsUrlSelector(state) || head(castArray(layer.url));
         const sourceFeature = sourceFeatureSelector(state);
         const executeOptions = {};

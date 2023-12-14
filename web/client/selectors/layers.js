@@ -20,23 +20,10 @@ import { mapSelector } from './map';
 import { getSelectedMapView } from './mapviews';
 import { mergeViewLayers } from '../utils/MapViewsUtils';
 import { currentLocaleSelector } from "../selectors/locale";
-import {createFeatureId} from '../utils/GeoProcessingUtils';
 
-export const layersSelector = ({layers: layersProp, config} = {}) => {
-    const layers = layersProp && isArray(layersProp) ? layersProp : layersProp && layersProp.flat || config && config.layers || [];
-    // adding foreach feature an id if missing
-    return layers?.map(layer => {
-        return layer?.features?.length ? {
-            ...layer,
-            features: layer?.features
-                ?.map((ft, i) => ({
-                    ...ft,
-                    id: createFeatureId(ft, i)
 
-                }))
-        } : layer;
-    });
-};
+export const layersSelector = state => state.layers && !isArray(state.layers) && state.layers.flat || isArray(state.layers) && state.layers || state.config && state.config.layers || [];
+
 export const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 export const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 export const getLayerFromName = (state, name) => head(layersSelector(state).filter(l => l.name === name));

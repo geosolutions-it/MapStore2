@@ -9,7 +9,6 @@ import expect from 'expect';
 import {
     createFC,
     getCounter,
-    createFeatureId,
     densifyGeodesicFeature
 } from '../GeoProcessingUtils';
 import {
@@ -47,12 +46,6 @@ describe('GeoProcessing utils', () => {
             }
         ], GPT_BUFFER_GROUP_ID);
         expect(counter2).toEqual(5);
-    });
-    it('test createFeatureId', () => {
-        let id = createFeatureId({}, 0);
-        expect(id).toEqual("Feature #0");
-        id = createFeatureId({id: "test"}, 0);
-        expect(id).toEqual("test");
     });
     it('test densifyGeodesicFeature', () => {
         let ft = densifyGeodesicFeature({}, 0);

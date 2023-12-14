@@ -45,7 +45,7 @@ import {
     isListeningClickSelector,
     selectedLayerIdSelector,
     selectedLayerTypeSelector,
-    wfsBackedLayersSelector,
+    availableLayersSelector,
     maxFeaturesSelector,
     wpsUrlSelector
 } from '../geoProcessing';
@@ -386,10 +386,10 @@ describe('Test Geo Processing Tools selectors', () => {
         };
         expect(wpsUrlSelector({geoProcessing})).toEqual("url");
     });
-    it('test wfsBackedLayersSelector', () => {
-        let layers = wfsBackedLayersSelector({});
+    it('test availableLayersSelector', () => {
+        let layers = availableLayersSelector({});
         expect(layers.length).toBeFalsy();
-        layers = wfsBackedLayersSelector({
+        layers = availableLayersSelector({
             layers: {
                 flat: [{
                     name: "ws:layer_1",

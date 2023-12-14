@@ -47,15 +47,6 @@ export const getCounter = (layers, groupName) => {
 };
 
 /**
- * it creates an id of a feature if not existing
- * @param {object} feature list of layers to check
- * @param {string} index the index of the feature
- * @return {string} a predictable id
- */
-export const createFeatureId = (feature, index) => {
-    return feature.id || `Feature #${index}`;
-};
-/**
  * Transforms a line into an arc of multiple segments if `geodesic` property is equal to true.
  * @param {object} feature list of layers to check
  * @return {object} the transformed feature if `properties.geodesic=true`, the original feature in the other cases.
