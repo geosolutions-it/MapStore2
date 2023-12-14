@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { createFeatureId } from '../utils/GeoProcessingUtils';
-
 import find from "lodash/find";
 import {
     GPT_TOOL_BUFFER,
@@ -179,12 +177,12 @@ function geoProcessing( state = {
         };
     }
     case SET_FEATURES: {
+        // filtering out the features with measureId because they are not the measures, the LineString for length and bering or the Polygon for the area one. We do not want to do the buffer on the point where the measure text label is stored
         return action.data.features ? {
             ...state,
             [action.source]: {
                 ...state[action.source],
-                features: (state[action.source].features || []).concat(action.data.features || []).filter(f => !f?.properties?.measureId).map((ft, i)  => ({...ft,
-                    id: createFeatureId(ft, i)})),
+                features: (state[action.source].features || []).concat(action.data.features || []).filter(f => !f?.properties?.measureId),
                 totalCount: action.data.totalFeatures,
                 currentPage: action.nextPage
             },

@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get} from "lodash";
+import {get, head} from "lodash";
 
 import {GPT_CONTROL_NAME} from "../actions/geoProcessing";
 import {mapSelector} from "../selectors/map";
 import {layersSelector} from "../selectors/layers";
 import {hasWFSService} from '../utils/LayersUtils';
+import {densifyGeodesicFeature} from '../utils/GeoProcessingUtils';
 
 // buffer
 export const distanceSelector = state => state?.geoProcessing?.buffer?.distance || 100;
@@ -73,5 +74,20 @@ export const wfsBackedLayersSelector = (state) => {
     const layers = layersSelector(state);
     return layers
         .filter(l => l.group !== "background")
-        .filter(layer => hasWFSService(layer) || layer.type === "vector");
+        .filter(layer => hasWFSService(layer) || layer.type === "vector")
+        .map(layer => {
+            return layer?.features?.length ? {
+                ...layer,
+                features: layer?.features?.map(densifyGeodesicFeature)
+            } : layer;
+        });
+};
+
+export const getLayerFromIdSelector = (state, id) => {
+    const layer = head(wfsBackedLayersSelector(state).filter(l => l.id === id));
+    return {
+        ...layer,
+        features: layer?.features?.filter(f => !f?.properties?.measureId)
+    };
+
 };

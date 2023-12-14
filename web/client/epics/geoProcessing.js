@@ -104,6 +104,7 @@ import {
     maxFeaturesSelector,
     distanceSelector,
     distanceUomSelector,
+    getLayerFromIdSelector,
     isListeningClickSelector,
     quadrantSegmentsSelector,
     capStyleSelector,
@@ -117,7 +118,7 @@ import {
     wpsUrlSelector,
     wfsBackedLayersSelector
 } from '../selectors/geoProcessing';
-import {getLayerFromId as getLayerFromIdSelector, groupsSelector} from '../selectors/layers';
+import {groupsSelector} from '../selectors/layers';
 import {additionalLayersSelector} from '../selectors/additionallayers';
 import {isGeoProcessingEnabledSelector} from '../selectors/controls';
 import {mapSelector} from '../selectors/map';
@@ -131,9 +132,7 @@ import {
 import {
     getGeom,
     createFC,
-    getCounter,
-    createFeatureId,
-    transformLineToArc
+    getCounter
 } from "../utils/GeoProcessingUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {logError} from "../utils/DebugUtils";
@@ -356,7 +355,7 @@ export const getFeaturesGPTEpic = (action$, store) => action$
  */
 export const getFeatureDataGPTEpic = (action$, store) => action$
     .ofType(SET_SOURCE_FEATURE_ID)
-    .filter(a => a.featureId !== "")
+    .filter(a => a.featureId && a.featureId !== "")
     .switchMap(({featureId}) => {
         const state = store.getState();
         const layerId = sourceLayerIdSelector(state);
@@ -375,13 +374,7 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
             });
         })
             .switchMap(({features}) => {
-                const featuresNormalized = features.map((ft, i) => {
-                    return {
-                        ...ft,
-                        id: createFeatureId(ft, i)
-                    };
-                });
-                const ft = find(featuresNormalized, f => f.id === featureId);
+                const ft = find(features, f => f.id === featureId);
                 const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(ft.geometry), "EPSG:4326")] : [];
                 return Rx.Observable.from([
                     setSourceFeature(ft),
@@ -393,7 +386,7 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
                             type: "vector",
                             name: "highlight-gpt-features",
                             visibility: showHighlightLayers,
-                            features: featuresNormalized.filter(f => f.id === featureId).map(applyMapInfoStyle(highlightStyle)).map(transformLineToArc)
+                            features: features.filter(f => f.id === featureId).map(applyMapInfoStyle(highlightStyle))
                         }),
                     ...zoomTo
                 ]);
@@ -436,13 +429,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
             });
         })
             .switchMap(({features}) => {
-                const featuresNormalized = features.map((ft, i) => {
-                    return {
-                        ...ft,
-                        id: createFeatureId(ft, i)
-                    };
-                });
-                const ft = find(featuresNormalized, f => f.id === featureId);
+                const ft = find(features, f => f.id === featureId);
                 const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(ft.geometry), "EPSG:4326")] : [];
                 return Rx.Observable.from([
                     setIntersectionFeature(ft),
@@ -454,7 +441,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
                             type: "vector",
                             name: "highlight-gpt-intersection-features",
                             visibility: showHighlightLayers,
-                            features: featuresNormalized.filter(f => f.id === featureId).map(applyMapInfoStyle(highlightStyle)).map(transformLineToArc)
+                            features: features.filter(f => f.id === featureId).map(applyMapInfoStyle(highlightStyle))
                         }),
                     ...zoomTo
                 ]);
@@ -574,7 +561,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                                                 ...f.properties,
                                                 geomType: getGeom(f.geometry.type)
                                             }
-                                        })).map(transformLineToArc),
+                                        })),
                                         style: {
                                             format: "geostyler",
                                             body: {
@@ -603,12 +590,12 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                         }));
                     })
         );
-        const feature = transformLineToArc(sourceFeatureSelector(state));
+        const feature = sourceFeatureSelector(state);
         if (isEmpty(feature)) {
             // then run the collect geometries which and then run the buffer
             const executeCollectProcess$ = executeProcess(
                 layerUrl,
-                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features.map(transformLineToArc)) : null }),
+                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -686,9 +673,9 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         const layer = getLayerFromIdSelector(state, layerId);
         const layers = wfsBackedLayersSelector(state);
         const layerUrl = wpsUrlSelector(state) || head(castArray(layer.url));
-        const sourceFeature = transformLineToArc(sourceFeatureSelector(state));
+        const sourceFeature = sourceFeatureSelector(state);
         const executeOptions = {};
-        const intersectionFeature = transformLineToArc(intersectionFeatureSelector(state));
+        const intersectionFeature = intersectionFeatureSelector(state);
         const counter = getCounter(layers, GPT_INTERSECTION_GROUP_ID);
         let sourceFC$;
         let intersectionFC$;
@@ -713,7 +700,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         if (isEmpty(intersectionFeature)) {
             intersectionFC$ = executeProcess(
                 intersectionLayerUrl,
-                collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (intersectionLayer.type === "vector") ? createFC(intersectionLayer.features.map(transformLineToArc)) : null }),
+                collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (intersectionLayer.type === "vector") ? createFC(intersectionLayer.features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -778,6 +765,16 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                 const intersection$ = executeProcess$
                     .switchMap((featureCollection) => {
                         const groups = groupsSelector(state);
+                        if (typeof featureCollection === "string") {
+                            const msg = featureCollection.substring(featureCollection.indexOf("<ows:ExceptionText>") + "<ows:ExceptionText>".length, featureCollection.indexOf("</ows:ExceptionText>"));
+                            console.error(featureCollection);
+                            return Rx.Observable.of(showErrorNotification({
+                                title: "errorTitleDefault",
+                                message: msg,
+                                autoDismiss: 6,
+                                position: "tc"
+                            }));
+                        }
                         const defaultGroup = find(groups, ({id}) => id === "Default");
                         const groupExist = find(defaultGroup?.nodes || [], (g) => g.id === GPT_INTERSECTION_GROUP_ID) || find(groups, (g) => g.id === GPT_INTERSECTION_GROUP_ID);
                         let extent = getGeoJSONExtent(featureCollection);
@@ -800,8 +797,9 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                                         group: GPT_INTERSECTION_GROUP_ID,
                                         title: "Intersection Layer " + counter,
                                         visibility: true,
-                                        features: featureCollection.features.map(f => ({
+                                        features: featureCollection.features.map((f, i) => ({
                                             ...f,
+                                            id: "Feature #" + i,
                                             properties: {
                                                 ...f.properties,
                                                 geomType: getGeom(f.geometry.type)
@@ -967,9 +965,8 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
             const basePath = url;
             const param = {...request};
             if (url) {
-                return getFeatureInfo(basePath, param, layer, {attachJSON: true})
+                return (url !== "client" ? getFeatureInfo(basePath, param, layer, {attachJSON: true}) : Rx.Observable.defer(() => Rx.Observable.of(request?.features?.[0]?.properties || {features: []})))
                     .switchMap(({features}) => {
-
                         if (features?.length) {
                             return Rx.Observable.from([
                                 updateFeature(features[0]),

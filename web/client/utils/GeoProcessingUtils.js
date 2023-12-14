@@ -56,12 +56,12 @@ export const createFeatureId = (feature, index) => {
     return feature.id || `Feature #${index}`;
 };
 /**
- * it creates an arc line into a multiple segments, only for LineString ft
+ * Transforms a line into an arc of multiple segments if `geodesic` property is equal to true.
  * @param {object} feature list of layers to check
- * @return {object} the transformed feature if geodesic
+ * @return {object} the transformed feature if `properties.geodesic=true`, the original feature in the other cases.
  */
-export const transformLineToArc = (feature) => {
-    if (feature?.properties?.geodesic) {
+export const densifyGeodesicFeature = (feature) => {
+    if (feature?.properties?.geodesic && feature.geometry.type === "LineString") {
         return {
             ...feature,
             geometry: {

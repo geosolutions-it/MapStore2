@@ -10,7 +10,7 @@ import {
     createFC,
     getCounter,
     createFeatureId,
-    transformLineToArc
+    densifyGeodesicFeature
 } from '../GeoProcessingUtils';
 import {
     GPT_BUFFER_GROUP_ID
@@ -54,12 +54,13 @@ describe('GeoProcessing utils', () => {
         id = createFeatureId({id: "test"}, 0);
         expect(id).toEqual("test");
     });
-    it('test transformLineToArc', () => {
-        let ft = transformLineToArc({}, 0);
+    it('test densifyGeodesicFeature', () => {
+        let ft = densifyGeodesicFeature({}, 0);
         expect(ft).toEqual({});
-        ft = transformLineToArc({
+        ft = densifyGeodesicFeature({
             geometry: {
-                coordinates: [[1, 1], [2, 2]]
+                coordinates: [[1, 1], [2, 2]],
+                type: "LineString"
             },
             properties: {
                 geodesic: true
