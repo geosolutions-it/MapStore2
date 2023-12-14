@@ -82,6 +82,8 @@ In this section the user can:
 
 * Change the trace layer through the <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> button
 
+* Open the [*Query Panel*](filtering-layers.md#query-panel) to set up a **Layer Filter** through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
+
 * Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
 
 * Define the **Y Attribute** of the chart (or **Use** for *Pie Charts*) choosing between layer fields
