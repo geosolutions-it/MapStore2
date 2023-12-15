@@ -31,7 +31,7 @@ const withSorting = () => withPropsOnChange(["gridEvents"], ({ gridEvents = {}, 
 export default compose(
     compose(connect(null, (dispatch, ownProps)=>{
         let isTblDashboard = ownProps?.enableZoomInTblWidget && ownProps?.widgetType === 'table' && ownProps?.isDashboardOpened;
-        let mapWidgetsConnectedWithTbl = ownProps?.widgets?.filter(i=>i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(ownProps.id)) || [];
+        let mapWidgetsConnectedWithTbl = ownProps?.widgets?.filter(i=>i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(ownProps.id) && i.mapSync) || [];
         let isTblSyncWithMap = ownProps?.mapSync || mapWidgetsConnectedWithTbl.length;
         let isTblWidgetInMapViewer = ownProps?.widgetType === 'table' && !isTblDashboard && ownProps?.enableZoomInTblWidget;
         return {

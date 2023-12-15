@@ -104,7 +104,7 @@ const CounterView = enhanceCounter(({
     const renderCounter = ({ dataKey } = {}, i) => (<Counter
         key={dataKey}
         uom={get(options, `seriesOptions[${i}].uom`)}
-        value={data[0][dataKey]}
+        value={data[0][dataKey] || 0}
         counterOpts={counterOpts}
         formula={formula}
         style={{ textAlign: "center", ...style }}
