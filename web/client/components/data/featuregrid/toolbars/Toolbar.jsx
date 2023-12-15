@@ -307,18 +307,18 @@ const buttons = [
 export default React.memo((props = {}) => {
     const {
         toolbarItems = [],
-        pluginCfg: { showPopoverSync = false }
+        pluginCfg = { showPopoverSync: false }
     } = props;
-    const [showPopover, setShowPopoverSync] = React.useState(getApi().getItem("showPopoverSync") !== null && props?.pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : props?.pluginCfg?.showPopoverSync);
+    const [showPopover, setShowPopoverSync] = React.useState(getApi().getItem("showPopoverSync") !== null && pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : pluginCfg?.showPopoverSync);
     React.useEffect(()=>{
         if (showPopover && props.mode === 'EDIT') {
             setShowPopoverSync(false);
         } else if (!showPopover && props.mode !== 'EDIT') {
-            setShowPopoverSync(getApi().getItem("showPopoverSync") !== null && props?.pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : props?.pluginCfg?.showPopoverSync);
+            setShowPopoverSync(getApi().getItem("showPopoverSync") !== null && pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : pluginCfg?.showPopoverSync);
         }
     }, [props.mode]);
     return (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
 
-        {sortBy(buttons.concat(toolbarItems), ["position"]).map(({Component}) => <Component {...props} showPopoverSync={showPopoverSync} hideSyncPopover={() => setShowPopoverSync(false)} mode={props?.mode ?? "VIEW"} disabled={props.disableToolbar} />)}
+        {sortBy(buttons.concat(toolbarItems), ["position"]).map(({Component}) => <Component {...props} showPopoverSync={showPopover} hideSyncPopover={() => setShowPopoverSync(false)} mode={props?.mode ?? "VIEW"} disabled={props.disableToolbar} />)}
     </ButtonGroup>);
 });
