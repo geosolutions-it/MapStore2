@@ -199,7 +199,7 @@ export const toggleWidgetConnectFlow = (action$, {getState = () => {}} = {}) =>
                             if (widget.widgetType === 'map') {
                                 deps = deps.filter(d => (WIDGETS_MAPS_REGEX.exec(d) || [])[2] === widget.selectedMapId);
                             }
-                            return configureDependency(active, deps[0], options, widget.dependenciesMap).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
+                            return configureDependency(active, deps[0], options, widget.dependencesMap).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
                         }).takeUntil(
                             action$.ofType(LOCATION_CHANGE)
                                 .merge(action$.filter(({ type, key } = {}) => type === EDITOR_SETTING_CHANGE && key === DEPENDENCY_SELECTOR_KEY))

@@ -965,7 +965,8 @@ export const clickToSelectFeatureGPTEpic = (action$, {getState}) =>
             const basePath = url;
             const param = {...request};
             if (url) {
-                return (url !== "client" ? getFeatureInfo(basePath, param, layer, {attachJSON: true}) : Rx.Observable.defer(() => Rx.Observable.of(request?.features?.[0]?.properties || {features: []})))
+                return (url !== "client" ? getFeatureInfo(basePath, param, layer, {attachJSON: true}) : Rx.Observable.defer(() => Rx.Observable.of(
+                    request?.features?.[0]?.properties?.features?.length ? request?.features?.[0]?.properties : request?.features?.length ? request : {features: []})))
                     .switchMap(({features}) => {
                         if (features?.length) {
                             return Rx.Observable.from([
