@@ -11,7 +11,7 @@ import {GPT_CONTROL_NAME} from "../actions/geoProcessing";
 import {mapSelector} from "../selectors/map";
 import {layersSelector} from "../selectors/layers";
 import {hasWFSService} from '../utils/LayersUtils';
-import {densifyGeodesicFeature} from '../utils/GeoProcessingUtils';
+import {densifyGeodesicFeature, transformCircleIntoPolygon} from '../utils/GeoProcessingUtils';
 
 // buffer
 export const distanceSelector = state => state?.geoProcessing?.buffer?.distance || 100;
@@ -79,7 +79,7 @@ export const availableLayersSelector = memoize((state) => {
         .map(layer => {
             return layer?.features?.length ? {
                 ...layer,
-                features: layer?.features?.map(densifyGeodesicFeature)
+                features: layer?.features?.map(densifyGeodesicFeature).map(transformCircleIntoPolygon)
             } : layer;
         });
 }, (state) => JSON.stringify(layersSelector(state)));
