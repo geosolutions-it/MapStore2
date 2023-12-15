@@ -306,13 +306,14 @@ const buttons = [
 */
 export default React.memo((props = {}) => {
     const {
-        toolbarItems = []
+        toolbarItems = [],
+        pluginCfg: { showPopoverSync = false }
     } = props;
-    const [showPopoverSync, setShowPopoverSync] = React.useState(getApi().getItem("showPopoverSync") !== null && props?.pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : props?.pluginCfg?.showPopoverSync);
+    const [showPopover, setShowPopoverSync] = React.useState(getApi().getItem("showPopoverSync") !== null && props?.pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : props?.pluginCfg?.showPopoverSync);
     React.useEffect(()=>{
-        if (showPopoverSync && props.mode === 'EDIT') {
+        if (showPopover && props.mode === 'EDIT') {
             setShowPopoverSync(false);
-        } else if (!showPopoverSync && props.mode !== 'EDIT') {
+        } else if (!showPopover && props.mode !== 'EDIT') {
             setShowPopoverSync(getApi().getItem("showPopoverSync") !== null && props?.pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : props?.pluginCfg?.showPopoverSync);
         }
     }, [props.mode]);
