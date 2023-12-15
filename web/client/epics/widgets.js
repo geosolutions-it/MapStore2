@@ -106,11 +106,11 @@ const getValidLocationChange = action$ =>
  * @param {string} dependency the dependency element id to add
  * @param {object} options dependency mapping options. Must contain `mappings` object
  */
-const configureDependency = (active, dependency, options, targetDependenciesMap) =>
+const configureDependency = (active, dependency, options) =>
     Rx.Observable.of(
         onEditorChange("mapSync", active),
         onEditorChange('dependenciesMap',
-            updateDependencyMap(active, dependency, options, targetDependenciesMap)
+            updateDependencyMap(active, dependency, options)
         )
     );
 
@@ -184,7 +184,7 @@ export const toggleWidgetConnectFlow = (action$, {getState = () => {}} = {}) =>
                             if (widget.widgetType === 'map') {
                                 deps = deps.filter(d => (WIDGETS_MAPS_REGEX.exec(d) || [])[2] === widget.selectedMapId);
                             }
-                            return configureDependency(active, deps[0], options, widget.dependeciesMap).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
+                            return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
                         }).takeUntil(
                             action$.ofType(LOCATION_CHANGE)
                                 .merge(action$.filter(({ type, key } = {}) => type === EDITOR_SETTING_CHANGE && key === DEPENDENCY_SELECTOR_KEY))
