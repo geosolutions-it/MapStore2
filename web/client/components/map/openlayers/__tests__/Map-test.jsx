@@ -499,7 +499,7 @@ describe('OpenlayersMap', () => {
         expect(map.map.getLayers().getLength()).toBe(1);
     });
 
-    it('check layers for elevation', () => {
+    it('check layers for elevation (deprecated)', () => {
         const options = {
             "url": "http://fake",
             "name": "mylayer",
@@ -508,6 +508,23 @@ describe('OpenlayersMap', () => {
         };
         const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}>
             <OpenlayersLayer type="wms" srs="EPSG:3857" options={options} />
+        </OpenlayersMap>, document.getElementById("map"));
+        expect(map).toBeTruthy();
+        const msElevationLayers = map.map.get('msElevationLayers');
+        expect(msElevationLayers).toBeTruthy();
+        expect(msElevationLayers.length).toBe(1);
+    });
+
+    it('check layers for elevation', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}>
+            <OpenlayersLayer type={options.type} srs="EPSG:3857" options={options} />
         </OpenlayersMap>, document.getElementById("map"));
         expect(map).toBeTruthy();
         const msElevationLayers = map.map.get('msElevationLayers');

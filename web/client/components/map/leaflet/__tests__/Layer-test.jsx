@@ -1760,4 +1760,22 @@ describe('Leaflet layer', () => {
         expect(map.hasLayer(layer.layer)).toBe(true);
 
     });
+    it('should create am elevation layer from wms layer', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <LeafLetLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.getElevation).toBeTruthy();
+    });
 });

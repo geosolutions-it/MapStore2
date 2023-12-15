@@ -3153,5 +3153,22 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getMinResolution()).toBe(0);
         expect(layer.layer.getMaxResolution()).toBe(Infinity);
     });
-
+    it('should create am elevation layer from wms layer', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <OpenlayersLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.get('getElevation')).toBeTruthy();
+    });
 });

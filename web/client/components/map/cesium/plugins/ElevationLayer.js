@@ -91,10 +91,10 @@ class ElevationWMS extends Cesium.WebMapServiceImageryProvider {
         }
         return promise;
     }
-    getElevation(
+    getElevation({
         longitude,
         latitude
-    ) {
+    }) {
         let elevation;
         const zoomLevelRequested = this._zoomLevelRequested || [];
         for (let i = 0; i < zoomLevelRequested.length; i++) {

@@ -411,10 +411,10 @@ class CesiumMap extends React.Component {
     getElevation(longitude, latitude) {
         const elevationLayers = this.map.msElevationLayers || [];
         return elevationLayers?.[0]?.getElevation
-            ? elevationLayers[0].getElevation(
+            ? elevationLayers[0].getElevation({
                 longitude,
                 latitude
-            )
+            })
             : undefined;
     }
 

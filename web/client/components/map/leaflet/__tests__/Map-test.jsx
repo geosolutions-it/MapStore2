@@ -398,7 +398,7 @@ describe('LeafletMap', () => {
         expect(spy.calls[0].arguments[0].z).toNotExist();
     });
 
-    it('check if the handler for "mousemove" event is called with elevation', () => {
+    it('check if the handler for "mousemove" event is called with elevation (deprecated)', () => {
         const testHandlers = {
             handler: () => { }
         };
@@ -417,6 +417,52 @@ describe('LeafletMap', () => {
                 onMouseMove={testHandlers.handler}
                 mapOptions={{ zoomAnimation: false }}
             ><LeafLetLayer type="wms" options={options} /></LeafletMap>
+            , document.getElementById("container"));
+
+        const leafletMap = map.map;
+        leafletMap.fire('mousemove', {
+            containerPoint: {
+                x: 100,
+                y: 100
+            },
+            latlng: {
+                wrap: () => ({
+                    lat: 43,
+                    lng: 10
+                })
+            },
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+        expect(spy.calls[0].arguments[0].pixel).toBeTruthy();
+        expect(spy.calls[0].arguments[0].x).toBeTruthy();
+        expect(spy.calls[0].arguments[0].y).toBeTruthy();
+        expect(spy.calls[0].arguments[0].z).toBe('');
+    });
+    it('check layers for elevation', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const testHandlers = {
+            handler: () => { }
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const map = ReactDOM.render(
+            <LeafletMap
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+                onMouseMove={testHandlers.handler}
+                mapOptions={{ zoomAnimation: false }}
+            ><LeafLetLayer type={options.type} options={options} /></LeafletMap>
             , document.getElementById("container"));
 
         const leafletMap = map.map;
