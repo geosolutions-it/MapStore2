@@ -58,14 +58,14 @@ function buildTileResource(imageryProvider, x, y, level, request) {
 class ElevationWMS extends Cesium.WebMapServiceImageryProvider {
     constructor({
         nodata,
-        littleendian,
+        littleEndian,
         map,
         ...options
     }) {
         super(options);
         this._msId = options.id;
         this._nodata = nodata ?? -9999;
-        this._littleEndian = littleendian ?? false;
+        this._littleEndian = littleEndian ?? false;
         this._map = map;
         if (!this._map.msElevationLayers) {
             this._map.msElevationLayers = [];
@@ -128,18 +128,27 @@ class ElevationWMS extends Cesium.WebMapServiceImageryProvider {
     }
 }
 
-const createLayer = (options, map) => {
-    if (options.provider === 'wms') {
-        const layer = new ElevationWMS({
-            ...wmsToCesiumOptions(options),
-            id: options.id,
-            map
-        });
-        return layer;
-    }
-    return null;
+const createWMSElevationLayer = (options, map) => {
+    const { parameters, ...wmsOptions } = wmsToCesiumOptions(options);
+    const layer = new ElevationWMS({
+        ...wmsOptions,
+        parameters: {
+            ...parameters,
+            format: options?.format || 'application/bil16'
+        },
+        id: options.id,
+        map,
+        nodata: options.nodata,
+        littleEndian: options?.littleEndian ?? options?.littleendian ?? false
+    });
+    return layer;
 };
 
 Layers.registerType('elevation', {
-    create: createLayer
+    create: (options, map) => {
+        if (options.provider === 'wms') {
+            return createWMSElevationLayer(options, map);
+        }
+        return null;
+    }
 });

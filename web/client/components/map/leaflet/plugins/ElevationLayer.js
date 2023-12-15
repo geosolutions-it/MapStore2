@@ -15,11 +15,11 @@ import { loadTile, getElevation, getElevationKey } from '../../../../utils/Eleva
 import { getWMSURLs, wmsToLeafletOptions, removeNulls } from '../../../../utils/leaflet/WMSUtils';
 
 L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
-    initialize: function(urls, options, nodata, littleendian, id) {
+    initialize: function(urls, options, nodata, littleEndian, id) {
         this._msId = id;
         this._tiles = {};
         this._nodata = nodata;
-        this._littleendian = littleendian;
+        this._littleEndian = littleEndian;
         L.TileLayer.MultipleUrlWMS.prototype.initialize.apply(this, arguments);
     },
     _addTile: function(coords) {
@@ -34,7 +34,7 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
                 getElevationKey(tilePoint.x, tilePoint.y, tilePoint.z, this._msId),
                 this._getTileRelativePixel(tilePoint, containerPoint),
                 this.getTileSize().x,
-                this._nodata, this._littleendian
+                this._nodata, this._littleEndian
             );
             if (elevation.available) {
                 return elevation.value;
@@ -68,15 +68,24 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
     }
 });
 
-L.tileLayer.elevationWMS = function(urls, options, nodata, littleendian, id) {
-    return new L.TileLayer.ElevationWMS(urls, options, nodata, littleendian, id);
+L.tileLayer.elevationWMS = function(urls, options, nodata, littleEndian, id) {
+    return new L.TileLayer.ElevationWMS(urls, options, nodata, littleEndian, id);
 };
 
 const createWMSElevationLayer = (options) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
-    const layer = L.tileLayer.elevationWMS(urls, queryParameters, options.nodata || -9999, options.littleendian || false, options.id);
+    const layer = L.tileLayer.elevationWMS(
+        urls,
+        {
+            ...queryParameters,
+            format: options?.format || 'application/bil16'
+        },
+        options.nodata || -9999,
+        options?.littleEndian ?? options?.littleendian ?? false,
+        options.id
+    );
     return layer;
 };
 

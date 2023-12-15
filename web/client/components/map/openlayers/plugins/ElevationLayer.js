@@ -70,7 +70,10 @@ const createWMSElevationLayer = (options, map) => {
             attributions: toOLAttributions(options.credits),
             urls: urls,
             crossOrigin: options.crossOrigin,
-            params: queryParameters,
+            params: {
+                ...queryParameters,
+                format: options?.format || 'application/bil16'
+            },
             tileGrid: generateTileGrid(options, map),
             tileLoadFunction: (imageTile, src) => {
                 let newSrc = proxySource(options.forceProxy, src);
@@ -83,7 +86,7 @@ const createWMSElevationLayer = (options, map) => {
     });
     layer.set('map', map);
     layer.set('nodata', options.nodata);
-    layer.set('littleEndian', options.littleendian ?? false);
+    layer.set('littleEndian', options?.littleEndian ?? options?.littleendian ?? false);
     layer.set('getElevation', getElevation.bind(layer));
 
     if (!map.get('msElevationLayers')) {

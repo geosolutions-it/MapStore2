@@ -319,7 +319,9 @@ Some other feature will break, for example the layer properties will stop workin
 },
 ```
 
-##### special case - The Elevation layer
+##### [Deprecated] special case - The Elevation layer
+
+This configuration is deprecated. It should be used a terrain layer and elevation layer instead.
 
 !!! note
     This type of layer configuration is still needed to show the elevation data inside the MousePosition plugin. The `terrain` layer section shows a more versatile way of handling elevation but it will work only as visualization in the 3D map viewer.
@@ -1147,6 +1149,52 @@ In order to use these layers they need to be added to the `additionalLayers` in 
             "visibility": true,
             "crs": "CRS:84"
         }]
+    }
+}
+```
+
+#### Elevation layer
+
+This layer provides information related to elevation based on a provided DTM layer and it does not display the terrain profile (see terrain type instead). This type of layer is introduced in substitution of the `useForElevation` property of the wms layer type and the main reason is to separate the visualization from the information displayed with the mouse position plugin aligning the behaviour of the 2D/3D viewers. The current implementation supports only a WMS layer in format `application/bil16`.
+
+Note that in the Cesium 3D viewer all the heights are relative to the WGS84 ellipsoid while usually locally DTM/DEM file could have an elevation value relative to the mean sea level (MSL). So with this new layer it's possible to have a terrain layer with the correct WGS84 ellipsoidal height while querying the mouse position with a MSL height.
+
+This requires:
+
+- a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
+- A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
+- a static layer in the Map plugin configuration (use the additionalLayers configuration option):
+
+in `localConfig.json`
+
+```javascript
+{
+    "name": "Map",
+    "cfg": {
+        "additionalLayers": [{
+            "type": "elevation",
+            "provider": "wms",
+            "url": "/geoserver/wms",
+            "name": "elevation",
+            "visibility": true,
+            // optional
+            "littleEndian": false, 
+            "nodata": -9999
+        }]
+    }
+}
+```
+
+The layer will be used for showing elevation in the MousePosition plugin (requires showElevation: true in the plugin configuration)
+
+in `localConfig.json`
+
+```javascript
+{
+    "name": "MousePosition",
+    "cfg": {
+        "showElevation": true,
+        ...
     }
 }
 ```
