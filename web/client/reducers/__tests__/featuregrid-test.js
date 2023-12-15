@@ -75,7 +75,6 @@ import {
     openFeatureGrid,
     closeFeatureGrid,
     toggleShowAgain,
-    hideSyncPopover,
     initPlugin,
     sizeChange,
     storeAdvancedSearchFilter,
@@ -91,9 +90,9 @@ import {isViewportFilterActive, paginationSelector, useLayerFilterSelector} from
 import { featureTypeLoaded, createQuery, updateQuery } from '../../actions/wfsquery';
 import { changeDrawingStatus } from '../../actions/draw';
 import { configureMap } from '../../actions/config';
+
 import museam from '../../test-resources/wfs/museam.json';
 describe('Test the featuregrid reducer', () => {
-
     it('returns original state on unrecognized action', () => {
         let state = featuregrid(1, {type: 'UNKNOWN'});
         expect(state).toBe(1);
@@ -104,10 +103,6 @@ describe('Test the featuregrid reducer', () => {
         expect(state.pagination).toExist();
         expect(state.select).toExist();
         expect(state.features).toExist();
-    });
-    it('hideSyncPopover', () => {
-        let state = featuregrid({}, hideSyncPopover());
-        expect(state.showPopoverSync).toBe(false);
     });
     it('toggleShowAgain toggling', () => {
         let state = featuregrid({showAgain: false}, toggleShowAgain());
@@ -222,13 +217,11 @@ describe('Test the featuregrid reducer', () => {
         expect(state.multiselect).toBeTruthy();
         expect(state.mode).toBe(MODES.EDIT);
         expect(state.tools.settings).toBeFalsy();
-        expect(state.showPopoverSync).toBe(false);
     });
     it('toggleViewMode view', () => {
         let state = featuregrid( {}, toggleViewMode());
         expect(state.multiselect).toBeFalsy();
         expect(state.mode).toBe(MODES.VIEW);
-        expect(state.showPopoverSync).toBe(true);
     });
     it('featureSaving', () => {
         let state = featuregrid( {}, featureSaving());
