@@ -120,7 +120,7 @@ const standardButtons = {
         visible={selectedCount <= 1 && mode === "VIEW"}
         onClick={events.settings}
         glyph="features-grid-set"/>),
-    syncGridFilterToMap: ({disabled, isSyncActive = false, showSyncOnMapButton = true, events = {}, syncPopover = { showPopoverSync: true, dockSize: "32.2%" }}) => (<TButton
+    syncGridFilterToMap: ({disabled, isSyncActive = false, showSyncOnMapButton = true, events = {}, syncPopover = { dockSize: "32.2%" }, showPopoverSync, hideSyncPopover}) => (<TButton
         id="grid-map-filter"
         keyProp="grid-map-filter"
         tooltipId="featuregrid.toolbar.syncOnMap"
@@ -129,7 +129,7 @@ const standardButtons = {
         visible={showSyncOnMapButton}
         onClick={events.sync}
         glyph="map-filter"
-        renderPopover={syncPopover.showPopoverSync}
+        renderPopover={showPopoverSync}
         popoverOptions={!disabled && {
             placement: "top",
             content: (<span>
@@ -152,7 +152,7 @@ const standardButtons = {
                                 console.error(e);
                             }
                         }
-                        events.hideSyncPopover();
+                        hideSyncPopover();
                     }} className="close">
                         <Glyphicon className="pull-right" glyph="1-close"/>
                     </button>
@@ -304,12 +304,21 @@ const buttons = [
  * @param {bool} showSyncOnMapButton shows / hide the show on map button (defaults to true)
  * @param {bool} showTimeSyncButton shows / hide the timeSync button (defaults to false)
 */
-export default (props = {}) => {
+export default React.memo((props = {}) => {
     const {
-        toolbarItems = []
+        toolbarItems = [],
+        pluginCfg = { showPopoverSync: false }
     } = props;
+    const [showPopover, setShowPopoverSync] = React.useState(getApi().getItem("showPopoverSync") !== null && pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : pluginCfg?.showPopoverSync);
+    React.useEffect(()=>{
+        if (showPopover && props.mode === 'EDIT') {
+            setShowPopoverSync(false);
+        } else if (!showPopover && props.mode !== 'EDIT') {
+            setShowPopoverSync(getApi().getItem("showPopoverSync") !== null && pluginCfg?.showPopoverSync ? getApi().getItem("showPopoverSync") === "true" : pluginCfg?.showPopoverSync);
+        }
+    }, [props.mode]);
     return (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
 
-        {sortBy(buttons.concat(toolbarItems), ["position"]).map(({Component}) => <Component {...props} mode={props?.mode ?? "VIEW"} disabled={props.disableToolbar} />)}
+        {sortBy(buttons.concat(toolbarItems), ["position"]).map(({Component}) => <Component {...props} showPopoverSync={showPopover} hideSyncPopover={() => setShowPopoverSync(false)} mode={props?.mode ?? "VIEW"} disabled={props.disableToolbar} />)}
     </ButtonGroup>);
-};
+});

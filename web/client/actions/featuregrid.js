@@ -49,7 +49,6 @@ export const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
 export const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
 export const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
 export const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
-export const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
 export const UPDATE_EDITORS_OPTIONS = 'FEATUREGRID:UPDATE_EDITORS_OPTIONS';
 export const LAUNCH_UPDATE_FILTER_FUNC = 'FEATUREGRID:LAUNCH_UPDATE_FILTER_FUNC';
 export const SET_SYNC_TOOL = 'FEATUREGRID:SET_SYNC_TOOL';
@@ -70,11 +69,6 @@ export const SET_PAGINATION = "FEATUREGRID:SET_PAGINATION";
 export function toggleShowAgain() {
     return {
         type: TOGGLE_SHOW_AGAIN_FLAG
-    };
-}
-export function hideSyncPopover() {
-    return {
-        type: HIDE_SYNC_POPOVER
     };
 }
 export function featureGridQueryResult(features, pages) {

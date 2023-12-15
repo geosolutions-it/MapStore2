@@ -43,7 +43,6 @@ import {
     selectedFeaturesCount,
     selectedLayerNameSelector,
     showAgainSelector,
-    showPopoverSyncSelector,
     showTimeSync,
     timeSyncActive,
     isViewportFilterActive,
@@ -82,9 +81,8 @@ const Toolbar = connect(
         hasChanges: hasChangesSelector,
         hasNewFeatures: hasNewFeaturesSelector,
         hasGeometry: hasGeometrySelector,
-        syncPopover: state => ({
+        syncPopover: (state) => ({
             showAgain: showAgainSelector(state),
-            showPopoverSync: showPopoverSyncSelector(state),
             dockSize: mapLayoutValuesSelector(state, {dockSize: true}).dockSize + 3.2 + "%"
         }),
         isDrawing: isDrawingSelector,
