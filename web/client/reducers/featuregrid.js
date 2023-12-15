@@ -330,7 +330,8 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case OPEN_FEATURE_GRID: {
         return assign({}, state, {
-            open: true
+            open: true,
+            closer: null
         });
     }
     case CLOSE_FEATURE_GRID: {
@@ -346,7 +347,8 @@ function featuregrid(state = emptyResultsState, action) {
             deleteConfirm: false,
             drawing: false,
             newFeatures: [],
-            changes: []
+            changes: [],
+            closer: action.closer
         });
     }
     case DISABLE_TOOLBAR: {
