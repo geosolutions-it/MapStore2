@@ -162,7 +162,9 @@ class AttributeFilter extends React.PureComponent {
             }
         }
         this.setState({value, isInputValid: isValid});
-        if (isValid) this.props.onChange({value, attribute: this.props.column && this.props.column.key, inputOperator: this.state.operator});
+        if (isValid) {
+            this.props.onChange({value, attribute: this.props.column && this.props.column.key, inputOperator: this.state.operator});
+        }
     }
 }
 

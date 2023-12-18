@@ -12,8 +12,8 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Calendar } from 'react-widgets';
 import localizer from 'react-widgets/lib/localizers/moment';
-import { Tooltip } from 'react-bootstrap';
-import { isDate, isNil } from 'lodash';
+import { Tooltip, Glyphicon } from 'react-bootstrap';
+import { isDate, isNil, omit } from 'lodash';
 import OverlayTrigger from '../OverlayTrigger';
 import Hours from './Hours';
 
@@ -111,22 +111,15 @@ class DateTimePicker extends Component {
         const { placeholder, tabIndex } = this.props;
 
         const timeVisible = open === 'time';
-        const props = Object.keys(this.props).reduce((acc, key) => {
-            if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
-                // remove these props because they might have undesired effects to the subsequent components
-                return acc;
-            }
-            acc[key] = this.props[key];
-            return acc;
-        }, {});
+        const props = omit(this.props, ['placeholder', 'calendar', 'time', 'onChange', 'value']);
         let calendarVal;
         if ( this.props.value && typeof this.props.value === 'object')  {
             calendarVal = this.props.value?.startDate;
         } else if (this.props.value && typeof this.props.value === 'string') calendarVal = this.props.value;
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', border: 'solid 5px', maxHeight: '360px', overflowY: 'auto'}}>
-                <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
+            <div style={{display: 'flex', flexDirection: 'column', border: 'solid 5px', maxHeight: '260px', overflowY: 'auto'}}>
+                <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto', height: 'inherit'}}>
                     <div>
                         <Calendar
                             tabIndex="-1"
@@ -137,7 +130,7 @@ class DateTimePicker extends Component {
                             value={!isNil(calendarVal) ? new Date(calendarVal) : undefined}
                         />
                         <div>
-                            <div style={{display: 'flex'}}>
+                            <div style={{display: 'flex', background: 'white'}}>
                                 {this.renderInput(inputValue, operator, '', placeholder, tabIndex, false, true, {width: '100%'})}
                                 <span className="">
                                     <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
@@ -145,7 +138,7 @@ class DateTimePicker extends Component {
                                     </button>
                                 </span>
                             </div>
-                            <div style={{display: timeVisible ? 'block' : 'none'}}>
+                            <div className="dateTime-picker-hours" style={{display: timeVisible ? 'block' : 'none', background: 'white'}}>
                                 <Hours ref={this.attachTimeRef}  {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
                             </div>
                         </div>
@@ -190,7 +183,7 @@ class DateTimePicker extends Component {
                 {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, true, true)}
                 <span className="rw-select">
                     <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleDateTime}>
-                        <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
+                        <Glyphicon glyph={'date-time'} />
                     </button>
                 </span>
                 { dateTimeVisible && <>
@@ -223,8 +216,8 @@ class DateTimePicker extends Component {
                         <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
                     </div>
                 </div>
-                <div className={`rw-calendar-popup rw-popup-container ${popupPosition === 'top' ? 'rw-dropup' : ''} ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '285px' }}>
-                    <div className={`rw-popup`} style={{ transform: calendarVisible ? 'translateY(0)' : 'translateY(-100%)', padding: '0', borderRadius: '4px', position: calendarVisible ? '' : 'absolute' }}>
+                <div className={`rw-calendar-popup rw-popup-container ${popupPosition === 'top' ? 'rw-dropup' : ''} ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '260px' }}>
+                    <div className={`rw-popup`} style={{ transform: calendarVisible ? 'translateY(0)' : 'translateY(-100%)', padding: '0', borderRadius: '4px', position: calendarVisible ? '' : 'absolute', height: 'inherit' }}>
                         <Calendar
                             tabIndex="-1"
                             ref={this.attachCalRef}
