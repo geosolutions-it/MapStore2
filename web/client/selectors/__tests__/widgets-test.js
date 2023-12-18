@@ -213,8 +213,10 @@ describe('widgets selectors', () => {
                 },
                 builder: {
                     editor: {
-                        layers: [{
-                            name: "layername"
+                        maps: [{
+                            layers: [{
+                                name: "layername"
+                            }]
                         }],
                         widgetType: "map",
                         id: "mapId"
