@@ -64,17 +64,18 @@ import { pick } from 'lodash';
  * // the enhancer will pass to the component of dependencies={counterDependencies}
  */
 
-export const buildDependencies = (map, deps, originalWidgetId) => {
+export const buildDependencies = (map, deps, originalWidgetId, updatedDependencyMap = []) => {
     if (map) {
         const dependenciesGenerated = Object.keys(map).reduce((ret, k) => {
-            if (k === "dependenciesMap" && deps[map[k]] && deps[map.mapSync] &&
-                deps[map[k]][k] && deps[map[k]][k].indexOf(originalWidgetId) === -1 // avoiding loop
-                && !ret.mapSync
+            if (k === "dependenciesMap" && deps[map[k]] && deps[map.mapSync] && deps[map[k]][k]
+                && originalWidgetId && deps[map[k]][k].indexOf(originalWidgetId) === -1
+                && updatedDependencyMap.every(dep => deps[map[k]][k] !== dep)
             ) {
+                const _updatedDependencyMap = updatedDependencyMap.concat(deps[map[k]][k]);
                 // go recursively until we get the dependencies from table ancestors
                 return {
                     ...ret,
-                    ...pick(buildDependencies(deps[map[k]], deps, originalWidgetId), ["options", "layer", "quickFilters", "filter", "dependenciesMap"])
+                    ...pick(buildDependencies(deps[map[k]], deps, originalWidgetId, _updatedDependencyMap), ["options", "layer", "quickFilters", "filter", "dependenciesMap"])
                 };
             }
             return {

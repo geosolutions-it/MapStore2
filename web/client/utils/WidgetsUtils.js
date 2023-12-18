@@ -331,3 +331,15 @@ export const getSelectedWidgetData = (widget = {}) => {
     }
     return widget;
 };
+
+/**
+ * Check if chart widget layers are compatible with table widget layer
+ * @param {object} widget current widget object
+ * @param {object} tableWidget depedant table widget object
+ * @returns {boolean} flag determines if compatible
+ */
+export const isChartCompatibleWithTableWidget = (widget, tableWidget) => {
+    const tableLayerName = tableWidget?.layer?.name;
+    return tableLayerName && get(widget, 'charts', [])
+        .every(({ layer = {} } = {}) => layer.name === tableLayerName);
+};

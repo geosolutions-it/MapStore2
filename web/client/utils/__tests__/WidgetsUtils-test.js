@@ -13,7 +13,8 @@ import {
     getConnectionList, getDependantWidget,
     getMapDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
-    shortenLabel, updateDependenciesMapOfMapList
+    shortenLabel, updateDependenciesMapOfMapList,
+    isChartCompatibleWithTableWidget
 } from '../WidgetsUtils';
 import SAMPLE_1 from '../../test-resources/widgets/widgets1.json';
 const widgets = SAMPLE_1.widgets;
@@ -318,5 +319,13 @@ describe('Test WidgetsUtils', () => {
         const widget = getSelectedWidgetData({id: "1", widgetType: "table", layer: {name: "test"}});
         expect(widget).toBeTruthy();
         expect(widget.layer.name).toBe("test");
+    });
+    it("isChartCompatibleWithTableWidget", () => {
+        expect(isChartCompatibleWithTableWidget()).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({charts: []})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({charts: [{layer: {name: "test"}}]})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({charts: [{layer: {name: "test"}}]}, {layer: {name: "test"}})).toBeTruthy();
+        expect(isChartCompatibleWithTableWidget({charts: [{layer: {name: "test"}}, {layer: {name: "test1"}}]}, {layer: {name: "test"}})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({charts: [{layer: {name: "test"}}, {layer: {name: "test"}}]}, {layer: {name: "test"}})).toBeTruthy();
     });
 });
