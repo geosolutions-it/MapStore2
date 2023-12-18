@@ -49,7 +49,7 @@ import dashboardEpics from '../epics/dashboard';
 import widgetsEpics from '../epics/widgets';
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
 import { createPlugin } from '../utils/PluginsUtils';
-import { getWidgetLayersName, isChartCompatibleWithTableWidget } from '../utils/WidgetsUtils';
+import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 
 const WidgetsView = compose(
     connect(
@@ -108,24 +108,15 @@ const WidgetsView = compose(
     withHandlers({
         // TODO: maybe using availableDependencies here will be better when different widgets type dependencies are supported
         isWidgetSelectable: ({ editingWidget }) =>
-            (target) => {
-                if (target.widgetType === "map") {
-                    return target.id !== editingWidget.id;
-                }
-                const layerPresent = target.layer && getWidgetLayersName(editingWidget)?.includes(target.layer.name);
-                /*
-                 * when the target is a table widget then check among its dependencies
-                 * if it has other connection that are for sure map or table
-                 * then make it non selectable
-                */
-                return target.widgetType === "table"
-                && !target.mapSync
-                && target.id !== editingWidget.id
-                && (editingWidget.widgetType !== "map"
-                    ? editingWidget.widgetType === "chart" ? layerPresent && isChartCompatibleWithTableWidget(editingWidget, target) : layerPresent
-                    : editingWidget.widgetType === "map"
-                );
-            }
+            (target) =>
+                (target.widgetType === "map" ||
+                    /*
+                     * when the target is a table widget then check among its dependencies
+                     * if it has other connection that are for sure map or table
+                     * then make it non selectable
+                    */
+                    target.widgetType === "table" && canTableWidgetBeDependency(editingWidget, target) && !target.mapSync
+                ) && target.id !== editingWidget.id
     })
 )(Dashboard);
 

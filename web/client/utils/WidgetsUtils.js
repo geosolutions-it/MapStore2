@@ -935,11 +935,11 @@ export const enableBarChartStack = (chart = {}) => {
 };
 
 /**
- * Get layers name of the widget
+ * Get names of the layers used in the widget
  * @param {object} widget current widget object
- * @returns {string[]|[]} array of widget's layers name
+ * @returns {string[]} array of widget's layers name
  */
-export const getWidgetLayersName = (widget) => {
+export const getWidgetLayersNames = (widget) => {
     const type = widget?.widgetType;
     if (!isEmpty(widget)) {
         if (type !== 'map') {
@@ -964,7 +964,7 @@ export const getWidgetLayersName = (widget) => {
 /**
  * Check if chart widget layers are compatible with table widget layer
  * @param {object} widget current widget object
- * @param {object} tableWidget depedant table widget object
+ * @param {object} tableWidget dependant table widget object
  * @returns {boolean} flag determines if compatible
  */
 export const isChartCompatibleWithTableWidget = (widget, tableWidget) => {
@@ -972,4 +972,22 @@ export const isChartCompatibleWithTableWidget = (widget, tableWidget) => {
     return tableLayerName && get(widget, 'charts', [])
         .every(({ traces = [] } = {}) => traces
             .every(trace => get(trace, 'layer.name') === tableLayerName));
+};
+
+/**
+ * Check if a table widget can be a depedency to the widget currently is edit
+ * @param {object} widget current widget in edit
+ * @param {object} dependencyTableWidget target widget in check for dependency compatibility
+ * @returns {boolean} flag determines if compatible
+ */
+export const canTableWidgetBeDependency = (widget, dependencyTableWidget) => {
+    const isChart = widget && widget.widgetType === 'chart';
+    const isMap = widget && widget.widgetType === 'map';
+    const editingLayer = getWidgetLayersNames(widget);
+
+    if (isMap) {
+        return !isEmpty(editingLayer);
+    }
+    const layerPresent = editingLayer.includes(get(dependencyTableWidget, 'layer.name'));
+    return isChart ? layerPresent && isChartCompatibleWithTableWidget(widget, dependencyTableWidget) : layerPresent;
 };

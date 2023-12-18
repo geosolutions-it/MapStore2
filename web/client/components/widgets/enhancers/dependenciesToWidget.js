@@ -17,6 +17,8 @@ import { pick } from 'lodash';
  *
  * @param {object} widget dependenciesMap. a map of key1: key2, where key1 is the key to return and key2 is the key of the value to return in the deps object
  * @param {object} deps the original dependencies object
+ * @param {string} originalWidgetId the current widget id for which dependencies are built
+ * @param {object[]} updatedDependencyMap temporary variable to hold updated dependencies in the transitive dependency generation
  *
  * @example
  * // * in case of a single connection between two widgets
@@ -68,7 +70,7 @@ export const buildDependencies = (map, deps, originalWidgetId, updatedDependency
     if (map) {
         const dependenciesGenerated = Object.keys(map).reduce((ret, k) => {
             if (k === "dependenciesMap" && deps[map[k]] && deps[map.mapSync] && deps[map[k]][k]
-                && originalWidgetId && deps[map[k]][k].indexOf(originalWidgetId) === -1
+                && deps[map[k]][k].indexOf(originalWidgetId) === -1
                 && updatedDependencyMap.every(dep => deps[map[k]][k] !== dep)
             ) {
                 const _updatedDependencyMap = updatedDependencyMap.concat(deps[map[k]][k]);
