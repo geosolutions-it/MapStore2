@@ -19,7 +19,7 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
 import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
 import {mapLayoutValuesSelector} from '../../selectors/maplayout';
-import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../../selectors/query';
+import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
@@ -95,6 +95,7 @@ const Dock = connect(createSelector(
   * @prop {number} cfg.snapConfig.maxFeatures defines features limit for request that loads vector data of WMS layer.
   * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers"
   * @prop {object} cfg.dateFormats object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
+  * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
@@ -273,19 +274,23 @@ export const selector = createStructuredSelector({
 });
 
 const EditorPlugin = compose(
-    connect(() => ({}),
-        (dispatch) => ({
-            onMount: bindActionCreators(setUp, dispatch),
-            setSyncTool: bindActionCreators(setSyncTool, dispatch)
-        })),
+    connect((state) => ({
+        isSyncWmsActive: isSyncWmsActive(state)
+    }),
+    (dispatch) => ({
+        onMount: bindActionCreators(setUp, dispatch),
+        setSyncTool: bindActionCreators(setSyncTool, dispatch)
+    })),
     lifecycle({
         componentDidMount() {
             // only the passed properties will be picked
             this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
-            if (this.props.enableMapFilterSync) {
-                this.props.setSyncTool(true);
-            } else {
-                this.props.setSyncTool(false);
+            if (!this.props.isSyncWmsActive) {
+                if (this.props.enableMapFilterSync) {
+                    this.props.setSyncTool(true);
+                } else {
+                    this.props.setSyncTool(false);
+                }
             }
         },
         // TODO: fix this in contexts
@@ -296,11 +301,6 @@ const EditorPlugin = compose(
             const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
             if (!isEqual(newOptions, oldOptions) ) {
                 this.props.onMount(newOptions);
-            }
-            if (this.props.enableMapFilterSync) {
-                this.props.setSyncTool(true);
-            } else {
-                this.props.setSyncTool(false);
             }
         }
     }),
