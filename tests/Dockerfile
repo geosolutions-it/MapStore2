@@ -3,9 +3,7 @@ FROM alpine:latest
 # Automatically run "apk update"
 RUN apk add --no-cache openssl \
     && apk add --no-cache curl \
-    && apk add --no-cache py3-pip \
-    # Request library to execute the tests
-    && python3 -m pip install requests 
+    && apk add --no-cache py3-requests
 
 # Dockerize is needed to sync containers startup
 ENV DOCKERIZE_VERSION v0.6.1
