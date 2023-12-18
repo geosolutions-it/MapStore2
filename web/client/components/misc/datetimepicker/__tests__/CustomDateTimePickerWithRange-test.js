@@ -37,9 +37,9 @@ describe('DateTimePickerWithRange component', () => {
         ReactDOM.render(<DateTimePickerWithRange type="date-time" calendar operator="=" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.rw-datetimepicker.range-time-input.rw-widget');
-        const clockIcon = container.querySelector('.rw-i.rw-i-calendar');
+        const dateTimeIcon = container.querySelector('.glyphicon-date-time');
         expect(el).toExist();
-        expect(clockIcon).toExist();
+        expect(dateTimeIcon).toExist();
     });
 
     it('DateTimePickerWithRange show calendar on calendar button click', function() {
