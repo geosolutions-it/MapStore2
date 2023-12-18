@@ -23,8 +23,8 @@ import { MAP_TYPE_CHANGED, VISUALIZATION_MODE_CHANGED } from '../actions/maptype
 import assign from 'object-assign';
 import ConfigUtils from '../utils/ConfigUtils';
 import { set, unset } from '../utils/ImmutableUtils';
-import { updateAnnotationsLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
-import { findIndex, castArray } from 'lodash';
+import { normalizeLayer } from '../utils/LayersUtils';
+import { castArray } from 'lodash';
 import {
     getVisualizationModeFromMapLibrary,
     VisualizationModes
@@ -43,18 +43,6 @@ function mapConfig(state = null, action) {
         // we get from the configuration what will be used as the initial state
         let mapState = action.legacy && !hasVersion ? ConfigUtils.convertFromLegacy(action.config) : ConfigUtils.normalizeConfig(action.config.map);
 
-
-        // regenerate geodesic lines as property since that info has not been saved
-        let annotationsLayerIndex = findIndex(mapState.layers, layer => layer.id === "annotations");
-        if (annotationsLayerIndex !== -1) {
-            mapState.layers = mapState.layers.reduce((acc, layer, idx) => {
-                if (annotationsLayerIndex === idx) {
-                    return [...acc, ...updateAnnotationsLayer(mapState.layers[annotationsLayerIndex])];
-                }
-                return [...acc, layer];
-            }, []);
-        }
-
         let newMapState = {
             ...mapState,
             layers: mapState.layers.map( l => {
@@ -62,7 +50,7 @@ function mapConfig(state = null, action) {
                     l.type = "empty";
                 }
                 return l;
-            }),
+            }).map(normalizeLayer),
             mapConfigRawData: { ...action.config }
         };
         // if map is loaded from an already saved map keep the same id

@@ -253,6 +253,7 @@ const convertMeasureToFeatureCollection = (geometricFeatures, textLabels = [], u
                         ]
                     }
                     : geometry,
+                id: feature.id || measureId,
                 properties: {
                     ...properties,
                     label: infoLabelText,

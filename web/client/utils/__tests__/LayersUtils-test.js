@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-
+import uuidv1 from 'uuid/v1';
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
+
 const { extractTileMatrixSetFromLayers, splitMapAndLayers} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
@@ -37,6 +38,43 @@ const noVendorWmsLayer = {
     serverType: 'no-vendor'
 };
 describe('LayersUtils', () => {
+    it('test normalizeLayer for vector layers', () => {
+        const feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "fileName": "file.zip",
+            "id": "feature-id"
+        };
+        const feature2 = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "fileName": "file.zip"
+        };
+        let layer = LayersUtils.normalizeLayer({
+            type: "vector",
+            features: [feature]
+        });
+        expect(layer.features[0].id).toEqual("feature-id");
+        layer = LayersUtils.normalizeLayer({
+            type: "vector",
+            features: [feature2]
+        });
+        expect(layer.features[0].id.length).toEqual(36);
+    });
+    it('test createFeatureId', () => {
+        let feature = LayersUtils.createFeatureId({});
+        expect(feature.id.length).toEqual(uuidv1().length);
+        feature = LayersUtils.createFeatureId({id: "test"});
+        expect(feature.id).toEqual("test");
+        feature = LayersUtils.createFeatureId({properties: {id: "test"}});
+        expect(feature.id).toEqual("test");
+    });
     it('getLayerUrl supports single and multiple url layers', () => {
         expect(['a', 'b']).toContain(LayersUtils.getLayerUrl({url: ['a', 'b']}));
         expect(LayersUtils.getLayerUrl({
