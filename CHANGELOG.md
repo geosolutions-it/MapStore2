@@ -1,6 +1,6 @@
 # Change Log
 
-## [2023.02.01](https://github.com/geosolutions-it/MapStore2/tree/v2023.02.01) (2023-12-5)
+## [2023.02.01](https://github.com/geosolutions-it/MapStore2/tree/v2023.02.01) (2023-12-7)
 
 - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/v2023.02.00...v2023.02.01)**
 - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222023.02.01%22+is%3Aclosed+label%3Aenhancement)**
