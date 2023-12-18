@@ -129,73 +129,67 @@ function updateShading(tileSet, options, map) {
 
 Layers.registerType('3dtiles', {
     create: (options, map) => {
-        if (options.visibility && options.url) {
-
-            let tileSet;
-            const resource = new Cesium.Resource({
-                url: options.url,
-                proxy: needProxy(options.url) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
-                // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
-                // if we want to use internal cesium functionality to retrieve data
-                // we need to create a utility to set a CesiumResource that applies also this part.
-                // in addition to this proxy.
-            });
-            Cesium.Cesium3DTileset.fromUrl(resource,
-                {
-                    showCreditsOnScreen: true
-                }
-            ).then((_tileSet) => {
-                tileSet = _tileSet;
-                updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
-                map.scene.primitives.add(tileSet);
-                // assign the original mapstore id of the layer
-                tileSet.msId = options.id;
-
-                ensureReady(tileSet, () => {
-                    updateModelMatrix(tileSet, options);
-                    clip3DTiles(tileSet, options, map);
-                    updateShading(tileSet, options, map);
-                    getStyle(options)
-                        .then((style) => {
-                            if (style) {
-                                tileSet.style = new Cesium.Cesium3DTileStyle(style);
-                            }
-                        });
-                });
-            });
-
+        if (!options.visibility) {
             return {
                 detached: true,
-                getTileSet: () => tileSet,
-                resource,
-                remove: () => {
-                    if (tileSet) {
-                        updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
-                        map.scene.primitives.remove(tileSet);
-                    }
-                },
-                setVisible: (visible) => {
-                    if (tileSet) {
-                        tileSet.show = !!visible;
-                    }
-                }
+                getTileSet: () => undefined,
+                remove: () => {}
             };
         }
+        let tileSet;
+        const resource = new Cesium.Resource({
+            url: options.url,
+            proxy: needProxy(options.url) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
+            // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
+            // if we want to use internal cesium functionality to retrieve data
+            // we need to create a utility to set a CesiumResource that applies also this part.
+            // in addition to this proxy.
+        });
+        let promise = Cesium.Cesium3DTileset.fromUrl(resource,
+            {
+                showCreditsOnScreen: true
+            }
+        ).then((_tileSet) => {
+            tileSet = _tileSet;
+            updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
+            map.scene.primitives.add(tileSet);
+            // assign the original mapstore id of the layer
+            tileSet.msId = options.id;
+
+            ensureReady(tileSet, () => {
+                updateModelMatrix(tileSet, options);
+                clip3DTiles(tileSet, options, map);
+                updateShading(tileSet, options, map);
+                getStyle(options)
+                    .then((style) => {
+                        if (style) {
+                            tileSet.style = new Cesium.Cesium3DTileStyle(style);
+                        }
+                    });
+            });
+        });
+        const removeTileset = () => {
+            updateGooglePhotorealistic3DTilesBrandLogo(map, options, tileSet);
+            map.scene.primitives.remove(tileSet);
+            tileSet = undefined;
+        };
         return {
             detached: true,
-            getTileSet: () => undefined,
-            remove: () => {},
-            setVisible: () => {}
+            getTileSet: () => tileSet,
+            resource,
+            remove: () => {
+                if (tileSet) {
+                    removeTileset();
+                    return;
+                }
+                promise.then(() => {
+                    removeTileset();
+                });
+                return;
+            }
         };
     },
     update: function(layer, newOptions, oldOptions, map) {
-        if (newOptions.visibility && !oldOptions.visibility) {
-            return this.create(newOptions, map);
-        }
-        if (!newOptions.visibility && oldOptions.visibility && layer?.remove) {
-            layer.remove();
-            return null;
-        }
         const tileSet = layer?.getTileSet();
         if (
             (!isEqual(newOptions.clippingPolygon, oldOptions.clippingPolygon)

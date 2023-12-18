@@ -15,8 +15,6 @@ import {
     errorLoadingDFT, ERROR_LOADING_DFT,
     getFeatures, GET_FEATURES,
     initPlugin, INIT_PLUGIN,
-    increaseBufferedCounter, INCREASE_BUFFERED_COUNTER,
-    increaseIntersectedCounter, INCREASE_INTERSECT_COUNTER,
     runningProcess, RUNNING_PROCESS,
     runProcess, RUN_PROCESS,
     setBufferDistance, SET_BUFFER_DISTANCE,
@@ -97,18 +95,6 @@ describe('Test Geo Processing Tools related actions', () => {
         expect(action).toEqual({
             type: INIT_PLUGIN,
             cfg
-        });
-    });
-    it('increaseBufferedCounter', () => {
-        const action = increaseBufferedCounter();
-        expect(action).toEqual({
-            type: INCREASE_BUFFERED_COUNTER
-        });
-    });
-    it('increaseIntersectedCounter', () => {
-        const action = increaseIntersectedCounter();
-        expect(action).toEqual({
-            type: INCREASE_INTERSECT_COUNTER
         });
     });
     it('runningProcess', () => {

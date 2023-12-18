@@ -254,13 +254,6 @@ function VisibilityLimitsForm({
         clearMessages();
     }, [ dpu,  resolutionString ]);
 
-    useEffect(() => {
-        if (isMounted.current && (!isNil(maxResolution) || !isNil(minResolution))) {
-            setCapabilitiesMessage(maxResolution, minResolution);
-            setRangeError(maxResolution, minResolution);
-        }
-    }, [isMounted]);
-
     return (
         <div className="ms-visibility-limits-form">
             <div className="ms-visibility-limits-form-title" style={{ display: 'flex', alignItems: 'center' }}>

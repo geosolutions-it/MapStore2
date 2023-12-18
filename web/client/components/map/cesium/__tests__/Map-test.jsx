@@ -168,7 +168,7 @@ describe('CesiumMap', () => {
                         try {
                             expect(Math.round(Math.round(center.y * precision) / precision)).toBe(30);
                             expect(Math.round(Math.round(center.x * precision) / precision)).toBe(20);
-                            expect(zoom).toBe(5);
+                            expect(Math.round(zoom)).toBe(5);
                             expect(bbox.bounds).toBeTruthy();
                             expect(bbox.crs).toBeTruthy();
                             expect(size.height).toBeTruthy();

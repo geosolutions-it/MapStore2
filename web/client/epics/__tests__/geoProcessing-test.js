@@ -26,6 +26,7 @@ import {
     clickToSelectFeatureGPTEpic,
     LPlongitudinalMapLayoutGPTEpic
 } from '../geoProcessing';
+
 import {
     GPT_TOOL_INTERSECTION,
     GPT_TOOL_BUFFER,
@@ -36,8 +37,7 @@ import {
     checkingIntersectionWPSAvailability,
     errorLoadingDFT,
     getFeatures,
-    increaseBufferedCounter,
-    increaseIntersectedCounter,
+    setFeatures,
     setFeatureSourceLoading,
     setFeatureIntersectionLoading,
     setSourceFeatureId,
@@ -98,6 +98,47 @@ describe('geoProcessing epics', () => {
     });
     afterEach(() => {
         mockAxios.restore();
+    });
+
+    it('checkWPSAvailabilityGPTEpic for a vector layer', (done) => {
+        const layerId = "id";
+        const source = "source";
+        const NUM_ACTIONS = 2;
+        const startActions = [checkWPSAvailability(layerId, source)];
+        const layer = {
+            id: "id",
+            url: "mockUrl",
+            describeFeatureType: {
+            },
+            type: "vector",
+            features: [{
+                type: "Feature",
+                id: "ft-id",
+                geometry: {
+                    type: "Point",
+                    coordinates: [1, 2]
+                }
+            }]
+        };
+        try {
+            testEpic(addTimeoutEpic(checkWPSAvailabilityGPTEpic), NUM_ACTIONS, startActions, actions => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                const [
+                    action1, // setwps
+                    action2 // setFeatures
+                ] = actions;
+                expect(action1).toEqual(setWPSAvailability(layerId, true, source));
+                expect(action2).toEqual(setFeatures(layerId, source, layer, 0, layer?.features?.[0]?.geometry?.type || ""));
+                done();
+            }, {
+                layers: {
+                    flat: [layer]
+                }
+            }, done);
+
+        } catch (error) {
+            done(error);
+        }
     });
     it('checkWPSAvailabilityGPTEpic describe layer available', (done) => {
         mockAxios.onGet("mockUrl?service=WPS&version=1.0.0&REQUEST=DescribeProcess&IDENTIFIER=geo%3Abuffer%2Cgs%3AIntersectionFeatureCollection%2Cgs%3ACollectGeometries").reply(200, DESCRIBE_PROCESS);
@@ -218,6 +259,39 @@ describe('geoProcessing epics', () => {
         });
     });
 
+    it('getFeaturesGPTEpic source as vector layer', (done) => {
+        const layerId = "id";
+        const source = "source";
+        const NUM_ACTIONS = 1;
+        mockAxios.onPost("mockUrl?service=WFS&outputFormat=json").reply(200, GET_FEATURES);
+
+        const startActions = [getFeatures(layerId, source)];
+        testEpic(getFeaturesGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1
+            ] = actions;
+            expect(action1.type).toEqual(SET_FEATURES);
+            done();
+        }, {
+            layers: {
+                flat: [{
+                    id: "id",
+                    url: "mockUrl",
+                    describeFeatureType: DESCRIBE_POIS,
+                    type: "vector",
+                    features: [{
+                        type: "Feature",
+                        id: "ft-id",
+                        geometry: {
+                            type: "Point",
+                            coordinates: [1, 2]
+                        }
+                    }]
+                }]
+            }
+        });
+    });
     it('getFeaturesGPTEpic source', (done) => {
         const layerId = "id";
         const source = "source";
@@ -297,8 +371,71 @@ describe('geoProcessing epics', () => {
             }
         });
     });
+    it('setSourceFeatureId as vector', (done) => {
+        const featureId = "ft-id2";
+        const NUM_ACTIONS = 3;
+        mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
+        const secondFt = {
+            type: "Feature",
+            id: "ft-id2",
+            geometry: {
+                type: "Point",
+                coordinates: [11, 22]
+            }
+        };
+        const startActions = [setSourceFeatureId(featureId)];
+        testEpic(getFeatureDataGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1,
+                action2,
+                action3
+            ] = actions;
+            expect(action1.type).toEqual(setSourceFeature().type);
+            expect(action1.feature).toEqual(secondFt);
+            expect(action2.type).toEqual(updateAdditionalLayer().type);
+            expect(action2.options.features).toEqual([{
+                ...secondFt,
+                style: {
+                    color: "#3388ff",
+                    dashArray: "",
+                    fillColor: "#3388ff",
+                    fillOpacity: 0.2,
+                    radius: 4,
+                    weight: 4
+                }}]);
+            expect(action3.type).toEqual(zoomToExtent().type);
+            done();
+        }, {
+            layers: {
+                flat: [{
+                    id: "id",
+                    url: "mockUrl",
+                    name: "name",
+                    type: "vector",
+                    features: [{
+                        type: "Feature",
+                        id: "ft-id",
+                        geometry: {
+                            type: "Point",
+                            coordinates: [1, 2]
+                        }
+                    },
+                    secondFt]
+                }]
+            },
+            geoProcessing: {
+                source: {
+                    layerId: "id"
+                },
+                flags: {
+                    showHighlightLayers: true
+                }
+            }
+        });
+    });
     it('setSourceFeatureId', (done) => {
-        const featureId = "ft-id";
+        const featureId = "INCENDI_INTERFACCIA.2955";
         const NUM_ACTIONS = 3;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
 
@@ -369,8 +506,73 @@ describe('geoProcessing epics', () => {
             }
         });
     });
+    it('setIntersectionFeatureId as vector', (done) => {
+        const featureId = "ft-id2";
+        const secondFt = {
+            type: "Feature",
+            id: "ft-id2",
+            geometry: {
+                type: "Point",
+                coordinates: [11, 22]
+            }
+        };
+        const NUM_ACTIONS = 3;
+        mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
+
+        const startActions = [setIntersectionFeatureId(featureId)];
+        testEpic(getIntersectionFeatureDataGPTEpic, NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1,
+                action2,
+                action3
+            ] = actions;
+            expect(action1.type).toEqual(setIntersectionFeature().type);
+            expect(action1.feature).toEqual(secondFt);
+            expect(action2.type).toEqual(updateAdditionalLayer().type);
+            expect(action2.options.features).toEqual([{
+                ...secondFt,
+                style: {
+                    color: "#3388ff",
+                    dashArray: "",
+                    fillColor: "#3388ff",
+                    fillOpacity: 0.2,
+                    radius: 4,
+                    weight: 4
+                }}]);
+            expect(action3.type).toEqual(zoomToExtent().type);
+
+            done();
+        }, {
+            layers: {
+                flat: [{
+                    id: "id",
+                    url: "mockUrl",
+                    name: "name",
+                    type: "vector",
+                    features: [{
+                        type: "Feature",
+                        id: "ft-id",
+                        geometry: {
+                            type: "Point",
+                            coordinates: [1, 2]
+                        }
+                    },
+                    secondFt]
+                }]
+            },
+            geoProcessing: {
+                intersection: {
+                    layerId: "id"
+                },
+                flags: {
+                    showHighlightLayers: true
+                }
+            }
+        });
+    });
     it('setIntersectionFeatureId', (done) => {
-        const featureId = "ft-id";
+        const featureId = "INCENDI_INTERFACCIA.2955";
         const NUM_ACTIONS = 3;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
 
@@ -442,7 +644,7 @@ describe('geoProcessing epics', () => {
         });
     });
     it('runBufferProcess with geom collect', (done) => {
-        const NUM_ACTIONS = 7;
+        const NUM_ACTIONS = 6;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
         mockAxios.onPost("mockUrl?service=WPS&version=1.0.0&REQUEST=Execute").reply(200, COLLECT_GEOM, {
             "content-type": "application/json"
@@ -457,16 +659,14 @@ describe('geoProcessing epics', () => {
                 action3,
                 action4,
                 action5,
-                action6,
-                action7
+                action6
             ] = actions;
             expect(action1).toEqual(runningProcess(true));
             expect(action2.type).toEqual(addGroup().type);
-            expect(action3.type).toEqual(increaseBufferedCounter().type);
-            expect(action4.type).toEqual(addLayer().type);
-            expect(action5.type).toEqual(zoomToExtent().type);
-            expect(action6.type).toEqual(showSuccessNotification().type);
-            expect(action7).toEqual(runningProcess(false));
+            expect(action3.type).toEqual(addLayer().type);
+            expect(action4.type).toEqual(zoomToExtent().type);
+            expect(action5.type).toEqual(showSuccessNotification().type);
+            expect(action6).toEqual(runningProcess(false));
             done();
         }, {
             layers: {
@@ -490,7 +690,7 @@ describe('geoProcessing epics', () => {
         });
     });
     it('runBufferProcess without geom collect', (done) => {
-        const NUM_ACTIONS = 7;
+        const NUM_ACTIONS = 6;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
         mockAxios.onPost("mockUrl?service=WPS&version=1.0.0&REQUEST=Execute").reply(200, COLLECT_GEOM, {
             "content-type": "application/json"
@@ -504,17 +704,14 @@ describe('geoProcessing epics', () => {
                 action3,
                 action4,
                 action5,
-                action6,
-                action7
+                action6
             ] = actions;
             expect(action1).toEqual(runningProcess(true));
             expect(action2.type).toEqual(addGroup().type);
-            expect(action3.type).toEqual(increaseBufferedCounter().type);
-            expect(action4.type).toEqual(addLayer().type);
-            expect(action5.type).toEqual(zoomToExtent().type);
-            expect(action6.type).toEqual(showSuccessNotification().type);
-
-            expect(action7).toEqual(runningProcess(false));
+            expect(action3.type).toEqual(addLayer().type);
+            expect(action4.type).toEqual(zoomToExtent().type);
+            expect(action5.type).toEqual(showSuccessNotification().type);
+            expect(action6).toEqual(runningProcess(false));
             done();
         }, {
             layers: {
@@ -547,6 +744,54 @@ describe('geoProcessing epics', () => {
                             coordinates: [1, 2]
                         }
                     }
+                },
+                flags: {
+                    showHighlightLayers: true
+                }
+            }
+        });
+    });
+    it('runBufferProcess with geom collect as vector layer', (done) => {
+        const NUM_ACTIONS = 6;
+        mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
+        mockAxios.onPost("mockUrl?service=WPS&version=1.0.0&REQUEST=Execute").reply(200, COLLECT_GEOM, {
+            "content-type": "application/json"
+        });
+
+        const startActions = [runProcess(GPT_TOOL_BUFFER)];
+        testEpic(addTimeoutEpic(runBufferProcessGPTEpic, 100), NUM_ACTIONS, startActions, actions => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            const [
+                action1,
+                action2,
+                action3,
+                action4,
+                action5,
+                action6
+            ] = actions;
+            expect(action1).toEqual(runningProcess(true));
+            expect(action2.type).toEqual(addGroup().type);
+            expect(action3.type).toEqual(addLayer().type);
+            expect(action4.type).toEqual(zoomToExtent().type);
+            expect(action5.type).toEqual(showSuccessNotification().type);
+            expect(action6).toEqual(runningProcess(false));
+            done();
+        }, {
+            layers: {
+                flat: [{
+                    id: "id",
+                    type: "vector",
+                    features: [{type: "Feature", geometry: {type: "Point", coordinates: [1, 2]}}],
+                    url: "mockUrl",
+                    name: "name",
+                    search: {
+                        url: "mockUrl"
+                    }
+                }]
+            },
+            geoProcessing: {
+                source: {
+                    layerId: "id"
                 },
                 flags: {
                     showHighlightLayers: true
@@ -604,7 +849,7 @@ describe('geoProcessing epics', () => {
     });
     it.skip('runIntersectProcessGPTEpic with double geom collect', (done) => {
         try {
-            const NUM_ACTIONS = 7;
+            const NUM_ACTIONS = 6;
             mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
             mockAxios
                 .onPost("mockUrl?service=WPS&version=1.0.0&REQUEST=Execute")
@@ -629,16 +874,14 @@ describe('geoProcessing epics', () => {
                     action3,
                     action4,
                     action5,
-                    action6,
-                    action7
+                    action6
                 ] = actions;
                 expect(action1).toEqual(runningProcess(true));
                 expect(action2.type).toEqual(addGroup().type);
-                expect(action3.type).toEqual(increaseIntersectedCounter().type);
-                expect(action4.type).toEqual(addLayer().type);
-                expect(action5.type).toEqual(zoomToExtent().type);
-                expect(action6.type).toEqual(showSuccessNotification().type);
-                expect(action7).toEqual(runningProcess(false));
+                expect(action3.type).toEqual(addLayer().type);
+                expect(action4.type).toEqual(zoomToExtent().type);
+                expect(action5.type).toEqual(showSuccessNotification().type);
+                expect(action6).toEqual(runningProcess(false));
                 done();
             }, {
                 layers: {
