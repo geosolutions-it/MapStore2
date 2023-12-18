@@ -75,6 +75,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
             setValid(false);
             setErrors({...errors, [layer.name]: true});
         }}
+        id={data.id}
         isAnimationActive={false}
         dependencies={dependencies}
         dependenciesMap={data.dependenciesMap}
