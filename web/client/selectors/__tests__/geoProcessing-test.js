@@ -7,6 +7,7 @@
  */
 
 import expect from 'expect';
+import find from 'lodash/find';
 
 import {
     distanceSelector,
@@ -437,5 +438,60 @@ describe('Test Geo Processing Tools selectors', () => {
                 type: "wfs"
             }
         }]);
+    });
+    it('test availableLayersSelector without normalized layers', () => {
+        let layers = availableLayersSelector({});
+        expect(layers.length).toBeFalsy();
+        layers = availableLayersSelector({
+            layers: {
+                flat: [{
+                    name: "ws:layer_1",
+                    group: "buffer",
+                    type: "wms",
+                    search: {
+                        type: "wfs"
+                    }
+                }, {
+                    name: "ws:layer_11",
+                    group: "buffer",
+                    type: "vector",
+                    features: [{
+                        geometry: {
+                            coordinates: [[1, 1], [2, 2]],
+                            type: "LineString"
+                        },
+                        properties: {
+                            geodesic: true
+                        }
+                    }, {
+                        geometry: {
+                            coordinates: [1, 1],
+                            type: "Point"
+                        },
+                        properties: {
+                            annotationType: "Circle",
+                            radius: 100
+                        }
+                    }]
+                },
+                {
+                    name: "ws:layer_3",
+                    group: "buffer",
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
+                },
+                {
+                    name: "ws:layer_2",
+                    group: "background"
+                }]}
+        });
+        expect(layers.length).toBeTruthy();
+        const transformedFeatures = find(layers, ({name}) => name === "ws:layer_11" ).features;
+        expect(transformedFeatures[0].geometry.type).toEqual("LineString");
+        expect(transformedFeatures[0].geometry.coordinates.length).toEqual(100);
+        expect(transformedFeatures[1].geometry.type).toEqual("Polygon");
+        expect(transformedFeatures[1].geometry.coordinates[0].length).toEqual(101);
     });
 });

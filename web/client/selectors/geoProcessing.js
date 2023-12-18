@@ -82,7 +82,8 @@ export const availableLayersSelector = memoize((state) => {
                 features: layer?.features?.map(densifyGeodesicFeature).map(transformCircleIntoPolygon)
             } : layer;
         });
-}, (state) => JSON.stringify(layersSelector(state)));
+}, (state) => JSON.stringify(layersSelector(state).filter(l => l.group !== "background")
+    .filter(layer => hasWFSService(layer) || layer.type === "vector")));
 
 export const getLayerFromIdSelector = (state, id) => {
     const layer = head(availableLayersSelector(state).filter(l => l.id === id));

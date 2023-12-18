@@ -9,8 +9,7 @@ import last from 'lodash/last';
 import sortBy from 'lodash/sortBy';
 import {
     transformLineToArcs,
-    getPolygonFromCircle,
-    reproject
+    getPolygonFromCircle
 } from './CoordinatesUtils';
 
 export const getGeom = (geomType) => {
@@ -66,14 +65,16 @@ export const densifyGeodesicFeature = (feature) => {
     return feature;
 };
 /**
- * Transforms a circle geom into a polygon version of it
- * @param {object} feature list of layers to check
- * @return {object} the transformed feature if `properties.geodesic=true`, the original feature in the other cases.
+ * Transforms a circle feature into a polygon one, it needs certain params to perform the transformation, to check it is an annotation circle and the radius property
+ * @param {object} feature to transform
+ * @param {string} feature.properties.annotationType the type of annotation e.g. "Circle"
+ * @param {number} feature.properties.radius the circle radius in meters
+ * @return {object} the transformed feature if `properties.annotationType="Circle"`, the original feature in the other cases.
  */
 export const transformCircleIntoPolygon = (feature) => {
     if (feature?.properties?.annotationType === "Circle") {
         const point = feature.properties.center || feature.geometry.coordinates;
-        const polygon = getPolygonFromCircle(point, feature.properties.radius, "meters");
+        const polygon = getPolygonFromCircle(point, feature.properties.radius || 1, "meters");
         return {
             ...feature,
             ...polygon
