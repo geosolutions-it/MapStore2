@@ -30,7 +30,6 @@ import {
     isSavedSelector,
     canEditSelector,
     showAgainSelector,
-    showPopoverSyncSelector,
     hasSupportedGeometry,
     getDockSize,
     selectedLayerNameSelector,
@@ -405,17 +404,8 @@ describe('Test featuregrid selectors', () => {
         const val = showAgainSelector(initialState);
         expect(val).toBe(false);
     });
-    it('test showPopoverSyncSelector default ', () => {
-        const val = showPopoverSyncSelector(initialState);
-        expect(val).toExist();
-        expect(val).toBe(true);
-    });
     it('test showAgainSelector ', () => {
         const val = showAgainSelector({featuregrid: {showAgain: false}});
-        expect(val).toBe(false);
-    });
-    it('test showPopoverSyncSelector ', () => {
-        const val = showPopoverSyncSelector({featuregrid: {showPopoverSync: false}});
         expect(val).toBe(false);
     });
     it('test selectedFeaturesSelector ', () => {

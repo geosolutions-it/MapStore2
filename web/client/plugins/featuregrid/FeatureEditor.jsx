@@ -95,6 +95,7 @@ const Dock = connect(createSelector(
   * @prop {number} cfg.snapConfig.maxFeatures defines features limit for request that loads vector data of WMS layer.
   * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers"
   * @prop {object} cfg.dateFormats object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
+  * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or

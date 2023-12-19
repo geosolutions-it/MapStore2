@@ -152,7 +152,6 @@ export const showTimeSync = state => {
     return null;
 };
 export const timeSyncActive = state => get(state, "featuregrid.timeSync", false);
-export const showPopoverSyncSelector = state => get(state, "featuregrid.showPopoverSync", true);
 export const isSavingSelector = state => state && state.featuregrid && state.featuregrid.saving;
 export const isSavedSelector = state => state && state.featuregrid && state.featuregrid.saved;
 export const isDrawingSelector = state => state && state.featuregrid && state.featuregrid.drawing;
