@@ -512,7 +512,7 @@ describe('Print Plugin', () => {
                 setTimeout(() => {
                     expect(spy.calls.length).toBe(1);
                     expect(spy.calls[0].arguments[0].layers.length).toBe(1);
-                    expect(spy.calls[0].arguments[1].layers[0].features.length).toBe(1);
+                    expect(spy.calls[0].arguments[0].layers[0].features.length).toBe(1);
                     done();
                 }, 0);
             } catch (ex) {
