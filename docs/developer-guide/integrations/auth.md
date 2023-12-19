@@ -8,10 +8,9 @@ In this section you can see the implementation details about the login / logout 
 
 ### Configure session timeout
 
-The following configuration is needed to configure session timeout when using standard login (i.e not Google OAuth, Keycloak, LDAP)
-In `mapstore-ovr.properties`, add the following
+By default MapStore session token lives 24 hours and the refresh token last forever. On application reboot anyway all the tokens are cancelled. In order to change these default. the administrator can change these defaults by adding to `mapstore-ovr.properties` file the following properties: 
 
-``` xml
+``` properties
     # Session timeout
     restSessionService.sessionTimeout=60 #in seconds
     restSessionService.autorefresh=false
@@ -21,6 +20,8 @@ In `mapstore-ovr.properties`, add the following
 - `autorefresh` refers to flag configured to handle automatic refresh process in the backend
   - when set to `false`, it avoids the use of refresh token after the session token has expired, meaning, after the timeout the user will have to reconnect
   - when set to `true`, the refresh token is used and the session extends everytime the session timeout is met
+
+!!! note these configurations in `mapstore.properties` are valid for the default session storage. If you are using openID or keycloak, they will not be used.
 
 Additionally, on the client side, in order to configure the interval in which is session `refresh` action is fired, one can use the `tokenRefreshInterval` property. It can be configued via `localConfig.json -> tokenRefreshInterval`, the value is in milliseconds.
 
