@@ -24,7 +24,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ### Using `elevation` layer type instead of wms layer with useForElevation property
 
-The wms layer with useForElevation property is deprecated and a `elevation` layer introduced in substitution.
+The wms layer with `useForElevation` property is deprecated and a `elevation` layer introduced in substitution.
 The `elevation` layer is used only to display height information inside the mouse position plugin.
 
 A configuration update example:
