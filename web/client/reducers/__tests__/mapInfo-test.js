@@ -20,7 +20,8 @@ import {
     toggleHighlightFeature,
     setMapTrigger,
     setShowInMapPopup,
-    onInitPlugin
+    onInitPlugin,
+    initiateOrResetHighlight
 } from '../../actions/mapInfo';
 import {changeVisualizationMode} from '../../actions/maptype';
 import { MAP_CONFIG_LOADED } from '../../actions/config';
@@ -448,5 +449,15 @@ describe('Test the mapInfo reducer', () => {
         const state = mapInfo(initialState, onInitPlugin({cfg1: "test", configuration: {maxItems: 3}}));
         expect(state.cfg1).toEqual("test");
         expect(state.configuration).toEqual({maxItems: 3});
+    });
+    it('initiateOrResetHighlight if highlight default value equal true', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, initiateOrResetHighlight(true));
+        expect(state.highlight).toEqual(true);
+    });
+    it('initiateOrResetHighlight if highlight default value equal false', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, initiateOrResetHighlight(false));
+        expect(state.highlight).toEqual(false);
     });
 });

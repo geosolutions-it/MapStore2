@@ -408,6 +408,7 @@
                 "name": "Identify",
                 "cfg": {
                     "showHighlightFeatureButton": true,
+                    "identifyHighlight":false,
                     "viewerOptions": {
                         "container": "{context.ReactSwipe}"
                     },

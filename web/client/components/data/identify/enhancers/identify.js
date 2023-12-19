@@ -78,7 +78,8 @@ export const identifyLifecycle = compose(
                 onEnableCenterToMarker = () => {},
                 setShowInMapPopup = () => {},
                 checkIdentifyIsMounted = () => {},
-                onInitPlugin = () => {}
+                onInitPlugin = () => {},
+                initiateOrResetHighlight = () => {}
             } = this.props;
 
             // Initialize plugin configuration
@@ -89,7 +90,7 @@ export const identifyLifecycle = compose(
                 },
                 showAllResponses
             });
-
+            initiateOrResetHighlight(this.props?.pluginCfg?.identifyHighlight || false);
             if (enabled || showInMapPopup) {
                 changeMousePointer('pointer');
                 checkIdentifyIsMounted(true);

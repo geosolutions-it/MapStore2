@@ -35,7 +35,8 @@ import {
     SET_CURRENT_EDIT_FEATURE_QUERY,
     SET_MAP_TRIGGER,
     SET_SHOW_IN_MAP_POPUP,
-    INIT_PLUGIN
+    INIT_PLUGIN,
+    INIT_IDENTIFY_HIGHLIGHT
 } from '../actions/mapInfo';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 
@@ -408,6 +409,12 @@ function mapInfo(state = initState, action) {
                 ...state.configuration,
                 ...(action.cfg?.configuration)
             }
+        };
+    }
+    case INIT_IDENTIFY_HIGHLIGHT: {
+        return {
+            ...state,
+            highlight: action.identifyHighlight
         };
     }
     default:
