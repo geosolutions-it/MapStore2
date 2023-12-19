@@ -99,9 +99,32 @@ describe("test the AnnotationsEditor Panel", () => {
         const viewer = ReactDOM.render(<AnnotationsEditor {...properties} {...actions} editing={{
             properties
         }}/>, document.getElementById("container"));
-        expect(viewer).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "input").length).toEqual(1);
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "quill").length).toEqual(1);
+        expect(viewer).toBeTruthy();
+        expect(document.querySelector(".mapstore-annotations-info-viewer-title")).toBeTruthy();
+        expect(document.querySelector(".mapstore-annotations-info-viewer-description")).toBeTruthy();
+    });
+
+    it('test annotation geometry title', () => {
+        const properties = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+
+        let viewer = ReactDOM.render(<AnnotationsEditor {...properties} {...actions} editing={{
+            properties
+        }} selected={{geometry: {type: "Point", coordinates: [1, 1]}, properties: {isValidFeature: true, geometryTitle: "Point-1"}}}/>,
+        document.getElementById("container"));
+        expect(viewer).toBeTruthy();
+        let input = document.querySelector(".mapstore-annotations-info-viewer-expanded input");
+        expect(input).toBeTruthy();
+        expect(input.value).toBe('Point-1');
+        viewer = ReactDOM.render(<AnnotationsEditor {...properties} {...actions} editing={{
+            properties
+        }} selected={{geometry: {type: "Point", coordinates: [1, 1]}, properties: {isValidFeature: true}}}/>,
+        document.getElementById("container"));
+        input = document.querySelector(".mapstore-annotations-info-viewer-expanded input");
+        expect(input.value).toBe('Point');
     });
 
     it('test click remove annotation', () => {
@@ -199,7 +222,7 @@ describe("test the AnnotationsEditor Panel", () => {
             marker: ["Test marker"],
             symbol: ["Test symbol"]
         }};
-        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+        let viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
             selected={{features: [], properties: {isValidFeature: true}}}
             editing={{
                 properties: feature,
@@ -215,6 +238,19 @@ describe("test the AnnotationsEditor Panel", () => {
         let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[1]);
 
         expect(saveButton).toExist();
+        TestUtils.Simulate.click(saveButton);
+        expect(spySaveGeometry).toNotHaveBeenCalled();
+        viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+            selected={{features: [], properties: {isValidFeature: true, geometryTitle: "Point-1"}}}
+            editing={{
+                properties: feature,
+                features: [{ properties: {
+                    isValidFeature: true
+                } }]
+            }}
+            defaultStyles={defaultStyles}
+            onAddNewFeature={testHandlers.onAddNewFeature}
+        />, document.getElementById("container"));
         TestUtils.Simulate.click(saveButton);
         expect(spySaveGeometry).toHaveBeenCalled();
     });
