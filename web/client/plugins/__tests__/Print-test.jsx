@@ -483,4 +483,41 @@ describe('Print Plugin', () => {
             }
         });
     });
+    it("print only annotation features that are visible", (done) => {
+        const layers = [{
+            features: [
+                {type: "FeatureCollection", properties: {id: "1", visibility: true}},
+                {type: "FeatureCollection", properties: {id: "2", visibility: false}}
+            ],
+            disableResolutionLimits: true,
+            visibility: true,
+            type: "vector"
+        }];
+        const printingService = {
+            print() {},
+            getMapConfiguration() {
+                return {
+                    layers
+                };
+            },
+            validate() { return {};}
+        };
+        const spy = expect.spyOn(printingService, "print");
+        getPrintPlugin().then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin printingService={printingService}/>, document.getElementById("container"));
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                submit.click();
+                setTimeout(() => {
+                    expect(spy.calls.length).toBe(1);
+                    expect(spy.calls[0].arguments[0].layers.length).toBe(1);
+                    expect(spy.calls[0].arguments[1].layers[0].features.length).toBe(1);
+                    done();
+                }, 0);
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
 });
