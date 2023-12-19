@@ -25,8 +25,7 @@ This is a list of things to check if you want to update from a previous version 
 ### Using `elevation` layer type instead of wms layer with useForElevation property
 
 The wms layer with `useForElevation` property is deprecated and a `elevation` layer introduced in substitution.
-The `elevation` layer is used only to display height information inside the mouse position plugin.
-
+The new `elevation` layer is used only to display height information inside the mouse position plugin and it will not provide a support for terrain model of the 3D visualziation mode. In order to provide this support, you need to add a `terrain` layer too. See documentation about [Elevation layer](maps-configuration.md#elevation) and [Terrain layer](maps-configuration.md#terrain) for more details.
 A configuration update example:
 
 ```diff
@@ -37,14 +36,12 @@ A configuration update example:
             {
 -               "type": "wms",
 +               "type": "elevation",
-+               "type": "provider",
                 "url": "/geoserver/wms",
                 "name": "workspace:layername",
 -               "format": "application/bil16",
                 "visibility": true,
--               "littleendian": false,
-+               "littleEndian": false,
--               "useForElevation": true
+-               "useForElevation": true,
+                "littleEndian": false
             },
             // only needed for 3D terrain
 +           {
@@ -90,7 +87,7 @@ In order to enable the possibility to add in and the spatial filter to the widge
 ...
 "dashboard": [
 ...
-{ 
+{
     "name": "QueryPanel",
     "cfg": {
         "toolsOptions": {
