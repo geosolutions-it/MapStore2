@@ -21,7 +21,7 @@ import isNil from 'lodash/isNil';
 import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
-import { ANNOTATIONS, updateAnnotationsLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
+// import { ANNOTATIONS, updateAnnotationsLayer } from './AnnotationsUtils';
 
 let LayersUtils;
 
@@ -433,9 +433,10 @@ export const normalizeLayer = (layer) => {
         } : layer;
     }
     // regenerate geodesic lines as property since that info has not been saved
-    if (_layer.id === ANNOTATIONS) {
+    /* if (_layer.id === ANNOTATIONS) {
+        excluded because updateAnnotationsLayer is not backported
         _layer = updateAnnotationsLayer(_layer)[0];
-    }
+    }*/
 
     return {
         ..._layer,

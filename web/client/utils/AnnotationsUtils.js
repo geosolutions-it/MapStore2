@@ -395,7 +395,7 @@ export const normalizeAnnotation = (ann = {}, messages = {}) => {
     const annotation = ann.type === "FeatureCollection" ? {...ann} : {type: "Feature", geometry: ann};
     const style = getStylesObject(annotation);
     const properties = getProperties(annotation.properties, messages);
-    return {style, properties, ...annotation};
+    return {style, properties, ...annotation, id: properties.id || annotation.id};
 };
 export const removeDuplicate = (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {}));
 /**

@@ -12,7 +12,7 @@ import get from 'lodash/get';
 import head from 'lodash/head';
 import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
-
+import turfBbox from '@turf/bbox';
 import Rx from 'rxjs';
 import uuidV1 from 'uuid/v1';
 import {parseString} from 'xml2js';
@@ -375,7 +375,8 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
         })
             .switchMap(({features}) => {
                 const ft = find(features, f => f.id === featureId);
-                const zoomTo = showHighlightLayers ? [zoomToExtent(getGeoJSONExtent(ft.geometry), "EPSG:4326")] : [];
+                const maxBBox = turfBbox(ft);
+                const zoomTo = showHighlightLayers ? [zoomToExtent(maxBBox, "EPSG:4326")] : [];
                 return Rx.Observable.from([
                     setSourceFeature(ft),
                     updateAdditionalLayer(
@@ -591,11 +592,14 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
                     })
         );
         const feature = sourceFeatureSelector(state);
-        if (isEmpty(feature)) {
+        if (isEmpty(feature) || feature.type === "FeatureCollection") {
             // then run the collect geometries which and then run the buffer
+            const features = layer.features?.[0]?.type === "FeatureCollection" ? layer.features.reduce((p, c) => {
+                return p.concat(c.features);
+            }, []) : layer.features;
             const executeCollectProcess$ = executeProcess(
                 layerUrl,
-                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
+                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -679,10 +683,13 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         const counter = getCounter(layers, GPT_INTERSECTION_GROUP_ID);
         let sourceFC$;
         let intersectionFC$;
-        if (isEmpty(sourceFeature)) {
+        if (isEmpty(sourceFeature) || sourceFeature.type === "FeatureCollection") {
+            const features = sourceFeature?.type === "FeatureCollection" ? layer.features.reduce((p, c) => {
+                return p.concat(c.features);
+            }, []) : layer.features;
             sourceFC$ = executeProcess(
                 layerUrl,
-                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(layer.features) : null }),
+                collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
@@ -697,10 +704,13 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         const intersectionLayerId = intersectionLayerIdSelector(state);
         const intersectionLayer = getLayerFromIdSelector(state, intersectionLayerId);
         const intersectionLayerUrl = wpsUrlSelector(state) || head(castArray(intersectionLayer.url));
-        if (isEmpty(intersectionFeature)) {
+        if (isEmpty(intersectionFeature) || intersectionFeature.type === "FeatureCollection") {
+            const features = intersectionFeature?.type === "FeatureCollection" ? intersectionLayer.features.reduce((p, c) => {
+                return p.concat(c.features);
+            }, []) : intersectionLayer.features;
             intersectionFC$ = executeProcess(
                 intersectionLayerUrl,
-                collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (intersectionLayer.type === "vector") ? createFC(intersectionLayer.features) : null }),
+                collectGeometriesXML({ name: intersectionLayer.name, featureCollection: (intersectionLayer.type === "vector") ? createFC(features) : null }),
                 executeOptions,
                 {
                     headers: {'Content-Type': 'application/xml', 'Accept': `application/xml, application/json`}
