@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get} from "lodash";
+import {get, head, memoize} from "lodash";
 
 import {GPT_CONTROL_NAME} from "../actions/geoProcessing";
 import {mapSelector} from "../selectors/map";
 import {layersSelector} from "../selectors/layers";
 import {hasWFSService} from '../utils/LayersUtils';
+import {densifyGeodesicFeature, transformCircleIntoPolygon} from '../utils/GeoProcessingUtils';
 
 // buffer
 export const distanceSelector = state => state?.geoProcessing?.buffer?.distance || 100;
@@ -69,9 +70,27 @@ export const selectedLayerIdSelector = (state) => state?.geoProcessing?.selected
 export const selectedLayerTypeSelector = (state) => state?.geoProcessing?.selectedLayerType;
 export const maxFeaturesSelector = (state) => state?.geoProcessing?.maxFeatures || 10;
 export const wpsUrlSelector = (state) => state?.geoProcessing?.wpsUrl;
-export const wfsBackedLayersSelector = (state) => {
+
+export const availableLayersSelector = memoize((state) => {
     const layers = layersSelector(state);
     return layers
         .filter(l => l.group !== "background")
-        .filter(layer => hasWFSService(layer) || layer.type === "vector");
+        .filter(layer => hasWFSService(layer) || layer.type === "vector")
+        .map(layer => {
+            return layer?.features?.length ? {
+                ...layer,
+                features: layer?.features?.map(densifyGeodesicFeature).map(transformCircleIntoPolygon)
+            } : layer;
+        });
+}, (state) => JSON.stringify(layersSelector(state).filter(l => l.group !== "background")
+    .filter(layer => hasWFSService(layer) || layer.type === "vector")));
+
+export const getLayerFromIdSelector = (state, id) => {
+    const layer = head(availableLayersSelector(state).filter(l => l.id === id));
+    // filtering out the features with measureId because they are not the measures, the LineString for length and bering or the Polygon for the area one. We do not want to do the buffer on the point where the measure text label is stored
+    return {
+        ...layer,
+        features: layer?.features?.filter(f => !f?.properties?.measureId)
+    };
+
 };

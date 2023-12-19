@@ -177,11 +177,12 @@ function geoProcessing( state = {
         };
     }
     case SET_FEATURES: {
+        // filtering out the features with measureId because they are not the measures, the LineString for length and bering or the Polygon for the area one. We do not want to do the buffer on the point where the measure text label is stored
         return action.data.features ? {
             ...state,
             [action.source]: {
                 ...state[action.source],
-                features: (state[action.source].features || []).concat(action.data.features || []),
+                features: (state[action.source].features || []).concat(action.data.features || []).filter(f => !f?.properties?.measureId),
                 totalCount: action.data.totalFeatures,
                 currentPage: action.nextPage
             },
@@ -287,7 +288,7 @@ function geoProcessing( state = {
             source: {
                 ...state.source,
                 feature: action.feature,
-                features: find(state.source.features, ft => ft.id === action.feature.id) ? state.source.features : [action.feature]
+                features: find(state.source.features, ft => ft?.id === action.feature?.id) ? state.source.features : [action.feature]
             }
         };
     }

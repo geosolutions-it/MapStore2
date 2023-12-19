@@ -21,6 +21,7 @@ import isNil from 'lodash/isNil';
 import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
+import { ANNOTATIONS, updateAnnotationsLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 
 let LayersUtils;
 
@@ -404,12 +405,43 @@ export const getDimension = (dimensions, dimension) => {
 export const getLayerId = (layerObj) => {
     return layerObj && layerObj.id || `${layerObj.name ? `${layerObj.name}__` : ''}${uuidv1()}`;
 };
+
 /**
- * Normalizes the layer to assign missing Ids
+ * it creates an id of a feature if not existing
+ * @param {object} feature list of layers to check
+  * @return {string} the id
+ */
+export const createFeatureId = (feature = {}) => {
+    return {
+        ...feature,
+        id: feature.id || feature.properties?.id || uuidv1()
+    };
+};
+/**
+ * Normalizes the layer to assign missing Ids and features for vector layers
  * @param {object} layer the layer to normalize
  * @returns {object} the normalized layer
  */
-export const normalizeLayer = (layer) => layer.id ? layer : { ...layer, id: LayersUtils.getLayerId(layer) };
+
+export const normalizeLayer = (layer) => {
+    // con uuid
+    let _layer = layer;
+    if (layer.type === "vector") {
+        _layer = _layer?.features?.length ? {
+            ..._layer,
+            features: _layer?.features?.map(createFeatureId)
+        } : layer;
+    }
+    // regenerate geodesic lines as property since that info has not been saved
+    if (_layer.id === ANNOTATIONS) {
+        _layer = updateAnnotationsLayer(_layer)[0];
+    }
+
+    return {
+        ..._layer,
+        id: _layer.id || LayersUtils.getLayerId(_layer)};
+
+};
 /**
  * Normalizes the map adding missing ids, default groups.
  * @param {object} map the map

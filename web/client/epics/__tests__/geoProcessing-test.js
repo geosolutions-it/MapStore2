@@ -164,8 +164,11 @@ describe('geoProcessing epics', () => {
                 flat: [{
                     id: "id",
                     url: "mockUrl",
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    },
                     describeFeatureType: {
-
                     }
                 }]
             }
@@ -197,7 +200,11 @@ describe('geoProcessing epics', () => {
             layers: {
                 flat: [{
                     id: "id",
-                    url: "mockUrl"
+                    url: "mockUrl",
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
                 }]
             }
         });
@@ -225,7 +232,11 @@ describe('geoProcessing epics', () => {
             layers: {
                 flat: [{
                     id: "id",
-                    url: "mockUrl"
+                    url: "mockUrl",
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
                 }]
             }
         });
@@ -253,7 +264,11 @@ describe('geoProcessing epics', () => {
             layers: {
                 flat: [{
                     id: "id",
-                    url: "mockUrl"
+                    url: "mockUrl",
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
                 }]
             }
         });
@@ -315,7 +330,11 @@ describe('geoProcessing epics', () => {
                 flat: [{
                     id: "id",
                     url: "mockUrl",
-                    describeFeatureType: DESCRIBE_POIS
+                    describeFeatureType: DESCRIBE_POIS,
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
                 }]
             }
         });
@@ -343,7 +362,11 @@ describe('geoProcessing epics', () => {
                 flat: [{
                     id: "id",
                     url: "mockUrl",
-                    describeFeatureType: DESCRIBE_POIS
+                    describeFeatureType: DESCRIBE_POIS,
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
                 }]
             }
         });
@@ -366,7 +389,11 @@ describe('geoProcessing epics', () => {
             layers: {
                 flat: [{
                     id: "id",
-                    url: "mockUrl"
+                    url: "mockUrl",
+                    type: "wfs",
+                    search: {
+                        type: "wfs"
+                    }
                 }]
             }
         });
@@ -457,7 +484,9 @@ describe('geoProcessing epics', () => {
                     id: "id",
                     url: "mockUrl",
                     name: "name",
+                    type: "wfs",
                     search: {
+                        type: "wfs",
                         url: "mockUrl"
                     }
                 }]
@@ -594,7 +623,9 @@ describe('geoProcessing epics', () => {
                     id: "id",
                     url: "mockUrl",
                     name: "name",
+                    type: "wfs",
                     search: {
+                        type: "wfs",
                         url: "mockUrl"
                     }
                 }]
@@ -674,7 +705,9 @@ describe('geoProcessing epics', () => {
                     id: "id",
                     url: "mockUrl",
                     name: "name",
+                    type: "wfs",
                     search: {
+                        type: "wfs",
                         url: "mockUrl"
                     }
                 }]
@@ -718,8 +751,10 @@ describe('geoProcessing epics', () => {
                 flat: [{
                     id: "id",
                     url: "mockUrl",
+                    type: "wfs",
                     name: "name",
                     search: {
+                        type: "wfs",
                         url: "mockUrl"
                     }
                 }]
@@ -1005,6 +1040,7 @@ describe('geoProcessing epics', () => {
                     name: "name",
                     type: "wms",
                     search: {
+                        type: "wfs",
                         url: "mockUrl"
                     }
                 }]
