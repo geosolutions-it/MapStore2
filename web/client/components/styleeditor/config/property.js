@@ -84,7 +84,7 @@ const property = {
         },
         isDisabled
     }),
-    dasharray: ({ key = 'dasharray', label = 'Dash array', disablePropertySelection = true }) => ({
+    dasharray: ({ key = 'dasharray', label = 'Dash array', disablePropertySelection = true, isDisabled }) => ({
         type: 'dash',
         label,
         config: {
@@ -105,7 +105,8 @@ const property = {
                     ? value.map((entry) => parseFloat(entry))
                     : undefined
             };
-        }
+        },
+        isDisabled
     }),
     cap: ({ key = 'cap', label = 'Line cap', isDisabled }) => ({
         type: 'toolbar',

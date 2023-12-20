@@ -1,25 +1,47 @@
 import * as Cesium from 'cesium';
 import turfFlatten from '@turf/flatten';
 import omit from 'lodash/omit';
+import isArray from 'lodash/isArray';
 import uuid from 'uuid/v1';
+
+const validateCoordinatesValue = (coords) => {
+    if (!isArray(coords[0]) && !isArray(coords[1]) && !isArray(coords[2])) {
+        return coords;
+    }
+    return null;
+};
 
 const featureToCartesianPositions = (feature) => {
     if (feature.geometry.type === 'Point') {
-        return [[Cesium.Cartesian3.fromDegrees(
+        const validatedCoords = validateCoordinatesValue([
             feature.geometry.coordinates[0],
             feature.geometry.coordinates[1],
             feature.geometry.coordinates[2] || 0
-        )]];
+        ]);
+        return validatedCoords ? [[Cesium.Cartesian3.fromDegrees(
+            validatedCoords[0],
+            validatedCoords[1],
+            validatedCoords[2] || 0
+        )]] : null;
     }
     if (feature.geometry.type === 'LineString') {
-        const positions = feature.geometry.coordinates.map(coords => Cesium.Cartesian3.fromDegrees(coords[0], coords[1], coords[2]));
-        return [positions];
+        const positions = feature.geometry.coordinates.map(coords =>
+            validateCoordinatesValue(coords)
+                ? Cesium.Cartesian3.fromDegrees(coords[0], coords[1], coords[2])
+                : null
+        ).filter(coords => coords !== null);
+        return positions.length > 1 ? [positions] : null;
     }
     if (feature.geometry.type === 'Polygon') {
-        const positions = feature.geometry.coordinates.map(rings =>
-            rings.map(coords => Cesium.Cartesian3.fromDegrees(coords[0], coords[1], coords[2]))
-        );
-        return positions;
+        const positions = feature.geometry.coordinates.map(ring => {
+            const ringPositions = ring.map(coords =>
+                validateCoordinatesValue(coords)
+                    ? Cesium.Cartesian3.fromDegrees(coords[0], coords[1], coords[2])
+                    : null
+            ).filter(coords => coords !== null);
+            return ringPositions.length > 2 ? ringPositions : null;
+        }).filter(ring => ring !== null);
+        return positions.length > 0 ? positions : null;
     }
     return null;
 };
@@ -326,7 +348,8 @@ class GeoJSONStyledFeatures {
                     id: uuid(),
                     positions: featureToCartesianPositions(feature)
                 };
-            });
+            }).filter(feature => feature.positions !== null);
+
     }
     setOpacity(opacity) {
         const previousOpacity = this._opacity;

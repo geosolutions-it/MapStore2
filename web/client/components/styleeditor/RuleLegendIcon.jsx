@@ -89,11 +89,37 @@ const icon = {
         );
     },
     Icon: ({ symbolizer }) => {
-        return (
-            <svg viewBox="0 0 50 50" style={{ transform: `rotate(${symbolizer.rotate}deg)`, opacity: symbolizer.opacity }}>
-                <image href={symbolizer.image} height="50" width="50" />
-            </svg>
-        );
+        const [iconData, setIconData] = useState(null);
+        const isMounted = useRef();
+
+        useEffect(() => {
+            isMounted.current = true;
+            return () => {
+                isMounted.current = false;
+            };
+        }, []);
+
+        useEffect(() => {
+            if (symbolizer?.image) {
+                const img = new Image();
+                img.onload = () => {
+                    if (isMounted.current) {
+                        setIconData(img);
+                    }
+                };
+                img.onerror = () => {
+                    if (isMounted.current) {
+                        setIconData(null);
+                    }
+                };
+                img.src = symbolizer.image;
+            }
+        }, [symbolizer?.image]);
+        return iconData
+            ? (<svg viewBox="0 0 50 50" style={{ transform: `rotate(${symbolizer.rotate}deg)`, opacity: symbolizer.opacity }}>
+                <image href={iconData.src} height="50" width="50" />
+            </svg>)
+            : <Glyphicon glyph="point"/>;
     },
     Model: () => <Glyphicon glyph="model"/>,
     Text: ({ symbolizer }) => {
@@ -112,7 +138,7 @@ const icon = {
                         strokeLinecap: 'round',
                         strokeLinejoin: 'round'
                     })
-                }} >La</text>
+                }} >T</text>
             </svg>
         );
     }

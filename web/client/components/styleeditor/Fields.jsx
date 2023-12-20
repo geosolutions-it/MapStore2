@@ -512,12 +512,15 @@ export const fields = {
             { value: '6 6' },
             { value: '20 20' },
             { value: '30 30' }
-        ]
+        ],
+        disabled
     }) => {
         return (
             <PropertyField
-                label={label}>
+                label={label}
+                disabled={disabled}>
                 <DashArray
+                    disabled={disabled}
                     dashArray={value}
                     onChange={onChange}
                     options={lineDashOptions}

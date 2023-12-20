@@ -43,7 +43,7 @@ describe('RuleLegendIcon', () => {
         expect(svgElements[0].innerHTML).toBe('');
     });
 
-    it('should render icon image', (done) => {
+    it('should render icon image', () => {
         const symbolizer = {
             "kind": "Icon",
             "image": "https://url.to.image",
@@ -54,17 +54,8 @@ describe('RuleLegendIcon', () => {
             "symbolizerId": "d21a3951-42f8-11ed-b9d2-fbb7c629c7af"
         };
         ReactDOM.render(<RuleLegendIcon rule={{ symbolizers: [symbolizer] }} />, document.getElementById('container'));
-        setTimeout(() => {
-            const svgElements = document.querySelectorAll('svg');
-            expect(svgElements.length).toBe(1);
-            const svgElement = svgElements[0];
-            const imageElement = svgElement.firstChild;
-            expect(imageElement).toExist();
-            const imageAttributes = imageElement.attributes;
-            expect(imageAttributes.href).toExist();
-            expect(imageAttributes.height.value).toBe("50");
-            expect(imageAttributes.width.value).toBe("50");
-            done();
-        }, 1);
+        const icon = document.querySelectorAll('span');
+        expect(icon.length).toBe(1);
+        expect(icon[0].getAttribute('class')).toBe('glyphicon glyphicon-point');
     });
 });

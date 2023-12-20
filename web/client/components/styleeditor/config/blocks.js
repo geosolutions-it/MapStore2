@@ -470,16 +470,19 @@ const getBlocks = ({
                     key: 'outlineColor',
                     opacityKey: 'outlineOpacity',
                     label: 'styleeditor.outlineColor',
-                    stroke: true
+                    stroke: true,
+                    isDisabled: (value, properties) => !properties?.msClampToGround && !!properties?.msExtrudedHeight
                 }),
                 outlineWidth: property.width({
                     key: 'outlineWidth',
-                    label: 'styleeditor.outlineWidth'
+                    label: 'styleeditor.outlineWidth',
+                    isDisabled: (value, properties) => !properties?.msClampToGround && !!properties?.msExtrudedHeight
                 }),
                 ...(!shouldHideVectorStyleOptions && {
                     outlineDasharray: property.dasharray({
                         label: 'styleeditor.outlineStyle',
-                        key: 'outlineDasharray'
+                        key: 'outlineDasharray',
+                        isDisabled: (value, properties) => !properties?.msClampToGround && !!properties?.msExtrudedHeight
                     })
                 }),
                 ...(!shouldHideVectorStyleOptions && vector3dStyleOptions({

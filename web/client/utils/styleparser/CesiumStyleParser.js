@@ -822,6 +822,7 @@ const symbolizerToPrimitives = {
         ];
     },
     Fill: ({ parsedSymbolizer, globalOpacity }) => {
+        const isExtruded = !parsedSymbolizer.msClampToGround && !!parsedSymbolizer.msExtrudedHeight;
         return [
             {
                 type: 'polygon',
@@ -844,7 +845,7 @@ const symbolizerToPrimitives = {
             // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
             // this is a workaround to visualize the outline with the correct side
             // this only for the footprint
-            ...(parsedSymbolizer.outlineColor && parsedSymbolizer.outlineWidth !== 0 ? [
+            ...(parsedSymbolizer.outlineColor && parsedSymbolizer.outlineWidth !== 0 && !isExtruded ? [
                 {
                     type: 'polyline',
                     geometryType: 'polyline',

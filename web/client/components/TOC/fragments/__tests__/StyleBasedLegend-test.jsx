@@ -223,11 +223,7 @@ describe('StyleBasedLegend module component', () => {
         const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
-        expect(textElement[0].innerHTML).toBe('Some icon');
-        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
-        expect(iconContainerElement.length).toBe(1);
-        const expectedSVG = '<svg viewBox="0 0 50 50" style="transform: rotate(0deg); opacity: 1;"><image href="https://url.to.image" height="50" width="50"></image></svg>';
-        expect(iconContainerElement[0].innerHTML).toBe(expectedSVG);
+        expect(textElement[0].getAttribute('class')).toBe('glyphicon glyphicon-point');
     });
 
     it('Should render multiple items', () => {
