@@ -20,7 +20,6 @@ import { setControlProperty } from '../actions/controls';
 import {burgerMenuSelector, unsavedMapSelector, unsavedMapSourceSelector} from '../selectors/controls';
 import { feedbackMaskSelector } from '../selectors/feedbackmask';
 import ConfigUtils from '../utils/ConfigUtils';
-// import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 import {pathnameSelector} from "../selectors/router";
 
 

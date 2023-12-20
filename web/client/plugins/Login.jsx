@@ -81,7 +81,7 @@ export default {
             name: "login",
             position: 3,
             tool: connect((state) => ({
-                hidden: pathnameSelector(state).indexOf("viewer") !== -1,
+                hidden: pathnameSelector(state).indexOf("viewer") !== -1, // this is temporary and will have to change when we align also geostory to have sidebar
                 renderButtonContent: () => {return <Glyphicon glyph="user" />; },
                 bsStyle: 'primary'
             }))(LoginNav),
@@ -92,7 +92,7 @@ export default {
             name: "login",
             position: 2,
             tool: connect((state) => ({
-                hidden: pathnameSelector(state).indexOf("dashboard") !== -1,
+                hidden: pathnameSelector(state).indexOf("dashboard") !== -1, // this is temporary and will have to change when we align also geostory to have sidebar
                 bsStyle: 'tray',
                 tooltipPosition: 'left',
                 renderButtonContent: (props) => [<Glyphicon glyph="user" />, props.renderButtonText ? props.user && <span>props.user[props.displayName]</span> || <span>"Guest"</span> : null],
