@@ -86,12 +86,13 @@ export default {
                 bsStyle: 'primary'
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
-            priority: 1
+            priority: 2
         },
         SidebarMenu: {
             name: "login",
             position: 2,
-            tool: connect(() => ({
+            tool: connect((state) => ({
+                hidden: pathnameSelector(state).indexOf("dashboard") !== -1,
                 bsStyle: 'tray',
                 tooltipPosition: 'left',
                 renderButtonContent: (props) => [<Glyphicon glyph="user" />, props.renderButtonText ? props.user && <span>props.user[props.displayName]</span> || <span>"Guest"</span> : null],
@@ -104,7 +105,7 @@ export default {
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
             }),
             tools: [UserDetails, PasswordReset, Login],
-            priority: 1
+            priority: 2
         }
     }),
     reducers: {security},

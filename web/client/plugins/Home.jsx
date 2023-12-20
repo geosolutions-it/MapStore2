@@ -20,7 +20,9 @@ import { setControlProperty } from '../actions/controls';
 import {burgerMenuSelector, unsavedMapSelector, unsavedMapSourceSelector} from '../selectors/controls';
 import { feedbackMaskSelector } from '../selectors/feedbackmask';
 import ConfigUtils from '../utils/ConfigUtils';
-import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
+// import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
+import {pathnameSelector} from "../selectors/router";
+
 
 const checkUnsavedMapChanges = (action) => {
     return dispatch => {
@@ -72,7 +74,7 @@ export default {
             name: 'home',
             position: 4,
             tool: connect((state) => ({
-                hidden: sidebarIsActiveSelector(state),
+                hidden: pathnameSelector(state).indexOf("viewer") !== -1, // this is temporary and will have to change when we align also geostory to have sidebar
                 bsStyle: 'primary',
                 tooltipPosition: 'bottom'
             }))(HomeConnected),
@@ -81,7 +83,8 @@ export default {
         SidebarMenu: {
             name: 'home',
             position: 1,
-            tool: connect(() => ({
+            tool: connect((state) => ({
+                hidden: pathnameSelector(state).indexOf("dashboard") !== -1, // this is temporary and will have to change when we align also geostory to have sidebar
                 bsStyle: 'tray',
                 tooltipPosition: 'left',
                 text: <Message msgId="gohome"/>

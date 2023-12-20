@@ -15,8 +15,7 @@
           "https://gs-stable.geosolutionsgroup.com:443/geoserver",
           "http://gs-stable.geosolutionsgroup.com/geoserver",
           "http://gs-stable.geosolutionsgroup.com:443/geoserver",
-          "https://tile.googleapis.com",
-          "https://geo.api.vlaanderen.be"
+          "https://tile.googleapis.com"
         ]
     },
     "geoStoreUrl": "rest/geostore/",
@@ -48,10 +47,6 @@
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
         "method": "bearer"
-      }, {
-        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.(geo-solutions\\.it|geosolutionsgroup\\.com)(\\:443|\\:80)?\\/geoserver/.*",
-        "authkeyParamName": "authkey",
-        "method": "authkey"
       }, {
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
@@ -753,6 +748,12 @@
           "AddWidgetDashboard",
           "MapConnectionDashboard",
           {
+            "name": "SidebarMenu",
+            "cfg" : {
+              "containerPosition": "columns"
+              }
+          },
+          {
             "name": "Dashboard"
           },
           "Notifications",
@@ -853,12 +854,6 @@
             "cfg": {
                 "containerPosition": "header"
             }
-          },
-          {
-            "name": "SidebarMenu",
-            "cfg" : {
-              "containerPosition": "columns"
-              }
           }
         ],
       "geostory-embedded": [
@@ -996,34 +991,6 @@
           }
         ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
-        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"],
-        "rulesmanager": [
-          "Redirect" ,
-          {
-            "name": "OmniBar",
-                "cfg": {
-                    "containerPosition": "header",
-                    "className": "navbar shadow navbar-home"
-                }
-          },
-          "Home","ManagerMenu", "Login", "Language", "NavMenu",
-          "Attribution", "RulesDataGrid", "Notifications",
-          {
-              "name": "RulesEditor",
-             "cfg": {
-                  "containerPosition": "columns",
-                    "disableDetails": true
-              }
-          }
-      ]
-    },
-    "geoFenceUrl": "https://gs-stable.geosolutionsgroup.com/geoserver/",
-    "geoFencePath": "rest/geofence",
-    "geoFenceServiceType": "geoserver",
-    "geoFenceLayerServiceType": "rest",
-    "geoserverUserServiceName": "geostore",
-    "geoFenceGeoServerInstance": {
-        "url": "https://gs-stable.geosolutionsgroup.com/geoserver/",
-        "id": 1
-    }
+        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
+      }
 }
