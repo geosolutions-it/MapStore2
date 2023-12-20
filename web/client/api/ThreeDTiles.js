@@ -140,6 +140,9 @@ export const getCapabilities = (url) => {
     return axios.get(url)
         .then(({ data }) => {
             return extractCapabilities(data).then((properties) => ({ tileset: data, ...properties }));
+        }).catch((e) => {
+            console.error(e);
+            return { tileset: {}};
         });
 };
 

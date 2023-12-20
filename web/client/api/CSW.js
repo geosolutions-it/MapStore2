@@ -253,7 +253,7 @@ const getBboxFor3DLayersToRecords = async(result)=> {
         const newRecords = records.map(
             (record, idx) => {
                 const capabilityResult = allPromises[idx];
-                if (!capabilityResult) {
+                if (!capabilityResult || !capabilityResult?.bbox?.bounds || !capabilityResult?.bbox?.crs) {
                     return record;
                 }
                 let bbox = getExtentFromNormalized(capabilityResult.bbox.bounds, capabilityResult.bbox.crs);
