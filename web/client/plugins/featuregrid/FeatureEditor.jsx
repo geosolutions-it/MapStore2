@@ -19,7 +19,7 @@ import BorderLayout from '../../components/layout/BorderLayout';
 import { toChangesMap} from '../../utils/FeatureGridUtils';
 import { sizeChange, setUp, setSyncTool } from '../../actions/featuregrid';
 import {mapLayoutValuesSelector} from '../../selectors/maplayout';
-import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} from '../../selectors/query';
+import {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector, isSyncWmsActive} from '../../selectors/query';
 import {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedLayerFieldsSelector, selectedFeaturesSelector, getDockSize} from '../../selectors/featuregrid';
 
 import {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} from './panels/index';
@@ -274,19 +274,23 @@ export const selector = createStructuredSelector({
 });
 
 const EditorPlugin = compose(
-    connect(() => ({}),
-        (dispatch) => ({
-            onMount: bindActionCreators(setUp, dispatch),
-            setSyncTool: bindActionCreators(setSyncTool, dispatch)
-        })),
+    connect((state) => ({
+        isSyncWmsActive: isSyncWmsActive(state)
+    }),
+    (dispatch) => ({
+        onMount: bindActionCreators(setUp, dispatch),
+        setSyncTool: bindActionCreators(setSyncTool, dispatch)
+    })),
     lifecycle({
         componentDidMount() {
             // only the passed properties will be picked
             this.props.onMount(pick(this.props, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']));
-            if (this.props.enableMapFilterSync) {
-                this.props.setSyncTool(true);
-            } else {
-                this.props.setSyncTool(false);
+            if (!this.props.isSyncWmsActive) {
+                if (this.props.enableMapFilterSync) {
+                    this.props.setSyncTool(true);
+                } else {
+                    this.props.setSyncTool(false);
+                }
             }
         },
         // TODO: fix this in contexts
@@ -297,11 +301,6 @@ const EditorPlugin = compose(
             const oldOptions = pick(oldProps, ['showFilteredObject', 'showTimeSync', 'timeSync', 'customEditorsOptions']);
             if (!isEqual(newOptions, oldOptions) ) {
                 this.props.onMount(newOptions);
-            }
-            if (this.props.enableMapFilterSync) {
-                this.props.setSyncTool(true);
-            } else {
-                this.props.setSyncTool(false);
             }
         }
     }),

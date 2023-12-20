@@ -272,6 +272,12 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CLOSE_FEATURE_GRID);
     });
+    it('Test closeFeatureGrid with closer', () => {
+        const retval = closeFeatureGrid('closer1');
+        expect(retval).toExist();
+        expect(retval.type).toBe(CLOSE_FEATURE_GRID);
+        expect(retval.closer).toBe('closer1');
+    });
     it('Test closeFeatureGridConfirm', () => {
         const retval = closeFeatureGridConfirm();
         expect(retval).toExist();

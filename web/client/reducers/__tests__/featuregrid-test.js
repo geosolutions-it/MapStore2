@@ -139,6 +139,13 @@ describe('Test the featuregrid reducer', () => {
         expect(state.open).toBe(false);
         expect(state.mode).toBe(MODES.VIEW);
     });
+    it('closeFeatureGrid with closer', () => {
+        let state = featuregrid(undefined, closeFeatureGrid('closer1'));
+        expect(state).toExist();
+        expect(state.open).toBe(false);
+        expect(state.mode).toBe(MODES.VIEW);
+        expect(state.closer).toBe('closer1');
+    });
 
     it('selectFeature', () => {
         // TODO FIX this test or the reducer

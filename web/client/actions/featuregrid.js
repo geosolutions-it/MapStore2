@@ -308,9 +308,10 @@ export function closeFeatureGridConfirm() {
         type: CLOSE_FEATURE_GRID_CONFIRM
     };
 }
-export function closeFeatureGrid() {
+export function closeFeatureGrid(closer) {
     return {
-        type: CLOSE_FEATURE_GRID
+        type: CLOSE_FEATURE_GRID,
+        closer      // the closer of feature grid like: 'queryPanel'
     };
 }
 export function openFeatureGrid() {
