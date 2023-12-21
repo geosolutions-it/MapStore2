@@ -19,7 +19,6 @@ import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/i
 import {connect} from "../utils/PluginsUtils";
 import {Glyphicon} from "react-bootstrap";
 import {burgerMenuSelector} from "../selectors/controls";
-import {pathnameSelector} from "../selectors/router";
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -80,19 +79,17 @@ export default {
         OmniBar: {
             name: "login",
             position: 3,
-            tool: connect((state) => ({
-                hidden: pathnameSelector(state).indexOf("viewer") !== -1, // this is temporary and will have to change when we align also geostory to have sidebar
+            tool: connect(() => ({
                 renderButtonContent: () => {return <Glyphicon glyph="user" />; },
                 bsStyle: 'primary'
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
-            priority: 2
+            priority: 1
         },
         SidebarMenu: {
             name: "login",
             position: 2,
-            tool: connect((state) => ({
-                hidden: pathnameSelector(state).indexOf("dashboard") !== -1, // this is temporary and will have to change when we align also geostory to have sidebar
+            tool: connect(() => ({
                 bsStyle: 'tray',
                 tooltipPosition: 'left',
                 renderButtonContent: (props) => [<Glyphicon glyph="user" />, props.renderButtonText ? props.user && <span>props.user[props.displayName]</span> || <span>"Guest"</span> : null],

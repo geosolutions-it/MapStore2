@@ -20,8 +20,6 @@ import { setControlProperty } from '../actions/controls';
 import {burgerMenuSelector, unsavedMapSelector, unsavedMapSourceSelector} from '../selectors/controls';
 import { feedbackMaskSelector } from '../selectors/feedbackmask';
 import ConfigUtils from '../utils/ConfigUtils';
-import {pathnameSelector} from "../selectors/router";
-
 
 const checkUnsavedMapChanges = (action) => {
     return dispatch => {
@@ -72,8 +70,7 @@ export default {
         OmniBar: {
             name: 'home',
             position: 4,
-            tool: connect((state) => ({
-                hidden: pathnameSelector(state).indexOf("viewer") !== -1, // this is temporary and will have to change when we align also geostory to have sidebar
+            tool: connect(() => ({
                 bsStyle: 'primary',
                 tooltipPosition: 'bottom'
             }))(HomeConnected),
@@ -82,8 +79,7 @@ export default {
         SidebarMenu: {
             name: 'home',
             position: 1,
-            tool: connect((state) => ({
-                hidden: pathnameSelector(state).indexOf("dashboard") !== -1, // this is temporary and will have to change when we align also geostory to have sidebar
+            tool: connect(() => ({
                 bsStyle: 'tray',
                 tooltipPosition: 'left',
                 text: <Message msgId="gohome"/>
@@ -91,7 +87,7 @@ export default {
             selector: (state) => ({
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
             }),
-            priority: 3
+            priority: 4
         }
     }),
     reducers: {},

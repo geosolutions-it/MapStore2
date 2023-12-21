@@ -757,7 +757,14 @@
             "name": "Dashboard"
           },
           "Notifications",
-          "Login",
+          {
+            "name": "Login",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
           {
             "name": "About",
             "cfg": {
@@ -769,7 +776,14 @@
           "DashboardSave",
           "DashboardSaveAs",
           "Attribution",
-          "Home",
+          {
+            "name": "Home",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
           { "name": "DeleteDashboard" },
           { "name": "DashboardExport" },
           { "name": "DashboardImport" },
