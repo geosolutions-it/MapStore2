@@ -70,8 +70,8 @@ describe('CesiumStyleParser', () => {
                     const [polygon, polyline] = styledFeatures;
                     expect(polygon.id).toBe('feature-01:symbolizer-01:polygon');
                     expect(polygon.primitive.type).toBe('polygon');
-                    expect(polygon.primitive.material.toString()).toEqual('(1, 0, 0, 0.5)');
-                    expect(polygon.primitive.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
+                    expect(polygon.primitive.entity.polygon.material.toString()).toEqual('(1, 0, 0, 0.5)');
+                    expect(polygon.primitive.entity.polygon.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
                     expect(polyline.id).toBe('feature-01:symbolizer-01:polyline');
                     expect(polyline.primitive.type).toBe('polyline');
                     expect(polyline.primitive.entity.polyline.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
@@ -123,8 +123,8 @@ describe('CesiumStyleParser', () => {
                     const [polygon, polyline] = styledFeatures;
                     expect(polygon.id).toBe('feature-01:symbolizer-01:polygon');
                     expect(polygon.primitive.type).toBe('polygon');
-                    expect(polygon.primitive.material.toString()).toEqual('(1, 0, 0, 0.5)');
-                    expect(polygon.primitive.classificationType).toBeFalsy();
+                    expect(polygon.primitive.entity.polygon.material.toString()).toEqual('(1, 0, 0, 0.5)');
+                    expect(polygon.primitive.entity.polygon.classificationType).toBeFalsy();
                     expect(polyline.id).toBe('feature-01:symbolizer-01:polyline');
                     expect(polyline.primitive.type).toBe('polyline');
                     expect(polyline.primitive.entity.polyline.classificationType).toBeFalsy();
@@ -800,7 +800,7 @@ describe('CesiumStyleParser', () => {
                     const [polygon, polyline] = styledFeatures;
                     expect(polygon.id).toBe('feature-01:symbolizer-01:polygon');
                     expect(polygon.primitive.type).toBe('polygon');
-                    expect(polygon.primitive.material.toString()).toEqual('(1, 0, 0, 0.5)');
+                    expect(polygon.primitive.entity.polygon.material.toString()).toEqual('(1, 0, 0, 0.5)');
                     expect(polyline.id).toBe('feature-01:symbolizer-01:polyline');
                     expect(polyline.primitive.type).toBe('polyline');
                     expect(polyline.primitive.entity.polyline.width).toBe(2);
@@ -865,8 +865,8 @@ describe('CesiumStyleParser', () => {
                     const [polygon, polyline] = styledFeatures;
                     expect(polygon.id).toBe('feature-01:symbolizer-01:polygon');
                     expect(polygon.primitive.type).toBe('polygon');
-                    expect(polygon.primitive.material.toString()).toEqual('(1, 0, 0, 0.5)');
-                    expect(polygon.primitive.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
+                    expect(polygon.primitive.entity.polygon.material.toString()).toEqual('(1, 0, 0, 0.5)');
+                    expect(polygon.primitive.entity.polygon.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
                     expect(polyline.id).toBe('feature-01:symbolizer-01:polyline');
                     expect(polyline.primitive.type).toBe('polyline');
                     expect(polyline.primitive.entity.polyline.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
@@ -987,8 +987,8 @@ describe('CesiumStyleParser', () => {
                 .then((styledFeatures) => {
                     expect(styledFeatures.length).toBe(1);
                     const [polygon] = styledFeatures;
-                    expect(polygon.primitive.height).toBe(10);
-                    expect(polygon.primitive.extrudedHeight).toBe(20);
+                    expect(polygon.primitive.entity.polygon.height).toBe(10);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(20);
                     done();
                 }).catch(done);
         });
@@ -1036,9 +1036,9 @@ describe('CesiumStyleParser', () => {
                 .then((styledFeatures) => {
                     expect(styledFeatures.length).toBe(1);
                     const [polygon] = styledFeatures;
-                    expect(polygon.primitive.height).toBe(undefined);
+                    expect(polygon.primitive.entity.polygon.height).toBe(undefined);
                     expect(Math.round(Cesium.Cartographic.fromCartesian(polygon.primitive.geometry[0][0]).height)).toBe(110);
-                    expect(polygon.primitive.extrudedHeight).toBe(120);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(120);
                     done();
                 }).catch(done);
         });
@@ -1086,9 +1086,9 @@ describe('CesiumStyleParser', () => {
                 .then((styledFeatures) => {
                     expect(styledFeatures.length).toBe(1);
                     const [polygon] = styledFeatures;
-                    expect(polygon.primitive.height).toBe(undefined);
+                    expect(polygon.primitive.entity.polygon.height).toBe(undefined);
                     expect(Math.round(Cesium.Cartographic.fromCartesian(polygon.primitive.geometry[0][0]).height)).toBe(100);
-                    expect(polygon.primitive.extrudedHeight).toBe(120);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(120);
                     done();
                 }).catch(done);
         });
@@ -1130,9 +1130,9 @@ describe('CesiumStyleParser', () => {
                 .then((styledFeatures) => {
                     expect(styledFeatures.length).toBe(1);
                     const [polygon] = styledFeatures;
-                    expect(polygon.primitive.height).toBe(undefined);
+                    expect(polygon.primitive.entity.polygon.height).toBe(undefined);
                     expect(Math.round(Cesium.Cartographic.fromCartesian(polygon.primitive.geometry[0][0]).height)).toBe(10);
-                    expect(polygon.primitive.extrudedHeight).toBe(30);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(30);
                     done();
                 }).catch(done);
         });
@@ -1180,9 +1180,9 @@ describe('CesiumStyleParser', () => {
                 .then((styledFeatures) => {
                     expect(styledFeatures.length).toBe(1);
                     const [polygon] = styledFeatures;
-                    expect(polygon.primitive.height).toBe(undefined);
+                    expect(polygon.primitive.entity.polygon.height).toBe(undefined);
                     expect(Math.round(Cesium.Cartographic.fromCartesian(polygon.primitive.geometry[0][0]).height)).toBe(110);
-                    expect(polygon.primitive.extrudedHeight).toBe(130);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(130);
                     done();
                 }).catch(done);
         });

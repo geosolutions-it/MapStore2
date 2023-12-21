@@ -521,34 +521,58 @@ const primitiveGeometryTypes = {
                     return computed.positions;
                 });
             })).then((geometry) => {
+                const extrusionParams = {
+                    // height will be computed on the geometry
+                    height: undefined,
+                    // in case of relative or clamp
+                    // extrusion will be relative to the height
+                    // so 0 value should be considered undefined
+                    extrudedHeight: extrudedHeight
+                        ? extrudedHeight + (
+                            extrudedHeight > 0
+                                ? maxHeight
+                                : minHeight
+                        )
+                        : undefined
+                };
                 return {
                     ...options,
                     primitive: {
                         ...primitive,
                         geometry,
-                        // height will be computed on the geometry
-                        height: undefined,
-                        // in case of relative or clamp
-                        // extrusion will be relative to the height
-                        // so 0 value should be considered undefined
-                        extrudedHeight: extrudedHeight
-                            ? extrudedHeight + (
-                                extrudedHeight > 0
-                                    ? maxHeight
-                                    : minHeight
-                            )
-                            : undefined
+                        ...(primitive?.entity?.polygon
+                            ? {
+                                entity: {
+                                    polygon: {
+                                        ...primitive?.entity?.polygon,
+                                        ...extrusionParams
+                                    }
+                                }
+                            }
+                            : extrusionParams)
                     }
                 };
             });
         }
+        const extrusionParams = {
+            ...(extrudedHeight !== null && { extrudedHeight }),
+            ...(height !== null && { height })
+        };
         return {
             ...options,
             primitive: {
                 ...primitive,
                 geometry: feature?.positions,
-                ...(extrudedHeight !== null && { extrudedHeight }),
-                ...(height !== null && { height })
+                ...(primitive?.entity?.polygon
+                    ? {
+                        entity: {
+                            polygon: {
+                                ...primitive?.entity?.polygon,
+                                ...extrusionParams
+                            }
+                        }
+                    }
+                    : extrusionParams)
             }
         };
     },
@@ -828,19 +852,23 @@ const symbolizerToPrimitives = {
                 type: 'polygon',
                 geometryType: 'polygon',
                 clampToGround: parsedSymbolizer.msClampToGround,
-                material: getCesiumColor({
-                    color: parsedSymbolizer.color,
-                    opacity: parsedSymbolizer.fillOpacity * globalOpacity
-                }),
-                perPositionHeight: !parsedSymbolizer.msClampToGround,
-                ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
-                    Cesium.ClassificationType.TERRAIN :
-                    parsedSymbolizer.msClassificationType === '3d' ?
-                        Cesium.ClassificationType.CESIUM_3D_TILE :
-                        Cesium.ClassificationType.BOTH} ),
-                arcType: parsedSymbolizer.msClampToGround
-                    ? Cesium.ArcType.GEODESIC
-                    : undefined
+                entity: {
+                    polygon: {
+                        material: getCesiumColor({
+                            color: parsedSymbolizer.color,
+                            opacity: parsedSymbolizer.fillOpacity * globalOpacity
+                        }),
+                        perPositionHeight: !parsedSymbolizer.msClampToGround,
+                        ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
+                            Cesium.ClassificationType.TERRAIN :
+                            parsedSymbolizer.msClassificationType === '3d' ?
+                                Cesium.ClassificationType.CESIUM_3D_TILE :
+                                Cesium.ClassificationType.BOTH} ),
+                        arcType: parsedSymbolizer.msClampToGround
+                            ? Cesium.ArcType.GEODESIC
+                            : undefined
+                    }
+                }
             },
             // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
             // this is a workaround to visualize the outline with the correct side
@@ -882,24 +910,28 @@ const symbolizerToPrimitives = {
             type: 'polygon',
             geometryType: 'circlePolygon',
             clampToGround: parsedSymbolizer.msClampToGround,
-            material: getCesiumColor({
-                color: parsedSymbolizer.color,
-                opacity: parsedSymbolizer.opacity * globalOpacity
-            }),
-            ...(parsedSymbolizer.geodesic
-                ? {
-                    perPositionHeight: !parsedSymbolizer.msClampToGround,
-                    ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
-                        Cesium.ClassificationType.TERRAIN :
-                        parsedSymbolizer.msClassificationType === '3d' ?
-                            Cesium.ClassificationType.CESIUM_3D_TILE :
-                            Cesium.ClassificationType.BOTH} ),
-                    arcType: Cesium.ArcType.GEODESIC
+            entity: {
+                polygon: {
+                    material: getCesiumColor({
+                        color: parsedSymbolizer.color,
+                        opacity: parsedSymbolizer.opacity * globalOpacity
+                    }),
+                    ...(parsedSymbolizer.geodesic
+                        ? {
+                            perPositionHeight: !parsedSymbolizer.msClampToGround,
+                            ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
+                                Cesium.ClassificationType.TERRAIN :
+                                parsedSymbolizer.msClassificationType === '3d' ?
+                                    Cesium.ClassificationType.CESIUM_3D_TILE :
+                                    Cesium.ClassificationType.BOTH} ),
+                            arcType: Cesium.ArcType.GEODESIC
+                        }
+                        : {
+                            perPositionHeight: true,
+                            arcType: undefined
+                        })
                 }
-                : {
-                    perPositionHeight: true,
-                    arcType: undefined
-                })
+            }
         },
         // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
         // this is a workaround to visualize the outline with the correct side
@@ -1019,7 +1051,18 @@ function getStyleFuncFromRules({
                         primitive: {
                             ...previousFeature?.primitive,
                             ...currentFeature?.primitive,
-                            geometry: previousFeature?.primitive?.geometry
+                            geometry: previousFeature?.primitive?.geometry,
+                            entity: {
+                                ...(Object.keys(currentFeature?.primitive?.entity || {}).reduce((acc, key) => {
+                                    return {
+                                        ...acc,
+                                        [key]: {
+                                            ...previousFeature?.primitive?.entity?.[key],
+                                            ...currentFeature?.primitive?.entity?.[key]
+                                        }
+                                    };
+                                }, {}))
+                            }
                         },
                         action: isSymbolizerChanged(previousFeature.parsedSymbolizer, currentFeature.parsedSymbolizer)
                             ? 'update'

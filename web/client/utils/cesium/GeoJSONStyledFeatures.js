@@ -52,6 +52,7 @@ const featureToCartesianPositions = (feature) => {
  * @param {number} options.opacity opacity of the layer
  * @param {boolean} options.queryable if false the features will not be queryable, default is true
  * @param {array} options.features array of valid geojson features
+ * @param {boolean} options.mergePolygonFeatures if true will merge all polygons with similar styles in a single primitive. This could help to reduce the draw call to the render
  */
 class GeoJSONStyledFeatures {
     constructor(options = {}) {
@@ -65,6 +66,7 @@ class GeoJSONStyledFeatures {
         this._entities = [];
         this._opacity = options.opacity ?? 1;
         this._queryable = options.queryable === undefined ? true : !!options.queryable;
+        this._mergePolygonFeatures = !!options?.mergePolygonFeatures;
         this._dataSource.entities.collectionChanged.addEventListener(() => {
             setTimeout(() => this._map.scene.requestRender(), 300);
         });
@@ -92,6 +94,19 @@ class GeoJSONStyledFeatures {
     }
     _getEntityOptions(primitive) {
         const { entity, geometry, orientation } = primitive;
+        if (entity.polygon) {
+            return {
+                polygon: {
+                    ...entity.polygon,
+                    hierarchy: new Cesium.PolygonHierarchy(
+                        geometry[0].map(cartesian => cartesian.clone()),
+                        geometry
+                            .filter((hole, idx) => idx > 0)
+                            .map(hole => hole.map((cartesian) => cartesian.clone()))
+                    )
+                }
+            };
+        }
         if (entity.polyline) {
             return {
                 polyline: {
@@ -136,9 +151,12 @@ class GeoJSONStyledFeatures {
         }
         return null;
     }
+    _filterEntities({ primitive }) {
+        return (this._mergePolygonFeatures && primitive?.entity?.polygon) ? false : !!primitive.entity;
+    }
     _updateEntities(newStyledFeatures, forceUpdate) {
-        const previousEntities = this._styledFeatures.filter(({ primitive }) => !!primitive.entity);
-        const entities = newStyledFeatures.filter(({ primitive }) => !!primitive.entity);
+        const previousEntities = this._styledFeatures.filter((feature) => this._filterEntities(feature));
+        const entities = newStyledFeatures.filter((feature) => this._filterEntities(feature));
         const previousIds = previousEntities.map(({ id }) => id);
         const currentIds = entities.map(({ id }) => id);
         const removeIds = previousIds
@@ -169,8 +187,11 @@ class GeoJSONStyledFeatures {
         this._entities = newEntities;
     }
     _updatePolygonPrimitive(newStyledFeatures, forceUpdate) {
+        const previousPolygonPrimitives = this._styledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !primitive.clampToGround);
         const polygonPrimitives = newStyledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !primitive.clampToGround);
-        const noActions = polygonPrimitives.length ? polygonPrimitives.every(({ action }) => !forceUpdate && action === 'none') : false;
+        const polygonPrimitivesIds = polygonPrimitives.map(({ id }) => id);
+        const removedPrimitives = previousPolygonPrimitives.filter(({ id }) => !polygonPrimitivesIds.includes(id));
+        const noActions = !removedPrimitives.length && polygonPrimitives.length ? polygonPrimitives.every(({ action }) => !forceUpdate && action === 'none') : false;
         if (noActions) {
             return;
         }
@@ -185,8 +206,8 @@ class GeoJSONStyledFeatures {
         }
         const groupByTranslucencyAndExtrusion = polygonPrimitives.reduce((acc, options) => {
             const { primitive } = options;
-            const { material } = primitive;
-            const key = `t:${material.alpha === 1},e:${primitive.extrudedHeight !== undefined ? 'true' : 'false'}`;
+            const { material, extrudedHeight } = primitive?.entity?.polygon || {};
+            const key = `t:${material.alpha === 1},e:${extrudedHeight !== undefined ? 'true' : 'false'}`;
             return {
                 ...acc,
                 [key]: [...(acc[key] || []), options]
@@ -196,6 +217,7 @@ class GeoJSONStyledFeatures {
             const styledFeatures = groupByTranslucencyAndExtrusion[key];
             const cesiumPrimitive = new Cesium.Primitive({
                 geometryInstances: styledFeatures.map(({ primitive, id }) => {
+                    const polygon = primitive?.entity?.polygon || {};
                     return new Cesium.GeometryInstance({
                         geometry: new Cesium.PolygonGeometry({
                             polygonHierarchy: new Cesium.PolygonHierarchy(
@@ -204,19 +226,19 @@ class GeoJSONStyledFeatures {
                                     .filter((hole, idx) => idx > 0)
                                     .map(hole => hole.map((cartesian) => cartesian.clone()))
                             ),
-                            arcType: primitive.arcType,
-                            perPositionHeight: primitive.height !== undefined ? false : primitive.perPositionHeight,
-                            ...(primitive.height !== undefined && { height: primitive.height }),
-                            ...(primitive.extrudedHeight !== undefined && { extrudedHeight: primitive.extrudedHeight }),
+                            arcType: polygon.arcType,
+                            perPositionHeight: polygon.height !== undefined ? false : polygon.perPositionHeight,
+                            ...(polygon.height !== undefined && { height: polygon.height }),
+                            ...(polygon.extrudedHeight !== undefined && { extrudedHeight: polygon.extrudedHeight }),
                             vertexFormat: Cesium.VertexFormat.POSITION_AND_NORMAL
                         }),
                         id,
                         attributes: {
                             color: new Cesium.ColorGeometryInstanceAttribute(
-                                primitive.material.red,
-                                primitive.material.green,
-                                primitive.material.blue,
-                                primitive.material.alpha
+                                polygon.material.red,
+                                polygon.material.green,
+                                polygon.material.blue,
+                                polygon.material.alpha
                             ),
                             // allow to click on multiple instances
                             show: new Cesium.ShowGeometryInstanceAttribute(true)
@@ -224,8 +246,8 @@ class GeoJSONStyledFeatures {
                     });
                 }),
                 appearance: new Cesium.PerInstanceColorAppearance({
-                    flat: styledFeatures[0].primitive?.extrudedHeight === undefined,
-                    translucent: styledFeatures[0].primitive?.material?.alpha !== 1
+                    flat: styledFeatures[0].primitive?.entity?.polygon?.extrudedHeight === undefined,
+                    translucent: styledFeatures[0].primitive?.entity?.polygon?.material?.alpha !== 1
                 }),
                 asynchronous: true
             });
@@ -237,8 +259,11 @@ class GeoJSONStyledFeatures {
         });
     }
     _updateGroundPolygonPrimitive(newStyledFeatures, forceUpdate) {
+        const previousGroundPolygonPrimitives = this._styledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !!primitive.clampToGround);
         const groundPolygonPrimitives = newStyledFeatures.filter(({ primitive }) => primitive.type === 'polygon' && !!primitive.clampToGround);
-        const noActions =  groundPolygonPrimitives.length ? groundPolygonPrimitives.every(({ action }) => !forceUpdate && action === 'none') : false;
+        const groundPolygonPrimitivesIds = groundPolygonPrimitives.map(({ id }) => id);
+        const removedPrimitives = previousGroundPolygonPrimitives.filter(({ id }) => !groundPolygonPrimitivesIds.includes(id));
+        const noActions = !removedPrimitives.length && groundPolygonPrimitives.length ? groundPolygonPrimitives.every(({ action }) => !forceUpdate && action === 'none') : false;
         if (noActions) {
             return;
         }
@@ -253,8 +278,8 @@ class GeoJSONStyledFeatures {
         }
         const groupByColorAndClassification = groundPolygonPrimitives.reduce((acc, options) => {
             const { primitive } = options;
-            const { material } = primitive;
-            const key = `r:${material.red},g:${material.green},b:${material.blue},a:${material.alpha},c:${primitive.classificationType}`;
+            const { material, classificationType } = primitive?.entity?.polygon || {};
+            const key = `r:${material.red},g:${material.green},b:${material.blue},a:${material.alpha},c:${classificationType}`;
             return {
                 ...acc,
                 [key]: [...(acc[key] || []), options]
@@ -264,33 +289,36 @@ class GeoJSONStyledFeatures {
         this._groundPolygonPrimitives = Object.keys(groupByColorAndClassification).map((key) => {
             const styledFeatures = groupByColorAndClassification[key];
             const cesiumPrimitive = new Cesium.GroundPrimitive({
-                classificationType: styledFeatures[0].primitive.classificationType,
-                geometryInstances: styledFeatures.map(({ primitive, id }) => new Cesium.GeometryInstance({
-                    geometry: new Cesium.PolygonGeometry({
-                        polygonHierarchy: new Cesium.PolygonHierarchy(
-                            primitive.geometry[0].map(cartesian => cartesian.clone()),
-                            primitive.geometry
-                                .filter((hole, idx) => idx > 0)
-                                .map(hole => hole.map((cartesian) => cartesian.clone()))
-                        ),
-                        arcType: primitive.arcType,
-                        perPositionHeight: primitive.perPositionHeight
-                    }),
-                    id,
-                    attributes: {
-                        color: new Cesium.ColorGeometryInstanceAttribute(
-                            primitive.material.red,
-                            primitive.material.green,
-                            primitive.material.blue,
-                            primitive.material.alpha
-                        ),
-                        // allow to click on multiple instances
-                        show: new Cesium.ShowGeometryInstanceAttribute(true)
-                    }
-                })),
+                classificationType: styledFeatures[0].primitive?.entity?.polygon?.classificationType,
+                geometryInstances: styledFeatures.map(({ primitive, id }) => {
+                    const polygon = primitive?.entity?.polygon || {};
+                    return new Cesium.GeometryInstance({
+                        geometry: new Cesium.PolygonGeometry({
+                            polygonHierarchy: new Cesium.PolygonHierarchy(
+                                primitive.geometry[0].map(cartesian => cartesian.clone()),
+                                primitive.geometry
+                                    .filter((hole, idx) => idx > 0)
+                                    .map(hole => hole.map((cartesian) => cartesian.clone()))
+                            ),
+                            arcType: polygon.arcType,
+                            perPositionHeight: polygon.perPositionHeight
+                        }),
+                        id,
+                        attributes: {
+                            color: new Cesium.ColorGeometryInstanceAttribute(
+                                polygon.material.red,
+                                polygon.material.green,
+                                polygon.material.blue,
+                                polygon.material.alpha
+                            ),
+                            // allow to click on multiple instances
+                            show: new Cesium.ShowGeometryInstanceAttribute(true)
+                        }
+                    });
+                }),
                 appearance: new Cesium.PerInstanceColorAppearance({
                     flat: true,
-                    translucent: styledFeatures[0].primitive?.material?.alpha !== 1
+                    translucent: styledFeatures[0].primitive?.entity?.polygon?.material?.alpha !== 1
                 }),
                 asynchronous: true
             });
@@ -321,9 +349,10 @@ class GeoJSONStyledFeatures {
                 })
                     .then((styledFeatures) => {
                         this._updateEntities(styledFeatures, forceUpdate);
-                        this._updatePolygonPrimitive(styledFeatures, forceUpdate);
-                        this._updateGroundPolygonPrimitive(styledFeatures, forceUpdate);
-
+                        if (this._mergePolygonFeatures) {
+                            this._updatePolygonPrimitive(styledFeatures, forceUpdate);
+                            this._updateGroundPolygonPrimitive(styledFeatures, forceUpdate);
+                        }
                         this._styledFeatures = [...styledFeatures];
                         setTimeout(() => this._map.scene.requestRender());
                     });
