@@ -42,9 +42,7 @@ import {
     checkIdentifyIsMounted,
     IDENTIFY_IS_MOUNTED,
     onInitPlugin,
-    INIT_PLUGIN,
-    INIT_IDENTIFY_HIGHLIGHT,
-    initiateOrResetHighlight
+    INIT_PLUGIN
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
@@ -167,11 +165,5 @@ describe('Test correctness of the map actions', () => {
     });
     it('onInitPlugin', () => {
         expect(onInitPlugin({cfg1: false})).toEqual({type: INIT_PLUGIN, cfg: {cfg1: false} });
-    });
-    it('initiateOrResetHighlight if highlight default value equal true', () => {
-        expect(initiateOrResetHighlight(true)).toEqual({type: INIT_IDENTIFY_HIGHLIGHT, identifyHighlight: true });
-    });
-    it('initiateOrResetHighlight if highlight default value equal false', () => {
-        expect(initiateOrResetHighlight(false)).toEqual({type: INIT_IDENTIFY_HIGHLIGHT, identifyHighlight: false });
     });
 });

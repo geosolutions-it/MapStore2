@@ -79,7 +79,7 @@ export const identifyLifecycle = compose(
                 setShowInMapPopup = () => {},
                 checkIdentifyIsMounted = () => {},
                 onInitPlugin = () => {},
-                initiateOrResetHighlight = () => {}
+                pluginCfg = {}
             } = this.props;
 
             // Initialize plugin configuration
@@ -88,9 +88,9 @@ export const identifyLifecycle = compose(
                 configuration: {
                     maxItems
                 },
-                showAllResponses
+                showAllResponses,
+                highlight: pluginCfg?.highlightEnabledFromTheStart || false
             });
-            initiateOrResetHighlight(this.props?.pluginCfg?.identifyHighlight || false);
             if (enabled || showInMapPopup) {
                 changeMousePointer('pointer');
                 checkIdentifyIsMounted(true);

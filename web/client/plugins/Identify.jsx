@@ -36,8 +36,7 @@ import {
     updateCenterToMarker,
     updateFeatureInfoClickPoint,
     checkIdentifyIsMounted,
-    onInitPlugin,
-    initiateOrResetHighlight
+    onInitPlugin
 } from '../actions/mapInfo';
 import DefaultViewerComp from '../components/data/identify/DefaultViewer';
 import { defaultViewerDefaultProps, defaultViewerHandlers } from '../components/data/identify/enhancers/defaultViewer';
@@ -197,7 +196,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.dock {bool} true shows dock panel, false shows modal
  * @prop cfg.draggable {boolean} draggable info window, when modal
  * @prop cfg.showHighlightFeatureButton {boolean} show the highlight feature button if the interrogation returned valid features (openlayers only)
- * @prop cfg.identifyHighlight {boolean} the highlight feature button will be activated by default if true
+ * @prop cfg.highlightEnabledFromTheStart {boolean} the highlight feature button will be activated by default if true
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the header of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
@@ -227,7 +226,6 @@ const identifyDefaultProps = defaultProps({
 const IdentifyPlugin = compose(
     connect(selector, {
         onInitPlugin,
-        initiateOrResetHighlight,
         purgeResults: purgeMapInfoResults,
         closeIdentify,
         onSubmitClickPoint: updateFeatureInfoClickPoint,

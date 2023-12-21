@@ -38,7 +38,6 @@ export const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 export const SET_SHOW_IN_MAP_POPUP = "IDENTIFY:SET_SHOW_IN_MAP_POPUP";
 export const IDENTIFY_IS_MOUNTED = "IDENTIFY:IDENTIFY_IS_MOUNTED";
 export const INIT_PLUGIN = 'IDENTIFY:INIT_PLUGIN';
-export const INIT_IDENTIFY_HIGHLIGHT = 'IDENTIFY:INIT_IDENTIFY_HIGHLIGHT';
 
 export const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
 
@@ -289,9 +288,3 @@ export const checkIdentifyIsMounted = (isMounted)=> ({
 });
 
 export const onInitPlugin = (cfg) => ({type: INIT_PLUGIN, cfg});
-/**
- * Action performed when the identify component opened to initiate the default value of highight
- * @param {boolean} highlight
- * @returns {{type: string, identifyHighlight: boolean}}
- */
-export const initiateOrResetHighlight = (highlight) => ({type: INIT_IDENTIFY_HIGHLIGHT, identifyHighlight: highlight});

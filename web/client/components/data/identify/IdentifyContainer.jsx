@@ -73,7 +73,7 @@ export default props => {
         validator = () => null,
         disableCoordinatesRow,
         disableInfoAlert,
-        initiateOrResetHighlight,
+        onInitPlugin = () => {},
         pluginCfg
     } = props;
     const latlng = point && point.latlng || null;
@@ -123,7 +123,9 @@ export default props => {
             draggable={draggable}
             onClose={() => {
                 onClose();
-                initiateOrResetHighlight(pluginCfg?.identifyHighlight || false);
+                onInitPlugin({
+                    highlight: pluginCfg?.highlightEnabledFromTheStart || false
+                });
             }}
             dock={dock}
             style={dockStyle}
