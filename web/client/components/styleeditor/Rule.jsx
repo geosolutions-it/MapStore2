@@ -55,6 +55,9 @@ function RuleCard({
             ref={elementRef}
             className={`ms-style-rule${dropTargetClassName}`}>
             <div className="ms-style-rule-head">
+                {draggable && <div className="ms-style-rule-grab-handle">
+                    <Glyphicon glyph="grab-handle"/>
+                </div>}
                 <Button
                     className="ms-rule-collapse"
                     onClick={() => onCollapse(!collapsed)}
@@ -69,9 +72,6 @@ function RuleCard({
                 <div className="ms-style-rule-head-tools">
                     {tools}
                 </div>
-                {draggable && <div className="ms-style-rule-grab-handle">
-                    <Glyphicon glyph="grab-handle"/>
-                </div>}
             </div>
             {errorId && <Alert bsStyle="danger">
                 <Message msgId={errorId} msgParams={msgParams} />
