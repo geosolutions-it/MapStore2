@@ -9,6 +9,7 @@
 import axios from '../libs/ajax';
 import { convertRadianToDegrees } from '../utils/CoordinatesUtils';
 import { METERS_PER_UNIT } from '../utils/MapUtils';
+import { logError } from '../utils/DebugUtils';
 
 // converts the boundingVolume of the root tileset to a valid layer bbox
 function tilesetToBoundingBox(Cesium, tileset) {
@@ -141,7 +142,7 @@ export const getCapabilities = (url) => {
         .then(({ data }) => {
             return extractCapabilities(data).then((properties) => ({ tileset: data, ...properties }));
         }).catch((e) => {
-            console.error(e);
+            logError(e);
             return { tileset: {}};
         });
 };
