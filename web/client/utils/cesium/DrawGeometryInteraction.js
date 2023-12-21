@@ -215,7 +215,11 @@ class CesiumDrawGeometryInteraction {
         this._coordinatesLength = options?.coordinatesLength;
         this._geodesic = options?.geodesic;
         this._sampleTerrain = options?.sampleTerrain;
-        this._getObjectsToExcludeOnPick = options?.getObjectsToExcludeOnPick;
+        this._getObjectsToExcludeOnPick = () => [
+            ...(options?.getObjectsToExcludeOnPick ? options.getObjectsToExcludeOnPick() : []),
+            this._dynamicPrimitivesCollection,
+            this._dynamicBillboardCollection
+        ];
         this._depthTestAgainstTerrain = options?.depthTestAgainstTerrain;
         this._getPositionInfo =  options?.getPositionInfo || defaultGetPositionInfo;
 
