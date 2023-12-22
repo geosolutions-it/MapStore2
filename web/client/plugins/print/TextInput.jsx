@@ -17,7 +17,7 @@ function getType(type) {
     return {componentClass: type};
 }
 
-export const TextInput = ({spec, property, label, placeholder, actions, onChangeParameter, path = "params.", type = "text", additionalProperty = true}, context) => {
+export const TextInput = ({spec, property, label, placeholder, actions, onChangeParameter, path = "params.", type = "text", additionalProperty = true, disabled}, context) => {
     const fullProperty = path + property;
     useEffect(() => {
         if (additionalProperty) actions.addParameter(property, get(spec, fullProperty) ?? "");
@@ -26,7 +26,7 @@ export const TextInput = ({spec, property, label, placeholder, actions, onChange
         <FormGroup>
             {label && <ControlLabel>{getMessageById(context.messages, label)}</ControlLabel> || null}
             <FormControl {...getType(type)} value={get(spec, fullProperty)} placeholder={placeholder && getMessageById(context.messages, placeholder)}
-                onChange={(e) => onChangeParameter(fullProperty, e.target.value)}/>
+                onChange={(e) => onChangeParameter(fullProperty, e.target.value)} disabled={disabled}/>
         </FormGroup>
     );
 };

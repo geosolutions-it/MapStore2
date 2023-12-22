@@ -720,9 +720,11 @@
             },
             "legend": {
                 "font": "Labels Config:",
-                "forceLabels": "Force Labels:",
-                "antiAliasing": "Font Anti Aliasing:",
-                "iconsSize": "Icons size:",
+                "forceLabels": "Force Labels",
+                "antiAliasing": "Font Anti Aliasing",
+                "forceIconsSize": "Override icons size",
+                "iconsWidth": "Icons width:",
+                "iconsHeight": "Icons height:",
                 "dpi": "Dpi:"
             },
             "rotation": "Rotation",

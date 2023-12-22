@@ -263,4 +263,10 @@ describe('Test the print reducer', () => {
         expect(state.map.layers[0].title).toBe('Layer001');
         expect(state.map.projection).toBe('EPSG:4326');
     });
+    it('default legend options', () => {
+        const state = print(undefined, {});
+        expect(state.spec.iconsWidth).toBe(24);
+        expect(state.spec.iconsWidth).toBe(24);
+        expect(state.spec.forceIconsSize).toBeFalsy();
+    });
 });

@@ -720,9 +720,11 @@
             },
             "legend": {
                 "font": "Configuration des étiquettes :",
-                "forceLabels": "Forcer les étiquettes :",
-                "antiAliasing": "Anti crénelage des polices :",
-                "iconsSize": "Taille d'icône :",
+                "forceLabels": "Forcer les étiquettes",
+                "antiAliasing": "Anti crénelage des polices",
+                "forceIconsSize": "Remplacer la taille des icônes",
+                "iconsWidth": "Largeur des icônes :",
+                "iconsHeight": "Hauteur des icônes :",
                 "dpi": "Ppp :"
             },
             "rotation": "Rotation",

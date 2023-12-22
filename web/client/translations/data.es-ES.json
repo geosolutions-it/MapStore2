@@ -720,9 +720,11 @@
             },
             "legend": {
                 "font": "Configuración de las etiquetas:",
-                "forceLabels": "Forzar las etiquetas:",
-                "antiAliasing": "Fuentes Anti Aliasing:",
-                "iconsSize": "Tamaño de los iconos:",
+                "forceLabels": "Forzar las etiquetas",
+                "antiAliasing": "Fuentes Anti Aliasing",
+                "forceIconsSize": "Anular el tamaño de los iconos",
+                "iconsWidth": "Ancho de los iconos:",
+                "iconsHeight": "Altura de los iconos:",
                 "dpi": "ppp:"
             },
             "rotation": "Rotation",
