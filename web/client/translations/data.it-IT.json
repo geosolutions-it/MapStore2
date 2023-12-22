@@ -2600,11 +2600,11 @@
             "msTranslateX": "Offset x",
             "msTranslateY": "Offset y",
             "geometryHeight": "Altezza della geometria",
-            "msExtrusionRelativeToPolygon": "Estrusione relativa al poligono",
+            "msExtrusionRelativeToGeometry": "Estrusione relativa alla geometria",
             "msExtrudedHeight": "Altezza estrusa",
-            "msExtrudedShapeName": "Forma estrusa",
-            "msExtrudedShapeRadius": "Raggio della forma estrusa",
-            "msExtrusionColor": "Colore estrusione"
+            "msExtrusionColor": "Colore estrusione",
+            "msExtrusionType": "Tipo estrusione",
+            "wall": "Muro"
         },
         "playback": {
             "settings": {

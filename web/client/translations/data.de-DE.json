@@ -2637,11 +2637,11 @@
             "msTranslateX": "Versatz x",
             "msTranslateY": "Versatz y",
             "geometryHeight": "Geometriehöhe",
-            "msExtrusionRelativeToPolygon": "Extrusion relativ zum Polygon",
+            "msExtrusionRelativeToGeometry": "Extrusion relativ zur Geometrie",
             "msExtrudedHeight": "Extrudierte Höhe",
-            "msExtrudedShapeName": "Extrudierte Form",
-            "msExtrudedShapeRadius": "Extrudierter Formradius",
-            "msExtrusionColor": "Extrusionsfarbe"
+            "msExtrusionColor": "Extrusionsfarbe",
+            "msExtrusionType": "Extrusionstyp",
+            "wall": "Wand"
         },
         "playback": {
             "settings": {

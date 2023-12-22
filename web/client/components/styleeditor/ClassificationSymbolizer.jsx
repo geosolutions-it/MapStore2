@@ -29,6 +29,7 @@ function ClassificationSymbolizer({
     config,
     supportedSymbolizerMenuOptions,
     fonts,
+    enableFieldExpression,
     ...props
 }) {
 
@@ -106,7 +107,8 @@ function ClassificationSymbolizer({
                     bands,
                     method,
                     methodEdit: props?.methodEdit,
-                    fonts
+                    fonts,
+                    enableFieldExpression
                 }}
                 params={mergedParams}
                 onChange={(values) => onUpdate({

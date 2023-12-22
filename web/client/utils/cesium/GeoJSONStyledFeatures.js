@@ -93,7 +93,7 @@ class GeoJSONStyledFeatures {
         };
     }
     _getEntityOptions(primitive) {
-        const { entity, geometry, orientation } = primitive;
+        const { entity, geometry, orientation, minimumHeights, maximumHeights } = primitive;
         if (entity.polygon) {
             return {
                 polygon: {
@@ -104,6 +104,16 @@ class GeoJSONStyledFeatures {
                             .filter((hole, idx) => idx > 0)
                             .map(hole => hole.map((cartesian) => cartesian.clone()))
                     )
+                }
+            };
+        }
+        if (entity.wall) {
+            return {
+                wall: {
+                    ...entity.wall,
+                    positions: geometry[0],
+                    minimumHeights: minimumHeights?.[0],
+                    maximumHeights: maximumHeights?.[0]
                 }
             };
         }

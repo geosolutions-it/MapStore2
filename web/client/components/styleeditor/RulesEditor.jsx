@@ -372,6 +372,7 @@ const RulesEditor = forwardRef(({
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     onReplace={handleReplaceRule}
                                     format={format}
+                                    enableFieldExpression={enableFieldExpression}
                                 />
                                 : symbolizers.map(({ kind = '', symbolizerId, ...properties }) => {
                                     const { params, glyph, hideMenu } = getSymbolizerInfo(kind);

@@ -2609,11 +2609,11 @@
             "msTranslateX": "Translate x",
             "msTranslateY": "Translate y",
             "geometryHeight": "Geometry height",
-            "msExtrusionRelativeToPolygon": "Extrusion relative to polygon",
+            "msExtrusionRelativeToGeometry": "Extrusion relative to geometry",
             "msExtrudedHeight": "Extruded height",
-            "msExtrudedShapeName": "Extruded shape",
-            "msExtrudedShapeRadius": "Extruded shape radius",
-            "msExtrusionColor": "Extrusion color"
+            "msExtrusionColor": "Extrusion color",
+            "msExtrusionType": "Extrusion type",
+            "wall": "Wall"
         },
         "playback": {
             "settings": {

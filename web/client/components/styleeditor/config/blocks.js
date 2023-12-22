@@ -207,9 +207,9 @@ const polygon3dExtrusion = ({ isDisabled }) => ({
         placeholderId: 'styleeditor.geometryHeight',
         isDisabled: (value, properties) => isDisabled(value, properties) || properties?.msHeightReference === 'clamp'
     }),
-    msExtrusionRelativeToPolygon: property.bool({
-        key: 'msExtrusionRelativeToPolygon',
-        label: 'styleeditor.msExtrusionRelativeToPolygon',
+    msExtrusionRelativeToGeometry: property.bool({
+        key: 'msExtrusionRelativeToGeometry',
+        label: 'styleeditor.msExtrusionRelativeToGeometry',
         isDisabled
     }),
     msExtrudedHeight: property.number({
@@ -222,25 +222,49 @@ const polygon3dExtrusion = ({ isDisabled }) => ({
 });
 
 const line3dExtrusion = ({ isDisabled }) => ({
-    msExtrudedShapeName: property.shape({
-        label: 'styleeditor.msExtrudedShapeName',
-        key: 'msExtrudedShapeName',
-        isDisabled,
-        excludeSvg: true,
-        options: ['Circle', 'Square', 'Triangle', 'Star', 'Cross']
+    msHeightReference: property.msHeightReference({
+        key: 'msHeightReference',
+        label: "styleeditor.heightReferenceFromGround",
+        isDisabled
     }),
-    msExtrudedShapeRadius: property.number({
-        key: 'msExtrudedShapeRadius',
-        label: 'styleeditor.msExtrudedShapeRadius',
-        fallbackValue: 0,
-        min: 0,
+    msHeight: property.number({
+        key: 'msHeight',
+        label: 'styleeditor.height',
         uom: 'm',
+        placeholderId: 'styleeditor.geometryHeight',
+        isDisabled: (value, properties) => isDisabled(value, properties) || properties?.msHeightReference === 'clamp'
+    }),
+    msExtrusionRelativeToGeometry: property.bool({
+        key: 'msExtrusionRelativeToGeometry',
+        label: 'styleeditor.msExtrusionRelativeToGeometry',
+        isDisabled: (value, properties) => isDisabled(value, properties) || !!properties?.msExtrusionType
+    }),
+    msExtrudedHeight: property.number({
+        key: 'msExtrudedHeight',
+        label: 'styleeditor.msExtrudedHeight',
+        uom: 'm',
+        fallbackValue: 0,
         isDisabled
     }),
     msExtrusionColor: property.color({
         key: 'msExtrusionColor',
         opacityKey: 'msExtrusionOpacity',
         label: 'styleeditor.msExtrusionColor',
+        isDisabled
+    }),
+    msExtrusionType: property.select({
+        key: 'msExtrusionType',
+        label: 'styleeditor.msExtrusionType',
+        setValue: (value) => {
+            return value || '';
+        },
+        getOptions: () => {
+            return [
+                { value: '', labelId: 'styleeditor.wall' },
+                { value: 'Circle', labelId: 'styleeditor.circle' },
+                { value: 'Square', labelId: 'styleeditor.square' }
+            ];
+        },
         isDisabled
     })
 });
@@ -817,11 +841,13 @@ const getBlocks = ({
                     ramp: property.colorRamp({
                         key: 'ramp',
                         label: 'styleeditor.colorRamp',
+                        disablePropertySelection: true,
                         getOptions: ({ getColors }) => getColors()
                     }),
                     reverse: property.bool({
                         key: 'reverse',
                         label: 'styleeditor.reverse',
+                        disablePropertySelection: true,
                         isDisabled: (value, properties) =>
                             properties?.ramp === 'custom'
                             || properties?.method === 'customInterval'
@@ -829,6 +855,7 @@ const getBlocks = ({
                     attribute: property.select({
                         key: 'attribute',
                         label: 'styleeditor.attribute',
+                        disablePropertySelection: true,
                         isValid: ({ value }) => value !== undefined,
                         getOptions: ({ attributes }) => {
                             return attributes?.map((option) => ({
@@ -841,6 +868,7 @@ const getBlocks = ({
                     method: property.select({
                         key: 'method',
                         label: 'styleeditor.method',
+                        disablePropertySelection: true,
                         isDisabled: (value, properties, {attributes})=>
                             attributes?.filter(({label}) => label === properties?.attribute)?.[0]?.type === 'string'
                             && properties?.method !== 'customInterval',
@@ -865,6 +893,7 @@ const getBlocks = ({
                     }),
                     intervals: property.intervals({
                         label: 'styleeditor.intervals',
+                        disablePropertySelection: true,
                         isDisabled: (value, properties) =>
                             includes(['customInterval', 'uniqueInterval'], properties?.method)
                     })
@@ -878,7 +907,8 @@ const getBlocks = ({
                         return {
                             fillOpacity: property.opacity({
                                 key: 'fillOpacity',
-                                label: 'styleeditor.opacity'
+                                label: 'styleeditor.opacity',
+                                disablePropertySelection: true
                             }),
                             ...omit(symbolizerBlock[symbolizerKind]?.params, ['color'])
                         };
@@ -886,7 +916,8 @@ const getBlocks = ({
                         return {
                             opacity: property.opacity({
                                 key: 'opacity',
-                                label: 'styleeditor.opacity'
+                                label: 'styleeditor.opacity',
+                                disablePropertySelection: true
                             }),
                             ...omit(symbolizerBlock[symbolizerKind]?.params, ['color'])
                         };
@@ -894,7 +925,8 @@ const getBlocks = ({
                         return {
                             fillOpacity: property.opacity({
                                 key: 'fillOpacity',
-                                label: 'styleeditor.opacity'
+                                label: 'styleeditor.opacity',
+                                disablePropertySelection: true
                             }),
                             ...omit(symbolizerBlock[symbolizerKind]?.params, ['color'])
                         };

@@ -82,7 +82,7 @@ const getPositionsRelativeToTerrain = ({
         let maxSampledHeight = -Infinity;
         const newPositions = cartographicPositions.map((cartographic, idx) => {
             const originalHeight = originalHeights[idx] || 0;
-            const sampledHeight = cartographic.height || 0;
+            const sampledHeight = heightReference === 'none' ? 0 : cartographic.height || 0;
             const height = computeHeightReference(originalHeight, sampledHeight);
             minHeight = height < minHeight ? height : minHeight;
             maxHeight = height > maxHeight ? height : maxHeight;
@@ -253,7 +253,7 @@ const anchorToOrigin = (anchor) => {
     }
 };
 
-const getVolumeShape = (shape = 'Circle', radius = 1) => {
+const getVolumeShape = (shape = 'Square', radius = 1) => {
     if (shape === 'Circle') {
         const positions = [];
         for (let i = 0; i < 360; i++) {
@@ -273,58 +273,6 @@ const getVolumeShape = (shape = 'Circle', radius = 1) => {
             new Cesium.Cartesian2(radius, -radius),
             new Cesium.Cartesian2(radius, radius),
             new Cesium.Cartesian2(-radius, radius)
-        ];
-    }
-    if (shape === 'Triangle') {
-        const h = Math.sqrt(3) * radius;
-        const bc = h / 3;
-        const marginY = (radius * 2 - h) / 2;
-        return [
-            new Cesium.Cartesian2(0, marginY + 2 * bc),
-            new Cesium.Cartesian2(radius, -(marginY + bc)),
-            new Cesium.Cartesian2(-radius, -(marginY + bc))
-        ];
-    }
-    if (shape === 'Star') {
-        const spikes = 5;
-        const outerRadius = radius;
-        const innerRadius = radius / 2;
-        let rot = Math.PI / 2;
-        let x = 0;
-        let y = 0;
-        const step = Math.PI / spikes;
-        const positions = [];
-        for (let i = 0; i < spikes; i++) {
-            x = Math.cos(rot) * outerRadius;
-            y = Math.sin(rot) * outerRadius;
-            positions.push(new Cesium.Cartesian2(x, y));
-            rot += step;
-
-            x = Math.cos(rot) * innerRadius;
-            y = Math.sin(rot) * innerRadius;
-            positions.push(new Cesium.Cartesian2(x, y));
-            rot += step;
-        }
-        return positions;
-    }
-    if (shape === 'Cross') {
-        const percentage = 0.2;
-        const w = (radius * 2) * percentage;
-        const wm = w / 2;
-        const rm = radius;
-        return [
-            new Cesium.Cartesian2(-wm, -rm),
-            new Cesium.Cartesian2(wm, -rm),
-            new Cesium.Cartesian2(wm, -wm),
-            new Cesium.Cartesian2(rm, -wm),
-            new Cesium.Cartesian2(rm, wm),
-            new Cesium.Cartesian2(wm, wm),
-            new Cesium.Cartesian2(wm, rm),
-            new Cesium.Cartesian2(-wm, rm),
-            new Cesium.Cartesian2(-wm, wm),
-            new Cesium.Cartesian2(-rm, wm),
-            new Cesium.Cartesian2(-rm, -wm),
-            new Cesium.Cartesian2(-wm, -wm)
         ];
     }
     return [];
@@ -472,39 +420,9 @@ const primitiveGeometryTypes = {
     },
     polyline: (options, { map, sampleTerrain }) => {
         const { feature, primitive, parsedSymbolizer } = options;
-        if ((parsedSymbolizer.msHeightReference || 'none') !== 'none') {
-            const msHeight = getNumberAttributeValue(parsedSymbolizer.msHeight);
-            return Promise.all(feature?.positions.map((positions) => {
-                return getPositionsRelativeToTerrain({
-                    map,
-                    positions,
-                    heightReference: parsedSymbolizer.msHeightReference,
-                    sampleTerrain,
-                    initialHeight: msHeight
-                }).then((computed) => computed.positions);
-            })).then((geometry) => {
-                return {
-                    ...options,
-                    primitive: {
-                        ...primitive,
-                        geometry
-                    }
-                };
-            });
-        }
-        return {
-            ...options,
-            primitive: {
-                ...primitive,
-                geometry: feature?.positions
-            }
-        };
-    },
-    polygon: (options, { map, sampleTerrain }) => {
-        const { feature, primitive, parsedSymbolizer } = options;
         const extrudedHeight = getNumberAttributeValue(parsedSymbolizer.msExtrudedHeight);
         const height = getNumberAttributeValue(parsedSymbolizer.msHeight);
-        if ((parsedSymbolizer.msHeightReference || 'none') !== 'none' || !!parsedSymbolizer.msExtrusionRelativeToPolygon) {
+        if (height !== null || !!parsedSymbolizer.msExtrusionRelativeToGeometry) {
             let minHeight = Infinity;
             let maxHeight = -Infinity;
             return Promise.all(feature?.positions.map((positions) => {
@@ -515,7 +433,78 @@ const primitiveGeometryTypes = {
                     sampleTerrain,
                     initialHeight: height
                 }).then((computed) => {
-                    const computedHeight = computed[parsedSymbolizer.msExtrusionRelativeToPolygon ? 'height' : 'sampledHeight'];
+                    const computedHeight = computed[parsedSymbolizer.msExtrusionRelativeToGeometry ? 'height' : 'sampledHeight'];
+                    minHeight = computedHeight.min < minHeight ? computedHeight.min : minHeight;
+                    maxHeight = computedHeight.max > maxHeight ? computedHeight.max : maxHeight;
+                    return computed.positions;
+                });
+            })).then((geometry) => {
+                return {
+                    ...options,
+                    primitive: {
+                        ...primitive,
+                        geometry,
+                        // in case of relative or clamp
+                        // extrusion will be relative to the height
+                        // so 0 value should be considered undefined
+                        extrudedHeight: extrudedHeight
+                            ? extrudedHeight + (
+                                extrudedHeight > 0
+                                    ? maxHeight
+                                    : minHeight
+                            )
+                            : undefined
+                    }
+                };
+            });
+        }
+        return {
+            ...options,
+            primitive: {
+                ...primitive,
+                geometry: feature?.positions,
+                ...(extrudedHeight !== null && { extrudedHeight })
+            }
+        };
+    },
+    wall: (options, configs) => {
+        return Promise.resolve(primitiveGeometryTypes.polyline(options, configs))
+            .then(({ primitive }) => {
+                return {
+                    ...options,
+                    primitive: {
+                        ...primitive,
+                        geometry: primitive?.geometry,
+                        minimumHeights: primitive?.geometry?.map((positions) => {
+                            return positions.map((cartesian) => {
+                                return Cesium.Cartographic.fromCartesian(cartesian).height;
+                            });
+                        }),
+                        maximumHeights: primitive?.geometry?.map((positions) => {
+                            return positions.map(() => {
+                                return primitive.extrudedHeight;
+                            });
+                        })
+                    }
+                };
+            });
+    },
+    polygon: (options, { map, sampleTerrain }) => {
+        const { feature, primitive, parsedSymbolizer } = options;
+        const extrudedHeight = getNumberAttributeValue(parsedSymbolizer.msExtrudedHeight);
+        const height = getNumberAttributeValue(parsedSymbolizer.msHeight);
+        if ((parsedSymbolizer.msHeightReference || 'none') !== 'none' || !!parsedSymbolizer.msExtrusionRelativeToGeometry) {
+            let minHeight = Infinity;
+            let maxHeight = -Infinity;
+            return Promise.all(feature?.positions.map((positions) => {
+                return getPositionsRelativeToTerrain({
+                    map,
+                    positions,
+                    heightReference: parsedSymbolizer.msHeightReference,
+                    sampleTerrain,
+                    initialHeight: height
+                }).then((computed) => {
+                    const computedHeight = computed[parsedSymbolizer.msExtrusionRelativeToGeometry ? 'height' : 'sampledHeight'];
                     minHeight = computedHeight.min < minHeight ? computedHeight.min : minHeight;
                     maxHeight = computedHeight.max > maxHeight ? computedHeight.max : maxHeight;
                     return computed.positions;
@@ -556,7 +545,10 @@ const primitiveGeometryTypes = {
         }
         const extrusionParams = {
             ...(extrudedHeight !== null && { extrudedHeight }),
-            ...(height !== null && { height })
+            ...(height !== null && {
+                height,
+                perPositionHeight: false
+            })
         };
         return {
             ...options,
@@ -830,7 +822,19 @@ const symbolizerToPrimitives = {
                     }
                 }
             }] : []),
-            ...((!parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedShapeName && parsedSymbolizer.msExtrudedShapeRadius) ? [{
+            ...((!parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedHeight && !parsedSymbolizer.msExtrusionType) ? [{
+                type: 'polylineVolume',
+                geometryType: 'wall',
+                entity: {
+                    wall: {
+                        material: getCesiumColor({
+                            color: parsedSymbolizer.msExtrusionColor || '#000000',
+                            opacity: (parsedSymbolizer.msExtrusionOpacity ?? 1) * globalOpacity
+                        })
+                    }
+                }
+            }] : []),
+            ...((!parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedHeight && parsedSymbolizer.msExtrusionType) ? [{
                 type: 'polylineVolume',
                 geometryType: 'polyline',
                 entity: {
@@ -839,7 +843,7 @@ const symbolizerToPrimitives = {
                             color: parsedSymbolizer.msExtrusionColor || '#000000',
                             opacity: (parsedSymbolizer.msExtrusionOpacity ?? 1) * globalOpacity
                         }),
-                        shape: getVolumeShape(parsedSymbolizer.msExtrudedShapeName, parsedSymbolizer.msExtrudedShapeRadius)
+                        shape: getVolumeShape(parsedSymbolizer.msExtrusionType, parsedSymbolizer.msExtrudedHeight / 2)
                     }
                 }
             }] : [])
@@ -977,7 +981,8 @@ const isGeometryChanged = (previousSymbolizer, currentSymbolizer) => {
         || previousSymbolizer?.msHeight !== currentSymbolizer?.msHeight
         || previousSymbolizer?.msHeightReference !== currentSymbolizer?.msHeightReference
         || previousSymbolizer?.msExtrudedHeight !== currentSymbolizer?.msExtrudedHeight
-        || previousSymbolizer?.msExtrusionRelativeToPolygon !== currentSymbolizer?.msExtrusionRelativeToPolygon
+        || previousSymbolizer?.msExtrusionRelativeToGeometry !== currentSymbolizer?.msExtrusionRelativeToGeometry
+        || previousSymbolizer?.msExtrusionType !== currentSymbolizer?.msExtrusionType
         || previousSymbolizer?.msTranslateX !== currentSymbolizer?.msTranslateX
         || previousSymbolizer?.msTranslateY !== currentSymbolizer?.msTranslateY
         || previousSymbolizer?.heading !== currentSymbolizer?.heading

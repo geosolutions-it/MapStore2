@@ -965,7 +965,7 @@ describe('CesiumStyleParser', () => {
                                 msHeight: 10,
                                 msExtrudedHeight: 20,
                                 msHeightReference: 'none',
-                                msExtrusionRelativeToPolygon: false
+                                msExtrusionRelativeToGeometry: false
                             }
                         ]
                     }
@@ -1008,7 +1008,7 @@ describe('CesiumStyleParser', () => {
                                 msHeight: 10,
                                 msExtrudedHeight: 20,
                                 msHeightReference: 'relative',
-                                msExtrusionRelativeToPolygon: false
+                                msExtrusionRelativeToGeometry: false
                             }
                         ]
                     }
@@ -1058,7 +1058,7 @@ describe('CesiumStyleParser', () => {
                                 msHeight: 10,
                                 msExtrudedHeight: 20,
                                 msHeightReference: 'clamp',
-                                msExtrusionRelativeToPolygon: false
+                                msExtrusionRelativeToGeometry: false
                             }
                         ]
                     }
@@ -1108,7 +1108,7 @@ describe('CesiumStyleParser', () => {
                                 msHeight: 10,
                                 msExtrudedHeight: 20,
                                 msHeightReference: 'none',
-                                msExtrusionRelativeToPolygon: true
+                                msExtrusionRelativeToGeometry: true
                             }
                         ]
                     }
@@ -1152,7 +1152,7 @@ describe('CesiumStyleParser', () => {
                                 msHeight: 10,
                                 msExtrudedHeight: 20,
                                 msHeightReference: 'relative',
-                                msExtrusionRelativeToPolygon: true
+                                msExtrusionRelativeToGeometry: true
                             }
                         ]
                     }
@@ -1186,7 +1186,7 @@ describe('CesiumStyleParser', () => {
                     done();
                 }).catch(done);
         });
-        it('should write a style function with line symbolizer', (done) => {
+        it('should write a style function with line symbolizer and circle extrusion', (done) => {
             const style = {
                 name: '',
                 rules: [
@@ -1197,10 +1197,10 @@ describe('CesiumStyleParser', () => {
                             {
                                 kind: 'Line',
                                 symbolizerId: 'symbolizer-01',
-                                msExtrudedShapeName: 'Circle',
-                                msExtrudedShapeRadius: 100,
+                                msExtrudedHeight: 100,
                                 msExtrusionColor: '#ff0000',
-                                msExtrusionOpacity: 0.5
+                                msExtrusionOpacity: 0.5,
+                                msExtrusionType: 'Circle'
                             }
                         ]
                     }

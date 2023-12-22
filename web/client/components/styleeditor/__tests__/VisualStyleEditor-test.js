@@ -579,8 +579,10 @@ describe('VisualStyleEditor', () => {
                 const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
                 expect([...disabledFields].map(node => node.innerHTML)).toEqual([
                     'styleeditor.clampToGround',
-                    'styleeditor.msExtrudedShapeName',
-                    'styleeditor.msExtrudedShapeRadius',
+                    'styleeditor.heightReferenceFromGround',
+                    'styleeditor.height',
+                    'styleeditor.msExtrusionRelativeToGeometry',
+                    'styleeditor.msExtrudedHeight',
                     'styleeditor.msExtrusionColor'
                 ]);
                 done();
@@ -678,7 +680,7 @@ describe('VisualStyleEditor', () => {
                     'styleeditor.classificationtype',
                     'styleeditor.heightReferenceFromGround',
                     'styleeditor.height',
-                    'styleeditor.msExtrusionRelativeToPolygon',
+                    'styleeditor.msExtrusionRelativeToGeometry',
                     'styleeditor.msExtrudedHeight'
                 ]);
                 done();

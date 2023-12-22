@@ -2599,11 +2599,11 @@
             "msTranslateX": "Décalage x",
             "msTranslateY": "Décalage y",
             "geometryHeight": "Hauteur de la géométrie",
-            "msExtrusionRelativeToPolygon": "Extrusion relative au polygone",
+            "msExtrusionRelativeToGeometry": "Extrusion par rapport à la géométrie",
             "msExtrudedHeight": "Hauteur extrudée",
-            "msExtrudedShapeName": "Forme extrudée",
-            "msExtrudedShapeRadius": "Rayon de la forme extrudée",
-            "msExtrusionColor": "Couleur d'extrusion"
+            "msExtrusionColor": "Couleur d'extrusion",
+            "msExtrusionType": "Type d'extrusion",
+            "wall": "Mur"
         },
         "playback": {
             "settings": {

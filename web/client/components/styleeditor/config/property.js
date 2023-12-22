@@ -221,11 +221,12 @@ const property = {
         },
         isDisabled
     }),
-    opacity: ({ key = 'opacity', label = 'Opacity' }) => ({
+    opacity: ({ key = 'opacity', label = 'Opacity', disablePropertySelection }) => ({
         type: 'slider',
         valueType: 'number',
         label,
         config: {
+            disablePropertySelection,
             range: { min: 0, max: 1 }
         },
         setValue: (value = 1) => {
@@ -433,11 +434,14 @@ const property = {
     bool: ({
         key = 'label',
         label,
-        isDisabled
+        isDisabled,
+        disablePropertySelection
     }) => ({
         type: 'checkbox',
         label,
-        config: {},
+        config: {
+            disablePropertySelection
+        },
         isDisabled,
         getValue: (value) => {
             return {
@@ -449,11 +453,13 @@ const property = {
         key = 'intervals',
         label,
         isDisabled = (value, properties) =>
-            properties?.method === 'customInterval'
+            properties?.method === 'customInterval',
+        disablePropertySelection = true
     }) => ({
         type: 'slider',
         label,
         config: {
+            disablePropertySelection,
             range: { min: 2, max: 25 },
             format: {
                 from: value => Math.round(value),
@@ -489,10 +495,11 @@ const property = {
         isVisible,
         setValue
     }),
-    colorRamp: ({ label, key = '', getOptions = () => [] }) => ({
+    colorRamp: ({ label, key = '', getOptions = () => [], disablePropertySelection = true }) => ({
         type: 'colorRamp',
         label,
         config: {
+            disablePropertySelection,
             getOptions
         },
         getValue: (value = '') => {
@@ -501,9 +508,12 @@ const property = {
             };
         }
     }),
-    colorMap: ({ label, key = '' }) => ({
+    colorMap: ({ label, key = '', disablePropertySelection = true }) => ({
         type: 'colorMap',
         label,
+        config: {
+            disablePropertySelection
+        },
         getValue: (value = {}, properties) => {
             const {
                 classification,

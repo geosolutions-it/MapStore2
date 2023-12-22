@@ -2599,11 +2599,11 @@
             "msTranslateX": "Desplazamiento x",
             "msTranslateY": "Desplazamiento y",
             "geometryHeight": "Altura de la geometría",
-            "msExtrusionRelativeToPolygon": "Extrusión relativa al polígono",
+            "msExtrusionRelativeToGeometry": "Extrusión relativa a la geometría",
             "msExtrudedHeight": "Altura extruida",
-            "msExtrudedShapeName": "Forma extruid",
-            "msExtrudedShapeRadius": "Radio de forma extruida",
-            "msExtrusionColor": "Color de extrusión"
+            "msExtrusionColor": "Color de extrusión",
+            "msExtrusionType": "Tipo de extrusión",
+            "wall": "Muro"
         },
         "playback": {
             "settings": {
