@@ -1227,5 +1227,238 @@ describe('CesiumStyleParser', () => {
                     done();
                 }).catch(done);
         });
+        it('should write style function with extruded fill symbolizer (none height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(10);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(20);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (relative height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'relative',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates.map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(110);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(120);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (clamp height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'clamp',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates.map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(100);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(120);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (none height reference and relative extrusion)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: true
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(10);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(30);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (relative height reference and relative extrusion)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'relative',
+                                msExtrusionRelativeToGeometry: true
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates.map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(110);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(130);
+                    done();
+                }).catch(done);
+        });
     });
 });
