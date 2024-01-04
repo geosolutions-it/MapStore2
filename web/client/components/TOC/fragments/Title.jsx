@@ -38,14 +38,19 @@ class Title extends React.Component {
     };
 
     getFilteredTitle = (title) => {
-        const splitTitle = title.toLowerCase().split(this.props.filterText.toLowerCase());
+        const regularExpression = new RegExp(this.props.filterText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'), 'gi');
+        const matches = title.match(regularExpression);
 
-        return this.props.filterText ? splitTitle.reduce((a, b, idx) => {
-            if (idx === splitTitle.length - 1) {
-                return [...a, b];
+        if (!this.props.filterText || !matches) {
+            return title;
+        }
+
+        return title.split(regularExpression).map((split, key) => {
+            if (key < matches.length) {
+                return [...split, <strong>{matches[key]}</strong>];
             }
-            return [...a, b, <strong key={idx}>{this.props.filterText.toLowerCase()}</strong>];
-        }, []) : title;
+            return split;
+        });
     };
 
     renderTitle = () => {
