@@ -1,16 +1,16 @@
 import {createSelector} from 'reselect';
 
+import { PROVIDERS, CONTROL_NAME, MARKER_LAYER_ID, CYCLOMEDIA_CREDENTIALS_REFERENCE } from '../constants';
 import { createControlEnabledSelector } from '../../../selectors/controls';
 import { additionalLayersSelector } from '../../../selectors/additionallayers';
-
-import { CONTROL_NAME, MARKER_LAYER_ID } from '../constants';
 import { localConfigSelector } from '../../../selectors/localConfig';
 
 export const enabledSelector = createControlEnabledSelector(CONTROL_NAME);
 export const streetViewStateSelector = state => state?.streetView ?? {};
-export const apiLoadedSelector = state => streetViewStateSelector(state)?.apiLoaded;
+export const apiLoadedSelectorCreator = (provider) => state => streetViewStateSelector(state)?.apiLoaded?.[provider] ?? false;
 export const locationSelector = createSelector(streetViewStateSelector, ({location} = {}) => location);
 export const povSelector = createSelector(streetViewStateSelector, ({pov} = {}) => pov);
+
 export function getStreetViewMarkerLayer(state) {
     const additionalLayers = additionalLayersSelector(state) ?? [];
     return additionalLayers.filter(({ id }) => id === MARKER_LAYER_ID)?.[0]?.options;
@@ -18,14 +18,71 @@ export function getStreetViewMarkerLayer(state) {
 export function streetViewConfigurationSelector(state) {
     return streetViewStateSelector(state)?.configuration ?? {};
 }
-
-const DATA_LAYER_DEFAULTS = {
+export function streetViewProviderSelector(state) {
+    return streetViewConfigurationSelector( state)?.provider ?? 'google';
+}
+export const currentProviderApiLoadedSelector = state => apiLoadedSelectorCreator(streetViewProviderSelector(state))(state);
+export const providerSettingsSelector = state => streetViewConfigurationSelector(state)?.providerSettings ?? {};
+const GOOGLE_DATA_LAYER_DEFAULTS = {
     provider: 'custom',
     type: "tileprovider",
     url: "https://mts1.googleapis.com/vt?hl=en-US&lyrs=svv|cb_client:apiv3&style=40,18&x={x}&y={y}&z={z}"
 };
+const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
+    type: "wfs",
+    security: {
+        type: 'Basic',
+        sourceType: 'sessionStorage',
+        sourceId: CYCLOMEDIA_CREDENTIALS_REFERENCE
+    },
+    strategy: 'bbox',
+    maxResolution: 2,
+    serverType: 'noVendor',
+    method: 'POST',
+    geometryType: 'point',
+    url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
+    name: "atlas:Recording",
+    style: {
+        format: "geostyler",
+        body: {
+            name: "My Style",
+            rules: [
+                {
+                    name: "",
+                    symbolizers: [
+                        {
+                            kind: "Mark",
+                            color: "#0000ff",
+                            fillOpacity: 1,
+                            strokeColor: "#000000",
+                            strokeOpacity: 1,
+                            strokeWidth: 1,
+                            radius: 5,
+                            wellKnownName: "Circle",
+                            msHeightReference: "none",
+                            msBringToFront: true,
+                            symbolizerId: "d2c4dab1-a0e7-11ee-a734-df08d0913056"
+                        }
+                    ],
+                    ruleId: "d2c4dab0-a0e7-11ee-a734-df08d0913056"
+                }
+            ]
+        }
+    }
+};
+const providerDataLayerDefaultsSelector = (state) => {
+    const provider = streetViewProviderSelector(state);
+    switch (provider) {
+    case PROVIDERS.GOOGLE:
+        return GOOGLE_DATA_LAYER_DEFAULTS;
+    case PROVIDERS.CYCLOMEDIA:
+        return CYCLOMEDIA_DATA_LAYER_DEFAULTS;
+    default:
+        return {};
+    }
+};
 export function streetViewDataLayerSelector(state) {
-    return streetViewConfigurationSelector(state)?.dataLayerConfig ?? DATA_LAYER_DEFAULTS;
+    return streetViewConfigurationSelector(state)?.dataLayerConfig ?? providerDataLayerDefaultsSelector(state);
 }
 
 
@@ -38,6 +95,20 @@ export function googleAPIKeySelector(state) {
         ?? localConfigSelector(state)?.apiKeys?.googleStreetViewAPIKey
         ?? localConfigSelector(state)?.apiKeys?.googleAPIKey
         ?? localConfigSelector(state)?.googleAPIKey;
+}
+export function cyclomediaAPIKeySelector(state) {
+    return streetViewConfigurationSelector(state)?.apiKey
+        ?? localConfigSelector(state)?.apiKeys?.cyclomediaAPIKey;
+}
+export function streetViewAPIKeySelector(state) {
+    switch (streetViewProviderSelector(state)) {
+    case PROVIDERS.GOOGLE:
+        return googleAPIKeySelector(state);
+    case PROVIDERS.CYCLOMEDIA:
+        return cyclomediaAPIKeySelector(state);
+    default:
+        return null;
+    }
 }
 /**
  * gets the useDataLayer flag actually loaded

@@ -11,27 +11,62 @@ import Layers from '../../../../utils/openlayers/Layers';
 import {getStyle} from '../VectorStyle';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
+import {bbox, all, tile} from 'ol/loadingstrategy.js';
+
 import GeoJSON from 'ol/format/GeoJSON';
 
-import { getFeature, describeFeatureType } from '../../../../api/WFS';
+import { getFeature, getFeatureLayer, describeFeatureType } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
+import { getCredentials } from '../../../../utils/SecurityUtils';
 import { needsReload, extractGeometryType } from '../../../../utils/WFSLayerUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
-
+const getConfig = (options) => {
+    const security = options?.security || {};
+    const config = {};
+    const {type, sourceId} = security;
+    const credentials = getCredentials(sourceId);
+    if (credentials) {
+        const {username, password} = credentials;
+        switch (type?.toLowerCase?.()) {
+        case "basic":
+            config.headers = {
+                Authorization: `Basic ${btoa(`${username}:${password}`)}`
+            };
+            break;
+        case "bearer":
+            config.headers = {
+                Authorization: `Bearer ${credentials.token}`
+            };
+            break;
+        default:
+            break;
+        }
+    }
+    return config;
+};
 const createLoader = (source, options) => (extent, resolution, projection) => {
-    const params = optionsToVendorParams(options);
     var proj = projection.getCode();
+    let req;
     const onError = () => {
         source.removeLoadedExtent(extent);
         source.dispatchEvent('vectorerror');
     };
-    getFeature(options.url, options.name, {
-        // bbox: extent.join(',') + ',' + proj,
-        outputFormat: "application/json",
-        // maxFeatures: 3600, // This looks the internal openlayers limit. TODO: investigate more
-        srsname: proj,
-        ...params
-    }).then(response => {
+    if (options.serverType === 'noVendor') {
+        // TODO: add filters, and transform extent in a filter, replicating what done in options to vendor params
+        req = getFeatureLayer(options, {extent, proj}, getConfig(options));
+    } else {
+        const params = optionsToVendorParams(options);
+        const config = getConfig(options);
+
+        req = getFeature(options.url, options.name, {
+            // bbox: extent.join(',') + ',' + proj,
+            outputFormat: "application/json",
+            // maxFeatures: 3600, // This looks the internal openlayers limit. TODO: investigate more
+            srsname: proj,
+            ...params
+        }, config);
+    }
+    req.then(response => {
         if (response.status === 200) {
             source.addFeatures(
                 source.getFormat().readFeatures(response.data));
@@ -66,7 +101,18 @@ const getWFSStyle = (layer, options, geometryType, map) => {
             }
         });
 };
-
+const getStrategy = (options) => {
+    if (options.strategy === 'bbox') {
+        return bbox;
+    }
+    if (options.strategy === 'all') {
+        return all;
+    }
+    if (options.strategy === 'tile') {
+        return tile;
+    }
+    return null;
+};
 /**
  * Fetch describeFeatureType if missing and set the style accordingly with the geometry type.
  * @param {object} layer the openlayers layer
@@ -88,6 +134,7 @@ Layers.registerType('wfs', {
     create: (options, map) => {
 
         const source = new VectorSource({
+            strategy: getStrategy(options),
             format: new GeoJSON()
         });
         let layer;
@@ -99,6 +146,7 @@ Layers.registerType('wfs', {
                 }
             })
         );
+
         layer = new VectorLayer({
             msId: options.id,
             source: source,
@@ -108,6 +156,7 @@ Layers.registerType('wfs', {
             minResolution: options.minResolution,
             maxResolution: options.maxResolution
         });
+        layer.geometryType = options.geometryType;
         updateStyle(layer, options, map);
         return layer;
     },

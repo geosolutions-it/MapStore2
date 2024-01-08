@@ -8,6 +8,7 @@
 import axios from '../libs/ajax';
 import urlUtil from 'url';
 import assign from 'object-assign';
+import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 
 export const toDescribeURL = (url, typeName) => {
     const parsed = urlUtil.parse(url, true);
@@ -64,6 +65,37 @@ export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = 
             ...params
         }, parsed.query)
     }));
+};
+// supports only post and extent. TODO: convert extent into filter
+export const getFeatureLayer = (layer, {extent, proj}, config) => {
+    const [left, bottom, right, top] = extent;
+    const {url, name: typeName, params } = layer;
+    const {layerFilter, filterObj: featureGridFilter} = layer; // TODO: add
+    const {getFeature: wfsGetFeature, query, filter, and} = requestBuilder({wfsVersion: "1.1.0"});
+    const reqBody = wfsGetFeature(query(
+        typeName,
+        filter(
+            and(
+                `<ogc:BBOX>
+                <gml:Envelope srsName="${proj}">
+                <gml:lowerCorner>${left} ${bottom}</gml:lowerCorner>
+                <gml:upperCorner>${right} ${top}</gml:upperCorner>
+                </gml:Envelope>
+                </ogc:BBOX>`,
+                "<ogc:PropertyIsNull><ogc:PropertyName>expiredAt</ogc:PropertyName></ogc:PropertyIsNull>"
+            )
+        ),
+        {srsName: proj} // 3rd for query is optional
+    ),
+    {outputFormat: 'application/json', resultType: 'results'}
+    );
+    return axios.post(url, reqBody, {
+        ...config,
+        headers: {
+            ...config?.headers,
+            'Content-Type': 'application/xml'
+        }
+    });
 };
 
 export const getFeature = (url, typeName, params, config) => {

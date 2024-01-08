@@ -1,8 +1,14 @@
 import { toggleControl } from "../../../actions/controls";
+import { error } from '../../../actions/notifications';
 
-import { loadGoogleMapsAPI } from "../api/gMaps";
+import API from "../api";
 import { CONTROL_NAME } from "../constants";
-import { apiLoadedSelector, googleAPIKeySelector } from "../selectors/streetView";
+import {
+    apiLoadedSelectorCreator,
+    streetViewAPIKeySelector,
+    streetViewProviderSelector,
+    providerSettingsSelector
+} from "../selectors/streetView";
 
 
 export const TOGGLE_STREET_VIEW = "STREET_VIEW:TOGGLE";
@@ -20,27 +26,35 @@ export function setAPILoading(loading) {
         loading
     };
 }
-export function gMapsAPILoaded() {
+export function streetViewAPILoaded(provider) {
     return {
-        type: API_LOADED
+        type: API_LOADED,
+        provider
     };
 }
 export function toggleStreetView() {
     return (dispatch, getState) => {
-        if (!apiLoadedSelector(getState())) {
+        const provider = streetViewProviderSelector(getState());
+        if (!apiLoadedSelectorCreator(provider)(getState())) {
             setAPILoading(true);
-            const apiKey = googleAPIKeySelector(getState());
-            loadGoogleMapsAPI({apiKey}).then(() => {
+            const apiKey = streetViewAPIKeySelector(getState());
+            const providerSettings = providerSettingsSelector(getState());
+            if (!API[provider]) {
+                console.error(`No API found for provider ${provider}`);
+                dispatch(error({title: "streetView.title", message: `No API found for provider ${provider}`}));
+            }
+            API[provider].loadAPI({apiKey, providerSettings}).then(() => {
                 setAPILoading(false);
-                dispatch(gMapsAPILoaded());
+                dispatch(streetViewAPILoaded());
                 dispatch(toggleControl(CONTROL_NAME, "enabled"));
             }).catch(e => {
                 setAPILoading(false);
-                console.log(e); // eslint-disable-line
+                    console.log(e); // eslint-disable-line
             });
         } else {
             dispatch(toggleControl(CONTROL_NAME, "enabled"));
         }
+
     };
 }
 

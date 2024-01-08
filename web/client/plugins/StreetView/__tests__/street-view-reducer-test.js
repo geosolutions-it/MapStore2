@@ -10,8 +10,8 @@ import expect from 'expect';
 import { createStateMocker } from '../../../reducers/__tests__/reducersTestUtils';
 
 import streetView from '../reducers/streetview';
-import { panoramaOptionsSelector, googleAPIKeySelector, apiLoadedSelector, locationSelector } from '../selectors/streetView';
-import { configure, gMapsAPILoaded, setLocation } from '../actions/streetView';
+import { panoramaOptionsSelector, googleAPIKeySelector, apiLoadedSelectorCreator, locationSelector } from '../selectors/streetView';
+import { configure, streetViewAPILoaded, setLocation } from '../actions/streetView';
 
 describe('street vie reducer', () => {
     const stateMocker = createStateMocker({ streetView });
@@ -35,8 +35,8 @@ describe('street vie reducer', () => {
         expect(locationSelector(state)).toEqual(LOCATION);
     });
     it('apiLoaded', () => {
-        const state = stateMocker(gMapsAPILoaded(true));
-        expect(apiLoadedSelector(state)).toBeTruthy();
+        const state = stateMocker(streetViewAPILoaded('google'));
+        expect(apiLoadedSelectorCreator('google')(state)).toBeTruthy();
     });
 
 });

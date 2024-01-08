@@ -20,6 +20,7 @@ export const loadGoogleMapsAPI  = ({apiKey, version = "weekly", useStaticCache =
 export function getAPI() {
     return API;
 }
+export const loadAPI = loadGoogleMapsAPI;
 export function getLocation(latLng) {
     const google = getAPI();
     const sv = new google.maps.StreetViewService();

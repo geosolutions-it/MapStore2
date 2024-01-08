@@ -17,7 +17,15 @@ import {hideMapinfoMarker, toggleMapInfoState} from '../../../actions/mapInfo';
 import { mapInfoEnabledSelector } from "../../../selectors/mapInfo";
 
 import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "../constants";
-import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "../selectors/streetView";
+import {
+    currentProviderApiLoadedSelector,
+    enabledSelector,
+    getStreetViewMarkerLayer,
+    locationSelector,
+    povSelector,
+    useStreetViewDataLayerSelector,
+    streetViewDataLayerSelector}
+from "../selectors/streetView";
 import {setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
 import { getLocation } from '../api/gMaps';
 import {shutdownToolOnAnotherToolDrawing} from "../../../utils/ControlUtils";
@@ -79,6 +87,7 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
         .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
         .filter(({control}) => control === CONTROL_NAME)
         .filter(() => enabledSelector(getState()))
+        // .filter(() => streetViewProviderSelector(getState()) === 'google') // TODO make this work for cyclomedia and other providers
         .switchMap(() => {
             // setup
             return Rx.Observable.from([
@@ -135,7 +144,8 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
 export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
     return action$.ofType(CLICK_ON_MAP)
         .filter(() => enabledSelector(getState()))
-        .filter(() => apiLoadedSelector(getState()))
+        .filter(() => currentProviderApiLoadedSelector(getState()))
+        // .filter(() => streetViewProviderSelector(getState()) === 'google') // TODO make this work for cyclomedia and other providers
         .switchMap(({point}) => {
             const latLng = point.latlng;
             return Rx.Observable
