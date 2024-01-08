@@ -117,7 +117,8 @@ describe('geoProcessing epics', () => {
                 geometry: {
                     type: "Point",
                     coordinates: [1, 2]
-                }
+                },
+                features: undefined
             }]
         };
         try {
@@ -408,7 +409,8 @@ describe('geoProcessing epics', () => {
             geometry: {
                 type: "Point",
                 coordinates: [11, 22]
-            }
+            },
+            features: undefined
         };
         const startActions = [setSourceFeatureId(featureId)];
         testEpic(getFeatureDataGPTEpic, NUM_ACTIONS, startActions, actions => {
@@ -428,7 +430,6 @@ describe('geoProcessing epics', () => {
                     dashArray: "",
                     fillColor: "#3388ff",
                     fillOpacity: 0.2,
-                    radius: 4,
                     weight: 4
                 }}]);
             expect(action3.type).toEqual(zoomToExtent().type);
@@ -543,7 +544,8 @@ describe('geoProcessing epics', () => {
             geometry: {
                 type: "Point",
                 coordinates: [11, 22]
-            }
+            },
+            features: undefined
         };
         const NUM_ACTIONS = 3;
         mockAxios.onGet("mockUrl?service=WFS&version=1.1.0&request=GetFeature").reply(200, GET_FEATURES);
@@ -566,7 +568,6 @@ describe('geoProcessing epics', () => {
                     dashArray: "",
                     fillColor: "#3388ff",
                     fillOpacity: 0.2,
-                    radius: 4,
                     weight: 4
                 }}]);
             expect(action3.type).toEqual(zoomToExtent().type);
