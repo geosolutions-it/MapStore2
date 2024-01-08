@@ -544,6 +544,9 @@ export default {
                             .filter(layer => layer.group === "background" && layer.visibility && this.isAllowed(layer, projection)));
                         return !background;
                     };
+                    filterAnnotationFeaturesByVisibility = (layer) => {
+                        return {...layer, ...(!isNil(layer.features) ? {features: layer.features?.filter(ft => ft?.properties?.visibility)} : {})};
+                    }
                     filterLayers = (layers, zoom, projection) => {
                         const resolution = this.getPreviewResolution(zoom, projection);
 
@@ -551,7 +554,7 @@ export default {
                             layer.visibility &&
                             isInsideResolutionsLimits(layer, resolution) &&
                             this.isAllowed(layer, projection)
-                        );
+                        ).map(this.filterAnnotationFeaturesByVisibility);
                         if (this.isBackgroundIgnored(layers, projection) && this.props.defaultBackground && this.props.printSpec.defaultBackground) {
                             const defaultBackground = this.getAlternativeBackground(layers, this.props.defaultBackground);
                             if (defaultBackground) {
