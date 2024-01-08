@@ -250,7 +250,7 @@ function layers(state = { flat: [] }, action) {
                     sameGroup = true;
                 }
                 // Edit the layer with the new options
-                return assign({}, layer, action.options);
+                return normalizeLayer(assign({}, layer, action.options));
             }
             return assign({}, layer);
         });

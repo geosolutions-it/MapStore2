@@ -414,7 +414,7 @@ export const getLayerId = (layerObj) => {
 export const createFeatureId = (feature = {}) => {
     return {
         ...feature,
-        id: feature.id || feature.properties?.id || uuidv1()
+        id: feature.id || feature?.properties?.id || uuidv1()
     };
 };
 /**
@@ -429,7 +429,16 @@ export const normalizeLayer = (layer) => {
     if (layer.type === "vector") {
         _layer = _layer?.features?.length ? {
             ..._layer,
-            features: _layer?.features?.map(createFeatureId)
+            features: _layer?.features?.map(f => {
+                return f?.features?.length ? {
+                    ...f,
+                    id: createFeatureId(f).id,
+                    features: f?.features?.map(createFeatureId)
+                } : {
+                    ...f,
+                    id: createFeatureId(f).id
+                };
+            })
         } : layer;
     }
     // regenerate geodesic lines as property since that info has not been saved

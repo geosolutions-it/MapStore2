@@ -122,7 +122,7 @@ import {groupsSelector} from '../selectors/layers';
 import {additionalLayersSelector} from '../selectors/additionallayers';
 import {isGeoProcessingEnabledSelector} from '../selectors/controls';
 import {mapSelector} from '../selectors/map';
-import {highlightStyleSelector, applyMapInfoStyle, mapInfoEnabledSelector} from '../selectors/mapInfo';
+import {highlightAnnotationStyleSelector, applyMapInfoStyle, mapInfoEnabledSelector} from '../selectors/mapInfo';
 
 import {
     getGeoJSONExtent,
@@ -359,7 +359,7 @@ export const getFeatureDataGPTEpic = (action$, store) => action$
     .switchMap(({featureId}) => {
         const state = store.getState();
         const layerId = sourceLayerIdSelector(state);
-        const highlightStyle = highlightStyleSelector(state);
+        const highlightStyle = highlightAnnotationStyleSelector(state);
         const showHighlightLayers = showHighlightLayersSelector(state);
         const layer = getLayerFromIdSelector(state, layerId);
         return Rx.Observable.defer(() => {
@@ -415,7 +415,7 @@ export const getIntersectionFeatureDataGPTEpic = (action$, store) => action$
     .switchMap(({featureId}) => {
         const state = store.getState();
         const layerId = intersectionLayerIdSelector(state);
-        const highlightStyle = highlightStyleSelector(state);
+        const highlightStyle = highlightAnnotationStyleSelector(state);
         const showHighlightLayers = showHighlightLayersSelector(state);
         const layer = getLayerFromIdSelector(state, layerId);
         return Rx.Observable.defer(() => {
@@ -594,9 +594,7 @@ export const runBufferProcessGPTEpic = (action$, store) => action$
         const feature = sourceFeatureSelector(state);
         if (isEmpty(feature) || feature.type === "FeatureCollection") {
             // then run the collect geometries which and then run the buffer
-            const features = layer.features?.[0]?.type === "FeatureCollection" ? layer.features.reduce((p, c) => {
-                return p.concat(c.features);
-            }, []) : layer.features;
+            const features = layer.features;
             const executeCollectProcess$ = executeProcess(
                 layerUrl,
                 collectGeometriesXML({ name: layer.name, featureCollection: (layer.type === "vector") ? createFC(features) : null }),
@@ -684,7 +682,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         let sourceFC$;
         let intersectionFC$;
         if (isEmpty(sourceFeature) || sourceFeature.type === "FeatureCollection") {
-            const features = sourceFeature?.type === "FeatureCollection" ? layer.features.reduce((p, c) => {
+            const features = layer.features?.[0]?.type === "FeatureCollection" ? layer.features.reduce((p, c) => {
                 return p.concat(c.features);
             }, []) : layer.features;
             sourceFC$ = executeProcess(
@@ -705,7 +703,7 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         const intersectionLayer = getLayerFromIdSelector(state, intersectionLayerId);
         const intersectionLayerUrl = wpsUrlSelector(state) || head(castArray(intersectionLayer.url));
         if (isEmpty(intersectionFeature) || intersectionFeature.type === "FeatureCollection") {
-            const features = intersectionFeature?.type === "FeatureCollection" ? intersectionLayer.features.reduce((p, c) => {
+            const features = intersectionLayer.features?.[0]?.type === "FeatureCollection" ? intersectionLayer.features.reduce((p, c) => {
                 return p.concat(c.features);
             }, []) : intersectionLayer.features;
             intersectionFC$ = executeProcess(

@@ -53,7 +53,7 @@ export const getCounter = (layers, groupName) => {
  * @return {object} the transformed feature if `properties.geodesic=true`, the original feature in the other cases.
  */
 export const densifyGeodesicFeature = (feature) => {
-    if (feature?.properties?.geodesic && feature.geometry.type === "LineString") {
+    if ((feature?.properties?.geodesic || feature?.properties?.useGeodesicLines) && feature.geometry.type === "LineString") {
         return {
             ...feature,
             geometry: {

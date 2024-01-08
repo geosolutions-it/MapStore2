@@ -79,7 +79,13 @@ export const availableLayersSelector = memoize((state) => {
         .map(layer => {
             return layer?.features?.length ? {
                 ...layer,
-                features: layer?.features?.map(densifyGeodesicFeature).map(transformCircleIntoPolygon)
+                features: layer?.features?.map(feature => {
+                    const ft = transformCircleIntoPolygon(densifyGeodesicFeature(feature));
+                    return {
+                        ...ft,
+                        features: ft?.features?.length ? ft?.features?.map(transformCircleIntoPolygon).map(densifyGeodesicFeature) : ft?.features
+                    };
+                })
             } : layer;
         });
 }, (state) => JSON.stringify(layersSelector(state).filter(l => l.group !== "background")
@@ -87,10 +93,18 @@ export const availableLayersSelector = memoize((state) => {
 
 export const getLayerFromIdSelector = (state, id) => {
     const layer = head(availableLayersSelector(state).filter(l => l.id === id));
-    // filtering out the features with measureId because they are not the measures, the LineString for length and bering or the Polygon for the area one. We do not want to do the buffer on the point where the measure text label is stored
+    // filtering out the features with measureId because they are not the measures, the LineString for length and bearing or the Polygon for the area one. We do not want to do the buffer on the point where the measure text label is stored
+    const features = layer?.features?.length ? layer.features.reduce((p, c) => {
+        return c.features?.length ? p.concat(c.features.filter((feature) => {
+            if (c.properties?.type === "Measure" && feature?.geometry?.type === "Point") {
+                return false;
+            }
+            return true;
+        })) : p.concat([c]);
+    }, []) : layer?.features;
     return {
         ...layer,
-        features: layer?.features?.filter(f => !f?.properties?.measureId)
+        features: features?.filter(f => !f?.properties?.measureId)
     };
 
 };
