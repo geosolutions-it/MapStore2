@@ -84,7 +84,7 @@ const property = {
         },
         isDisabled
     }),
-    dasharray: ({ key = 'dasharray', label = 'Dash array', disablePropertySelection = true }) => ({
+    dasharray: ({ key = 'dasharray', label = 'Dash array', disablePropertySelection = true, isDisabled }) => ({
         type: 'dash',
         label,
         config: {
@@ -105,7 +105,8 @@ const property = {
                     ? value.map((entry) => parseFloat(entry))
                     : undefined
             };
-        }
+        },
+        isDisabled
     }),
     cap: ({ key = 'cap', label = 'Line cap', isDisabled }) => ({
         type: 'toolbar',
@@ -220,11 +221,12 @@ const property = {
         },
         isDisabled
     }),
-    opacity: ({ key = 'opacity', label = 'Opacity' }) => ({
+    opacity: ({ key = 'opacity', label = 'Opacity', disablePropertySelection }) => ({
         type: 'slider',
         valueType: 'number',
         label,
         config: {
+            disablePropertySelection,
             range: { min: 0, max: 1 }
         },
         setValue: (value = 1) => {
@@ -275,17 +277,10 @@ const property = {
         }
     }),
     msClampToGround: ({ key = 'msClampToGround', label = 'Clamp to ground', isDisabled, disablePropertySelection = true }) => ({
-        type: 'toolbar',
+        type: 'checkbox',
         valueType: 'string',
         label,
         config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }],
             disablePropertySelection
         },
         getValue: (value) => {
@@ -297,17 +292,10 @@ const property = {
         isDisabled
     }),
     msBringToFront: ({ key = 'msBringToFront', label = 'Arrange', isDisabled, disablePropertySelection = true }) => ({
-        type: 'toolbar',
+        type: 'checkbox',
         valueType: 'string',
         label,
         config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }],
             disablePropertySelection
         },
         getValue: (value) => {
@@ -368,15 +356,20 @@ const property = {
         },
         isDisabled
     }),
-    shape: ({ label, key = 'wellKnownName' }) => ({
+    shape: ({ label, key = 'wellKnownName', options, excludeSvg, isDisabled }) => ({
         type: 'mark',
         valueType: 'string',
         label,
+        config: {
+            options,
+            excludeSvg
+        },
         getValue: (value = '') => {
             return {
                 [key]: value
             };
-        }
+        },
+        isDisabled
     }),
     image: ({ label, key = 'image' }) => ({
         type: 'image',
@@ -441,18 +434,13 @@ const property = {
     bool: ({
         key = 'label',
         label,
-        isDisabled
+        isDisabled,
+        disablePropertySelection
     }) => ({
-        type: 'toolbar',
+        type: 'checkbox',
         label,
         config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }]
+            disablePropertySelection
         },
         isDisabled,
         getValue: (value) => {
@@ -465,11 +453,13 @@ const property = {
         key = 'intervals',
         label,
         isDisabled = (value, properties) =>
-            properties?.method === 'customInterval'
+            properties?.method === 'customInterval',
+        disablePropertySelection = true
     }) => ({
         type: 'slider',
         label,
         config: {
+            disablePropertySelection,
             range: { min: 2, max: 25 },
             format: {
                 from: value => Math.round(value),
@@ -505,10 +495,11 @@ const property = {
         isVisible,
         setValue
     }),
-    colorRamp: ({ label, key = '', getOptions = () => [] }) => ({
+    colorRamp: ({ label, key = '', getOptions = () => [], disablePropertySelection = true }) => ({
         type: 'colorRamp',
         label,
         config: {
+            disablePropertySelection,
             getOptions
         },
         getValue: (value = '') => {
@@ -517,9 +508,12 @@ const property = {
             };
         }
     }),
-    colorMap: ({ label, key = '' }) => ({
+    colorMap: ({ label, key = '', disablePropertySelection = true }) => ({
         type: 'colorMap',
         label,
+        config: {
+            disablePropertySelection
+        },
         getValue: (value = {}, properties) => {
             const {
                 classification,

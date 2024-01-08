@@ -52,12 +52,16 @@ function MarkSelector({
     value,
     config = {},
     onChange = () => {},
-    svgSymbolsPath,
-    onUpdateOptions = () => {}
+    svgSymbolsPath: svgSymbolsPathProp,
+    onUpdateOptions = () => {},
+    disabled
 }) {
     const {
-        options = wellKnownName
+        options: optionsConfig,
+        excludeSvg
     } = config;
+    const options = optionsConfig ? wellKnownName.filter((shape) => optionsConfig.includes(shape.value)) : wellKnownName;
+    const svgSymbolsPath = !excludeSvg ? svgSymbolsPathProp : undefined;
     const [svgOptions, setSvgOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const selected = svgOptions.length === 0 && (value || '').includes('.svg')
@@ -88,6 +92,7 @@ function MarkSelector({
 
     return (
         <Popover
+            disabled={disabled}
             content={
                 <div className="ms-mark-list">
                     <ul>

@@ -7,7 +7,6 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
 import axios from '../../../../libs/ajax';
 import { getFeature } from '../../../../api/WFS';
@@ -18,6 +17,7 @@ import {
     layerToGeoStylerStyle
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
+import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
 
 const requestFeatures = (options, params, cancelToken) => {
     return getFeature(options.url, options.name, {
@@ -35,15 +35,17 @@ const createLayer = (options, map) => {
     if (!options.visibility) {
         return {
             detached: true,
-            dataSource: undefined,
+            styledFeatures: undefined,
             remove: () => {}
         };
     }
 
-    let dataSource = new Cesium.GeoJsonDataSource(options?.id);
-    dataSource.loadingEvent.addEventListener(() => {
-        // ensure it updates render on every loading
-        map.scene.requestRender();
+    let styledFeatures = new GeoJSONStyledFeatures({
+        features: [],
+        id: options?.id,
+        map: map,
+        opacity: options.opacity,
+        queryable: options.queryable === undefined || options.queryable
     });
     const params = optionsToVendorParams(options);
 
@@ -51,49 +53,23 @@ const createLayer = (options, map) => {
     const source = cancelToken.source();
     requestFeatures(options, params, source.token)
         .then(({ data: collection }) => {
-            dataSource.load(collection, {
-                // ensure default style is not applied
-                stroke: new Cesium.Color(0, 0, 0, 0),
-                fill: new Cesium.Color(0, 0, 0, 0),
-                markerColor: new Cesium.Color(0, 0, 0, 0),
-                strokeWidth: 0,
-                markerSize: 0
-            }).then(() => {
-                map.dataSources.add(dataSource);
-                dataSource['@wfsFeatureCollection'] = collection;
-                layerToGeoStylerStyle(options)
-                    .then((style) => {
-                        getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
-                            .then((styleFunc) => {
-                                if (styleFunc) {
-                                    styleFunc({
-                                        entities: dataSource?.entities?.values,
-                                        map,
-                                        opacity: options.opacity ?? 1,
-                                        features: collection.features
-                                    }).then(() => {
-                                        map.scene.requestRender();
-                                    });
-                                }
-                            });
-                    });
-            });
+            styledFeatures.setFeatures(collection.features);
+            layerToGeoStylerStyle(options)
+                .then((style) => {
+                    getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
+                        .then((styleFunc) => {
+                            styledFeatures.setStyleFunction(styleFunc);
+                        });
+                });
         });
-
-
-    dataSource.show = !!options.visibility;
-    dataSource.queryable = options.queryable === undefined || options.queryable;
 
     return {
         detached: true,
-        dataSource,
+        styledFeatures,
         remove: () => {
-            if (source?.cancel) {
-                source.cancel();
-            }
-            if (dataSource && map) {
-                map.dataSources.remove(dataSource);
-                dataSource = undefined;
+            if (styledFeatures) {
+                styledFeatures.destroy();
+                styledFeatures = undefined;
             }
         }
     };
@@ -105,28 +81,17 @@ Layers.registerType('wfs', {
         if (needsReload(oldOptions, newOptions)) {
             return createLayer(newOptions, map);
         }
-        if (layer?.dataSource?.entities?.values
-            && (
-                !isEqual(newOptions.style, oldOptions.style)
-                || newOptions.opacity !== oldOptions.opacity
-            )
-        ) {
+        if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {
             layerToGeoStylerStyle(newOptions)
                 .then((style) => {
                     getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, style }), 'cesium')
                         .then((styleFunc) => {
-                            if (styleFunc) {
-                                styleFunc({
-                                    entities: layer.dataSource.entities.values,
-                                    map,
-                                    opacity: newOptions.opacity ?? 1,
-                                    features: layer?.dataSource?.['@wfsFeatureCollection']?.features
-                                }).then(() => {
-                                    map.scene.requestRender();
-                                });
-                            }
+                            layer.styledFeatures.setStyleFunction(styleFunc);
                         });
                 });
+        }
+        if (layer?.styledFeatures && newOptions.opacity !== oldOptions.opacity) {
+            layer.styledFeatures.setOpacity(newOptions.opacity);
         }
         return null;
     }

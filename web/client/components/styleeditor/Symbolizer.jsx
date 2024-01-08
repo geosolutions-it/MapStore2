@@ -193,9 +193,10 @@ export function SymbolizerMenu({
 
     return (
         <DropdownButton
-            className="square-button-md no-border"
+            className="no-border"
             noCaret
             pullRight
+            style={{ padding: 0 }}
             title={<Glyphicon glyph="option-vertical"/>}>
             {options.map((option) => {
                 return !option.isVisible || option.isVisible({ graphicKey })

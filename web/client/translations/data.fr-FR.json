@@ -2464,8 +2464,8 @@
             "fontStyleItalic": "Italic",
             "fontWeightNormal": "Normal",
             "fontWeightBold": "Bold",
-            "boolTrue": "True",
-            "boolFalse": "False",
+            "boolTrue": "Actif",
+            "boolFalse": "Inactif",
             "colorMapType": {
               "label": "Type de carte de couleur",
               "ramp": "Rampe",
@@ -2597,7 +2597,13 @@
             "colorPropertyInfoMessage": "La valeur de la propriété de couleur doit être une chaîne hexadécimale. Exemple : \"#ffffff\"",
             "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété.",
             "msTranslateX": "Décalage x",
-            "msTranslateY": "Décalage y"
+            "msTranslateY": "Décalage y",
+            "geometryHeight": "Hauteur de la géométrie",
+            "msExtrusionRelativeToGeometry": "Extrusion par rapport à la géométrie",
+            "msExtrudedHeight": "Hauteur extrudée",
+            "msExtrusionColor": "Couleur d'extrusion",
+            "msExtrusionType": "Type d'extrusion",
+            "wall": "Mur"
         },
         "playback": {
             "settings": {

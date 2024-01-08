@@ -143,6 +143,9 @@
     .ms-classification-popover {
         .background-color-var(@theme-vars[main-bg]);
     }
+    .ms-rule-collapse * {
+        .color-var(@theme-vars[main-color]);
+    }
 }
 
 // **************
@@ -515,7 +518,6 @@ Ported to CodeMirror by Peter Kroon
         list-style-type: none;
     }
     .ms-style-rule-head {
-        margin-bottom: 8px;
         display: flex;
         align-items: center;
         .ms-style-rule-grab-handle {
@@ -535,6 +537,22 @@ Ported to CodeMirror by Peter Kroon
             flex: 1;
             margin-right: 8px;
         }
+        .ms-rule-legend-icon {
+            padding: 0 4px;
+        }
+    }
+    .ms-rule-collapse {
+        border: transparent;
+        padding: 0 4px;
+        width: 21px;
+        height: 21px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+    .ms-style-rule-body {
+        margin-top: 8px;
     }
     .ms-style-rule-head-tools {
         display: flex;
@@ -568,6 +586,7 @@ Ported to CodeMirror by Peter Kroon
 
     .ms-symbolizer-info {
         padding: 4px;
+        padding-right: 0;
         display: flex;
         align-items: center;
         > *:not(.ms-symbolizer-tools) {
@@ -756,5 +775,14 @@ Ported to CodeMirror by Peter Kroon
     }
     .form-group + .form-group {
         margin-top: 4px;
+    }
+}
+
+.ms-rule-legend-icon {
+    display: flex;
+    align-items: center;
+    svg {
+        width: 16px;
+        height: 16px;
     }
 }

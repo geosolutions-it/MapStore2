@@ -347,6 +347,10 @@ class CesiumMap extends React.Component {
         // for consistency with 2D view we allow to drill pick through the first feature
         // and intersect all the features behind
         const features = map.scene.drillPick(position).filter((aFeature) => {
+            const isQueryable = aFeature?.id?._msIsQueryable || aFeature?.primitive?._msIsQueryable;
+            if (isQueryable) {
+                return isQueryable();
+            }
             return !(aFeature?.id?.entityCollection?.owner?.queryable === false);
         });
         if (features) {
@@ -359,10 +363,11 @@ class CesiumMap extends React.Component {
                     // it has content but refers to the whole tile model
                     const getPropertyIds = feature.getPropertyIds();
                     properties = Object.fromEntries(getPropertyIds.map(key => [key, feature.getProperty(key)]));
-                } else if (feature?.id instanceof Cesium.Entity && feature.id.id && feature.id.properties) {
-                    const {properties: {propertyNames}, entityCollection: {owner: {name}}} = feature.id;
-                    properties = Object.fromEntries(propertyNames.map(key => [key, feature.id.properties[key].getValue(0)]));
-                    msId = name;
+                } else if (feature?.id?._msGetFeatureById || feature?.primitive?._msGetFeatureById) {
+                    const getFeatureById = feature?.id?._msGetFeatureById || feature?.primitive?._msGetFeatureById;
+                    const value = getFeatureById(feature.id);
+                    properties = value.feature.properties;
+                    msId = value.msId;
                 }
                 if (!properties || !msId) {
                     return acc;

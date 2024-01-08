@@ -2502,8 +2502,8 @@
             "fontStyleItalic": "Italic",
             "fontWeightNormal": "Normal",
             "fontWeightBold": "Bold",
-            "boolTrue": "True",
-            "boolFalse": "False",
+            "boolTrue": "Aktiv",
+            "boolFalse": "Inaktiv",
             "colorMapType": {
               "label": "Farbkartentyp",
               "ramp": "Rampe",
@@ -2635,7 +2635,13 @@
             "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\"",
             "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft.",
             "msTranslateX": "Versatz x",
-            "msTranslateY": "Versatz y"
+            "msTranslateY": "Versatz y",
+            "geometryHeight": "Geometriehöhe",
+            "msExtrusionRelativeToGeometry": "Extrusion relativ zur Geometrie",
+            "msExtrudedHeight": "Extrudierte Höhe",
+            "msExtrusionColor": "Extrusionsfarbe",
+            "msExtrusionType": "Extrusionstyp",
+            "wall": "Wand"
         },
         "playback": {
             "settings": {

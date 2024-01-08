@@ -25,6 +25,7 @@ import getBlocks from './config/blocks';
 import Rule from './Rule';
 import InfoPopover from '../widgets/widget/InfoPopover';
 import ButtonRB from '../misc/Button';
+import RuleLegendIcon from './RuleLegendIcon';
 
 const Button = tooltip(ButtonRB);
 const FormControl = localizedProps('placeholder')(FormControlRB);
@@ -260,7 +261,8 @@ const RulesEditor = forwardRef(({
                         kind: ruleKind,
                         errorId: ruleErrorId,
                         msgParams: ruleMsgParams,
-                        mandatory
+                        mandatory,
+                        collapsed
                     } = rule;
 
                     const {
@@ -287,6 +289,11 @@ const RulesEditor = forwardRef(({
                             errorId={ruleErrorId}
                             msgParams={ruleMsgParams}
                             onSort={handleSortRules}
+                            icon={<RuleLegendIcon rule={rule} />}
+                            collapsed={collapsed}
+                            onCollapse={(_collapsed) =>
+                                handleChanges({ values: { collapsed: _collapsed }, ruleId }, true)
+                            }
                             title={
                                 hideInputLabel
                                     ? <Message msgId={`styleeditor.rule${ruleKind}`}/>
@@ -365,6 +372,7 @@ const RulesEditor = forwardRef(({
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     onReplace={handleReplaceRule}
                                     format={format}
+                                    enableFieldExpression={enableFieldExpression}
                                 />
                                 : symbolizers.map(({ kind = '', symbolizerId, ...properties }) => {
                                     const { params, glyph, hideMenu } = getSymbolizerInfo(kind);

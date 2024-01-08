@@ -2464,8 +2464,8 @@
             "fontStyleItalic": "Cursiva",
             "fontWeightNormal": "Normal",
             "fontWeightBold": "Negrita",
-            "boolTrue": "Verdadero",
-            "boolFalse": "Falso",
+            "boolTrue": "Activo",
+            "boolFalse": "Inactivo",
             "colorMapType": {
               "label": "Tipo de mapa de color",
               "ramp": "Rampa",
@@ -2597,7 +2597,13 @@
             "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\"",
             "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad.",
             "msTranslateX": "Desplazamiento x",
-            "msTranslateY": "Desplazamiento y"
+            "msTranslateY": "Desplazamiento y",
+            "geometryHeight": "Altura de la geometría",
+            "msExtrusionRelativeToGeometry": "Extrusión relativa a la geometría",
+            "msExtrudedHeight": "Altura extruida",
+            "msExtrusionColor": "Color de extrusión",
+            "msExtrusionType": "Tipo de extrusión",
+            "wall": "Muro"
         },
         "playback": {
             "settings": {

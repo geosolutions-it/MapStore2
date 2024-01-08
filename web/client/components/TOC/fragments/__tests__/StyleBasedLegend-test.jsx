@@ -51,7 +51,7 @@ describe('StyleBasedLegend module component', () => {
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some Line');
-        const iconContainerElement = ruleElements[0].querySelectorAll('.wfs-legend-icon');
+        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
         expect(iconContainerElement.length).toBe(1);
         const expectedSVG = '<svg viewBox="0 0 50 50"><path d="M 7 7 L 43 43" stroke="#8426c9" stroke-width="7" stroke-dasharray="18 18" stroke-linecap="butt" stroke-linejoin="round" stroke-opacity="0.5"></path></svg>';
         expect(iconContainerElement[0].innerHTML).toBe(expectedSVG);
@@ -84,7 +84,7 @@ describe('StyleBasedLegend module component', () => {
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some Line');
-        const iconContainerElement = ruleElements[0].querySelectorAll('.wfs-legend-icon');
+        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
         expect(iconContainerElement.length).toBe(1);
         const expectedSVG = '<svg viewBox="0 0 50 50"><path d="M 1 1 L 49 49" stroke="#8426c9" stroke-width="1" stroke-linecap="butt" stroke-linejoin="round" stroke-opacity="0.5"></path></svg>';
         expect(iconContainerElement[0].innerHTML).toBe(expectedSVG);
@@ -117,7 +117,7 @@ describe('StyleBasedLegend module component', () => {
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some Line');
-        const iconContainerElement = ruleElements[0].querySelectorAll('.wfs-legend-icon');
+        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
         expect(iconContainerElement.length).toBe(1);
         const expectedSVG = '<svg viewBox="0 0 50 50"><path d="M 7 7 L 43 43" stroke="#8426c9" stroke-width="7" stroke-linecap="butt" stroke-linejoin="round" stroke-opacity="0.5"></path></svg>';
         expect(iconContainerElement[0].innerHTML).toBe(expectedSVG);
@@ -152,7 +152,7 @@ describe('StyleBasedLegend module component', () => {
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some polygon');
-        const iconContainerElement = ruleElements[0].querySelectorAll('.wfs-legend-icon');
+        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
         expect(iconContainerElement.length).toBe(1);
         const expectedSVG = '<svg viewBox="0 0 50 50"><path d="M 1 1 L 1 49 L 49 49 L 49 1 L 1 1" fill="#28ee50" opacity="1" stroke="#17ad31" stroke-width="6" stroke-opacity="1"></path></svg>';
         expect(iconContainerElement[0].innerHTML).toBe(expectedSVG);
@@ -190,7 +190,7 @@ describe('StyleBasedLegend module component', () => {
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some mark');
-        const iconContainerElement = ruleElements[0].querySelectorAll('.wfs-legend-icon');
+        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
         expect(iconContainerElement.length).toBe(1);
         const expectedSVG = '<svg viewBox="0 0 50 50" style="transform: rotate(55deg);"></svg>';
         expect(iconContainerElement[0].innerHTML).toBe(expectedSVG);
@@ -223,11 +223,7 @@ describe('StyleBasedLegend module component', () => {
         const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
-        expect(textElement[0].innerHTML).toBe('Some icon');
-        const iconContainerElement = ruleElements[0].querySelectorAll('.wfs-legend-icon');
-        expect(iconContainerElement.length).toBe(1);
-        const expectedSVG = '<svg viewBox="0 0 50 50" style="transform: rotate(0deg); opacity: 1;"><image href="https://url.to.image" height="50" width="50"></image></svg>';
-        expect(iconContainerElement[0].innerHTML).toBe(expectedSVG);
+        expect(textElement[0].getAttribute('class')).toBe('glyphicon glyphicon-point');
     });
 
     it('Should render multiple items', () => {

@@ -159,6 +159,13 @@ The `symbolizer` could be of following `kinds`:
 | `width` | stroke width of the line | x | x |
 | `dasharray` | array that represent the dashed line intervals | x | x |
 | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
+| `msHeight` | line height in meters, if undefined the line geometry height is used |  | x |
+| `msHeightReference` | reference to compute the distance of the line geometry, one of **none**, **ground** or **clamp**. This is applied also to the `msExtrudedHeight` property |  | x |
+| `msExtrudedHeight` | height of the extrusion in meters |  | x |
+| `msExtrusionRelativeToGeometry` | if true the extrusion height is computed as z distance from the line geometry. When false the extrude height is computed as absolute altitude. When `msExtrusionType` is not `undefined` the extrusion height will be computed always relative to the geometry so this property has not effect |  | x |
+| `msExtrusionColor` | color of the extruded shape |  | x |
+| `msExtrusionOpacity` | opacity of the extruded shape |  | x |
+| `msExtrusionType` | type of extrusion, one of `undefined`, **Circle** or **Square**. If `undefined` a vertical wall plane will be extruded. |  | x |
 
 ## `Fill` symbolizer properties
 
@@ -172,7 +179,10 @@ The `symbolizer` could be of following `kinds`:
 | `outlineWidth` | outline width of the polygon | x | x |
 | `outlineDasharray` | array that represent the dashed line intervals | x | x |
 | `msClassificationType` | allow setting **classificationType** value for the feature. This would only apply on polygon graphics in Cesium maps. |  | x |
-| `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
+| `msHeight` | polygon height in meters, if undefined the polygon geometry height is used |  | x |
+| `msHeightReference` | reference to compute the distance of the polygon geometry, one of **none**, **ground** or **clamp**. This is applied also to the `msExtrudedHeight` property |  | x |
+| `msExtrudedHeight` | height of the extrusion in meters |  | x |
+| `msExtrusionRelativeToGeometry` | if true the extrusion height is computed as z distance from the polygon surface. When false the extrude height is computed as absolute altitude |  | x |
 
 ## `Text` symbolizer properties
 

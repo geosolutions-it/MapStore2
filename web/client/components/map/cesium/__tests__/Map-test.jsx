@@ -244,11 +244,11 @@ describe('CesiumMap', () => {
                                         id: 'vector',
                                         features: [
                                             {
-                                                type: 'Feature', properties: { category: 'boundary' },
+                                                type: 'Feature', properties: { category: 'area' },
                                                 geometry: null
                                             },
                                             {
-                                                type: 'Feature', properties: { category: 'area' },
+                                                type: 'Feature', properties: { category: 'boundary' },
                                                 geometry: null
                                             }
                                         ]
@@ -364,14 +364,14 @@ describe('CesiumMap', () => {
                 </CesiumMap>
                 , document.getElementById("container"));
         });
-        waitFor(() => expect(ref.map.dataSourceDisplay.ready).toBe(true), {
+        waitFor(() => expect(!!ref.map.dataSources.get(0).entities.values.length && ref.map.dataSourceDisplay.ready).toBe(true), {
             timeout: 5000
         })
             .then(() => {
                 expect(ref.map.dataSources.length).toBe(1);
                 const dataSource = ref.map.dataSources.get(0);
                 expect(dataSource).toBeTruthy();
-                expect(dataSource.entities.values.length).toBe(2);
+                expect(dataSource.entities.values.length).toBe(4);
                 const mapCanvas = ref.map.canvas;
                 const { width, height } = mapCanvas.getBoundingClientRect();
                 simulateClick(mapCanvas, {

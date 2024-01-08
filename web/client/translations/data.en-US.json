@@ -2466,8 +2466,8 @@
             "fontStyleItalic": "Italic",
             "fontWeightNormal": "Normal",
             "fontWeightBold": "Bold",
-            "boolTrue": "True",
-            "boolFalse": "False",
+            "boolTrue": "Active",
+            "boolFalse": "Inactive",
 
             "colorMapType": {
                 "label": "Color map type",
@@ -2607,7 +2607,13 @@
             "colorPropertyInfoMessage": "The color property value must be an hexadecimal string. Example: \"#ffffff\"",
             "pointCloudSizeInfo": "The point cloud radius is applied only when the attenuation options is disabled. The attenuation option takes precedence over this property.",
             "msTranslateX": "Translate x",
-            "msTranslateY": "Translate y"
+            "msTranslateY": "Translate y",
+            "geometryHeight": "Geometry height",
+            "msExtrusionRelativeToGeometry": "Extrusion relative to geometry",
+            "msExtrudedHeight": "Extruded height",
+            "msExtrusionColor": "Extrusion color",
+            "msExtrusionType": "Extrusion type",
+            "wall": "Wall"
         },
         "playback": {
             "settings": {

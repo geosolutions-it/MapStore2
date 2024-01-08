@@ -1354,7 +1354,7 @@ describe('Cesium layer', () => {
             }).catch(done);
     });
 
-    it('should create a vector layer', (done) => {
+    it('should create a vector layer', () => {
         const options = {
             type: 'vector',
             features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [0, 0] } }],
@@ -1379,12 +1379,11 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.dataSource).toBeTruthy();
+        expect(cmp.layer.styledFeatures).toBeTruthy();
         expect(cmp.layer.detached).toBe(true);
-        waitFor(() => expect(cmp.layer.dataSource.entities.values.length).toBe(1))
-            .then(() => done());
+        expect(cmp.layer.styledFeatures._features.length).toBe(1);
     });
-    it('should create a vector layer queryable', (done) => {
+    it('should create a vector layer queryable', () => {
         const options = {
             type: 'vector',
             features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [0, 0] } }],
@@ -1410,11 +1409,10 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.dataSource).toBeTruthy();
+        expect(cmp.layer.styledFeatures).toBeTruthy();
         expect(cmp.layer.detached).toBe(true);
-        expect(cmp.layer.dataSource.queryable).toBe(false);
-        waitFor(() => expect(cmp.layer.dataSource.entities.values.length).toBe(1))
-            .then(() => done());
+        expect(cmp.layer.styledFeatures._queryable).toBe(false);
+        expect(cmp.layer.styledFeatures._features.length).toBe(1);
     });
     it('should create a wfs layer', () => {
         const options = {
@@ -1443,10 +1441,10 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.dataSource).toBeTruthy();
-        expect(cmp.layer.dataSource.entities.values.length).toBe(0);
-        expect(cmp.layer.dataSource.name).toBe('ws:layer_id');
-        expect(cmp.layer.dataSource.queryable).toBe(true);
+        expect(cmp.layer.styledFeatures).toBeTruthy();
+        expect(cmp.layer.styledFeatures._features.length).toBe(0);
+        expect(cmp.layer.styledFeatures._msId).toBe('ws:layer_id');
+        expect(cmp.layer.styledFeatures._queryable).toBe(true);
         expect(cmp.layer.detached).toBe(true);
     });
     it('should create a non-queriable wfs layer', () => {
@@ -1475,7 +1473,7 @@ describe('Cesium layer', () => {
                 options={options}
                 map={map}
             />, document.getElementById('container'));
-        expect(cmp.layer.dataSource.queryable).toBe(false);
+        expect(cmp.layer.styledFeatures._queryable).toBe(false);
     });
 
     it('should create a bil terrain provider from wms layer (deprecated)', (done) => {
