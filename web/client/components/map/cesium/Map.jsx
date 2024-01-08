@@ -246,6 +246,17 @@ class CesiumMap extends React.Component {
                 const latitude = cartographic.latitude * 180.0 / Math.PI;
                 const longitude = cartographic.longitude * 180.0 / Math.PI;
 
+                let elevation = Math.round(cartographic.height);
+                // cartographic height of terrain in cesium is ellipsoidal
+                // if we want the elevation above the sea level from a DTM
+                // we should use an elevation layer instead
+                if (this.map?.msElevationLayers?.[0]) {
+                    elevation = this.getElevation(
+                        cartographic.longitude,
+                        cartographic.latitude
+                    );
+                }
+
                 const y = (90.0 - latitude) / 180.0 * this.props.standardHeight * (this.props.zoom + 1);
                 const x = (180.0 + longitude) / 360.0 * this.props.standardWidth * (this.props.zoom + 1);
                 this.props.onClick({
@@ -259,7 +270,8 @@ class CesiumMap extends React.Component {
                     cartographic,
                     latlng: {
                         lat: latitude,
-                        lng: longitude
+                        lng: longitude,
+                        z: elevation
                     },
                     crs: "EPSG:4326",
                     intersectedFeatures,
@@ -275,7 +287,16 @@ class CesiumMap extends React.Component {
             let cartographic = ClickUtils.getMouseXYZ(this.map, movement) || cartesian && Cesium.Cartographic.fromCartesian(cartesian);
             if (cartographic) {
                 const intersectedFeatures = this.getIntersectedFeatures(this.map, movement.endPosition);
-                const elevation = Math.round(cartographic.height);
+                let elevation = Math.round(cartographic.height);
+                // cartographic height of terrain in cesium is ellipsoidal
+                // if we want the elevation above the sea level from a DTM
+                // we should use an elevation layer instead
+                if (this.map?.msElevationLayers?.[0]) {
+                    elevation = this.getElevation(
+                        cartographic.longitude,
+                        cartographic.latitude
+                    );
+                }
                 this.props.onMouseMove({
                     y: cartographic.latitude * 180.0 / Math.PI,
                     x: cartographic.longitude * 180.0 / Math.PI,
@@ -382,6 +403,16 @@ class CesiumMap extends React.Component {
             return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
         }
         return [];
+    }
+
+    getElevation(longitude, latitude) {
+        const elevationLayers = this.map.msElevationLayers || [];
+        return elevationLayers?.[0]?.getElevation
+            ? elevationLayers[0].getElevation({
+                longitude,
+                latitude
+            })
+            : undefined;
     }
 
     render() {

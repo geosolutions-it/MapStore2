@@ -26,6 +26,7 @@ import '../plugins/ThreeDTilesLayer';
 import '../plugins/VectorLayer';
 import '../plugins/WFSLayer';
 import '../plugins/TerrainLayer';
+import '../plugins/ElevationLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1602,5 +1603,23 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.terrainProvider).toBeTruthy();
+    });
+    it('should create am elevation layer from wms layer', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.getElevation).toBeTruthy();
     });
 });

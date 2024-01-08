@@ -22,6 +22,42 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.xx to 2024.01.00
 
+### Using `elevation` layer type instead of wms layer with useForElevation property
+
+The wms layer with `useForElevation` property is deprecated and a `elevation` layer introduced in substitution.
+The new `elevation` layer is used only to display height information inside the mouse position plugin and it will not provide a support for terrain model of the 3D visualziation mode. In order to provide this support, you need to add a `terrain` layer too. See documentation about [Elevation layer](maps-configuration.md#elevation) and [Terrain layer](maps-configuration.md#terrain) for more details.
+A configuration update example:
+
+```diff
+{
+    "name": "Map",
+    "cfg": {
+        "additionalLayers": [
+            {
+-               "type": "wms",
++               "type": "elevation",
+                "url": "/geoserver/wms",
+                "name": "workspace:layername",
+-               "format": "application/bil16",
+                "visibility": true,
+-               "useForElevation": true,
+                "littleEndian": false
+            },
+            // only needed for 3D terrain
++           {
++               "type": "terrain",
++               "provider": "wms",
++               "url": "/geoserver/wms",
++               "name": "workspace:layername",
++               "littleEndian": false,
++               "visibility": true,
++               "crs": "CRS:84"
+            }
+        ]
+    }
+}
+```
+
 ### Removing possibility to add custom fonts to the Map
 
 From this version we limited the load of the font to FontAwesome.
@@ -51,7 +87,7 @@ In order to enable the possibility to add in and the spatial filter to the widge
 ...
 "dashboard": [
 ...
-{ 
+{
     "name": "QueryPanel",
     "cfg": {
         "toolsOptions": {

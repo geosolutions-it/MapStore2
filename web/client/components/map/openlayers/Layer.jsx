@@ -194,9 +194,6 @@ export default class OpenlayersLayer extends React.Component {
                 this.addLayer(options);
             }
 
-            if (this.layer && this.layer.get && this.layer.get('getElevation')) {
-                this.props.map.set('elevationLayer', this.layer);
-            }
             this.forceUpdate();
         }
     };

@@ -161,7 +161,7 @@ class LeafletMap extends React.Component {
                     latlng: {
                         lat: event.latlng.lat,
                         lng: event.latlng.lng,
-                        z: this.elevationLayer && this.elevationLayer.getElevation(event.latlng, event.containerPoint) || undefined
+                        z: this.getElevation(event.latlng, event.containerPoint)
                     },
                     rawPos: [event.latlng.lat, event.latlng.lng],
                     modifiers: {
@@ -201,9 +201,6 @@ class LeafletMap extends React.Component {
                 return;
             }
             event.layer._ms2Added = true;
-            if (event.layer.getElevation) {
-                this.elevationLayer = event.layer;
-            }
 
             // avoid binding if not possible, e.g. for measurement vector layers
             if (!event.layer.layerId) {
@@ -359,6 +356,13 @@ class LeafletMap extends React.Component {
         return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
     }
 
+    getElevation(pos, containerPoint) {
+        const elevationLayers = this.map.msElevationLayers || [];
+        return elevationLayers?.[0]?.getElevation
+            ? elevationLayers[0].getElevation(pos, containerPoint)
+            : undefined;
+    }
+
     render() {
         const map = this.map;
         const mapProj = this.props.projection;
@@ -480,7 +484,7 @@ class LeafletMap extends React.Component {
         this.props.onMouseMove({
             x: pos.lng || 0.0,
             y: pos.lat || 0.0,
-            z: this.elevationLayer && this.elevationLayer.getElevation(pos, event.containerPoint) || undefined,
+            z: this.getElevation(pos, event.containerPoint),
             crs: "EPSG:4326",
             pixel: {
                 x: event.containerPoint.x,
@@ -489,7 +493,7 @@ class LeafletMap extends React.Component {
             latlng: {
                 lat: event.latlng.lat,
                 lng: event.latlng.lng,
-                z: this.elevationLayer && this.elevationLayer.getElevation(event.latlng, event.containerPoint) || undefined
+                z: this.getElevation(event.latlng, event.containerPoint)
             },
             rawPos: [event.latlng.lat, event.latlng.lng],
             intersectedFeatures

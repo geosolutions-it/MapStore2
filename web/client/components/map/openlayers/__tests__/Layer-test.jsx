@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import OpenlayersLayer from '../Layer';
-
+import { waitFor } from '@testing-library/react';
 import assign from 'object-assign';
 import Layers from '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
@@ -24,6 +24,7 @@ import '../plugins/OverlayLayer';
 import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/WFS3Layer';
+import '../plugins/ElevationLayer';
 
 import {
     setStore
@@ -483,20 +484,17 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.constructor.name).toBe('VectorTileLayer');
         expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
-        setTimeout(() => {
-            try {
-                const style = layer.layer.getStyle()()[0];
-                expect(style).toBeTruthy();
-                expect(style.getStroke().getColor()).toBe('#FF0000');
-                // currently SLD parser use fillOpacity instead of opacity
-                // and probably this cause wrong parsing of opacity
-                // added a wrapper to the openlayers parser to manage the issue related to opacity
-                expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, 0);
+        waitFor(() => {
+            const style = layer.layer.getStyle()()[0];
+            expect(style).toBeTruthy();
+            expect(style.getStroke().getColor()).toBe('#FF0000');
+            // currently SLD parser use fillOpacity instead of opacity
+            // and probably this cause wrong parsing of opacity
+            // added a wrapper to the openlayers parser to manage the issue related to opacity
+            return expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
+        })
+            .then(() => done())
+            .catch(done);
     });
 
     it('wms layer attribution with credits - create and update layer', () => {
@@ -3155,5 +3153,22 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getMinResolution()).toBe(0);
         expect(layer.layer.getMaxResolution()).toBe(Infinity);
     });
-
+    it('should create am elevation layer from wms layer', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <OpenlayersLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.get('getElevation')).toBeTruthy();
+    });
 });

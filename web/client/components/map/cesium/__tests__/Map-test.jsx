@@ -102,7 +102,7 @@ describe('CesiumMap', () => {
         expect(ref.map.imageryLayers.length).toBe(1);
     });
 
-    it('check layers for elevation', () => {
+    it('check layers for elevation (deprecated)', () => {
         const options = {
             "url": "http://fake",
             "name": "mylayer",
@@ -118,6 +118,24 @@ describe('CesiumMap', () => {
         expect(ref).toBeTruthy();
         expect(ref.map.terrainProvider).toBeTruthy();
         expect(ref.map.terrainProvider.layerName).toBe('mylayer');
+    });
+    it('check layers for elevation', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        let ref;
+        act(() => {
+            ReactDOM.render(<CesiumMap ref={value => { ref = value; } } center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                <CesiumLayer type={options.type} options={options} />
+            </CesiumMap>, document.getElementById("container"));
+        });
+        expect(ref).toBeTruthy();
+        expect(ref.map.msElevationLayers).toBeTruthy();
+        expect(ref.map.msElevationLayers.length).toBe(1);
     });
     it('check wmts layer for custom attribution', () => {
         const options = {
