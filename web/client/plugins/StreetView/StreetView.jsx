@@ -49,7 +49,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  * @property {boolean} [cfg.useDataLayer=true] If true, adds to the map a layer for street view data availability when the plugin is turned on.
  * @property {object} [cfg.dataLayerConfig] configuration for the data layer. By default `{provider: 'custom', type: "tileprovider", url: "https://mts1.googleapis.com/vt?hl=en-US&lyrs=svv|cb_client:apiv3&style=40,18&x={x}&y={y}&z={z}"}`
  * @property {object} [cfg.panoramaOptions] options to configure the panorama. {@link https://developers.google.com/maps/documentation/javascript/reference/street-view#panoramaOptions|Reference for google maps API}
- * @property {object} [cfg.panelSize] option to configure default street view modal panel size i.e `width` and `height`
+ * @property {object} [cfg.panelSize] option to configure default street view modal panel size `width` and `height`. Example: `{"width": 500, "height": 500}`.
  * @class
  */
 export default createPlugin(
