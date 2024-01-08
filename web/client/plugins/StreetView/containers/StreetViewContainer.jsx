@@ -17,9 +17,9 @@ import { toggleStreetView } from '../actions/streetView';
  * @param {*} param0
  * @returns
  */
-function Panel({enabled, onClose = () => {}}) {
+function Panel({enabled, onClose = () => {}, panelSize}) {
     const margin = 10;
-    const [size, setSize] = useState({width: 400, height: 300});
+    const [size, setSize] = useState({width: 400, height: 300, ...panelSize});
     if (!enabled) {
         return null;
     }
