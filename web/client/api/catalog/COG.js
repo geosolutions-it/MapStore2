@@ -136,12 +136,19 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
             const isSave = get(info, 'options.save', false);
             // Fetch metadata only on saving the service (skip on search)
             if ((isNil(service.fetchMetadata) || service.fetchMetadata) && isSave) {
-                const cached = {} || capabilitiesCache[url];
+                const cached = capabilitiesCache[url];
                 if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
                     return {...cached.data};
                 }
                 return fromUrl(url, controller?.signal)
-                    .then(image => getLayerConfig(layer, image ))
+                    .then(image => {
+                        const updatedLayer = getLayerConfig(layer, image);
+                        capabilitiesCache[url] = {
+                            timestamp: new Date().getTime(),
+                            data: {...updatedLayer}
+                        };
+                        return updatedLayer;
+                    })
                     .catch(() => ({...layer}));
             }
             return Promise.resolve(layer);
