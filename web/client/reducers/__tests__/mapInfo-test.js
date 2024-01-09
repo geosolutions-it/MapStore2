@@ -449,4 +449,14 @@ describe('Test the mapInfo reducer', () => {
         expect(state.cfg1).toEqual("test");
         expect(state.configuration).toEqual({maxItems: 3});
     });
+    it('initiateOrResetHighlight via onInitPlugin if highlight default value equal true', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, onInitPlugin({highlight: true}));
+        expect(state.highlight).toEqual(true);
+    });
+    it('initiateOrResetHighlight via onInitPlugin if highlight default value equal false', () => {
+        const initialState = { configuration: {} };
+        const state = mapInfo(initialState, onInitPlugin({highlight: false}));
+        expect(state.highlight).toEqual(false);
+    });
 });
