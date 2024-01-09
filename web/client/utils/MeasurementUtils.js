@@ -220,6 +220,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                         ]
                     }
                     : geometry,
+                id: feature.id || measureId,
                 properties: {
                     ...properties,
                     label: infoLabelText,

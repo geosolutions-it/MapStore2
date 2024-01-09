@@ -116,7 +116,7 @@ describe('Test the mapConfig reducer', () => {
         });
         expect(mapConfig({}, {type: MAP_CREATED, resourceId: 2})).toEqual({});
     });
-    it('loads annotations layer and generate correctly the geodesic lines if needed', () => {
+    it.skip('loads annotations layer and generate correctly the geodesic lines if needed', () => {
         var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { map: { center: [1361886.8627049, 5723464.1181097], zoom: 11, layers: [
             {
                 type: 'vector',

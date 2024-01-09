@@ -3924,6 +3924,7 @@
           "true": "vero",
           "false": "falso",
           "notifications": {
+            "errorMissingUrl": "È necessario fornire un URL wps del geoserver per esegurie il processo per i livelli {layerName}. È possibile configurare la proprietà wpsUrl nel plugin GeoProcessing",
             "errorIntersectGFI": "Si è verificato un errore durante l'intersezione delle geometrie. Non è stato possibile creare il livello di intersezione.",
             "errorGFI": "Si è verificato un errore durante il caricamento della feature",
             "errorGetFeature": "Si è verificato un errore durante il caricamento della feature per ottenerne la geometria",

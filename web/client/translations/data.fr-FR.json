@@ -3924,6 +3924,7 @@
           "true": "vrai",
           "false": "faux",
           "notifications": {
+            "errorMissingUrl": "Une URL wps de géoserveur doit être fournie pour collecter les géométries de ces couches {layerName}. Vous pouvez configurer la propriété wpsUrl dans le plugin GeoProcessing",
             "errorIntersectGFI": "Une erreur s'est produite lors de l'intersection des entités. Il n'a pas été possible de créer la couche d'intersection.",
             "errorGFI": "Une erreur s'est produite lors du chargement de la fonctionnalité",
             "errorGetFeature": "Une erreur s'est produite lors du chargement de l'entité afin d'obtenir sa géométrie",

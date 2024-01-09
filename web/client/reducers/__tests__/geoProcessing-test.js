@@ -7,6 +7,7 @@
  */
 
 import expect from 'expect';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import geoProcessing from '../geoProcessing';
 import {
@@ -14,8 +15,6 @@ import {
     checkingIntersectionWPSAvailability,
     errorLoadingDFT,
     initPlugin,
-    increaseBufferedCounter,
-    increaseIntersectedCounter,
     runningProcess,
     setBufferDistance,
     setBufferDistanceUom,
@@ -39,8 +38,12 @@ import {
     setIntersectionPercentagesEnabled,
     setIntersectionAreasEnabled,
     setSelectedLayerType,
-    toggleHighlightLayers
+    toggleHighlightLayers,
+    reset
 } from '../../actions/geoProcessing';
+import {
+    resetControls
+} from '../../actions/controls';
 
 describe('Test Geo Processing Tools reducer', () => {
     it('CHECKING_WPS_AVAILABILITY', () => {
@@ -63,25 +66,53 @@ describe('Test Geo Processing Tools reducer', () => {
     });
     it('INIT_PLUGIN', () => {
         const cfg = {
+            wpsUrl: "test",
             buffer: {
                 distance: 1234
             }
         };
         const action = initPlugin(cfg);
-        const state = geoProcessing(undefined, action);
+        const state = geoProcessing({
+            intersection: {
+                intersectionMode: "INTERSECTION",
+                featureId: "id"
+            }
+        }, action);
         expect(state.buffer.distance).toEqual(1234);
-        expect(state.intersection.counter).toEqual(0);
+        expect(state.intersection.intersectionMode).toEqual("INTERSECTION");
+        expect(state.intersection.featureId).toEqual("id");
+        expect(state.wpsUrl).toEqual("test");
+        expect(state.cfg).toEqual(cfg);
     });
-    it('INCREASE_BUFFERED_COUNTER', () => {
-        const action = increaseBufferedCounter();
-        const state = geoProcessing(undefined, action);
-        expect(state.buffer.counter).toEqual(1);
+    it('RESET, RESET_CONTROLS, LOCATION_CHANGE', () => {
+        const actions = [reset(), resetControls(), {type: LOCATION_CHANGE}];
+        actions.forEach(a => {
+            const state = geoProcessing({
+                intersection: {
+                    intersectionMode: "INTERSECTION",
+                    firstAttributeToRetain: "first",
+                    featureId: "id"
+                },
+                buffer: {
+                    featureId: "id",
+                    distance: 1400
+                },
+                cfg: {
+                    buffer: {
+                        distance: 100
+                    }
+                }
+            }, a);
+            expect(state.buffer.distance).toEqual(100);
+            expect(state.intersection.intersectionMode).toEqual("INTERSECTION");
+            expect(state.intersection.featureId).toEqual(undefined);
+            expect(state.wpsUrl).toEqual(undefined);
+            expect(state.cfg).toEqual({buffer: {
+                distance: 100
+            }});
+        });
     });
-    it('INCREASE_INTERSECT_COUNTER', () => {
-        const action = increaseIntersectedCounter();
-        const state = geoProcessing(undefined, action);
-        expect(state.intersection.counter).toEqual(1);
-    });
+
     it('RUNNING_PROCESS', () => {
         const status = true;
         const action = runningProcess(status);

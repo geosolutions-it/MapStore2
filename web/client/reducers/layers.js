@@ -45,7 +45,8 @@ import {
     sortLayers,
     removeEmptyGroups,
     getLayerId,
-    getGroupNodes
+    getGroupNodes,
+    normalizeLayer
 } from '../utils/LayersUtils';
 
 /**
@@ -249,7 +250,7 @@ function layers(state = { flat: [] }, action) {
                     sameGroup = true;
                 }
                 // Edit the layer with the new options
-                return assign({}, layer, action.options);
+                return normalizeLayer(assign({}, layer, action.options));
             }
             return assign({}, layer);
         });
@@ -343,9 +344,10 @@ function layers(state = { flat: [] }, action) {
         return state;
     }
     case ADD_LAYER: {
+        const layer = normalizeLayer(action.layer);
         let newLayers = (state.flat || []).concat();
         let newGroups = (state.groups || []).concat();
-        const newLayer = (action.layer.id) ? action.layer : assign({}, action.layer, {id: getLayerId(action.layer)});
+        const newLayer = (layer.id) ? layer : assign({}, layer, {id: getLayerId(layer)});
         newLayers.push(newLayer);
         const groupId = newLayer.group || 'Default';
         if (groupId !== "background") {

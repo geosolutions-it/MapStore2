@@ -170,6 +170,18 @@ export const highlightStyleSelector = state => get(state, 'mapInfo.highlightStyl
     fillColor: '#3388ff',
     fillOpacity: 0.2
 });
+/**
+ * gets the configured state for highlight mapInfo features.
+ * @param {object} state the application state
+ * @returns {object} style object
+ */
+export const highlightAnnotationStyleSelector = state => get(state, 'mapInfo.highlightStyle', {
+    color: '#3388ff',
+    weight: 4,
+    dashArray: '',
+    fillColor: '#3388ff',
+    fillOpacity: 0.2
+});
 
 export const clickedPointWithFeaturesSelector = createSelector(
     clickPointSelector,

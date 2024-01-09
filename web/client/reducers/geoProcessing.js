@@ -14,8 +14,6 @@ import {
     CHECKING_WPS_AVAILABILITY_INTERSECTION,
     ERROR_LOADING_DFT,
     INIT_PLUGIN,
-    INCREASE_BUFFERED_COUNTER,
-    INCREASE_INTERSECT_COUNTER,
     RESET,
     RUNNING_PROCESS,
     SET_BUFFER_DISTANCE,
@@ -57,13 +55,10 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 
 const initialState = {
     source: {},
-    buffer: {
-        counter: 0
-    },
+    buffer: {},
     selectedLayerId: "",
     selectedLayerType: "",
     intersection: {
-        counter: 0,
         intersectionMode: "INTERSECTION"
     },
     flags: {
@@ -116,24 +111,6 @@ function geoProcessing( state = {
             intersection: {
                 ...state.intersection,
                 ...(action.cfg.intersection || {})
-            }
-        };
-    }
-    case INCREASE_BUFFERED_COUNTER: {
-        return {
-            ...state,
-            buffer: {
-                ...state.buffer,
-                counter: state.buffer.counter + 1
-            }
-        };
-    }
-    case INCREASE_INTERSECT_COUNTER: {
-        return {
-            ...state,
-            intersection: {
-                ...state.intersection,
-                counter: state.intersection.counter + 1
             }
         };
     }
@@ -200,11 +177,12 @@ function geoProcessing( state = {
         };
     }
     case SET_FEATURES: {
+        // filtering out the features with measureId because they are not the measures, the LineString for length and bering or the Polygon for the area one. We do not want to do the buffer on the point where the measure text label is stored
         return action.data.features ? {
             ...state,
             [action.source]: {
                 ...state[action.source],
-                features: (state[action.source].features || []).concat(action.data.features || []),
+                features: (state[action.source].features || []).concat(action.data.features || []).filter(f => !f?.properties?.measureId),
                 totalCount: action.data.totalFeatures,
                 currentPage: action.nextPage
             },
@@ -310,7 +288,7 @@ function geoProcessing( state = {
             source: {
                 ...state.source,
                 feature: action.feature,
-                features: find(state.source.features, ft => ft.id === action.feature.id) ? state.source.features : [action.feature]
+                features: find(state.source.features, ft => ft?.id === action.feature?.id) ? state.source.features : [action.feature]
             }
         };
     }

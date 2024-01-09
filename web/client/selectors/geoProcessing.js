@@ -5,19 +5,20 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get} from "lodash";
+import {get, head, memoize} from "lodash";
 
 import {GPT_CONTROL_NAME} from "../actions/geoProcessing";
 import {mapSelector} from "../selectors/map";
 import {layersSelector} from "../selectors/layers";
 import {hasWFSService} from '../utils/LayersUtils';
+import {densifyGeodesicFeature, transformCircleIntoPolygon} from '../utils/GeoProcessingUtils';
 
 // buffer
 export const distanceSelector = state => state?.geoProcessing?.buffer?.distance || 100;
 export const distanceUomSelector = state => state?.geoProcessing?.buffer?.distanceUom || "m";
 export const quadrantSegmentsSelector = state => state?.geoProcessing?.buffer?.quadrantSegments;
 export const capStyleSelector = state => state?.geoProcessing?.buffer?.capStyle;
-export const bufferedLayersCounterSelector = state => state?.geoProcessing?.buffer?.counter ?? 0;
+
 // source
 export const sourceLayerIdSelector = state => state?.geoProcessing?.source?.layerId;
 export const sourceFeatureIdSelector = state => state?.geoProcessing?.source?.featureId;
@@ -36,7 +37,6 @@ export const intersectionFeatureSelector = state => state?.geoProcessing?.inters
 export const intersectionFeaturesSelector = state => state?.geoProcessing?.intersection?.features || [];
 export const intersectionTotalCountSelector = state => state?.geoProcessing?.intersection?.totalCount || 0;
 export const intersectionCurrentPageSelector = state => state?.geoProcessing?.intersection?.currentPage || 0;
-export const intersectedLayersCounterSelector = state => state?.geoProcessing?.intersection?.counter ?? 0;
 export const firstAttributeToRetainSelector = state => state?.geoProcessing?.intersection?.firstAttributeToRetain;
 export const secondAttributeToRetainSelector = state => state?.geoProcessing?.intersection?.secondAttributeToRetain;
 export const intersectionModeSelector = state => state?.geoProcessing?.intersection?.intersectionMode;
@@ -69,6 +69,42 @@ export const isListeningClickSelector = (state) => !!(get(mapSelector(state), 'e
 export const selectedLayerIdSelector = (state) => state?.geoProcessing?.selectedLayerId;
 export const selectedLayerTypeSelector = (state) => state?.geoProcessing?.selectedLayerType;
 export const maxFeaturesSelector = (state) => state?.geoProcessing?.maxFeatures || 10;
-export const wfsBackedLayersSelector = (state) => layersSelector(state)
-    .filter(l => l.group !== "background")
-    .filter(hasWFSService);
+export const wpsUrlSelector = (state) => state?.geoProcessing?.wpsUrl;
+
+export const availableLayersSelector = memoize((state) => {
+    const layers = layersSelector(state);
+    return layers
+        .filter(l => l.group !== "background")
+        .filter(layer => hasWFSService(layer) || layer.type === "vector")
+        .map(layer => {
+            return layer?.features?.length ? {
+                ...layer,
+                features: layer?.features?.map(feature => {
+                    const ft = transformCircleIntoPolygon(densifyGeodesicFeature(feature));
+                    return {
+                        ...ft,
+                        features: ft?.features?.length ? ft?.features?.map(transformCircleIntoPolygon).map(densifyGeodesicFeature) : ft?.features
+                    };
+                })
+            } : layer;
+        });
+}, (state) => JSON.stringify(layersSelector(state).filter(l => l.group !== "background")
+    .filter(layer => hasWFSService(layer) || layer.type === "vector")));
+
+export const getLayerFromIdSelector = (state, id) => {
+    const layer = head(availableLayersSelector(state).filter(l => l.id === id));
+    // filtering out the features with measureId because they are not the measures, the LineString for length and bearing or the Polygon for the area one. We do not want to do the buffer on the point where the measure text label is stored
+    const features = layer?.features?.length ? layer.features.reduce((p, c) => {
+        return c.features?.length ? p.concat(c.features.filter((feature) => {
+            if (c.properties?.type === "Measure" && feature?.geometry?.type === "Point") {
+                return false;
+            }
+            return true;
+        })) : p.concat([c]);
+    }, []) : layer?.features;
+    return {
+        ...layer,
+        features: features?.filter(f => !f?.properties?.measureId)
+    };
+
+};

@@ -39,8 +39,10 @@ import {
     isSourceLayerInvalidSelector,
     isSourceFeaturesLoadingSelector,
     selectedLayerTypeSelector,
-    wfsBackedLayersSelector
+    availableLayersSelector
 } from '../../selectors/geoProcessing';
+
+import { createFeatureId } from '../../utils/LayersUtils';
 
 const Addon = tooltip(InputGroup.Addon);
 
@@ -70,10 +72,14 @@ const Source = ({
     }, [sourceLayerId]);
 
     const handleOnChangeSource = (sel) => {
-        onSetSourceLayerId(sel?.value || "");
+        if (sel?.value !== sourceLayerId) {
+            onSetSourceLayerId(sel?.value ?? "");
+        }
     };
     const handleOnChangeSourceFeatureId = (sel) => {
-        onSetSourceFeatureId(sel?.value || "");
+        if (sel?.value !== sourceFeatureId) {
+            onSetSourceFeatureId(sel?.value ?? "");
+        }
     };
     const isDisableClickSelectFeature = !sourceLayerId || isSourceFeaturesLoading || checkingWPSAvailability;
     const handleOnClickToSelectSourceFeature = () => {
@@ -117,7 +123,7 @@ const Source = ({
                     clearable
                     noResultsText={<Message msgId="GeoProcessing.noMatchedFeature" />}
                     onChange={handleOnChangeSourceFeatureId}
-                    options={sourceFeatures.map(f => ({value: f.id, label: f.id }))}
+                    options={sourceFeatures.map((f, i) => ({value: createFeatureId(f).id, label: f?.properties?.measureType ? `${f?.properties?.measureType} #${i}` : createFeatureId(f).id }))}
                     value={sourceFeatureId}
 
                     onOpen={() => {
@@ -184,7 +190,7 @@ const SourceConnected = connect(
         [
             areAllWPSAvailableForSourceLayerSelector,
             runningProcessSelector,
-            wfsBackedLayersSelector,
+            availableLayersSelector,
             sourceLayerIdSelector,
             sourceFeatureIdSelector,
             sourceFeaturesSelector,
