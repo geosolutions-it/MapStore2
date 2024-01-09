@@ -280,6 +280,21 @@ class AnnotationsEditor extends React.Component {
         this.props.onInitPlugin();
     }
 
+    onAddGeometryAction = (type) => {
+        this.addGeometryTitle();
+        this.props.onAddGeometry(type);
+    }
+
+    onSelectFeatureAction = (feature) => {
+        this.addGeometryTitle();
+        this.props.onSelectFeature(feature);
+    }
+
+    onUnSelectFeatureAction = () => {
+        this.addGeometryTitle();
+        this.props.onUnSelectFeature();
+    }
+
     getConfig = () => {
         return {...defaultConfig, ...this.props.config, onFilterMarker: this.props.onFilterMarker};
     };
@@ -307,6 +322,15 @@ class AnnotationsEditor extends React.Component {
         }
         return handleExpression({}, {}, '{(function(value) {return ' + validator + ';})}');
     };
+
+    getGeometryTitle = (isLabel = false) => {
+        const type = this.props.selected ? getGeometryType(this.props.selected) : "";
+        const {label = ""} = isEmpty(type) ? {} : getGeometryGlyphInfo(type);
+        if (isLabel) {
+            return label;
+        }
+        return this.props.selected?.properties?.geometryTitle ?? label ?? this.props.selected?.properties?.id;
+    }
 
     renderViewButtons = () => {
         return (
@@ -397,7 +421,7 @@ class AnnotationsEditor extends React.Component {
                                 glyph: 'floppy-disk',
                                 tooltipPosition: 'bottom',
                                 tooltipId: !areAllFeaturesValid ? "annotations.annotationSaveGeometryError" : !isEmpty(this.props.selected) ? "annotations.saveGeometry" : "annotations.save",
-                                disabled: (this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature) || !areAllFeaturesValid,
+                                disabled: (this.props.selected && this.props.selected.properties && (!this.props.selected.properties.isValidFeature || !this.getGeometryTitle())) || !areAllFeaturesValid,
                                 onClick: () => this.save()
                             },
                             {
@@ -483,7 +507,7 @@ class AnnotationsEditor extends React.Component {
                 {editing && <FeaturesList
                     editing={this.props.editing}
                     selected={this.props.selected}
-                    onAddGeometry={this.props.onAddGeometry}
+                    onAddGeometry={this.onAddGeometryAction}
                     onSetStyle={this.props.onSetStyle}
                     onStartDrawing={this.props.onStartDrawing}
                     onAddText={this.props.onAddText}
@@ -493,9 +517,9 @@ class AnnotationsEditor extends React.Component {
                     setTabValue={this.setTabValue}
                     styling={this.props.styling}
                     onStyleGeometry={this.props.onStyleGeometry}
-                    onSelectFeature={this.props.onSelectFeature}
+                    onSelectFeature={this.onSelectFeatureAction}
                     drawing={this.props.drawing}
-                    onUnselectFeature={this.props.onUnSelectFeature}
+                    onUnselectFeature={this.onUnSelectFeatureAction}
                     onGeometryHighlight={this.props.onGeometryHighlight}
                     isMeasureEditDisabled={this.isMeasureEditDisabled()}
                     onSetAnnotationMeasurement={this.setAnnotationMeasurement}
@@ -653,7 +677,7 @@ class AnnotationsEditor extends React.Component {
             }
         } : {};
         const type = this.props.selected ? getGeometryType(this.props.selected) : "";
-        const {glyph = "", label = ""} = isEmpty(type) ? {} : getGeometryGlyphInfo(type);
+        const {glyph = ""} = isEmpty(type) ? {} : getGeometryGlyphInfo(type);
         return (
             <div style={{display: "flex"}} className={"mapstore-annotations-info-viewer" + (this.props.mouseHoverEvents ? " hover-background" : "")} {...mouseHoverEvents}>
                 <div style={{flex: 1}}>
@@ -667,15 +691,17 @@ class AnnotationsEditor extends React.Component {
                         <div style={{padding: 8, display: 'flex', alignItems: 'center'}}>
                             <Glyphicon glyph={glyph} style={{fontSize: 20, paddingRight: 8}}/>
                             <div style={{flex: 1}}>
-                                <FormControl
-                                    value={this.props.selected?.properties?.geometryTitle || label || this.props.selected?.properties?.id}
-                                    name="text"
-                                    placeholder="Enter geometry title"
-                                    onChange={e => {
-                                        const valueText = e.target.value.trim();
-                                        this.props.onChangeGeometryTitle(valueText ? valueText : label);
-                                    }}
-                                    type="text"/>
+                                <FormGroup validationState={!this.getGeometryTitle() ? "error" : null}>
+                                    <FormControl
+                                        value={this.getGeometryTitle()}
+                                        name="text"
+                                        placeholder="Enter geometry title"
+                                        onChange={e => {
+                                            const valueText = e.target.value.trim();
+                                            this.props.onChangeGeometryTitle(valueText);
+                                        }}
+                                        type="text"/>
+                                </FormGroup>
                             </div>
                         </div>
                         {this.props.selected?.properties?.isText && <div style={{padding: 8}}>
@@ -774,6 +800,14 @@ class AnnotationsEditor extends React.Component {
                 }
             </div>
         );
+    }
+
+    addGeometryTitle = () => {
+        const title = this.getGeometryTitle();
+        if (isEmpty(title)) {
+            const defaultTitle = this.getGeometryTitle(true);
+            !isEmpty(defaultTitle) && this.props.onChangeGeometryTitle(defaultTitle);
+        }
     }
 
     validateFeatures = () => {
