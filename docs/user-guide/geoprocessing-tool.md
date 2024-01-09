@@ -5,9 +5,21 @@ This tool aims to provide a set of geo-processing utilities on layers present in
 !!! note
     The **GeoProcessing Tool** is not included by default in the MapStore configuration but it can be configured within an [application contexts](application-context.md#configure-plugins) if needed or directly included in the standard [application configuration](../developer-guide/local-config.md).
 
+!!! warning
+    To avoid errors in geometry overlay methods and therefore correctly use the *GeoProcessing tool*, the [JTS system property](https://github.com/locationtech/jts/blob/master/USING.md#jts-system-properties) must be added to the GeoServer in use (enable the `-Djts.overlay=ng` property).
+
 By clicking the **GeoProcessing Tool** <img src="../img/button/geoprocessing-button.jpg" class="ms-docbutton"/> button, available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar), a panel opens so that the user can choose the geographic operations between **Buffer** and **Intersection**.
 
 <img src="../img/geoprocessing-tool/geoprocessing-panel.jpg" class="ms-docimage" width="400px"/>
+
+!!! note
+    The user can use all the layer types listed below as input into the *GeoProcessing tool*:
+
+    * WMS and WFS layers in the [TOC](toc.md)
+    * [Measurements](measure.md)
+    * [GeoJSON map imported](import.md#export-and-import-map-context-files)
+    * [Imported ShapeFiles](import.md#import-vector-files)
+    * [Annotations](annotations.md)
 
 ## Buffer tool
 
