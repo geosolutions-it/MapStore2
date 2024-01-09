@@ -2549,6 +2549,7 @@
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
+            "alphaChannel": "Alpha channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
@@ -2615,7 +2616,13 @@
             "msExtrudedHeight": "Extruded height",
             "msExtrusionColor": "Extrusion color",
             "msExtrusionType": "Extrusion type",
-            "wall": "Wall"
+            "wall": "Wall",
+            "enableBanding": "Band styling",
+            "selectChannel": "Select a band",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Minimum source data value",
+            "maxSourceValue": "Maximum source data value"
         },
         "playback": {
             "settings": {

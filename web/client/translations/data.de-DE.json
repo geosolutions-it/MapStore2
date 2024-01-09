@@ -2577,6 +2577,7 @@
             "redChannel": "Roter Kanal",
             "greenChannel": "Grüner Kanal",
             "blueChannel": "Blauer Kanal",
+            "alphaChannel": "Alpha Kanal",
             "grayChannel": "Graukanal",
             "ruleClassification": "Klassifikation",
             "ruleRaster": "Raster",
@@ -2643,7 +2644,13 @@
             "msExtrudedHeight": "Extrudierte Höhe",
             "msExtrusionColor": "Extrusionsfarbe",
             "msExtrusionType": "Extrusionstyp",
-            "wall": "Wand"
+            "wall": "Wand",
+            "enableBanding": "Band styling",
+            "selectChannel": "Wählen Sie eine Band aus",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Mindestwert der Quelldaten",
+            "maxSourceValue": "Maximaler Quelldatenwert"
         },
         "playback": {
             "settings": {

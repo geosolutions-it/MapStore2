@@ -7,15 +7,23 @@
  */
 
 import Layers from '../../../../utils/openlayers/Layers';
+import isEqual from 'lodash/isEqual';
 
 import GeoTIFF from 'ol/source/GeoTIFF.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 
 function create(options) {
+    const style = options.style;
     return new TileLayer({
         msId: options.id,
-        style: options.style, // TODO style needs to be improved. Currently renders only predefined band and ranges when specified in config
+        style: {
+            ...style,
+            ...(style?.color && {
+                color: typeof style?.color === 'string'
+                    ? JSON.parse(style?.color) : style?.color
+            })
+        },
         opacity: options.opacity !== undefined ? options.opacity : 1,
         visible: options.visibility,
         source: new GeoTIFF({
@@ -32,7 +40,10 @@ function create(options) {
 Layers.registerType('cog', {
     create,
     update(layer, newOptions, oldOptions, map) {
-        if (newOptions.srs !== oldOptions.srs) {
+        if (newOptions.srs !== oldOptions.srs
+            || !isEqual(newOptions.style, oldOptions.style)
+            || !isEqual(newOptions.sources, oldOptions.sources) // min/max source data value can change
+        ) {
             return create(newOptions, map);
         }
         if (oldOptions.minResolution !== newOptions.minResolution) {
