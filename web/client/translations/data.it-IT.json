@@ -721,8 +721,10 @@
             "legend": {
                 "font": "Config. Etichette:",
                 "forceLabels": "Forza etichette:",
-                "antiAliasing": "Font Anti Aliasing:",
-                "iconsSize": "Dimensione icone:",
+                "antiAliasing": "Font Anti Aliasing",
+                "forceIconsSize": "Sostituisci la dimensione delle icone",
+                "iconsWidth": "Larghezza delle icone:",
+                "iconsHeight": "Altezza delle icone:",
                 "dpi": "Dpi:"
             },
             "rotation": "Rotation",

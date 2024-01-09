@@ -82,7 +82,9 @@ function expectDefaultItems() {
     expect(getByXPath("//*[text()='print.alternatives.portrait']")).toExist();
     expect(getByXPath("//*[text()='print.legend.font']")).toExist();
     expect(getByXPath("//*[text()='print.legend.forceLabels']")).toExist();
-    expect(getByXPath("//*[text()='print.legend.iconsSize']")).toExist();
+    expect(getByXPath("//*[text()='print.legend.forceIconsSize']")).toExist();
+    expect(getByXPath("//*[text()='print.legend.iconsWidth']")).toExist();
+    expect(getByXPath("//*[text()='print.legend.iconsHeight']")).toExist();
     expect(getByXPath("//*[text()='print.legend.dpi']")).toExist();
     expect(getByXPath("//*[text()='print.resolution']")).toExist();
     expect(getByXPath("//*[text()='print.submit']")).toExist();
