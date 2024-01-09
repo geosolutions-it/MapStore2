@@ -45,9 +45,9 @@ class Title extends React.Component {
             return title;
         }
 
-        return title.split(regularExpression).map((split, key) => {
-            if (key < matches.length) {
-                return [...split, <strong>{matches[key]}</strong>];
+        return title.split(regularExpression).map((split, idx) => {
+            if (idx < matches.length) {
+                return [...split, <strong key={idx}>{matches[idx]}</strong>];
             }
             return split;
         });
