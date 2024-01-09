@@ -752,12 +752,11 @@
             "cfg" : {
               "containerPosition": "columns"
               }
-          },                  
+          },
           {
             "name": "Dashboard"
           },
           "Notifications",
-          "Login",
           {
             "name": "About",
             "cfg": {
@@ -769,7 +768,22 @@
           "DashboardSave",
           "DashboardSaveAs",
           "Attribution",
-          "Home",
+          {
+            "name": "Home",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
+          {
+            "name": "Login",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
           { "name": "DeleteDashboard" },
           { "name": "DashboardExport" },
           { "name": "DashboardImport" },
@@ -992,5 +1006,5 @@
         ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
         "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
-    }
+      }
 }
