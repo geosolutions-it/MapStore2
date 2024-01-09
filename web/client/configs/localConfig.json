@@ -758,14 +758,6 @@
           },
           "Notifications",
           {
-            "name": "Login",
-            "override": {
-              "OmniBar": {
-                "priority": 5
-              }
-            }
-          },
-          {
             "name": "About",
             "cfg": {
                 "githubUrl": "https://github.com/geosolutions-it/MapStore2/tree/"
@@ -778,6 +770,14 @@
           "Attribution",
           {
             "name": "Home",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
+          {
+            "name": "Login",
             "override": {
               "OmniBar": {
                 "priority": 5

@@ -22,6 +22,35 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.xx to 2024.01.00
 
+### Restructuring of Login and Home in Dashboard page
+
+We recently added the sidebar to the dashboard page and by doing so we wanted to keep a uniform position of login and home plugins, by putting them in the omnibar container rather than the sidebar one. The viewer is a specific case that will be reviewed in the future.
+
+In order to align the configuration of the two mentioned plugin you have t
+
+- edit locaConfig.json plugins.dashboard
+- remove Home and Login items
+- add the following
+
+```json
+{
+    "name": "Home",
+    "override": {
+        "OmniBar": {
+            "priority": 5
+        }
+    }
+},
+{
+    "name": "Login",
+    "override": {
+        "OmniBar": {
+        "priority": 5
+        }
+    }
+}
+```
+
 ### Using `elevation` layer type instead of wms layer with useForElevation property
 
 The wms layer with `useForElevation` property is deprecated and a `elevation` layer introduced in substitution.
