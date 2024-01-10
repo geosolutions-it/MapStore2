@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-import { PROVIDERS, CONTROL_NAME, MARKER_LAYER_ID, CYCLOMEDIA_CREDENTIALS_REFERENCE } from '../constants';
+import { PROVIDERS, CONTROL_NAME, MARKER_LAYER_ID, CYCLOMEDIA_CREDENTIALS_REFERENCE, CYCLOMEDIA_DEFAULT_MAX_RESOLUTION } from '../constants';
 import { createControlEnabledSelector } from '../../../selectors/controls';
 import { additionalLayersSelector } from '../../../selectors/additionallayers';
 import { localConfigSelector } from '../../../selectors/localConfig';
@@ -35,9 +35,9 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
         sourceType: 'sessionStorage',
         sourceId: CYCLOMEDIA_CREDENTIALS_REFERENCE
     },
-    strategy: 'bbox',
-    maxResolution: 2,
-    serverType: 'noVendor',
+    strategy: 'bbox', // loads data only in the current extent
+    maxResolution: CYCLOMEDIA_DEFAULT_MAX_RESOLUTION,
+    serverType: 'noVendor', // do not support CQL filters
     method: 'POST',
     geometryType: 'point',
     url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
@@ -70,19 +70,26 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
         }
     }
 };
-const providerDataLayerDefaultsSelector = (state) => {
-    const provider = streetViewProviderSelector(state);
-    switch (provider) {
-    case PROVIDERS.GOOGLE:
-        return GOOGLE_DATA_LAYER_DEFAULTS;
-    case PROVIDERS.CYCLOMEDIA:
-        return CYCLOMEDIA_DATA_LAYER_DEFAULTS;
-    default:
-        return {};
+const providerDataLayerDefaultsSelector = createSelector(
+    streetViewProviderSelector,
+    (provider) => {
+        switch (provider) {
+        case PROVIDERS.GOOGLE:
+            return GOOGLE_DATA_LAYER_DEFAULTS;
+        case PROVIDERS.CYCLOMEDIA:
+            return CYCLOMEDIA_DATA_LAYER_DEFAULTS;
+        default:
+            return {};
+        }
     }
-};
+);
+/**
+ *
+ * @param {object} state
+ * @returns {object} the data layer configuration for the current provider, or the default one if not configured
+ */
 export function streetViewDataLayerSelector(state) {
-    return streetViewConfigurationSelector(state)?.dataLayerConfig ?? providerDataLayerDefaultsSelector(state);
+    return providerDataLayerDefaultsSelector(state);
 }
 
 

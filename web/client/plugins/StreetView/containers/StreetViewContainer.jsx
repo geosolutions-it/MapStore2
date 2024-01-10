@@ -35,7 +35,7 @@ function Panel({enabled, onClose = () => {}, provider, panelSize, providerSettin
         return null;
     }
 
-    return (<Dialog bodyClassName={"street-view-window-body"} draggable
+    return (<Dialog id="street-view-dialog" bodyClassName={"street-view-window-body"} draggable
         style={{
             zIndex: 10000,
             position: "absolute",

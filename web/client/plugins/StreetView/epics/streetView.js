@@ -18,16 +18,17 @@ import { mapInfoEnabledSelector } from "../../../selectors/mapInfo";
 
 import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "../constants";
 import {
+    streetViewProviderSelector,
     currentProviderApiLoadedSelector,
     enabledSelector,
     getStreetViewMarkerLayer,
     locationSelector,
     povSelector,
     useStreetViewDataLayerSelector,
-    streetViewDataLayerSelector}
-from "../selectors/streetView";
+    streetViewDataLayerSelector
+} from "../selectors/streetView";
 import {setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
-import { getLocation } from '../api/gMaps';
+import API from '../api';
 import {shutdownToolOnAnotherToolDrawing} from "../../../utils/ControlUtils";
 
 const getNavigationArrowSVG = function({rotation = 0}) {
@@ -147,9 +148,15 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
         .filter(() => currentProviderApiLoadedSelector(getState()))
         // .filter(() => streetViewProviderSelector(getState()) === 'google') // TODO make this work for cyclomedia and other providers
         .switchMap(({point}) => {
-            const latLng = point.latlng;
+            const provider = streetViewProviderSelector(getState());
+            const getLocation = API[provider]?.getLocation;
+            if (!getLocation) {
+                return Rx.Observable.of(
+                    error({title: "streetView.title", message: "streetView.messages.providerNotSupported"})
+                );
+            }
             return Rx.Observable
-                .defer(() => getLocation(latLng))
+                .defer(() => getLocation(point))
                 .map(setLocation)
                 .catch((e) => {
                     if (e.code === "ZERO_RESULTS") {

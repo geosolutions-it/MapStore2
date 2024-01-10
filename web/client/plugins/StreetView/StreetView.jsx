@@ -18,7 +18,7 @@ import Message from '../../components/I18N/Message';
 
 import streetView from './reducers/streetview';
 import * as epics from './epics/streetView';
-import './css/style.css';
+import './style/street-view.less';
 
 
 const StreetViewPluginComponent = ({onMount, onUnmount, apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider = 'google', providerSettings, panelSize}) => {

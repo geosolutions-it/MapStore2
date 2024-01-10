@@ -21,10 +21,20 @@ export function getAPI() {
     return API;
 }
 export const loadAPI = loadGoogleMapsAPI;
-export function getLocation(latLng) {
+/**
+ *
+ * @param {point} Click point event (the point contains the `intersectedFeatures`, `latlng`... (note: different case of `latlng` from returned object `latLng`))
+ * @returns {Promise} a promise that resolves to a location object with the following properties:
+ * - `pano`: the pano id
+ * - `shortDescription`: a short description of the location
+ * - `description`: a description of the location
+ * - `latLng`: the latitude and longitude of the location
+ * - `properties`: additional properties of the location
+ */
+export function getLocation({latlng}) {
     const google = getAPI();
     const sv = new google.maps.StreetViewService();
-    return sv.getPanorama({ location: latLng, radius: 50 }).then(({data} = {}) => {
+    return sv.getPanorama({ location: latlng, radius: 50 }).then(({data} = {}) => {
         const {location} = data ?? {};
         return googleToMapStoreLocation(location);
 

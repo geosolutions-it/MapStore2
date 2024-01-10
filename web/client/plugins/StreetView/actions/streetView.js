@@ -45,7 +45,7 @@ export function toggleStreetView() {
             }
             API[provider].loadAPI({apiKey, providerSettings}).then(() => {
                 setAPILoading(false);
-                dispatch(streetViewAPILoaded());
+                dispatch(streetViewAPILoaded(provider));
                 dispatch(toggleControl(CONTROL_NAME, "enabled"));
             }).catch(e => {
                 setAPILoading(false);
@@ -64,6 +64,13 @@ export function setLocation(location) {
         location
     };
 }
+/**
+ *
+ * @param {object} pov pov object. Can contain :
+ * @param {number} pov.heading heading in degrees
+ * @param {number} pov.pitch pitch in degrees
+ * @returns
+ */
 export function setPov(pov) {
     return {
         type: SET_POV,

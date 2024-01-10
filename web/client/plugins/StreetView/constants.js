@@ -6,4 +6,5 @@ export const PROVIDERS = {
     GOOGLE: 'google',
     CYCLOMEDIA: 'cyclomedia'
 };
+export const CYCLOMEDIA_DEFAULT_MAX_RESOLUTION = 2;
 export const CYCLOMEDIA_CREDENTIALS_REFERENCE = "__cycloMedia_streetView_source_credential__";
