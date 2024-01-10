@@ -33,6 +33,8 @@ import assign from 'object-assign';
 import sortBy from "lodash/sortBy";
 import head from "lodash/head";
 import isNil from "lodash/isNil";
+import get from "lodash/get";
+import min from "lodash/min";
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
 
@@ -514,6 +516,17 @@ export const getPrintVendorParams = (layer) => {
     return { "TILED": true };
 };
 
+export const getLegendIconsSize = (spec = {}, layer = {}) => {
+    const forceIconSize = (spec.forceIconsSize || layer.group === 'background');
+    const width = forceIconSize ? spec.iconsWidth : get(layer, 'legendOptions.legendWidth', 12);
+    const height = forceIconSize ? spec.iconsHeight : get(layer, 'legendOptions.legendHeight', 12);
+    return {
+        width,
+        height,
+        minSymbolSize: min([width, height])
+    };
+};
+
 /**
  * Generate the layers (or legend) specification for print.
  * @param  {array} layers  the layers configurations
@@ -571,9 +584,7 @@ export const specCreators = {
                                 LANGUAGE: spec.language || '',
                                 STYLE: layer.style || '',
                                 SCALE: spec.scale,
-                                height: spec.iconSize,
-                                width: spec.iconSize,
-                                minSymbolSize: spec.iconSize,
+                                ...getLegendIconsSize(spec, layer),
                                 LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || '') + ";fontName:" + spec.fontFamily + ";fontSize:" + spec.fontSize,
                                 format: "image/png",
                                 ...assign({}, layer.params)

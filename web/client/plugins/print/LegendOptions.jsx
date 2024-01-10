@@ -27,12 +27,28 @@ export const LegendOptions = ({spec, onChangeParameter, actions}, context) => {
                 label={getMessageById(context.messages, "print.legend.antiAliasing")}
                 checked={!!spec?.antiAliasing}
                 onChange={a => onChangeParameter("antiAliasing", a)}/>
+            <PrintOption
+                label={getMessageById(context.messages, "print.legend.forceIconsSize")}
+                checked={!!spec?.forceIconsSize}
+                onChange={a => onChangeParameter("forceIconsSize", a)}/>
             <TextInput
-                label={getMessageById(context.messages, "print.legend.iconsSize")}
+                label={getMessageById(context.messages, "print.legend.iconsWidth")}
                 spec={spec}
+                disabled={!spec?.forceIconsSize}
                 type="number"
                 additionalProperty={false}
-                property="iconSize"
+                property="iconsWidth"
+                path=""
+                onChangeParameter={onChangeParameter}
+                actions={actions}
+            />
+            <TextInput
+                label={getMessageById(context.messages, "print.legend.iconsHeight")}
+                spec={spec}
+                disabled={!spec?.forceIconsSize}
+                type="number"
+                additionalProperty={false}
+                property="iconsHeight"
                 path=""
                 onChangeParameter={onChangeParameter}
                 actions={actions}

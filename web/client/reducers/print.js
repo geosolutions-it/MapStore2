@@ -28,7 +28,8 @@ import set from "lodash/set";
 
 const initialSpec = {
     antiAliasing: true,
-    iconSize: 24,
+    iconsWidth: 24,
+    iconsHeight: 24,
     legendDpi: 96,
     fontFamily: "Verdana",
     fontSize: 8,

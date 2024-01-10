@@ -757,9 +757,11 @@
             },
             "legend": {
                 "font": "Beschriftungseinstellungen:",
-                "forceLabels": "Beschriftungen erzwingen:",
-                "antiAliasing": "Anti Aliasing Schrift:",
-                "iconsSize": "Symbolgröße:",
+                "forceLabels": "Beschriftungen erzwingen",
+                "antiAliasing": "Anti Aliasing Schrift",
+                "forceIconsSize": "Überschreiben Sie die Symbolgröße",
+                "iconsWidth": "Breite der Symbole:",
+                "iconsHeight": "Höhe der Symbole:",
                 "dpi": "dpi:"
             },
             "rotation": "Rotation",

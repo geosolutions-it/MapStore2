@@ -26,7 +26,8 @@ import {
     getValidatorsChain,
     getPrintVendorParams,
     resetDefaultPrintingService,
-    getDefaultPrintingService
+    getDefaultPrintingService,
+    getLegendIconsSize
 } from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
@@ -536,6 +537,38 @@ describe('PrintUtils', () => {
         const params = getPrintVendorParams(noVendorLayer);
         expect(params).toExist();
         expect(params).toEqual({});
+    });
+    it('getLegendIconsSize', () => {
+        // with layer legend options
+        let spec = {forceIconsSize: false};
+        let _layer = {legendOptions: {legendWidth: 20, legendHeight: 20}};
+        let iconSize = getLegendIconsSize(spec, _layer);
+        expect(iconSize.width).toBe(20);
+        expect(iconSize.height).toBe(20);
+        expect(iconSize.minSymbolSize).toBe(20);
+
+        // with override legend options
+        spec = {forceIconsSize: true, iconsWidth: 10, iconsHeight: 10};
+        iconSize = getLegendIconsSize(spec, _layer);
+        expect(iconSize.width).toBe(10);
+        expect(iconSize.height).toBe(10);
+        expect(iconSize.minSymbolSize).toBe(10);
+
+        // with layer as background
+        spec = {forceIconsSize: false, iconsWidth: 10, iconsHeight: 10};
+        _layer = {..._layer, group: "background"};
+        iconSize = getLegendIconsSize(spec, _layer);
+        expect(iconSize.width).toBe(10);
+        expect(iconSize.height).toBe(10);
+        expect(iconSize.minSymbolSize).toBe(10);
+
+        // with default layer legend option
+        spec = {forceIconsSize: false, iconsWidth: 10, iconsHeight: 10};
+        iconSize = getLegendIconsSize(spec, {});
+        expect(iconSize.width).toBe(12);
+        expect(iconSize.height).toBe(12);
+        expect(iconSize.minSymbolSize).toBe(12);
+
     });
 
     describe('specCreators', () => {
