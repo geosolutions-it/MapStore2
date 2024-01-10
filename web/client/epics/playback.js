@@ -7,7 +7,8 @@
  */
 import moment from 'moment';
 
-import { get } from 'lodash';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 
 import {
     PLAY,
@@ -25,7 +26,8 @@ import {
     framesLoading,
     updateMetadata,
     setIntervalData,
-    toggleAnimationMode
+    toggleAnimationMode,
+    onInitPlayback
 } from '../actions/playback';
 
 import { moveTime, SET_CURRENT_TIME, MOVE_TIME } from '../actions/dimension';
@@ -79,6 +81,7 @@ import { wrapStartStop } from '../observables/epics';
 import { getTimeDomainsObservable } from '../observables/multidim';
 import { getDomainValues } from '../api/MultiDim';
 import Rx from 'rxjs';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 
 const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
@@ -437,6 +440,17 @@ export const playbackStopWhenDeleteLayer = (action$, { getState = () => {} } = {
         )
         .switchMap( () => Rx.Observable.of(stop()));
 
+/**
+ * Updates playback state on map config load
+ * @param action$
+ * @return {observable}
+ */
+export const updatePlaybackDataOnMapLoad = (action$) =>
+    action$.ofType(MAP_CONFIG_LOADED)
+        .filter(({config} = {}) => !isEmpty(config?.playback))
+        .switchMap(({config} = {}) => {
+            return Rx.Observable.of(onInitPlayback(config?.playback));
+        });
 
 export default {
     retrieveFramesForPlayback,
@@ -448,5 +462,6 @@ export default {
     playbackFollowCursor,
     playbackStopWhenDeleteLayer,
     setIsIntervalData,
-    switchOffSnapToLayer
+    switchOffSnapToLayer,
+    updatePlaybackDataOnMapLoad
 };

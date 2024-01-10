@@ -3,6 +3,7 @@ import {
     PAUSE,
     STOP,
     STATUS,
+    INIT,
     SET_FRAMES,
     APPEND_FRAMES,
     FRAMES_LOADING,
@@ -25,6 +26,9 @@ const DEFAULT_SETTINGS = {
 
 export default (state = { status: STATUS.STOP, currentFrame: -1, settings: DEFAULT_SETTINGS}, action) => {
     switch (action.type) {
+    case INIT: {
+        return {...state, ...action.payload};
+    }
     case PLAY: {
         return set(`status`, STATUS.PLAY, state);
     }
