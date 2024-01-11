@@ -257,12 +257,12 @@ describe("test IdentifyContainer", () => {
         expect(glyphIcons.forEach(glyph => glyph.className) !== 'zoom-to').toBeTruthy();
     });
 
-    it('test call toggleHighlightFeature on Close', () => {
+    it('test call onInitPlugin on Close', () => {
         const requests = [{reqId: 1}, {reqId: 2}];
         const callbacks = {
-            toggleHighlightFeature: () => {}
+            onInitPlugin: () => {}
         };
-        const toggleHighlightFeatureSpy = expect.spyOn(callbacks, 'toggleHighlightFeature');
+        const onInitPluginSpy = expect.spyOn(callbacks, 'onInitPlugin');
         const responses = [{layerMetadata: {title: "Layer 1"}}, {layerMetadata: {title: "Layer 2"}}];
         const CMP = (<IdentifyContainer
             enabled
@@ -272,7 +272,7 @@ describe("test IdentifyContainer", () => {
             getFeatureButtons={getFeatureButtons}
             point={{latlng: {lat: 1, lng: 1}}}
             showCoordinateEditor={false}
-            toggleHighlightFeature={callbacks.toggleHighlightFeature}
+            onInitPlugin={callbacks.onInitPlugin}
         />);
         ReactDOM.render(CMP, document.getElementById("container"));
         const container = document.getElementById('container');
@@ -281,7 +281,7 @@ describe("test IdentifyContainer", () => {
         TestUtils.act(() => {
             ReactDOM.render(CMP, document.getElementById("container"));
         });
-        expect(toggleHighlightFeatureSpy).toHaveBeenCalled();
+        expect(onInitPluginSpy).toHaveBeenCalled();
         // Test since when the highlight feature is disabled the zoom Icon is not shown
         const zoomIcon = document.querySelector('.glyphicon-zoom-to');
         expect(zoomIcon).toNotExist();
