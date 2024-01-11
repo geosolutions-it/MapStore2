@@ -180,6 +180,7 @@
     "draft-js-side-toolbar-plugin": "3.0.1",
     "draftjs-to-html": "0.8.4",
     "dxf-parser": "1.1.2",
+    "dxf-writer": "1.18.4",
     "earcut": "2.2.4",
     "element-closest": "2.0.2",
     "embed-video": "2.0.4",
