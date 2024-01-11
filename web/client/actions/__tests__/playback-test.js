@@ -11,7 +11,7 @@ import {
     PLAY, PAUSE, STOP, SET_FRAMES, SET_CURRENT_FRAME, APPEND_FRAMES, FRAMES_LOADING, SELECT_PLAYBACK_RANGE,
     CHANGE_SETTING, TOGGLE_ANIMATION_MODE, ANIMATION_STEP_MOVE, UPDATE_METADATA, SET_INTERVAL_DATA,
     pause, play, stop, setFrames, setCurrentFrame, appendFrames, framesLoading, selectPlaybackRange,
-    changeSetting, toggleAnimationMode, animationStepMove, updateMetadata, setIntervalData
+    changeSetting, toggleAnimationMode, animationStepMove, updateMetadata, setIntervalData, onInitPlayback, INIT
 } from "../playback";
 
 describe('Test playback actions', () => {
@@ -98,5 +98,12 @@ describe('Test playback actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SET_INTERVAL_DATA);
         expect(retval.timeIntervalData).toBe(true);
+    });
+    it('Test init action creator', () => {
+        const payload = {metadata: "1", settings: "2"};
+        const retval = onInitPlayback(payload);
+        expect(retval).toBeTruthy();
+        expect(retval.type).toBe(INIT);
+        expect(retval.payload).toEqual(payload);
     });
 });

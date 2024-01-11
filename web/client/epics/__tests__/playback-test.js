@@ -17,7 +17,8 @@ import {
     SET_FRAMES,
     SET_INTERVAL_DATA,
     TOGGLE_ANIMATION_MODE,
-    toggleAnimationMode
+    toggleAnimationMode,
+    INIT
 } from '../../actions/playback';
 
 import {
@@ -26,7 +27,8 @@ import {
     playbackCacheNextPreviousTimes,
     setIsIntervalData,
     switchOffSnapToLayer,
-    playbackToggleGuideLayerToFixedStep
+    playbackToggleGuideLayerToFixedStep,
+    updatePlaybackDataOnMapLoad
 } from '../playback';
 
 import DOMAIN_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainValues.xml';
@@ -34,6 +36,7 @@ import DOMAIN_INTERVAL_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmt
 import { removeNode, CHANGE_LAYER_PROPERTIES, changeLayerProperties } from '../../actions/layers';
 import { setCurrentTime, moveTime } from '../../actions/dimension';
 import { selectLayer, LOADING, setMapSync, SELECT_LAYER, initializeSelectLayer } from '../../actions/timeline';
+import { configureMap } from '../../actions/config';
 import axios from '../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
 const ANIMATION_MOCK_STATE = {
@@ -584,5 +587,30 @@ describe('playback Epics', () => {
                 done(e);
             }
         }, state);
+    });
+    it('updatePlaybackDataOnMapLoad on config load', done => {
+        const _payload = {playback: {metadata: {timeIntervalData: false}, settings: "2"}};
+        testEpic(updatePlaybackDataOnMapLoad, 1, configureMap(_payload), ([action]) => {
+            try {
+                const { type, payload } = action;
+                expect(type).toBe(INIT);
+                expect(payload.metadata.timeIntervalData).toBe(false);
+                expect(payload.settings).toBe("2");
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
+    });
+    it('updatePlaybackDataOnMapLoad on no playback config data', done => {
+        const _payload = {map: {}};
+        testEpic(addTimeoutEpic(updatePlaybackDataOnMapLoad, 500), 1, configureMap(_payload), ([action]) => {
+            try {
+                expect(action.type).toBe(TEST_TIMEOUT);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        }, ANIMATION_MOCK_STATE);
     });
 });
