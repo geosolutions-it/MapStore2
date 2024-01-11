@@ -19,7 +19,8 @@ import {
     selectPlaybackRange,
     framesLoading,
     STATUS,
-    setIntervalData
+    setIntervalData,
+    onInitPlayback
 } from '../../actions/playback';
 
 import playback from '../playback';
@@ -134,5 +135,13 @@ describe('playback reducer', () => {
         const state = playback(undefined, action);
         expect(state).toExist();
         expect(state.metadata.timeIntervalData).toBe(false);
+    });
+    it('initialize playback data', () => {
+        const payload = {metadata: {timeIntervalData: false}, settings: "2"};
+        const action = onInitPlayback(payload);
+        const state = playback(undefined, action);
+        expect(state).toBeTruthy();
+        expect(state.metadata.timeIntervalData).toBe(false);
+        expect(state.settings).toBe("2");
     });
 });
