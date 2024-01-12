@@ -7,6 +7,8 @@
  */
 
 import Layers from '../../../../utils/openlayers/Layers';
+import { ServerTypes } from '../../../../utils/LayersUtils';
+
 
 import {getStyle} from '../VectorStyle';
 import VectorSource from 'ol/source/Vector';
@@ -45,15 +47,29 @@ const getConfig = (options) => {
     return config;
 };
 const createLoader = (source, options) => (extent, resolution, projection) => {
-    var proj = projection.getCode();
+    let proj = projection.getCode();
     let req;
+    let filters = [];
     const onError = () => {
         source.removeLoadedExtent(extent);
         source.dispatchEvent('vectorerror');
     };
-    if (options.serverType === 'noVendor') {
-        // TODO: add filters, and transform extent in a filter, replicating what done in options to vendor params
-        req = getFeatureLayer(options, {extent, proj}, getConfig(options));
+    if (options.serverType === ServerTypes.NO_VENDOR) {
+        if (options?.strategy === 'bbox') {
+            // here bbox filter is
+            const [left, bottom, right, top] = extent;
+
+            filters = [{
+                spatialField: {
+                    operation: 'BBOX',
+                    geometry: {
+                        projection: proj,
+                        extent: [[left, bottom, right, top]] // use array because bbox is buggy
+                    }
+                }
+            }];
+        }
+        req = getFeatureLayer(options, {filters, proj}, getConfig(options));
     } else {
         const params = optionsToVendorParams(options);
         const config = getConfig(options);
@@ -134,7 +150,7 @@ Layers.registerType('wfs', {
     create: (options, map) => {
 
         const source = new VectorSource({
-            strategy: getStrategy(options),
+            strategy: getStrategy(options) || undefined, // this can not be null, must be
             format: new GeoJSON()
         });
         let layer;

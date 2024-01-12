@@ -27,9 +27,12 @@ import '../plugins/WFS3Layer';
 import '../plugins/ElevationLayer';
 
 import {
-    setStore
+    setStore,
+    setCredentials
 } from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
+import { ServerTypes } from '../../../../utils/LayersUtils';
+
 
 import { Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
@@ -3031,6 +3034,140 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getSource()).toBeTruthy();
     });
 
+    describe('WFS', () => {
+        // this function create a WFS layer with the given options.
+        const createWFSLayerTest = (options, done, onRenderComplete = () => {}) => {
+            let layer;
+            map.on('rendercomplete', () => {
+                if (layer.layer.getSource().getFeatures().length > 0) {
+                    const f = layer.layer.getSource().getFeatures()[0];
+                    expect(f.getGeometry().getCoordinates()[0]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[0]);
+                    expect(f.getGeometry().getCoordinates()[1]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[1]);
+                    onRenderComplete(layer);
+                    done();
+                }
+            });
+            // first render
+            layer = ReactDOM.render(<OpenlayersLayer
+                type="wfs"
+                options={{
+                    ...options
+                }}
+                map={map} />, document.getElementById("container"));
+            expect(layer.layer.getSource()).toBeTruthy();
+        };
+        describe('serverType: no-vendor', () => {
+            it('test basic post request', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR
+                }, done);
+            });
+            it('test layerFilter', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    expect(data).toContain(
+                        '<ogc:Filter>'
+                        + '<ogc:And>'
+                            + '<ogc:PropertyIsEqualTo><ogc:PropertyName>a</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>'
+                        + '</ogc:And>'
+                    + '</ogc:Filter>');
+
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    layerFilter: {
+                        filters: [{
+                            format: 'cql',
+                            body: 'a = 1'
+                        }]
+                    }
+                }, done);
+            });
+            it('test strategy "bbox"', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    expect(data).toContain('<ogc:PropertyIsEqualTo><ogc:PropertyName>a</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>');
+                    expect(data).toContain('<ogc:BBOX>');
+
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    strategy: 'bbox',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    layerFilter: {
+                        filters: [{
+                            format: 'cql',
+                            body: 'a = 1'
+                        }]
+                    }
+                }, done);
+            });
+            it('test security basic authentication', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    method,
+                    headers
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(headers.Authorization).toEqual(`Basic ${btoa("test:test")}`);
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                setCredentials("TEST_SOURCE", {username: "test", password: "test"});
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    security: {
+                        type: 'basic',
+                        sourceId: 'TEST_SOURCE'
+                    }
+                }, done, () => {
+                    setCredentials("TEST_SOURCE", undefined);
+                });
+            });
+        });
+    });
     it('should apply native ol min and max resolution on vector layer', () => {
         const minResolution = 1222; // ~ zoom 7 Web Mercator
         const maxResolution = 39135; // ~ zoom 2 Web Mercator

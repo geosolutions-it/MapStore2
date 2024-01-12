@@ -9,6 +9,7 @@ import axios from '../libs/ajax';
 import urlUtil from 'url';
 import assign from 'object-assign';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
+import {toOGCFilterParts} from '../utils/FilterUtils';
 
 export const toDescribeURL = (url, typeName) => {
     const parsed = urlUtil.parse(url, true);
@@ -66,31 +67,43 @@ export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = 
         }, parsed.query)
     }));
 };
-// supports only post and extent. TODO: convert extent into filter
-export const getFeatureLayer = (layer, {extent, proj}, config) => {
-    const [left, bottom, right, top] = extent;
+/**
+ * Performs a getFeature request (using axios POST) to a WFS service for a given MapStore layer WFS layer object.
+ * @param {object} layer MapStore layer object
+ * @param {object} requestOptions additional request options. Can include:
+ * - `version`: WFS version. Default: `1.1.0`
+ * - `filter`: optional array of mapstore filters. If the layer has a `layerFilter` property or filterObj, it will be added to the filter in a logic AND.
+ * - `proj`: projection string
+ * - `outputFormat`: output format string. Default: `application/json`
+ * - `resultType`: result type string. Default: `results`
+ * @param {object} config axios request config (headers, etc...)
+ * @returns
+ */
+export const getFeatureLayer = (layer, {version =  "1.1.0", filters, proj, outputFormat = 'application/json', resultType = 'results'} = {}, config) => {
     const {url, name: typeName, params } = layer;
     const {layerFilter, filterObj: featureGridFilter} = layer; // TODO: add
-    const {getFeature: wfsGetFeature, query, filter, and} = requestBuilder({wfsVersion: "1.1.0"});
+    const {getFeature: wfsGetFeature, query, filter, and} = requestBuilder({wfsVersion: version});
+    const allFilters = []
+        .concat(filters ?? [])
+        .concat(layerFilter ? layerFilter : [])
+        .concat(featureGridFilter ? featureGridFilter : []);
     const reqBody = wfsGetFeature(query(
         typeName,
-        filter(
-            and(
-                `<ogc:BBOX>
-                <gml:Envelope srsName="${proj}">
-                <gml:lowerCorner>${left} ${bottom}</gml:lowerCorner>
-                <gml:upperCorner>${right} ${top}</gml:upperCorner>
-                </gml:Envelope>
-                </ogc:BBOX>`,
-                "<ogc:PropertyIsNull><ogc:PropertyName>expiredAt</ogc:PropertyName></ogc:PropertyIsNull>"
-            )
-        ),
+        allFilters.length > 0
+            ? filter(
+                and(
+                    allFilters
+                        .map(f => toOGCFilterParts(f, version, "ogc"))
+                )
+
+            ) : "",
         {srsName: proj} // 3rd for query is optional
     ),
-    {outputFormat: 'application/json', resultType: 'results'}
+    {outputFormat, resultType}
     );
     return axios.post(url, reqBody, {
         ...config,
+        params,
         headers: {
             ...config?.headers,
             'Content-Type': 'application/xml'
@@ -98,6 +111,14 @@ export const getFeatureLayer = (layer, {extent, proj}, config) => {
     });
 };
 
+/**
+ * Performs a WFS GetFeature request (using axios GET) with the given parameters.
+ * @param {string} url URL of the WFS service
+ * @param {string} typeName layer name
+ * @param {object} params the params to add to the request
+ * @param {object} config axios request config (headers, etc...)
+ * @returns {Promise} the axios promise
+ */
 export const getFeature = (url, typeName, params, config) => {
     return axios.get(getFeatureURL(url, typeName, params), config);
 };
