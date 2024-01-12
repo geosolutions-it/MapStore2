@@ -9,6 +9,7 @@ export const PLAY = "PLAYBACK:START";
 export const PAUSE = "PLAYBACK:PAUSE";
 export const STOP = "PLAYBACK:STOP";
 
+export const INIT = "PLAYBACK:INIT";
 export const SET_FRAMES = "PLAYBACK:SET_FRAMES";
 export const APPEND_FRAMES = "PLAYBACK:APPEND_FRAMES";
 export const FRAMES_LOADING = "PLAYBACK:FRAMES_LOADING";
@@ -87,4 +88,13 @@ export const updateMetadata = ({next, previous, forTime}) => ({
 export const setIntervalData = (timeIntervalData) => ({
     type: SET_INTERVAL_DATA,
     timeIntervalData
+});
+
+/**
+ * Initialize the playback data on config load
+ * @param {object} playback data
+ */
+export const onInitPlayback = (payload) => ({
+    type: INIT,
+    payload
 });
