@@ -18,6 +18,7 @@ export default ({setCredentials = () => {}, credentials}) => {
         setHasCredentials(true);
     };
     if (hasCredentials) {
+        // show only button to reset credentials.
         return (<div style={{textAlign: "right"}}>
             <ButtonT
                 style={{marginRight: 10, border: "none", background: "none"}}
@@ -36,7 +37,7 @@ export default ({setCredentials = () => {}, credentials}) => {
             <ControlLabel><Message msgId="streetView.cyclomedia.password" /></ControlLabel>
             <FormControl type="password"  value={password} onChange={e => setPassword(e.target.value)}/>
             <div className="street-view-credentials-form-buttons">
-                <Button onClick={() => onSubmit()}><Message msgId="streetView.cyclomedia.submit" /></Button>
+                <Button disabled={!username || !password} onClick={() => onSubmit()}><Message msgId="streetView.cyclomedia.submit" /></Button>
             </div>
         </Form>
     </div>);

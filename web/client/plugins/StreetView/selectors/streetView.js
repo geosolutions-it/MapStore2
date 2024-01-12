@@ -9,7 +9,20 @@ import { localConfigSelector } from '../../../selectors/localConfig';
 export const enabledSelector = createControlEnabledSelector(CONTROL_NAME);
 export const streetViewStateSelector = state => state?.streetView ?? {};
 export const apiLoadedSelectorCreator = (provider) => state => streetViewStateSelector(state)?.apiLoaded?.[provider] ?? false;
+
+/**
+ * Gets the current street view location
+ * @memberof selectors.streetview
+ * @param {object} state
+ * @returns {object} the current street view location ( minimal is `{latLng: {lat, lng, }}`. The rest of the properties are provider specific )
+ */
 export const locationSelector = createSelector(streetViewStateSelector, ({location} = {}) => location);
+/**
+ * Gets the current street view point of view
+ * @memberof selectors.streetview
+ * @param {object} state
+ * @returns {object} the current street view point of view ( minimal is `{heading, pitch}`. The rest of the properties are provider specific )
+ */
 export const povSelector = createSelector(streetViewStateSelector, ({pov} = {}) => pov);
 
 export function getStreetViewMarkerLayer(state) {
@@ -19,10 +32,26 @@ export function getStreetViewMarkerLayer(state) {
 export function streetViewConfigurationSelector(state) {
     return streetViewStateSelector(state)?.configuration ?? {};
 }
+
+/**
+ * Returns the current street-view provider selected for the plugin
+ */
 export function streetViewProviderSelector(state) {
     return streetViewConfigurationSelector( state)?.provider ?? 'google';
 }
+/**
+ * Gets the current provider API loaded flag.
+ * @memberof selectors.streetview
+ * @param {object} state
+ * @returns {boolean} the current provider API loaded flag
+ */
 export const currentProviderApiLoadedSelector = state => apiLoadedSelectorCreator(streetViewProviderSelector(state))(state);
+/**
+ * Gets the configuration for the current provider.
+ * @memberof selectors.streetview
+ * @param {object} state
+ * @returns {object} the configuration for the current provider
+ */
 export const providerSettingsSelector = state => streetViewConfigurationSelector(state)?.providerSettings ?? {};
 const GOOGLE_DATA_LAYER_DEFAULTS = {
     provider: 'custom',
@@ -70,6 +99,12 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
         }
     }
 };
+/**
+ * Gets the default data layer configuration for the current provider.
+ * @memberof selectors.streetview
+ * @param {object} state
+ * @returns {object} the data layer configuration for the current provider, or the default one if not configured
+ */
 const providerDataLayerDefaultsSelector = createSelector(
     streetViewProviderSelector,
     (provider) => {
@@ -84,8 +119,9 @@ const providerDataLayerDefaultsSelector = createSelector(
     }
 );
 /**
- *
+ * Gets the data layer configuration for the current provider.
  * @param {object} state
+ * @memberof selectors.streetview
  * @returns {object} the data layer configuration for the current provider, or the default one if not configured
  */
 export function streetViewDataLayerSelector(state) {
@@ -95,6 +131,7 @@ export function streetViewDataLayerSelector(state) {
 
 /**
  * gets the API key for Google street view.
+ * @memberof selectors.streetview
  * @returns the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.googleStreetViewAPIKey`, `apiKeys.googleAPIKey`, `googleAPIKey`.
  */
 export function googleAPIKeySelector(state) {
@@ -103,10 +140,22 @@ export function googleAPIKeySelector(state) {
         ?? localConfigSelector(state)?.apiKeys?.googleAPIKey
         ?? localConfigSelector(state)?.googleAPIKey;
 }
+/**
+ * Selector for the cyclomedia API key
+ * @memberof selectors.streetview
+ * @param {object} state the state
+ * @returns the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.cyclomediaAPIKey`.
+ */
 export function cyclomediaAPIKeySelector(state) {
     return streetViewConfigurationSelector(state)?.apiKey
         ?? localConfigSelector(state)?.apiKeys?.cyclomediaAPIKey;
 }
+/**
+ * Selector for the API key for the current provider
+ * @memberof selectors.streetview
+ * @param {object} state the state
+ * @returns the API key for the current provider
+ */
 export function streetViewAPIKeySelector(state) {
     switch (streetViewProviderSelector(state)) {
     case PROVIDERS.GOOGLE:
@@ -119,6 +168,8 @@ export function streetViewAPIKeySelector(state) {
 }
 /**
  * gets the useDataLayer flag actually loaded
+ * @memberof selectors.streetview
+ * @param {object} state
  * @returns {boolean} the flag value
  */
 export function useStreetViewDataLayerSelector(state) {

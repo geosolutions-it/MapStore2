@@ -3,7 +3,8 @@ import {STREET_VIEW_DATA_LAYER_ID} from '../constants';
 /**
  * Load the Cyclomedia API (does nothing for now)
  * NOTE: The current implementation loads the API in an iframe in the CyclomediaViewer component, so this is only a fake API loader.
- * Despite the API has been published on NPM (on Dec 2023), so we can load it dynamically in the future. (now it's not possible because of conflicts with the react-dnd library)
+ * The API has been published on NPM (on Dec 2023), so we can load it dynamically in the future.
+ * Now it's not possible because of conflicts with the `react-dnd` library.
  */
 export const loadAPI = () => (new Promise((r) => r()));
 // https://streetsmart.cyclomedia.com/api/v23.14/documentation/

@@ -77,6 +77,11 @@ const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible})
 
 const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLocation = () => {}, mapPointVisible, providerSettings = {}}) => {
     const StreetSmartApiURL = providerSettings?.StreetSmartApiURL ?? "https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js";
+    const scripts = providerSettings?.scripts ?? `
+    <script type="text/javascript" src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    `;
     const initOptions = providerSettings?.initOptions ?? {};
     // location contains the latLng and the properties of the feature
     // properties contains the `imageId` that can be used as query
@@ -226,9 +231,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
                     overflow: hidden;
                 }
             </style>
-            <script type="text/javascript" src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
-            <script type="text/javascript" src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+            ${scripts}
             <script type="text/javascript" src="${StreetSmartApiURL}" ></script>
             <script>
                     window.StreetSmartApi = StreetSmartApi

@@ -88,7 +88,6 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
         .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
         .filter(({control}) => control === CONTROL_NAME)
         .filter(() => enabledSelector(getState()))
-        // .filter(() => streetViewProviderSelector(getState()) === 'google') // TODO make this work for cyclomedia and other providers
         .switchMap(() => {
             // setup
             return Rx.Observable.from([
@@ -124,6 +123,7 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
                     .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
                     .filter(({control}) => control === CONTROL_NAME)
                     .filter(() => !enabledSelector(getState()))
+                    .merge(action$.ofType(RESET_CONTROLS))
                     .take(1)
                     .switchMap(() => {
                         return  Rx.Observable.from([
@@ -132,7 +132,6 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
                             removeAdditionalLayer({id: MARKER_LAYER_ID, owner: STREET_VIEW_OWNER})
                         ]);
                     })
-                    .takeUntil(action$.ofType(RESET_CONTROLS))
             );
         });
 /**
@@ -146,7 +145,6 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
     return action$.ofType(CLICK_ON_MAP)
         .filter(() => enabledSelector(getState()))
         .filter(() => currentProviderApiLoadedSelector(getState()))
-        // .filter(() => streetViewProviderSelector(getState()) === 'google') // TODO make this work for cyclomedia and other providers
         .switchMap(({point}) => {
             const provider = streetViewProviderSelector(getState());
             const getLocation = API[provider]?.getLocation;
@@ -161,7 +159,7 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
                 .catch((e) => {
                     if (e.code === "ZERO_RESULTS") {
                         return Rx.Observable.of(
-                            info({title: "streetView.title", message: "streetView.messages.noDataForPosition"}) // LOCALIZE
+                            info({title: "streetView.title", message: "streetView.messages.noDataForPosition"})
                         );
                     }
                     console.error(e); //

@@ -3890,20 +3890,19 @@
             "noDataForPosition": "no hay datos de Street View para esta",
             "unknownError": "error desconocido, ver consola"
           },
-            "loadingAPI": "Cargando API...",
-            "cyclomedia": {
-              "initializing": "Inicializando la API de Street Smart...",
-              "loadingAPI": "Cargando la API de Street Smart...",
-              "changeCredentials": "Cambiar credenciales de Street Smart",
-              "insertCredentials": "Inserte sus credenciales de Street Smart",
-              "emptyDescription": "Haga clic en uno de los puntos azules en el mapa para comenzar a navegar por las imágenes de vista de calle",
-              "username": "Nombre de usuario",
-              "password": "Contraseña",
-              "submit": "Enviar",
-              "zoomIn": "Por favor, acerque el mapa para ver la cobertura de vista de calle",
-              "errorOccurred": "Se produjo un error: ",
-              "reloadAPI": "Recargar API"
-            }
+          "loadingAPI": "Cargando API...",
+          "cyclomedia": {
+            "initializing": "Inicializando la API de Street Smart...",
+            "loadingAPI": "Cargando la API de Street Smart...",
+            "changeCredentials": "Cambiar credenciales de Street Smart",
+            "insertCredentials": "Inserte sus credenciales de Street Smart",
+            "emptyDescription": "Haga clic en uno de los puntos azules en el mapa para comenzar a navegar por las imágenes de vista de calle",
+            "username": "Nombre de usuario",
+            "password": "Contraseña",
+            "submit": "Enviar",
+            "zoomIn": "Por favor, acerque el mapa para ver la cobertura de vista de calle",
+            "errorOccurred": "Se produjo un error: ",
+            "reloadAPI": "Recargar API"
           }
         },
         "sidebarMenu": {
