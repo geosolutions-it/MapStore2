@@ -22,15 +22,15 @@ Through the *Top Toolbar* it is possible to:
 
 <img src="../img/exploring-dashboards/language-switcher.jpg" class="ms-docimage"  style="max-width:150px;"/>
 
+* Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/home-page-icon.jpg" class="ms-docbutton"/> button
+
+* **Login/Logout** by clicking the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
+
 ### Side Toolbar
 
 From the **Side Toolbar** the user can:
 
 <img src="../img/exploring-dashboards/options-menu.jpg" class="ms-docimage"  style="max-width:150px;"/>
-
-* Go back to the [Homepage](https://mapstore.geosolutionsgroup.com/mapstore/#/) by clicking the <img src="../img/button/homepage.jpg" class="ms-docbutton"/> button
-
-* **Login/Logout** by clicking the <img src="../img/button/logged.jpg" class="ms-docbutton"/> button (for more information see the [Managing Users and Groups](managing-users-and-groups.md) section)
 
 * [Add new widgets](adding-widgets.md#adding-widgets) with the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button
 
