@@ -1,5 +1,5 @@
 import { Loader } from '@googlemaps/js-api-loader';
-import { googleToMapStoreLocation } from '../googleMapsUtils';
+import { googleToMapStoreLocation } from '../utils/google';
 
 let API;
 export const loadGoogleMapsAPI  = ({apiKey, version = "weekly", useStaticCache = true, ...options} = {}) => {

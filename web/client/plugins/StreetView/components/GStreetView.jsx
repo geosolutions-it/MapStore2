@@ -1,6 +1,6 @@
 import { isEqual } from "lodash";
 import React, { useRef, useState, useEffect } from "react";
-import { googleToMapStoreLocation } from "../googleMapsUtils";
+import { googleToMapStoreLocation } from "../utils/google";
 import EmptyStreetView from './EmptyStreetView';
 
 

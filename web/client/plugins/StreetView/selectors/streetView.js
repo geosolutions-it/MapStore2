@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect';
+import { ServerTypes } from '../../../utils/LayersUtils';
 
 import { PROVIDERS, CONTROL_NAME, MARKER_LAYER_ID, CYCLOMEDIA_CREDENTIALS_REFERENCE, CYCLOMEDIA_DEFAULT_MAX_RESOLUTION } from '../constants';
 import { createControlEnabledSelector } from '../../../selectors/controls';
@@ -37,9 +38,8 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
     },
     strategy: 'bbox', // loads data only in the current extent
     maxResolution: CYCLOMEDIA_DEFAULT_MAX_RESOLUTION,
-    serverType: 'noVendor', // do not support CQL filters
-    method: 'POST',
-    geometryType: 'point',
+    serverType: ServerTypes.NO_VENDOR, // do not support CQL filters
+    geometryType: 'point', // this is required to avoid style to ask for capabilities
     url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
     name: "atlas:Recording",
     style: {

@@ -4,8 +4,10 @@ import { Form, Button, ControlLabel, FormControl, Glyphicon } from 'react-bootst
 import tooltip from '../../../../components/misc/enhancers/tooltip';
 const ButtonT = tooltip(Button);
 /**
- *
- * @returns form for username and password for Cyclomedia API
+ * Component to insert Smart API Credentials
+ * @prop {function} setCredentials function to set credentials
+ * @prop {object} credentials object with username and password
+ * @returns {JSX.Element} The rendered component
  */
 export default ({setCredentials = () => {}, credentials}) => {
     const [hasCredentials, setHasCredentials] = useState(credentials?.username && credentials?.password);
@@ -30,9 +32,9 @@ export default ({setCredentials = () => {}, credentials}) => {
         <h5><Message msgId="streetView.cyclomedia.insertCredentials" /></h5>
         <Form>
             <ControlLabel><Message msgId="streetView.cyclomedia.username" /></ControlLabel>
-            <FormControl type="text" autocomplete="off" value={username} onChange={e => setUsername(e.target.value)}/>
+            <FormControl type="text"  value={username} onChange={e => setUsername(e.target.value)}/>
             <ControlLabel><Message msgId="streetView.cyclomedia.password" /></ControlLabel>
-            <FormControl type="password" autocomplete="off" value={password} onChange={e => setPassword(e.target.value)}/>
+            <FormControl type="password"  value={password} onChange={e => setPassword(e.target.value)}/>
             <div className="street-view-credentials-form-buttons">
                 <Button onClick={() => onSubmit()}><Message msgId="streetView.cyclomedia.submit" /></Button>
             </div>

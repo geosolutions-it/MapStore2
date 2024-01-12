@@ -50,9 +50,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  * - `cyclomedia` provider. TODO: add a global property.
  * @property {string} providerSettings The settings specific for the provider. Depending on the `provider` property, the following settings are available:
  * - `cyclomedia` provider:
- *     - `username` the username to use for the Cyclomedia API. It is mandatory.
- *     - `password` the password to use for the Cyclomedia API. It is mandatory.
- *     - Other options coming...
+ *   - `StreetSmartApiURL` (optional). The URL of the StreetSmart API. Default: `https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js`.
  * - `google` provider:
  *
  * Generally speaking, you should prefer general settings in `localConfig.json` over the plugin configuration, in order to reuse the same configuration for default viewer and all the contexts, automatically. This way you will not need to configure the `apiKey` in every context.

@@ -3889,6 +3889,20 @@
           "messages": {
             "noDataForPosition": "pas de données Street View pour cette position",
             "unknownError": "erreur inconnue, voir console"
+          },
+          "loadingAPI": "Chargement de l'API...",
+          "cyclomedia": {
+            "initializing": "Initialisation de l'API Street Smart...",
+            "loadingAPI": "Chargement de l'API Street Smart...",
+            "changeCredentials": "Modifier les identifiants Street Smart",
+            "insertCredentials": "Insérer vos identifiants Street Smart",
+            "emptyDescription": "Cliquez sur l'un des points bleus sur la carte pour commencer à parcourir les images de Street View",
+            "username": "Nom d'utilisateur",
+            "password": "Mot de passe",
+            "submit": "Soumettre",
+            "zoomIn": "Veuillez zoomer sur la carte pour voir la couverture Street View",
+            "errorOccurred": "Une erreur s'est produite : ",
+            "reloadAPI": "Recharger l'API"
           }
         },
         "sidebarMenu": {

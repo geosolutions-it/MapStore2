@@ -32,8 +32,19 @@
     }
     // empty view
     .empty-street-view {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         height: 100%;
+        width: 100%;
         overflow: hidden;
+        div {
+            max-width: 350px;
+        }
+        // fix street icon position (it's not centered in the font)
+        .empty-state-image .glyphicon {
+            margin-left: -14% !important;
+        }
     }
     .street-view-credentials {
         h5 {
@@ -50,6 +61,11 @@
                 margin-top: 20px;
             }
         }
+    }
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
     }
 }
 
