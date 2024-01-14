@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import {intlShape} from 'react-intl';
 import {getContext} from 'recompose';
 import DateTimePicker from '../../../misc/datetimepicker';
-import CustomDateTimePickerWithRange from '../../../misc/datetimepicker/CustomDateTimePickerWithRange';
+import RangedDateTimePicker  from '../../../misc/datetimepicker/RangedDateTimePicker';
 import {getMessageById} from '../../../../utils/LocaleUtils';
 import { getDateTimeFormat } from '../../../../utils/TimeUtils';
 import AttributeFilter from './AttributeFilter';
@@ -27,7 +27,7 @@ const UTCDateTimePickerWithRange = utcDateWrapper({
     dateProp: "value",
     dateTypeProp: "type",
     setDateProp: "onChange"
-})(CustomDateTimePickerWithRange);
+})(RangedDateTimePicker );
 
 
 class DateFilter extends AttributeFilter {
@@ -76,6 +76,7 @@ class DateFilter extends AttributeFilter {
                     placeholder={placeholder}
                     value={dateValue}
                     toolTip={toolTip}
+                    popupPosition={this.props.type === 'time' && this.props.isWithinAttrTbl && operator !== "><" ? 'bottom' : 'top'}     // popover open direction
                     operator={operator}
                     type={this.props.type}
                     time={this.props.type === 'time'}
@@ -94,6 +95,7 @@ class DateFilter extends AttributeFilter {
             toolTip={toolTip}
             operator={operator}
             type={this.props.type}
+            popupPosition={this.props.type === 'time' && this.props.isWithinAttrTbl && operator !== "><" ? 'bottom' : 'top'} // popover open direction
             time={this.props.type === 'date-time' || this.props.type === 'time'}
             calendar={this.props.type === 'date-time' || this.props.type === 'date'}
             onChange={(date, stringDate) => this.handleChange(date, stringDate)}

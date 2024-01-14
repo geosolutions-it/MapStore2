@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
-import DateTimePickerWithRange from '../CustomDateTimePickerWithRange';
+import DateTimePickerWithRange from '../RangedDateTimePicker';
 
 describe('DateTimePickerWithRange component', () => {
     beforeEach((done) => {
@@ -47,7 +47,8 @@ describe('DateTimePickerWithRange component', () => {
         const container = document.getElementById('container');
         const button = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(button);
-        const calendar = container.querySelector('.rw-calendar-popup');
-        expect(calendar.style.display).toBe('block');
+        const calendar = document.querySelector('.shadow-soft.picker-container');
+        expect(calendar.style.position).toBe('relative');
+        expect(calendar).toExist();
     });
 });

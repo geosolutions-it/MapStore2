@@ -36,7 +36,7 @@ export default compose(
             } else {
                 props.onValueChange(value);
                 props.onChange({
-                    value: { startDate: value?.startDate, endDate: value?.endDate, inputOperator },
+                    value: { startDate: value?.startDate, endDate: value?.endDate, operator: inputOperator },
                     operator: inputOperator,
                     type: props.type,
                     attribute
