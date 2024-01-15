@@ -15,11 +15,13 @@ import { CONTROL_NAME } from './constants';
 import StreetViewContainer from './containers/StreetViewContainer';
 import {toggleStreetView, configure, reset} from './actions/streetView';
 import Message from '../../components/I18N/Message';
+import { enabledSelector } from './selectors/streetView';
+
 
 import streetView from './reducers/streetview';
 import * as epics from './epics/streetView';
 import './style/street-view.less';
-
+import { setControlProperty } from '../../actions/controls';
 
 const StreetViewPluginComponent = ({onMount, onUnmount, apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider = 'google', providerSettings, panelSize}) => {
     useEffect(() => {
@@ -33,7 +35,14 @@ const StreetViewPluginComponent = ({onMount, onUnmount, apiKey, useDataLayer, da
 };
 
 const StreetViewPluginContainer = connect(() => ({}), {
-    onMount: configure, onUnmount: reset
+    onMount: configure, onUnmount: () => {
+        return (dispatch, getState) => {
+            dispatch(reset());
+            if (enabledSelector(getState())) {
+                dispatch(setControlProperty(CONTROL_NAME, "enabled", false)); // turn the plugin off when unmounting, if it was on
+            }
+        };
+    }
 })(StreetViewPluginComponent);
 
 /**
@@ -93,8 +102,8 @@ export default createPlugin(
                 action: () => toggleStreetView(),
                 selector: (state) => {
                     return {
-                        bsStyle: state.controls["street-view"] && state.controls["street-view"].enabled ? 'primary' : 'tray',
-                        active: state.controls["street-view"] && state.controls["street-view"].enabled || false
+                        bsStyle: enabledSelector(state) ? 'primary' : 'tray',
+                        active: enabledSelector(state) || false
                     };
                 }
             }
