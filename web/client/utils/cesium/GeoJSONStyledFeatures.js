@@ -375,7 +375,7 @@ class GeoJSONStyledFeatures {
                 ...feature,
                 properties: {
                     ...feature.properties,
-                    [this._uuidKey]: feature.properties[this._uuidKey] ?? uuid()
+                    [this._uuidKey]: feature?.properties?.[this._uuidKey] ?? uuid()
                 }
             };
         });
