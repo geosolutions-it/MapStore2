@@ -80,7 +80,7 @@ const MapCatalog = ({
                     : i)}
             loading={loading}
             onItemClick={({ map } = {}, props, event) => {
-                if (event.ctrlKey) {
+                if (event.ctrlKey || event.metaKey) {
                     return onSelected(isEmpty(selected)
                         ? castArray(map)
                         : castArray(selected).concat(map));

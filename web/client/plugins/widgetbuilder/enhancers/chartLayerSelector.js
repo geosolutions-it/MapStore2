@@ -66,7 +66,7 @@ const layerSelector = compose(
                 : i
         ),
         onItemClick: ({record} = {}, props, event) => {
-            if (event.ctrlKey) {
+            if (event.ctrlKey || event.metaKey) {
                 const selectedArray = castArray(selected);
                 if (isEmpty(selected)) {
                     return setSelected(castArray(record));

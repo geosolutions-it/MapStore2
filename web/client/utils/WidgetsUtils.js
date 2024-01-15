@@ -933,3 +933,61 @@ export const enableBarChartStack = (chart = {}) => {
     // the reason is related to the overlay behavior for each new axis added
     return false;
 };
+
+/**
+ * Get names of the layers used in the widget
+ * @param {object} widget current widget object
+ * @returns {string[]} array of widget's layers name
+ */
+export const getWidgetLayersNames = (widget) => {
+    const type = widget?.widgetType;
+    if (!isEmpty(widget)) {
+        if (type !== 'map') {
+            if (type === 'chart') {
+                return uniq(get(widget, 'charts', [])
+                    .map(c => get(c, 'traces', []).map(t => get(t, 'layer.name', '')))
+                    .flat()
+                    .filter(n => n)
+                );
+            }
+            return castArray(get(widget, 'layer.name', []));
+        }
+        return uniq(get(widget, 'maps', [])
+            .map(m => get(m, 'layers', []).map(t => get(t, 'name', '')))
+            .flat()
+            .filter(n => n)
+        );
+    }
+    return [];
+};
+
+/**
+ * Check if chart widget layers are compatible with table widget layer
+ * @param {object} widget current widget object
+ * @param {object} tableWidget dependant table widget object
+ * @returns {boolean} flag determines if compatible
+ */
+export const isChartCompatibleWithTableWidget = (widget, tableWidget) => {
+    const tableLayerName = tableWidget?.layer?.name;
+    return tableLayerName && get(widget, 'charts', [])
+        .every(({ traces = [] } = {}) => traces
+            .every(trace => get(trace, 'layer.name') === tableLayerName));
+};
+
+/**
+ * Check if a table widget can be a depedency to the widget currently is edit
+ * @param {object} widget current widget in edit
+ * @param {object} dependencyTableWidget target widget in check for dependency compatibility
+ * @returns {boolean} flag determines if compatible
+ */
+export const canTableWidgetBeDependency = (widget, dependencyTableWidget) => {
+    const isChart = widget && widget.widgetType === 'chart';
+    const isMap = widget && widget.widgetType === 'map';
+    const editingLayer = getWidgetLayersNames(widget);
+
+    if (isMap) {
+        return !isEmpty(editingLayer);
+    }
+    const layerPresent = editingLayer.includes(get(dependencyTableWidget, 'layer.name'));
+    return isChart ? layerPresent && isChartCompatibleWithTableWidget(widget, dependencyTableWidget) : layerPresent;
+};
