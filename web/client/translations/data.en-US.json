@@ -3080,7 +3080,7 @@
             "title": "Title",
             "titlePlaceholder": "Enter displayed name",
             "add": "Add",
-            "thumbnailMessage": "Size of images should be a square of 98px x 98px or 128px x 128px, max 500kb",
+            "thumbnailMessage": "Size of images should be a square of 128px x 128px, max 500kb",
             "imageUploadMessage": "Click, or drag and drop to add an image",
             "additionalParameters": "Additional Parameters",
             "addAdditionalParameterTooltip": "Add parameter",

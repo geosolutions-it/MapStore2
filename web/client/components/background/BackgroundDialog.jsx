@@ -324,10 +324,10 @@ export default class BackgroundDialog extends React.Component {
                         newThumbnail: get(this.state.thumbnail, 'url') || "NODATA"
                     }}
                     thumbnailOptions={{
-                        width: 98,
-                        height: 98,
+                        width: 128,
+                        height: 128,
                         type: 'image/jpeg',
-                        quality: 0.5,
+                        quality: 0.8,
                         contain: false
                     }}
                 />
