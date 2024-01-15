@@ -63,7 +63,7 @@ Through this menu the user is allowed to:
 
 * Enable the *Font Anti Aliasing* (when Anti Aliasing is on, the borders of the labels font are smoothed improving the image quality)
 
-* Set the *Icons size*
+* Enable the *Override icon size* option to have the ability to change the *Height* and *Width* of the icons (by default, the icon sizes are `24x24`)
 
 * Set the *Dpi* resolution of the legend
 
