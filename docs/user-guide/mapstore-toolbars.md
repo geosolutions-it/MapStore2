@@ -111,11 +111,11 @@ Once the **Override default services** option is enabled, only the custom search
 
 <img src="../img/menu-bar/override-yes.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-When there are a multiple search services, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to select the search service to use to perform a search. Selecting the **Service Menu** option <img src="../img/button/select-tool-button.jpg" class="ms-docbutton"/>, the following window opens:
+When there are multiple search services defined, by default [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) performs the search operation on all of them according to the priority configured for each service (see above). Therefore, it is also possible for the user to select the desired search service from the menu to perform the search only on it. Selecting the **Search Service Menu** button <img src="../img/button/select-tool-button.jpg" class="ms-docbutton"/>, the following window opens:
 
 <img src="../img/menu-bar/search-tool-option.jpg" class="ms-docimage" style="max-width:400px;"/>
 
-In the *Service Menu*, the user can choose one of the search services to use to carry out the search by clicking on one of them. An example could be the following:
+In the *Search Menu*, the user can choose one of the search services to use to carry out the search by clicking on one of them. An example could be the following:
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/menu-bar/search-with-one-search-service.mp4"/></video>
 
