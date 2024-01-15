@@ -1,10 +1,14 @@
 import expect from 'expect';
-import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from '../../../epics/__tests__/epicTestUtils';
+import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from '../../../../epics/__tests__/epicTestUtils';
+import { CONTROL_NAME } from '../../constants';
 
-import { UPDATE_ADDITIONAL_LAYER } from '../../../actions/additionallayers';
+import { UPDATE_ADDITIONAL_LAYER } from '../../../../actions/additionallayers';
+import { setControlProperty } from '../../../../actions/controls';
 
-import { streetViewSyncLayer } from '../epics/streetView';
-import { setPov, setLocation } from '../actions/streetView';
+import { streetViewSyncLayer, streetViewSetupTearDown } from '../streetView';
+import { setPov, setLocation } from '../../actions/streetView';
+import {REGISTER_EVENT_LISTENER} from '../../../../actions/map';
+
 
 describe('StreetView epics', () => {
     it('update layer on setLocation', (done) => {
@@ -41,5 +45,35 @@ describe('StreetView epics', () => {
             expect(timeout.type).toBe(TEST_TIMEOUT);
             done();
         }, {layers: {flat: [{name: "layerName", url: "clearlyNotAUrl", visibility: true, queryable: false, type: "wms"}]}});
+    });
+    it('streetViewSetupTearDown', (done) => {
+        let action = setControlProperty(CONTROL_NAME, 'enabled', false);
+        const NUM_ACTIONS = 3;
+        testEpic(streetViewSetupTearDown, NUM_ACTIONS, action, ([
+            register,
+            updateAdditionalLayers1,
+            updateAdditionalLayers2
+        ]) => {
+            expect(register.type).toBe(REGISTER_EVENT_LISTENER);
+            expect(register.eventName).toBe('click');
+            expect(register.toolName).toBe(CONTROL_NAME);
+            expect(updateAdditionalLayers1.type).toBe(UPDATE_ADDITIONAL_LAYER);
+            expect(updateAdditionalLayers2.type).toBe(UPDATE_ADDITIONAL_LAYER);
+            done();
+        }, {
+            streetView: {
+                location: {
+                    latLng: {
+                        lat: 1,
+                        lng: 2
+                    }
+                }
+            },
+            controls: {
+                [CONTROL_NAME]: {
+                    enabled: true
+                }
+            }
+        });
     });
 });

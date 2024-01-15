@@ -549,10 +549,13 @@ export const processOGCSpatialFilter = function(version, spatialField, nsplaceho
     if (spatialField.collectGeometries) {
         return FilterUtils.processOGCCrossLayerFilter(spatialField);
     }
-    let ogc =
-        propertyTagReference[nsplaceholder].startTag +
-            spatialField.attribute +
-        propertyTagReference[nsplaceholder].endTag;
+    // spatial attribute name is not mandatory for bbox, and sometimes not present.
+    // Filter should be generated anyway
+    let ogc = spatialField.attribute
+        ? propertyTagReference[nsplaceholder].startTag +
+                spatialField.attribute +
+            propertyTagReference[nsplaceholder].endTag
+        : '';
 
     switch (spatialField.operation) {
     case "INTERSECTS":

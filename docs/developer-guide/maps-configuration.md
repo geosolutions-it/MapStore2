@@ -973,6 +973,27 @@ This layer differs from the "vector" because all the loading/filtering/querying 
 - `url`: the url of the WFS service.
 - `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.)
 
+##### Experimental properties
+
+Here a list of experimental properties that can be used in the WFS layer configuration, they may change in the future.
+
+- `serverType`: analogous to the `serverType` of the WMS layer. It can be `geoserver` or `no-vendor`. If `no-vendor` is used, the requests will not contain vendor specific parameters like `cql_filter`, and the layer will be treated as a generic WFS layer. The filtering will be done on the "WFS client" side, using the `filter` property. Actually this property is supported only in OpenLayers and only for the map viewer.
+- `security`: this is an object that can contain the security configuration for the layer. It allows to specify if some particular security is configured for this layer, apart from the usual `securityRules` configured globally. It can contain the following properties. Actually this property is supported only in OpenLayers and only for the map viewer:
+
+  - `type`: the type of security to use. It can be `Basic`.
+  - `sourceType`: the type of source to use. It can be  `sessionStorage`. In case of sessionStorage, a `sourceId` must be provided to get the credentials from the sessionStorage.
+  - `sourceId`: the id of the source to use. It can be any string.
+
+    ```json
+    {
+        "security": {
+            "type": "Basic",
+            "sourceType": "sessionStorage",
+            "sourceId": "source-identifier"
+        }
+    }
+    ```
+
 #### Graticule
 
 i.e.

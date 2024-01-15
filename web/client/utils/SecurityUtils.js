@@ -229,6 +229,14 @@ export function cleanAuthParamsFromURL(url) {
     return ConfigUtils.filterUrlParams(url, [getAuthKeyParameter(url)].filter(p => p));
 }
 
+export function getCredentials(id) {
+    const securityStorage = JSON.parse(sessionStorage.getItem('credentialStorage') ?? "{}");
+    return securityStorage[id] || {};
+}
+export function setCredentials(id, credentials) {
+    const securityStorage = JSON.parse(sessionStorage.getItem('credentialStorage') ?? "{}");
+    sessionStorage.setItem('credentialStorage', JSON.stringify(assign({}, securityStorage, {[id]: credentials})));
+}
 /**
  * This utility class will get information about the current logged user directly from the store.
  */
