@@ -323,6 +323,13 @@ export default class BackgroundDialog extends React.Component {
                     map={{
                         newThumbnail: get(this.state.thumbnail, 'url') || "NODATA"
                     }}
+                    thumbnailOptions={{
+                        width: 98,
+                        height: 98,
+                        type: 'image/jpeg',
+                        quality: 0.5,
+                        contain: false
+                    }}
                 />
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.title"/></ControlLabel>

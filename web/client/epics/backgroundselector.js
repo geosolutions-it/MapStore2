@@ -18,6 +18,7 @@ import {
     BACKGROUND_EDITED,
     REMOVE_BACKGROUND,
     SYNC_CURRENT_BACKGROUND_LAYER,
+    UPDATE_BACKGROUND_THUMBNAIL,
     clearModalParameters,
     setBackgroundModalParams,
     setCurrentBackgroundLayer,
@@ -27,7 +28,7 @@ import {
 
 import { setControlProperty } from '../actions/controls';
 import { changeSelectedService } from '../actions/catalog';
-import {ADD_LAYER, changeLayerProperties, removeNode} from '../actions/layers';
+import { UPDATE_NODE, ADD_LAYER, changeLayerProperties, removeNode} from '../actions/layers';
 import { getLayerFromId, currentBackgroundSelector } from '../selectors/layers';
 import { backgroundLayersSelector } from '../selectors/backgroundselector';
 import { getLayerCapabilities } from '../observables/wms';
@@ -67,6 +68,24 @@ const setCurrentBackgroundLayerEpic = (action$, store) =>
                 setControlProperty('backgroundSelector', 'currentLayer', layer)
             ] : []));
         });
+
+const updateTempBackgroundLayerEpic = (action$, store) =>
+    action$.ofType(UPDATE_BACKGROUND_THUMBNAIL)
+        .take(1)
+        .switchMap(({ id }) =>
+            action$.ofType(UPDATE_NODE)
+                .switchMap(() => {
+                    const state = store.getState();
+                    const layer = getLayerFromId(state, id);
+                    const currentLayer = currentBackgroundSelector(state);
+
+                    return currentLayer.id === layer.id ? Rx.Observable.of(...(layer && layer.group === 'background' ? [
+                        setControlProperty('backgroundSelector', 'tempLayer', layer),
+                        setControlProperty('backgroundSelector', 'currentLayer', layer)
+                    ] : [])) : Rx.Observable.of(setControlProperty('backgroundSelector', 'tempLayer', layer));
+                })
+        );
+
 
 const backgroundAddedEpic = (action$, store) =>
     action$.ofType(BACKGROUND_ADDED)
@@ -127,6 +146,7 @@ export default {
     accessMetadataExplorer,
     addBackgroundPropertiesEpic,
     setCurrentBackgroundLayerEpic,
+    updateTempBackgroundLayerEpic,
     backgroundAddedEpic,
     backgroundEditedEpic,
     backgroundRemovedEpic,
