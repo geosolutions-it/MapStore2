@@ -57,7 +57,7 @@ export const fields = {
             const blockConfig = config?.getGroupConfig(value.kind) || {};
             const properties = value;
             return (
-                <>
+                <div className="ms-symbolizer-nested-fields">
                     <Fields
                         properties={properties}
                         params={blockConfig.omittedKeys ? omit(params, blockConfig.omittedKeys) : params}
@@ -68,7 +68,7 @@ export const fields = {
                         format={format}
                     />
                     <PropertyField divider/>
-                </>
+                </div>
             );
         }
 
