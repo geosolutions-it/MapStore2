@@ -301,37 +301,36 @@ const ChartData = ({
                         </div>
                     )}
                 </ContainerDimensions>
-                {data.length ? (
-                    <FormGroup className="form-group-flex" style={{padding: 0}}>
-                        <ControlLabel><Message msgId="layerdownload.format" /></ControlLabel>
-                        <InputGroup style={{ zIndex: 0 }}>
-                            <Select
-                                value={selectedDownloadFormat}
-                                options={downloadFormat.map(key => ({
-                                    value: key,
-                                    label: getMessageById(messages, downloadOptions[key].label),
-                                    disabled: key === "pdf" && isTainted
-                                }))}
-                                onChange={(val) => {
-                                    setSelectedDownloadFormat(val?.value);
-                                }}
-                            />
-                            <InputGroup.Button>
-                                <Button
-                                    bsStyle="primary"
-                                    onClick={() => {
-                                        downloadOptions?.[selectedDownloadFormat]?.onDownload(data);
-                                    }}
-                                    className="export"
-                                >
-                                    <Glyphicon glyph="download"/> <Message msgId="longitudinalProfile.export" />
-                                </Button>
-                            </InputGroup.Button>
-                        </InputGroup>
-                    </FormGroup>
-                ) : null}
             </div>
-
+            {data.length ? (
+                <FormGroup className="form-group-flex" style={{padding: "0px 15px"}}>
+                    <ControlLabel><Message msgId="layerdownload.format" /></ControlLabel>
+                    <InputGroup style={{ zIndex: 0 }}>
+                        <Select
+                            value={selectedDownloadFormat}
+                            options={downloadFormat.map(key => ({
+                                value: key,
+                                label: getMessageById(messages, downloadOptions[key].label),
+                                disabled: key === "pdf" && isTainted
+                            }))}
+                            onChange={(val) => {
+                                setSelectedDownloadFormat(val?.value);
+                            }}
+                        />
+                        <InputGroup.Button>
+                            <Button
+                                bsStyle="primary"
+                                onClick={() => {
+                                    downloadOptions?.[selectedDownloadFormat]?.onDownload(data);
+                                }}
+                                className="export"
+                            >
+                                <Glyphicon glyph="download"/> <Message msgId="longitudinalProfile.export" />
+                            </Button>
+                        </InputGroup.Button>
+                    </InputGroup>
+                </FormGroup>
+            ) : null}
 
             </>
         );
