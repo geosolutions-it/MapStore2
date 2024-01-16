@@ -373,3 +373,21 @@ export const getStartEndDomainValues = (value) => {
     let [startTime, endTime] = values?.filter(v => !!v) || [];
     return [startTime, endTime];
 };
+
+/**
+ * @param {Date|string} date to parse
+ * @return {string} date part of the TimeStamp for local time not UTC
+ **/
+export const getLocalTimePart = (date) => {
+    let dateToParse = date;
+    if (!isDate(date) & isString(date)) {
+        dateToParse = new Date(date);
+    }
+    let hours = dateToParse.getHours();
+    hours = hours < 10 ? "0" + hours : hours;
+    let minutes = dateToParse.getMinutes();
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    let seconds = dateToParse.getSeconds();
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    return `${hours}:${minutes}:${seconds}`;
+};

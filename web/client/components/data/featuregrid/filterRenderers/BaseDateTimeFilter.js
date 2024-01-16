@@ -76,7 +76,7 @@ class DateFilter extends AttributeFilter {
                     placeholder={placeholder}
                     value={dateValue}
                     toolTip={toolTip}
-                    popupPosition={this.props.type === 'time' && this.props.isWithinAttrTbl && operator !== "><" ? 'bottom' : 'top'}     // popover open direction
+                    popupPosition={'top'}     // popover open direction
                     operator={operator}
                     type={this.props.type}
                     time={this.props.type === 'time'}
@@ -95,7 +95,7 @@ class DateFilter extends AttributeFilter {
             toolTip={toolTip}
             operator={operator}
             type={this.props.type}
-            popupPosition={this.props.type === 'time' && this.props.isWithinAttrTbl && operator !== "><" ? 'bottom' : 'top'} // popover open direction
+            popupPosition={'top'} // popover open direction
             time={this.props.type === 'date-time' || this.props.type === 'time'}
             calendar={this.props.type === 'date-time' || this.props.type === 'date'}
             onChange={(date, stringDate) => this.handleChange(date, stringDate)}

@@ -115,7 +115,7 @@ class DateTimePicker extends Component {
         const props = omit(this.props, ['placeholder', 'calendar', 'time', 'onChange', 'value']);
         let calendarVal;
         if ( this.props.value && typeof this.props.value === 'object')  {
-            calendarVal = this.props.value?.startDate;
+            calendarVal = this.props.value?.startDate || this.props.value;
         } else if (this.props.value && typeof this.props.value === 'string') calendarVal = this.props.value;
 
         return (
@@ -124,7 +124,7 @@ class DateTimePicker extends Component {
                     <div>
                         <Calendar
                             tabIndex="-1"
-                            ref={this.attachCalRef}
+                            ref={(elem) => {this.attachCalRef = elem;}}
                             onMouseDown={this.handleMouseDown}
                             onChange={this.handleCalendarChange}
                             {...props}
@@ -140,7 +140,7 @@ class DateTimePicker extends Component {
                                 </span>
                             </div>
                             <div className="dateTime-picker-hours" style={{display: timeVisible ? 'block' : 'none', background: 'white', position: 'relative', zIndex: 1}}>
-                                <Hours style={{maxHeight: "120px"}} ref={this.attachTimeRef}  {...props} onClose={this.close} onSelect={(time) => this.handleTimeSelect(time, type)} />
+                                <Hours style={{maxHeight: "120px"}} ref={elem => {this.attachTimeRef = elem; }} value={inputValue} {...props} onClose={this.close} onSelect={(time) => this.handleTimeSelect(time, type)} />
                             </div>
                         </div>
                     </div>
@@ -176,7 +176,7 @@ class DateTimePicker extends Component {
         const timeVisible = open === 'time';
         let calendarVal;
         if ( this.props.value && typeof this.props.value === 'object')  {
-            calendarVal = this.props.value?.startDate;
+            calendarVal = this.props.value?.startDate || this.props.value;
         } else if (this.props.value && typeof this.props.value === 'string') {
             calendarVal = this.props.value;
         }
@@ -202,7 +202,7 @@ class DateTimePicker extends Component {
             </div>);
         } else if (type === 'time') {
             return (
-                <div tabIndex="-1" onBlur={this.handleWidgetBlur} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
+                <div tabIndex="-1" onBlur={this.handleWidgetBlur} onKeyDown={this.handleKeyDown} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
                     {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible)}
                     <span className="rw-select">
                         <Popover
@@ -212,7 +212,9 @@ class DateTimePicker extends Component {
                             content={
                                 <div className="shadow-soft" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
                                     <div className="dateTime-picker-hours" style={{display: 'block', background: 'white', position: 'relative', zIndex: 1}}>
-                                        <Hours style={{maxHeight: "120px"}} ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+                                        <div style={{ height: '120px' }}>
+                                            <Hours style={{maxHeight: "120px"}} ref={elem => { this.attachTimeRef = elem;}} value={inputValue} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+                                        </div>
                                     </div>
                                 </div>
                             }
@@ -238,7 +240,7 @@ class DateTimePicker extends Component {
                                 <div className="shadow-soft picker-container" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
                                     <Calendar
                                         tabIndex="-1"
-                                        ref={this.attachCalRef}
+                                        ref={elem => {this.attachCalRef = elem;}}
                                         onMouseDown={this.handleMouseDown}
                                         onChange={this.handleCalendarChange}
                                         {...props}
