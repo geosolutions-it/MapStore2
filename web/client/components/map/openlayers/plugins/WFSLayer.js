@@ -17,10 +17,10 @@ import {bbox, all, tile} from 'ol/loadingstrategy.js';
 
 import GeoJSON from 'ol/format/GeoJSON';
 
-import { getFeature, getFeatureLayer, describeFeatureType } from '../../../../api/WFS';
+import { getFeature, getFeatureLayer } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { getCredentials } from '../../../../utils/SecurityUtils';
-import { needsReload, extractGeometryType } from '../../../../utils/WFSLayerUtils';
+import { needsReload } from '../../../../utils/WFSLayerUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 const getConfig = (options) => {
     const security = options?.security || {};
@@ -96,17 +96,21 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
     });
 };
 /**
- * Generate the OL style from options and geometryType. It workarounds some issues
+ * Generate the OL style from options. It workarounds some issues
  * @param {object} options MapStore's layer options
- * @param {string} geometryType the geometry type
  * @param {object} layer the openlayers layer
  */
-const getWFSStyle = (layer, options, geometryType, map) => {
-    return getStyle(applyDefaultStyleToVectorLayer({ ...options, style: { ...(options.style || {}), type: geometryType }, asPromise: true }))
+const getWFSStyle = (layer, options, map) => {
+    const collection = layer.getSource().get('@wfsFeatureCollection') || {};
+    return getStyle(
+        applyDefaultStyleToVectorLayer({
+            ...options,
+            features: collection.features
+        })
+    )
         .then((style) => {
             if (style) {
                 if (style.__geoStylerStyle) {
-                    const collection = layer.getSource().get('@wfsFeatureCollection') || {};
                     style({ map, features: collection.features })
                         .then((olStyle) => {
                             layer.setStyle(olStyle);
@@ -129,16 +133,13 @@ const getStrategy = (options) => {
     }
     return null;
 };
+
 /**
  * Fetch describeFeatureType if missing and set the style accordingly with the geometry type.
  * @param {object} layer the openlayers layer
  * @param {object} options MapStore layer configuration
  */
-const updateStyle = (layer, options, map) => layer.geometryType
-    ? getWFSStyle(layer, options, layer.geometryType, map)
-    : describeFeatureType(options.url, options.name)
-        .then(extractGeometryType)
-        .then(geometryType => getWFSStyle(layer, options, geometryType, map));
+const updateStyle = (layer, options, map) => getWFSStyle(layer, options, map);
 
 /**
  * WFS Layer for MapStore. Openlayers implementation.
@@ -172,7 +173,6 @@ Layers.registerType('wfs', {
             minResolution: options.minResolution,
             maxResolution: options.maxResolution
         });
-        layer.geometryType = options.geometryType;
         updateStyle(layer, options, map);
         return layer;
     },

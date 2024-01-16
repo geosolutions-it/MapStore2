@@ -70,6 +70,9 @@ import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
 import { projectionSelector } from '../selectors/map';
 import { getResolutions } from "../utils/MapUtils";
+import { describeFeatureType } from '../api/WFS';
+import { extractGeometryType } from '../utils/WFSLayerUtils';
+import { createDefaultStyle } from '../utils/StyleUtils';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     if (isNewService) {
@@ -269,6 +272,20 @@ export default (API) => ({
                                 }
                             }
                             return Rx.Observable.empty();
+                        })
+                        .merge(Rx.Observable.from(actions))
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                if (layer.type === 'wfs') {
+                    return Rx.Observable.defer(() => describeFeatureType(layer.url, layer.name))
+                        .switchMap((result) => {
+                            const extractedGeometryType = (extractGeometryType(result) || '').replace('Multi', '');
+                            const geometryType = ['Point', 'LineString', 'Polygon'].includes(extractedGeometryType)
+                                ? extractedGeometryType
+                                : 'GeometryCollection';
+                            return Rx.Observable.of(changeLayerProperties(id, {
+                                style: createDefaultStyle({ geometryType })
+                            }));
                         })
                         .merge(Rx.Observable.from(actions))
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));

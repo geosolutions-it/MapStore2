@@ -17,7 +17,6 @@ import {
     testService as commonTestService,
     preprocess as commonPreprocess
 } from './common';
-import { createDefaultStyle } from '../../utils/StyleUtils';
 import { get, castArray } from 'lodash';
 
 const capabilitiesCache = {};
@@ -91,7 +90,6 @@ const recordToLayer = (record) => {
         description: record.description || "",
         bbox: record.boundingBox,
         links: getRecordLinks(record),
-        style: createDefaultStyle({}),
         ...record.layerOptions
     };
 };
