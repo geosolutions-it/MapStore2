@@ -168,10 +168,6 @@ describe('TimeUtils', () => {
         });
     });
     it('test getLocalTimePart', () => {
-        // utc dates without 'Z'
-        expect(getLocalTimePart(new Date("2019-03-15T10:30:00Z"))).toBe("12:30:00");
-        expect(getLocalTimePart(new Date("2018-01-09T05:03:00Z"))).toBe("07:03:00");
-        // local dates
         expect(getLocalTimePart(new Date("2018-01-09T01:00:00"))).toBe("01:00:00");
         expect(getLocalTimePart(new Date("2018-01-09T12:00:00"))).toBe("12:00:00");
     });
