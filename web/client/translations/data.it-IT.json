@@ -3070,7 +3070,7 @@
             "title": "Titolo",
             "titlePlaceholder": "Inserisci il nome visualizzato",
             "add": "Inserisci",
-            "thumbnailMessage": "Le dimensioni delle immagini devono essere quadrate di 98 px x 98 px o 128 px x 128 px, max 500kb",
+            "thumbnailMessage": "Le dimensioni delle immagini devono essere quadrate di 128 px x 128 px, max 500kb",
             "imageUploadMessage": "Fare clic o trascinare e rilasciare per aggiungere un'immagine",
             "additionalParameters": "Parametri aggiuntivi",
             "addAdditionalParameterTooltip": "Aggiungi parametro",
