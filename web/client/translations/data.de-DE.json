@@ -3107,7 +3107,7 @@
             "title": "Titel",
             "titlePlaceholder": "Den angezeigten Namen eingeben",
             "add": "Hinzufügen",
-            "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 128 x 128 Pixel sein, maximal 500kb",
+            "thumbnailMessage": "Quadratisches Bild mit 128 x 128 Pixel, maximal 500 KB",
             "imageUploadMessage": "Klicken Sie auf oder ziehen Sie sie ab, um ein Bild hinzuzufügen",
             "additionalParameters": "Zusätzliche Parameter",
             "addAdditionalParameterTooltip": "Parameter hinzufügen",
