@@ -316,6 +316,7 @@ export default class BackgroundDialog extends React.Component {
             {<Form style={{width: '100%'}}>
                 {this.renderThumbnailErrors()}
                 <Thumbnail
+                    checkOriginalFileSize
                     onUpdate={(data, url) => this.setState({thumbnail: {data, url}})}
                     onError={(errors) => this.setState({thumbnailErrors: errors})}
                     message={<Message msgId="backgroundDialog.thumbnailMessage"/>}
