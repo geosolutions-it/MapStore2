@@ -68,7 +68,6 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
     strategy: 'bbox', // loads data only in the current extent
     maxResolution: CYCLOMEDIA_DEFAULT_MAX_RESOLUTION,
     serverType: ServerTypes.NO_VENDOR, // do not support CQL filters
-    geometryType: 'point', // this is required to avoid style to ask for capabilities
     url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
     name: "atlas:Recording",
     style: {
