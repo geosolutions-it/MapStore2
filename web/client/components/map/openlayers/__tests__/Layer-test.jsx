@@ -3036,16 +3036,16 @@ describe('Openlayers layer', () => {
 
     describe('WFS', () => {
         // this function create a WFS layer with the given options.
-        const createWFSLayerTest = (options, done, onRenderComplete = () => {}) => {
+        const createWFSLayerTest = (options, done, onRenderComplete = () => {}, checkFeatures = true) => {
             let layer;
             map.on('rendercomplete', () => {
-                if (layer.layer.getSource().getFeatures().length > 0) {
+                if (layer.layer.getSource().getFeatures().length > 0 && checkFeatures) {
                     const f = layer.layer.getSource().getFeatures()[0];
                     expect(f.getGeometry().getCoordinates()[0]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[0]);
                     expect(f.getGeometry().getCoordinates()[1]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[1]);
                     onRenderComplete(layer);
-                    done();
                 }
+                done();
             });
             // first render
             layer = ReactDOM.render(<OpenlayersLayer
@@ -3165,6 +3165,28 @@ describe('Openlayers layer', () => {
                 }, done, () => {
                     setCredentials("TEST_SOURCE", undefined);
                 });
+            });
+            it('test security basic authentication with no credentials', (done) => {
+                mockAxios.onPost().reply(({
+
+                }) => {
+                    done("should not be called"); // request should not be performed to avoid basic authentication popup
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                setCredentials("TEST_SOURCE", undefined);
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    security: {
+                        type: 'basic',
+                        sourceId: 'TEST_SOURCE'
+                    }
+                }, done, () => {
+                    setCredentials("TEST_SOURCE", undefined);
+                }, false);
             });
         });
     });

@@ -3,7 +3,7 @@ import {createStructuredSelector, createSelector} from 'reselect';
 import {connect} from 'react-redux';
 import {PROVIDERS, CYCLOMEDIA_DEFAULT_MAX_RESOLUTION} from '../constants';
 import { getAPI } from '../api/cyclomedia';
-import {setLocation, setPov} from '../actions/streetView';
+import {setLocation, setPov, updateStreetViewLayer} from '../actions/streetView';
 import {apiLoadedSelectorCreator, streetViewAPIKeySelector, locationSelector} from '../selectors/streetView';
 import CyclomediaView from '../components/CyclomediaView/CyclomediaView';
 import { currentResolutionSelector } from '../../../selectors/map';
@@ -23,7 +23,8 @@ const CyclomediaViewPanel = connect(createStructuredSelector({
     mapPointVisible: mapPointVisibleSelector
 }), {
     setLocation,
-    setPov
+    setPov,
+    refreshLayer: () => updateStreetViewLayer({_v_: Date.now()})
 })(({enabled, apiLoaded, ...props}) => {
     const api = useMemo(() => getAPI(), [apiLoaded]);
     if (enabled) {

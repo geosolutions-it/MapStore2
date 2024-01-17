@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect';
 import { ServerTypes } from '../../../utils/LayersUtils';
 
-import { PROVIDERS, CONTROL_NAME, MARKER_LAYER_ID, CYCLOMEDIA_CREDENTIALS_REFERENCE, CYCLOMEDIA_DEFAULT_MAX_RESOLUTION } from '../constants';
+import { PROVIDERS, CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_DATA_LAYER_ID, CYCLOMEDIA_CREDENTIALS_REFERENCE, CYCLOMEDIA_DEFAULT_MAX_RESOLUTION } from '../constants';
 import { createControlEnabledSelector } from '../../../selectors/controls';
 import { additionalLayersSelector } from '../../../selectors/additionallayers';
 import { localConfigSelector } from '../../../selectors/localConfig';
@@ -24,10 +24,23 @@ export const locationSelector = createSelector(streetViewStateSelector, ({locati
  * @returns {object} the current street view point of view ( minimal is `{heading, pitch}`. The rest of the properties are provider specific )
  */
 export const povSelector = createSelector(streetViewStateSelector, ({pov} = {}) => pov);
-
+/**
+ * Selector for the current street view marker layer configuration
+ * @param {object} state the application state
+ * @returns {object} the current street view configuration
+ */
 export function getStreetViewMarkerLayer(state) {
     const additionalLayers = additionalLayersSelector(state) ?? [];
     return additionalLayers.filter(({ id }) => id === MARKER_LAYER_ID)?.[0]?.options;
+}
+/**
+ * Selector for street view data layer configuration
+ * @param {object} state the application state
+ * @returns {object} the street view data layer configuration
+ */
+export function getStreetViewDataLayer(state) {
+    const additionalLayers = additionalLayersSelector(state) ?? [];
+    return additionalLayers.filter(({ id }) => id === STREET_VIEW_DATA_LAYER_ID)?.[0]?.options;
 }
 export function streetViewConfigurationSelector(state) {
     return streetViewStateSelector(state)?.configuration ?? {};

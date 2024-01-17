@@ -4,28 +4,30 @@ import { Form, Button, ControlLabel, FormControl, Glyphicon } from 'react-bootst
 import tooltip from '../../../../components/misc/enhancers/tooltip';
 const ButtonT = tooltip(Button);
 /**
- * Component to insert Smart API Credentials
+ * Component to insert Smart API Credentials.
+ * If showCredentialsForm is false, it shows only a button to open the form.
+ * When showCredentialsForm is true, it shows the form to insert credentials.
  * @prop {function} setCredentials function to set credentials
  * @prop {object} credentials object with username and password
+ * @prop {boolean} showCredentialsForm show form
+ * @prop {function} setShowCredentialsForm function to set showCredentialsForm
  * @returns {JSX.Element} The rendered component
  */
-export default ({setCredentials = () => {}, credentials}) => {
-    const [hasCredentials, setHasCredentials] = useState(credentials?.username && credentials?.password);
+export default ({setCredentials = () => {}, credentials, showCredentialsForm, setShowCredentialsForm = () => {}}) => {
     const [username, setUsername] = useState(credentials?.username || '');
     const [password, setPassword] = useState(credentials?.password || '');
     const onSubmit = () => {
         setCredentials({username, password});
-        setHasCredentials(true);
+        setShowCredentialsForm(false);
     };
-    if (hasCredentials) {
+    if (!showCredentialsForm) {
         // show only button to reset credentials.
         return (<div style={{textAlign: "right"}}>
             <ButtonT
                 style={{marginRight: 10, border: "none", background: "none"}}
                 tooltipId="streetView.cyclomedia.changeCredentials"
                 onClick={() => {
-                    setCredentials(null);
-                    setHasCredentials(false);
+                    setShowCredentialsForm(true);
                 }}><Glyphicon glyph="1-user-mod" /></ButtonT>
         </div>);
     }
@@ -38,6 +40,12 @@ export default ({setCredentials = () => {}, credentials}) => {
             <FormControl type="password"  value={password} onChange={e => setPassword(e.target.value)}/>
             <div className="street-view-credentials-form-buttons">
                 <Button disabled={!username || !password} onClick={() => onSubmit()}><Message msgId="streetView.cyclomedia.submit" /></Button>
+                {
+                    credentials?.username && credentials?.password && <Button onClick={() => {
+                        setCredentials({username: credentials.username, password: credentials.password});
+                        setShowCredentialsForm(false);
+                    } }><Message msgId="cancel" /></Button>
+                }
             </div>
         </Form>
     </div>);

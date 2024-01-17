@@ -6,7 +6,7 @@ import { UPDATE_ADDITIONAL_LAYER } from '../../../../actions/additionallayers';
 import { setControlProperty } from '../../../../actions/controls';
 
 import { streetViewSyncLayer, streetViewSetupTearDown } from '../streetView';
-import { setPov, setLocation } from '../../actions/streetView';
+import { setPov, setLocation, updateStreetViewLayer } from '../../actions/streetView';
 import {REGISTER_EVENT_LISTENER} from '../../../../actions/map';
 
 
@@ -45,6 +45,16 @@ describe('StreetView epics', () => {
             expect(timeout.type).toBe(TEST_TIMEOUT);
             done();
         }, {layers: {flat: [{name: "layerName", url: "clearlyNotAUrl", visibility: true, queryable: false, type: "wms"}]}});
+    });
+    it('updateStreetViewLayer', (done) => {
+        let action = updateStreetViewLayer({_v_: 1});
+        const NUM_ACTIONS = 1;
+        testEpic(streetViewSyncLayer, NUM_ACTIONS, action, ([update]) => {
+            expect(update).toExist();
+            expect(update.type).toBe(UPDATE_ADDITIONAL_LAYER);
+            expect(update.options._v_).toEqual(1); // the update is applied to the default layer.
+            done();
+        });
     });
     it('streetViewSetupTearDown', (done) => {
         let action = setControlProperty(CONTROL_NAME, 'enabled', false);

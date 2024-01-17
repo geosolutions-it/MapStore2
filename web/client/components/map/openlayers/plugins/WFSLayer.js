@@ -22,6 +22,12 @@ import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { getCredentials } from '../../../../utils/SecurityUtils';
 import { needsReload } from '../../../../utils/WFSLayerUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
+const needsCredentials = (options) => {
+    const security = options?.security || {};
+    const {type, sourceId} = security;
+    const {username, password} = getCredentials(sourceId) ?? {};
+    return type?.toLowerCase?.() === "basic" && (!username || !password);
+};
 const getConfig = (options) => {
     const security = options?.security || {};
     const config = {};
@@ -55,25 +61,29 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
         source.dispatchEvent('vectorerror');
     };
     if (options.serverType === ServerTypes.NO_VENDOR) {
-        if (options?.strategy === 'bbox') {
-            // here bbox filter is
-            const [left, bottom, right, top] = extent;
 
-            filters = [{
-                spatialField: {
-                    operation: 'BBOX',
-                    geometry: {
-                        projection: proj,
-                        extent: [[left, bottom, right, top]] // use array because bbox is buggy
+        if (needsCredentials(options)) {
+            req = new Promise((resolve, reject) => {reject();});
+        } else {
+            if (options?.strategy === 'bbox') {
+            // here bbox filter is
+                const [left, bottom, right, top] = extent;
+
+                filters = [{
+                    spatialField: {
+                        operation: 'BBOX',
+                        geometry: {
+                            projection: proj,
+                            extent: [[left, bottom, right, top]] // use array because bbox is buggy
+                        }
                     }
-                }
-            }];
+                }];
+            }
+            req = getFeatureLayer(options, {filters, proj}, getConfig(options));
         }
-        req = getFeatureLayer(options, {filters, proj}, getConfig(options));
     } else {
         const params = optionsToVendorParams(options);
         const config = getConfig(options);
-
         req = getFeature(options.url, options.name, {
             // bbox: extent.join(',') + ',' + proj,
             outputFormat: "application/json",
@@ -82,6 +92,7 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
             ...params
         }, config);
     }
+
     req.then(response => {
         if (response.status === 200) {
             source.addFeatures(

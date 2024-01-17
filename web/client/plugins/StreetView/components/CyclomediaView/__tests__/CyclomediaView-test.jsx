@@ -92,6 +92,7 @@ describe('Cyclomedia CyclomediaView', () => {
 
             }
         };
+
         const props = {
             apiKey: testAPIKey
         };

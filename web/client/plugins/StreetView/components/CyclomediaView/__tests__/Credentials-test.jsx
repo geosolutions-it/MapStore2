@@ -19,7 +19,7 @@ describe('Cyclomedia Credentials', () => {
         return document.getElementsByClassName('street-view-credentials')[0];
     };
     it('Test for default props', () => {
-        ReactDOM.render(<Credentials/>, document.getElementById("container"));
+        ReactDOM.render(<Credentials showCredentialsForm />, document.getElementById("container"));
         const div = getMainDiv();
         // check inputs are present
         expect(div.querySelector('input[type="text"]')).toExist();
@@ -29,25 +29,39 @@ describe('Cyclomedia Credentials', () => {
         expect(div.querySelector('.street-view-credentials-form-buttons button').disabled).toBe(true);
         expect(div).toExist();
     });
-    it('Form interactions', () => {
-        const handers = {
-            setCredentials: () => {}
-        };
-        const spy = expect.spyOn(handers, 'setCredentials');
-        act(() => {
-            ReactDOM.render(<Credentials setCredentials={handers.setCredentials} credentials={{username: 'test', password: 'password'}}/>, document.getElementById("container"));
-        });
-        const div1 = getMainDiv();
-        expect(div1).toNotExist();
+    it('not show if showCredentialsForm is false', () => {
+        ReactDOM.render(<Credentials showCredentialsForm={false}/>, document.getElementById("container"));
+        const div = getMainDiv();
+        expect(div).toNotExist();
+        // check cancel button is present
+
         const button = document.getElementsByClassName('glyphicon')[0];
         expect(button).toExist();
-        // click on button resets credentials
+    });
+    it('cancel calls setShowCredentialsForm with false', () => {
+        const handlers = {
+            setShowCredentialsForm: () => {}
+        };
+        const spy = expect.spyOn(handlers, 'setShowCredentialsForm');
+        ReactDOM.render(<Credentials showCredentialsForm setShowCredentialsForm={handlers.setShowCredentialsForm} credentials={{username: 'test', password: 'password'}}/>, document.getElementById("container"));
+        const div = getMainDiv();
+        expect(div.querySelector('.street-view-credentials-form-buttons button')).toExist();
+        // click on cancel button calls setHasCredentials
         act(() => {
-            button.click();
-        });
-        // check credentials are reset
+            div.querySelector('.street-view-credentials-form-buttons button').click();
+        }
+        );
         expect(spy).toHaveBeenCalled();
-        expect(spy.calls[0].arguments[0]).toEqual(null);
+        expect(spy.calls[0].arguments[0]).toEqual(false);
+    });
+    it('Form interactions', () => {
+        const handlers = {
+            setCredentials: () => {}
+        };
+        const spy = expect.spyOn(handlers, 'setCredentials');
+        act(() => {
+            ReactDOM.render(<Credentials showCredentialsForm setCredentials={handlers.setCredentials} credentials={{username: 'test', password: 'password'}}/>, document.getElementById("container"));
+        });
         const div2 = getMainDiv();
         // credentials are maintained internally
         expect(div2.querySelector('input[type="text"]').value).toBe('test');
@@ -64,7 +78,8 @@ describe('Cyclomedia Credentials', () => {
         act(() => {
             div2.querySelector('.street-view-credentials-form-buttons button').click();
         });
-        expect(spy.calls[1].arguments[0]).toEqual({username: 'test', password: 'newPassword'});
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0].arguments[0]).toEqual({username: 'test', password: 'newPassword'});
 
 
     });
