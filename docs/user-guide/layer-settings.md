@@ -277,7 +277,7 @@ The line rule is used to style linear features of the layer: clicking on the <im
 
 The editor can change the `Stroke color`, the `Stroke width`, the `Line style` (*continuous*, *dashed*, etc), the `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). An example can be the following one:
 
-<video class="ms-docimage" controls><source src="../img/layer-settings/ex_line_style.mp4"></video>
+<img src="../img/layer-settings/ex_line_style.jpg" class="ms-docimage"  style="max-width:500px;">
 
 #### Fill
 
@@ -389,7 +389,7 @@ From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-
 
 Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds some additional styling options in the *Visual Style Editor* such as:
 
-* **Bring to front** (available for Icon, Mark and 3D model symbolizers) to bring in front and so to make visible (if set to *true*) all features covered by 3D Tile layers and the Terrain layer (for this last case when the *depth test against terrain* option is enabled in Global Settings).
+* **Bring to front** (available for Icon, Mark and 3D model symbolizers) to bring in front and so to make visible (if enable) all features covered by 3D Tile layers and the Terrain layer (for this last case when the *depth test against terrain* option is enabled in Global Settings).
 
 <img src="../img/layer-settings/bring-to-front.jpg" class="ms-docimage">
 
