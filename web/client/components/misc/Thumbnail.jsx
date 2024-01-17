@@ -89,20 +89,21 @@ const Thumbnail = forwardRef(({
 
     const handleDrop = (files) => {
         const imageType = files?.[0]?.type;
+        const imageSize = files?.[0]?.size;
         const isASupportedImage = supportedImageTypes.indexOf(imageType) !== -1;
         setPending(true);
         getThumbnail(files, thumbnailOptions)
-            .then(({ data, size }) => {
+            .then(({ data }) => {
                 if (!mounted.current) {
                     return null;
                 }
                 setPending(false);
-                if (isASupportedImage && data && size < maxFileSize) {
+                if (isASupportedImage && data && imageSize < maxFileSize) {
                     return onUpdate(data, files);
                 }
                 return onError([
                     ...(!isASupportedImage ? ['FORMAT'] : []),
-                    ...(data && size >= maxFileSize ? ['SIZE'] : [])
+                    ...(data && imageSize >= maxFileSize ? ['SIZE'] : [])
                 ], files);
             })
             .catch((e) => {
