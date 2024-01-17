@@ -3913,6 +3913,9 @@
             "submit": "Submit",
             "zoomIn": "Please zoom in the map to see the street view coverage",
             "errorOccurred": "Error occurred: ",
+            "errors": {
+              "invalidCredentials": "Invalid credentials"
+            },
             "reloadAPI": "Reload API"
           }
         },

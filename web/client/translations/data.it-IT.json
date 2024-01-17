@@ -3902,6 +3902,9 @@
               "submit": "Invia",
               "zoomIn": "Effettua un ulteriore zoom sulla mappa per visualizzare dove sono disponibili le immagini",
               "errorOccurred": "Si è verificato un errore: ",
+              "errors": {
+                "invalidCredentials": "Credenziali non valide"
+              },
               "reloadAPI": "Ricarica API"
             }
         },

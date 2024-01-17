@@ -3902,6 +3902,9 @@
             "submit": "Soumettre",
             "zoomIn": "Veuillez zoomer sur la carte pour voir la couverture Street View",
             "errorOccurred": "Une erreur s'est produite : ",
+            "errors": {
+                "invalidCredentials": "Identifiants invalides"
+            },
             "reloadAPI": "Recharger l'API"
           }
         },

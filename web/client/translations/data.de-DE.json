@@ -3940,6 +3940,9 @@
             "submit": "Senden",
             "zoomIn": "Bitte zoomen Sie in die Karte, um die Street-View-Abdeckung zu sehen",
             "errorOccurred": "Fehler aufgetreten: ",
+            "errors": {
+                "invalidCredentials": "Ungültige Anmeldeinformationen"
+            },
             "reloadAPI": "API neu laden"
           }
         },

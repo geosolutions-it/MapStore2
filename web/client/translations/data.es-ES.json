@@ -3902,6 +3902,9 @@
             "submit": "Enviar",
             "zoomIn": "Por favor, acerque el mapa para ver la cobertura de vista de calle",
             "errorOccurred": "Se produjo un error: ",
+            "errors": {
+                "invalidCredentials": "Credenciales inválidas"
+            },
             "reloadAPI": "Recargar API"
           }
         },

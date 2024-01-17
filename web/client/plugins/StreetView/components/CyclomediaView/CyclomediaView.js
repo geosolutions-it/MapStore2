@@ -8,6 +8,9 @@ import { Alert, Button } from 'react-bootstrap';
 import CyclomediaCredentials from './Credentials';
 import EmptyStreetView from '../EmptyStreetView';
 
+const isInvalidCredentials = (error) => {
+    return error?.message?.indexOf?.("code 401");
+};
 /**
  * Parses the error message to show to the user in the alert an user friendly message
  * @private
@@ -15,9 +18,10 @@ import EmptyStreetView from '../EmptyStreetView';
  * @returns {string|JSX.Element} the error message
  */
 const getErrorMessage = (error) => {
-    if (error?.indexOf?.("init::Loading user info failed with status code 401") >= 0) {
-        return <Message msgId="streetView.cyclomedia.invalidCredentials" />;
+    if (isInvalidCredentials(error) >= 0) {
+        return <Message msgId="streetView.cyclomedia.errors.invalidCredentials" />;
     }
+
     return error?.message ?? "Unknown error";
 };
 
@@ -72,10 +76,11 @@ const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible})
  * @param {function} props.setLocation the function to call when the location changes. It receives the new location as parameter (an object with `latLng` and `properties` properties)
  * @param {boolean} props.mapPointVisible true if the map point are visible at the current level of zoom. It is used to show a message to zoom in when the map point are not visible.
  * @param {object} props.providerSettings the settings of the provider. It contains the `StreetSmartApiURL` property that is the URL of the Cyclomedia API
+ * @param {function} props.refreshLayer the function to call to refresh the layer. It is used to refresh the layer when the credentials are changed.
  * @returns {JSX.Element} the component rendering
  */
 
-const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLocation = () => {}, mapPointVisible, providerSettings = {}}) => {
+const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLocation = () => {}, mapPointVisible, providerSettings = {}, refreshLayer = () => {}}) => {
     const StreetSmartApiURL = providerSettings?.StreetSmartApiURL ?? "https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js";
     const scripts = providerSettings?.scripts ?? `
     <script type="text/javascript" src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
@@ -102,7 +107,19 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
     // gets the credentials from the storage
     const initialCredentials = getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE);
     const [credentials, setCredentials] = useState(initialCredentials);
+    const [showCredentialsForm, setShowCredentialsForm] = useState(!credentials?.username || !credentials?.password); // determines to show the credentials form
     const {username, password} = credentials ?? {};
+    const resetCredentials = () => {
+        if (getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE)) {
+            setStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE, undefined);
+        }
+    };
+
+    const srs = 'EPSG:4326';
+    // this EPSG:7791 enables the measurement tool (where present), but coordinates of the click
+    // are in the srs named, so we need to convert them to EPSG:4326. Actually definition is not in place
+    // and have to be implemented
+    // it enables also the oblique tool, but we have to implement the click on that point too.
 
     /**
      * Utility function to open an image in street smart viewer (it must be called after the API is initialized)
@@ -110,7 +127,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
      * @param {string} srs SRS for StreetSmartApi.open
      * @returns {Promise} a promise that resolves with the panoramaViewer
      */
-    const openImage = (query, srs) => {
+    const openImage = (query) => {
         const viewerType = StreetSmartApi.ViewerType.PANORAMA;
         const options = {
             viewerType: viewerType,
@@ -140,19 +157,21 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             password,
             apiKey,
             loginOauth: false,
-            srs: 'EPSG:4326',
+            srs: srs,
             locale: 'en-us',
             ...initOptions
         }).then(function() {
             setInitializing(false);
             setInitialized(true);
+            setError(null);
         }).catch(function(err) {
             setInitializing(false);
             setError(err);
-            console.error('Cyclomedia API: init: error: ' + err);
+            if (err) {console.error('Cyclomedia API: init: error: ' + err);}
         });
         return () => {
             try {
+                setInitialized(false);
                 StreetSmartApi?.destroy?.({targetElement});
             } catch (e) {
                 console.error(e);
@@ -160,7 +179,17 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
 
         };
     }, [StreetSmartApi, username, password, apiKey, reload]);
-
+    // update credentials in the storage (for layer and memorization)
+    useEffect(() => {
+        const invalid = isInvalidCredentials(error);
+        if (initialized && username && password && !invalid && initialized) {
+            setStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE, credentials);
+            refreshLayer();
+        } else {
+            resetCredentials();
+            refreshLayer();
+        }
+    }, [initialized, username, password, username, password, error, initialized]);
     const changeView = (_, {detail} = {}) => {
         const {yaw: heading, pitch} = detail ?? {};
         setPov({heading, pitch});
@@ -187,7 +216,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         let panoramaViewer;
         let viewChangeHandler;
         let recordingClickHandler;
-        openImage(imageId, 'EPSG:4326')
+        openImage(imageId)
             .then((result) => {
                 if (result && result[0]) {
                     panoramaViewer = result[0];
@@ -210,14 +239,11 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         };
     }, [StreetSmartApi, initialized, imageId]);
 
-    // handle view state
-    const hasCredentials = username && password;
-    // flag to show the credentials form
-    const showCredentialsForm = !hasCredentials;
     // flag to show the panorama viewer
     const showPanoramaViewer = StreetSmartApi && initialized && imageId && !showCredentialsForm && !error;
     // flag to show the empty view
-    const showEmptyView = !showCredentialsForm && !showPanoramaViewer && !error;
+    const showEmptyView = initializing || !showCredentialsForm && !showPanoramaViewer && !error;
+    const showError = error && !showCredentialsForm && !showPanoramaViewer && !initializing;
 
     // create the iframe content
     const srcDoc = `<html>
@@ -245,10 +271,11 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
     return (<>
         {<CyclomediaCredentials
             key="credentials"
+            showCredentialsForm={showCredentialsForm}
+            setShowCredentialsForm={setShowCredentialsForm}
             credentials={credentials}
             setCredentials={(newCredentials) => {
                 setCredentials(newCredentials);
-                setStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE, newCredentials);
             }}/>}
         {showEmptyView ? <EmptyView key="empty-view" StreetSmartApi={StreetSmartApi} style={style} initializing={initializing} initialized={initialized}  mapPointVisible={mapPointVisible}/> : null}
         <iframe key="iframe" ref={viewer} onLoad={() => {
@@ -257,7 +284,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         }} style={{ ...style, display: showPanoramaViewer ? 'block' : 'none'}}  srcDoc={srcDoc}>
 
         </iframe>
-        <Alert bsStyle="danger" style={{...style, textAlign: 'center', alignContent: 'center', display: error ? 'block' : 'none'}} key="error">
+        <Alert bsStyle="danger" style={{...style, textAlign: 'center', alignContent: 'center', display: showError ? 'block' : 'none'}} key="error">
             <Message msgId="streetView.cyclomedia.errorOccurred" />
             {getErrorMessage(error)}
             {initialized ? <div><Button

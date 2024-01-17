@@ -6,7 +6,8 @@ import {
     setPov, SET_POV,
     configure, CONFIGURE,
     reset, RESET,
-    toggleStreetView
+    toggleStreetView,
+    updateStreetViewLayer, UPDATE_STREET_VIEW_LAYER
 
 } from '../streetView';
 import { TOGGLE_CONTROL } from '../../../../actions/controls';
@@ -90,5 +91,12 @@ describe('StreetView actions', () => {
             }
         });
         ret(dispatch, getState);
+    });
+    it('updateStreetViewLayer', () => {
+        const updates = {_v_: 1};
+        const ret = updateStreetViewLayer(updates);
+        expect(ret).toExist();
+        expect(ret.type).toBe(UPDATE_STREET_VIEW_LAYER);
+        expect(ret.updates).toBe(updates);
     });
 });

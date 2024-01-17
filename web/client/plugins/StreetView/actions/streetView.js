@@ -19,6 +19,7 @@ export const SET_LOCATION = "STREET_VIEW:SET_LOCATION";
 export const SET_POV = "STREET_VIEW:SET_POV";
 export const CONFIGURE = "STREET_VIEW:CONFIGURE";
 export const RESET = "STREET_VIEW:RESET";
+export const UPDATE_STREET_VIEW_LAYER = "STREET_VIEW:UPDATE_STREET_VIEW_LAYER";
 
 export function setAPILoading(loading) {
     return {
@@ -57,7 +58,17 @@ export function toggleStreetView() {
 
     };
 }
-
+/**
+ * Updates the properties of the street view layer.
+ * @param {object} updates properties to update
+ * @returns {object}
+ */
+export function updateStreetViewLayer(updates) {
+    return {
+        type: UPDATE_STREET_VIEW_LAYER,
+        updates
+    };
+}
 export function setLocation(location) {
     return {
         type: SET_LOCATION,

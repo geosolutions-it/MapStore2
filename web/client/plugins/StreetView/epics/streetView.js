@@ -22,12 +22,13 @@ import {
     currentProviderApiLoadedSelector,
     enabledSelector,
     getStreetViewMarkerLayer,
+    getStreetViewDataLayer,
     locationSelector,
     povSelector,
     useStreetViewDataLayerSelector,
     streetViewDataLayerSelector
 } from "../selectors/streetView";
-import {setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
+import {setLocation, SET_LOCATION, SET_POV, UPDATE_STREET_VIEW_LAYER } from '../actions/streetView';
 import API from '../api';
 import {shutdownToolOnAnotherToolDrawing} from "../../../utils/ControlUtils";
 
@@ -172,7 +173,7 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
 /**
  * On location update events updates the map layer.
  * the state.
- * @param {external:Observable} action$ manages `SET_LOCATION`
+ * @param {external:Observable} action$ manages `SET_LOCATION`, `UPDATE_STREET_VIEW_LAYER`
  * @param getState
  * @return {external:Observable}
  */
@@ -217,7 +218,15 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
                 "overlay", {...options, features: [feature]}
             );
         });
-    });
+    })
+        .merge(action$.ofType(UPDATE_STREET_VIEW_LAYER).switchMap(({updates = {}}) => {
+            const options = getStreetViewDataLayer(getState());
+            return Rx.Observable.of(updateAdditionalLayer(
+                STREET_VIEW_DATA_LAYER_ID,
+                STREET_VIEW_OWNER,
+                'overlay',
+                {...options, ...updates}));
+        }));
 };
 
 /**
