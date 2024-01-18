@@ -3941,7 +3941,8 @@
             "zoomIn": "Bitte zoomen Sie in die Karte, um die Street-View-Abdeckung zu sehen",
             "errorOccurred": "Fehler aufgetreten: ",
             "errors": {
-                "invalidCredentials": "Ungültige Anmeldeinformationen"
+                "invalidCredentials": "Ungültige Anmeldeinformationen",
+                "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
             },
             "reloadAPI": "API neu laden"
           }

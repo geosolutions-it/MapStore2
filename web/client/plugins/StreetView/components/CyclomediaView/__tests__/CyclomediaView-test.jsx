@@ -37,8 +37,8 @@ describe('Cyclomedia CyclomediaView', () => {
         setCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE, {username: 'test', password: 'password'});
         // set a default mock
         window.__cyclomedia__mock__ = {
-            init: () => {},
-            open: () => {}
+            init: () => new Promise((resolve) => { resolve(); }),
+            open: () => new Promise((resolve) => { resolve(); })
         };
         setTimeout(done);
     });
@@ -102,5 +102,24 @@ describe('Cyclomedia CyclomediaView', () => {
         expect(div).toExist();
 
     });
-
+    it('srs check for existing projection', () => {
+        const props = {
+            apiKey: testAPIKey
+        };
+        ReactDOM.render(<CyclomediaView {...props} providerSettings={{...mockProviderSettings, srs: "EPSG:4326"}}/>, document.getElementById("container"));
+        // no error shown.
+        const div = emptyStreetView();
+        expect(div).toExist();
+    });
+    it('srs not defined error handling', () => {
+        const props = {
+            apiKey: testAPIKey
+        };
+        ReactDOM.render(<CyclomediaView {...props} providerSettings={{...mockProviderSettings, srs: "UNKNOWN"}}/>, document.getElementById("container"));
+        // no error shown.
+        const div = emptyStreetView();
+        expect(div).toNotExist();
+        // check alert to exist
+        expect(document.querySelector('.alert-danger')).toExist();
+    });
 });

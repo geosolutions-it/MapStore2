@@ -3903,7 +3903,8 @@
               "zoomIn": "Effettua un ulteriore zoom sulla mappa per visualizzare dove sono disponibili le immagini",
               "errorOccurred": "Si è verificato un errore: ",
               "errors": {
-                "invalidCredentials": "Credenziali non valide"
+                "invalidCredentials": "Credenziali non valide",
+                "projectionNotAvailable": "La proiezione {srs} configurata non è disponibile. Contattare l'amministratore."
               },
               "reloadAPI": "Ricarica API"
             }
