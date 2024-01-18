@@ -3903,7 +3903,8 @@
             "zoomIn": "Por favor, acerque el mapa para ver la cobertura de vista de calle",
             "errorOccurred": "Se produjo un error: ",
             "errors": {
-                "invalidCredentials": "Credenciales inválidas"
+                "invalidCredentials": "Credenciales inválidas",
+                "projectionNotAvailable": "La proyección {srs} configurada no está disponible. Por favor, contacte al administrador."
             },
             "reloadAPI": "Recargar API"
           }

@@ -3914,7 +3914,8 @@
             "zoomIn": "Please zoom in the map to see the street view coverage",
             "errorOccurred": "Error occurred: ",
             "errors": {
-              "invalidCredentials": "Invalid credentials"
+              "invalidCredentials": "Invalid credentials",
+              "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
             },
             "reloadAPI": "Reload API"
           }

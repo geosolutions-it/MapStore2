@@ -3903,7 +3903,8 @@
             "zoomIn": "Veuillez zoomer sur la carte pour voir la couverture Street View",
             "errorOccurred": "Une erreur s'est produite : ",
             "errors": {
-                "invalidCredentials": "Identifiants invalides"
+                "invalidCredentials": "Identifiants invalides",
+                "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur."
             },
             "reloadAPI": "Recharger l'API"
           }
