@@ -1,5 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import Message from '../../../../components/I18N/Message';
+import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
+import { reproject } from '../../../../utils/CoordinatesUtils';
+
 
 import { getCredentials as getStoredCredentials, setCredentials as setStoredCredentials } from '../../../../utils/SecurityUtils';
 import { CYCLOMEDIA_CREDENTIALS_REFERENCE } from '../../constants';
@@ -7,7 +10,7 @@ import { Alert, Button } from 'react-bootstrap';
 
 import CyclomediaCredentials from './Credentials';
 import EmptyStreetView from '../EmptyStreetView';
-
+const PROJECTION_NOT_AVAILABLE = "Projection not available";
 const isInvalidCredentials = (error) => {
     return error?.message?.indexOf?.("code 401");
 };
@@ -17,11 +20,13 @@ const isInvalidCredentials = (error) => {
  * @param {object|string} error the error to parse
  * @returns {string|JSX.Element} the error message
  */
-const getErrorMessage = (error) => {
+const getErrorMessage = (error, msgParams = {}) => {
     if (isInvalidCredentials(error) >= 0) {
-        return <Message msgId="streetView.cyclomedia.errors.invalidCredentials" />;
+        return <Message msgId="streetView.cyclomedia.errors.invalidCredentials" msgParams={msgParams} />;
     }
-
+    if (error?.message?.indexOf?.(PROJECTION_NOT_AVAILABLE) >= 0) {
+        return <Message msgId="streetView.cyclomedia.errors.projectionNotAvailable" msgParams={msgParams} />;
+    }
     return error?.message ?? "Unknown error";
 };
 
@@ -88,6 +93,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
     `;
     const initOptions = providerSettings?.initOptions ?? {};
+    const srs = providerSettings?.srs ?? 'EPSG:4326'; // for measurement tool and oblique tool 'EPSG:7791' is one of the supported SRS
     // location contains the latLng and the properties of the feature
     // properties contains the `imageId` that can be used as query
     const {properties} = location;
@@ -114,12 +120,16 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE, undefined);
         }
     };
+    // setting a custom srs enables the measurement tool (where present) and other tools, but coordinates of the click
+    // will be managed in the SRS used, so we need to convert them to EPSG:4326.
+    // So we need to make sure that the SRS is available for coordinates conversion
+    useEffect(() => {
+        if (!isProjectionAvailable(srs)) {
+            console.error(`Cyclomedia API: init: error: projection ${srs} is not available`);
+            setError(new Error(PROJECTION_NOT_AVAILABLE));
+        }
+    }, [srs]);
 
-    const srs = 'EPSG:4326';
-    // this EPSG:7791 enables the measurement tool (where present), but coordinates of the click
-    // are in the srs named, so we need to convert them to EPSG:4326. Actually definition is not in place
-    // and have to be implemented
-    // it enables also the oblique tool, but we have to implement the click on that point too.
 
     /**
      * Utility function to open an image in street smart viewer (it must be called after the API is initialized)
@@ -142,6 +152,11 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
                 measureTypeButtonVisible: true,
                 measureTypeButtonStart: true,
                 measureTypeButtonToggle: true
+            },
+            obliqueViewer: {
+                closable: true,
+                maximizable: true,
+                navbarVisible: false
             }
         };
         return StreetSmartApi.open(query, options);
@@ -149,7 +164,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
 
     // initialize API
     useEffect(() => {
-        if (!StreetSmartApi || !username || !password || !apiKey) return () => {};
+        if (!StreetSmartApi || !username || !password || !apiKey || !isProjectionAvailable(srs)) return () => {};
         setInitializing(true);
         StreetSmartApi.init({
             targetElement,
@@ -198,10 +213,11 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         const {recording} = detail ?? {};
         // extract coordinates lat long from `xyz` of `recording` and `imageId` from recording `id` property
         if (recording?.xyz && recording?.id) {
+            const {x: lng, y: lat} = reproject([recording?.xyz?.[0], recording?.xyz?.[1]], srs, 'EPSG:4326');
             setLocation({
                 latLng: {
-                    lat: recording?.xyz?.[1],
-                    lng: recording?.xyz?.[0]
+                    lat,
+                    lng
                 },
                 properties: {
                     ...recording,
@@ -286,7 +302,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         </iframe>
         <Alert bsStyle="danger" style={{...style, textAlign: 'center', alignContent: 'center', display: showError ? 'block' : 'none'}} key="error">
             <Message msgId="streetView.cyclomedia.errorOccurred" />
-            {getErrorMessage(error)}
+            {getErrorMessage(error, {srs})}
             {initialized ? <div><Button
                 onClick={() => {
                     setError(null);
