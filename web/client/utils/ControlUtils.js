@@ -13,6 +13,8 @@ import {CHANGE_DRAWING_STATUS} from "../actions/draw";
 import {REGISTER_EVENT_LISTENER} from "../actions/map";
 import {OPEN_FEATURE_GRID} from "../actions/featuregrid";
 
+export const EXPORT_CONTEXT = "export-context";
+
 /**
  * Common part of the workflow that toggles one plugin off when another plugin intend to perform drawing action
  * @param action$
