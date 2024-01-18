@@ -45,7 +45,7 @@ const getThumbnail = (files, options) => {
  * @prop {node} message display node message inside thumbnail
  * @prop {string} thumbnail source of thumbnail
  * @prop {number} maxFileSize max size of file
- * @prop {boolean} checkOriginalFileSize if tru it checks maxFileSize compared to source image
+ * @prop {boolean} checkOriginalFileSize if true it checks maxFileSize compared to source image
  * @prop {array} supportedImageTypes array of images supported mime types
  * @prop {options} thumbnailOptions options to scale the thumbnail to fit a specific size
  * @prop {object} dropZoneProps props for dropzone component
