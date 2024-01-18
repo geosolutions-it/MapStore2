@@ -145,8 +145,10 @@ class AttributeFilter extends React.PureComponent {
         let inputKey = 'header-filter--' + this.props.column.key;
         return (
             <div key={inputKey} className={`form-group${((this.state.isInputValid && this.props.valid) ? "" : " has-error")}`}>
-                {this.props.isWithinAttrTbl ? this.renderOperatorField() : null}
-                {this.renderTooltip(this.renderInput())}
+                {this.props.isWithinAttrTbl ? <>
+                    {this.renderOperatorField()}
+                    {['time', 'date', 'date-time'].includes(this.props.type) ? this.renderInput() : this.renderTooltip(this.renderInput())}
+                </> : this.renderTooltip(this.renderInput())}
             </div>
         );
     }

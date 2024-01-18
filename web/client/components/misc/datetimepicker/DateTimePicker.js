@@ -166,7 +166,7 @@ class DateTimePicker extends Component {
     }
 
     render() {
-        const { open, inputValue, operator, focused } = this.state;
+        const { open, inputValue, operator, focused, openDateTime } = this.state;
         const { calendar, time, toolTip, placeholder, tabIndex, type, popupPosition } = this.props;
         const props = Object.keys(this.props).reduce((acc, key) => {
             if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
@@ -179,6 +179,7 @@ class DateTimePicker extends Component {
         }, {});
         const calendarVisible = open === 'date';
         const timeVisible = open === 'time';
+        const dateTimeVisible = openDateTime === 'dateTime';
         let calendarVal = null;
         if ( this.props.value && typeof this.props.value === 'object')  {
             calendarVal = this.props.value?.startDate;
@@ -189,9 +190,10 @@ class DateTimePicker extends Component {
 
         if (type === 'date-time') {
             return (<div tabIndex="-1" ref={elem => {this.dateTimeRef = elem;}} onBlur={() => this.handleWidgetBlur(type)} onKeyDown={this.handleKeyDown} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget ${focused ? 'rw-state-focus' : ''}`}>
-                {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, true, true)}
+                {this.renderInput(inputValue, operator, dateTimeVisible ? '' : toolTip, placeholder, tabIndex, true, true)}
                 <span className="rw-select" >
                     <Popover
+                        onClick={this.toggleDateTime}
                         disabled={false}
                         placement={popupPosition}
                         triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
@@ -201,7 +203,7 @@ class DateTimePicker extends Component {
                             </div>
                         }
                     >
-                        <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleDateTime}>
+                        <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn">
                             <Glyphicon glyph={'date-time'} />
                         </button>
                     </Popover>
@@ -210,9 +212,10 @@ class DateTimePicker extends Component {
         } else if (type === 'time') {
             return (
                 <div tabIndex="-1" onBlur={this.handleWidgetBlur} onKeyDown={this.handleKeyDown} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
-                    {this.renderInput(inputValue, operator, toolTip, timePlaceholderMsgId, tabIndex, calendarVisible, timeVisible)}
+                    {this.renderInput(inputValue, operator, timeVisible ? '' : toolTip, timePlaceholderMsgId, tabIndex, calendarVisible, timeVisible)}
                     <span className="rw-select">
                         <Popover
+                            onClick={this.toggleTime}
                             disabled={false}
                             placement={popupPosition}
                             triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
@@ -226,7 +229,7 @@ class DateTimePicker extends Component {
                                 </div>
                             }
                         >
-                            <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
+                            <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" >
                                 <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
                             </button>
                         </Popover>
@@ -236,13 +239,14 @@ class DateTimePicker extends Component {
         }
         return (
             <div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
-                {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible)}
+                {this.renderInput(inputValue, operator, calendarVisible ? '' : toolTip, placeholder, tabIndex, calendarVisible, timeVisible)}
                 {calendar ?
                     <span className="rw-select">
                         <Popover
+                            onClick={this.toggleCalendar}
                             disabled={false}
                             placement={popupPosition}
-                            triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
+                            triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}       // table element to trigger its scroll
                             content={
                                 <div className="shadow-soft picker-container" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
                                     <Calendar
@@ -256,7 +260,7 @@ class DateTimePicker extends Component {
                                 </div>
                             }
                         >
-                            <button ref={elem => {this.calendarRef = elem;}} tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleCalendar}>
+                            <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" >
                                 <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
                             </button>
                         </Popover>
