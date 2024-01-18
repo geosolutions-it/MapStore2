@@ -1832,6 +1832,7 @@
                 "placeholders": {
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "date": "Geben Sie das zu filternde Datum ein...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein..."
                 },
@@ -1839,6 +1840,7 @@
                     "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
                     "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
                     "geometry": {
@@ -1852,6 +1854,7 @@
                 "placeholders": {
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "date": "Geben Sie das zu filternde Datum ein...",
                     "number": "Geben Sie eine Zahl ..."
                 },
@@ -1859,6 +1862,7 @@
                     "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "number": "Geben Sie eine Zahl ...",
                     "date": "Geben Sie ein Datum. Verwenden Sie {format} für das Datum.",
                     "geometry": {

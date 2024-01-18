@@ -1793,6 +1793,7 @@
                 "placeholders": {
                     "default": "Cerca...",
                     "string": "Digita testo da cercare...",
+                    "time": "Digita il tempo da cercare...",
                     "date": "Digita data da cercare...",
                     "number": "Digita numero o espressione..."
                 },
@@ -1800,6 +1801,7 @@
                     "editMode": "La ricerca veloce non è disponibile in modalità editing",
                     "default": "Cerca...",
                     "string": "Digita il testo da cercare...",
+                    "time": "Digita il tempo da cercare...",
                     "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
                     "date":"Digita una data o un'espressione. Utilizza {format} per la data",
                     "geometry": {
@@ -1813,6 +1815,7 @@
                 "placeholders": {
                     "default": "Cerca...",
                     "string": "Digita testo da cercare...",
+                    "time": "Digita il tempo da cercare...",
                     "date": "Digita data da cercare...",
                     "number": "Digita numero..."
                 },
@@ -1820,6 +1823,7 @@
                     "editMode": "La ricerca veloce non è disponibile in modalità editing",
                     "default": "Cerca...",
                     "string": "Digita il testo da cercare...",
+                    "time": "Digita il tempo da cercare...",
                     "number": "Digita un numero...",
                     "date":"Digita una data. Utilizza {format} per la data",
                     "geometry": {

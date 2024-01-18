@@ -17,6 +17,7 @@ import { isDate, isNil, omit } from 'lodash';
 import OverlayTrigger from '../OverlayTrigger';
 import Hours from './Hours';
 import Popover from '../../styleeditor/Popover';
+import {getMessageById} from '../../../utils/LocaleUtils';
 
 localizer(moment);
 
@@ -70,7 +71,10 @@ class DateTimePicker extends Component {
         options: PropTypes.object,
         isWithinAttrTbl: PropTypes.bool
     }
-
+    static contextTypes = {
+        messages: PropTypes.object,
+        locale: PropTypes.string
+    };
     static defaultProps = {
         placeholder: 'Type date...',
         calendar: true,
@@ -98,7 +102,7 @@ class DateTimePicker extends Component {
         if (prevProps.value !== this.props.value || prevProps.operator !== this.props.operator) {
             const { value, operator } = this.props;
             this.setDateFromValueProp(value, operator);
-            if (this.props.operator === 'isNull') this.setState({ inputValue: '' });
+            if (this.props.operator === 'isNull') this.setState({ inputValue: '', date: null });
         }
     }
 
@@ -109,14 +113,15 @@ class DateTimePicker extends Component {
     }
     renderCustomDateTimePopup = () => {
         const { inputValue, operator, open } = this.state;
-        const { placeholder, tabIndex, type } = this.props;
+        const { tabIndex, type } = this.props;
 
         const timeVisible = open === 'time';
         const props = omit(this.props, ['placeholder', 'calendar', 'time', 'onChange', 'value']);
-        let calendarVal;
+        let calendarVal = null;
         if ( this.props.value && typeof this.props.value === 'object')  {
-            calendarVal = this.props.value?.startDate || this.props.value;
+            calendarVal = this.props.value?.startDate;
         } else if (this.props.value && typeof this.props.value === 'string') calendarVal = this.props.value;
+        let timePlaceholderMsgId = getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.time");
 
         return (
             <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -132,7 +137,7 @@ class DateTimePicker extends Component {
                         />
                         <div>
                             <div style={{display: 'flex', background: 'white'}}>
-                                {this.renderInput(inputValue, operator, '', placeholder, tabIndex, false, true, {width: '90%'})}
+                                {this.renderInput(inputValue, operator, '', timePlaceholderMsgId, tabIndex, false, true, {width: '90%'})}
                                 <span style={{width: '10%'}}>
                                     <button style={{width: '100%'}} tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
                                         <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
@@ -174,12 +179,14 @@ class DateTimePicker extends Component {
         }, {});
         const calendarVisible = open === 'date';
         const timeVisible = open === 'time';
-        let calendarVal;
+        let calendarVal = null;
         if ( this.props.value && typeof this.props.value === 'object')  {
-            calendarVal = this.props.value?.startDate || this.props.value;
+            calendarVal = this.props.value?.startDate;
         } else if (this.props.value && typeof this.props.value === 'string') {
             calendarVal = this.props.value;
         }
+        let timePlaceholderMsgId = getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.time");
+
         if (type === 'date-time') {
             return (<div tabIndex="-1" ref={elem => {this.dateTimeRef = elem;}} onBlur={() => this.handleWidgetBlur(type)} onKeyDown={this.handleKeyDown} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget ${focused ? 'rw-state-focus' : ''}`}>
                 {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, true, true)}
@@ -203,7 +210,7 @@ class DateTimePicker extends Component {
         } else if (type === 'time') {
             return (
                 <div tabIndex="-1" onBlur={this.handleWidgetBlur} onKeyDown={this.handleKeyDown} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
-                    {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible)}
+                    {this.renderInput(inputValue, operator, toolTip, timePlaceholderMsgId, tabIndex, calendarVisible, timeVisible)}
                     <span className="rw-select">
                         <Popover
                             disabled={false}
@@ -240,7 +247,7 @@ class DateTimePicker extends Component {
                                 <div className="shadow-soft picker-container" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
                                     <Calendar
                                         tabIndex="-1"
-                                        ref={elem => {this.attachCalRef = elem;}}
+                                        ref={(elem) => {this.attachCalRef = elem;}}
                                         onMouseDown={this.handleMouseDown}
                                         onChange={this.handleCalendarChange}
                                         {...props}
@@ -373,11 +380,11 @@ class DateTimePicker extends Component {
         }
 
         if (timeVisible) {
-            this.timeRef.handleKeyDown(e);
+            this.timeRef?.handleKeyDown(e);
         }
 
         if (calVisible) {
-            this.calRef.refs.inner.handleKeyDown(e);
+            this.calRef?.refs?.inner?.handleKeyDown(e);
         }
 
         if (!timeVisible && !calVisible && e.key === 'Enter') {

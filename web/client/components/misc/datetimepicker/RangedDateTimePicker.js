@@ -17,6 +17,7 @@ import { isDate, isNil, omit } from 'lodash';
 import OverlayTrigger from '../OverlayTrigger';
 import Hours from './Hours';
 import Popover from '../../styleeditor/Popover';
+import { getMessageById } from '../../../utils/LocaleUtils';
 
 localizer(moment);
 
@@ -78,7 +79,10 @@ class DateTimePickerWithRange extends Component {
         value: null,
         popupPosition: 'bottom'
     }
-
+	static contextTypes = {
+	    messages: PropTypes.object,
+	    locale: PropTypes.string
+	};
     state = {
         openRangeContainer: false,
         openRangeInputs: 'start',			// start, end
@@ -271,8 +275,10 @@ class DateTimePickerWithRange extends Component {
 	}
 	renderDateTimeRange = () =>{
 	    const { inputValue, operator, openRangeInputs, openTime } = this.state;
-	    const { placeholder, tabIndex } = this.props;
+	    const { tabIndex } = this.props;
 	    const props = omit(this.props, ['placeholder', 'calendar', 'time', 'onChange', 'value', 'toolTip', 'onMouseOver']);
+	    let timePlaceholderMsgId = getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.time");
+
 	    return (
 	        <div onMouseDown={this.handleMouseDown} style={{display: 'flex', flexDirection: 'column'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -301,7 +307,7 @@ class DateTimePickerWithRange extends Component {
 	                        />
 	                	<div style={{ display: openRangeInputs === 'start' ? 'block' : 'none'}}>
 	                        <div style={{display: 'flex'}}>
-	                    {this.renderInput(inputValue.startDate, operator, '', placeholder, tabIndex, false, true, {width: '90%'})}
+	                    {this.renderInput(inputValue.startDate, operator, '', timePlaceholderMsgId, tabIndex, false, true, {width: '90%'})}
 	                            <span style={{width: '10%'}}>
 	                                <button style={{width: '100%'}} tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                                    <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
@@ -324,7 +330,7 @@ class DateTimePickerWithRange extends Component {
 	                    />
 	                	<div style={{ display: openRangeInputs === 'end' ? 'block' : 'none'}}>
 	                        <div style={{display: 'flex'}}>
-	                            {this.renderInput(inputValue.endDate, operator, '', placeholder, tabIndex, false, true, {width: '90%'})}
+	                            {this.renderInput(inputValue.endDate, operator, '', timePlaceholderMsgId, tabIndex, false, true, {width: '90%'})}
 	                            <span style={{width: '10%'}}>
 	                                <button style={{width: '100%'}} tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                                    <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>

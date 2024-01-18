@@ -1794,12 +1794,14 @@
                     "default": "Search...",
                     "string": "Type text to filter...",
                     "date": "Type date to filter...",
+                    "time": "Type time to filter...",
                     "number": "Type number or expression..."
                 },
                 "tooltips": {
                     "editMode": "Quick search is not available in edit mode",
                     "default": "Search...",
                     "string": "Type text to filter...",
+                    "time": "Type time to filter...",
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
                     "date": "Type a date or an expression. Use {format} for the date.",
                     "geometry": {
@@ -1813,6 +1815,7 @@
                 "placeholders": {
                     "default": "Search...",
                     "string": "Type text to filter...",
+                    "time": "Type time to filter...",
                     "date": "Type date to filter...",
                     "number": "Type number to filter..."
                 },
@@ -1820,6 +1823,7 @@
                     "editMode": "Quick search is not available in edit mode",
                     "default": "Search...",
                     "string": "Type text to filter...",
+                    "time": "Type time to filter...",
                     "number": "Type a number ...",
                     "date": "Type a date. Use {format} for the date.",
                     "geometry": {

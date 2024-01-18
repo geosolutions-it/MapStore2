@@ -33,10 +33,18 @@ export default compose(
                     type: props.type,
                     attribute
                 });
-            } else {
+            } else if (value && typeof value === 'object') {
                 props.onValueChange(value);
                 props.onChange({
                     value: { startDate: value?.startDate, endDate: value?.endDate, operator: inputOperator },
+                    operator: inputOperator,
+                    type: props.type,
+                    attribute
+                });
+            } else if (!value) {
+                props.onValueChange(value);
+                props.onChange({
+                    value: { startDate: value, operator: inputOperator },
                     operator: inputOperator,
                     type: props.type,
                     attribute
