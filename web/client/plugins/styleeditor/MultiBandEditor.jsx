@@ -53,14 +53,21 @@ const MultiBandEditor = ({
     rbgBandLabels,
     onUpdateNode
 }) => {
-    const samples = get(layer, "sourceMetadata.samples"); // RGB - sample is 3 and if samples > 3, then extra sample is added (alpha)
     const [enableBand, setEnableBand] = useState(true);
 
     /**
+     * Samples per pixel are a combination of image samples + extra samples (alpha)
+     * Each pixel can have N extra samples, however currently only +1 extra sample included
+     * i.e Multi extra samples are not supported
+     * Sample >=3 is generally considered 'RGB' as the GeoTIFF source is set with convertToRGB:'auto'
+     */
+    const samples = get(layer, "sourceMetadata.samples");
+
+    /**
      * There are instances where the sample is 3 or above with PhotometricInterpretation as 0 or 1 [gray scale indicator],
-     * this could be because the band channel are not properly defined,
-     * hence we consider if the sample is >=3 or PhotometricInterpretation is not a gray scale image,
-     * to determin the image is RGB
+     * this could be because the band channels are not properly defined.
+     * Hence we consider if the sample is >=3 or PhotometricInterpretation is not a gray scale image,
+     * to determin the RGB image
      */
     const isRGB = samples >= 3
     || ![0, 1].includes(get(layer, "sourceMetadata.fileDirectory.PhotometricInterpretation"));
@@ -77,29 +84,11 @@ const MultiBandEditor = ({
         !isRGB && updateStyle(defaultSingleColorExpression);
     }, [isRGB]);
 
-    const getAdjustedRGBAColorExpression = () => {
-        let colorExpression = [...defaultRGBAColorExpression];
-        const [extraSample] = get(layer, "sourceMetadata.fileDirectory.ExtraSamples", []);
-        /**
-         * Each pixel can have N extra samples,
-         * currently the implementation looks for only +1 extra sample with RGB samples.
-         * i.e Multi extra samples are not supported
-         * Extra sample is skipped when value is 0 (UNSPECIFIED),
-         * meaning it has little or nothing to do with alpha.
-         * For 1(ASSOCIATED ALPHA) & 2(UNASSOCIATED ALPHA),
-         * the alpha channel is populated with 1 and not banding 4 channel
-         */
-        if (extraSample && extraSample !== 0) {
-            colorExpression = colorExpression.slice(0, -1).concat(1);
-        }
-        return colorExpression;
-    };
-
     const onEnableBandStyle = (flag) => {
         setEnableBand(flag);
         let color;
         if (flag) {
-            color = isRGB ? getAdjustedRGBAColorExpression() : defaultSingleColorExpression;
+            color = isRGB ? [...defaultRGBAColorExpression] : defaultSingleColorExpression;
         }
         updateStyle(color);
     };
@@ -112,7 +101,7 @@ const MultiBandEditor = ({
     };
 
     const onChangeBand = (index, value) => {
-        let color = getParsedColor() ?? getAdjustedRGBAColorExpression();
+        let color = getParsedColor() ?? [...defaultRGBAColorExpression];
         color[index] = value ? ["band", value] : 1;
         updateStyle(color);
     };
