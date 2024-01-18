@@ -7,14 +7,13 @@
  */
 
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 import { Observable } from 'rxjs';
-import { fromUrl as fromGeotiffUrl } from 'geotiff';
+
 
 import { isValidURL } from '../../utils/URLUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
-import { isProjectionAvailable } from '../../utils/ProjectionUtils';
+import LayerUtils from '../../utils/cog/LayerUtils';
 
 export const COG_LAYER_TYPE = 'cog';
 const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
@@ -31,92 +30,7 @@ const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
         records
     };
 };
-/**
- * Get projection code from geokeys
- * @param {Object} image
- * @returns {string} projection code
- */
-export const getProjectionFromGeoKeys = (image) => {
-    const geoKeys = image.geoKeys;
-    if (!geoKeys) {
-        return null;
-    }
 
-    if (
-        geoKeys.ProjectedCSTypeGeoKey &&
-        geoKeys.ProjectedCSTypeGeoKey !== 32767
-    ) {
-        return "EPSG:" + geoKeys.ProjectedCSTypeGeoKey;
-    }
-
-    if (
-        geoKeys.GeographicTypeGeoKey &&
-        geoKeys.GeographicTypeGeoKey !== 32767
-    ) {
-        return "EPSG:" + geoKeys.GeographicTypeGeoKey;
-    }
-
-    return null;
-};
-const abortError = (reject) => reject(new DOMException("Aborted", "AbortError"));
-/**
- * fromUrl with abort fetching of data and data slices
- * Note: The abort action will not cancel data fetch request but just the promise,
- * because of the issue in https://github.com/geotiffjs/geotiff.js/issues/408
- */
-const fromUrl = (url, signal) => {
-    if (signal?.aborted) {
-        return abortError(Promise.reject);
-    }
-    return new Promise((resolve, reject) => {
-        signal?.addEventListener("abort", () => abortError(reject));
-        return fromGeotiffUrl(url)
-            .then((image)=> image.getImage()) // Fetch and read first image to get medatadata of the tif
-            .then((image) => resolve(image))
-            .catch(()=> abortError(reject));
-    });
-};
-
-const getLayerConfig = (layer, image) => {
-    const crs = getProjectionFromGeoKeys(image);
-    const extent = image.getBoundingBox();
-    const isProjectionDefined = isProjectionAvailable(crs);
-    const sample = image.getSamplesPerPixel();
-    const isRGB = image.getSampleByteSize(0) === 1 && typeof get(image, 'fileDirectory.PhotometricInterpretation') !== 'undefined';
-    const { STATISTICS_MINIMUM, STATISTICS_MAXIMUM } = image.getGDALMetadata() ?? {};
-    const source = get(layer, 'sources[0]');
-
-    return {
-        ...layer,
-        sources: [{...source, min: STATISTICS_MINIMUM, max: STATISTICS_MAXIMUM}],
-        sourceMetadata: {
-            crs,
-            extent: extent,
-            width: image.getWidth(),
-            height: image.getHeight(),
-            tileWidth: image.getTileWidth(),
-            tileHeight: image.getTileHeight(),
-            origin: image.getOrigin(),
-            resolution: image.getResolution(),
-            isRGB: sample > 1 && isRGB
-        },
-        // skip adding bbox when geokeys or extent is empty
-        ...(!isEmpty(extent) && !isEmpty(crs) && {
-            bbox: {
-                crs,
-                ...(isProjectionDefined && {
-                    bounds: {
-                        minx: extent[0],
-                        miny: extent[1],
-                        maxx: extent[2],
-                        maxy: extent[3]
-                    }}
-                )
-            }
-        })
-    };
-
-};
 let capabilitiesCache = {};
 export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => {
     const service = get(info, 'options.service');
@@ -130,19 +44,19 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                 title: record.title,
                 type: COG_LAYER_TYPE,
                 sources: [{url}],
+                // sources: [{"url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/31/T/GJ/2022/7/S2A_31TGJ_20220703_0_L2A/B04.tif", "max": 3000}, {"url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/31/T/GJ/2022/7/S2A_31TGJ_20220703_0_L2A/B03.tif", "max": 3000}, {"url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/31/T/GJ/2022/7/S2A_31TGJ_20220703_0_L2A/B02.tif", "max": 3000}, {"url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/31/T/GJ/2022/7/S2A_31TGJ_20220703_0_L2A/B08.tif", "max": 3000}],
                 options: service.options || {}
             };
             const controller = get(info, 'options.controller');
             const isSave = get(info, 'options.save', false);
+            const cached = capabilitiesCache[url];
+            if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+                return {...cached.data};
+            }
             // Fetch metadata only on saving the service (skip on search)
             if ((isNil(service.fetchMetadata) || service.fetchMetadata) && isSave) {
-                const cached = capabilitiesCache[url];
-                if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
-                    return {...cached.data};
-                }
-                return fromUrl(url, controller?.signal)
-                    .then(image => {
-                        const updatedLayer = getLayerConfig(layer, image);
+                return LayerUtils.getLayerConfig({url, controller, layer})
+                    .then(updatedLayer => {
                         capabilitiesCache[url] = {
                             timestamp: new Date().getTime(),
                             data: {...updatedLayer}

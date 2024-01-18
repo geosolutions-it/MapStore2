@@ -45,16 +45,27 @@ const defaultSingleColorExpression = ["array", ["band", 1], ["band", 1], ["band"
 /**
  * Multi-Band Editor component
  * The DataTileSource supports multi-bands and the Geotiff source can provide multi-band data,
- * however the editor currently supports only RGB bands along with an optional alpha band and a single/gray band
+ * however the editor currently supports only RGB bands (3 samples) along with an optional alpha band and a single/gray band (1 sample)
  */
 const MultiBandEditor = ({
     element: layer,
-    bands,
+    bands: defaultBands,
     rbgBandLabels,
     onUpdateNode
 }) => {
+    const samples = get(layer, "sourceMetadata.samples"); // RGB - sample is 3 and if samples > 3, then extra sample is added (alpha)
     const [enableBand, setEnableBand] = useState(true);
-    const isRGB = get(layer, "sourceMetadata.isRGB", false);
+
+    /**
+     * There are instances where the sample is 3 or above with PhotometricInterpretation as 0 or 1 [gray scale indicator],
+     * this could be because the band channel are not properly defined,
+     * hence we consider if the sample is >=3 or PhotometricInterpretation is not a gray scale image,
+     * to determin the image is RGB
+     */
+    const isRGB = samples >= 3
+    || ![0, 1].includes(get(layer, "sourceMetadata.fileDirectory.PhotometricInterpretation"));
+
+    const bands = samples === 3 ? defaultBands.slice(0, -1) : defaultBands;
 
     const updateStyle = (color) => {
         onUpdateNode(layer.id, "layers", {
@@ -66,11 +77,29 @@ const MultiBandEditor = ({
         !isRGB && updateStyle(defaultSingleColorExpression);
     }, [isRGB]);
 
+    const getAdjustedRGBAColorExpression = () => {
+        let colorExpression = [...defaultRGBAColorExpression];
+        const [extraSample] = get(layer, "sourceMetadata.fileDirectory.ExtraSamples", []);
+        /**
+         * Each pixel can have N extra samples,
+         * currently the implementation looks for only +1 extra sample with RGB samples.
+         * i.e Multi extra samples are not supported
+         * Extra sample is skipped when value is 0 (UNSPECIFIED),
+         * meaning it has little or nothing to do with alpha.
+         * For 1(ASSOCIATED ALPHA) & 2(UNASSOCIATED ALPHA),
+         * the alpha channel is populated with 1 and not banding 4 channel
+         */
+        if (extraSample && extraSample !== 0) {
+            colorExpression = colorExpression.slice(0, -1).concat(1);
+        }
+        return colorExpression;
+    };
+
     const onEnableBandStyle = (flag) => {
         setEnableBand(flag);
         let color;
         if (flag) {
-            color = isRGB ? defaultRGBAColorExpression : defaultSingleColorExpression;
+            color = isRGB ? getAdjustedRGBAColorExpression() : defaultSingleColorExpression;
         }
         updateStyle(color);
     };
@@ -83,7 +112,7 @@ const MultiBandEditor = ({
     };
 
     const onChangeBand = (index, value) => {
-        let color = getParsedColor() ?? [...defaultRGBAColorExpression];
+        let color = getParsedColor() ?? getAdjustedRGBAColorExpression();
         color[index] = value ? ["band", value] : 1;
         updateStyle(color);
     };
@@ -91,7 +120,7 @@ const MultiBandEditor = ({
     const onChangeMinMax = (type, value) => {
         const source = get(layer, "sources[0]");
         onUpdateNode(layer.id, "layers", {
-            sources: [{ ...source, [type]: value }]
+            sources: [{ ...source, [type]: isEmpty(value) ? undefined : value }]
         });
     };
 
@@ -122,7 +151,9 @@ const MultiBandEditor = ({
                     </div>
                     {isRGB ? (
                         bands.map((_, index) => {
-                            const isAlpha = index === bands.length - 1;
+                            const bandLength = bands.length;
+                            // 4th band is alpha channel
+                            const isAlpha =  bandLength === 4 && index === bandLength - 1;
                             return (
                                 <PropertyField label={rbgBandLabels[index]}>
                                     <Select

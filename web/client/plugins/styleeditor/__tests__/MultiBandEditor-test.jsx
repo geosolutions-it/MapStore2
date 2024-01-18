@@ -26,7 +26,7 @@ describe("MultiBandEditor", () => {
     });
     it("editor with single band data", () => {
         const props = {
-            element: {sourceMetadata: {isRGB: false} }
+            element: {sourceMetadata: {samples: 1, fileDirectory: {PhotometricInterpretation: 0}} }
         };
 
         render(<MultiBandEditor {...props}/>, document.getElementById("container"));
@@ -43,9 +43,22 @@ describe("MultiBandEditor", () => {
         expect(propertyFields[1].innerHTML).toContain('styleeditor.minLabel');
         expect(propertyFields[2].innerHTML).toContain('styleeditor.maxLabel');
     });
+    it("editor with RGB band data", () => {
+        const props = {
+            element: {sourceMetadata: {samples: 3} }
+        };
+
+        render(<MultiBandEditor {...props}/>, document.getElementById("container"));
+        const enableBanding = document.querySelector('.enable-band');
+        expect(enableBanding).toBeTruthy();
+        expect(enableBanding.innerHTML).toContain("styleeditor.enableBanding");
+
+        const propertyFields = document.querySelectorAll('.ms-symbolizer-field');
+        expect(propertyFields.length).toBe(5);
+    });
     it("editor with multi band data", () => {
         const props = {
-            element: {sourceMetadata: {isRGB: true} }
+            element: {sourceMetadata: {samples: 4} }
         };
 
         render(<MultiBandEditor {...props}/>, document.getElementById("container"));
@@ -58,7 +71,7 @@ describe("MultiBandEditor", () => {
     });
     it("editor on apply & un-apply banding", () => {
         const props = {
-            element: {sourceMetadata: {isRGB: true} }
+            element: {sourceMetadata: {samples: 4} }
         };
         const action = {
             onUpdateNode: () => {}
@@ -81,7 +94,7 @@ describe("MultiBandEditor", () => {
     });
     it("editor sideffect udpate on loading single band tile source", () => {
         const props = {
-            element: {sourceMetadata: {isRGB: false}, sources: [{url: "test.com"}] }
+            element: {sourceMetadata: {samples: 1, fileDirectory: {PhotometricInterpretation: 1}}, sources: [{url: "test.com"}] }
         };
         const action = {
             onUpdateNode: () => {}
