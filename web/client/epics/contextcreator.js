@@ -922,7 +922,7 @@ export const exportContextEpic = (action$, { getState }) =>
                 "application/json"
             ])
                 .do((downloadArgs) => download(...downloadArgs))
-                .map(() => toggleControl("export"))
+                .map(() => toggleControl("export-context"))
                 .catch(() =>
                     Rx.Observable.of(
                         error({

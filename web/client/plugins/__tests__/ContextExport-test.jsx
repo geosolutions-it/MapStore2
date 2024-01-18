@@ -29,7 +29,7 @@ describe('ContextExport plugin', () => {
     it('displays the export panel when enabled', () => {
         const { Plugin } = getPluginForTest(ContextExport, {
             controls: {
-                "export": {
+                "export-context": {
                     enabled: true
                 }
             }

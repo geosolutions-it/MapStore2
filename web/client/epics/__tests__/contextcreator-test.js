@@ -965,7 +965,7 @@ describe('contextcreator epics', () => {
     it('exportContextEpic, export context with plugins and themes', (done) => {
         testEpic(exportContextEpic, 1, onContextExport('file.json'), ([a]) => {
             expect(a.type).toEqual(TOGGLE_CONTROL);
-            expect(a.control).toEqual("export");
+            expect(a.control).toEqual("export-context");
             done();
         }, {
             map: {
