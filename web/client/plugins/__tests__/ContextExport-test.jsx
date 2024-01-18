@@ -13,6 +13,7 @@ import expect from 'expect';
 import { getPluginForTest } from './pluginsTestUtils';
 
 import ContextExport from '../ContextExport';
+import { EXPORT_CONTEXT } from '../../utils/ControlUtils';
 
 describe('ContextExport plugin', () => {
     beforeEach((done) => {
@@ -29,7 +30,7 @@ describe('ContextExport plugin', () => {
     it('displays the export panel when enabled', () => {
         const { Plugin } = getPluginForTest(ContextExport, {
             controls: {
-                "export-context": {
+                [EXPORT_CONTEXT]: {
                     enabled: true
                 }
             }

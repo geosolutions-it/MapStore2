@@ -41,6 +41,7 @@ import { upload, uninstall } from '../api/plugins';
 import { download, readJson } from "../utils/FileUtils";
 import { toggleControl } from "../actions/controls";
 import { mapSelector } from "../selectors/map";
+import { EXPORT_CONTEXT } from '../utils/ControlUtils';
 
 const saveContextErrorStatusToMessage = (status) => {
     switch (status) {
@@ -922,7 +923,7 @@ export const exportContextEpic = (action$, { getState }) =>
                 "application/json"
             ])
                 .do((downloadArgs) => download(...downloadArgs))
-                .map(() => toggleControl("export-context"))
+                .map(() => toggleControl(EXPORT_CONTEXT))
                 .catch(() =>
                     Rx.Observable.of(
                         error({
