@@ -20,7 +20,9 @@ import { onContextExport } from "../actions/contextcreator";
 import { toggleControl } from "../actions/controls";
 import Message from "../components/I18N/Message";
 import Button from "../components/misc/Button";
-const isEnabled = createControlEnabledSelector("export");
+import { EXPORT_CONTEXT } from "../utils/ControlUtils";
+
+const isEnabled = createControlEnabledSelector(EXPORT_CONTEXT);
 
 const mapStateToProps = createSelector(
     isEnabled,
@@ -32,7 +34,7 @@ const mapStateToProps = createSelector(
 );
 
 const actions = {
-    onClose: () => toggleControl("export"),
+    onClose: () => toggleControl(EXPORT_CONTEXT),
     onExport: onContextExport
 };
 
@@ -58,7 +60,7 @@ const ExportComponent = connect(mapStateToProps, actions)(Component);
 const ExportButton = connect(
     createSelector(resourceSelector, (resource) => ({ resource })),
     {
-        onExport: () => toggleControl("export")
+        onExport: () => toggleControl(EXPORT_CONTEXT)
     }
 )(({ resource, onExport }) => (
     <Button
