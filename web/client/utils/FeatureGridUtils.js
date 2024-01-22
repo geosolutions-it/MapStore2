@@ -130,11 +130,11 @@ export const featureTypeToGridColumns = (
     columnSettings = {},
     fields = [],
     {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
-    {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}} = {}) =>
+    {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}, isWithinAttrTbl = false} = {}) =>
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
         const field = fields.find(f => f.name === desc.name);
-        return {
+        let columnProp = {
             sortable,
             key: desc.name,
             width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
@@ -150,6 +150,8 @@ export const featureTypeToGridColumns = (
             formatter: getFormatter(desc, field),
             filterRenderer: getFilterRenderer(desc, field)
         };
+        if (isWithinAttrTbl) columnProp.width = 300;
+        return columnProp;
     });
 /**
  * Create a column from the configruation. Maps the events to call a function with the whole property
@@ -267,7 +269,7 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type, filte
                 index: 0
             }]),
         filters: (oldFilterObj?.filters?.filter((filter) => attribute !== filter?.attribute) ?? []).concat(filters),
-        filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value)
+        filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value) || operator === 'isNull'
             ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                 attribute,
                 rowId: Date.now(),

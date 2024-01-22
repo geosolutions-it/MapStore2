@@ -1796,6 +1796,7 @@
                 "placeholders": {
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
+                    "time": "Escriba el tiempo para filtrar ...",
                     "date": "Escriba la fecha para filtrar...",
                     "number": "Escriba el número o la expresión..."
                 },
@@ -1803,6 +1804,7 @@
                     "editMode": "La búsqueda rápida no está disponible en modo de edición",
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
+                    "time": "Escriba el tiempo para filtrar ...",
                     "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
                     "date": "Escriba una fecha o una expresión. Usa {format} para la fecha.",
                     "geometry": {
@@ -1810,6 +1812,33 @@
                         "enabled": "Haga clic en el mapa para seleccionar una característica / Alt + arrastre del mouse para dibujar un filtro de cuadro. Mantenga presionada la tecla Ctrl y haga clic para seleccionar varias características",
                         "applied": "Limpiar la selección"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Buscar...",
+                    "string": "Escribe texto para filtrar...",
+                    "time": "Escriba el tiempo para filtrar ...",
+                    "date": "Escriba la fecha para filtrar...",
+                    "number": "Escriba el número...",
+                    "range": "Por favor escribe ..."
+                },
+                "tooltips": {
+                    "editMode": "La búsqueda rápida no está disponible en modo de edición",
+                    "default": "Buscar...",
+                    "string": "Escribe texto para filtrar...",
+                    "time": "Escriba el tiempo para filtrar ...",
+                    "number": "Escriba el número",
+                    "date": "Escriba una fecha. Usa {format} para la fecha.",
+                    "geometry": {
+                        "disabled": "Hacer clic en el filtro en el mapa / Alt + arrastrar el mouse para dibujar un filtro de cuadro. Mantenga presionada también la tecla Ctrl para agregar más funciones al filtro actual",
+                        "enabled": "Haga clic en el mapa para seleccionar una característica / Alt + arrastre del mouse para dibujar un filtro de cuadro. Mantenga presionada la tecla Ctrl y haga clic para seleccionar varias características",
+                        "applied": "Limpiar la selección"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Comenzar",
+                    "end": "Fin"
                 }
             },
             "toolbar": {

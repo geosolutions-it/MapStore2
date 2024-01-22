@@ -1796,6 +1796,7 @@
                 "placeholders": {
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
                     "date": "Tapez la date à filtrer...",
                     "number": "Tapez un nombre ou une expression..."
                 },
@@ -1803,6 +1804,7 @@
                     "editMode": "La recherche rapide n'est pas disponible en mode édition",
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
                     "number": "Tapez un nombre ou une expression... Exemples : 10, > 2, < 10",
                     "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
                     "geometry": {
@@ -1810,6 +1812,33 @@
                         "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
                         "applied": "Nettoyer la sélection"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
+                    "date": "Tapez la date à filtrer...",
+                    "number": "Tapez un nombre...",
+                    "range": "Entrez s'il vous plait ..."
+                },
+                "tooltips": {
+                    "editMode": "La recherche rapide n'est pas disponible en mode édition",
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
+                    "number": "Tapez un nombre...",
+                    "date": "Tapez une date. Utilisez {format} pour la date.",
+                    "geometry": {
+                        "disabled": "Filtrer en cliquant sur la carte / Alt + glisser la souris pour dessiner un filtre de boîte. Maintenez également la touche Ctrl pour ajouter plus de fonctionnalités au filtre actuel",
+                        "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
+                        "applied": "Nettoyer la sélection"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Commencer",
+                    "end": "Fin"
                 }
             },
             "toolbar": {

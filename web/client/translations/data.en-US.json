@@ -1796,12 +1796,14 @@
                     "default": "Search...",
                     "string": "Type text to filter...",
                     "date": "Type date to filter...",
+                    "time": "Type time to filter...",
                     "number": "Type number or expression..."
                 },
                 "tooltips": {
                     "editMode": "Quick search is not available in edit mode",
                     "default": "Search...",
                     "string": "Type text to filter...",
+                    "time": "Type time to filter...",
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
                     "date": "Type a date or an expression. Use {format} for the date.",
                     "geometry": {
@@ -1809,6 +1811,33 @@
                         "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
                         "applied": "Clean the selection"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "time": "Type time to filter...",
+                    "date": "Type date to filter...",
+                    "number": "Type number to filter...",
+                    "range": "Please Enter ..."
+                },
+                "tooltips": {
+                    "editMode": "Quick search is not available in edit mode",
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "time": "Type time to filter...",
+                    "number": "Type a number ...",
+                    "date": "Type a date. Use {format} for the date.",
+                    "geometry": {
+                        "disabled": "Filter clicking on map / Alt + mouse drag to draw a box filter. Hold also ctrl to add more features to the current filter",
+                        "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
+                        "applied": "Clean the selection"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Start",
+                    "end": "End"
                 }
             },
             "toolbar": {

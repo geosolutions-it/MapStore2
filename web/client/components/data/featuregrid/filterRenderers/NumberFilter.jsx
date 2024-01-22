@@ -19,7 +19,7 @@ export default compose(
     }),
     withState("valid", "setValid", true),
     withHandlers({
-        onChange: props => ({value, attribute} = {}) => {
+        onChange: props => ({value, attribute, inputOperator} = {}) => {
             props.onValueChange(value);
             if (!COMMA_REGEX.exec(value)) {
                 let {operator, newVal} = getOperatorAndValue(value, "number");
@@ -31,7 +31,7 @@ export default compose(
                 props.onChange({
                     value: isNaN(newVal) ? undefined : newVal,
                     rawValue: value,
-                    operator,
+                    operator: inputOperator || operator,
                     type: 'number',
                     attribute
                 });
@@ -48,7 +48,7 @@ export default compose(
                     isValid && props.onChange({
                         value,
                         rawValue: value,
-                        operator: "=",
+                        operator: inputOperator || "=",
                         type: 'number',
                         attribute
                     });

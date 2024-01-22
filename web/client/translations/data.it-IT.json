@@ -1795,6 +1795,7 @@
                 "placeholders": {
                     "default": "Cerca...",
                     "string": "Digita testo da cercare...",
+                    "time": "Digita l'ora da cercare...",
                     "date": "Digita data da cercare...",
                     "number": "Digita numero o espressione..."
                 },
@@ -1802,6 +1803,7 @@
                     "editMode": "La ricerca veloce non è disponibile in modalità editing",
                     "default": "Cerca...",
                     "string": "Digita il testo da cercare...",
+                    "time": "Digita l'ora da cercare...",
                     "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10",
                     "date":"Digita una data o un'espressione. Utilizza {format} per la data",
                     "geometry": {
@@ -1809,6 +1811,33 @@
                       "enabled": "Clicca per selezionare le features / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
                       "applied": "Pulisci la selezione"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Cerca...",
+                    "string": "Digita testo da cercare...",
+                    "time": "Digita l'ora da cercare...",
+                    "date": "Digita data da cercare...",
+                    "number": "Digita numero...",
+                    "range": "Prego entra ..."
+                },
+                "tooltips": {
+                    "editMode": "La ricerca veloce non è disponibile in modalità editing",
+                    "default": "Cerca...",
+                    "string": "Digita il testo da cercare...",
+                    "time": "Digita l'ora da cercare...",
+                    "number": "Digita un numero...",
+                    "date":"Digita una data. Utilizza {format} per la data",
+                    "geometry": {
+                      "disabled": "Filtra facendo click sulla mappa / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
+                      "enabled": "Clicca per selezionare le features / Alt + trascinamento per disegnare un filtro rettangolare. Tieni premuto anche ctrl per aggiungere features alla selezione corrente",
+                      "applied": "Pulisci la selezione"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Inizio",
+                    "end": "Fine"
                 }
             },
             "toolbar": {

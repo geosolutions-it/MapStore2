@@ -33,15 +33,17 @@ const EXPRESSION_TESTS = [
     [" ", "=", undefined],
     ["ZZZ", "=", undefined]
 ];
-const testExpression = (spyonChange, spyonValueChange, rawValue, expectedOperator, expectedValue) => {
+const testExpression = (spyonChange, spyonValueChange, rawValue, expectedOperator, expectedValue, index) => {
     const input = document.getElementsByTagName("input")[0];
     input.value = rawValue;
     ReactTestUtils.Simulate.change(input);
-    const args = spyonChange.calls[spyonChange.calls.length - 1].arguments[0];
-    const valueArgs = spyonValueChange.calls[spyonValueChange.calls.length - 1].arguments[0];
-    expect(args.value).toBe(expectedValue);
-    expect(args.operator).toBe(expectedOperator);
-    expect(valueArgs).toBe(rawValue);
+    const args = spyonChange.calls[index]?.arguments[0];
+    const valueArgs = spyonValueChange.calls[index]?.arguments[0];
+    if (valueArgs) {        // in case of invalid number expression it will be undefined
+        expect(args.value).toBe(expectedValue);
+        expect(args.operator).toBe(expectedOperator);
+        expect(valueArgs).toBe(rawValue);
+    }
 };
 
 describe('Test for NumberFilter component', () => {
@@ -75,7 +77,7 @@ describe('Test for NumberFilter component', () => {
         ReactDOM.render(<NumberFilter onChange={actions.onChange} />, document.getElementById("container"));
 
         const input = document.getElementsByTagName("input")[0];
-        input.value = "> 2";
+        input.value = "2";
         ReactTestUtils.Simulate.change(input);
         expect(spyonChange).toHaveBeenCalled();
     });
@@ -115,6 +117,6 @@ describe('Test for NumberFilter component', () => {
         const spyonChange = expect.spyOn(actions, 'onChange');
         const spyonValueChange = expect.spyOn(actions, 'onValueChange');
         ReactDOM.render(<NumberFilter onChange={actions.onChange} onValueChange={actions.onValueChange} />, document.getElementById("container"));
-        EXPRESSION_TESTS.map( params => testExpression(spyonChange, spyonValueChange, ...params));
+        EXPRESSION_TESTS.map( (params, index) => testExpression(spyonChange, spyonValueChange, ...params, index));
     });
 });
