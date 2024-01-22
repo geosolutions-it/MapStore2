@@ -13,6 +13,28 @@
     .featuregrid-geometry-filter.filter-enabled {
         .color-var(@theme-vars[primary]);
     }
+    .ms-popover-overlay {
+        .picker-container {
+            .background-color-var(@theme-vars[main-bg]);
+            &.date-time {
+                .date-time-container {
+                    .date-time-hour-input {
+                        .background-color-var(@theme-vars[main-bg]);
+                        .time-icon {
+                            .border-color-var(@theme-vars[main-border-color]);
+                        }
+                    }
+                }
+            }
+            .range-tab {
+                .color-var(@theme-vars[main-color]);
+                .background-color-var(@theme-vars[main-bg]);
+                &.selected {
+                    .background-color-var(@theme-vars[main-variant-bg]);
+                }
+            }
+        }
+    }
 }
 
 // **************
@@ -88,12 +110,10 @@
             overflow-x:hidden;
             overflow-y:auto;
         }
-        div.rw-datetimepicker.rw-widget span.rw-select{
-            background: white;
-            height:30px;
-        } 
-        div.range-tab:hover{
-            cursor:pointer;
+        div.range-tab{
+            &:hover{
+                cursor:pointer;
+            }
         }
         input.rw-input.has-error{
             outline: 2px auto var(--ms-danger, @ms-danger);
@@ -125,6 +145,58 @@
 .ms-popover-overlay{
     div.picker-container .rw-calendar.rw-widget tbody span.rw-btn{
         line-height: 2em;
+    }
+    .picker-container {
+        .range-tab{
+            &:hover{
+                cursor:pointer;
+            }
+            width: 50%;
+            cursor: pointer;
+            font-size: 8px;
+            height: 40px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.5rem; 
+        }
+        position: relative;
+        width: 300px;
+        height: 290px; 
+        &.range {
+            height: 328px; 
+        }
+        &.date-time, &.time {
+            height: 100%;
+        }
+        &.date-time {
+            .date-time-container {
+                .rw-widget {
+                    height: 290px;
+                }
+                .date-time-hour-input {
+                    display: flex;
+                    align-items: center;
+                    padding: 2px;
+                    .rw-input {
+                        height: 30px;
+                    }
+                    .time-icon {
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border: 1px solid;
+                        border-left-width: 1px;
+                    }
+                }
+            }
+        }
+        overflow: auto;
+        .rw-widget {
+            border: none !important;
+        }
     }
 }
 // **************

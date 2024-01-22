@@ -18,6 +18,7 @@ import OverlayTrigger from '../OverlayTrigger';
 import Hours from './Hours';
 import Popover from '../../styleeditor/Popover';
 import { getMessageById } from '../../../utils/LocaleUtils';
+import Message from '../../I18N/Message';
 
 localizer(moment);
 
@@ -120,14 +121,15 @@ class DateTimePickerWithRange extends Component {
         return format ? format : !time && calendar ? dateFormat : time && !calendar ? timeFormat : defaultFormat;
     }
 
-    renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, style = {}) => {
+    renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, style = {}, className) => {
         let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
+        const inputEl = <input style={style} type="text" id="rw_1_input" disabled={'true'} role="combobox" placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${this.state.isInputNotValid ? 'has-error' : ''} ${className ? className : ''}`} onChange={this.handleValueChange} />;
         if (toolTip) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{toolTip}</Tooltip>}>
-                <input style={style} type="text" id="rw_1_input" disabled={'true'} role="combobox" placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${this.state.isInputNotValid ? 'has-error' : ''}`} onChange={this.handleValueChange} />
+                {inputEl}
             </OverlayTrigger>);
         }
-        return (<input style={style} type="text" id="rw_1_input" disabled={'true'} role="combobox" placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${this.state.isInputNotValid ? 'has-error' : ''}`} onChange={this.handleValueChange} />);
+        return inputEl;
     }
 	renderHoursRange = () =>{
 	    const { inputValue, operator, focused, openRangeInputs} = this.state;
@@ -136,16 +138,16 @@ class DateTimePickerWithRange extends Component {
 	    return (
 	        <div onMouseDown={this.handleMouseDown} style={{display: 'flex', flexDirection: 'column', height: '200px'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
-	                <div onClick={this.toggleStart} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem', cursor: 'pointer'}}>
-	                    <strong style={{fontSize: '12px'}}>Start</strong>
+	                <div onClick={this.toggleStart} className={this.rangeTabClassName('start')}>
+	                    <strong style={{fontSize: '12px'}}><Message msgId="featuregrid.attributeFilter.rangeTab.start"/></strong>
 	                    <span>
-	                        {inputValue.startDate || 'Please Enter ...' }
+	                        {inputValue.startDate || getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.range") }
 	                    </span>
 	                </div>
-	                <div onClick={this.toggleEnd} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem', cursor: 'pointer'}}>
-	                    <strong style={{fontSize: '12px'}}>End</strong>
+	                <div onClick={this.toggleEnd} className={this.rangeTabClassName('end')}>
+	                    <strong style={{fontSize: '12px'}}><Message msgId="featuregrid.attributeFilter.rangeTab.end"/></strong>
 	                    <span>
-	                        {inputValue.endDate || 'Please Enter ...' }
+	                        {inputValue.endDate || getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.range") }
 	                    </span>
 	                </div>
 	            </div>
@@ -189,7 +191,7 @@ class DateTimePickerWithRange extends Component {
 	                    placement={popupPosition}
 					 	triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
 	                    content={
-                        	<div className="shadow-soft picker-container" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
+                        	<div className="shadow-soft picker-container time">
 	                            { this.renderHoursRange() }
 	                        </div>
 	                    }
@@ -202,22 +204,26 @@ class DateTimePickerWithRange extends Component {
 		 	</div>
 	 	);
 	}
+	rangeTabClassName = (type) => {
+	    const openRangeInputs = this.state.openRangeInputs;
+	    return "range-tab" + (openRangeInputs === type || !openRangeInputs ? '' : ' selected');
+	}
 	renderCalendarRange = () =>{
 	    const { openRangeInputs, inputValue } = this.state;
 	    const props = omit(this.props, ['placeholder', 'calendar', 'time', 'onChange', 'value', 'toolTip', 'onMouseOver']);
 	    return (
 	        <div onMouseDown={this.handleMouseDown} style={{display: 'flex', flexDirection: 'column'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
-	                <div onClick={this.toggleStart} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem', cursor: 'pointer'}}>
-	                    <strong style={{fontSize: '12px'}}>Start</strong>
+	                <div onClick={this.toggleStart} className={this.rangeTabClassName('start')}>
+	                    <strong style={{fontSize: '12px'}}><Message msgId="featuregrid.attributeFilter.rangeTab.start"/></strong>
 	                    <span>
-	                        {inputValue.startDate || 'Please Enter ...'}
+	                        {inputValue.startDate || getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.range")}
 	                    </span>
 	                </div>
-	                <div onClick={this.toggleEnd} className="range-tab" style={{width: '50%', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem', cursor: 'pointer'}}>
-	                    <strong style={{fontSize: '12px'}}>End</strong>
+	                <div onClick={this.toggleEnd} className={this.rangeTabClassName('end')}>
+	                    <strong style={{fontSize: '12px'}}><Message msgId="featuregrid.attributeFilter.rangeTab.end"/></strong>
 	                    <span>
-	                        {inputValue.endDate || 'Please Enter ...'}
+	                        {inputValue.endDate || getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.range")}
 	                    </span>
 	                </div>
 	            </div>
@@ -260,7 +266,7 @@ class DateTimePickerWithRange extends Component {
 	                    placement={popupPosition}
 					 	triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
 	                    content={
-                        	<div className="shadow-soft picker-container" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
+                        	<div className="shadow-soft picker-container range">
 	                            { this.renderCalendarRange() }
 	                        </div>
 	                    }
@@ -282,21 +288,21 @@ class DateTimePickerWithRange extends Component {
 	    return (
 	        <div onMouseDown={this.handleMouseDown} style={{display: 'flex', flexDirection: 'column'}}>
 	            <div style={{display: 'flex', flexDirection: 'row'}}>
-	                <div onClick={this.toggleStart} className="range-tab" style={{width: '50%', cursor: 'pointer', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'start' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
-	                    <strong style={{fontSize: '12px'}}>Start</strong>
+	                <div onClick={this.toggleStart} className={this.rangeTabClassName('start')}>
+	                    <strong style={{fontSize: '12px'}}><Message msgId="featuregrid.attributeFilter.rangeTab.start"/></strong>
 	                    <span>
-	                        {inputValue.startDate || 'Please Enter ...'}
+	                        {inputValue.startDate || getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.range")}
 	                    </span>
 	                </div>
-	                <div onClick={this.toggleEnd} className="range-tab" style={{width: '50%', cursor: 'pointer', fontSize: '8px', height: '40px', color: 'black', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: openRangeInputs === 'end' || !openRangeInputs ? 'white' : 'gray', padding: '0.5rem'}}>
-	                    <strong style={{fontSize: '12px'}}>End</strong>
+	                <div onClick={this.toggleEnd} className={this.rangeTabClassName('end')}>
+	                    <strong style={{fontSize: '12px'}}><Message msgId="featuregrid.attributeFilter.rangeTab.end"/></strong>
 	                    <span>
-	                        {inputValue.endDate || 'Please Enter ...'}
+	                        {inputValue.endDate || getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.range")}
 	                    </span>
 	                </div>
 	            </div>
 	            <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
-	                <div style={{display: openRangeInputs === 'start' ? 'block' : 'none'}}>
+	                <div className="date-time-container" style={{display: openRangeInputs === 'start' ? 'block' : 'none'}}>
 	                    <Calendar
 	                        tabIndex="-1"
 	                        ref={elem => {this.attachCalStartRef = elem;}}
@@ -306,9 +312,9 @@ class DateTimePickerWithRange extends Component {
 	                        value={!isNil(this.state.date?.startDate || this.props.value?.startDate) ? new Date(this.state.date?.startDate || this.props.value?.startDate) : undefined}
 	                        />
 	                	<div style={{ display: openRangeInputs === 'start' ? 'block' : 'none'}}>
-	                        <div style={{display: 'flex'}}>
-	                    {this.renderInput(inputValue.startDate, operator, '', timePlaceholderMsgId, tabIndex, false, true, {width: '90%'})}
-	                            <span style={{width: '10%'}}>
+	                        <div className="date-time-hour-input">
+	                    		{this.renderInput(inputValue.startDate, operator, '', timePlaceholderMsgId, tabIndex, false, true, {}, 'form-control')}
+	                            <span className="time-icon">
 	                                <button style={{width: '100%'}} tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                                    <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
 	                                </button>
@@ -319,7 +325,7 @@ class DateTimePickerWithRange extends Component {
 	                    </div>
 	                </div>
 	                </div>
-	                <div style={{display: openRangeInputs === 'end' ? 'block' : 'none'}}>
+	                <div className="date-time-container" style={{display: openRangeInputs === 'end' ? 'block' : 'none'}}>
 	                    <Calendar
 	                        tabIndex="-1"
 	                        ref={elem => { this.attachCalEndRef = elem;}}
@@ -329,9 +335,9 @@ class DateTimePickerWithRange extends Component {
 	                        value={!isNil(this.state.date?.endDate || this.props.value?.endDate) ? new Date(this.state.date?.endDate || this.props.value?.endDate) : undefined}
 	                    />
 	                	<div style={{ display: openRangeInputs === 'end' ? 'block' : 'none'}}>
-	                        <div style={{display: 'flex'}}>
-	                            {this.renderInput(inputValue.endDate, operator, '', timePlaceholderMsgId, tabIndex, false, true, {width: '90%'})}
-	                            <span style={{width: '10%'}}>
+	                        <div className="date-time-hour-input">
+	                            {this.renderInput(inputValue.endDate, operator, '', timePlaceholderMsgId, tabIndex, false, true, {}, 'form-control')}
+	                            <span className="time-icon">
 	                                <button style={{width: '100%'}} tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
 	                                    <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
 	                                </button>
@@ -360,7 +366,7 @@ class DateTimePickerWithRange extends Component {
 	                    placement={popupPosition}
 					 	triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
 	                    content={
-                         	<div className="shadow-soft picker-container" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
+                         	<div className="shadow-soft picker-container date-time range">
 	                            {this.renderDateTimeRange()}
 	                        </div>
 	                    }

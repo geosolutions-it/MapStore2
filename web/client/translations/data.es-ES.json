@@ -1818,7 +1818,8 @@
                     "string": "Escribe texto para filtrar...",
                     "time": "Escriba el tiempo para filtrar ...",
                     "date": "Escriba la fecha para filtrar...",
-                    "number": "Escriba el número..."
+                    "number": "Escriba el número...",
+                    "range": "Por favor escribe ..."
                 },
                 "tooltips": {
                     "editMode": "La búsqueda rápida no está disponible en modo de edición",
@@ -1832,6 +1833,10 @@
                         "enabled": "Haga clic en el mapa para seleccionar una característica / Alt + arrastre del mouse para dibujar un filtro de cuadro. Mantenga presionada la tecla Ctrl y haga clic para seleccionar varias características",
                         "applied": "Limpiar la selección"
                     }
+                },
+                "rangeTab": {
+                    "start": "Comenzar",
+                    "end": "Fin"
                 }
             },
             "toolbar": {

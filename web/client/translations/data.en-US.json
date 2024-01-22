@@ -1817,7 +1817,8 @@
                     "string": "Type text to filter...",
                     "time": "Type time to filter...",
                     "date": "Type date to filter...",
-                    "number": "Type number to filter..."
+                    "number": "Type number to filter...",
+                    "range": "Please Enter ..."
                 },
                 "tooltips": {
                     "editMode": "Quick search is not available in edit mode",
@@ -1831,6 +1832,10 @@
                         "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
                         "applied": "Clean the selection"
                     }
+                },
+                "rangeTab": {
+                    "start": "Start",
+                    "end": "End"
                 }
             },
             "toolbar": {

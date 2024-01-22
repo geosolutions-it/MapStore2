@@ -1856,7 +1856,8 @@
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
                     "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "date": "Geben Sie das zu filternde Datum ein...",
-                    "number": "Geben Sie eine Zahl ..."
+                    "number": "Geben Sie eine Zahl ...",
+                    "range": "Bitte eingeben ..."
                 },
                 "tooltips": {
                     "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
@@ -1870,6 +1871,10 @@
                         "enabled": "Klicken Sie auf die Karte, um ein Feature auszuwählen / Alt + Maus ziehen, um einen Boxfilter zu zeichnen. Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere Features auszuwählen",
                         "applied": "Auswahl bereinigen"
                     }
+                },
+                "rangeTab": {
+                    "start": "Start",
+                    "end": "Ende"
                 }
             },
             "toolbar": {

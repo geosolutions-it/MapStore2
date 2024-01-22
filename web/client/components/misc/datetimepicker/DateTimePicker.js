@@ -117,16 +117,13 @@ class DateTimePicker extends Component {
 
         const timeVisible = open === 'time';
         const props = omit(this.props, ['placeholder', 'calendar', 'time', 'onChange', 'value']);
-        let calendarVal = null;
-        if ( this.props.value && typeof this.props.value === 'object')  {
-            calendarVal = this.props.value?.startDate;
-        } else if (this.props.value && typeof this.props.value === 'string') calendarVal = this.props.value;
+        const calendarVal = this.props.value?.startDate ?? this.props.value;
         let timePlaceholderMsgId = getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.time");
 
         return (
             <div style={{display: 'flex', flexDirection: 'column'}}>
                 <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto', height: 'inherit'}}>
-                    <div>
+                    <div className="date-time-container">
                         <Calendar
                             tabIndex="-1"
                             ref={(elem) => {this.attachCalRef = elem;}}
@@ -136,10 +133,10 @@ class DateTimePicker extends Component {
                             value={!isNil(calendarVal) ? new Date(calendarVal) : undefined}
                         />
                         <div>
-                            <div style={{display: 'flex', background: 'white'}}>
-                                {this.renderInput(inputValue, operator, '', timePlaceholderMsgId, tabIndex, false, true, {width: '90%'})}
-                                <span style={{width: '10%'}}>
-                                    <button style={{width: '100%'}} tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
+                            <div className="date-time-hour-input">
+                                {this.renderInput(inputValue, operator, '', timePlaceholderMsgId, tabIndex, false, true, 'form-control')}
+                                <span className="time-icon">
+                                    <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
                                         <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
                                     </button>
                                 </span>
@@ -153,16 +150,17 @@ class DateTimePicker extends Component {
             </div>
         );
     };
-    renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, style = {}) => {
+    renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, className) => {
         let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
         let isNullOperator = this.props.operator === 'isNull';
         if (isNullOperator) inputV = '';
+        const inputEl = <input type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${className ? className : ''}`} onChange={this.handleValueChange} disabled={isNullOperator} />;
         if (toolTip) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{toolTip}</Tooltip>}>
-                <input style={style} type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className="rw-input" onChange={this.handleValueChange} disabled={isNullOperator} />
+                {inputEl}
             </OverlayTrigger>);
         }
-        return (<input style={style} type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className="rw-input" onChange={this.handleValueChange} disabled={isNullOperator} />);
+        return inputEl;
     }
 
     render() {
@@ -180,12 +178,7 @@ class DateTimePicker extends Component {
         const calendarVisible = open === 'date';
         const timeVisible = open === 'time';
         const dateTimeVisible = openDateTime === 'dateTime';
-        let calendarVal = null;
-        if ( this.props.value && typeof this.props.value === 'object')  {
-            calendarVal = this.props.value?.startDate;
-        } else if (this.props.value && typeof this.props.value === 'string') {
-            calendarVal = this.props.value;
-        }
+        const calendarVal =  this.props.value?.startDate ?? this.props.value;
         let timePlaceholderMsgId = getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.time");
 
         if (type === 'date-time') {
@@ -198,7 +191,7 @@ class DateTimePicker extends Component {
                         placement={popupPosition}
                         triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
                         content={
-                            <div className="shadow-soft picker-container" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
+                            <div className="shadow-soft picker-container date-time">
                                 {this.renderCustomDateTimePopup()}
                             </div>
                         }
@@ -248,7 +241,7 @@ class DateTimePicker extends Component {
                             placement={popupPosition}
                             triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}       // table element to trigger its scroll
                             content={
-                                <div className="shadow-soft picker-container" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
+                                <div className="shadow-soft picker-container">
                                     <Calendar
                                         tabIndex="-1"
                                         ref={(elem) => {this.attachCalRef = elem;}}
