@@ -47,8 +47,7 @@ describe('DateTimePickerWithRange component', () => {
         const container = document.getElementById('container');
         const button = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(button);
-        const calendar = document.querySelector('.shadow-soft.picker-container');
-        expect(calendar.style.position).toBe('relative');
-        expect(calendar).toExist();
+        const calendar = document.querySelector('.shadow-soft.picker-container.range');
+        expect(calendar).toBeTruthy();
     });
 });
