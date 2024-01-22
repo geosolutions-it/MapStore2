@@ -125,6 +125,25 @@
                 "fixed": true,
                 "type": "empty",
                 "visibility": false
+            },
+            {
+                "id": "model-01",
+                "type": "model",
+                "url": " https://threejs.org/examples/models/ifc/rac_advanced_sample_project.ifc",
+                "name": "Model",
+                "title": "Model",
+                "center": [0, 0, 0],
+                "visibility": true
+            },
+            {
+                "id": "model-02",
+                "type": "model",
+                "url": "https://www.steptools.com/docs/stpfiles/ifc/AC20-Institute-Var-2.ifc",
+                "name": "Model2",
+                "title": "Model2",
+                "center": [30.044583340501617,
+                31.30455288820029, 0],
+                "visibility": true
             }
         ]
 	}

@@ -43,7 +43,7 @@ export default ({service: defaultService, catalogServices,
     const handleChangeServiceProperty = (property, value) => {
         setService({ ...service, [property]: value });
     };
-
+    // todo: add ifc to serviceTypes
     return (<div style={{padding: '1rem', height: '100%'}}>
         <CatalogServiceEditorComponent
             onChangeUrl={(url) => setService({...service, url})}

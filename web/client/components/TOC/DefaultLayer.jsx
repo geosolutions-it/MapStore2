@@ -99,7 +99,7 @@ class DefaultLayer extends React.Component {
 
     getVisibilityMessage = () => {
         if (this.props.node.exclusiveMapType) {
-            return this.props.node?.type === '3dtiles' ? 'toc.notVisibleSwitchTo3D' : this.props.node?.type === 'cog' ? 'toc.notVisibleSwitchTo2D' : '';
+            return ['3dtiles', 'model'].includes(this.props.node?.type) ? 'toc.notVisibleSwitchTo3D' : this.props.node?.type === 'cog' ? 'toc.notVisibleSwitchTo2D' : '';
         }
         const maxResolution = this.props.node.maxResolution || Infinity;
         return this.props.resolution >=  maxResolution
@@ -119,7 +119,7 @@ class DefaultLayer extends React.Component {
     getSourceCRS = () => this.props.node?.bbox?.crs || this.props.node?.sourceMetadata?.crs;
 
     renderOpacitySlider = (hideOpacityTooltip) => {
-        return (this.props.activateOpacityTool && this.props.node?.type !== '3dtiles') ? (
+        return (this.props.activateOpacityTool && !['3dtiles', 'model'].includes(this.props.node?.type)) ? (
             <OpacitySlider
                 opacity={this.props.node.opacity}
                 disabled={!this.props.node.visibility}
