@@ -85,7 +85,7 @@ class AttributeFilter extends React.PureComponent {
         const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Search";
         let inputKey = 'header-filter-' + this.props.column.key;
         let isValueExist = this.state?.value ?? this.props.value;
-        if (['date', 'time', 'date-time'].includes(this.props.type) && this.props.isWithinAttrTbl) isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
+        if (this.isDateTimeField() && this.props.isWithinAttrTbl) isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
         let isNullOperator = this.state.operator === 'isNull';
         return (<div className={`rw-widget ${this.state.isInputValid ? "" : "show-error"}`}>
             <input
@@ -109,15 +109,16 @@ class AttributeFilter extends React.PureComponent {
     renderOperatorField = () => {
         return (
             <ComboField
-                style={{ width: '90px'}}
+                style={{ width: 90 }}
                 fieldOptions= {this.getOperator(this.props.type)}
                 fieldName="operator"
                 fieldRowId={1}
+                disabled={this.props.disabled}
                 onSelect={(selectedOperator)=>{
                     // if select the same operator -> don't do anything
                     if (selectedOperator === this.state.operator) return;
                     let isValueExist;           // entered value
-                    if (['date', 'time', 'date-time'].includes(this.props.type)) {
+                    if (this.isDateTimeField()) {
                         isValueExist = this.state?.value ?? this.props.value?.startDate ?? this.props.value;
                     } else {
                         isValueExist = this.state?.value ?? this.props.value;
@@ -147,10 +148,13 @@ class AttributeFilter extends React.PureComponent {
             <div key={inputKey} className={`form-group${((this.state.isInputValid && this.props.valid) ? "" : " has-error")}`}>
                 {this.props.isWithinAttrTbl ? <>
                     {this.renderOperatorField()}
-                    {['time', 'date', 'date-time'].includes(this.props.type) ? this.renderInput() : this.renderTooltip(this.renderInput())}
+                    {this.isDateTimeField() ? this.renderInput() : this.renderTooltip(this.renderInput())}
                 </> : this.renderTooltip(this.renderInput())}
             </div>
         );
+    }
+    isDateTimeField = () => {
+        return ['date', 'time', 'date-time'].includes(this.props.type);
     }
     handleChange = (e) => {
         const value = e.target.value;

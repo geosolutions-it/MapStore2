@@ -132,6 +132,18 @@
         .color-var(@theme-vars[main-color]);
         .background-color-var(@theme-vars[main-bg]);
     }
+    .feature-grid-container {
+        .ms2-border-layout-body {
+            .react-grid-HeaderRow {
+                .react-grid-HeaderCell {
+                    .rw-datetimepicker.rw-widget input:disabled, 
+                    .rw-datetimepicker.rw-widget .rw-select button:disabled {
+                        .background-color-var(@theme-vars[disabled-bg], true);
+                    }
+                }
+            }
+        }
+   }
 }
 
 // **************
