@@ -115,6 +115,8 @@
             "templateError": "Si è verificato un errore durante l'applicazione del template alle informazioni restituite dal server, controllare il template.",
             "templatePreview": "Anteprima template",
             "heightOffset": "Spostamento in altezza (m)",
+            "modelCenterLat": "Latitudine del centro (DD)",
+            "modelCenterLng": "Longitudine del centro (DD)",
             "wmsLayerTileSize": "Dimensione tile (WMS)",
             "serverType": "Tipo di Server",
             "formatError": "Non è stato possibile recuperare le informazioni sui formati dal servizio configurato. Probabilmente stai usando un servizio \"No Vendor\" e questo non è supportato (es. GeoNetwork)",

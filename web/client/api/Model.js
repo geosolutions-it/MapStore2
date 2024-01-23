@@ -5,8 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import * as Cesium from 'cesium';
-
 // extract the tile format from the uri
 function getFormat(uri) {
     const parts = uri.split(/\./g);
@@ -27,18 +25,11 @@ function extractCapabilities(ifcApi, modelID, url) {
     };
 }
 
-const applyMatrix = (matrix, coords) => {
-    const result = Cesium.Matrix4.multiplyByPoint(
-        Cesium.Matrix4.fromArray(matrix),
-        new Cesium.Cartesian3(...coords),
-        new Cesium.Cartesian3()
-    );
-
-    return [result.x, result.y, result.z];
-};
-
 export const ifcDataToJSON = ({ data, ifcApi }) => {
-    const settings = {};
+    const settings = {
+        COORDINATE_TO_ORIGIN: true,
+        USE_FAST_BOOLS: true
+    };
     let rawFileData = new Uint8Array(data);
     const modelID = ifcApi.OpenModel(rawFileData, settings); // eslint-disable-line
     ifcApi.LoadAllGeometry(modelID); // eslint-disable-line
@@ -61,14 +52,9 @@ export const ifcDataToJSON = ({ data, ifcApi }) => {
             const positions = new Float64Array(ifcVertices.length / 2);
             const normals = new Float32Array(ifcVertices.length / 2);
             for (let j = 0; j < ifcVertices.length; j += 6) {
-                const [x, y, z] = applyMatrix(
-                    coordinationMatrix,
-                    applyMatrix(placedGeometry.flatTransformation, [
-                        ifcVertices[j],
-                        ifcVertices[j + 1],
-                        ifcVertices[j + 2]
-                    ], Cesium), Cesium
-                );
+                const x = ifcVertices[j];           // index = 0
+                const y = ifcVertices[j + 1];       // index = 1
+                const z = ifcVertices[j + 2];       // index = 2
                 if (x < minx) { minx = x; }
                 if (y < miny) { miny = y; }
                 if (z < minz) { minz = z; }
@@ -78,15 +64,16 @@ export const ifcDataToJSON = ({ data, ifcApi }) => {
                 positions[j / 2] = x;
                 positions[j / 2 + 1] = y;
                 positions[j / 2 + 2] = z;
-                normals[j / 2] = ifcVertices[j + 3];
-                normals[j / 2 + 1] = ifcVertices[j + 4];
-                normals[j / 2 + 2] = ifcVertices[j + 5];
+                normals[j / 2] = ifcVertices[j + 3];        // index = 3
+                normals[j / 2 + 1] = ifcVertices[j + 4];    // index = 4
+                normals[j / 2 + 2] = ifcVertices[j + 5];    // index = 5
             }
             geometry.push({
                 color: placedGeometry.color,
                 positions,
                 normals,
-                indices: Array.from(ifcIndices)
+                indices: Array.from(ifcIndices),
+                flatTransformation: placedGeometry.flatTransformation
             });
             ifcGeometry.delete();
         }
@@ -143,15 +130,16 @@ export const getCapabilities = (url) => {
                     // todo: read IFCProjectedCRS, IFCMapCONVERSION in case of IFC4
                     let bbox = {
                         bounds: capabilities.version !== "IFC4" ? {
-                            minx: 0,
-                            miny: 0,
-                            maxx: 0,
-                            maxy: 0
+                            minx: 0 - 2,
+                            miny: 0 - 2,
+                            maxx: 0 + 2,
+                            maxy: 0 + 2
                         } : {
-                            minx: 0,
-                            miny: 0,
-                            maxx: 0,
-                            maxy: 0},
+                            minx: 0 - 2,
+                            miny: 0 - 2,
+                            maxx: 0 + 2,
+                            maxy: 0 + 2
+                        },
                         crs: 'EPSG:4326'
                     };
                     return { modelData: data, ...capabilities, ...(bbox && { bbox })};

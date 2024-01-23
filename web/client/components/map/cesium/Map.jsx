@@ -117,7 +117,8 @@ class CesiumMap extends React.Component {
                 : undefined,
             requestRenderMode: true,
             maximumRenderTimeChange: Infinity,
-            skyBox: false
+            skyBox: false,
+            scene3DOnly: true
         }, this.getMapOptions(this.props.mapOptions)));
 
         // prevent default behavior

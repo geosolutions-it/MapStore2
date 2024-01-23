@@ -115,6 +115,8 @@
             "templateError": "There was an error applying the template to the information returned by the server, please check the template",
             "templatePreview": "Template preview",
             "heightOffset": "Height offset (m)",
+            "modelCenterLat": "Center's Latitude (DD)",
+            "modelCenterLng": "Center's Longitude (DD)",
             "wmsLayerTileSize": "Tile size (WMS)",
             "serverType": "Server Type",
             "formatError": "It was not possible to fetch format and information sheet format from the service configured. Probably you are using a No Vendor service and this is not supported (e.g. GeoNetwork)",

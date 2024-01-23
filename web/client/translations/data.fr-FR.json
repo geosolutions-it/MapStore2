@@ -115,6 +115,8 @@
             "templateError": "Une erreur s'est produite lors de l'application du modèle aux informations renvoyées par le serveur, veuillez vérifier le modèle",
             "templatePreview": "Aperçu du modèle",
             "heightOffset": "Décalage en hauteur (m)",
+            "modelCenterLat": "Latitude du centre (DD)",
+            "modelCenterLng": "Longitude du centre(DD)",
             "wmsLayerTileSize": "Taille de la tuile (WMS)",
             "serverType": "Type de serveur",
             "formatError": "Il n'a pas été possible de récupérer le format et le format de la fiche d'information à partir du service configuré. Vous utilisez probablement un service No Vendor et celui-ci n'est pas pris en charge (par exemple GeoNetwork)",

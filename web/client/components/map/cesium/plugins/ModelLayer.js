@@ -7,38 +7,40 @@
  */
 
 import * as Cesium from 'cesium';
+import isEqual from 'lodash/isEqual';
 import Layers from '../../../../utils/cesium/Layers';
 import { ifcDataToJSON, getWebIFC } from '../../../../api/Model';     // todo: change path to MODEL
 
-
-const transform = (positions, coords, matrix) => {
-    let transformed = [];
-    for (let i = 0; i < positions.length; i += 3) {
-        const cartesian = Cesium.Matrix4.multiplyByPoint(matrix, new Cesium.Cartesian3(
-            positions[i] + coords[0],
-            positions[i + 1] + coords[1],
-            positions[i + 2] + coords[2]
-        ), new Cesium.Cartesian3());
-        transformed.push(
-            cartesian.x,
-            cartesian.y,
-            cartesian.z
+const updatePrimitivesPosition = (primitives, center) => {
+    for (let i = 0; i < primitives.length; i++) {
+        const primitive = primitives.get(i);
+        primitive.modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(
+            // review the center properties
+            // based on other existing layer parameters
+            Cesium.Cartesian3.fromDegrees(...(center ? [
+                center[0],
+                center[1],
+                center[2]
+            ] : [0, 0, 0]))
         );
     }
-    return transformed;
 };
-
+const updatePrimitivesVisibility = (primitives, visibilityOption) => {
+    for (let i = 0; i < primitives.length; i++) {
+        const primitive = primitives.get(i);
+        primitive.show = visibilityOption;
+    }
+};
 const getGeometryInstances = ({
-    meshes,
-    center,
-    options
+    meshes
 }) => {
     return meshes
         .map((mesh) => mesh.geometry.map(({
             color,
             positions,
             normals,
-            indices
+            indices,
+            flatTransformation
         }) => {
             const rotationMatrix = Cesium.Matrix4.fromTranslationQuaternionRotationScale(
                 new Cesium.Cartesian3(0.0, 0.0, 0.0),       // 0,0
@@ -49,30 +51,15 @@ const getGeometryInstances = ({
                 new Cesium.Cartesian3(1.0, 1.0, 1.0),
                 new Cesium.Matrix4()
             );
-            const transformedPositions = transform(
-                positions,
-                [-center[0], -center[1], -center[2]],
-                Cesium.Matrix4.multiply(
-                    Cesium.Transforms.eastNorthUpToFixedFrame(
-                        // review the center properties
-                        // based on other existing layer parameters
-                        Cesium.Cartesian3.fromDegrees(...(options.center ? [
-                            options.center[0],
-                            options.center[1],
-                            options.center[2]
-                        ] : [0, 0, 0]))
-                    ),
-                    rotationMatrix,
-                    new Cesium.Matrix4()
-                )
-            );
-            const transformedNormals = transform(
-                normals,
-                [0, 0, 0],
-                rotationMatrix
-            );
+            const transformedPositions = positions;
+            const transformedNormals = normals;
             return new Cesium.GeometryInstance({
                 id: mesh.id,
+                modelMatrix: Cesium.Matrix4.multiply(
+                    rotationMatrix,
+                    flatTransformation,
+                    new Cesium.Matrix4()
+                ),
                 geometry: new Cesium.Geometry({
                     attributes: {
                         position: new Cesium.GeometryAttribute({
@@ -91,8 +78,6 @@ const getGeometryInstances = ({
                     primitiveType: Cesium.PrimitiveType.TRIANGLES,
                     boundingSphere: Cesium.BoundingSphere.fromVertices(transformedPositions)
                 }),
-
-                // modelMatrix: ,
                 attributes: {
                     color: Cesium.ColorGeometryInstanceAttribute.fromColor(new Cesium.Color(
                         color.x,
@@ -157,6 +142,8 @@ const createLayer = (options, map) => {
                     opaquePrimitive.msId = options.id;
                     opaquePrimitive.id = 'opaquePrimitive';
                     primitives.add(opaquePrimitive);
+                    updatePrimitivesPosition(primitives, options.center);
+
                 });
         });
     map.scene.primitives.add(primitives);
@@ -171,17 +158,32 @@ const createLayer = (options, map) => {
             }
         },
         setVisible: (
-            // newVisiblity
+            newVisibility
         ) => {
             // todo: add the logic of setting visibility
+            if (primitives && map) {
+                updatePrimitivesVisibility(primitives, newVisibility);
+            }
         }
     };
 };
 
 Layers.registerType('model', {
     create: createLayer,
-    update: (/* layer, newOptions, oldOptions, map */) => {
-        // todo: here we can put change opacity logic
+    update: (layer, newOptions, oldOptions) => {
+        if (layer?.primitives && !isEqual(newOptions?.center, oldOptions?.center)) {
+            // update layer.bbox
+            layer.bbox = {
+                ...layer.bbox,
+                bounds: {
+                    minx: newOptions?.center?.[0] || 0 - 2,
+                    miny: newOptions?.center?.[1] || 0 - 2,
+                    maxx: newOptions?.center?.[0] || 0 + 2,
+                    maxy: newOptions?.center?.[1] || 0 + 2
+                }
+            };
+            updatePrimitivesPosition(layer?.primitives, newOptions?.center);
+        }
         return null;
     }
 });
