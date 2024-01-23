@@ -761,9 +761,11 @@
             },
             "legend": {
                 "font": "Beschriftungseinstellungen:",
-                "forceLabels": "Beschriftungen erzwingen:",
-                "antiAliasing": "Anti Aliasing Schrift:",
-                "iconsSize": "Symbolgröße:",
+                "forceLabels": "Beschriftungen erzwingen",
+                "antiAliasing": "Anti Aliasing Schrift",
+                "forceIconsSize": "Überschreiben Sie die Symbolgröße",
+                "iconsWidth": "Breite der Symbole:",
+                "iconsHeight": "Höhe der Symbole:",
                 "dpi": "dpi:"
             },
             "rotation": "Rotation",
@@ -1834,6 +1836,7 @@
                 "placeholders": {
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "date": "Geben Sie das zu filternde Datum ein...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein..."
                 },
@@ -1841,6 +1844,7 @@
                     "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
                     "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
                     "geometry": {
@@ -1848,6 +1852,33 @@
                         "enabled": "Klicken Sie auf die Karte, um ein Feature auszuwählen / Alt + Maus ziehen, um einen Boxfilter zu zeichnen. Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere Features auszuwählen",
                         "applied": "Auswahl bereinigen"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Beispiele...",
+                    "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
+                    "date": "Geben Sie das zu filternde Datum ein...",
+                    "number": "Geben Sie eine Zahl ...",
+                    "range": "Bitte eingeben ..."
+                },
+                "tooltips": {
+                    "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
+                    "default": "Beispiele...",
+                    "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
+                    "number": "Geben Sie eine Zahl ...",
+                    "date": "Geben Sie ein Datum. Verwenden Sie {format} für das Datum.",
+                    "geometry": {
+                        "disabled": "Klicken Sie auf die Karte, um zu filtern / Alt + Maus ziehen, um einen Box-Filter zu zeichnen. Halten Sie auch die Strg-Taste gedrückt, um dem aktuellen Filter weitere Funktionen hinzuzufügen",
+                        "enabled": "Klicken Sie auf die Karte, um ein Feature auszuwählen / Alt + Maus ziehen, um einen Boxfilter zu zeichnen. Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere Features auszuwählen",
+                        "applied": "Auswahl bereinigen"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Start",
+                    "end": "Ende"
                 }
             },
             "toolbar": {
@@ -2504,8 +2535,8 @@
             "fontStyleItalic": "Italic",
             "fontWeightNormal": "Normal",
             "fontWeightBold": "Bold",
-            "boolTrue": "True",
-            "boolFalse": "False",
+            "boolTrue": "Aktiv",
+            "boolFalse": "Inaktiv",
             "colorMapType": {
               "label": "Farbkartentyp",
               "ramp": "Rampe",
@@ -2637,7 +2668,13 @@
             "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\"",
             "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft.",
             "msTranslateX": "Versatz x",
-            "msTranslateY": "Versatz y"
+            "msTranslateY": "Versatz y",
+            "geometryHeight": "Geometriehöhe",
+            "msExtrusionRelativeToGeometry": "Extrusion relativ zur Geometrie",
+            "msExtrudedHeight": "Extrudierte Höhe",
+            "msExtrusionColor": "Extrusionsfarbe",
+            "msExtrusionType": "Extrusionstyp",
+            "wall": "Wand"
         },
         "playback": {
             "settings": {
@@ -3101,7 +3138,7 @@
             "title": "Titel",
             "titlePlaceholder": "Den angezeigten Namen eingeben",
             "add": "Hinzufügen",
-            "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel oder 128 x 128 Pixel sein, maximal 500kb",
+            "thumbnailMessage": "Quadratisches Bild mit 128 x 128 Pixel, maximal 500 KB",
             "imageUploadMessage": "Klicken Sie auf oder ziehen Sie sie ab, um ein Bild hinzuzufügen",
             "additionalParameters": "Zusätzliche Parameter",
             "addAdditionalParameterTooltip": "Parameter hinzufügen",
@@ -3921,6 +3958,24 @@
           "messages": {
             "noDataForPosition": "keine Street-View-Daten für diese Position",
             "unknownError": "Unbekannter Fehler, siehe Konsole"
+          },
+          "loadingAPI": "API wird geladen...",
+          "cyclomedia": {
+            "initializing": "Initialisiere Street Smart API...",
+            "loadingAPI": "Lade Street Smart API...",
+            "changeCredentials": "Street Smart-Anmeldeinformationen ändern",
+            "insertCredentials": "Geben Sie Ihre Street Smart-Anmeldeinformationen ein",
+            "emptyDescription": "Klicken Sie auf einen der blauen Punkte auf der Karte, um mit der Durchsuchung der Street-View-Bilder zu beginnen",
+            "username": "Benutzername",
+            "password": "Passwort",
+            "submit": "Senden",
+            "zoomIn": "Bitte zoomen Sie in die Karte, um die Street-View-Abdeckung zu sehen",
+            "errorOccurred": "Fehler aufgetreten: ",
+            "errors": {
+                "invalidCredentials": "Ungültige Anmeldeinformationen",
+                "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
+            },
+            "reloadAPI": "API neu laden"
           }
         },
         "sidebarMenu": {
@@ -3945,6 +4000,9 @@
           "fileSelected": "Datei ausgewählt: ",
           "uomMeters": "meter",
           "source": "Quelle",
+          "export": "Export",
+          "downloadGeoJSON": "GeoJSON",
+          "downloadDXF": "DXF",
           "downloadCSV": "CSV",
           "downloadPNG": "PNG",
           "downloadPDF": "PDF",

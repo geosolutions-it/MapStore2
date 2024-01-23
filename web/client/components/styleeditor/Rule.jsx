@@ -10,7 +10,7 @@ import React, { useRef } from 'react';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import Message from '../I18N/Message';
-import { Alert, Glyphicon } from 'react-bootstrap';
+import { Alert, Glyphicon, Button } from 'react-bootstrap';
 import {
     DragSource as dragSource,
     DropTarget as dropTarget
@@ -28,6 +28,7 @@ import {
  */
 function RuleCard({
     title,
+    icon,
     tools,
     errorId,
     msgParams,
@@ -35,7 +36,9 @@ function RuleCard({
     connectDragSource,
     connectDropTarget,
     isDragging,
-    children
+    children,
+    collapsed,
+    onCollapse = () => {}
 }) {
 
     const elementRef = useRef(null);
@@ -55,6 +58,14 @@ function RuleCard({
                 {draggable && <div className="ms-style-rule-grab-handle">
                     <Glyphicon glyph="grab-handle"/>
                 </div>}
+                <Button
+                    className="ms-rule-collapse"
+                    onClick={() => onCollapse(!collapsed)}
+                    style={!collapsed ? { transform: 'rotate(90deg)' } : {}}
+                >
+                    <Glyphicon glyph="next"/>
+                </Button>
+                {icon}
                 <div className="ms-style-rule-head-info">
                     {title}
                 </div>
@@ -65,9 +76,9 @@ function RuleCard({
             {errorId && <Alert bsStyle="danger">
                 <Message msgId={errorId} msgParams={msgParams} />
             </Alert>}
-            <ul className="ms-style-rule-body">
+            {!collapsed ? <ul className="ms-style-rule-body">
                 {children}
-            </ul>
+            </ul> : null}
         </li>
     );
 }

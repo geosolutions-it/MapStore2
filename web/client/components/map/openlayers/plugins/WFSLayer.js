@@ -7,31 +7,93 @@
  */
 
 import Layers from '../../../../utils/openlayers/Layers';
+import { ServerTypes } from '../../../../utils/LayersUtils';
+
 
 import {getStyle} from '../VectorStyle';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
+import {bbox, all, tile} from 'ol/loadingstrategy.js';
+
 import GeoJSON from 'ol/format/GeoJSON';
 
-import { getFeature, describeFeatureType } from '../../../../api/WFS';
+import { getFeature, getFeatureLayer } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
-import { needsReload, extractGeometryType } from '../../../../utils/WFSLayerUtils';
+import { getCredentials } from '../../../../utils/SecurityUtils';
+import { needsReload } from '../../../../utils/WFSLayerUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
-
+const needsCredentials = (options) => {
+    const security = options?.security || {};
+    const {type, sourceId} = security;
+    const {username, password} = getCredentials(sourceId) ?? {};
+    return type?.toLowerCase?.() === "basic" && (!username || !password);
+};
+const getConfig = (options) => {
+    const security = options?.security || {};
+    const config = {};
+    const {type, sourceId} = security;
+    const credentials = getCredentials(sourceId);
+    if (credentials) {
+        const {username, password} = credentials;
+        switch (type?.toLowerCase?.()) {
+        case "basic":
+            config.headers = {
+                Authorization: `Basic ${btoa(`${username}:${password}`)}`
+            };
+            break;
+        case "bearer":
+            config.headers = {
+                Authorization: `Bearer ${credentials.token}`
+            };
+            break;
+        default:
+            break;
+        }
+    }
+    return config;
+};
 const createLoader = (source, options) => (extent, resolution, projection) => {
-    const params = optionsToVendorParams(options);
-    var proj = projection.getCode();
+    let proj = projection.getCode();
+    let req;
+    let filters = [];
     const onError = () => {
         source.removeLoadedExtent(extent);
         source.dispatchEvent('vectorerror');
     };
-    getFeature(options.url, options.name, {
-        // bbox: extent.join(',') + ',' + proj,
-        outputFormat: "application/json",
-        // maxFeatures: 3600, // This looks the internal openlayers limit. TODO: investigate more
-        srsname: proj,
-        ...params
-    }).then(response => {
+    if (options.serverType === ServerTypes.NO_VENDOR) {
+
+        if (needsCredentials(options)) {
+            req = new Promise((resolve, reject) => {reject();});
+        } else {
+            if (options?.strategy === 'bbox') {
+            // here bbox filter is
+                const [left, bottom, right, top] = extent;
+
+                filters = [{
+                    spatialField: {
+                        operation: 'BBOX',
+                        geometry: {
+                            projection: proj,
+                            extent: [[left, bottom, right, top]] // use array because bbox is buggy
+                        }
+                    }
+                }];
+            }
+            req = getFeatureLayer(options, {filters, proj}, getConfig(options));
+        }
+    } else {
+        const params = optionsToVendorParams(options);
+        const config = getConfig(options);
+        req = getFeature(options.url, options.name, {
+            // bbox: extent.join(',') + ',' + proj,
+            outputFormat: "application/json",
+            // maxFeatures: 3600, // This looks the internal openlayers limit. TODO: investigate more
+            srsname: proj,
+            ...params
+        }, config);
+    }
+
+    req.then(response => {
         if (response.status === 200) {
             source.addFeatures(
                 source.getFormat().readFeatures(response.data));
@@ -45,17 +107,21 @@ const createLoader = (source, options) => (extent, resolution, projection) => {
     });
 };
 /**
- * Generate the OL style from options and geometryType. It workarounds some issues
+ * Generate the OL style from options. It workarounds some issues
  * @param {object} options MapStore's layer options
- * @param {string} geometryType the geometry type
  * @param {object} layer the openlayers layer
  */
-const getWFSStyle = (layer, options, geometryType, map) => {
-    return getStyle(applyDefaultStyleToVectorLayer({ ...options, style: { ...(options.style || {}), type: geometryType }, asPromise: true }))
+const getWFSStyle = (layer, options, map) => {
+    const collection = layer.getSource().get('@wfsFeatureCollection') || {};
+    return getStyle(
+        applyDefaultStyleToVectorLayer({
+            ...options,
+            features: collection.features
+        })
+    )
         .then((style) => {
             if (style) {
                 if (style.__geoStylerStyle) {
-                    const collection = layer.getSource().get('@wfsFeatureCollection') || {};
                     style({ map, features: collection.features })
                         .then((olStyle) => {
                             layer.setStyle(olStyle);
@@ -66,17 +132,25 @@ const getWFSStyle = (layer, options, geometryType, map) => {
             }
         });
 };
+const getStrategy = (options) => {
+    if (options.strategy === 'bbox') {
+        return bbox;
+    }
+    if (options.strategy === 'all') {
+        return all;
+    }
+    if (options.strategy === 'tile') {
+        return tile;
+    }
+    return null;
+};
 
 /**
  * Fetch describeFeatureType if missing and set the style accordingly with the geometry type.
  * @param {object} layer the openlayers layer
  * @param {object} options MapStore layer configuration
  */
-const updateStyle = (layer, options, map) => layer.geometryType
-    ? getWFSStyle(layer, options, layer.geometryType, map)
-    : describeFeatureType(options.url, options.name)
-        .then(extractGeometryType)
-        .then(geometryType => getWFSStyle(layer, options, geometryType, map));
+const updateStyle = (layer, options, map) => getWFSStyle(layer, options, map);
 
 /**
  * WFS Layer for MapStore. Openlayers implementation.
@@ -88,6 +162,7 @@ Layers.registerType('wfs', {
     create: (options, map) => {
 
         const source = new VectorSource({
+            strategy: getStrategy(options) || undefined, // this can not be null, must be
             format: new GeoJSON()
         });
         let layer;
@@ -99,6 +174,7 @@ Layers.registerType('wfs', {
                 }
             })
         );
+
         layer = new VectorLayer({
             msId: options.id,
             source: source,

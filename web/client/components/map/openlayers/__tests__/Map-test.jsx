@@ -170,9 +170,9 @@ describe('OpenlayersMap', () => {
         const testHandlers = {
             handler: () => { }
         };
-        var spy = expect.spyOn(testHandlers, 'handler');
+        const spy = expect.spyOn(testHandlers, 'handler');
 
-        var options = {
+        const options = {
             "url": "http://fake",
             "name": "mylayer",
             "visibility": true,
@@ -199,7 +199,7 @@ describe('OpenlayersMap', () => {
         expect(spy.calls[0].arguments.length).toBe(2);
         expect(spy.calls[0].arguments[0].pixel).toBeTruthy();
         expect(spy.calls[0].arguments[0].latlng).toBeTruthy();
-        expect(spy.calls[0].arguments[0].latlng.z).toBeTruthy();
+        expect(spy.calls[0].arguments[0].latlng.z).toBe('');
         expect(spy.calls[0].arguments[0].modifiers).toBeTruthy();
         expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
         expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
@@ -242,9 +242,9 @@ describe('OpenlayersMap', () => {
         const testHandlers = {
             handler: () => { }
         };
-        var spy = expect.spyOn(testHandlers, 'handler');
+        const spy = expect.spyOn(testHandlers, 'handler');
 
-        var options = {
+        const options = {
             "url": "http://fake",
             "name": "mylayer",
             "visibility": true,
@@ -273,7 +273,7 @@ describe('OpenlayersMap', () => {
         expect(spy.calls[0].arguments[0].pixel).toBeTruthy();
         expect(spy.calls[0].arguments[0].x).toBeTruthy();
         expect(spy.calls[0].arguments[0].y).toBeTruthy();
-        expect(spy.calls[0].arguments[0].z).toBeTruthy();
+        expect(spy.calls[0].arguments[0].z).toBe('');
     });
 
     it('click on feature', (done) => {
@@ -499,8 +499,8 @@ describe('OpenlayersMap', () => {
         expect(map.map.getLayers().getLength()).toBe(1);
     });
 
-    it('check layers for elevation', () => {
-        var options = {
+    it('check layers for elevation (deprecated)', () => {
+        const options = {
             "url": "http://fake",
             "name": "mylayer",
             "visibility": true,
@@ -510,7 +510,26 @@ describe('OpenlayersMap', () => {
             <OpenlayersLayer type="wms" srs="EPSG:3857" options={options} />
         </OpenlayersMap>, document.getElementById("map"));
         expect(map).toBeTruthy();
-        expect(map.map.get('elevationLayer')).toBeTruthy();
+        const msElevationLayers = map.map.get('msElevationLayers');
+        expect(msElevationLayers).toBeTruthy();
+        expect(msElevationLayers.length).toBe(1);
+    });
+
+    it('check layers for elevation', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}>
+            <OpenlayersLayer type={options.type} srs="EPSG:3857" options={options} />
+        </OpenlayersMap>, document.getElementById("map"));
+        expect(map).toBeTruthy();
+        const msElevationLayers = map.map.get('msElevationLayers');
+        expect(msElevationLayers).toBeTruthy();
+        expect(msElevationLayers.length).toBe(1);
     });
 
     it('check if the handler for "moveend" event is called after setZoom', (done) => {

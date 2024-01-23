@@ -1739,6 +1739,26 @@
           }
         }
       },
+      "attributeFilter": {
+        "placeholders": {
+            "default": "Search...",
+            "string": "Type text to filter...",
+            "date": "Type date to filter...",
+            "number": "Type number to filter..."
+        },
+        "tooltips": {
+            "editMode": "Quick search is not available in edit mode",
+            "default": "Search...",
+            "string": "Type text to filter...",
+            "number": "Type a number ...",
+            "date": "Type a date. Use {format} for the date.",
+            "geometry": {
+                "disabled": "Filter clicking on map / Alt + mouse drag to draw a box filter. Hold also ctrl to add more features to the current filter",
+                "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
+                "applied": "Clean the selection"
+            }
+        }
+    },
       "toolbar": {
         "synchPopoverTitle": "Sync map with filter ",
         "synchPopoverText": "Use this tool to synchronize the map with the selected filter",

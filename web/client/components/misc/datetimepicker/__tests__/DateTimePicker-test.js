@@ -44,7 +44,7 @@ describe('DateTimePicker component', () => {
 
     it('DateTimePicker with value and operator prop', function() {
         const today = new Date();
-        ReactDOM.render(<DateTimePicker value={today} operator="<" />, document.getElementById("container"));
+        ReactDOM.render(<DateTimePicker value={today} operator="<" type="date" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const input = container.querySelector('input');
         const match = /\s*(!==|!=|<>|<=|>=|===|==|=|<|>)?(.*)/.exec(input.value);
@@ -53,37 +53,38 @@ describe('DateTimePicker component', () => {
     });
 
     it('DateTimePicker show calendar on calendar button click', function() {
-        ReactDOM.render(<DateTimePicker />, document.getElementById("container"));
+        ReactDOM.render(<DateTimePicker type="date" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const button = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(button);
-        const calendar = container.querySelector('.rw-calendar-popup');
-        expect(calendar.style.display).toBe('block');
+        const calendar = document.querySelector('.shadow-soft.picker-container .rw-calendar.rw-widget');
+        expect(calendar).toExist();
+        expect(calendar.style.display).toNotEqual('none');
     });
     it('calendar opens to today when value is null or undefined', function() {
-        ReactDOM.render(<DateTimePicker/>, document.getElementById("container"));
+        ReactDOM.render(<DateTimePicker type="date" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const button = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(button);
-        const monthLabel = document.querySelector('#container > div > div.rw-calendar-popup.rw-popup-container .rw-btn-view');
+        const monthLabel = document.querySelector('.ms-popover-overlay > div > div.shadow-soft .rw-calendar.rw-widget .rw-btn-view');
         expect(monthLabel.innerHTML).toBe(moment().format('MMMM YYYY'));
     });
     it('calendar opens at the values date', function() {
         const value = "01-01-2010";
-        ReactDOM.render(<DateTimePicker value={value} />, document.getElementById("container"));
+        ReactDOM.render(<DateTimePicker type="date" value={value} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const button = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(button);
-        const monthLabel = document.querySelector('#container > div > div.rw-calendar-popup.rw-popup-container .rw-btn-view');
+        const monthLabel = document.querySelector('.ms-popover-overlay > div > div.shadow-soft .rw-calendar.rw-widget .rw-btn-view');
         expect(monthLabel.innerHTML).toBe(moment(value).format('MMMM YYYY'));
     });
     it('DateTimePicker show hours on time button click', function() {
-        ReactDOM.render(<DateTimePicker />, document.getElementById("container"));
+        ReactDOM.render(<DateTimePicker type="time" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const button = container.querySelector('.rw-btn-time');
         TestUtils.Simulate.click(button);
-        const hourPopup = container.querySelector('.rw-popup-container');
-        expect(hourPopup.style.display).toBe('block');
+        const hourPopup = document.querySelector('.ms-popover-overlay > div > div.shadow-soft .dateTime-picker-hours');
+        expect(hourPopup.style.display).toNotEqual('none');
     });
 
     it('DateTimePicker can parse !== operator', function(done) {
@@ -94,7 +95,7 @@ describe('DateTimePicker component', () => {
             expect(match[1]).toEqual('!==');
             done();
         };
-        ReactDOM.render(<DateTimePicker onChange={handleChange} />, document.getElementById("container"));
+        ReactDOM.render(<DateTimePicker onChange={handleChange} type="date-time" />, document.getElementById("container"));
         const container = document.getElementById('container');
         const input = container.querySelector('input');
         TestUtils.Simulate.focus(input);
@@ -152,8 +153,8 @@ describe('DateTimePicker component', () => {
         const container = document.getElementById('container');
         const calendar = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(calendar);
-        const dropUp = container.querySelector('.rw-dropup');
-        expect(dropUp).toExist();
+        const dropUp = document.querySelector('.shadow-soft.picker-container div').getAttribute('popupposition');
+        expect(dropUp).toEqual('top');
         done();
     });
 
@@ -169,7 +170,7 @@ describe('DateTimePicker component', () => {
         const container = document.getElementById('container');
         const calendar = container.querySelector('.rw-btn-calendar');
         TestUtils.Simulate.click(calendar);
-        const day = container.querySelector('.rw-calendar-grid tbody tr td:first-child .rw-btn');
+        const day = document.querySelector('.shadow-soft.picker-container tbody tr td:first-child .rw-btn');
         TestUtils.Simulate.click(day);
     });
 });

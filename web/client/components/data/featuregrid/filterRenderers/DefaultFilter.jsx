@@ -15,11 +15,11 @@ export default compose(
         onValueChange: () => {}
     }),
     withHandlers({
-        onChange: props => ({value, attribute} = {}) => {
+        onChange: props => ({value, attribute, inputOperator} = {}) => {
             props.onValueChange(value);
             props.onChange({
                 value: value,
-                operator: "=",
+                operator: inputOperator || "=",
                 type: props.type,
                 attribute
             });

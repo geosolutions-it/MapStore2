@@ -221,7 +221,6 @@ class OpenlayersMap extends React.Component {
                     });
                     const intersectedFeatures = this.getIntersectedFeatures(map, event?.pixel);
                     const tLng = normalizeLng(coords.x);
-                    const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                     this.props.onClick({
                         pixel: {
                             x: event.pixel[0],
@@ -230,7 +229,7 @@ class OpenlayersMap extends React.Component {
                         latlng: {
                             lat: coords.y,
                             lng: tLng,
-                            z: getElevation && getElevation(pos, event.pixel) || undefined
+                            z: this.getElevation(pos, event.pixel)
                         },
                         rawPos: event.coordinate.slice(),
                         modifiers: {
@@ -396,7 +395,12 @@ class OpenlayersMap extends React.Component {
         const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
         return intersectedFeatures;
     };
-
+    getElevation(pos, pixel) {
+        const elevationLayers = this.map.get('msElevationLayers') || [];
+        return elevationLayers?.[0]?.get('getElevation')
+            ? elevationLayers[0].get('getElevation')(pos, pixel)
+            : undefined;
+    }
     render() {
         const map = this.map;
         const children = map ? React.Children.map(this.props.children, child => {
@@ -421,7 +425,6 @@ class OpenlayersMap extends React.Component {
 
     mouseMoveEvent = (event) => {
         if (!event.dragging && event.coordinate) {
-            const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
             let pos = event.coordinate.slice();
             let coords = toLonLat(pos, this.props.projection);
             let tLng = coords[0] / 360 % 1 * 360;
@@ -431,10 +434,11 @@ class OpenlayersMap extends React.Component {
                 tLng = tLng - 360;
             }
             const intersectedFeatures = this.getIntersectedFeatures(this.map, event?.pixel);
+            const elevation = this.getElevation(pos, event.pixel);
             this.props.onMouseMove({
                 y: coords[1] || 0.0,
                 x: tLng || 0.0,
-                z: this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation')(pos, event.pixel) || undefined,
+                z: elevation,
                 crs: "EPSG:4326",
                 pixel: {
                     x: event.pixel[0],
@@ -443,7 +447,7 @@ class OpenlayersMap extends React.Component {
                 latlng: {
                     lat: coords[1],
                     lng: tLng,
-                    z: getElevation && getElevation(pos, event.pixel) || undefined
+                    z: elevation
                 },
                 lat: coords[1],
                 lng: tLng,

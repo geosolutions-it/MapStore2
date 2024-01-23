@@ -28,6 +28,7 @@ import '../plugins/BingLayer';
 import '../plugins/MapQuest';
 import '../plugins/WFSLayer';
 import '../plugins/VectorLayer';
+import '../plugins/ElevationLayer';
 
 let mockAxios;
 
@@ -268,7 +269,8 @@ describe('Leaflet layer', () => {
     });
 
     it('creates a wms elevation layer for leaflet map', () => {
-        var options = {
+        const options = {
+            "id": 'elevation',
             "type": "wms",
             "visibility": true,
             "name": "nurc:Arc_Sample",
@@ -278,18 +280,18 @@ describe('Leaflet layer', () => {
             "url": "http://sample.server/geoserver/wms"
         };
         // create layers
-        var layer = ReactDOM.render(
+        const layer = ReactDOM.render(
             <LeafLetLayer type="wms"
                 options={options} map={map} />, document.getElementById("container"));
-        var lcount = 0;
+        let lcount = 0;
 
-        expect(layer).toExist();
+        expect(layer).toBeTruthy();
         // count layers
         map.eachLayer(function() { lcount++; });
         expect(lcount).toBe(1);
         let elevationFunc;
         map.eachLayer((l) => {elevationFunc = l.getElevation;});
-        expect(elevationFunc).toExist();
+        expect(elevationFunc).toBeTruthy();
     });
     it('creates a wms layer with credits', () => {
         const CREDITS1 = {
@@ -1757,5 +1759,23 @@ describe('Leaflet layer', () => {
         expect(layer).toBeTruthy();
         expect(map.hasLayer(layer.layer)).toBe(true);
 
+    });
+    it('should create am elevation layer from wms layer', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <LeafLetLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.getElevation).toBeTruthy();
     });
 });

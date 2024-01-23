@@ -17,8 +17,15 @@ import playback from '../epics/playback';
 import dimensionReducers from '../reducers/dimension';
 import playbackReducers from '../reducers/playback';
 import { currentTimeSelector } from '../selectors/dimension';
-import { loadingSelector, statusSelector } from '../selectors/playback';
+import { loadingSelector, playbackMetadataSelector, playbackRangeSelector, playbackSettingsSelector, statusSelector } from '../selectors/playback';
 import PlaybackComp from './playback/Playback';
+import { registerCustomSaveHandler } from '../selectors/mapsave';
+
+registerCustomSaveHandler('playback', (state) => ({
+    settings: playbackSettingsSelector(state),
+    playbackRange: playbackRangeSelector(state),
+    metadata: playbackMetadataSelector(state)
+}));
 
 const Playback = compose(
     defaultProps({

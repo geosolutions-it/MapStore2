@@ -102,7 +102,7 @@ describe('CesiumMap', () => {
         expect(ref.map.imageryLayers.length).toBe(1);
     });
 
-    it('check layers for elevation', () => {
+    it('check layers for elevation (deprecated)', () => {
         const options = {
             "url": "http://fake",
             "name": "mylayer",
@@ -118,6 +118,24 @@ describe('CesiumMap', () => {
         expect(ref).toBeTruthy();
         expect(ref.map.terrainProvider).toBeTruthy();
         expect(ref.map.terrainProvider.layerName).toBe('mylayer');
+    });
+    it('check layers for elevation', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        let ref;
+        act(() => {
+            ReactDOM.render(<CesiumMap ref={value => { ref = value; } } center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                <CesiumLayer type={options.type} options={options} />
+            </CesiumMap>, document.getElementById("container"));
+        });
+        expect(ref).toBeTruthy();
+        expect(ref.map.msElevationLayers).toBeTruthy();
+        expect(ref.map.msElevationLayers.length).toBe(1);
     });
     it('check wmts layer for custom attribution', () => {
         const options = {
@@ -244,11 +262,11 @@ describe('CesiumMap', () => {
                                         id: 'vector',
                                         features: [
                                             {
-                                                type: 'Feature', properties: { category: 'boundary' },
+                                                type: 'Feature', properties: { category: 'area' },
                                                 geometry: null
                                             },
                                             {
-                                                type: 'Feature', properties: { category: 'area' },
+                                                type: 'Feature', properties: { category: 'boundary' },
                                                 geometry: null
                                             }
                                         ]
@@ -364,14 +382,14 @@ describe('CesiumMap', () => {
                 </CesiumMap>
                 , document.getElementById("container"));
         });
-        waitFor(() => expect(ref.map.dataSourceDisplay.ready).toBe(true), {
+        waitFor(() => expect(!!ref.map.dataSources.get(0).entities.values.length && ref.map.dataSourceDisplay.ready).toBe(true), {
             timeout: 5000
         })
             .then(() => {
                 expect(ref.map.dataSources.length).toBe(1);
                 const dataSource = ref.map.dataSources.get(0);
                 expect(dataSource).toBeTruthy();
-                expect(dataSource.entities.values.length).toBe(2);
+                expect(dataSource.entities.values.length).toBe(4);
                 const mapCanvas = ref.map.canvas;
                 const { width, height } = mapCanvas.getBoundingClientRect();
                 simulateClick(mapCanvas, {

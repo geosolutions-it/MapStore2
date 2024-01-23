@@ -301,6 +301,9 @@ An example of table widget could be:
 
 <img src="../img/widgets/table-ex.jpg" class="ms-docimage"/>
 
+!!! Note
+    If the *Table* is connected to a map or if maps are connected to a *Table*, the user can **Zoom to feature** through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record.
+
 ### Counter
 
 Selecting the counter option, the following window opens:

@@ -319,7 +319,9 @@ Some other feature will break, for example the layer properties will stop workin
 },
 ```
 
-##### special case - The Elevation layer
+##### useForElevation [Deprecated]
+
+This configuration is deprecated. It should be used a terrain layer and elevation layer instead.
 
 !!! note
     This type of layer configuration is still needed to show the elevation data inside the MousePosition plugin. The `terrain` layer section shows a more versatile way of handling elevation but it will work only as visualization in the 3D map viewer.
@@ -971,6 +973,27 @@ This layer differs from the "vector" because all the loading/filtering/querying 
 - `url`: the url of the WFS service.
 - `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.)
 
+##### Experimental properties
+
+Here a list of experimental properties that can be used in the WFS layer configuration, they may change in the future.
+
+- `serverType`: analogous to the `serverType` of the WMS layer. It can be `geoserver` or `no-vendor`. If `no-vendor` is used, the requests will not contain vendor specific parameters like `cql_filter`, and the layer will be treated as a generic WFS layer. The filtering will be done on the "WFS client" side, using the `filter` property. Actually this property is supported only in OpenLayers and only for the map viewer.
+- `security`: this is an object that can contain the security configuration for the layer. It allows to specify if some particular security is configured for this layer, apart from the usual `securityRules` configured globally. It can contain the following properties. Actually this property is supported only in OpenLayers and only for the map viewer:
+
+  - `type`: the type of security to use. It can be `Basic`.
+  - `sourceType`: the type of source to use. It can be  `sessionStorage`. In case of sessionStorage, a `sourceId` must be provided to get the credentials from the sessionStorage.
+  - `sourceId`: the id of the source to use. It can be any string.
+
+    ```json
+    {
+        "security": {
+            "type": "Basic",
+            "sourceType": "sessionStorage",
+            "sourceId": "source-identifier"
+        }
+    }
+    ```
+
 #### Graticule
 
 i.e.
@@ -1042,59 +1065,88 @@ The style body object for the format 3dtiles accepts rules described in the 3d t
 
 #### Terrain
 
-`terrain` layer allows the customization of the elevation profile of the globe mesh in the Cesium 3d viewer. Currently Mapstore supports three different types of [terrain providers](https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html). If no `terrain` layer is defined the default elevation profile for the globe would be the [ellipsoid](https://cesium.com/learn/cesiumjs/ref-doc/EllipsoidTerrainProvider.html) that provides a rather flat profile.
+The `terrain` layer allows the customization of the elevation profile of the globe mesh in the *Cesium 3d viewer*.
 
-The other two available terrain providers are the `wms` (that supports `DDL/BIL` types of assets) and the `cesium` (that support resources compliant with the Cesium terrain format).
+Mapstore supports 3 different types of [terrain providers](https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html):
+
+- `wms`: Supports `DDL/BIL` types of assets using WMS OGC protocol.
+- `cesium`: Support resources compliant with the Cesium terrain format.
+
+If no `terrain` layer is defined the default elevation profile for the globe will be the [ellipsoid](https://cesium.com/learn/cesiumjs/ref-doc/EllipsoidTerrainProvider.html), that is the 3rd type, that provides a rather flat profile.
+
+In order to use these layers with all the maps, they need to be incorporated into the `additionalLayers` configuration of the `Map` plugin (in `localConfig.json` and/or in the context configuration).
+The globe accepts **only one** terrain provider so in case of adding more than one the last one will take precedence to be used to create the elevation profile.
+
+```json
+{
+    "name": "Map",
+    "cfg": {
+        "additionalLayers": [{
+            "type": "terrain",
+            "provider": "wms",
+            "url": "https://host-sample/geoserver/wms",
+            "name": "workspace:layername",  // name of the geoserver resource
+            "littleEndian": false,
+            "visibility": true,
+            "crs": "CRS:84"
+        }]
+    }
+}
+```
+
+##### WMS terrain provider
 
 In order to create a `wms` based mesh there are some requirements that need to be fulfilled:
 
-- a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
-- A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
-  - BILTerrainProvider is used to parse `wms` based mesh. Supports three ways in parsing the metadata of the layer
-    1. Layer configuration with **sufficient metadata** of the layer. This prevents a call to `getCapabilities` eventually improving performance of the parsing of the layer.
-        Mandatory fields are `url`, `name`, `crs`.
+- A GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
+- The Layer to use for the terrain model have to be configured in GeoServer with **BIL 16 bit** output, **big endian mode**, **-9999 as no-data value**
+- A **layer** of `"type": "terrain"` configured in MapStore (map or `additionalLayers`) that uses the `"provider": "wms"` .
 
-        ```json
-        {
-          "type": "terrain",
-          "provider": "wms",
-          "url": "http://hot-sample/geoserver/wms",
-          "name": "workspace:layername",
-          "littleEndian": false,
-          "visibility": true,
-          "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
-        }
-        ```
+The **layer** configuration can be done in 3 different ways:
 
-    2. Layer configuration of `geoserver` layer with layer name *prefixed with workspace*, then the `getCapabilities` is requested only for that layer
-
-        ```json
-        {
-        "type": "terrain",
-        "provider": "wms",
-        "url": "https://host-sample/geoserver/wms", // 'geoserver' url
-        "name": "workspace:layername", // name of the geoserver resource with workspace prefixed
-        "littleEndian": false
-        }
-        ```
-
-    3. Layer configuration of geoserver layer with layer name *not prefixed with workspace* then `getCapabilities` is requested in global scope.
+1. Layer configuration with **sufficient metadata** of the layer. This prevents a call to `getCapabilities` eventually improving performance of the parsing of the layer.
+    Mandatory fields are `url`, `name`, `crs`.
 
     ```json
     {
-      "type": "terrain",
-      "provider": "wms",
-      "url": "https://host-sample/geoserver/wms",
-      "name": "layername",
-      "littleEndian": false
+        "type": "terrain",
+        "provider": "wms",
+        "url": "http://hot-sample/geoserver/wms",
+        "name": "workspace:layername",
+        "littleEndian": false,
+        "visibility": true,
+        "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
+    }
+    ```
+
+2. Layer configuration of `geoserver` layer with layer name *prefixed with workspace*, then the `getCapabilities` is requested only for that layer
+
+    ```json
+    {
+    "type": "terrain",
+    "provider": "wms",
+    "url": "https://host-sample/geoserver/wms", // 'geoserver' url
+    "name": "workspace:layername", // name of the geoserver resource with workspace prefixed
+    "littleEndian": false
+    }
+    ```
+
+3. Layer configuration of geoserver layer with layer name *not prefixed with workspace* then `getCapabilities` is requested in global scope.
+
+    ```json
+    {
+        "type": "terrain",
+        "provider": "wms",
+        "url": "https://host-sample/geoserver/wms",
+        "name": "layername",
+        "littleEndian": false
     }
     ```
 
 !!! note
-    With `wms` as provider, the format option is not needed, as Mapstore supports only `image/bil` format and is used by default
+    With `wms` as provider, the `format` option is not needed, as Mapstore supports only `image/bil` format and is used by default
 
-Generic layer configuration of type `terrain` and provide `wms` as follows.
-The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider, here all available properties:
+Here all the available properties for the `wms` terrain provider:
 
 ```json
 {
@@ -1118,7 +1170,9 @@ The layer configuration needs to point to the geoserver resource and define the 
 }
 ```
 
-The `terrain` layer of `cesium` type allows using Cesium terrain format compliant services (like Cesium Ion resources or [MapTiler meshes](https://cloud.maptiler.com/tiles/terrain-quantized-mesh-v2/)). The options attributte allows for further customization of the terrain properties (see available options on the Cesium documentation for the [cesium terrain provider](https://cesium.com/learn/cesiumjs/ref-doc/CesiumTerrainProvider.html))
+##### Cesium terrain provider
+
+The `terrain` layer of `cesium` type allows using Cesium terrain format compliant services (like Cesium Ion resources or [MapTiler meshes](https://cloud.maptiler.com/tiles/terrain-quantized-mesh-v2/)). The options attribute allows for further customization of the terrain properties (see available options on the Cesium documentation for the [cesium terrain provider](https://cesium.com/learn/cesiumjs/ref-doc/CesiumTerrainProvider.html))
 
 ```json
 {
@@ -1132,24 +1186,55 @@ The `terrain` layer of `cesium` type allows using Cesium terrain format complian
 }
 ```
 
-In order to use these layers they need to be added to the `additionalLayers` in `localConfig.json`. The globe only accepts one terrain provider so in case of adding more than one the last one will take precedence and be used to create the elevation profile.
+#### Elevation
 
-```json
+This layer provides information related to elevation based on a provided DTM layer. **It does not provide the terrain profile for 3D visualization**, see [terrain](#terrain) layer type for this feature.
+
+!!! Note
+    In the Cesium 3D viewer all the heights are relative to the WGS84 ellipsoid while usually DTM/DEM files could have an elevation value relative to the mean sea level (MSL). So with this layer it's possible to have a terrain layer with the correct WGS84 ellipsoidal height while querying the mouse position with a MSL height.
+
+This requires:
+
+- a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
+- A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
+- a static layer in the Map plugin configuration (use the `additionalLayers` configuration option to share it with all the maps):
+
+in `localConfig.json`
+
+```javascript
 {
     "name": "Map",
     "cfg": {
         "additionalLayers": [{
-            "type": "terrain",
+            "type": "elevation",
             "provider": "wms",
-            "url": "https://host-sample/geoserver/wms",
-            "name": "workspace:layername",  // name of the geoserver resource
-            "littleEndian": false,
+            "url": "/geoserver/wms",
+            "name": "elevation",
             "visibility": true,
-            "crs": "CRS:84"
+            // optional
+            "littleEndian": false,
+            "nodata": -9999
         }]
     }
 }
 ```
+
+The layer will be used for showing elevation in the `MousePosition` plugin (it requires `"showElevation": true` in the plugin configuration)
+
+in `localConfig.json`
+
+```javascript
+{
+    "name": "MousePosition",
+    "cfg": {
+        "showElevation": true,
+        ...
+    }
+}
+```
+
+!!! note
+    This type of layer is introduced in substitution of the of the wms layer [useForElevation](#useforelevation-deprecated) and the main reason is to separate the visualization from the information displayed with the mouse position plugin aligning the behavior of the 2D/3D viewers. The current implementation supports only a WMS layer in format `application/bil16`.
 
 #### Cloud Optimized GeoTIFF (COG)
 
@@ -1163,7 +1248,7 @@ i.e.
     "visibility": false,
     "name": "Name",
     "sources": [
-        { "url": "https://host-sample/cog1.tif" }, 
+        { "url": "https://host-sample/cog1.tif" },
         { "url": "https://host-sample/cog2.tif" }
     ]
 }

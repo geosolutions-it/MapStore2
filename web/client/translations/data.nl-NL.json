@@ -1702,6 +1702,26 @@
                     }
                 }
             },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Zoeken...",
+                    "string": "Typ tekst om te filteren...",
+                    "date": "Typ de datum om te filteren...",
+                    "number": "Typ een getal..."
+                },
+                "tooltips": {
+                    "editMode": "Snel zoeken is niet beschikbaar in de editeermodus",
+                    "default": "Zoeken...",
+                    "string": "Typ tekst om te filteren...</br>Standaard wordt in de hele tekstwaarde gezocht</br>Gebruik <b>*</b> om een willekeurig aantal karakters aan te geven</br>Gebruik <b>.</b> om een enkel karakter aan te geven </br>Plaats <b>!</b> voor een speciaal teken (* of .) om het te behandelen als een normaal karakter</br>",
+                    "number": "Typ een getal ...",
+                    "date": "Typ een datum . Gebruik {format} voor de datum.",
+                    "geometry": {
+                        "disabled": "Filter door te klikken op de kaart / Alt + sleep muis om filtervenster te tekenen. Hou ctrl ingedrukt om meerdere afzonderlijke objecten te selecteren",
+                        "enabled": "Klik op de kaart om de resultaten te filteren / Alt + sleep muis om filtervenster te tekenen. Hou ctrl ingedrukt om meerdere afzonderlijke objecten te selecteren",
+                        "applied": "Verwijder de filter met een muisklik"
+                    }
+                }
+            },
             "toolbar": {
                 "synchPopoverTitle": "Synchroniseer kaart met filter ",
                 "synchPopoverText": "Gebruik deze tool om de kaart te synchroniseren met de geselecteerde filter",

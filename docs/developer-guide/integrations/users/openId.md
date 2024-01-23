@@ -124,7 +124,7 @@ Create/edit `mapstore-ovr.properties` file (in data-dir or class path) to config
 
 ```properties
 # enables the keycloak OpenID Connect filter
-keycloakOAuth2Config.enabled=false
+keycloakOAuth2Config.enabled=true
 
 # Configuration
 keycloakOAuth2Config.jsonConfig=<copy-here-the-json-config-from-keycloak-removing-all-the-spaces>
@@ -144,7 +144,7 @@ keycloakOAuth2Config.autoCreateUser=true
 keycloakOAuth2Config.roleMappings=admin:ADMIN,user:USER
 
 # Comma separated list of <keycloak-role>:<geostore-group>
-keycloakOAuth2Config.roleMappings=MY_KEYCLOAK_ROLE:MY_MAPSTORE_GROUP,MY_KEYCLOAK_ROLE2:MY_MAPSTORE_GROUP2
+keycloakOAuth2Config.groupMappings=MY_KEYCLOAK_ROLE:MY_MAPSTORE_GROUP,MY_KEYCLOAK_ROLE2:MY_MAPSTORE_GROUP2
 
 # Default role, when no mapping has matched
 keycloakOAuth2Config.authenticatedDefaultRole=USER

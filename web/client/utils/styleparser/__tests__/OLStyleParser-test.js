@@ -7,7 +7,7 @@
  */
 
 import expect from 'expect';
-import OLStyleParser from '../OLStyleParser';
+import OLStyleParser, {createGetImagesSrc} from '../OLStyleParser';
 
 const parser = new OLStyleParser();
 
@@ -366,4 +366,32 @@ describe('OLStyleParser', () => {
                 }).catch(done);
         });
     });
+    // this function uses canvas and cache to speed up rendering
+    describe('createGetImagesSrc', () => {
+        it('should create a function that returns an image src', () => {
+
+            const image = document.createElement('canvas');
+            // add data to the canvas
+            image.width = 10;
+            image.height = 10;
+            const ctx = image.getContext('2d');
+            ctx.fillStyle = '#ff0000';
+            ctx.fillRect(0, 0, 10, 10);
+
+            const getImageSrc = createGetImagesSrc([image]);
+            const src = getImageSrc(image, 'imageID');
+            expect(src).toBe(image.toDataURL()); // check returns the same src
+            expect(getImageSrc(image, 'imageID')).toBe(src); // check cache
+            const image2 = document.createElement('canvas');
+            // add data to the canvas
+            image2.width = 10;
+            image2.height = 10;
+            const ctx2 = image2.getContext('2d');
+            ctx2.fillStyle = '#00ff00';
+            ctx2.fillRect(0, 0, 10, 10);
+            expect(getImageSrc(image2, 'imageID2')).toBe(image2.toDataURL()); // check different id
+            expect(getImageSrc(image2, 'imageID2')).toNotBe(src); // check different id
+        });
+    });
+
 });

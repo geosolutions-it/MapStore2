@@ -722,9 +722,11 @@
             },
             "legend": {
                 "font": "Configuration des étiquettes :",
-                "forceLabels": "Forcer les étiquettes :",
-                "antiAliasing": "Anti crénelage des polices :",
-                "iconsSize": "Taille d'icône :",
+                "forceLabels": "Forcer les étiquettes",
+                "antiAliasing": "Anti crénelage des polices",
+                "forceIconsSize": "Remplacer la taille des icônes",
+                "iconsWidth": "Largeur des icônes :",
+                "iconsHeight": "Hauteur des icônes :",
                 "dpi": "Ppp :"
             },
             "rotation": "Rotation",
@@ -1796,6 +1798,7 @@
                 "placeholders": {
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
                     "date": "Tapez la date à filtrer...",
                     "number": "Tapez un nombre ou une expression..."
                 },
@@ -1803,6 +1806,7 @@
                     "editMode": "La recherche rapide n'est pas disponible en mode édition",
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
                     "number": "Tapez un nombre ou une expression... Exemples : 10, > 2, < 10",
                     "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
                     "geometry": {
@@ -1810,6 +1814,33 @@
                         "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
                         "applied": "Nettoyer la sélection"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
+                    "date": "Tapez la date à filtrer...",
+                    "number": "Tapez un nombre...",
+                    "range": "Entrez s'il vous plait ..."
+                },
+                "tooltips": {
+                    "editMode": "La recherche rapide n'est pas disponible en mode édition",
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
+                    "number": "Tapez un nombre...",
+                    "date": "Tapez une date. Utilisez {format} pour la date.",
+                    "geometry": {
+                        "disabled": "Filtrer en cliquant sur la carte / Alt + glisser la souris pour dessiner un filtre de boîte. Maintenez également la touche Ctrl pour ajouter plus de fonctionnalités au filtre actuel",
+                        "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
+                        "applied": "Nettoyer la sélection"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Commencer",
+                    "end": "Fin"
                 }
             },
             "toolbar": {
@@ -2466,8 +2497,8 @@
             "fontStyleItalic": "Italic",
             "fontWeightNormal": "Normal",
             "fontWeightBold": "Bold",
-            "boolTrue": "True",
-            "boolFalse": "False",
+            "boolTrue": "Actif",
+            "boolFalse": "Inactif",
             "colorMapType": {
               "label": "Type de carte de couleur",
               "ramp": "Rampe",
@@ -2599,7 +2630,13 @@
             "colorPropertyInfoMessage": "La valeur de la propriété de couleur doit être une chaîne hexadécimale. Exemple : \"#ffffff\"",
             "pointCloudSizeInfo": "Le rayon du nuage de points est appliqué uniquement lorsque les options d'atténuation sont désactivées. L'option d'atténuation est prioritaire sur cette propriété.",
             "msTranslateX": "Décalage x",
-            "msTranslateY": "Décalage y"
+            "msTranslateY": "Décalage y",
+            "geometryHeight": "Hauteur de la géométrie",
+            "msExtrusionRelativeToGeometry": "Extrusion par rapport à la géométrie",
+            "msExtrudedHeight": "Hauteur extrudée",
+            "msExtrusionColor": "Couleur d'extrusion",
+            "msExtrusionType": "Type d'extrusion",
+            "wall": "Mur"
         },
         "playback": {
             "settings": {
@@ -3064,7 +3101,7 @@
             "title": "Titre",
             "titlePlaceholder": "Entrez le nom affiché",
             "add": "Ajouter",
-            "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px ou 128px x 128px, maximum 500kb",
+            "thumbnailMessage": "Images doit être un carré de 128px x 128px, maximum 500kb",
             "imageUploadMessage": "Cliquez ou faites glisser et déposez pour ajouter une image",
             "additionalParameters": "Paramètres additionnels",
             "addAdditionalParameterTooltip": "Ajouter un paramètre",
@@ -3883,6 +3920,24 @@
           "messages": {
             "noDataForPosition": "pas de données Street View pour cette position",
             "unknownError": "erreur inconnue, voir console"
+          },
+          "loadingAPI": "Chargement de l'API...",
+          "cyclomedia": {
+            "initializing": "Initialisation de l'API Street Smart...",
+            "loadingAPI": "Chargement de l'API Street Smart...",
+            "changeCredentials": "Modifier les identifiants Street Smart",
+            "insertCredentials": "Insérer vos identifiants Street Smart",
+            "emptyDescription": "Cliquez sur l'un des points bleus sur la carte pour commencer à parcourir les images de Street View",
+            "username": "Nom d'utilisateur",
+            "password": "Mot de passe",
+            "submit": "Soumettre",
+            "zoomIn": "Veuillez zoomer sur la carte pour voir la couverture Street View",
+            "errorOccurred": "Une erreur s'est produite : ",
+            "errors": {
+                "invalidCredentials": "Identifiants invalides",
+                "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur."
+            },
+            "reloadAPI": "Recharger l'API"
           }
         },
         "sidebarMenu": {
@@ -3907,6 +3962,9 @@
           "fileSelected": "Fichier sélectionné: ",
           "uomMeters": "mètres",
           "source": "Source",
+          "export": "Exporter",
+          "downloadGeoJSON": "GeoJSON",
+          "downloadDXF": "DXF",
           "downloadCSV": "CSV",
           "downloadPNG": "PNG",
           "downloadPDF": "PDF",

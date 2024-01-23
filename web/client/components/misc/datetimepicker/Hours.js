@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { getLocalTimePart } from '../../../utils/TimeUtils';
 
 const getDates = (step) => {
     let min = moment().startOf('day');
@@ -23,15 +24,21 @@ class Hours extends Component {
     static propTypes = {
         onSelect: PropTypes.func,
         onMouseDown: PropTypes.func,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        style: PropTypes.object,
+        value: PropTypes.string,
+        type: PropTypes.string
     }
     static defaultProps = {
         onSelect: () => { },
         onMouseDown: () => {},
-        disabled: false
+        disabled: false,
+        style: {},
+        value: '',
+        type: ''
     }
 
-    state = { focusedItemIndex: 0, times: [] };
+    state = { focusedItemIndex: -1, times: [] };
 
     componentDidMount() {
         this.setState({ times: getDates() });
@@ -39,10 +46,11 @@ class Hours extends Component {
 
     render() {
         const { focusedItemIndex, times } = this.state;
-        const { onMouseDown, onSelect, disabled } = this.props;
+        const { onMouseDown, onSelect, disabled, style, value, type } = this.props;
+        let selectedVal = type === 'date-time' ? (value?.split(" ")[1] || "") : value;      // in case of date-time --> extract hours from selected passed value ex.: 01/01/2024 10:00:00
         return (
-            <ul id="rw_1_time_listbox" style={{ position: 'relative' }} ref={this.attachListRef} tabIndex="0" className="rw-list" role="listbox" aria-labelledby="rw_1_input" aria-live="false" aria-hidden="true" aria-activedescendant="rw_1_time_listbox__option__11">
-                {times.map((time, index) => <li key={time.label} onMouseDown={disabled ? () => {} : onMouseDown} onClick={disabled ? () => {} : () => onSelect(time)} ref={instance => {this.itemsRef[index] = instance;}} role="option" tabIndex="0" aria-selected="false" className={`rw-list-option ${focusedItemIndex === index && !disabled ? 'rw-state-focus' : ''} ${disabled ? 'rw-state-disabled' : ''}`} id="rw_1_time_listbox__option__0">{time.label}</li>)}
+            <ul id="rw_1_time_listbox Select-option" style={{ position: 'relative', ...style }} ref={this.attachListRef} tabIndex="0" className="rw-list" role="listbox" aria-labelledby="rw_1_input" aria-live="false" aria-hidden="true" aria-activedescendant="rw_1_time_listbox__option__11">
+                {times.map((time, index) => <li key={time.label} onMouseDown={disabled ? () => {} : onMouseDown} onClick={disabled ? () => {} : () => onSelect(time)} ref={instance => {this.itemsRef[index] = instance;}} role="option" tabIndex="0" aria-selected="false" className={`rw-list-option ${(selectedVal === getLocalTimePart(time.date) || focusedItemIndex === index ) && !disabled ? 'rw-state-focus is-selected' : ''} ${disabled ? 'rw-state-disabled' : ''}`} id="rw_1_time_listbox__option__0">{time.label}</li>)}
             </ul>
         );
     }

@@ -213,8 +213,10 @@ describe('widgets selectors', () => {
                 },
                 builder: {
                     editor: {
-                        layers: [{
-                            name: "layername"
+                        maps: [{
+                            layers: [{
+                                name: "layername"
+                            }]
                         }],
                         widgetType: "map",
                         id: "mapId"
@@ -259,9 +261,9 @@ describe('widgets selectors', () => {
                         charts: [
                             {
                                 chartId: "1",
-                                layer: {
-                                    name: "layername"
-                                }
+                                traces: [{
+                                    layer: { name: "layername" }
+                                }]
                             }
                         ],
                         widgetType: "chart",

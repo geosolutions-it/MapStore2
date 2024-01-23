@@ -168,8 +168,9 @@ describe('LeafletMap', () => {
         const map = ReactDOM.render(<LeafletMap center={{ y: 43.9, x: 10.3 }} zoom={11} mapOptions={{ zoomAnimation: false }}>
             <LeafLetLayer type="wms" options={options} />
         </LeafletMap>, document.getElementById("container"));
-        expect(map).toExist();
-        expect(map.elevationLayer).toExist();
+        expect(map).toBeTruthy();
+        expect(map.map.msElevationLayers).toBeTruthy();
+        expect(map.map.msElevationLayers.length).toBe(1);
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
 
@@ -293,10 +294,10 @@ describe('LeafletMap', () => {
         });
         expect(spy.calls.length).toBe(1);
         expect(spy.calls[0].arguments.length).toBe(1);
-        expect(spy.calls[0].arguments[0].pixel).toExist();
-        expect(spy.calls[0].arguments[0].latlng).toExist();
-        expect(spy.calls[0].arguments[0].latlng.z).toExist();
-        expect(spy.calls[0].arguments[0].modifiers).toExist();
+        expect(spy.calls[0].arguments[0].pixel).toBeTruthy();
+        expect(spy.calls[0].arguments[0].latlng).toBeTruthy();
+        expect(spy.calls[0].arguments[0].latlng.z).toBe('');
+        expect(spy.calls[0].arguments[0].modifiers).toBeTruthy();
         expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
         expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
         expect(spy.calls[0].arguments[0].modifiers.shift).toBe(false);
@@ -397,13 +398,13 @@ describe('LeafletMap', () => {
         expect(spy.calls[0].arguments[0].z).toNotExist();
     });
 
-    it('check if the handler for "mousemove" event is called with elevation', () => {
+    it('check if the handler for "mousemove" event is called with elevation (deprecated)', () => {
         const testHandlers = {
             handler: () => { }
         };
-        var spy = expect.spyOn(testHandlers, 'handler');
+        const spy = expect.spyOn(testHandlers, 'handler');
 
-        var options = {
+        const options = {
             "url": "http://fake",
             "name": "mylayer",
             "visibility": true,
@@ -438,10 +439,56 @@ describe('LeafletMap', () => {
         });
         expect(spy.calls.length).toBe(1);
         expect(spy.calls[0].arguments.length).toBe(1);
-        expect(spy.calls[0].arguments[0].pixel).toExist();
-        expect(spy.calls[0].arguments[0].x).toExist();
-        expect(spy.calls[0].arguments[0].y).toExist();
-        expect(spy.calls[0].arguments[0].z).toExist();
+        expect(spy.calls[0].arguments[0].pixel).toBeTruthy();
+        expect(spy.calls[0].arguments[0].x).toBeTruthy();
+        expect(spy.calls[0].arguments[0].y).toBeTruthy();
+        expect(spy.calls[0].arguments[0].z).toBe('');
+    });
+    it('check layers for elevation', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const testHandlers = {
+            handler: () => { }
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const map = ReactDOM.render(
+            <LeafletMap
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+                onMouseMove={testHandlers.handler}
+                mapOptions={{ zoomAnimation: false }}
+            ><LeafLetLayer type={options.type} options={options} /></LeafletMap>
+            , document.getElementById("container"));
+
+        const leafletMap = map.map;
+        leafletMap.fire('mousemove', {
+            containerPoint: {
+                x: 100,
+                y: 100
+            },
+            latlng: {
+                wrap: () => ({
+                    lat: 43,
+                    lng: 10
+                })
+            },
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+        expect(spy.calls[0].arguments[0].pixel).toBeTruthy();
+        expect(spy.calls[0].arguments[0].x).toBeTruthy();
+        expect(spy.calls[0].arguments[0].y).toBeTruthy();
+        expect(spy.calls[0].arguments[0].z).toBe('');
     });
 
     it('check if the map changes when receive new props', () => {
