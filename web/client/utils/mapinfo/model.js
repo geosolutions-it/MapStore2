@@ -1,5 +1,5 @@
 /**
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -22,17 +22,17 @@ export default {
             request: {
                 features: [...features],
                 outputFormat: 'application/json',
-                lat: props.point.latlng.lat,
-                lng: props.point.latlng.lng
+                lat: props?.point?.latlng?.lat,
+                lng: props?.point?.latlng?.lng
             },
             metadata: {
                 fields: layer.features?.[0]?.properties && Object.keys(layer.features[0].properties) || [],
                 title,
                 resolution: isNil(props?.map?.resolution)
-                    ? props?.map?.zoom && getCurrentResolution(props.map.zoom, 0, 21, 96)
-                    : props.map.resolution,
-                buffer: props.buffer || 2,
-                units: props.map && props.map.units,
+                    ? props?.map?.zoom && getCurrentResolution(props?.map?.zoom, 0, 21, 96)
+                    : props?.map?.resolution,
+                buffer: props?.buffer || 2,
+                units: props?.map && props.map.units,
                 rowViewer: layer.rowViewer,
                 viewer: layer.viewer,
                 layerId: layer.id

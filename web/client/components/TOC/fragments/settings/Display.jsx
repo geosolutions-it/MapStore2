@@ -178,7 +178,7 @@ export default class extends React.Component {
                     </Col>
                 </Row>}
 
-                {this.props.element.type !== "3dtiles" && <Row>
+                {!["3dtiles", 'model'].includes(this.props.element.type) && <Row>
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel>{this.props.opacityText} %</ControlLabel>
