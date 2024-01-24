@@ -85,12 +85,12 @@ describe("MultiBandEditor", () => {
 
         expect(spyOnUpdate).toHaveBeenCalled();
         expect(spyOnUpdate.calls[0].arguments[1]).toBe("layers");
-        expect(spyOnUpdate.calls[0].arguments[2].style).toEqual({color: undefined});
+        expect(spyOnUpdate.calls[0].arguments[2].style).toEqual({ body: { color: undefined }, format: 'openlayers' });
 
         TestUtils.Simulate.change(enableBandBtn, { "target": { "checked": true }});
         expect(spyOnUpdate).toHaveBeenCalled();
         expect(spyOnUpdate.calls[1].arguments[1]).toBe("layers");
-        expect(spyOnUpdate.calls[1].arguments[2].style.color).toBeTruthy();
+        expect(spyOnUpdate.calls[1].arguments[2].style.body.color).toBeTruthy();
     });
     it("editor sideffect udpate on loading single band tile source", () => {
         const props = {
@@ -105,6 +105,6 @@ describe("MultiBandEditor", () => {
 
         expect(spyOnUpdate).toHaveBeenCalled();
         expect(spyOnUpdate.calls[0].arguments[1]).toBe("layers");
-        expect(spyOnUpdate.calls[0].arguments[2].style.color).toBeTruthy();
+        expect(spyOnUpdate.calls[0].arguments[2].style.body.color).toBeTruthy();
     });
 });

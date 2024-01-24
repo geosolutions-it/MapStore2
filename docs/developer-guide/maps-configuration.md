@@ -1229,7 +1229,14 @@ i.e.
     "sources": [
         { "url": "https://host-sample/cog1.tif" },
         { "url": "https://host-sample/cog2.tif" }
-    ]
+    ],
+    "style": {
+        "body": { // cog style currently supports only RGB with alpha band or single/gray band
+            "color": ["array", ["band", 1], ["band", 2], ["band", 3], ["band", 4]] // RGB with alpha band
+            // "color": ["array", ["band", 1], ["band", 1], ["band", 1], 1]  - single/gray band
+        },
+        "format": "openlayers",
+    }
 }
 ```
 

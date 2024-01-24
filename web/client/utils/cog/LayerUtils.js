@@ -1,5 +1,6 @@
 import { fromUrl as fromGeotiffUrl } from 'geotiff';
 import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
 
 import { isProjectionAvailable } from "../ProjectionUtils";
 
@@ -78,7 +79,10 @@ export const getLayerConfig = ({ url, layer, controller }) => {
                     origin: image.getOrigin(),
                     resolution: image.getResolution(),
                     samples,
-                    fileDirectory: image.fileDirectory
+                    fileDirectory: {
+                        // add more fileDirectory properties based on requirement
+                        PhotometricInterpretation: get(image, 'fileDirectory.PhotometricInterpretation')
+                    }
                 },
                 // skip adding bbox when geokeys or extent is empty
                 ...(!isEmpty(extent) && !isEmpty(crs) && {

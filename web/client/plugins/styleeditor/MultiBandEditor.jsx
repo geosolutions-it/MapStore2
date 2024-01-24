@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import castArray from "lodash/castArray";
+import cloneDeep from "lodash/cloneDeep";
 import ReactSelect from "react-select";
 import {
     ControlLabel,
@@ -76,32 +77,25 @@ const MultiBandEditor = ({
 
     const updateStyle = (color) => {
         onUpdateNode(layer.id, "layers", {
-            style: { color: !isEmpty(color) ? JSON.stringify(color) : color}
+            style: { body: { color }, format: "openlayers"}
         });
     };
 
     useEffect(() => {
-        !isRGB && updateStyle(defaultSingleColorExpression);
+        !isRGB && updateStyle([...defaultSingleColorExpression]);
     }, [isRGB]);
 
     const onEnableBandStyle = (flag) => {
         setEnableBand(flag);
         let color;
         if (flag) {
-            color = isRGB ? [...defaultRGBAColorExpression] : defaultSingleColorExpression;
+            color = [...(isRGB ? defaultRGBAColorExpression : defaultSingleColorExpression)];
         }
         updateStyle(color);
     };
 
-    const getParsedColor = () => {
-        const color = get(layer, "style.color");
-        return !isEmpty(color) && typeof color === "string"
-            ? JSON.parse(color)
-            : color;
-    };
-
     const onChangeBand = (index, value) => {
-        let color = getParsedColor() ?? [...defaultRGBAColorExpression];
+        let color = cloneDeep(get(layer, "style.body.color") ?? defaultRGBAColorExpression);
         color[index] = value ? ["band", value] : 1;
         updateStyle(color);
     };
@@ -114,7 +108,7 @@ const MultiBandEditor = ({
     };
 
     const getColors = () => {
-        const colors = getParsedColor();
+        const colors = get(layer, "style.body.color");
         if (isEmpty(colors)) {
             return [...bands];
         }
