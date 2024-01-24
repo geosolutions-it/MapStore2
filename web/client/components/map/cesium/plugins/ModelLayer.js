@@ -31,6 +31,20 @@ const updatePrimitivesVisibility = (primitives, visibilityOption) => {
         primitive.show = visibilityOption;
     }
 };
+const updateOpacity = (primitives, opacityOption, map) => {
+    for (let i = 0; i < primitives.length; i++) {
+        const primitive = primitives.get(i);
+        let geomInstances = primitive.geometryInstances;
+        geomInstances?.forEach(geomInstance => {
+            let instanceAttributes = primitive.getGeometryInstanceAttributes(geomInstance.id);
+            let cloneColor = Cesium.Color.fromBytes(instanceAttributes.color[0], instanceAttributes.color[1], instanceAttributes.color[2], instanceAttributes.color[3]);
+            cloneColor.alpha = (geomInstance?.originalOpacity || 1 ) * opacityOption;
+            instanceAttributes.color = Cesium.ColorGeometryInstanceAttribute.fromColor(cloneColor).value;
+        });
+
+    }
+    map.scene.requestRender();
+};
 const getGeometryInstances = ({
     meshes
 }) => {
@@ -53,7 +67,7 @@ const getGeometryInstances = ({
             );
             const transformedPositions = positions;
             const transformedNormals = normals;
-            return new Cesium.GeometryInstance({
+            let geometryInstance =  new Cesium.GeometryInstance({
                 id: mesh.id,
                 modelMatrix: Cesium.Matrix4.multiply(
                     rotationMatrix,
@@ -87,7 +101,39 @@ const getGeometryInstances = ({
                     ))
                 }
             });
+            geometryInstance.originalOpacity = color.w;
+            return geometryInstance;
         })).flat();
+};
+
+const createPrimitiveFromMeshes = (meshes, options, center, primitiveName) => {
+    const primitive = new Cesium.Primitive({
+        geometryInstances: getGeometryInstances({
+            meshes: meshes.filter(mesh => primitiveName === 'translucentPrimitive' ? !mesh.geometry.every(({ color }) => color.w === 1) : !!mesh.geometry.every(({ color }) => color.w === 1)),
+            center,
+            options
+        }),
+        releaseGeometryInstances: false,
+        appearance: new Cesium.PerInstanceColorAppearance({
+            translucent: primitiveName === 'translucentPrimitive' ? true : false
+        }),
+        asynchronous: false,
+        allowPicking: true
+    });
+    // see https://github.com/geosolutions-it/MapStore2/blob/9f6f9d498796180ff59679887d300ce51e72a289/web/client/components/map/cesium/Map.jsx#L354-L393
+    primitive._msGetFeatureById = (id) => {
+        return {
+            msId: options.id,
+            feature: {
+                properties: meshes.find((_mesh) => _mesh.id === id)?.properties || {},
+                type: 'Feature',
+                geometry: null
+            }
+        };
+    };
+    primitive.msId = options.id;
+    primitive.id = primitiveName;
+    return primitive;
 };
 
 const createLayer = (options, map) => {
@@ -106,41 +152,9 @@ const createLayer = (options, map) => {
             return getWebIFC()
                 .then((ifcApi) => {
                     const { meshes, center } = ifcDataToJSON({ ifcApi, data });
-                    const translucentPrimitive = new Cesium.Primitive({
-                        geometryInstances: getGeometryInstances({
-                            meshes: meshes.filter(mesh => !mesh.geometry.every(({ color }) => color.w === 1)),
-                            center,
-                            options
-                        }),
-                        releaseGeometryInstances: false,
-                        appearance: new Cesium.PerInstanceColorAppearance({
-                            translucent: true
-                        }),
-                        asynchronous: false,
-                        allowPicking: true
-                    });
-                    // see https://github.com/geosolutions-it/MapStore2/blob/9f6f9d498796180ff59679887d300ce51e72a289/web/client/components/map/cesium/Map.jsx#L354-L393
-                    translucentPrimitive._msGetFeatureById = (id) => meshes.find((_mesh) => _mesh.id === id)?.properties || {};
-                    translucentPrimitive.msId = options.id;
-                    translucentPrimitive.id = 'translucentPrimitive';
+                    const translucentPrimitive = createPrimitiveFromMeshes(meshes, options, center, 'translucentPrimitive');
+                    const opaquePrimitive = createPrimitiveFromMeshes(meshes, options, center, 'opaquePrimitive');
                     primitives.add(translucentPrimitive);
-                    const opaquePrimitive = new Cesium.Primitive({
-                        geometryInstances: getGeometryInstances({
-                            meshes: meshes.filter(mesh => !!mesh.geometry.every(({ color }) => color.w === 1)),
-                            center,
-                            options
-                        }),
-                        releaseGeometryInstances: false,
-                        appearance: new Cesium.PerInstanceColorAppearance({
-                            // flat: true
-                            translucent: false
-                        }),
-                        asynchronous: false,
-                        allowPicking: true
-                    });
-                    opaquePrimitive._msGetFeatureById = (id) => meshes.find((_mesh) => _mesh.id === id)?.properties || {};
-                    opaquePrimitive.msId = options.id;
-                    opaquePrimitive.id = 'opaquePrimitive';
                     primitives.add(opaquePrimitive);
                     updatePrimitivesPosition(primitives, options.center);
 
@@ -160,7 +174,6 @@ const createLayer = (options, map) => {
         setVisible: (
             newVisibility
         ) => {
-            // todo: add the logic of setting visibility
             if (primitives && map) {
                 updatePrimitivesVisibility(primitives, newVisibility);
             }
@@ -170,20 +183,13 @@ const createLayer = (options, map) => {
 
 Layers.registerType('model', {
     create: createLayer,
-    update: (layer, newOptions, oldOptions) => {
+    update: (layer, newOptions, oldOptions, map) => {
         if (layer?.primitives && !isEqual(newOptions?.center, oldOptions?.center)) {
-            // update layer.bbox
-            layer.bbox = {
-                ...layer.bbox,
-                bounds: {
-                    minx: newOptions?.center?.[0] || 0 - 2,
-                    miny: newOptions?.center?.[1] || 0 - 2,
-                    maxx: newOptions?.center?.[0] || 0 + 2,
-                    maxy: newOptions?.center?.[1] || 0 + 2
-                }
-            };
             updatePrimitivesPosition(layer?.primitives, newOptions?.center);
         }
+        // if (layer?.primitives && !isEqual(newOptions?.opacity, oldOptions?.opacity)) {
+        //     updateOpacity(layer?.primitives, newOptions?.opacity, map);
+        // }
         return null;
     }
 });

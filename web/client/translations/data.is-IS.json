@@ -112,8 +112,6 @@
       "templateError": "There was an error applying the template to the information returned by the server, please check the template",
       "templatePreview": "Template preview",
       "heightOffset": "Height offset (m)",
-      "modelCenterLat": "Center's Latitude (DD)",
-      "modelCenterLng": "Center's Longitude (DD)",
       "wmsLayerTileSize": "Tile size (WMS)",
       "serverType": "Server Type",
       "serverTypeOption": {
@@ -155,6 +153,10 @@
         "type": "Limits type",
         "scale": "Scale",
         "resolution": "Resolution"
+      },
+      "modelLayer": {
+        "modelCenterLat": "Center's Latitude (DD)",
+        "modelCenterLng": "Center's Longitude (DD)"
       },
       "tooltip": {
         "label": "Tooltip",

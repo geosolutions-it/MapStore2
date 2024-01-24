@@ -23,34 +23,26 @@ function ModelTransformation({
     layer,
     onChange
 }) {
+    const changeCenterModelHandler = (newCenter) => {
+        const newBbox = {
+            ...layer?.bbox,
+            bounds: {
+                minx: newCenter?.[0] - 0.001,
+                miny: newCenter?.[1] - 0.001,
+                maxx: newCenter?.[0] + 0.001,
+                maxy: newCenter?.[1] + 0.001
+            }
+        };
+        onChange('center', newCenter);
+        onChange('bbox', newBbox);
+    };
     if (layer?.type !== 'model') {
         return null;
     }
     return (
         <div style={{ margin: '0 -8px' }}>
             <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId="layerProperties.modelCenterLat"/></ControlLabel>
-                <InputGroup style={{ maxWidth: 210 }}>
-                    <DebouncedFormControl
-                        type="number"
-                        name={"modelCenterLat"}
-                        value={layer?.center?.[1] || 0}
-                        fallbackValue={0}
-                        onChange={(val)=> {
-                            const newCenter = [
-                                layer?.center?.[0] ?? 0,
-                                val !== undefined
-                                    ? parseFloat(val) : 0,
-                                layer?.center?.[2] ?? 0
-                            ];
-                            onChange('center', newCenter);
-                        }}
-                    />
-                    <InputGroup.Addon>DD</InputGroup.Addon>
-                </InputGroup>
-            </FormGroup>
-            <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId="layerProperties.modelCenterLng"/></ControlLabel>
+                <ControlLabel><Message msgId="layerProperties.modelLayer.modelCenterLng"/></ControlLabel>
                 <InputGroup style={{ maxWidth: 210 }}>
                     <DebouncedFormControl
                         type="number"
@@ -64,7 +56,28 @@ function ModelTransformation({
                                 layer?.center?.[1] ?? 0,
                                 layer?.center?.[2] ?? 0
                             ];
-                            onChange('center', newCenter);
+                            changeCenterModelHandler(newCenter);
+                        }}
+                    />
+                    <InputGroup.Addon>DD</InputGroup.Addon>
+                </InputGroup>
+            </FormGroup>
+            <FormGroup className="form-group-flex">
+                <ControlLabel><Message msgId="layerProperties.modelLayer.modelCenterLat"/></ControlLabel>
+                <InputGroup style={{ maxWidth: 210 }}>
+                    <DebouncedFormControl
+                        type="number"
+                        name={"modelCenterLat"}
+                        value={layer?.center?.[1] || 0}
+                        fallbackValue={0}
+                        onChange={(val)=> {
+                            const newCenter = [
+                                layer?.center?.[0] ?? 0,
+                                val !== undefined
+                                    ? parseFloat(val) : 0,
+                                layer?.center?.[2] ?? 0
+                            ];
+                            changeCenterModelHandler(newCenter);
                         }}
                     />
                     <InputGroup.Addon>DD</InputGroup.Addon>
@@ -85,7 +98,7 @@ function ModelTransformation({
                                 val !== undefined
                                     ? parseFloat(val) : 0
                             ];
-                            onChange('center', newCenter);
+                            changeCenterModelHandler(newCenter);
                         }}
                     />
                     <InputGroup.Addon>m</InputGroup.Addon>

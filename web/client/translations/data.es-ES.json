@@ -112,8 +112,6 @@
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "heightOffset": "Desplazamiento de altura (m)",
-            "modelCenterLat": "Latitud del centro (DD)",
-            "modelCenterLng": "Longitud del centro (DD)",
             "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
             "serverType": "Tipo de servidor",
             "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
@@ -171,6 +169,10 @@
                     "eyeDomeLightingStrength": "Intensidad de iluminación",
                     "eyeDomeLightingRadius": "Radio de iluminación"
                 }
+            },
+            "modelLayer": {
+                "modelCenterLat": "Latitud del centro (DD)",
+                "modelCenterLng": "Longitud del centro (DD)"
             },
             "tooltip": {
                 "label": "Información sobre herramientas",

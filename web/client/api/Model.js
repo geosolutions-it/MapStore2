@@ -130,15 +130,15 @@ export const getCapabilities = (url) => {
                     // todo: read IFCProjectedCRS, IFCMapCONVERSION in case of IFC4
                     let bbox = {
                         bounds: capabilities.version !== "IFC4" ? {
-                            minx: 0 - 2,
-                            miny: 0 - 2,
-                            maxx: 0 + 2,
-                            maxy: 0 + 2
+                            minx: 0 - 0.001,
+                            miny: 0 - 0.001,
+                            maxx: 0 + 0.001,
+                            maxy: 0 + 0.001
                         } : {
-                            minx: 0 - 2,
-                            miny: 0 - 2,
-                            maxx: 0 + 2,
-                            maxy: 0 + 2
+                            minx: 0 - 0.001,
+                            miny: 0 - 0.001,
+                            maxx: 0 + 0.001,
+                            maxy: 0 + 0.001
                         },
                         crs: 'EPSG:4326'
                     };
