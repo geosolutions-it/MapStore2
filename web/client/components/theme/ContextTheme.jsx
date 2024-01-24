@@ -10,7 +10,7 @@ import React, {useState, useEffect} from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { trim } from 'lodash';
-import themeVars from "!!raw-loader!../../themes/default/ms-variables.less";
+import defaultThemeVars from "!!raw-loader!../../themes/default/ms-variables.less";
 
 
 import { validateVersion } from '../../selectors/version';
@@ -21,6 +21,7 @@ import { validateVersion } from '../../selectors/version';
  * @name ContextTheme
  * @prop {object} theme a theme configuration to apply in a specific context
  * @prop {string} version version string to use for the css href
+ * @prop {string} lessCssInput the less variable and functions to execute with the custom vairables
  * @example
  * // add a css link tag in the context page
  * <ContextTheme
@@ -42,17 +43,19 @@ import { validateVersion } from '../../selectors/version';
 function ContextTheme({
     customVariablesEnabled,
     theme,
-    version
+    version,
+    lessCssInput = defaultThemeVars + ".get-root-css-variables(@ms-theme-vars);"
 }) {
     const validatedVersion = validateVersion(version) ? trim(version) : '';
     let [variables, setVariables] = useState("");
 
     useEffect( () => {
-        import(/* webpackChunkName: 'less' */ "less").then(({"default": less}) => {
-            if (theme.variables && customVariablesEnabled) {
+        if (theme.variables && customVariablesEnabled) {
+            // excute import only if it's really needed
+            import(/* webpackChunkName: 'less' */ "less").then(({"default": less}) => {
                 try {
                     // we add the dispatch of the mixin so that we trigger the recompilation of the variables
-                    less.render(themeVars + ".get-root-css-variables(@ms-theme-vars);", {
+                    less.render(lessCssInput, {
                         modifyVars: theme?.variables || {}
                     }, (error, output) => {
                         if (output.css) {
@@ -62,8 +65,8 @@ function ContextTheme({
                 } catch (error) {
                     console.error("error during parsing", error);
                 }
-            }
-        });
+            });
+        }
     }, [theme.id, JSON.stringify(theme.variables), customVariablesEnabled]); // id cannot be defined if a theme preset is not chosen
     return <>
         {[createPortal(

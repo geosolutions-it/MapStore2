@@ -25,11 +25,13 @@ export default ({
     showBackToPageConfirmation = false,
     backToPageConfirmationMessage = 'contextCreator.undo',
     onConfirmBackToPage = () => { },
-    enableClickOnStep = false
+    enableClickOnStep = false,
+    hideSaveButton: hideSaveButtonProp,
+    hideCloseButton
 }) => {
     const curStepIndex = steps.findIndex(step => step.id === currentStepId);
-
-    const footer = (
+    const hideSaveButton = hideSaveButtonProp && curStepIndex === steps.length - 1;
+    const footer = curStepIndex > -1 ? (
         <div className="ms2-stepper">
             <div className="footer-button-toolbar-div">
                 <ButtonToolbar className="footer-button-toolbar-extra">
@@ -43,13 +45,13 @@ export default ({
                     })}
                 </ButtonToolbar>
                 <ButtonToolbar className="footer-button-toolbar">
-                    <Button
+                    {!hideSaveButton && <Button
                         bsStyle="primary"
                         bsSize="sm"
                         disabled={steps[curStepIndex].disableNext || loading}
                         onClick={() => curStepIndex < steps.length - 1 ? onSetStep(steps[curStepIndex + 1].id) : onSave()}>
                         <Message msgId={curStepIndex < steps.length - 1 ? "stepper.next" : "save"}/>
-                    </Button>
+                    </Button>}
                     <Button
                         style={{height: '100%'}}
                         bsSize="sm"
@@ -58,7 +60,7 @@ export default ({
                         onClick={() => onSetStep(steps[curStepIndex - 1].id)}>
                         <Message msgId="stepper.back"/>
                     </Button>
-                    <CloseButton
+                    {!hideCloseButton && <CloseButton
                         style={{height: '100%'}}
                         className="no-border"
                         title={loading ? <Loader size={14}/> : <Message msgId="close"/>}
@@ -66,7 +68,7 @@ export default ({
                         onShowConfirm={onShowBackToPageConfirmation}
                         onConfirm={onConfirmBackToPage}
                         onClick={() => onShowBackToPageConfirmation(true)}
-                        confirmMessage={backToPageConfirmationMessage}/>
+                        confirmMessage={backToPageConfirmationMessage}/>}
                 </ButtonToolbar>
             </div>
             <div className="footer-step-bar">
@@ -104,10 +106,11 @@ export default ({
                 })}
             </div>
         </div>
-    );
+    ) : null;
 
     return curStepIndex > -1 ?
         <BorderLayout
+            className="ms-stepper-container"
             footer={footer}>
             {steps[curStepIndex].component}
         </BorderLayout> : null;

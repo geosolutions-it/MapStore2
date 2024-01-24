@@ -161,7 +161,11 @@ export default class ContextCreator extends React.Component {
         customVariablesEnabled: PropTypes.bool,
         onToggleCustomVariables: PropTypes.func,
         enableClickOnStep: PropTypes.bool,
-        items: PropTypes.array
+        items: PropTypes.array,
+        availableSteps: PropTypes.array,
+        hideUploadExtension: PropTypes.bool,
+        hideSaveButton: PropTypes.bool,
+        hideCloseButton: PropTypes.bool
     };
 
     static contextTypes = {
@@ -266,7 +270,13 @@ export default class ContextCreator extends React.Component {
         backToPageDestRoute: '/context-manager',
         backToPageConfirmationMessage: 'contextCreator.undo',
         tutorials: CONTEXT_TUTORIALS,
-        tutorialsList: false
+        tutorialsList: false,
+        availableSteps: [
+            'general-settings',
+            'configure-map',
+            'configure-plugins',
+            'configure-themes'
+        ]
     };
 
     componentDidMount() {
@@ -302,6 +312,116 @@ export default class ContextCreator extends React.Component {
             return toolbarButton;
         };
 
+        const defaultSteps = [{
+            id: 'general-settings',
+            label: 'contextCreator.generalSettings.label',
+            extraToolbarButtons: extraToolbarButtons('general-settings'),
+            disableNext: !this.props.resource.name ||
+                !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length ||
+                this.props.loading || !this.props.isValidContextName || !this.props.contextNameChecked,
+            component:
+                <GeneralSettings
+                    contextId={this.props.contextId}
+                    contextName={this.props.resource.name}
+                    windowTitle={this.props.newContext.windowTitle}
+                    isValidContextName={this.props.isValidContextName}
+                    contextNameChecked={this.props.contextNameChecked}
+                    loading={this.props.loading && this.props.loadFlags.contextNameCheck}
+                    context={this.context}
+                    onChange={this.props.onChangeAttribute} />
+        }, {
+            id: 'configure-map',
+            label: 'contextCreator.configureMap.label',
+            extraToolbarButtons: extraToolbarButtons('configure-map'),
+            component:
+                <ConfigureMap
+                    pluginsConfig={this.props.ignoreViewerPlugins ?
+                        this.props.pluginsConfig :
+                        keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
+                            ...curConfig,
+                            [mode]: pluginsFilterOverride(this.props.pluginsConfig[mode], this.props.viewerPlugins)
+                        }), {})}
+                    plugins={this.context.plugins}
+                    mapType={this.props.mapType}
+                    showConfirm={this.props.showReloadConfirm}
+                    onReloadConfirm={this.props.onReloadConfirm}
+                    onMapViewerReload={this.props.onMapViewerReload} />
+        }, {
+            id: 'configure-plugins',
+            label: 'contextCreator.configurePlugins.label',
+            extraToolbarButtons: extraToolbarButtons('configure-plugins'),
+            disableNext: !this.props.allAvailablePlugins.filter(
+                plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length ||
+                !!this.props.cfgError ||
+                !this.props.isCfgValidated,
+            component:
+                <ConfigurePlugins
+                    user={this.props.user}
+                    loading={this.props.loading}
+                    loadFlags={this.props.loadFlags}
+                    tutorialMode={this.props.tutorialStatus === 'run'}
+                    tutorialStep={this.props.tutorialStep}
+                    allPlugins={this.props.allAvailablePlugins}
+                    editedPlugin={this.props.editedPlugin}
+                    editedCfg={this.props.editedCfg}
+                    cfgError={this.props.cfgError}
+                    availablePluginsFilterText={this.props.availablePluginsFilterText}
+                    enabledPluginsFilterText={this.props.enabledPluginsFilterText}
+                    documentationBaseURL={this.props.documentationBaseURL}
+                    showDescriptionTooltip={this.props.showPluginDescriptionTooltip}
+                    descriptionTooltipDelay={this.props.pluginDescriptionTooltipDelay}
+                    showDialog={this.props.showDialog}
+                    mapTemplates={this.props.mapTemplates}
+                    parsedTemplate={this.props.parsedTemplate}
+                    editedTemplate={this.props.editedTemplate}
+                    fileDropStatus={this.props.fileDropStatus}
+                    availableTemplatesFilterText={this.props.availableTemplatesFilterText}
+                    enabledTemplatesFilterText={this.props.enabledTemplatesFilterText}
+                    onFilterAvailablePlugins={this.props.onFilterAvailablePlugins}
+                    onFilterEnabledPlugins={this.props.onFilterEnabledPlugins}
+                    onEditPlugin={this.props.onEditPlugin}
+                    onEnablePlugins={this.props.onEnablePlugins}
+                    onDisablePlugins={this.props.onDisablePlugins}
+                    onUpdateCfg={this.props.onUpdateCfg}
+                    setSelectedPlugins={this.props.setSelectedPlugins}
+                    changePluginsKey={this.props.changePluginsKey}
+                    uploading={this.props.uploading}
+                    uploadResult={this.props.uploadResult}
+                    onEnableUpload={this.props.onEnableUploadPlugin}
+                    uploadEnabled={this.props.uploadEnabled}
+                    pluginsToUpload={this.props.pluginsToUpload}
+                    onUpload={this.props.onUploadPlugin}
+                    onAddUpload={this.props.onAddUploadPlugin}
+                    onRemoveUpload={this.props.onRemoveUploadPlugin}
+                    changeTemplatesKey={this.props.changeTemplatesKey}
+                    setSelectedTemplates={this.props.setSelectedTemplates}
+                    setParsedTemplate={this.props.setParsedTemplate}
+                    setFileDropStatus={this.props.setFileDropStatus}
+                    onShowDialog={this.props.onShowDialog}
+                    onRemovePlugin={this.props.onRemovePlugin}
+                    onSaveTemplate={this.props.onSaveTemplate}
+                    onDeleteTemplate={this.props.onDeleteTemplate}
+                    onEditTemplate={this.props.onEditTemplate}
+                    onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
+                    onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}
+                    hideUploadExtension={this.props.hideUploadExtension}/>
+        },
+        {
+            id: 'configure-themes',
+            label: 'contextCreator.configureThemes.label',
+            extraToolbarButtons: extraToolbarButtons('configure-themes'),
+            disableNext: false,
+            component: <ConfigureThemes
+                themes={this.props.themes}
+                customVariablesEnabled={this.props.customVariablesEnabled}
+                basicVariables={this.props.basicVariables}
+                setSelectedTheme={this.props.setSelectedTheme}
+                onToggleCustomVariables={this.props.onToggleCustomVariables}
+                selectedTheme={this.props.selectedTheme}
+            />
+        }
+        ];
+
         return (
             <Stepper
                 enableClickOnStep={this.props.enableClickOnStep}
@@ -313,114 +433,9 @@ export default class ContextCreator extends React.Component {
                 showBackToPageConfirmation={this.props.showBackToPageConfirmation}
                 backToPageConfirmationMessage={this.props.backToPageConfirmationMessage}
                 onConfirmBackToPage={() => this.context.router.history.push(this.props.backToPageDestRoute)}
-                steps={[{
-                    id: 'general-settings',
-                    label: 'contextCreator.generalSettings.label',
-                    extraToolbarButtons: extraToolbarButtons('general-settings'),
-                    disableNext: !this.props.resource.name ||
-                        !this.props.newContext.windowTitle || !this.props.newContext.windowTitle.length ||
-                        this.props.loading || !this.props.isValidContextName || !this.props.contextNameChecked,
-                    component:
-                        <GeneralSettings
-                            contextId={this.props.contextId}
-                            contextName={this.props.resource.name}
-                            windowTitle={this.props.newContext.windowTitle}
-                            isValidContextName={this.props.isValidContextName}
-                            contextNameChecked={this.props.contextNameChecked}
-                            loading={this.props.loading && this.props.loadFlags.contextNameCheck}
-                            context={this.context}
-                            onChange={this.props.onChangeAttribute} />
-                }, {
-                    id: 'configure-map',
-                    label: 'contextCreator.configureMap.label',
-                    extraToolbarButtons: extraToolbarButtons('configure-map'),
-                    component:
-                        <ConfigureMap
-                            pluginsConfig={this.props.ignoreViewerPlugins ?
-                                this.props.pluginsConfig :
-                                keys(this.props.pluginsConfig).reduce((curConfig, mode) => ({
-                                    ...curConfig,
-                                    [mode]: pluginsFilterOverride(this.props.pluginsConfig[mode], this.props.viewerPlugins)
-                                }), {})}
-                            plugins={this.context.plugins}
-                            mapType={this.props.mapType}
-                            showConfirm={this.props.showReloadConfirm}
-                            onReloadConfirm={this.props.onReloadConfirm}
-                            onMapViewerReload={this.props.onMapViewerReload} />
-                }, {
-                    id: 'configure-plugins',
-                    label: 'contextCreator.configurePlugins.label',
-                    extraToolbarButtons: extraToolbarButtons('configure-plugins'),
-                    disableNext: !this.props.allAvailablePlugins.filter(
-                        plugin => plugin.enabled && get(plugin, 'pluginConfig.cfg.containerPosition') === undefined).length ||
-                        !!this.props.cfgError ||
-                        !this.props.isCfgValidated,
-                    component:
-                        <ConfigurePlugins
-                            user={this.props.user}
-                            loading={this.props.loading}
-                            loadFlags={this.props.loadFlags}
-                            tutorialMode={this.props.tutorialStatus === 'run'}
-                            tutorialStep={this.props.tutorialStep}
-                            allPlugins={this.props.allAvailablePlugins}
-                            editedPlugin={this.props.editedPlugin}
-                            editedCfg={this.props.editedCfg}
-                            cfgError={this.props.cfgError}
-                            availablePluginsFilterText={this.props.availablePluginsFilterText}
-                            enabledPluginsFilterText={this.props.enabledPluginsFilterText}
-                            documentationBaseURL={this.props.documentationBaseURL}
-                            showDescriptionTooltip={this.props.showPluginDescriptionTooltip}
-                            descriptionTooltipDelay={this.props.pluginDescriptionTooltipDelay}
-                            showDialog={this.props.showDialog}
-                            mapTemplates={this.props.mapTemplates}
-                            parsedTemplate={this.props.parsedTemplate}
-                            editedTemplate={this.props.editedTemplate}
-                            fileDropStatus={this.props.fileDropStatus}
-                            availableTemplatesFilterText={this.props.availableTemplatesFilterText}
-                            enabledTemplatesFilterText={this.props.enabledTemplatesFilterText}
-                            onFilterAvailablePlugins={this.props.onFilterAvailablePlugins}
-                            onFilterEnabledPlugins={this.props.onFilterEnabledPlugins}
-                            onEditPlugin={this.props.onEditPlugin}
-                            onEnablePlugins={this.props.onEnablePlugins}
-                            onDisablePlugins={this.props.onDisablePlugins}
-                            onUpdateCfg={this.props.onUpdateCfg}
-                            setSelectedPlugins={this.props.setSelectedPlugins}
-                            changePluginsKey={this.props.changePluginsKey}
-                            uploading={this.props.uploading}
-                            uploadResult={this.props.uploadResult}
-                            onEnableUpload={this.props.onEnableUploadPlugin}
-                            uploadEnabled={this.props.uploadEnabled}
-                            pluginsToUpload={this.props.pluginsToUpload}
-                            onUpload={this.props.onUploadPlugin}
-                            onAddUpload={this.props.onAddUploadPlugin}
-                            onRemoveUpload={this.props.onRemoveUploadPlugin}
-                            changeTemplatesKey={this.props.changeTemplatesKey}
-                            setSelectedTemplates={this.props.setSelectedTemplates}
-                            setParsedTemplate={this.props.setParsedTemplate}
-                            setFileDropStatus={this.props.setFileDropStatus}
-                            onShowDialog={this.props.onShowDialog}
-                            onRemovePlugin={this.props.onRemovePlugin}
-                            onSaveTemplate={this.props.onSaveTemplate}
-                            onDeleteTemplate={this.props.onDeleteTemplate}
-                            onEditTemplate={this.props.onEditTemplate}
-                            onFilterAvailableTemplates={this.props.onFilterAvailableTemplates}
-                            onFilterEnabledTemplates={this.props.onFilterEnabledTemplates}/>
-                },
-                {
-                    id: 'configure-themes',
-                    label: 'contextCreator.configureThemes.label',
-                    extraToolbarButtons: extraToolbarButtons('configure-themes'),
-                    disableNext: false,
-                    component: <ConfigureThemes
-                        themes={this.props.themes}
-                        customVariablesEnabled={this.props.customVariablesEnabled}
-                        basicVariables={this.props.basicVariables}
-                        setSelectedTheme={this.props.setSelectedTheme}
-                        onToggleCustomVariables={this.props.onToggleCustomVariables}
-                        selectedTheme={this.props.selectedTheme}
-                    />
-                }
-                ]} />
+                steps={this.props.availableSteps.map((step) => defaultSteps.find(defaultStep => defaultStep.id === step))}
+                hideSaveButton={this.props.hideSaveButton}
+                hideCloseButton={this.props.hideCloseButton} />
         );
     }
 }
