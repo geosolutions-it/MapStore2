@@ -8,6 +8,7 @@
 
 import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
+import axios from 'axios';
 import Layers from '../../../../utils/cesium/Layers';
 import { ifcDataToJSON, getWebIFC } from '../../../../api/Model';     // todo: change path to MODEL
 
@@ -30,20 +31,6 @@ const updatePrimitivesVisibility = (primitives, visibilityOption) => {
         const primitive = primitives.get(i);
         primitive.show = visibilityOption;
     }
-};
-const updateOpacity = (primitives, opacityOption, map) => {
-    for (let i = 0; i < primitives.length; i++) {
-        const primitive = primitives.get(i);
-        let geomInstances = primitive.geometryInstances;
-        geomInstances?.forEach(geomInstance => {
-            let instanceAttributes = primitive.getGeometryInstanceAttributes(geomInstance.id);
-            let cloneColor = Cesium.Color.fromBytes(instanceAttributes.color[0], instanceAttributes.color[1], instanceAttributes.color[2], instanceAttributes.color[3]);
-            cloneColor.alpha = (geomInstance?.originalOpacity || 1 ) * opacityOption;
-            instanceAttributes.color = Cesium.ColorGeometryInstanceAttribute.fromColor(cloneColor).value;
-        });
-
-    }
-    map.scene.requestRender();
 };
 const getGeometryInstances = ({
     meshes
@@ -146,9 +133,10 @@ const createLayer = (options, map) => {
     }
     let primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
 
-    fetch(options.url)
-        .then((res) => res.arrayBuffer())
-        .then((data) => {
+    axios(options.url, {
+        responseType: 'arraybuffer'
+    })
+        .then(({ data }) => {
             return getWebIFC()
                 .then((ifcApi) => {
                     const { meshes, center } = ifcDataToJSON({ ifcApi, data });
@@ -161,7 +149,6 @@ const createLayer = (options, map) => {
                 });
         });
     map.scene.primitives.add(primitives);
-    window.MapScene = map.scene;
     return {
         detached: true,
         primitives,
@@ -183,13 +170,10 @@ const createLayer = (options, map) => {
 
 Layers.registerType('model', {
     create: createLayer,
-    update: (layer, newOptions, oldOptions, map) => {
+    update: (layer, newOptions, oldOptions) => {
         if (layer?.primitives && !isEqual(newOptions?.center, oldOptions?.center)) {
             updatePrimitivesPosition(layer?.primitives, newOptions?.center);
         }
-        // if (layer?.primitives && !isEqual(newOptions?.opacity, oldOptions?.opacity)) {
-        //     updateOpacity(layer?.primitives, newOptions?.opacity, map);
-        // }
         return null;
     }
 });

@@ -5,6 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import axios from 'axios';
+
 // extract the tile format from the uri
 function getFormat(uri) {
     const parts = uri.split(/\./g);
@@ -100,7 +102,6 @@ export const ifcDataToJSON = ({ data, ifcApi }) => {
 
 export const getWebIFC = () => import('web-ifc')
     .then(WebIFC => {
-        window.WebIFC = WebIFC;
         const ifcApi = new WebIFC.IfcAPI();
         ifcApi.SetWasmPath('./web-ifc/'); // eslint-disable-line
         return ifcApi.Init().then(() => ifcApi); // eslint-disable-line
@@ -116,12 +117,12 @@ export const getWebIFC = () => import('web-ifc')
  * @
  */
 export const getCapabilities = (url) => {
-    return fetch(url)
-        .then((res) => res.arrayBuffer())
-        .then((data) => {
+    return axios.get(url, {
+        responseType: 'arraybuffer'
+    })
+        .then(({ data }) => {
             return getWebIFC()
                 .then((ifcApi) => {
-                    window.ifcApi = ifcApi;
                     let modelID = ifcApi.OpenModel(new Uint8Array(data));   // eslint-disable-line
                     // const { extent, center } = ifcDataToJSON({ ifcApi, data });
                     let capabilities = extractCapabilities(ifcApi, modelID, url);

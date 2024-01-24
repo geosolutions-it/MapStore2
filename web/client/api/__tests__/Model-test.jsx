@@ -6,24 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { getCapabilities } from '../Model';
-import axios from '../../libs/ajax';
 import expect from 'expect';
-import MockAdapter from "axios-mock-adapter";
-let mockAxios;
 
 describe('Test Model API for ifc models', () => {
-    beforeEach(done => {
-        mockAxios = new MockAdapter(axios);
-        setTimeout(done);
-    });
-
-    afterEach(done => {
-        mockAxios.restore();
-        setTimeout(done);
-    });
     it('should extract capabilities from ifc model', (done) => {
-        mockAxios.onGet().reply(200);
-        getCapabilities('/ifcModel.ifc').then(({ bbox, format, version, properties, modelData }) => {
+        getCapabilities('base/web/client/test-resources/ifcModels/ifcModel.ifc').then(({ bbox, format, version, properties, modelData }) => {
             try {
                 expect(modelData).toBeTruthy();
                 expect(format).toBeTruthy();
@@ -31,13 +18,13 @@ describe('Test Model API for ifc models', () => {
                 expect(version).toBeTruthy();
                 expect(version).toBe('IFC4');
                 expect(properties).toBeTruthy();
-                expect(properties).toBe({});
+                expect(properties).toEqual({});
                 expect(bbox).toBeTruthy();
                 expect(bbox.crs).toBe('EPSG:4326');
-                expect(Math.floor(bbox.bounds.minx)).toBe(0);
-                expect(Math.floor(bbox.bounds.miny)).toBe(0);
-                expect(Math.ceil(bbox.bounds.maxx)).toBe(0);
-                expect(Math.ceil(bbox.bounds.maxy)).toBe(0);
+                expect(Math.round(bbox.bounds.minx)).toBe(0);
+                expect(Math.round(bbox.bounds.miny)).toBe(0);
+                expect(Math.round(bbox.bounds.maxx)).toBe(0);
+                expect(Math.round(bbox.bounds.maxy)).toBe(0);
             } catch (e) {
                 done(e);
             }
