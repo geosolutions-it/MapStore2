@@ -6,22 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+export const JSON_MIME_TYPE = 'application/json';
+export const GEOJSON_MIME_TYPE = 'application/geo+json';
+
 export const INFO_FORMATS = {
     "TEXT": "text/plain",
     "HTML": "text/html",
     "JSONP": "text/javascript",
-    "PROPERTIES": "application/json",
-    "JSON": "application/json",
+    "PROPERTIES": JSON_MIME_TYPE,
+    "JSON": JSON_MIME_TYPE,
+    "GEOJSON": GEOJSON_MIME_TYPE,
     "GML2": "application/vnd.ogc.gml",
     "GML3": "application/vnd.ogc.gml/3.1.1",
-    "TEMPLATE": "application/json"
+    "TEMPLATE": JSON_MIME_TYPE
 };
 
 export const INFO_FORMATS_BY_MIME_TYPE = {
     "text/plain": "TEXT",
     "text/html": "HTML",
     "text/javascript": "JSONP",
-    "application/json": "PROPERTIES",
+    JSON_MIME_TYPE: "PROPERTIES",
+    GEOJSON_MIME_TYPE: "PROPERTIES",
     "application/vnd.ogc.gml": "GML2",
     "application/vnd.ogc.gml/3.1.1": "GML3"
 };

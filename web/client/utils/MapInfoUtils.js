@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, Validator } from './FeatureInfoUtils';
+import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, JSON_MIME_TYPE, GEOJSON_MIME_TYPE, Validator } from './FeatureInfoUtils';
 
 import pointOnSurface from 'turf-point-on-surface';
 import { findIndex } from 'lodash';
@@ -25,7 +25,7 @@ let MapInfoUtils;
  * specifies which info formats are currently supported
  */
 //           default format ↴
-export const AVAILABLE_FORMAT = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'];
+export const AVAILABLE_FORMAT = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE', 'GEOJSON'];
 
 export const EMPTY_RESOURCE_VALUE = 'NODATA';
 
@@ -70,12 +70,21 @@ export const getDefaultInfoFormatValue = () => {
 /**
  * @return {string} the info format value from layer, otherwise the info format in settings
  */
-export const getDefaultInfoFormatValueFromLayer = (layer, props) =>
-    layer.featureInfo
-        && layer.featureInfo.format
-        && INFO_FORMATS[layer.featureInfo.format]
-        || props.format
-        || MapInfoUtils.getDefaultInfoFormatValue();
+export const getDefaultInfoFormatValueFromLayer = (layer, props) => {
+    const featInfoFormat = getLayerFeatureInfo(layer)?.format;
+    if (featInfoFormat) {
+        return INFO_FORMATS[layer.featureInfo.format];
+    } else if (props.format) {
+        if (props.format === JSON_MIME_TYPE && layer.infoFormats && layer.infoFormats.includes(GEOJSON_MIME_TYPE)) {
+            return GEOJSON_MIME_TYPE;
+        }
+
+        return props.format;
+    }
+
+    return MapInfoUtils.getDefaultInfoFormatValue();
+}
+    
 export const getLayerFeatureInfoViewer = (layer) => {
     if (layer.featureInfo
         && layer.featureInfo.viewer) {
@@ -221,6 +230,7 @@ export const getViewers = () => {
     return {
         [INFO_FORMATS.PROPERTIES]: JSONViewer,
         [INFO_FORMATS.JSON]: JSONViewer,
+        [INFO_FORMATS.GEOJSON]: JSONViewer,
         [INFO_FORMATS.HTML]: HTMLViewer,
         [INFO_FORMATS.TEXT]: TextViewer
     };
