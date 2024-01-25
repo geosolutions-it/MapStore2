@@ -4,6 +4,14 @@ import omit from 'lodash/omit';
 import isArray from 'lodash/isArray';
 import uuid from 'uuid/v1';
 
+/**
+ * validate the coordinates and ensure:
+ * - values inside are not nested arrays
+ * - the current coordinate are not a duplication of the previous one
+ * @param {number[]} coords array of coordinates [longitude, latitude, height]
+ * @param {number[]} prevCoords array of coordinates [longitude, latitude, height]
+ * @returns the coordinates if valid and null if invalid
+ */
 const validateCoordinatesValue = (coords, prevCoords) => {
     if (!isArray(coords[0]) && !isArray(coords[1]) && !isArray(coords[2])) {
         // remove duplicated points
