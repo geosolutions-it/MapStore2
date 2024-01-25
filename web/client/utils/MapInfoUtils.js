@@ -68,20 +68,33 @@ export const getDefaultInfoFormatValue = () => {
     return INFO_FORMATS[MapInfoUtils.AVAILABLE_FORMAT[0]];
 };
 /**
+ * @param {object} param object map of params for a getFeatureInfo request.
+ * @return {boolean} Check if param.info_format of param.outputFormat is set as json / geojson mime type.
+ */
+export const isDataFormat = ({ info_format, outputFormat }) => {
+    return info_format === JSON_MIME_TYPE ||  outputFormat === JSON_MIME_TYPE || info_format === GEOJSON_MIME_TYPE ||  outputFormat === GEOJSON_MIME_TYPE;
+}
+/**
  * @return {string} the info format value from layer, otherwise the info format in settings
  */
 export const getDefaultInfoFormatValueFromLayer = (layer, props) => {
     const featInfoFormat = getLayerFeatureInfo(layer)?.format;
     if (featInfoFormat) {
+        // When the user explicitly configures the format from the layer settings => feature info page, return directly from definition map.
         return INFO_FORMATS[layer.featureInfo.format];
-    } else if (props.format) {
+    } 
+    if (props.format) {
         if (props.format === JSON_MIME_TYPE && layer.infoFormats && layer.infoFormats.includes(GEOJSON_MIME_TYPE)) {
+            // When global settings is configured for PROPERTIES (json), layer settings are not used and the layer.info_format configuration supports geo+json
+            // then override global settings and set param.info_format to geo+json mime type explicitly. 
             return GEOJSON_MIME_TYPE;
         }
 
+        // otherwise, preserve and obey the global configration for getFeatureInfo mime type.
         return props.format;
     }
 
+    // if global configration somehow fails provide a last fallback.
     return MapInfoUtils.getDefaultInfoFormatValue();
 }
     
