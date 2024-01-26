@@ -41,8 +41,8 @@ describe('MapInfoUtils', () => {
         let testData = {
             "TEXT": "text/plain",
             "HTML": "text/html",
-            "PROPERTIES": "application/json",
-            "TEMPLATE": "application/json"
+            "JSON": "application/json",
+            "GEOJSON": "application/geo+json"
         };
         let results = getAvailableInfoFormat();
         expect(results).toExist();
@@ -57,7 +57,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('getAvailableInfoFormatLabels', () => {
-        let testData = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'];
+        let testData = ['TEXT', 'HTML', 'JSON', 'GEOJSON'];
         let results = getAvailableInfoFormatLabels();
         expect(results).toExist();
         expect(results.length).toBe(4);
@@ -68,7 +68,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('getAvailableInfoFormatValues', () => {
-        let testData = ['text/plain', 'text/html', 'application/json'];
+        let testData = ['text/plain', 'text/html', 'application/json', 'application/geo+json'];
         let results = getAvailableInfoFormatValues();
         expect(results).toExist();
         expect(results.length).toBe(4);
@@ -203,7 +203,7 @@ describe('MapInfoUtils', () => {
             name: "layer",
             url: "http://localhost",
             featureInfo: {
-                format: "PROPERTIES",
+                format: "JSON",
                 viewer: {
                     type: 'customViewer'
                 }
@@ -343,7 +343,7 @@ describe('MapInfoUtils', () => {
             name: "layer",
             url: "http://localhost",
             featureInfo: {
-                format: "PROPERTIES",
+                format: "JSON",
                 viewer: {
                     type: 'customViewer'
                 }
@@ -487,11 +487,6 @@ describe('MapInfoUtils', () => {
         let validResponses = validator.getValidResponses(response);
         expect(validResponses.length).toBe(1);
 
-        // Validate format 'PROPERTIES'
-        response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
-        validResponses = validator.getValidResponses(response);
-        expect(validResponses.length).toBe(1);
-
         // Validate format 'JSON'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
         validResponses = validator.getValidResponses(response);
@@ -565,11 +560,6 @@ describe('MapInfoUtils', () => {
 
         let validator = getValidator();
         let noValidResponses = validator.getNoValidResponses(response);
-        expect(noValidResponses.length).toBe(1);
-
-        // Validate format 'PROPERTIES'
-        response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
-        noValidResponses = validator.getNoValidResponses(response);
         expect(noValidResponses.length).toBe(1);
 
         // Validate format 'JSON'

@@ -40,7 +40,7 @@ function FeatureInfoFormatSelector({
     const options = Object.keys(filtered).map((format) => {
         return {
             value: filtered[format],
-            label: getInfoViewByInfoFormat(filtered[format])
+            label: getInfoViewByInfoFormat(filtered[format]) || format
         };
     });
 

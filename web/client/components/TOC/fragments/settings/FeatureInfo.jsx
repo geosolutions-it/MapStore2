@@ -138,7 +138,7 @@ export default class extends React.Component {
         const infoFormats = Object.assign({},
             ...Object.entries(formats)
                 .filter(([, value])=> includes(availableInfoFormats, value))
-                .map(([key, value])=> ( {[ (value === JSON_MIME_TYPE || value === GEOJSON_MIME_TYPE) ? getInfoViewByInfoFormat((value)) : key ]: value}))
+                .map(([key, value])=> ( {[ (value === JSON_MIME_TYPE || value === GEOJSON_MIME_TYPE) ? (getInfoViewByInfoFormat((value)) || key) : key ]: value}))
         );
 
         return isEmpty(infoFormats) ? formats : infoFormats;

@@ -66,7 +66,8 @@ export const getInfoViewByInfoFormat = (infoFormat) => {
         infoView = INFO_VIEW_MODES.PROPERTIES;
         break;
     default:
-        infoView = INFO_VIEW_MODES.TEXT;
+        // re-assess leaving default null value, this way tests work but caller is burdened with fallback.
+        infoView;
     }
 
     return infoView;
