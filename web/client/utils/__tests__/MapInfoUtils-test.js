@@ -58,7 +58,7 @@ describe('MapInfoUtils', () => {
                 && results[key] === testData[key];
         }, true)).toBe(true);
     });
-    
+
     it('getInfoViewByInfoFormat', () => {
         let testViews = {
             "TEXT": "TEXT",
@@ -70,8 +70,9 @@ describe('MapInfoUtils', () => {
             "TEXT": 'text/plain',
             "HTML": 'text/html',
             "JSON": 'application/json',
-            "GEOJSON": 'application/geo+json',
-        }
+            "GEOJSON": 'application/geo+json'
+        };
+
         let textPlainResult = getInfoViewByInfoFormat(testInfoFormats.TEXT);
         expect(textPlainResult).toExist();
         expect(textPlainResult).toBe(testViews.TEXT);
