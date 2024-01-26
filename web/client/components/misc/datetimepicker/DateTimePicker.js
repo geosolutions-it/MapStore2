@@ -69,7 +69,8 @@ class DateTimePicker extends Component {
         toolTip: PropTypes.string,
         tabIndex: PropTypes.string,
         options: PropTypes.object,
-        isWithinAttrTbl: PropTypes.bool
+        isWithinAttrTbl: PropTypes.bool,
+        disabled: PropTypes.bool
     }
     static contextTypes = {
         messages: PropTypes.object,
@@ -154,7 +155,7 @@ class DateTimePicker extends Component {
         let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
         let isNullOperator = this.props.operator === 'isNull';
         if (isNullOperator) inputV = '';
-        const inputEl = <input type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${className ? className : ''}`} onChange={this.handleValueChange} disabled={isNullOperator} />;
+        const inputEl = <input type="text" disabled={this.props.disabled || isNullOperator} id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${className ? className : ''}`} onChange={this.handleValueChange} />;
         if (toolTip) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{toolTip}</Tooltip>}>
                 {inputEl}
@@ -196,7 +197,7 @@ class DateTimePicker extends Component {
                             </div>
                         }
                     >
-                        <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn">
+                        <button disabled={this.props.disabled} tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn">
                             <Glyphicon glyph={'date-time'} />
                         </button>
                     </Popover>
@@ -204,7 +205,7 @@ class DateTimePicker extends Component {
             </div>);
         } else if (type === 'time') {
             return (
-                <div tabIndex="-1" onBlur={this.handleWidgetBlur} onKeyDown={this.handleKeyDown} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
+                <div tabIndex="-1" onBlur={this.handleWidgetBlur} onKeyDown={this.handleKeyDown} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
                     {this.renderInput(inputValue, operator, timeVisible ? '' : toolTip, timePlaceholderMsgId, tabIndex, calendarVisible, timeVisible)}
                     <span className="rw-select">
                         <Popover
@@ -222,7 +223,7 @@ class DateTimePicker extends Component {
                                 </div>
                             }
                         >
-                            <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" >
+                            <button disabled={this.props.disabled} tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" >
                                 <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
                             </button>
                         </Popover>
@@ -253,7 +254,7 @@ class DateTimePicker extends Component {
                                 </div>
                             }
                         >
-                            <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" >
+                            <button disabled={this.props.disabled} tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" >
                                 <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
                             </button>
                         </Popover>
@@ -269,8 +270,10 @@ class DateTimePicker extends Component {
     ignoreBlur = false;
 
     handleWidgetFocus = () => {
-        this.setState({ focused: true });
-        this.ignoreBlur = false;
+        if (!this.props.disabled) {
+            this.setState({ focused: true });
+            this.ignoreBlur = false;
+        }
     }
 
     handleWidgetBlur = (type) => {

@@ -4,9 +4,21 @@ import omit from 'lodash/omit';
 import isArray from 'lodash/isArray';
 import uuid from 'uuid/v1';
 
-const validateCoordinatesValue = (coords) => {
+/**
+ * validate the coordinates and ensure:
+ * - values inside are not nested arrays
+ * - the current coordinate are not a duplication of the previous one
+ * @param {number[]} coords array of coordinates [longitude, latitude, height]
+ * @param {number[]} prevCoords array of coordinates [longitude, latitude, height]
+ * @returns the coordinates if valid and null if invalid
+ */
+const validateCoordinatesValue = (coords, prevCoords) => {
     if (!isArray(coords[0]) && !isArray(coords[1]) && !isArray(coords[2])) {
-        return coords;
+        // remove duplicated points
+        // to avoid normalization errors
+        return prevCoords && (prevCoords[0] === coords[0] && prevCoords[1] === coords[1] && prevCoords[2] === coords[2])
+            ? null
+            : coords;
     }
     return null;
 };
@@ -25,8 +37,8 @@ const featureToCartesianPositions = (feature) => {
         )]] : null;
     }
     if (feature.geometry.type === 'LineString') {
-        const positions = feature.geometry.coordinates.map(coords =>
-            validateCoordinatesValue(coords)
+        const positions = feature.geometry.coordinates.map((coords, idx) =>
+            validateCoordinatesValue(coords, feature.geometry.coordinates[idx - 1])
                 ? Cesium.Cartesian3.fromDegrees(coords[0], coords[1], coords[2])
                 : null
         ).filter(coords => coords !== null);
@@ -34,8 +46,8 @@ const featureToCartesianPositions = (feature) => {
     }
     if (feature.geometry.type === 'Polygon') {
         const positions = feature.geometry.coordinates.map(ring => {
-            const ringPositions = ring.map(coords =>
-                validateCoordinatesValue(coords)
+            const ringPositions = ring.map((coords, idx) =>
+                validateCoordinatesValue(coords, ring[idx - 1])
                     ? Cesium.Cartesian3.fromDegrees(coords[0], coords[1], coords[2])
                     : null
             ).filter(coords => coords !== null);
@@ -60,8 +72,10 @@ class GeoJSONStyledFeatures {
         this._dataSource = new Cesium.CustomDataSource(options.id);
         this._primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
         this._map = options.map;
-        this._map.scene.primitives.add(this._primitives);
-        this._map.dataSources.add(this._dataSource);
+        if (this._map) {
+            this._map.scene.primitives.add(this._primitives);
+            this._map.dataSources.add(this._dataSource);
+        }
         this._styledFeatures = [];
         this._entities = [];
         this._opacity = options.opacity ?? 1;
