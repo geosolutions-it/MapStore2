@@ -69,7 +69,8 @@ class DateTimePickerWithRange extends Component {
         culture: PropTypes.string,
         toolTip: PropTypes.string,
         tabIndex: PropTypes.string,
-        options: PropTypes.object
+        options: PropTypes.object,
+        disabled: PropTypes.disabled
     }
 
     static defaultProps = {
@@ -123,7 +124,7 @@ class DateTimePickerWithRange extends Component {
 
     renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, style = {}, className) => {
         let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
-        const inputEl = <input style={style} type="text" id="rw_1_input" disabled={'true'} role="combobox" placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${this.state.isInputNotValid ? 'has-error' : ''} ${className ? className : ''}`} onChange={this.handleValueChange} />;
+        const inputEl = <input style={style} disabled={this.props.disabled || true} type="text" id="rw_1_input" role="combobox" placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${this.state.isInputNotValid ? 'has-error' : ''} ${className ? className : ''}`} onChange={this.handleValueChange} />;
         if (toolTip) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{toolTip}</Tooltip>}>
                 {inputEl}
@@ -196,7 +197,7 @@ class DateTimePickerWithRange extends Component {
 	                        </div>
 	                    }
 	                >
-	                    <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
+	                    <button disabled={this.props.disabled} tabIndex="-1" title="Select Date" type="button" aria-disabled={this.props.disabled} aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
 	                        <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
 	                    </button>
 	                </Popover>
@@ -271,7 +272,7 @@ class DateTimePickerWithRange extends Component {
 	                        </div>
 	                    }
 	                >
-	                    <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
+	                    <button disabled={this.props.disabled} tabIndex="-1" title="Select Date" type="button" aria-disabled={this.props.disabled} aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
 	                        <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
 	                    </button>
 	                </Popover>
@@ -371,7 +372,7 @@ class DateTimePickerWithRange extends Component {
 	                        </div>
 	                    }
 	                >
-	                    <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
+	                    <button disabled={this.props.disabled} tabIndex="-1" title="Select Date" type="button" aria-disabled={this.props.disabled} aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleHandler}>
 	                        <Glyphicon glyph={'date-time'} />
 	                    </button>
 	                </Popover>
@@ -392,8 +393,10 @@ class DateTimePickerWithRange extends Component {
     ignoreBlur = false;
 
     handleWidgetFocus = () => {
-        this.setState({ focused: true });
-        this.ignoreBlur = false;
+        if (!this.props.disabled) {
+            this.setState({ focused: true });
+            this.ignoreBlur = false;
+        }
     }
 
     handleWidgetBlur = (type) => {
@@ -402,7 +405,7 @@ class DateTimePickerWithRange extends Component {
         }
         if (type === 'date') {
             this.calendarRef.click();
-        } else if (type === 'dat-time') {
+        } else if (type === 'date-time') {
             this.dateTimeRef.click();
         }
         this.setState({ openRangeContainer: '', focused: false });

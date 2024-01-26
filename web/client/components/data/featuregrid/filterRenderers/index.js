@@ -15,39 +15,39 @@ import NumberFilter from './NumberFilter';
 import StringFilter from './StringFilter';
 
 const types = {
-    "defaultFilter": (props) => withProps(() =>{
+    "defaultFilter": (props) => withProps(({disabled, tooltipMsgId: editTooltipMsgId}) =>{
         let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.default" : '';
-        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.default" : "";
+        let tooltipMsgId = props.isWithinAttrTbl ? disabled ? editTooltipMsgId : "featuregrid.attributeFilter.tooltips.default" : "";
         return { type: props.type, isWithinAttrTbl: props.isWithinAttrTbl || false, placeholderMsgId, tooltipMsgId };
     })(DefaultFilter),
-    "string": (props) => withProps(() =>{
+    "string": (props) => withProps(({disabled, tooltipMsgId: editTooltipMsgId}) =>{
         let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.string" : '';
-        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.string" : "";
+        let tooltipMsgId = props.isWithinAttrTbl ? disabled ? editTooltipMsgId : "featuregrid.attributeFilter.tooltips.string" : "";
         return { type: 'string', isWithinAttrTbl: props.isWithinAttrTbl || false, placeholderMsgId, tooltipMsgId };
     })(StringFilter),
-    "number": (props) => withProps(() =>{
+    "number": (props) => withProps(({disabled, tooltipMsgId: editTooltipMsgId}) =>{
         let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.number" : '';
-        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.number" : "";
+        let tooltipMsgId = props.isWithinAttrTbl ? disabled ? editTooltipMsgId : "featuregrid.attributeFilter.tooltips.number" : "";
         return { type: 'number', isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
     })(NumberFilter),
-    "int": (props) => withProps(() =>{
+    "int": (props) => withProps(({disabled, tooltipMsgId: editTooltipMsgId}) =>{
         let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.number" : '';
-        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.number" : "";
+        let tooltipMsgId = props.isWithinAttrTbl ? disabled ? editTooltipMsgId : "featuregrid.attributeFilter.tooltips.number" : "";
         return { type: 'integer', isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
     })(NumberFilter),
-    "date": (props) => withProps(() =>{
+    "date": (props) => withProps(({disabled, tooltipMsgId: editTooltipMsgId}) =>{
         let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.date" : '';
-        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.date" : "";
+        let tooltipMsgId = props.isWithinAttrTbl ? disabled ? editTooltipMsgId : "featuregrid.attributeFilter.tooltips.date" : "";
         return { type: "date", isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
     })(DateTimeFilter),
-    "time": (props) => withProps(() =>{
+    "time": (props) => withProps(({disabled, tooltipMsgId: editTooltipMsgId}) =>{
         let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.date" : '';
-        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.date" : "";
+        let tooltipMsgId = props.isWithinAttrTbl ? disabled ? editTooltipMsgId : "featuregrid.attributeFilter.tooltips.date" : "";
         return { type: "time", isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
     })(DateTimeFilter),
-    "date-time": (props) => withProps(() =>{
+    "date-time": (props) => withProps(({disabled, tooltipMsgId: editTooltipMsgId}) =>{
         let placeholderMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.placeholders.date" : '';
-        let tooltipMsgId = props.isWithinAttrTbl ? "featuregrid.attributeFilter.tooltips.date" : "";
+        let tooltipMsgId = props.isWithinAttrTbl ? disabled ? editTooltipMsgId : "featuregrid.attributeFilter.tooltips.date" : "";
         return { type: "date-time", isWithinAttrTbl: props.isWithinAttrTbl || false,  placeholderMsgId, tooltipMsgId };
     })(DateTimeFilter),
     "geometry": () => GeometryFilter
