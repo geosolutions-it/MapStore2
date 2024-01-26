@@ -23,20 +23,6 @@ const responses = {
     text
 };
 
-const _properties = {
-    titleId: 'layerProperties.propertiesFormatTitle',
-    descId: 'layerProperties.propertiesFormatDescription',
-    glyph: 'ext-json',
-    body: () => (
-        <div>
-            <div><Message msgId="layerProperties.exampleOfResponse" /></div>
-            <br />
-            <JSONViewer response={responses.json} />
-        </div>
-    ) 
-}
-
-
 const formatCards = {
     HIDDEN: {
         titleId: 'layerProperties.hideFormatTitle',
@@ -67,8 +53,18 @@ const formatCards = {
             </div>
         )
     },
-    PROPERTIES: _properties,
-    GEOJSON: _properties,
+    PROPERTIES: {
+        titleId: 'layerProperties.propertiesFormatTitle',
+        descId: 'layerProperties.propertiesFormatDescription',
+        glyph: 'ext-json',
+        body: () => (
+            <div>
+                <div><Message msgId="layerProperties.exampleOfResponse" /></div>
+                <br />
+                <JSONViewer response={responses.json} />
+            </div>
+        )
+    },
     TEMPLATE: {
         titleId: 'layerProperties.templateFormatTitle',
         descId: 'layerProperties.templateFormatDescription',

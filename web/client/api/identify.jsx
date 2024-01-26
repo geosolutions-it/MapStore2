@@ -38,7 +38,7 @@ export const getFeatureInfo = (basePath, param, layer, {attachJSON, itemId = nul
         // add to the flow data in JSON format for highlight/zoom to feature
             ? Observable.forkJoin(
                 retrieveFlow(param),
-                retrieveFlow({ ...param, info_format: layer.infoFormats.includes(GEOJSON_MIME_TYPE) ? GEOJSON_MIME_TYPE : JSON_MIME_TYPE })
+                retrieveFlow({ ...param, info_format: layer?.infoFormats?.includes(GEOJSON_MIME_TYPE) ? GEOJSON_MIME_TYPE : JSON_MIME_TYPE })
                     .map(res => res.data)
                     .catch(() => Observable.of({})) // errors on geometry retrieval are ignored
             ).map(([response, data]) => ({

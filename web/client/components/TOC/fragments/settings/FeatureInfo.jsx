@@ -16,6 +16,8 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import { GEOJSON_MIME_TYPE, JSON_MIME_TYPE } from '../../../../utils/FeatureInfoUtils';
+import { getInfoViewByInfoFormat } from '../../../../utils/MapInfoUtils';
 
 /**
  * Component for rendering FeatureInfo an Accordion with current available format for get feature info
@@ -78,9 +80,21 @@ export default class extends React.Component {
         });
     }
 
+    includeTemplateFormat = (infoFormats) => {
+        let infoFormatVals = Object.values(infoFormats);
+        if (infoFormatVals.includes(JSON_MIME_TYPE)) {
+            return {...infoFormats, 'TEMPLATE': JSON_MIME_TYPE};
+        }
+        if (infoFormatVals.includes(GEOJSON_MIME_TYPE)) {
+            return {...infoFormats, 'TEMPLATE': GEOJSON_MIME_TYPE};
+        }
+
+        return infoFormats;
+    }
+
     render() {
         // the selected value if missing on that layer should be set to the general info format value and not the first one.
-        const data = this.getInfoFormat(this.supportedInfoFormats());
+        const data = this.getInfoFormat(this.includeTemplateFormat(this.supportedInfoFormats()));
         return this.state.loading ? (
             <div
                 style={{
@@ -124,8 +138,9 @@ export default class extends React.Component {
         const infoFormats = Object.assign({},
             ...Object.entries(formats)
                 .filter(([, value])=> includes(availableInfoFormats, value))
-                .map(([key, value])=> ({[key]: value}))
+                .map(([key, value])=> ( {[ (value === JSON_MIME_TYPE || value === GEOJSON_MIME_TYPE) ? getInfoViewByInfoFormat((value)) : key ]: value}))
         );
+
         return isEmpty(infoFormats) ? formats : infoFormats;
     }
 }
