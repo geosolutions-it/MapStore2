@@ -26,29 +26,35 @@ This is a list of things to check if you want to update from a previous version 
 
 We recently added the sidebar to the dashboard page and by doing so we wanted to keep a uniform position of login and home plugins, by putting them in the omnibar container rather than the sidebar one. The viewer is a specific case that will be reviewed in the future.
 
-In order to align the configuration of the two mentioned plugin you have t
+In order to align the configuration of the two mentioned plugin you have to:
 
-- edit locaConfig.json plugins.dashboard
-- remove Home and Login items
+- edit `locaConfig.json` `plugins.dashboard` section
+- remove `BurgerMenu`, `Home` and `Login` items
 - add the following
 
 ```json
 {
-    "name": "Home",
-    "override": {
-        "OmniBar": {
-            "priority": 5
-        }
-    }
+  "name": "SidebarMenu",
+  "cfg": {
+    "containerPosition": "columns"
+  }
 },
 {
-    "name": "Login",
-    "override": {
-        "OmniBar": {
-        "priority": 5
-        }
+  "name": "Home",
+  "override": {
+    "OmniBar": {
+      "priority": 5
     }
-}
+  }
+},
+{
+  "name": "Login",
+  "override": {
+    "OmniBar": {
+      "priority": 5
+    }
+  }
+},
 ```
 
 ### Using `elevation` layer type instead of wms layer with useForElevation property
