@@ -349,7 +349,7 @@
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
-            <version>2.3-SNAPSHOT</version>
+            <version>2.4-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
