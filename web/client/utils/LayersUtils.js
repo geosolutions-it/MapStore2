@@ -817,9 +817,9 @@ export const excludeGoogleBackground = ll => {
     }
     return layers;
 };
-export const creditsToAttribution = ({ imageUrl, link, title }) => {
+export const creditsToAttribution = ({ imageUrl, link, title, text }) => {
     // TODO: check if format is valid for an img (svg, for instance, may not work)
-    const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
+    const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title || text || "credits";
     return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
 };
 
