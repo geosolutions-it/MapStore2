@@ -10,6 +10,7 @@ import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import TileProvider from '../../../../utils/TileConfigProvider';
 import ConfigUtils from '../../../../utils/ConfigUtils';
+import {creditsToAttribution} from '../../../../utils/LayersUtils';
 import {getProxyUrl, needProxy} from '../../../../utils/ProxyUtils';
 
 function splitUrl(originalUrl) {
@@ -74,7 +75,8 @@ Layers.registerType('tileprovider', (options) => {
         proxy = opt.noCors || needProxy(url);
     }
     const cr = opt.credits;
-    const credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : opt.attribution;
+
+    const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : opt.attribution;
     return new Cesium.UrlTemplateImageryProvider({
         url: template(url, opt),
         enablePickFeatures: false,
