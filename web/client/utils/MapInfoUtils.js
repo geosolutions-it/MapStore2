@@ -330,7 +330,16 @@ export const getViewers = () => {
  * @returns {jsx} the associated viewer component.
  */
 export const getDefaultViewer = function(infoFormat, viewers = getViewers()) {
-    return viewers[getAvailableInfoFormatLabels()?.includes(infoFormat) ? getInfoViewByInfoFormat(infoFormat) : infoFormat];
+    let isInfoKey = getAvailableInfoFormatLabels()?.includes(infoFormat);
+    let isInfoValue = getAvailableInfoFormatValues()?.includes(infoFormat);
+    if (isInfoKey) {
+        return viewers[getInfoViewByInfoFormat(getAvailableInfoFormat()[infoFormat])];
+    }
+    if (isInfoValue) {
+        return viewers[getInfoViewByInfoFormat(infoFormat)];
+    }
+
+    return viewers[infoFormat];
 };
 export const defaultQueryableFilter = (l) => {
     return l.visibility &&
