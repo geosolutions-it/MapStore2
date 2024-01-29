@@ -12,7 +12,7 @@ import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTe
 import assign from 'object-assign';
 import {isArray, isEqual} from 'lodash';
 import WMSUtils from '../../../../utils/cesium/WMSUtils';
-import { getAuthenticationParam, getURLs, getWMSVendorParams } from '../../../../utils/LayersUtils';
+import { creditsToAttribution, getAuthenticationParam, getURLs, getWMSVendorParams } from '../../../../utils/LayersUtils';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { addAuthenticationToSLD, getAuthenticationHeaders } from '../../../../utils/SecurityUtils';
 
@@ -54,7 +54,7 @@ function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
     const cr = options.credits;
-    const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
+    const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken);
