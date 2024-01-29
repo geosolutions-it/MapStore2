@@ -36,7 +36,7 @@ function wmsToCesiumOptionsSingleTile(options) {
         height: options.size || 2000,
         bbox: "-180.0,-90,180.0,90",
         srs: "EPSG:4326"
-    }, params || {}, getAuthenticationParam(options));
+    }, (options._v_ ? {_v_: options._v_} : {}), params || {}, getAuthenticationParam(options));
 
     const url = (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
         + getQueryString(addAuthenticationToSLD(parameters, options));
