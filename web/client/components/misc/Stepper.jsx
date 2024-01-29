@@ -111,7 +111,7 @@ export default ({
     return curStepIndex > -1 ?
         <BorderLayout
             className="ms-stepper-container"
-            footer={footer}>
+            footer={steps?.length === 1 ? null : footer}>
             {steps[curStepIndex].component}
         </BorderLayout> : null;
 };
