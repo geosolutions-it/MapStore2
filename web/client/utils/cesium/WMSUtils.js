@@ -145,7 +145,8 @@ export function wmsToCesiumOptionsSingleTile(options) {
         bbox: "-180.0,-90,180.0,90",
         srs: "EPSG:4326",
         ...(params || {}),
-        ...getAuthenticationParam(options)
+        ...getAuthenticationParam(options),
+        ...(options._v_ ? {_v_: options._v_} : {})
     };
 
     const url = (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'

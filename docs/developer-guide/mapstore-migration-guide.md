@@ -153,7 +153,7 @@ For this reason, if you are using the printing plugin in your project you have t
                     <groupId>org.mapfish.print</groupId>
                     <artifactId>print-lib</artifactId>
 -                    <version>geosolutions-2.3-SNAPSHOT</version>
-+                    <version>2.3-SNAPSHOT</version>
++                    <version>2.4-SNAPSHOT</version>
 
 ```
 
