@@ -60,7 +60,7 @@ export default class extends React.Component {
     };
 
     renderPage = () => {
-        const Viewer = getDefaultViewer(this.props.format, this.props.viewers);
+        const Viewer = typeof this.props.viewers === 'function' ? this.props.viewers : getDefaultViewer(this.props.format, this.props.viewers);
         if (Viewer) {
             return <Viewer response={this.props.response} layer={this.props.layer}/>;
         }

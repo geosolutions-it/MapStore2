@@ -281,7 +281,7 @@ describe('MapInfoUtils', () => {
             name: "layer",
             url: "http://localhost",
             featureInfo: {
-                format: "JSON",
+                format: "PROPERTIES",
                 viewer: {
                     type: 'customViewer'
                 }
@@ -421,7 +421,7 @@ describe('MapInfoUtils', () => {
             name: "layer",
             url: "http://localhost",
             featureInfo: {
-                format: "JSON",
+                format: "PROPERTIES",
                 viewer: {
                     type: 'customViewer'
                 }
@@ -661,7 +661,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('getDefaultInfoFormatValueFromLayer', () => {
-        const jsonFormat = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "JSON"}}, {});
+        const jsonFormat = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "PROPERTIES"}}, {});
         expect(jsonFormat).toBe('application/json');
         const htmlFormat = getDefaultInfoFormatValueFromLayer({}, {format: "text/html"});
         expect(htmlFormat).toBe('text/html');

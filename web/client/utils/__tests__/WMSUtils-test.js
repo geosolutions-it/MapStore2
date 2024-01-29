@@ -16,7 +16,7 @@ import {
 
 describe('Test the WMSUtils', () => {
     it('getDefaultSupportedGetFeatureInfoFormats', () => {
-        expect(getDefaultSupportedGetFeatureInfoFormats()).toEqual(['text/plain', 'text/html', 'application/json']);
+        expect(getDefaultSupportedGetFeatureInfoFormats()).toEqual(['text/plain', 'text/html', 'application/json', 'application/geo+json']);
     });
     it('isValidGetMapFormat', () => {
         expect(isValidGetMapFormat('image/png')).toBe(true);

@@ -16,7 +16,6 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
-import { GEOJSON_MIME_TYPE, JSON_MIME_TYPE } from '../../../../utils/FeatureInfoUtils';
 import { getInfoViewByInfoFormat } from '../../../../utils/MapInfoUtils';
 
 /**
@@ -64,7 +63,7 @@ export default class extends React.Component {
         }
     }
 
-    getInfoFormat = (infoFormats) => {
+    getInfoViews = (infoFormats) => {
         return Object.keys(infoFormats).map((infoFormat) => {
             const Body = this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].body;
             return {
@@ -80,13 +79,13 @@ export default class extends React.Component {
         });
     }
 
-    includeTemplateFormat = (infoFormats) => {
-        let infoFormatVals = Object.values(infoFormats);
-        if (infoFormatVals.includes(JSON_MIME_TYPE)) {
-            return {...infoFormats, 'TEMPLATE': JSON_MIME_TYPE};
+    transformInfoFormatsToViews = (infoFormats) => {
+        const { JSON, GEOJSON, ..._infoFormats } = infoFormats;
+        if (JSON) {
+            return {..._infoFormats, [getInfoViewByInfoFormat(GEOJSON || JSON)]: GEOJSON || JSON, 'TEMPLATE': GEOJSON || JSON};
         }
-        if (infoFormatVals.includes(GEOJSON_MIME_TYPE)) {
-            return {...infoFormats, 'TEMPLATE': GEOJSON_MIME_TYPE};
+        if (GEOJSON) {
+            return {..._infoFormats, [getInfoViewByInfoFormat(GEOJSON)]: GEOJSON, 'TEMPLATE': GEOJSON};
         }
 
         return infoFormats;
@@ -94,7 +93,7 @@ export default class extends React.Component {
 
     render() {
         // the selected value if missing on that layer should be set to the general info format value and not the first one.
-        const data = this.getInfoFormat(this.includeTemplateFormat(this.supportedInfoFormats()));
+        const data = this.getInfoViews(this.transformInfoFormatsToViews(this.supportedInfoFormats()));
         return this.state.loading ? (
             <div
                 style={{
@@ -138,7 +137,7 @@ export default class extends React.Component {
         const infoFormats = Object.assign({},
             ...Object.entries(formats)
                 .filter(([, value])=> includes(availableInfoFormats, value))
-                .map(([key, value])=> ( {[ (value === JSON_MIME_TYPE || value === GEOJSON_MIME_TYPE) ? (getInfoViewByInfoFormat((value)) || key) : key ]: value}))
+                .map(([key, value])=> ({[key]: value}))
         );
 
         return isEmpty(infoFormats) ? formats : infoFormats;
