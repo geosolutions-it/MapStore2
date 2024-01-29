@@ -33,8 +33,11 @@ In order to align the configuration of the two mentioned plugin you have to:
 - add the following
 
 ```json
+"Details",
+"AddWidgetDashboard",
+"MapConnectionDashboard",
 {
-  "name": "SidebarMenu",
+  "name": "Menu",
   "cfg": {
     "containerPosition": "columns"
   }
