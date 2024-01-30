@@ -28,7 +28,7 @@ We recently added the sidebar to the dashboard page and by doing so we wanted to
 
 In order to align the configuration of the two mentioned plugin you have to:
 
-- edit `locaConfig.json` `plugins.dashboard` section
+- edit `localConfig.json` `plugins.dashboard` section
 - remove `BurgerMenu`, `Home` and `Login` items
 - add the following
 
