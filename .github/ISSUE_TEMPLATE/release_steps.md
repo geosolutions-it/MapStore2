@@ -25,7 +25,7 @@ This steps have to be followed always when preparing a new release.
       With the following Parameters:
         - Use workflow from branch `master`
         - MapStore branch name to use: `YYYY.XX.xx`
-        - Version of *MapFish Print*, *GeoStore* and *HTTP-Proxy* accordingly to the release calendar
+        - Version of *MapFish Print*, *GeoStore* and *HTTP-Proxy* accordingly to the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
         - use the default value for the other parameters
 - [ ] Wait for the end of the process. At the end
     - A Pull request will be created to the master
