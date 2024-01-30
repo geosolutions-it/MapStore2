@@ -3,7 +3,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-binary</artifactId>
   <packaging>pom</packaging>
-  <version>1.6.2</version>
+  <version>${mapstore2.version}</version>
   <name>MapStore 2 Binary Module</name>
   <description>Project to create the binary package</description>
   <url>http://www.geo-solutions.it</url>
