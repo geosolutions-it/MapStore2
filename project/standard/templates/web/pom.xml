@@ -22,7 +22,7 @@
     <dependency>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-services</artifactId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.6.2</version>
     </dependency>
 
     <!-- ================================================================ -->

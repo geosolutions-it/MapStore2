@@ -3,7 +3,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-root</artifactId>
   <packaging>pom</packaging>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6.2</version>
   <name>MapStore Root</name>
 
   <properties>
