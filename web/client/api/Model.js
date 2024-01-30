@@ -36,6 +36,9 @@ export const ifcDataToJSON = ({ data, ifcApi }) => {
     const modelID = ifcApi.OpenModel(rawFileData, settings); // eslint-disable-line
     ifcApi.LoadAllGeometry(modelID); // eslint-disable-line
     const coordinationMatrix = ifcApi.GetCoordinationMatrix(modelID); // eslint-disable-line
+    if (coordinationMatrix) {
+        ifcApi.SetGeometryTransformation(modelID, coordinationMatrix); // eslint-disable-line
+    }
     let meshes = [];
     let minx = Infinity;
     let maxx = -Infinity;
@@ -84,10 +87,8 @@ export const ifcDataToJSON = ({ data, ifcApi }) => {
             geometry,
             id: mesh.expressID,
             properties: Object.keys(propertyLines).reduce((acc, key) => {
-                return {
-                    ...acc,
-                    [key]: propertyLines[key]?.value || propertyLines[key]
-                };
+                acc[key] = propertyLines[key]?.value || propertyLines[key];
+                return acc;
             }, {})
         });
     });

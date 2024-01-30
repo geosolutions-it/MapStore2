@@ -44,10 +44,8 @@ describe('ModelTransformation', () => {
             }}
             onChange={(key, value) => {
                 try {
-                    expect(key).toBe('center');
-                    expect(value[0]).toBe(2);
-                    expect(value[1]).toBe(0);
-                    expect(value[2]).toBe(0);
+                    expect(key).toBe('features');
+                    expect(value[0]).toEqual({ properties: {}, type: 'Feature', geometry: { type: 'Point', coordinates: [ 2, 0, 0 ] } });
                 } catch (e) {
                     done(e);
                 }
@@ -72,10 +70,8 @@ describe('ModelTransformation', () => {
             }}
             onChange={(key, value) => {
                 try {
-				 	expect(key).toBe('center');
-                    expect(value[0]).toBe(0);
-                    expect(value[1]).toBe(1);
-                    expect(value[2]).toBe(0);
+                    expect(key).toBe('features');
+                    expect(value[0]).toEqual({ properties: {}, type: 'Feature', geometry: { type: 'Point', coordinates: [ 0, 1, 0 ] } });
                 } catch (e) {
                     done(e);
                 }
@@ -100,10 +96,8 @@ describe('ModelTransformation', () => {
             }}
             onChange={(key, value) => {
                 try {
-                    expect(key).toBe('center');
-                    expect(value[0]).toBe(0);
-                    expect(value[1]).toBe(0);
-                    expect(value[2]).toBe(10);
+                    expect(key).toBe('features');
+                    expect(value[0]).toEqual({ properties: {}, type: 'Feature', geometry: { type: 'Point', coordinates: [ 0, 0, 10 ] } });
                 } catch (e) {
                     done(e);
                 }

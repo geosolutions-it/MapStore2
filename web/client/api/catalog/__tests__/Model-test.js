@@ -115,7 +115,22 @@ describe('Test IFC Model catalog API', () => {
                     maxy: 0
                 }
             },
-            center: [0, 0, 0]
+            features: [
+                {
+                    type: 'Feature',
+                    id: 'model-origin',
+                    properties: {
+                        heading: 0,
+                        pitch: 0,
+                        roll: 0,
+                        scale: 1
+                    },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [0, 0, 0]
+                    }
+                }
+            ]
         });
     });
     it('should validate if the service url ends with .ifc', (done) => {

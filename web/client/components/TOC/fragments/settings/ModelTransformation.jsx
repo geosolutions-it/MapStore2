@@ -23,22 +23,46 @@ function ModelTransformation({
     layer,
     onChange
 }) {
-    const changeCenterModelHandler = (newCenter) => {
+    const changeCenterModelHandler = (value) => {
+        const feature = layer?.features?.[0];
+        const [longitude, latitude, height] = feature?.geometry?.coordinates || [0, 0, 0];
+        const updatedCenter = {
+            longitude,
+            latitude,
+            height,
+            ...value
+        };
         const newBbox = {
             ...layer?.bbox,
             bounds: {
-                minx: newCenter?.[0] - 0.001,
-                miny: newCenter?.[1] - 0.001,
-                maxx: newCenter?.[0] + 0.001,
-                maxy: newCenter?.[1] + 0.001
+                minx: updatedCenter.longitude - 0.001,
+                miny: updatedCenter.latitude - 0.001,
+                maxx: updatedCenter.longitude + 0.001,
+                maxy: updatedCenter.latitude + 0.001
             }
         };
-        onChange('center', newCenter);
+        onChange('features', [
+            {
+                properties: {},
+                ...feature,
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [
+                        updatedCenter.longitude,
+                        updatedCenter.latitude,
+                        updatedCenter.height
+                    ]
+                }
+            }
+        ]);
         onChange('bbox', newBbox);
     };
     if (layer?.type !== 'model') {
         return null;
     }
+    const feature = layer?.features?.[0];
+    const [longitude, latitude, height] = feature?.geometry?.coordinates || [0, 0, 0];
     return (
         <div style={{ margin: '0 -8px' }}>
             <FormGroup className="form-group-flex">
@@ -47,16 +71,13 @@ function ModelTransformation({
                     <DebouncedFormControl
                         type="number"
                         name={"modelCenterLng"}
-                        value={layer?.center?.[0] || 0}
+                        value={longitude}
                         fallbackValue={0}
                         onChange={(val)=> {
-                            const newCenter = [
-                                val !== undefined
-                                    ? parseFloat(val) : 0,
-                                layer?.center?.[1] ?? 0,
-                                layer?.center?.[2] ?? 0
-                            ];
-                            changeCenterModelHandler(newCenter);
+                            changeCenterModelHandler({
+                                longitude: val !== undefined
+                                    ? parseFloat(val) : 0
+                            });
                         }}
                     />
                     <InputGroup.Addon>DD</InputGroup.Addon>
@@ -68,16 +89,13 @@ function ModelTransformation({
                     <DebouncedFormControl
                         type="number"
                         name={"modelCenterLat"}
-                        value={layer?.center?.[1] || 0}
+                        value={latitude}
                         fallbackValue={0}
                         onChange={(val)=> {
-                            const newCenter = [
-                                layer?.center?.[0] ?? 0,
-                                val !== undefined
-                                    ? parseFloat(val) : 0,
-                                layer?.center?.[2] ?? 0
-                            ];
-                            changeCenterModelHandler(newCenter);
+                            changeCenterModelHandler({
+                                latitude: val !== undefined
+                                    ? parseFloat(val) : 0
+                            });
                         }}
                     />
                     <InputGroup.Addon>DD</InputGroup.Addon>
@@ -89,16 +107,13 @@ function ModelTransformation({
                     <DebouncedFormControl
                         type="number"
                         name={"heightOffset"}
-                        value={layer?.center?.[2] || 0}
+                        value={height}
                         fallbackValue={0}
                         onChange={(val)=> {
-                            const newCenter = [
-                                layer?.center?.[0] ?? 0,
-                                layer?.center?.[1] ?? 0,
-                                val !== undefined
+                            changeCenterModelHandler({
+                                height: val !== undefined
                                     ? parseFloat(val) : 0
-                            ];
-                            changeCenterModelHandler(newCenter);
+                            });
                         }}
                     />
                     <InputGroup.Addon>m</InputGroup.Addon>
