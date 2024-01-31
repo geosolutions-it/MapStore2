@@ -125,10 +125,7 @@ export const getCapabilities = (url) => {
             return getWebIFC()
                 .then((ifcApi) => {
                     let modelID = ifcApi.OpenModel(new Uint8Array(data));   // eslint-disable-line
-                    // const { extent, center } = ifcDataToJSON({ ifcApi, data });
                     let capabilities = extractCapabilities(ifcApi, modelID, url);
-                    // console.log({extent, center});
-                    // let [minx, miny, maxx, maxy] = extent;
                     // todo: read IFCProjectedCRS, IFCMapCONVERSION in case of IFC4
                     let bbox = {
                         bounds: capabilities.version !== "IFC4" ? {

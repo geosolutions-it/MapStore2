@@ -80,7 +80,6 @@ function ModelTransformation({
                             });
                         }}
                     />
-                    <InputGroup.Addon>DD</InputGroup.Addon>
                 </InputGroup>
             </FormGroup>
             <FormGroup className="form-group-flex">
@@ -98,15 +97,14 @@ function ModelTransformation({
                             });
                         }}
                     />
-                    <InputGroup.Addon>DD</InputGroup.Addon>
                 </InputGroup>
             </FormGroup>
             <FormGroup className="form-group-flex">
-                <ControlLabel><Message msgId="layerProperties.heightOffset"/></ControlLabel>
+                <ControlLabel><Message msgId="layerProperties.modelLayer.height"/></ControlLabel>
                 <InputGroup style={{ maxWidth: 120 }}>
                     <DebouncedFormControl
                         type="number"
-                        name={"heightOffset"}
+                        name={"height"}
                         value={height}
                         fallbackValue={0}
                         onChange={(val)=> {
@@ -116,7 +114,6 @@ function ModelTransformation({
                             });
                         }}
                     />
-                    <InputGroup.Addon>m</InputGroup.Addon>
                 </InputGroup>
             </FormGroup>
         </div>

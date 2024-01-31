@@ -118,7 +118,7 @@ class CesiumMap extends React.Component {
             requestRenderMode: true,
             maximumRenderTimeChange: Infinity,
             skyBox: false,
-            scene3DOnly: true
+            scene3DOnly: true                       // we are using cesium for 3d scene and ol for 2d plus there is an error while converting and normalizing the ifc position when scene3DOnly is false
         }, this.getMapOptions(this.props.mapOptions)));
 
         // prevent default behavior

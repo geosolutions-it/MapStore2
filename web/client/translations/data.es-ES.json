@@ -172,7 +172,8 @@
             },
             "modelLayer": {
                 "modelCenterLat": "Latitud del centro (DD)",
-                "modelCenterLng": "Longitud del centro (DD)"
+                "modelCenterLng": "Longitud del centro (DD)",
+                "height": "Altura (m)"
             },
             "tooltip": {
                 "label": "Información sobre herramientas",

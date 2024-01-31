@@ -175,7 +175,8 @@
             },
             "modelLayer": {
                 "modelCenterLat": "Center's Latitude (DD)",
-                "modelCenterLng": "Center's Longitude (DD)"
+                "modelCenterLng": "Center's Longitude (DD)",
+                "height": "Height (m)"
             },
             "tooltip": {
                 "label": "Tooltip",

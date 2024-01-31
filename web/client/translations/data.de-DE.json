@@ -175,7 +175,8 @@
             },
             "modelLayer": {
                 "modelCenterLat": "Breitengrad des Zentrums (DD)",
-                "modelCenterLng": "Längengrad des Zentrums (DD)"
+                "modelCenterLng": "Längengrad des Zentrums (DD)",
+                "height": "Höhe (m)"
             },
             "tooltip": {
                 "label": "QuickInfo",

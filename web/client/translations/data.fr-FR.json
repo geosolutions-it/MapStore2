@@ -175,7 +175,8 @@
             },
             "modelLayer": {
                 "modelCenterLat": "Latitude du centre (DD)",
-                "modelCenterLng": "Longitude du centre(DD)"
+                "modelCenterLng": "Longitude du centre(DD)",
+                "height": "Hauteur (m)"
             },
             "tooltip": {
                 "label": "Infobulle",
