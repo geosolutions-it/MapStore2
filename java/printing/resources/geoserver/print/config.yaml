@@ -39,7 +39,7 @@ hosts:
     dummy: true
 
   - !ipMatch
-    host: 127.0.0.1
+    ip: 127.0.0.1
     # Allow to all hosts
     mask: 0.0.0.0
 
@@ -127,7 +127,6 @@ layouts:
           widths: [395]
           items:
             - !text
-              width: 300
               text: '${comment}'
               fontEncoding: Cp1252
               fontSize: 9
@@ -143,7 +142,6 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 300
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -174,8 +172,8 @@ layouts:
         - !map
           width: 592
           height: 400
-          absoluteX:30
-          absoluteY:475
+          absoluteX: 30
+          absoluteY: 475
         #legend panel
         - !columns
           config:
@@ -224,14 +222,12 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 300
                   text: '${comment}'
                   fontEncoding: Cp1252
                   fontSize: 9
                   align: left
                   vertAlign: middle
                 - !text
-                  width: 300
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -297,7 +293,6 @@ layouts:
           widths: [395]
           items:
             - !text
-              width: 300
               text: '${comment}'
               fontEncoding: Cp1252
               fontSize: 9
@@ -313,7 +308,6 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 300
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -344,8 +338,8 @@ layouts:
         - !map
           width: 780
           height: 400
-          absoluteX:30
-          absoluteY:475
+          absoluteX: 30
+          absoluteY: 475
         - !columns
           absoluteX: 750
           absoluteY: 140
@@ -366,14 +360,12 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 300
                   text: '${comment}'
                   fontEncoding: Cp1252
                   fontSize: 9
                   align: left
                   vertAlign: middle
                 - !text
-                  width: 300
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -439,7 +431,6 @@ layouts:
           widths: [395]
           items:
             - !text
-              width: 300
               text: '${comment}'
               fontEncoding: Cp1252
               fontSize: 9
@@ -455,7 +446,6 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 300
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -468,7 +458,6 @@ layouts:
               type: 'bar sub'
               intervals: 5
     lastPage:
-      rotation: true
       pageSize: 595 842
       landscape: false
       items:
@@ -524,8 +513,8 @@ layouts:
         - !map
           width: 780
           height: 400
-          absoluteX:30
-          absoluteY:475
+          absoluteX: 30
+          absoluteY: 475
         - !columns
           absoluteX: 750
           absoluteY: 140
@@ -546,14 +535,12 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 300
                   text: '${comment}'
                   fontEncoding: Cp1252
                   fontSize: 9
                   align: left
                   vertAlign: middle
                 - !text
-                  width: 300
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -571,7 +558,6 @@ layouts:
               type: 'bar sub'
               intervals: 5
     lastPage:
-      rotation: true
       pageSize: 842 595
       landscape: false
       items:
@@ -586,7 +572,7 @@ layouts:
                 padding: 4
                 backgroundColor: white
                 vertAlign: bottom
-          absoluteX:30
+          absoluteX: 30
           absoluteY: 535
           width: 780
           widths: [780]
@@ -685,7 +671,6 @@ layouts:
           widths: [424]
           items:
             - !text
-              width: 424
               text: '${comment}'
               fontEncoding: Cp1252
               fontSize: 9
@@ -701,7 +686,6 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 424
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -732,8 +716,8 @@ layouts:
         - !map
           width: 837
           height: 594
-          absoluteX:42
-          absoluteY:700
+          absoluteX: 42
+          absoluteY: 700
         #legend panel
         - !columns
           config:
@@ -782,14 +766,12 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 424
                   text: '${comment}'
                   fontEncoding: Cp1252
                   fontSize: 9
                   align: left
                   vertAlign: middle
                 - !text
-                  width: 424
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -855,7 +837,6 @@ layouts:
           widths: [424]
           items:
             - !text
-              width: 424
               text: '${comment}'
               fontEncoding: Cp1252
               fontSize: 9
@@ -871,7 +852,6 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 424
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -902,8 +882,8 @@ layouts:
         - !map
           width: 1102
           height: 594
-          absoluteX:42
-          absoluteY:700
+          absoluteX: 42
+          absoluteY: 700
         - !columns
           absoluteX: 1060
           absoluteY: 198
@@ -924,14 +904,12 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 424
                   text: '${comment}'
                   fontEncoding: Cp1252
                   fontSize: 9
                   align: left
                   vertAlign: middle
                 - !text
-                  width: 424
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -997,7 +975,6 @@ layouts:
           widths: [424]
           items:
             - !text
-              width: 424
               text: '${comment}'
               fontEncoding: Cp1252
               fontSize: 9
@@ -1013,7 +990,6 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 424
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -1026,7 +1002,6 @@ layouts:
               type: 'bar sub'
               intervals: 5
     lastPage:
-      rotation: true
       pageSize: 842 1190
       landscape: false
       items:
@@ -1082,8 +1057,8 @@ layouts:
         - !map
           width: 1102
           height: 594
-          absoluteX:42
-          absoluteY:700
+          absoluteX: 42
+          absoluteY: 700
         - !columns
           absoluteX: 1070
           absoluteY: 198
@@ -1104,14 +1079,12 @@ layouts:
               nbColumns: 1
               items:
                 - !text
-                  width: 424
                   text: '${comment}'
                   fontEncoding: Cp1252
                   fontSize: 9
                   align: left
                   vertAlign: middle
                 - !text
-                  width: 424
                   text: '${now MM.dd.yyyy}'
                   fontEncoding: Cp1252
                   fontSize: 9
@@ -1129,7 +1102,6 @@ layouts:
               type: 'bar sub'
               intervals: 5
     lastPage:
-      rotation: true
       pageSize: 1190 842
       landscape: false
       items:
@@ -1144,7 +1116,7 @@ layouts:
                 padding: 4
                 backgroundColor: white
                 vertAlign: bottom
-          absoluteX:30
+          absoluteX: 30
           absoluteY: 800
           width: 780
           widths: [780]
