@@ -120,6 +120,92 @@ describe('Test Feature', () => {
         count = container.getSource().getFeatures().length;
         expect(count).toBe(0);
     });
+    it('adding a feature of type circle and geodesic', () => {
+        let options = {
+            crs: 'EPSG:4326',
+            features: {
+                type: 'FeatureCollection',
+                crs: {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[
+                                [13, 43],
+                                [15, 43],
+                                [15, 44],
+                                [13, 44]
+                            ]]
+                        },
+                        properties: {
+                            'name': "some name",
+                            isGeodesic: true,
+                            isCircle: true,
+                            radius: 1000,
+                            center: [13, 43]
+                        }
+                    }
+                ]
+            }
+        };
+        let source = new VectorSource({
+            features: []
+        });
+        const msId = "some value";
+        let container = new VectorLayer({
+            msId,
+            source: source,
+            visible: true,
+            zIndex: 1
+        });
+        const geometry = options.features.features[0].geometry;
+        const type = options.features.features[0].type;
+        let properties = {...options.features.features[0].properties, isGeodesic: false};
+
+        // create layers with feature visible
+        let layer = ReactDOM.render(
+            <Feature
+                options={options}
+                geometry={geometry}
+                type={type}
+                properties={properties}
+                msId={msId}
+                container={container}
+                featuresCrs={"EPSG:4326"}
+                crs={"EPSG:3857"}
+            />, document.getElementById("container"));
+
+        expect(layer).toBeTruthy();
+        // count layers
+        let [feature] = container.getSource().getFeatures();
+        expect(feature).toBeTruthy();
+        expect(feature.getGeometry().getType()).toBe('Circle');
+
+        properties = options.features.features[0].properties;
+        layer = ReactDOM.render(
+            <Feature
+                options={options}
+                geometry={geometry}
+                type={type}
+                properties={properties}
+                msId={msId}
+                container={container}
+                featuresCrs={"EPSG:4326"}
+                crs={"EPSG:3857"}
+            />, document.getElementById("container"));
+
+        expect(layer).toExist();
+
+        [feature] = container.getSource().getFeatures();
+        expect(feature).toBeTruthy();
+        expect(feature.getGeometry().getType()).toBe('Polygon');
+    });
     it('adding a feature without a geometry', () => {
         var options = {
             crs: 'EPSG:4326',
