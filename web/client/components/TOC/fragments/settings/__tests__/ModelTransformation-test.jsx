@@ -34,7 +34,7 @@ describe('ModelTransformation', () => {
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'layerProperties.modelLayer.modelCenterLng',
             'layerProperties.modelLayer.modelCenterLat',
-            'layerProperties.heightOffset'
+            'layerProperties.modelLayer.height'
         ]);
     });
     it('should trigger on change with model center lng input', (done) => {
@@ -57,7 +57,7 @@ describe('ModelTransformation', () => {
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'layerProperties.modelLayer.modelCenterLng',
             'layerProperties.modelLayer.modelCenterLat',
-            'layerProperties.heightOffset'
+            'layerProperties.modelLayer.height'
         ]);
         const inputNodes = document.querySelectorAll('input[type=\'number\']');
         Simulate.focus(inputNodes[0]);
@@ -83,13 +83,13 @@ describe('ModelTransformation', () => {
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'layerProperties.modelLayer.modelCenterLng',
             'layerProperties.modelLayer.modelCenterLat',
-            'layerProperties.heightOffset'
+            'layerProperties.modelLayer.height'
         ]);
         const inputNodes = document.querySelectorAll('input[type=\'number\']');
         Simulate.focus(inputNodes[1]);
         Simulate.change(inputNodes[1], { target: { value: 1 } });
     });
-    it('should trigger on change with heightOffset input', (done) => {
+    it('should trigger on change with height input', (done) => {
         act(() => {
             ReactDOM.render(<ModelTransformation layer={{
                 type: 'model', center: [0, 0, 0]
@@ -109,7 +109,7 @@ describe('ModelTransformation', () => {
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'layerProperties.modelLayer.modelCenterLng',
             'layerProperties.modelLayer.modelCenterLat',
-            'layerProperties.heightOffset'
+            'layerProperties.modelLayer.height'
         ]);
         const inputNodes = document.querySelectorAll('input[type=\'number\']');
         Simulate.focus(inputNodes[2]);
