@@ -89,7 +89,7 @@ export default class Feature extends React.Component {
             });
             this._feature.map(f => {
                 let newF = f;
-                if (f.getProperties().isCircle) {
+                if (f.getProperties().isCircle && !f.getProperties().isGeodesic) {
                     newF = transformPolygonToCircle(f, props.crs || 'EPSG:3857', props.featuresCrs);
                     newF.setGeometry(newF.getGeometry().transform(props.crs || 'EPSG:3857', props.featuresCrs));
                 }
