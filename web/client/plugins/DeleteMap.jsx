@@ -73,9 +73,6 @@ export default createPlugin('DeleteMap', {
             onConfirmDelete: (mapId) => deleteMap(mapId),
             onClose: toggleControl.bind(null, 'mapDelete', false)
         })(DeleteConfirmDialog),
-    options: {
-        disablePluginIf: "{state('userrole') !== 'ADMIN'}"
-    },
     containers: {
         BurgerMenu: {
             name: 'mapDelete',
@@ -85,7 +82,8 @@ export default createPlugin('DeleteMap', {
             action: toggleControl.bind(null, 'mapDelete', null),
             tooltip: "mapDeleteDialog.mapDeleteTooltip",
             selector: (state) => {
-                return state?.map?.present?.info ? {} : { style: {display: "none"} };
+                const { canDelete = false } = state?.map?.present?.info || {};
+                return canDelete ? {} : { style: {display: "none"} };
             },
             priority: 2,
             doNotHide: true
@@ -99,7 +97,8 @@ export default createPlugin('DeleteMap', {
             toggle: true,
             tooltip: "manager.deleteMap",
             selector: (state) => {
-                return state?.map?.present?.info ? {} : { style: {display: "none"} };
+                const { canDelete = false } = state?.map?.present?.info || {};
+                return canDelete ? {} : { style: {display: "none"} };
             },
             priority: 1,
             doNotHide: true
