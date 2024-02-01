@@ -116,7 +116,8 @@ const getWFSStyle = (layer, options, map) => {
     return getStyle(
         applyDefaultStyleToVectorLayer({
             ...options,
-            features: collection.features
+            features: collection.features,
+            asPromise: true
         })
     )
         .then((style) => {
