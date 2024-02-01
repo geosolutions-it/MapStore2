@@ -41,10 +41,12 @@ export const getInfoViewModes = () => {
     return {...INFO_VIEW_MODES};
 };
 /**
+ * Given an `infoFormat` mime-type passed, it returns the default view mode (e.g. `PROPERTIES`, `HTML`, `TEXT`) for the format selected.
+ *
  * @param {string} infoFormat the info format mime type.
  * @returns {string} the info view mode that is used for that info format.
  */
-export const getInfoViewByInfoFormat = (infoFormat) => {
+export const getDefaultInfoViewMode = (infoFormat) => {
     let infoView;
     switch (infoFormat) {
     case INFO_FORMATS.TEXT:
@@ -67,13 +69,14 @@ export const getInfoViewByInfoFormat = (infoFormat) => {
     return infoView;
 };
 /**
+ * Given a infoViewMode (e.g. "HTML", "PROPERTIES", "TEMPLATE"), returns the mime-type to use for the request for the given layer.
+ *
  * @param {string} infoView the info view mode.
  * @param {array} layerInfoFormatCfg the layer supported GFI mime types.
  * @returns {string} the info format mime type.
  */
 export const getInfoFormatByInfoView = (infoView, layerInfoFormatCfg) => {
     let infoFormat;
-    let isGeoJSON = layerInfoFormatCfg?.includes(GEOJSON_MIME_TYPE);
     switch (infoView) {
     case INFO_VIEW_MODES.TEXT:
         infoFormat = INFO_FORMATS.TEXT;
@@ -82,10 +85,8 @@ export const getInfoFormatByInfoView = (infoView, layerInfoFormatCfg) => {
         infoFormat = INFO_FORMATS.HTML;
         break;
     case INFO_VIEW_MODES.PROPERTIES:
-        infoFormat = isGeoJSON ? INFO_FORMATS.GEOJSON : INFO_FORMATS.JSON;
-        break;
     case INFO_VIEW_MODES.TEMPLATE:
-        infoFormat = isGeoJSON ? INFO_FORMATS.GEOJSON : INFO_FORMATS.JSON;
+        infoFormat = layerInfoFormatCfg?.includes(GEOJSON_MIME_TYPE) ? INFO_FORMATS.GEOJSON : INFO_FORMATS.JSON;
         break;
     default:
         // TODO: re-assess leaving default null value, this way tests work but caller is burdened with fallback.
@@ -160,14 +161,21 @@ export const getLayerFeatureInfo = (layer) => {
     return layer && layer.featureInfo && {...layer.featureInfo} || {};
 };
 /**
+ * Extracts the proper mime time to use for the layer, given the passed props that determine the preferred type. This
+ *  helps to convert, for instance, the mime-type set as default for the map (e.g. `application/json`) into the effective
+ * mime type requested by the server (e.g. `application/geo+json`)
+ * @param {object} layer the layer
+ * @param props.format the preferred format, corresponding to the global settings information sheet field. it can be a mime type like `application/json`.
  * @return {string} the info format value from layer, otherwise the info format in settings
  */
-
 export const getDefaultInfoFormatValueFromLayer = (layer, props) => {
     const featInfoFormat = getLayerFeatureInfo(layer)?.format;
     if (featInfoFormat) {
         // When the user explicitly configures the format from the layer settings => feature info page, return directly from definition map.
-        return getInfoFormatByInfoView(featInfoFormat, layer.infoFormats) || INFO_FORMATS;
+        // Check if featInfoFormat is an actual view, otherwise retrieve infoFormat directly.
+        return Object.values(getInfoViewModes()).includes(featInfoFormat)
+            ? getInfoFormatByInfoView(featInfoFormat, layer.infoFormats)
+            : getAvailableInfoFormat()[featInfoFormat];
     }
     if (props.format) {
         if (props.format === JSON_MIME_TYPE && layer.infoFormats && layer.infoFormats.includes(GEOJSON_MIME_TYPE)) {
@@ -183,6 +191,10 @@ export const getDefaultInfoFormatValueFromLayer = (layer, props) => {
     // if global configration somehow fails provide a last fallback.
     return MapInfoUtils.getDefaultInfoFormatValue();
 };
+/**
+ * @param {object} layer a layer object
+ * @returns {object} the viewer configured for the layer. If viewer is not configured, it returns an empty object.
+ */
 export const getLayerFeatureInfoViewer = (layer) => {
     if (layer.featureInfo
         && layer.featureInfo.viewer) {
@@ -333,10 +345,10 @@ export const getDefaultViewer = function(infoFormat, viewers = getViewers()) {
     let isInfoKey = getAvailableInfoFormatLabels()?.includes(infoFormat);
     let isInfoValue = getAvailableInfoFormatValues()?.includes(infoFormat);
     if (isInfoKey) {
-        return viewers[getInfoViewByInfoFormat(getAvailableInfoFormat()[infoFormat])];
+        return viewers[getDefaultInfoViewMode(getAvailableInfoFormat()[infoFormat])];
     }
     if (isInfoValue) {
-        return viewers[getInfoViewByInfoFormat(infoFormat)];
+        return viewers[getDefaultInfoViewMode(infoFormat)];
     }
 
     return viewers[infoFormat];

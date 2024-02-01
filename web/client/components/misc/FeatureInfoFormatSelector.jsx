@@ -8,7 +8,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {getAvailableInfoFormat, getDefaultInfoFormatValue, getInfoViewByInfoFormat} from '../../utils/MapInfoUtils';
+import {getAvailableInfoFormat, getDefaultInfoFormatValue, getDefaultInfoViewMode} from '../../utils/MapInfoUtils';
 import Select from "react-select";
 import { FormGroup, ControlLabel } from 'react-bootstrap';
 import ControlledPopover from '../widgets/widget/ControlledPopover';
@@ -40,7 +40,7 @@ function FeatureInfoFormatSelector({
     const options = Object.keys(filtered).map((format) => {
         return {
             value: filtered[format],
-            label: getInfoViewByInfoFormat(filtered[format]) || format
+            label: getDefaultInfoViewMode(filtered[format]) || format
         };
     });
 

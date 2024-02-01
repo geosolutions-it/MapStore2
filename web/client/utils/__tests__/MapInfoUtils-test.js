@@ -26,7 +26,7 @@ import {
     defaultQueryableFilter,
     filterRequestParams,
     getInfoViewModes,
-    getInfoViewByInfoFormat,
+    getDefaultInfoViewMode,
     isDataFormat
 } from '../MapInfoUtils';
 
@@ -59,7 +59,7 @@ describe('MapInfoUtils', () => {
         }, true)).toBe(true);
     });
 
-    it('getInfoViewByInfoFormat', () => {
+    it('getDefaultInfoViewMode', () => {
         let testViews = {
             "TEXT": "TEXT",
             "PROPERTIES": "PROPERTIES",
@@ -73,19 +73,19 @@ describe('MapInfoUtils', () => {
             "GEOJSON": 'application/geo+json'
         };
 
-        let textPlainResult = getInfoViewByInfoFormat(testInfoFormats.TEXT);
+        let textPlainResult = getDefaultInfoViewMode(testInfoFormats.TEXT);
         expect(textPlainResult).toExist();
         expect(textPlainResult).toBe(testViews.TEXT);
 
-        let htmlResult = getInfoViewByInfoFormat(testInfoFormats.HTML);
+        let htmlResult = getDefaultInfoViewMode(testInfoFormats.HTML);
         expect(htmlResult).toExist();
         expect(htmlResult).toBe(testViews.HTML);
 
-        let jsonResult = getInfoViewByInfoFormat(testInfoFormats.JSON);
+        let jsonResult = getDefaultInfoViewMode(testInfoFormats.JSON);
         expect(jsonResult).toExist();
         expect(jsonResult).toBe(testViews.PROPERTIES);
 
-        let geoJsonResult = getInfoViewByInfoFormat(testInfoFormats.GEOJSON);
+        let geoJsonResult = getDefaultInfoViewMode(testInfoFormats.GEOJSON);
         expect(geoJsonResult).toExist();
         expect(geoJsonResult).toBe(testViews.PROPERTIES);
     });

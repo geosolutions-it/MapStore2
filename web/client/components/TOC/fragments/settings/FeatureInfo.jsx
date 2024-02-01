@@ -16,7 +16,7 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
-import { getInfoViewByInfoFormat } from '../../../../utils/MapInfoUtils';
+import { getDefaultInfoViewMode } from '../../../../utils/MapInfoUtils';
 
 /**
  * Component for rendering FeatureInfo an Accordion with current available format for get feature info
@@ -82,10 +82,10 @@ export default class extends React.Component {
     transformInfoFormatsToViews = (infoFormats) => {
         const { JSON, GEOJSON, ..._infoFormats } = infoFormats;
         if (JSON) {
-            return {..._infoFormats, [getInfoViewByInfoFormat(GEOJSON || JSON)]: GEOJSON || JSON, 'TEMPLATE': GEOJSON || JSON};
+            return {..._infoFormats, [getDefaultInfoViewMode(GEOJSON || JSON)]: GEOJSON || JSON, 'TEMPLATE': GEOJSON || JSON};
         }
         if (GEOJSON) {
-            return {..._infoFormats, [getInfoViewByInfoFormat(GEOJSON)]: GEOJSON, 'TEMPLATE': GEOJSON};
+            return {..._infoFormats, [getDefaultInfoViewMode(GEOJSON)]: GEOJSON, 'TEMPLATE': GEOJSON};
         }
 
         return infoFormats;
