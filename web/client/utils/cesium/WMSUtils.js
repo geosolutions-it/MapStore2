@@ -11,7 +11,7 @@ import { isArray } from 'lodash';
 import { addAuthenticationToSLD, getAuthenticationHeaders } from "../SecurityUtils";
 import { getProxyUrl, needProxy } from "../ProxyUtils";
 import ConfigUtils from "../ConfigUtils";
-import { getAuthenticationParam, getURLs, getWMSVendorParams } from "../LayersUtils";
+import { creditsToAttribution, getAuthenticationParam, getURLs, getWMSVendorParams } from "../LayersUtils";
 import { isVectorFormat } from '../VectorTileUtils';
 import { optionsToVendorParams } from '../VendorParamsUtils';
 
@@ -94,7 +94,7 @@ export function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
     const cr = options.credits;
-    const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
+    const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
     const headers = getAuthenticationHeaders(urls[0], options.securityToken);
