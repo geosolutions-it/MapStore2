@@ -663,6 +663,9 @@ describe('MapInfoUtils', () => {
     it('getDefaultInfoFormatValueFromLayer', () => {
         const jsonFormat = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "PROPERTIES"}}, {});
         expect(jsonFormat).toBe('application/json');
+        // getDefaultInfoFormatValueFromLayer should also resolve when featureInfo.format corresponds to an info_format key rather then an info view.
+        const geojsonPreConfigured = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "GEOJSON"}}, {});
+        expect(geojsonPreConfigured).toBe('application/geo+json');
         const htmlFormat = getDefaultInfoFormatValueFromLayer({}, {format: "text/html"});
         expect(htmlFormat).toBe('text/html');
     });
