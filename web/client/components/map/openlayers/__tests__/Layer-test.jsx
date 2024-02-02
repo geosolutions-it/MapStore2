@@ -2719,6 +2719,43 @@ describe('Openlayers layer', () => {
             map={map} />, document.getElementById("container"));
         expect(layer.layer.getSource()).toBeTruthy();
     });
+    it('render wfs layer with legacy style', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
+            return [200, SAMPLE_FEATURE_COLLECTION];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile',
+            style: {
+                color: 'rgba(0, 0, 255, 1)',
+                fillColor: 'rgba(0, 0, 255, 0.1)',
+                fillOpacity: 0.1,
+                opacity: 1,
+                radius: 10,
+                weight: 1
+            }
+        };
+        let layer;
+        map.on('rendercomplete', () => {
+            if (layer.layer.getSource().getFeatures().length > 0) {
+                const f = layer.layer.getSource().getFeatures()[0];
+                expect(f.getGeometry().getCoordinates()[0]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[0]);
+                expect(f.getGeometry().getCoordinates()[1]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[1]);
+                done();
+            }
+        });
+        // first render
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource()).toBeTruthy();
+    });
     it('render wfs layer with error', () => {
         mockAxios.onGet().reply(r => {
             expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
