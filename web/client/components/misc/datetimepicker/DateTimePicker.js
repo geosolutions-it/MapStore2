@@ -18,6 +18,7 @@ import OverlayTrigger from '../OverlayTrigger';
 import Hours from './Hours';
 import Popover from '../../styleeditor/Popover';
 import {getMessageById} from '../../../utils/LocaleUtils';
+import QuickTimeSelectors from './QuickTimeSelectors';
 
 localizer(moment);
 
@@ -56,6 +57,7 @@ const formats = {
 class DateTimePicker extends Component {
 
     static propTypes = {
+        className: PropTypes.string,
         format: PropTypes.string,
         type: PropTypes.string,
         placeholder: PropTypes.string,
@@ -70,7 +72,8 @@ class DateTimePicker extends Component {
         tabIndex: PropTypes.string,
         options: PropTypes.object,
         isWithinAttrTbl: PropTypes.bool,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        quickDateTimeSelectors: PropTypes.array
     }
     static contextTypes = {
         messages: PropTypes.object,
@@ -112,6 +115,19 @@ class DateTimePicker extends Component {
         const { date: dateFormat, time: timeFormat, base: defaultFormat } = formats;
         return format ? format : !time && calendar ? dateFormat : time && !calendar ? timeFormat : defaultFormat;
     }
+
+    renderQuickTimeSelectors = () => {
+        return (
+            <QuickTimeSelectors
+                type={this.props.type}
+                quickDateTimeSelectors={this.props.quickDateTimeSelectors}
+                onMouseDown={this.handleMouseDown}
+                onChangeDate={this.handleCalendarChange}
+                onChangeTime={(date, type) => this.handleTimeSelect({date}, type)}
+            />
+        );
+    }
+
     renderCustomDateTimePopup = () => {
         const { inputValue, operator, open } = this.state;
         const { tabIndex, type } = this.props;
@@ -146,6 +162,7 @@ class DateTimePicker extends Component {
                                 <Hours style={{maxHeight: "120px"}} ref={elem => {this.attachTimeRef = elem; }} value={inputValue} {...props} onClose={this.close} onSelect={(time) => this.handleTimeSelect(time, type)} />
                             </div>
                         </div>
+                        {this.renderQuickTimeSelectors()}
                     </div>
                 </div>
             </div>
@@ -166,7 +183,7 @@ class DateTimePicker extends Component {
 
     render() {
         const { open, inputValue, operator, focused, openDateTime } = this.state;
-        const { calendar, time, toolTip, placeholder, tabIndex, type, popupPosition } = this.props;
+        const { calendar, time, toolTip, placeholder, tabIndex, type, popupPosition, className } = this.props;
         const props = Object.keys(this.props).reduce((acc, key) => {
             if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
                 // remove these props because they might have undesired effects to the subsequent components
@@ -192,7 +209,7 @@ class DateTimePicker extends Component {
                         placement={popupPosition}
                         triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
                         content={
-                            <div className="shadow-soft picker-container date-time">
+                            <div className={`shadow-soft picker-container date-time ${className}`}>
                                 {this.renderCustomDateTimePopup()}
                             </div>
                         }
@@ -242,7 +259,7 @@ class DateTimePicker extends Component {
                             placement={popupPosition}
                             triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}       // table element to trigger its scroll
                             content={
-                                <div className="shadow-soft picker-container">
+                                <div className={`shadow-soft picker-container ${className}`}>
                                     <Calendar
                                         tabIndex="-1"
                                         ref={(elem) => {this.attachCalRef = elem;}}
@@ -251,6 +268,7 @@ class DateTimePicker extends Component {
                                         {...props}
                                         value={!isNil(calendarVal) ? new Date(calendarVal) : undefined}
                                     />
+                                    {this.renderQuickTimeSelectors()}
                                 </div>
                             }
                         >

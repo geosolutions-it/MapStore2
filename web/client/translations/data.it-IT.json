@@ -1120,7 +1120,18 @@
                     "wrong_range": "Il limite inferiore deve essere minore del limite superiore"
                 },
                 "datefield": {
-                    "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine"
+                    "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine",
+                    "placeholder": "Inserisci la data",
+                    "tooltip": "Inserisci la data nel formato {format}",
+                    "quickSelectors": {
+                        "today": "Oggi",
+                        "now": "Ora",
+                        "tomorrow": "Domani",
+                        "yesterday": "Ieri",
+                        "thisWeek": "Questa settimana",
+                        "thisMonth": "Questo mese",
+                        "nDaysFrom": "{n} giorni da {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Nessun risultato",

@@ -19,6 +19,7 @@ import Hours from './Hours';
 import Popover from '../../styleeditor/Popover';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import Message from '../../I18N/Message';
+import QuickTimeSelectors from './QuickTimeSelectors';
 
 localizer(moment);
 
@@ -57,6 +58,7 @@ const formats = {
 class DateTimePickerWithRange extends Component {
 
     static propTypes = {
+        className: PropTypes.string,
         format: PropTypes.string,
         type: PropTypes.string,
         placeholder: PropTypes.string,
@@ -70,7 +72,8 @@ class DateTimePickerWithRange extends Component {
         toolTip: PropTypes.string,
         tabIndex: PropTypes.string,
         options: PropTypes.object,
-        disabled: PropTypes.disabled
+        disabled: PropTypes.bool,
+        quickDateTimeSelectors: PropTypes.array
     }
 
     static defaultProps = {
@@ -121,6 +124,18 @@ class DateTimePickerWithRange extends Component {
         const { date: dateFormat, time: timeFormat, base: defaultFormat } = formats;
         return format ? format : !time && calendar ? dateFormat : time && !calendar ? timeFormat : defaultFormat;
     }
+
+	renderQuickTimeSelectors = () => {
+	    return (
+	        <QuickTimeSelectors
+	            type={this.props.type}
+	            quickDateTimeSelectors={this.props.quickDateTimeSelectors}
+	            onMouseDown={this.handleMouseDown}
+	            onChangeDate={this.handleCalendarChange}
+	            onChangeTime={(date, type) => this.handleTimeSelect({date}, type)}
+	        />
+	    );
+	}
 
     renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, style = {}, className) => {
         let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
@@ -255,11 +270,11 @@ class DateTimePickerWithRange extends Component {
 	}
 	renderCalendar = () =>{
 	    const { inputValue, operator, focused } = this.state;
-	    const { toolTip, placeholder, tabIndex, popupPosition, type } = this.props;
+	    const { toolTip, placeholder, tabIndex, popupPosition, type, className } = this.props;
 	    let shownVal = (inputValue.endDate || inputValue.startDate) ? Object.values(inputValue).join(" : ") : '';
 
 	    return (
-	        <div tabIndex="-1" onKeyDown={this.handleKeyDown} ref={elem => {this.calendarRef = elem;}} onBlur={()=> this.handleWidgetBlur(type)} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget rw-has-neither ${focused ? 'rw-state-focus' : ''}`}>
+	        <div tabIndex="-1" onKeyDown={this.handleKeyDown} ref={elem => {this.calendarRef = elem;}} onBlur={()=> this.handleWidgetBlur(type)} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget ${focused ? 'rw-state-focus' : ''}`}>
 	            {this.renderInput(shownVal, operator, toolTip, placeholder, tabIndex, true, false)}
 	            <span className="rw-select">
 	                <Popover
@@ -267,8 +282,9 @@ class DateTimePickerWithRange extends Component {
 	                    placement={popupPosition}
 					 	triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
 	                    content={
-                        	<div className="shadow-soft picker-container range">
+                        	<div className={`shadow-soft picker-container range ${className}`}>
 	                            { this.renderCalendarRange() }
+	                            {this.renderQuickTimeSelectors()}
 	                        </div>
 	                    }
 	                >
@@ -355,7 +371,7 @@ class DateTimePickerWithRange extends Component {
 	}
 	renderCalendarTimeDate = () =>{
 	    const { inputValue, operator, focused } = this.state;
-	    const { toolTip, placeholder, tabIndex, popupPosition, type } = this.props;
+	    const { toolTip, placeholder, tabIndex, popupPosition, type, className } = this.props;
 	    let shownVal = (inputValue.endDate || inputValue.startDate) ? Object.values(inputValue).join(" : ") : '';
 
 	    return (
@@ -367,8 +383,9 @@ class DateTimePickerWithRange extends Component {
 	                    placement={popupPosition}
 					 	triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
 	                    content={
-                         	<div className="shadow-soft picker-container date-time range">
+                         	<div className={`shadow-soft picker-container date-time range ${className}`}>
 	                            {this.renderDateTimeRange()}
+	                            {this.renderQuickTimeSelectors()}
 	                        </div>
 	                    }
 	                >
