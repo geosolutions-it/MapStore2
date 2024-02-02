@@ -30,7 +30,7 @@ const UTCDateTimePickerWithRange = utcDateWrapper({
 })(RangedDateTimePicker );
 
 
-class DateFilter extends AttributeFilter {
+export class DateFilter extends AttributeFilter {
     static propTypes = {
         type: PropTypes.string,
         disabled: PropTypes.bool,
@@ -55,7 +55,9 @@ class DateFilter extends AttributeFilter {
         const operator = this.props.value && this.props.value.operator || this.state.operator;
         const format = getDateTimeFormat(this.context.locale, this.props.type);
         const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Insert date";
-        const toolTip = this.props.intl && this.props.intl.formatMessage({id: `${this.props.tooltipMsgId}`}, {format}) || `Insert date in ${format} format`;
+        const toolTip = this.props.intl && this.props.tooltipMsgId
+            ? this.props.intl.formatMessage({id: `${this.props.tooltipMsgId}`}, {format})
+            : `Insert date in ${format} format`;
 
         const inputKey = 'header-filter-' + this.props.column.key;
         let val;
