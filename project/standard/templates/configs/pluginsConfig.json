@@ -491,16 +491,21 @@
       "denyUserSelection": true,
       "title": "plugins.Save.title",
       "description": "plugins.Save.description",
-      "dependencies": [
-        "SidebarMenu",
+      "children": [
         "SaveAs"
+      ],
+      "autoEnableChildren": [
+        "SaveAs"
+      ],
+      "dependencies": [
+        "SidebarMenu"
       ]
     },
     {
       "name": "SaveAs",
       "glyph": "floppy-open",
       "title": "plugins.SaveAs.title",
-      "hidden": true,
+      "hidden": false,
       "description": "plugins.SaveAs.description",
       "dependencies": [
         "SidebarMenu"
