@@ -514,7 +514,7 @@
       "name": "DeleteMap",
       "glyph": "trash",
       "title": "plugins.DeleteMap.title",
-      "hidden": true,
+      "hidden": false,
       "description": "plugins.DeleteMap.description",
       "dependencies": [
         "SidebarMenu"
