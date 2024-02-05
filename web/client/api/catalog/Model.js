@@ -29,6 +29,7 @@ const recordToLayer = (record) => {
         return null;
     }
     const { bbox, format, properties } = record;
+    const { scale, longitude, latitude, height } = properties;
     return {
         type: 'model',
         url: record.url,
@@ -41,11 +42,11 @@ const recordToLayer = (record) => {
                     heading: 0,
                     pitch: 0,
                     roll: 0,
-                    scale: 1
+                    scale: scale || 1
                 },
                 geometry: {
                     type: 'Point',
-                    coordinates: [0, 0, 0]
+                    coordinates: [longitude, latitude, height]
                 }
             }
         ],

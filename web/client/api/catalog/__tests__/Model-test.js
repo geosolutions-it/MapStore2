@@ -98,7 +98,13 @@ describe('Test IFC Model catalog API', () => {
                     maxy: 0
                 }
             },
-            references: []
+            references: [],
+            properties: {
+                longitude: 0,
+                latitude: 0,
+                height: 0,
+                scale: 1
+            }
         };
         const layer = getLayerFromRecord(catalogRecord);
         expect(layer).toEqual({
@@ -130,7 +136,12 @@ describe('Test IFC Model catalog API', () => {
                         coordinates: [0, 0, 0]
                     }
                 }
-            ]
+            ], properties: {
+                longitude: 0,
+                latitude: 0,
+                height: 0,
+                scale: 1
+            }
         });
     });
     it('should validate if the service url ends with .ifc', (done) => {

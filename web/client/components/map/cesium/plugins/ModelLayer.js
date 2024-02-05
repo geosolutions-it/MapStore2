@@ -39,15 +39,14 @@ const updatePrimitivesMatrix = (primitives, feature) => {
             new Cesium.Cartesian3(scale || 1.0, scale || 1.0, scale || 1.0),
             new Cesium.Matrix4()
         );
+        // Apply IFC transformation to model matrix
+        const translationMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(
+            Cesium.Cartesian3.fromDegrees(longitude || 0, latitude || 0, height || 0)
+        );
+        const scaleMatrix = Cesium.Matrix4.fromScale(new Cesium.Cartesian3(scale || 1, scale || 1, scale || 1));
         primitive.modelMatrix = Cesium.Matrix4.multiply(
-            Cesium.Transforms.eastNorthUpToFixedFrame(
-                Cesium.Cartesian3.fromDegrees(
-                    longitude || 0,
-                    latitude || 0,
-                    height || 0
-                )
-            ),
-            rotationMatrix,
+            translationMatrix,
+            Cesium.Matrix4.multiply(rotationMatrix, scaleMatrix, new Cesium.Matrix4()),     // todo: try to remove this and put just the rotationMatrix
             new Cesium.Matrix4()
         );
     }
@@ -157,13 +156,13 @@ const createLayer = (options, map) => {
     }
     let primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
 
-    axios(options.url, {
+    axios.get(options.url, {
         responseType: 'arraybuffer'
     })
         .then(({ data }) => {
             return getWebIFC()
-                .then((ifcApi) => {
-                    const { meshes } = ifcDataToJSON({ ifcApi, data });
+                .then((ifcData) => {
+                    const { meshes } = ifcDataToJSON({ ifcData, data });
                     const translucentPrimitive = createPrimitiveFromMeshes(meshes, options, 'translucentPrimitive');
                     const opaquePrimitive = createPrimitiveFromMeshes(meshes, options, 'opaquePrimitive');
                     primitives.add(translucentPrimitive);

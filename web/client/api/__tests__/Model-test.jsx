@@ -18,7 +18,7 @@ describe('Test Model API for ifc models', () => {
                 expect(version).toBeTruthy();
                 expect(version).toBe('IFC4');
                 expect(properties).toBeTruthy();
-                expect(properties).toEqual({});
+                expect(properties).toEqual({ latitude: 0, longitude: 0, height: 0, scale: 1 });
                 expect(bbox).toBeTruthy();
                 expect(bbox.crs).toBe('EPSG:4326');
                 expect(Math.round(bbox.bounds.minx)).toBe(0);

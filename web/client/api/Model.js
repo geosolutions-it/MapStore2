@@ -6,6 +6,63 @@
  * LICENSE file in the root directory of this source tree.
  */
 import axios from 'axios';
+import proj4 from 'proj4';
+
+/**
+ * get ifc model main info such as: longitude, latitude, height and scale
+ * and additional info in case of existing a specified crs like: projectedCrs
+ * @param {object} ifcData includes 2 items: ifcApi, WebIFC
+ * @param {string} modelVersion the version of ifc file [e.g: IFC2x3, IFC4, IFC4x3]
+ * @param {number} modelID it is the model if of the ifc model e.g: 0,1,2
+ * @return {object} return originProperties that includes: latitude, longitude, height, scale and "projectedCrs" in case of georeferenced IFC4 model
+ * @
+ */
+// extract model origin point
+function getModelOriginCoords(ifcData, modelVersion, modelID) {
+    const { ifcApi, WebIFC } = ifcData;
+    let originProperties = {
+        latitude: 0,
+        longitude: 0,
+        height: 0,
+        scale: 1
+    };
+    if (modelVersion?.includes("IFC4")) {
+        let projectedCrs;
+        let mapConversion;
+        let projectedCrsLineId = ifcApi.GetLineIDsWithType(modelID, WebIFC.IFCPROJECTEDCRS);    // eslint-disable-line
+        let mapConversionLineId = ifcApi.GetLineIDsWithType(modelID, WebIFC.IFCMAPCONVERSION);    // eslint-disable-line
+        if (projectedCrsLineId.size()) {
+            let typeID = projectedCrsLineId.get(0);
+            let projectedCrsObj = ifcApi.GetLine(modelID, typeID);    // eslint-disable-line
+            projectedCrs = projectedCrsObj?.Name?.value;
+        }
+        if (mapConversionLineId.size()) {
+            let typeID = mapConversionLineId.get(0);
+            let mapConversionObj = ifcApi.GetLine(modelID, typeID);    // eslint-disable-line
+            mapConversion = {
+                northings: mapConversionObj?.Northings?.value,          // x coord
+                eastings: mapConversionObj?.Eastings?.value,            // y coord
+                orthogonalHeight: mapConversionObj?.OrthogonalHeight?.value,    // height (z coord)
+                xAxisOrdinate: mapConversionObj?.XAxisOrdinate?.value,
+                xAxisAbscissa: mapConversionObj?.XAxisAbscissa?.value,
+                rotation: Math.atan2(mapConversionObj?.XAxisOrdinate?.value || 0, mapConversionObj?.XAxisAbscissa?.value || 0),
+                scale: mapConversionObj?.Scale?.value
+            };
+            if (proj4.defs(projectedCrs)) {         // if crs in not defined in MS, model will be locatied at 0,0
+                let wgs84Origin = proj4(proj4.defs(projectedCrs), proj4.defs('EPSG:4326'), [mapConversion.eastings, mapConversion.northings]);
+                originProperties = {
+                    longitude: wgs84Origin[0] || 0,
+                    latitude: wgs84Origin[1] || 0,
+                    height: mapConversion.orthogonalHeight || 0,
+                    scale: mapConversion.scale || 1,
+                    projectedCrs
+                };
+            }
+        }
+    }
+    // todo: maybe in future enhancement, handling georeferenced ifc models with schema less than version 4 like IFC2x3 by getting projection info ref: (https://medium.com/@stijngoedertier/how-to-georeference-a-bim-model-1905d5154cfd)
+    return originProperties;
+}
 
 // extract the tile format from the uri
 function getFormat(uri) {
@@ -14,20 +71,26 @@ function getFormat(uri) {
     return format;
 }
 
-// extract version, bbox, format and properties from the tileset metadata
-function extractCapabilities(ifcApi, modelID, url) {
-    const version = ifcApi?.GetModelSchema() !== undefined ? ifcApi.GetModelSchema()?.includes("IFC4")? "IFC4" : ifcApi.GetModelSchema() : 'IFC4';    // eslint-disable-line
+// extract version, bbox, format and properties from the ifc file
+function extractCapabilities(ifcData, modelID, url) {
+    const { ifcApi } = ifcData;
+    const version = ifcApi?.GetModelSchema(modelID) !== undefined ? ifcApi.GetModelSchema(modelID)?.includes("IFC4")? "IFC4" : ifcApi.GetModelSchema(modelID) : 'IFC4';    // eslint-disable-line
     const format = getFormat(url || '');
-    const properties =  {};
-    ifcApi.CloseModel(modelID);     // eslint-disable-line
     return {
         version,
         format,
-        properties
+        properties: {}
     };
 }
 
-export const ifcDataToJSON = ({ data, ifcApi }) => {
+/**
+ * get ifc response and additional parsed information such as: version, bbox, format and properties
+ * @param {object} this object includes: data --> ifc raw data, ifcData: is an object includes ifcApi object (from web-ifc) that enable to read ifc content
+ * @return {object} return json object includes meshes array [geometry data of ifc model], extent of ifc model, center and size
+ * @
+ */
+export const ifcDataToJSON = ({ data, ifcData }) => {
+    const { ifcApi } = ifcData;
     const settings = {
         COORDINATE_TO_ORIGIN: true,
         USE_FAST_BOOLS: true
@@ -105,7 +168,7 @@ export const getWebIFC = () => import('web-ifc')
     .then(WebIFC => {
         const ifcApi = new WebIFC.IfcAPI();
         ifcApi.SetWasmPath('./web-ifc/'); // eslint-disable-line
-        return ifcApi.Init().then(() => ifcApi); // eslint-disable-line
+        return ifcApi.Init().then(() => { return { ifcApi, WebIFC } }); // eslint-disable-line
     });
 /**
  * Common requests to IFC
@@ -123,21 +186,30 @@ export const getCapabilities = (url) => {
     })
         .then(({ data }) => {
             return getWebIFC()
-                .then((ifcApi) => {
-                    let modelID = ifcApi.OpenModel(new Uint8Array(data));   // eslint-disable-line
-                    let capabilities = extractCapabilities(ifcApi, modelID, url);
-                    // todo: read IFCProjectedCRS, IFCMapCONVERSION in case of IFC4
+                .then((ifcData) => {
+                    const { ifcApi } = ifcData;
+                    const settings = {
+                        COORDINATE_TO_ORIGIN: true,
+                        USE_FAST_BOOLS: true
+                    };
+                    const modelID = ifcApi.OpenModel(new Uint8Array(data), settings); // eslint-disable-line
+
+                    let capabilities = extractCapabilities(ifcData, modelID, url);
+                    // extract model origin info by reading IFCProjectedCRS, IFCMapCONVERSION in case of IFC4
+                    const modelOriginProperties = getModelOriginCoords(ifcData, capabilities.version, modelID);
+                    capabilities.properties = {
+                        ...capabilities.properties,
+                        ...modelOriginProperties
+                    };
+                    ifcApi.CloseModel(modelID);     // eslint-disable-line
+                    let properties = capabilities.properties;
+                    // todo: getting bbox needs to enhance to get the accurate bbox of the ifc model
                     let bbox = {
-                        bounds: capabilities.version !== "IFC4" ? {
-                            minx: 0 - 0.001,
-                            miny: 0 - 0.001,
-                            maxx: 0 + 0.001,
-                            maxy: 0 + 0.001
-                        } : {
-                            minx: 0 - 0.001,
-                            miny: 0 - 0.001,
-                            maxx: 0 + 0.001,
-                            maxy: 0 + 0.001
+                        bounds: {
+                            minx: properties.longitude || 0 - 0.001,
+                            miny: properties.latitude || 0 - 0.001,
+                            maxx: properties.longitude || 0 + 0.001,
+                            maxy: properties.latitude || 0 + 0.001
                         },
                         crs: 'EPSG:4326'
                     };
