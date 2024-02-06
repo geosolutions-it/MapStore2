@@ -7,12 +7,28 @@
   */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import BaseDateTimeFilter from '../BaseDateTimeFilter';
+import BaseDateTimeFilter, { DateFilter } from '../BaseDateTimeFilter';
 import expect from 'expect';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 
 momentLocalizer(Moment);
+const intlMock = {
+    formatMessage: ({ id }) => {
+        // intl library throws an error when id is undefined, null or an empty string
+        if (!id) {
+            throw new Error();
+        }
+        return 'any message';
+    },
+    formatDate: () => {},
+    formatTime: () => {},
+    formatRelative: () => {},
+    formatNumber: () => {},
+    formatPlural: () => {},
+    formatHTMLMessage: () => {},
+    now: () => {}
+};
 describe('Test for BaseDateTimeFilter component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -72,5 +88,10 @@ describe('Test for BaseDateTimeFilter component', () => {
         expect(el).toExist();
         dateTimePickerWithRangeElement = document.getElementsByClassName('rw-datetimepicker range-time-input rw-widget')[0];
         expect(dateTimePickerWithRangeElement).toExist();
+    });
+    it('render with intl when tooltipMsgId is an empty string', () => {
+        ReactDOM.render(<DateFilter intl={intlMock} tooltipMsgId=""/>, document.getElementById("container"));
+        const el = document.getElementsByTagName("input")[0];
+        expect(el).toBeTruthy();
     });
 });
