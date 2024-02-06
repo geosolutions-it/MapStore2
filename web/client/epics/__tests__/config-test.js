@@ -41,7 +41,13 @@ import {
     SHOW_FORMAT_ERROR
 } from '../../actions/catalog';
 const api = {
-    getResource: () => Promise.resolve({mapId: 1234})
+    getResource: (id, {includeAttributes = true, withData = true}) => {
+        if (!includeAttributes && !withData) {
+            return Promise.resolve({mapId: id});
+        }
+
+        return Promise.resolve({mapId: Number(String(id).split('').reverse().join(''))});
+    }
 };
 let mockAxios;
 
@@ -302,6 +308,7 @@ describe('config epics', () => {
     });
 
     describe('loadMapInfo', () => {
+        const id = 1234;
         Persistence.addApi("testConfig", api);
         beforeEach(() => {
             Persistence.setApi("testConfig");
@@ -319,7 +326,21 @@ describe('config epics', () => {
             };
             testEpic(loadMapInfoEpic,
                 2,
-                loadMapInfo(1234),
+                loadMapInfo(id),
+                checkActions
+            );
+        });
+        it('loadMapInfo will not fetch data and attributes', (done) => {
+            const checkActions = ([a, b]) => {
+                expect(a).toExist();
+                expect(b).toExist();
+                expect(b.type).toBe(MAP_INFO_LOADED);
+                expect(b?.info?.mapId).toBe(id);
+                done();
+            };
+            testEpic(loadMapInfoEpic,
+                2,
+                loadMapInfo(id),
                 checkActions
             );
         });
