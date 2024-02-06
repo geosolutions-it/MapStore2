@@ -180,7 +180,7 @@ export const zoomToMaxExtentOnConfigureMap = action$ =>
         .map(({config, zoomToExtent: extent}) => zoomToExtent(extent.bounds, extent.crs || get(config, 'map.projection')));
 
 /**
- * Intercepts LOAD_MAP_INFO and loads map resources with all information about user's permission on that resource, attributes and data.
+ * Intercepts LOAD_MAP_INFO and loads map resources with all information about user's permission on that resource, excluding attributes and data.
  * @param {Observable} action$ stream of actions
  * @returns {external:Observable}
  */
