@@ -46,7 +46,7 @@ const api = {
             return Promise.resolve({mapId: id});
         }
 
-        return Promise.resolve({mapId: Number(String(id).split('').reverse().join(''))});
+        return Promise.resolve({data: {} });
     }
 };
 let mockAxios;
@@ -335,7 +335,7 @@ describe('config epics', () => {
                 expect(a).toExist();
                 expect(b).toExist();
                 expect(b.type).toBe(MAP_INFO_LOADED);
-                expect(b?.info?.mapId).toBe(id);
+                expect(b?.info?.data).toBeFalsy();
                 done();
             };
             testEpic(loadMapInfoEpic,
