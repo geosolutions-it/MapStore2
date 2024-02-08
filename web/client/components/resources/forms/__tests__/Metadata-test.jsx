@@ -26,7 +26,7 @@ describe('Metadata component', () => {
         ReactDOM.render(<Metadata />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
-        expect(el.length).toBe(2);
+        expect(el.length).toBe(3);
     });
     it('Metadata rendering with meta-data', () => {
         const resource = {
@@ -34,16 +34,20 @@ describe('Metadata component', () => {
             createdAt: new Date(),
             metadata: {
                 name: "NAME",
-                description: "DESCRIPTION"
+                description: "DESCRIPTION",
+                advertised: true
             }
         };
         ReactDOM.render(<Metadata resource={resource}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(6);
+        expect(labels.length).toBe(8);
         expect(el[0].value).toBe("NAME");
         expect(el[1].value).toBe("DESCRIPTION");
+        // the visualisation of the advertised resource attribute is represented as "Unadvertised"
+        // so, it should be always visualized as the opposite boolean of the value processed by the app.
+        expect(el[2].checked).toBe(false);
     });
     it('Metadata rendering with attributes', () => {
         const resource = {
@@ -57,7 +61,7 @@ describe('Metadata component', () => {
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(7);
+        expect(labels.length).toBe(9);
         expect(el[1].value).toBe("TITLE");
     });
     it('Metadata rendering without timestamp', () => {
@@ -70,7 +74,7 @@ describe('Metadata component', () => {
         ReactDOM.render(<Metadata resource={resource}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(2);
+        expect(labels.length).toBe(4);
     });
 
     it('Test Metadata onChange', () => {
@@ -110,7 +114,7 @@ describe('Metadata component', () => {
         ReactDOM.render(<Metadata resource={resource} titleFieldText="Title" createdAtFieldText="Created" modifiedAtFieldText="Modified"/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(6);
+        expect(labels.length).toBe(8);
         expect(labels[2].innerText).toBe('Created');
         expect(labels[4].innerText).toBe('Modified');
     });

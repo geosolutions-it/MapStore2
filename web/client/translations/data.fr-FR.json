@@ -3020,7 +3020,8 @@
             "saveSuccessTitle": "Succès",
             "saveSuccessMessage": "Enregistré avec succès",
             "saveTooltip": "Enregistrer",
-            "saveAsTooltip": "Enregistrer sous"
+            "saveAsTooltip": "Enregistrer sous",
+            "unadvertised": "Non annoncé"
         },
         "mapEditor": {
             "modalTitle": "Editeur de carte",
