@@ -70,7 +70,8 @@ class DateTimePicker extends Component {
         tabIndex: PropTypes.string,
         options: PropTypes.object,
         isWithinAttrTbl: PropTypes.bool,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        onPopoverOpen: PropTypes.func
     }
     static contextTypes = {
         messages: PropTypes.object,
@@ -83,7 +84,8 @@ class DateTimePicker extends Component {
         onChange: () => { },
         value: null,
         popupPosition: 'bottom',
-        isWithinAttrTbl: false
+        isWithinAttrTbl: false,
+        onPopoverOpen: () => {}
     }
 
     state = {
@@ -190,6 +192,7 @@ class DateTimePicker extends Component {
                         onClick={this.toggleDateTime}
                         disabled={false}
                         placement={popupPosition}
+                        onOpen={this.props.onPopoverOpen}
                         triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
                         content={
                             <div className="shadow-soft picker-container date-time">
@@ -212,6 +215,7 @@ class DateTimePicker extends Component {
                             onClick={this.toggleTime}
                             disabled={false}
                             placement={popupPosition}
+                            onOpen={this.props.onPopoverOpen}
                             triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
                             content={
                                 <div className="shadow-soft" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
@@ -240,6 +244,7 @@ class DateTimePicker extends Component {
                             onClick={this.toggleCalendar}
                             disabled={false}
                             placement={popupPosition}
+                            onOpen={this.props.onPopoverOpen}
                             triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}       // table element to trigger its scroll
                             content={
                                 <div className="shadow-soft picker-container">

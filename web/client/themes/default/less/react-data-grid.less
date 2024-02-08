@@ -328,3 +328,12 @@
         }
     }
 }
+
+// we are using the validate function to prevent
+// to lose focus on the editing of date/time inside a popover
+// for this reason we are going to hide the error status icon
+.rdg-editor-container.has-error {
+    .rw-datetimepicker ~ .glyphicon-remove {
+        display: none;
+    }
+}
