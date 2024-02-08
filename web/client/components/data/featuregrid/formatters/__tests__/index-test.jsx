@@ -180,27 +180,30 @@ describe("Tests for the formatter functions", () => {
             "date-time": "YYYY DD",
             time: "HH:mm"
         };
-        const DateFormatter = getFormatter({ localType: "date" }, undefined, { dateFormats });
-        const DateTimeFormatter = getFormatter({ localType: "date-time" }, undefined, { dateFormats });
-        const TimeFormatter = getFormatter({ localType: "time" }, undefined, { dateFormats });
+        const row = {
+            dateFormats
+        };
+        const DateFormatter = getFormatter({ localType: "date" });
+        const DateTimeFormatter = getFormatter({ localType: "date-time" });
+        const TimeFormatter = getFormatter({ localType: "time" });
 
         act(() => {
-            ReactDOM.render(<DateFormatter value="2015-02-01T12:45:00Z" />, container);
+            ReactDOM.render(<DateFormatter value="2015-02-01T12:45:00Z" row={row} />, container);
         });
         expect(container.textContent).toBe("2015");
 
         act(() => {
-            ReactDOM.render(<DateTimeFormatter value="2015-02-01Z" />, container);
+            ReactDOM.render(<DateTimeFormatter value="2015-02-01Z" row={row} />, container);
         });
         expect(container.textContent).toBe("2015 01");
 
         act(() => {
-            ReactDOM.render(<TimeFormatter value="12:45:00Z" />, container);
+            ReactDOM.render(<TimeFormatter value="12:45:00Z" row={row} />, container);
         });
         expect(container.textContent).toBe("12:45");
 
         act(() => {
-            ReactDOM.render(<TimeFormatter value="1970-01-01T02:30:00Z" />, container);
+            ReactDOM.render(<TimeFormatter value="1970-01-01T02:30:00Z" row={row} />, container);
         });
         expect(container.textContent).toBe("02:30");
     });
@@ -209,25 +212,28 @@ describe("Tests for the formatter functions", () => {
         const dateFormats = {
             "date-time": "YYYY-MM-DD[Z]"
         };
-        const DateTimeWithZFormatter = getFormatter({ localType: "date-time" }, undefined, { dateFormats });
+        const row = {
+            dateFormats
+        };
+        const DateTimeWithZFormatter = getFormatter({ localType: "date-time" });
 
         act(() => {
-            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01Z" />, container);
+            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01Z" row={row} />, container);
         });
         expect(container.textContent).toBe("2015-02-01Z");
 
         act(() => {
-            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01" />, container);
+            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01" row={row}/>, container);
         });
         expect(container.textContent).toBe("2015-02-01Z");
 
         act(() => {
-            ReactDOM.render(<DateTimeWithZFormatter value="2015/02/01 03:20:10" />, container);
+            ReactDOM.render(<DateTimeWithZFormatter value="2015/02/01 03:20:10" row={row}/>, container);
         });
         expect(container.textContent).toBe("2015-02-01Z");
 
         act(() => {
-            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01T12:45:00Z" />, container);
+            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01T12:45:00Z" row={row}/>, container);
         });
         expect(container.textContent).toBe("2015-02-01Z");
     });
