@@ -129,7 +129,7 @@ class DateTimePicker extends Component {
                     <div className="date-time-container">
                         <Calendar
                             tabIndex="-1"
-                            ref={(elem) => {this.attachCalRef = elem;}}
+                            ref={this.attachCalRef}
                             onMouseDown={this.handleMouseDown}
                             onChange={this.handleCalendarChange}
                             {...props}
@@ -145,7 +145,7 @@ class DateTimePicker extends Component {
                                 </span>
                             </div>
                             <div className="dateTime-picker-hours" style={{display: timeVisible ? 'block' : 'none', background: 'white', position: 'relative', zIndex: 1}}>
-                                <Hours style={{maxHeight: "120px"}} ref={elem => {this.attachTimeRef = elem; }} value={inputValue} {...props} onClose={this.close} onSelect={(time) => this.handleTimeSelect(time, type)} />
+                                <Hours style={{maxHeight: "120px"}} ref={this.attachTimeRef} value={inputValue} {...props} onClose={this.close} onSelect={(time) => this.handleTimeSelect(time, type)} />
                             </div>
                         </div>
                     </div>
@@ -221,7 +221,7 @@ class DateTimePicker extends Component {
                                 <div className="shadow-soft" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
                                     <div className="dateTime-picker-hours" style={{display: 'block', background: 'white', position: 'relative', zIndex: 1}}>
                                         <div style={{ height: '120px' }}>
-                                            <Hours style={{maxHeight: "120px"}} ref={elem => { this.attachTimeRef = elem;}} value={inputValue} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+                                            <Hours style={{maxHeight: "120px"}} ref={this.attachTimeRef} value={inputValue} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
                                         </div>
                                     </div>
                                 </div>
@@ -250,7 +250,7 @@ class DateTimePicker extends Component {
                                 <div className="shadow-soft picker-container">
                                     <Calendar
                                         tabIndex="-1"
-                                        ref={(elem) => {this.attachCalRef = elem;}}
+                                        ref={this.attachCalRef}
                                         onMouseDown={this.handleMouseDown}
                                         onChange={this.handleCalendarChange}
                                         {...props}
