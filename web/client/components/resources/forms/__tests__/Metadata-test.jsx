@@ -12,7 +12,7 @@ import  ReactDOM from 'react-dom';
 import  ReactTestUtils from 'react-dom/test-utils';
 
 import  Metadata from '../Metadata';
-describe.only('Metadata component', () => {
+describe('Metadata component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
