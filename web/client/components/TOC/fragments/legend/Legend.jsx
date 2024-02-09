@@ -18,6 +18,9 @@ import {
     addAuthenticationToSLD,
     clearNilValuesForParams
 } from '../../../../utils/SecurityUtils';
+import {
+    randomInt
+} from '../../../../utils/cesium/MathUtils';
 import Message from '../../../I18N/Message';
 
 class Legend extends React.Component {
@@ -54,7 +57,7 @@ class Legend extends React.Component {
     getUrl = (props, urlIdx) => {
         if (props.layer && props.layer.type === "wms" && props.layer.url) {
             const layer = props.layer;
-            const idx = !isNil(urlIdx) ? urlIdx : isArray(layer.url) && Math.floor(Math.random() * layer.url.length);
+            const idx = !isNil(urlIdx) ? urlIdx : isArray(layer.url) && Math.floor(randomInt(layer.url.length));
 
             const url = isArray(layer.url) ?
                 layer.url[idx] :

@@ -17,7 +17,7 @@ import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { addAuthenticationToSLD, getAuthenticationHeaders } from '../../../../utils/SecurityUtils';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-
+import {randomInt} from "../../../../utils/cesium/MathUtils";
 function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
@@ -38,7 +38,7 @@ function wmsToCesiumOptionsSingleTile(options) {
         srs: "EPSG:4326"
     }, params || {}, getAuthenticationParam(options));
 
-    const url = (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
+    const url = (isArray(options.url) ? options.url[Math.round(randomInt(options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
         + getQueryString(addAuthenticationToSLD(parameters, options));
     const headers = getAuthenticationHeaders(url, options.securityToken);
     return {
