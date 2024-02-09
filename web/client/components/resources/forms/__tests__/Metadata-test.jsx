@@ -12,7 +12,7 @@ import  ReactDOM from 'react-dom';
 import  ReactTestUtils from 'react-dom/test-utils';
 
 import  Metadata from '../Metadata';
-describe('Metadata component', () => {
+describe.only('Metadata component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -30,7 +30,9 @@ describe('Metadata component', () => {
     });
     it('Metadata rendering with meta-data', () => {
         const resource = {
+            editor: "TEST_EDITOR",
             modifiedAt: new Date(),
+            creator: "TEST_CREATOR",
             createdAt: new Date(),
             metadata: {
                 name: "NAME",
@@ -42,7 +44,7 @@ describe('Metadata component', () => {
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(8);
+        expect(labels.length).toBe(12);
         expect(el[0].value).toBe("NAME");
         expect(el[1].value).toBe("DESCRIPTION");
         // the visualisation of the advertised resource attribute is represented as "Unadvertised"
@@ -51,7 +53,9 @@ describe('Metadata component', () => {
     });
     it('Metadata rendering with attributes', () => {
         const resource = {
+            editor: "TEST_EDITOR",
             modifiedAt: new Date(),
+            creator: "TEST_CREATOR",
             createdAt: new Date(),
             attributes: {
                 title: "TITLE"
@@ -61,7 +65,7 @@ describe('Metadata component', () => {
         const container = document.getElementById('container');
         const el = container.querySelectorAll('input');
         const labels = container.querySelectorAll('label');
-        expect(labels.length).toBe(9);
+        expect(labels.length).toBe(13);
         expect(el[1].value).toBe("TITLE");
     });
     it('Metadata rendering without timestamp', () => {

@@ -76,6 +76,8 @@ class MainForm extends React.Component {
                     descriptionPlaceholderText={"saveDialog.descriptionPlaceholder"}
                     titlePlaceholderText={"saveDialog.titlePlaceholder"}
                     unadvertisedText={<Message msgId="saveDialog.unadvertised" />}
+                    creatorFieldText={<Message msgId="saveDialog.creator" />}
+                    editorFieldText={<Message msgId="saveDialog.editor" />}
                 />
             </Col>
         </Row>);

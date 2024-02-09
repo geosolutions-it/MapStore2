@@ -59,7 +59,8 @@ export default compose(
                     },
                     createdAt: resource.creation,
                     modifiedAt: resource.lastUpdate,
-                    creator: resource.creator
+                    creator: resource.creator,
+                    editor: resource.editor
                 },
                 linkedResources
             };

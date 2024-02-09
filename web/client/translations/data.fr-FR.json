@@ -3021,7 +3021,9 @@
             "saveSuccessMessage": "Enregistré avec succès",
             "saveTooltip": "Enregistrer",
             "saveAsTooltip": "Enregistrer sous",
-            "unadvertised": "Non annoncé"
+            "unadvertised": "Non annoncé",
+            "creator": "Créateur",
+            "editor": "Éditeur"
         },
         "mapEditor": {
             "modalTitle": "Editeur de carte",
