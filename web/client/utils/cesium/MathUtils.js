@@ -91,7 +91,7 @@ export function computeSlopes(coordinates, cameraPosition) {
  */
 export const randomFloat = function () {
     const int = window.crypto.getRandomValues(new Uint32Array(1))[0];
-    return int / 2**32;
+    return int / 2 ** 32;
 }
 
 /**
@@ -100,6 +100,6 @@ export const randomFloat = function () {
  * @todo check that min is <= max.
  */
 export const randomInt = function (max, min = 0) {
-    const range = max - min
-    return Math.floor(randomFloat() * range + min)
-  }
+    const range = max - min;
+    return Math.floor(randomFloat() * range + min);
+};
