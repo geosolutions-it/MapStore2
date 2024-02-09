@@ -3059,8 +3059,8 @@
             "saveTooltip": "Speichern",
             "saveAsTooltip": "Speichern als",
             "unadvertised": "Nicht geworben",
-            "creator": "Schöpfer",
-            "editor": "Redakteur"
+            "creator": "Erstellt von",
+            "editor": "Zuletzt geändert von"
         },
         "mapEditor": {
             "modalTitle": "Karteneditor",

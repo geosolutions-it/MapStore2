@@ -3022,8 +3022,8 @@
             "saveTooltip": "Salva",
             "saveAsTooltip": "Salva con nome",
             "unadvertised": "Non pubblicizzato",
-            "creator": "Creatore",
-            "editor": "Redattore"
+            "creator": "Creato da",
+            "editor": "Ultima modifica di"
         },
         "mapEditor": {
             "modalTitle": "Editor di Mappa",
