@@ -7,7 +7,7 @@
  */
 
 import { CHANGE_VERSION, LOAD_VERSION_ERROR } from '../actions/version';
-
+const splitData = __COMMIT_DATA__.split('\n');
 /**
  * Manages the state of the version identifier
  * @prop {string} current mapstore version identifier
@@ -22,12 +22,11 @@ import { CHANGE_VERSION, LOAD_VERSION_ERROR } from '../actions/version';
  *}
  * @memberof reducers
  */
-const splitData = __COMMIT_DATA__.split('\n');
 function version(state = {
     splitData,
-    message: splitData.find((x)=> x.includes('Message:')).split('Message: ')[1],
-    commit: splitData.find((x)=> x.includes('Commit:')).split('Commit: ')[1],
-    date: splitData.find((x)=> x.includes('Date:')).split('Date: ')[1]
+    message: splitData.find((x)=> x.includes('Message:'))?.split('Message: ')?.[1] ?? 'no-message',
+    commit: splitData.find((x)=> x.includes('Commit:'))?.split('Commit: ')?.[1] ?? 'no-commit',
+    date: splitData.find((x)=> x.includes('Date:'))?.split('Date: ')?.[1] ?? 'no-date'
 }, action) {
     switch (action.type) {
     case CHANGE_VERSION: {
