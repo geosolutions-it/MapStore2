@@ -18,6 +18,9 @@ import {
     addAuthenticationToSLD,
     clearNilValuesForParams
 } from '../../../../utils/SecurityUtils';
+import {
+    randomInt
+} from '../../../../utils/cesium/MathUtils';
 import Message from '../../../I18N/Message';
 
 class Legend extends React.Component {
