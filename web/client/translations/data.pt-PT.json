@@ -1599,7 +1599,8 @@
                 "close": "Close",
                 "cancel": "Cancel",
                 "saveSuccessTitle": "Success",
-                "saveSuccessMessage": "Dashboard saved successfully"
+                "saveSuccessMessage": "Dashboard saved successfully",
+                "unadvertised": "Não anunciado"
             },
             "errors":{
                 "loading": {

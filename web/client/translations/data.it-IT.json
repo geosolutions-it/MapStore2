@@ -3020,7 +3020,8 @@
             "saveSuccessTitle": "Successo",
             "saveSuccessMessage": "Salvata con successo",
             "saveTooltip": "Salva",
-            "saveAsTooltip": "Salva con nome"
+            "saveAsTooltip": "Salva con nome",
+            "unadvertised": "Non pubblicizzato"
         },
         "mapEditor": {
             "modalTitle": "Editor di Mappa",

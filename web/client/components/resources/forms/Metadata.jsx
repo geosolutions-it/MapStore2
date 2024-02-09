@@ -16,7 +16,7 @@
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { FormControl as BFormControl, ControlLabel, FormGroup } from 'react-bootstrap';
+import { FormControl as BFormControl, ControlLabel, FormGroup, Checkbox } from 'react-bootstrap';
 import get from 'lodash/get';
 
 import ConfigUtils from '../../../utils/ConfigUtils';
@@ -42,7 +42,8 @@ class Metadata extends React.Component {
         descriptionPlaceholderText: PropTypes.string,
         titlePlaceholderText: PropTypes.string,
         createdAtFieldText: PropTypes.string,
-        modifiedAtFieldText: PropTypes.string
+        modifiedAtFieldText: PropTypes.string,
+        unadvertisedText: PropTypes.string
     };
 
     static contextTypes = {
@@ -58,7 +59,8 @@ class Metadata extends React.Component {
         descriptionFieldText: "Description",
         nameFieldFilter: () => {},
         namePlaceholderText: "Map Name",
-        descriptionPlaceholderText: "Map Description"
+        descriptionPlaceholderText: "Map Description",
+        unadvertisedText: "Unadvertised"
     };
 
     renderDate = (date) => {
@@ -120,6 +122,12 @@ class Metadata extends React.Component {
                     <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.modifiedAt || this.props.resource.createdAt) || ""}</ControlLabel>
                 </FormGroup>
             }
+            {
+                <FormGroup>
+                    <ControlLabel>{this.props.unadvertisedText}</ControlLabel>
+                    <Checkbox checked={!this.props.resource?.metadata?.advertised} onChange={this.changeAdvertised} aria-label="advertisedResource"/>
+                </FormGroup>
+            }
         </form>);
     }
 
@@ -133,6 +141,9 @@ class Metadata extends React.Component {
 
     changeTitle = (e) => {
         this.props.onChange('attributes.title', e.target.value);
+    };
+    changeAdvertised = (e) => {
+        this.props.onChange('metadata.advertised', !e.target.checked);
     };
 }
 

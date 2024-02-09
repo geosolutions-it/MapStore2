@@ -2598,7 +2598,8 @@
             "close": "Zatvoriť",
             "cancel": "Zrušiť",
             "saveSuccessTitle": "Úspech",
-            "saveSuccessMessage": "Úspešne uložené"
+            "saveSuccessMessage": "Úspešne uložené",
+            "unadvertised": "Neinzerované"
         },
         "mapEditor": {
             "modalTitle": "Mapový editor",

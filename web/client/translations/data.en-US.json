@@ -3030,7 +3030,8 @@
             "saveSuccessTitle": "Success",
             "saveSuccessMessage": "Saved successfully",
             "saveTooltip": "Save",
-            "saveAsTooltip": "Save As"
+            "saveAsTooltip": "Save As",
+            "unadvertised": "Unadvertised"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",
