@@ -536,6 +536,54 @@ export const fields = {
                 />
             </PropertyField>
         );
+    },
+    customParams: (props) => {
+        const {
+            label,
+            value,
+            config: {
+                isValid
+            },
+            thematicCustomParams,
+            onChange
+        } = props;
+        if (!(thematicCustomParams?.length)) return null;         // if there is no params it will be hidden
+        const valid = !isValid || isValid({ value });
+        const handleCustomParamChange = (key, selectedVal) => {
+            onChange({
+                [key]: selectedVal
+            });
+        };
+        return (
+            <>
+                <div style={{width: '100%', borderTop: 'solid 2px grey', marginTop: '0.5rem'}}>
+                    <h5><strong><Message msgId={label} /> </strong></h5>
+                    <div>
+                        {thematicCustomParams?.map(param=>(
+                            <PropertyField
+                                label={param?.title || param?.field}
+                                invalid={!valid}>
+                                <SelectInput
+                                    {...props}
+                                    value={ value ? value[param?.field] : undefined}
+                                    onChange={(val)=>handleCustomParamChange(param.field, val)}
+                                    config={{...props.config, getOptions: () => {
+                                        return param?.values?.map(val => {
+                                            return {
+                                                labelId: val.value,
+                                                value: val.value,
+                                                label: val.name
+                                            };
+                                        });
+                                    }}}
+                                />
+                            </PropertyField>
+                        ))
+                        }
+                    </div>
+                </div>
+            </>
+        );
     }
 };
 

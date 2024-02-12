@@ -2558,6 +2558,8 @@
             "alertForceTranslate": "Passando all'editor visuale perderai tutte le modifiche applicate con l'editor testuale. Sei sicuro di passare alla modalità editor visuale?",
             "stayInTextareaEditor": "No, continua con l'editor testuale",
             "useLatestValidStyle": "Sì, passa all'editor visuale",
+            "alertCustomParamsNotValid": "Perderai tutte le modifiche aggiunte nella modalità di testo chiudendo l'editor parametri personalizzati. Sei sicuro di chiudere l'editor?",
+            "closeCustomParamsEditor": "Sì, chiudi l'editore",
             "validationError": "Errore di validazione",
             "incorrectPropertyInputError": "Questo è probabilmente dovuto ad un valore mancante o non valido negli input delle proprietà dell'editor di stile.",
             "emptyRuleEditorTitle": "Aggiungi nuove regole",
@@ -2635,7 +2637,8 @@
             "msExtrudedHeight": "Altezza estrusa",
             "msExtrusionColor": "Colore estrusione",
             "msExtrusionType": "Tipo estrusione",
-            "wall": "Muro"
+            "wall": "Muro",
+            "customParams": "Parametri personalizzati"
         },
         "playback": {
             "settings": {

@@ -99,7 +99,8 @@ const RulesEditor = forwardRef(({
         svgSymbolsPath,
         lineDashOptions,
         supportedSymbolizerMenuOptions,
-        enableFieldExpression
+        enableFieldExpression,
+        thematicCustomParams            // layer.thematic.params in layers state
     } = config;
 
     // needed for slider
@@ -373,6 +374,7 @@ const RulesEditor = forwardRef(({
                                     onReplace={handleReplaceRule}
                                     format={format}
                                     enableFieldExpression={enableFieldExpression}
+                                    thematicCustomParamsProperty={thematicCustomParams}     // layer.thematic.params in layers state
                                 />
                                 : symbolizers.map(({ kind = '', symbolizerId, ...properties }) => {
                                     const { params, glyph, hideMenu } = getSymbolizerInfo(kind);

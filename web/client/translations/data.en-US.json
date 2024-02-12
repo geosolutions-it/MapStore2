@@ -2566,6 +2566,8 @@
             "alertForceTranslate": "You will lose all the changes added in the text mode by switching to visual editor. Are you sure to switch to visual style editor mode?",
             "stayInTextareaEditor": "No, continue with text editor",
             "useLatestValidStyle": "Yes, switch to visual editor",
+            "alertCustomParamsNotValid": "You will lose all the changes added in the text mode by closing the custom params editor. Are you sure to close the editor?",
+            "closeCustomParamsEditor": "Yes, close the editor",
             "validationError": "Validation error",
             "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
 
@@ -2644,7 +2646,9 @@
             "msExtrudedHeight": "Extruded height",
             "msExtrusionColor": "Extrusion color",
             "msExtrusionType": "Extrusion type",
-            "wall": "Wall"
+            "wall": "Wall",
+            "customParams": "Custom Parameters",
+            "wrongFormatMsg": "The entered configration is in wrong format !!"
         },
         "playback": {
             "settings": {

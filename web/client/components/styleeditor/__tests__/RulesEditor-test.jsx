@@ -350,7 +350,8 @@ describe('RulesEditor', () => {
         const ruleHeadButtonNodes = ruleHeadNode.querySelectorAll('button');
         expect([...ruleHeadButtonNodes].map(btn => btn.children[0].getAttribute('class'))).toEqual([
             'glyphicon glyphicon-next',
-            'glyphicon glyphicon-trash'
+            'glyphicon glyphicon-trash',
+            'glyphicon glyphicon-cog'
         ]);
 
         const symbolizersNode = rulesNode[0].querySelectorAll('.ms-symbolizer');

@@ -223,12 +223,20 @@ const defaultClassificationRequest = ({
     params,
     styleService
 }) => {
-    const paramSLDService = {
+    let paramSLDService = {
         intervals: params.intervals,
         method: params.method,
         attribute: params.attribute,
         intervalsForUnique: params.intervalsForUnique
     };
+    let isCustomParamExist = typeof params.customParams === 'object';
+    if (isCustomParamExist) {
+        Object.entries(params.customParams).forEach((item) => {
+            if (item[1]) {
+                paramSLDService[item[0]] = item[1];
+            }
+        });
+    }
     return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService, styleService));
 };
 /**
@@ -252,13 +260,15 @@ export function classificationVector({
     classificationRequest = defaultClassificationRequest
 }) {
 
+    // maybe need to add customParams in this keys
     let paramsKeys = [
         'intervals',
         'method',
         'reverse',
         'attribute',
         'ramp',
-        'intervalsForUnique'
+        'intervalsForUnique',
+        'customParams'
     ];
     let params = { ...properties, ...values };
     const { ruleId } = properties;

@@ -21,7 +21,7 @@ import CLASSIFY_VECTOR_RESPONSE from './classifyVectorResponse.json';
 import CLASSIFY_RASTER_RESPONSE from './classifyRaterResponse.json';
 
 describe('StyleEditor API', () => {
-    const DEFAULT_CONFIG = { intervalsForUnique: 10 };
+    const DEFAULT_CONFIG = { intervalsForUnique: 10, customParams: {} };
     describe('classificationVector', () => {
         beforeEach(done => {
             mockAxios = new MockAdapter(axios);
@@ -551,6 +551,7 @@ describe('StyleEditor API', () => {
                 attribute: 'ATTRIBUTE',
                 type: 'classificationVector',
                 classification: [1, 2, 3, 4, 5],
+                ...DEFAULT_CONFIG,
                 ...param
             };
             const rules = [
