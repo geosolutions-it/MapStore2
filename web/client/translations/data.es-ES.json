@@ -2637,7 +2637,8 @@
             "msExtrusionColor": "Color de extrusión",
             "msExtrusionType": "Tipo de extrusión",
             "wall": "Muro",
-            "customParams": "Parámetros personalizados"
+            "customParams": "Parámetros personalizados",
+            "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!"
         },
         "playback": {
             "settings": {

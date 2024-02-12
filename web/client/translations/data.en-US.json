@@ -2648,7 +2648,7 @@
             "msExtrusionType": "Extrusion type",
             "wall": "Wall",
             "customParams": "Custom Parameters",
-            "wrongFormatMsg": "The entered configration is in wrong format !!"
+            "wrongFormatMsg": "The entered configuration is in wrong format !!"
         },
         "playback": {
             "settings": {

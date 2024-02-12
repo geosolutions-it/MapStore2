@@ -2675,7 +2675,8 @@
             "msExtrusionColor": "Extrusionsfarbe",
             "msExtrusionType": "Extrusionstyp",
             "wall": "Wand",
-            "customParams": "Benutzerdefinierte Parameter"
+            "customParams": "Benutzerdefinierte Parameter",
+            "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
         },
         "playback": {
             "settings": {
