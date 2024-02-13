@@ -20,12 +20,7 @@ import proj4 from 'proj4';
 // extract model origin point
 function getModelOriginCoords(ifcData, modelVersion, modelID) {
     const { ifcApi, WebIFC } = ifcData;
-    let originProperties = {
-        latitude: 0,
-        longitude: 0,
-        height: 0,
-        scale: 1
-    };
+    let originProperties = {};
     if (modelVersion?.includes("IFC4")) {
         let projectedCrs;
         let mapConversion;
@@ -45,17 +40,25 @@ function getModelOriginCoords(ifcData, modelVersion, modelID) {
                 orthogonalHeight: mapConversionObj?.OrthogonalHeight?.value,    // height (z coord)
                 xAxisOrdinate: mapConversionObj?.XAxisOrdinate?.value,
                 xAxisAbscissa: mapConversionObj?.XAxisAbscissa?.value,
-                rotation: Math.atan2(mapConversionObj?.XAxisOrdinate?.value || 0, mapConversionObj?.XAxisAbscissa?.value || 0),
+                rotation: Math.atan2(mapConversionObj?.XAxisOrdinate?.value || 0, mapConversionObj?.XAxisAbscissa?.value || 0) * 180.0 / Math. PI,
                 scale: mapConversionObj?.Scale?.value
             };
             if (proj4.defs(projectedCrs)) {         // if crs in not defined in MS, model will be locatied at 0,0
                 let wgs84Origin = proj4(proj4.defs(projectedCrs), proj4.defs('EPSG:4326'), [mapConversion.eastings, mapConversion.northings]);
                 originProperties = {
+                    projectedCrs,
                     longitude: wgs84Origin[0] || 0,
                     latitude: wgs84Origin[1] || 0,
                     height: mapConversion.orthogonalHeight || 0,
                     scale: mapConversion.scale || 1,
-                    projectedCrs
+                    heading: mapConversion.rotation,
+                    mapConversion
+                };
+            } else {
+                originProperties = {
+                    projectedCrs,
+                    projectedCrsNotSupported: true,
+                    mapConversion
                 };
             }
         }
@@ -92,7 +95,7 @@ function extractCapabilities(ifcData, modelID, url) {
 export const ifcDataToJSON = ({ data, ifcData }) => {
     const { ifcApi } = ifcData;
     const settings = {
-        COORDINATE_TO_ORIGIN: true,
+        COORDINATE_TO_ORIGIN: false, // this property change the position for IFC4 with projection if true
         USE_FAST_BOOLS: true
     };
     let rawFileData = new Uint8Array(data);

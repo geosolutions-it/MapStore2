@@ -29,7 +29,7 @@ const recordToLayer = (record) => {
         return null;
     }
     const { bbox, format, properties } = record;
-    const { scale, longitude, latitude, height } = properties;
+    const { scale, longitude, latitude, height, heading, ...others } = properties;
     return {
         type: 'model',
         url: record.url,
@@ -39,21 +39,21 @@ const recordToLayer = (record) => {
                 type: 'Feature',
                 id: 'model-origin',
                 properties: {
-                    heading: 0,
+                    ...others,
+                    heading: heading || 0,
                     pitch: 0,
                     roll: 0,
                     scale: scale || 1
                 },
                 geometry: {
                     type: 'Point',
-                    coordinates: [longitude, latitude, height]
+                    coordinates: [longitude || 0, latitude || 0, height || 0]
                 }
             }
         ],
         visibility: true,
         ...(bbox && { bbox }),
-        ...(format && { format }),
-        ...(properties && { properties })
+        ...(format && { format })
     };
 };
 

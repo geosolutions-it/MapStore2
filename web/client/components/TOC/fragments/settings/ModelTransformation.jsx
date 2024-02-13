@@ -73,6 +73,7 @@ function ModelTransformation({
                         name={"modelCenterLng"}
                         value={longitude}
                         fallbackValue={0}
+                        step={0.00001}
                         onChange={(val)=> {
                             changeCenterModelHandler({
                                 longitude: val !== undefined
@@ -90,6 +91,7 @@ function ModelTransformation({
                         name={"modelCenterLat"}
                         value={latitude}
                         fallbackValue={0}
+                        step={0.00001}
                         onChange={(val)=> {
                             changeCenterModelHandler({
                                 latitude: val !== undefined
@@ -114,6 +116,31 @@ function ModelTransformation({
                             });
                         }}
                     />
+                </InputGroup>
+            </FormGroup>
+            <FormGroup className="form-group-flex">
+                <ControlLabel><Message msgId="layerProperties.modelLayer.heading"/></ControlLabel>
+                <InputGroup style={{ maxWidth: 120 }}>
+                    <DebouncedFormControl
+                        type="number"
+                        name={"heading"}
+                        value={feature?.properties?.heading || 0}
+                        fallbackValue={0}
+                        onChange={(val)=> {
+                            const heading = val !== undefined
+                                ? parseFloat(val) : 0;
+                            onChange('features', [
+                                {
+                                    ...feature,
+                                    properties: {
+                                        ...feature?.properties,
+                                        heading
+                                    }
+                                }
+                            ]);
+                        }}
+                    />
+                    <InputGroup.Addon>°</InputGroup.Addon>
                 </InputGroup>
             </FormGroup>
         </div>
