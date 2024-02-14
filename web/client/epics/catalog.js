@@ -37,7 +37,7 @@ import {
     setNewServiceStatus
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
-import { error, success } from '../actions/notifications';
+import { error, success, warning } from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
 import { allowBackgroundsDeletion } from '../actions/backgroundselector';
@@ -318,9 +318,14 @@ export default (API) => ({
                                 }
                             ]
                         };
-                        return Rx.Observable.of(
+                        return Rx.Observable.from(
                             // add notification warning,
-                            addNewLayer({...newLayer, id})
+                            [addNewLayer({...newLayer, id}), warning({
+                                title: "notification.warning",
+                                message: properties?.projectedCrsNotSupported ? "layerProperties.modelLayer.warnings.projectedCrsNotSupported" : "layerProperties.modelLayer.warnings.projectedCrsNotProvided",
+                                autoDismiss: 15,
+                                position: "tc"
+                            })]
                         );
                     }
                 }

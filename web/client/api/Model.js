@@ -192,7 +192,7 @@ export const getCapabilities = (url) => {
                 .then((ifcData) => {
                     const { ifcApi } = ifcData;
                     const settings = {
-                        COORDINATE_TO_ORIGIN: true,
+                        COORDINATE_TO_ORIGIN: false,
                         USE_FAST_BOOLS: true
                     };
                     const modelID = ifcApi.OpenModel(new Uint8Array(data), settings); // eslint-disable-line

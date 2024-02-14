@@ -34,13 +34,14 @@ describe('ModelTransformation', () => {
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'layerProperties.modelLayer.modelCenterLng',
             'layerProperties.modelLayer.modelCenterLat',
-            'layerProperties.modelLayer.height'
+            'layerProperties.modelLayer.height',
+            'layerProperties.modelLayer.heading'
         ]);
     });
     it('should trigger on change with model center lng input', (done) => {
         act(() => {
             ReactDOM.render(<ModelTransformation layer={{
-                type: 'model'
+                type: 'model',  features: [ { type: 'Feature', geometry: { type: 'Point', coordinates: [ 0, 0, 0 ] } }]
             }}
             onChange={(key, value) => {
                 try {
@@ -57,7 +58,8 @@ describe('ModelTransformation', () => {
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'layerProperties.modelLayer.modelCenterLng',
             'layerProperties.modelLayer.modelCenterLat',
-            'layerProperties.modelLayer.height'
+            'layerProperties.modelLayer.height',
+            'layerProperties.modelLayer.heading'
         ]);
         const inputNodes = document.querySelectorAll('input[type=\'number\']');
         Simulate.focus(inputNodes[0]);
@@ -66,7 +68,7 @@ describe('ModelTransformation', () => {
     it('should trigger on change with model center lat input', (done) => {
         act(() => {
             ReactDOM.render(<ModelTransformation layer={{
-                type: 'model'
+                type: 'model',  features: [ { type: 'Feature', geometry: { type: 'Point', coordinates: [ 0, 0, 0 ] } }]
             }}
             onChange={(key, value) => {
                 try {
@@ -83,7 +85,8 @@ describe('ModelTransformation', () => {
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'layerProperties.modelLayer.modelCenterLng',
             'layerProperties.modelLayer.modelCenterLat',
-            'layerProperties.modelLayer.height'
+            'layerProperties.modelLayer.height',
+            'layerProperties.modelLayer.heading'
         ]);
         const inputNodes = document.querySelectorAll('input[type=\'number\']');
         Simulate.focus(inputNodes[1]);
@@ -92,7 +95,7 @@ describe('ModelTransformation', () => {
     it('should trigger on change with height input', (done) => {
         act(() => {
             ReactDOM.render(<ModelTransformation layer={{
-                type: 'model', center: [0, 0, 0]
+                type: 'model', center: [0, 0, 0], features: [ { type: 'Feature', geometry: { type: 'Point', coordinates: [ 0, 0, 0 ] } }]
             }}
             onChange={(key, value) => {
                 try {
@@ -109,10 +112,38 @@ describe('ModelTransformation', () => {
         expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
             'layerProperties.modelLayer.modelCenterLng',
             'layerProperties.modelLayer.modelCenterLat',
-            'layerProperties.modelLayer.height'
+            'layerProperties.modelLayer.height',
+            'layerProperties.modelLayer.heading'
         ]);
         const inputNodes = document.querySelectorAll('input[type=\'number\']');
         Simulate.focus(inputNodes[2]);
         Simulate.change(inputNodes[2], { target: { value: 10 } });
+    });
+    it('should trigger on change with heading input', (done) => {
+        act(() => {
+            ReactDOM.render(<ModelTransformation layer={{
+                type: 'model', center: [0, 0, 0], features: [ {  properties: { heading: 0, pitch: 0, roll: 0, scale: 1 }, type: 'Feature', geometry: { type: 'Point', coordinates: [ 0, 0, 0 ] } }]
+            }}
+            onChange={(key, value) => {
+                try {
+                    expect(key).toBe('features');
+                    expect(value[0]).toEqual({  properties: { heading: 10, pitch: 0, roll: 0, scale: 1 }, type: 'Feature', geometry: { type: 'Point', coordinates: [ 0, 0, 0 ] } });
+                } catch (e) {
+                    done(e);
+                }
+                done();
+            }}
+            />, document.getElementById('container'));
+        });
+        const controlLabelsNodes = document.querySelectorAll('.control-label');
+        expect([...controlLabelsNodes].map(node => node.innerText)).toEqual([
+            'layerProperties.modelLayer.modelCenterLng',
+            'layerProperties.modelLayer.modelCenterLat',
+            'layerProperties.modelLayer.height',
+            'layerProperties.modelLayer.heading'
+        ]);
+        const inputNodes = document.querySelectorAll('input[type=\'number\']');
+        Simulate.focus(inputNodes[3]);
+        Simulate.change(inputNodes[3], { target: { value: 10 } });
     });
 });

@@ -176,7 +176,12 @@
             "modelLayer": {
                 "modelCenterLat": "Breitengrad des Zentrums (DD)",
                 "modelCenterLng": "Längengrad des Zentrums (DD)",
-                "height": "Höhe (m)"
+                "height": "Höhe (m)",
+                "heading": "Kurswinkel (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "Il modello è posizionato al centro della vista corrente perché: das Modell hat eine CRS -Projektion, wird aber nicht unterstützt.",
+                    "projectedCrsNotProvided": "Il modello è posizionato al centro della vista corrente perché: das Modell hat keine definierte CRS -Projektion."
+                }
             },
             "tooltip": {
                 "label": "QuickInfo",

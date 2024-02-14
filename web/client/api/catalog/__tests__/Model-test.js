@@ -107,42 +107,13 @@ describe('Test IFC Model catalog API', () => {
             }
         };
         const layer = getLayerFromRecord(catalogRecord);
-        expect(layer).toEqual({
-            type: 'model',
-            url: 'base/web/client/test-resources/ifcModels/ifcModel.ifc',
-            title: 'Title',
-            visibility: true,
-            bbox: {
-                crs: 'EPSG:4326',
-                bounds: {
-                    minx: 0,
-                    miny: 0,
-                    maxx: 0,
-                    maxy: 0
-                }
-            },
-            features: [
-                {
-                    type: 'Feature',
-                    id: 'model-origin',
-                    properties: {
-                        heading: 0,
-                        pitch: 0,
-                        roll: 0,
-                        scale: 1
-                    },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [0, 0, 0]
-                    }
-                }
-            ], properties: {
-                longitude: 0,
-                latitude: 0,
-                height: 0,
-                scale: 1
-            }
-        });
+        expect(layer.type).toEqual("model");
+        expect(layer.url).toEqual("base/web/client/test-resources/ifcModels/ifcModel.ifc");
+        expect(layer.title).toEqual("Title");
+        expect(layer.visibility).toEqual(true);
+        expect(layer.bbox).toEqual({ crs: 'EPSG:4326', bounds: { minx: 0, miny: 0, maxx: 0, maxy: 0 } });
+        expect(layer.features.length).toEqual(1);
+        expect(layer.features[0]).toEqual({ type: 'Feature', id: 'model-origin', properties: { heading: 0, pitch: 0, roll: 0, scale: 1 }, geometry: { type: 'Point', coordinates: [ 0, 0, 0 ] } });
     });
     it('should validate if the service url ends with .ifc', (done) => {
         const service = { title: 'IFC Model', url: 'https://service.org/ifcModel.ifc' };
