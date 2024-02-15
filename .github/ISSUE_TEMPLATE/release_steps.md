@@ -19,15 +19,16 @@ This steps have to be followed always when preparing a new release.
 
 ## New stable branch creation
 
-**Only** if you are need to create a new stable major release (YYYY.XX.00), you need first to create a branch for it. Follow the following:
+**Only** if you need to create a new stable major release (YYYY.XX.00), you need to create a branch for it. Check the following:
 
 - [ ] Run the [`Cut Release Branch`](https://github.com/geosolutions-it/MapStore2/actions/workflows/cut_major_branch.yml) workflow on github.
       With the following Parameters:
-        - Use workflow from branch `master`
-        - MapStore branch name to use: `YYYY.XX.xx`
-        - Version of *MapFish Print*, *GeoStore* and *HTTP-Proxy* accordingly to the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
-        - use the default value for the other parameters
-- [ ] Wait for the end of the process. At the end
+      
+        - [ ] Use workflow from branch `master`
+        - [ ] MapStore branch name to use: `YYYY.XX.xx`
+        - [ ] Version of *MapFish Print*, *GeoStore* and *HTTP-Proxy* accordingly to the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
+        - [ ] use the default value for the other parameters
+- [ ] Wait for the process to complete. At the end:
     - A Pull request will be created to the master
     - A new branch named `YYYY.XX.xx` with fixed versions
 - [ ] Merge the incoming PR created by the workflow
@@ -61,7 +62,7 @@ This steps have to be followed always when preparing a new release.
   - MapStore version for changelog generation **YYYY.XX.mm** (the effective number of the previous release)
   - version to fix for the java module, accordingly with release schedule (e.g. `1.7.0`)
   - use the default value for the other parameters
-- [ ] Wait for the end of the process.At the end of this process:
+- [ ] Wait for the process to complete. At the end:
     - a new commit will be added to the release branch tagged as `vYYYY.XX.mm`. This commit will contain the changelog and the updated version of the java modules.
     - a pull request will be created on master with the changelog updates
 - [ ] Merge the incoming PR created by the workflow for updating changelog on Master

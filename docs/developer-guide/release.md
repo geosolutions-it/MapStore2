@@ -127,7 +127,7 @@ The changelog generation is now automated. Anyway it is possible to generate the
 npm run generate:changelog <oldReleaseNumber>  <newReleaseNumber>
 
 # usage
-# generate:changelog 2022.01.00 2022.02.00
+# e.g. npm run generate:changelog 2022.01.00 2022.02.00
 ```
 
 This produces some text that can be used to update the changelog file.
