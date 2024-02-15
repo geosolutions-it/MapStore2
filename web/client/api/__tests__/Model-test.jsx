@@ -10,9 +10,8 @@ import expect from 'expect';
 
 describe('Test Model API for ifc models', () => {
     it('should extract capabilities from ifc model', (done) => {
-        getCapabilities('base/web/client/test-resources/ifcModels/ifcModel.ifc').then(({ bbox, format, version, properties, modelData }) => {
+        getCapabilities('base/web/client/test-resources/ifcModels/ifcModel.ifc').then(({ bbox, format, version, properties }) => {
             try {
-                expect(modelData).toBeTruthy();
                 expect(format).toBeTruthy();
                 expect(format).toBe('ifc');
                 expect(version).toBeTruthy();

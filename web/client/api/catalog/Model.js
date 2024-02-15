@@ -65,7 +65,7 @@ function getTitleFromUrl(url) {
 // todo: need to refactor
 const getRecords = (url, startPosition, maxRecords, text, info) => {
     return getCapabilities(url)
-        .then(({ modelData, ...properties }) => {
+        .then(({ ...properties }) => {
             const records = [{
                 // current specification does not define the title location
                 // but there is works related to the metadata in the next version of 3d tiles
@@ -74,7 +74,6 @@ const getRecords = (url, startPosition, maxRecords, text, info) => {
                 title: info?.options?.service?.title || getTitleFromUrl(url),
                 url: url,
                 type: 'model',
-                modelData,
                 ...properties
             }];
             return {
