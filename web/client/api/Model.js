@@ -92,8 +92,8 @@ function extractCapabilities(ifcData, modelID, url) {
  * @return {object} return json object includes meshes array [geometry data of ifc model], extent of ifc model, center and size
  * @
  */
-export const ifcDataToJSON = ({ data, ifcData }) => {
-    const { ifcApi } = ifcData;
+export const ifcDataToJSON = ({ data, ifcModule }) => {
+    const { ifcApi } = ifcModule;
     const settings = {
         COORDINATE_TO_ORIGIN: false, // this property change the position for IFC4 with projection if true
         USE_FAST_BOOLS: true
@@ -173,6 +173,25 @@ export const getWebIFC = () => import('web-ifc')
         ifcApi.SetWasmPath('./web-ifc/'); // eslint-disable-line
         return ifcApi.Init().then(() => { return { ifcApi, WebIFC } }); // eslint-disable-line
     });
+
+let ifcCache = {};
+export const getIFCModel = (url) => {
+    const request = ifcCache[url]
+        ? () => Promise.resolve(ifcCache[url])
+        : () => axios.get(url, {
+            responseType: 'arraybuffer'
+        }).then(({ data }) => {
+            ifcCache[url] = data;
+            return data;
+        });
+    return request()
+        .then((data) => {
+            return getWebIFC()
+                .then((ifcModule) => {
+                    return { data, ifcModule };
+                });
+        });
+};
 /**
  * Common requests to IFC
  * @module api.IFC
@@ -184,40 +203,35 @@ export const getWebIFC = () => import('web-ifc')
  * @
  */
 export const getCapabilities = (url) => {
-    return axios.get(url, {
-        responseType: 'arraybuffer'
-    })
-        .then(({ data }) => {
-            return getWebIFC()
-                .then((ifcData) => {
-                    const { ifcApi } = ifcData;
-                    const settings = {
-                        COORDINATE_TO_ORIGIN: false,
-                        USE_FAST_BOOLS: true
-                    };
-                    const modelID = ifcApi.OpenModel(new Uint8Array(data), settings); // eslint-disable-line
+    return getIFCModel(url)
+        .then(({ ifcModule, data }) => {
+            const { ifcApi } = ifcModule;
+            const settings = {
+                COORDINATE_TO_ORIGIN: false,
+                USE_FAST_BOOLS: true
+            };
+            const modelID = ifcApi.OpenModel(new Uint8Array(data), settings); // eslint-disable-line
 
-                    let capabilities = extractCapabilities(ifcData, modelID, url);
-                    // extract model origin info by reading IFCProjectedCRS, IFCMapCONVERSION in case of IFC4
-                    const modelOriginProperties = getModelOriginCoords(ifcData, capabilities.version, modelID);
-                    capabilities.properties = {
-                        ...capabilities.properties,
-                        ...modelOriginProperties
-                    };
-                    ifcApi.CloseModel(modelID);     // eslint-disable-line
-                    let properties = capabilities.properties;
-                    // todo: getting bbox needs to enhance to get the accurate bbox of the ifc model
-                    let bbox = {
-                        bounds: {
-                            minx: properties.longitude || 0 - 0.001,
-                            miny: properties.latitude || 0 - 0.001,
-                            maxx: properties.longitude || 0 + 0.001,
-                            maxy: properties.latitude || 0 + 0.001
-                        },
-                        crs: 'EPSG:4326'
-                    };
-                    return { modelData: data, ...capabilities, ...(bbox && { bbox })};
-                });
+            let capabilities = extractCapabilities(ifcModule, modelID, url);
+            // extract model origin info by reading IFCProjectedCRS, IFCMapCONVERSION in case of IFC4
+            const modelOriginProperties = getModelOriginCoords(ifcModule, capabilities.version, modelID);
+            capabilities.properties = {
+                ...capabilities.properties,
+                ...modelOriginProperties
+            };
+            ifcApi.CloseModel(modelID);     // eslint-disable-line
+            let properties = capabilities.properties;
+            // todo: getting bbox needs to enhance to get the accurate bbox of the ifc model
+            let bbox = {
+                bounds: {
+                    minx: properties.longitude || 0 - 0.001,
+                    miny: properties.latitude || 0 - 0.001,
+                    maxx: properties.longitude || 0 + 0.001,
+                    maxy: properties.latitude || 0 + 0.001
+                },
+                crs: 'EPSG:4326'
+            };
+            return { ...capabilities, ...(bbox && { bbox })};
         });
 };
 

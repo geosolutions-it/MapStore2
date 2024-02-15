@@ -8,9 +8,8 @@
 
 import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
-import axios from 'axios';
 import Layers from '../../../../utils/cesium/Layers';
-import { ifcDataToJSON, getWebIFC } from '../../../../api/Model';     // todo: change path to MODEL
+import { ifcDataToJSON, getIFCModel } from '../../../../api/Model';
 
 const updatePrimitivesMatrix = (primitives, feature) => {
     const { properties, geometry } = feature;
@@ -155,21 +154,15 @@ const createLayer = (options, map) => {
         };
     }
     let primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
+    getIFCModel(options.url)
+        .then(({ifcModule, data}) => {
+            const { meshes } = ifcDataToJSON({ ifcModule, data });
+            const translucentPrimitive = createPrimitiveFromMeshes(meshes, options, 'translucentPrimitive');
+            const opaquePrimitive = createPrimitiveFromMeshes(meshes, options, 'opaquePrimitive');
+            primitives.add(translucentPrimitive);
+            primitives.add(opaquePrimitive);
+            updatePrimitivesMatrix(primitives, options?.features?.[0]);
 
-    axios.get(options.url, {
-        responseType: 'arraybuffer'
-    })
-        .then(({ data }) => {
-            return getWebIFC()
-                .then((ifcData) => {
-                    const { meshes } = ifcDataToJSON({ ifcData, data });
-                    const translucentPrimitive = createPrimitiveFromMeshes(meshes, options, 'translucentPrimitive');
-                    const opaquePrimitive = createPrimitiveFromMeshes(meshes, options, 'opaquePrimitive');
-                    primitives.add(translucentPrimitive);
-                    primitives.add(opaquePrimitive);
-                    updatePrimitivesMatrix(primitives, options?.features?.[0]);
-
-                });
         });
     map.scene.primitives.add(primitives);
     return {

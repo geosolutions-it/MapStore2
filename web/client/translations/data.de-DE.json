@@ -179,8 +179,8 @@
                 "height": "Höhe (m)",
                 "heading": "Kurswinkel (DD)",
                 "warnings": {
-                    "projectedCrsNotSupported": "Il modello è posizionato al centro della vista corrente perché: das Modell hat eine CRS -Projektion, wird aber nicht unterstützt.",
-                    "projectedCrsNotProvided": "Il modello è posizionato al centro della vista corrente perché: das Modell hat keine definierte CRS -Projektion."
+                    "projectedCrsNotSupported": "Das Modell wird aus folgenden Gründen in der Mitte der aktuellen Ansicht platziert: Das Modell verfügt über eine CRS-Projektion, diese wird jedoch nicht unterstützt.",
+                    "projectedCrsNotProvided": "Das Modell wird aus folgenden Gründen in der Mitte der aktuellen Ansicht platziert: Das Modell verfügt über keine definierte CRS-Projektion."
                 }
             },
             "tooltip": {
