@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, Validator } from './FeatureInfoUtils';
+import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, JSON_MIME_TYPE, GEOJSON_MIME_TYPE, Validator } from './FeatureInfoUtils';
 
 import pointOnSurface from 'turf-point-on-surface';
 import { findIndex } from 'lodash';
@@ -22,20 +22,95 @@ import threeDTiles from './mapinfo/threeDTiles';
 
 let MapInfoUtils;
 /**
+ * Map of info modes which are used to display feature info data (identify tools).
+ * To be distinguished with INFO_FORMATS which is the map of mime types used in client server communication.
+ * These are strictly a representation of the various ways that info data is visualized.
+ * Has an N <=> N relationship with INFO_FORMATS.
+ */
+const INFO_VIEW_MODES = {
+    TEXT: "TEXT",
+    PROPERTIES: "PROPERTIES",
+    HTML: "HTML",
+    TEMPLATE: "TEMPLATE"
+};
+
+/**
+ * @returns {object} Map of views which are used to display feature info data (identify tools).
+ */
+export const getInfoViewModes = () => {
+    return {...INFO_VIEW_MODES};
+};
+/**
+ * Given an `infoFormat` mime-type passed, it returns the default view mode (e.g. `PROPERTIES`, `HTML`, `TEXT`) for the format selected.
+ *
+ * @param {string} infoFormat the info format mime type.
+ * @returns {string} the info view mode that is used for that info format.
+ */
+export const getDefaultInfoViewMode = (infoFormat) => {
+    let infoView;
+    switch (infoFormat) {
+    case INFO_FORMATS.TEXT:
+        infoView = INFO_VIEW_MODES.TEXT;
+        break;
+    case INFO_FORMATS.HTML:
+        infoView = INFO_VIEW_MODES.HTML;
+        break;
+    case INFO_FORMATS.JSON:
+        infoView = INFO_VIEW_MODES.PROPERTIES;
+        break;
+    case INFO_FORMATS.GEOJSON:
+        infoView = INFO_VIEW_MODES.PROPERTIES;
+        break;
+    default:
+        // TODO: re-assess leaving default null value, this way tests work but caller is burdened with fallback.
+        infoView;
+    }
+
+    return infoView;
+};
+/**
+ * Given a infoViewMode (e.g. "HTML", "PROPERTIES", "TEMPLATE"), returns the mime-type to use for the request for the given layer.
+ *
+ * @param {string} infoView the info view mode.
+ * @param {array} layerInfoFormatCfg the layer supported GFI mime types.
+ * @returns {string} the info format mime type.
+ */
+export const getInfoFormatByInfoView = (infoView, layerInfoFormatCfg) => {
+    let infoFormat;
+    switch (infoView) {
+    case INFO_VIEW_MODES.TEXT:
+        infoFormat = INFO_FORMATS.TEXT;
+        break;
+    case INFO_VIEW_MODES.HTML:
+        infoFormat = INFO_FORMATS.HTML;
+        break;
+    case INFO_VIEW_MODES.PROPERTIES:
+    case INFO_VIEW_MODES.TEMPLATE:
+        infoFormat = layerInfoFormatCfg?.includes(GEOJSON_MIME_TYPE) ? INFO_FORMATS.GEOJSON : INFO_FORMATS.JSON;
+        break;
+    default:
+        // TODO: re-assess leaving default null value, this way tests work but caller is burdened with fallback.
+        infoFormat;
+    }
+
+    return infoFormat;
+};
+
+/**
  * specifies which info formats are currently supported
  */
 //           default format ↴
-export const AVAILABLE_FORMAT = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'];
+export const SUPPORTED_FORMATS = ['TEXT', 'HTML', 'JSON', 'GEOJSON'];
 
 export const EMPTY_RESOURCE_VALUE = 'NODATA';
 
 /**
  * @return a filtered version of INFO_FORMATS object.
- * the returned object contains only keys that AVAILABLE_FORMAT contains.
+ * the returned object contains only keys that SUPPORTED_FORMATS contains.
  */
 export const getAvailableInfoFormat = () => {
     return Object.keys(INFO_FORMATS).filter((k) => {
-        return MapInfoUtils.AVAILABLE_FORMAT.indexOf(k) !== -1;
+        return MapInfoUtils.SUPPORTED_FORMATS.indexOf(k) !== -1;
     }).reduce((prev, k) => {
         prev[k] = INFO_FORMATS[k];
         return prev;
@@ -65,23 +140,17 @@ export const getAvailableInfoFormatValues = () => {
  * @return {string} the default info format value
  */
 export const getDefaultInfoFormatValue = () => {
-    return INFO_FORMATS[MapInfoUtils.AVAILABLE_FORMAT[0]];
+    return INFO_FORMATS[MapInfoUtils.SUPPORTED_FORMATS[0]];
 };
 /**
- * @return {string} the info format value from layer, otherwise the info format in settings
+ * @param {object} param object map of params for a getFeatureInfo request.
+ * @return {boolean} Check if param.info_format of param.outputFormat is set as json / geojson mime type.
  */
-export const getDefaultInfoFormatValueFromLayer = (layer, props) =>
-    layer.featureInfo
-        && layer.featureInfo.format
-        && INFO_FORMATS[layer.featureInfo.format]
-        || props.format
-        || MapInfoUtils.getDefaultInfoFormatValue();
-export const getLayerFeatureInfoViewer = (layer) => {
-    if (layer.featureInfo
-        && layer.featureInfo.viewer) {
-        return layer.featureInfo.viewer;
-    }
-    return {};
+export const isDataFormat = (param) => {
+    return param?.info_format === JSON_MIME_TYPE
+        || param?.outputFormat === JSON_MIME_TYPE
+        || param?.info_format === GEOJSON_MIME_TYPE
+        || param?.outputFormat === GEOJSON_MIME_TYPE;
 };
 /**
  * returns feature info options of layer
@@ -90,6 +159,48 @@ export const getLayerFeatureInfoViewer = (layer) => {
  */
 export const getLayerFeatureInfo = (layer) => {
     return layer && layer.featureInfo && {...layer.featureInfo} || {};
+};
+/**
+ * Extracts the proper mime time to use for the layer, given the passed props that determine the preferred type. This
+ *  helps to convert, for instance, the mime-type set as default for the map (e.g. `application/json`) into the effective
+ * mime type requested by the server (e.g. `application/geo+json`)
+ * @param {object} layer the layer
+ * @param props.format the preferred format, corresponding to the global settings information sheet field. it can be a mime type like `application/json`.
+ * @return {string} the info format value from layer, otherwise the info format in settings
+ */
+export const getDefaultInfoFormatValueFromLayer = (layer, props) => {
+    const featInfoFormat = getLayerFeatureInfo(layer)?.format;
+    if (featInfoFormat) {
+        // When the user explicitly configures the format from the layer settings => feature info page, return directly from definition map.
+        // Check if featInfoFormat is an actual view, otherwise retrieve infoFormat directly.
+        return Object.values(getInfoViewModes()).includes(featInfoFormat)
+            ? getInfoFormatByInfoView(featInfoFormat, layer.infoFormats)
+            : getAvailableInfoFormat()[featInfoFormat];
+    }
+    if (props.format) {
+        if (props.format === JSON_MIME_TYPE && layer.infoFormats && layer.infoFormats.includes(GEOJSON_MIME_TYPE)) {
+            // When global settings is configured for PROPERTIES (json), layer settings are not used and the layer.info_format configuration supports geo+json
+            // then override global settings and set param.info_format to geo+json mime type explicitly.
+            return GEOJSON_MIME_TYPE;
+        }
+
+        // otherwise, preserve and obey the global configration for getFeatureInfo mime type.
+        return props.format;
+    }
+
+    // if global configration somehow fails provide a last fallback.
+    return MapInfoUtils.getDefaultInfoFormatValue();
+};
+/**
+ * @param {object} layer a layer object
+ * @returns {object} the viewer configured for the layer. If viewer is not configured, it returns an empty object.
+ */
+export const getLayerFeatureInfoViewer = (layer) => {
+    if (layer.featureInfo
+        && layer.featureInfo.viewer) {
+        return layer.featureInfo.viewer;
+    }
+    return {};
 };
 export const clickedPointToGeoJson = (clickedPoint) => {
     if (!clickedPoint) {
@@ -219,11 +330,28 @@ export const getValidator = (format) => {
 };
 export const getViewers = () => {
     return {
-        [INFO_FORMATS.PROPERTIES]: JSONViewer,
-        [INFO_FORMATS.JSON]: JSONViewer,
-        [INFO_FORMATS.HTML]: HTMLViewer,
-        [INFO_FORMATS.TEXT]: TextViewer
+        [INFO_VIEW_MODES.TEMPLATE]: JSONViewer,
+        [INFO_VIEW_MODES.PROPERTIES]: JSONViewer,
+        [INFO_VIEW_MODES.HTML]: HTMLViewer,
+        [INFO_VIEW_MODES.TEXT]: TextViewer
     };
+};
+/**
+ * @param {string} infoFormat the info format key corresponding to a specific mime type in INFO_FORMATS OR a custom viewer key set by the user.
+ * @param {object} viewers a map of {infoFormat: viewerType} (see MapInfoUtils.getViewers).
+ * @returns {jsx} the associated viewer component.
+ */
+export const getDefaultViewer = function(infoFormat, viewers = getViewers()) {
+    let isInfoKey = getAvailableInfoFormatLabels()?.includes(infoFormat);
+    let isInfoValue = getAvailableInfoFormatValues()?.includes(infoFormat);
+    if (isInfoKey) {
+        return viewers[getDefaultInfoViewMode(getAvailableInfoFormat()[infoFormat])];
+    }
+    if (isInfoValue) {
+        return viewers[getDefaultInfoViewMode(infoFormat)];
+    }
+
+    return viewers[infoFormat];
 };
 export const defaultQueryableFilter = (l) => {
     return l.visibility &&
@@ -294,7 +422,7 @@ export const getRowViewer = (name) => {
 };
 
 MapInfoUtils = {
-    AVAILABLE_FORMAT,
+    SUPPORTED_FORMATS,
     getAvailableInfoFormatLabels,
     getAvailableInfoFormat,
     getDefaultInfoFormatValue,
