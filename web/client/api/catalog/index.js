@@ -16,7 +16,7 @@ import * as geojson from './GeoJSON';
 import * as backgrounds from './backgrounds';
 import * as threeDTiles from './ThreeDTiles';
 import * as cog from './COG';
-
+import * as model from './Model';           // todo: will change to model
 /**
  * APIs collection for catalog.
  * Each entry must implement:
@@ -51,5 +51,6 @@ export default {
     'geojson': geojson,
     'backgrounds': backgrounds,
     '3dtiles': threeDTiles,
-    'cog': cog
+    'cog': cog,
+    'model': model
 };

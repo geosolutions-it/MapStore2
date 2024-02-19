@@ -37,7 +37,7 @@ import {
     setNewServiceStatus
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
-import { error, success } from '../actions/notifications';
+import { error, success, warning } from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
 import { allowBackgroundsDeletion } from '../actions/backgroundselector';
@@ -68,7 +68,7 @@ import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace} from '../u
 
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
-import { projectionSelector } from '../selectors/map';
+import { projectionSelector, mapSelector } from '../selectors/map';
 import { getResolutions } from "../utils/MapUtils";
 import { describeFeatureType } from '../api/WFS';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
@@ -289,6 +289,45 @@ export default (API) => ({
                         })
                         .merge(Rx.Observable.from(actions))
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                if (layer.type === 'model') {
+                    const properties = layer?.features?.[0]?.properties || {};
+                    if (properties?.projectedCrsNotSupported || !properties?.projectedCrs) {
+                        const { center: mapCenter } = mapSelector(state) || {};
+                        const center = CoordinatesUtils.reproject(mapCenter, mapCenter.crs, 'EPSG:4326');
+                        const longitude = center.x;
+                        const latitude = center.y;
+                        const newLayer = {
+                            ...layer,
+                            bbox: {
+                                bounds: {
+                                    minx: longitude || 0 - 0.001,
+                                    miny: latitude || 0 - 0.001,
+                                    maxx: longitude || 0 + 0.001,
+                                    maxy: latitude || 0 + 0.001
+                                },
+                                crs: 'EPSG:4326'
+                            },
+                            features: [
+                                {
+                                    ...layer?.features?.[0],
+                                    geometry: {
+                                        type: 'Point',
+                                        coordinates: [longitude, latitude, 0]
+                                    }
+                                }
+                            ]
+                        };
+                        return Rx.Observable.from(
+                            // add notification warning,
+                            [addNewLayer({...newLayer, id}), warning({
+                                title: "notification.warning",
+                                message: properties?.projectedCrsNotSupported ? "layerProperties.modelLayer.warnings.projectedCrsNotSupported" : "layerProperties.modelLayer.warnings.projectedCrsNotProvided",
+                                autoDismiss: 15,
+                                position: "tc"
+                            })]
+                        );
+                    }
                 }
                 return Rx.Observable.from(actions);
             })
