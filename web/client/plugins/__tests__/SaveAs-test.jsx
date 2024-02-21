@@ -10,7 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
 
-import  MapSaveAs from '../SaveAs';
+import  MapSaveAs, { omitResourceProperties } from '../SaveAs';
 import { getPluginForTest } from './pluginsTestUtils';
 import { createStateMocker } from '../../reducers/__tests__/reducersTestUtils';
 
@@ -82,6 +82,25 @@ describe('MapSave Plugins (MapSave, MapSaveAs)', () => {
             inputEl.value = 'f';
             TestUtils.Simulate.change(inputEl);
             expect(inputEl.value).toBe('f');
+        });
+        it('does not show creator, editor, created and lastUpdate fields. Advertised field is unchecked.', () => {
+            const _resources = {
+                creator: 'creator',
+                editor: 'editor',
+                advertised: 'advertised',
+                creation: 'creation',
+                lastUpdate: 'lastUpdate',
+                shownProperty: 'shownProperty'
+            };
+
+            const filtered = omitResourceProperties(true, _resources);
+            expect(filtered.resource.creator).toBeFalsy();
+            expect(filtered.resource.editor).toBeFalsy();
+            expect(filtered.resource.advertised).toBeFalsy();
+            expect(filtered.resource.creation).toBeFalsy();
+            expect(filtered.resource.lastUpdate).toBeFalsy();
+
+            expect(filtered.resource.shownProperty).toBeTruthy();
         });
     });
 
