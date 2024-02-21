@@ -18,6 +18,7 @@ import {
     preprocess as commonPreprocess
 } from './common';
 import { THREE_D_TILES } from '../ThreeDTiles';
+import { MODEL } from '../Model';
 const getBaseCatalogUrl = (url) => {
     return url && url.replace(/\/csw$/, "/");
 };
@@ -235,7 +236,8 @@ export const getCatalogRecords = (records, options, locales) => {
             let catRecord;
             if (dc && dc.format === THREE_D_TILES) {
                 catRecord = getCatalogRecord3DTiles(record, metadata);
-
+            } else if (dc && dc.format === MODEL) {
+                // todo: handle get catalog record for ifc
             } else {
                 catRecord = {
                     serviceType: 'csw',

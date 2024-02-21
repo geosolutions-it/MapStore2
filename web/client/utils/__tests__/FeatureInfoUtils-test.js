@@ -125,24 +125,11 @@ describe('FeatureInfoUtils', () => {
     const validJSON = {"type": "FeatureCollection", "totalFeatures": "unknown", "features": [{"type": "Feature", "id": "", "geometry": null, "properties": {"precip30min": 816}}], "crs": null};
     const emptyJSON = {"type": "FeatureCollection", "totalFeatures": "unknown", "features": [], "crs": null};
     it('PROPERTIES Validator', () => {
-        let results = Validator.PROPERTIES.getValidResponses([{response: validJSON}, {response: emptyJSON}]);
+        let results = Validator.JSON.getValidResponses([{response: validJSON}, {response: emptyJSON}]);
         expect(results.length).toBe(1);
         expect(results[0].response).toBe(validJSON);
 
-        let notValidResults = Validator.PROPERTIES.getNoValidResponses([{response: validJSON}, {response: emptyJSON}]);
-        expect(notValidResults.length).toBe(1);
-        expect(notValidResults[0].response).toBe(emptyJSON);
-    });
-
-    // **********************************
-    // TEMPLATE
-    // **********************************
-    it('TEMPLATE Validator', () => {
-        let results = Validator.TEMPLATE.getValidResponses([{response: validJSON}, {response: emptyJSON}]);
-        expect(results.length).toBe(1);
-        expect(results[0].response).toBe(validJSON);
-
-        let notValidResults = Validator.TEMPLATE.getNoValidResponses([{response: validJSON}, {response: emptyJSON}]);
+        let notValidResults = Validator.JSON.getNoValidResponses([{response: validJSON}, {response: emptyJSON}]);
         expect(notValidResults.length).toBe(1);
         expect(notValidResults[0].response).toBe(emptyJSON);
     });

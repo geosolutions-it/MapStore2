@@ -8,11 +8,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import {getAvailableInfoFormat, getDefaultInfoFormatValue} from '../../utils/MapInfoUtils';
+import {getAvailableInfoFormat, getDefaultInfoFormatValue, getDefaultInfoViewMode} from '../../utils/MapInfoUtils';
 import Select from "react-select";
 import { FormGroup, ControlLabel } from 'react-bootstrap';
 import ControlledPopover from '../widgets/widget/ControlledPopover';
 import HTML from '../I18N/HTML';
+import { GEOJSON_MIME_TYPE } from '../../utils/FeatureInfoUtils';
 
 function FeatureInfoFormatSelector({
     id,
@@ -25,9 +26,10 @@ function FeatureInfoFormatSelector({
     selectProps
 }) {
     const filtered = Object.keys(availableInfoFormat).reduce((acc, key) => {
+        const isGeoJSON = availableInfoFormat[key] === GEOJSON_MIME_TYPE;
         const values = Object.keys(acc).map(item => acc[item]);
         const exist = values.some(item => item === availableInfoFormat[key]);
-        if (!exist) {
+        if (!exist && !isGeoJSON) {
             return {
                 ...acc,
                 [key]: availableInfoFormat[key]
@@ -35,10 +37,12 @@ function FeatureInfoFormatSelector({
         }
         return acc;
     }, {});
-    const options = Object.keys(filtered).map((format) => ({
-        value: filtered[format],
-        label: format
-    }));
+    const options = Object.keys(filtered).map((format) => {
+        return {
+            value: filtered[format],
+            label: getDefaultInfoViewMode(filtered[format]) || format
+        };
+    });
 
     const select = (
         <>

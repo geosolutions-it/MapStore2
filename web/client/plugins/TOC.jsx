@@ -155,7 +155,7 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
             },
             {
                 options: { exclusiveMapType: true },
-                func: (node) => (node.type === "3dtiles" && !isCesiumActive) || (node.type === "cog" && isCesiumActive)
+                func: (node) => (["3dtiles", 'model'].includes(node.type) && !isCesiumActive) || (node.type === "cog" && isCesiumActive)
             }
         ]),
         catalogActive,
