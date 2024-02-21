@@ -43,7 +43,6 @@ export default ({service: defaultService, catalogServices,
     const handleChangeServiceProperty = (property, value) => {
         setService({ ...service, [property]: value });
     };
-
     return (<div style={{padding: '1rem', height: '100%'}}>
         <CatalogServiceEditorComponent
             onChangeUrl={(url) => setService({...service, url})}

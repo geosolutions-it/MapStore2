@@ -173,6 +173,16 @@
                     "eyeDomeLightingRadius": "Beleuchtungsradius"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Breitengrad des Zentrums (DD)",
+                "modelCenterLng": "Längengrad des Zentrums (DD)",
+                "height": "Höhe (m)",
+                "heading": "Kurswinkel (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "Das Modell wird aus folgenden Gründen in der Mitte der aktuellen Ansicht platziert: Das Modell verfügt über eine CRS-Projektion, diese wird jedoch nicht unterstützt.",
+                    "projectedCrsNotProvided": "Das Modell wird aus folgenden Gründen in der Mitte der aktuellen Ansicht platziert: Das Modell verfügt über keine definierte CRS-Projektion."
+                }
+            },
             "tooltip": {
                 "label": "QuickInfo",
                 "title": "Titel",
@@ -3068,7 +3078,8 @@
             "saveSuccessTitle": "Erfolg",
             "saveSuccessMessage": "Erfolgreich gespeichert",
             "saveTooltip": "Speichern",
-            "saveAsTooltip": "Speichern als"
+            "saveAsTooltip": "Speichern als",
+            "unadvertised": "Nicht geworben"
         },
         "mapEditor": {
             "modalTitle": "Karteneditor",

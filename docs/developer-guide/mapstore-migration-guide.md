@@ -20,7 +20,7 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2023.02.xx to 2024.01.00
+## Migration from 2023.02.02 to 2024.01.00
 
 ### Restructuring of Login and Home in Dashboard page
 

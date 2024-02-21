@@ -1627,7 +1627,8 @@
                 "close": "Zatvori",
                 "cancel": "Odustani",
                 "saveSuccessTitle": "Uspješno",
-                "saveSuccessMessage": "Ploča je uspješno spremljena"
+                "saveSuccessMessage": "Ploča je uspješno spremljena",
+                "unadvertised": "Nenamjerno"
             },
             "errors":{
                 "loading": {

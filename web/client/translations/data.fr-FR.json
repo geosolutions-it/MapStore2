@@ -173,6 +173,16 @@
                     "eyeDomeLightingRadius": "Rayon d'éclairage"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Latitude du centre (DD)",
+                "modelCenterLng": "Longitude du centre(DD)",
+                "height": "Hauteur (m)",
+                "heading": "Angle de cap (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "Le modèle est placé au centre de la vue actuelle car: le modèle a une projection CRS, mais elle n'est pas prise en charge.",
+                    "projectedCrsNotProvided": "Le modèle est placé au centre de la vue actuelle car: le modèle n'a pas de projection CRS définie."
+                }
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -3031,7 +3041,8 @@
             "saveSuccessTitle": "Succès",
             "saveSuccessMessage": "Enregistré avec succès",
             "saveTooltip": "Enregistrer",
-            "saveAsTooltip": "Enregistrer sous"
+            "saveAsTooltip": "Enregistrer sous",
+            "unadvertised": "Non annoncé"
         },
         "mapEditor": {
             "modalTitle": "Editeur de carte",

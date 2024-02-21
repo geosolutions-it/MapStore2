@@ -24,7 +24,7 @@ import NodeTool from './NodeTool';
 import ExpandButton from './ExpandButton';
 
 const getLayerVisibilityWarningMessageId = (node, config = {}) => {
-    if (config.visualizationMode === VisualizationModes._2D && ['3dtiles'].includes(node.type)) {
+    if (config.visualizationMode === VisualizationModes._2D && ['3dtiles', 'model'].includes(node.type)) {
         return 'toc.notVisibleSwitchTo3D';
     }
     if (config.visualizationMode === VisualizationModes._3D && ['cog'].includes(node.type)) {
@@ -149,7 +149,7 @@ const DefaultLayerNode = ({
                 {content}
             </ul> : null}
             <OpacitySlider
-                hide={!!error || config?.hideOpacitySlider || ['3dtiles'].includes(node?.type)}
+                hide={!!error || config?.hideOpacitySlider || ['3dtiles', 'model'].includes(node?.type)}
                 opacity={node?.opacity}
                 disabled={!node.visibility}
                 hideTooltip={!config.showOpacityTooltip}

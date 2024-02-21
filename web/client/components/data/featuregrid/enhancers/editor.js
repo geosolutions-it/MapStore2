@@ -104,7 +104,7 @@ const featuresToGrid = compose(
         props => ({typeName: props.typeName})
     ),
     withPropsOnChange(
-        ["features", "newFeatures", "changes"],
+        ["features", "newFeatures", "changes", "dateFormats"],
         props => ({
             rows: (props.newFeatures ? [...props.newFeatures, ...props.features] : props.features)
                 .filter(props.focusOnEdit ? createNewAndEditingFilter(props.changes && Object.keys(props.changes).length > 0, props.newFeatures, props.changes) : () => true)
@@ -113,7 +113,8 @@ const featuresToGrid = compose(
                         ["_!_id_!_"]: result.id,
                         get: key => {
                             return (key === "geometry" || key === "_new") ? result[key] : result.properties && result.properties[key];
-                        }
+                        },
+                        dateFormats: props.dateFormats
                     }))
         })
     ),
@@ -171,7 +172,7 @@ const featuresToGrid = compose(
                             return props.editors(desc.localType, generalProps);
                         },
                         getFilterRenderer: getFilterRendererFunc,
-                        getFormatter: (desc) => getFormatter(desc, (props.fields ?? []).find(f => f.name === desc.name), {dateFormats: props.dateFormats}),
+                        getFormatter: (desc) => getFormatter(desc, (props.fields ?? []).find(f => f.name === desc.name)),
                         isWithinAttrTbl: props.isWithinAttrTbl
                     }))
             });

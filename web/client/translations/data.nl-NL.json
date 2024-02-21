@@ -2937,7 +2937,8 @@
             "saveSuccessTitle": "Succes",
             "saveSuccessMessage": "Succesvol opgeslagen",
             "saveTooltip": "Opslaan",
-            "saveAsTooltip": "Opslaan als"
+            "saveAsTooltip": "Opslaan als",
+            "unadvertised": "Niet geadverteerd"
         },
         "mapEditor": {
             "modalTitle": "Kaarteditor",

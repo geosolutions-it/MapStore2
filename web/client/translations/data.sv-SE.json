@@ -2605,7 +2605,8 @@
             "saveSuccessTitle": "Framgång",
             "saveSuccessMessage": "Sparad framgångsrikt",
             "saveTooltip": "Spara",
-            "saveAsTooltip": "Spara som"
+            "saveAsTooltip": "Spara som",
+            "unadvertised": "Oannonserad"
         },
         "mapEditor": {
             "modalTitle": "Kartredigerare",

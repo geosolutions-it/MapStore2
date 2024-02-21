@@ -172,7 +172,8 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             { from: path.join(getCesiumPath({ paths, prod }), 'Workers'), to: path.join(paths.dist, 'cesium', 'Workers') },
             { from: path.join(getCesiumPath({ paths, prod }), 'Assets'), to: path.join(paths.dist, 'cesium', 'Assets') },
             { from: path.join(getCesiumPath({ paths, prod }), 'Widgets'), to: path.join(paths.dist, 'cesium', 'Widgets') },
-            { from: path.join(getCesiumPath({ paths, prod }), 'ThirdParty'), to: path.join(paths.dist, 'cesium', 'ThirdParty') }
+            { from: path.join(getCesiumPath({ paths, prod }), 'ThirdParty'), to: path.join(paths.dist, 'cesium', 'ThirdParty') },
+            { from: path.join(paths.base, 'node_modules', 'web-ifc'), to: path.join(paths.dist, 'web-ifc') }
         ]),
         new ProvidePlugin({
             Buffer: ['buffer', 'Buffer']

@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
  */
 
 import React from 'react';
+import { getDefaultViewer } from '../../../../utils/MapInfoUtils';
 
 export default class extends React.Component {
     static propTypes = {
@@ -59,7 +60,7 @@ export default class extends React.Component {
     };
 
     renderPage = () => {
-        const Viewer = typeof this.props.viewers === 'function' ? this.props.viewers : this.props.viewers[this.props.format];
+        const Viewer = typeof this.props.viewers === 'function' ? this.props.viewers : getDefaultViewer(this.props.format, this.props.viewers);
         if (Viewer) {
             return <Viewer response={this.props.response} layer={this.props.layer}/>;
         }
