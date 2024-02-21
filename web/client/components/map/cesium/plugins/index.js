@@ -19,6 +19,7 @@ import './ThreeDTilesLayer';
 import './VectorLayer';
 import './WFSLayer';
 import './TerrainLayer';
+import './ModelLayer';
 import './ElevationLayer';
 
 export default {};

@@ -209,6 +209,7 @@ In the case of the background the `thumbURL` is used to show a preview of the la
 - `3dtiles`: 3d tiles layers
 - `terrain`: layers that define the elevation profile of the terrain
 - `cog`: Cloud Optimized GeoTIFF layers
+- `model`: 3D model layers like: IFC
 
 #### WMS
 
@@ -1062,6 +1063,49 @@ i.e.
 ```
 
 The style body object for the format 3dtiles accepts rules described in the 3d tiles styling specification version 1.0 available [here](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling).
+
+#### Model Layer
+
+This type of layer shows ifc models with different versions including referenced and non-georeferenced ifc models inside the Cesium viewer. This layer will not be visible inside 2d map viewer types: openlayer or leaflet.
+See specification for more info about IFC [here](https://technical.buildingsmart.org/standards/ifc/ifc-schema-specifications/).
+
+i.e.
+
+```javascript
+{
+    "type": "model",
+    "url": "http..." // URL of ifc file with ".ifc" format
+    "title": "IFC Model Layer",
+    "visibility": true,
+    features: [
+      {
+          type: 'Feature',
+          id: 'model-origin',
+          properties: {
+              heading: 0,
+              pitch: 0,
+              roll: 0,
+              scale: scale
+          },
+          geometry: {
+              type: 'Point',
+              coordinates: [longitude, latitude, height]
+          }
+      }
+    ],
+    bbox: {
+      crs: "EPSG:4326",
+      bounds: {
+        minx: 0,
+        miny: 0,
+        maxx: 0,
+        maxy: 0
+      }
+    },
+     // optional
+    properties: {}
+}
+```
 
 #### Terrain
 

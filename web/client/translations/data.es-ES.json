@@ -170,6 +170,16 @@
                     "eyeDomeLightingRadius": "Radio de iluminación"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Latitud del centro (DD)",
+                "modelCenterLng": "Longitud del centro (DD)",
+                "height": "Altura (m)",
+                "heading": "Ángulo de rumbo (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "El modelo se coloca en el centro de la vista actual porque: el modelo tiene una proyección CRS pero no es soportado",
+                    "projectedCrsNotProvided": "El modelo se coloca en el centro de la vista actual porque: el modelo no tiene una proyección CRS definida."
+                }
+            },
             "tooltip": {
                 "label": "Información sobre herramientas",
                 "title": "Título",

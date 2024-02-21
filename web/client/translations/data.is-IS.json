@@ -154,6 +154,10 @@
         "scale": "Scale",
         "resolution": "Resolution"
       },
+      "modelLayer": {
+        "modelCenterLat": "Center's Latitude (DD)",
+        "modelCenterLng": "Center's Longitude (DD)"
+      },
       "tooltip": {
         "label": "Tooltip",
         "title": "Title",

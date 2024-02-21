@@ -173,6 +173,16 @@
                     "eyeDomeLightingRadius": "Lighting radius"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Center's Latitude (DD)",
+                "modelCenterLng": "Center's Longitude (DD)",
+                "height": "Height (m)",
+                "heading": "Heading (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "The model is placed on the center of the current view because: the model has a CRS projection but it is not supported.",
+                    "projectedCrsNotProvided": "The model is placed on the center of the current view because: the model has no defined CRS projection."
+                }
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
