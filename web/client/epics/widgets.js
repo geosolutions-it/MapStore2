@@ -60,7 +60,7 @@ import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/W
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
-    const mapDependencies = ["layers", "viewport", "zoom", "center"];
+    const mapDependencies = ["layers", "groups", "viewport", "zoom", "center"];
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
@@ -169,7 +169,8 @@ export const alignDependenciesToWidgets = (action$, { getState = () => { } } = {
                 [m === "map" ? "viewport" : `${depToTheMap}.viewport`]: `${depToTheMap}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].maps[ID_M].viewport": "widgets[ID_W].maps[ID_M].bbox"}
                 [m === "map" ? "center" : `${depToTheMap}.center`]: `${depToTheMap}.center`, // {center: "map.center"} or {"widgets[ID_W].maps[ID_M].center": "widgets[ID_W].maps[ID_M].center"}
                 [m === "map" ? "zoom" : `${depToTheMap}.zoom`]: `${depToTheMap}.zoom`,
-                [m === "map" ? "layers" : `${depToTheMap}.layers`]: m === "map" ? `layers.flat` : `${depToTheMap}.layers`
+                [m === "map" ? "layers" : `${depToTheMap}.layers`]: m === "map" ? `layers.flat` : `${depToTheMap}.layers`,
+                [m === "map" ? "groups" : `${depToTheMap}.groups`]: m === "map" ? `layers.groups` : `${depToTheMap}.groups`
             };
         }, {}))
         );

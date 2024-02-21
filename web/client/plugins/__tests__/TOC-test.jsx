@@ -13,8 +13,20 @@ import TestBackend from 'react-dnd-test-backend';
 
 import TOCPlugin from '../TOC';
 import { getPluginForTest } from './pluginsTestUtils';
+import AddGroup from '../AddGroup';
+import MetadataExplorer from '../MetadataExplorer';
+import LayerInfo from '../LayerInfo';
+import FeatureEditor from '../FeatureEditor';
+import TOCItemsSettings from '../TOCItemsSettings';
+import FilterLayer from '../FilterLayer';
+import WidgetsBuilder from '../WidgetsBuilder';
 
 const dndContext = dragDropContext(TestBackend);
+
+const getTOCItems = (plugins) => {
+    return Object.keys(plugins)
+        .map((key) => plugins?.[key]?.[`${key}Plugin`]?.TOC).flat();
+};
 
 describe('TOCPlugin Plugin', () => {
     beforeEach((done) => {
@@ -38,7 +50,7 @@ describe('TOCPlugin Plugin', () => {
         });
         const WrappedPlugin = dndContext(Plugin);
         ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
-        expect(document.getElementsByClassName('mapstore-toc').length).toBe(1);
+        expect(document.getElementsByClassName('ms-toc-container').length).toBe(1);
     });
 
     it('TOCPlugin shows annotations layer in openlayers mapType', () => {
@@ -53,9 +65,9 @@ describe('TOCPlugin Plugin', () => {
         });
         const WrappedPlugin = dndContext(Plugin);
         ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
-        expect(document.querySelector('.toc-title').textContent).toBe('Annotations');
-        expect(document.querySelector('.toc-group-title').textContent).toBe('Default');
-        expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(1);
+        expect(document.querySelector('.ms-node-layer .ms-node-title').textContent).toBe('Annotations');
+        expect(document.querySelector('.ms-node-group .ms-node-title').textContent).toBe('Default');
+        expect(document.querySelectorAll('.ms-toc-filter input').length).toBe(1);
     });
 
     it('TOCPlugin hides filter layer if no groups and no layers are present', () => {
@@ -70,7 +82,7 @@ describe('TOCPlugin Plugin', () => {
         });
         const WrappedPlugin = dndContext(Plugin);
         ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
-        expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(0);
+        expect(document.querySelectorAll('.ms-toc-filter input').length).toBe(0);
     });
     it('TOCPlugin hides filter layer if a group with no layers are present', () => {
         const { Plugin } = getPluginForTest(TOCPlugin, {
@@ -84,24 +96,26 @@ describe('TOCPlugin Plugin', () => {
         });
         const WrappedPlugin = dndContext(Plugin);
         ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
-        expect(document.querySelectorAll('.mapstore-filter.form-group').length).toBe(0);
+        expect(document.querySelectorAll('.ms-toc-filter input').length).toBe(0);
     });
     it('TOCPlugin use custom group node', () => {
         const { Plugin } = getPluginForTest(TOCPlugin, {
             layers: {
                 groups: [{
                     expanded: true,
-                    id: 'Default',
+                    id: 'custom-group',
                     name: 'Default',
                     nodes: [ 'layer_01', 'layer_02' ],
                     title: 'Default'
                 }],
                 flat: [{
                     id: 'layer_01',
-                    title: 'title_01'
+                    title: 'title_01',
+                    group: 'custom-group'
                 }, {
                     id: 'layer_02',
-                    title: 'title_02'
+                    title: 'title_02',
+                    group: 'custom-group'
                 }]
             },
             maptype: {
@@ -142,17 +156,16 @@ describe('TOCPlugin Plugin', () => {
             }
         });
         const LayerNode = ({ node }) => {
-            return <div className="custom-layer-node">{node.dummy ? 'dummy' : node.title}</div>;
+            return <div className="custom-layer-node">{node.title}</div>;
         };
         const WrappedPlugin = dndContext(Plugin);
         ReactDOM.render(<WrappedPlugin
             layerNodeComponent={LayerNode}/>, document.getElementById("container"));
         const groupNodes = document.querySelectorAll('.custom-layer-node');
-        expect(groupNodes.length).toBe(3);
-        const [ layerNode01, layerNode02, layerNodeDummy ] = groupNodes;
+        expect(groupNodes.length).toBe(2);
+        const [ layerNode01, layerNode02 ] = groupNodes;
         expect(layerNode01.innerHTML).toBe('title_01');
         expect(layerNode02.innerHTML).toBe('title_02');
-        expect(layerNodeDummy.innerHTML).toBe('dummy');
     });
     it('Update layer title and description button', () => {
         const { Plugin } = getPluginForTest(TOCPlugin, {
@@ -189,10 +202,11 @@ describe('TOCPlugin Plugin', () => {
             }
         });
         const WrappedPlugin = dndContext(Plugin);
-        ReactDOM.render(<WrappedPlugin items={[{name: 'MetadataExplorer'}, {name: 'AddGroup'}, {name: 'LayerInfo'}]}/>, document.getElementById("container"));
-        const tocHead = document.getElementsByClassName('mapstore-toc-head')[0];
-        expect(tocHead).toExist();
-        const buttons = tocHead.getElementsByTagName('button');
+        const items = getTOCItems({ MetadataExplorer, AddGroup, LayerInfo });
+        ReactDOM.render(<WrappedPlugin items={items}/>, document.getElementById("container"));
+        const toolbarNode = document.getElementsByClassName('ms-toc-toolbar')[0];
+        expect(toolbarNode).toBeTruthy();
+        const buttons = toolbarNode.getElementsByTagName('button');
         expect(buttons.length).toBe(3);
     });
     it('Update layer title and description button is hidden when there are no valid layers for updating', () => {
@@ -231,14 +245,15 @@ describe('TOCPlugin Plugin', () => {
             }
         });
         const WrappedPlugin = dndContext(Plugin);
-        ReactDOM.render(<WrappedPlugin items={[{name: 'MetadataExplorer'}, {name: 'AddGroup'}, {name: 'LayerInfo'}]}/>, document.getElementById("container"));
-        const tocHead = document.getElementsByClassName('mapstore-toc-head')[0];
-        expect(tocHead).toExist();
-        const buttons = tocHead.getElementsByTagName('button');
+        const items = getTOCItems({ MetadataExplorer, AddGroup, LayerInfo });
+        ReactDOM.render(<WrappedPlugin items={items}/>, document.getElementById("container"));
+        const toolbar = document.getElementsByClassName('ms-toc-toolbar')[0];
+        expect(toolbar).toBeTruthy();
+        const buttons = toolbar.getElementsByTagName('button');
         expect(buttons.length).toBe(2);
     });
     describe('render items from other plugins', () => {
-        const TOOL_BUTTON_SELECTOR = '.btn-group button';
+        const TOOL_BUTTON_SELECTOR = '.ms-toc-toolbar button';
         const SELECTED_LAYER_STATE = {
             layers: {
                 flat: [
@@ -309,7 +324,7 @@ describe('TOCPlugin Plugin', () => {
                     Component: () => <button id="toolbarCustomButton"></button>
                 }]} />, document.getElementById("container"));
                 expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
-                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton`)).toExist();
+                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton`)).toBeTruthy();
             });
             it('selector do not show the button when return false', () => {
                 const { Plugin } = getPluginForTest(TOCPlugin, {
@@ -344,7 +359,7 @@ describe('TOCPlugin Plugin', () => {
                     Component: () => <button id="toolbarCustomButton"></button>
                 }]} />, document.getElementById("container"));
                 expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBeGreaterThan(0); // other buttons are shown.
-                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton`)).toExist();
+                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton`)).toBeTruthy();
             });
             it('Component receives the property \`status\`', () => {
                 const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
@@ -358,7 +373,7 @@ describe('TOCPlugin Plugin', () => {
                     }
                 }]} />, document.getElementById("container"));
                 expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBeGreaterThan(0); // other buttons are shown.
-                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton-LAYER`)).toExist();
+                expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton-LAYER`)).toBeTruthy();
             });
         });
 
@@ -387,11 +402,10 @@ describe('TOCPlugin Plugin', () => {
                 }
             });
             const WrappedPlugin = dndContext(Plugin);
-            ReactDOM.render(<WrappedPlugin items={[{
-                name: "MetadataExplorer"
-            }]} />, document.getElementById("container"));
+            const items = getTOCItems({ MetadataExplorer });
+            ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
-            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toExist();
+            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toBeTruthy();
         });
         it('render AddGroup', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, {
@@ -404,11 +418,10 @@ describe('TOCPlugin Plugin', () => {
                 }
             });
             const WrappedPlugin = dndContext(Plugin);
-            ReactDOM.render(<WrappedPlugin items={[{
-                name: "AddGroup"
-            }]} />, document.getElementById("container"));
+            const items = getTOCItems({ AddGroup });
+            ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
-            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-folder`)).toExist();
+            expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-folder`)).toBeTruthy();
         });
         const ZOOM_TO_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-zoom-to`;
         const FEATURES_GRID_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-features-grid`;
@@ -416,65 +429,59 @@ describe('TOCPlugin Plugin', () => {
         const SETTINGS_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-wrench`;
         const FILTER_LAYER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-filter-layer`;
         const WIDGET_BUILDER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-stats`;
-        it('render default tools (zoomToLayer, remove layer, for selected layer, metadata tool', () => {
+        it('render default tools (zoomToLayer, remove layer, for selected layer', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
             const WrappedPlugin = dndContext(Plugin);
             ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
             // check zoom and remove selector
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
 
         });
         it('render FeatureEditor', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
             const WrappedPlugin = dndContext(Plugin);
-            ReactDOM.render(<WrappedPlugin items={[{
-                name: "FeatureEditor"
-            }]} />, document.getElementById("container"));
+            const items = getTOCItems({ FeatureEditor });
+            ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(FEATURES_GRID_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(FEATURES_GRID_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
         it('render TOCItemsSettings', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
             const WrappedPlugin = dndContext(Plugin);
-            ReactDOM.render(<WrappedPlugin items={[{
-                name: "TOCItemsSettings"
-            }]} />, document.getElementById("container"));
+            const items = getTOCItems({ TOCItemsSettings });
+            ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(SETTINGS_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(SETTINGS_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
         it('render FilterLayer', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
             const WrappedPlugin = dndContext(Plugin);
-            ReactDOM.render(<WrappedPlugin items={[{
-                name: "FilterLayer"
-            }]} />, document.getElementById("container"));
+            const items = getTOCItems({ FilterLayer });
+            ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist();
-            expect(document.querySelector(FILTER_LAYER_SELECTOR)).toExist();
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist();
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(FILTER_LAYER_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
         });
-        it('render WidgetBuilder', () => {
+        it('render WidgetsBuilder', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, { ...SELECTED_LAYER_STATE, controls: { widgetBuilder: {available: true}}});
             const WrappedPlugin = dndContext(Plugin);
-            ReactDOM.render(<WrappedPlugin items={[{
-                name: "WidgetBuilder"
-            }, {
-                name: "Widgets"
-            }]} />, document.getElementById("container"));
+            const items = getTOCItems({ WidgetsBuilder });
+            ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             // check tools
 
-            expect(document.querySelector(ZOOM_TO_SELECTOR)).toExist("zoom doesn't exist");
-            expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toExist("widget doesn't exist");
-            expect(document.querySelector(REMOVE_SELECTOR)).toExist("remove doesn't exist");
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy("zoom doesn't exist");
+            expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toBeTruthy("widget doesn't exist");
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy("remove doesn't exist");
         });
     });
 });

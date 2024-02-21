@@ -463,11 +463,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Visa lager",
-            "showLegend": "Visa legend",
-            "hideLegend": "Dölj legend"
-        },
         "addgroup": {
             "addbtn": "Lägg till",
             "groupName": "Gruppnamn"

@@ -585,11 +585,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Ebenen anzeigen",
-            "showLegend": "Legende anzeigen",
-            "hideLegend": "Legende ausblenden"
-        },
         "addgroup": {
             "addbtn": "Hinzufügen",
             "groupName": "Gruppenname"
@@ -654,6 +649,22 @@
             "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
             "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",
             "notVisibleSwitchTo2D": "Wechseln Sie in den 2D-Kartenmodus, um diesen Layer anzuzeigen",
+            "toolGroupShowAllChildren": "Sichtbarkeit aller untergeordneten Knoten aktivieren",
+            "toolGroupHideAllChildren": "Sichtbarkeit aller untergeordneten Knoten deaktivieren",
+            "activateToolGroupMutuallyExclusive": "Aktivieren Sie sich gegenseitig ausschließende Sichtbarkeit von untergeordneten Knoten",
+            "deactivateToolGroupMutuallyExclusive": "Deaktivieren Sie sich gegenseitig ausschließende Sichtbarkeit von untergeordneten Knoten",
+            "toolGroupCollapseAllChildren": "Alle untergeordneten Knoten reduzieren",
+            "toolGroupExpandAllChildren": "Alle untergeordneten Knoten erweitern",
+            "closeOnMapInitialization": "Bei Karteninitialisierung geschlossen bleiben",
+            "openOnMapInitialization": "Bei Karteninitialisierung öffnen",
+            "defaultTheme": "Standardthema",
+            "legendTheme": "Legendenthema",
+            "showFullTitle": "Vollständigen Titel anzeigen",
+            "hideFullTitle": "Titel in einer einzelnen Zeile",
+            "showOpacitySlider": "Deckkraft-Schieberegler anzeigen",
+            "hideOpacitySlider": "Deckkraft-Schieberegler ausblenden",
+            "showOpacityTooltip": "Deckkraft-Tooltip anzeigen",
+            "hideOpacityTooltip": "Deckkraft-Tooltip ausblenden",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",

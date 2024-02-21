@@ -86,16 +86,6 @@
     .ms-widget-empty-message {
         .background-color-var(@theme-vars[main-bg]);
     }
-
-    .legend-widget {
-        .widget-legend-toc {
-            .toc-default-layer-head {
-                .color-var(@theme-vars[main-color]);
-                .background-color-var(@theme-vars[main-bg]);
-                .border-bottom-color-var(@theme-vars[main-border-color]);
-            }
-        }
-    }
 }
 
 // **************
@@ -367,55 +357,6 @@
         position: absolute;
         right: 0;
         top: -90px;
-    }
-}
-
-.legend-widget {
-    .setFontSize(@font-size-small);
-    font-size: @fSize;
-    padding-top: 0;
-    .em(padding-right, 15);
-    .em(padding-bottom, 15);
-    .em(padding-left, 15);
-    .widget-legend-toc {
-        .shadow-soft();
-        .em(margin-top, 10);
-        .toc-default-layer-head {
-            .em(padding, 8);
-            padding-bottom: 0;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            .toc-title {
-                flex: 1;
-                max-width: none;
-                .em(padding-right, 8);
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-            }
-            .visibility-check + .toc-title {
-                .em(padding-left, 8);
-            }
-            .toc-legend-icon {
-                &.expanded {
-                    transform: rotate(-90deg);
-                }
-            }
-            .toc-layer-tool {
-                cursor: pointer;
-            }
-        }
-        .expanded-legend-view {
-            .em(padding, 8);
-        }
-        &.expanded {
-            .toc-default-layer-head {
-                .em(border-bottom-width, 1);
-                border-bottom-style: solid;
-                .em(padding-bottom, 8);
-            }
-        }
     }
 }
 

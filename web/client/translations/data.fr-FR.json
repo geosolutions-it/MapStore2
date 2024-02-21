@@ -547,11 +547,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Afficher les couches",
-            "showLegend": "Afficher la légende",
-            "hideLegend": "Cacher la légende"
-        },
         "addgroup": {
             "addbtn": "Ajouter",
             "groupName": "Nom de groupe"
@@ -615,6 +610,22 @@
             "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
             "notVisibleSwitchTo3D": "Passer en mode carte 3D pour voir cette couche",
             "notVisibleSwitchTo2D": "Passer en mode carte 2D pour voir cette couche",
+            "toolGroupShowAllChildren": "Activer la visibilité de tous les nœuds enfants",
+            "toolGroupHideAllChildren": "Désactiver la visibilité de tous les nœuds enfants",
+            "activateToolGroupMutuallyExclusive": "Activer la visibilité mutuellement exclusive des nœuds enfants",
+            "deactivateToolGroupMutuallyExclusive": "Désactiver la visibilité mutuellement exclusive des nœuds enfants",
+            "toolGroupCollapseAllChildren": "Réduire tous les nœuds enfants",
+            "toolGroupExpandAllChildren": "Développer tous les nœuds enfants",
+            "closeOnMapInitialization": "Garder fermé lors de l'initialisation de la carte",
+            "openOnMapInitialization": "Ouvrir sur l'initialisation de la carte",
+            "defaultTheme": "Thème par défaut",
+            "legendTheme": "Thème Légende",
+            "showFullTitle": "Afficher le titre complet",
+            "hideFullTitle": "Titre sur une seule ligne",
+            "showOpacitySlider": "Afficher le curseur d'opacité",
+            "hideOpacitySlider": "Masquer le curseur d'opacité",
+            "showOpacityTooltip": "Afficher l'info-bulle d'opacité",
+            "hideOpacityTooltip": "Masquer l'info-bulle d'opacité",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",

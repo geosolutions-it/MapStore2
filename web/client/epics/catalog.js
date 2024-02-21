@@ -64,7 +64,7 @@ import {
 import { getCapabilities, describeLayers, flatLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
-import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace} from '../utils/LayersUtils';
+import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace, DEFAULT_GROUP_ID} from '../utils/LayersUtils';
 
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
@@ -529,7 +529,7 @@ export default (API) => ({
             const state = store.getState();
             const selectedNodes = selectedNodesSelector(state);
             const groupId = (selectedNodes.length === 0 || nodeType !== 'group')
-                ? 'Default'
+                ? DEFAULT_GROUP_ID
                 : id;
             return Rx.Observable.of(setControlProperty('metadataexplorer', "group", groupId));
         })
