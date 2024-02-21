@@ -20,6 +20,18 @@ import {
 } from '../../../utils/SecurityUtils';
 import Message from '../../../components/I18N/Message';
 
+/**
+ * Legend renders the wms legend image
+ * @prop {object} layer layer options
+ * @prop {object} style style of legend image
+ * @prop {number} currentZoomLvl map zoom level
+ * @prop {array} scales list of available scales on the map
+ * @prop {string} legendOptions options for the WMS get legend graphic LEGEND_OPTIONS parameter
+ * @prop {boolean} scaleDependent if true add the scale parameter to the legend graphic request
+ * @prop {string} language current language code
+ * @prop {number} legendWidth width of the legend symbols
+ * @prop {number} legendHeight height of the legend symbols
+ */
 class Legend extends React.Component {
     static propTypes = {
         layer: PropTypes.object,

@@ -9,6 +9,18 @@
 import React from 'react';
 import Title from './Title';
 
+/**
+ * Header for layer or group nodes component
+ * @prop {object} node node options
+ * @prop {string} filterText text to filter the title
+ * @prop {string} currentLocale current locale code
+ * @prop {object} tooltipOptions title tooltip options
+ * @prop {node} beforeTitle components rendered before the title
+ * @prop {node} afterTitle components rendered after the title
+ * @prop {function} onClick returns the click event
+ * @prop {string} className custom class name
+ * @prop {boolean} showTitleTooltip show the title tooltip
+ */
 const NodeHeader = ({
     node,
     filterText,

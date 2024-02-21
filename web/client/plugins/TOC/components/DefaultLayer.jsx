@@ -41,7 +41,22 @@ const getLayerVisibilityWarningMessageId = (node, config = {}) => {
     }
     return '';
 };
-
+/**
+ * DefaultLayerNode renders internal part of the layer node
+ * @prop {string} node layer node properties
+ * @prop {string} filterText filter to apply to the layer title
+ * @prop {function} onChange return the changes of a specific node
+ * @prop {object} config optional configuration available for the nodes
+ * @prop {array} nodeToolItems list of node tool component to customize specific tool available on a node, expected structure [ { name, Component } ]
+ * @prop {function} onSelect return the current selected node on click event
+ * @prop {string} nodeType node type
+ * @prop {object} nodeTypes constant values for node types
+ * @prop {object} error error message object
+ * @prop {string} visibilityWarningMessageId message id for visibility warning tool
+ * @prop {component} sortHandler component for the sort handler
+ * @prop {component} visibilityCheck component for the visibility check
+ * @prop {component} nodeIcon component for the node icon
+ */
 const DefaultLayerNode = ({
     node,
     filterText,
@@ -158,7 +173,44 @@ const DefaultLayerNode = ({
         </>
     );
 };
-
+/**
+ * DefaultLayer renders the layer node representation
+ * @prop {string} node layer node properties
+ * @prop {string} parentId id of the parent node
+ * @prop {number} index index of the node
+ * @prop {object} sort sorting handlers
+ * @prop {function} sort.beginDrag begin drag event
+ * @prop {function} sort.hover hover dragging event
+ * @prop {function} sort.drop drop event
+ * @prop {function} filter if false hides the component
+ * @prop {string} filterText filter to apply to the layer title
+ * @prop {function} replaceNodeOptions function to change the node properties (used by LayersTree)
+ * @prop {function} onChange return the changes of a specific node
+ * @prop {function} onContextMenu return the context menu event of a specific node
+ * @prop {function} onSelect return the current selected node on click event
+ * @prop {function} getNodeStyle function to create a custom style (used by LayersTree)
+ * @prop {function} getNodeClassName function to create a custom class name (used by LayersTree)
+ * @prop {boolean} parentHasNodesMutuallyExclusive if true changes the visibility icon to radio button
+ * @prop {string} nodeType type of the current node
+ * @prop {boolean} sortable if false hides the sort handler components
+ * @prop {array} nodeItems list of node component to customize specific nodes, expected structure [ { name, Component, selector } ]
+ * @prop {array} nodeToolItems list of node tool component to customize specific tool available on a node, expected structure [ { name, Component } ]
+ * @prop {object} config optional configuration available for the nodes
+ * @prop {number} config.resolution map resolution
+ * @prop {array} config.resolutions list of available map resolutions
+ * @prop {array} config.scales list of available map scales
+ * @prop {number} config.zoom zoom level of the map
+ * @prop {string} config.visualizationMode visualization mode of the map, `2D` or `3D`
+ * @prop {boolean} config.hideOpacitySlider hide the opacity slider
+ * @prop {string} config.language current language code
+ * @prop {string} config.currentLocale current language code
+ * @prop {boolean} config.showTitleTooltip show the title tooltip
+ * @prop {boolean} config.showOpacityTooltip show the opacity tooltip
+ * @prop {object} config.layerOptions specific options for layer nodes
+ * @prop {object} config.layerOptions.tooltipOptions options for layer title tooltip
+ * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
+ * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
+ */
 const DefaultLayer = ({
     node: nodeProp,
     parentId,

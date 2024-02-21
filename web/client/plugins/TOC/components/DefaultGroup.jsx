@@ -17,6 +17,20 @@ import NodeTool from './NodeTool';
 import ExpandButton from './ExpandButton';
 import InlineLoader from './InlineLoader';
 
+/**
+ * DefaultGroupNode renders internal part of the group node
+ * @prop {string} node group node properties
+ * @prop {function} onChange return the changes of a specific node
+ * @prop {object} config optional configuration available for the nodes
+ * @prop {array} nodeToolItems list of node tool component to customize specific tool available on a node, expected structure [ { name, Component } ]
+ * @prop {function} onSelect return the current selected node on click event
+ * @prop {string} nodeType node type
+ * @prop {object} nodeTypes constant values for node types
+ * @prop {component} sortHandler component for the sort handler
+ * @prop {component} expandButton component for the expand button
+ * @prop {component} visibilityCheck component for the visibility check
+ * @prop {component} nodeIcon component for the node icon
+ */
 const DefaultGroupNode = ({
     node,
     nodeType,
@@ -58,7 +72,34 @@ const DefaultGroupNode = ({
         </>
     );
 };
-
+/**
+ * DefaultGroup renders the group node representation
+ * @prop {string} node group node properties
+ * @prop {string} parentId id of the parent node
+ * @prop {number} index index of the node
+ * @prop {object} sort sorting handlers
+ * @prop {function} sort.beginDrag begin drag event
+ * @prop {function} sort.hover hover dragging event
+ * @prop {function} sort.drop drop event
+ * @prop {function} filter if false hides the component
+ * @prop {string} filterText filter to apply to the layer title
+ * @prop {function} replaceNodeOptions function to change the node properties (used by LayersTree)
+ * @prop {function} onChange return the changes of a specific node
+ * @prop {function} onContextMenu return the context menu event of a specific node
+ * @prop {function} onSelect return the current selected node on click event
+ * @prop {function} getNodeStyle function to create a custom style (used by LayersTree)
+ * @prop {function} getNodeClassName function to create a custom class name (used by LayersTree)
+ * @prop {boolean} parentHasNodesMutuallyExclusive if true changes the visibility icon to radio button
+ * @prop {string} nodeType type of the current node
+ * @prop {boolean} sortable if false hides the sort handler components
+ * @prop {array} nodeItems list of node component to customize specific nodes, expected structure [ { name, Component, selector } ]
+ * @prop {array} nodeToolItems list of node tool component to customize specific tool available on a node, expected structure [ { name, Component } ]
+ * @prop {object} config optional configuration available for the node
+ * @prop {string} config.currentLocale current language code
+ * @prop {boolean} config.showTitleTooltip show the title tooltip
+ * @prop {object} config.groupOptions specific options for group nodes
+ * @prop {object} config.groupOptions.tooltipOptions options for group title tooltip
+ */
 const DefaultGroup = ({
     node: nodeProp,
     parentId,

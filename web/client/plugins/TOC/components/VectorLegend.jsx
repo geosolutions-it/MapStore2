@@ -8,7 +8,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import RuleLegendIcon from '../../../components/styleeditor/RuleLegendIcon';
-
+/**
+ * VectorLegend renders the legend given a valid vector style
+ * @prop {object} style a layer style object in geostyler format
+ */
 function VectorLegend({ style }) {
 
     const renderRules = (rules) => {

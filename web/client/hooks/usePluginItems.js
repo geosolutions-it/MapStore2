@@ -10,6 +10,20 @@ import React, { useRef, useMemo } from 'react';
 import join from 'lodash/join';
 import { getConfiguredPlugin } from '../utils/PluginsUtils';
 
+/**
+ * hook to load and configure items in plugins container
+ * @param {array} items list of items received by a plugin as prop
+ * @param {object} loadedPlugins context loaded plugins
+ * @param {component} loaderComponent a loader component to present as placeholder while waiting async plugins
+ * @returns the configured items
+ * @example
+ * function MyContainerPlugin({ items }, context) {
+ *  const { loadedPlugins } = context;
+ *  const configuredItems = usePluginItems({ items, loadedPlugins });
+ *  const toolbarItems = configuredItems.filter(({ target }) => target === 'toolbar');
+ *  return (<div>{toolbarItems.map(({ Component, name }) => <Component key={name} />)}</div>)
+ * }
+ */
 const usePluginItems = ({
     items,
     loadedPlugins,

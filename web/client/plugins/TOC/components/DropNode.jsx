@@ -148,7 +148,15 @@ const Drop = drop(({
         </div>
     );
 });
-
+/**
+ * DropNode applies all property and handlers for drop events
+ * @prop {string} id identifier of the node
+ * @prop {string} parentId identifier of the node parent
+ * @prop {string} position needed only to manage some drops event in group nodes, it could be `after` or `before`.
+ * @prop {string} nodeType node type, one of `layers` or `groups`
+ * @prop {object} style custom style
+ * @prop {boolean} sortable if true adds all the needed properties and handler for drop events
+ */
 const DropNode = ({ children, ...props }) => {
     if (!props.sortable) {
         return children;

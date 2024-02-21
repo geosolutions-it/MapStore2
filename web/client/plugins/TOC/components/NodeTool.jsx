@@ -13,6 +13,16 @@ import localizedProps from '../../../components/misc/enhancers/localizedProps';
 const Button = tooltip(({ children, ...props }) => <button {...props}>{children}</button>);
 const GlyphIndicator = localizedProps('tooltip')(tooltip(Glyphicon));
 
+/**
+ * Item component to provide consistent interface for node tools
+ * @prop {string} glyph icon name
+ * @prop {string} tooltipId message id for tooltip
+ * @prop {string} tooltip message for tooltip
+ * @prop {boolean} active show active style if true
+ * @prop {object} style add custom style
+ * @prop {string} className add custom class name
+ * @prop {boolean} disabled disable the click event
+ */
 function NodeTool({
     onClick,
     ...props

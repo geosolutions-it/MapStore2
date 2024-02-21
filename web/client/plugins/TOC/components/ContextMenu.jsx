@@ -14,6 +14,21 @@ import TableOfContentItemButton from './TableOfContentItemButton';
 import { NodeTypes, ROOT_GROUP_ID, DEFAULT_GROUP_ID } from '../../../utils/LayersUtils';
 import { StatusTypes } from '../utils/TOCUtils';
 
+/**
+ * This component renders a context menu
+ * @prop {array} items list of items to display in the menu, expected structure [ { name, Component }, ... ]
+ * @prop {object} value selected node, expected structure { id, type, node }
+ * @prop {function} onClick triggered on click event
+ * @prop {function} onClose triggered on close event, eg. clicking outside the menu
+ * @prop {boolean} show if true show the menu
+ * @prop {array} position position of the menu in pixels [left, top]
+ * @prop {function} containerNode this function must return a valid dom node used by this component as target for the portal
+ * @prop {object} nodeTypes constant values for node types
+ * @prop {string} rootGroupId constant value for root group id
+ * @prop {string} defaultGroupId constant value for default group id
+ * @prop {object} statusTypes constant values for selection status types
+ * @prop {object} config custom configuration to pass to the toc items
+ */
 function ContextMenu({
     items,
     value,

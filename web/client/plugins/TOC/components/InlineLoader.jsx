@@ -8,6 +8,10 @@
 
 import React, { useEffect, useState } from 'react';
 
+/**
+ * InlineLoader for the layer or group node component
+ * @prop {boolean} loading if true show the loader
+ */
 const InlineLoader = ({ loading: loadingProp }) => {
 
     const [loading, setLoading] = useState(loadingProp);

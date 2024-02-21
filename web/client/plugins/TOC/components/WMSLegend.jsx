@@ -11,7 +11,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty, isNumber } from 'lodash';
 import Legend from './Legend';
-
+/**
+ * WMSLegend renders the wms legend image
+ * @prop {object} node layer node options
+ * @prop {object} legendContainerStyle style of legend container
+ * @prop {object} legendStyle style of legend image
+ * @prop {boolean} showOnlyIfVisible show only if the layer node is visible
+ * @prop {number} currentZoomLvl map zoom level
+ * @prop {array} scales list of available scales on the map
+ * @prop {string} WMSLegendOptions options for the WMS get legend graphic LEGEND_OPTIONS parameter
+ * @prop {boolean} scaleDependent if true add the scale parameter to the legend graphic request
+ * @prop {string} language current language code
+ * @prop {number} legendWidth width of the legend symbols
+ * @prop {number} legendHeight height of the legend symbols
+ */
 class WMSLegend extends React.Component {
     static propTypes = {
         node: PropTypes.object,

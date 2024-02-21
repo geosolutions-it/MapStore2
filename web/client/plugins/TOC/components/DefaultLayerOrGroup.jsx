@@ -9,6 +9,13 @@
 import React, { cloneElement } from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * DefaultLayerOrGroup is the LayersTree core component and manage the distribution of groups and layers nodes
+ * @prop {string} node group or layer node
+ * @prop {node} groupElement component that represents the group node
+ * @prop {node} layerElement component that represents the layer node
+ * @prop {node} containerNode container node, used by sorting handler of default groups and layers
+ */
 function DefaultLayerOrGroup({
     node,
     groupElement: DefaultGroup,

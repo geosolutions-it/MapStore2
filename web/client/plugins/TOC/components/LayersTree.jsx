@@ -47,11 +47,30 @@ const loopGroupCondition = (groupNode, condition) => {
         return !!condition(node);
     });
 };
-
+/**
+ * LayersTree renders all nodes given a tree representation
+ * @prop {object} tree nodes tree
+ * @prop {object} contextMenu context menu payload
+ * @prop {function} onSort return the sorted node information
+ * @prop {function} onChange return the changes of a specific node
+ * @prop {function} onContextMenu return the context menu event of a specific node
+ * @prop {component} groupNodeComponent custom group node component
+ * @prop {component} layerNodeComponent custom layer node component
+ * @prop {array} selectedNodes list of selected node objects
+ * @prop {function} onSelect return the current selected node on click event
+ * @prop {string} filterText filter to apply to layers title
+ * @prop {string} theme layers tree theme, one of undefined or `legend`
+ * @prop {string} className additional class name for the layer tree
+ * @prop {array} nodeItems list of node component to customize specific nodes, expected structure [ { name, Component, selector } ]
+ * @prop {array} nodeToolItems list of node tool component to customize specific tool available on a node, expected structure [ { name, Component } ]
+ * @prop {object} singleDefaultGroup if true it hides the default group nodes
+ * @prop {string} noFilteredResultsMsgId message id for no result on filter
+ * @prop {object} config optional configuration available for the nodes
+ * @prop {boolean} config.sortable activate the possibility to sort nodes
+ */
 const LayersTree = ({
     tree,
     filterText,
-    currentLocale,
     onSort = () => {},
     onChange = () => {},
     groupNodeComponent = DefaultGroup,
@@ -138,7 +157,6 @@ const LayersTree = ({
                             })}
                             getNodeStyle={getNodeStyle}
                             getNodeClassName={getNodeClassName}
-                            currentLocale={currentLocale}
                             filterText={filterText}
                             config={config}
                             theme={theme}
@@ -150,7 +168,7 @@ const LayersTree = ({
                                     return filterTitle({
                                         node: currentNode,
                                         filterText,
-                                        currentLocale
+                                        currentLocale: config.currentLocale
                                     });
                                 }
                                 return true;

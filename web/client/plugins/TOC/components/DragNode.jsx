@@ -38,6 +38,11 @@ const Drag = drag(({ component: Component, ...props }) => {
     return <Component {...props} />;
 });
 
+/**
+ * DragNode applies all property and handlers for drag events
+ * @prop {component} component component to enhance
+ * @prop {boolean} sortable if true adds all the needed properties and handler for drag events
+ */
 const DragNode = ({ component, ...props }) => {
     const node = props.replaceNodeOptions ? props.replaceNodeOptions(props.node, props.nodeType) : props.node;
     const sortable = !!(props?.config?.sortable !== false && node?.sortable !== false);
