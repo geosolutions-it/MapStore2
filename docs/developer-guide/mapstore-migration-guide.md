@@ -36,7 +36,6 @@ So if you want to see this information, even if it is not strictily required, yo
 
     [oracle migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/oracle/oracle-migration-from-v.2.0.0-to-v2.1.0.sql)
 
-
 ### Restructuring of Login and Home in Dashboard page
 
 We recently added the sidebar to the dashboard page and by doing so we wanted to keep a uniform position of login and home plugins, by putting them in the omnibar container rather than the sidebar one. The viewer is a specific case that will be reviewed in the future.
