@@ -3041,7 +3041,9 @@
             "saveSuccessMessage": "Guardado con éxito",
             "saveTooltip": "Salvar",
             "saveAsTooltip": "Guardar como",
-            "unadvertised": "Sin publicidad"
+            "unadvertised": "Sin publicidad",
+            "creator": "Creado por",
+            "editor": "Última modificación por"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",

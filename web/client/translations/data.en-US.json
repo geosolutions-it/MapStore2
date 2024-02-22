@@ -3052,7 +3052,9 @@
             "saveSuccessMessage": "Saved successfully",
             "saveTooltip": "Save",
             "saveAsTooltip": "Save As",
-            "unadvertised": "Unadvertised"
+            "unadvertised": "Unadvertised",
+            "creator": "Created by",
+            "editor": "Last modified by"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",

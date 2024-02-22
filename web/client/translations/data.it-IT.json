@@ -3042,7 +3042,9 @@
             "saveSuccessMessage": "Salvata con successo",
             "saveTooltip": "Salva",
             "saveAsTooltip": "Salva con nome",
-            "unadvertised": "Non pubblicizzato"
+            "unadvertised": "Non pubblicizzato",
+            "creator": "Creato da",
+            "editor": "Ultima modifica di"
         },
         "mapEditor": {
             "modalTitle": "Editor di Mappa",
