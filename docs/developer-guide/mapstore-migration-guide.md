@@ -22,26 +22,13 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.02 to 2024.01.00
 
-### Creator, editor and advertised columns
+The resource metadata has been recently extented to include  information about resource creator and editor and to provide the advertises/unadvertised resource functionalities.
+If your installation has the [database creation mode](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/database-setup/#database-creation-mode) set to `update` (the default), the columns will be added automatically and you do not have to do any action. If it is set to `validate` instead you will have to run the update scripts.
 
-The resource metadata has been recently extented to include these three columns. In order to properly setup the database, please refer to the [database creation mode](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/database-setup/#database-creation-mode) general guidelines. More specifically with regards to these three columns, you have to do the following steps, depending on which `database creation option` and `database type` you have chosen:
+*In any case*, the update scripts contain also a part to populate the `creator` column, that can not be applied automatically with  [database creation mode](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/database-setup/#database-creation-mode) set to `update`.
+So if you want to see this information, even if it is not strictily required, you will have to run the migration scripts anyway.
 
-- In case of an `update` database creation option:
-  - The table columns are updated automatically for the corresponding database type.
-  - The creator column fields are not populated.
-  - Keep in mind that the `update` option is the default option used by MapStore, unless explicitly told otherwise.
-  - In order to populate the creator column, you have to manually execute the following script:
-
-  ```sql
-        update gs_resource as gsr
-            set creator = subquery.name
-        from
-        (select gsu.name, gss.resource_id from geostore.gs_security as gss join     geostore.gs_user as gsu on (gss.user_id = gsu.id)
-        where gss.user_id IS NOT NULL) as subquery
-        where gsr.id = subquery.resource_id and gsr.creator IS NULL;
-  ```
-
-  - For script reference see:
+- For script reference see:
 
     [postgresql migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.0.0-to-v2.1.0.sql)
 
@@ -49,9 +36,6 @@ The resource metadata has been recently extented to include these three columns.
 
     [oracle migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/oracle/oracle-migration-from-v.2.0.0-to-v2.1.0.sql)
 
-- In case of a `validate` database creation option:
-  - The table columns will not be updated.
-  - You have to manually execute the whole script referenced above, depending on your choice of database type.
 
 ### Restructuring of Login and Home in Dashboard page
 
