@@ -224,10 +224,10 @@ export const getCapabilities = (url) => {
             // todo: getting bbox needs to enhance to get the accurate bbox of the ifc model
             let bbox = {
                 bounds: {
-                    minx: properties.longitude || 0 - 0.001,
-                    miny: properties.latitude || 0 - 0.001,
-                    maxx: properties.longitude || 0 + 0.001,
-                    maxy: properties.latitude || 0 + 0.001
+                    minx: (properties.longitude || 0) - 0.001,
+                    miny: (properties.latitude || 0) - 0.001,
+                    maxx: (properties.longitude || 0) + 0.001,
+                    maxy: (properties.latitude || 0) + 0.001
                 },
                 crs: 'EPSG:4326'
             };

@@ -301,10 +301,10 @@ export default (API) => ({
                             ...layer,
                             bbox: {
                                 bounds: {
-                                    minx: longitude || 0 - 0.001,
-                                    miny: latitude || 0 - 0.001,
-                                    maxx: longitude || 0 + 0.001,
-                                    maxy: latitude || 0 + 0.001
+                                    minx: (longitude || 0) - 0.001,
+                                    miny: (latitude || 0) - 0.001,
+                                    maxx: (longitude || 0) + 0.001,
+                                    maxy: (latitude || 0) + 0.001
                                 },
                                 crs: 'EPSG:4326'
                             },
@@ -324,6 +324,9 @@ export default (API) => ({
                                 title: "notification.warning",
                                 message: properties?.projectedCrsNotSupported ? "layerProperties.modelLayer.warnings.projectedCrsNotSupported" : "layerProperties.modelLayer.warnings.projectedCrsNotProvided",
                                 autoDismiss: 15,
+                                values: {
+                                    modelProjection: properties?.projectedCrsNotSupported ? `(${properties?.projectedCrs})` : ""
+                                },
                                 position: "tc"
                             })]
                         );
