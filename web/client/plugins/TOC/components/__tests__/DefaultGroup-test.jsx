@@ -206,7 +206,7 @@ describe('test Group module component', () => {
             onChange: () => {}
         };
         let spy = expect.spyOn(actions, "onChange");
-        ReactDOM.render(<Group node={group} nodeType="groups" parentHasNodesMutuallyExclusive onChange={actions.onChange}><CustomChildNode/></Group>,
+        ReactDOM.render(<Group node={group} nodeType="groups" mutuallyExclusive onChange={actions.onChange}><CustomChildNode/></Group>,
             document.getElementById("container"));
         const visibilityNode = document.querySelector('.ms-visibility-check');
         expect(visibilityNode.querySelector('.glyphicon-radio-off'));

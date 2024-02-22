@@ -90,6 +90,17 @@ function ContextMenu({
 
     const status = getSelectedNodesStatus();
 
+    const componentProps = {
+        selectedNodes: [value],
+        status,
+        statusTypes,
+        nodeTypes,
+        rootGroupId,
+        defaultGroupId,
+        config,
+        itemComponent: TableOfContentItemButton
+    };
+
     return createPortal(
         <div
             ref={ref}
@@ -105,19 +116,12 @@ function ContextMenu({
             }}
             onClick={onClick}
         >
-            {items.map(({ name, Component }) => {
+            {items.filter(({ selector = () => true }) => selector(componentProps)).map(({ name, Component }) => {
                 return (
                     <Component
                         key={name}
-                        selectedNodes={[value]}
+                        {...componentProps}
                         contextMenu
-                        itemComponent={TableOfContentItemButton}
-                        status={status}
-                        statusTypes={statusTypes}
-                        nodeTypes={nodeTypes}
-                        rootGroupId={rootGroupId}
-                        defaultGroupId={defaultGroupId}
-                        config={config}
                     />);
             })}
         </div>,

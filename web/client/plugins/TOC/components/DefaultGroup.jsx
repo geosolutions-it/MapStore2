@@ -44,6 +44,13 @@ const DefaultGroupNode = ({
     visibilityCheck,
     nodeIcon
 }) => {
+    const componentProps = {
+        node,
+        onChange,
+        nodeType,
+        nodeTypes,
+        itemComponent: NodeTool
+    };
     return (
         <>
             <NodeHeader
@@ -63,8 +70,8 @@ const DefaultGroupNode = ({
                 afterTitle={
                     <>
                         {node.error ? <NodeTool tooltipId="toc.loadingerror" glyph="exclamation-mark" /> : null}
-                        {nodeToolItems.map(({ Component, name }) => {
-                            return (<Component key={name} itemComponent={NodeTool} node={node} onChange={onChange} nodeType={nodeType} nodeTypes={nodeTypes} />);
+                        {nodeToolItems.filter(({ selector = () => true }) => selector(componentProps)).map(({ Component, name }) => {
+                            return (<Component key={name} {...componentProps}/>);
                         })}
                     </>
                 }
@@ -89,7 +96,7 @@ const DefaultGroupNode = ({
  * @prop {function} onSelect return the current selected node on click event
  * @prop {function} getNodeStyle function to create a custom style (used by LayersTree)
  * @prop {function} getNodeClassName function to create a custom class name (used by LayersTree)
- * @prop {boolean} parentHasNodesMutuallyExclusive if true changes the visibility icon to radio button
+ * @prop {boolean} mutuallyExclusive if true changes the visibility icon to radio button
  * @prop {string} nodeType type of the current node
  * @prop {boolean} sortable if false hides the sort handler components
  * @prop {array} nodeItems list of node component to customize specific nodes, expected structure [ { name, Component, selector } ]
@@ -106,7 +113,7 @@ const DefaultGroup = ({
     children,
     connectDragPreview = cmp => cmp,
     connectDragSource = cmp => cmp,
-    parentHasNodesMutuallyExclusive,
+    mutuallyExclusive,
     sortable,
     nodeType,
     ...props
@@ -171,11 +178,11 @@ const DefaultGroup = ({
         onSelect: handleOnSelect,
         onChange: handleOnChange,
         nodeToolItems,
-        parentHasNodesMutuallyExclusive,
+        mutuallyExclusive,
         visibilityCheck: (
             <VisibilityCheck
                 hide={config?.hideVisibilityButton}
-                mutuallyExclusive={parentHasNodesMutuallyExclusive}
+                mutuallyExclusive={mutuallyExclusive}
                 value={node?.visibility}
                 onChange={(visibility) => {
                     handleOnChange({ visibility });
@@ -249,7 +256,7 @@ const DefaultGroup = ({
                         node: childNode,
                         parentId: node.id,
                         index: _index,
-                        parentHasNodesMutuallyExclusive: node?.nodesMutuallyExclusive,
+                        mutuallyExclusive: node?.nodesMutuallyExclusive,
                         onChange: (value) => {
                             if (value?.parentId === node?.id && value?.options?.visibility !== undefined && node?.nodesMutuallyExclusive) {
                                 node.nodes.forEach((cNode) => {

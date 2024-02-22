@@ -118,6 +118,14 @@ const DefaultLayerNode = ({
     const expanded = forceExpanded ? config?.expanded : node?.expanded;
     const content = getContent(error);
 
+    const componentProps = {
+        node,
+        onChange,
+        nodeType,
+        nodeTypes,
+        itemComponent: NodeTool
+    };
+
     return (
         <>
             <NodeHeader
@@ -154,8 +162,8 @@ const DefaultLayerNode = ({
                                 ? indicator.glyph && <NodeTool onClick={false} key={indicator.key} glyph={indicator.glyph} {...indicator.props} />
                                 : null)
                             : null}
-                        {nodeToolItems.map(({ Component, name }) => {
-                            return (<Component key={name} itemComponent={NodeTool} node={node} onChange={onChange} nodeType={nodeType} nodeTypes={nodeTypes}/>);
+                        {nodeToolItems.filter(({ selector = () => true }) => selector(componentProps)).map(({ Component, name }) => {
+                            return (<Component key={name} {...componentProps} />);
                         })}
                     </>
                 }
@@ -190,7 +198,7 @@ const DefaultLayerNode = ({
  * @prop {function} onSelect return the current selected node on click event
  * @prop {function} getNodeStyle function to create a custom style (used by LayersTree)
  * @prop {function} getNodeClassName function to create a custom class name (used by LayersTree)
- * @prop {boolean} parentHasNodesMutuallyExclusive if true changes the visibility icon to radio button
+ * @prop {boolean} mutuallyExclusive if true changes the visibility icon to radio button
  * @prop {string} nodeType type of the current node
  * @prop {boolean} sortable if false hides the sort handler components
  * @prop {array} nodeItems list of node component to customize specific nodes, expected structure [ { name, Component, selector } ]
@@ -226,7 +234,7 @@ const DefaultLayer = ({
     onSelect = () => {},
     getNodeStyle = () => {},
     getNodeClassName = () => '',
-    parentHasNodesMutuallyExclusive,
+    mutuallyExclusive,
     nodeType,
     sortable,
     config,
@@ -272,7 +280,7 @@ const DefaultLayer = ({
         node,
         filterText,
         onChange: handleOnChange,
-        parentHasNodesMutuallyExclusive,
+        mutuallyExclusive,
         config,
         nodeToolItems,
         onSelect: handleOnSelect,
@@ -289,7 +297,7 @@ const DefaultLayer = ({
         visibilityCheck: (<VisibilityCheck
             error={error}
             hide={config?.hideVisibilityButton}
-            mutuallyExclusive={parentHasNodesMutuallyExclusive}
+            mutuallyExclusive={mutuallyExclusive}
             value={!!node?.visibility}
             onChange={(visibility) => {
                 handleOnChange({ visibility });

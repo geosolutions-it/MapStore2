@@ -51,40 +51,167 @@ registerCustomSaveHandler('toc', (state) => (state?.toc?.config));
 
 /**
  * Provides Table Of Content visualization. Lists the layers on the map, organized in groups and provides the possibility to select them.
- * Based on current layer(s)/group(s) selection, shows a set of tools for the current selection.
- * This is also a plugin container. Tools injected providing only the name to the container need an internal support (deprecated). Here an example:
+ * The mode to inject tools in the TOC is by using `target`. TOC supports following targets:
+ * - `toolbar` target add a button in the main toolbar below the filter
  * ```javascript
- * export default createPlugin('AddGroup', {
- *     component: AddGroupPlugin,
- *     containers: {
- *         TOC: {
- *             doNotHide: true,
- *             name: "AddGroup" // this works only if AddGroup is one of the plugins internally supported by TOC.
- *         }
- *     }
+ * const MyToolbarComponent = connect(selector, { onActivateTool })(({
+ *  selectedLayers, // current list of selected layers - deprecated use selectedNodes instead
+ *  selectedGroups, // current list of selected groups - deprecated use selectedNodes instead
+ *  selectedNodes, // list of selected nodes object
+ *  status, // selection status depending if only one or more than one layers or groups are selected
+ *  statusTypes, // object with the available status types constant values: `DESELECT`, `LAYER`, `LAYERS`, `GROUP` or `BOTH`
+ *  nodeTypes, // object with available node types constant values: `LAYER` or `GROUP`
+ *  rootGroupId, constant value for root group id
+ *  defaultGroupId, constant value for default group id
+ *  itemComponent, // default component that provides a consistent UI (see TableOfContentItemButton for props)
+ *  config, // custom configuration provided by the TOC
+ *  onActivateTool, // example of a custom connected action
+ *  ...props // additional props to pass to the default item component eg. buttonProps
+ * }) => {
+ *  const ItemComponent = itemComponent;
+ *  // hide based on selection condition
+ *  if (status !== statusTypes.DESELECT) {
+ *      return null;
+ *  }
+ *  return (
+ *      <ItemComponent
+ *          {...props}
+ *          glyph="heart"
+ *          tooltipId="myMessageId"
+ *          onClick={() => onActivateTool()}
+ *      />
+ *  );
  * });
- * ```
- * The new **(recommended)** mode to inject tools in the TOC is by using `target`.
- * This method allows to insert a component in the defined target. Actually `toolbar` is the only target supported for the `target`, and allows to add a button on the toolbar.
- * ```javascript
  * createPlugin(
  *  'MyPlugin',
  *  {
  *      containers: {
- *         TOC: {
- *             name: "TOOLNAME", // a name for the current tool.
- *             target: "toolbar", // the target where to insert the component
- *             //In case of `target: toolbar`, `selector` determine to show or not show the tool (returning `true` or `false`).
- *             // As argument of this function you have several information, that will be passed also to the component.
- *             // - `status`: that can be `LAYER`, `LAYERS`, `GROUP` or `GROUPS`, depending if only one or more than one layer is selected.
- *             // - `selectedGroups`: current list of selected groups
- *             // - `selectedLayers`: current list of selected layers
- *             selector: ({ status }) => status === 'LAYER',
- *             // The component to render. It receives as props the same object passed to the `selector` function.
- *             Component: connect(...)(MyButton)
- *                 createSelector(layerSwipeSettingsSelector, (swipeSettings) => ({swipeSettings})),
- *             // ...
- *         },
+ *          TOC: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: "toolbar", // the target where to insert the component
+ *              Component: MyToolbarComponent,
+ *              // selector is `optional` and it will receive same prop as the Component eg.:
+ *              // selector: ({ status, statusTypes }) => status === statusTypes.DESELECT,
+ *          },
+ * // ...
+ * ```
+ * - `context-menu` add a button inside the context menu
+ * ```javascript
+ * const MyContextMenuComponent = connect(selector, { onActivateTool })(({
+ *  selectedNodes, // list of selected nodes object
+ *  status, // selection status depending if only one or more than one layers or groups are selected
+ *  statusTypes, // object with the available status types constant values: `DESELECT`, `LAYER`, `LAYERS`, `GROUP` or `BOTH`
+ *  nodeTypes, // object with available node types constant values: `LAYER` or `GROUP`
+ *  rootGroupId, constant value for root group id
+ *  defaultGroupId, constant value for default group id
+ *  itemComponent, // default component that provides a consistent UI (see TableOfContentItemButton for props)
+ *  config, // custom configuration provided by the TOC
+ *  onActivateTool, // example of a custom connected action
+ *  ...props // additional props to pass to the default item component
+ * }) => {
+ *  const ItemComponent = itemComponent;
+ *  // hide based on selection condition
+ *  if (status !== statusTypes.DESELECT) {
+ *      return null;
+ *  }
+ *  return (
+ *      <ItemComponent
+ *          {...props}
+ *          glyph="heart"
+ *          labelId="myMessageId"
+ *          onClick={() => onActivateTool()}
+ *      />
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          TOC: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: "context-menu", // the target where to insert the component
+ *              Component: MyContextMenuComponent
+ *          },
+ * // ...
+ * ```
+ * - `node-tool` add a button inside a node
+ * ```
+ * - `context-menu` add a button inside the context menu
+ * ```javascript
+ * const MyNodeToolComponent = connect(selector)(({
+ *  node, // node properties
+ *  nodeType, // type of the node `LAYER` or `GROUP`
+ *  nodeTypes, // object with available node types constant value: `LAYER` or `GROUP`
+ *  itemComponent, // default component that provides a consistent UI (see NodeTool for props)
+ *  onChange, // callback to change the node properties
+ *  ...props // additional props to pass to the default item component
+ * }) => {
+ *  const ItemComponent = itemComponent;
+ *  // hide based on selection condition
+ *  if (nodeType !== nodeTypes.LAYER) {
+ *      return null;
+ *  }
+ *  return (
+ *      <ItemComponent
+ *          {...props}
+ *          glyph="heart"
+ *          tooltipId="myMessageId"
+ *          onClick={() => onChange({ singleTile: !node?.singleTile })}
+ *      />
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          TOC: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: "node-tool", // the target where to insert the component
+ *              Component: MyNodeToolComponent
+ *          },
+ * // ...
+ * ```
+ * - `node` replace the node component
+ * ```javascript
+ * const MyNodeComponent = connect(selector)(({
+ *  index, // index of the node
+ *  parentId, // type of the node `LAYER` or `GROUP`
+ *  theme, // current used theme
+ *  node, // node properties
+ *  filterText, // text filter to apply to layer title
+ *  nodeType, // type of the node `LAYER` or `GROUP`
+ *  nodeTypes, // object with available node types constant value: `LAYER` or `GROUP`
+ *  config, // custom configuration provided layers tree
+ *  onSelect, // select callback
+ *  onChange, // callback to change the node properties
+ *  nodeToolItems, // list of node tool items
+ *  mutuallyExclusive, // inform the node if mutually exclusive or not
+ *  visibilityCheck, // rendered node for visibility check
+ *  expandButton, // rendered node for expand button
+ *  sortHandler, // rendered node for sort handler
+ *  nodeIcon, // rendered node for node icon
+ *  defaultGroupNodeComponent, // default group node component. Available only for group nodes. It is possible to re-use it and apply changes
+ *  defaultLayerNodeComponent, // default layer node component. Available only for layer nodes. it is possible to re-use it and apply changes
+ * }) => {
+ *  return (
+ *      <div>
+ *          <div>{sortHandler}{expandButton}{visibilityCheck}</div>
+ *          <div>My custom node</div>
+ *      </div>
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          TOC: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: "node", // the target where to insert the component
+ *              Component: MyNodeComponent,
+ *              // selector is `mandatory` and it and it will receive same prop as the Component
+ *              // this example will modify the node of groups
+ *              selector: ({ nodeType, nodeTypes }) => nodeType === nodeTypes.GROUP
+ *          },
  * // ...
  * ```
  * @memberof plugins
