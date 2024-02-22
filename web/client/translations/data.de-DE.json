@@ -3068,7 +3068,9 @@
             "saveSuccessMessage": "Erfolgreich gespeichert",
             "saveTooltip": "Speichern",
             "saveAsTooltip": "Speichern als",
-            "unadvertised": "Nicht geworben"
+            "unadvertised": "Nicht geworben",
+            "creator": "Erstellt von",
+            "editor": "Zuletzt geändert von"
         },
         "mapEditor": {
             "modalTitle": "Karteneditor",
