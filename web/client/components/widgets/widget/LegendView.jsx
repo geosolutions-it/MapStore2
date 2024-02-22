@@ -26,6 +26,7 @@ export default ({
             theme="legend"
             config={{
                 sortable: false,
+                showFullTitle: true,
                 hideOpacitySlider: disableOpacitySlider,
                 hideVisibilityButton: disableVisibility,
                 expanded: legendExpanded === true ? true : undefined,
