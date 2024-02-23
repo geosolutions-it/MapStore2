@@ -13,4 +13,4 @@ import tooltip from './enhancers/tooltip';
 
 export default buttonWithDisabled(Button);
 
-export const ButtonWithTooltip = tooltip(Button);
+export const ButtonWithTooltip = tooltip(buttonWithDisabled(Button));

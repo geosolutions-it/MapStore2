@@ -230,59 +230,62 @@ export default ({
                     activeTool === "bookmarkSearch" && showBookMarkSearchOption &&
                         <BookmarkSelect mapInitial={props.mapInitial}/>
                 }
-                <SearchBarToolbar
-                    splitTools={false}
-                    toolbarButtons={[
-                        ...(getConfigButtons() ? [{...getConfigButtons()}] : []),
-                        ...items
-                            .filter(({ target }) => target === 'button')
-                            .map(({ component: Element }) => ({
-                                visible: !!showOptions,
-                                Element
-                            })),
-                        {
-                            glyph: removeIcon,
-                            className: "square-button-md no-border",
-                            bsStyle: "default",
-                            pullRight: true,
-                            loading: !isUndefined(loading) && loading,
-                            visible: activeTool === "addressSearch" &&
-                            (searchText !== "" || selectedItems && selectedItems.length > 0),
-                            onClick: () => {
-                                if (activeTool === "addressSearch") {
-                                    clearSearch();
-                                }
-                            },
-                            ...(activeTool === "coordinatesSearch" &&
-                                CoordinateOptions.removeIcon(activeTool, coordinate, onClearCoordinatesSearch, onChangeCoord))
-                        }, {
-                            glyph: searchIcon,
-                            className: "square-button-md no-border " +
-                            (isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
-                            bsStyle: "default",
-                            pullRight: true,
-                            tooltipPosition: "bottom",
-                            visible: activeTool === "addressSearch" &&
-                            (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools),
-                            onClick: () => isSearchClickable && search(),
-                            ...(activeTool === "coordinatesSearch" &&
-                                CoordinateOptions.searchIcon(activeTool, coordinate, onZoomToPoint, defaultZoomLevel)),
-                            ...(activeTool === "bookmarkSearch" &&
+                <Message msgId="catalog.search">
+                    {(searchButtonText) => <SearchBarToolbar
+                        splitTools={false}
+                        toolbarButtons={[
+                            ...(getConfigButtons() ? [{...getConfigButtons()}] : []),
+                            ...items
+                                .filter(({ target }) => target === 'button')
+                                .map(({ component: Element }) => ({
+                                    visible: !!showOptions,
+                                    Element
+                                })),
+                            {
+                                glyph: removeIcon,
+                                className: "square-button-md no-border",
+                                bsStyle: "default",
+                                pullRight: true,
+                                loading: !isUndefined(loading) && loading,
+                                visible: activeTool === "addressSearch" &&
+                                    (searchText !== "" || selectedItems && selectedItems.length > 0),
+                                onClick: () => {
+                                    if (activeTool === "addressSearch") {
+                                        clearSearch();
+                                    }
+                                },
+                                ...(activeTool === "coordinatesSearch" &&
+                                    CoordinateOptions.removeIcon(activeTool, coordinate, onClearCoordinatesSearch, onChangeCoord))
+                            }, {
+                                glyph: searchIcon,
+                                className: "square-button-md no-border " +
+                                    (isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
+                                bsStyle: "default",
+                                pullRight: true,
+                                tooltipPosition: "bottom",
+                                'aria-label': searchButtonText,
+                                visible: activeTool === "addressSearch" &&
+                                    (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools),
+                                onClick: () => isSearchClickable && search(),
+                                ...(activeTool === "coordinatesSearch" &&
+                                    CoordinateOptions.searchIcon(activeTool, coordinate, onZoomToPoint, defaultZoomLevel)),
+                                ...(activeTool === "bookmarkSearch" &&
                                     BookmarkOptions.searchIcon(activeTool, props))
-                        }, {
-                            tooltip: getError(error),
-                            tooltipPosition: "bottom",
-                            className: "square-button-md no-border",
-                            glyph: "warning-sign",
-                            bsStyle: "danger",
-                            glyphClassName: "searcherror",
-                            visible: !!error,
-                            onClick: clearSearch
-                        }, {
-                            visible: showOptions,
-                            renderButton: <SearchBarMenu disabled={showOptions} menuItems={searchMenuOptions} />
-                        }]}
-                />
+                            }, {
+                                tooltip: getError(error),
+                                tooltipPosition: "bottom",
+                                className: "square-button-md no-border",
+                                glyph: "warning-sign",
+                                bsStyle: "danger",
+                                glyphClassName: "searcherror",
+                                visible: !!error,
+                                onClick: clearSearch
+                            }, {
+                                visible: showOptions,
+                                renderButton: <SearchBarMenu disabled={showOptions} menuItems={searchMenuOptions} />
+                            }]}
+                    />}
+                </Message>
             </div>
         </FormGroup>
     </SearchBarBase>);

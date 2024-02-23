@@ -10,7 +10,6 @@ import { get } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Tooltip } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
@@ -58,7 +57,7 @@ const selector = createSelector([
 const MousePositionButton = connect((state) => ({
     pressed: isMouseMoveCoordinatesActiveSelector(state),
     active: isMouseMoveCoordinatesActiveSelector(state),
-    tooltip: <Tooltip id="showMousePositionCoordinates"><Message msgId="showMousePositionCoordinates"/></Tooltip>,
+    tooltip: <Message msgId="showMousePositionCoordinates"/>,
     tooltipPlace: 'left',
     pressedStyle: "success active",
     defaultStyle: "primary",

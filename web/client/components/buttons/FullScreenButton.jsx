@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import ToggleButton from './ToggleButton';
-import { Tooltip } from 'react-bootstrap';
 import Message from '../I18N/Message';
 
 /**
@@ -86,7 +85,7 @@ class FullScreenButton extends React.Component {
     };
 
     render() {
-        return (<ToggleButton {...this.getButtonProperties()} pressed={this.props.active} tooltip={<Tooltip id="full-screen-button-tip"><Message msgId={this.props.active ? this.props.activeTooltip : this.props.notActiveTooltip}/></Tooltip>} />);
+        return (<ToggleButton {...this.getButtonProperties()} pressed={this.props.active} tooltip={<Message msgId={this.props.active ? this.props.activeTooltip : this.props.notActiveTooltip}/>} />);
     }
 }
 

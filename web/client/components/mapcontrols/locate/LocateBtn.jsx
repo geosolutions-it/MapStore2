@@ -8,12 +8,10 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Glyphicon, Tooltip} from 'react-bootstrap';
+import {Glyphicon} from 'react-bootstrap';
 
-import Message from '../../I18N/Message';
-import OverlayTrigger from '../../misc/OverlayTrigger';
 import defaultIcon from '../../misc/spinners/InlineSpinner/img/spinner.gif';
-import Button from '../../misc/Button';
+import {ButtonWithTooltip} from '../../misc/Button';
 import('./css/locate.css');
 
 let checkingGeoLocation = false;
@@ -74,9 +72,19 @@ class LocateBtn extends React.Component {
     renderButton = () => {
         const geoLocationDisabled = this.props.locate === "PERMISSION_DENIED";
         return (
-            <Button id={this.props.id} disabled={geoLocationDisabled} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.getBtnStyle()} style={this.props.style}>
+            <ButtonWithTooltip
+                id={this.props.id}
+                disabled={geoLocationDisabled}
+                {...this.props.btnConfig}
+                onClick={this.onClick}
+                bsStyle={this.getBtnStyle()}
+                style={this.props.style}
+                tooltipId={this.props.tooltip}
+                tooltipPosition={this.props.tooltipPlace}
+                keyProp={"overlay-trigger." + this.props.id}
+            >
                 <Glyphicon glyph={this.props.glyph}/>{this.props.text}{this.props.help}
-            </Button>
+            </ButtonWithTooltip>
         );
     };
 
@@ -91,18 +99,18 @@ class LocateBtn extends React.Component {
             }} alt="..." />)
         ;
         return (
-            <Button id={this.props.id} onClick={this.onClick} {...this.props.btnConfig} bsStyle={this.getBtnStyle()} style={this.props.style}>
+            <ButtonWithTooltip
+                id={this.props.id}
+                onClick={this.onClick}
+                {...this.props.btnConfig}
+                bsStyle={this.getBtnStyle()}
+                style={this.props.style}
+                tooltipId={this.props.tooltip}
+                tooltipPosition={this.props.tooltipPlace}
+                keyProp={"overlay-trigger." + this.props.id}
+            >
                 {img}
-            </Button>
-        );
-    };
-
-    addTooltip = (btn) => {
-        const tooltip = <Tooltip id="locate-tooltip"><Message msgId={this.props.tooltip} /></Tooltip>;
-        return (
-            <OverlayTrigger placement={this.props.tooltipPlace} key={`{overlay-trigger.${this.props.id}-${this.props.tooltip}}`} overlay={tooltip}>
-                {btn}
-            </OverlayTrigger>
+            </ButtonWithTooltip>
         );
     };
 
@@ -130,15 +138,7 @@ class LocateBtn extends React.Component {
     }
 
     render() {
-        var retval;
-        var btn = this.props.locate === "LOCATING" ? this.renderLoadingButton() : this.renderButton();
-        if (this.props.tooltip) {
-            retval = this.addTooltip(btn);
-        } else {
-            retval = btn;
-        }
-        return retval;
-
+        return this.props.locate === "LOCATING" ? this.renderLoadingButton() : this.renderButton();
     }
 
     getBtnStyle = () => {
