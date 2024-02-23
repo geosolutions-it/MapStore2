@@ -1169,7 +1169,18 @@
                     "wrong_range": "Die untere Grenze muss kleiner als die obere Grenze sein"
                 },
                 "datefield": {
-                    "wrong_date_range": "Das Datum des Beginns muss früher als das des Endes sein"
+                    "wrong_date_range": "Das Datum des Beginns muss früher als das des Endes sein",
+                    "placeholder": "Datum einfügen",
+                    "tooltip": "Geben Sie das Datum im Format {format} ein",
+                    "quickSelectors": {
+                        "today": "Heute",
+                        "now": "Jetzt",
+                        "tomorrow": "Morgen",
+                        "yesterday": "Gestern",
+                        "thisWeek": "Diese Woche",
+                        "thisMonth": "Diesen Monat",
+                        "nDaysFrom": "{n} Tage ab {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Keine Ergebnisse",

@@ -1130,7 +1130,18 @@
                     "wrong_range": "Lower boundary must be lower than the upper boundary"
                 },
                 "datefield": {
-                    "wrong_date_range": "Start date must be earlier than end date"
+                    "wrong_date_range": "Start date must be earlier than end date",
+                    "placeholder": "Insert date",
+                    "tooltip": "Insert date in {format} format",
+                    "quickSelectors": {
+                        "today": "Today",
+                        "now": "Now",
+                        "tomorrow": "Tomorrow",
+                        "yesterday": "Yesterday",
+                        "thisWeek": "This week",
+                        "thisMonth": "This month",
+                        "nDaysFrom": "{n} days from {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "No results",

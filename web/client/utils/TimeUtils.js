@@ -391,3 +391,60 @@ export const getLocalTimePart = (date) => {
     seconds = seconds < 10 ? "0" + seconds : seconds;
     return `${hours}:${minutes}:${seconds}`;
 };
+
+/**
+ * Parse the date time template string to get parts
+ * Ex: `{now}+P1D` will result in `now`, `+` and `P1D`
+ * @param {string} value template string
+ * @returns parsed parts of the string
+ */
+export const parseDateTimeTemplate = (value) => {
+    const REGEX_DATE_TIME_TEMPLATE = /\{([^}]+)\}([+-])?(.*)/g;
+    const [, placeholderKey, sign, durationExp] = REGEX_DATE_TIME_TEMPLATE.exec(value) ?? [];
+    return { placeholderKey, sign, durationExp };
+};
+
+/**
+ * Get parsed date from date time template string
+ * Ex: `{now}+P1D`, `{now}-P1Y9M8DT2H25M30S`
+ * @param {string} value template string
+ * @param {string} rangeType one of 'start' & 'end'
+ * @returns {Date} parsed date
+ */
+export const getDateFromTemplate = (value, rangeType = "start") => {
+    let date;
+    const { placeholderKey, sign, durationExp } = parseDateTimeTemplate(value);
+    const isStartDate = rangeType === "start";
+
+    switch (placeholderKey) {
+    case "today":
+        date = moment()[isStartDate ? "startOf" : "endOf"]('day');
+        break;
+    case "thisWeekStart":
+        date = moment().startOf('isoWeek');
+        break;
+    case "thisWeekEnd":
+        date = moment().endOf('isoWeek');
+        break;
+    case "thisMonthStart":
+        date = moment().startOf('month');
+        break;
+    case "thisMonthEnd":
+        date = moment().endOf('month');
+        break;
+    case "thisYearStart":
+        date = moment().startOf('year');
+        break;
+    case "thisYearEnd":
+        date = moment().endOf('year');
+        break;
+    default:
+        date = isStartDate ? moment() : moment().endOf('day');
+        break;
+    }
+    if (sign && durationExp) {
+        date = date[sign === "+" ? 'add' : 'subtract'](moment.duration(durationExp).asSeconds(), "seconds");
+    }
+    date = date.toDate();
+    return date;
+};
