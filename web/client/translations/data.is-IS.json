@@ -154,6 +154,10 @@
         "scale": "Scale",
         "resolution": "Resolution"
       },
+      "modelLayer": {
+        "modelCenterLat": "Center's Latitude (DD)",
+        "modelCenterLng": "Center's Longitude (DD)"
+      },
       "tooltip": {
         "label": "Tooltip",
         "title": "Title",
@@ -2859,7 +2863,8 @@
       "saveSuccessTitle": "Success",
       "saveSuccessMessage": "Saved successfully",
       "saveTooltip": "Save",
-      "saveAsTooltip": "Save As"
+      "saveAsTooltip": "Save As",
+      "unadvertised": "Óauglýst"
     },
     "mapEditor": {
       "modalTitle": "Map Editor",

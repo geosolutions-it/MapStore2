@@ -39,6 +39,22 @@ const EnhancedStringFormatter = handleLongTextEnhancer(StringFormatter);
 const EnhancedNumberFormatter = handleLongTextEnhancer(NumberFormatter);
 const enhancedDateTimeFormatter = handleLongTextEnhancer(DateTimeFormatter);
 
+const getDateTimeFormat = (dateFormats, localType) => get(dateFormats, localType) ?? defaultDateFormats[localType];
+
+const createEnhancedDateTimeFormatterComponent = (type) => (props) => {
+    const { dateFormats } = props?.row || {};
+    const format = getDateTimeFormat(dateFormats, type);
+    return enhancedDateTimeFormatter({
+        ...props,
+        format,
+        type
+    });
+};
+
+const EnhancedDateFormatter = createEnhancedDateTimeFormatterComponent('date');
+const EnhancedTimeFormatter = createEnhancedDateTimeFormatterComponent('time');
+const EnhancedDateTimeFormatter = createEnhancedDateTimeFormatterComponent('date-time');
+
 export const register = {};
 
 /**
@@ -74,7 +90,7 @@ export const getFormatterByName = (name) => {
  * - `config` (only if `directRender` is not `true`): the `featureGridFormatter` object in the field object.
  *
  */
-export const getFormatter = (desc, {featureGridFormatter} = {}, {dateFormats} = {}) => {
+export const getFormatter = (desc, {featureGridFormatter} = {}) => {
     const usedFormatter = featureGridFormatter;
     if (usedFormatter && getFormatterByName(usedFormatter?.name)) {
         const Formatter = getFormatterByName(usedFormatter.name);
@@ -85,6 +101,16 @@ export const getFormatter = (desc, {featureGridFormatter} = {}, {dateFormats} = 
             return <Formatter {...props} config={usedFormatter} />;
         };
     }
+    // we should avoid to create component in formatters
+    // eg:
+    //   case 'date-time':
+    //      const format = get(dateFormats, desc.localType) ?? defaultDateFormats[desc.localType];
+    //      return ({value} = {}) => enhancedDateTimeFormatter({value, format, type: desc.localType});
+    //
+    // because this is causing a continuous mount/unmount
+    // that makes impossible to double click to edit cells
+    // instead we should pass just the component and include needed properties
+    // inside the `row` prop
     switch (desc.localType) {
     case 'boolean':
         return BooleanFormatter;
@@ -96,10 +122,11 @@ export const getFormatter = (desc, {featureGridFormatter} = {}, {dateFormats} = 
     case 'Geometry':
         return () => null;
     case 'time':
+        return EnhancedTimeFormatter;
     case 'date':
+        return EnhancedDateFormatter;
     case 'date-time':
-        const format = get(dateFormats, desc.localType) ?? defaultDateFormats[desc.localType];
-        return ({value} = {}) => enhancedDateTimeFormatter({value, format, type: desc.localType});
+        return EnhancedDateTimeFormatter;
     default:
         return null;
     }

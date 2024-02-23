@@ -18,12 +18,13 @@ import { registerErrorParser } from '../utils/LocaleUtils';
 import { encodeUTF8 } from '../utils/EncodeUtils';
 
 
-const generateMetadata = (name = "", description = "") =>
+const generateMetadata = (name = "", description = "", advertised = true) =>
     "<description><![CDATA[" + description + "]]></description>"
     + "<metadata></metadata>"
-    + "<name><![CDATA[" + (name) + "]]></name>";
+    + "<name><![CDATA[" + (name) + "]]></name>"
+    + "<advertised>" + advertised + "</advertised>";
 const createAttributeList = (metadata = {}) => {
-    const attributes = metadata.attributes || omit(metadata, ["name", "description", "id"]);
+    const attributes = metadata.attributes || omit(metadata, ["name", "description", "id", "advertised"]);
 
     const xmlAttrs = Object.keys(attributes).map((key) => {
         return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
@@ -266,10 +267,10 @@ const Api = {
             .then(rl => castArray( withSelector ? get(rl, 'SecurityRuleList.SecurityRule') : rl))
             .then(rules => (rules && rules[0] && rules[0] !== "") ? rules : []);
     },
-    putResourceMetadata: function(resourceId, newName, newDescription, options) {
+    putResourceMetadata: function(resourceId, newName, newDescription, advertised, options) {
         return axios.put(
             "resources/resource/" + resourceId,
-            "<Resource>" + generateMetadata(newName, newDescription) + "</Resource>",
+            "<Resource>" + generateMetadata(newName, newDescription, advertised) + "</Resource>",
             this.addBaseUrl(merge({
                 headers: {
                     'Content-Type': "application/xml"
@@ -279,7 +280,7 @@ const Api = {
     putResourceMetadataAndAttributes: function(resourceId, metadata, options) {
         return axios.put(
             "resources/resource/" + resourceId,
-            "<Resource>" + generateMetadata(metadata.name, metadata.description) + createAttributeList(metadata) + "</Resource>",
+            "<Resource>" + generateMetadata(metadata.name, metadata.description, metadata.advertised) + createAttributeList(metadata) + "</Resource>",
             this.addBaseUrl(merge({
                 headers: {
                     'Content-Type': "application/xml"
@@ -337,7 +338,7 @@ const Api = {
         const attributesSection = createAttributeList(metadata);
         return axios.post(
             "resources/",
-            "<Resource>" + generateMetadata(name, description) + "<category><name>" + (category || "") + "</name></category>" +
+            "<Resource>" + generateMetadata(name, description, metadata.advertised) + "<category><name>" + (category || "") + "</name></category>" +
                 attributesSection +
                 "<store><data><![CDATA[" + (
                 data

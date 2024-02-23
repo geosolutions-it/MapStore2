@@ -179,11 +179,16 @@ export const zoomToMaxExtentOnConfigureMap = action$ =>
         .delay(300) // without the delay the map zoom will not change
         .map(({config, zoomToExtent: extent}) => zoomToExtent(extent.bounds, extent.crs || get(config, 'map.projection')));
 
+/**
+ * Intercepts LOAD_MAP_INFO and loads map resources with all information about user's permission on that resource, excluding attributes and data.
+ * @param {Observable} action$ stream of actions
+ * @returns {external:Observable}
+ */
 export const loadMapInfoEpic = action$ =>
     action$.ofType(LOAD_MAP_INFO)
         .switchMap(({mapId}) =>
             Observable
-                .defer(() => Persistence.getResource(mapId))
+                .defer(() => Persistence.getResource(mapId, { includeAttributes: false, withData: false }))
                 .map(resource => mapInfoLoaded(resource, mapId))
                 .catch((e) => Observable.of(mapInfoLoadError(mapId, e)))
                 .startWith(mapInfoLoadStart(mapId))

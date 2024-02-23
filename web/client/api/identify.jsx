@@ -8,9 +8,10 @@
 import { isString, isNil } from 'lodash';
 import { Observable } from 'rxjs';
 
-import {getIdentifyFlow} from '../utils/MapInfoUtils';
+import {getIdentifyFlow, isDataFormat} from '../utils/MapInfoUtils';
 import axios from '../libs/ajax';
 import {parseURN} from '../utils/CoordinatesUtils';
+import { GEOJSON_MIME_TYPE, JSON_MIME_TYPE } from '../utils/FeatureInfoUtils';
 
 
 /**
@@ -33,11 +34,11 @@ export const getFeatureInfo = (basePath, param, layer, {attachJSON, itemId = nul
     // TODO: We should move MapInfoUtils parts of the API here, with specific implementations.
     return (
         // default identify flow, valid for WMS/WMTS. It attach json data, if missing, for advanced features. TODO: make this specific by service, using layer info.
-        (attachJSON && param.info_format !== "application/json" && param.outputFormat !== "application/json")
+        (attachJSON && !isDataFormat(param))
         // add to the flow data in JSON format for highlight/zoom to feature
             ? Observable.forkJoin(
                 retrieveFlow(param),
-                retrieveFlow({ ...param, info_format: "application/json" })
+                retrieveFlow({ ...param, info_format: layer?.infoFormats?.includes(GEOJSON_MIME_TYPE) ? GEOJSON_MIME_TYPE : JSON_MIME_TYPE })
                     .map(res => res.data)
                     .catch(() => Observable.of({})) // errors on geometry retrieval are ignored
             ).map(([response, data]) => ({

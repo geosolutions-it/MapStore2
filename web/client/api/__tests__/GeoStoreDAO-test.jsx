@@ -127,8 +127,8 @@ describe('Test correctness of the GeoStore APIs', () => {
         expect(payload).toBe(SAMPLE_XML_RULES);
     });
     it('test generate meatadata', () => {
-        const payload = API.generateMetadata("Special & chars", "&<>'\"");
-        expect(payload).toBe('<description><![CDATA[&<>\'"]]></description><metadata></metadata><name><![CDATA[Special & chars]]></name>');
+        const payload = API.generateMetadata("Special & chars", "&<>'\"", false);
+        expect(payload).toBe('<description><![CDATA[&<>\'"]]></description><metadata></metadata><name><![CDATA[Special & chars]]></name><advertised>false</advertised>');
     });
 
     it('test login without credentials', (done) => {
@@ -176,13 +176,15 @@ describe('Test correctness of the GeoStore APIs', () => {
         const metadata = API.generateMetadata();
         const name = "";
         const description = "";
-        expect(metadata).toEqual(`<description><![CDATA[${description}]]></description><metadata></metadata><name><![CDATA[${name}]]></name>`);
+        const advertised = true;
+        expect(metadata).toEqual(`<description><![CDATA[${description}]]></description><metadata></metadata><name><![CDATA[${name}]]></name><advertised>${advertised}</advertised>`);
     });
-    it("test generateMetadata with name and desc", () => {
+    it("test generateMetadata with name, desc and advertised", () => {
         const name = "Map 1";
         const description = "this map shows high traffic zones";
-        const metadata = API.generateMetadata(name, description);
-        expect(metadata).toEqual(`<description><![CDATA[${description}]]></description><metadata></metadata><name><![CDATA[${name}]]></name>`);
+        const advertised = false;
+        const metadata = API.generateMetadata(name, description, advertised);
+        expect(metadata).toEqual(`<description><![CDATA[${description}]]></description><metadata></metadata><name><![CDATA[${name}]]></name><advertised>${advertised}</advertised>`);
     });
     it("test createAttributeList default", () => {
         expect(API.createAttributeList()).toEqual("");

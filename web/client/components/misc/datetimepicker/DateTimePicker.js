@@ -73,7 +73,8 @@ class DateTimePicker extends Component {
         options: PropTypes.object,
         isWithinAttrTbl: PropTypes.bool,
         disabled: PropTypes.bool,
-        quickDateTimeSelectors: PropTypes.array
+        quickDateTimeSelectors: PropTypes.array,
+        onPopoverOpen: PropTypes.func
     }
     static contextTypes = {
         messages: PropTypes.object,
@@ -86,7 +87,8 @@ class DateTimePicker extends Component {
         onChange: () => { },
         value: null,
         popupPosition: 'bottom',
-        isWithinAttrTbl: false
+        isWithinAttrTbl: false,
+        onPopoverOpen: () => {}
     }
 
     state = {
@@ -143,7 +145,7 @@ class DateTimePicker extends Component {
                     <div className="date-time-container">
                         <Calendar
                             tabIndex="-1"
-                            ref={(elem) => {this.attachCalRef = elem;}}
+                            ref={this.attachCalRef}
                             onMouseDown={this.handleMouseDown}
                             onChange={this.handleCalendarChange}
                             {...props}
@@ -159,7 +161,7 @@ class DateTimePicker extends Component {
                                 </span>
                             </div>
                             <div className="dateTime-picker-hours" style={{display: timeVisible ? 'block' : 'none', background: 'white', position: 'relative', zIndex: 1}}>
-                                <Hours style={{maxHeight: "120px"}} ref={elem => {this.attachTimeRef = elem; }} value={inputValue} {...props} onClose={this.close} onSelect={(time) => this.handleTimeSelect(time, type)} />
+                                <Hours style={{maxHeight: "120px"}} ref={this.attachTimeRef} value={inputValue} {...props} onClose={this.close} onSelect={(time) => this.handleTimeSelect(time, type)} />
                             </div>
                         </div>
                         {this.renderQuickTimeSelectors()}
@@ -207,6 +209,7 @@ class DateTimePicker extends Component {
                         onClick={this.toggleDateTime}
                         disabled={false}
                         placement={popupPosition}
+                        onOpen={this.props.onPopoverOpen}
                         triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
                         content={
                             <div className={`shadow-soft picker-container date-time ${className}`}>
@@ -229,12 +232,13 @@ class DateTimePicker extends Component {
                             onClick={this.toggleTime}
                             disabled={false}
                             placement={popupPosition}
+                            onOpen={this.props.onPopoverOpen}
                             triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
                             content={
                                 <div className="shadow-soft" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
                                     <div className="dateTime-picker-hours" style={{display: 'block', background: 'white', position: 'relative', zIndex: 1}}>
                                         <div style={{ height: '120px' }}>
-                                            <Hours style={{maxHeight: "120px"}} ref={elem => { this.attachTimeRef = elem;}} value={inputValue} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+                                            <Hours style={{maxHeight: "120px"}} ref={this.attachTimeRef} value={inputValue} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
                                         </div>
                                     </div>
                                 </div>
@@ -257,12 +261,13 @@ class DateTimePicker extends Component {
                             onClick={this.toggleCalendar}
                             disabled={false}
                             placement={popupPosition}
+                            onOpen={this.props.onPopoverOpen}
                             triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}       // table element to trigger its scroll
                             content={
                                 <div className={`shadow-soft picker-container ${className}`}>
                                     <Calendar
                                         tabIndex="-1"
-                                        ref={(elem) => {this.attachCalRef = elem;}}
+                                        ref={this.attachCalRef}
                                         onMouseDown={this.handleMouseDown}
                                         onChange={this.handleCalendarChange}
                                         {...props}

@@ -2114,7 +2114,8 @@
       "close": "Sulje",
       "cancel": "Peruuta",
       "saveSuccessTitle": "Tallennus onnistui",
-      "saveSuccessMessage": "Tallennettu onnistuneesti"
+      "saveSuccessMessage": "Tallennettu onnistuneesti",
+      "unadvertised": "Mainostamaton"
     },
     "mapEditor": {
       "modalTitle": "Karttaeditori",
