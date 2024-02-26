@@ -397,3 +397,21 @@ In addition to the standard options, only for COG catalog sources, through the *
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
     * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and customize the *Opacity* value and the *Visibility limits* from the [Display](layer-settings.md#display) tab
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+
+### IFC Model Catalog
+
+An **Industry Foundation Classes** ([IFC](https://www.buildingsmart.org/standards/bsi-standards/industry-foundation-classes/)) is a 3D model file. MapStore allows to add IFC model through its *Catalog* tool where a specific source type can be configured as follows by specifying the URL of a reachable `.ifc` resource.
+
+In **General Settings** of a IFC source type, it is possible to specify the service `Title` and its `URL`.
+
+<img src="../img/catalog/ifc_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+!!! Note
+    To properly display IFC 3D model in your MapStore map, it is necessary to add the reference system definition supported by the model in the MapStore [projectionDefs configuration](../../developer-guide/local-config/#projectiondefs-configuration)
+
+!!! Note
+    The tool capabilities currently available for IFC model layers are:
+
+    * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and customize the *Visibility limits*; change the *Center Longitude*, *Center Latitude*, *Height* and *Heading* of the model from the [Display](layer-settings.md#display) tab
+    * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
