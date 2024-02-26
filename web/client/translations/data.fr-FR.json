@@ -179,7 +179,7 @@
                 "height": "Hauteur (m)",
                 "heading": "Angle de cap (DD)",
                 "warnings": {
-                    "projectedCrsNotSupported": "Le modèle est placé au centre de la vue actuelle car: le modèle a une projection CRS, mais elle n'est pas prise en charge.",
+                    "projectedCrsNotSupported": "Le modèle est placé au centre de la vue actuelle car: le modèle a une projection CRS {modelProjection}, mais elle n'est pas prise en charge.",
                     "projectedCrsNotProvided": "Le modèle est placé au centre de la vue actuelle car: le modèle n'a pas de projection CRS définie."
                 }
             },

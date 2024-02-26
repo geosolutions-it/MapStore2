@@ -20,7 +20,8 @@ describe('Test Model API for ifc models', () => {
                 expect(properties).toEqual({
                     projectedCrs: 'EPSG:5834',
                     projectedCrsNotSupported: true,
-                    mapConversion: { northings: 5334600, eastings: 4468005, orthogonalHeight: 515, xAxisOrdinate: 0, xAxisAbscissa: 1, rotation: 0, scale: 1 }
+                    mapConversion: { northings: 5334600, eastings: 4468005, orthogonalHeight: 515, xAxisOrdinate: 0, xAxisAbscissa: 1, rotation: 0, scale: 1 },
+                    size: [ 1000, 1000, 0 ]
                 });
                 expect(bbox).toBeTruthy();
                 expect(bbox.crs).toBe('EPSG:4326');

@@ -69,11 +69,10 @@ import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace} from '../u
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
 import { projectionSelector, mapSelector } from '../selectors/map';
-import { getResolutions } from "../utils/MapUtils";
+import { getResolutions, METERS_PER_UNIT } from "../utils/MapUtils";
 import { describeFeatureType } from '../api/WFS';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
-
 const onErrorRecordSearch = (isNewService, errObj) => {
     if (isNewService) {
         return Rx.Observable.of(
@@ -297,14 +296,15 @@ export default (API) => ({
                         const center = CoordinatesUtils.reproject(mapCenter, mapCenter.crs, 'EPSG:4326');
                         const longitude = center.x;
                         const latitude = center.y;
+                        const size = properties.size || [2, 2];
                         const newLayer = {
                             ...layer,
                             bbox: {
                                 bounds: {
-                                    minx: longitude || 0 - 0.001,
-                                    miny: latitude || 0 - 0.001,
-                                    maxx: longitude || 0 + 0.001,
-                                    maxy: latitude || 0 + 0.001
+                                    minx: (longitude || 0) - ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                                    miny: (latitude || 0) - ((size[1] / 2) / METERS_PER_UNIT.degrees),
+                                    maxx: (longitude || 0) + ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                                    maxy: (latitude || 0) + ((size[1] / 2) / METERS_PER_UNIT.degrees)
                                 },
                                 crs: 'EPSG:4326'
                             },
@@ -324,6 +324,9 @@ export default (API) => ({
                                 title: "notification.warning",
                                 message: properties?.projectedCrsNotSupported ? "layerProperties.modelLayer.warnings.projectedCrsNotSupported" : "layerProperties.modelLayer.warnings.projectedCrsNotProvided",
                                 autoDismiss: 15,
+                                values: {
+                                    modelProjection: properties?.projectedCrsNotSupported ? `(${properties?.projectedCrs})` : ""
+                                },
                                 position: "tc"
                             })]
                         );

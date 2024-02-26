@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
 import DebouncedFormControl from '../../../misc/DebouncedFormControl';
 import Message from '../../../I18N/Message';
-
+import { METERS_PER_UNIT } from "../../../../utils/MapUtils";
 /**
  * ModelTransformation. This component shows the model transformation options available
  * @prop {object} layer the layer options
@@ -32,13 +32,14 @@ function ModelTransformation({
             height,
             ...value
         };
+        const size = feature?.properties?.size || [2, 2];
         const newBbox = {
             ...layer?.bbox,
             bounds: {
-                minx: updatedCenter.longitude - 0.001,
-                miny: updatedCenter.latitude - 0.001,
-                maxx: updatedCenter.longitude + 0.001,
-                maxy: updatedCenter.latitude + 0.001
+                minx: updatedCenter.longitude - ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                miny: updatedCenter.latitude - ((size[1] / 2) / METERS_PER_UNIT.degrees),
+                maxx: updatedCenter.longitude + ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                maxy: updatedCenter.latitude + ((size[1] / 2) / METERS_PER_UNIT.degrees)
             }
         };
         onChange('features', [
