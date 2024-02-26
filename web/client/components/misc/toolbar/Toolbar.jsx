@@ -18,7 +18,6 @@ import ToolbarButton from './ToolbarButton';
 * @param  {object[]} [buttons=[]] Array of buttons. Button objects support the following properties:
 *  - *visible*: true by default, set to `false` to make the button disappear
 *  - *Element*: a component to render instead of the ToolbarButton, it can be a DropdownToolbarOptions
-*  - *DirectElement*: a direct component to render instead of the ToolbarButton/ Element to prevent continious mount/unmount
 *  - All the react-bootstrap buttons properties.
 *  - All the properties for @see components.misc.enhancers
 *  - All properties for @see components.misc.toolbar.ToolbarButton and react-bootstrap button
@@ -36,8 +35,8 @@ export default ({
         transitionLeaveTimeout: 300
     }} = {}) => {
     const renderButtons = () => buttons.map(
-        ({ visible = true, Element, renderButton, DirectElement, ...props }, index) => visible
-            ? (renderButton ? renderButton : (Element && <Element key={props.key || index} {...props} /> || (DirectElement && DirectElement) || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />))
+        ({ visible = true, Element, renderButton, ...props }, index) => visible
+            ? (renderButton ? renderButton : (Element && <Element key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />))
             : null
     );
     return (<ButtonGroup {...btnGroupProps}>

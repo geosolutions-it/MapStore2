@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useRef, useReducer, useState, memo } from 'react';
+import React, { useEffect, useRef, useReducer, useState } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import find from 'lodash/find';
@@ -306,12 +306,14 @@ function VisualStyleEditor({
                             onClick: () => dispatch({ type: REDO_STYLE })
                         },
                         {
-                            visible: !!find(state.current?.style?.rules, ({ kind }) => (kind === 'Classification')),
-                            DirectElement: (<ClassificationLayerSettings thematicCustomParams={layer?.thematic} onUpdate={(params) => {
+                            visible: ['wms'].includes(layer?.type) && !!find(state.current?.style?.rules, ({ kind }) => (kind === 'Classification')),
+                            thematicCustomParams: layer?.thematic,
+                            onUpdate: (params) => {
                                 onUpdateNode(layer.id, "layers", {thematic: {
                                     ...params
                                 }});
-                            }} />)
+                            },
+                            Element: ClassificationLayerSettings
                         },
                         {
                             visible: !!error,
@@ -430,4 +432,4 @@ VisualStyleEditor.defaultProps = {
     onUpdateNode: () => {}
 };
 
-export default memo(VisualStyleEditor);
+export default VisualStyleEditor;

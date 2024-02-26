@@ -547,30 +547,39 @@ export const fields = {
             thematicCustomParams,
             onChange
         } = props;
-        if (!(thematicCustomParams?.length)) return null;         // if there is no params it will be hidden
+        // if there is no params it will be hidden
+        if (!(thematicCustomParams?.length)) {
+            return null;
+        }
         const valid = !isValid || isValid({ value });
         const handleCustomParamChange = (key, selectedVal) => {
             onChange({
                 [key]: selectedVal
             });
         };
+
         return (
-            <>
-                <div style={{width: '100%', borderTop: 'solid 2px grey', marginTop: '0.5rem'}}>
-                    <h5><strong><Message msgId={label} /> </strong></h5>
-                    <div>
-                        {thematicCustomParams?.map(param=>(
+            <div style={{ width: '100%' }}>
+                <hr />
+                <div className="ms-symbolizer-field"><Message msgId={label} /></div>
+                <div>
+                    {thematicCustomParams?.map(param=> {
+                        const currentValue = value ? value[param?.field] : undefined;
+                        const valueObj = param?.values?.find(val => val.value === currentValue);
+                        return (
                             <PropertyField
+                                key={param?.field}
                                 label={param?.title || param?.field}
                                 invalid={!valid}>
                                 <SelectInput
                                     {...props}
-                                    value={ value ? value[param?.field] : undefined}
-                                    onChange={(val)=>handleCustomParamChange(param.field, val)}
+                                    value={valueObj?.value
+                                        ? { value: valueObj.value, label: valueObj.name ?? valueObj.value }
+                                        : currentValue }
+                                    onChange={(val)=> handleCustomParamChange(param.field, val)}
                                     config={{...props.config, getOptions: () => {
                                         return param?.values?.map(val => {
                                             return {
-                                                labelId: val.value,
                                                 value: val.value,
                                                 label: val.name
                                             };
@@ -578,11 +587,11 @@ export const fields = {
                                     }}}
                                 />
                             </PropertyField>
-                        ))
-                        }
-                    </div>
+                        );
+                    })}
                 </div>
-            </>
+                <hr />
+            </div>
         );
     }
 };

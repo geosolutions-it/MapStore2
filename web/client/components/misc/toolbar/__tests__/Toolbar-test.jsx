@@ -9,7 +9,6 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ClassificationLayerSettings from "../../../styleeditor/ClassificationLayerSettings";
 import Toolbar from '../Toolbar';
 
 describe("Toolbar component", () => {
@@ -69,24 +68,5 @@ describe("Toolbar component", () => {
         // this allows vertical toolbar with bootstrap css (animation group add internal span)
         const el = document.querySelector(".btn-group > button");
         expect(el).toExist();
-    });
-    it('creates component with buttons and defaultProps and these buttons include a direct React component', () => {
-        ReactDOM.render(<Toolbar key={"toolbar"} btnDefaultProps={{className: "TEST_CLASS"}} buttons={[{
-            id: "button",
-            tooltip: "hello",
-            text: "hello",
-            tooltipPosition: "right",
-            glyph: "plus"
-        }, {
-            visible: true,
-            DirectElement: <ClassificationLayerSettings onUpdate={() => {}} thematicCustomParams={{}} />
-        }]}/>, document.getElementById("container"));
-        const el = document.getElementsByClassName("btn-group");
-        expect(el).toExist();
-        const btn = document.getElementById("button");
-        expect(btn).toExist();
-        const cofBtn = document.querySelector(".square-button-md.no-border");
-        expect(cofBtn).toExist();
-        expect(document.getElementsByClassName("TEST_CLASS").length > 0).toBe(true);
     });
 });

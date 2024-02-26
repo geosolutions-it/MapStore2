@@ -938,8 +938,7 @@ const getBlocks = ({
                     customParams: property.customParams({
                         key: 'customParams',
                         label: 'styleeditor.customParams',
-                        disablePropertySelection: true,
-                        isValid: ({ value }) => value !== undefined
+                        disablePropertySelection: true
                     }),
                     classification: property.colorMap({
                         key: 'classification',

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEqual, get, castArray } from 'lodash';
+import { isEqual, get, castArray, isString } from 'lodash';
 
 import axios from '../libs/ajax';
 import StylesAPI from './geoserver/Styles';
@@ -223,20 +223,25 @@ const defaultClassificationRequest = ({
     params,
     styleService
 }) => {
+
+    const viewparams = Object.keys(params.customParams || {})
+        .map((key) => {
+            const property = params.customParams[key];
+            // arrays need escaped comma
+            // strings need sourronding single quotes
+            const value = castArray(property)
+                .map(val => isString(val) ? `'${val}'` : val)
+                .join('\\,');
+            return `${key}:${value}`;
+        }).join(';');
+
     let paramSLDService = {
         intervals: params.intervals,
         method: params.method,
         attribute: params.attribute,
-        intervalsForUnique: params.intervalsForUnique
+        intervalsForUnique: params.intervalsForUnique,
+        ...(viewparams && { viewparams })
     };
-    let isCustomParamExist = typeof params.customParams === 'object';
-    if (isCustomParamExist) {
-        Object.entries(params.customParams).forEach((item) => {
-            if (item[1]) {
-                paramSLDService[item[0]] = item[1];
-            }
-        });
-    }
     return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService, styleService));
 };
 /**
@@ -260,7 +265,6 @@ export function classificationVector({
     classificationRequest = defaultClassificationRequest
 }) {
 
-    // maybe need to add customParams in this keys
     let paramsKeys = [
         'intervals',
         'method',

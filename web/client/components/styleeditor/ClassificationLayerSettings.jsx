@@ -6,11 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState, memo } from 'react';
+import React, { useState } from 'react';
 import { Alert, Glyphicon } from 'react-bootstrap';
-import { compose, getContext } from 'recompose';
-import PropTypes from 'prop-types';
-
 import { ControlledPopover } from './Popover';
 import Toolbar from '../misc/toolbar/Toolbar';
 import tooltip from '../misc/enhancers/tooltip';
@@ -26,18 +23,16 @@ const INITIAL_CODE_VALUE = {
     "params": []
 };
 /**
- * Component select the wellKnownName property of a Mark symbolizer
+ * Component to change the layer classification options
  * @memberof components.styleeditor
  * @name ClassificationLayerSettings
- * @prop {string} value well know name or svg link
- * @prop {function} onChange returns the updated value
- * @prop {string} svgSymbolsPath path to symbols list (`index.json` or `symbol.json` endpoint)
+ * @prop {object} thematicCustomParams parameters to update
+ * @prop {function} onUpdate returns the updated value
  */
 function ClassificationLayerSettings({
     onUpdate,
-    thematicCustomParams,
-    messages
-}) {
+    thematicCustomParams
+}, { messages }) {
     const [open, setOpen] = useState(false);
     const [isValidJson, setValid] = useState(true);
     const [alert, setAlert] = useState(false);
@@ -77,58 +72,49 @@ function ClassificationLayerSettings({
         try {
             const config = JSON.parse(code);
             let isValid = validateEnteredParams(config);
-            if (isValid) {
+            if (isValid && !isEqual(config, thematicCustomParams)) {
+                onUpdate(config);
+            }
+        } catch (e) { /**/ }
+    };
 
-                if (!isEqual(config, thematicCustomParams )) {
-                    onUpdate(config);
-                }
-                onValid(config);
-            } else return;
-        } catch (e) {
-            onError(e);
+    const onToggle = () => {
+        // info: showing an alert if entered json not valid
+        if (isValidJson) {
+            setOpen(prev => !prev);
+        } else {
             setAlert(true);
         }
     };
 
-
     return (
         <ControlledPopover
             open={open}
-            onClick={() => {
-                // info: showing an alert if entered json not valid
-                if (isValidJson) setOpen(prev => !prev);
-                else setAlert(true);
-            }}
+            onClick={() => onToggle()}
             placement={'right'}
             content={
-                <div style={{background: 'white', border: 'solid 3px gray'}}>
-                    <h4 style={{ margin: '0.5rem'}}>
+                <div className="ms-classification-layer-settings">
+                    <div className="ms-classification-layer-settings-title">
                         <Message msgId="styleeditor.customParams" />
-                    </h4>
-                    <div style={{
-                        position: 'relative',
-                        width: '450px',
-                        background: 'white'
-                    }}>
-                        <JSONEditor json={thematicCustomParams?.params ? thematicCustomParams : INITIAL_CODE_VALUE} editorWillUnmount={saveChanges} onValid={onValid} onError={onError} />
-                        {alert &&
-                        <div
-                            className="ms-style-editor-alert"
-                            style={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '100%',
-                                zIndex: 10,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                padding: 16,
-                                backgroundColor: 'rgba(0, 0, 0, 0.6)'
-                            }}>
-                            <Alert bsStyle="warning" style={{ textAlign: 'center' }}>
-                                <p style={{ padding: 8 }}><Message msgId="styleeditor.alertCustomParamsNotValid" /></p>
+                        <Button
+                            className="square-button-md no-border"
+                            onClick={() => onToggle()}
+                        >
+                            <Glyphicon
+                                glyph="1-close"
+                            />
+                        </Button>
+                    </div>
+                    <JSONEditor
+                        json={thematicCustomParams?.params ? thematicCustomParams : INITIAL_CODE_VALUE}
+                        editorWillUnmount={saveChanges}
+                        onValid={onValid}
+                        onError={onError}
+                    />
+                    {alert &&
+                        <div className="ms-style-editor-alert">
+                            <Alert bsStyle="warning">
+                                <p><Message msgId="styleeditor.alertCustomParamsNotValid" /></p>
                                 <p>
                                     <Toolbar
                                         buttons={[
@@ -144,9 +130,9 @@ function ClassificationLayerSettings({
                                                 bsStyle: 'primary',
                                                 text: <Message msgId="styleeditor.closeCustomParamsEditor" />,
                                                 onClick: () => {
-                                                    setOpen(false);
                                                     setValid(true);
                                                     setAlert(false);
+                                                    setOpen(false);
                                                 }
                                             }
                                         ]}
@@ -154,7 +140,6 @@ function ClassificationLayerSettings({
                                 </p>
                             </Alert>
                         </div>}
-                    </div>
                 </div>}
         >
             <Button
@@ -168,6 +153,4 @@ function ClassificationLayerSettings({
     );
 }
 
-export default  compose(getContext({
-    messages: PropTypes.object
-}))(memo(ClassificationLayerSettings));
+export default ClassificationLayerSettings;
