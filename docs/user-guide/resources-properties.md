@@ -24,6 +24,14 @@ Through the *Edit properties* window the user can perform the following operatio
 
 * Add **Details** (only for *Maps* and *Dashboard*)
 
+Once a resource has been saved, in the *Save* panel, the user can view the creation and last modification data of the resource itself. An example in the image below:
+
+<img src="../img/resource-properties/resource_data.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
+While an admin user can also view who created the resource and the last user who modified it. An example in the image below:
+
+<img src="../img/resource-properties/resource_creation.jpg" class="ms-docimage"  style="max-width:400px;"/>
+
 ## Permission rules
 
 In the *Add a rule...* section you can set one ore more permission rules in order to allow a group to access the resource. In particular it is possible to choose between a particular group of authenticated users or the *everyone* group that includes all authenticated users but also anonymous users (more information about different user types can be found in [Homepage](home-page.md#home-page) section). <br>
