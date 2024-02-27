@@ -224,16 +224,19 @@ const defaultClassificationRequest = ({
     styleService
 }) => {
 
-    const viewparams = Object.keys(params.customParams || {})
+    const viewparams = Object.keys(params.msViewParams || {})
         .map((key) => {
-            const property = params.customParams[key];
+            const property = params.msViewParams[key];
+            if (property === undefined) {
+                return null;
+            }
             // arrays need escaped comma
             // strings need sourronding single quotes
             const value = castArray(property)
                 .map(val => isString(val) ? `'${val}'` : val)
                 .join('\\,');
             return `${key}:${value}`;
-        }).join(';');
+        }).filter((value) => value).join(';');
 
     let paramSLDService = {
         intervals: params.intervals,
@@ -272,7 +275,7 @@ export function classificationVector({
         'attribute',
         'ramp',
         'intervalsForUnique',
-        'customParams'
+        'msViewParams'
     ];
     let params = { ...properties, ...values };
     const { ruleId } = properties;
@@ -301,7 +304,7 @@ export function classificationVector({
 
     const previousParams = paramsKeys.reduce((acc, key) => ({ ...acc, [key]: properties[key] }), {});
     const currentParams = paramsKeys.reduce((acc, key) => ({ ...acc, [key]: params[key] }), {});
-    const validParameters = !paramsKeys.find(key => params[key] === undefined);
+    const validParameters = !paramsKeys.filter((key) => key !== 'msViewParams').find(key => params[key] === undefined);
     const needsRequest = validParameters && !isEqual(previousParams, currentParams)
         // not request if the entries are updated manually
         && values?.ramp !== 'custom'

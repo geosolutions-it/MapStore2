@@ -144,7 +144,7 @@ function ClassificationLayerSettings({
         >
             <Button
                 className="square-button-md no-border"
-                tooltipId="toc.thematic.go_to_cfg">
+                tooltipId="toc.thematic.goToCfg">
                 <Glyphicon
                     glyph="cog"
                 />

@@ -680,7 +680,7 @@
                 "configuration": "Configurazione",
                 "apply": "Applicare la classificazione",
                 "restore": "Annulla le personalizzazioni",
-                "go_to_cfg": "Configura ...",
+                "goToCfg": "Configura ...",
                 "go_to_thema": "Usa questa configurazione",
                 "cfgError": "Errore nella configurazione JSON",
                 "classify": "Classificazione",

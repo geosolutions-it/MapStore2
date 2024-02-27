@@ -935,8 +935,8 @@ const getBlocks = ({
                     }
                 },
                 {
-                    customParams: property.customParams({
-                        key: 'customParams',
+                    msViewParams: property.customParams({
+                        key: 'msViewParams',
                         label: 'styleeditor.customParams',
                         disablePropertySelection: true
                     }),
