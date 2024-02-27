@@ -522,4 +522,41 @@ describe('Print Plugin', () => {
             }
         });
     });
+    it("print features that are missing visibility property", (done) => {
+        const layers = [{
+            features: [
+                {type: "FeatureCollection", properties: {id: "1"}},
+                {type: "FeatureCollection", properties: {id: "2"}}
+            ],
+            disableResolutionLimits: true,
+            visibility: true,
+            type: "vector"
+        }];
+        const printingService = {
+            print() {},
+            getMapConfiguration() {
+                return {
+                    layers
+                };
+            },
+            validate() { return {};}
+        };
+        const spy = expect.spyOn(printingService, "print");
+        getPrintPlugin().then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin printingService={printingService}/>, document.getElementById("container"));
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                submit.click();
+                setTimeout(() => {
+                    expect(spy.calls.length).toBe(1);
+                    expect(spy.calls[0].arguments[0].layers.length).toBe(1);
+                    expect(spy.calls[0].arguments[0].layers[0].features.length).toBe(2);
+                    done();
+                }, 0);
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
 });
