@@ -31,7 +31,8 @@ const INITIAL_CODE_VALUE = {
  */
 function ClassificationLayerSettings({
     onUpdate,
-    thematicCustomParams
+    thematicCustomParams,
+    editorRef
 }, { messages }) {
     const [open, setOpen] = useState(false);
     const [isValidJson, setValid] = useState(true);
@@ -110,6 +111,7 @@ function ClassificationLayerSettings({
                         editorWillUnmount={saveChanges}
                         onValid={onValid}
                         onError={onError}
+                        editorRef={editorRef}
                     />
                     {alert &&
                         <div className="ms-style-editor-alert">

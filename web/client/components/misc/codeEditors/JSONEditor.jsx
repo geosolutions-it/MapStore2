@@ -10,7 +10,7 @@ import Message from '../../I18N/Message';
 
 import CodeMirror from '../../../libs/codemirror/react-codemirror-suspense';
 
-export default ({onValid, onError, json = {}, editorWillUnmount = () => {} }) => {
+export default ({onValid, onError, editorRef, json = {}, editorWillUnmount = () => {} }) => {
     const [code, setCode] = useState(JSON.stringify(json, true, 2));
     const [error, setError] = useState();
     // parse code and set options
@@ -27,6 +27,7 @@ export default ({onValid, onError, json = {}, editorWillUnmount = () => {} }) =>
     }, [code]);
     return (<div className="code-editor">
         <CodeMirror
+            ref={editorRef}
             editorWillUnmount={() => editorWillUnmount(code)}
             value={code}
             onBeforeChange={(_, __, value) => {
