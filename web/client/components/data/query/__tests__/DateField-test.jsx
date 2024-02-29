@@ -31,7 +31,7 @@ describe('DateField', () => {
         let fieldRowId = 200;
         let fieldValue = {startDate: new Date(86400000), endDate: null};
 
-        const datefield = ReactDOM.render(
+        ReactDOM.render(
             <DateField attType="date"
                 operator={operator}
                 fieldName={fieldName}
@@ -39,14 +39,18 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-        expect(datefield).toBeTruthy();
-        const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
-        expect(dateFieldDOMNode).toBeTruthy();
-        let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
-        expect(childNodes.length).toBe(1);
-        let dateRow = childNodes[0];
-        expect(dateRow).toBeTruthy();
-        expect(dateRow.childNodes.length).toBe(2);
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+        const datePicker = container.querySelector('.rw-datetimepicker');
+        expect(datePicker).toBeTruthy();
+        const button = container.querySelector('.rw-btn-calendar');
+        expect(button).toBeTruthy();
+        ReactTestUtils.Simulate.click(button);
+        const quickTimeSelector = document.querySelectorAll('.quick-time-selector');
+        expect(quickTimeSelector).toBeTruthy();
+        const selectorBtns = document.querySelectorAll('.selector-btn');
+        expect(selectorBtns).toBeTruthy();
+        expect(selectorBtns.length).toBe(3);
     });
 
     it('creates the DateField component with date range', () => {
@@ -55,7 +59,7 @@ describe('DateField', () => {
         let fieldRowId = 200;
         let fieldValue = {startDate: new Date(86400000), endDate: new Date(96400000)};
 
-        const datefield = ReactDOM.render(
+        ReactDOM.render(
             <DateField attType="date"
                 operator={operator}
                 fieldName={fieldName}
@@ -63,12 +67,11 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-        expect(datefield).toBeTruthy();
-        const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
-        expect(dateFieldDOMNode).toBeTruthy();
-        let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
-        expect(childNodes.length).toBe(4);
-        expect(dateFieldDOMNode.childNodes.length).toBe(2);
+        const container = document.getElementById('container');
+        const el = container.querySelector('.rw-datetimepicker.range-time-input.rw-widget');
+        const clockIcon = container.querySelector('.rw-i.rw-i-calendar');
+        expect(el).toBeTruthy();
+        expect(clockIcon).toBeTruthy();
     });
 
     it('creates the DateField with date-time type', () => {
@@ -77,7 +80,7 @@ describe('DateField', () => {
         let fieldRowId = 200;
         let fieldValue = {startDate: new Date(86400000), endDate: null};
 
-        const datefield = ReactDOM.render(
+        ReactDOM.render(
             <DateField
                 timeEnabled
                 dateEnabled
@@ -88,18 +91,20 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-        expect(datefield).toBeTruthy();
-        const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
-        expect(dateFieldDOMNode).toBeTruthy();
-        let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
-        expect(childNodes.length).toBe(1);
-        let dateRow = childNodes[0];
-        expect(dateRow).toBeTruthy();
-        expect(dateRow.childNodes.length).toBe(2);
-        const buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(datefield, "button");
-        expect(buttons.length).toBe(2);
-        expect(buttons[0].title).toBe("Select Date");
-        expect(buttons[1].title).toBe("Select Time");
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+        const el = container.querySelector('.rw-datetimepicker.range-time-input.rw-widget');
+        const dateTimeIcon = container.querySelector('.glyphicon-date-time');
+        expect(el).toBeTruthy();
+        expect(dateTimeIcon).toBeTruthy();
+        const button = container.querySelector('.rw-btn-calendar');
+        expect(button).toBeTruthy();
+        ReactTestUtils.Simulate.click(button);
+        const quickTimeSelector = document.querySelectorAll('.quick-time-selector');
+        expect(quickTimeSelector).toBeTruthy();
+        const selectorBtns = document.querySelectorAll('.selector-btn');
+        expect(selectorBtns).toBeTruthy();
+        expect(selectorBtns.length).toBe(3);
     });
 
     it('creates the DateField with time type', () => {
@@ -108,7 +113,7 @@ describe('DateField', () => {
         let fieldRowId = 200;
         let fieldValue = {startDate: new Date(86400000), endDate: null};
 
-        const datefield = ReactDOM.render(
+        ReactDOM.render(
             <DateField
                 timeEnabled
                 dateEnabled={false}
@@ -119,16 +124,9 @@ describe('DateField', () => {
                 fieldValue={fieldValue}/>,
             document.getElementById("container")
         );
-        expect(datefield).toBeTruthy();
-        const dateFieldDOMNode = ReactDOM.findDOMNode(datefield);
-        expect(dateFieldDOMNode).toBeTruthy();
-        let childNodes = dateFieldDOMNode.getElementsByTagName('DIV');
-        expect(childNodes.length).toBe(1);
-        let dateRow = childNodes[0];
-        expect(dateRow).toBeTruthy();
-        expect(dateRow.childNodes.length).toBe(2);
-        const buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag(datefield, "button");
-        expect(buttons.length).toBe(1);
-        expect(buttons[0].title).toBe("Select Time");
+        const container = document.getElementById('container');
+        expect(container).toBeTruthy();
+        const button = container.querySelector('.rw-btn-time');
+        expect(button).toBeTruthy();
     });
 });

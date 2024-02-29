@@ -173,12 +173,14 @@ class GroupField extends React.Component {
                 <DateField
                     attType="date"
                     dateEnabled
-                    operator={filterField.operator}/>
+                    operator={filterField.operator}
+                    quickDateTimeSelectors={this.props.quickDateTimeSelectors}/>
                 <DateField
                     attType="date-time"
                     timeEnabled
                     dateEnabled
-                    operator={filterField.operator}/>
+                    operator={filterField.operator}
+                    quickDateTimeSelectors={this.props.quickDateTimeSelectors}/>
                 <TextField
                     attType="array"
                     operator={filterField.operator}/>

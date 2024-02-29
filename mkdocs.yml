@@ -178,7 +178,18 @@ nav:
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
 plugins:
   - search
-  - pdf-export:
-      combined: true
-      combined_output_path: pdf/mapstore_documentation.pdf
+  - with-pdf:
+      author: GeoSolutionsGroup
+      copyright: 'MapStore©'
+      #
+      #cover: false
+      #back_cover: true
+      cover_logo: 'img/mapstore2-logo.png'
+      cover_title: MapStore Documentation
+      cover_subtitle: User Guide and Developer Guide
+      toc_level: 3
+      output_path: pdf/mapstore_documentation.pdf
       enabled_if_env: ENABLE_PDF_EXPORT
+      debug_html: true
+      show_anchors: true
+      verbose: true

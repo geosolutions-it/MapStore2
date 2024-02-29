@@ -179,7 +179,7 @@
                 "height": "Hauteur (m)",
                 "heading": "Angle de cap (DD)",
                 "warnings": {
-                    "projectedCrsNotSupported": "Le modèle est placé au centre de la vue actuelle car: le modèle a une projection CRS, mais elle n'est pas prise en charge.",
+                    "projectedCrsNotSupported": "Le modèle est placé au centre de la vue actuelle car: le modèle a une projection CRS {modelProjection}, mais elle n'est pas prise en charge.",
                     "projectedCrsNotProvided": "Le modèle est placé au centre de la vue actuelle car: le modèle n'a pas de projection CRS définie."
                 }
             },
@@ -1130,7 +1130,18 @@
                     "wrong_range": "La limite inférieure doit être plus petite que la limite supérieure"
                 },
                 "datefield": {
-                    "wrong_date_range": "La date de début doit être antérieure à la date de fin"
+                    "wrong_date_range": "La date de début doit être antérieure à la date de fin",
+                    "placeholder": "Insérer la date",
+                    "tooltip": "Insérer la date au format {format}",
+                    "quickSelectors": {
+                        "today": "Aujourd'hui",
+                        "now": "Maintenant",
+                        "tomorrow": "Demain",
+                        "yesterday": "Hier",
+                        "thisWeek": "Cette semaine",
+                        "thisMonth": "Ce mois-ci",
+                        "nDaysFrom": "{n} jours à partir de {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Aucun résultat",
@@ -3031,7 +3042,9 @@
             "saveSuccessMessage": "Enregistré avec succès",
             "saveTooltip": "Enregistrer",
             "saveAsTooltip": "Enregistrer sous",
-            "unadvertised": "Non annoncé"
+            "unadvertised": "Non annoncé",
+            "creator": "Créé par",
+            "editor": "Dernière modification par"
         },
         "mapEditor": {
             "modalTitle": "Editeur de carte",

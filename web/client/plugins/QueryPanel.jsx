@@ -403,11 +403,6 @@ class QueryPanel extends React.Component {
  * Targets available for injection: "start", "attributes", "afterAttributes", "spatial", "afterSpatial", "layers", "end", "map"
 
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
- * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
- * @prop {boolean} cfg.toolsOptions.hideAttributeFilter force attribute filter panel to hide (when is not used or not usable). In general any `hide${CapitailizedItemId}` works to hide a particular panel of the query panel.
- * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
- * @prop {boolean} cfg.toolsOptions.useEmbeddedMap if spatial filter panel is present, this option allows to use the embedded map instead of the map plugin
- *
  * @example
  * // This example configure a layer with polygons geometry as spatial filter method
  * "spatialOperations": [
@@ -443,6 +438,19 @@ class QueryPanel extends React.Component {
  *        },
  *        "customItemClassName": "customItemClassName"
  *    }
+ * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
+ * @prop {boolean} cfg.toolsOptions.hideAttributeFilter force attribute filter panel to hide (when is not used or not usable). In general any `hide${CapitailizedItemId}` works to hide a particular panel of the query panel.
+ * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
+ * @prop {boolean} cfg.toolsOptions.useEmbeddedMap if spatial filter panel is present, this option allows to use the embedded map instead of the map plugin
+ * @prop {boolean} cfg.toolsOptions.quickDateTimeSelectors selectors allow quick selection of configured date/date-time in both single and range Date/DateTime picker.
+ * The quick time selectors basically uses the template string `{predefinedPlaceholds}[+/-][durationExpression]` to define selectors. Range is denoted as `{startDate}/{endDate}` using the same template string format
+ * - predefinedPlaceholds: `today`, `now`, `thisWeekStart`, `thisWeekEnd`, `thisMonthStart`, `thisMonthEnd`, `thisYearStart`, `thisYearEnd`
+ * - durationExpression: duration expression uses ISO 8601 (https://en.wikipedia.org/wiki/ISO_8601#Durations) format `P[n]Y[n]M[n]DT[n]H[n]M[n]S` or `P[n]W`
+ *
+ * *Note*: `now` - uses current date time (for range, start time - 'current time' and end time - '23:59') where `today` uses 00:00 time of the current day (for range, start time - '00:00' and end time - '23:59')
+ * @example
+ * single - `{now}`, `{today}`, `{today}+P1D` - Tomorrow, `{now}-P10M` - 10 months from now
+ * range - `{now}/{now}+P1D` - start date is current date time and end date is tomorrow
  *
  * @example
  * // customize the QueryPanels UI via plugin(s)

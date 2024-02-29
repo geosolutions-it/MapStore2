@@ -179,7 +179,7 @@
                 "height": "Altezza (m)",
                 "heading": "Angolo di rotta (DD)",
                 "warnings": {
-                    "projectedCrsNotSupported": "Il modello è posizionato al centro della vista corrente perché: il modello ha una proiezione CRS, ma non è supportata.",
+                    "projectedCrsNotSupported": "Il modello è posizionato al centro della vista corrente perché: il modello ha una proiezione CRS {modelProjection}, ma non è supportata.",
                     "projectedCrsNotProvided": "Il modello è posizionato al centro della vista corrente perché: il modello non ha una proiezione CRS definita."
                 }
             },
@@ -1130,7 +1130,18 @@
                     "wrong_range": "Il limite inferiore deve essere minore del limite superiore"
                 },
                 "datefield": {
-                    "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine"
+                    "wrong_date_range": "La data di inizio deve essere inferiore a quella di fine",
+                    "placeholder": "Inserisci la data",
+                    "tooltip": "Inserisci la data nel formato {format}",
+                    "quickSelectors": {
+                        "today": "Oggi",
+                        "now": "Ora",
+                        "tomorrow": "Domani",
+                        "yesterday": "Ieri",
+                        "thisWeek": "Questa settimana",
+                        "thisMonth": "Questo mese",
+                        "nDaysFrom": "{n} giorni da {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Nessun risultato",
@@ -3031,7 +3042,9 @@
             "saveSuccessMessage": "Salvata con successo",
             "saveTooltip": "Salva",
             "saveAsTooltip": "Salva con nome",
-            "unadvertised": "Non pubblicizzato"
+            "unadvertised": "Non pubblicizzato",
+            "creator": "Creato da",
+            "editor": "Ultima modifica di"
         },
         "mapEditor": {
             "modalTitle": "Editor di Mappa",
