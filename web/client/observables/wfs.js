@@ -130,7 +130,7 @@ const getFeaturesFiltered = (features, filterObj) => {
 const getFeatureUtilities = (searchUrl, filterObj, options = {}, downloadOption = 'json') => {
     const data = getWFSFilterData(filterObj, options);
 
-    const urlParsedObj = urlUtil.parse(searchUrl, true);
+    const urlParsedObj = urlUtil.parse(getDefaultUrl(searchUrl), true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
     params.service = 'WFS';
     params.outputFormat = downloadOption;
