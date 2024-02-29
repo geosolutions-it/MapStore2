@@ -250,7 +250,7 @@ class ThematicLayer extends React.Component {
                         title={this.localizedItem('toc.thematic.data_panel', '')}
                         buttons={[{
                             glyph: 'cog',
-                            tooltip: this.localizedItem('toc.thematic.go_to_cfg', ''),
+                            tooltip: this.localizedItem('toc.thematic.goToCfg', ''),
                             visible: this.props.canEditThematic,
                             onClick: this.toggleCfg
                         }]}

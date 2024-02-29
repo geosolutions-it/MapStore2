@@ -729,7 +729,7 @@
                 "configuration": "Konfiguration",
                 "apply": "Klassifizierung anwenden",
                 "restore": "Anpassungen zurücksetzen",
-                "go_to_cfg": "Konfigurieren...",
+                "goToCfg": "Konfigurieren...",
                 "go_to_thema": "Verwenden Sie diese Konfiguration",
                 "cfgError": "Fehler in der Konfigurations-JSON",
                 "classify": "Klassifizieren",
@@ -2616,6 +2616,8 @@
             "alertForceTranslate": "Sie verlieren alle im Code-Editor gemachten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
             "stayInTextareaEditor": "Nein, weiter im Code-Editor",
             "useLatestValidStyle": "Ja, zum visuellen Editor wechseln",
+            "alertCustomParamsNotValid": "Sie verlieren alle im Textmodus hinzugefügten Änderungen, indem Sie den benutzerdefinierten Params -Editor schließen. Sind Sie sicher, den Herausgeber zu schließen?",
+            "closeCustomParamsEditor": "Ja, schließen Sie den Herausgeber",
             "validationError": "Validierungsfehler",
             "incorrectPropertyInputError": "Dies liegt wahrscheinlich an einem fehlenden oder ungültigen Wert in den Eigenschaftseingaben des Stileditors.",
             "emptyRuleEditorTitle": "Neue Regeln hinzufügen",
@@ -2693,7 +2695,9 @@
             "msExtrudedHeight": "Extrudierte Höhe",
             "msExtrusionColor": "Extrusionsfarbe",
             "msExtrusionType": "Extrusionstyp",
-            "wall": "Wand"
+            "wall": "Wand",
+            "customParams": "Benutzerdefinierte Parameter",
+            "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
         },
         "playback": {
             "settings": {
