@@ -18,11 +18,12 @@ import { createFeatureFilter, getWFSFilterData } from '../utils/FilterUtils';
 import { getCapabilitiesUrl } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
+import { getDefaultUrl } from '../utils/URLUtils';
 
 const {getFeature, query, sortBy, propertyName} = requestBuilder({ wfsVersion: "1.1.0" });
 
 export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} = {}) => {
-    const parsed = urlUtil.parse(describeFeatureTypeURL || search.url || url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(describeFeatureTypeURL || search.url || url), true);
     return urlUtil.format(
         {
             ...parsed,

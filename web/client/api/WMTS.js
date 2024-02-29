@@ -16,6 +16,7 @@ const capabilitiesCache = {};
 
 import { castArray } from 'lodash';
 import { getEPSGCode } from '../utils/CoordinatesUtils';
+import { getDefaultUrl } from '../utils/URLUtils';
 
 import {
     getOperations,
@@ -26,7 +27,7 @@ import {
 } from '../utils/WMTSUtils';
 
 const parseUrl = (url) => {
-    const parsed = urlUtil.parse(url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, {search: null}, {
         query: assign({
             SERVICE: "WMTS",
