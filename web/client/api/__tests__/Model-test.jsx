@@ -8,7 +8,7 @@
 import { getCapabilities } from '../Model';
 import expect from 'expect';
 
-describe.only('Test Model API for ifc models', () => {
+describe('Test Model API for ifc models', () => {
     it('should extract capabilities from ifc model', (done) => {
         getCapabilities('base/web/client/test-resources/ifcModels/ifcModel.ifc').then(({ bbox, format, version, properties }) => {
             try {
