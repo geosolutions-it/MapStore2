@@ -6,15 +6,15 @@ The MapStore2 [externalized configuration](https://docs.mapstore.geosolutionsgro
 * Providing different services, based on the same framework.
 * Fulfilling third-party customer requirements.
 
->This guideline assumes familiarity with the following sections of the documentation, so please read these first if you haven't done so already:
->* [MapStore projects](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/mapstore-projects/)
->* [Working with extensions](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/extensions/)
->* [Externalized configuration](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/externalized-configuration/)
+This guideline assumes familiarity with the following sections of the documentation, so please read these first if you haven't done so already:
 
+* [MapStore projects](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/mapstore-projects/)
+* [Working with extensions](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/extensions/)
+* [Externalized configuration](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/externalized-configuration/)
 
 ## Basic setup requirements
 
-First you need to [create you project](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/project-creation-script/) following the steps outlined in the linked section. 
+First you need to [create you project](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/project-creation-script/) following the steps outlined in the linked section.
 
 Then you need to create the `datadir` folder inside root. **To use the contents of the datadir you need to set the JVM system property `datadir.location`**, like in the example below:
 
@@ -22,9 +22,9 @@ Then you need to create the `datadir` folder inside root. **To use the contents 
 
 This command will make the contents of the datadir available for the application **in runtime**. For further details on setting up and usage of the `datadir`, refer to the section [using a data directory](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/externalized-configuration/#using-a-data-directory).
 
-Alternatively, for development purposes only, you can set the same property by modifying the `web/pom.xml` file inside your custom project. 
+Alternatively, for development purposes only, you can set the same property by modifying the `web/pom.xml` file inside your custom project.
 
-Find the entry for `cargo-maven3-plugin` and add the `systemProperties` tag within the `container` tag, so that your configuration looks like this: 
+Find the entry for `cargo-maven3-plugin` and add the `systemProperties` tag within the `container` tag, so that your configuration looks like this:
 
 ```xml
         <plugin>
@@ -66,14 +66,14 @@ Find the entry for `cargo-maven3-plugin` and add the `systemProperties` tag with
 
 In order to setup the multiple installations we can, for example, create three folders inside our `datadir`, denoting three different installations.
 
-```
+```text
 ├── datadir
     ├── customA
     ├── customB
     ├── customC
 ```
 
-Please note that the only requirement regarding folder structure is that the `datadir` exists, any content inside is optional and can be structured freely. 
+Please note that the only requirement regarding folder structure is that the `datadir` exists, any content inside is optional and can be structured freely.
 
 As a final step, we will re-set the `datadir.location` system property outlined above to point to a specific installation, such that:
 
@@ -85,7 +85,7 @@ Inside our example installation folder `datadir/customA` we can include customiz
 
 For the purpose of this guideline we will adhere to the following folder structure convention, as outlined [here](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/externalized-configuration/#using-a-data-directory):
 
-```
+```text
 ├── customA
     ├── configs
     │   └── localConfig.json.patch
@@ -108,11 +108,11 @@ For the purpose of this guideline we will adhere to the following folder structu
             │   ├── ...other translation files.
 ```
 
-In the `customA/configs/localConfig.json.patch` file, we can patch the base configuration that is supplied by the `configs/localConfig.json` file inside root of the custom project, effectively customizing for this particular installation. 
+In the `customA/configs/localConfig.json.patch` file, we can patch the base configuration that is supplied by the `configs/localConfig.json` file inside root of the custom project, effectively customizing for this particular installation.
 
 To include both these files into your build, import the `setLocalConfigurationFile` helper function provided by MapStore inside `js/app.jsx` and call it by providing the paths to both files:
 
-```
+```js
 import { setLocalConfigurationFile} from '@mapstore/utils/ConfigUtils';
 ...
 
@@ -120,12 +120,13 @@ setLocalConfigurationFile(['configs/localConfig.json', 'configs/localConfig.patc
 ```
 
 The `localConfig.json.patch` file can serve as the central hub for these customizations (see example below), essentially linking the whole content of the custom datadir folder and allowing for:
+
 * Adding custom plugins in the application.
 * Replacing default MapStore plugins.
 * Initializing and overriding default application state.
 * Initializing default component state of a particular plugin.
 * Linking to assets, such as images and fonts.
-* Including specific translations and language support. 
+* Including specific translations and language support.
 
 ```JSON
 [
@@ -170,24 +171,28 @@ The `localConfig.json.patch` file can serve as the central hub for these customi
   }
 ]
 ```
+
 In the example above the following modifications are made:
+
 * Language support is changed to English and Italian only.
 * Translation files for the language support are now read from a custom directory `./extensions/customizations/translations`, instead of the default one.
 * A custom theme `MyTheme` is enabled for the whole application. For details see section below.
 * A custom plugin `Logo` is added to the application, specifically the homepage, while being configured with the following props:
-    * **src** - for the logo image, pointing to a location in our datadir where the image is located.
-    * **width** and **position** - which are props used by the component internally.
+  * **src** - for the logo image, pointing to a location in our datadir where the image is located.
+  * **width** and **position** - which are props used by the component internally.
 
 ## Theme customizations
 
-Custom themes can be included in the project and applied only to a specific installation as well. Follow [this guideline](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/customize-theme/#custom-theme-for-project) in order to create a custom theme. 
+Custom themes can be included in the project and applied only to a specific installation as well. Follow [this guideline](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/customize-theme/#custom-theme-for-project) in order to create a custom theme.
 
 Once you have the required folder structure and the necessary imports in `theme.less`, as well as the required changes in your `webpack.config.js`, do the following steps:
 
-1. Check `configs/localConfig.json`, if you override the configuration, and look for `selectedTheme` property, it should be the following path.
+Check `configs/localConfig.json`, if you override the configuration, and look for `selectedTheme` property, it should be the following path.
+
 > /initialState/defaultState/theme/selectedTheme
 
 If it's not configured, add the following block to `initialState.defaultState`, where `id` points to the name of the default theme (you should include one).
+
 ```JSON
       "theme": {
         "selectedTheme": {
@@ -196,9 +201,10 @@ If it's not configured, add the following block to `initialState.defaultState`, 
       }
 ```
 
-2. Inside the configuration patch file `datadir/[installationName]/configs/localConfig.patch.json`, modify the id we have previously set to point to the name of your custom theme, in the example below that would be `MyTheme`. 
+Inside the configuration patch file `datadir/[installationName]/configs/localConfig.patch.json`, modify the id we have previously set to point to the name of your custom theme, in the example below that would be `MyTheme`.
 
 This change will effectively change the theme for that specific installation only.
+
 ```JSON
 [
   {
@@ -209,6 +215,6 @@ This change will effectively change the theme for that specific installation onl
 ]
 ```
 
-Please note that the `themes/` folder has to be placed outside of the `datadir` folder, as stated in the linked guideline above. 
+Please note that the `themes/` folder has to be placed outside of the `datadir` folder, as stated in the linked guideline above.
 
-The reason is that css / less files are assembled and packaged into a theme at build time, while the contents of the `datadir` folder are only available at runtime.  
+The reason is that css / less files are assembled and packaged into a theme at build time, while the contents of the `datadir` folder are only available at runtime.
