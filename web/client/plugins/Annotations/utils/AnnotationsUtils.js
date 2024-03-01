@@ -434,7 +434,7 @@ export const annotationsToGeoJSON = (annotations) => {
                 if (isGeodesic) {
                     newGeom = {
                         type: feature.geometry.type,
-                        coordinates: [MeasureTypes.LENGTH].includes(measureType) ? transformLineToArcs(feature.geometry.coordinates) : [transformLineToArcs(feature.geometry.coordinates[0])]
+                        coordinates: measureType === MeasureTypes.LENGTH ? transformLineToArcs(feature.geometry.coordinates) : feature.geometry.coordinates.map(transformLineToArcs)
                     };
                 }
                 return {
