@@ -690,7 +690,7 @@
                 "configuration": "Configuration",
                 "apply": "Appliquer la classification",
                 "restore": "Réinitialiser les personnalisations",
-                "go_to_cfg": "Configurer...",
+                "goToCfg": "Configurer...",
                 "go_to_thema": "Utilisez cette configuration",
                 "cfgError": "Erreur dans la configuration JSON",
                 "classify": "Classer",
@@ -2578,6 +2578,8 @@
             "alertForceTranslate": "Vous perdrez toutes les modifications ajoutées dans le texte en passant à l'éditeur visuel. Êtes-vous sûr de passer en mode éditeur de style visuel?",
             "stayInTextareaEditor": "Non, continuez dans la zone de texte",
             "useLatestValidStyle": "Oui, passez à l'éditeur visuel",
+            "alertCustomParamsNotValid": "Vous perdrez toutes les modifications ajoutées en mode texte en fermant l'éditeur de paramètres personnalisés. Êtes-vous sûr de fermer l'éditeur?",
+            "closeCustomParamsEditor": "Oui, fermez l'éditeur",
             "validationError": "Erreur de validation",
             "incorrectPropertyInputError": "Ceci est probablement dû à une valeur manquante ou non valide dans les entrées de propriétés de l'éditeur de style.",
             "emptyRuleEditorTitle": "Ajouter de nouvelles règles",
@@ -2655,7 +2657,9 @@
             "msExtrudedHeight": "Hauteur extrudée",
             "msExtrusionColor": "Couleur d'extrusion",
             "msExtrusionType": "Type d'extrusion",
-            "wall": "Mur"
+            "wall": "Mur",
+            "customParams": "Paramètres personnalisés",
+            "wrongFormatMsg": "La configuration entrée est en mauvais format !!"
         },
         "playback": {
             "settings": {
