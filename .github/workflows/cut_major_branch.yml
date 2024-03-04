@@ -96,6 +96,6 @@ jobs:
           git add package.json
           git commit -m "Bump versions on master for release-branch"
           git push origin "${pr_branch_name}"
-          pr_url=$(gh pr create -B "${MAIN_BRANCH}" -H "${pr_branch_name}" --title "[github-action] Bump version for next release" --body "This automatic pull request bumps version of ${MAIN_BRANCH} branch for java packages and for package.json after creating the $release-branc")
+          pr_url=$(gh pr create -B "${MAIN_BRANCH}" -H "${pr_branch_name}" --title "[github-action] ${MAIN_BRANCH} - Bump version for next release" --body "This automatic pull request bumps version of ${MAIN_BRANCH} branch for java packages and for package.json after creating the ${RELEASE_BRANCH}")
           sleep 10
           #gh pr merge "$pr_url" ${PR_OPTIONS}
