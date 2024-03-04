@@ -152,10 +152,6 @@ const DefaultLayerNode = ({
                 afterTitle={
                     <>
                         {visibilityWarningMessageId && <NodeTool glyph="info-sign" tooltipId={visibilityWarningMessageId} />}
-                        {
-                        // indicators are deprecated
-                        // use node items instead
-                        }
                         {config?.layerOptions?.indicators ? castArray(config.layerOptions.indicators).map( indicator =>
                             (indicator.type === 'dimension'
                                 ? find(node?.dimensions || [], indicator.condition) : false)

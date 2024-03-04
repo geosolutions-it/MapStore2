@@ -583,6 +583,7 @@
             "layerFilterTooltip": "Filtrer les couches",
             "toolDownloadTooltip": "Exporter les données de la couche",
             "noFilteredResults": "Aucun résultat",
+            "emptyLayerTree": "L'arborescence des calques est vide. Veuillez ajouter un nouveau calque du catalogue",
             "filterPlaceholder": "Filtrer les couches",
             "clearFilter": "Supprimer le filtre",
             "toolReloadLayerTooltip": "Forcer le rechargement de la couche sélectionnée",

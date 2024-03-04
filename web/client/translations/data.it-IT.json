@@ -583,6 +583,7 @@
             "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
+            "emptyLayerTree": "La lista dei layer è vuota. Aggiungi un nuovo layer dal catalogo",
             "filterPlaceholder": "Filtra layers",
             "clearFilter": "Pulisci filtro",
             "toolReloadLayerTooltip": "Forza caricamento del livello selezionato",

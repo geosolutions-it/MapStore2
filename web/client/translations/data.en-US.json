@@ -583,6 +583,7 @@
             "layerFilterTooltip": "Filter layer",
             "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "No results",
+            "emptyLayerTree": "Layers tree is empty. Please add a new layer from the catalog",
             "filterPlaceholder": "Filter layers",
             "clearFilter": "Clear filter",
             "toolReloadLayerTooltip": "Force reload of selected layer",

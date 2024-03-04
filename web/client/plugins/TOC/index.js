@@ -45,6 +45,7 @@ import { registerCustomSaveHandler } from '../../selectors/mapsave';
 import toc from './reducers/toc';
 import { setControlProperty } from '../../actions/controls';
 import { updateTOCConfig } from './actions/toc';
+import Message from '../../components/I18N/Message';
 const Button = tooltip(ButtonRB);
 const FormControl = localizedProps('placeholder')(FormControlRB);
 registerCustomSaveHandler('toc', (state) => (state?.toc?.config));
@@ -239,6 +240,7 @@ registerCustomSaveHandler('toc', (state) => (state?.toc?.config));
  * @prop {boolean} cfg.activateTitleTooltip: show tooltip with full title on layers and groups, default `true`
  * @prop {boolean} cfg.activateLegendTool: show legend in collapsible panel, default `true`
  * @prop {boolean} cfg.hideOpacityTooltip hide tooltip on opacity sliders
+ * @prop {boolean} cfg.hideSettings hide toc settings
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * @prop {object} cfg.layerOptions.legendOptions default options for legend
  * Some of the `layerOptions` are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend CSS.
@@ -337,6 +339,7 @@ function TOC({
     activateToolsContainer = true,
     activateZoomTool = true,
     hideOpacitySlider = false,
+    hideSettings,
 
     activateTitleTooltip = true,
     activateLegendTool = true,
@@ -393,7 +396,7 @@ function TOC({
             { name: 'TOCRemoveNodesButton', target: 'toolbar', Component: RemoveNodesButton, position: 8 },
             { name: 'TOCRemoveNodesMenuItem', target: 'context-menu', Component: RemoveNodesButton, position: 8 },
             { name: 'TOCGroupOptionsMenuItem', target: 'context-menu', Component: GroupOptionsButton, position: 1 },
-            { name: 'TOCSettings', target: 'context-menu', Component: TOCSettings, position: 0 },
+            ...(!hideSettings ? [{ name: 'TOCSettings', target: 'context-menu', Component: TOCSettings, position: 0 }] : []),
             ...items
         ],
         loadedPlugins
@@ -464,6 +467,9 @@ function TOC({
                     defaultGroupId={DEFAULT_GROUP_ID}
                     config={config}
                     buttonProps={toolbarButtonProps}
+                    settingsItems={[
+                        { name: 'TOCSettings', Component: TOCSettings }
+                    ]}
                 /> : null}
             </div>
             <ControlledTOC
@@ -526,6 +532,9 @@ function TOC({
                 rootGroupId={ROOT_GROUP_ID}
                 config={config}
             /> : null}
+            {!tree?.length && <div>
+                <Message msgId="toc.emptyLayerTree" />
+            </div>}
         </div>
     );
 }
@@ -572,7 +581,6 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
     (enabled, tree, layers, selectedNodes, user, map, title, currentLocale, currentLocaleLanguage, isLocalizedLayerStylesEnabled, { resolutions, resolution }, visualizationMode, config) => ({
         enabled,
         tree,
-        layers,
         selectedNodes: selectedNodesIdsToObject(selectedNodes, layers, tree),
         user,
         title,

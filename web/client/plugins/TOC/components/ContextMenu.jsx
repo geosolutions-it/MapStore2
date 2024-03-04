@@ -30,7 +30,7 @@ import { StatusTypes } from '../utils/TOCUtils';
  * @prop {object} config custom configuration to pass to the toc items
  */
 function ContextMenu({
-    items,
+    items = [],
     value,
     onClick = () => {},
     onClose = () => {},

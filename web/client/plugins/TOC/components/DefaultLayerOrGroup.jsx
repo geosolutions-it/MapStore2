@@ -8,6 +8,7 @@
 
 import React, { cloneElement } from 'react';
 import PropTypes from 'prop-types';
+import { NodeTypes } from '../../../utils/LayersUtils';
 
 /**
  * DefaultLayerOrGroup is the LayersTree core component and manage the distribution of groups and layers nodes
@@ -18,28 +19,37 @@ import PropTypes from 'prop-types';
  */
 function DefaultLayerOrGroup({
     node,
-    groupElement: DefaultGroup,
-    layerElement: DefaultLayer,
+    groupElement,
+    layerElement,
     ...props
 }) {
+    if (!groupElement || !layerElement) {
+        return null;
+    }
     if (node.nodes) {
         return cloneElement(
-            DefaultGroup,
+            groupElement,
             {
                 node,
                 nodeType: props.nodeTypes.GROUP,
                 ...props
             },
-            <DefaultLayerOrGroup groupElement={DefaultGroup} layerElement={DefaultLayer}/>
+            <DefaultLayerOrGroup groupElement={groupElement} layerElement={layerElement}/>
         );
     }
-    return cloneElement(DefaultLayer, { node, nodeType: props.nodeTypes.LAYER, ...props });
+    return cloneElement(layerElement, { node, nodeType: props.nodeTypes.LAYER, ...props });
 }
 
 DefaultLayerOrGroup.propTypes = {
     node: PropTypes.object,
     groupElement: PropTypes.element.isRequired,
-    layerElement: PropTypes.element.isRequired
+    layerElement: PropTypes.element.isRequired,
+    nodeTypes: PropTypes.object
+};
+
+DefaultLayerOrGroup.defaultProps = {
+    node: {},
+    nodeTypes: NodeTypes
 };
 
 export default DefaultLayerOrGroup;

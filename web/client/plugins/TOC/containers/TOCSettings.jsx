@@ -35,7 +35,7 @@ const TOCSettings = connect(
 
     const ItemComponent = itemComponent;
     const selected = selectedNodes?.[0];
-    if (selected?.id === rootGroupId) {
+    if (selected?.id === rootGroupId || props?.menuItem) {
         return (
             <>
                 <ItemComponent

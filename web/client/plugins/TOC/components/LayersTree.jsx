@@ -83,7 +83,7 @@ const LayersTree = ({
     defaultGroupId = DEFAULT_GROUP_ID,
     nodeTypes = NodeTypes,
     noFilteredResultsMsgId = 'toc.noFilteredResults',
-    config,
+    config = {},
     className,
     nodeItems,
     nodeToolItems,

@@ -207,7 +207,7 @@ describe('TOCPlugin Plugin', () => {
         const toolbarNode = document.getElementsByClassName('ms-toc-toolbar')[0];
         expect(toolbarNode).toBeTruthy();
         const buttons = toolbarNode.getElementsByTagName('button');
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(4);
     });
     it('Update layer title and description button is hidden when there are no valid layers for updating', () => {
         const { Plugin } = getPluginForTest(TOCPlugin, {
@@ -250,7 +250,7 @@ describe('TOCPlugin Plugin', () => {
         const toolbar = document.getElementsByClassName('ms-toc-toolbar')[0];
         expect(toolbar).toBeTruthy();
         const buttons = toolbar.getElementsByTagName('button');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(3);
     });
     describe('render items from other plugins', () => {
         const TOOL_BUTTON_SELECTOR = '.ms-toc-toolbar button';
@@ -323,7 +323,7 @@ describe('TOCPlugin Plugin', () => {
                     target: "toolbar",
                     Component: () => <button id="toolbarCustomButton"></button>
                 }]} />, document.getElementById("container"));
-                expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
+                expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
                 expect(document.querySelector(`${TOOL_BUTTON_SELECTOR}#toolbarCustomButton`)).toBeTruthy();
             });
             it('selector do not show the button when return false', () => {
@@ -389,7 +389,7 @@ describe('TOCPlugin Plugin', () => {
             });
             const WrappedPlugin = dndContext(Plugin);
             ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(0);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
         });
         it('render AddLayer', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, {
@@ -404,7 +404,7 @@ describe('TOCPlugin Plugin', () => {
             const WrappedPlugin = dndContext(Plugin);
             const items = getTOCItems({ MetadataExplorer });
             ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
             expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-layer`)).toBeTruthy();
         });
         it('render AddGroup', () => {
@@ -420,7 +420,7 @@ describe('TOCPlugin Plugin', () => {
             const WrappedPlugin = dndContext(Plugin);
             const items = getTOCItems({ AddGroup });
             ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(1);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
             expect(document.querySelector(`${TOOL_BUTTON_SELECTOR} .glyphicon-add-folder`)).toBeTruthy();
         });
         const ZOOM_TO_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-zoom-to`;
@@ -429,12 +429,12 @@ describe('TOCPlugin Plugin', () => {
         const SETTINGS_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-wrench`;
         const FILTER_LAYER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-filter-layer`;
         const WIDGET_BUILDER_SELECTOR = `${TOOL_BUTTON_SELECTOR} .glyphicon-stats`;
-        it('render default tools (zoomToLayer, remove layer, for selected layer', () => {
+        it('render default tools zoomToLayer, remove layer, for selected layer', () => {
             const { Plugin } = getPluginForTest(TOCPlugin, SELECTED_LAYER_STATE);
             const WrappedPlugin = dndContext(Plugin);
             ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
             // check zoom and remove selector
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(2);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
             expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
 
@@ -445,7 +445,7 @@ describe('TOCPlugin Plugin', () => {
             const items = getTOCItems({ FeatureEditor });
             ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
             expect(document.querySelector(FEATURES_GRID_SELECTOR)).toBeTruthy();
             expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
@@ -456,7 +456,7 @@ describe('TOCPlugin Plugin', () => {
             const items = getTOCItems({ TOCItemsSettings });
             ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
             expect(document.querySelector(SETTINGS_SELECTOR)).toBeTruthy();
             expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
@@ -467,7 +467,7 @@ describe('TOCPlugin Plugin', () => {
             const items = getTOCItems({ FilterLayer });
             ReactDOM.render(<WrappedPlugin items={items} />, document.getElementById("container"));
             // check tools
-            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(4);
             expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
             expect(document.querySelector(FILTER_LAYER_SELECTOR)).toBeTruthy();
             expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();

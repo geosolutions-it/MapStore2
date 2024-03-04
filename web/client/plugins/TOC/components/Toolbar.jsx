@@ -25,6 +25,7 @@ import { StatusTypes } from '../utils/TOCUtils';
  */
 function Toolbar({
     items = [],
+    settingsItems = [],
     selectedNodes = [],
     buttonProps = {
         className: 'toc-toolbar-button',
@@ -92,51 +93,73 @@ function Toolbar({
         .filter(({ selector = () => true }) => selector(componentProps)); // pre-filter items that should not show
     const [left, breakpoint] = breakpointData || [];
     return (
-        <div className="ms-toc-toolbar-container" style={{ display: 'flex' }}>
-            <div className="ms-toc-toolbar" ref={ref} style={{ overflow: 'hidden', textWrap: 'nowrap' }}>
-                {filteredItems.map(({ Component, name }, idx) => {
-                    return (
-                        <div key={name ?? `item-${idx}`} style={{
-                            display: 'inline-block',
-                            ...(breakpoint && idx >= breakpoint && {
-                                visibility: 'hidden'
-                            })
-                        }}>
-                            <Component
-                                {...componentProps}
-                            />
-                        </div>
-                    );
-                })}
+        <div className="ms-toc-toolbar-container" style={{ display: 'flex', position: 'relative' }}>
+            <div className="ms-toc-toolbar" style={{ overflow: 'hidden', display: 'flex', flex: 1 }}>
+                <div className="ms-toc-toolbar-content" ref={ref} style={{ overflow: 'hidden', textWrap: 'nowrap' }}>
+                    {filteredItems.map(({ Component, name }, idx) => {
+                        return (
+                            <div key={name ?? `item-${idx}`} style={{
+                                display: 'inline-block',
+                                ...(breakpoint && idx >= breakpoint && {
+                                    visibility: 'hidden'
+                                })
+                            }}>
+                                <Component
+                                    {...componentProps}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="ms-toc-toolbar-dropdown">
+                    <Dropdown
+                        id="ms-toc-toolbar-dropdown"
+                        pullRight
+                        style={{
+                            position: 'absolute',
+                            left,
+                            ...(breakpoint === undefined && { visibility: 'hidden' })
+                        }}
+                    >
+                        <Dropdown.Toggle noCaret>
+                            <Glyphicon glyph="option-vertical"/>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {breakpoint !== undefined && filteredItems
+                                .filter((item, idx) => idx >= breakpoint)
+                                .map(({ Component, name }, idx) => {
+                                    return (
+                                        <Component
+                                            key={name ?? `item-${idx}`}
+                                            {...componentProps}
+                                            menuItem
+                                        />
+                                    );
+                                })}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             </div>
-            <div className="ms-toc-toolbar-dropdown">
-                <Dropdown
-                    id="ms-toc-toolbar-dropdown"
-                    pullRight
-                    style={{
-                        position: 'absolute',
-                        left,
-                        ...(breakpoint === undefined && { visibility: 'hidden' })
-                    }}
-                >
-                    <Dropdown.Toggle noCaret>
-                        <Glyphicon glyph="option-vertical"/>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        {breakpoint !== undefined && filteredItems
-                            .filter((item, idx) => idx >= breakpoint)
-                            .map(({ Component, name }, idx) => {
-                                return (
-                                    <Component
-                                        key={name ?? `item-${idx}`}
-                                        {...componentProps}
-                                        menuItem
-                                    />
-                                );
-                            })}
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
+            {settingsItems?.length ? <Dropdown
+                id="ms-toc-toolbar-settings"
+                pullRight
+            >
+                <Dropdown.Toggle noCaret>
+                    <Glyphicon glyph="cog"/>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {settingsItems
+                        .map(({ Component, name }, idx) => {
+                            return (
+                                <Component
+                                    key={name ?? `item-${idx}`}
+                                    {...componentProps}
+                                    menuItem
+                                />
+                            );
+                        })}
+                </Dropdown.Menu>
+            </Dropdown> : null}
         </div>
     );
 }

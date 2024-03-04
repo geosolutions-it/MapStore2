@@ -583,6 +583,7 @@
             "layerFilterTooltip": "Filtrar capas",
             "toolDownloadTooltip": "Exportar datos de la capa",
             "noFilteredResults": "Ningún resultado",
+            "emptyLayerTree": "El árbol de capas está vacío. Agregue una nueva capa del catálogo",
             "filterPlaceholder": "Filtrar capas",
             "clearFilter": "Quitar filtro",
             "toolReloadLayerTooltip": "Fuerza la recarga de la capa seleccionada",

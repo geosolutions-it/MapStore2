@@ -24,7 +24,7 @@ const NodeTitle = tooltip(({ children, titleRef, idDropDown, keyProp, ...props }
  * @prop {boolean} showTooltip show the tooltip
  */
 const Title = ({
-    node,
+    node = {},
     filterText = '',
     currentLocale,
     tooltipOptions,

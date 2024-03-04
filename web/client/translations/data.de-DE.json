@@ -621,6 +621,7 @@
             "layerFilterTooltip": "Ausgewählte Ebene filtern",
             "toolDownloadTooltip": "Daten zur ausgewählten Ebene exportieren",
             "noFilteredResults": "Keine Ergebnisse",
+            "emptyLayerTree": "Der Ebenenbaum ist leer. Bitte fügen Sie eine neue Ebene aus dem Katalog hinzu",
             "filterPlaceholder": "Ebenen filtern",
             "clearFilter": "Filter löschen",
             "toolReloadLayerTooltip": "Erneutes Laden der ausgewählten Ebene erzwingen",
