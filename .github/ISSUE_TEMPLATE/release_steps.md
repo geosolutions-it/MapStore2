@@ -22,12 +22,11 @@ This steps have to be followed always when preparing a new release.
 **Only** if you need to create a new stable major release (YYYY.XX.00), you need to create a branch for it. Check the following:
 
 - [ ] Run the [`Cut Release Branch`](https://github.com/geosolutions-it/MapStore2/actions/workflows/cut_major_branch.yml) workflow on github.
-      With the following Parameters:
-      
-        - [ ] Use workflow from branch `master`
-        - [ ] MapStore branch name to use: `YYYY.XX.xx`
-        - [ ] Version of *MapFish Print*, *GeoStore* and *HTTP-Proxy* accordingly to the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
-        - [ ] use the default value for the other parameters
+  With the following Parameters:
+  - [ ] Use workflow from branch `master`
+  - [ ] MapStore branch name to use: `YYYY.XX.xx`
+  - [ ] Version of *MapFish Print*, *GeoStore* and *HTTP-Proxy* accordingly to the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
+  - [ ] use the default value for the other parameters
 - [ ] Wait for the process to complete. At the end:
     - A Pull request will be created to the master
     - A new branch named `YYYY.XX.xx` with fixed versions
