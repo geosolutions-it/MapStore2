@@ -72,7 +72,7 @@ jobs:
           if ! git diff-index --quiet HEAD; then
             git commit -m "Set versions of main dependencies to a stable version"
           else
-            echo "::notice no version changes in dependencies to commit. Please make sure to make this version fixed later"  
+            echo "::notice::No version changes in dependencies to commit. Please make sure to make this version fixed later"  
           fi
           git push --set-upstream origin "$BRANCH_NAME"
           echo "branch created"
