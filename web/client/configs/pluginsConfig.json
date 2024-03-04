@@ -59,7 +59,8 @@
         "FeatureEditor",
         "FilterLayer",
         "AddGroup",
-        "Swipe"
+        "Swipe",
+        "MetadataInfo"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
@@ -395,6 +396,9 @@
     },
     {
       "name": "Swipe"
+    },
+    {
+      "name": "MetadataInfo"
     },
     {
       "name": "SearchByBookmark"

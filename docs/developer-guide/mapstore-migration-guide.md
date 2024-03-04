@@ -22,6 +22,88 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.02 to 2024.01.00
 
+### TOC plugin refactor
+
+The table of content (TOC) has been refactored with following changes:
+
+- Removal of hardcoded tools from the toolbar. Now all the toolbar are injected by related plugins. This included the introduction of a new plugin called `MetadataInfo` for layer metadata.
+- Refactor of TOC components
+- Review of plugin configuration (cfg). List of changed configuration properties:
+  - `activateSettingsTool` removed property, now the button will be added directly from `TOCItemsSettings` when available
+  - `activateQueryTool` removed property, now the button will be added directly from `FilterLayer` when available
+  - `activateDownloadTool` removed property, now the button will be added directly from `LayerDownload` when available
+  - `activateMetedataTool` removed property, now the button will be added directly from `MetadataInfo` when available
+  - `checkPlugins` remove property, now availability of tools rely on the related plugin so this check is not needed anymore  
+  - `showFullTitleOnExpand`  removed property, the new style allows to see the full title inline without duplicating it
+  - `metadataTemplate` this configuration has been moved to `MetadataInfo` plugin
+  - `metadataOptions` this configuration has been moved to `MetadataInfo` plugin
+
+### Introduction of MetadataInfo plugin
+
+The MetadataInfo plugin has been introduced to include the layer metadata info button of the TOC toolbar has separated plugin as expected by the new TOC.
+Some steps are needed to correctly configure it:
+
+- Ensure to import the MetadataInfo plugin in the downstream project
+- Include the plugin definition in the pluginsConfig.json to make it available inside contexts.
+- Move the related configuration (cfg) from the TOC to the MetadataInfo definition in the localConfig.json. This only in case the layer metadata button was configured at application level
+
+expected changes in the `pluginsConfig.json` file:
+
+- add `MetadataInfo` entry to the list
+
+```js
+{
+    "name": "MetadataInfo"
+}
+```
+
+- add `MetadataInfo` to `TOC` children
+
+```js
+{
+    "name": "TOC",
+    "glyph": "1-layer",
+    "symbol": "layers",
+    "title": "plugins.TOC.title",
+    "description": "plugins.TOC.description",
+    "defaultConfig": {
+        "activateAddLayerButton": true,
+        "addLayersPermissions": true,
+        "removeLayersPermissions": true,
+        "sortingPermissions": true,
+        "addGroupsPermissions": true,
+        "removeGroupsPermissions": true,
+        "activateWidgetTool": true,
+        "activateMetedataTool": false
+    },
+    "children": [
+        "TOCItemsSettings",
+        "FeatureEditor",
+        "FilterLayer",
+        "AddGroup",
+        "Swipe",
+        "MetadataInfo"
+    ],
+    "autoEnableChildren": [
+        "TOCItemsSettings",
+        "FeatureEditor",
+        "FilterLayer",
+        "AddGroup"
+    ],
+    "dependencies": [
+        "DrawerMenu"
+    ]
+}
+```
+
+Note: contexts using this tool needs to be updated referring to the configuration of the new MetadataInfo plugin.
+
+### Removal of deprecated FloatingLegend plugin
+
+The Floating legend plugin has been completely removed from the core repository.
+
+### Resource metadata
+
 The resource metadata has been recently extented to include  information about resource creator and editor and to provide the advertises/unadvertised resource functionalities.
 If your installation has the [database creation mode](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/database-setup/#database-creation-mode) set to `update` (the default), the columns will be added automatically and you do not have to do any action. If it is set to `validate` instead you will have to run the update scripts.
 
