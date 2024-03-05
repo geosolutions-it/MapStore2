@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tomcat.version>8.5.96</tomcat.version>
-        <binary.number>${project.version}</binary.number>
+        <binary.number>${mapstore2.version}</binary.number>
     </properties>
     <dependencies>
         <dependency>
