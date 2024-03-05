@@ -36,6 +36,7 @@ This steps have to be followed always when preparing a new release.
     - [ ] Use workflow from branch `master`
     - [ ] MapStore branch name to use: `YYYY.XX.xx`
     - [ ] main branch `master` (default)
+- [ ] Update the [QA build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-QA-Build/) to point to the branch created (YYYY.XX.xx)
 
 ## Before the Release
 
