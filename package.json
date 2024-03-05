@@ -1,6 +1,6 @@
 {
   "name": "mapstore2",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "MapStore 2",
   "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",

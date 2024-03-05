@@ -3,7 +3,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-webapp</artifactId>
   <packaging>war</packaging>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.8-SNAPSHOT</version>
   <name>MapStore 2 - WAR</name>
   <url>http://www.geo-solutions.it</url>
 
@@ -67,7 +67,7 @@
     <dependency>
         <groupId>it.geosolutions.mapstore</groupId>
         <artifactId>mapstore-services</artifactId>
-        <version>1.7-SNAPSHOT</version>
+        <version>1.8-SNAPSHOT</version>
     </dependency>
 
     <!-- ================================================================ -->

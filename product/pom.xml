@@ -3,7 +3,7 @@
   <groupId>it.geosolutions.mapstore</groupId>
   <artifactId>mapstore-product</artifactId>
   <packaging>war</packaging>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.8-SNAPSHOT</version>
   <name>MapStore Product Web Application</name>
 
   <properties>
@@ -17,7 +17,7 @@
     <dependency>
       <groupId>it.geosolutions.mapstore</groupId>
       <artifactId>mapstore-webapp</artifactId>
-      <version>1.7-SNAPSHOT</version>
+      <version>1.8-SNAPSHOT</version>
       <type>war</type>
       <scope>runtime</scope>
     </dependency>
