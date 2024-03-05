@@ -39,7 +39,9 @@ This steps have to be followed always when preparing a new release.
 
 ## Before the Release
 
-- [ ] Check `pom.xml` dependencies are all in fixed stable versions ( no `-SNAPSHOT` usage release).
+- [ ] Check `pom.xml` dependencies are all in fixed stable versions ( no `-SNAPSHOT` usage release). If not, You use the action  [`Update dependencies versions`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/update_dependencies_versions.yml) to fix them, setting:
+    - [ ] the branch to `YYYY.XX.xx`
+    - [ ] the of geostore, http_proxy and mapfish-print versions accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
 - [ ] Check that [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository is aligned and working
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
   - [ ] Test **everything**, not only the new features
