@@ -44,11 +44,19 @@ jobs:
           git config user.email github-actions@github.com
           # Find all pom.xml files and update-dependencies on them
           echo "Updating versions of dependencies in all pom.xml files to versions mapfish: $MAPFISH_VERSION, geostore: $GEOSTORE_VERSION, http-proxy: $HTTP_PROXY_VERSION"
-          POM_FILES=$(git ls-files . | grep 'pom\.xml$' | grep -v 'project/standard/templates/backend/pom\.xml$'| grep -v 'project/standard/templates/pom\.xml$');# note: exclues one file not involved that is not valid pom.xml, because it is a template
+
+          ## Update the versions of the dependencies in the project
+          # updating in main `pom.xml` (the mvn properties `geostore-webapp.version` and `http_proxy.version`, `print-lib.version` contain the versions of the dependencies to update)
+          mvn versions:set-property -Dproperty=print-lib.version -DnewVersion=$MAPFISH_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          mvn versions:set-property -Dproperty=geostore-webapp.version -DnewVersion=$GEOSTORE_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          mvn versions:set-property -Dproperty=http_proxy.version -DnewVersion=$HTTP_PROXY_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+
+          ## Update the versions of the dependencies in the project templates
+          POM_FILES=$(git ls-files project/standard/templates/ | grep 'pom\.xml$')
           for POM_FILE in $POM_FILES; do
-              mvn versions:use-dep-version -f $POM_FILE -Dincludes=$MAPFISH_GROUP -DdepVersion=$MAPFISH_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-              mvn versions:use-dep-version -f $POM_FILE -Dincludes=$GEOSTORE_GROUP -DdepVersion=$GEOSTORE_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-              mvn versions:use-dep-version -f $POM_FILE -Dincludes=$HTTP_PROXY_GROUP -DdepVersion=$HTTP_PROXY_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+              mvn versions:set-property -Dproperty=print-lib.version -DnewVersion=$MAPFISH_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+              mvn versions:set-property -Dproperty=geostore-webapp.version -DnewVersion=$GEOSTORE_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+              mvn versions:set-property -Dproperty=http_proxy.version -DnewVersion=$HTTP_PROXY_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
           done
           pr_branch_name="up_versions-${RUN_ID}"
           echo "Creating a PR on branch: ${pr_branch_name} for ${{ github.ref_name }}"

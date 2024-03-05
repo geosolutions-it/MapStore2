@@ -58,22 +58,6 @@ jobs:
           BRANCH_NAME="${RELEASE_BRANCH}"
           echo "creating branch is $BRANCH_NAME"
           git checkout -b "$BRANCH_NAME"
-          # Find all pom.xml files and update-dependencies on them
-          echo "Updating versions on release branch"
-          # Find all pom.xml files and update-dependencies on them
-          echo "Updating versions on release branch"
-          POM_FILES=$(git ls-files . | grep 'pom\.xml$' | grep -v 'project/standard/templates/backend/pom\.xml$'| grep -v 'project/standard/templates/pom\.xml$');# note: exclues one file not involved that is not valid pom.xml, because it is a template
-          for POM_FILE in $POM_FILES; do
-              mvn versions:use-dep-version -f $POM_FILE -Dincludes=$MAPFISH_GROUP -DdepVersion=$MAPFISH_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-              mvn versions:use-dep-version -f $POM_FILE -Dincludes=$GEOSTORE_GROUP -DdepVersion=$GEOSTORE_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-              mvn versions:use-dep-version -f $POM_FILE -Dincludes=$HTTP_PROXY_GROUP -DdepVersion=$HTTP_PROXY_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-          done
-          echo $POM_FILES | xargs git add
-          if ! git diff-index --quiet HEAD; then
-            git commit -m "Set versions of main dependencies to a stable version"
-          else
-            echo "::notice::No version changes in dependencies to commit. Please make sure to make this version fixed later"  
-          fi
           git push --set-upstream origin "$BRANCH_NAME"
           echo "branch created"
           echo "creating bump changes"
@@ -85,7 +69,7 @@ jobs:
           echo "Java packages versions updated from $OLD_JAVA_VERSION to $NEXT_JAVA_VERSION"
           ### increase dependency of project to new version
           echo "Updating project dependency to new version"
-          mvn versions:use-dep-version -f project/standard/templates/web/pom.xml -Dincludes=it.geosolutions.mapstore -DdepVersion=$NEXT_JAVA_VERSION -DforceVersion=true -DgenerateBackupPoms=false
+          mvn versions:set-property -f project/standard/templates/web/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$NEXT_JAVA_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
           # Increase release minor version
           echo "Updating project version to new version in package.json"
           npm version minor --git-tag-version=false
