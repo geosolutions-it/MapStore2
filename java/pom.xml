@@ -1,79 +1,42 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>it.geosolutions.mapstore</groupId>
-  <artifactId>mapstore-java</artifactId>
-  <packaging>pom</packaging>
-  <version>1.7-SNAPSHOT</version>
-  <name>MapStore 2</name>
-  <url>http://www.geo-solutions.it</url>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>it.geosolutions.mapstore</groupId>
+        <artifactId>mapstore-root</artifactId>
+        <version>1.7-SNAPSHOT</version>
+    </parent>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <spring.version>5.3.18</spring.version>
-  </properties>
+    <groupId>it.geosolutions.mapstore</groupId>
+    <artifactId>mapstore-java</artifactId>
+    <packaging>pom</packaging>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <name>MapStore 2</name>
+    <url>http://www.geo-solutions.it</url>
 
-
-  <dependencies>
-
-
-  </dependencies>
-
-  <build>
-    <extensions>
-        <!--.............................................-->
-        <!--       GeoSolutions (using wagon ftp)       -->
-        <!--.............................................-->
-        <extension>
-            <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-ftp</artifactId>
-            <version>1.0-beta-2</version>
-        </extension>
-    </extensions>
-  </build>
-  <distributionManagement>
-    <repository>
-        <id>geosolutions</id>
-        <url>ftp://maven.geo-solutions.it/</url>
-    </repository>
-  </distributionManagement>
-
-  <profiles>
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>services</module>
-        <module>web</module>
-      </modules>
-    </profile>
-    <profile>
-        <id>printingbundle</id>
-        <activation>
-        <property>
-          <name>printingbundle</name>
-        </property>
-      </activation>
-      <modules>
-        <module>services</module>
-        <module>web</module>
-        <module>printing</module>
-      </modules>
-    </profile>
-  </profiles>
-
-
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>services</module>
+                <module>web</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>printingbundle</id>
+            <activation>
+                <property>
+                    <name>printingbundle</name>
+                </property>
+            </activation>
+            <modules>
+                <module>services</module>
+                <module>web</module>
+                <module>printing</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

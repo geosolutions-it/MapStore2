@@ -77,7 +77,7 @@ jobs:
 
         # Update project dependency
         echo "updating project pom.xml dependency from mapstore packages to version: $JAVA_MODULES_NEW_VERSION"
-        mvn versions:use-dep-version -f project/standard/templates/web/pom.xml -Dincludes=it.geosolutions.mapstore -DdepVersion=$JAVA_MODULES_NEW_VERSION -DforceVersion=true -DgenerateBackupPoms=false
+        mvn versions:set-property -f project/standard/templates/web/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$JAVA_MODULES_NEW_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
         # Update changelog
         echo "Updating changelog"
         update_changelog $LAST_MS_VERSION $NEW_MS_VERSION

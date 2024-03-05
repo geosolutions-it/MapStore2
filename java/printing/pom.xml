@@ -1,115 +1,87 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>it.geosolutions.mapstore</groupId>
-  <artifactId>mapstore-print</artifactId>
-  <packaging>pom</packaging>
-  <version>1.7-SNAPSHOT</version>
-  <name>MapStore 2 - Printing extension bundle</name>
-  <url>http://www.geo-solutions.it</url>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>it.geosolutions.mapstore</groupId>
+        <artifactId>mapstore-java</artifactId>
+        <version>1.7-SNAPSHOT</version>
+    </parent>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mapstore2.version>DEV</mapstore2.version>
-  </properties>
+    <groupId>it.geosolutions.mapstore</groupId>
+    <artifactId>mapstore-print</artifactId>
+    <packaging>pom</packaging>
 
-  <dependencies>
-    <!-- mapfish-print -->
-    <dependency>
-        <groupId>org.mapfish.print</groupId>
-        <artifactId>print-lib</artifactId>
-        <version>2.4-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
+    <name>MapStore 2 - Printing extension bundle</name>
+    <url>http://www.geo-solutions.it</url>
 
-  <build>
-    <finalName>mapstore-printing</finalName>
-    <plugins>
-        <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>process-classes</phase>
-                <goals>
-                  <goal>copy-dependencies</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${project.build.directory}/mapstore-printing/WEB-INF/lib</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>2.6</version>
-            <executions>
-                <execution>
-                    <id>application-context</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore-printing/WEB-INF/classes</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/webapp</directory>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
+    <dependencies>
+        <!-- mapfish-print -->
+        <dependency>
+            <groupId>org.mapfish.print</groupId>
+            <artifactId>print-lib</artifactId>
+        </dependency>
+    </dependencies>
 
-            </executions>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <executions>
-            <execution>
-                <id>create-distribution</id>
-                <phase>package</phase>
-                <goals>
-                <goal>single</goal>
-                </goals>
-                <configuration>
-                <finalName>mapstore-printing</finalName>
-                <appendAssemblyId>false</appendAssemblyId>
-                <descriptors>
-                    <descriptor>assembly/mapstore-printing.xml</descriptor>
-                </descriptors>
-                </configuration>
-            </execution>
-            </executions>
-        </plugin>
-    </plugins>
-  </build>
-    <repositories>
-        <!-- GeoSolutions -->
-        <repository>
-            <id>geosolutions</id>
-            <name>GeoSolutions Repository</name>
-            <url>https://maven.geo-solutions.it</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+    <build>
+        <finalName>mapstore-printing</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/mapstore-printing/WEB-INF/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>application-context</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/mapstore-printing/WEB-INF/classes</outputDirectory>
+                            <encoding>UTF-8</encoding>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/webapp</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
 
-        <repository>
-            <id>osgeo</id>
-            <name>Open Source Geospatial Foundation Repository</name>
-            <url>https://repo.osgeo.org/repository/release/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <!-- OSGEO snapshot (for mapfish-print)-->
-        <repository>
-            <id>osgeo-snapshot</id>
-            <name>Open Source Geospatial Foundation Repository</name>
-            <url>https://repo.osgeo.org/repository/snapshot/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-distribution</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>mapstore-printing</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <descriptors>
+                                <descriptor>assembly/mapstore-printing.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

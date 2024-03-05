@@ -38,7 +38,7 @@ jobs:
         echo
         echo "Restoring snapshot version tp $SNAPSHOT_VERSION"
         mvn versions:set -DnewVersion=$SNAPSHOT_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,binary,printingbundle
-        mvn versions:use-dep-version -f project/standard/templates/web/pom.xml -Dincludes=it.geosolutions.mapstore -DdepVersion=$SNAPSHOT_VERSION -DforceVersion=true -DgenerateBackupPoms=false
+        mvn versions:set-property -f project/standard/templates/web/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$SNAPSHOT_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
         npm version patch --git-tag-version=false
         echo "Committing changes"
         find . -name 'pom.xml' | xargs git add

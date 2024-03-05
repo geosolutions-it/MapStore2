@@ -1,173 +1,123 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>it.geosolutions.mapstore</groupId>
-  <artifactId>mapstore-webapp</artifactId>
-  <packaging>war</packaging>
-  <version>1.7-SNAPSHOT</version>
-  <name>MapStore 2 - WAR</name>
-  <url>http://www.geo-solutions.it</url>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mapstore2.version>DEV</mapstore2.version>
-    <tomcat.version>8.5.69</tomcat.version>
-    <spring.version>5.3.18</spring.version>
-  </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- JUnit -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <scope>test</scope>
-                <version>4.13.1</version>
-            </dependency>
-            <!--  mockito -->
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>1.9.5</version>
-            </dependency>
-            <!-- servlet -->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.0.1</version>
-            </dependency>
-            <!-- gzip compression filter -->
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-web</artifactId>
-                <version>2.0.4</version>
-            </dependency>
-            <!-- misc -->
-            <dependency>
-                <groupId>commons-pool</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>1.5.4</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.xml.ws</groupId>
-                <artifactId>jaxws-api</artifactId>
-                <version>2.3.1</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-  <dependencies>
-    <!-- MapStore services -->
-    <dependency>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
         <groupId>it.geosolutions.mapstore</groupId>
-        <artifactId>mapstore-services</artifactId>
+        <artifactId>mapstore-java</artifactId>
         <version>1.7-SNAPSHOT</version>
-    </dependency>
+    </parent>
 
-    <!-- ================================================================ -->
-    <!-- GeoStore modules -->
-    <!-- ================================================================ -->
-    <dependency>
-      <groupId>it.geosolutions.geostore</groupId>
-      <artifactId>geostore-webapp</artifactId>
-      <version>2.1-SNAPSHOT</version>
-      <type>war</type>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>proxy</groupId>
-      <artifactId>http_proxy</artifactId>
-      <version>1.5-SNAPSHOT</version>
-      <type>war</type>
-      <scope>runtime</scope>
-    </dependency>
+    <groupId>it.geosolutions.mapstore</groupId>
+    <artifactId>mapstore-webapp</artifactId>
+    <packaging>war</packaging>
 
-    <!-- JUnit -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <!--  mockito -->
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-    </dependency>
-    <!-- servlet -->
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-    </dependency>
-    <!-- gzip compression filter -->
-    <dependency>
-        <groupId>net.sf.ehcache</groupId>
-        <artifactId>ehcache-web</artifactId>
-    </dependency>
-    <!-- misc -->
-    <dependency>
-        <groupId>commons-pool</groupId>
-        <artifactId>commons-pool</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>javax.xml.ws</groupId>
-        <artifactId>jaxws-api</artifactId>
-    </dependency>
-  </dependencies>
+    <name>MapStore 2 - WAR</name>
+    <url>http://www.geo-solutions.it</url>
 
-  <build>
-    <finalName>mapstore</finalName>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>2.1.1</version>
-            <configuration>
-                <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
-                WEB-INF/lib/commons-io-1.1.jar,
-                WEB-INF/lib/commons-logging-1.0.4.jar,
-                WEB-INF/lib/commons-pool-1.3.jar,
-                WEB-INF/lib/slf4j-api-1.5*.jar,
-                WEB-INF/lib/slf4j-log4j12-1.5*.jar,
-                WEB-INF/lib/spring-tx-5.2.15*.jar
-                </packagingExcludes>
-                <overlays>
-                    <overlay>
-                        <groupId>it.geosolutions.geostore</groupId>
-                        <artifactId>geostore-webapp</artifactId>
-                        <excludes>WEB-INF/classes/geostore-spring-security.xml</excludes>
-                    </overlay>
-                    <overlay>
-                        <groupId>proxy</groupId>
-                        <artifactId>http_proxy</artifactId>
-                    </overlay>
-                </overlays>
-            </configuration>
-        </plugin>
-    </plugins>
-    <extensions>
-        <!--.............................................-->
-        <!--       GeoSolutions (using wagon ftp)       -->
-        <!--.............................................-->
-        <extension>
-            <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-ftp</artifactId>
-            <version>1.0-beta-2</version>
-        </extension>
-    </extensions>
-  </build>
+    <dependencies>
+        <!-- MapStore services -->
+        <dependency>
+            <groupId>it.geosolutions.mapstore</groupId>
+            <artifactId>mapstore-services</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-  <distributionManagement>
-    <repository>
-        <id>geosolutions</id>
-        <url>ftp://maven.geo-solutions.it/</url>
-    </repository>
-  </distributionManagement>
+        <!-- ================================================================ -->
+        <!-- GeoStore modules -->
+        <!-- ================================================================ -->
+        <dependency>
+            <groupId>it.geosolutions.geostore</groupId>
+            <artifactId>geostore-webapp</artifactId>
+            <type>war</type>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>proxy</groupId>
+            <artifactId>http_proxy</artifactId>
+            <type>war</type>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- JUnit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--  mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+        </dependency>
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <!-- gzip compression filter -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-web</artifactId>
+        </dependency>
+        <!-- misc -->
+        <dependency>
+            <groupId>commons-pool</groupId>
+            <artifactId>commons-pool</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>mapstore</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
+                    <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
+                        WEB-INF/lib/commons-io-1.1.jar,
+                        WEB-INF/lib/commons-logging-1.0.4.jar,
+                        WEB-INF/lib/commons-pool-1.3.jar,
+                        WEB-INF/lib/slf4j-api-1.5*.jar,
+                        WEB-INF/lib/slf4j-log4j12-1.5*.jar,
+                        WEB-INF/lib/spring-tx-5.2.15*.jar
+                    </packagingExcludes>
+                    <overlays>
+                        <overlay>
+                            <groupId>it.geosolutions.geostore</groupId>
+                            <artifactId>geostore-webapp</artifactId>
+                            <excludes>WEB-INF/classes/geostore-spring-security.xml</excludes>
+                        </overlay>
+                        <overlay>
+                            <groupId>proxy</groupId>
+                            <artifactId>http_proxy</artifactId>
+                        </overlay>
+                    </overlays>
+                </configuration>
+            </plugin>
+        </plugins>
+        <extensions>
+            <!--.............................................-->
+            <!--       GeoSolutions (using wagon ftp)       -->
+            <!--.............................................-->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+                <version>1.0-beta-2</version>
+            </extension>
+        </extensions>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>geosolutions</id>
+            <url>ftp://maven.geo-solutions.it/</url>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <!-- GeoSolutions -->
