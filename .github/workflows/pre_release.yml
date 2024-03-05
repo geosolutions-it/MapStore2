@@ -1,0 +1,149 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release. (format: `YYYY.MM.mm`)'
+        required: true
+      previous-ms-version:
+        description: 'previous MapStore version for changelog generation. (format: `YYYY.MM.mm`)'
+        required: true
+      java-modules-version:
+        description: 'version to fix for the java module, accordingly with release schedule (e.g. `1.7.0`)'
+        required: true
+      main-branch:
+        description: 'main branch name'
+        required: true
+        default: 'master'
+jobs:
+  ################
+  # Fix versions
+  ###############
+  fix-version:
+    concurrency: release-${{ github.ref }}
+    runs-on: ubuntu-latest
+    steps:
+    ################
+    # Protect master branch
+    ################
+    - name: Check branch
+      if: ${{ github.repository != 'geosolutions-it/MapStore2' || github.ref == 'master' }}
+      uses: actions/github-script@v3
+      with:
+        script: |
+            core.setFailed('This workflow can not run on master branch')
+    - uses: actions/checkout@v3
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11.x'
+        distribution: 'adopt'
+        cache: maven
+    - name: 'Fix versions, commit and push new tag'
+      env:
+          LAST_MS_VERSION: ${{ github.event.inputs.previous-ms-version }}
+          NEW_MS_VERSION: ${{ github.event.inputs.version }}
+          JAVA_MODULES_NEW_VERSION: ${{ github.event.inputs.java-modules-version }}
+      run: |
+
+        ## Generate changelog
+        function update_changelog () {
+            echo "Update changelog"
+            markdown_text=$(npm -s run generate:changelog $1 $2)
+            # Text file path
+            file_path="CHANGELOG.md"
+            # read old content, excluding the title
+            existing_content=$(cat "$file_path" | tail -n +2)
+
+            # add again the title and the new content concatenated to the old one
+            new_content="# Change Log\n${markdown_text}\n${existing_content}"
+
+            # overwrite the file with the new content
+            echo -e "$new_content" > "$file_path"
+
+            echo "Changelog updated"
+        }
+        # read snapshot version
+        CURRENT_JAVA_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo "current java version: $CURRENT_JAVA_VERSION"
+
+        # Update snapshot version
+        echo "updating modules to version: $JAVA_MODULES_NEW_VERSION"
+        mvn versions:set -DnewVersion=$JAVA_MODULES_NEW_VERSION -DprocessAllModules -DgenerateBackupPoms=false -Pprinting,binary,printingbundle # note: this do not set binary profile version it is used to generate artifact name ( to be fixed in the future )
+
+        # Update project dependency
+        echo "updating project pom.xml dependency from mapstore packages to version: $JAVA_MODULES_NEW_VERSION"
+        mvn versions:use-dep-version -f project/standard/templates/web/pom.xml -Dincludes=it.geosolutions.mapstore -DdepVersion=$JAVA_MODULES_NEW_VERSION -DforceVersion=true -DgenerateBackupPoms=false
+        # Update changelog
+        echo "Updating changelog"
+        update_changelog $LAST_MS_VERSION $NEW_MS_VERSION
+        echo "Initializing git"
+        # Initializing git
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+        # Commit changes
+        echo "Committing changes"
+        find . -name 'pom.xml' | xargs git add
+        git add CHANGELOG.md
+        git commit -m "Version Release ${NEW_MS_VERSION}"
+        git tag v${NEW_MS_VERSION} # create tag
+        git push origin ${{ github.ref_name }} --tags # push tag
+  update-main-changelog:
+    runs-on: ubuntu-latest
+    needs: fix-version
+    steps:
+      - name: "checking out"
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.main-branch }}
+      - name: "setting up npm"
+        uses: actions/setup-node@v3
+        with:
+            node-version: '16.x'
+      - name: 'Updte changelog on master'
+        env:
+            LAST_MS_VERSION: ${{ github.event.inputs.previous-ms-version }}
+            NEW_MS_VERSION: ${{ github.event.inputs.version }}
+            JAVA_MODULES_NEW_VERSION: ${{ github.event.inputs.java-modules-version }}
+            GH_TOKEN: ${{ github.token }}
+        run: |
+          ## Generate changelog
+          function update_changelog () {
+              echo "Update changelog"
+              markdown_text=$(npm -s run generate:changelog $1 $2)
+              # Text file path
+              file_path="CHANGELOG.md"
+              # read old content, excluding the title
+              existing_content=$(cat "$file_path" | tail -n +2)
+
+              # add again the title and the new content concatenated to the old one
+              new_content="# Change Log\n${markdown_text}\n${existing_content}"
+
+              # overwrite the file with the new content
+              echo -e "$new_content" > "$file_path"
+
+              echo "Changelog updated"
+          }
+          echo "Initializing git"
+          # Initializing git
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          # Update master branch with CHANGELOG.md
+          pr_branch_name="update-changelog-${{ github.run_id}}"
+          git checkout -b "${pr_branch_name}"
+          # Update changelog
+          update_changelog $LAST_MS_VERSION $NEW_MS_VERSION
+          git add CHANGELOG.md
+          git commit -m "Update Changelog for version ${{ inputs.version }}"
+          git push origin "${pr_branch_name}"
+          echo "Sending pull request"
+          pr_url=$(gh pr create -B "${MAIN_BRANCH}" -H "${pr_branch_name}" --title "[github-action] Update changelog for release ${NEW_MS_VERSION}" --body "This automatic pull request update CHANGELOG.md on ${MAIN_BRANCH} branch")
+
+
+
