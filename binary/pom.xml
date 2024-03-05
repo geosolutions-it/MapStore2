@@ -1,14 +1,17 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>it.geosolutions.mapstore</groupId>
+        <artifactId>mapstore-root</artifactId>
+        <version>1.8-SNAPSHOT</version>
+    </parent>
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-binary</artifactId>
     <packaging>pom</packaging>
-    <version>${mapstore2.version}</version>
     <name>MapStore 2 Binary Module</name>
     <description>Project to create the binary package</description>
     <url>http://www.geo-solutions.it</url>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tomcat.version>8.5.96</tomcat.version>
