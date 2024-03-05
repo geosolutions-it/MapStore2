@@ -69,7 +69,11 @@ jobs:
               mvn versions:use-dep-version -f $POM_FILE -Dincludes=$HTTP_PROXY_GROUP -DdepVersion=$HTTP_PROXY_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
           done
           echo $POM_FILES | xargs git add
-          git commit -m "Set versions of main dependencies to a stable version"
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Set versions of main dependencies to a stable version"
+          else
+            echo "::notice::No version changes in dependencies to commit. Please make sure to make this version fixed later"  
+          fi
           git push --set-upstream origin "$BRANCH_NAME"
           echo "branch created"
           echo "creating bump changes"
@@ -92,6 +96,6 @@ jobs:
           git add package.json
           git commit -m "Bump versions on master for release-branch"
           git push origin "${pr_branch_name}"
-          pr_url=$(gh pr create -B "${MAIN_BRANCH}" -H "${pr_branch_name}" --title "[github-action] Bump version for next release" --body "This automatic pull request bumps version of ${MAIN_BRANCH} branch for java packages and for package.json after creating the $release-branc")
+          pr_url=$(gh pr create -B "${MAIN_BRANCH}" -H "${pr_branch_name}" --title "[github-action] ${MAIN_BRANCH} - Bump version for next release" --body "This automatic pull request bumps version of ${MAIN_BRANCH} branch for java packages and for package.json after creating the ${RELEASE_BRANCH}")
           sleep 10
           #gh pr merge "$pr_url" ${PR_OPTIONS}
