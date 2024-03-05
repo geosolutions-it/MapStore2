@@ -1,4 +1,4 @@
-name: Update GS dependency versions
+name: Update dependencies versions
 on:
   workflow_dispatch:
     inputs:
@@ -13,7 +13,7 @@ on:
         required: true
 jobs:
   update-versions:
-    name: Uptate GS dependency versions (Mapfish, GeoStore, Http Proxy)
+    name: Uptate dependency versions (Mapfish, GeoStore, Http Proxy)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
