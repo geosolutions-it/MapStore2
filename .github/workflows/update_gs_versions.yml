@@ -30,7 +30,6 @@ jobs:
           GEOSTORE_VERSION:  ${{ github.event.inputs.geostore-version }}
           HTTP_PROXY_GROUP: proxy
           HTTP_PROXY_VERSION:  ${{ github.event.inputs.http-proxy-version }}
-          RELEASE_BRANCH:  ${{ github.event.inputs.release-branch }}
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAIN_BRANCH: ${{ github.event.inputs.main-branch }}
@@ -51,8 +50,8 @@ jobs:
               mvn versions:use-dep-version -f $POM_FILE -Dincludes=$GEOSTORE_GROUP -DdepVersion=$GEOSTORE_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
               mvn versions:use-dep-version -f $POM_FILE -Dincludes=$HTTP_PROXY_GROUP -DdepVersion=$HTTP_PROXY_VERSION -DforceVersion=true -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
           done
-          pr_branch_name="up_versions-${release-branch}-${RUN_ID}"
-          echo "Creating a PR on branch: ${pr_branch_name} for "${{ github.ref_name }}"
+          pr_branch_name="up_versions-${RUN_ID}"
+          echo "Creating a PR on branch: ${pr_branch_name} for ${{ github.ref_name }}"
           git checkout -b "${pr_branch_name}"
           echo $POM_FILES | xargs git add
           if ! git diff-index --quiet HEAD; then
