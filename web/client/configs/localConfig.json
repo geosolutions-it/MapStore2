@@ -117,6 +117,7 @@
 							"https://maps5.geosolutionsgroup.com/geoserver/wms",
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"visibility": false,
 						"singleTile": false,
 						"credits": {
@@ -138,6 +139,7 @@
 							"https://maps2.geosolutionsgroup.com/geoserver/wms",
 							"https://maps5.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"visibility": false,
 						"singleTile": false,
 						"credits": {
@@ -159,6 +161,7 @@
 							"https://maps5.geosolutionsgroup.com/geoserver/wms",
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"visibility": true,
 						"singleTile": false,
 						"credits": {
@@ -180,6 +183,7 @@
 							"https://maps5.geosolutionsgroup.com/geoserver/wms",
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"visibility": false,
 						"singleTile": false,
 						"credits": {
@@ -200,6 +204,7 @@
 							"https://maps5.geosolutionsgroup.com/geoserver/wms",
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"source": "s2cloudless",
 						"singleTile": false,
 						"visibility": false
