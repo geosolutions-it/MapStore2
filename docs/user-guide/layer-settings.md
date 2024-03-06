@@ -321,6 +321,18 @@ It this case the editor is allowed to choose a `Color ramp` and the order (with 
 
 <img src="../img/layer-settings/classification_style_ex.jpg" class="ms-docimage">
 
+!!!note
+    The *Classification style* method is also available for **WFS** and **Vector** layers.
+
+!!!note
+
+    From the *Classification style* options, it is possible to activate the **Thematic Layer** option thought the <img src="../img/button/configute_lite_button.jpg" class="ms-docbutton"/> button. 
+    <img src="../img/layer-settings/configure_popup.jpg" class="ms-docimage" style="max-width:400px;">
+
+    Here the user can add custom parameters that will be visible in the *Visual Style Editor*, above the *Color Palette* option. The *Thematic Layer* property provides an array of fields where each one represents a select input, once a user selects one of this input the associated view parameter is included in the classify.json request to the SLD service. An example can be the following one:
+
+    <video class="ms-docimage" controls><source src="../img/layer-settings/thematic-layer.mp4"></video>
+
 #### Pattern mark style
 
 With the *Pattern mark style* it is possible to represent *Line* or *Fill*  style rules with a mark by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern mark style** options from the dropdown menu.
@@ -340,6 +352,22 @@ With the *Pattern icon style*  it is possible to represent *Line* or *Fill* styl
 The style editor can configure the *Icon* as explained [here](#icon) along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
+
+#### Style with properties
+
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to choose a property of a layer's feature as the value for a symbolizer option. The *Style with properties* function is available for *Marker*, *Icon*, *Line*, *Fill*, *Text* and *3D model* by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button of each symbolizer option supported by this function and choosing **Property value** option from the dropdown menu.
+
+<img src="../img/layer-settings/properties_style.jpg" class="ms-docimage"  style="max-width:500px;">
+
+By default, **Constant value** is selected. If the user chooses **Property value**, a drop-down menu appears so that the desired layer attribute can be selected to use the necessary values from the styling property.
+
+<video class="ms-docimage" controls><source src="../img/layer-settings/property-value-example.mp4"></video>
+
+!!!warning
+    As a *Property value* only attributes of type `string` or `number` are currently supported.
+
+!!!note
+    The *Style with properties* method is also available for **WFS** and **Vector** layers.
 
 ### Styling on the 3D navigation
 
