@@ -177,7 +177,13 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
       - name: Publish maven packages
-        run: mvn clean install deploy -f java/pom.xml
+        # Here it deploys only java modules and root, needed for MS project builds.
+        # Product, binary modules are to big to be hosted on the repository in snapshots, so they are skipped
+        run: |
+          # deploys java packages
+          mvn clean install deploy -f java/pom.xml
+          # deploys also the root module, needed for dependencies
+          mvn deploy --non-recursive
         env:
           MAVEN_USERNAME: ${{ secrets.GS_MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.GS_MAVEN_PASSWORD }}
