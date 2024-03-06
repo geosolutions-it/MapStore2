@@ -246,7 +246,7 @@ describe('CesiumMap', () => {
             done();
         }, 800);
     });
-    it.only('click on layer should return intersected features', (done) => {
+    it('click on layer should return intersected features', (done) => {
         let ref;
         act(() => {
             ReactDOM.render(
