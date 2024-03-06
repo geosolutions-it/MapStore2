@@ -7,7 +7,7 @@
 */
 
 import uuidv1 from 'uuid/v1';
-import { slice, head, last, get, isNaN, isEqual, isNumber } from 'lodash';
+import { slice, omit, head, last, get, isNaN, isEqual, isNumber } from 'lodash';
 import turfBbox from '@turf/bbox';
 import {
     MeasureTypes,
@@ -482,7 +482,8 @@ export const geoJSONToAnnotations = (json) => {
                     const isGeodesic = isGeodesicMeasure(measureType);
                     return isGeodesic && feature.properties.originalGeom ? {
                         ...feature,
-                        geometry: feature.properties.originalGeom
+                        geometry: feature.properties.originalGeom,
+                        properties: omit(feature.properties, "originalGeom")
                     } : feature;
                 });
             const {

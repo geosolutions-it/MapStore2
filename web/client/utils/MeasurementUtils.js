@@ -258,7 +258,6 @@ const convertMeasureToFeatureCollection = (geometricFeatures, textLabels = [], u
                     ...properties,
                     label: infoLabelText,
                     geodesic: measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA,
-                    ...(measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA ? { originalGeom: geometry} : {}),
                     ...parseProperties(values, uom),
                     type: [MeasureTypes.POINT_COORDINATES].includes(measureType)
                         ? 'position'
@@ -547,6 +546,7 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
 
     return {
         type: 'FeatureCollection',
+        msType: MEASURE_TYPE,
         features: features.map(ft => {
             const measureType = getMeasureType(ft);
             return measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA ? {
@@ -554,6 +554,10 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
                 geometry: {
                     ...ft.geometry,
                     coordinates: measureType === MeasureTypes.LENGTH ? transformLineToArcs(ft.geometry.coordinates) : ft.geometry.coordinates.map(transformLineToArcs)
+                },
+                properties: {
+                    ...ft.properties,
+                    ...(measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA ? { originalGeom: ft.geometry} : {})
                 }
             } : ft;
         }),

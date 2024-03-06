@@ -101,7 +101,7 @@ export const geometryFunctionsLibrary = {
                 };
             },
             lineToArc: () => {
-                return { arcType: Cesium.ArcType.GEODESIC };
+                return { arcType: Cesium.ArcType.GEODESIC, perPositionHeight: undefined };
             },
             startPoint: (feature) => {
                 const { positions } = getPositions(feature);
@@ -244,6 +244,9 @@ export const geometryFunctionsLibrary = {
             lineToArc: (feature) => {
                 if (feature.geometry.type === 'LineString') {
                     return transformLineToArcs(feature.geometry.coordinates);
+                }
+                if (feature.geometry.type === 'Polygon') {
+                    return feature.geometry.coordinates.map(transformLineToArcs);
                 }
                 return null;
             },

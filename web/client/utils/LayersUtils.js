@@ -22,6 +22,7 @@ import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
+import { MEASURE_TYPE } from './MeasurementUtils';
 
 let LayersUtils;
 
@@ -588,6 +589,9 @@ export const geoJSONToLayer = (geoJSON, id) => {
     let features = [];
     if (geoJSON.type === "FeatureCollection") {
         features = geoJSON.features.map((feature, idx) => {
+            /* if (geoJSON.msType === MEASURE_TYPE && feature.properties.originalGeom) {
+                feature.geometry  = feature.properties.originalGeom;
+            }*/
             if (!feature.id) {
                 feature.id = idx;
             }
