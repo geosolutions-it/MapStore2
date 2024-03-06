@@ -19,7 +19,7 @@ describe('StreetView epics', () => {
         testEpic(streetViewSyncLayer, NUM_ACTIONS, action, ([update]) => {
             expect(update).toExist();
             expect(update.type).toBe(UPDATE_ADDITIONAL_LAYER);
-            expect(update.options.features[0].geometry.coordinates).toEqual([LNG, LAT]);
+            expect(update.options.features[0].geometry.coordinates).toEqual([LNG, LAT, 0]);
             done();
         }, {streetView: {location: {latLng: {lat: LAT, lng: LNG}}}});
     });
@@ -32,7 +32,7 @@ describe('StreetView epics', () => {
         testEpic(streetViewSyncLayer, NUM_ACTIONS, action, ([update]) => {
             expect(update).toExist();
             expect(update.type).toBe(UPDATE_ADDITIONAL_LAYER);
-            expect(update.options.features[0].geometry.coordinates).toEqual([LNG, LAT]);
+            expect(update.options.features[0].geometry.coordinates).toEqual([LNG, LAT, 0]);
             expect(decodeURIComponent(update.options.features[0].style[0].symbolUrl).includes(`rotate(${rotation})`)).toBeTruthy();
             done();
         }, {streetView: {pov: {heading: rotation}, location: {latLng: {lat: LAT, lng: LNG}}}});
@@ -109,11 +109,11 @@ describe('StreetView epics', () => {
                         lat: 1,
                         lng: 2
                     }
+                },
+                configuration: {
+                    provider: 'mapillary',
+                    ApiURL: "http://localhost:3000/index.json"
                 }
-            },
-            configuration: {
-                provider: 'mapillary',
-                ApiURL: "http://localhost:3000/index.json"
             },
             controls: {
                 [CONTROL_NAME]: {
