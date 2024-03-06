@@ -111,3 +111,16 @@ export const isValidURLTemplate = (url, params, regexp = /^(http(s{0,1}):\/\/)+?
     return false;
 
 };
+
+export const getPathURLFromFileUrl = (fileUrl) => {
+    let parts = fileUrl?.split(".") || [];
+    let pathUrl = () => {
+        if (parts.length > 1) {
+            let hashSplittedPathUrl = parts[0].split("/");
+            hashSplittedPathUrl.pop();
+            return hashSplittedPathUrl.join("/") + "/";
+        }
+        return parts[0];
+    };
+    return pathUrl();
+};

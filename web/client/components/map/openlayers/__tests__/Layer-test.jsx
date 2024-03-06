@@ -1471,7 +1471,23 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
+    it('vector layer with url + isGeojson flag = true [geojson layer]', () => {
+        var options = {
+            isGeojson: true,
+            url: 'base/web/client/test-resources/vector/feature-collection-vector.json',
+            styleName: "Polygon",
+            crs: 'EPSG:4326'
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="vector"
+                options={options} map={map}/>, document.getElementById("container"));
 
+        expect(layer).toBeTruthy();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getSource().getUrl()).toEqual(options.url);
+    });
     it('change layer visibility for Google Layer', () => {
         var google = {
             maps: {

@@ -1415,6 +1415,44 @@ describe('Cesium layer', () => {
         expect(cmp.layer.styledFeatures._queryable).toBe(false);
         expect(cmp.layer.styledFeatures._features.length).toBe(1);
     });
+    it('should create a vector layer with url + isGeojson flag = true', (done) => {
+        const options = {
+            type: 'vector',
+            features: [],
+            url: 'base/web/client/test-resources/vector/feature-collection-vector.json',
+            isGeojson: true,
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="vector"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.styledFeatures).toBeTruthy();
+        expect(cmp.layer.detached).toBe(true);
+        expect(cmp.layer.styledFeatures._features.length).toBe(0);
+        waitFor(()=>expect(cmp.layer.styledFeatures._features.length).toBe(3), {
+            timeout: 5000
+        })
+            .then(()=>{
+                expect(cmp.layer.styledFeatures._features.length).toBeGreaterThan(0);
+            }).catch(done)
+            .finally(done);
+    });
     it('should create a wfs layer', () => {
         const options = {
             type: 'wfs',

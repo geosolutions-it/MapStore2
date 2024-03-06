@@ -26,11 +26,13 @@ import {
     locationSelector,
     povSelector,
     useStreetViewDataLayerSelector,
-    streetViewDataLayerSelector
+    streetViewDataLayerSelector,
+    streetViewConfigurationSelector
 } from "../selectors/streetView";
 import {setLocation, SET_LOCATION, SET_POV, UPDATE_STREET_VIEW_LAYER } from '../actions/streetView';
 import API from '../api';
 import {shutdownToolOnAnotherToolDrawing} from "../../../utils/ControlUtils";
+import { mapTypeSelector } from '../../../selectors/maptype';
 
 const getNavigationArrowSVG = function({rotation = 0}) {
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">
@@ -91,6 +93,11 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
         .filter(() => enabledSelector(getState()))
         .switchMap(() => {
             // setup
+            let streetViewConfigration = streetViewConfigurationSelector(getState());
+            let streetViewDataLayer = { ...streetViewDataLayerSelector(getState()) };
+            if (streetViewConfigration?.provider === 'mapillary') {
+                streetViewDataLayer = { ...streetViewDataLayer, url: streetViewConfigration?.providerSettings?.ApiURL, type: streetViewConfigration?.providerSettings?.type || 'vector' };
+            }
             return Rx.Observable.from([
                 registerEventListener('click', CONTROL_NAME),
                 ...(useStreetViewDataLayerSelector(getState())
@@ -102,8 +109,7 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
                             id: STREET_VIEW_DATA_LAYER_ID,
                             name: STREET_VIEW_DATA_LAYER_ID,
                             visibility: true,
-                            ...streetViewDataLayerSelector(getState())
-
+                            ...streetViewDataLayer
                         })]
                     : []
                 ),
@@ -179,38 +185,54 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
  */
 export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
 
-
-    const locationToFeature = (location, pov) => {
-        const {lat, lng} = location?.latLng;
-        return {
-            type: "Feature",
-            geometry: {
-                type: "Point",
-                coordinates: [lng, lat],
-                crs: "EPSG:4326"
-            },
-            style: [{
+    const locationToFeature = (location, pov, isCesium) => {
+        if (!location) return null;
+        const {lat, lng, h = 0} = location?.latLng;
+        const style = isCesium ?
+            [{
+                opacity: 1,
+                anchor: 'center',
+                iconSize: [100],
+                iconUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(getNavigationArrowSVG({rotation: pov?.heading || 0})),
+                leaderLine: true,
+                id: "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d",
+                weight: 4,
+                rotation: pov?.heading || 0
+            }] : [{
                 iconAnchor: [0.5, 0.5],
                 anchorXUnits: "fraction",
                 anchorYUnits: "fraction",
                 opacity: 1,
                 size: 100,
-                symbolUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(getNavigationArrowSVG({rotation: pov?.heading})),
+                symbolUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(getNavigationArrowSVG({rotation: pov?.heading || 0})),
                 shape: "triangle",
                 id: "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d",
                 highlight: false,
                 weight: 4
-            }]
+            }];
+        return {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [lng, lat, h],
+                crs: "EPSG:4326"
+            },
+            properties: {
+                id: "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d"
+            },
+            style
         };
     };
     return action$.ofType(SET_LOCATION, SET_POV).switchMap(() => {
         const state = getState();
+        const mapType = mapTypeSelector(state);
+        const isCesium = mapType === 'cesium';
         const location = locationSelector(state);
         const pov = povSelector(state);
         if (!location) {
             return Rx.Observable.empty();
         }
-        return Rx.Observable.of(locationToFeature(location, pov)).map((feature) => {
+        return Rx.Observable.of(locationToFeature(location, pov, isCesium)).map((feature) => {
             const options = getStreetViewMarkerLayer(getState());
             return updateAdditionalLayer(
                 MARKER_LAYER_ID,

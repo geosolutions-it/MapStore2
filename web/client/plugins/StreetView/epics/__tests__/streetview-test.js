@@ -86,4 +86,40 @@ describe('StreetView epics', () => {
             }
         });
     });
+    it('streetViewSetupTearDown for mapillary', (done) => {
+        let action = setControlProperty(CONTROL_NAME, 'enabled', false);
+        const NUM_ACTIONS = 3;
+        testEpic(streetViewSetupTearDown, NUM_ACTIONS, action, ([
+            register,
+            updateAdditionalLayers1,
+            updateAdditionalLayers2
+        ]) => {
+            expect(register.type).toBe(REGISTER_EVENT_LISTENER);
+            expect(register.eventName).toBe('click');
+            expect(register.toolName).toBe(CONTROL_NAME);
+            expect(updateAdditionalLayers1.type).toBe(UPDATE_ADDITIONAL_LAYER);
+            expect(updateAdditionalLayers1.options.owner).toBe('mapillaryViewer');
+            expect(updateAdditionalLayers1.options.isGeojson).toBe(true);
+            expect(updateAdditionalLayers2.type).toBe(UPDATE_ADDITIONAL_LAYER);
+            done();
+        }, {
+            streetView: {
+                location: {
+                    latLng: {
+                        lat: 1,
+                        lng: 2
+                    }
+                }
+            },
+            configuration: {
+                provider: 'mapillary',
+                ApiURL: "http://localhost:3000/index.json"
+            },
+            controls: {
+                [CONTROL_NAME]: {
+                    enabled: true
+                }
+            }
+        });
+    });
 });

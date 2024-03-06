@@ -111,6 +111,40 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
         }
     }
 };
+const MAPILLARY_DATA_LAYER_DEFAULTS = {
+    // type: "vector",
+    provider: "custom",
+    // url: "http://localhost:4000/output/run_04/index.json",
+    isGeojson: true,
+    owner: 'mapillaryViewer',
+    style: {
+        format: "geostyler",
+        body: {
+            name: "My Style",
+            rules: [
+                {
+                    name: "",
+                    symbolizers: [
+                        {
+                            kind: "Mark",
+                            color: "#0000ff",
+                            fillOpacity: 1,
+                            strokeColor: "#000000",
+                            strokeOpacity: 1,
+                            strokeWidth: 1,
+                            radius: 5,
+                            wellKnownName: "Circle",
+                            msHeightReference: "none",
+                            msBringToFront: true,
+                            symbolizerId: "d2c4dab1-a0e7-11ee-a734-df08d0913056"
+                        }
+                    ],
+                    ruleId: "d2c4dab0-a0e7-11ee-a734-df08d0913056"
+                }
+            ]
+        }
+    }
+};
 /**
  * Gets the default data layer configuration for the current provider.
  * @memberof selectors.streetview
@@ -125,6 +159,8 @@ const providerDataLayerDefaultsSelector = createSelector(
             return GOOGLE_DATA_LAYER_DEFAULTS;
         case PROVIDERS.CYCLOMEDIA:
             return CYCLOMEDIA_DATA_LAYER_DEFAULTS;
+        case PROVIDERS.MAPILLARY:
+            return MAPILLARY_DATA_LAYER_DEFAULTS;
         default:
             return {};
         }
@@ -163,6 +199,16 @@ export function cyclomediaAPIKeySelector(state) {
         ?? localConfigSelector(state)?.apiKeys?.cyclomediaAPIKey;
 }
 /**
+ * Selector for the mapillary API key
+ * @memberof selectors.streetview
+ * @param {object} state the state
+ * @returns the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.mapillaryAPIKey`.
+ */
+export function mapillaryAPIKeySelector(state) {
+    return streetViewConfigurationSelector(state)?.apiKey
+        ?? localConfigSelector(state)?.apiKeys?.mapillaryAPIKey;
+}
+/**
  * Selector for the API key for the current provider
  * @memberof selectors.streetview
  * @param {object} state the state
@@ -174,6 +220,8 @@ export function streetViewAPIKeySelector(state) {
         return googleAPIKeySelector(state);
     case PROVIDERS.CYCLOMEDIA:
         return cyclomediaAPIKeySelector(state);
+    case PROVIDERS.MAPILLARY:
+        return mapillaryAPIKeySelector(state);
     default:
         return null;
     }

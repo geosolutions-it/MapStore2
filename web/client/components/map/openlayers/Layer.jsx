@@ -237,6 +237,15 @@ export default class OpenlayersLayer extends React.Component {
             if (options.handleClickOnLayer) {
                 this.layer.set("handleClickOnLayer", true);
             }
+            if (options?.url && options?.isGeojson) {
+                this.layer.getSource().on('featuresloadend', () => {
+                    let extent = this.layer.getSource().getExtent();
+                    if (extent) {
+                        let extendedExtent = [extent[0] - 100, extent[1] - 100, extent[2] + 100, extent[3] + 100];
+                        this.props.map.getView().fit(extendedExtent);
+                    }
+                });
+            }
             this.layer.getSource().on('tileloadstart', () => {
                 if (this.tilestoload === 0) {
                     this.props.onLayerLoading(options.id);

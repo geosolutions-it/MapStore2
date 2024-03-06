@@ -57,7 +57,8 @@
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"},
       {"name": "userrole", "path": "security.user.role"},
-      {"name": "printEnabled", "path": "print.capabilities"}
+      {"name": "printEnabled", "path": "print.capabilities"},
+      {"name": "streetView", "path": "streetView"}
     ],
     "userSessions": {
       "enabled": true

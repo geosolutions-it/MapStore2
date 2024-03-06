@@ -13,7 +13,7 @@ import { createPlugin } from '../../utils/PluginsUtils';
 import { CONTROL_NAME } from './constants';
 
 import StreetViewContainer from './containers/StreetViewContainer';
-import {toggleStreetView, configure, reset} from './actions/streetView';
+import {toggleStreetView, configure, reset, resetViewerData} from './actions/streetView';
 import Message from '../../components/I18N/Message';
 import { enabledSelector } from './selectors/streetView';
 
@@ -23,7 +23,7 @@ import * as epics from './epics/streetView';
 import './style/street-view.less';
 import { setControlProperty } from '../../actions/controls';
 
-const StreetViewPluginComponent = ({onMount, onUnmount, apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider = 'google', providerSettings, panelSize}) => {
+const StreetViewPluginComponent = ({onMount, onUnmount, resetStViewData, apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider = 'google', providerSettings, panelSize}) => {
     useEffect(() => {
         onMount({apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider, providerSettings});
         return () => {
@@ -31,7 +31,7 @@ const StreetViewPluginComponent = ({onMount, onUnmount, apiKey, useDataLayer, da
         };
     }, [apiKey, useDataLayer, dataLayerConfig, JSON.stringify(panoramaOptions ?? {})]);
 
-    return <StreetViewContainer provider={provider} providerSettings={providerSettings} panelSize={panelSize} />;
+    return <StreetViewContainer resetStViewData={resetStViewData} apiKey={apiKey} provider={provider} providerSettings={providerSettings} panelSize={panelSize} />;
 };
 
 const StreetViewPluginContainer = connect(() => ({}), {
@@ -42,6 +42,8 @@ const StreetViewPluginContainer = connect(() => ({}), {
                 dispatch(setControlProperty(CONTROL_NAME, "enabled", false)); // turn the plugin off when unmounting, if it was on
             }
         };
+    }, resetStViewData: () => {
+        return (dispatch) => dispatch(resetViewerData());
     }
 })(StreetViewPluginComponent);
 
@@ -49,7 +51,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  * StreetView Plugin. Uses Google Street View services to provide the navigation of Google panoramic photos of street view service through the map.
  * @name StreetView
  * @memberof plugins
- * @property {string} provider the Street View provider. Can be `google` or `cyclomedia`. It is set to `google` by default.
+ * @property {string} provider the Street View provider. Can be `google`, `cyclomedia` or `mapillary`. It is set to `google` by default.
  * @property {string} cfg.apiKey The API key to use. This is generically valid for all the providers.
  * It is Mandatory in production. Depending on the provider, this can be also configured globally:
  * - `google` provider: In order to allow fine billing strategies (with different API keys), the API key can be defined and customized here in this configuration option or in `localConfig.json` with the following order of priority:
@@ -57,10 +59,14 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *      - `apiKeys.googleAPIKey` - Use this if you have a general API key enabled for all Google APIs in MapStore.
  *      - `googleAPIKey` (for retro-compatibility only)
  * - `cyclomedia` provider: The API key is mandatory and can be configured only in the plugin configuration. It is not possible to configure it globally in `localConfig.json`, in `apiKeys.cyclomediaAPIKey`.
+ * - `mapillary` provider: The API key is mandatory and can be configured only in the plugin configuration. It is not possible to configure it globally in `localConfig.json`, in `apiKeys.mapillaryAPIKey`.
  * @property {string} providerSettings The settings specific for the provider. Depending on the `provider` property, the following settings are available:
  * - `cyclomedia` provider:
  *   - `providerSettings.StreetSmartApiURL` (optional). The URL of the StreetSmart API. Default: `https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js`.
  *   - `providerSettings.srs` (optional). Coordinate reference system code to use for the API. Default: `EPSG:4326`. Note that the SRS used here must be supported by the StreetSmart API **and** defined in `localConfig.json` file, in `projectionDefs`.
+ *
+ * - `mapillary` provider:
+ *   - `providerSettings.ApiURL` (optional). The URL of the the WFS/Geojson endpoint API. If existing, mapillary viewer will use GeoJSONDataProvider fetching the data and if not existing, mapillary viewer will use the default tiles`.
  *
  * Generally speaking, you should prefer general settings in `localConfig.json` over the plugin configuration, in order to reuse the same configuration for default viewer and all the contexts, automatically. This way you will not need to configure the `apiKey` in every context.
  * <br>**Important**: You can use only **one** API-key for a MapStore instance. The api-key can be configured replicated in every plugin configuration or using one of the unique global settings (suggested) in `localConfig.json`). @see {@link https://github.com/googlemaps/js-api-loader/issues/5|here} and @see {@link https://github.com/googlemaps/js-api-loader/issues/100|here}
@@ -74,7 +80,7 @@ export default createPlugin(
     'StreetView',
     {
         options: {
-            disablePluginIf: "{state('mapType') === 'leaflet' || state('mapType') === 'cesium'}"
+            disablePluginIf: "{state('mapType') === 'leaflet' || (state('mapType') === 'cesium' && (state('streetView')?.configuration?.provider !== 'mapillary'))}"
         },
         epics,
         reducers: {
