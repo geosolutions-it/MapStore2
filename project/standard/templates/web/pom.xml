@@ -18,7 +18,14 @@
     <mapstore-services.version>1.8-SNAPSHOT</mapstore-services.version>
     <geostore-webapp.version>2.1-SNAPSHOT</geostore-webapp.version>
     <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
-    <print-lib.version>1.4-SNAPSHOT</print-lib.version>
+    <print-lib.version>2.4-SNAPSHOT</print-lib.version>
+    <httpclient.version>4.5.13</httpclient.version>
+    <junit.version>4.13.1</junit.version>
+    <mockito-all.version>1.9.5</mockito-all.version>
+    <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+    <ehcache-web.version>2.0.4</ehcache-web.version>
+    <commons-pool.version>1.5.4</commons-pool.version>
+    <jaxws-api.version>2.3.1</jaxws-api.version>
   </properties>
 
   <dependencies>
@@ -469,7 +476,43 @@
                     <dependency>
                         <groupId>org.apache.httpcomponents</groupId>
                         <artifactId>httpclient</artifactId>
-                        <version>4.5.13</version>
+                        <version>${httpclient.version}</version>
+                    </dependency>
+                    <!-- JUnit -->
+                    <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                        <scope>test</scope>
+                        <version>${junit.version}</version>
+                    </dependency>
+                    <!--  mockito -->
+                    <dependency>
+                        <groupId>org.mockito</groupId>
+                        <artifactId>mockito-all</artifactId>
+                        <version>${mockito-all.version}</version>
+                    </dependency>
+                    <!-- servlet -->
+                    <dependency>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>javax.servlet-api</artifactId>
+                        <version>${javax.servlet-api.version}</version>
+                    </dependency>
+                    <!-- gzip compression filter -->
+                    <dependency>
+                        <groupId>net.sf.ehcache</groupId>
+                        <artifactId>ehcache-web</artifactId>
+                        <version>${ehcache-web.version}</version>
+                    </dependency>
+                    <!-- misc -->
+                    <dependency>
+                        <groupId>commons-pool</groupId>
+                        <artifactId>commons-pool</artifactId>
+                        <version>${commons-pool.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.xml.ws</groupId>
+                        <artifactId>jaxws-api</artifactId>
+                        <version>${jaxws-api.version}</version>
                     </dependency>
                 </dependencies>
             </dependencyManagement>
