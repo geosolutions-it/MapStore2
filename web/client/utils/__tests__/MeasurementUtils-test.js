@@ -121,7 +121,6 @@ describe('MeasurementUtils', () => {
             length: 2456862.991,
             lengthUom: 'm',
             lengthTargetUom: 'm',
-            originalGeom: { type: 'LineString', coordinates: [ [ -3.6694335937499996, 37.81701672562037 ], [ 24.763183593750004, 41.6674407428383 ] ] },
             type: 'measurement',
             measureType: 'length',
             annotationType: 'LineString',
@@ -149,8 +148,6 @@ describe('MeasurementUtils', () => {
         expect(properties).toEqual({
             label: '175.074.750.490,87 m²',
             geodesic: true,
-            originalGeom: { type: 'Polygon', coordinates: [ [ [ 10.042417613994017, 53.9617045912569 ], [ 21.29241761399402, 57.23667168428492 ], [ 22.522886363994022, 53.17884325605559 ], [
-                10.042417613994017, 53.9617045912569 ] ] ] },
             length: 2079229.382,
             lengthUom: 'm',
             lengthTargetUom: 'm',
