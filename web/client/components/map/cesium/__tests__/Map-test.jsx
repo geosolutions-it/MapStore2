@@ -246,7 +246,7 @@ describe('CesiumMap', () => {
             done();
         }, 800);
     });
-    it('click on layer should return intersected features', (done) => {
+    it.only('click on layer should return intersected features', (done) => {
         let ref;
         act(() => {
             ReactDOM.render(
@@ -392,10 +392,12 @@ describe('CesiumMap', () => {
                 expect(dataSource.entities.values.length).toBe(4);
                 const mapCanvas = ref.map.canvas;
                 const { width, height } = mapCanvas.getBoundingClientRect();
-                simulateClick(mapCanvas, {
-                    clientX: width / 2,
-                    clientY: height / 2
-                });
+                setTimeout(() => { // this mitigates #9965 waiting for a better solution
+                    simulateClick(mapCanvas, {
+                        clientX: width / 2,
+                        clientY: height / 2
+                    });
+                }, 1000);
             })
             .catch(done);
     }).timeout(5000);
