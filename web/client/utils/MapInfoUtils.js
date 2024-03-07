@@ -286,6 +286,20 @@ export const getIdentifyFlow = (layer, baseURL, params) => {
     }
     return null;
 };
+
+const deduceInfoFormat = (response) => {
+    let infoFormat;
+    // Handle WMS, WMTS
+    if (response.queryParams && response.queryParams.hasOwnProperty('info_format')) {
+        infoFormat = response.queryParams.info_format;
+    }
+    // handle WFS
+    if (response.queryParams && response.queryParams.hasOwnProperty('outputFormat')) {
+        infoFormat = response.queryParams.outputFormat;
+    }
+    return infoFormat;
+};
+
 export const getValidator = (format) => {
     const defaultValidator = {
         getValidResponses: (responses) => responses,
@@ -295,15 +309,7 @@ export const getValidator = (format) => {
         getValidResponses: (responses) => {
             return responses.reduce((previous, current) => {
                 if (current) {
-                    let infoFormat;
-                    // Handle WMS, WMTS
-                    if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
-                        infoFormat = current.queryParams.info_format;
-                    }
-                    // handle WFS
-                    if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
-                        infoFormat = current.queryParams.outputFormat;
-                    }
+                    const infoFormat = deduceInfoFormat(current);
                     const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
                     return [...previous, ...valid];
                 }
@@ -313,13 +319,7 @@ export const getValidator = (format) => {
         getNoValidResponses: (responses) => {
             return responses.reduce((previous, current) => {
                 if (current) {
-                    let infoFormat;
-                    if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
-                        infoFormat = current.queryParams.info_format;
-                    }
-                    if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
-                        infoFormat = current.queryParams.outputFormat;
-                    }
+                    const infoFormat = deduceInfoFormat(current);
                     const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
                     return [...previous, ...valid];
                 }
