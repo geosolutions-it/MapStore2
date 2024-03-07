@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, JSON_MIME_TYPE, GEOJSON_MIME_TYPE, Validator } from './FeatureInfoUtils';
+import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, JSON_MIME_TYPE, GEOJSON_MIME_TYPE, validator } from './FeatureInfoUtils';
 
 import pointOnSurface from 'turf-point-on-surface';
 import { findIndex } from 'lodash';
@@ -300,11 +300,6 @@ const deduceInfoFormat = (response) => {
     return infoFormat;
 };
 
-const defaultValidator = {
-    getValidResponses: (responses) => responses,
-    getNoValidResponses: () => []
-};
-
 const determineValidatorFormat = (response, format) => {
     if (response.format) return response.format;
 
@@ -314,7 +309,7 @@ const determineValidatorFormat = (response, format) => {
 
 const determineValidator = (response, format) => {
     const validatorFormat = determineValidatorFormat(response, format);
-    return Validator[validatorFormat] || defaultValidator;
+    return validator(validatorFormat);
 };
 
 export const getValidator = (format) => {
@@ -322,8 +317,7 @@ export const getValidator = (format) => {
         getValidResponses: (responses) => {
             return responses.filter((current) => {
                 if (current) {
-                    const valid = determineValidator(current, format).getValidResponses([current]);
-                    return valid.length;
+                    return determineValidator(current, format).isValidResponse(current);
                 }
                 return false;
             });
@@ -331,8 +325,7 @@ export const getValidator = (format) => {
         getNoValidResponses: (responses) => {
             return responses.filter((current) => {
                 if (current) {
-                    const valid = determineValidator(current, format).getNoValidResponses([current]);
-                    return valid.length;
+                    return !determineValidator(current, format).isValidResponse(current);
                 }
                 return false;
             });
