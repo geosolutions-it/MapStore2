@@ -183,7 +183,7 @@ export const getGeomTypeSelected = (features = []) =>{
     }));
 };
 
-const getMeasureType = (feature) => {
+export const getMeasureType = (feature) => {
     if (feature?.properties?.measureType) {
         return feature.properties.measureType;
     }
@@ -257,7 +257,7 @@ const convertMeasureToFeatureCollection = (geometricFeatures, textLabels = [], u
                 properties: {
                     ...properties,
                     label: infoLabelText,
-                    geodesic: measureType === MeasureTypes.LENGTH,
+                    geodesic: measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA,
                     ...parseProperties(values, uom),
                     type: [MeasureTypes.POINT_COORDINATES].includes(measureType)
                         ? 'position'
@@ -422,6 +422,9 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
                         {
                             symbolizerId: uuidv1(),
                             kind: 'Fill',
+                            msGeometry: {
+                                name: 'lineToArc'
+                            },
                             color: '#ffffff',
                             fillOpacity: 0.5,
                             outlineColor: '#33A8FF',
@@ -543,7 +546,21 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
 
     return {
         type: 'FeatureCollection',
-        features,
+        msType: MEASURE_TYPE,
+        features: features.map(ft => {
+            const measureType = getMeasureType(ft);
+            return measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA ? {
+                ...ft,
+                geometry: {
+                    ...ft.geometry,
+                    coordinates: measureType === MeasureTypes.LENGTH ? transformLineToArcs(ft.geometry.coordinates) : ft.geometry.coordinates.map(transformLineToArcs)
+                },
+                properties: {
+                    ...ft.properties,
+                    ...(measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA ? { originalGeom: ft.geometry} : {})
+                }
+            } : ft;
+        }),
         style: {
             metadata: { editorType: 'visual' },
             format: 'geostyler',

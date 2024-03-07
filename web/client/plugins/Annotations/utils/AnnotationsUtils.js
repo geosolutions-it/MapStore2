@@ -7,9 +7,19 @@
 */
 
 import uuidv1 from 'uuid/v1';
-import { slice, head, last, get, isNaN, isEqual, isNumber } from 'lodash';
+import { slice, omit, head, last, get, isNaN, isEqual, isNumber } from 'lodash';
 import turfBbox from '@turf/bbox';
-import { measureIcons } from '../../../utils/MeasureUtils';
+import {
+    MeasureTypes,
+    measureIcons
+} from '../../../utils/MeasureUtils';
+import {
+    getMeasureType
+} from '../../../utils/MeasurementUtils';
+
+import {
+    transformLineToArcs
+} from '../../../utils/CoordinatesUtils';
 
 // legacy style
 export const STYLE_CIRCLE = {
@@ -405,6 +415,9 @@ export const updateAnnotationsLayer = (layer = {}) => {
     }
     return [];
 };
+
+export const isGeodesicMeasure = (measureType) => [MeasureTypes.LENGTH, MeasureTypes.AREA].includes(measureType);
+
 /**
  * This function takes an annotations layer and converts it to valid GeoJSON Feature Collection usable for export
  * @param {array} annotations annotations layers
@@ -415,10 +428,21 @@ export const annotationsToGeoJSON = (annotations) => {
         return [
             ...acc,
             ...(annotation.features || []).map((feature) => {
+                const measureType = getMeasureType(feature);
+                const isGeodesic = isGeodesicMeasure(measureType);
+                let newGeom = feature.geometry;
+                if (isGeodesic) {
+                    newGeom = {
+                        type: feature.geometry.type,
+                        coordinates: measureType === MeasureTypes.LENGTH ? transformLineToArcs(feature.geometry.coordinates) : feature.geometry.coordinates.map(transformLineToArcs)
+                    };
+                }
                 return {
                     ...feature,
+                    geometry: newGeom,
                     properties: {
                         ...feature.properties,
+                        ...(isGeodesic ? {originalGeom: feature.geometry} : {}),
                         annotationLayerId: annotation.id,
                         annotationLayerTitle: annotation.title,
                         annotationLayerDescription: annotation.description
@@ -452,7 +476,16 @@ export const geoJSONToAnnotations = (json) => {
     const layers = (json?.annotations || [])
         .map((annotation) => {
             const features = (json?.features || [])
-                .filter((feature) => feature?.properties?.annotationLayerId === annotation.id);
+                .filter((feature) => feature?.properties?.annotationLayerId === annotation.id)
+                .map(feature => {
+                    const measureType = getMeasureType(feature);
+                    const isGeodesic = isGeodesicMeasure(measureType);
+                    return isGeodesic && feature.properties.originalGeom ? {
+                        ...feature,
+                        geometry: feature.properties.originalGeom,
+                        properties: omit(feature.properties, "originalGeom")
+                    } : feature;
+                });
             const {
                 annotationLayerTitle: title,
                 annotationLayerDescription: description
