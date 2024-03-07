@@ -382,7 +382,27 @@ describe('CesiumMap', () => {
                 </CesiumMap>
                 , document.getElementById("container"));
         });
-        waitFor(() => expect(!!ref.map.dataSources.get(0).entities.values.length && ref.map.dataSourceDisplay.ready).toBe(true), {
+        let prevReady = false;
+        let countReady = 0;
+        // the data source switches twice from false to true
+        // here we are waiting the second render
+        const checkReadyDataSource = () => {
+            const currentReady = ref.map.dataSourceDisplay.ready;
+            if (currentReady !== prevReady) {
+                if (currentReady) {
+                    countReady += 1;
+                }
+                prevReady = ref.map.dataSourceDisplay.ready;
+            }
+            if (countReady === 2) {
+                return true;
+            }
+            return false;
+        };
+        // first we check we got data source ready twice
+        // then we verify that the dataSources entities are available
+        waitFor(() => expect(checkReadyDataSource()
+        && !!ref.map.dataSources.get(0).entities.values.length).toBe(true), {
             timeout: 5000
         })
             .then(() => {
@@ -392,7 +412,8 @@ describe('CesiumMap', () => {
                 expect(dataSource.entities.values.length).toBe(4);
                 const mapCanvas = ref.map.canvas;
                 const { width, height } = mapCanvas.getBoundingClientRect();
-                setTimeout(() => { // this mitigates #9965 waiting for a better solution
+                // adding additional timeout to ensure the complete render
+                setTimeout(() => {
                     simulateClick(mapCanvas, {
                         clientX: width / 2,
                         clientY: height / 2
