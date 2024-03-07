@@ -320,22 +320,22 @@ const determineValidator = (response, format) => {
 export const getValidator = (format) => {
     return {
         getValidResponses: (responses) => {
-            return responses.reduce((previous, current) => {
+            return responses.filter((current) => {
                 if (current) {
                     const valid = determineValidator(current, format).getValidResponses([current]);
-                    return [...previous, ...valid];
+                    return valid.length;
                 }
-                return [...previous];
-            }, []);
+                return false;
+            });
         },
         getNoValidResponses: (responses) => {
-            return responses.reduce((previous, current) => {
+            return responses.filter((current) => {
                 if (current) {
                     const valid = determineValidator(current, format).getNoValidResponses([current]);
-                    return [...previous, ...valid];
+                    return valid.length;
                 }
-                return [...previous];
-            }, []);
+                return false;
+            });
         }
     };
 };
