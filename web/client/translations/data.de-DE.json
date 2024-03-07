@@ -173,6 +173,16 @@
                     "eyeDomeLightingRadius": "Beleuchtungsradius"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Breitengrad des Zentrums (DD)",
+                "modelCenterLng": "Längengrad des Zentrums (DD)",
+                "height": "Höhe (m)",
+                "heading": "Kurswinkel (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "Das Modell wird aus folgenden Gründen in der Mitte der aktuellen Ansicht platziert: Das Modell verfügt über eine CRS-Projektion {modelProjection}, diese wird jedoch nicht unterstützt.",
+                    "projectedCrsNotProvided": "Das Modell wird aus folgenden Gründen in der Mitte der aktuellen Ansicht platziert: Das Modell verfügt über keine definierte CRS-Projektion."
+                }
+            },
             "tooltip": {
                 "label": "QuickInfo",
                 "title": "Titel",
@@ -719,7 +729,7 @@
                 "configuration": "Konfiguration",
                 "apply": "Klassifizierung anwenden",
                 "restore": "Anpassungen zurücksetzen",
-                "go_to_cfg": "Konfigurieren...",
+                "goToCfg": "Konfigurieren...",
                 "go_to_thema": "Verwenden Sie diese Konfiguration",
                 "cfgError": "Fehler in der Konfigurations-JSON",
                 "classify": "Klassifizieren",
@@ -1159,7 +1169,18 @@
                     "wrong_range": "Die untere Grenze muss kleiner als die obere Grenze sein"
                 },
                 "datefield": {
-                    "wrong_date_range": "Das Datum des Beginns muss früher als das des Endes sein"
+                    "wrong_date_range": "Das Datum des Beginns muss früher als das des Endes sein",
+                    "placeholder": "Datum einfügen",
+                    "tooltip": "Geben Sie das Datum im Format {format} ein",
+                    "quickSelectors": {
+                        "today": "Heute",
+                        "now": "Jetzt",
+                        "tomorrow": "Morgen",
+                        "yesterday": "Gestern",
+                        "thisWeek": "Diese Woche",
+                        "thisMonth": "Diesen Monat",
+                        "nDaysFrom": "{n} Tage ab {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Keine Ergebnisse",
@@ -2595,6 +2616,8 @@
             "alertForceTranslate": "Sie verlieren alle im Code-Editor gemachten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
             "stayInTextareaEditor": "Nein, weiter im Code-Editor",
             "useLatestValidStyle": "Ja, zum visuellen Editor wechseln",
+            "alertCustomParamsNotValid": "Sie verlieren alle im Textmodus hinzugefügten Änderungen, indem Sie den benutzerdefinierten Params -Editor schließen. Sind Sie sicher, den Herausgeber zu schließen?",
+            "closeCustomParamsEditor": "Ja, schließen Sie den Herausgeber",
             "validationError": "Validierungsfehler",
             "incorrectPropertyInputError": "Dies liegt wahrscheinlich an einem fehlenden oder ungültigen Wert in den Eigenschaftseingaben des Stileditors.",
             "emptyRuleEditorTitle": "Neue Regeln hinzufügen",
@@ -2672,7 +2695,9 @@
             "msExtrudedHeight": "Extrudierte Höhe",
             "msExtrusionColor": "Extrusionsfarbe",
             "msExtrusionType": "Extrusionstyp",
-            "wall": "Wand"
+            "wall": "Wand",
+            "customParams": "Benutzerdefinierte Parameter",
+            "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
         },
         "playback": {
             "settings": {
@@ -3058,7 +3083,9 @@
             "saveSuccessMessage": "Erfolgreich gespeichert",
             "saveTooltip": "Speichern",
             "saveAsTooltip": "Speichern als",
-            "unadvertised": "Nicht geworben"
+            "unadvertised": "Nicht geworben",
+            "creator": "Erstellt von",
+            "editor": "Zuletzt geändert von"
         },
         "mapEditor": {
             "modalTitle": "Karteneditor",

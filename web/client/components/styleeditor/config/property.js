@@ -547,7 +547,28 @@ const property = {
                 contrastEnhancement: value.contrastEnhancement
             };
         }
-    })
+    }),
+    customParams: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled, isVisible, setValue, getValue, disablePropertySelection }) => {
+        return ({
+            type: 'customParams',
+            valueType: 'string',
+            label,
+            config: {
+                getOptions,
+                selectProps: { ...selectProps, clearable: true},
+                isValid,
+                disablePropertySelection
+            },
+            getValue: getValue ? getValue : (value, props) => {
+                return {
+                    [key]: {...(props[key] || {}), ...value}
+                };
+            },
+            isDisabled,
+            isVisible,
+            setValue
+        });
+    }
 };
 
 export default property;

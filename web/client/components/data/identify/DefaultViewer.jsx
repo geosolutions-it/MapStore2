@@ -9,7 +9,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer } from '../../../utils/MapInfoUtils';
+import { getDefaultInfoFormatValue, getValidator, getViewers, getViewer, getDefaultViewer } from '../../../utils/MapInfoUtils';
 import HTML from '../../../components/I18N/HTML';
 import Message from '../../../components/I18N/Message';
 import { Alert, Panel, Accordion } from 'react-bootstrap';
@@ -137,7 +137,7 @@ class DefaultViewer extends React.Component {
     };
 
     renderPage = (response) => {
-        const Viewer = this.props.viewers[this.props.format];
+        const Viewer = getDefaultViewer(this.props.format, this.props.viewers);
         if (Viewer) {
             return <Viewer response={response} />;
         }

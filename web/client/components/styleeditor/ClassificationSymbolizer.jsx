@@ -30,9 +30,9 @@ function ClassificationSymbolizer({
     supportedSymbolizerMenuOptions,
     fonts,
     enableFieldExpression,
+    thematicCustomParamsProperty,           // property:  [ { YEAR: 2024 }, { MONTH: 5 } ]
     ...props
 }) {
-
     const {
         ramp,
         method,
@@ -42,7 +42,8 @@ function ClassificationSymbolizer({
         intervalsForUnique = config?.intervalsForUnique || 100,
         reverse,
         continuous,
-        format
+        format,
+        customParams        // customParams values: e.g: { YEAR: 2024, MONTH: 5 }
     } = props;
 
     // needed for slider
@@ -58,7 +59,8 @@ function ClassificationSymbolizer({
         reverse,
         ramp,
         continuous,
-        classification
+        classification,
+        customParams: customParams || {}
     };
 
     function handleColors() {
@@ -108,7 +110,8 @@ function ClassificationSymbolizer({
                     method,
                     methodEdit: props?.methodEdit,
                     fonts,
-                    enableFieldExpression
+                    enableFieldExpression,
+                    thematicCustomParams: thematicCustomParamsProperty
                 }}
                 params={mergedParams}
                 onChange={(values) => onUpdate({

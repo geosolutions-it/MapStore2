@@ -173,6 +173,16 @@
                     "eyeDomeLightingRadius": "Lighting radius"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Center's Latitude (DD)",
+                "modelCenterLng": "Center's Longitude (DD)",
+                "height": "Height (m)",
+                "heading": "Heading (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "The model is placed on the center of the current view because: the model has a CRS projection {modelProjection} but it is not supported.",
+                    "projectedCrsNotProvided": "The model is placed on the center of the current view because: the model has no defined CRS projection."
+                }
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
@@ -680,7 +690,7 @@
                 "configuration": "Configuration",
                 "apply": "Apply classification",
                 "restore": "Reset customizations",
-                "go_to_cfg": "Configure...",
+                "goToCfg": "Configure...",
                 "go_to_thema": "Use this configuration",
                 "cfgError": "Error in configuration JSON",
                 "classify": "Classify",
@@ -1120,7 +1130,18 @@
                     "wrong_range": "Lower boundary must be lower than the upper boundary"
                 },
                 "datefield": {
-                    "wrong_date_range": "Start date must be earlier than end date"
+                    "wrong_date_range": "Start date must be earlier than end date",
+                    "placeholder": "Insert date",
+                    "tooltip": "Insert date in {format} format",
+                    "quickSelectors": {
+                        "today": "Today",
+                        "now": "Now",
+                        "tomorrow": "Tomorrow",
+                        "yesterday": "Yesterday",
+                        "thisWeek": "This week",
+                        "thisMonth": "This month",
+                        "nDaysFrom": "{n} days from {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "No results",
@@ -2566,6 +2587,8 @@
             "alertForceTranslate": "You will lose all the changes added in the text mode by switching to visual editor. Are you sure to switch to visual style editor mode?",
             "stayInTextareaEditor": "No, continue with text editor",
             "useLatestValidStyle": "Yes, switch to visual editor",
+            "alertCustomParamsNotValid": "You will lose all the changes added in the text mode by closing the custom params editor. Are you sure to close the editor?",
+            "closeCustomParamsEditor": "Yes, close the editor",
             "validationError": "Validation error",
             "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
 
@@ -2644,7 +2667,9 @@
             "msExtrudedHeight": "Extruded height",
             "msExtrusionColor": "Extrusion color",
             "msExtrusionType": "Extrusion type",
-            "wall": "Wall"
+            "wall": "Wall",
+            "customParams": "Custom Parameters",
+            "wrongFormatMsg": "The entered configuration is in wrong format !!"
         },
         "playback": {
             "settings": {
@@ -3031,7 +3056,9 @@
             "saveSuccessMessage": "Saved successfully",
             "saveTooltip": "Save",
             "saveAsTooltip": "Save As",
-            "unadvertised": "Unadvertised"
+            "unadvertised": "Unadvertised",
+            "creator": "Created by",
+            "editor": "Last modified by"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",

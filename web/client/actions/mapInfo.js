@@ -125,6 +125,7 @@ export function purgeMapInfoResults() {
  *   - "text/html"
  *   - "text/javascript"
  *   - "application/json"
+ *   - "application/geo+json"
  *   - "application/vnd.ogc.gml"
  *   - "application/vnd.ogc.gml/3.1.1"
  */

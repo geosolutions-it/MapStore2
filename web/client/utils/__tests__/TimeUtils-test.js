@@ -19,10 +19,13 @@ import {
     getLowestAndHighestDates,
     getStartEndDomainValues,
     roundRangeResolution,
-    getLocalTimePart
+    getLocalTimePart,
+    parseDateTimeTemplate,
+    getDateFromTemplate
 } from '../TimeUtils';
 
 import { describeDomains } from '../../api/MultiDim';
+import moment from 'moment';
 
 const DATES_INTERVAL_ARRAY = ['2021-11-02T23:00:00.000Z/2021-12-29T23:00:00.000Z', '2021-11-08T23:00:00.000Z/2021-12-21T23:00:00.000Z'];
 const DATES_ARRAY = ['2021-10-01T22:00:00.000Z', '2021-10-21T22:00:00.000Z', '2021-10-29T22:00:00.000Z', '2021-11-21T23:00:00.000Z', '2021-11-21T23:00:00.000Z', '2021-11-29T23:00:00.000Z', '2021-11-29T23:00:00.000Z', '2021-12-21T23:00:00.000Z', '2021-12-29T23:00:00.000Z', '2021-12-29T23:00:00.000Z'];
@@ -170,5 +173,66 @@ describe('TimeUtils', () => {
     it('test getLocalTimePart', () => {
         expect(getLocalTimePart(new Date("2018-01-09T01:00:00"))).toBe("01:00:00");
         expect(getLocalTimePart(new Date("2018-01-09T12:00:00"))).toBe("12:00:00");
+    });
+    it('test parseDateTimeTemplate', () => {
+        let parsedDateTime = parseDateTimeTemplate("{now}+P1Y1M5D");
+        expect(parsedDateTime.placeholderKey).toBe('now');
+        expect(parsedDateTime.sign).toBe('+');
+        expect(parsedDateTime.durationExp).toBe('P1Y1M5D');
+        parsedDateTime = parseDateTimeTemplate("{thisWeekStart}");
+        expect(parsedDateTime.placeholderKey).toBe('thisWeekStart');
+        expect(parsedDateTime.sign).toBeFalsy();
+        expect(parsedDateTime.durationExp).toBeFalsy();
+    });
+    it('test getDateFromTemplate', () => {
+        const getDate = (_moment, sign, duration) => {
+            let date = _moment;
+            if (sign && duration) {
+                date = _moment[sign](moment.duration(duration).asSeconds(), "seconds");
+            }
+            return date;
+        };
+        const isSame = (dates) => {
+            const [date1, date2] = dates.map(date => date.format('YYYY-MM-DD HH:mm:ss'));
+            return expect(date1).toEqual(date2);
+        };
+
+        let duration = "P1Y1M5D";
+        const value = `{now}+${duration}`;
+        let dateFromTemplate = getDateFromTemplate(value);
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment(), 'add', duration)]);
+        dateFromTemplate = getDateFromTemplate("{thisWeekStart}");
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment().startOf('isoWeek'))]);
+
+        dateFromTemplate = getDateFromTemplate("{thisWeekEnd}");
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment().endOf('isoWeek'))]);
+
+        dateFromTemplate = getDateFromTemplate("{thisMonthStart}");
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment().startOf('month'))]);
+
+        dateFromTemplate = getDateFromTemplate("{thisMonthEnd}");
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment().endOf('month'))]);
+
+        dateFromTemplate = getDateFromTemplate("{thisYearStart}");
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment().startOf('year'))]);
+
+        dateFromTemplate = getDateFromTemplate("{thisYearEnd}");
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment().endOf('year'))]);
+
+        duration = "{today}";
+        dateFromTemplate = getDateFromTemplate(duration);
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment().startOf('day'))]);
+
+        dateFromTemplate = getDateFromTemplate("{today}", "end");
+        expect(dateFromTemplate).toBeTruthy();
+        isSame([moment(dateFromTemplate), getDate(moment().endOf('day'))]);
     });
 });

@@ -45,7 +45,7 @@ describe('mapinfo wms utils', () => {
         });
         getFeatureInfo(
             "TEST_URL", {
-                info_format: INFO_FORMATS.PROPERTIES
+                info_format: INFO_FORMATS.JSON
             }, SAMPLE_LAYER
         ).subscribe(
             n => {
@@ -75,7 +75,7 @@ describe('mapinfo wms utils', () => {
         });
         getFeatureInfo(
             "TEST_URL", {
-                info_format: INFO_FORMATS.PROPERTIES
+                info_format: INFO_FORMATS.JSON
             }, SAMPLE_LAYER
         ).subscribe(
             n => {

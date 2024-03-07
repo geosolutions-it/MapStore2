@@ -43,7 +43,9 @@ class Metadata extends React.Component {
         titlePlaceholderText: PropTypes.string,
         createdAtFieldText: PropTypes.string,
         modifiedAtFieldText: PropTypes.string,
-        unadvertisedText: PropTypes.string
+        unadvertisedText: PropTypes.string,
+        creatorFieldText: PropTypes.string,
+        editorFieldText: PropTypes.string
     };
 
     static contextTypes = {
@@ -60,7 +62,9 @@ class Metadata extends React.Component {
         nameFieldFilter: () => {},
         namePlaceholderText: "Map Name",
         descriptionPlaceholderText: "Map Description",
-        unadvertisedText: "Unadvertised"
+        unadvertisedText: "Unadvertised",
+        creatorFieldText: "Creator",
+        editorFieldText: "Editor"
     };
 
     renderDate = (date) => {
@@ -111,9 +115,21 @@ class Metadata extends React.Component {
                     value={this.props.resource && this.props.resource.metadata && this.props.resource.metadata.description || ""} />
             </FormGroup>
             {
+                this.props.resource && this.props.resource.creator && <FormGroup>
+                    <ControlLabel>{this.props.creatorFieldText}</ControlLabel>
+                    <ControlLabel>{this.props.resource.creator}</ControlLabel>
+                </FormGroup>
+            }
+            {
                 this.props.resource && this.props.resource.createdAt && <FormGroup>
                     <ControlLabel>{this.props.createdAtFieldText}</ControlLabel>
                     <ControlLabel>{this.props.resource && this.renderDate(this.props.resource.createdAt) || ""}</ControlLabel>
+                </FormGroup>
+            }
+            {
+                this.props.resource && this.props.resource.editor && <FormGroup>
+                    <ControlLabel>{this.props.editorFieldText}</ControlLabel>
+                    <ControlLabel>{this.props.resource.editor}</ControlLabel>
                 </FormGroup>
             }
             {

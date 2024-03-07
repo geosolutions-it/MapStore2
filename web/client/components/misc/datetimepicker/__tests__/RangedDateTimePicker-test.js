@@ -33,6 +33,17 @@ describe('DateTimePickerWithRange component', () => {
         expect(el).toExist();
         expect(clockIcon).toExist();
     });
+    it('DateTimePickerWithRange with quick time selector', () => {
+        ReactDOM.render(<DateTimePickerWithRange type="date" calendar operator="="
+            quickDateTimeSelectors={[{type: "date", value: "{today}+P0D", label: "Test"}]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.rw-datetimepicker.range-time-input.rw-widget');
+        const button = container.querySelector('.rw-btn-calendar');
+        TestUtils.Simulate.click(button);
+        const quickTimeSelector = document.querySelector('.quick-time-selector');
+        expect(el).toBeTruthy();
+        expect(quickTimeSelector).toBeTruthy();
+    });
     it('DateTimePickerWithRange with type date-time rendering with defaults', () => {
         ReactDOM.render(<DateTimePickerWithRange type="date-time" calendar operator="=" />, document.getElementById("container"));
         const container = document.getElementById('container');

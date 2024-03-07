@@ -25,6 +25,17 @@ describe('DateTimePicker component', () => {
         expect(el).toExist();
     });
 
+    it('DateTimePicker rendering with quick time selectors', () => {
+        ReactDOM.render(<DateTimePicker type="date" calendar
+            quickDateTimeSelectors={[{type: "date", value: "{today}+P0D", label: "Test"}]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.rw-datetimepicker');
+        const button = container.querySelector('.rw-btn-calendar');
+        TestUtils.Simulate.click(button);
+        const quickTimeSelector = document.querySelector('.quick-time-selector');
+        expect(el).toBeTruthy();
+        expect(quickTimeSelector).toBeTruthy();
+    });
 
     it('DateTimePicker with value prop of date type', function() {
         const today = new Date();

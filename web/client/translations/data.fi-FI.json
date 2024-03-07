@@ -490,7 +490,7 @@
         "configuration": "Kokoonpano",
         "apply": "Käytä luokitusta",
         "restore": "Palauta mukautukset",
-        "go_to_cfg": "Määritä...",
+        "goToCfg": "Määritä...",
         "go_to_thema": "Käytä tätä kokoonpanoa",
         "cfgError": "Virhe JSON-asetuksissa",
         "classify": "Luokittele",

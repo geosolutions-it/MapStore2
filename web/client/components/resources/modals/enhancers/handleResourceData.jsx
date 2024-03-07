@@ -20,7 +20,7 @@ import ConfirmDialog from '../ConfirmModal';
  */
 export default compose(
     withStateHandlers(
-        ({resource = {}, linkedResources = {}}) => {
+        ({resource = {}, linkedResources = {}, user = {}}) => {
             const detailsSettingsString = resource.detailsSettings || resource.attributes?.detailsSettings;
             let detailsSettings = {};
 
@@ -59,7 +59,8 @@ export default compose(
                     },
                     createdAt: resource.creation,
                     modifiedAt: resource.lastUpdate,
-                    creator: resource.creator
+                    creator: user?.role === 'ADMIN' ? resource.creator : '',
+                    editor: user?.role === 'ADMIN' ? resource.editor : ''
                 },
                 linkedResources
             };

@@ -347,13 +347,13 @@ export const toggleStyleEditorEpic = (action$, store) =>
  */
 export const updateLayerOnStatusChangeEpic = (action$, store) =>
     action$.ofType(UPDATE_STATUS)
-        .filter(({ status }) => !!status)
         .switchMap((action) => {
-
             const state = store.getState();
-
             const layer = getUpdatedLayer(state);
-
+            if (!action.status) {
+                // incase of canceling edit mode, reset layer.thematic object
+                return Rx.Observable.of(updateNode(layer.id, 'layers', {thematic: {}}));
+            }
             const query = layer && layer.params || {};
             const describeAction = layer && !layer.describeFeatureType && getDescribeLayer(layer.url, layer, { query });
             const selectedStyle = selectedStyleSelector(state);
@@ -385,6 +385,7 @@ export const updateLayerOnStatusChangeEpic = (action$, store) =>
                 baseUrl
             });
         });
+
 /**
  * Gets every `SELECT_STYLE_TEMPLATE`, `EDIT_STYLE_CODE` events.
  * Creates/Updates a temporary style used to preview templates or edits of style code.

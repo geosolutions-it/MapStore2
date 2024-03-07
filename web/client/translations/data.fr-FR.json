@@ -173,6 +173,16 @@
                     "eyeDomeLightingRadius": "Rayon d'éclairage"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Latitude du centre (DD)",
+                "modelCenterLng": "Longitude du centre(DD)",
+                "height": "Hauteur (m)",
+                "heading": "Angle de cap (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "Le modèle est placé au centre de la vue actuelle car: le modèle a une projection CRS {modelProjection}, mais elle n'est pas prise en charge.",
+                    "projectedCrsNotProvided": "Le modèle est placé au centre de la vue actuelle car: le modèle n'a pas de projection CRS définie."
+                }
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -680,7 +690,7 @@
                 "configuration": "Configuration",
                 "apply": "Appliquer la classification",
                 "restore": "Réinitialiser les personnalisations",
-                "go_to_cfg": "Configurer...",
+                "goToCfg": "Configurer...",
                 "go_to_thema": "Utilisez cette configuration",
                 "cfgError": "Erreur dans la configuration JSON",
                 "classify": "Classer",
@@ -1120,7 +1130,18 @@
                     "wrong_range": "La limite inférieure doit être plus petite que la limite supérieure"
                 },
                 "datefield": {
-                    "wrong_date_range": "La date de début doit être antérieure à la date de fin"
+                    "wrong_date_range": "La date de début doit être antérieure à la date de fin",
+                    "placeholder": "Insérer la date",
+                    "tooltip": "Insérer la date au format {format}",
+                    "quickSelectors": {
+                        "today": "Aujourd'hui",
+                        "now": "Maintenant",
+                        "tomorrow": "Demain",
+                        "yesterday": "Hier",
+                        "thisWeek": "Cette semaine",
+                        "thisMonth": "Ce mois-ci",
+                        "nDaysFrom": "{n} jours à partir de {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Aucun résultat",
@@ -2557,6 +2578,8 @@
             "alertForceTranslate": "Vous perdrez toutes les modifications ajoutées dans le texte en passant à l'éditeur visuel. Êtes-vous sûr de passer en mode éditeur de style visuel?",
             "stayInTextareaEditor": "Non, continuez dans la zone de texte",
             "useLatestValidStyle": "Oui, passez à l'éditeur visuel",
+            "alertCustomParamsNotValid": "Vous perdrez toutes les modifications ajoutées en mode texte en fermant l'éditeur de paramètres personnalisés. Êtes-vous sûr de fermer l'éditeur?",
+            "closeCustomParamsEditor": "Oui, fermez l'éditeur",
             "validationError": "Erreur de validation",
             "incorrectPropertyInputError": "Ceci est probablement dû à une valeur manquante ou non valide dans les entrées de propriétés de l'éditeur de style.",
             "emptyRuleEditorTitle": "Ajouter de nouvelles règles",
@@ -2634,7 +2657,9 @@
             "msExtrudedHeight": "Hauteur extrudée",
             "msExtrusionColor": "Couleur d'extrusion",
             "msExtrusionType": "Type d'extrusion",
-            "wall": "Mur"
+            "wall": "Mur",
+            "customParams": "Paramètres personnalisés",
+            "wrongFormatMsg": "La configuration entrée est en mauvais format !!"
         },
         "playback": {
             "settings": {
@@ -3021,7 +3046,9 @@
             "saveSuccessMessage": "Enregistré avec succès",
             "saveTooltip": "Enregistrer",
             "saveAsTooltip": "Enregistrer sous",
-            "unadvertised": "Non annoncé"
+            "unadvertised": "Non annoncé",
+            "creator": "Créé par",
+            "editor": "Dernière modification par"
         },
         "mapEditor": {
             "modalTitle": "Editeur de carte",

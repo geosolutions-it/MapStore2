@@ -78,7 +78,7 @@ import {
 import { getDatesInRange } from '../utils/TimeUtils';
 import pausable from '../observables/pausable';
 import { wrapStartStop } from '../observables/epics';
-import { getTimeDomainsObservable } from '../observables/multidim';
+import { getNearestTimesObservable } from '../observables/multidim';
 import { getDomainValues } from '../api/MultiDim';
 import Rx from 'rxjs';
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -98,15 +98,14 @@ const domainArgs = (getState, paginationOptions = {}) => {
     const layerUrl = selectedLayerUrl(getState());
     const { startPlaybackTime, endPlaybackTime } = playbackRangeSelector(getState()) || {};
     const shouldFilter = statusSelector(getState()) === STATUS.PLAY || statusSelector(getState()) === STATUS.PAUSE;
+    const bboxOptions = multidimOptionsSelectorCreator(id)(getState());
     const fromEnd = snapTypeSelector(getState()) === 'end';
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE, // default, can be overridden by pagination options
         time: startPlaybackTime && endPlaybackTime && shouldFilter ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
         fromEnd,
         ...paginationOptions
-    },
-    multidimOptionsSelectorCreator(id)(getState())
-    ];
+    }, bboxOptions ];
 };
 
 /**
@@ -194,7 +193,7 @@ const getAnimationFrames = (getState, options) => {
         return domainValues.map(res => {
             const domainsArray =  res.DomainValues.Domain.split(",");
             // if there is a selected layer check for time intervals (start/end)
-            // and filter-out domain dates falling outisde the start/end playBack time
+            // and filter-out domain dates falling outside the start/end playBack time
             const selectedLayer = selectedLayerSelector(getState());
             const x = selectedLayer ? getTimeIntervalDomains(getState, domainsArray) : domainsArray;
             return x;
@@ -361,7 +360,7 @@ export const playbackCacheNextPreviousTimes = (action$, { getState = () => { } }
             // get current time in case of SELECT_LAYER or INIT_SELECT_LAYER
             const time = actionTime || currentTimeSelector(getState());
             const snapType = snapTypeSelector(getState());
-            return getTimeDomainsObservable(domainArgs, false, getState, snapType, time).map(([next, previous]) => {
+            return getNearestTimesObservable(domainArgs, false, getState, snapType, time).map(([next, previous]) => {
                 return updateMetadata({
                     forTime: time,
                     next,
@@ -381,7 +380,7 @@ export const setIsIntervalData = (action$, { getState = () => { } } = {}) =>
         .switchMap(({time: actionTime}) => {
             const time = actionTime || currentTimeSelector(getState());
             const snapType = snapTypeSelector(getState());
-            return getTimeDomainsObservable(domainArgs, true, getState, snapType, time)
+            return getNearestTimesObservable(domainArgs, true, getState, snapType, time)
                 .map(([next, previous]) => {
                     const isTimeIntervalData = next.indexOf('/') !== -1 || previous.indexOf('/') !== -1;
                     return setIntervalData(isTimeIntervalData);
