@@ -300,17 +300,29 @@ const deduceInfoFormat = (response) => {
     return infoFormat;
 };
 
+const defaultValidator = {
+    getValidResponses: (responses) => responses,
+    getNoValidResponses: () => []
+};
+
+const determineValidatorFormat = (response, format) => {
+    if (response.format) return response.format;
+
+    const infoFormat = deduceInfoFormat(response);
+    return INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format];
+};
+
+const determineValidator = (response, format) => {
+    const validatorFormat = determineValidatorFormat(response, format);
+    return Validator[validatorFormat] || defaultValidator;
+};
+
 export const getValidator = (format) => {
-    const defaultValidator = {
-        getValidResponses: (responses) => responses,
-        getNoValidResponses: () => []
-    };
     return {
         getValidResponses: (responses) => {
             return responses.reduce((previous, current) => {
                 if (current) {
-                    const infoFormat = deduceInfoFormat(current);
-                    const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
+                    const valid = determineValidator(current, format).getValidResponses([current]);
                     return [...previous, ...valid];
                 }
                 return [...previous];
@@ -319,8 +331,7 @@ export const getValidator = (format) => {
         getNoValidResponses: (responses) => {
             return responses.reduce((previous, current) => {
                 if (current) {
-                    const infoFormat = deduceInfoFormat(current);
-                    const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
+                    const valid = determineValidator(current, format).getNoValidResponses([current]);
                     return [...previous, ...valid];
                 }
                 return [...previous];
