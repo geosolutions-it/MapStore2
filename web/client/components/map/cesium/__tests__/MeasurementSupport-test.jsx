@@ -79,8 +79,9 @@ describe('Cesium MeasurementSupport', () => {
         expect(viewer).toBeTruthy();
         expect(ref.map.canvas).toBeTruthy();
         const buttons = document.querySelectorAll('button');
-        expect(buttons.length).toBe(8);
+        expect(buttons.length).toBe(9);
         expect([...buttons].map(button => button.querySelector('.glyphicon').getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-length',
             'glyphicon glyphicon-polyline-3d',
             'glyphicon glyphicon-polygon-3d',
             'glyphicon glyphicon-point-coordinates',
