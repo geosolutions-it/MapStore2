@@ -91,6 +91,11 @@ const authenticationRules = [
     {
         "urlPattern": ".*sitetocheck.*",
         "method": "bearer"
+    },
+    {
+        method: "header",
+        urlPattern: ".*header-site.com",
+        headers: {"X-Test-Token": "test"}
     }
 ];
 
@@ -322,6 +327,20 @@ describe('Tests ajax library', () => {
             expect(exception.config).toExist().toIncludeKey('url');
             expect(exception.config.url.indexOf('authkey')).toBe(-1);
             done();
+        });
+    });
+    it.only('adds generic headers', (done) => {
+        ConfigUtils.setConfigProp("useAuthenticationRules", true);
+        ConfigUtils.setConfigProp("authenticationRules", authenticationRules);
+        axios.get('header-site.com').then(() => {
+            done("Axios actually reached the fake url");
+        }).catch((exception) => {
+            expect(exception.config).toExist().toIncludeKey('headers');
+
+            expect(exception.config.headers["X-Test-Token"]).toBe('test');
+            done();
+        }).catch(e => {
+            done(e);
         });
     });
 
