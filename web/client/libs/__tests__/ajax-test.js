@@ -329,7 +329,7 @@ describe('Tests ajax library', () => {
             done();
         });
     });
-    it.only('adds generic headers', (done) => {
+    it('adds generic headers', (done) => {
         ConfigUtils.setConfigProp("useAuthenticationRules", true);
         ConfigUtils.setConfigProp("authenticationRules", authenticationRules);
         axios.get('header-site.com').then(() => {
