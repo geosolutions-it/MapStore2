@@ -17,6 +17,9 @@ import {
     mapUomAreaToLength
 } from '../../../utils/MeasureUtils';
 import {
+    calculateDistance
+} from '../../../utils/CoordinatesUtils';
+import {
     getCesiumColor,
     createPolylinePrimitive,
     createPolygonPrimitive,
@@ -387,7 +390,7 @@ function DrawMeasureSupport({
         }
     }, [clearId]);
 
-    function featureToToPrimitives({
+    function featureToPrimitives({
         coordinates,
         feature,
         measureType
@@ -456,6 +459,15 @@ function DrawMeasureSupport({
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, feature.properties.length, 'm'));
             }
             break;
+        case MeasureTypes.LENGTH:
+            if (coordinates.length > 1) {
+                const geodesicDistance = calculateDistance(feature.geometry.coordinates);
+                staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...coordinates], geodesic: true }));
+                segments = addSegmentsLabels(staticLabelsCollection.current, coordinates, MeasureTypes.LENGTH);
+                infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, geodesicDistance, 'm'));
+            }
+            break;
+
         case MeasureTypes.AREA_3D:
             if (coordinates.length > 2) {
                 staticPrimitivesCollection.current.add(createPolygonPrimitive({ ...style?.area, coordinates: [...coordinates] }));
@@ -515,7 +527,7 @@ function DrawMeasureSupport({
 
         const newFeatures = features.map((feature) => {
             const coordinates = measureFeatureToCartesianCoordinates(feature);
-            return featureToToPrimitives({
+            return featureToPrimitives({
                 coordinates,
                 feature,
                 measureType: feature?.properties?.measureType
@@ -530,7 +542,7 @@ function DrawMeasureSupport({
 
     function updateStaticCoordinates(coordinates, { feature }) {
 
-        const updatedFeature = featureToToPrimitives({
+        const updatedFeature = featureToPrimitives({
             coordinates,
             feature,
             measureType: type
@@ -696,6 +708,7 @@ function DrawMeasureSupport({
         case MeasureTypes.POINT_COORDINATES:
             return 'Point';
         case MeasureTypes.ANGLE_3D:
+        case MeasureTypes.LENGTH:
         case MeasureTypes.POLYLINE_DISTANCE_3D:
             return 'LineString';
         case MeasureTypes.SLOPE:
@@ -727,6 +740,7 @@ function DrawMeasureSupport({
             map={map}
             active={active}
             geometryType={getGeometryType()}
+            geodesic={type === MeasureTypes.LENGTH }
             onDrawStart={handleDrawUpdate}
             onMouseMove={handleDrawUpdate}
             onDrawing={handleDrawUpdate}

@@ -819,6 +819,7 @@
             "saveMeasure": "Guarde las medidas en la anotación",
             "resetTooltip": "Medidas claras",
             "addAsLayer": "Agregar como capa",
+            "lengthMeasure": "Medir la distancia geodésica en el espacio 3D",
             "polylineDistance3DMeasure": "Medir distancia en el espacio 3D",
             "area3DMeasure": "Medir área en espacio 3D",
             "pointCoordinatesMeasure": "Medir las coordenadas del punto",
