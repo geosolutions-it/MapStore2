@@ -9,7 +9,6 @@
 import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
-import { DOMParser } from 'xmldom';
 import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
 
 import {
@@ -467,7 +466,9 @@ export default (API) => ({
 
                         const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl, {headers: {'Accept': 'application/xml'}}))
                             .pluck('data')
-                            .map(metadataXml => new DOMParser().parseFromString(metadataXml))
+                            .map(metadataXml => {
+                                return (new DOMParser()).parseFromString(metadataXml, "text/xml");
+                            })
                             .map(metadataDoc => {
                                 const selectXpath = xpathlib.useNamespaces(metadataOptions.xmlNamespaces || {});
 
