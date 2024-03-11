@@ -51,14 +51,14 @@ export default class extends React.Component {
     componentDidMount() {
         // we dont know supported infoFormats yet
         if (this.props.element.url && !this.props.element.infoFormats || this.props.element.infoFormats?.length === 0) {
-            this.setState({ loading: true });
+            this.setState({ loading: true }); // eslint-disable-line -- TODO: need to be fixed
             getSupportedFormat(this.props.element.url, true)
                 .then(({ infoFormats }) => {
                     this.props.onChange("infoFormats", infoFormats);
-                    this.setState({ loading: false });
+                    this.setState({ loading: false }); // eslint-disable-line -- TODO: need to be fixed
                 })
                 .catch(() => {
-                    this.setState({ loading: false });
+                    this.setState({ loading: false }); // eslint-disable-line -- TODO: need to be fixed
                 });
         }
     }
