@@ -91,6 +91,6 @@ describe('Cesium MeasurementSupport', () => {
             'glyphicon glyphicon-trash',
             'glyphicon glyphicon-ext-json'
         ]);
-        Simulate.click(buttons[4]);
+        Simulate.click(buttons[5]);
     });
 });
