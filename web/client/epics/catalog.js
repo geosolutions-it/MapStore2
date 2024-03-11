@@ -9,7 +9,6 @@
 import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
-import { DOMParser } from 'xmldom';
 import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
 
 import {
