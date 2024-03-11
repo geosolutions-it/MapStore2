@@ -305,7 +305,7 @@ function DrawMeasureSupport({
             : `${value.toFixed(2)} ${unitOfMeasure.label}`;
     }
 
-    function addSegmentsLabels(pCollection, coordinates, measureType) {
+    function addSegmentsLabels(pCollection, coordinates, measureType, isGeodesicDistance = false) {
         const unitOfMeasure = measureType === MeasureTypes.AREA_3D
             ? mapUomAreaToLength[unitsOfMeasureRef.current[measureType]?.value]
             : unitsOfMeasureRef.current[measureType];
@@ -314,14 +314,26 @@ function DrawMeasureSupport({
                 const nextCartesian = coordinates[idx + 1];
                 if (nextCartesian) {
                     const middlePoint = computeMiddlePoint(currentCartesian, nextCartesian);
-                    const length = Cesium.Cartesian3.distance(currentCartesian, nextCartesian);
+                    let length = Cesium.Cartesian3.distance(currentCartesian, nextCartesian);
+                    if (isGeodesicDistance) {
+                        const currentPoint = Cesium.Cartographic.fromCartesian(currentCartesian);
+                        const nextPoint = Cesium.Cartographic.fromCartesian(nextCartesian);
+                        length = calculateDistance([[
+                            Cesium.Math.toDegrees(currentPoint.longitude),
+                            Cesium.Math.toDegrees(currentPoint.latitude)
+                        ],
+                        [
+                            Cesium.Math.toDegrees(nextPoint.longitude),
+                            Cesium.Math.toDegrees(nextPoint.latitude)
+                        ]]);
+                    }
+                    const { longitude, latitude, height } = Cesium.Cartographic.fromCartesian(middlePoint);
                     const label = convertMeasure(unitOfMeasure, length, 'm');
                     pCollection.add({
                         position: middlePoint,
                         text: label,
                         ...getSecondaryLabelStyle()
                     });
-                    const { longitude, latitude, height } = Cesium.Cartographic.fromCartesian(middlePoint);
                     return [Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude), height, length, label];
                 }
                 return null;
@@ -462,9 +474,9 @@ function DrawMeasureSupport({
         case MeasureTypes.LENGTH:
             if (coordinates.length > 1) {
                 const geodesicDistance = calculateDistance(feature.geometry.coordinates);
-                staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...coordinates], geodesic: true }));
-                segments = addSegmentsLabels(staticLabelsCollection.current, coordinates, MeasureTypes.LENGTH);
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, geodesicDistance, 'm'));
+                staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...coordinates], geodesic: true }));
+                segments = addSegmentsLabels(staticLabelsCollection.current, coordinates, MeasureTypes.LENGTH, true);
             }
             break;
 
@@ -625,6 +637,28 @@ function DrawMeasureSupport({
                 tooltipLabelText = tooltips.end;
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, distance, 'm'));
                 addSegmentsLabels(dynamicLabelsCollection.current, coordinates, MeasureTypes.POLYLINE_DISTANCE_3D);
+                coordinates.forEach((cartesian, idx) => {
+                    if (idx !== (coordinates.length - 1)) {
+                        dynamicBillboardCollection.current.add({
+                            position: cartesian,
+                            image: coordinateNodeImage.current,
+                            ...getCoordinatesNodeStyle()
+                        });
+                    }
+                });
+            }
+            break;
+        case MeasureTypes.LENGTH:
+            tooltipLabelText = tooltips.start;
+            if (coordinates.length > 1) {
+                tooltipLabelText = tooltips.end;
+                const coords4326 = coordinates.map((cartesianPoint) => {
+                    const {longitude, latitude} = Cesium.Cartographic.fromCartesian(cartesianPoint);
+                    return [Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude)];
+                });
+                const geodesicDistance = calculateDistance(coords4326);
+                infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, geodesicDistance, 'm'));
+                addSegmentsLabels(dynamicLabelsCollection.current, coordinates, MeasureTypes.LENGTH, true);
                 coordinates.forEach((cartesian, idx) => {
                     if (idx !== (coordinates.length - 1)) {
                         dynamicBillboardCollection.current.add({
