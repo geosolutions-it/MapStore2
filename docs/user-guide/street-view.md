@@ -66,6 +66,6 @@ Through the navigation toolbar it is possible to:
 
 * Open the **Measurements** pop-up, through the <img src="../img/button/cyclomedia-measurements-button.jpg" class="ms-docbutton"/> button.
 
-* **Download** the image in `png` format through the <img src="../img/button/cyclomedia-download-button.jpg" class="ms-docbutton"/> button.
+* **Download** the cyclorama image in `png` format through the <img src="../img/button/cyclomedia-download-button.jpg" class="ms-docbutton"/> button.
 
 * Open the **Image Info** pop-up, through the <img src="../img/button/image-info-button.jpg" class="ms-docbutton"/> button, to: view the *General* tab, the *Location* tab and the *Precision* tab.
