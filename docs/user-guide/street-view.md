@@ -58,7 +58,7 @@ Through the navigation toolbar it is possible to:
 
 * See the **Elevation** through the <img src="../img/button/elevation-button.jpg" class="ms-docbutton"/> button.
 
-* Open the **Report issue** pop-up, through the <img src="../img/button/report-issue-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
+* Open the **Report issue** pop-up, through the <img src="../img/button/report-issue-button.jpg" class="ms-docbutton"/> button.
 
 * Open the **Point Cloud** pop-up, through the <img src="../img/button/point-cloud-button.jpg" class="ms-docbutton"/> button.
 
