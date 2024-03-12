@@ -56,7 +56,7 @@ Through the navigation toolbar it is possible to:
 
 * Open the **Cross Section** pop-up, through the <img src="../img/button/cross-section-button.jpg" class="ms-docbutton"/> button.
 
-* See the **Elevation** through the <img src="../img/button/elevation-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
+* See the **Elevation** through the <img src="../img/button/elevation-button.jpg" class="ms-docbutton"/> button.
 
 * Open the **Report issue** pop-up, through the <img src="../img/button/report-issue-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
 
