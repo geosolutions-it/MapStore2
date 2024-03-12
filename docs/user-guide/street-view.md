@@ -31,7 +31,7 @@ By clicking on a street in the map, the tool window displays the Street View and
 
 ## Cyclomedia
 
-The user can activated the [Cyclomedia](https://www.cyclomedia.com/en) tool to navigate the map through the <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> button available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar).
+If the [Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart) has been configured as a provider for the MS Street View tool, the user experience is the same: the tool can be activated through the same button <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> in [Side Toolbar](mapstore-toolbars.md#side-toolbar).
 
 <img src="../img/street-view/cyclomedia-popup.jpg" class="ms-docimage" width="500px"/>
 
