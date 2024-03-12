@@ -29,7 +29,7 @@ By clicking on a street in the map, the tool window displays the Street View and
 
 * Enable/disable the **Full Screen** <img src="../img/button/full-screen-street.jpg">
 
-## Cyclomedia
+## Cyclomedia Street Smart
 
 If the [Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart) has been configured as a provider for the MS Street View tool, the user experience is the same: the tool can be activated through the same button <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> in [Side Toolbar](mapstore-toolbars.md#side-toolbar).
 
