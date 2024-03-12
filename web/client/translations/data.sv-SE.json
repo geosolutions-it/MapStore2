@@ -591,7 +591,7 @@
                 "configuration": "Konfiguration",
                 "apply": "Tillämpa klassificering",
                 "restore": "Återställ anpassningar",
-                "go_to_cfg": "Konfigurera ...",
+                "goToCfg": "Konfigurera ...",
                 "go_to_thema": "Använd den här konfigurationen",
                 "cfgError": "Fel i konfigurationen JSON",
                 "classify": "Klassificera",
@@ -2610,7 +2610,8 @@
             "saveSuccessTitle": "Framgång",
             "saveSuccessMessage": "Sparad framgångsrikt",
             "saveTooltip": "Spara",
-            "saveAsTooltip": "Spara som"
+            "saveAsTooltip": "Spara som",
+            "unadvertised": "Oannonserad"
         },
         "mapEditor": {
             "modalTitle": "Kartredigerare",

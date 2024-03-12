@@ -56,7 +56,11 @@ const createLayer = (options, map) => {
             styledFeatures.setFeatures(collection.features);
             layerToGeoStylerStyle(options)
                 .then((style) => {
-                    getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
+                    getStyle(applyDefaultStyleToVectorLayer({
+                        ...options,
+                        features: collection.features,
+                        style
+                    }), 'cesium')
                         .then((styleFunc) => {
                             styledFeatures.setStyleFunction(styleFunc);
                         });
@@ -84,7 +88,11 @@ Layers.registerType('wfs', {
         if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {
             layerToGeoStylerStyle(newOptions)
                 .then((style) => {
-                    getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, style }), 'cesium')
+                    getStyle(applyDefaultStyleToVectorLayer({
+                        ...newOptions,
+                        features: layer?.styledFeatures?._originalFeatures,
+                        style
+                    }), 'cesium')
                         .then((styleFunc) => {
                             layer.styledFeatures.setStyleFunction(styleFunc);
                         });

@@ -16,6 +16,7 @@ import { Glyphicon } from 'react-bootstrap';
 import Message from '../../../I18N/Message';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import { getDefaultInfoViewMode } from '../../../../utils/MapInfoUtils';
 
 /**
  * Component for rendering FeatureInfo an Accordion with current available format for get feature info
@@ -62,7 +63,7 @@ export default class extends React.Component {
         }
     }
 
-    getInfoFormat = (infoFormats) => {
+    getInfoViews = (infoFormats) => {
         return Object.keys(infoFormats).map((infoFormat) => {
             const Body = this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].body;
             return {
@@ -78,9 +79,21 @@ export default class extends React.Component {
         });
     }
 
+    transformInfoFormatsToViews = (infoFormats) => {
+        const { JSON, GEOJSON, ..._infoFormats } = infoFormats;
+        if (JSON) {
+            return {..._infoFormats, [getDefaultInfoViewMode(GEOJSON || JSON)]: GEOJSON || JSON, 'TEMPLATE': GEOJSON || JSON};
+        }
+        if (GEOJSON) {
+            return {..._infoFormats, [getDefaultInfoViewMode(GEOJSON)]: GEOJSON, 'TEMPLATE': GEOJSON};
+        }
+
+        return infoFormats;
+    }
+
     render() {
         // the selected value if missing on that layer should be set to the general info format value and not the first one.
-        const data = this.getInfoFormat(this.supportedInfoFormats());
+        const data = this.getInfoViews(this.transformInfoFormatsToViews(this.supportedInfoFormats()));
         return this.state.loading ? (
             <div
                 style={{
@@ -126,6 +139,7 @@ export default class extends React.Component {
                 .filter(([, value])=> includes(availableInfoFormats, value))
                 .map(([key, value])=> ({[key]: value}))
         );
+
         return isEmpty(infoFormats) ? formats : infoFormats;
     }
 }

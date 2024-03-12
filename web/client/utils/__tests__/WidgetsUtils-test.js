@@ -22,7 +22,10 @@ import {
     generateClassifiedData,
     parsePieNoAggregationFunctionData,
     isChartOptionsValid,
-    enableBarChartStack
+    enableBarChartStack,
+    getWidgetLayersNames,
+    isChartCompatibleWithTableWidget,
+    canTableWidgetBeDependency
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -706,5 +709,52 @@ describe('Test WidgetsUtils', () => {
         expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], yAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
         expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }, { id: 'axis-1' }], yAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
         expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }], yAxisOpts: [{ id: 0 }] })).toBe(true);
+    });
+    it('getWidgetLayersNames', () => {
+        expect(getWidgetLayersNames()).toEqual([]);
+        expect(getWidgetLayersNames({})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'map'})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'map', maps: [{layers: [{name: "test"}]}]})).toEqual(["test"]);
+        expect(getWidgetLayersNames({widgetType: 'legend', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersNames({widgetType: 'counter', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersNames({widgetType: 'table', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersNames({widgetType: 'chart'})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1"}]})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: []}]})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: ""}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "2", traces: [{layer: {name: "layer_1"}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "2", traces: [{layer: {name: "layer_2"}}]}]})).toEqual(["layer_1", "layer_2"]);
+    });
+    it('isChartCompatibleWithTableWidget', () => {
+        expect(isChartCompatibleWithTableWidget()).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'map'})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1"}]})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: []}]})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeTruthy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeTruthy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_2"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
+    });
+    it('canTableWidgetBeDependency', () => {
+        const dependencyTableWidget1 = {layer: {name: "layer_1"}};
+        const dependencyTableWidget2 = {layer: {name: "layer_2"}};
+        expect(canTableWidgetBeDependency()).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'map'})).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'map', maps: [{layers: [{name: "layer_1"}]}]}, dependencyTableWidget1)).toBeTruthy();
+        expect(canTableWidgetBeDependency({widgetType: 'counter', layer: {name: "layer_1"}}, dependencyTableWidget1)).toBeTruthy();
+        expect(canTableWidgetBeDependency({widgetType: 'counter', layer: {name: "layer_1"}}, dependencyTableWidget2)).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'table', layer: {name: "layer_1"}}, dependencyTableWidget1)).toBeTruthy();
+        expect(canTableWidgetBeDependency({widgetType: 'table', layer: {name: "layer_1"}}, dependencyTableWidget2)).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1"}]})).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}]}]}, dependencyTableWidget1)).toBeTruthy();
+        expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, dependencyTableWidget2)).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, dependencyTableWidget2)).toBeFalsy();
     });
 });

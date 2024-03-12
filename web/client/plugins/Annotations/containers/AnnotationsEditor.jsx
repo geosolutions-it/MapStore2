@@ -130,7 +130,7 @@ function AnnotationsEditor({
     defaultShape,
     defaultShapeStrokeColor,
     defaultShapeFillColor,
-    defaultShapeSize,
+    defaultShapeSize = 64,
     geodesic,
     activeClickEventListener,
     fonts,

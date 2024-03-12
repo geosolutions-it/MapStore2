@@ -9,7 +9,6 @@
 import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
-import { DOMParser } from 'xmldom';
 import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
 
 import {
@@ -37,7 +36,7 @@ import {
     setNewServiceStatus
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
-import { error, success } from '../actions/notifications';
+import { error, success, warning } from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
 import { allowBackgroundsDeletion } from '../actions/backgroundselector';
@@ -68,9 +67,11 @@ import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace} from '../u
 
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
-import { projectionSelector } from '../selectors/map';
-import { getResolutions } from "../utils/MapUtils";
-
+import { projectionSelector, mapSelector } from '../selectors/map';
+import { getResolutions, METERS_PER_UNIT } from "../utils/MapUtils";
+import { describeFeatureType } from '../api/WFS';
+import { extractGeometryType } from '../utils/WFSLayerUtils';
+import { createDefaultStyle } from '../utils/StyleUtils';
 const onErrorRecordSearch = (isNewService, errObj) => {
     if (isNewService) {
         return Rx.Observable.of(
@@ -273,6 +274,63 @@ export default (API) => ({
                         .merge(Rx.Observable.from(actions))
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }
+                if (layer.type === 'wfs') {
+                    return Rx.Observable.defer(() => describeFeatureType(layer.url, layer.name))
+                        .switchMap((result) => {
+                            const extractedGeometryType = (extractGeometryType(result) || '').replace('Multi', '');
+                            const geometryType = ['Point', 'LineString', 'Polygon'].includes(extractedGeometryType)
+                                ? extractedGeometryType
+                                : 'GeometryCollection';
+                            return Rx.Observable.of(changeLayerProperties(id, {
+                                style: createDefaultStyle({ geometryType })
+                            }));
+                        })
+                        .merge(Rx.Observable.from(actions))
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                if (layer.type === 'model') {
+                    const properties = layer?.features?.[0]?.properties || {};
+                    if (properties?.projectedCrsNotSupported || !properties?.projectedCrs) {
+                        const { center: mapCenter } = mapSelector(state) || {};
+                        const center = CoordinatesUtils.reproject(mapCenter, mapCenter.crs, 'EPSG:4326');
+                        const longitude = center.x;
+                        const latitude = center.y;
+                        const size = properties.size || [2, 2];
+                        const newLayer = {
+                            ...layer,
+                            bbox: {
+                                bounds: {
+                                    minx: (longitude || 0) - ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                                    miny: (latitude || 0) - ((size[1] / 2) / METERS_PER_UNIT.degrees),
+                                    maxx: (longitude || 0) + ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                                    maxy: (latitude || 0) + ((size[1] / 2) / METERS_PER_UNIT.degrees)
+                                },
+                                crs: 'EPSG:4326'
+                            },
+                            features: [
+                                {
+                                    ...layer?.features?.[0],
+                                    geometry: {
+                                        type: 'Point',
+                                        coordinates: [longitude, latitude, 0]
+                                    }
+                                }
+                            ]
+                        };
+                        return Rx.Observable.from(
+                            // add notification warning,
+                            [addNewLayer({...newLayer, id}), warning({
+                                title: "notification.warning",
+                                message: properties?.projectedCrsNotSupported ? "layerProperties.modelLayer.warnings.projectedCrsNotSupported" : "layerProperties.modelLayer.warnings.projectedCrsNotProvided",
+                                autoDismiss: 15,
+                                values: {
+                                    modelProjection: properties?.projectedCrsNotSupported ? `(${properties?.projectedCrs})` : ""
+                                },
+                                position: "tc"
+                            })]
+                        );
+                    }
+                }
                 return Rx.Observable.from(actions);
             })
             .catch(() => {
@@ -408,7 +466,9 @@ export default (API) => ({
 
                         const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl, {headers: {'Accept': 'application/xml'}}))
                             .pluck('data')
-                            .map(metadataXml => new DOMParser().parseFromString(metadataXml))
+                            .map(metadataXml => {
+                                return (new DOMParser()).parseFromString(metadataXml, "text/xml");
+                            })
                             .map(metadataDoc => {
                                 const selectXpath = xpathlib.useNamespaces(metadataOptions.xmlNamespaces || {});
 

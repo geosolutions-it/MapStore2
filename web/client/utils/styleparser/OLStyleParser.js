@@ -69,10 +69,25 @@ import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 const getGeometryFunction = geometryFunctionsLibrary.openlayers({
     Point: OlGeomPoint,
     LineString: OlGeomLineString,
+    Polygon: OlGeomPolygon,
     GeoJSON,
     getCenter
 });
-
+// create a cached accessor for image src data
+export const createGetImagesSrc = () => {
+    // note that images are canvas elements, identified by ID.
+    const imgCache = {};
+    const getImageSrcFromCache = (image, id) => {
+        if (!id) {
+            return image.toDataURL();
+        }
+        if (!imgCache[id]) {
+            imgCache[id] = image.toDataURL();
+        }
+        return imgCache[id];
+    };
+    return getImageSrcFromCache;
+};
 const anchorStringToFraction = (anchor) => {
     switch (anchor) {
     case 'top-left':
@@ -413,6 +428,7 @@ export class OlStyleParser {
         const olStyle = ({ map, features } = {}) => drawIcons(geoStylerStyle, { features })
             .then((images) => {
                 this._getImages = () => images;
+                this._getImageSrc = createGetImagesSrc();
                 this._computeIconScaleBasedOnSymbolizer = (symbolizer, _symbolizer) => {
                     const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
                     if (image && width && height) {
@@ -557,13 +573,17 @@ export class OlStyleParser {
         }
         const geometryFunc = getGeometryFunction(markSymbolizer, feature, this._getMap());
         const images = this._getImages();
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(markSymbolizer, _markSymbolizer)) || {};
+        const imageId = getImageIdFromSymbolizer(markSymbolizer, _markSymbolizer);
+        const { image, width, height } = images.find(({ id }) => id === imageId) || {};
         if (image) {
             const side = width > height ? width : height;
             const scale = (markSymbolizer.radius * 2) / side;
+            // const src = this._getImageSrc(image, imageId);
+            // if _getImageSrc is not defined, perform the image.toDataURL() here
+            const src = this._getImageSrc?.(image, imageId) ?? image.toDataURL();
             return new this.OlStyleConstructor({
                 image: new this.OlStyleIconConstructor({
-                    src: image.toDataURL(),
+                    src,
                     crossOrigin: 'anonymous',
                     opacity: 1,
                     scale,
@@ -697,6 +717,7 @@ export class OlStyleParser {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
             }
         }
+        const geometryFunc = getGeometryFunction(symbolizer, feat, this._getMap());
 
         const color = symbolizer.color;
         // fillOpacity is needed for legacy support
@@ -722,6 +743,7 @@ export class OlStyleParser {
         }) : undefined;
 
         const olStyle = new this.OlStyleConstructor({
+            ...geometryFunc,
             fill,
             stroke
         });

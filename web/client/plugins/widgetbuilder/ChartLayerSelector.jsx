@@ -85,6 +85,7 @@ export default connect((state) =>({
                 trigger={false}
                 glyph="warning-sign"
                 bsStyle="warning"
+                placement="left"
                 title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle"/>}
                 text={<HTML msgId={layerError}/>}/> : null}
         </BuilderHeader>}

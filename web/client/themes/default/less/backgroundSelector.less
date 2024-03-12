@@ -139,6 +139,16 @@
     padding: 8px;
 }
 
-.background-dialog .dropzone-thumbnail-container label {
-    font-weight: bold
+.background-dialog
+{
+    .dropzone-thumbnail-container {
+        .dropzone{
+            width: 128px;
+            height: 128px;
+        }
+        label {
+            font-weight: bold;
+            width: ~"calc(100% - 128px)"
+        }
+    }
 }

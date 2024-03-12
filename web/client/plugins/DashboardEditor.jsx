@@ -88,7 +88,17 @@ class DashboardEditorComponent extends React.Component {
         const defaultServices = this.props.pluginCfg.services || {};
 
         return this.props.editing
-            ? <div className="dashboard-editor de-builder"><Builder disableEmptyMap={this.props.disableEmptyMap} defaultSelectedService={defaultSelectedService} defaultServices={defaultServices} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
+            ? <div
+                className="dashboard-editor de-builder">
+                <Builder
+                    disableEmptyMap={this.props.disableEmptyMap}
+                    defaultSelectedService={defaultSelectedService}
+                    defaultServices={defaultServices}
+                    enabled={this.props.editing}
+                    onClose={() => this.props.setEditing(false)}
+                    catalog={this.props.catalog}
+                />
+            </div>
             : false;
     }
 }

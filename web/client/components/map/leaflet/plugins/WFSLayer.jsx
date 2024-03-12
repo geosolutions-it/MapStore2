@@ -24,7 +24,12 @@ import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 const setStyle = (layer, options) => {
     layerToGeoStylerStyle(options)
         .then((style) => {
-            getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'leaflet')
+            const collection = layer['@wfsFeatureCollection'];
+            getStyle(applyDefaultStyleToVectorLayer({
+                ...options,
+                features: collection.features,
+                style
+            }), 'leaflet')
                 .then((styleUtils) => {
                     styleUtils({ opacity: options.opacity, layer, features: layer?.['@wfsFeatureCollection']?.features })
                         .then(({

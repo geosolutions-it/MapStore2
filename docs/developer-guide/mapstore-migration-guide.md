@@ -20,7 +20,67 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2023.02.xx to 2024.01.00
+## Migration from 2023.02.02 to 2024.01.00
+
+### Maven project update
+
+With this release the maven `pom.xml` files has been restructured to centralize dependencies version in the `dependencyManagement` section and then in some properties in the root `pom.xml` file.
+This regards also the projects that now hold the versions of the dependencies in the properties section.
+Your projects will work in any case, but we suggest to update your `pom.xml` files to align them to the new structure (see template file in the MapStore2 repository for more details).
+
+### Database update
+
+The resource metadata has been recently extented to include  information about resource creator and editor and to provide the advertises/unadvertised resource functionalities.
+If your installation has the [database creation mode](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/database-setup/#database-creation-mode) set to `update` (the default), the columns will be added automatically and you do not have to do any action. If it is set to `validate` instead you will have to run the update scripts.
+
+*In any case*, the update scripts contain also a part to populate the `creator` column, that can not be applied automatically with  [database creation mode](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/database-setup/#database-creation-mode) set to `update`.
+So if you want to see this information, even if it is not strictily required, you will have to run the migration scripts anyway.
+
+- For script reference see:
+
+    [postgresql migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.0.0-to-v2.1.0.sql)
+
+    [h2 migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/h2/h2-migration-from-v.2.0.0-to-v2.1.0.sql)
+
+    [oracle migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/oracle/oracle-migration-from-v.2.0.0-to-v2.1.0.sql)
+
+### Restructuring of Login and Home in Dashboard page
+
+We recently added the sidebar to the dashboard page and by doing so we wanted to keep a uniform position of login and home plugins, by putting them in the omnibar container rather than the sidebar one. The viewer is a specific case that will be reviewed in the future.
+
+In order to align the configuration of the two mentioned plugin you have to:
+
+- edit `localConfig.json` `plugins.dashboard` section
+- remove `BurgerMenu`, `Home` and `Login` items
+- add the following
+
+```json
+"Details",
+"AddWidgetDashboard",
+"MapConnectionDashboard",
+{
+  "name": "SidebarMenu",
+  "cfg": {
+    "containerPosition": "columns"
+  }
+},
+{
+  "name": "Home",
+  "override": {
+    "OmniBar": {
+      "priority": 5
+    }
+  }
+},
+{
+  "name": "Login",
+  "override": {
+    "OmniBar": {
+      "priority": 5
+    }
+  }
+},
+```
 
 ### Using `elevation` layer type instead of wms layer with useForElevation property
 
@@ -124,7 +184,7 @@ For this reason, if you are using the printing plugin in your project you have t
                     <groupId>org.mapfish.print</groupId>
                     <artifactId>print-lib</artifactId>
 -                    <version>geosolutions-2.3-SNAPSHOT</version>
-+                    <version>2.3-SNAPSHOT</version>
++                    <version>2.4-SNAPSHOT</version>
 
 ```
 

@@ -215,9 +215,9 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
 
                     let geometry = feature.geometry;
                     const geometryFunction = getGeometryFunction(symbolizer);
-                    if (geometryFunction && geometryType === 'LineString') {
+                    if (geometryFunction && (geometryType === 'LineString' || geometryType === 'Polygon')) {
                         geometry = {
-                            type: 'LineString',
+                            type: geometryType,
                             coordinates: geometryFunction(feature)
                         };
                     }

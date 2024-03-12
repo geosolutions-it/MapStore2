@@ -465,7 +465,7 @@
                 "configuration": "Configuração",
                 "apply": "Aplicar classificação",
                 "restore": "Reverter costumizações",
-                "go_to_cfg": "Configurar...",
+                "goToCfg": "Configurar...",
                 "go_to_thema": "Utilizar esta configuração",
                 "cfgError": "Erro na configuração JSON",
                 "classify": "Classificar",
@@ -1599,7 +1599,8 @@
                 "close": "Close",
                 "cancel": "Cancel",
                 "saveSuccessTitle": "Success",
-                "saveSuccessMessage": "Dashboard saved successfully"
+                "saveSuccessMessage": "Dashboard saved successfully",
+                "unadvertised": "Não anunciado"
             },
             "errors":{
                 "loading": {

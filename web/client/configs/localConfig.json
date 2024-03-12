@@ -117,6 +117,7 @@
 							"https://maps5.geosolutionsgroup.com/geoserver/wms",
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"visibility": false,
 						"singleTile": false,
 						"credits": {
@@ -138,6 +139,7 @@
 							"https://maps2.geosolutionsgroup.com/geoserver/wms",
 							"https://maps5.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"visibility": false,
 						"singleTile": false,
 						"credits": {
@@ -159,6 +161,7 @@
 							"https://maps5.geosolutionsgroup.com/geoserver/wms",
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"visibility": true,
 						"singleTile": false,
 						"credits": {
@@ -180,6 +183,7 @@
 							"https://maps5.geosolutionsgroup.com/geoserver/wms",
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"visibility": false,
 						"singleTile": false,
 						"credits": {
@@ -200,6 +204,7 @@
 							"https://maps5.geosolutionsgroup.com/geoserver/wms",
 							"https://maps6.geosolutionsgroup.com/geoserver/wms"
 						],
+            "tileSize": 512,
 						"source": "s2cloudless",
 						"singleTile": false,
 						"visibility": false
@@ -752,12 +757,11 @@
             "cfg" : {
               "containerPosition": "columns"
               }
-          },                  
+          },
           {
             "name": "Dashboard"
           },
           "Notifications",
-          "Login",
           {
             "name": "About",
             "cfg": {
@@ -769,7 +773,22 @@
           "DashboardSave",
           "DashboardSaveAs",
           "Attribution",
-          "Home",
+          {
+            "name": "Home",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
+          {
+            "name": "Login",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
           { "name": "DeleteDashboard" },
           { "name": "DashboardExport" },
           { "name": "DashboardImport" },
@@ -992,5 +1011,5 @@
         ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
         "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
-    }
+      }
 }

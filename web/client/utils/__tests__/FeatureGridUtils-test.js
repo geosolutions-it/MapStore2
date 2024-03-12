@@ -133,6 +133,39 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter.filterFields[2].operator).toBe("<");
 
     });
+    it('gridUpdateToQueryUpdate with isNull operator', () => {
+        const gridUpdate1 = {
+            type: "number",
+            attribute: "ATTRIBUTE",
+            operator: "isNull",
+            value: "",
+            rawValue: ""
+        };
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.filterFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("AND");
+        expect(queryUpdateFilter.filterFields[0].value).toBe('');
+        expect(queryUpdateFilter.filterFields[0].operator).toBe("isNull");
+
+    });
+    it('gridUpdateToQueryUpdate with range operator', () => {
+        const gridUpdate1 = {
+            type: "date",
+            attribute: "ATTR_2_DATE",
+            operator: "><",
+            value: "2023-01-01 >< 2023-01-10",
+            rawValue: "2023-01-01 >< 2023-01-10"
+        };
+
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.filterFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("AND");
+        expect(queryUpdateFilter.filterFields[0].value).toBe('2023-01-01 >< 2023-01-10');
+        expect(queryUpdateFilter.filterFields[0].operator).toBe("><");
+
+    });
     it('gridUpdateToQueryUpdate with multiple numbers and multiple strings', () => {
         const gridUpdate1 = {
             type: "number",
@@ -327,6 +360,31 @@ describe('FeatureGridUtils', () => {
             expect(fgColumns.editable).toBeFalsy();
             expect(fgColumns.sortable).toBeTruthy();
             expect(fgColumns.width).toBe(200);
+            expect(fgColumns.headerRenderer).toBeTruthy();
+            expect(fgColumns.filterRenderer).toBeTruthy();
+            expect(fgColumns.formatter).toBeTruthy();
+            expect(fgColumns.editor).toBeTruthy();
+        });
+    });
+    it('test featureTypeToGridColumns with headerRenderer, filterRenderer, formatter and editor for attribute table', () => {
+        const DUMMY = () => {};
+        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const columnSettings = {name: 'Test1', hide: false};
+        const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => DUMMY, getEditor: () => DUMMY, isWithinAttrTbl: true});
+        expect(featureGridColumns.length).toBe(2);
+        featureGridColumns.forEach((fgColumns, index) => {
+            if (index === 0) {
+                expect(fgColumns.description).toBe('Some description');
+                expect(fgColumns.title).toBe('Some title');
+                expect(fgColumns.showTitleTooltip).toBeTruthy();
+            }
+            expect(['Test1', 'Test2'].includes(fgColumns.name)).toBeTruthy();
+            expect(fgColumns.resizable).toBeTruthy();
+            expect(fgColumns.filterable).toBeTruthy();
+            expect(fgColumns.editable).toBeFalsy();
+            expect(fgColumns.sortable).toBeTruthy();
+            expect(fgColumns.width).toBe(300);          // for attribute table
             expect(fgColumns.headerRenderer).toBeTruthy();
             expect(fgColumns.filterRenderer).toBeTruthy();
             expect(fgColumns.formatter).toBeTruthy();

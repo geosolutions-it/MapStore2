@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import { find, get, castArray, isArray, flatten } from 'lodash';
+import { find, get, castArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
 import { getSelectedLayer } from './layers';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
-import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData } from '../utils/WidgetsUtils';
+import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
@@ -99,8 +99,6 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
     pathnameSelector,
     getEditingWidget,
     (ws = [], tableWidgets = [], map = {}, pathname, editingWidget) => {
-        const isChart = editingWidget && editingWidget.widgetType === 'chart';
-        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? isChart ? (editingWidget?.charts?.map(c => c?.layer?.name) || []) : editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
         return {
             availableDependencies:
                 flatten(ws
@@ -110,7 +108,7 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
                     .concat(
                         castArray(tableWidgets)
                             .filter(() => pathname.indexOf("viewer") === -1)
-                            .filter((w) => (!isChart && isArray(editingLayer)) || (isChart ? editingLayer.includes(w.layer.name) : editingLayer.name === w.layer.name))
+                            .filter((w) => canTableWidgetBeDependency(editingWidget, w))
                             .filter((w) => editingWidget && editingWidget.id !== w.id)
                             .map(({id}) => `widgets[${id}]`)
                     )

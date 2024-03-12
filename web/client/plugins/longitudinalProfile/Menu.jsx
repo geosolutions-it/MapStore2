@@ -56,7 +56,7 @@ const Menu = ({
         const ButtonElement = document.getElementById("longitudinal-tool");
         const offsetTop = getOffsetTop(ButtonElement);
         const offsetBottom = getOffsetBottom(ButtonElement);
-        const dropUpVal = offsetTop > 2000 && offsetBottom < 130;
+        const dropUpVal = offsetTop > 130 || offsetBottom < 130;
         setDropUp(dropUpVal);
     }, []);
     const [open, setMenuOpen ] = useState(false);

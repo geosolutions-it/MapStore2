@@ -3,13 +3,14 @@ import {connect} from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { setLocation, setPov } from '../actions/streetView';
+import Message from '../../../components/I18N/Message';
 
 import GStreetView from '../components/GStreetView';
-import { apiLoadedSelector, locationSelector, panoramaOptionsSelector } from '../selectors/streetView';
-import { getAPI } from '../api/gMaps';
+import { apiLoadedSelectorCreator, locationSelector, panoramaOptionsSelector } from '../selectors/streetView';
+import { getAPI } from '../api/google';
 
 const GStreetViewPanel = connect(createStructuredSelector({
-    apiLoaded: apiLoadedSelector,
+    apiLoaded: apiLoadedSelectorCreator("google"),
     location: locationSelector,
     panoramaOptions: panoramaOptionsSelector
 }), {
@@ -19,6 +20,6 @@ const GStreetViewPanel = connect(createStructuredSelector({
     if (apiLoaded) {
         return <GStreetView location={location} google={getAPI()} {...props} />;
     }
-    return null;
+    return <div className="street-view-api-loader"><Message msgId="streetView.loadingAPI" /></div>;
 });
 export default GStreetViewPanel;

@@ -9,7 +9,7 @@
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 
 import { createSelector } from 'reselect';
-import {get, memoize} from 'lodash';
+import {get, memoize, round} from 'lodash';
 import {detectIdentifyInMapPopUp} from "../utils/MapUtils";
 import { isLoggedIn } from './security';
 
@@ -81,6 +81,14 @@ export const mapLimitsSelector = state => get(mapSelector(state), "limits");
 export const mapBboxSelector = state => get(mapSelector(state), "bbox");
 export const minZoomSelector = state => get(mapLimitsSelector(state), "minZoom");
 export const resolutionsSelector = state => get(mapSelector(state), "resolutions");
+export const currentZoomLevelSelector = state => get(mapSelector(state), "zoom");
+export const currentResolutionSelector = createSelector(
+    resolutionsSelector,
+    currentZoomLevelSelector,
+    (resolutions = [], currentZoomLvl) => {
+        return resolutions[round(currentZoomLvl)];
+    }
+);
 
 /**
  * Get the scales of the current map

@@ -67,4 +67,18 @@ describe("The VersionInfo component", () => {
         expect(dateValue.textContent.trim()).toBe(date);
         expect(githubUrlValue.textContent.trim()).toBe(commit);
     });
+    it('no commit', () => {
+        const githubUrl = "https://github.com/geosolutions-it/MapStore/tree/";
+        const vd = ReactDOM.render(
+            <VersionInfo
+                version={'version'}
+                githubUrl={githubUrl}
+                commit={'no-commit'}
+                message={'no-mssage'}
+                date={'no-date'}
+            />, document.getElementById("container"));
+        expect(vd).toBeTruthy();
+        const commitValue = document.querySelector('.v_commit');
+        expect(commitValue.textContent.trim()).toBe('no-commit'); // No URL for 'no-commit' value
+    });
 });

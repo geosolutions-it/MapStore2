@@ -42,7 +42,7 @@ extra:
       link: 'https://it.linkedin.com/company/geosolutions-s-a-s-'
 extra_javascript:
   - 'https://code.jquery.com/jquery-3.3.1.min.js'
-  - 'https://unpkg.com/mermaid@9.1.3/dist/mermaid.min.js'
+  - 'https://unpkg.com/mermaid@10.6.0/dist/mermaid.min.js'
 extra_css:
   - 'theme/css/extra.css'
 repo_name: 'geosolutions-it/MapStore2'
@@ -178,7 +178,18 @@ nav:
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
 plugins:
   - search
-  - pdf-export:
-      combined: true
-      combined_output_path: pdf/mapstore_documentation.pdf
+  - with-pdf:
+      author: GeoSolutionsGroup
+      copyright: 'MapStore©'
+      #
+      #cover: false
+      #back_cover: true
+      cover_logo: 'img/mapstore2-logo.png'
+      cover_title: MapStore Documentation
+      cover_subtitle: User Guide and Developer Guide
+      toc_level: 3
+      output_path: pdf/mapstore_documentation.pdf
       enabled_if_env: ENABLE_PDF_EXPORT
+      debug_html: true
+      show_anchors: true
+      verbose: true

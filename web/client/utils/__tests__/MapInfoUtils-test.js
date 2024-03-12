@@ -24,7 +24,10 @@ import {
     getLayerFeatureInfo,
     getMarkerLayer,
     defaultQueryableFilter,
-    filterRequestParams
+    filterRequestParams,
+    getInfoViewModes,
+    getDefaultInfoViewMode,
+    isDataFormat
 } from '../MapInfoUtils';
 
 import { createBBox } from '../CoordinatesUtils';
@@ -37,12 +40,62 @@ class App extends React.Component {
 
 describe('MapInfoUtils', () => {
 
+    it('getInfoViewModes', () => {
+        let testData = {
+            "TEXT": "TEXT",
+            "PROPERTIES": "PROPERTIES",
+            "HTML": "HTML",
+            "TEMPLATE": "TEMPLATE"
+        };
+        let results = getInfoViewModes();
+        expect(results).toExist();
+        expect(Object.keys(results).length).toBe(Object.keys(testData).length);
+
+        let testKeys = Object.keys(testData);
+        expect(Object.keys(results).reduce((prev, key) => {
+            return prev
+                && testKeys.indexOf(key) !== -1
+                && results[key] === testData[key];
+        }, true)).toBe(true);
+    });
+
+    it('getDefaultInfoViewMode', () => {
+        let testViews = {
+            "TEXT": "TEXT",
+            "PROPERTIES": "PROPERTIES",
+            "HTML": "HTML",
+            "TEMPLATE": "TEMPLATE"
+        };
+        let testInfoFormats = {
+            "TEXT": 'text/plain',
+            "HTML": 'text/html',
+            "JSON": 'application/json',
+            "GEOJSON": 'application/geo+json'
+        };
+
+        let textPlainResult = getDefaultInfoViewMode(testInfoFormats.TEXT);
+        expect(textPlainResult).toExist();
+        expect(textPlainResult).toBe(testViews.TEXT);
+
+        let htmlResult = getDefaultInfoViewMode(testInfoFormats.HTML);
+        expect(htmlResult).toExist();
+        expect(htmlResult).toBe(testViews.HTML);
+
+        let jsonResult = getDefaultInfoViewMode(testInfoFormats.JSON);
+        expect(jsonResult).toExist();
+        expect(jsonResult).toBe(testViews.PROPERTIES);
+
+        let geoJsonResult = getDefaultInfoViewMode(testInfoFormats.GEOJSON);
+        expect(geoJsonResult).toExist();
+        expect(geoJsonResult).toBe(testViews.PROPERTIES);
+    });
+
     it('getAvailableInfoFormat', () => {
         let testData = {
             "TEXT": "text/plain",
             "HTML": "text/html",
-            "PROPERTIES": "application/json",
-            "TEMPLATE": "application/json"
+            "JSON": "application/json",
+            "GEOJSON": "application/geo+json"
         };
         let results = getAvailableInfoFormat();
         expect(results).toExist();
@@ -57,7 +110,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('getAvailableInfoFormatLabels', () => {
-        let testData = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'];
+        let testData = ['TEXT', 'HTML', 'JSON', 'GEOJSON'];
         let results = getAvailableInfoFormatLabels();
         expect(results).toExist();
         expect(results.length).toBe(4);
@@ -68,7 +121,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('getAvailableInfoFormatValues', () => {
-        let testData = ['text/plain', 'text/html', 'application/json'];
+        let testData = ['text/plain', 'text/html', 'application/json', 'application/geo+json'];
         let results = getAvailableInfoFormatValues();
         expect(results).toExist();
         expect(results.length).toBe(4);
@@ -76,6 +129,31 @@ describe('MapInfoUtils', () => {
         expect(results.reduce((prev, value) => {
             return prev && testData.indexOf(value) !== -1;
         }, true)).toBe(true);
+    });
+
+    it('isDataFormat', () => {
+        let jsonMimeType = 'application/json';
+        let geoJsonMimeType = 'application/geo+json';
+        let otherMimeType = 'test';
+
+        let infoJsonTrue = isDataFormat({ info_format: jsonMimeType });
+        expect(infoJsonTrue).toExist();
+        expect(infoJsonTrue).toBe(true);
+
+        let infoGeoJsonTrue = isDataFormat({ info_format: geoJsonMimeType });
+        expect(infoGeoJsonTrue).toExist();
+        expect(infoGeoJsonTrue).toBe(true);
+
+        let outputGeoJsonTrue = isDataFormat({ outputFormat: geoJsonMimeType });
+        expect(outputGeoJsonTrue).toExist();
+        expect(outputGeoJsonTrue).toBe(true);
+
+        let outputJsonTrue = isDataFormat({ outputFormat: jsonMimeType });
+        expect(outputJsonTrue).toExist();
+        expect(outputJsonTrue).toBe(true);
+
+        let notDataType = isDataFormat({ info_format: otherMimeType });
+        expect(notDataType).toBe(false);
     });
 
     it('getDefaultInfoFormatValue', () => {
@@ -487,11 +565,6 @@ describe('MapInfoUtils', () => {
         let validResponses = validator.getValidResponses(response);
         expect(validResponses.length).toBe(1);
 
-        // Validate format 'PROPERTIES'
-        response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
-        validResponses = validator.getValidResponses(response);
-        expect(validResponses.length).toBe(1);
-
         // Validate format 'JSON'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
         validResponses = validator.getValidResponses(response);
@@ -567,11 +640,6 @@ describe('MapInfoUtils', () => {
         let noValidResponses = validator.getNoValidResponses(response);
         expect(noValidResponses.length).toBe(1);
 
-        // Validate format 'PROPERTIES'
-        response.filter(r=> r !== undefined).forEach(res => {res.format = "PROPERTIES"; return res;});
-        noValidResponses = validator.getNoValidResponses(response);
-        expect(noValidResponses.length).toBe(1);
-
         // Validate format 'JSON'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
         noValidResponses = validator.getNoValidResponses(response);
@@ -593,8 +661,11 @@ describe('MapInfoUtils', () => {
     });
 
     it('getDefaultInfoFormatValueFromLayer', () => {
-        const jsonFormat = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "JSON"}}, {});
+        const jsonFormat = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "PROPERTIES"}}, {});
         expect(jsonFormat).toBe('application/json');
+        // getDefaultInfoFormatValueFromLayer should also resolve when featureInfo.format corresponds to an info_format key rather then an info view.
+        const geojsonPreConfigured = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "GEOJSON"}}, {});
+        expect(geojsonPreConfigured).toBe('application/geo+json');
         const htmlFormat = getDefaultInfoFormatValueFromLayer({}, {format: "text/html"});
         expect(htmlFormat).toBe('text/html');
     });

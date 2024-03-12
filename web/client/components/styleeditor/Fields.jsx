@@ -57,7 +57,7 @@ export const fields = {
             const blockConfig = config?.getGroupConfig(value.kind) || {};
             const properties = value;
             return (
-                <>
+                <div className="ms-symbolizer-nested-fields">
                     <Fields
                         properties={properties}
                         params={blockConfig.omittedKeys ? omit(params, blockConfig.omittedKeys) : params}
@@ -68,7 +68,7 @@ export const fields = {
                         format={format}
                     />
                     <PropertyField divider/>
-                </>
+                </div>
             );
         }
 
@@ -535,6 +535,63 @@ export const fields = {
                     creatable
                 />
             </PropertyField>
+        );
+    },
+    customParams: (props) => {
+        const {
+            label,
+            value,
+            config: {
+                isValid
+            },
+            thematicCustomParams,
+            onChange
+        } = props;
+        // if there is no params it will be hidden
+        if (!(thematicCustomParams?.length)) {
+            return null;
+        }
+        const valid = !isValid || isValid({ value });
+        const handleCustomParamChange = (key, selectedVal) => {
+            onChange({
+                [key]: selectedVal
+            });
+        };
+
+        return (
+            <div style={{ width: '100%' }}>
+                <hr />
+                <div className="ms-symbolizer-field"><Message msgId={label} /></div>
+                <div>
+                    {thematicCustomParams?.map(param=> {
+                        const currentValue = value ? value[param?.field] : undefined;
+                        const valueObj = param?.values?.find(val => val.value === currentValue);
+                        return (
+                            <PropertyField
+                                key={param?.field}
+                                label={param?.title || param?.field}
+                                invalid={!valid}>
+                                <SelectInput
+                                    {...props}
+                                    value={valueObj?.value
+                                        ? { value: valueObj.value, label: valueObj.name ?? valueObj.value }
+                                        : currentValue }
+                                    onChange={(val)=> handleCustomParamChange(param.field, val)}
+                                    config={{...props.config, getOptions: () => {
+                                        return param?.values?.map(val => {
+                                            return {
+                                                value: val.value,
+                                                label: val.name
+                                            };
+                                        });
+                                    }}}
+                                />
+                            </PropertyField>
+                        );
+                    })}
+                </div>
+                <hr />
+            </div>
         );
     }
 };

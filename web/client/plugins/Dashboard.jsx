@@ -49,6 +49,7 @@ import dashboardEpics from '../epics/dashboard';
 import widgetsEpics from '../epics/widgets';
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
 import { createPlugin } from '../utils/PluginsUtils';
+import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 
 const WidgetsView = compose(
     connect(
@@ -114,12 +115,7 @@ const WidgetsView = compose(
                      * if it has other connection that are for sure map or table
                      * then make it non selectable
                     */
-                    target.widgetType === "table" &&
-                        (editingWidget.widgetType !== "map" &&
-                            editingWidget.widgetType === "chart"
-                            ? (target.layer && editingWidget && editingWidget?.charts?.map(c => c?.layer?.name)?.includes(target.layer.name))
-                            : (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
-                        || editingWidget.widgetType === "map") && !target.mapSync
+                    target.widgetType === "table" && canTableWidgetBeDependency(editingWidget, target) && !target.mapSync
                 ) && target.id !== editingWidget.id
     })
 )(Dashboard);

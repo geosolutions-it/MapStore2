@@ -41,7 +41,8 @@ class MapThumbnail extends React.Component {
         onRemoveThumbnail: PropTypes.func,
         // I18N
         message: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-        suggestion: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
+        suggestion: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        checkOriginalFileSize: PropTypes.bool
     };
 
     static contextTypes = {
@@ -113,6 +114,7 @@ class MapThumbnail extends React.Component {
                 ref="imgThumbnail"
                 thumbnail={this.getThumbnailUrl()}
                 className={null}
+                checkOriginalFileSize={this.props.checkOriginalFileSize}
                 dropZoneProps={{
                     className: 'dropzone alert alert-info',
                     rejectClassName: 'alert-danger'

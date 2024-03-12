@@ -18,6 +18,7 @@ import {
     errorStyle,
     updateEditorMetadata
 } from '../../actions/styleeditor';
+import { updateNode } from '../../actions/layers';
 import SLDService from '../../api/SLDService';
 import {
     classificationRaster,
@@ -143,7 +144,6 @@ export function StyleEditor({
     editors: editorsProp = [],
     ...props
 }) {
-
     const [alert, setAlert] = useState();
 
     const centeredChildStyle = {
@@ -308,7 +308,8 @@ const StyleCodeEditor = connect(
     ),
     {
         onUpdateMetadata: updateEditorMetadata,
-        onChange: editStyleCode
+        onChange: editStyleCode,
+        onUpdateNode: updateNode
     }
 )(StyleEditor);
 

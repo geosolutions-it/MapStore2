@@ -173,6 +173,16 @@
                     "eyeDomeLightingRadius": "Lighting radius"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Center's Latitude (DD)",
+                "modelCenterLng": "Center's Longitude (DD)",
+                "height": "Height (m)",
+                "heading": "Heading (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "The model is placed on the center of the current view because: the model has a CRS projection {modelProjection} but it is not supported.",
+                    "projectedCrsNotProvided": "The model is placed on the center of the current view because: the model has no defined CRS projection."
+                }
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Title",
@@ -680,7 +690,7 @@
                 "configuration": "Configuration",
                 "apply": "Apply classification",
                 "restore": "Reset customizations",
-                "go_to_cfg": "Configure...",
+                "goToCfg": "Configure...",
                 "go_to_thema": "Use this configuration",
                 "cfgError": "Error in configuration JSON",
                 "classify": "Classify",
@@ -1120,7 +1130,18 @@
                     "wrong_range": "Lower boundary must be lower than the upper boundary"
                 },
                 "datefield": {
-                    "wrong_date_range": "Start date must be earlier than end date"
+                    "wrong_date_range": "Start date must be earlier than end date",
+                    "placeholder": "Insert date",
+                    "tooltip": "Insert date in {format} format",
+                    "quickSelectors": {
+                        "today": "Today",
+                        "now": "Now",
+                        "tomorrow": "Tomorrow",
+                        "yesterday": "Yesterday",
+                        "thisWeek": "This week",
+                        "thisMonth": "This month",
+                        "nDaysFrom": "{n} days from {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "No results",
@@ -1796,12 +1817,14 @@
                     "default": "Search...",
                     "string": "Type text to filter...",
                     "date": "Type date to filter...",
+                    "time": "Type time to filter...",
                     "number": "Type number or expression..."
                 },
                 "tooltips": {
                     "editMode": "Quick search is not available in edit mode",
                     "default": "Search...",
                     "string": "Type text to filter...",
+                    "time": "Type time to filter...",
                     "number": "Type a number or an expression. Examples: 10, > 2, < 10",
                     "date": "Type a date or an expression. Use {format} for the date.",
                     "geometry": {
@@ -1809,6 +1832,33 @@
                         "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
                         "applied": "Clean the selection"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "time": "Type time to filter...",
+                    "date": "Type date to filter...",
+                    "number": "Type number to filter...",
+                    "range": "Please Enter ..."
+                },
+                "tooltips": {
+                    "editMode": "Quick search is not available in edit mode",
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "time": "Type time to filter...",
+                    "number": "Type a number ...",
+                    "date": "Type a date. Use {format} for the date.",
+                    "geometry": {
+                        "disabled": "Filter clicking on map / Alt + mouse drag to draw a box filter. Hold also ctrl to add more features to the current filter",
+                        "enabled": "Click on map to select a feature / Alt + mouse drag to draw a box filter. Hold ctrl and click to select multiple features",
+                        "applied": "Clean the selection"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Start",
+                    "end": "End"
                 }
             },
             "toolbar": {
@@ -2537,6 +2587,8 @@
             "alertForceTranslate": "You will lose all the changes added in the text mode by switching to visual editor. Are you sure to switch to visual style editor mode?",
             "stayInTextareaEditor": "No, continue with text editor",
             "useLatestValidStyle": "Yes, switch to visual editor",
+            "alertCustomParamsNotValid": "You will lose all the changes added in the text mode by closing the custom params editor. Are you sure to close the editor?",
+            "closeCustomParamsEditor": "Yes, close the editor",
             "validationError": "Validation error",
             "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
 
@@ -2622,7 +2674,9 @@
             "minLabel": "Min",
             "maxLabel": "Max",
             "minSourceValue": "Minimum source data value",
-            "maxSourceValue": "Maximum source data value"
+            "maxSourceValue": "Maximum source data value",
+            "customParams": "Custom Parameters",
+            "wrongFormatMsg": "The entered configuration is in wrong format !!"
         },
         "playback": {
             "settings": {
@@ -3008,7 +3062,10 @@
             "saveSuccessTitle": "Success",
             "saveSuccessMessage": "Saved successfully",
             "saveTooltip": "Save",
-            "saveAsTooltip": "Save As"
+            "saveAsTooltip": "Save As",
+            "unadvertised": "Unadvertised",
+            "creator": "Created by",
+            "editor": "Last modified by"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",
@@ -3087,7 +3144,7 @@
             "title": "Title",
             "titlePlaceholder": "Enter displayed name",
             "add": "Add",
-            "thumbnailMessage": "Size of images should be a square of 98px x 98px or 128px x 128px, max 500kb",
+            "thumbnailMessage": "Size of images should be a square of 128px x 128px, max 500kb",
             "imageUploadMessage": "Click, or drag and drop to add an image",
             "additionalParameters": "Additional Parameters",
             "addAdditionalParameterTooltip": "Add parameter",
@@ -3907,6 +3964,24 @@
           "messages": {
             "noDataForPosition": "no street-view data for this position",
             "unknownError": "unknown error, see console"
+          },
+          "loadingAPI": "Loading API...",
+          "cyclomedia": {
+            "initializing": "Initializing Street Smart API...",
+            "loadingAPI": "Loading Street Smart API...",
+            "changeCredentials": "Change Street Smart credentials",
+            "insertCredentials": "Insert your Street Smart credentials",
+            "emptyDescription": "Click on one of the blue points on the map to start browsing the images of street view",
+            "username": "Username",
+            "password": "Password",
+            "submit": "Submit",
+            "zoomIn": "Please zoom in the map to see the street view coverage",
+            "errorOccurred": "Error occurred: ",
+            "errors": {
+              "invalidCredentials": "Invalid credentials",
+              "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
+            },
+            "reloadAPI": "Reload API"
           }
         },
         "sidebarMenu": {
@@ -3931,6 +4006,9 @@
           "fileSelected": "File selected: ",
           "uomMeters": "meters",
           "source": "Source",
+          "export": "Export",
+          "downloadGeoJSON": "GeoJSON",
+          "downloadDXF": "DXF",
           "downloadCSV": "CSV",
           "downloadPNG": "PNG",
           "downloadPDF": "PDF",

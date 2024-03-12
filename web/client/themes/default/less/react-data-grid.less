@@ -132,6 +132,18 @@
         .color-var(@theme-vars[main-color]);
         .background-color-var(@theme-vars[main-bg]);
     }
+    .feature-grid-container {
+        .ms2-border-layout-body {
+            .react-grid-HeaderRow {
+                .react-grid-HeaderCell {
+                    .rw-datetimepicker.rw-widget input:disabled, 
+                    .rw-datetimepicker.rw-widget .rw-select button:disabled {
+                        .background-color-var(@theme-vars[disabled-bg], true);
+                    }
+                }
+            }
+        }
+   }
 }
 
 // **************
@@ -297,6 +309,9 @@
                  .rw-datetimepicker.rw-widget input {
                       .input-size(@input-height-small; @padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @input-border-radius-small);
                  }
+                 .rw-datetimepicker.rw-widget input:disabled{
+                    height:100%;
+                 }
              }
          }
      }
@@ -311,5 +326,14 @@
                } 
             }
         }
+    }
+}
+
+// we are using the validate function to prevent
+// to lose focus on the editing of date/time inside a popover
+// for this reason we are going to hide the error status icon
+.rdg-editor-container.has-error {
+    .rw-datetimepicker ~ .glyphicon-remove {
+        display: none;
     }
 }

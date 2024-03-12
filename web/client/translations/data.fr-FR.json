@@ -173,6 +173,16 @@
                     "eyeDomeLightingRadius": "Rayon d'éclairage"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Latitude du centre (DD)",
+                "modelCenterLng": "Longitude du centre(DD)",
+                "height": "Hauteur (m)",
+                "heading": "Angle de cap (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "Le modèle est placé au centre de la vue actuelle car: le modèle a une projection CRS {modelProjection}, mais elle n'est pas prise en charge.",
+                    "projectedCrsNotProvided": "Le modèle est placé au centre de la vue actuelle car: le modèle n'a pas de projection CRS définie."
+                }
+            },
             "tooltip": {
                 "label": "Infobulle",
                 "title": "Titre",
@@ -680,7 +690,7 @@
                 "configuration": "Configuration",
                 "apply": "Appliquer la classification",
                 "restore": "Réinitialiser les personnalisations",
-                "go_to_cfg": "Configurer...",
+                "goToCfg": "Configurer...",
                 "go_to_thema": "Utilisez cette configuration",
                 "cfgError": "Erreur dans la configuration JSON",
                 "classify": "Classer",
@@ -1120,7 +1130,18 @@
                     "wrong_range": "La limite inférieure doit être plus petite que la limite supérieure"
                 },
                 "datefield": {
-                    "wrong_date_range": "La date de début doit être antérieure à la date de fin"
+                    "wrong_date_range": "La date de début doit être antérieure à la date de fin",
+                    "placeholder": "Insérer la date",
+                    "tooltip": "Insérer la date au format {format}",
+                    "quickSelectors": {
+                        "today": "Aujourd'hui",
+                        "now": "Maintenant",
+                        "tomorrow": "Demain",
+                        "yesterday": "Hier",
+                        "thisWeek": "Cette semaine",
+                        "thisMonth": "Ce mois-ci",
+                        "nDaysFrom": "{n} jours à partir de {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Aucun résultat",
@@ -1796,6 +1817,7 @@
                 "placeholders": {
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
                     "date": "Tapez la date à filtrer...",
                     "number": "Tapez un nombre ou une expression..."
                 },
@@ -1803,6 +1825,7 @@
                     "editMode": "La recherche rapide n'est pas disponible en mode édition",
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
                     "number": "Tapez un nombre ou une expression... Exemples : 10, > 2, < 10",
                     "date": "Tapez une date ou une expression. Utilisez {format} pour la date.",
                     "geometry": {
@@ -1810,6 +1833,33 @@
                         "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
                         "applied": "Nettoyer la sélection"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
+                    "date": "Tapez la date à filtrer...",
+                    "number": "Tapez un nombre...",
+                    "range": "Entrez s'il vous plait ..."
+                },
+                "tooltips": {
+                    "editMode": "La recherche rapide n'est pas disponible en mode édition",
+                    "default": "Recherche...",
+                    "string": "Tapez le texte à filtrer...",
+                    "time": "Tapez le temps à filtrer...",
+                    "number": "Tapez un nombre...",
+                    "date": "Tapez une date. Utilisez {format} pour la date.",
+                    "geometry": {
+                        "disabled": "Filtrer en cliquant sur la carte / Alt + glisser la souris pour dessiner un filtre de boîte. Maintenez également la touche Ctrl pour ajouter plus de fonctionnalités au filtre actuel",
+                        "enabled": "Cliquez sur la carte pour sélectionner une caractéristique / Alt + glissement de la souris pour dessiner un filtre de boîte. Maintenez la touche Ctrl enfoncée et cliquez pour sélectionner plusieurs entités",
+                        "applied": "Nettoyer la sélection"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Commencer",
+                    "end": "Fin"
                 }
             },
             "toolbar": {
@@ -2528,6 +2578,8 @@
             "alertForceTranslate": "Vous perdrez toutes les modifications ajoutées dans le texte en passant à l'éditeur visuel. Êtes-vous sûr de passer en mode éditeur de style visuel?",
             "stayInTextareaEditor": "Non, continuez dans la zone de texte",
             "useLatestValidStyle": "Oui, passez à l'éditeur visuel",
+            "alertCustomParamsNotValid": "Vous perdrez toutes les modifications ajoutées en mode texte en fermant l'éditeur de paramètres personnalisés. Êtes-vous sûr de fermer l'éditeur?",
+            "closeCustomParamsEditor": "Oui, fermez l'éditeur",
             "validationError": "Erreur de validation",
             "incorrectPropertyInputError": "Ceci est probablement dû à une valeur manquante ou non valide dans les entrées de propriétés de l'éditeur de style.",
             "emptyRuleEditorTitle": "Ajouter de nouvelles règles",
@@ -2612,7 +2664,9 @@
             "minLabel": "Min",
             "maxLabel": "Max",
             "minSourceValue": "Valeur minimale des données sources",
-            "maxSourceValue": "Valeur maximale des données sources"
+            "maxSourceValue": "Valeur maximale des données sources",
+            "customParams": "Paramètres personnalisés",
+            "wrongFormatMsg": "La configuration entrée est en mauvais format !!"
         },
         "playback": {
             "settings": {
@@ -2998,7 +3052,10 @@
             "saveSuccessTitle": "Succès",
             "saveSuccessMessage": "Enregistré avec succès",
             "saveTooltip": "Enregistrer",
-            "saveAsTooltip": "Enregistrer sous"
+            "saveAsTooltip": "Enregistrer sous",
+            "unadvertised": "Non annoncé",
+            "creator": "Créé par",
+            "editor": "Dernière modification par"
         },
         "mapEditor": {
             "modalTitle": "Editeur de carte",
@@ -3077,7 +3134,7 @@
             "title": "Titre",
             "titlePlaceholder": "Entrez le nom affiché",
             "add": "Ajouter",
-            "thumbnailMessage": "La taille des images doit être un carré de 98px x 98px ou 128px x 128px, maximum 500kb",
+            "thumbnailMessage": "Images doit être un carré de 128px x 128px, maximum 500kb",
             "imageUploadMessage": "Cliquez ou faites glisser et déposez pour ajouter une image",
             "additionalParameters": "Paramètres additionnels",
             "addAdditionalParameterTooltip": "Ajouter un paramètre",
@@ -3896,6 +3953,24 @@
           "messages": {
             "noDataForPosition": "pas de données Street View pour cette position",
             "unknownError": "erreur inconnue, voir console"
+          },
+          "loadingAPI": "Chargement de l'API...",
+          "cyclomedia": {
+            "initializing": "Initialisation de l'API Street Smart...",
+            "loadingAPI": "Chargement de l'API Street Smart...",
+            "changeCredentials": "Modifier les identifiants Street Smart",
+            "insertCredentials": "Insérer vos identifiants Street Smart",
+            "emptyDescription": "Cliquez sur l'un des points bleus sur la carte pour commencer à parcourir les images de Street View",
+            "username": "Nom d'utilisateur",
+            "password": "Mot de passe",
+            "submit": "Soumettre",
+            "zoomIn": "Veuillez zoomer sur la carte pour voir la couverture Street View",
+            "errorOccurred": "Une erreur s'est produite : ",
+            "errors": {
+                "invalidCredentials": "Identifiants invalides",
+                "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur."
+            },
+            "reloadAPI": "Recharger l'API"
           }
         },
         "sidebarMenu": {
@@ -3920,6 +3995,9 @@
           "fileSelected": "Fichier sélectionné: ",
           "uomMeters": "mètres",
           "source": "Source",
+          "export": "Exporter",
+          "downloadGeoJSON": "GeoJSON",
+          "downloadDXF": "DXF",
           "downloadCSV": "CSV",
           "downloadPNG": "PNG",
           "downloadPDF": "PDF",

@@ -20,7 +20,6 @@ import { setControlProperty } from '../actions/controls';
 import {burgerMenuSelector, unsavedMapSelector, unsavedMapSourceSelector} from '../selectors/controls';
 import { feedbackMaskSelector } from '../selectors/feedbackmask';
 import ConfigUtils from '../utils/ConfigUtils';
-import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 
 const checkUnsavedMapChanges = (action) => {
     return dispatch => {
@@ -71,8 +70,7 @@ export default {
         OmniBar: {
             name: 'home',
             position: 4,
-            tool: connect((state) => ({
-                hidden: sidebarIsActiveSelector(state),
+            tool: connect(() => ({
                 bsStyle: 'primary',
                 tooltipPosition: 'bottom'
             }))(HomeConnected),
@@ -89,7 +87,7 @@ export default {
             selector: (state) => ({
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
             }),
-            priority: 3
+            priority: 4
         }
     }),
     reducers: {},

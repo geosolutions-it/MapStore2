@@ -474,7 +474,7 @@
                 "configuration": "Prilagodba",
                 "apply": "Primijeni klasifikaciju",
                 "restore": "Reset prilagodbe",
-                "go_to_cfg": "Prilagodi...",
+                "goToCfg": "Prilagodi...",
                 "go_to_thema": "Koristi ovu prilagodbu",
                 "cfgError": "Greška u konfiguracijskom JSON-u",
                 "classify": "Klasificiraj",
@@ -1632,7 +1632,8 @@
                 "close": "Zatvori",
                 "cancel": "Odustani",
                 "saveSuccessTitle": "Uspješno",
-                "saveSuccessMessage": "Ploča je uspješno spremljena"
+                "saveSuccessMessage": "Ploča je uspješno spremljena",
+                "unadvertised": "Nenamjerno"
             },
             "errors":{
                 "loading": {

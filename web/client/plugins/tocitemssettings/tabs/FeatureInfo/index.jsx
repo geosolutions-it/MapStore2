@@ -23,7 +23,6 @@ const responses = {
     text
 };
 
-
 const formatCards = {
     HIDDEN: {
         titleId: 'layerProperties.hideFormatTitle',

@@ -85,11 +85,30 @@ class DateTimeEditor extends AttributeEditor {
             onChange={this.onChange}
             calendar={calendar}
             time={time}
+            onPopoverOpen={(open) => {
+                this.setState({ open });
+                if (!open) {
+                    this.props.onBlur();
+                }
+            }}
             options={{
                 shouldCalendarSetHours: false
             }}
             format={dateFormats[dataType]}
         />);
+    }
+    // when we are using the popover we are using a portal
+    // this makes the current editor component not contained inside the editor container
+    // making this editor directly commit the value causing the issue https://github.com/geosolutions-it/MapStore2/issues/9959
+    // here how the original library is checking relation between editor and editor container to trigger the blur event
+    // https://github.com/adazzle/react-data-grid/blob/v5.0.4/packages/common/editors/EditorContainer.js#L292-L329
+    // ---
+    // Workaround:
+    // we could take advantage of the unused validate method to solve this problem
+    // in this way we prevent to commit the value while the popover is open
+    // see https://github.com/adazzle/react-data-grid/blob/v5.0.4/packages/common/editors/EditorContainer.js#L245
+    validate = () => {
+        return !this.state.open;
     }
 }
 export default DateTimeEditor;

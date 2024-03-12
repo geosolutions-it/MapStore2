@@ -64,7 +64,7 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
-
+    const depToTheWidget = targetId.split(".maps")[0];
     const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => {
         if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
             return {
@@ -81,12 +81,12 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
             }
             return {
                 ...ov,
-                [k]: `${targetId.replace(/.map$/, "")}.${mappings[k]}`
+                [k]: `${depToTheWidget}.${mappings[k]}`
             };
         }
         return ov;
     }, {});
-    const depToTheWidget = targetId.split(".maps")[0];
+
     return active
         ? { ...cleanDependenciesMap, ...overrides, ["dependenciesMap"]: `${depToTheWidget}.dependenciesMap`, ["mapSync"]: `${depToTheWidget}.mapSync`}
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);
@@ -121,11 +121,11 @@ const getValidLocationChange = action$ =>
  * @param {string} dependency the dependency element id to add
  * @param {object} options dependency mapping options. Must contain `mappings` object
  */
-const configureDependency = (active, dependency, options, targetDependenciesMap) =>
+const configureDependency = (active, dependency, options) =>
     Rx.Observable.of(
         onEditorChange("mapSync", active),
         onEditorChange('dependenciesMap',
-            updateDependencyMap(active, dependency, options, targetDependenciesMap)
+            updateDependencyMap(active, dependency, options)
         )
     );
 
@@ -199,7 +199,7 @@ export const toggleWidgetConnectFlow = (action$, {getState = () => {}} = {}) =>
                             if (widget.widgetType === 'map') {
                                 deps = deps.filter(d => (WIDGETS_MAPS_REGEX.exec(d) || [])[2] === widget.selectedMapId);
                             }
-                            return configureDependency(active, deps[0], options, widget.dependencesMap).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
+                            return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
                         }).takeUntil(
                             action$.ofType(LOCATION_CHANGE)
                                 .merge(action$.filter(({ type, key } = {}) => type === EDITOR_SETTING_CHANGE && key === DEPENDENCY_SELECTOR_KEY))

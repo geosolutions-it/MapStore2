@@ -19,7 +19,6 @@ import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/i
 import {connect} from "../utils/PluginsUtils";
 import {Glyphicon} from "react-bootstrap";
 import {burgerMenuSelector} from "../selectors/controls";
-import {sidebarIsActiveSelector} from "../selectors/sidebarmenu";
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -80,8 +79,7 @@ export default {
         OmniBar: {
             name: "login",
             position: 3,
-            tool: connect((state) => ({
-                hidden: sidebarIsActiveSelector(state),
+            tool: connect(() => ({
                 renderButtonContent: () => {return <Glyphicon glyph="user" />; },
                 bsStyle: 'primary'
             }))(LoginNav),
@@ -104,7 +102,7 @@ export default {
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
             }),
             tools: [UserDetails, PasswordReset, Login],
-            priority: 1
+            priority: 2
         }
     }),
     reducers: {security},

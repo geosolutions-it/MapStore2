@@ -602,8 +602,8 @@ function DrawMeasureSupport({
             if (coordinates[0]) {
                 const cartographic = Cesium.Cartographic.fromCartesian(coordinates[0]);
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, cartographic.height, 'm'), {
-                    latitude: cartographic.latitude,
-                    longitude: cartographic.longitude
+                    latitude: Cesium.Math.toDegrees(cartographic.latitude),
+                    longitude: Cesium.Math.toDegrees(cartographic.longitude)
                 });
             }
             break;

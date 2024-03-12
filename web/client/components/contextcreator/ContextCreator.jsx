@@ -246,9 +246,7 @@ export default class ContextCreator extends React.Component {
                         editingAllowedRoles: []
                     }
                 }
-            },
-            "ContextImport",
-            "ContextExport"
+            }
         ],
         ignoreViewerPlugins: false,
         allAvailablePlugins: [],

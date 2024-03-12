@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {isString} from 'lodash';
+import {isString, isUndefined} from 'lodash';
 import React from 'react';
 import { branch, compose, renderComponent, withHandlers, withState, withStateHandlers } from 'recompose';
 
@@ -20,7 +20,7 @@ import ConfirmDialog from '../ConfirmModal';
  */
 export default compose(
     withStateHandlers(
-        ({resource = {}, linkedResources = {}}) => {
+        ({resource = {}, linkedResources = {}, user = {}}) => {
             const detailsSettingsString = resource.detailsSettings || resource.attributes?.detailsSettings;
             let detailsSettings = {};
 
@@ -54,10 +54,13 @@ export default compose(
                     },
                     metadata: {
                         name: resource.name,
-                        description: resource.description
+                        description: resource.description,
+                        advertised: isUndefined(resource.advertised) ? true : resource.advertised
                     },
                     createdAt: resource.creation,
-                    modifiedAt: resource.lastUpdate
+                    modifiedAt: resource.lastUpdate,
+                    creator: user?.role === 'ADMIN' ? resource.creator : '',
+                    editor: user?.role === 'ADMIN' ? resource.editor : ''
                 },
                 linkedResources
             };

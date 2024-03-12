@@ -1,0 +1,71 @@
+/* css for react-resizable */
+.street-view-window-body {
+    .react-resizable-handle {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        bottom: 0;
+        right: 0;
+        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmYwMCIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iNnB4Ij48ZyBvcGFjaXR5PSIwLjMwMiI+PHBhdGggZD0iTSA2IDYgTCAwIDYgTCAwIDQuMiBMIDQgNC4yIEwgNC4yIDQuMiBMIDQuMiAwIEwgNiAwIEwgNiA2IEwgNiA2IFoiIGZpbGw9IiMwMDAwMDAiLz48L2c+PC9zdmc+');
+        background-position: bottom right;
+        padding: 0 3px 3px 0;
+        background-repeat: no-repeat;
+        background-origin: content-box;
+        box-sizing: border-box;
+        cursor: se-resize;
+    }
+    .react-resizable {
+        position: relative;
+    }
+    /* override the standard justify */
+    .empty-state-container .empty-state-main-view .empty-state-description {
+        text-align: center;
+    }
+    // "Loading API ..." indicator
+    .street-view-api-loader {
+        // center text
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+    }
+    // empty view
+    .empty-street-view {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        div {
+            max-width: 350px;
+        }
+        // fix street icon position (it's not centered in the font)
+        .empty-state-image .glyphicon {
+            margin-left: -14% !important;
+        }
+    }
+    .street-view-credentials {
+        h5 {
+            text-align: center;
+            font-weight: bold;
+            margin: 25px auto;
+        }
+        form {
+            margin: 0 30px;
+            .street-view-credentials-form-buttons {
+                display: flex;
+                // all aligned to center
+                justify-content: center;
+                margin-top: 20px;
+            }
+        }
+    }
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+}
+

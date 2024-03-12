@@ -58,7 +58,7 @@ class VersionInfo extends React.Component {
                         </div>
                         <div className="v_commit">
                             {
-                                this.props.githubUrl ?
+                                this.props.githubUrl && this.props.commit !== 'no-commit' ?
                                     <a href={this.props.githubUrl + this.props.commit} target="_blank" className="v_githubUrl">
                                         {this.props.commit}
                                     </a> :

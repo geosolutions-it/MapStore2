@@ -66,4 +66,56 @@ describe('Test for filterRenderer function', () => {
             unregisterFilterRenderer("test");
         }
     });
+    it('render filter components for attribute table', () => {
+        // default filter
+        let Cmp = getFilterRenderer({type: "unknown", isWithinAttrTbl: true});
+        expect(Cmp).toExist();
+        ReactDOM.render(<Cmp />, document.getElementById("container"));
+        let operatorDropdownEl = document.getElementsByClassName('rw-dropdownlist')[0];
+        let input = document.getElementsByClassName("form-control input-sm")[0];
+        expect(operatorDropdownEl).toExist();
+        expect(input).toExist();
+        // string filter
+        Cmp = getFilterRenderer({type: "string", isWithinAttrTbl: true});
+        expect(Cmp).toExist();
+        ReactDOM.render(<Cmp />, document.getElementById("container"));
+        operatorDropdownEl = document.getElementsByClassName('rw-dropdownlist')[0];
+        input = document.getElementsByClassName("form-control input-sm")[0];
+        expect(operatorDropdownEl).toExist();
+        expect(input).toExist();
+        // number filter
+        Cmp = getFilterRenderer({type: "int", isWithinAttrTbl: true});
+        expect(Cmp).toExist();
+        ReactDOM.render(<Cmp />, document.getElementById("container"));
+        operatorDropdownEl = document.getElementsByClassName('rw-dropdownlist')[0];
+        input = document.getElementsByClassName("form-control input-sm")[0];
+        expect(operatorDropdownEl).toExist();
+        expect(input).toExist();
+        // number filter
+        Cmp = getFilterRenderer({type: "number", isWithinAttrTbl: true});
+        expect(Cmp).toExist();
+        ReactDOM.render(<Cmp />, document.getElementById("container"));
+        operatorDropdownEl = document.getElementsByClassName('rw-dropdownlist')[0];
+        input = document.getElementsByClassName("form-control input-sm")[0];
+        expect(operatorDropdownEl).toExist();
+        expect(input).toExist();
+        // time filter
+        Cmp = getFilterRenderer({type: "time", isWithinAttrTbl: true});
+        expect(Cmp).toExist();
+        ReactDOM.render(<Cmp />, document.getElementById("container"));
+        operatorDropdownEl = document.getElementsByClassName('rw-dropdownlist')[0];
+        expect(operatorDropdownEl).toExist();
+        // date filter
+        Cmp = getFilterRenderer({type: "date", isWithinAttrTbl: true});
+        expect(Cmp).toExist();
+        ReactDOM.render(<Cmp />, document.getElementById("container"));
+        operatorDropdownEl = document.getElementsByClassName('rw-dropdownlist')[0];
+        expect(operatorDropdownEl).toExist();
+        // date-time filter
+        Cmp = getFilterRenderer({type: "date-time", isWithinAttrTbl: true});
+        expect(Cmp).toExist();
+        ReactDOM.render(<Cmp />, document.getElementById("container"));
+        operatorDropdownEl = document.getElementsByClassName('rw-dropdownlist')[0];
+        expect(operatorDropdownEl).toExist();
+    });
 });
