@@ -51,7 +51,7 @@ How to manage users and groups is a topic present in the [Managing Users](managi
 
 ## Details
 
-Only for resources of type *map* and *dashboard*, it is possible to add details as additional information in form of descriptive content for the resource itself. This is useful to associate some information to the resource or an overview description of its content. In this case the *Edit properties* window is the following:
+Only for resources of type *map* and *dashboard*, it is possible to add details as additional information in form of descriptive content for the resource itself. This is useful to associate some information to the resource and provide an overview of its content. In this case the *Edit properties* window is the following:
 
 <img src="../img/resource-properties/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
