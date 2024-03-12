@@ -18,13 +18,13 @@ Through the *Edit properties* window the user can perform the following operatio
 !!! note
     The name of a resource is the only mandatory field. Note that is not allowed to choose a name that has already been assigned to another resource.
 
-* * Enable the **Unadvertised** option to makes the owner of the resource or the MapStore admin the only ones who can see and search that resource in the [Home Page](home-page.md) or in the [Map Catalog](map-catalog.md) tool.
+* * Enable the **Unadvertised** option to make the owner of the resource or the MapStore admin the only ones who can see and search that resource in the [Home Page](home-page.md) or in the [Map Catalog](map-catalog.md) tool.
 
 * Add a [**Permission** rule](resources-properties.md#permission-rules)
 
 * Add **Details** (only for *Maps* and *Dashboard*)
 
-Once a resource is saved, the *Edit properties* panel shows the creation and last modification date. An example in the image below:
+Once a resource is saved, the *Edit properties* panel shows the creation and the last modification dates. An example in the image below:
 
 <img src="../img/resource-properties/resource_data.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -51,7 +51,7 @@ How to manage users and groups is a topic present in the [Managing Users](managi
 
 ## Details
 
-Only for resources of type *map* and *dashboard*, it is possible to add details as additional information in form of descriptive content for the resource itself. This is useful to associate some information to the resource or an overview description of its content. In this case the *Edit properties* window is the following:
+Only for resources of type *map* and *dashboard*, it is possible to add details as additional information in form of descriptive content for the resource itself. This is useful to associate some information to the resource and provide an overview of its content. In this case the *Edit properties* window is the following:
 
 <img src="../img/resource-properties/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
