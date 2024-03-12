@@ -36,7 +36,7 @@ The user can activated the [Cyclomedia](https://www.cyclomedia.com/en) tool to n
 <img src="../img/street-view/cyclomedia-popup.jpg" class="ms-docimage" width="500px"/>
 
 !!! note
-    The **Cyclomedia** tool can be configured on the *Street View* plugin as documented [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView)
+    The **[Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart)** provided can be configured on the *Street View* plugin as documented [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView)
 
 When the tool is activated, a window opens and dots appears to highlight streets on the map so that the user can select one of them with a simple click of the mouse.
 
