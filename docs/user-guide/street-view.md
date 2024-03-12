@@ -38,7 +38,7 @@ If the [Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart) has
 !!! note
     The **[Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart)** provided can be configured on the *Street View* plugin as documented [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView)
 
-When the tool is activated, a window opens and dots appears to highlight streets on the map so that the user can select one of them with a simple click of the mouse.
+When the tool is activated, a window opens and the street layer is visualized in form of dots to highlight streets on the map so that the user can select one of them with a simple click of the mouse.
 
 <video class="ms-docimage" controls><source src="../img/street-view/add-point.mp4"/></video>
 
