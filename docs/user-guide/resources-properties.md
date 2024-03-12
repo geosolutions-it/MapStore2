@@ -24,7 +24,7 @@ Through the *Edit properties* window the user can perform the following operatio
 
 * Add **Details** (only for *Maps* and *Dashboard*)
 
-Once a resource is saved, the *Edit properties* panel shows the creation and last modification date. An example in the image below:
+Once a resource is saved, the *Edit properties* panel shows the creation and the last modification dates. An example in the image below:
 
 <img src="../img/resource-properties/resource_data.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
