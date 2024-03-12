@@ -18,7 +18,7 @@ Through the *Edit properties* window the user can perform the following operatio
 !!! note
     The name of a resource is the only mandatory field. Note that is not allowed to choose a name that has already been assigned to another resource.
 
-* * Enable the **Unadvertised** option to make the owner of the resource or the MapStore admin the only ones who can see and search that resource in the [Home Page](home-page.md) or in the [Map Catalog](map-catalog.md) tool.
+* Enable the **Unadvertised** option to make the owner of the resource or the MapStore admin the only ones who can see and search that resource in the [Home Page](home-page.md) or in the [Map Catalog](map-catalog.md) tool.
 
 * Add a [**Permission** rule](resources-properties.md#permission-rules)
 
