@@ -52,7 +52,7 @@ Through the navigation toolbar it is possible to:
 
 * Open the **Display** pop-up, through the <img src="../img/button/display-button.jpg" class="ms-docbutton"/> button, to: set the *Brightness* and the *Contrast* of the view.
 
-* See the **Object Information** through the <img src="../img/button/object-nformation-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
+* See the **Object Information** through the <img src="../img/button/object-nformation-button.jpg" class="ms-docbutton"/> button.
 
 * Open the **Cross Section** pop-up, through the <img src="../img/button/cross-section-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
 
