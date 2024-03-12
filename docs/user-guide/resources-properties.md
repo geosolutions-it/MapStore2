@@ -18,17 +18,17 @@ Through the *Edit properties* window the user can perform the following operatio
 !!! note
     The name of a resource is the only mandatory field. Note that is not allowed to choose a name that has already been assigned to another resource.
 
-* Enable the **Unadvertised** option to makes the resource owner or the admin the only one who can see and search the resource on the [Home Page](home-page.md) or in the [Map Catalog](map-catalog.md) tool.
+* * Enable the **Unadvertised** option to makes the owner of the resource or the MapStore admin the only ones who can see and search that resource in the [Home Page](home-page.md) or in the [Map Catalog](map-catalog.md) tool.
 
-* Add a **Permission** rule
+* Add a [**Permission** rule](resources-properties.md#permission-rules)
 
 * Add **Details** (only for *Maps* and *Dashboard*)
 
-Once a resource has been saved, in the *Save* panel, the user can view the creation and last modification data of the resource itself. An example in the image below:
+Once a resource is saved, the *Edit properties* panel shows the creation and last modification date. An example in the image below:
 
 <img src="../img/resource-properties/resource_data.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-While an admin user can also view who created the resource and the last user who modified it. An example in the image below:
+Admin users can also see who created and modified the resource. An example in the image below:
 
 <img src="../img/resource-properties/resource_creation.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
@@ -51,11 +51,11 @@ How to manage users and groups is a topic present in the [Managing Users](managi
 
 ## Details
 
-Only for resources of type map and dashbaord, it is possible to add details to the resource. This is useful to associate some information to the resource or an overview description of its content. In this case the *Edit properties* window is the following:
+Only for resources of type *map* and *dashboard*, it is possible to add details as additional information in form of descriptive content for the resource itself. This is useful to associate some information to the resource or an overview description of its content. In this case the *Edit properties* window is the following:
 
 <img src="../img/resource-properties/edit-map-properties-panel_details.jpg" class="ms-docimage"  style="max-width:400px;"/>
 
-With a click on the **Add new details** button <img src="../img/button/add_details_button.jpg" class="ms-docbutton"/> it opens a panel where the user can write the details of the resource.
+With a click on the **Add new details** button <img src="../img/button/add_details_button.jpg" class="ms-docbutton"/> a panel opens and the user can write the details of the resource.
 
 <img src="../img/resource-properties/details_panel.jpg" class="ms-docimage"/>
 
@@ -80,7 +80,7 @@ Here, the user is allowed to:
 !!! warning
     The *About this map* button is visible in the [Side Toolbar](mapstore-toolbars.md#side-toolbar) only when the details are present on the map.
 
-* Enable the **Show at startup** <img src="../img/button/show-at-starup-button.jpg" class="ms-docbutton"/> button. If active, as soon as the user opens the resources, the details panel is visualized.
+* Enable the **Show at startup** <img src="../img/button/show-at-starup-button.jpg" class="ms-docbutton"/> button. If active, when the user opens a resource with defined details, these are visualized in a descriptive panel.
 
 * **Delete** the details sheet <img src="../img/button/delete_white_button.jpg" class="ms-docbutton"/>
 
