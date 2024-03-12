@@ -2,7 +2,7 @@
 
 *******************
 
-The **Street View** tool allows the user to browse [Google Street View](https://www.google.com/streetview/) or  [Cyclomedia](https://www.cyclomedia.com/en) contents in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/).
+The **Street View** tool allows the user to browse 360 imagery in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) from different supported providers such as [Google Street View](https://www.google.com/streetview/) or  [Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart).
 
 !!! note
     By default, the **Street View** plugin is ready to be configured for [application contexts](application-context.md#configure-plugins), and is not available in the default plugin configuration due to licensing reasons.
