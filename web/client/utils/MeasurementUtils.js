@@ -100,8 +100,7 @@ export const computeFeatureMeasurement = (feature, options = { formatNumber: n =
         ];
     }
     if (feature.properties.measureType === MeasureTypes.AREA) {
-        const coordinates = feature.geometry.coordinates[0]
-            .filter((coords, idx) => idx < (feature.geometry.coordinates[0].length - 1));
+        const coordinates = feature.geometry.coordinates[0];
         const length = calculateDistance(coordinates, options.lengthFormula);
         const convertedLengthValue = (feature.properties.lengthTargetUom
             ? convertUom(length, 'm', feature.properties.lengthTargetUom)
@@ -324,6 +323,7 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
                 }
             };
             if (feature?.properties?.measureType === MeasureTypes.BEARING) {
+                // used only for bearing because the others rely on react-intl.formatNumber available from components (MeasurementSupport)
                 return [...acc, ...computeFeatureMeasurement(newFeature)];
             }
             return [...acc, newFeature];
