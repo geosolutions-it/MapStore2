@@ -1651,7 +1651,8 @@
           },
           "sortBy": {
             "label": "Sort By",
-            "tooltip": "Add namespace prefix to name property. i.e. ${namespace}:${name}"
+            "tooltip": "Add namespace prefix to name property. i.e. ${namespace}:${name}",
+            "placeholder": "Enter a name"
           }
         },
         "uploader": {

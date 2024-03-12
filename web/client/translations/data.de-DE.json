@@ -1690,7 +1690,8 @@
           },
           "sortBy": {
             "label": "Sortiere nach",
-            "tooltip": "Namespace-Präfix zur Namenseigenschaft hinzufügen. d.h. ${namespace}:${name}"
+            "tooltip": "Namespace-Präfix zur Namenseigenschaft hinzufügen. d.h. ${namespace}:${name}",
+            "placeholder": "Name eingeben"
           }
         },
         "uploader": {

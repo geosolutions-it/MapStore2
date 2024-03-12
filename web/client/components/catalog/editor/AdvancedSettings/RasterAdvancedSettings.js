@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {useEffect} from 'react';
-import { FormGroup, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon, InputGroup, FormControl, Tooltip } from "react-bootstrap";
+import { FormGroup, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon, InputGroup, FormControl as FC, Tooltip } from "react-bootstrap";
 import RS from 'react-select';
 import {isNil, camelCase} from "lodash";
 
@@ -23,6 +23,7 @@ import OverlayTrigger from '../../../misc/OverlayTrigger';
 
 const Button = tooltip(ButtonRB);
 const Select = localizedProps('noResultsText')(RS);
+const FormControl = localizedProps('placeholder')(FC);
 
 /**
  * Generates an array of options in the form e.g. [{value: "256", label: "256x256"}]
@@ -239,6 +240,7 @@ export default ({
                 <InputGroup style={{display: "flex"}}>
                     <FormControl
                         type="text"
+                        placeholder={"catalog.sortBy.placeholder"}
                         style={{ textOverflow: "ellipsis", flex: 1.5 }}
                         value={service?.sortBy?.name}
                         onChange={event => onChangeServiceProperty("sortBy", {...service?.sortBy, name: event && event.target.value})}

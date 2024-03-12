@@ -1652,7 +1652,8 @@
             },
             "sortBy": {
                 "label": "Ordenar por",
-                "tooltip": "Agregue el prefijo del espacio de nombres a la propiedad del nombre. es decir, ${namespace}:${name}"
+                "tooltip": "Agregue el prefijo del espacio de nombres a la propiedad del nombre. es decir, ${namespace}:${name}",
+                "placeholder": "Ingresar nombre"
               }
         },
         "uploader": {
