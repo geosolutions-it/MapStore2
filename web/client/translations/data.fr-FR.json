@@ -1649,7 +1649,11 @@
             "allowUnsecureLayers": {
               "label": "Autoriser les couches non sécurisées",
               "tooltip": "L'ajout d'une couche à la carte avec cette option activée force l'application à appliquer un proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Trier par",
+                "tooltip": "Ajoutez un préfixe d’espace de noms à la propriété name. c'est-à-dire ${namespace}:${name}"
+              }
         },
         "uploader": {
             "filename": "Nom du fichier",

@@ -1648,7 +1648,11 @@
             "allowUnsecureLayers": {
               "label": "Consenti livelli non sicuri",
               "tooltip": "L'aggiunta di un livello da mappare con questa opzione abilitata, costringe l'applicazione ad applicare il proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Ordina per",
+                "tooltip": "Aggiungi il prefisso dello spazio dei nomi alla proprietà del nome. cioè ${namespace}:${name}"
+              }
         },
         "uploader": {
             "filename": "File Name",

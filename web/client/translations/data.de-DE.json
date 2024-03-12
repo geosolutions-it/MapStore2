@@ -1687,6 +1687,10 @@
           "allowUnsecureLayers": {
               "label": "Nicht sichere Ebenen zulassen",
               "tooltip": "Das Hinzufügen einer Ebene zur Karte mit aktivierter Option zwingt die Anwendung, Proxy anzuwenden"
+          },
+          "sortBy": {
+            "label": "Sortiere nach",
+            "tooltip": "Namespace-Präfix zur Namenseigenschaft hinzufügen. d.h. ${namespace}:${name}"
           }
         },
         "uploader": {

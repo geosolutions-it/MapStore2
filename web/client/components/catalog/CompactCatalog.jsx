@@ -78,7 +78,7 @@ const loadPage = ({text, catalog = {}}, page = 0) => {
     const _tempOption = {options: {service: catalog}};
     let options = {};
     if (type === 'csw') {
-        options = {..._tempOption, filter: catalog.filter};
+        options = _tempOption;
     } else if (type === 'tms') {
         options = _tempOption;
     }
