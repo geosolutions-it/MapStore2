@@ -60,7 +60,7 @@ Through the navigation toolbar it is possible to:
 
 * Open the **Report issue** pop-up, through the <img src="../img/button/report-issue-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
 
-* Open the **Point Cloud** pop-up, through the <img src="../img/button/point-cloud-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
+* Open the **Point Cloud** pop-up, through the <img src="../img/button/point-cloud-button.jpg" class="ms-docbutton"/> button.
 
 * Open the **Oblique viewer** pop-up, through the <img src="../img/button/oblique-viewer-button.jpg" class="ms-docbutton"/> button.
 
