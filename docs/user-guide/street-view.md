@@ -54,7 +54,7 @@ Through the navigation toolbar it is possible to:
 
 * See the **Object Information** through the <img src="../img/button/object-nformation-button.jpg" class="ms-docbutton"/> button.
 
-* Open the **Cross Section** pop-up, through the <img src="../img/button/cross-section-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
+* Open the **Cross Section** pop-up, through the <img src="../img/button/cross-section-button.jpg" class="ms-docbutton"/> button.
 
 * See the **Elevation** through the <img src="../img/button/elevation-button.jpg" class="ms-docbutton"/> button (currently not available on MapStore).
 
