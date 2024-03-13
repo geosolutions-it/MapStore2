@@ -29,13 +29,14 @@ This regards also the projects that now hold the versions of the dependencies in
 Your projects will work in any case, but we suggest to update your `pom.xml` files to align them to the new structure (see template file in the MapStore2 repository for more details).
 
 ### Print config file update
+
 Due to the introduction of the new `Jackson Yaml` parser, the MapStore `config.yaml` file has been reviewed and updated. Below are reported all the relevant changes that need to be applied also to `config.yaml` of MapStore donwstream projects where the printing engine is present.
 
 Due to the new library being stricter on the format of the Yaml, some changes in the configuration files were made, to make them compliant with yaml format:
 
-- Removed not allowed characters from property values (@ in @shared.privileged.geoserver.pass@)
-- Removed references without anchors (document declares link to *commonFooter but anchor &commonFooter was not defined previously)
-- Added a space between key\value pairs ("absoluteX: 30" instead of "absoluteX:30")
+- Removed not allowed characters from property values (`@` in `@shared.privileged.geoserver.pass@`)
+- Removed references without anchors (document declares link to `*commonFooter` but anchor `&commonFooter` was not defined previously)
+- Added a space between key\value pairs (`"absoluteX: 30"` instead of `"absoluteX:30"`)
 
 Some additional updates has been provided due to parsing issue with the new library:
 
