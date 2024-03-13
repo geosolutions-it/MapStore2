@@ -40,7 +40,7 @@ Due to the new library being stricter on the format of the Yaml, some changes in
 
 Some additional updates has been provided due to parsing issue with the new library:
 
-```
+```yaml
 - !ipMatch
     host: 127.0.0.1
     # Allow to all hosts
@@ -49,7 +49,7 @@ Some additional updates has been provided due to parsing issue with the new libr
 
 `!ipMatch` is mapped to [AddressHostMatcher](https://github.com/mapfish/mapfish-print-v2/blob/0c055e2a36bec3b12eafd207144ff8eb7b37f987/src/main/java/org/mapfish/print/config/AddressHostMatcher.java#L26), which does not have host property. Should instead use ip property (e.g IP: 127.0.0.1)
 
-```
+```yaml
 - !text
               width: 300
               text: '${comment}'
@@ -58,7 +58,7 @@ Some additional updates has been provided due to parsing issue with the new libr
 
 `!text` is mapped to [TextBlock class](https://github.com/mapfish/mapfish-print-v2/blob/4b73912e5565ae206af5b5c434ef37454a98c252/src/main/java/org/mapfish/print/config/layout/TextBlock.java#L37). It does not have width property, so it should be removed.
 
-```
+```yaml
 lastPage:
     rotation: true
     ...
