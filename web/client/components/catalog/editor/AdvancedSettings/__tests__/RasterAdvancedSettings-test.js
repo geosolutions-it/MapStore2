@@ -264,7 +264,30 @@ describe('Test Raster advanced settings', () => {
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'infoFormat', 'application/json' ]);
     });
-    it('test component onChangeServiceProperty sortBy', () => {
+    it('test component onChangeServiceProperty sortBy change property name', (done) => {
+        TestUtils.act(() => {
+            ReactDOM.render(<RasterAdvancedSettings
+                onChangeServiceProperty={(field, value) => {
+                    try {
+                        expect(field).toBe('sortBy');
+                        expect(value).toEqual({ name: "dc:value", order: 'DESC' });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+                service={{type: "csw", sortBy: {name: "dc:title", order: "DESC"}}}/>, document.getElementById("container"));
+        });
+
+        const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingsPanel).toBeTruthy();
+        const sortOrder = document.querySelectorAll('input[role="combobox"]')[4];
+        const sortName = document.querySelectorAll('input[type="text"]')[0];
+        expect(sortOrder).toBeTruthy();
+        TestUtils.Simulate.focus(sortName);
+        TestUtils.Simulate.change(sortName, { target: { value: "dc:value" }});
+    });
+    it('test component onChangeServiceProperty sortBy, change sort order', () => {
         const action = {
             onChangeServiceProperty: () => {}
         };
@@ -272,16 +295,14 @@ describe('Test Raster advanced settings', () => {
         ReactDOM.render(<RasterAdvancedSettings
             onChangeServiceProperty={action.onChangeServiceProperty}
             service={{type: "csw", sortBy: {name: "dc:title", order: "DESC"}}}/>, document.getElementById("container"));
+
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
         const sortOrder = document.querySelectorAll('input[role="combobox"]')[4];
-        const sortName = document.querySelectorAll('input[type="text"]')[0];
         expect(sortOrder).toBeTruthy();
-        TestUtils.Simulate.change(sortName, { target: { value: "dc:value" }});
-        expect(spyOn).toHaveBeenCalled();
-        expect(spyOn.calls[0].arguments).toEqual([ 'sortBy', { name: "dc:value", order: 'DESC' } ]);
         TestUtils.Simulate.change(sortOrder, { target: { value: "ASC" }});
         TestUtils.Simulate.keyDown(sortOrder, { keyCode: 9, key: 'Tab' });
-        expect(spyOn.calls[1].arguments).toEqual([ 'sortBy', { name: "dc:title", order: 'ASC' } ]);
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'sortBy', { name: "dc:title", order: 'ASC' } ]);
     });
 });
