@@ -165,7 +165,6 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(TEXT_SEARCH);
             expect(actions[0].options).toEqual({
-                filter: "test",
                 service: {
                     type: "csw",
                     url: "url",
