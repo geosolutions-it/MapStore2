@@ -38,7 +38,14 @@ If the [Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart) has
 !!! note
     The **[Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart)** provided can be configured on the *Street View* plugin as documented [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView)
 
-When the tool is activated, a window opens and the street layer is visualized in form of dots to highlight streets on the map so that the user can select one of them with a simple click of the mouse.
+When the tool is activated, the user must enter *Username* and *Password* and click <img src="../img/button/submit-button.jpg" class="ms-docbutton"/>.
+
+<img src="../img/street-view/credentials_api.jpg" class="ms-docimage" width="500px"/>
+
+!!! warning
+    The credentials are necessary to visualize the street layer while the usual authkey is needed in plugin config to interact with the street smart APIs (see plugin config page [here](https://dev-mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView))
+
+After that a window opens and the street layer is visualized in form of dots to highlight streets on the map so that the user can select one of them with a simple click of the mouse.
 
 <video class="ms-docimage" controls><source src="../img/street-view/add-point.mp4"/></video>
 
@@ -48,9 +55,13 @@ By clicking on a highlighted point on the map, the tool window displays the Stre
 
 Through the navigation toolbar it is possible to:
 
-* Open the **Overlays** pop-up, through the <img src="../img/button/overlays-button.jpg" class="ms-docbutton"/> button, to: view and enable/disable the layers present in the view in the **Layers** tab, enable/disable the *Show Mouse position* and the *Show Compass* in the **Viewer** tab.
+* Open the **Overlays** pop-up, through the <img src="../img/button/overlays-button.jpg" class="ms-docbutton"/> button, to:<br>
+  **-** View and enable/disable the layers present in the view from the **Layers** tab<br>
+  **-** Enable/disable the *Show Mouse position* and the *Show Compass* from the **Viewer** tab
 
-* Open the **Display** pop-up, through the <img src="../img/button/display-button.jpg" class="ms-docbutton"/> button, to: set the *Brightness* and the *Contrast* of the view.
+* Open the **Display** pop-up, through the <img src="../img/button/display-button.jpg" class="ms-docbutton"/> button, to:<br>
+    **-** Set the *Brightness* of the view<br>
+    **-** Set the *Contrast* of the view
 
 * See the **Object Information** through the <img src="../img/button/object-nformation-button.jpg" class="ms-docbutton"/> button.
 
@@ -68,4 +79,4 @@ Through the navigation toolbar it is possible to:
 
 * **Download** the cyclorama image in `png` format through the <img src="../img/button/cyclomedia-download-button.jpg" class="ms-docbutton"/> button.
 
-* Open the **Image Info** pop-up, through the <img src="../img/button/image-info-button.jpg" class="ms-docbutton"/> button to access image metadata such as: general image information as well as geospatial references of the image itself
+* Open the **Image Info** pop-up, through the <img src="../img/button/image-info-button.jpg" class="ms-docbutton"/> button to access image metadata such as: general image information as well as geospatial references of the image itself.

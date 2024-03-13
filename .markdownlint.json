@@ -3,6 +3,7 @@
   "code-block-style": false,
   "line-length": false,
   "no-inline-html": false,
+  "no-alt-text": false,
   "no-duplicate-heading": {
     "siblings_only": true
   }
