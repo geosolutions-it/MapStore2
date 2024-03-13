@@ -43,7 +43,7 @@ When the tool is activated, the user must enter *Username* and *Password* and cl
 <img src="../img/street-view/credentials_api.jpg" class="ms-docimage" width="500px"/>
 
 !!! warning
-    The credentials are necessary to visualize the street layer while the usual authkey is needed in plugin config to interact with the street smart APIs (see plugin config page [here](https://dev-mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView))
+    The credentials are necessary to visualize the street layer while the usual authkey is needed in plugin config to interact with the street smart APIs (see plugin config page [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView))
 
 After that a window opens and the street layer is visualized in form of dots to highlight streets on the map so that the user can select one of them with a simple click of the mouse.
 
