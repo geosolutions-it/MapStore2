@@ -36,7 +36,7 @@ If the [Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart) has
 <img src="../img/street-view/cyclomedia-popup.jpg" class="ms-docimage" width="500px"/>
 
 !!! note
-    The **[Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart)** provided can be configured on the *Street View* plugin as documented [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView)
+    The **[Cyclomedia Street Smart](https://www.cyclomedia.com/en/street-smart)** provider can be configured on the *Street View* plugin as documented [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView)
 
 When the tool is activated, the user must enter *Username* and *Password* and click <img src="../img/button/submit-button.jpg" class="ms-docbutton"/>.
 
