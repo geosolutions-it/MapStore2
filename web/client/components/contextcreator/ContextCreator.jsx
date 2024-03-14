@@ -162,7 +162,7 @@ export default class ContextCreator extends React.Component {
         onToggleCustomVariables: PropTypes.func,
         enableClickOnStep: PropTypes.bool,
         items: PropTypes.array,
-        availableSteps: PropTypes.array,
+        stepIds: PropTypes.array,
         hideUploadExtension: PropTypes.bool,
         hideSaveButton: PropTypes.bool,
         hideCloseButton: PropTypes.bool
@@ -271,7 +271,7 @@ export default class ContextCreator extends React.Component {
         backToPageConfirmationMessage: 'contextCreator.undo',
         tutorials: CONTEXT_TUTORIALS,
         tutorialsList: false,
-        availableSteps: [
+        stepIds: [
             'general-settings',
             'configure-map',
             'configure-plugins',
@@ -433,7 +433,7 @@ export default class ContextCreator extends React.Component {
                 showBackToPageConfirmation={this.props.showBackToPageConfirmation}
                 backToPageConfirmationMessage={this.props.backToPageConfirmationMessage}
                 onConfirmBackToPage={() => this.context.router.history.push(this.props.backToPageDestRoute)}
-                steps={this.props.availableSteps.map((step) => defaultSteps.find(defaultStep => defaultStep.id === step))}
+                steps={this.props.stepIds.map((step) => defaultSteps.find(defaultStep => defaultStep.id === step))}
                 hideSaveButton={this.props.hideSaveButton}
                 hideCloseButton={this.props.hideCloseButton} />
         );
