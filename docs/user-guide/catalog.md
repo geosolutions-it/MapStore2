@@ -407,7 +407,7 @@ In **General Settings** of a IFC source type, it is possible to specify the serv
 <img src="../img/catalog/ifc_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 !!! Note
-    To properly display IFC 3D model in your MapStore map, it is necessary to add the reference system definition supported by the model in the MapStore [projectionDefs configuration](../../developer-guide/local-config/#projectiondefs-configuration)
+    To properly display georeferenced IFC 3D model layers in MapStore, ensure to have its coordinate reference system definition defined in the MapStore [projectionDefs configuration](../../developer-guide/local-config/#projectiondefs-configuration). Non-georeferenced IFC models are added by default in the center of the map viewport.
 
 !!! Note
     The tool capabilities currently available for IFC model layers are:
