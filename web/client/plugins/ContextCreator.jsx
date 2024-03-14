@@ -101,6 +101,10 @@ export const contextCreatorSelector = createStructuredSelector({
  * @prop {object[]} cfg.themes list of themes with default configuration that will appear in the context creation process
  * @prop {object} cfg.themes[index].defaultVariables variables of the theme used to initialize the pickers
  * @prop {object} cfg.basicVariables variables used as default values if a theme is not selected
+ * @prop {boolean} cfg.hideUploadExtension if true the import extension button is not visible
+ * @prop {boolean} cfg.hideSaveButton if true the wizard save button is not visible
+ * @prop {boolean} cfg.hideCloseButton if true the wizard close button is not visible
+ * @prop {string[]} availableSteps list of ids of the step available in the context creator wizard
  *
  * @example
  * "cfg": {
