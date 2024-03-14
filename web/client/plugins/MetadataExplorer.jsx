@@ -39,7 +39,8 @@ import {
     toggleAdvancedSettings,
     toggleTemplate,
     toggleThumbnail,
-    setNewServiceStatus
+    setNewServiceStatus,
+    initPlugin
 } from '../actions/catalog';
 import { setControlProperty, toggleControl } from '../actions/controls';
 import { changeLayerProperties } from '../actions/layers';
@@ -74,7 +75,8 @@ import {
     getSupportedFormatsSelector,
     getSupportedGFIFormatsSelector,
     getNewServiceStatusSelector,
-    showFormatErrorSelector
+    showFormatErrorSelector,
+    canEditServiceSelector
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
@@ -121,7 +123,8 @@ const metadataExplorerSelector = createStructuredSelector({
     formatsLoading: formatsLoadingSelector,
     formatOptions: getSupportedFormatsSelector,
     infoFormatOptions: getSupportedGFIFormatsSelector,
-    isNewServiceAdded: getNewServiceStatusSelector
+    isNewServiceAdded: getNewServiceStatusSelector,
+    canEdit: canEditServiceSelector
 });
 
 
@@ -174,7 +177,10 @@ class MetadataExplorerComponent extends React.Component {
         // side panel properties
         width: PropTypes.number,
         dockStyle: PropTypes.object,
-        group: PropTypes.string
+        group: PropTypes.string,
+        onInitPlugin: PropTypes.func,
+        editingAllowedRoles: PropTypes.array,
+        editingAllowedGroups: PropTypes.array
     };
 
     static defaultProps = {
@@ -191,6 +197,7 @@ class MetadataExplorerComponent extends React.Component {
         },
         panelClassName: "catalog-panel",
         closeCatalog: () => {},
+        onInitPlugin: () => {},
         closeGlyph: "1-close",
         zoomToLayer: true,
 
@@ -205,8 +212,16 @@ class MetadataExplorerComponent extends React.Component {
         dockStyle: {},
         group: null,
         services: {},
-        servicesWithBackgrounds: {}
+        servicesWithBackgrounds: {},
+        editingAllowedRoles: ["ADMIN"]
     };
+
+    componentDidMount() {
+        this.props.onInitPlugin({
+            editingAllowedRoles: this.props.editingAllowedRoles,
+            editingAllowedGroups: this.props.editingAllowedGroups
+        });
+    }
 
     componentWillUnmount() {
         this.props.closeCatalog();
@@ -275,7 +290,8 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
-    setNewServiceStatus
+    setNewServiceStatus,
+    onInitPlugin: initPlugin
 })(MetadataExplorerComponent);
 
 /**
