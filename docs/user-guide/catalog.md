@@ -400,7 +400,7 @@ In addition to the standard options, only for COG catalog sources, through the *
 
 ### IFC Model Catalog
 
-An **Industry Foundation Classes** ([IFC](https://www.buildingsmart.org/standards/bsi-standards/industry-foundation-classes/)) is a 3D model file. MapStore allows to add IFC model through its *Catalog* tool where a specific source type can be configured as follows by specifying the URL of a reachable `.ifc` resource.
+An **Industry Foundation Classes** (or [IFC](https://www.buildingsmart.org/standards/bsi-standards/industry-foundation-classes/)) is a 3D model file created to provide a standardized, digital description of the built asset industry. MapStore allows to add IFC model through its *Catalog* tool where a specific source type can be configured as follows by specifying the URL of a reachable `.ifc` resource on the web.
 
 In **General Settings** of a IFC source type, it is possible to specify the service `Title` and its `URL`.
 
