@@ -78,7 +78,7 @@ This filter is available for each colum in the [Attribute Table](attributes-tabl
 
 The user has the possibility to apply simple filters by attributes typing the filter's value in the available input fields (Date or Time pickers are available according to the attributes data types). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md#attribute-table) are automatically filtered accordingly.
 
-If the user wants to filter by an attribute, he can simply write something inside the input box and the list of records in table will be automatically filtered by matching with the input text.
+If the user wants to filter by an attribute, he can simply write the desired filter value inside the input box and the list of records in table will be automatically filtered by matching with the input text.
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-1.jpg" class="ms-docimage"/>
 
