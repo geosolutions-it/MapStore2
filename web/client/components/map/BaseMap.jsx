@@ -43,7 +43,8 @@ class BaseMap extends React.Component {
         plugins: PropTypes.any,
         tools: PropTypes.array,
         getLayerProps: PropTypes.func,
-        env: PropTypes.array
+        env: PropTypes.array,
+        zoomControl: PropTypes.bool
     };
 
     static defaultProps = {
@@ -60,7 +61,8 @@ class BaseMap extends React.Component {
             onLayerLoading: () => {},
             onLayerError: () => {}
         },
-        env: []
+        env: [],
+        zoomControl: false
     };
 
     getTool = (tool) => {
@@ -143,7 +145,7 @@ class BaseMap extends React.Component {
                     projectionDefs={this.props.projectionDefs}
                     style={this.props.styleMap}
                     id={this.props.id}
-                    zoomControl={false}
+                    zoomControl={this.props.zoomControl}
                     center={{ x: 0, y: 0 }}
                     zoom={1}
                     hookRegister={this.props.hookRegister}

@@ -21,5 +21,8 @@ export default [{
         </OverlayTrigger> :
         <OverlayTrigger placement="top" overlay={<Tooltip id="fe-save-features"><Message msgId="featuregrid.missingGeometry"/></Tooltip>}>
             <Glyphicon glyph="exclamation-mark" />
-        </OverlayTrigger>
+        </OverlayTrigger>,
+    tableWidgetFormatter: <OverlayTrigger placement="top" overlay={<Tooltip id="fe-zoom-object"><Message msgId="featuregrid.zoomObject"/></Tooltip>}>
+        <Glyphicon glyph="zoom-to" />
+    </OverlayTrigger>
 }];

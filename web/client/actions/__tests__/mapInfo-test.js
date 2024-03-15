@@ -15,7 +15,6 @@ import {
     CHANGE_MAPINFO_FORMAT,
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE,
-    GET_VECTOR_INFO,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     FEATURE_INFO_CLICK,
@@ -28,7 +27,6 @@ import {
     changeMapInfoFormat,
     showMapinfoRevGeocode,
     hideMapinfoRevGeocode,
-    getVectorInfo,
     toggleMapInfoState,
     updateCenterToMarker,
     TOGGLE_SHOW_COORD_EDITOR,
@@ -48,15 +46,6 @@ import {
 } from '../mapInfo';
 
 describe('Test correctness of the map actions', () => {
-
-    it('gets vector info', () => {
-        const retval = getVectorInfo('layer', 'request', 'metadata');
-
-        expect(retval.type).toBe(GET_VECTOR_INFO);
-        expect(retval.layer).toBe('layer');
-        expect(retval.request).toBe('request');
-        expect(retval.metadata).toBe('metadata');
-    });
 
     it('change map info state', () => {
         const testVal = "val";

@@ -225,7 +225,7 @@ describe('map layout epics', () => {
     });
 
     describe('tests layout updated for left panels', () => {
-        const epicResult = (done, left = 300) => actions => {
+        const epicResult = (done, left = 600) => actions => {
             try {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {

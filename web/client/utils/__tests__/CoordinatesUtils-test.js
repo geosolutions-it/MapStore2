@@ -37,7 +37,11 @@ import {
     makeNumericEPSG,
     getPolygonFromCircle,
     checkIfLayerFitsExtentForProjection,
-    getLonLatFromPoint, convertRadianToDegrees, convertDegreesToRadian
+    getLonLatFromPoint,
+    convertRadianToDegrees,
+    convertDegreesToRadian,
+    transformExtentToObj,
+    transformExtentToArray
 } from '../CoordinatesUtils';
 
 import Proj4js from 'proj4';
@@ -765,6 +769,26 @@ describe('CoordinatesUtils', () => {
         const lc = [4, 2];
         const uc = [2, 4];
         expect(makeBboxFromOWS(lc, uc)).toEqual([2, 2, 4, 4]);
+    });
+    describe('test transformExtentToObj to return bound obj', ()=>{
+
+        it('with provided extent ', ()=>{
+            const extent = [1, 1, 5, 5];
+            expect(transformExtentToObj(extent)).toEqual({
+                minx: 1, miny: 1, maxx: 5, maxy: 5
+            });
+        });
+        it('with no extent passed', ()=>{
+            const extent = undefined;
+            expect(transformExtentToObj(extent)).toEqual({
+                minx: -180, miny: -90, maxx: 180, maxy: 90
+            });
+        });
+    });
+    it('test transformExtentToArray', ()=>{
+        const extent = [1, 1, 5, 5];
+        const bounds = { minx: 1, miny: 1, maxx: 5, maxy: 5 };
+        expect(transformExtentToArray(bounds)).toEqual(extent);
     });
     it('extractCrsFromURN #1', () => {
         const urn = 'urn:ogc:def:crs:EPSG:6.6:4326';

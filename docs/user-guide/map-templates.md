@@ -12,11 +12,11 @@ For each template in the *Map Templates* list the following buttons are displaye
 
 * The **Replace** button <img src="../img/button/replace-button.jpg" class="ms-docbutton" /> allows the user to entirely replace the current map with the one defined in the template, as follows:
 
-<img src="../img/map-templates/replace-map.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/map-templates/replace-map.mp4"/></video>
 
 * The **Add Template** button <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton" /> allows the user to add the map template contents (layers) to current map without replacing it (by default a new group is created in that case in TOC, on top of the other ones, to contains layers coming from the template to better identify them), as follows:
 
-<img src="../img/map-templates/add-templates.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/map-templates/add-templates.mp4"/></video>
 
 * The **Add to favorites** button <img src="../img/button/favourites-button.jpg" class="ms-docbutton" /> allows the user to add the template to favorites on top of the list
 

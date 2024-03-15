@@ -20,11 +20,13 @@ const getAttributeValue = (name, constraints) => {
     return (getAttribute(name, constraints) || {}).access || "READWRITE";
 };
 
-export default ({attributes = [], constraints = {}, setOption = () => {}, active = false}) => {
+export default ({attributes = [], constraints = {}, setOption = () => {}, active = false, setEditedAttributes = () => {}, editedAttributes = []}) => {
     const onChange = (at) => {
         const {attributes: attrs} = constraints;
-        const attribute = (attrs && attrs.attribute || []).filter(e => e.name !== at.name).concat(at);
+        const attribute = ((attrs && attrs?.attribute?.length) ? attrs.attribute : (attrs?.attribute) ? [attrs.attribute] : [] || []).filter(e => e.name !== at.name).concat(at);
         setOption({key: "attributes", value: {attribute}});
+        // add it to edited attribute
+        if (!editedAttributes.includes(at.name)) setEditedAttributes(at.name);
     };
     return (
         <Grid className="ms-rule-editor" fluid style={{ width: '100%', display: active ? 'block' : 'none'}}>
@@ -51,6 +53,7 @@ export default ({attributes = [], constraints = {}, setOption = () => {}, active
                         </Col>
                         <Col sm={4}>
                             <Select
+                                className={ editedAttributes.includes(mA.name) ? "highlighted-dd" : ""}
                                 attribute={mA}
                                 onChange={onChange}
                                 value={getAttributeValue(mA.name, constraints)}

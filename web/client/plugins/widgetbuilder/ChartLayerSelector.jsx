@@ -59,10 +59,18 @@ export default connect((state) =>({
     selectedCatalog
 }) => {
     const _canProceed = showLayers ? canProceed && !isEmpty(layer) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
-    const onProceed = () => {
+    const getProcessArguments = () => {
+        if (showLayers.key) {
+            const { key, ...value } = showLayers;
+            return [key, { ...value, layer }];
+        }
         const isUpdate = showLayers && !isEmpty(layers);
         const key = isUpdate ? 'chart-add' : 'chart-layers';
-        onLayerChoice(key, layer);
+        return [key, layer];
+    };
+    const onProceed = () => {
+        const [key, value] = getProcessArguments();
+        onLayerChoice(key, value);
         toggleLayerSelector(false);
     };
     const stepButton = !showLayers ? stepButtons : withBackButton({toggleLayerSelector});
@@ -77,6 +85,7 @@ export default connect((state) =>({
                 trigger={false}
                 glyph="warning-sign"
                 bsStyle="warning"
+                placement="left"
                 title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle"/>}
                 text={<HTML msgId={layerError}/>}/> : null}
         </BuilderHeader>}

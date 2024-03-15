@@ -201,7 +201,6 @@ class OpenlayersMap extends React.Component {
                     }
 
                     let layerInfo;
-                    let groupIntersectedFeatures = {};
                     this.markerPresent = false;
                     /*
                      * Handle special case for vector features with handleClickOnLayer=true
@@ -219,19 +218,9 @@ class OpenlayersMap extends React.Component {
                                 coords = { x: arr[0], y: arr[1] };
                             }
                         }
-                        if (layer?.get('msId')) {
-                            const geoJSONFeature = geoJSONFormat.writeFeatureObject(feature, {
-                                featureProjection: this.props.projection,
-                                dataProjection: 'EPSG:4326'
-                            });
-                            groupIntersectedFeatures[layer.get('msId')] = groupIntersectedFeatures[layer.get('msId')]
-                                ? [ ...groupIntersectedFeatures[layer.get('msId')], geoJSONFeature ]
-                                : [ geoJSONFeature ];
-                        }
                     });
-                    const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+                    const intersectedFeatures = this.getIntersectedFeatures(map, event?.pixel);
                     const tLng = normalizeLng(coords.x);
-                    const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                     this.props.onClick({
                         pixel: {
                             x: event.pixel[0],
@@ -240,7 +229,7 @@ class OpenlayersMap extends React.Component {
                         latlng: {
                             lat: coords.y,
                             lng: tLng,
-                            z: getElevation && getElevation(pos, event.pixel) || undefined
+                            z: this.getElevation(pos, event.pixel)
                         },
                         rawPos: event.coordinate.slice(),
                         modifiers: {
@@ -314,8 +303,8 @@ class OpenlayersMap extends React.Component {
             }, 0);
         }
 
-        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.props.limits !== newProps.limits) {
-            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits) {
+        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.haveRotationChanged(newProps) || this.props.limits !== newProps.limits) {
+            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits || this.haveRotationChanged(newProps)) {
                 let mapProjection = newProps.projection;
                 const center = reproject([
                     newProps.center.x,
@@ -390,6 +379,28 @@ class OpenlayersMap extends React.Component {
         return view.getProjection().getExtent() || msGetProjection(props.projection).extent;
     };
 
+    getIntersectedFeatures = (map, pixel) => {
+        let groupIntersectedFeatures = {};
+        map.forEachFeatureAtPixel(pixel, (feature, layer) => {
+            if (layer?.get('msId')) {
+                const geoJSONFeature = geoJSONFormat.writeFeatureObject(feature, {
+                    featureProjection: this.props.projection,
+                    dataProjection: 'EPSG:4326'
+                });
+                groupIntersectedFeatures[layer.get('msId')] = groupIntersectedFeatures[layer.get('msId')]
+                    ? [ ...groupIntersectedFeatures[layer.get('msId')], geoJSONFeature ]
+                    : [ geoJSONFeature ];
+            }
+        });
+        const intersectedFeatures = Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));
+        return intersectedFeatures;
+    };
+    getElevation(pos, pixel) {
+        const elevationLayers = this.map.get('msElevationLayers') || [];
+        return elevationLayers?.[0]?.get('getElevation')
+            ? elevationLayers[0].get('getElevation')(pos, pixel)
+            : undefined;
+    }
     render() {
         const map = this.map;
         const children = map ? React.Children.map(this.props.children, child => {
@@ -414,7 +425,6 @@ class OpenlayersMap extends React.Component {
 
     mouseMoveEvent = (event) => {
         if (!event.dragging && event.coordinate) {
-            const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
             let pos = event.coordinate.slice();
             let coords = toLonLat(pos, this.props.projection);
             let tLng = coords[0] / 360 % 1 * 360;
@@ -423,10 +433,12 @@ class OpenlayersMap extends React.Component {
             } else if (tLng > 180) {
                 tLng = tLng - 360;
             }
+            const intersectedFeatures = this.getIntersectedFeatures(this.map, event?.pixel);
+            const elevation = this.getElevation(pos, event.pixel);
             this.props.onMouseMove({
                 y: coords[1] || 0.0,
                 x: tLng || 0.0,
-                z: this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation')(pos, event.pixel) || undefined,
+                z: elevation,
                 crs: "EPSG:4326",
                 pixel: {
                     x: event.pixel[0],
@@ -435,11 +447,12 @@ class OpenlayersMap extends React.Component {
                 latlng: {
                     lat: coords[1],
                     lng: tLng,
-                    z: getElevation && getElevation(pos, event.pixel) || undefined
+                    z: elevation
                 },
                 lat: coords[1],
                 lng: tLng,
-                rawPos: event.coordinate.slice()
+                rawPos: event.coordinate.slice(),
+                intersectedFeatures
             });
         }
     };
@@ -493,6 +506,12 @@ class OpenlayersMap extends React.Component {
         return !isEqual(resolutions, newResolutions);
     };
 
+    haveRotationChanged = (newProps) => {
+        const rotation = this.props.mapOptions && this.props.mapOptions.view ? this.props.mapOptions.view.rotation : undefined;
+        const newRotation = newProps.mapOptions && newProps.mapOptions.view ? newProps.mapOptions.view.rotation : undefined;
+        return !isEqual(rotation, newRotation);
+    };
+
     createView = (center, zoom, projection, options, limits = {}) => {
         // limit has a crs defined
         const extent = limits.restrictedExtent && limits.crs && reprojectBbox(limits.restrictedExtent, limits.crs, normalizeSRS(projection));
@@ -505,7 +524,12 @@ class OpenlayersMap extends React.Component {
             projection: normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom,
-            minZoom: limits.minZoom
+            minZoom: limits.minZoom,
+            // allow to zoom to level 0 and see world wrapping
+            multiWorld: true,
+            // does not allow intermediary zoom levels
+            // we need this at true to set correctly the scale box
+            constrainResolution: true
         }, newOptions || {});
         return new View(viewOptions);
     };
@@ -541,6 +565,26 @@ class OpenlayersMap extends React.Component {
         }
     };
 
+    zoomToExtentHandler = (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {})=> {
+        let bounds = reprojectBbox(extent, crs, this.props.projection);
+        // TODO: improve this to manage all degenerated bounding boxes.
+        if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
+        crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
+            bounds = this.map.getView().getProjection().getExtent();
+        }
+        let maxZoom = zoomLevel;
+        if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
+            maxZoom = 21; // TODO: allow to this maxZoom to be customizable
+        }
+        this.map.getView().fit(bounds, {
+            size: this.map.getSize(),
+            padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
+            maxZoom,
+            duration,
+            nearest
+        });
+    }
+
     registerHooks = () => {
         this.props.hookRegister.registerHook(mapUtils.RESOLUTIONS_HOOK, (srs) => {
             return this.getResolutions(srs);
@@ -570,27 +614,7 @@ class OpenlayersMap extends React.Component {
         this.props.hookRegister.registerHook(mapUtils.GET_COORDINATES_FROM_PIXEL_HOOK, (pixel) => {
             return this.map.getCoordinateFromPixel(pixel);
         });
-        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, (extent, { padding, crs, maxZoom: zoomLevel, duration, nearest} = {}) => {
-            let bounds = reprojectBbox(extent, crs, this.props.projection);
-            // if EPSG:4326 with max extent (-180, -90, 180, 90) bounds are 0,0,0,0. In this case zoom to max extent
-            // TODO: improve this to manage all degenerated bounding boxes.
-            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] &&
-                crs === "EPSG:4326" && isArray(extent) && extent[0] === -180 && extent[1] === -90) {
-                bounds = this.map.getView().getProjection().getExtent();
-            }
-            let maxZoom = zoomLevel;
-            if (bounds && bounds[0] === bounds[2] && bounds[1] === bounds[3] && isNil(maxZoom)) {
-                maxZoom = 21; // TODO: allow to this maxZoom to be customizable
-            }
-
-            this.map.getView().fit(bounds, {
-                size: this.map.getSize(),
-                padding: padding && [padding.top || 0, padding.right || 0, padding.bottom || 0, padding.left || 0],
-                maxZoom,
-                duration,
-                nearest
-            });
-        });
+        this.props.hookRegister.registerHook(mapUtils.ZOOM_TO_EXTENT_HOOK, this.zoomToExtentHandler);
     };
 }
 

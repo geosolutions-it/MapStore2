@@ -10,21 +10,19 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
-
+import {Provider} from 'react-redux';
 import QueryBuilder from '../QueryBuilder';
 import standardItemsReference from "../../../../plugins/querypanel/index";
-import SwitchPanel from "../../../misc/switch/SwitchPanel";
+import configureMockStore from 'redux-mock-store';
+const mockStore = configureMockStore();
 
-const standardItems = Object.keys(standardItemsReference).reduce((prev, cur) => {
-    return {...prev, [cur]: standardItemsReference[cur].map(el => ({
-        ...el,
-        plugin: () => <SwitchPanel key={el.id} />
-    }))};
-}, {});
 
 describe('QueryBuilder', () => {
-
+    let store;
     beforeEach((done) => {
+        store = mockStore({
+            queryform: {}
+        });
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
@@ -34,7 +32,13 @@ describe('QueryBuilder', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
+    const standardItems = Object.keys(standardItemsReference).reduce((prev, cur) => {
+        return {...prev, [cur]: standardItemsReference[cur].map(el => ({
+            ...el,
+            plugin: el.plugin ? (props) => <Provider store={store}><el.plugin {...props} /></Provider> : undefined,
+            component: el.component ? (props) => <Provider store={store}><el.component {...props} /></Provider> : undefined
+        }))};
+    }, {});
     it('creates the QueryBuilder component with his default content', () => {
         const querybuilder = ReactDOM.render(<QueryBuilder/>, document.getElementById("container"));
         expect(querybuilder).toExist();
@@ -197,6 +201,53 @@ describe('QueryBuilder', () => {
         expect(querybuilder).toExist();
         // only attribute filter should be shown
         expect(document.querySelectorAll('.mapstore-switch-panel').length).toBe(1);
+    });
+    it('useEmbeddedMap', () => {
+        const groupLevels = 5;
+
+        const groupFields = [];
+
+        const filterFields = [{
+            rowId: 100,
+            groupId: 1,
+            attribute: "",
+            operator: null,
+            value: null,
+            exception: null
+        }];
+
+        const attributes = [{
+            id: "Attribute",
+            type: "list",
+            values: [
+                "attribute1",
+                "attribute2",
+                "attribute3",
+                "attribute4",
+                "attribute5"
+            ]
+        }];
+
+        const querybuilder = ReactDOM.render(
+            <QueryBuilder
+                queryPanelEnabled
+                toolsOptions={{
+                    hideCrossLayer: true,
+                    hideSpatialFilter: false,
+                    useEmbeddedMap: true
+                }}
+                filterFields={filterFields}
+                attributes={attributes}
+                groupFields={groupFields}
+                groupLevels={groupLevels}
+                standardItems={standardItems}
+            />,
+            document.getElementById("container")
+        );
+        expect(querybuilder).toExist();
+        // only attribute filter should be shown
+        expect(document.querySelectorAll('.mapstore-switch-panel').length).toBe(2);
+        expect(document.querySelectorAll('.mapstore-query-map').length).toBe(1);
     });
 
     it('creates the QueryBuilder component in error state', () => {

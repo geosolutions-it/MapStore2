@@ -13,8 +13,22 @@ import {
     getConnectionList, getDependantWidget,
     getMapDependencyPath, getSelectedWidgetData, getWidgetDependency,
     getWidgetsGroups,
-    shortenLabel, updateDependenciesMapOfMapList
+    shortenLabel, updateDependenciesMapOfMapList,
+    defaultChartStyle,
+    getAggregationAttributeDataKey,
+    generateNewTrace,
+    legacyChartToChartWithTraces,
+    extractTraceData,
+    generateClassifiedData,
+    parsePieNoAggregationFunctionData,
+    isChartOptionsValid,
+    enableBarChartStack,
+    getWidgetLayersNames,
+    isChartCompatibleWithTableWidget,
+    canTableWidgetBeDependency
 } from '../WidgetsUtils';
+import * as simpleStatistics from 'simple-statistics';
+import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
 import SAMPLE_1 from '../../test-resources/widgets/widgets1.json';
 const widgets = SAMPLE_1.widgets;
 import SAMPLE_2 from '../../test-resources/widgets/complex_graph.json';
@@ -25,6 +39,7 @@ const dataWidgets = {
         {id: 'w_2', dependenciesMap: {layers: "widgets[w_1].maps[m_1].layers", zoom: "widgets[w_1].maps[m_1].zoom", viewport: "widgets[w_1].maps[m_1].viewport", dependenciesMap: "widgets[w_1].dependenciesMap", mapSync: "widgets[w_1].mapSync"}, layer: false, legend: false, mapSync: true, url: false, widgetType: "legend", yAxis: true}
     ]
 };
+const classifyGeoJSONSync = createClassifyGeoJSONSync(simpleStatistics);
 describe('Test WidgetsUtils', () => {
     it('test getConnectionList', () => {
         const pairs = getConnectionList(widgets);
@@ -139,15 +154,15 @@ describe('Test WidgetsUtils', () => {
         expect(_widgets[0].mapSync).toBeTruthy();
         expect(_widgets[0].selectedChartId).toBeTruthy();
         expect(_widgets[0].charts).toBeTruthy();
-        expect(_widgets[0].charts[0].layer).toBeTruthy();
-        expect(_widgets[0].charts[0].yAxis).toBeTruthy();
+        expect(_widgets[0].charts[0].chartId).toBe(_widgets[0].selectedChartId);
+        expect(_widgets[0].charts[0].yAxisOpts).toBeTruthy();
         expect(_widgets[0].charts[0].cartesian).toBe(false);
         expect(_widgets[0].charts[0].legend).toBe(false);
-        expect(_widgets[0].charts[0].options).toBeTruthy();
-        expect(_widgets[0].charts[0].autoColorOptions).toBeTruthy();
-        expect(_widgets[0].charts[0].url).toBe('some_url');
         expect(_widgets[0].charts[0].name).toBe('Chart-1');
-        expect(_widgets[0].charts[0].chartId).toBe(_widgets[0].selectedChartId);
+        expect(_widgets[0].charts[0].traces.length).toBe(1);
+        expect(_widgets[0].charts[0].traces[0].layer).toBeTruthy();
+        expect(_widgets[0].charts[0].traces[0].options).toBeTruthy();
+        expect(_widgets[0].charts[0].traces[0].style).toBeTruthy();
     });
     it('updateDependenciesMapOfMapList', () => {
         const modified = updateDependenciesMapOfMapList(dataWidgets.widgets, 'w_1', 'm_2');
@@ -259,10 +274,11 @@ describe('Test WidgetsUtils', () => {
             const {charts, selectedChartId} = props.builder.editor;
             expect(charts).toBeTruthy();
             expect(charts.length).toBe(2);
-            expect(charts[0].type).toBe('bar');
+            expect(charts[0].name).toBe(undefined);
             expect(charts[0].chartId).toBeTruthy();
-            expect(charts[0].layer.name).toBe('NewTest');
-            expect(charts[0].name).toBe('Chart-1');
+            expect(charts[0].traces.length).toBe(1);
+            expect(charts[0].traces[0].type).toBe('bar');
+            expect(charts[0].traces[0].layer.name).toBe('NewTest');
             expect(selectedChartId).toBeTruthy();
         });
         it('editorChange delete a chart', () =>{
@@ -284,9 +300,10 @@ describe('Test WidgetsUtils', () => {
             expect(charts).toBeTruthy();
             expect(charts.length).toBe(5);
             expect(charts[4].chartId).toBeTruthy();
-            expect(charts[4].layer.name).toBe('Test3');
-            expect(charts[4].name).toBe('Chart-5');
-            expect(charts[4].type).toBe('bar');
+            expect(charts[4].name).toBe(undefined);
+            expect(charts[4].traces.length).toBe(1);
+            expect(charts[4].traces[0].layer.name).toBe('Test3');
+            expect(charts[4].traces[0].type).toBe('bar');
         });
     });
     it("getDependantWidget", () => {
@@ -305,7 +322,7 @@ describe('Test WidgetsUtils', () => {
         expect(widget).toEqual({});
     });
     it("getSelectedWidgetData for charts", () => {
-        const widget = getSelectedWidgetData({id: "1", selectedChartId: "1", widgetType: "chart", charts: [{layer: "test", chartId: "1"}]});
+        const widget = getSelectedWidgetData({id: "1", selectedChartId: "1", widgetType: "chart", charts: [{chartId: "1", traces: [{ layer: "test" }]}]});
         expect(widget).toBeTruthy();
         expect(widget.layer).toBe("test");
     });
@@ -318,5 +335,426 @@ describe('Test WidgetsUtils', () => {
         const widget = getSelectedWidgetData({id: "1", widgetType: "table", layer: {name: "test"}});
         expect(widget).toBeTruthy();
         expect(widget.layer.name).toBe("test");
+    });
+    it('defaultChartStyle',  () => {
+        expect(defaultChartStyle()).toEqual({ line: { color: '#0888A1', width: 2 }, marker: { color: '#0888A1', size: 6 } });
+        expect(defaultChartStyle('line', { color: '#ff0000' })).toEqual({ line: { color: '#ff0000', width: 2 }, marker: { color: '#ff0000', size: 6 } });
+        expect(defaultChartStyle('bar')).toEqual({ marker: { color: '#0888A1' }, msMode: 'simple', line: { color: 'rgb(0, 0, 0)', width: 0 } });
+        expect(defaultChartStyle('bar', { color: '#ff0000' })).toEqual({ marker: { color: '#ff0000' }, msMode: 'simple', line: { color: 'rgb(0, 0, 0)', width: 0 } });
+        expect(defaultChartStyle('pie')).toEqual({ msClassification: { method: 'uniqueInterval', intervals: 5, reverse: false, ramp: 'blues' } });
+        expect(defaultChartStyle('pie', { ramp: 'viridis' })).toEqual({ msClassification: { method: 'uniqueInterval', intervals: 5, reverse: false, ramp: 'viridis' } });
+    });
+    it('getAggregationAttributeDataKey',  () => {
+        expect(getAggregationAttributeDataKey()).toBe('');
+        expect(getAggregationAttributeDataKey({ aggregateFunction: 'None', aggregationAttribute: 'STATE_NAME' })).toBe('STATE_NAME');
+        expect(getAggregationAttributeDataKey({ aggregationAttribute: 'STATE_NAME' })).toBe('STATE_NAME');
+        expect(getAggregationAttributeDataKey({ aggregateFunction: 'Sum', aggregationAttribute: 'STATE_NAME' })).toBe('Sum(STATE_NAME)');
+    });
+    it('generateNewTrace',  () => {
+        const { id, ...newTrace } = generateNewTrace({
+            color: '#ff0000',
+            type: 'bar',
+            geomProp: 'the_geom',
+            filter: {},
+            layer: {
+                type: 'wms',
+                url: '/geoserver/wms',
+                search: {
+                    type: 'wfs',
+                    url: '/geoserver/wfs'
+                }
+            }
+        });
+        expect(id).toBeTruthy();
+        expect(newTrace).toEqual({
+            type: 'bar',
+            layer: {
+                type: 'wms',
+                url: '/geoserver/wms',
+                search: {
+                    type: 'wfs',
+                    url: '/geoserver/wfs'
+                }
+            },
+            options: {},
+            filter: {},
+            geomProp: 'the_geom',
+            style: { msMode: 'simple', line: { color: 'rgb(0, 0, 0)', width: 0 }, marker: { color: '#ff0000' } }
+        });
+    });
+    it('extractTraceData',  () => {
+        expect(extractTraceData()).toBe(undefined);
+        expect(extractTraceData({
+            selectedChartId: 'chart-01',
+            selectedTraceId: 'trace-01',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{
+                    id: 'trace-01',
+                    layer: {}
+                }]
+            }]
+        })).toEqual({ id: 'trace-01', layer: {} });
+        expect(extractTraceData({
+            selectedChartId: 'chart-01',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{
+                    id: 'trace-01',
+                    layer: {}
+                }]
+            }]
+        })).toEqual({ id: 'trace-01', layer: {} });
+        expect(extractTraceData({
+            selectedChartId: 'chart-01',
+            selectedTraceId: 'trace-02',
+            charts: [{
+                chartId: 'chart-01',
+                traces: [{
+                    id: 'trace-01',
+                    layer: {}
+                }]
+            }]
+        })).toEqual({ id: 'trace-01', layer: {} });
+    });
+    it('parsePieNoAggregationFunctionData',  () => {
+        expect(parsePieNoAggregationFunctionData()).toBe(undefined);
+        expect(parsePieNoAggregationFunctionData(
+            [
+                { value: 5, label: 'A' },
+                { value: 2, label: 'A' },
+                { value: 1, label: 'B' },
+                { value: 7, label: 'B' },
+                { value: 6, label: 'C' },
+                { value: 8, label: 'C' },
+                { value: 1, label: 'C' },
+                { value: 9, label: 'C' }
+            ],
+            {
+                groupByAttributes: 'label',
+                aggregationAttribute: 'value'
+            }
+        )).toEqual([ { label: 'A', value: 7 }, { label: 'B', value: 8 }, { label: 'C', value: 24 } ]);
+    });
+    it('legacyChartToChartWithTraces',  () => {
+        expect(legacyChartToChartWithTraces({
+            yAxis: false,
+            xAxisAngle: 45,
+            type: 'bar',
+            options: {
+                groupByAttributes: 'label',
+                aggregationAttribute: 'value',
+                classificationAttribute: 'class',
+                classificationAttributeType: 'string'
+            },
+            autoColorOptions: {
+                name: 'global.colors.custom',
+                classification: [{ id: 'class-01', title: 'Class 01', unique: 'A' }],
+                defaultCustomColor: '#0033aa',
+                defaultClassLabel: 'Default label'
+            },
+            legend: false,
+            cartesian: true,
+            chartId: 'chart-01',
+            xAxisOpts: {
+                type: '-'
+            },
+            yAxisOpts: {
+                type: '-',
+                textinfo: true,
+                includeLegendPercent: true
+            },
+            yAxisLabel: 'Trace name',
+            tickPrefix: '~',
+            format: '.2s',
+            tickSuffix: ' W',
+            formula: 'value / 100',
+            name: 'Chart-1',
+            geomProp: 'the_geom',
+            layer: {
+                type: 'wms',
+                url: '/geoserver/wms',
+                search: {
+                    type: 'wfs',
+                    url: '/geoserver/wfs'
+                }
+            },
+            barChartType: 'group'
+        })).toEqual({
+            name: 'Chart-1',
+            legend: false,
+            cartesian: true,
+            chartId: 'chart-01',
+            barChartType: 'group',
+            xAxisOpts: [
+                { type: '-', angle: 45, id: 0 }
+            ],
+            yAxisOpts: [
+                { type: '-', hide: true, id: 0 }
+            ],
+            traces: [
+                {
+                    id: 'trace-chart-01',
+                    name: 'Trace name',
+                    type: 'bar',
+                    options: {
+                        groupByAttributes: 'label',
+                        aggregationAttribute: 'value',
+                        classificationAttribute: 'class'
+                    },
+                    style: {
+                        msMode: 'classification',
+                        msClassification: {
+                            method: 'uniqueInterval',
+                            intervals: 5,
+                            reverse: false,
+                            ramp: 'viridis',
+                            defaultColor: '#0033aa',
+                            defaultLabel: 'Default label',
+                            classes: [{ id: 'class-01', title: 'Class 01', unique: 'A' }]
+                        }
+                    },
+                    textinfo: true,
+                    tickPrefix: '~',
+                    format: '.2s',
+                    tickSuffix: ' W',
+                    formula: 'value / 100',
+                    geomProp: 'the_geom',
+                    layer: { type: 'wms', url: '/geoserver/wms', search: { type: 'wfs', url: '/geoserver/wfs' } },
+                    includeLegendPercent: true
+                }
+            ]
+        });
+    });
+    it('generateClassifiedData pie unique interval sorted by aggregate',  () => {
+        const data = [
+            { value: 5, label: 'A' },
+            { value: 2, label: 'A' },
+            { value: 1, label: 'B' },
+            { value: 7, label: 'B' },
+            { value: 6, label: 'C' },
+            { value: 8, label: 'C' },
+            { value: 1, label: 'C' },
+            { value: 9, label: 'C' }
+        ];
+        const { classes } = generateClassifiedData({
+            type: 'pie',
+            data,
+            sortBy: 'aggregate',
+            options: {
+                groupByAttributes: 'label',
+                aggregationAttribute: 'value'
+            },
+            msClassification: {
+                method: 'uniqueInterval',
+                ramp: 'spectral',
+                reverse: true
+            },
+            classifyGeoJSON: classifyGeoJSONSync
+        });
+        expect(classes.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', unique: 'C', index: 0, label: 'C' },
+            { color: '#ffffbf', unique: 'B', index: 1, label: 'B' },
+            { color: '#9e0142', unique: 'A', index: 2, label: 'A' },
+            { color: '#ffff00', label: 'Others', index: 3 }
+        ]);
+    });
+    it('generateClassifiedData pie unique interval sorted by groupBy',  () => {
+        const data = [
+            { value: 5, label: 'A' },
+            { value: 2, label: 'A' },
+            { value: 1, label: 'B' },
+            { value: 7, label: 'B' },
+            { value: 6, label: 'C' },
+            { value: 8, label: 'C' },
+            { value: 1, label: 'C' },
+            { value: 9, label: 'C' }
+        ];
+        const { classes } = generateClassifiedData({
+            type: 'pie',
+            data,
+            sortBy: 'groupBy',
+            options: {
+                groupByAttributes: 'label',
+                aggregationAttribute: 'value'
+            },
+            msClassification: {
+                method: 'uniqueInterval',
+                ramp: 'spectral',
+                reverse: true
+            },
+            classifyGeoJSON: classifyGeoJSONSync
+        });
+        expect(classes.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', unique: 'A', index: 0, label: 'A' },
+            { color: '#ffffbf', unique: 'B', index: 1, label: 'B' },
+            { color: '#9e0142', unique: 'C', index: 2, label: 'C' },
+            { color: '#ffff00', label: 'Others', index: 3 }
+        ]);
+    });
+    it('generateClassifiedData bar jenks sorted by groupBy',  () => {
+        const data = [
+            { value: 5, label: 'A' },
+            { value: 2, label: 'A' },
+            { value: 1, label: 'B' },
+            { value: 7, label: 'B' },
+            { value: 6, label: 'C' },
+            { value: 8, label: 'C' },
+            { value: 1, label: 'C' },
+            { value: 9, label: 'C' }
+        ];
+        const { sortByKey, classes, classifiedData } = generateClassifiedData({
+            type: 'bar',
+            data,
+            sortBy: 'groupBy',
+            options: {
+                groupByAttributes: 'label',
+                aggregationAttribute: 'value',
+                classificationAttribute: 'value'
+            },
+            msClassification: {
+                method: 'jenks',
+                ramp: 'spectral',
+                reverse: true,
+                intervals: 3
+            },
+            classifyGeoJSON: classifyGeoJSONSync
+        });
+        expect(classes.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5' },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7' },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9' },
+            { color: '#ffff00', label: 'Others', index: 3 }
+        ]);
+        expect(classifiedData.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 1, label: 'C' } },
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 1, label: 'B' } },
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5', properties: { value: 2, label: 'A' } },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7', properties: { value: 5, label: 'A' } },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7', properties: { value: 6, label: 'C' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 7, label: 'B' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 8, label: 'C' } },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9', properties: { value: 9, label: 'C' } }
+        ]);
+        expect(sortByKey).toBe('label');
+    });
+    it('generateClassifiedData bar jenks sorted by aggregation',  () => {
+        const data = [
+            { value: 5, label: 'A' },
+            { value: 2, label: 'A' },
+            { value: 1, label: 'B' },
+            { value: 7, label: 'B' },
+            { value: 6, label: 'C' },
+            { value: 8, label: 'C' },
+            { value: 1, label: 'C' },
+            { value: 9, label: 'C' }
+        ];
+        const { sortByKey, classes } = generateClassifiedData({
+            type: 'bar',
+            data,
+            sortBy: 'aggregation',
+            options: {
+                groupByAttributes: 'label',
+                aggregationAttribute: 'value',
+                classificationAttribute: 'value'
+            },
+            msClassification: {
+                method: 'jenks',
+                ramp: 'spectral',
+                reverse: true,
+                intervals: 3
+            },
+            classifyGeoJSON: classifyGeoJSONSync
+        });
+        expect(classes.map(({ insideClass, ...entry }) => entry)).toEqual([
+            { color: '#5e4fa2', min: 1, max: 5, index: 0, label: '>= 1<br>< 5' },
+            { color: '#ffffbf', min: 5, max: 7, index: 1, label: '>= 5<br>< 7' },
+            { color: '#9e0142', min: 7, max: 9, index: 2, label: '>= 7<br><= 9' },
+            { color: '#ffff00', label: 'Others', index: 3 }
+        ]);
+        expect(sortByKey).toBe('value');
+    });
+    describe('isChartOptionsValid', () => {
+        it('mandatory operation if process present', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B"
+            }, { hasAggregateProcess: true })).toBeFalsy();
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B",
+                aggregateFunction: "SUM"
+            }, { hasAggregateProcess: true })).toBeTruthy();
+        });
+        it('operation not needed if WPS not present', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B"
+            }, { hasAggregateProcess: false })).toBeTruthy();
+        });
+        it('only classification attribute present ', () => {
+            expect(isChartOptionsValid({
+                aggregationAttribute: "A",
+                groupByAttributes: "B",
+                classificationAttribute: "C"
+            }, {hasAggregateProcess: false})).toBeTruthy();
+        });
+    });
+    it('enableBarChartStack', () => {
+        expect(enableBarChartStack()).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }] })).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar', style: { msMode: 'classification' } }] })).toBe(true);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }] })).toBe(true);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], yAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }, { id: 'axis-1' }], yAxisOpts: [{ id: 0 }, { id: 'axis-1' }] })).toBe(false);
+        expect(enableBarChartStack({ traces: [{ type: 'bar' }, { type: 'bar' }], xAxisOpts: [{ id: 0 }], yAxisOpts: [{ id: 0 }] })).toBe(true);
+    });
+    it('getWidgetLayersNames', () => {
+        expect(getWidgetLayersNames()).toEqual([]);
+        expect(getWidgetLayersNames({})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'map'})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'map', maps: [{layers: [{name: "test"}]}]})).toEqual(["test"]);
+        expect(getWidgetLayersNames({widgetType: 'legend', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersNames({widgetType: 'counter', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersNames({widgetType: 'table', layer: {name: "test"}})).toEqual(["test"]);
+        expect(getWidgetLayersNames({widgetType: 'chart'})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1"}]})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: []}]})).toEqual([]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: ""}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "2", traces: [{layer: {name: "layer_1"}}]}]})).toEqual(["layer_1"]);
+        expect(getWidgetLayersNames({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "2", traces: [{layer: {name: "layer_2"}}]}]})).toEqual(["layer_1", "layer_2"]);
+    });
+    it('isChartCompatibleWithTableWidget', () => {
+        expect(isChartCompatibleWithTableWidget()).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'map'})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1"}]})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: []}]})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeTruthy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeTruthy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_2"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
+        expect(isChartCompatibleWithTableWidget({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]},
+            {chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, {layer: {name: "layer_1"}})).toBeFalsy();
+    });
+    it('canTableWidgetBeDependency', () => {
+        const dependencyTableWidget1 = {layer: {name: "layer_1"}};
+        const dependencyTableWidget2 = {layer: {name: "layer_2"}};
+        expect(canTableWidgetBeDependency()).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'map'})).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'map', maps: [{layers: [{name: "layer_1"}]}]}, dependencyTableWidget1)).toBeTruthy();
+        expect(canTableWidgetBeDependency({widgetType: 'counter', layer: {name: "layer_1"}}, dependencyTableWidget1)).toBeTruthy();
+        expect(canTableWidgetBeDependency({widgetType: 'counter', layer: {name: "layer_1"}}, dependencyTableWidget2)).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'table', layer: {name: "layer_1"}}, dependencyTableWidget1)).toBeTruthy();
+        expect(canTableWidgetBeDependency({widgetType: 'table', layer: {name: "layer_1"}}, dependencyTableWidget2)).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1"}]})).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}]}]}, dependencyTableWidget1)).toBeTruthy();
+        expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, dependencyTableWidget2)).toBeFalsy();
+        expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, dependencyTableWidget2)).toBeFalsy();
     });
 });

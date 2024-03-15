@@ -306,7 +306,7 @@ export default (state = INITIAL_STATE, action) => {
         )(state);
     }
     case UPDATE: {
-        const { path: rawPath, mode } = action;
+        const { path: rawPath, mode, options } = action;
         let { element: newElement } = action;
         const path = getEffectivePath(`currentStory.${rawPath}`, state);
         const oldElement = get(state, path);
@@ -317,7 +317,8 @@ export default (state = INITIAL_STATE, action) => {
         }
 
         if (isArray(oldElement) && isArray(newElement) && mode === "merge") {
-            newElement = [ ...oldElement, ...newElement ];
+            // check for options to filter unique options
+            newElement = (options?.uniqueByKey) ? uniqBy([ ...oldElement, ...newElement ], options.uniqueByKey) : [...oldElement, ...newElement ];
         }
         return set(path, newElement, state);
     }

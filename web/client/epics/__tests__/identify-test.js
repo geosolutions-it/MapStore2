@@ -26,10 +26,8 @@ import {
     LOAD_FEATURE_INFO,
     NO_QUERYABLE_LAYERS,
     ERROR_FEATURE_INFO,
-    EXCEPTIONS_FEATURE_INFO,
     SHOW_MAPINFO_MARKER,
     HIDE_MAPINFO_MARKER,
-    GET_VECTOR_INFO,
     SET_CURRENT_EDIT_FEATURE_QUERY,
     CLEAR_WARNING,
     loadFeatureInfo,
@@ -59,7 +57,7 @@ import {
     removePopupOnUnregister,
     setMapTriggerEpic
 } from '../identify';
-import { CLOSE_ANNOTATIONS } from '../../actions/annotations';
+import { CLOSE_ANNOTATIONS } from '../../plugins/Annotations/actions/annotations';
 import { testEpic, TEST_TIMEOUT, addTimeoutEpic } from './epicTestUtils';
 
 import {
@@ -402,45 +400,6 @@ describe('identify Epics', () => {
             }
         }, state);
     });
-    it('getFeatureInfoOnFeatureInfoClick handle server exception', (done) => {
-        // remove previous hook
-        registerHook('RESOLUTION_HOOK', undefined);
-        const state = {
-            map: TEST_MAP_STATE,
-            mapInfo: {
-                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
-            },
-            layers: {
-                flat: [{
-                    id: "TEST",
-                    "title": "TITLE",
-                    type: "wms",
-                    visibility: true,
-                    url: 'base/web/client/test-resources/featureInfo-exception.json'
-                }]
-            }
-        };
-        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
-            try {
-                expect(a0).toExist();
-                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
-                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a1.reqId).toExist();
-                expect(a1.request).toExist();
-                expect(a2).toExist();
-                expect(a2.type).toBe(EXCEPTIONS_FEATURE_INFO);
-                expect(a2.exceptions).toExist();
-                expect(a2.reqId).toExist();
-                expect(a2.requestParams).toExist();
-                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
-                done();
-            } catch (ex) {
-                done(ex);
-            }
-        }, state);
-    });
     it('Test local request, remote request and skip background layers', done => {
         const LAYERS = [{
             id: 'OpenTopoMap__3',
@@ -480,17 +439,15 @@ describe('identify Epics', () => {
             layers: LAYERS
         };
         const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
-        testEpic(getFeatureInfoOnFeatureInfoClick, 5, sentActions, ([a0, a1, a2, a3, a4]) => {
+        testEpic(getFeatureInfoOnFeatureInfoClick, 5, sentActions, (actions) => {
             try {
-                expect(a0).toExist();
-                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
-                expect(a1).toExist();
-                expect(a1.type).toBe(GET_VECTOR_INFO);
-                expect(a2.type).toBe(FORCE_UPDATE_MAP_LAYOUT);
-                expect(a3.type).toBe(NEW_MAPINFO_REQUEST);
-                expect(a3.reqId).toExist();
-                expect(a3.request).toExist();
-                expect(a4.type).toBe(LOAD_FEATURE_INFO);
+                expect(actions.map(action => action.type)).toEqual([
+                    PURGE_MAPINFO_RESULTS,
+                    NEW_MAPINFO_REQUEST,
+                    NEW_MAPINFO_REQUEST,
+                    LOAD_FEATURE_INFO,
+                    FORCE_UPDATE_MAP_LAYOUT
+                ]);
                 done();
             } catch (ex) {
                 done(ex);
@@ -649,9 +606,9 @@ describe('identify Epics', () => {
             done();
         }, {});
     });
-    it('handleMapInfoMarker hide when layer is present', done => {
+    it('handleMapInfoMarker should display the marker even when layer is present', done => {
         testEpic(handleMapInfoMarker, 1, featureInfoClick("POINT", "LAYER"), ([ a ]) => {
-            expect(a.type).toBe(HIDE_MAPINFO_MARKER);
+            expect(a.type).toBe(SHOW_MAPINFO_MARKER);
             done();
         }, {});
     });

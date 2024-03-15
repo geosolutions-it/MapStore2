@@ -145,15 +145,8 @@
                     .wfs-legend-rule {
                         display: flex;
                         margin-bottom: @padding-left-square-md;
-                        .wfs-legend-icon {
-                            margin-right: @padding-left-square-md;
-                            display: flex;
-                            align-items: center;
-
-                            svg {
-                                width: 16px;
-                                height: 16px;
-                            }
+                        .ms-rule-legend-icon {
+                            margin-right: 8px;
                         }
                     }
                 }
@@ -787,7 +780,17 @@
 
         }
     }
+    /* fix not align legend item content in one line in layer group */
+    .toc-group-children {
+        .toc-default-group{
+            .toc-group-children{
+                div.toc-title{
+                    width: calc(140px - 16px);
+                }
+            }
+        }
 
+    }
 
 }
 

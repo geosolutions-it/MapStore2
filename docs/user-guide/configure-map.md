@@ -35,7 +35,7 @@ The *Setting section* allows the user to:
 <img src="../img/configure-map/identify-format.jpg" class="ms-docimage"/>
 
 !!! note
-    The Identify request is performed as usual when the user clicks on a layer in the map, as follows: <img src="../img/configure-map/identify-on-map.gif" class="ms-docimage"/>
+    The Identify request is performed as usual when the user clicks on a layer in the map, as follows: <video class="ms-docimage" controls><source src="../img/configure-map/identify-on-map.mp4" /></video>
 
 ## Advanced map editor
 

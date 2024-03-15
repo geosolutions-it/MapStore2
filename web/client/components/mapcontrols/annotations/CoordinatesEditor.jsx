@@ -27,7 +27,7 @@ import { getMessageById } from '../../../utils/LocaleUtils';
 import Toolbar from '../../misc/toolbar/Toolbar';
 import draggableContainer from '../../misc/enhancers/draggableContainer';
 import Message from '../../I18N/Message';
-import { validateCoords, coordToArray } from '../../../utils/AnnotationsUtils';
+import { validateCoords, coordToArray } from '../../../plugins/Annotations/utils/AnnotationsUtils';
 import CoordinatesRow from '../../misc/coordinateeditors/CoordinatesRow';
 import MeasureEditor from './MeasureEditor';
 
@@ -82,7 +82,8 @@ class CoordinatesEditor extends React.Component {
         showLengthAndBearingLabel: PropTypes.bool,
         renderer: PropTypes.string,
         style: PropTypes.object,
-        onValidateFeature: PropTypes.func
+        onValidateFeature: PropTypes.func,
+        enableHeightField: PropTypes.bool
     };
 
     static contextTypes = {
@@ -120,7 +121,8 @@ class CoordinatesEditor extends React.Component {
         isMouseLeaveEnabled: false,
         properties: {},
         type: "Point",
-        style: {display: 'flex', flexDirection: 'column', flex: 1}
+        style: {display: 'flex', flexDirection: 'column', flex: 1},
+        enableHeightField: false
     };
 
     getValidationStateRadius = (radius) => {
@@ -132,7 +134,7 @@ class CoordinatesEditor extends React.Component {
     }
 
     renderCircle() {
-        return (<div style={{flex: 1, overflowY: 'auto', padding: "0 10px"}}>
+        return (<div className="ms-coordinates-editor-radius" style={{flex: 1, overflowY: 'auto', padding: "0 10px"}}>
             <div>
                 <FormGroup validationState={this.getValidationStateRadius(this.props.properties.radius)}>
                     <ControlLabel><Message msgId="annotations.editor.radius"/></ControlLabel>
@@ -147,7 +149,7 @@ class CoordinatesEditor extends React.Component {
                             if (this.isValid(this.props.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray), uom);
                             } else if (radius !== "") {
-                                this.props.onChangeRadius(parseFloat(radius), [], uom);
+                                this.props.onChangeRadius(parseFloat(radius), [[0, 0]], uom);
                             } else {
                                 this.props.onChangeRadius(null, this.props.components.map(coordToArray), uom);
                                 this.props.onSetInvalidSelected("radius", this.props.components.map(coordToArray));
@@ -192,7 +194,8 @@ class CoordinatesEditor extends React.Component {
             {
                 glyph: validationCompleteButton ? 'ok-sign text-success' : 'exclamation-mark text-danger',
                 tooltipId: validationCompleteButton ? 'annotations.editor.valid' : componentsValidation[type].notValid,
-                visible: true
+                visible: true,
+                onClick: () => {}
             }, {
                 Element: () => (
                     <DropdownButton
@@ -278,6 +281,7 @@ class CoordinatesEditor extends React.Component {
                             aeronauticalOptions={this.props.aeronauticalOptions}
                             sortId={idx}
                             key={idx + " key"}
+                            enableHeightField={this.props.enableHeightField}
                             disabled={this.props.properties.disabled && validateCoords(component)}
                             renderer={this.props.renderer}
                             isDraggable={this.props.isDraggable}
@@ -377,7 +381,7 @@ class CoordinatesEditor extends React.Component {
         if (this.props.type === "Polygon") {
             const validComponents = components.filter(validateCoords);
             const coordinates = this.props.features[this.props.currentFeature]?.geometry?.coordinates?.[0] || [];
-            const invalidCoordinateIndex = coordinates !== undefined ? coordinates.findIndex(c=> !validateCoords({lon: c[0], lat: c[1]})) : -1;
+            const invalidCoordinateIndex = coordinates !== undefined ? coordinates.findIndex(c=> !validateCoords({lon: c[0], lat: c[1], ...(c[2] !== undefined && { height: c[2] }) })) : -1;
             return components.concat([validComponents.length && invalidCoordinateIndex !== 0 ? validComponents[0] : {lat: "", lon: ""}]);
         }
         return components;
@@ -386,7 +390,8 @@ class CoordinatesEditor extends React.Component {
         let tempComps = this.props.components;
         const lat = isNaN(parseFloat(value.lat)) ? "" : parseFloat(value.lat);
         const lon = isNaN(parseFloat(value.lon)) ? "" : parseFloat(value.lon);
-        tempComps[id] = {lat, lon};
+        const height = value.height !== undefined ? isNaN(parseFloat(value.height)) ? "" : parseFloat(value.height) : undefined;
+        tempComps[id] = {lat, lon, ...(height !== undefined && { height })};
         let validComponents = this.addCoordPolygon(tempComps);
         this.props.onChange(validComponents, this.props.properties.radius, this.props.properties.valueText, this.props.mapProjection);
         if (!this.isValid(tempComps)) {

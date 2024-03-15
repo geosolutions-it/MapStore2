@@ -23,7 +23,7 @@ import {createPlugin} from "../utils/PluginsUtils";
 import sidebarMenuReducer from "../reducers/sidebarmenu";
 
 import './sidebarmenu/sidebarmenu.less';
-import {lastActiveToolSelector, sidebarIsActiveSelector} from "../selectors/sidebarmenu";
+import {lastActiveToolSelector, sidebarIsActiveSelector, isSidebarWithFullHeight} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
 
@@ -40,7 +40,7 @@ class SidebarMenu extends React.Component {
         sidebarWidth: PropTypes.number,
         state: PropTypes.object,
         setLastActiveItem: PropTypes.func,
-        lastActiveTool: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+        isSidebarFullHeight: PropTypes.bool
     };
 
     static contextTypes = {
@@ -60,7 +60,8 @@ class SidebarMenu extends React.Component {
         stateSelector: 'sidebarMenu',
         tool: SidebarElement,
         toolCfg: {},
-        sidebarWidth: 40
+        sidebarWidth: 40,
+        isSidebarFullHeight: false
     };
 
     constructor() {
@@ -90,7 +91,8 @@ class SidebarMenu extends React.Component {
             }
             return prev;
         }, []).length > 0 : false;
-        return newSize || newItems || newVisibleItems || newHeight || burgerMenuState || markedAsInactive;
+        const nextIsSideBarFullHeight = !this.props.isSidebarFullHeight && nextProps.isSidebarFullHeight;
+        return newSize || newItems || newVisibleItems || newHeight || burgerMenuState || markedAsInactive || nextIsSideBarFullHeight;
     }
 
     componentDidUpdate(prevProps) {
@@ -229,7 +231,7 @@ class SidebarMenu extends React.Component {
 
     render() {
         return this.state.hidden ? false : (
-            <div id="mapstore-sidebar-menu-container" className="shadow-soft" style={this.getStyle(this.props.style)}>
+            <div id="mapstore-sidebar-menu-container" className={`shadow-soft ${this.props.isSidebarFullHeight ? "fullHeightSideBar" : ""}`} style={this.getStyle(this.props.style)}>
                 <ContainerDimensions>
                     { ({ height }) =>
                         <ToolsContainer id={this.props.id}
@@ -270,12 +272,14 @@ const sidebarMenuSelector = createSelector([
     state => state,
     state => lastActiveToolSelector(state),
     state => mapLayoutValuesSelector(state, {dockSize: true, bottom: true, height: true}),
-    sidebarIsActiveSelector
-], (state, lastActiveTool, style, isActive) => ({
+    sidebarIsActiveSelector,
+    isSidebarWithFullHeight
+], (state, lastActiveTool, style, isActive, isSidebarFullHeight ) => ({
     style,
     lastActiveTool,
     state,
-    isActive
+    isActive,
+    isSidebarFullHeight
 }));
 
 /**

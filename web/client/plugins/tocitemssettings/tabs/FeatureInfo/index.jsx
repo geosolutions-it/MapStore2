@@ -23,7 +23,6 @@ const responses = {
     text
 };
 
-
 const formatCards = {
     HIDDEN: {
         titleId: 'layerProperties.hideFormatTitle',
@@ -71,7 +70,7 @@ const formatCards = {
         descId: 'layerProperties.templateFormatDescription',
         glyph: 'ext-empty',
         body: ({ template = '', ...props }) => (
-            <div>
+            <div className="template-html-renderer" >
                 <div>{template && template !== '<p><br></p>' ? <Message msgId="layerProperties.templatePreview" /> : null}</div>
                 <br />
                 <div>

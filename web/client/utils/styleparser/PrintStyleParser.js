@@ -12,11 +12,63 @@ import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
     drawWellKnownNameImageFromSymbolizer,
-    drawIcons
+    drawIcons,
+    parseSymbolizerExpressions
 } from './StyleParserUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
+import { circleToPolygon } from '../DrawGeometryUtils';
 
 const getGeometryFunction = geometryFunctionsLibrary.geojson();
+
+const anchorToGraphicOffset = (anchor, width, height) => {
+    switch (anchor) {
+    case 'top-left':
+        return [0, 0];
+    case 'top':
+        return [-(width / 2), 0];
+    case 'top-right':
+        return [-width, 0];
+    case 'left':
+        return [0, -(height / 2)];
+    case 'center':
+        return [-(width / 2), -(height / 2)];
+    case 'right':
+        return [-width, -(height / 2)];
+    case 'bottom-left':
+        return [0, -height];
+    case 'bottom':
+        return [-(width / 2), -height];
+    case 'bottom-right':
+        return [-width, -height];
+    default:
+        return [-(width / 2), -(height / 2)];
+    }
+};
+
+const anchorToLabelAlign = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return 'lt';
+    case 'top':
+        return 'ct';
+    case 'top-right':
+        return 'rt';
+    case 'left':
+        return 'lm';
+    case 'center':
+        return 'cm';
+    case 'right':
+        return 'rm';
+    case 'bottom-left':
+        return 'lb';
+    case 'bottom':
+        return 'cb';
+    case 'bottom-right':
+        return 'rb';
+    default:
+        return 'cm';
+    }
+};
 
 const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
     const globalOpacity = layer.opacity === undefined ? 1 : layer.opacity;
@@ -33,12 +85,21 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
         };
     }
     if (symbolizer.kind === 'Icon') {
+        const { width = symbolizer.size, height = symbolizer.size }  = drawWellKnownNameImageFromSymbolizer(symbolizer);
+        const aspect = width / height;
+        let iconSizeW = symbolizer.size;
+        let iconSizeH = iconSizeW / aspect;
+        if (height > width) {
+            iconSizeH = symbolizer.size;
+            iconSizeW = iconSizeH * aspect;
+        }
+        const [graphicXOffset, graphicYOffset] = anchorToGraphicOffset(symbolizer.anchor, iconSizeW, iconSizeH);
         return {
-            graphicWidth: symbolizer.size,
-            graphicHeight: symbolizer.size,
+            graphicWidth: iconSizeW,
+            graphicHeight: iconSizeH,
             externalGraphic: symbolizer.image,
-            graphicXOffset: -symbolizer.size / 2,
-            graphicYOffset: -symbolizer.size / 2,
+            graphicXOffset,
+            graphicYOffset,
             rotation: symbolizer.rotate || 0,
             graphicOpacity: symbolizer.opacity * globalOpacity
         };
@@ -51,10 +112,7 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
             // Supported itext fonts: COURIER, HELVETICA, TIMES_ROMAN
             fontFamily: (symbolizer.font || ['TIMES_ROMAN'])[0],
             fontWeight: symbolizer.fontWeight,
-            // Valid values for horizontal alignment: "l"=left, "c"=center,
-            // "r"=right. Valid values for vertical alignment: "t"=top,
-            // "m"=middle, "b"=bottom.
-            labelAlign: 'cm',
+            labelAlign: anchorToLabelAlign(symbolizer.anchor),
             labelXOffset: symbolizer?.offset?.[0] || 0,
             labelYOffset: -(symbolizer?.offset?.[1] || 0),
             rotation: -(symbolizer.rotate || 0),
@@ -90,8 +148,19 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
             strokeColor: symbolizer.outlineColor,
             strokeOpacity: (symbolizer.outlineOpacity ?? 0) * globalOpacity,
             strokeWidth: symbolizer.outlineWidth ?? 0,
+            ...(symbolizer.outlineDasharray && { strokeDashstyle: symbolizer.outlineDasharray.join(" ") }),
             fillColor: symbolizer.color,
             fillOpacity: symbolizer.fillOpacity * globalOpacity
+        };
+    }
+    if (symbolizer.kind === 'Circle') {
+        return {
+            strokeColor: symbolizer.outlineColor,
+            strokeOpacity: (symbolizer.outlineOpacity ?? 0) * globalOpacity,
+            strokeWidth: symbolizer.outlineWidth ?? 0,
+            ...(symbolizer.outlineDasharray && { strokeDashstyle: symbolizer.outlineDasharray.join(" ") }),
+            fillColor: symbolizer.color,
+            fillOpacity: symbolizer.opacity * globalOpacity
         };
     }
     return {
@@ -101,7 +170,8 @@ const symbolizerToPrintMSStyle = (symbolizer, feature, layer) => {
 
 export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
     return ({
-        layer
+        layer,
+        spec = { projection: 'EPSG:3857' }
     }) => {
         if (!layer?.features) {
             return [];
@@ -123,26 +193,38 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
                         symbolizer.kind === 'Fill' && ['Polygon'].includes(geometryType)
                     );
 
+                    const circleGeometrySymbolizers = symbolizers.filter((symbolizer) =>
+                        symbolizer.kind === 'Circle' && ['Point'].includes(geometryType)
+                    );
+
                     const additionalPointSymbolizers = symbolizers.filter((symbolizer, idx) =>
                         ['Mark', 'Icon', 'Text', 'Model'].includes(symbolizer.kind)
                         && (
                             ['Polygon'].includes(geometryType)
                             || ['LineString'].includes(geometryType)
-                            || ['Point'].includes(geometryType) && idx < pointGeometrySymbolizers.length - 1
+                            || ['Point'].includes(geometryType) && (circleGeometrySymbolizers.length === 0
+                                ? idx < pointGeometrySymbolizers.length - 1
+                                : true)
                         )
                     );
 
-                    const symbolizer = pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
+                    const symbolizer = parseSymbolizerExpressions(circleGeometrySymbolizers[circleGeometrySymbolizers.length - 1]
+                        || pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
                         || polylineGeometrySymbolizers[polylineGeometrySymbolizers.length - 1]
-                        || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1];
+                        || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1], feature);
 
                     let geometry = feature.geometry;
                     const geometryFunction = getGeometryFunction(symbolizer);
-                    if (geometryFunction && geometryType === 'LineString') {
+                    if (geometryFunction && (geometryType === 'LineString' || geometryType === 'Polygon')) {
                         geometry = {
-                            type: 'LineString',
+                            type: geometryType,
                             coordinates: geometryFunction(feature)
                         };
+                    }
+                    if (geometryType === 'Point' && circleGeometrySymbolizers.length) {
+                        geometry = circleToPolygon(feature.geometry.coordinates, symbolizer.radius, symbolizer.geodesic, {
+                            projection: spec.projection
+                        });
                     }
 
                     return [
@@ -154,7 +236,8 @@ export const getPrintStyleFuncFromRules = (geoStylerStyle) => {
                                 ms_style: symbolizerToPrintMSStyle(symbolizer, feature, layer)
                             }
                         },
-                        ...additionalPointSymbolizers.map((additionalSymbolizer) => {
+                        ...additionalPointSymbolizers.map((_additionalSymbolizer) => {
+                            const additionalSymbolizer = parseSymbolizerExpressions(_additionalSymbolizer, feature);
                             const geomFunction = getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...additionalSymbolizer});
                             if (geomFunction) {
                                 const coordinates = geomFunction(feature);
@@ -199,11 +282,11 @@ class PrintStyleParser {
         }
         return new Promise((resolve, reject) => {
             try {
-                drawIcons(geoStylerStyle)
+                const styleFunc = (options) => drawIcons(geoStylerStyle)
                     .then((images = []) => {
-                        const styleFunc = getPrintStyleFuncFromRules(geoStylerStyle, { images });
-                        resolve(styleFunc);
+                        return getPrintStyleFuncFromRules(geoStylerStyle, { images })(options);
                     });
+                resolve(styleFunc);
             } catch (error) {
                 reject(error);
             }

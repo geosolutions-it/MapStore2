@@ -17,7 +17,7 @@ import StyleCanvas from './StyleCanvas';
 import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 numberLocalizer();
 import { getMessageById } from '../../utils/LocaleUtils';
-import { createFont } from '../../utils/AnnotationsUtils';
+import { createFont } from '../../utils/LegacyAnnotationsUtils';
 import Message from '../I18N/Message';
 import tinycolor from 'tinycolor2';
 import IntlNumberFormControl from '../I18N/IntlNumberFormControl';

@@ -8,6 +8,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import isNumber from 'lodash/isNumber';
 import CesiumMap from '../Map';
 import expect from 'expect';
 import { act } from 'react-dom/test-utils';
@@ -60,7 +61,7 @@ describe('Cesium DrawGeometrySupport', () => {
                         active
                         geometryType="Point"
                         getPositionInfo={() => {
-                            const cartographic = new Cesium.Cartographic(10, 43, 0);
+                            const cartographic = new Cesium.Cartographic(10, 43, 10);
                             return {
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -73,6 +74,54 @@ describe('Cesium DrawGeometrySupport', () => {
                                 expect(feature).toBeTruthy();
                                 expect(feature.geometry.type).toBe('Point');
                                 expect(feature.geometry.coordinates.length).toBe(3);
+                                expect(Math.round(feature.geometry.coordinates[2])).toBe(10);
+                                expect(!!feature.properties.geodesic).toBe(false);
+                            } catch (e) {
+                                done(e);
+                            }
+                            done();
+                        }}
+                    />
+                </CesiumMap>
+                ,
+                document.getElementById('container'));
+        });
+        const viewer = document.querySelector('.cesium-viewer');
+        expect(viewer).toBeTruthy();
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+    });
+    it('should be able to draw a point with geodesic true', (done) => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    id="map"
+                    center={{ x: 10.3, y: 43.9 }}
+                    zoom={11}
+                >
+                    <DrawGeometrySupport
+                        active
+                        geodesic
+                        geometryType="Point"
+                        getPositionInfo={() => {
+                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            return {
+                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartographic
+                            };
+                        }}
+                        onDrawEnd={({ coordinates, feature }) => {
+                            try {
+                                expect(coordinates).toBeTruthy();
+                                expect(coordinates.length).toBe(1);
+                                expect(feature).toBeTruthy();
+                                expect(feature.geometry.type).toBe('Point');
+                                expect(feature.geometry.coordinates.length).toBe(3);
+                                expect(Math.round(feature.geometry.coordinates[2])).toBe(0);
+                                expect(!!feature.properties.geodesic).toBe(true);
                             } catch (e) {
                                 done(e);
                             }
@@ -103,7 +152,7 @@ describe('Cesium DrawGeometrySupport', () => {
                         active
                         geometryType="LineString"
                         getPositionInfo={() => {
-                            const cartographic = new Cesium.Cartographic(10, 43, 0);
+                            const cartographic = new Cesium.Cartographic(10, 43, 10);
                             return {
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -116,6 +165,55 @@ describe('Cesium DrawGeometrySupport', () => {
                                 expect(feature).toBeTruthy();
                                 expect(feature.geometry.type).toBe('LineString');
                                 expect(feature.geometry.coordinates.length).toBe(2);
+                                expect(Math.round(feature.geometry.coordinates[0][2])).toBe(10);
+                                expect(!!feature.properties.geodesic).toBe(false);
+                            } catch (e) {
+                                done(e);
+                            }
+                            done();
+                        }}
+                    />
+                </CesiumMap>
+                ,
+                document.getElementById('container'));
+        });
+        const viewer = document.querySelector('.cesium-viewer');
+        expect(viewer).toBeTruthy();
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
+        simulateClick(mapCanvas, options);
+        simulateDoubleClick(mapCanvas, options);
+    });
+    it('should be able to draw a line with geodesic true', (done) => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    id="map"
+                    center={{ x: 10.3, y: 43.9 }}
+                    zoom={11}
+                >
+                    <DrawGeometrySupport
+                        active
+                        geodesic
+                        geometryType="LineString"
+                        getPositionInfo={() => {
+                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            return {
+                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartographic
+                            };
+                        }}
+                        onDrawEnd={({ coordinates, feature }) => {
+                            try {
+                                expect(coordinates).toBeTruthy();
+                                expect(coordinates.length).toBe(2);
+                                expect(feature).toBeTruthy();
+                                expect(feature.geometry.type).toBe('LineString');
+                                expect(feature.geometry.coordinates.length).toBe(2);
+                                expect(Math.round(feature.geometry.coordinates[0][2])).toBe(0);
+                                expect(!!feature.properties.geodesic).toBe(true);
                             } catch (e) {
                                 done(e);
                             }
@@ -193,7 +291,7 @@ describe('Cesium DrawGeometrySupport', () => {
                         active
                         geometryType="Polygon"
                         getPositionInfo={() => {
-                            const cartographic = new Cesium.Cartographic(10, 43, 0);
+                            const cartographic = new Cesium.Cartographic(10, 43, 10);
                             return {
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -206,6 +304,57 @@ describe('Cesium DrawGeometrySupport', () => {
                                 expect(feature).toBeTruthy();
                                 expect(feature.geometry.type).toBe('Polygon');
                                 expect(feature.geometry.coordinates[0].length).toBe(4);
+                                expect(Math.round(feature.geometry.coordinates[0][0][2])).toBe(10);
+                                expect(!!feature.properties.geodesic).toBe(false);
+                            } catch (e) {
+                                done(e);
+                            }
+                            done();
+                        }}
+                    />
+                </CesiumMap>
+                ,
+                document.getElementById('container'));
+        });
+        const viewer = document.querySelector('.cesium-viewer');
+        expect(viewer).toBeTruthy();
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
+
+        simulateClick(mapCanvas, options);
+        simulateClick(mapCanvas, options);
+        simulateDoubleClick(mapCanvas, options);
+    });
+    it('should be able to draw a polygon with geodesic true', (done) => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    id="map"
+                    center={{ x: 10.3, y: 43.9 }}
+                    zoom={11}
+                >
+                    <DrawGeometrySupport
+                        active
+                        geodesic
+                        geometryType="Polygon"
+                        getPositionInfo={() => {
+                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            return {
+                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartographic
+                            };
+                        }}
+                        onDrawEnd={({ coordinates, feature }) => {
+                            try {
+                                expect(coordinates).toBeTruthy();
+                                expect(coordinates.length).toBe(4);
+                                expect(feature).toBeTruthy();
+                                expect(feature.geometry.type).toBe('Polygon');
+                                expect(feature.geometry.coordinates[0].length).toBe(4);
+                                expect(Math.round(feature.geometry.coordinates[0][0][2])).toBe(0);
+                                expect(!!feature.properties.geodesic).toBe(true);
                             } catch (e) {
                                 done(e);
                             }
@@ -271,6 +420,103 @@ describe('Cesium DrawGeometrySupport', () => {
         simulateClick(mapCanvas, options);
         simulateClick(mapCanvas, options);
         simulateClick(mapCanvas, options);
+    });
+    it('should be able to draw a circle', (done) => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    id="map"
+                    center={{ x: 10.3, y: 43.9 }}
+                    zoom={11}
+                >
+                    <DrawGeometrySupport
+                        active
+                        geometryType="Circle"
+                        getPositionInfo={() => {
+                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            return {
+                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartographic
+                            };
+                        }}
+                        onDrawEnd={({ coordinates, feature }) => {
+                            try {
+                                expect(coordinates).toBeTruthy();
+                                expect(coordinates.length).toBe(2);
+                                expect(feature).toBeTruthy();
+                                expect(feature.geometry.type).toBe('Point');
+                                expect(feature.geometry.coordinates.length).toBe(3);
+                                expect(Math.round(feature.geometry.coordinates[2])).toBe(10);
+                                expect(isNumber(feature.properties.radius)).toBe(true);
+                                expect(!!feature.properties.geodesic).toBe(false);
+                            } catch (e) {
+                                done(e);
+                            }
+                            done();
+                        }}
+                    />
+                </CesiumMap>
+                ,
+                document.getElementById('container'));
+        });
+        const viewer = document.querySelector('.cesium-viewer');
+        expect(viewer).toBeTruthy();
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
+
+        simulateClick(mapCanvas, options);
+        simulateDoubleClick(mapCanvas, options);
+    });
+    it('should be able to draw a circle with geodesic true', (done) => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    id="map"
+                    center={{ x: 10.3, y: 43.9 }}
+                    zoom={11}
+                >
+                    <DrawGeometrySupport
+                        active
+                        geometryType="Circle"
+                        geodesic
+                        getPositionInfo={() => {
+                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            return {
+                                cartesian: Cesium.Cartographic.toCartesian(cartographic),
+                                cartographic
+                            };
+                        }}
+                        onDrawEnd={({ coordinates, feature }) => {
+                            try {
+                                expect(coordinates).toBeTruthy();
+                                expect(coordinates.length).toBe(2);
+                                expect(feature).toBeTruthy();
+                                expect(feature.geometry.type).toBe('Point');
+                                expect(feature.geometry.coordinates.length).toBe(3);
+                                expect(isNumber(feature.properties.radius)).toBe(true);
+                                expect(Math.round(feature.geometry.coordinates[2])).toBe(0);
+                                expect(!!feature.properties.geodesic).toBe(true);
+                            } catch (e) {
+                                done(e);
+                            }
+                            done();
+                        }}
+                    />
+                </CesiumMap>
+                ,
+                document.getElementById('container'));
+        });
+        const viewer = document.querySelector('.cesium-viewer');
+        expect(viewer).toBeTruthy();
+        const mapCanvas = ref.map.canvas;
+        const options = { clientX: mapCanvas.clientWidth / 2, clientY: mapCanvas.clientHeight / 2 };
+
+        simulateClick(mapCanvas, options);
+        simulateDoubleClick(mapCanvas, options);
     });
 });
 

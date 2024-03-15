@@ -170,9 +170,9 @@ describe('OpenlayersMap', () => {
         const testHandlers = {
             handler: () => { }
         };
-        var spy = expect.spyOn(testHandlers, 'handler');
+        const spy = expect.spyOn(testHandlers, 'handler');
 
-        var options = {
+        const options = {
             "url": "http://fake",
             "name": "mylayer",
             "visibility": true,
@@ -199,7 +199,7 @@ describe('OpenlayersMap', () => {
         expect(spy.calls[0].arguments.length).toBe(2);
         expect(spy.calls[0].arguments[0].pixel).toBeTruthy();
         expect(spy.calls[0].arguments[0].latlng).toBeTruthy();
-        expect(spy.calls[0].arguments[0].latlng.z).toBeTruthy();
+        expect(spy.calls[0].arguments[0].latlng.z).toBe('');
         expect(spy.calls[0].arguments[0].modifiers).toBeTruthy();
         expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
         expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
@@ -242,9 +242,9 @@ describe('OpenlayersMap', () => {
         const testHandlers = {
             handler: () => { }
         };
-        var spy = expect.spyOn(testHandlers, 'handler');
+        const spy = expect.spyOn(testHandlers, 'handler');
 
-        var options = {
+        const options = {
             "url": "http://fake",
             "name": "mylayer",
             "visibility": true,
@@ -273,7 +273,7 @@ describe('OpenlayersMap', () => {
         expect(spy.calls[0].arguments[0].pixel).toBeTruthy();
         expect(spy.calls[0].arguments[0].x).toBeTruthy();
         expect(spy.calls[0].arguments[0].y).toBeTruthy();
-        expect(spy.calls[0].arguments[0].z).toBeTruthy();
+        expect(spy.calls[0].arguments[0].z).toBe('');
     });
 
     it('click on feature', (done) => {
@@ -499,8 +499,8 @@ describe('OpenlayersMap', () => {
         expect(map.map.getLayers().getLength()).toBe(1);
     });
 
-    it('check layers for elevation', () => {
-        var options = {
+    it('check layers for elevation (deprecated)', () => {
+        const options = {
             "url": "http://fake",
             "name": "mylayer",
             "visibility": true,
@@ -510,7 +510,26 @@ describe('OpenlayersMap', () => {
             <OpenlayersLayer type="wms" srs="EPSG:3857" options={options} />
         </OpenlayersMap>, document.getElementById("map"));
         expect(map).toBeTruthy();
-        expect(map.map.get('elevationLayer')).toBeTruthy();
+        const msElevationLayers = map.map.get('msElevationLayers');
+        expect(msElevationLayers).toBeTruthy();
+        expect(msElevationLayers.length).toBe(1);
+    });
+
+    it('check layers for elevation', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}>
+            <OpenlayersLayer type={options.type} srs="EPSG:3857" options={options} />
+        </OpenlayersMap>, document.getElementById("map"));
+        expect(map).toBeTruthy();
+        const msElevationLayers = map.map.get('msElevationLayers');
+        expect(msElevationLayers).toBeTruthy();
+        expect(msElevationLayers.length).toBe(1);
     });
 
     it('check if the handler for "moveend" event is called after setZoom', (done) => {
@@ -710,6 +729,83 @@ describe('OpenlayersMap', () => {
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: []}}})) ).toBe(true);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [10, 5, 2, 1]}}})) ).toBe(false);
         expect( map.haveResolutionsChanged(testProps({mapOptions: {view: {resolutions: [100, 50, 25]}}})) ).toBe(true);
+    });
+
+    it('check result of "haveRotationChanged()" when receiving new props', () => {
+        let map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+            />
+            , document.getElementById("map"));
+
+        let origProps = assign({}, map.props);
+        function testProps(newProps) {
+            // update original props with newProps
+            return assign({}, origProps, newProps);
+        }
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={undefined}
+            />
+            , document.getElementById("map"));
+
+        expect(map.haveRotationChanged(testProps({mapOptions: undefined}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: undefined}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 0}}}))).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 20}}}))).toBe(true);
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{}}
+            />
+            , document.getElementById("map"));
+        expect(map.haveRotationChanged(testProps({mapOptions: undefined}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: undefined}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 0}}}))).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 20}}}))).toBe(true);
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{view: {}}}
+            />
+            , document.getElementById("map"));
+        expect(map.haveRotationChanged(testProps({mapOptions: undefined}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: undefined}}}))).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 0}}}))).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 20}}}))).toBe(true);
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11.6}
+                measurement={{}}
+                mapOptions={{view: {rotation: 1}}}
+                maxExtent= {[-180, -90, 180, 80]}
+            />
+            , document.getElementById("map"));
+        expect(map.haveRotationChanged(testProps({mapOptions: undefined})) ).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {}})) ).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {}}})) ).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: undefined}}})) ).toBe(true);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 1}}})) ).toBe(false);
+        expect(map.haveRotationChanged(testProps({mapOptions: {view: {rotation: 20}}})) ).toBe(true);
     });
 
     it('check if the map has "auto" cursor as default', () => {
@@ -1386,7 +1482,7 @@ describe('OpenlayersMap', () => {
             expect(MapUtils.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
         it("with custom hookRegister", () => {
-            const customHooRegister = MapUtils.createRegisterHooks();
+            const customHooRegister = MapUtils.createRegisterHooks("mymap");
             const map = ReactDOM.render(<OpenlayersMap hookRegister={customHooRegister} id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("map"));
             expect(map).toBeTruthy();
             expect(ReactDOM.findDOMNode(map).id).toBe('mymap');

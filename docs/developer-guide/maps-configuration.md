@@ -208,6 +208,8 @@ In the case of the background the `thumbURL` is used to show a preview of the la
 - `empty`: special type for empty background
 - `3dtiles`: 3d tiles layers
 - `terrain`: layers that define the elevation profile of the terrain
+- `cog`: Cloud Optimized GeoTIFF layers
+- `model`: 3D model layers like: IFC
 
 #### WMS
 
@@ -243,8 +245,51 @@ Details:
 - `params`: an object with additional parameters to add to the WMS request
 - `layerFilter`: an object to filter the layer. See [LayerFilter](LayerFilter.md) for details.
 - `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs'}`.
-- `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.)
+- `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.). See [Fields](#fields) for details.
 - `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
+
+##### Fields
+
+The `fields` array is used to configure the attributes of the features of the layer. They can be used in the Identify tool, in the FeatureGrid plugin, in the FeatureInfo popup, etc.
+It is supported by `wms` and `wfs` layers. The supported attributes are:
+
+- `name`: the name of the attribute
+- `alias`: the alias of the attribute (used in the Identify tool, in the FeatureGrid plugin, in the FeatureInfo popup, etc.). If not present, the `name` will be used. It can be an object to support i18n.
+- `type`: the type of the attribute. Supported types are: `string`, `number`, `date`, `boolean`. If not present, the default type is `string`.
+- `filterRenderer`: an object to configure the filter renderer in feature grid (for custom projects)
+  - `name`: the name of the filter renderer (for custom projects)
+- `featureGridFormatter`: an object to configure the feature grid formatter in feature grid.
+  - `name`: the name of the feature grid formatter .
+  - `config`: the configuration of the feature grid formatter.
+
+Example:
+
+```json
+{
+    "fields": [{
+        "name": "attr1",
+        "alias": "Attribute 1",
+        "type": "string",
+        "filterRenderer": {
+            "name": "customFilterRenderer"
+        },
+        "featureGridFormatter": {
+            "name": "customFeatureGridFormatter",
+            "config": {
+                "someConfig": "someValue"
+            }
+        }
+    }, {
+        "name": "attr2",
+        "alias": {
+            "default": "Attribute 2",
+            "en-US": "Attribute 2",
+            "it-IT": "Attributo 2"
+        },
+        "type": "number"
+    }]
+}
+```
 
 ##### Multiple URLs
 
@@ -275,7 +320,9 @@ Some other feature will break, for example the layer properties will stop workin
 },
 ```
 
-##### special case - The Elevation layer
+##### useForElevation [Deprecated]
+
+This configuration is deprecated. It should be used a terrain layer and elevation layer instead.
 
 !!! note
     This type of layer configuration is still needed to show the elevation data inside the MousePosition plugin. The `terrain` layer section shows a more versatile way of handling elevation but it will work only as visualization in the 3D map viewer.
@@ -898,7 +945,7 @@ This is the typical fields of a vector layer
 ```
 
 - `features`: features in GeoJSON format.
-- `style`: the style object.
+- `style`: the style object of the layer. See [vector style](vector-style.md) for details.
 - `styleName`: name of a style to use (e.g. "marker").
 - `hideLoading`: boolean. if true, the loading will not be taken into account.
 
@@ -923,352 +970,30 @@ This layer differs from the "vector" because all the loading/filtering/querying 
 ```
 
 - `name`: the name of the layer in the WFS service.
+- `style`: the style object of the layer. See [vector style](vector-style.md) for details.
 - `url`: the url of the WFS service.
 - `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.)
 
-#### Vector Style
+##### Experimental properties
 
-The `vector` and `wfs` layer types are rendered by the client as GeoJSON features and it possible to apply specific symbolizer using the `style` property available in the layer options. The style object is composed by these properties
+Here a list of experimental properties that can be used in the WFS layer configuration, they may change in the future.
 
-- `format` the format encoding used by style body
-- `body` the actual style rules and symbolizers
+- `serverType`: analogous to the `serverType` of the WMS layer. It can be `geoserver` or `no-vendor`. If `no-vendor` is used, the requests will not contain vendor specific parameters like `cql_filter`, and the layer will be treated as a generic WFS layer. The filtering will be done on the "WFS client" side, using the `filter` property. Actually this property is supported only in OpenLayers and only for the map viewer.
+- `security`: this is an object that can contain the security configuration for the layer. It allows to specify if some particular security is configured for this layer, apart from the usual `securityRules` configured globally. It can contain the following properties. Actually this property is supported only in OpenLayers and only for the map viewer:
 
-example:
+  - `type`: the type of security to use. It can be `Basic`.
+  - `sourceType`: the type of source to use. It can be  `sessionStorage`. In case of sessionStorage, a `sourceId` must be provided to get the credentials from the sessionStorage.
+  - `sourceId`: the id of the source to use. It can be any string.
 
-```json
-{
-  "type": "vector",
-  "features": [],
-  "style": {
-    "format": "geostyler",
-    "body": {
-      "name": "My Style",
-      "rules": [
-        {
-          "name": "My Rule",
-          "symbolizers": [
-            {
-              "kind": "Line",
-              "color": "#3075e9",
-              "opacity": 1,
-              "width": 2
-            }
-          ]
+    ```json
+    {
+        "security": {
+            "type": "Basic",
+            "sourceType": "sessionStorage",
+            "sourceId": "source-identifier"
         }
-      ]
     }
-  }
-}
-```
-
-The default format used by MapStore is "geostyler" that is an encoding based on the [geostyler-style](https://github.com/geostyler/geostyler-style) specification that could include some variations or limitations related to the map libraries used by MapStore app.
-We suggest to refer to following doc for the rule/symbolizer properties available in MapStore.
-
-Ths style `body` is composed by following properties:
-
-- `name` style name
-- `rules` list of rule object that describe the style
-
-A `rule` object is composed by following properties:
-
-- `name` rule name that could be used to generate a legend
-- `filter` filter expression
-- `symbolizers` list of symbolizer object that describe the rule (usually one per rule)
-
-The `filter` expression define with features should be rendered with the symbolizers listed in the rule
-
-example:
-
-```js
-// simple comparison condition structure
-// [operator, property key, value]
-{
-  "filter": ["==", "count", 10]
-}
-
-// mulitple condition with logical operato
-// [logical operator, [condition], [condition]]
-{
-  "filter": [
-    "||",
-    [">", "height", 10],
-    ["==", "category", "building"]
-  ]
-}
-```
-
-Available logical operators:
-
-| Operator | Description |
-| --- | --- |
-| `\|\|` | OR operator |
-| `&&` | AND operator |
-
-Available comparison operators:
-
-| Operator | Description |
-| --- | --- |
-| `==` | equal to |
-| `*=` | like (for string type) |
-| `!=` | is not |
-| `<` | less than |
-| `<=` | less and equal than |
-| `>` | grater than |
-| `>=` | grater and equal than |
-
-The `symbolizer` could be of following `kinds`:
-
-- `Mark` symbolizer properties
-
-  | Property | Description | 2D | 3D |
-  | --- | --- | --- | --- |
-  | `kind` | must be equal to **Mark** | x | x |
-  | `color` | fill color of the mark | x | x |
-  | `fillOpacity` | fill opacity of the mark | x | x |
-  | `strokeColor` | stroke color of the mark | x | x |
-  | `strokeOpacity` | stroke opacity of the mark | x | x |
-  | `strokeWidth` | stroke width of the mark | x | x |
-  | `radius` | radius size in px of the mark | x | x |
-  | `wellKnownName` | rendered shape, one of Circle, Square, Triangle, Star, Cross, X, shape://vertline, shape://horline, shape://slash, shape://backslash, shape://dot, shape://plus, shape://times, shape://oarrow or shape://carrow | x | x |
-  | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
-  | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
-  | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
-  | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
-  | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
-  | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
-
-- `Icon` symbolizer properties
-
-  | Property | Description | 2D | 3D |
-  | --- | --- | --- | --- |
-  | `kind` | must be equal to **Icon** | x | x |
-  | `image` | url of the image to use as icon | x | x |
-  | `size` | size of the icon | x | x |
-  | `opacity` | opacity of the icon | x | x |
-  | `rotate` | rotation of the icon | x | x |
-  | `anchor` | array of values defined in fractions [0 to 1] | x | x |
-  | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
-  | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
-  | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
-  | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
-  | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
-  | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
-
-- `Line` symbolizer properties
-
-  | Property | Description | 2D | 3D |
-  | --- | --- | --- | --- |
-  | `kind` | must be equal to **Line** | x | x |
-  | `color` | stroke color of the line | x | x |
-  | `opacity` | stroke opacity of the line | x | x |
-  | `width` | stroke width of the line | x | x |
-  | `dasharray` | array that represent the dashed line intervals | x | x |
-  | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
-
-- `Fill` symbolizer properties
-
-  | Property | Description | 2D | 3D |
-  | --- | --- | --- | --- |
-  | `kind` | must be equal to **Fill** | x | x |
-  | `color` | fill color of the polygon | x | x |
-  | `fillOpacity` | fill opacity of the polygon | x | x |
-  | `outlineColor` | outline color of the polygon | x | x |
-  | `outlineOpacity` | outline opacity of the polygon | x | x |
-  | `outlineWidth` | outline width of the polygon | x | x |
-  | `msClassificationType` | allow setting **classificationType** value for the feature. This would only apply on polygon graphics in Cesium maps. |  | x |
-  | `msClampToGround` | this boolean will allow setting the **clampToGround** value for the feature. This would only apply on Cesium maps. |  | x |
-
-- `Text` symbolizer properties
-
-  | Property | Description | 2D | 3D |
-  | --- | --- | --- | --- |
-  | `kind` | must be equal to **Text** | x | x |
-  | `label` | text to show in the label, the {{propertyKey}} notetion allow to access feature properties (eg. 'feature name is {{name}}') | x | x |
-  | `font` | array of font family names | x | x |
-  | `size` | font size of the label | x | x |
-  | `fontStyle` | font style of the label: normal or italic | x | x |
-  | `fontWeight` | font style of the label: normal or bold | x | x |
-  | `color` | font color of the label | x | x |
-  | `haloColor` | halo color of the label | x | x |
-  | `haloWidth` | halo width of the label | x | x |
-  | `offset` | array of x and y values offset of the label | x | x |
-  | `msBringToFront` | this boolean will allow setting the **disableDepthTestDistance** value for the feature. This would |  | x |
-  | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
-  | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
-  | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
-  | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
-  | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
-
-- `Model` symbolizer properties (custom symbolizer to visualize 3D model as point geometries)
-
-  | Property | Description | 2D | 3D |
-  | --- | --- | --- | --- |
-  | `kind` | must be equal to **Model** |  | x |
-  | `model` | url of a 3D .glb file |  | x |
-  | `heading` | heading rotation |  | x |
-  | `pitch` | pitch rotation |  | x |
-  | `roll` | roll rotation |  | x |
-  | `scale` | scale factor |  | x |
-  | `color` | color mixed with the mesh texture/material |  | x |
-  | `opacity` | color opacity |  | x |
-  | `msHeightReference` | reference to compute the distance of the point geometry, one of **none**, **ground** or **clamp** |  | x |
-  | `msHeight` | height of the point, the original geometry is applied if undefined  |  | x |
-  | `msLeaderLineColor` | color of the leading line connecting the point to the terrain  |  | x |
-  | `msLeaderLineOpacity` | opacity of the leading line connecting the point to the terrain |  | x |
-  | `msLeaderLineWidth` | width of the leading line connecting the point to the terrain |  | x |
-
-#### Legacy Vector Style (deprecated)
-
-The `style` or `styleName` properties of vector layers (wfs, vector...) allow to apply a style to the local data on the map.
-
-- `style`: a style object/array. It can have different formats. In the simplest case it is an object that uses some leaflet-like style properties:
-  - `weight`: width in pixel of the border / line.
-  - `radius`: radius of the circle (valid only for Point types)
-  - `opacity`: opacity of the border / line.
-  - `color`: color of the border / line.
-  - `fillOpacity`: opacity of the fill if any. (Polygons, Point)
-  - `fillColor`: color of the fill, if any. (Polygons, Point)
-- `styleName`: if set to `marker`, the `style` object will be ignored and it will use the default marker.
-
-In case of `vector` layer, style can be added also to the specific features. Other ways of defining the style for a vector layer have to be documented.
-
-#### Advanced Vector Styles (deprecated)
-
-To support advanced styles (like multiple rules, symbols, dashed lines, start point, end point) the style can be configured also in a different format, as an array of objects and you can define them feature by feature, adding a "style" property.
-
-!!!warning
-    This advanced style functionality has been implemented to support annotations, at the moment this kind of advanced style options is supported **only** as a property of the single feature object, not as global style.
-
-##### SVG Symbol (deprecated)
-
-The following options are available for a SVG symbol.
-
-- `symbolUrl`: a URL (also a data URL is ok) for the symbol to use (SVG format).
-    You can anchor the symbol using:
-  - `iconAnchor`: array of x,y position of the offset of the symbol from top left corner.
-  - `anchorXUnits`, `anchorYUnits` unit of the `iconAnchor` (`fraction` or `pixels`).
-  - `size`: the size in pixel of the square that contains the symbol to draw. The size is used to center and to cut the original svg, so it must fit the svg.
-- `dashArray`: Array of line, space size, in pixels. ["6","6"] Will draw the border of the symbol dashed. It is applied also to a generic line or polygon geometry.
-
-##### Markers and glyphs (deprecated)
-
-These are the available options for makers. These are specific of annotations for now, so allowed values have to be documented.
-
-- `iconGlyph`: e.g. "shopping-cart"
-- `iconShape`: e.g. "circle"
-- `iconColor`: e.g. "red"
-- `iconAnchor`: [0.5,0.5]
-
-##### Multiple rules and filtering (deprecated)
-
-In order to support start point and end point symbols, you could find in the style these entries:
-
-- `geometry`: "endPoint"|"startPoint", identify how to get the geometry from
-- `filtering`: if true, the geometry filter is applied.
-
-#### Example (deprecated)
-
-Here an example of a layer with:
-
-- a point styled with SVG symbol,
-- a polygon with dashed style
-- a line with start-end point styles as markers with icons
-
-```json
-{
-        "type": "vector",
-        "visibility": true,
-        "id": "styled-vector-layer",
-        "name": "styled-vector-layer",
-        "hideLoading": true,
-        "features": [
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [2,0]
-            },
-            "properties": {},
-            "style": [
-              {
-                "iconAnchor": [0.5,0.5],
-                "anchorXUnits": "fraction",
-                "anchorYUnits": "fraction",
-                "opacity": 1,
-                "size": 30,
-                "symbolUrl": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Crect  x='5' y='5' width='20' height='20' style='fill:rgb(255,0,0);stroke-width:5;stroke:rgb(0,0,0)' /%3E%3C/svg%3E",
-                "shape": "triangle",
-                "id": "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d",
-                "highlight": false,
-                "weight": 4
-              }
-            ]
-          },{
-            "type": "Feature",
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [[[0, 0],[1, 0],[1, 1],[0,1],[ 0,0]]]
-            },
-            "properties": {},
-            "style": [
-              {
-                "color": "#d0021b",
-                "opacity": 1,
-                "weight": 3,
-                "fillColor": "#4a90e2",
-                "fillOpacity": 0.5,
-                "highlight": false,
-                "dashArray": ["6","6"]
-              }
-            ]
-          },{
-            "type": "Feature",
-            "geometry": {
-              "coordinates": [[0, 2],[ 0,3]],
-              "type": "LineString"
-            },
-            "properties": {},
-            "style": [
-              {
-                "color": "#ffcc33",
-                "opacity": 1,
-                "weight": 3,
-                "editing": {
-                  "fill": 1
-                },
-                "highlight": false
-              },
-              {
-                "iconGlyph": "comment",
-                "iconShape": "square",
-                "iconColor": "blue",
-                "highlight": false,
-                "iconAnchor": [ 0.5,0.5],
-                "type": "Point",
-                "title": "StartPoint Style",
-                "geometry": "startPoint",
-                "filtering": true
-              },
-              {
-                "iconGlyph": "shopping-cart",
-                "iconShape": "circle",
-                "iconColor": "red",
-                "highlight": false,
-                "iconAnchor": [ 0.5,0.5 ],
-                "type": "Point",
-                "title": "EndPoint Style",
-                "geometry": "endPoint",
-                "filtering": true
-              }
-            ]
-          }
-        ]
-      }
-```
-
-*Result:*
-
-<img src="../img/vector-style-annotations.jpg" class="ms-docimage"  style="max-width:600px;"/>
+    ```
 
 #### Graticule
 
@@ -1339,61 +1064,133 @@ i.e.
 
 The style body object for the format 3dtiles accepts rules described in the 3d tiles styling specification version 1.0 available [here](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification/Styling).
 
+#### Model Layer
+
+This type of layer shows ifc models with different versions including referenced and non-georeferenced ifc models inside the Cesium viewer. This layer will not be visible inside 2d map viewer types: openlayer or leaflet.
+See specification for more info about IFC [here](https://technical.buildingsmart.org/standards/ifc/ifc-schema-specifications/).
+
+i.e.
+
+```javascript
+{
+    "type": "model",
+    "url": "http..." // URL of ifc file with ".ifc" format
+    "title": "IFC Model Layer",
+    "visibility": true,
+    features: [
+      {
+          type: 'Feature',
+          id: 'model-origin',
+          properties: {
+              heading: 0,
+              pitch: 0,
+              roll: 0,
+              scale: scale
+          },
+          geometry: {
+              type: 'Point',
+              coordinates: [longitude, latitude, height]
+          }
+      }
+    ],
+    bbox: {
+      crs: "EPSG:4326",
+      bounds: {
+        minx: 0,
+        miny: 0,
+        maxx: 0,
+        maxy: 0
+      }
+    },
+     // optional
+    properties: {}
+}
+```
+
 #### Terrain
 
-`terrain` layer allows the customization of the elevation profile of the globe mesh in the Cesium 3d viewer. Currently Mapstore supports three different types of [terrain providers](https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html). If no `terrain` layer is defined the default elevation profile for the globe would be the [ellipsoid](https://cesium.com/learn/cesiumjs/ref-doc/EllipsoidTerrainProvider.html) that provides a rather flat profile.
+The `terrain` layer allows the customization of the elevation profile of the globe mesh in the *Cesium 3d viewer*.
 
-The other two available terrain providers are the `wms` (that supports `DDL/BIL` types of assets) and the `cesium` (that support resources compliant with the Cesium terrain format).
+Mapstore supports 3 different types of [terrain providers](https://cesium.com/learn/cesiumjs/ref-doc/TerrainProvider.html):
+
+- `wms`: Supports `DDL/BIL` types of assets using WMS OGC protocol.
+- `cesium`: Support resources compliant with the Cesium terrain format.
+
+If no `terrain` layer is defined the default elevation profile for the globe will be the [ellipsoid](https://cesium.com/learn/cesiumjs/ref-doc/EllipsoidTerrainProvider.html), that is the 3rd type, that provides a rather flat profile.
+
+In order to use these layers with all the maps, they need to be incorporated into the `additionalLayers` configuration of the `Map` plugin (in `localConfig.json` and/or in the context configuration).
+The globe accepts **only one** terrain provider so in case of adding more than one the last one will take precedence to be used to create the elevation profile.
+
+```json
+{
+    "name": "Map",
+    "cfg": {
+        "additionalLayers": [{
+            "type": "terrain",
+            "provider": "wms",
+            "url": "https://host-sample/geoserver/wms",
+            "name": "workspace:layername",  // name of the geoserver resource
+            "littleEndian": false,
+            "visibility": true,
+            "crs": "CRS:84"
+        }]
+    }
+}
+```
+
+##### WMS terrain provider
 
 In order to create a `wms` based mesh there are some requirements that need to be fulfilled:
 
-- a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
-- A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
-  - BILTerrainProvider is used to parse `wms` based mesh. Supports three ways in parsing the metadata of the layer
-    1. Layer configuration with **sufficient metadata** of the layer. This prevents a call to `getCapabilities` eventually improving performance of the parsing of the layer.
-        Mandatory fields are `url`, `name`, `crs`.
+- A GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
+- The Layer to use for the terrain model have to be configured in GeoServer with **BIL 16 bit** output, **big endian mode**, **-9999 as no-data value**
+- A **layer** of `"type": "terrain"` configured in MapStore (map or `additionalLayers`) that uses the `"provider": "wms"` .
 
-        ```json
-        {
-          "type": "terrain",
-          "provider": "wms",
-          "url": "http://hot-sample/geoserver/wms",
-          "name": "workspace:layername",
-          "littleEndian": false,
-          "visibility": true,
-          "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
-        }
-        ```
+The **layer** configuration can be done in 3 different ways:
 
-    2. Layer configuration of `geoserver` layer with layer name *prefixed with workspace*, then the `getCapabilities` is requested only for that layer
-
-        ```json
-        {
-        "type": "terrain",
-        "provider": "wms",
-        "url": "https://host-sample/geoserver/wms", // 'geoserver' url
-        "name": "workspace:layername", // name of the geoserver resource with workspace prefixed
-        "littleEndian": false
-        }
-        ```
-
-    3. Layer configuration of geoserver layer with layer name *not prefixed with workspace* then `getCapabilities` is requested in global scope.
+1. Layer configuration with **sufficient metadata** of the layer. This prevents a call to `getCapabilities` eventually improving performance of the parsing of the layer.
+    Mandatory fields are `url`, `name`, `crs`.
 
     ```json
     {
-      "type": "terrain",
-      "provider": "wms",
-      "url": "https://host-sample/geoserver/wms",
-      "name": "layername",
-      "littleEndian": false
+        "type": "terrain",
+        "provider": "wms",
+        "url": "http://hot-sample/geoserver/wms",
+        "name": "workspace:layername",
+        "littleEndian": false,
+        "visibility": true,
+        "crs": "CRS:84" // Supports only CRS:84 | EPSG:4326 | EPSG:3857 | OSGEO:41001
+    }
+    ```
+
+2. Layer configuration of `geoserver` layer with layer name *prefixed with workspace*, then the `getCapabilities` is requested only for that layer
+
+    ```json
+    {
+    "type": "terrain",
+    "provider": "wms",
+    "url": "https://host-sample/geoserver/wms", // 'geoserver' url
+    "name": "workspace:layername", // name of the geoserver resource with workspace prefixed
+    "littleEndian": false
+    }
+    ```
+
+3. Layer configuration of geoserver layer with layer name *not prefixed with workspace* then `getCapabilities` is requested in global scope.
+
+    ```json
+    {
+        "type": "terrain",
+        "provider": "wms",
+        "url": "https://host-sample/geoserver/wms",
+        "name": "layername",
+        "littleEndian": false
     }
     ```
 
 !!! note
-    With `wms` as provider, the format option is not needed, as Mapstore supports only `image/bil` format and is used by default
+    With `wms` as provider, the `format` option is not needed, as Mapstore supports only `image/bil` format and is used by default
 
-Generic layer configuration of type `terrain` and provide `wms` as follows.
-The layer configuration needs to point to the geoserver resource and define the type of layer and the type of provider, here all available properties:
+Here all the available properties for the `wms` terrain provider:
 
 ```json
 {
@@ -1417,7 +1214,9 @@ The layer configuration needs to point to the geoserver resource and define the 
 }
 ```
 
-The `terrain` layer of `cesium` type allows using Cesium terrain format compliant services (like Cesium Ion resources or [MapTiler meshes](https://cloud.maptiler.com/tiles/terrain-quantized-mesh-v2/)). The options attributte allows for further customization of the terrain properties (see available options on the Cesium documentation for the [cesium terrain provider](https://cesium.com/learn/cesiumjs/ref-doc/CesiumTerrainProvider.html))
+##### Cesium terrain provider
+
+The `terrain` layer of `cesium` type allows using Cesium terrain format compliant services (like Cesium Ion resources or [MapTiler meshes](https://cloud.maptiler.com/tiles/terrain-quantized-mesh-v2/)). The options attribute allows for further customization of the terrain properties (see available options on the Cesium documentation for the [cesium terrain provider](https://cesium.com/learn/cesiumjs/ref-doc/CesiumTerrainProvider.html))
 
 ```json
 {
@@ -1431,22 +1230,71 @@ The `terrain` layer of `cesium` type allows using Cesium terrain format complian
 }
 ```
 
-In order to use these layers they need to be added to the `additionalLayers` in `localConfig.json`. The globe only accepts one terrain provider so in case of adding more than one the last one will take precedence and be used to create the elevation profile.
+#### Elevation
 
-```json
+This layer provides information related to elevation based on a provided DTM layer. **It does not provide the terrain profile for 3D visualization**, see [terrain](#terrain) layer type for this feature.
+
+!!! Note
+    In the Cesium 3D viewer all the heights are relative to the WGS84 ellipsoid while usually DTM/DEM files could have an elevation value relative to the mean sea level (MSL). So with this layer it's possible to have a terrain layer with the correct WGS84 ellipsoidal height while querying the mouse position with a MSL height.
+
+This requires:
+
+- a GeoServer WMS service with the [DDS/BIL plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html)
+- A WMS layer configured with **BIL 16 bit** output in **big endian mode** and **-9999 nodata value**
+- a static layer in the Map plugin configuration (use the `additionalLayers` configuration option to share it with all the maps):
+
+in `localConfig.json`
+
+```javascript
 {
     "name": "Map",
     "cfg": {
         "additionalLayers": [{
-            "type": "terrain",
+            "type": "elevation",
             "provider": "wms",
-            "url": "https://host-sample/geoserver/wms",
-            "name": "workspace:layername",  // name of the geoserver resource
-            "littleEndian": false,
+            "url": "/geoserver/wms",
+            "name": "elevation",
             "visibility": true,
-            "crs": "CRS:84"
+            // optional
+            "littleEndian": false,
+            "nodata": -9999
         }]
     }
+}
+```
+
+The layer will be used for showing elevation in the `MousePosition` plugin (it requires `"showElevation": true` in the plugin configuration)
+
+in `localConfig.json`
+
+```javascript
+{
+    "name": "MousePosition",
+    "cfg": {
+        "showElevation": true,
+        ...
+    }
+}
+```
+
+!!! note
+    This type of layer is introduced in substitution of the of the wms layer [useForElevation](#useforelevation-deprecated) and the main reason is to separate the visualization from the information displayed with the mouse position plugin aligning the behavior of the 2D/3D viewers. The current implementation supports only a WMS layer in format `application/bil16`.
+
+#### Cloud Optimized GeoTIFF (COG)
+
+i.e.
+
+```javascript
+{
+    "type": "cog",
+    "title": "Title",
+    "group": "background",
+    "visibility": false,
+    "name": "Name",
+    "sources": [
+        { "url": "https://host-sample/cog1.tif" },
+        { "url": "https://host-sample/cog2.tif" }
+    ]
 }
 ```
 

@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import {intlShape} from 'react-intl';
 import {getContext} from 'recompose';
 import DateTimePicker from '../../../misc/datetimepicker';
+import RangedDateTimePicker  from '../../../misc/datetimepicker/RangedDateTimePicker';
 import {getMessageById} from '../../../../utils/LocaleUtils';
 import { getDateTimeFormat } from '../../../../utils/TimeUtils';
 import AttributeFilter from './AttributeFilter';
@@ -22,8 +23,14 @@ const UTCDateTimePicker = utcDateWrapper({
     setDateProp: "onChange"
 })(DateTimePicker);
 
+const UTCDateTimePickerWithRange = utcDateWrapper({
+    dateProp: "value",
+    dateTypeProp: "type",
+    setDateProp: "onChange"
+})(RangedDateTimePicker );
 
-class DateFilter extends AttributeFilter {
+
+export class DateFilter extends AttributeFilter {
     static propTypes = {
         type: PropTypes.string,
         disabled: PropTypes.bool,
@@ -45,9 +52,12 @@ class DateFilter extends AttributeFilter {
         if (this.props.column.filterable === false) {
             return <span />;
         }
+        const operator = this.props.value && this.props.value.operator || this.state.operator;
         const format = getDateTimeFormat(this.context.locale, this.props.type);
         const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Insert date";
-        const toolTip = this.props.intl && this.props.intl.formatMessage({id: `${this.props.tooltipMsgId}`}, {format}) || `Insert date in ${format} format`;
+        const toolTip = this.props.intl && this.props.tooltipMsgId
+            ? this.props.intl.formatMessage({id: `${this.props.tooltipMsgId}`}, {format})
+            : `Insert date in ${format} format`;
 
         const inputKey = 'header-filter-' + this.props.column.key;
         let val;
@@ -58,8 +68,27 @@ class DateFilter extends AttributeFilter {
             val = this.props.value && this.props.value.startDate || this.props.value;
         }
         const dateValue = this.props.value ? val : null;
-        const operator = this.props.value && this.props.value.operator;
+        if (operator === '><') {
+            return (
+                <UTCDateTimePickerWithRange
+                    isWithinAttrTbl={this.props.isWithinAttrTbl}
+                    key={inputKey}
+                    disabled={this.props.disabled}
+                    format={format}
+                    placeholder={placeholder}
+                    value={dateValue}
+                    toolTip={toolTip}
+                    popupPosition={'top'}     // popover open direction
+                    operator={operator}
+                    type={this.props.type}
+                    time={this.props.type === 'time'}
+                    calendar={this.props.type === 'date-time' || this.props.type === 'date'}
+                    onChange={(date, stringDate, order) => this.handleChangeRangeFilter(date, stringDate, order)}
+                />
+            );
+        }
         return (<UTCDateTimePicker
+            isWithinAttrTbl={this.props.isWithinAttrTbl}
             key={inputKey}
             disabled={this.props.disabled}
             format={format}
@@ -68,13 +97,29 @@ class DateFilter extends AttributeFilter {
             toolTip={toolTip}
             operator={operator}
             type={this.props.type}
+            popupPosition={'top'} // popover open direction
             time={this.props.type === 'date-time' || this.props.type === 'time'}
             calendar={this.props.type === 'date-time' || this.props.type === 'date'}
             onChange={(date, stringDate) => this.handleChange(date, stringDate)}
         />);
     }
     handleChange = (value, stringValue) => {
-        this.props.onChange({ value, stringValue, attribute: this.props.column && this.props.column.name });
+        this.props.onChange({ value, stringValue, attribute: this.props.column && this.props.column.name, inputOperator: this.state.operator || this.props.operator });
+    }
+    handleChangeRangeFilter = (value, stringValue, order = 'start') => {
+        let reqVal = {};
+        if (order === 'end') {
+            reqVal = {
+                startDate: this.props.value?.startDate,
+                endDate: value
+            };
+        } else {
+            reqVal = {
+                startDate: value,
+                endDate: this.props.value?.endDate
+            };
+        }
+        this.props.onChange({ value: reqVal, stringValue, attribute: this.props.column && this.props.column.name, inputOperator: this.state.operator || this.props.operator });
     }
 }
 

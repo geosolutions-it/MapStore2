@@ -18,6 +18,7 @@ import {
     TEXT_SEARCH_CANCEL_ITEM,
     UPDATE_RESULTS_STYLE,
     resetSearch,
+    selectSearchItem,
     changeFormat,
     changeCoord,
     changeActiveSearchTool,
@@ -177,6 +178,40 @@ describe('Test the search reducer', () => {
         // or it keeps one empty
         state = search({}, resetSearch());
         expect(state).toEqual({style: {}});
+    });
+    it('TEXT_SEARCH_ITEM_SELECTED - wfs service', () => {
+        let service =  {
+            type: 'wfs',
+            displayName: '${properties.DISPLAY_NAME}'
+        };
+        let item = {
+            properties: {
+                DISPLAY_NAME: 'Display Name'
+            }
+        };
+        const state = search({}, selectSearchItem(item, {}, service, {}));
+        expect(state.searchText).toBe('Display Name');
+    });
+    it('TEXT_SEARCH_ITEM_SELECTED - Nominatim service', () => {
+        let service =  {
+            type: 'nominatim'
+        };
+        let item = {
+            properties: {
+                display_name: 'Display Name'
+            }
+        };
+        const state = search({}, selectSearchItem(item, {}, service, {}));
+        expect(state.searchText).toBe('Display Name');
+    });
+    it('TEXT_SEARCH_ITEM_SELECTED - undefined service', () => {
+        let item = {
+            properties: {
+                display_name: 'Display Name'
+            }
+        };
+        const state = search({ searchText: 'Displ' }, selectSearchItem(item, {}, undefined, {}));
+        expect(state.searchText).toBe('Displ');
     });
     it('RESET_CONTROLS', () => {
 

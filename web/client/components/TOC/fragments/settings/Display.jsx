@@ -21,6 +21,8 @@ import { ServerTypes } from '../../../../utils/LayersUtils';
 import Select from 'react-select';
 import { getSupportedFormat } from '../../../../api/WMS';
 import WMSCacheOptions from './WMSCacheOptions';
+import ThreeDTilesSettings from './ThreeDTilesSettings';
+import ModelTransformation from './ModelTransformation';
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -176,7 +178,7 @@ export default class extends React.Component {
                     </Col>
                 </Row>}
 
-                {this.props.element.type !== "3dtiles" && <Row>
+                {!["3dtiles", 'model'].includes(this.props.element.type) && <Row>
                     <Col xs={12}>
                         <FormGroup>
                             <ControlLabel>{this.props.opacityText} %</ControlLabel>
@@ -206,18 +208,14 @@ export default class extends React.Component {
                     </Col>
                 </Row>
 
-                {this.props.element.type === "3dtiles" && <Row>
-                    <Col xs={12}>
-                        <FormGroup>
-                            <ControlLabel><Message msgId="layerProperties.heightOffset"/></ControlLabel>
-                            <IntlNumberFormControl
-                                type="number"
-                                name={"heightOffset"}
-                                value={this.props.element.heightOffset || 0}
-                                onChange={(val)=> this.props.onChange("heightOffset", parseFloat(val))}/>
-                        </FormGroup>
-                    </Col>
-                </Row>}
+                <ThreeDTilesSettings
+                    layer={this.props.element}
+                    onChange={this.props.onChange}
+                />
+                <ModelTransformation
+                    layer={this.props.element}
+                    onChange={this.props.onChange}
+                />
 
                 {this.props.element.type === "wms" &&
                 <Row>

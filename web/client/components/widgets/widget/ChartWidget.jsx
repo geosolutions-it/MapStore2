@@ -33,7 +33,7 @@ const ChartWidget = ({
     data = [],
     charts = [],
     selectedChartId,
-    series = [],
+    traces = [],
     loading,
     icons,
     showTable,
@@ -74,7 +74,7 @@ const ChartWidget = ({
     >
         {showTable
             ? <TableView data={data} {...props}/>
-            : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />}
+            : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} traces={traces} iconFit {...props} />}
     </WidgetContainer>
 
     );

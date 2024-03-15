@@ -166,10 +166,11 @@ export function SymbolizerMenu({
     symbolizerBlock,
     getSelected = defaultGetSelected,
     getOptions = defaultGetOptions,
-    onSelect
+    onSelect,
+    supportedOptions
 }) {
 
-    const options = getOptions({ ruleBlock, symbolizerBlock, kind: symbolizerKind });
+    const options = getOptions({ ruleBlock, symbolizerBlock, kind: symbolizerKind }).filter(option => !supportedOptions || supportedOptions.includes(option.value));
 
     const { defaultProperties, params = {} } = symbolizerKind
         ? symbolizerBlock[symbolizerKind]
@@ -192,9 +193,10 @@ export function SymbolizerMenu({
 
     return (
         <DropdownButton
-            className="square-button-md no-border"
+            className="no-border"
             noCaret
             pullRight
+            style={{ padding: 0 }}
             title={<Glyphicon glyph="option-vertical"/>}>
             {options.map((option) => {
                 return !option.isVisible || option.isVisible({ graphicKey })

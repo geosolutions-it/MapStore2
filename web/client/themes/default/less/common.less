@@ -6,6 +6,7 @@
 // LICENSE file in the root directory of this source tree.
 //
 
+
 // **************
 // Theme
 // **************
@@ -63,6 +64,36 @@
             }
         }
     }
+    .input-group-addon-success {
+        .background-color-var(@theme-vars[success]);
+        .color-var(@theme-vars[primary-contrast]);
+    }
+    .DraftEditor-editorContainer,
+    .template-html-renderer,
+    .ms-template-viewer
+    {
+        img::before {
+            .background-color-var(@theme-vars[main-bg]);
+        }
+    }
+    .form-group-flex {
+        &.has-success {
+            .Select-control {
+                .border-color-var(@theme-vars[success], true);
+            }
+        }
+        &.has-error {
+            .Select-control {
+                .border-color-var(@theme-vars[danger], true);
+            }
+        }
+        &.has-warning {
+            .Select-control {
+                .border-color-var(@theme-vars[warning], true);
+            }
+        }
+    }
+
 }
 
 // **************
@@ -327,4 +358,90 @@ div#sync-popover.popover {
             cursor: pointer;
         }
     }
+}
+
+
+.ms-feature-info-editor {
+    .rdw-image-modal-url-section {
+        display: block;
+    }
+    .guide-text {
+        font-size: @font-size-small;
+        font-style: italic;
+    }
+}
+
+
+.DraftEditor-editorContainer, // selector editor
+.template-html-renderer, // selector preview sx
+.ms-template-viewer // selector fi panel
+{
+    img {
+        display: inline-block;
+        min-height: 145px;
+        position: relative;
+        text-align: center;
+        min-width: 460px;
+        max-width: 100%;
+        font-size: @font-size-small;
+    }
+    img::before {
+        content: ' ';
+        width: 101%;
+        height: calc(100% - 36px);
+        border-radius: 10px;
+        position: absolute;
+        top: -2px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        left: -2px;
+        background-image: url("../img/image-not-found.jpg");
+    }
+
+    img::after {
+        font-size: @font-size-small;
+        display: block;
+        bottom: 0;
+        left: 50%;
+        font-style: italic;
+        position: absolute;
+        transform: translate(-50%, 0px);
+    }
+}
+
+// forced to avoid conflicts with no-image display for not found at link
+.rdw-link-decorator-icon
+{
+    width: 15px !important;
+    min-width: 10px !important;
+    min-height: 15px !important;
+    position: static !important;
+    vertical-align: text-top;
+}
+
+.form-control.intl-numeric {
+    float: unset;
+
+}
+
+.form-group-flex {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    .checkbox,
+    .control-label {
+        flex: 1;
+        font-weight: normal;
+        &.strong{
+            font-weight: bold;
+        }
+    }
+    .input-group {
+        flex: 1;
+    }
+    input {
+        z-index: 0;
+    }
+    margin-bottom: 8px;
 }

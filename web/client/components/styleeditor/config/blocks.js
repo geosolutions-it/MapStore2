@@ -20,12 +20,11 @@ const vector3dStyleOptions = ({ label = 'styleeditor.clampToGround', isDisabled 
     })
 });
 
-const INITIAL_OPTION_VALUE = '@ms-INITIAL_OPTION_VALUE';
-
 const pointGeometryTransformation = () => ({
     msGeometry: property.select({
         label: 'styleeditor.geometryTransformation',
         key: 'msGeometry',
+        disablePropertySelection: true,
         setValue: (value) => {
             if (!value) {
                 return 'unset';
@@ -57,10 +56,59 @@ const pointGeometryTransformation = () => ({
     })
 });
 
+const anchorProperty = () => ({
+    anchor: property.select({
+        label: 'styleeditor.anchor',
+        key: 'anchor',
+        setValue: (value) => {
+            return value ? value : 'center';
+        },
+        getOptions: () => [
+            {
+                value: 'top-left',
+                labelId: 'styleeditor.topLeft'
+            },
+            {
+                value: 'top',
+                labelId: 'styleeditor.top'
+            },
+            {
+                value: 'top-right',
+                labelId: 'styleeditor.topRight'
+            },
+            {
+                value: 'left',
+                labelId: 'styleeditor.left'
+            },
+            {
+                value: 'center',
+                labelId: 'styleeditor.center'
+            },
+            {
+                value: 'right',
+                labelId: 'styleeditor.right'
+            },
+            {
+                value: 'bottom-left',
+                labelId: 'styleeditor.bottomLeft'
+            },
+            {
+                value: 'bottom',
+                labelId: 'styleeditor.bottom'
+            },
+            {
+                value: 'bottom-right',
+                labelId: 'styleeditor.bottomRight'
+            }
+        ]
+    })
+});
+
 const lineGeometryTransformation = () => ({
     msGeometry: property.select({
         label: 'styleeditor.geometryTransformation',
         key: 'msGeometry',
+        disablePropertySelection: true,
         setValue: (value) => {
             if (!value) {
                 return 'unset';
@@ -88,27 +136,33 @@ const lineGeometryTransformation = () => ({
     })
 });
 
-const heightPoint3dOptions = ({ isDisabled }) =>  ({
+const heightPoint3dOptions = ({ isDisabled, enableTranslation }) =>  ({
     msHeightReference: property.msHeightReference({
         label: "styleeditor.heightReferenceFromGround",
         isDisabled
     }),
-    msHeight: property.multiInput({
-        label: "styleeditor.height",
-        key: "msHeight",
-        isDisabled: (value, properties) => isDisabled() || properties?.msHeightReference === 'clamp',
-        initialOptionValue: INITIAL_OPTION_VALUE,
-        getSelectOptions: ({ attributes }) => {
-            const numberAttributes = attributes
-                ?.map(({ label, attribute, type }) =>
-                    type === "number" ? { label, value: attribute } : null
-                )
-                .filter((x) => !!x) || [];
-            return [
-                { labelId: 'styleeditor.pointHeight', value: INITIAL_OPTION_VALUE },
-                ...numberAttributes
-            ];
-        }
+    msHeight: property.number({
+        key: 'msHeight',
+        label: 'styleeditor.height',
+        uom: 'm',
+        placeholderId: 'styleeditor.pointHeight',
+        isDisabled: (value, properties) => isDisabled(value, properties) || properties?.msHeightReference === 'clamp'
+    }),
+    ...(enableTranslation && {
+        msTranslateX: property.number({
+            key: 'msTranslateX',
+            label: 'styleeditor.msTranslateX',
+            uom: 'm',
+            fallbackValue: 0,
+            isDisabled
+        }),
+        msTranslateY: property.number({
+            key: 'msTranslateY',
+            label: 'styleeditor.msTranslateY',
+            uom: 'm',
+            fallbackValue: 0,
+            isDisabled
+        })
     }),
     msLeaderLineColor: property.color({
         key: 'msLeaderLineColor',
@@ -140,6 +194,81 @@ const polygon3dStyleOptions = ({ isDisabled }) =>  ({
     })
 });
 
+const polygon3dExtrusion = ({ isDisabled }) => ({
+    msHeightReference: property.msHeightReference({
+        key: 'msHeightReference',
+        label: "styleeditor.heightReferenceFromGround",
+        isDisabled
+    }),
+    msHeight: property.number({
+        key: 'msHeight',
+        label: 'styleeditor.height',
+        uom: 'm',
+        placeholderId: 'styleeditor.geometryHeight',
+        isDisabled: (value, properties) => isDisabled(value, properties) || properties?.msHeightReference === 'clamp'
+    }),
+    msExtrusionRelativeToGeometry: property.bool({
+        key: 'msExtrusionRelativeToGeometry',
+        label: 'styleeditor.msExtrusionRelativeToGeometry',
+        isDisabled
+    }),
+    msExtrudedHeight: property.number({
+        key: 'msExtrudedHeight',
+        label: 'styleeditor.msExtrudedHeight',
+        uom: 'm',
+        fallbackValue: 0,
+        isDisabled
+    })
+});
+
+const line3dExtrusion = ({ isDisabled }) => ({
+    msHeightReference: property.msHeightReference({
+        key: 'msHeightReference',
+        label: "styleeditor.heightReferenceFromGround",
+        isDisabled
+    }),
+    msHeight: property.number({
+        key: 'msHeight',
+        label: 'styleeditor.height',
+        uom: 'm',
+        placeholderId: 'styleeditor.geometryHeight',
+        isDisabled: (value, properties) => isDisabled(value, properties) || properties?.msHeightReference === 'clamp'
+    }),
+    msExtrusionRelativeToGeometry: property.bool({
+        key: 'msExtrusionRelativeToGeometry',
+        label: 'styleeditor.msExtrusionRelativeToGeometry',
+        isDisabled: (value, properties) => isDisabled(value, properties) || !!properties?.msExtrusionType
+    }),
+    msExtrudedHeight: property.number({
+        key: 'msExtrudedHeight',
+        label: 'styleeditor.msExtrudedHeight',
+        uom: 'm',
+        fallbackValue: 0,
+        isDisabled
+    }),
+    msExtrusionColor: property.color({
+        key: 'msExtrusionColor',
+        opacityKey: 'msExtrusionOpacity',
+        label: 'styleeditor.msExtrusionColor',
+        isDisabled
+    }),
+    msExtrusionType: property.select({
+        key: 'msExtrusionType',
+        label: 'styleeditor.msExtrusionType',
+        setValue: (value) => {
+            return value || '';
+        },
+        getOptions: () => {
+            return [
+                { value: '', labelId: 'styleeditor.wall' },
+                { value: 'Circle', labelId: 'styleeditor.circle' },
+                { value: 'Square', labelId: 'styleeditor.square' }
+            ];
+        },
+        isDisabled
+    })
+});
+
 const getBlocks = ({
     exactMatchGeometrySymbol,
     enable3dStyleOptions
@@ -153,7 +282,16 @@ const getBlocks = ({
             glyph: '1-point',
             glyphAdd: '1-point-add',
             tooltipAddId: 'styleeditor.addMarkRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             params: {
                 wellKnownName: property.shape({
                     label: 'styleeditor.shape'
@@ -172,6 +310,12 @@ const getBlocks = ({
                 strokeWidth: property.width({
                     key: 'strokeWidth',
                     label: 'styleeditor.strokeWidth'
+                }),
+                ...(!shouldHideVectorStyleOptions && {
+                    strokeDasharray: property.dasharray({
+                        label: 'styleeditor.strokeStyle',
+                        key: 'strokeDasharray'
+                    })
                 }),
                 radius: property.size({
                     key: 'radius',
@@ -204,7 +348,16 @@ const getBlocks = ({
             glyph: 'point',
             glyphAdd: 'point-plus',
             tooltipAddId: 'styleeditor.addIconRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             hideMenu: true,
             params: {
                 image: property.image({
@@ -215,7 +368,7 @@ const getBlocks = ({
                     label: 'styleeditor.format',
                     key: 'format',
                     isVisible: (value, { image } = {}, format) => {
-                        return format !== 'css'
+                        return image !== undefined && value?.name !== 'msMarkerIcon' && format !== 'css'
                         && !isObject(image)
                         && !['png', 'jpg', 'svg', 'gif', 'jpeg'].includes(image.split('.').pop());
                     },
@@ -231,6 +384,7 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
+                ...(!shouldHideVectorStyleOptions && anchorProperty()),
                 ...(!shouldHideVectorStyleOptions && point3dStyleOptions({
                     isDisabled: () => !enable3dStyleOptions
                 })),
@@ -295,7 +449,10 @@ const getBlocks = ({
                     label: 'styleeditor.clampToGround',
                     isDisabled: () => !enable3dStyleOptions
                 })),
-                ...(!shouldHideVectorStyleOptions && lineGeometryTransformation({}))
+                ...(!shouldHideVectorStyleOptions && lineGeometryTransformation({})),
+                ...(!shouldHideVectorStyleOptions && line3dExtrusion({
+                    isDisabled: (value, properties) => !(!properties?.msClampToGround && enable3dStyleOptions)
+                }))
             },
             defaultProperties: {
                 kind: 'Line',
@@ -337,11 +494,20 @@ const getBlocks = ({
                     key: 'outlineColor',
                     opacityKey: 'outlineOpacity',
                     label: 'styleeditor.outlineColor',
-                    stroke: true
+                    stroke: true,
+                    isDisabled: (value, properties) => !properties?.msClampToGround && !!properties?.msExtrudedHeight
                 }),
                 outlineWidth: property.width({
                     key: 'outlineWidth',
-                    label: 'styleeditor.outlineWidth'
+                    label: 'styleeditor.outlineWidth',
+                    isDisabled: (value, properties) => !properties?.msClampToGround && !!properties?.msExtrudedHeight
+                }),
+                ...(!shouldHideVectorStyleOptions && {
+                    outlineDasharray: property.dasharray({
+                        label: 'styleeditor.outlineStyle',
+                        key: 'outlineDasharray',
+                        isDisabled: (value, properties) => !properties?.msClampToGround && !!properties?.msExtrudedHeight
+                    })
                 }),
                 ...(!shouldHideVectorStyleOptions && vector3dStyleOptions({
                     label: 'styleeditor.clampOutlineToGround',
@@ -349,6 +515,9 @@ const getBlocks = ({
                 })),
                 ...(!shouldHideVectorStyleOptions && polygon3dStyleOptions({
                     isDisabled: (value, properties) => !properties?.msClampToGround || !enable3dStyleOptions
+                })),
+                ...(!shouldHideVectorStyleOptions && polygon3dExtrusion({
+                    isDisabled: (value, properties) => !(!properties?.msClampToGround && enable3dStyleOptions)
                 }))
             },
             defaultProperties: {
@@ -380,7 +549,8 @@ const getBlocks = ({
                     range: {
                         min: 1,
                         max: 10
-                    }
+                    },
+                    infoMessageId: 'styleeditor.pointCloudSizeInfo'
                 })
             },
             defaultProperties: {
@@ -431,7 +601,16 @@ const getBlocks = ({
             glyphAdd: 'model-plus',
             disableAdd: () => !enable3dStyleOptions,
             tooltipAddId: 'styleeditor.addModelRule',
-            supportedTypes: ['point', 'linestring', 'polygon', 'vector'],
+            supportedTypes: [
+                'point',
+                'linestring',
+                'polygon',
+                'vector',
+                'annotation-point',
+                'annotation-linestring',
+                'annotation-polygon',
+                'annotation-circle'
+            ],
             hideMenu: true,
             params: {
                 model: property.model({
@@ -477,7 +656,8 @@ const getBlocks = ({
                     isDisabled: () => !enable3dStyleOptions
                 }),
                 ...heightPoint3dOptions({
-                    isDisabled: () => !enable3dStyleOptions
+                    isDisabled: () => !enable3dStyleOptions,
+                    enableTranslation: true
                 }),
                 ...(!shouldHideVectorStyleOptions && pointGeometryTransformation({}))
             },
@@ -499,6 +679,7 @@ const getBlocks = ({
                 label: property.select({
                     key: 'label',
                     label: 'styleeditor.label',
+                    disablePropertySelection: true,
                     selectProps: {
                         creatable: true
                     },
@@ -512,6 +693,7 @@ const getBlocks = ({
                 font: property.select({
                     key: 'font',
                     label: 'styleeditor.fontFamily',
+                    disablePropertySelection: true,
                     selectProps: {
                         multi: true
                     },
@@ -539,6 +721,7 @@ const getBlocks = ({
                     label: 'styleeditor.fontWeight',
                     key: 'fontWeight'
                 }),
+                ...(!shouldHideVectorStyleOptions && anchorProperty()),
                 haloColor: property.color({
                     label: 'styleeditor.haloColor',
                     key: 'haloColor',
@@ -552,13 +735,8 @@ const getBlocks = ({
                 rotate: property.rotate({
                     label: 'styleeditor.rotation'
                 }),
-                offsetX: property.offset({
-                    label: 'styleeditor.offsetX',
-                    axis: 'x'
-                }),
-                offsetY: property.offset({
-                    label: 'styleeditor.offsetY',
-                    axis: 'y'
+                offset: property.offset({
+                    label: 'styleeditor.offset'
                 }),
                 ...(!shouldHideVectorStyleOptions && point3dStyleOptions({
                     isDisabled: () => !enable3dStyleOptions
@@ -595,6 +773,59 @@ const getBlocks = ({
                 opacity: 1,
                 contrastEnhancement: {}
             }
+        },
+        Circle: {
+            kind: 'Circle',
+            glyph: '1-circle',
+            glyphAdd: '1-circle-add',
+            tooltipAddId: 'styleeditor.addCircleRule',
+            supportedTypes: [],
+            params: {
+                color: property.color({
+                    key: 'color',
+                    opacityKey: 'opacity',
+                    label: 'styleeditor.color'
+                }),
+                outlineColor: property.color({
+                    key: 'outlineColor',
+                    opacityKey: 'outlineOpacity',
+                    label: 'styleeditor.outlineColor',
+                    stroke: true
+                }),
+                outlineWidth: property.width({
+                    key: 'outlineWidth',
+                    label: 'styleeditor.outlineWidth'
+                }),
+                outlineDasharray: property.dasharray({
+                    label: 'styleeditor.outlineStyle',
+                    key: 'outlineDasharray'
+                }),
+                radius: property.number({
+                    key: 'radius',
+                    label: 'styleeditor.radius',
+                    uom: 'm',
+                    fallbackValue: 0,
+                    maxWidth: 125
+                }),
+                geodesic: property.bool({
+                    key: 'geodesic',
+                    label: 'styleeditor.geodesic'
+                }),
+                ...(!shouldHideVectorStyleOptions && vector3dStyleOptions({
+                    label: 'styleeditor.clampOutlineToGround',
+                    isDisabled: () => !enable3dStyleOptions
+                })),
+                ...(!shouldHideVectorStyleOptions && polygon3dStyleOptions({
+                    isDisabled: (value, properties) => !properties?.msClampToGround || !enable3dStyleOptions
+                }))
+            },
+            defaultProperties: {
+                kind: 'Circle',
+                color: '#dddddd',
+                opacity: 1,
+                outlineColor: '#777777',
+                outlineWidth: 1
+            }
         }
     };
 
@@ -610,11 +841,13 @@ const getBlocks = ({
                     ramp: property.colorRamp({
                         key: 'ramp',
                         label: 'styleeditor.colorRamp',
+                        disablePropertySelection: true,
                         getOptions: ({ getColors }) => getColors()
                     }),
                     reverse: property.bool({
                         key: 'reverse',
                         label: 'styleeditor.reverse',
+                        disablePropertySelection: true,
                         isDisabled: (value, properties) =>
                             properties?.ramp === 'custom'
                             || properties?.method === 'customInterval'
@@ -622,6 +855,7 @@ const getBlocks = ({
                     attribute: property.select({
                         key: 'attribute',
                         label: 'styleeditor.attribute',
+                        disablePropertySelection: true,
                         isValid: ({ value }) => value !== undefined,
                         getOptions: ({ attributes }) => {
                             return attributes?.map((option) => ({
@@ -634,6 +868,7 @@ const getBlocks = ({
                     method: property.select({
                         key: 'method',
                         label: 'styleeditor.method',
+                        disablePropertySelection: true,
                         isDisabled: (value, properties, {attributes})=>
                             attributes?.filter(({label}) => label === properties?.attribute)?.[0]?.type === 'string'
                             && properties?.method !== 'customInterval',
@@ -658,6 +893,7 @@ const getBlocks = ({
                     }),
                     intervals: property.intervals({
                         label: 'styleeditor.intervals',
+                        disablePropertySelection: true,
                         isDisabled: (value, properties) =>
                             includes(['customInterval', 'uniqueInterval'], properties?.method)
                     })
@@ -671,7 +907,8 @@ const getBlocks = ({
                         return {
                             fillOpacity: property.opacity({
                                 key: 'fillOpacity',
-                                label: 'styleeditor.opacity'
+                                label: 'styleeditor.opacity',
+                                disablePropertySelection: true
                             }),
                             ...omit(symbolizerBlock[symbolizerKind]?.params, ['color'])
                         };
@@ -679,7 +916,8 @@ const getBlocks = ({
                         return {
                             opacity: property.opacity({
                                 key: 'opacity',
-                                label: 'styleeditor.opacity'
+                                label: 'styleeditor.opacity',
+                                disablePropertySelection: true
                             }),
                             ...omit(symbolizerBlock[symbolizerKind]?.params, ['color'])
                         };
@@ -687,7 +925,8 @@ const getBlocks = ({
                         return {
                             fillOpacity: property.opacity({
                                 key: 'fillOpacity',
-                                label: 'styleeditor.opacity'
+                                label: 'styleeditor.opacity',
+                                disablePropertySelection: true
                             }),
                             ...omit(symbolizerBlock[symbolizerKind]?.params, ['color'])
                         };
@@ -696,6 +935,11 @@ const getBlocks = ({
                     }
                 },
                 {
+                    msViewParams: property.customParams({
+                        key: 'msViewParams',
+                        label: 'styleeditor.customParams',
+                        disablePropertySelection: true
+                    }),
                     classification: property.colorMap({
                         key: 'classification',
                         rampKey: 'ramp'

@@ -9,7 +9,7 @@
 
 import expect from 'expect';
 
-import { scrollIntoViewId } from '../DOMUtil';
+import { getOffsetBottom, getOffsetTop, scrollIntoViewId } from '../DOMUtil';
 
 describe('Test the DOMUtils', () => {
 
@@ -22,6 +22,26 @@ describe('Test the DOMUtils', () => {
         window.HTMLElement.prototype.scrollIntoView = handlers.scroll;
         scrollIntoViewId('container');
         expect(spy.calls.length).toEqual(1);
+    });
+    it('test getOffsetTop', function() {
+        document.body.innerHTML = `
+        <div id="container">
+            <div id="content">
+            test
+            </div>
+        </div>`;
+        const offset = getOffsetTop(document.querySelector("#content"));
+        expect(offset).toEqual(8);
+    });
+    it('test getOffsetBottom', function() {
+        document.body.innerHTML = `
+        <div id="container">
+            <div id="content">
+            test
+            </div>
+        </div>`;
+        const offset = getOffsetBottom(document.querySelector("#content"));
+        expect(offset).toEqual(10);
     });
 
 });

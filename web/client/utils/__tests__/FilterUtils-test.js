@@ -16,6 +16,7 @@ import {
     processOGCCrossLayerFilter,
     cqlBooleanField,
     cqlStringField,
+    ogcStringField,
     ogcBooleanField,
     getCrossLayerCqlFilter,
     composeAttributeFilters,
@@ -1239,6 +1240,14 @@ describe('FilterUtils', () => {
         // test LIKE wrapped with wildcard
         expect(cqlStringField("attribute_1", "like", "*A*")).toBe("\"attribute_1\" LIKE '%A%'");
     });
+    it('Check if ogcStringField(attribute, operator, value, ns)', () => {
+        // testing operator =
+        expect(ogcStringField("attribute_1", "=", "Alabama", "ogc")).toBe("<ogc:PropertyIsEqualTo><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>Alabama</ogc:Literal></ogc:PropertyIsEqualTo>");
+        expect(ogcStringField("attribute_1", "<>", "Alabama", "ogc")).toBe("<ogc:PropertyIsNotEqualTo><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>Alabama</ogc:Literal></ogc:PropertyIsNotEqualTo>");
+        expect(ogcStringField("attribute_1", "like", "Alabama", "ogc")).toBe("<ogc:PropertyIsLike matchCase=\"true\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\"><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>*Alabama*</ogc:Literal></ogc:PropertyIsLike>");
+        expect(ogcStringField("attribute_1", "ilike", "Alabama", "ogc")).toBe("<ogc:PropertyIsLike matchCase=\"false\" wildCard=\"*\" singleChar=\".\" escapeChar=\"!\"><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>*Alabama*</ogc:Literal></ogc:PropertyIsLike>");
+        expect(ogcStringField("attribute_1", "isNull", "", "ogc")).toBe("<ogc:PropertyIsNull><ogc:PropertyName>attribute_1</ogc:PropertyName></ogc:PropertyIsNull>");
+    });
     it('Check if ogcBooleanField(attribute, operator, value, nsplaceholder)', () => {
         // testing operators
         expect(ogcBooleanField("attribute_1", "=", true, "ogc"))
@@ -1528,6 +1537,7 @@ describe('FilterUtils', () => {
                     "index": 1
                 }
             ],
+            filters: [{format: 'cql', body: "STATE_FIPS = '01'"}],
             "filterFields": [
                 {
                     "rowId": 1545411885028,
@@ -1580,6 +1590,7 @@ describe('FilterUtils', () => {
                     "index": 1
                 }
             ],
+            filters: [{format: 'cql', body: "STATE_NAME = 'Illinois'"}],
             "filterFields": [
                 {
                     "rowId": 15454118,
@@ -1631,6 +1642,9 @@ describe('FilterUtils', () => {
         expect(filter.filterFields[1].groupId).toBe(filter.groupFields[2].id);
         expect(filter.filterFields[2].groupId).toBe(filter.groupFields[3].id);
         expect(filter.filterFields[3].groupId).toBe(filter.groupFields[4].id);
+        expect(filter.filters.length).toBe(2);
+        expect(filter.filters[0].body).toBe("STATE_FIPS = '01'");
+        expect(filter.filters[1].body).toBe("STATE_NAME = 'Illinois'");
     });
     it('check CQL filter when logic is NOR', () => {
         const filterObject = {

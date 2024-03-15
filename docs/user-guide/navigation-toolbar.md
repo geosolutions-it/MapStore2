@@ -74,11 +74,11 @@ In addition to the layers information, the following are provided by the *Identi
 
 * The **Highlight Features** button <img src="../img/button/highlight_features_icon.jpg" class="ms-docbutton"/> allows to highlights on the map the layers features corresponding to the retrieved information in the clicked point.
 
-<img src="../img/navigation-toolbar/hightlight-point1.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/navigation-toolbar/hightlight-point1.mp4"/></video>
 
 * The **Edit** button <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> allows the user to open the [Attribute Table](attributes-table.md)  in edit mode showing only layers records corresponding to the clicked point on the map.
 
-<img src="../img/navigation-toolbar/edit_identify.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/navigation-toolbar/edit_identify.mp4"/></video>
 
 ### Using the Coordinates Editor
 
@@ -88,11 +88,11 @@ The coordinates can be in **decimal** or **areonautical** format depending on th
 
 An example of search with `Decimal` coordinates as follows:
 
-<img src="../img/navigation-toolbar/decimal-ex.gif" class="ms-docimage"  />
+<video class="ms-docimage"   controls><source src="../img/navigation-toolbar/decimal-ex.mp4"/></video>
 
 An example of search with `Aeronautical` coordinates as follows:
 
-<img src="../img/navigation-toolbar/areonautical-ex.gif" class="ms-docimage"  style="max-width:700px;"/>
+<video class="ms-docimage"  style="max-width:700px;" controls><source src="../img/navigation-toolbar/areonautical-ex.mp4"/></video>
 
 ### Identify Tool with more than one layer
 
@@ -104,7 +104,7 @@ If the user clicks on the map where one or more overlapping layers are present, 
 
 In order to have information about one layer only the user can select the layer on the [Table of Contents](toc.md#table-of-contents), through the *TOC* button <img src="../img/button/show-layers.jpg" class="ms-docbutton"/>, and then click on the layer in the map to perform the identify operation only for that selected layer in TOC. The identify panel opens containing the layer information corresponding to the clicked point in the map, as follows:
 
-<img src="../img/navigation-toolbar/layer.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/navigation-toolbar/layer.mp4"/></video>
 
 ### Floating Identify Tool
 
@@ -116,4 +116,4 @@ In order to activate the *Floating Identify Tool* the user can select the  <img 
 
 As soon as the option *Hover* is selected, the user can hover the mouse over a layer in the map in order to show the popup containing the identify information.
 
-<img src="../img/navigation-toolbar/hover-over-map.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/navigation-toolbar/hover-over-map.mp4"/></video>

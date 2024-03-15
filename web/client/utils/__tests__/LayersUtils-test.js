@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 import expect from 'expect';
-
+import uuidv1 from 'uuid/v1';
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
+
 const { extractTileMatrixSetFromLayers, splitMapAndLayers} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
@@ -37,6 +38,43 @@ const noVendorWmsLayer = {
     serverType: 'no-vendor'
 };
 describe('LayersUtils', () => {
+    it('test normalizeLayer for vector layers', () => {
+        const feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "fileName": "file.zip",
+            "id": "feature-id"
+        };
+        const feature2 = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[0, 39], [28, 48]]
+            },
+            "fileName": "file.zip"
+        };
+        let layer = LayersUtils.normalizeLayer({
+            type: "vector",
+            features: [feature]
+        });
+        expect(layer.features[0].id).toEqual("feature-id");
+        layer = LayersUtils.normalizeLayer({
+            type: "vector",
+            features: [feature2]
+        });
+        expect(layer.features[0].id.length).toEqual(36);
+    });
+    it('test createFeatureId', () => {
+        let feature = LayersUtils.createFeatureId({});
+        expect(feature.id.length).toEqual(uuidv1().length);
+        feature = LayersUtils.createFeatureId({id: "test"});
+        expect(feature.id).toEqual("test");
+        feature = LayersUtils.createFeatureId({properties: {id: "test"}});
+        expect(feature.id).toEqual("test");
+    });
     it('getLayerUrl supports single and multiple url layers', () => {
         expect(['a', 'b']).toContain(LayersUtils.getLayerUrl({url: ['a', 'b']}));
         expect(LayersUtils.getLayerUrl({
@@ -997,9 +1035,9 @@ describe('LayersUtils', () => {
             [{ title: "test", imageUrl: "image.png" }, '<img src="image.png" title="test">'], // image and text
             [{ title: "test", link: "http://url.com" }, '<a href="http://url.com" target="_blank">test</a>'], // text with link
             [{ title: "test", link: "http://url.com", imageUrl: "image.png" }, '<a href="http://url.com" target="_blank"><img src="image.png" title="test"></a>'], // text, image, link
-            [[], undefined], // no data returns undefined
-            [[{}], undefined], // empty object returns undefined
-            [{ link: "http://url.com" }, undefined] // only link returns undefined
+            [[], "credits"], // no data returns undefined
+            [[{}], "credits"], // empty object returns undefined
+            [{ link: "http://url.com" }, '<a href="http://url.com" target="_blank">credits</a>'] // only link returns undefined
         ];
         TESTS.map(([credits, expectedResult]) => expect(LayersUtils.creditsToAttribution(credits)).toBe(expectedResult));
     });
@@ -1245,6 +1283,31 @@ describe('LayersUtils', () => {
                 },
                 l => {
                     expect(l.disableFeaturesEditing).toBeTruthy();
+                }
+            ],
+            [
+                {
+                    pointCloudShading: {
+                        attenuation: true,
+                        maximumAttenuation: 4,
+                        eyeDomeLighting: true,
+                        eyeDomeLightingStrength: 1,
+                        eyeDomeLightingRadius: 1
+                    }
+                },
+                l => {
+                    expect(l.pointCloudShading).toBeTruthy();
+                }
+            ],
+            // Save sourceMetadata
+            [
+                {
+                    sourceMetadata: {
+                        crs: "EPSG:3946"
+                    }
+                },
+                l => {
+                    expect(l.sourceMetadata).toBeTruthy();
                 }
             ]
         ];

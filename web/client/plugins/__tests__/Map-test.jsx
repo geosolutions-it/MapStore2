@@ -78,4 +78,39 @@ describe('Map Plugin', () => {
         });
         expect(actions.filter(action => action.type === RESET_CONTROLS).length).toBe(1);
     });
+    it('should always assign an id to static additional layers', (done) => {
+        const { Plugin } = getPluginForTest(MapPlugin, { map });
+        ReactDOM.render(<Plugin
+            fonts={null}
+            additionalLayers={[
+                {
+                    type: 'terrain',
+                    provider: 'cesium',
+                    url: 'url/to/terrain',
+                    visibility: true
+                }
+            ]}
+            pluginsCreator={() => Promise.resolve({
+                Map: ({ children }) => <div className="map">{children}</div>,
+                Layer: ({ options }) => <div id={options.id} className="layers">{options.type}</div>,
+                Feature: () => null,
+                tools: {
+                    overview: () => null,
+                    scalebar: () => null,
+                    draw: () => null,
+                    highlight: () => null,
+                    selection: () => null,
+                    popup: () => null,
+                    box: () => null
+                },
+                mapType: 'openlayers'
+            })}
+        />, document.getElementById("container"));
+        waitFor(() => expect(document.querySelector('.layers')).toBeTruthy())
+            .then(() => {
+                expect(document.querySelector('.layers').getAttribute('id')).toBe('additional-layers-0');
+                done();
+            })
+            .catch(done);
+    });
 });

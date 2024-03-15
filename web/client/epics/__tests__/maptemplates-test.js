@@ -13,7 +13,9 @@ import MockAdapter from 'axios-mock-adapter';
 import { testEpic } from './epicTestUtils';
 
 import {
+    mergeTemplateEpic,
     openMapTemplatesPanelEpic,
+    replaceTemplateEpic,
     setAllowedTemplatesEpic
 } from '../maptemplates';
 
@@ -21,12 +23,17 @@ import {
     openMapTemplatesPanel,
     setAllowedTemplates,
     SET_TEMPLATES,
-    SET_MAP_TEMPLATES_LOADED
+    SET_MAP_TEMPLATES_LOADED,
+    mergeTemplate,
+    SET_TEMPLATE_LOADING,
+    SET_TEMPLATE_DATA,
+    replaceTemplate
 } from '../../actions/maptemplates';
 
 import {
     SET_CONTROL_PROPERTY
 } from '../../actions/controls';
+import { MAP_CONFIG_LOADED, MAP_INFO_LOADED } from '../../actions/config';
 
 let mockAxios;
 
@@ -121,6 +128,138 @@ describe('maptemplates epics', () => {
                 }
             },
             maptemplates: {}
+        }, done);
+    });
+    it('mergeTemplateEpic with map data', (done) => {
+        mockAxios.onGet().reply(200, {
+            map: {}
+        });
+        testEpic(mergeTemplateEpic, 5, mergeTemplate("1"), actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(SET_TEMPLATE_LOADING);
+            expect(actions[0].id).toBe("1");
+            expect(actions[0].loadingValue).toBeTruthy();
+            expect(actions[1].type).toBe(SET_TEMPLATE_DATA);
+            expect(actions[1].id).toBe("1");
+            expect(actions[1].data).toBeTruthy();
+            expect(actions[2].type).toBe(MAP_CONFIG_LOADED);
+            expect(actions[2].config).toBeTruthy();
+            expect(actions[2].legacy).toBeTruthy();
+            expect(actions[2].mapId).toBe("map1");
+            expect(actions[3].type).toBe(MAP_INFO_LOADED);
+            expect(actions[3].info).toEqual({id: "map1"});
+            expect(actions[3].mapId).toBe("map1");
+            expect(actions[4].type).toBe(SET_TEMPLATE_LOADING);
+            expect(actions[4].id).toBe("1");
+            expect(actions[4].loadingValue).toBeFalsy();
+        }, {
+            map: {
+                present: {
+                    zoom: 1,
+                    info: {
+                        id: "map1"
+                    }
+                }
+            },
+            layers: {
+                flat: [{
+                    id: "1",
+                    visibility: true,
+                    name: "test"
+                }],
+                groups: [{
+                    id: "Default",
+                    name: "Default",
+                    title: "Default",
+                    nodes: ["1"]
+                }]
+            },
+            maptemplates: {templates: [{id: "1"}]}
+        }, done);
+    });
+    it('mergeTemplateEpic - set setTemplateData when no map data in response', (done) => {
+        mockAxios.onGet().reply(200, {});
+        testEpic(mergeTemplateEpic, 3, mergeTemplate("1"), actions => {
+            expect(actions.length).toBe(3);
+            expect(actions[0].type).toBe(SET_TEMPLATE_LOADING);
+            expect(actions[0].id).toBe("1");
+            expect(actions[0].loadingValue).toBeTruthy();
+            expect(actions[1].type).toBe(SET_TEMPLATE_DATA);
+            expect(actions[1].id).toBe("1");
+            expect(actions[1].data).toBeTruthy();
+            expect(actions[2].type).toBe(SET_TEMPLATE_LOADING);
+            expect(actions[2].id).toBe("1");
+            expect(actions[2].loadingValue).toBeFalsy();
+        }, {
+            map: {
+                present: {
+                    zoom: 1,
+                    info: {
+                        id: "map1"
+                    }
+                }
+            },
+            layers: {
+                flat: [{
+                    id: "1",
+                    visibility: true,
+                    name: "test"
+                }],
+                groups: [{
+                    id: "Default",
+                    name: "Default",
+                    title: "Default",
+                    nodes: ["1"]
+                }]
+            },
+            maptemplates: {templates: [{id: "1"}]}
+        }, done);
+    });
+    it('replaceTemplateEpic', (done) => {
+        mockAxios.onGet().reply(200, {
+            map: {}
+        });
+        testEpic(replaceTemplateEpic, 5, replaceTemplate("1"), actions => {
+            expect(actions.length).toBe(5);
+            expect(actions[0].type).toBe(SET_TEMPLATE_LOADING);
+            expect(actions[0].id).toBe("1");
+            expect(actions[0].loadingValue).toBeTruthy();
+            expect(actions[1].type).toBe(SET_TEMPLATE_DATA);
+            expect(actions[1].id).toBe("1");
+            expect(actions[1].data).toBeTruthy();
+            expect(actions[2].type).toBe(MAP_CONFIG_LOADED);
+            expect(actions[2].config).toBeTruthy();
+            expect(actions[2].legacy).toBeTruthy();
+            expect(actions[2].mapId).toBe("map1");
+            expect(actions[3].type).toBe(MAP_INFO_LOADED);
+            expect(actions[3].info).toEqual({id: "map1"});
+            expect(actions[3].mapId).toBe("map1");
+            expect(actions[4].type).toBe(SET_TEMPLATE_LOADING);
+            expect(actions[4].id).toBe("1");
+            expect(actions[4].loadingValue).toBeFalsy();
+        }, {
+            map: {
+                present: {
+                    zoom: 1,
+                    info: {
+                        id: "map1"
+                    }
+                }
+            },
+            layers: {
+                flat: [{
+                    id: "1",
+                    visibility: true,
+                    name: "test"
+                }],
+                groups: [{
+                    id: "Default",
+                    name: "Default",
+                    title: "Default",
+                    nodes: ["1"]
+                }]
+            },
+            maptemplates: {templates: [{id: "1"}]}
         }, done);
     });
 });

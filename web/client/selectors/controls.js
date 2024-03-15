@@ -34,5 +34,6 @@ export const unsavedMapSelector = (state) => get(state, "controls.unsavedMap.ena
 export const unsavedMapSourceSelector = (state) => get(state, "controls.unsavedMap.source", "");
 export const isIdentifyAvailable = (state) => get(state, "controls.info.available");
 export const isLongitudinalProfileEnabledSelector = (state) => get(state, "controls.longitudinalProfile.enabled");
+export const isGeoProcessingEnabledSelector = (state) => get(state, "controls.GeoProcessing.enabled", false);
 export const showConfirmDeleteMapModalSelector = (state) => get(state, "controls.mapDelete.enabled", false);
 export const burgerMenuSelector = (state) => get(state, "controls.burgermenu.enabled", false);

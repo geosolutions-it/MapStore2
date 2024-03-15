@@ -127,11 +127,12 @@ describe('VisualStyleEditor', () => {
                 expect([...buttonNodes].map(node => node.children[0].getAttribute('class'))).toEqual([
                     'glyphicon glyphicon-undo',
                     'glyphicon glyphicon-redo',
+                    'glyphicon glyphicon-next',
                     'glyphicon glyphicon-trash',
                     'glyphicon glyphicon-option-vertical'
                 ]);
                 act(() => {
-                    Simulate.click(buttonNodes[2]);
+                    Simulate.click(buttonNodes[3]);
                 });
             } catch (e) {
                 done(e);
@@ -526,6 +527,8 @@ describe('VisualStyleEditor', () => {
                     'styleeditor.color',
                     'styleeditor.heightReferenceFromGround',
                     'styleeditor.height',
+                    'styleeditor.msTranslateX',
+                    'styleeditor.msTranslateY',
                     'styleeditor.leaderLineColor',
                     'styleeditor.leaderLineWidth'
                 ]);
@@ -574,7 +577,14 @@ describe('VisualStyleEditor', () => {
         waitFor(() => expect(document.querySelector('.ms-style-rule')).toBeTruthy())
             .then(() => {
                 const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
-                expect([...disabledFields].map(node => node.innerHTML)).toEqual([ 'styleeditor.clampToGround' ]);
+                expect([...disabledFields].map(node => node.innerHTML)).toEqual([
+                    'styleeditor.clampToGround',
+                    'styleeditor.heightReferenceFromGround',
+                    'styleeditor.height',
+                    'styleeditor.msExtrusionRelativeToGeometry',
+                    'styleeditor.msExtrudedHeight',
+                    'styleeditor.msExtrusionColor'
+                ]);
                 done();
             }).catch(done);
     });
@@ -667,7 +677,11 @@ describe('VisualStyleEditor', () => {
                 const disabledFields = document.querySelectorAll('.ms-symbolizer-field-disabled .ms-symbolizer-label span');
                 expect([...disabledFields].map(node => node.innerHTML)).toEqual([
                     'styleeditor.clampOutlineToGround',
-                    'styleeditor.classificationtype'
+                    'styleeditor.classificationtype',
+                    'styleeditor.heightReferenceFromGround',
+                    'styleeditor.height',
+                    'styleeditor.msExtrusionRelativeToGeometry',
+                    'styleeditor.msExtrudedHeight'
                 ]);
                 done();
             }).catch(done);

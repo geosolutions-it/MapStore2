@@ -22,3 +22,26 @@ export const scrollIntoViewId = (viewId) => {
     }
 };
 
+
+/**
+ * @param {node} elem the node element you want to inspect top offset
+ * @returns {number} the total offset from the top
+ */
+export function getOffsetTop( elem ) {
+    var offsetTop = 0;
+    do {
+        if ( !isNaN( elem?.offsetTop ) ) {
+            offsetTop += elem.offsetTop;
+        }
+    // eslint-disable-next-line no-param-reassign, no-cond-assign
+    } while ( elem = elem?.offsetParent );
+    return offsetTop;
+}
+/**
+ * @param {node} elem the node element you want to inspect bottom offset
+ * @returns {number} the total offset from the bottom
+ */
+export const getOffsetBottom = ( element, containerClass = "container") =>{
+    const container = document.getElementById(containerClass);
+    return container.clientHeight - getOffsetTop(element);
+};

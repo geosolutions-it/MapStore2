@@ -7,6 +7,7 @@
  */
 
 import {
+    TEXT_SEARCH_ITEM_SELECTED,
     TEXT_SEARCH_RESULTS_LOADED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
@@ -25,6 +26,7 @@ import {
 } from '../actions/search';
 
 import { RESET_CONTROLS } from '../actions/controls';
+import { generateTemplateString } from '../utils/TemplateUtils';
 import assign from 'object-assign';
 /**
  * Manages the state of the map search with it's results
@@ -88,6 +90,12 @@ import assign from 'object-assign';
  */
 function search(state = null, action) {
     switch (action.type) {
+    case TEXT_SEARCH_ITEM_SELECTED: {
+        const { type: serviceType } = action.service || {};
+        const displayName = serviceType === 'nominatim' ? action.item.properties?.display_name : serviceType === 'wfs' ?
+            generateTemplateString(action.service?.displayName || '')(action.item) : state.searchText;
+        return {...state, searchText: displayName || state.searchText || '' };
+    }
     case TEXT_SEARCH_LOADING: {
         return assign({}, state, {loading: action.loading});
     }

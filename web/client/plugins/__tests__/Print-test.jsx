@@ -73,6 +73,7 @@ function expectDefaultItems() {
     expect(getByXPath("//*[text()='print.description']")).toExist();
     expect(getByXPath("//*[text()='print.outputFormat']")).toExist();
     expect(getByXPath("//*[text()='print.projection']")).toExist();
+    expect(getByXPath("//*[text()='print.rotation']")).toExist();
     expect(document.getElementById("print_preview")).toExist();
     expect(getByXPath("//*[text()='print.sheetsize']")).toExist();
     expect(getByXPath("//*[text()='print.alternatives.legend']")).toExist();
@@ -81,7 +82,9 @@ function expectDefaultItems() {
     expect(getByXPath("//*[text()='print.alternatives.portrait']")).toExist();
     expect(getByXPath("//*[text()='print.legend.font']")).toExist();
     expect(getByXPath("//*[text()='print.legend.forceLabels']")).toExist();
-    expect(getByXPath("//*[text()='print.legend.iconsSize']")).toExist();
+    expect(getByXPath("//*[text()='print.legend.forceIconsSize']")).toExist();
+    expect(getByXPath("//*[text()='print.legend.iconsWidth']")).toExist();
+    expect(getByXPath("//*[text()='print.legend.iconsHeight']")).toExist();
     expect(getByXPath("//*[text()='print.legend.dpi']")).toExist();
     expect(getByXPath("//*[text()='print.resolution']")).toExist();
     expect(getByXPath("//*[text()='print.submit']")).toExist();
@@ -425,6 +428,47 @@ describe('Print Plugin', () => {
                         onPrint: actions.onPrint
                     }}
                     useFixedScales
+                    defaultBackground={["osm", "empty"]}
+                />, document.getElementById("container"));
+                const submit = document.getElementsByClassName("print-submit").item(0);
+                expect(submit).toExist();
+                ReactTestUtils.Simulate.click(submit);
+                setTimeout(() => {
+                    expect(spy.calls.length).toBe(1);
+                    expect(spy.calls[0].arguments[1].layers.length).toBe(1);
+                    expect(spy.calls[0].arguments[1].layers[0].layers).toEqual(["test"]);
+                    done();
+                }, 0);
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it("test configuration with not round zoom level", (done) => {
+        const actions = {
+            onPrint: () => {}
+        };
+        let spy = expect.spyOn(actions, "onPrint");
+        getPrintPlugin({
+            layers: [
+                {visibility: true, type: "osm"},
+                {id: "test", url: "/test", name: "test", type: "wms", visibility: true, maxResolution: 500000}
+            ],
+            projection: "EPSG:4326",
+            state: {
+                ...initialState,
+                map: {
+                    ...initialState.map,
+                    zoom: 5.1
+                }
+            }
+        }).then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin
+                    pluginCfg={{
+                        onPrint: actions.onPrint
+                    }}
                     defaultBackground={["osm", "empty"]}
                 />, document.getElementById("container"));
                 const submit = document.getElementsByClassName("print-submit").item(0);

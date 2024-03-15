@@ -28,13 +28,21 @@ describe('details actions tests', () => {
         const a = closeDetailsPanel();
         expect(a.type).toBe(CLOSE_DETAILS_PANEL);
     });
-    it('detailsLoaded', () => {
+    it('detailsLoaded for map', () => {
         const mapId = 1;
         const detailsUri = "sada/da/";
         const a = detailsLoaded(mapId, detailsUri);
         expect(a.type).toBe(DETAILS_LOADED);
         expect(a.detailsUri).toBe(detailsUri);
-        expect(a.mapId).toBe(mapId);
+        expect(a.id).toBe(mapId);
+    });
+    it('detailsLoaded for dashboard', () => {
+        const dashboardId = 1;
+        const detailsUri = "sada/da/";
+        const a = detailsLoaded(dashboardId, detailsUri);
+        expect(a.type).toBe(DETAILS_LOADED);
+        expect(a.detailsUri).toBe(detailsUri);
+        expect(a.id).toBe(dashboardId);
     });
     it('updateDetails', () => {
         const a = updateDetails('text');

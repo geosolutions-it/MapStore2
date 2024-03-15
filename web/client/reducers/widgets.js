@@ -15,6 +15,7 @@ import {
     DELETE,
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
+    INIT,
     CHANGE_LAYOUT,
     CLEAR_WIDGETS,
     DEFAULT_TARGET,
@@ -54,6 +55,7 @@ const emptyState = {
         }
     },
     builder: {
+        map: null,
         settings: {
             step: 0
         }
@@ -81,6 +83,9 @@ const emptyState = {
  */
 function widgetsReducer(state = emptyState, action) {
     switch (action.type) {
+    case INIT: {
+        return set(`defaults`, action.cfg, state);
+    }
     case EDITOR_SETTING_CHANGE: {
         return set(`builder.settings.${action.key}`, action.value, state);
     }
@@ -103,10 +108,17 @@ function widgetsReducer(state = emptyState, action) {
         if (widget.widgetType === 'chart') {
             widget = omit(widget, ["layer", "url"]);
         }
+        const w = state?.defaults?.initialSize?.w ?? 1;
+        const h = state?.defaults?.initialSize?.h ?? 1;
         return arrayUpsert(`containers[${action.target}].widgets`, {
             id: action.id,
             ...widget,
-            dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
+            dataGrid: action.id && {
+                w,
+                h,
+                x: 0,
+                y: 0
+            }
         }, {
             id: action.widget.id || action.id
         }, state);
@@ -146,9 +158,15 @@ function widgetsReducer(state = emptyState, action) {
                             // every chart stores the layer object configuration
                             // so we need to loop around them to update correctly the layer properties
                             // including the layerFilter
-                            return set("charts", w.charts.map((chart) =>
-                                get(chart, "layer.id") === action.layer.id ? set("layer", action.layer, chart) : chart
-                            ), w);
+                            let chartsCopy = w?.charts?.length ? [...w.charts] : [];
+                            chartsCopy = chartsCopy.map(chart=>{
+                                let chartItem = {...chart};
+                                chartItem.traces = chartItem?.traces?.map(trace=>
+                                    get(trace, "layer.id") === action.layer.id ? set("layer", action.layer, trace) : trace
+                                );
+                                return chartItem;
+                            });
+                            return set("charts", chartsCopy, w);
                         }
                         return get(w, "layer.id") === action.layer.id ? set("layer", action.layer, w) : w;
                     }), state);

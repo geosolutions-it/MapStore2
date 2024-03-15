@@ -9,16 +9,11 @@
 import { urlParts } from '../utils/URLUtils';
 
 import url from 'url';
-import { sortBy, head, castArray, isNumber, isString, uniq } from 'lodash';
+import { sortBy, head, castArray, isNumber, isString } from 'lodash';
 import assign from 'object-assign';
 import chroma from 'chroma-js';
 import { getLayerUrl } from '../utils/LayersUtils';
-
-const supportedColorBrewer = uniq(Object.keys(chroma.brewer).map((key) => key.toLocaleLowerCase()))
-    .map((key) => ({
-        name: key,
-        colors: key
-    }));
+import { standardClassificationScales as standardColors } from '../utils/ClassificationUtils';
 
 const isAttributeAllowed = (type) => ['Integer', 'Long', 'Double', 'Float', 'BigDecimal'].indexOf(type) !== -1;
 const getSimpleType = () => {
@@ -49,24 +44,6 @@ const getCustomClassification = (classification) => {
     }
     return {};
 };
-
-const standardColors = [{
-    name: 'red',
-    colors: ['#000', '#f00']
-}, {
-    name: 'green',
-    colors: ['#000', '#008000', '#0f0']
-}, {
-    name: 'blue',
-    colors: ['#000', '#00f']
-}, {
-    name: 'gray',
-    colors: ['#333', '#eee']
-}, {
-    name: 'jet',
-    colors: ['#00f', '#ff0', '#f00']
-},
-...supportedColorBrewer];
 
 const getColor = (layer, name, intervals, customRamp) => {
     const chosenColors = layer
@@ -431,9 +408,10 @@ const API = {
 
         return colors.map((color) => !isString(color.colors) && color.colors.length >= samples
             ? color
-            : assign({}, color, {
-                colors: chroma.scale(color.colors).colors(samples)
-            }));
+            : {
+                ...color,
+                colors: chroma.scale(color.colors.length === 1 ? [color.colors[0], color.colors[0]] : color.colors).colors(samples)
+            });
     },
     /**
      * Checks if the given layer has a thematic style applied on it (SLD param not empty)

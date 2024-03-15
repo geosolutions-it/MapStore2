@@ -15,17 +15,20 @@ import Message from '../../I18N/Message';
 /**
  * Switch button with a toolbar.
  * @param {boolean} [checked=false] the status of the button
+ * @param {boolean} [disabled=false] the disabled status
  * @prop {function} onClick handler for click
  */
 class SwitchToolbar extends React.Component {
 
     static propTypes = {
         checked: PropTypes.bool,
+        disabled: PropTypes.bool,
         onClick: PropTypes.func
     };
 
     static defaultProps = {
         checked: false,
+        disabled: false,
         onClick: () => {}
     };
 
@@ -37,13 +40,14 @@ class SwitchToolbar extends React.Component {
             }}
             btnGroupProps={{
                 style: {
-                    margin: 10
+                    margin: 5
                 }
             }}
             buttons={[
                 {
                     glyph: this.props.checked ? 'chevron-down' : 'chevron-left',
                     visible: true,
+                    disabled: this.props.disabled,
                     tooltip: this.props.checked ? <Message msgId="collapse"/> : <Message msgId="expand"/>,
                     onClick: () => this.props.onClick(!this.props.checked)
                 }

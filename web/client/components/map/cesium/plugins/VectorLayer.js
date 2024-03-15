@@ -7,7 +7,6 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
-import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
 import {
     getStyle,
@@ -15,90 +14,66 @@ import {
     flattenFeatures
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
+import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
 
 const createLayer = (options, map) => {
 
-    let dataSource = new Cesium.GeoJsonDataSource(options?.id);
-
-    const features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
-    const collection = {
-        type: 'FeatureCollection',
-        features
-    };
-
-    if (options.visibility) {
-        dataSource.load(collection, {
-            // ensure default style is not applied
-            stroke: new Cesium.Color(0, 0, 0, 0),
-            fill: new Cesium.Color(0, 0, 0, 0),
-            markerColor: new Cesium.Color(0, 0, 0, 0),
-            strokeWidth: 0,
-            markerSize: 0
-        }).then(() => {
-            map.dataSources.add(dataSource);
-            layerToGeoStylerStyle(options)
-                .then((style) => {
-                    getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
-                        .then((styleFunc) => {
-                            if (styleFunc) {
-                                styleFunc({
-                                    entities: dataSource?.entities?.values,
-                                    map,
-                                    opacity: options.opacity ?? 1
-                                }).then(() => {
-                                    map.scene.requestRender();
-                                });
-                            }
-                        });
-                });
-        });
+    if (!options.visibility) {
+        return {
+            detached: true,
+            styledFeatures: undefined,
+            remove: () => {}
+        };
     }
 
-    dataSource.show = !!options.visibility;
-    dataSource.queryable = options.queryable === undefined || options.queryable;
+    const features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
+
+    let styledFeatures = new GeoJSONStyledFeatures({
+        features,
+        id: options?.id,
+        map: map,
+        opacity: options.opacity,
+        queryable: options.queryable === undefined || options.queryable
+    });
+
+    layerToGeoStylerStyle(options)
+        .then((style) => {
+            getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'cesium')
+                .then((styleFunc) => {
+                    styledFeatures.setStyleFunction(styleFunc);
+                });
+        });
 
     return {
         detached: true,
-        dataSource,
+        styledFeatures,
         remove: () => {
-            if (dataSource && map) {
-                map.dataSources.remove(dataSource);
-                dataSource = undefined;
+            if (styledFeatures) {
+                styledFeatures.destroy();
+                styledFeatures = undefined;
             }
-        },
-        setVisible: () => {}
+        }
     };
 };
 
 Layers.registerType('vector', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (!isEqual(newOptions.features, oldOptions.features)
-        || newOptions.visibility !== oldOptions.visibility) {
+        if (!isEqual(newOptions.features, oldOptions.features)) {
             return createLayer(newOptions, map);
         }
 
-        if (layer?.dataSource?.entities?.values
-            && (
-                !isEqual(newOptions.style, oldOptions.style)
-                || newOptions.opacity !== oldOptions.opacity
-            )
-        ) {
+        if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {
             layerToGeoStylerStyle(newOptions)
                 .then((style) => {
                     getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, style }), 'cesium')
                         .then((styleFunc) => {
-                            if (styleFunc) {
-                                styleFunc({
-                                    entities: layer.dataSource.entities.values,
-                                    map,
-                                    opacity: newOptions.opacity ?? 1
-                                }).then(() => {
-                                    map.scene.requestRender();
-                                });
-                            }
+                            layer.styledFeatures.setStyleFunction(styleFunc);
                         });
                 });
+        }
+        if (layer?.styledFeatures && newOptions.opacity !== oldOptions.opacity) {
+            layer.styledFeatures.setOpacity(newOptions.opacity);
         }
         return null;
     }

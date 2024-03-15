@@ -68,4 +68,30 @@ describe('Test for AttributeFilter component', () => {
         ReactTestUtils.Simulate.change(input);
         expect(spyonChange).toHaveBeenCalled();
     });
+    it('test rendering with operator DD', () => {
+        const cmp = ReactDOM.render(<AttributeFilter isWithinAttrTbl={"true"} value={"TEST"}/>, document.getElementById("container"));
+        const el = document.getElementsByClassName("form-control input-sm")[0];
+        expect(el).toExist();
+        const input = ReactTestUtils.findRenderedDOMComponentWithTag(cmp, "input");
+        expect(input.value).toBe("TEST");
+        const operatorDropdownListEl = ReactTestUtils.findRenderedDOMComponentWithClass(cmp, 'rw-dropdownlist');
+        expect(operatorDropdownListEl).toExist();
+    });
+    it('test disable operator dropdown', () => {
+        const cmp = ReactDOM.render(<AttributeFilter disabled isWithinAttrTbl={"true"} value={"TEST"}/>, document.getElementById("container"));
+        const el = document.getElementsByClassName("form-control input-sm")[0];
+        expect(el).toExist();
+        const input = ReactTestUtils.findRenderedDOMComponentWithTag(cmp, "input");
+        expect(input.value).toBe("TEST");
+        expect(input.disabled).toBe(true);
+    });
+    it('test rendering without operator DD', () => {
+        const cmp = ReactDOM.render(<AttributeFilter isWithinAttrTbl={false} value={"TEST"}/>, document.getElementById("container"));
+        const el = document.getElementsByClassName("form-control input-sm")[0];
+        expect(el).toExist();
+        const input = ReactTestUtils.findRenderedDOMComponentWithTag(cmp, "input");
+        expect(input.value).toBe("TEST");
+        const operatorDropdownListEl = document.getElementsByClassName('rw-dropdownlist');
+        expect(operatorDropdownListEl.length).toEqual(0);
+    });
 });

@@ -216,8 +216,8 @@ class SpatialFilter extends React.Component {
                 {this.props.spatialMethodOptions.length > 1 ? this.renderSpatialHeader() : <span/>}
                 {this.renderZoneFields()}
                 {this.props.spatialField.method
-                     && this.getMethodFromId(this.props.spatialField.method)
-                     && this.getMethodFromId(this.props.spatialField.method).type === "wfsGeocoder"
+                && this.getMethodFromId(this.props.spatialField.method)
+                && this.getMethodFromId(this.props.spatialField.method).type === "wfsGeocoder"
                     ? this.renderRoiPanel()
                     : null}
                 {this.props.spatialOperations.length > 1 ?

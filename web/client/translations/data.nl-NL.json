@@ -90,6 +90,8 @@
             "groupProperties": "Groep eigenschappen",
             "featureInfo": "object informatie",
             "featureInfoFormatLbl": "identificeer formaat respons",
+            "guideText": "In de afbeeldingslink kunnen placeholders gebruikt worden in de vorm van $\\{properties.YOUR_ATTRIBUTE\\} om objectattributen als parameters toe te voegen aan de URL. Zowel URLs als base64 gecodeerde \"Data URIs\" worden ondersteund",
+            "imageNotFound": "Deze afbeelding heeft mogelijks een feature info request nodig om correct te renderen",
             "legenderror": "De legende is niet bereikbaar",
             "editCustomFormat": "Editeer formaat op maat",
             "exampleOfResponse": "Voorbeeld",
@@ -114,11 +116,29 @@
             "heightOffset": "Hoogteverschuiving (m)",
             "wmsLayerTileSize": "Tegelgrootte (WMS)",
             "serverType": "Type server",
+            "formatError": "Het is niet mogelijk om de afbeeldings- en informatieformaten op te halen van de opgegeven service. Waarschijnlijk is dit een 'No Vendor' service, een type dat dit niet ondersteunt (vb. GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "Geen 'Vendor'",
                 "geoserver": "GeoServer"
             },
-	    "visibilityLimits": {
+	          "availableTileGrids": "Beschikbare Tegel Grids",
+            "crsId": "Id",
+            "projection": "Projectie",
+            "tileSize": "Tegelgrootte",
+            "tileGridInUse": "Het tegelgrid '{id}' matcht de huidige kaartprojectie en ingestelde tegelgrootte voor deze laag",
+            "useStandardTileGridStrategy": "Gebruik het standaard tegelgrid",
+            "useCustomTileGridStrategy": "Gebruik externe aangepaste tegelgrids",
+            "updateTileGrids": "Werk beschikbare tegelgrids bij",
+            "noTileGridMatchesConfiguration": "Er is geen tegelgrid beschikbaar dat matcht met de huidige kaartprojectie en ingestelde tegelgrootte. De bovenstaande tabel toont de beschikbare tegelgrids die compatibel zijn met de huidige kaartprojectie. U kan de lijst van beschikbare tegelgrids bijwerken door op de vernieuwknop te drukken",
+            "noConfiguredGridSets": "Het is niet mogelijk om de aangepaste tegelgrids op te halen. Deze laag heeft geen enkel grid dat compatibel is met de beschikbare projecties. Gelieve de serverconfiguratie na te kijken en vervolgens opnieuw te proberen",
+            "notPossibleToConnectToWMTSService": "Het is niet mogelijk om de tegelgrids op te halen van de server. De request {requestUrl} geeft een foutmelding terug",
+            "notSupportedSelectedFormatCache": "Het geselecteerde formaat wordt niet ondersteund door de cache.",
+            "customParamsCacheWarning": "Gelokaliseerde stijlen zijn toegelaten voor deze laag. Gelieve in de serverconfiguratie na te kijken of de custom ENV parameter ondersteund wordt",
+            "supportedFormats": "Ondersteunde formaten",
+            "checkAvailableTileGridsInfo": "Controleer beschikbare informatie tegelgrids",
+            "tileGridInfoChecksTitle": "Informatie tegelgrids",
+            "tileGridInfoChecks": "De volgende checklist toont mogelijke compatibiliteitsproblemen tussen het huidige grid en de externe informatie. Het is nog steeds mogelijk dat het tilegrid niet matcht met chache, zelfs als alle opgelijste checks voldaan zijn",
+            "visibilityLimits": {
                 "title": "Zichtbaarheidslimieten",
                 "serverValuesUpdateUndefined": "De server heeft geen limieten voor de zichtbaarheid van de schaal voor deze laag opgegeven",
                 "serverValuesUpdate": "De server heeft minimale en maximale zichtbaarheidslimieten voor deze laag opgegeven",
@@ -136,6 +156,21 @@
                 "type": "Limieten type",
                 "scale": "Schaal",
                 "resolution": "Resolutie"
+            },
+            "3dTiles": {
+                "format": "Formaat",
+                "3dModel": "3D Model",
+                "pointCloud": "Puntenwolk",
+                "pointCloudShading": {
+                    "title": "Visualisatie opties",
+                    "attenuationInfo": "Pas puntverzachting toe gebaseerd op de afstand vanaf het huidige zichtspunt",
+                    "attenuation": "Activeer verzachting",
+                    "maximumAttenuation": "Maximale verzachting",
+                    "eyeDomeLightingInfo": "Dit activeert 'eye dome' belichting om visualisatie van de puntenwolk te verbeteren. Dit komt niet overeen met de echte zonbelichting",
+                    "eyeDomeLighting": "Activeer belichting",
+                    "eyeDomeLightingStrength": "Belichtingssterkte",
+                    "eyeDomeLightingRadius": "Belichtingsradius"
+                }
             },
             "tooltip": {
                 "label": "Tooltip",
@@ -163,6 +198,8 @@
             },
             "format": {
               "title": "Formaat",
+              "tile": "Tegel",
+              "information": "Informatievenster",
               "refresh": "Laad ondersteunde formaten",
               "loading": "Laden...",
               "noOption": "Geen keuzeopties",
@@ -171,7 +208,24 @@
                   "message": "Laden van formaat gefaald"
               }
             },
-            "forceProxy": "Forceer proxy"
+            "forceProxy": "Forceer proxy",
+            "fields": {
+              "refresh": "Herlaad attributen van de gegevensbron",
+              "title": "Attributen",
+              "tooltip": "Attributen",
+              "name": "Naam",
+              "alias": "Alias",
+              "type": "Type",
+              "clearCustomization": "Verwijder aanpassingen",
+              "clearCustomizationConfirm": "Bent u zeker dat u alle aanpassingen wil ongedaan maken?",
+              "error": "Het is niet mogelijk om de attributen automatisch in te laden"
+            },
+            "disableFeaturesEditing": "Deactiveer editeerfunctionaliteit in attributentabel"
+        },
+        "localizedInput": {
+          "localize": "Vertaal deze tekst...",
+          "title": "Vertaal tekst",
+          "default": "Standaard"
         },
         "longitude": "Lengtegraad",
         "latitude": "Breedtegraad",
@@ -179,6 +233,7 @@
             "update": "Bijwerken",
             "warning": "Waarschuwing",
             "success": "Geslaagd",
+            "error": "Fout",
             "backgroundLayerNotSupported": "De eerder geselecteerde achtergrondlaag wordt niet ondersteund voor dit type kaart. De eerst beschikbare wordt vervolgens gebruikt.",
             "noBackgroundLayerSupported": "Er is geen achtergrondlaag ondersteund voor dit type kaart.",
             "updateOldMap": "Dit is een oude kaart, dus niet alle functionaliteiten kunnen worden ingeschakeld. Klik op de knop Bijwerken om de kaart bij te werken of sluit deze melding als u deze niet wilt bijwerken.",
@@ -535,6 +590,7 @@
             "browseData": "Open de attributentabel",
             "removeLayer": "De laag verwijderen",
             "loadingerror": "De laag is niet correct geladen",
+            "sourceCRSNotCompatible": "De data kan niet geherprojecteerd worden omdat het CRS {sourceCRS} van de brondata van de laag niet beschikbaar is in de applicatie",
             "measure": "Meten",
             "layers": "Lagen",
             "drawerButton": "Lagen",
@@ -556,6 +612,7 @@
 	          "notVisibleZoomIn": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom in om de laag te tonen",
             "notVisibleZoomOut": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom uit om de laag weer te geven",
             "notVisibleSwitchTo3D": "Activeer de 3D-modus om deze laag te kunnen zien",
+            "notVisibleSwitchTo2D": "Activeer de 2D-modus om deze laag te kunnen zien",
             "refreshOptions": {
                 "bbox": "BBOX bijwerken",
                 "search": "De zoekopties bijwerken",
@@ -621,7 +678,7 @@
                 "configuration": "Configuratie",
                 "apply": "Classificatie toepassen",
                 "restore": "Reset aanpassingen",
-                "go_to_cfg": "Configureren...",
+                "goToCfg": "Configureren...",
                 "go_to_thema": "Gebruik deze configuratie",
                 "cfgError": "Fout in JSON configuratie",
                 "classify": "Classificeren",
@@ -666,6 +723,7 @@
                 "iconsSize": "Pictogramgrootte:",
                 "dpi": "dpi:"
             },
+            "rotation": "Rotatie",
             "layoutWarning": "Lay-out niet toegelaten",
             "scale": "Schaal",
             "includeScale": "Afdrukschaal",
@@ -1344,6 +1402,38 @@
               "height": "hoogte"
             }
         },
+        "permalink": {
+            "title": "Permalink",
+            "shareLinkTitle": "Permalink gegenereerd",
+            "accessible": "Publiek",
+            "success": "Permalink werd succesvol opgeslagen",
+            "createCategorySuccess": "\"PERMALINK\" categorie ontbreekt; deze werd automatisch aangemaakt",
+            "descriptionLabel": "Omschrijving",
+            "titleLabel": "Titel",
+            "titlePlaceholder": "Voer een titel in",
+            "descriptionPlaceholder": "Voer een beschrijving in",
+            "generate": "Genereer permalink",
+            "create": "Maak een nieuwe permalink",
+            "loadingSpinner": "Permalink laden...",
+            "subtitle": "Deel de resource via de gegenereerde link",
+            "errors": {
+                "loading": {
+                    "unknownError": "Er is een fout opgetreden bij het laden van de permalink",
+                    "permalinkNotAccessible": "U beschikt niet over de juiste rechten om deze permalink te bekijken. Gelieve de eigenaar van de resource te contacteren",
+                    "permalinkDoesNotExist": "De permalink die u probeert te bereiken bestaat niet",
+                    "title": "Fout laden permalink",
+                    "pleaseLogin": "Deze permalink is niet publiek beschikbaar. Gelieve u aan te melden",
+                    "notFound": "Permalink niet gevonden",
+                    "notAccessible": "Permalink niet toegankelijk"
+                },
+                "save": {
+                    "title": "Genereren van permalink mislukt",
+                    "generic": "Fout bij opslaan van permalink",
+                    "categoryErrorAdmin": "Aanmaken van ontbrekende categorie \"{categoryName}\" mislukt",
+                    "categoryErrorNonAdmin": "Categorie \"{categoryName}\" ontbreekt, gelieve de administrator te contacteren om de categorie aan te maken"
+                }
+            }
+        },
         "snapshot": {
             "title": "momentopname-voorbeeld",
             "save": "Opslaan",
@@ -1423,6 +1513,10 @@
             "title": "Catalogus",
             "tooltip": "Blader door de catalogus en voeg lagen toe aan de kaart",
             "autoload": "Zoek op serviceselectie",
+            "fetchMetadata": {
+                "label": "Download metadatabestand bij zoeken",
+                "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
+            },
             "clearValueText": "Selecties wissen",
             "noResultsText": "Geen resultaat",
             "addToMap": "Toevoegen aan kaart",
@@ -1460,6 +1554,10 @@
               "forceDefaultTileGrid": "Forceer standaard tegelgrid",
               "forceDefaultTileGridDescription": "Gebruik het tegelgrid van de globale projectie in plaats van de oorsprong en resoluties van de server. Dit is handig voor sommige TMS-services die reclame maken voor een verkeerde origine of verkeerde resolutie."
             },
+            "urls": "URL(s)",
+            "cog": {
+                "urlTemplateHint": "Er kunnen meerdere urls toegevoegd worden door ze met een komma te scheiden. Elke url zal als een afzonderlijke laag worden behandeld"
+            },
             "tileprovider": {
               "tooltip": "x, y, z zijn tegelpositie, s is het subdomein (standaard)"
             },
@@ -1488,7 +1586,8 @@
             },
             "format": {
               "noOption": "Geen optie",
-              "loading": "Laden..."
+              "loading": "Laden...",
+              "refresh": "Laad ondersteunde formaten"
             },
             "filter": {
                 "static": {
@@ -1702,6 +1801,26 @@
                     }
                 }
             },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Zoeken...",
+                    "string": "Typ tekst om te filteren...",
+                    "date": "Typ de datum om te filteren...",
+                    "number": "Typ een getal..."
+                },
+                "tooltips": {
+                    "editMode": "Snel zoeken is niet beschikbaar in de editeermodus",
+                    "default": "Zoeken...",
+                    "string": "Typ tekst om te filteren...</br>Standaard wordt in de hele tekstwaarde gezocht</br>Gebruik <b>*</b> om een willekeurig aantal karakters aan te geven</br>Gebruik <b>.</b> om een enkel karakter aan te geven </br>Plaats <b>!</b> voor een speciaal teken (* of .) om het te behandelen als een normaal karakter</br>",
+                    "number": "Typ een getal ...",
+                    "date": "Typ een datum . Gebruik {format} voor de datum.",
+                    "geometry": {
+                        "disabled": "Filter door te klikken op de kaart / Alt + sleep muis om filtervenster te tekenen. Hou ctrl ingedrukt om meerdere afzonderlijke objecten te selecteren",
+                        "enabled": "Klik op de kaart om de resultaten te filteren / Alt + sleep muis om filtervenster te tekenen. Hou ctrl ingedrukt om meerdere afzonderlijke objecten te selecteren",
+                        "applied": "Verwijder de filter met een muisklik"
+                    }
+                }
+            },
             "toolbar": {
                 "synchPopoverTitle": "Synchroniseer kaart met filter ",
                 "synchPopoverText": "Gebruik deze tool om de kaart te synchroniseren met de geselecteerde filter",
@@ -1857,6 +1976,11 @@
                     "errorChart": "Een of meerdere grafieken zijn ongeldig",
                     "backToTableOptions": "Terug naar tabelopties",
                     "configureTableOptions": "Configureer tabelopties",
+                    "attributeEditorColumns": {
+                      "name": "Naam",
+                      "title": "Titel",
+                      "tooltip": "Tooltip"
+                    },
                     "resetColumnsSizes": "Reset alle wijzigingen in de kolomafmetingen",
                     "updateWidget": "Werk de widget bij",
                     "addTheWidget": "Voeg de widget toe",
@@ -2431,7 +2555,8 @@
             "startPoint": "Startpunt",
             "endPoint": "Eindpunt",
             "line": "Lijn",
-            "geodesicLine": "Geodetische lijn"
+            "geodesicLine": "Geodetische lijn",
+            "pointCloudSizeInfo": "De puntenwolkradius wordt enkel toegepast wanneer de vervagingsopties zijn uitgeschakeld, aangezien die instelling voorrang heeft op deze parameter."
         },
         "playback": {
             "settings": {
@@ -2535,7 +2660,8 @@
                 "access": "Typ om in Toegang te zoeken",
                 "ip": "###.###.###.###/##",
                 "priority": "Selecteer Prioriteit",
-                "filter": "Filter stijlen ..."
+                "filter": "Filter stijlen ...",
+                "filterAny": "EEN VAN"
             },
             "menutitle": "Beheer toegangsregels",
             "tooltip": {
@@ -2546,7 +2672,9 @@
                 "deleteT": "Verwijder geselecteerde regels",
                 "cacheT": "Cache wissen",
                 "save": "Sla de huidige regel op",
-                "close": "Verlaat het aanmaken van een regel"
+                "close": "Verlaat het aanmaken van een regel",
+                "showAllRules": "Toon alle relevante regels",
+                "filterRuleList": "Filter lijst op basis van geselecteerde waarde"
             },
             "navItems": {
                 "main": "Algemene regel",
@@ -2801,18 +2929,21 @@
         "saveDialog": {
             "title": "Bewerk eigenschappen",
             "name": "Naam",
+            "titleInput": "Titel",
             "description": "Omschrijving",
             "createdAt": "Gemaakt",
             "modifiedAt": "Gewijzigd",
             "namePlaceholder": "Typ een naam ...",
             "descriptionPlaceholder": "Typ een beschrijving ...",
+            "titlePlaceholder": "Typ een titel...",
             "confirmCloseText": "Er zijn wijzigingen in behandeling. Weet u zeker dat u wilt afsluiten zonder op te slaan?",
             "close": "Afsluiten",
             "cancel": "Annuleren",
             "saveSuccessTitle": "Succes",
             "saveSuccessMessage": "Succesvol opgeslagen",
             "saveTooltip": "Opslaan",
-            "saveAsTooltip": "Opslaan als"
+            "saveAsTooltip": "Opslaan als",
+            "unadvertised": "Niet geadverteerd"
         },
         "mapEditor": {
             "modalTitle": "Kaarteditor",
@@ -2967,6 +3098,10 @@
             "description": "Maakt het mogelijk om een filter aan een laag toe te voegen",
             "title": "Filter Laag"
           },
+          "GeoProcessing": {
+            "description": "Maakt het mogelijk om wps buffer en intersectie geoprocessing toe te passen op lagen met een nieuwe laag als resultaat",
+            "title": "GeoProcessing"
+          },
           "HelpLink": {
             "description": "Een knop om toegang te krijgen tot MapStore-documentatie",
             "title": "Documentatielink"
@@ -2986,6 +3121,10 @@
           "Login": {
             "description": "Login-tool",
             "title": "Login"
+          },
+          "LongitudinalProfileTool": {
+            "description": "Geeft gebruikers de mogelijkheid om langsprofielen te genereren op basis van een profiellijn en een laag met hoogtewaarden. Configuratie is noodzakelijk",
+            "title": "Longitudinal Profile tool"
           },
           "MapCatalog": {
             "description": "Staat het bladeren, bewerken, verwijderen en laden van kaarten toe die beschikbaar zijn op de server",
@@ -3042,6 +3181,10 @@
           "Share": {
             "description": "Maakt het mogelijk om de kaart op verschillende manieren te delen (link, QR-code, embed, sociale netwerken ...)",
             "title": "Deel tool"
+          },
+          "Permalink": {
+            "description": "Maakt het mogelijk om een permalink aan te maken van de huidige weergave (gebruikerssessie) van de resource",
+            "title": "Permalink"
           },
           "StreetView": {
             "title": "Street View",
@@ -3242,7 +3385,25 @@
                 "unknownError": "Er is een onverwachte fout opgetreden"
             },
             "undo": "Weet u zeker dat u de contextbewerkingssessie wilt verlaten?",
-            "showTutorial": "Tutorial weergeven"
+            "showTutorial": "Tutorial weergeven",
+            "errors":{
+                "loading": {
+                    "title": "Fout bij laden van context",
+                    "import": "Fout bij context importeren",
+                    "export": "Fout bij context exporteren"
+                }
+            },
+            "import": "Importeer",
+            "importTooltip": "Om een context te importeren, ga naar Stap 1",
+            "export": "Exporteer",
+            "importDialog": {
+                "selectFiles": "Selecteer een bestand",
+                "heading": "Sleep een geëxporteerd context.json bestand naar hier",
+                "note": "De gegevens uit het geïmporteerde bestand zullen de huidige contextconfiguratie overschrijven"
+            },
+            "exportDialog": {
+                "heading": "Exporteer deze context als bestand"
+            }
         },
         "contextManager": {
             "title": "Beheer contexten",
@@ -3685,6 +3846,148 @@
         },
         "sidebarMenu": {
           "showMoreItems": "Toon meer..."
+        },
+        "longitudinalProfile": {
+          "open": "Open Langsprofiel",
+          "close": "Sluit Langsprofiel",
+          "title": "Langsprofiel",
+          "draw": "Teken lijn",
+          "import": "Laad bestand",
+          "select": "Selectie als profiellijn",
+          "parameters": "Parameters",
+          "elevation": "Hoogte",
+          "crsSelector": "Specifieer een projectie voor het DXF bestand",
+          "distance": "Afstand (m)",
+          "chart": "Grafiek",
+          "infos": "Informatie",
+          "preferences": "Voorkeuren",
+          "CRS": "CRS",
+          "uom": "Eenheden",
+          "fileSelected": "Geselecteerd bestand: ",
+          "uomMeters": "meters",
+          "source": "Bron",
+          "downloadCSV": "CSV",
+          "downloadPNG": "PNG",
+          "downloadPDF": "PDF",
+          "info": {
+            "points": " punten",
+            "totalPoints": "Aantal verwerkte punten:",
+            "layer":"Laag:",
+            "line":"Afstand:",
+            "up":"Cumulatieve stijging:",
+            "down":"Cumulatieve daling:",
+            "noInfos": "Geen info beschikbaar"
+          },
+          "help": {
+            "draw": "Klik op de kaart om een lijn te tekenen. Klik nogmaals op het eindpunt om te stoppen.",
+            "select": "Selecteer een laag in het lagenpaneel en klik op een lijnobject om een profiel langs deze lijn te genereren.<br/>Geselecteerde laag: {layerName}",
+            "noLayer": "Geen laag geselecteerd",
+            "notSupportedLayer": "niet ondersteund. Gelieve een WMS, WFS of vector laag te selecteren."
+          },
+          "warnings": {
+            "noLayerSelected": "Gelieve eerst een laag te selecteren.",
+            "layerNotSupported": "Geselecteerde laag is niet ondersteund. Gelieve een WMS, WFS of vector laag te selecteren.",
+            "noFeatureInPoint": "Geen lijnobject gevonden op de aangeduide locatie.",
+            "noLineFeatureFound": "Geen lijnobject gevonden in geïmporteerd bestand.",
+            "fallbackToProjection": "Projectie van standaardreferentie \"{defaultReferential}\" is niet ondersteund. Terugvallen op referentie \"{referential}\" met \"{projection}\" projectie."
+          },
+          "errors": {
+            "outsideCoverage": "De lijn ligt buiten het profielbereik",
+            "loadingError": "Fout bij het laden van de data voor het langsprofiel",
+            "unableToSetupPlugin": "Kan langsprofiel extensie niet instellen",
+            "defaultReferentialNotFound": "Standaardreferentie is geconfigureerd maar kan niet gevonden worden in de referentielijst. Gelieve de extensieconfiguratie bij te werken.",
+            "projectionNotSupported": "Er kan geen referentie gevonden worden waarvan de projectie ondersteund wordt door de kaarttoepassing. Gelieve de extensieconfiguratie bij te werken of de gewenste projectie toe te voegen aan de applicatieconfiguratie.",
+            "cannotDownloadPDF": "Onmogelijk om een kaartafdruk te maken omdat de kaart referenties bevat naar externe domeinen. Gelieve die te verwijderen en vervolgens de kaart opnieuw op te slaan, te herladen en vervolgens de afdruk opnieuw te proberen.",
+            "cannotDownloadPNG": "Kan grafiek niet opslaan als afbeelding."
+          },
+          "settings": {
+            "chartTitle": "Grafiektitel",
+            "referential": "Referentielaag",
+            "distance": "Afstand (m)"
+          },
+          "dropZone": {
+            "heading": "<p><h4>Sleep bestand naar hier</h4><small>of</small></p>",
+            "selectFiles": "Selecteer bestand...",
+            "infoSupported": "<p><small>Ondersteunde bestandsformaten: GeoJSON, DXF, Shapefiles</small></p>",
+            "dxfGeometryNotSupported": "Enkel LWPOLYLINE wordt ondersteund"
+          }
+        },
+        "GeoProcessing": {
+          "title": "GeoProcessing",
+          "emptyTitle": "Volgende WPS processen moeten geïnstalleerd zijn op GeoServer om dit proces te gebruiken:",
+          "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "sourceLayer": "Bronlaag",
+          "sourceFeature": "Bronobject",
+          "tool": "Selecteer een proces",
+          "highlight": "Markeer objecten",
+          "bufferTool": "Buffer",
+          "distance": "Afstand",
+          "distanceUom": "Meeteenheid",
+          "km": "km",
+          "m": "m",
+          "run": "Uitvoeren",
+          "intersectionTool": "Intersectie",
+          "noMatchedLayer": "Er komen geen lagen overeen met de huidige filter",
+          "noMatchedFeature": "Er komen geen objecten overeen met de huidige filter",
+          "intersectionLayer": "Intersectielaag",
+          "intersectionFeature": "Intersectieobject",
+          "advancedSettings": "Geavanceerde instellingen",
+          "quadrantSegments": "Kwadrantsegmenten",
+          "quadrantSegmentsTooltip": "Aantal segmenten",
+          "capStyle": "Stijl lijneinde",
+          "capStyleTooltip": "Stijl voor de bufferuiteindes",
+          "round": "Rond",
+          "flat": "Plat",
+          "square": "Vierkant",
+          "firstAttributeToRetain": "Eerste attribuut om weer te geven",
+          "secondAttributeToRetain": "Tweede attribuut om weer te geven",
+          "intersectionMode": "Intersectiemodus",
+          "percentagesEnabled": "Percentages inschakelen",
+          "areasEnabled": "Oppervlaktes uitschakelen",
+          "firstAttributeToRetainTooltip": "Eerste objectcollectie attribuut om mee te nemen",
+          "secondAttributeToRetainTooltip": "Tweede objectcollectie attribuut om mee te nemen",
+          "intersectionModeTooltip": "Specifieert de resulterende geometrie voor overlappende objecten",
+          "percentagesEnabledTooltip": "Objectoppervlaktepercentage in het resultaat weergeven?",
+          "areasEnabledTooltip": "Moeten objectoppervlaktes in het resultaat weergeven worden?",
+          "noMatchedMode": "Geen enkele modus komt overeen met de huidige filter",
+          "INTERSECTION": "INTERSECTIE",
+          "FIRST": "EERSTE",
+          "SECOND": "TWEEDE",
+          "true": "ja",
+          "false": "nee",
+          "notifications": {
+            "errorIntersectGFI": "Er is een fout opgetreden bij het uitvoeren van de intersectie waardoor er geen intersectielaag kon worden gemaakt.",
+            "errorGFI": "Er is een fout opgetreden bij het laden van het object",
+            "errorGetFeature": "Er is een fout opgetreden bij het ophalen van de geometrie van het object",
+            "layerNotSupported": "Geselecteerde laag is niet ondersteund. Gelieve een WMS, WFS of vector laag te selecteren.",
+            "noFeatureInPoint": "Geen object gevonden op de geselecteerde locatie.",
+            "featureFound": "Er werd een object gevonden op de geselecteerde locatie.",
+            "noLayerSelected": "Gelieve eerst een laag te selecteren.",
+            "successfulIntersection": "De intersectie is geslaagd en de resulterende laag werd toegevoegd aan het lagenpaneel",
+            "successfulBuffer": "De bufferoperatie is geslaagd en de resulterende laag werd toegevoegd aan het lagenpaneel",
+            "errorBuffer": "De bufferoperatie is gefaald",
+            "emptyIntersection": "Er is geen ruimtelijke overlap tussen de gegeven gegevensbronnen.",
+            "errorGettingFC": "Het was niet mogelijk om een collectie te maken van de geometrieën van de laag '{layerName}'",
+            "errorGettingFeaturesList": "Het was niet mogelijk om een lijst van de objecten op te halen van de laag '{layerName}'"
+          },
+          "warningTitle": "Waarschuwing",
+          "warningBody": "U hebt geen object geselecteerd. Dit kan het GeoServer-proces vertragen. Wilt u verdergaan?",
+          "warningConfirmText": "Ja",
+          "warningCancel": "Annuleer",
+          "tooltip": {
+            "clickToSelectFeature": "Klik om object te selecteren",
+            "invalidLayers": "Een van de geselecteerde lagen kan niet gebruikt worden in dit proces",
+            "fillRequiredDataIntersection": "Gelieve minstens de bronlaag en de intersectielaag aan te duiden",
+            "fillRequiredDataBuffer": "Gelieve minstens de bronlaag aan te duiden",
+            "pointAndPolygon": "Een puntenlaag kan enkel als intersectielaag gebruikt worden",
+            "siderBarBtn": "GeoProcessing",
+            "selectFeature": "Gelieve een object te selecteren",
+            "validFeature": "Dit is een geldig object",
+            "invalidFeature": "Dit object is ongeldig",
+            "selectLayer": "Gelieve een laag te selecteren",
+            "validLayer": "Dit is een geldige laag die gebruikt kan worden in dit proces",
+            "invalidLayer": "Deze laag ondersteunt niet de vereiste WPS-processen \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\nof het is een rasterlaag"
+          }
         }
     }
 }

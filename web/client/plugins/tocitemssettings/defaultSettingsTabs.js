@@ -17,7 +17,7 @@ import { defaultProps } from 'recompose';
 import { isCesium } from '../../selectors/maptype';
 
 import {getConfiguredPlugin as getConfiguredPluginUtil } from '../../utils/PluginsUtils';
-
+import { isAnnotationLayer } from '../Annotations/utils/AnnotationsUtils';
 import General from '../../components/TOC/fragments/settings/General';
 import Display from '../../components/TOC/fragments/settings/Display';
 
@@ -44,7 +44,7 @@ const ConnectedVectorStyleEditor = connect(
 )(VectorStyleEditor);
 
 const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
-const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "3dtiles" || element.type === "vector" && element.id !== "annotations";
+const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "3dtiles" || element.type === "vector" && !isAnnotationLayer(element);
 const isWMS = ({element = {}} = {}) => element.type === "wms";
 const isWFS = ({element = {}} = {}) => element.type === "wfs";
 

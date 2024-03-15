@@ -1,0 +1,66 @@
+name: Cut Release Branch
+on:
+  workflow_dispatch:
+    inputs:
+      release-branch:
+        description: MapStore branch name to use (YYYY.MM.xx). E.g. 2024.01.xx
+        required: true
+      main-branch:
+        description: main branch
+        default: master
+      pr-options:
+        description: Options for Pull request
+        default: --squash --auto --delete-branch
+jobs:
+  cut-release:
+    name: Create release branch and PRs into main main branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.main-branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release branch and generate PR body
+        id: create-branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BRANCH: ${{ github.event.inputs.release-branch }}
+          MAIN_BRANCH: ${{ github.event.inputs.main-branch }}
+          PR_OPTIONS: ${{ github.event.inputs.pr-options }}
+          RUN_ID: ${{ github.run_id }}
+
+        run: |
+          # script will go here
+          echo "Initializing git"
+          # Optional
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          BRANCH_NAME="${RELEASE_BRANCH}"
+          echo "creating branch is $BRANCH_NAME"
+          git checkout -b "$BRANCH_NAME"
+          git push --set-upstream origin "$BRANCH_NAME"
+          echo "branch created"
+          echo "creating bump changes"
+          git checkout "$MAIN_BRANCH"
+          OLD_JAVA_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "Incrementing java packages versions"
+          mvn -B release:update-versions -DautoVersionSubmodules=true -Pprinting,binary,printingbundle
+          NEXT_JAVA_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "Java packages versions updated from $OLD_JAVA_VERSION to $NEXT_JAVA_VERSION"
+          ### increase dependency of project to new version
+          echo "Updating project dependency to new version"
+          mvn versions:set-property -f project/standard/templates/web/pom.xml -Dproperty=mapstore-services.version -DnewVersion=$NEXT_JAVA_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          # Increase release minor version
+          echo "Updating project version to new version in package.json"
+          npm version minor --git-tag-version=false
+          pr_branch_name="bump-${release-branch}-${RUN_ID}"
+          echo "Creating a temp PR on branch: ${pr_branch_name}"
+          git checkout -b "${pr_branch_name}"
+          find . -name 'pom.xml' | xargs git add
+          git add package.json
+          git commit -m "Bump versions on master for release-branch"
+          git push origin "${pr_branch_name}"
+          pr_url=$(gh pr create -B "${MAIN_BRANCH}" -H "${pr_branch_name}" --title "[github-action] ${MAIN_BRANCH} - Bump version for next release" --body "This automatic pull request bumps version of ${MAIN_BRANCH} branch for java packages and for package.json after creating the ${RELEASE_BRANCH}")
+          sleep 10
+          #gh pr merge "$pr_url" ${PR_OPTIONS}

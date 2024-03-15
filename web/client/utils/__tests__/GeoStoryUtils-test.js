@@ -535,6 +535,7 @@ describe("GeoStory Utils", () => {
         const contents = [
             {
                 id: 'content-1',
+                title: 'Title',
                 features: [{
                     properties: {},
                     geometry: { type: 'Point', coordinates: [0, 0] }
@@ -555,7 +556,11 @@ describe("GeoStory Utils", () => {
             type: 'vector',
             features: [
                 {
-                    properties: {},
+                    properties: {
+                        title: 'Title',
+                        sectionId: 'section-id',
+                        contentId: 'content-1'
+                    },
                     geometry: { type: 'Point', coordinates: [ 0, 0 ] },
                     contentRefId: 'content-1'
                 }
@@ -574,6 +579,7 @@ describe("GeoStory Utils", () => {
             contents: [
                 {
                     id: 'content-1',
+                    title: 'Title',
                     features: [{
                         properties: {},
                         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -592,7 +598,11 @@ describe("GeoStory Utils", () => {
             type: 'vector',
             features: [
                 {
-                    properties: {},
+                    properties: {
+                        title: 'Title',
+                        sectionId: 'section-id',
+                        contentId: 'content-1'
+                    },
                     geometry: { type: 'Point', coordinates: [ 0, 0 ] },
                     contentRefId: 'content-1',
                     style: {
@@ -613,6 +623,7 @@ describe("GeoStory Utils", () => {
             contents: [
                 {
                     id: 'content-1',
+                    title: 'Title',
                     features: [{
                         properties: {},
                         geometry: { type: 'Point', coordinates: [0, 0] }
@@ -630,7 +641,11 @@ describe("GeoStory Utils", () => {
             type: 'vector',
             features: [
                 {
-                    properties: {},
+                    properties: {
+                        title: 'Title',
+                        sectionId: 'section-id',
+                        contentId: 'content-1'
+                    },
                     geometry: { type: 'Point', coordinates: [ 0, 0 ] },
                     contentRefId: 'content-1'
                 }

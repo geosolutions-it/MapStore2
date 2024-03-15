@@ -44,5 +44,27 @@ describe('onMapViewChanges enhancer', () => {
         expect(map.mapStateSource).toExist();
         expect(map.projection).toExist();
     });
+    it('onMapViewChanges rendering with zoomToExtentHandler', () => {
+        const Sink = onMapViewChanges(createSink( props => {
+            expect(props.eventHandlers.onMapViewChanges).toExist();
+            setTimeout(props.eventHandlers.onMapViewChanges("CENTER", "ZOOM", { bbox: { x: 2 } }, "SIZE", "mapStateSource", "projection", {}, "RESOLUTION", "ORINATE", () => {}));
+
+        }));
+        const actions = {
+            onMapViewChanges: () => {}
+        };
+        const spy = expect.spyOn(actions, 'onMapViewChanges');
+        ReactDOM.render(<Sink map={{ bbox: { x: 1, y: 1 }, test: "TEST" }} onMapViewChanges={actions.onMapViewChanges} />, document.getElementById("container"));
+        expect(spy).toHaveBeenCalled();
+        const map = spy.calls[0].arguments[0];
+        expect(map).toExist();
+        expect(map.center).toExist();
+        expect(map.zoom).toExist();
+        expect(map.bbox).toExist();
+        expect(map.size).toExist();
+        expect(map.mapStateSource).toExist();
+        expect(map.projection).toExist();
+        expect(map.zoomToExtentHandler).toExist();
+    });
 
 });

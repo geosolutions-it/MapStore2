@@ -15,14 +15,28 @@
             20037508.34,
             20037508.34
         ],
-        "layers": [
-            {
-                "type": "osm",
-                "title": "Open Street Map",
-                "name": "mapnik",
-                "source": "osm",
+        "layers": [{
+                "format": "image/jpeg",
                 "group": "background",
-                "visibility": true
+                "name": "osm:osm",
+                "opacity": 1,
+                "title": "OSM Bright",
+                "thumbURL": "product/assets/img/osm-bright.jpg",
+                "type": "wms",
+                "url": [
+                    "https://maps1.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps2.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps3.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps4.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps5.geosolutionsgroup.com/geoserver/wms",
+                    "https://maps6.geosolutionsgroup.com/geoserver/wms"
+                ],
+                "visibility": true,
+                "singleTile": false,
+                "credits": {
+                    "title": "OSM Bright | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+
+                }
             }
         ]
     }

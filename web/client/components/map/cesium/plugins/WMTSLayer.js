@@ -14,7 +14,7 @@ import {
     needProxy
 } from '../../../../utils/ProxyUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
-import { getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
+import { creditsToAttribution, getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
 import assign from 'object-assign';
 import { isObject, isArray, slice, get, head} from 'lodash';
 import urlParser from 'url';
@@ -115,7 +115,7 @@ function wmtsToCesiumOptions(_options) {
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSetID]);
     const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
     const cr = options.credits;
-    const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : '';
+    const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : '';
     return assign({
         // TODO: multi-domain support, if use {s} switches to RESTFul mode
         url: new Cesium.Resource({

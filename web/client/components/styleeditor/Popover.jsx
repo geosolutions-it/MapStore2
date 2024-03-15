@@ -33,7 +33,9 @@ export function ControlledPopover({
     children,
     open,
     onOpen = () => {},
-    disabled
+    onClick = () => {},
+    disabled,
+    triggerScrollableElement      // [Optional] it is a DOM element I want to update the popover position if user scrolls within it
 }) {
 
     const margin = 10;
@@ -214,8 +216,14 @@ export function ControlledPopover({
         setStyles(computeStyles());
         const updateStyleOnResize = () => setStyles(computeStyles());
         window.addEventListener('resize', updateStyleOnResize);
+        if (triggerScrollableElement && open) {
+            triggerScrollableElement.addEventListener('scroll', updateStyleOnResize);
+        }
         return () => {
             window.removeEventListener('resize', updateStyleOnResize);
+            if (triggerScrollableElement) {
+                triggerScrollableElement.removeEventListener('scroll', updateStyleOnResize);
+            }
         };
     }, [ computeStyles ]);
 
@@ -268,6 +276,7 @@ export function ControlledPopover({
                             event.stopPropagation();
                             const newOpen = !open;
                             onOpen(newOpen);
+                            onClick();
                         }
                     }
                 })}

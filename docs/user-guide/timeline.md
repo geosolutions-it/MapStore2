@@ -82,11 +82,11 @@ The **Step backward** button <img src="../img/button/timeline-step-backward-butt
 <br>
 The user can pause the animation through the **Pause** button <img src="../img/button/timeline-pause-button.jpg" class="ms-docbutton"/>, as follows:
 
-<img src="../img/timeline/timeline-animation.gif" class="ms-docimage"  style="max-width:700px;" />
+<video class="ms-docimage"  style="max-width:700px;" controls><source src="../img/timeline/timeline-animation.mp4"/></video>
 
 !!! Note
     The user can also specify a *time range*. During the animation, the whole range will be shifted step by step along the time axis and, in each step, the layers in map will show data corresponding to that range of time.
-    <img src="../img/timeline/timeline-animation-range.gif" class="ms-docimage"  style="max-width:700px;"/>
+    <video class="ms-docimage"  style="max-width:700px;"controls><source src="../img/timeline/timeline-animation-range.mp4"/></video>
 
 ### Animation Settings
 
@@ -100,7 +100,7 @@ By default, the **Snap to guide layer** is enabled. It allows to force the time 
 
 If the time dimension of the layer has time ranges defined (start/end time) instead of time instants, the user can choose the **Time interval snap point** by selecting the option `Start` or `End`. An example of snapping to the `End` point could be the following:
 
-<img src="../img/timeline/time-interval-snap-point.gif" class="ms-docimage"/>
+<video class="ms-docimage"controls><source src="../img/timeline/time-interval-snap-point.mp4"/></video>
 
 The user can disable *Snap to guide layer* to select the preferred time step through the **Animation Step** option. For example, the process could be similar to the following one:
 
@@ -112,7 +112,7 @@ The user can set the number of second between one animation frame and another th
 
 Enabling the  **Animation Range** the user can bound the animation execution to a fixed time interval, the *green range*. The *green range* can be defined both dragging the *play/stop cursors* directly on the histogram or filling the *date/time control cells* of the extra panel displayed, as follows:
 
-<img src="../img/timeline/timeline-animation-green-range.gif" class="ms-docimage"/>
+<video class="ms-docimage"controls><source src="../img/timeline/timeline-animation-green-range.mp4"/></video>
 
 In order to properly set the Animation Ranger, some controls are available to help the user:
 

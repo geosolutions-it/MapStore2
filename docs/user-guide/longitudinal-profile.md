@@ -6,7 +6,7 @@ Given a DEM or a bathymetric layer as a source and a provided path on it, this t
 
 !!! note
     The **Longitudinal Profile** is not included by default in the MapStore configuration but it can be configured within an [application contexts](application-context.md#configure-plugins) if needed.
-    The plugin works only if the **Longitudinal Profile WPS process** (available as a community extension) is properly installed in [GeoServer](http://geoserver.org/).
+    The plugin works only if the **Longitudinal Profile WPS process** is properly installed in [GeoServer](http://geoserver.org/). Look at the official [online documentation](https://docs.geoserver.org/latest/en/user/community/wps-longitudinal-profile/index.html) to learn more about this process and how to install it. The GeoServer module of the Longitudinal profile is available from Geoserver v2.20.x of Aug 2023.
 
 By clicking the **Longitudinal Profile** <img src="../img/button/long-profile-button.jpg" class="ms-docbutton"/> button, available in the [Side Toolbar](mapstore-toolbars.md#side-toolbar), a drop down menu opens so that the user can manage the available options including different ways to calculate the profile:
 
@@ -14,15 +14,15 @@ By clicking the **Longitudinal Profile** <img src="../img/button/long-profile-bu
 
 * It is possible to draw a line directly on the map through <img src="../img/button/drawing-line.jpg" class="ms-docbutton"/> button
 
-<img src="../img/longitudinal-profile/drawing-line.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/longitudinal-profile/drawing-line.mp4"/></video>
 
 * In alternative it is also possible to import a linear profile as a vector file (available formats for this are `GeoJSON`, `ShapeFile` or `DXF`),  through <img src="../img/button/import-file.jpg" class="ms-docbutton"/> button
 
-<img src="../img/longitudinal-profile/import-file.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/longitudinal-profile/import-file.mp4"/></video>
 
 * Finally, through <img src="../img/button/selection-layer.jpg" class="ms-docbutton"/> button, the user can also select a vector linear layer in [TOC](toc.md) and then select the line feature representing the desired profile path on map.
 
-<img src="../img/longitudinal-profile/selection-layer.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/longitudinal-profile/selection-layer.mp4"/></video>
 
 ## Chart
 
@@ -32,7 +32,7 @@ When the geometry of the profile path has been drawn on the map, the **Longitudi
 
 While the *X axis* indicates the distance from the starting point of the provided path, the *Y axis* indicates instead the height of points along the profile calculated from the provided path.  The user can hover over the chart to interact between the chart and the line of the map as follows:
 
-<img src="../img/longitudinal-profile/interact-with-chart.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/longitudinal-profile/interact-with-chart.mp4"/></video>
 
 The **Chart toolbar**, displayed in the right corner of the chart, allows the user to:
 

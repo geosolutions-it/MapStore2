@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(12);
+        expect(fields.length).toBe(13);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
@@ -41,8 +41,10 @@ describe('Test Raster advanced settings', () => {
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
         const cswFilters = document.getElementsByClassName("catalog-csw-filters");
-        expect(fields.length).toBe(10);
+        const sortBy = document.getElementsByClassName("sort-by");
+        expect(fields.length).toBe(12);
         expect(cswFilters).toBeTruthy();
+        expect(sortBy).toBeTruthy();
     });
     it('test component onChangeServiceProperty autoload', () => {
         const action = {
@@ -159,7 +161,7 @@ describe('Test Raster advanced settings', () => {
             service={{type: "wms"}}/>, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const format = document.querySelectorAll('input[role="combobox"]')[0];
+        const format = document.querySelectorAll('input[role="combobox"]')[1];
         expect(format).toBeTruthy();
         TestUtils.Simulate.change(format, { target: { value: 'image/png' } });
         TestUtils.Simulate.keyDown(format, { keyCode: 9, key: 'Tab' });
@@ -176,7 +178,7 @@ describe('Test Raster advanced settings', () => {
             service={{type: "wms", layerOptions: {tileSize: 256}}}/>, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const layerOption = document.querySelectorAll('input[role="combobox"]')[2];
+        const layerOption = document.querySelectorAll('input[role="combobox"]')[3];
         expect(layerOption).toBeTruthy();
         TestUtils.Simulate.change(layerOption, { target: { value: "512" }});
         TestUtils.Simulate.keyDown(layerOption, { keyCode: 9, key: 'Tab' });
@@ -237,7 +239,7 @@ describe('Test Raster advanced settings', () => {
         />, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const serverTypeOption = document.querySelectorAll('input[role="combobox"]')[3];
+        const serverTypeOption = document.querySelectorAll('input[role="combobox"]')[0];
         expect(serverTypeOption).toBeTruthy();
         TestUtils.Simulate.change(serverTypeOption, { target: { value: "geoserver" }});
         TestUtils.Simulate.keyDown(serverTypeOption, { keyCode: 9, key: 'Tab' });
@@ -255,11 +257,52 @@ describe('Test Raster advanced settings', () => {
             service={{ type: "wms" }}/>, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const infoFormatOption = document.querySelectorAll('input[role="combobox"]')[1];
+        const infoFormatOption = document.querySelectorAll('input[role="combobox"]')[2];
         expect(infoFormatOption).toBeTruthy();
         TestUtils.Simulate.change(infoFormatOption, { target: { value: "application/json" }});
         TestUtils.Simulate.keyDown(infoFormatOption, { keyCode: 9, key: 'Tab' });
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'infoFormat', 'application/json' ]);
+    });
+    it('test component onChangeServiceProperty sortBy change property name', (done) => {
+        TestUtils.act(() => {
+            ReactDOM.render(<RasterAdvancedSettings
+                onChangeServiceProperty={(field, value) => {
+                    try {
+                        expect(field).toBe('sortBy');
+                        expect(value).toEqual({ name: "dc:value", order: 'DESC' });
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+                service={{type: "csw", sortBy: {name: "dc:title", order: "DESC"}}}/>, document.getElementById("container"));
+        });
+
+        const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingsPanel).toBeTruthy();
+        const sortOrder = document.querySelectorAll('input[role="combobox"]')[4];
+        const sortName = document.querySelectorAll('input[type="text"]')[0];
+        expect(sortOrder).toBeTruthy();
+        TestUtils.Simulate.focus(sortName);
+        TestUtils.Simulate.change(sortName, { target: { value: "dc:value" }});
+    });
+    it('test component onChangeServiceProperty sortBy, change sort order', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+        ReactDOM.render(<RasterAdvancedSettings
+            onChangeServiceProperty={action.onChangeServiceProperty}
+            service={{type: "csw", sortBy: {name: "dc:title", order: "DESC"}}}/>, document.getElementById("container"));
+
+        const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingsPanel).toBeTruthy();
+        const sortOrder = document.querySelectorAll('input[role="combobox"]')[4];
+        expect(sortOrder).toBeTruthy();
+        TestUtils.Simulate.change(sortOrder, { target: { value: "ASC" }});
+        TestUtils.Simulate.keyDown(sortOrder, { keyCode: 9, key: 'Tab' });
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'sortBy', { name: "dc:title", order: 'ASC' } ]);
     });
 });

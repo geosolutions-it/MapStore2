@@ -9,6 +9,7 @@ import * as Cesium from 'cesium';
 import expect from 'expect';
 
 import CesiumStyleParser from '../CesiumStyleParser';
+import GeoJSONStyledFeatures from '../../cesium/GeoJSONStyledFeatures';
 
 const parser = new CesiumStyleParser();
 
@@ -42,37 +43,44 @@ describe('CesiumStyleParser', () => {
                                 outlineColor: '#00ff00',
                                 outlineOpacity: 0.25,
                                 outlineWidth: 2,
+                                outlineDasharray: [10, 10],
                                 msClassificationType: 'terrain',
-                                msClampToGround: true
+                                msClampToGround: true,
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     }
                 ]
             };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'Polygon',
-                            coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
-                        }
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then(() => {
-                                expect({ ...entities[0].polygon.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
-                                expect(entities[0].polygon.classificationType.getValue()).toEqual(Cesium.ClassificationType.TERRAIN);
-                                expect(entities[0].polygon.classificationType).toBeTruthy();
-                                expect(entities[0].polyline.classificationType).toBeTruthy();
-                                expect(entities[0].polyline.width.getValue()).toBe(2);
-                                expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
-                                expect(entities[0].polyline.clampToGround.getValue()).toBe(true);
-                                done();
-                            }).catch(done);
-                    });
-                });
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(2);
+                    const [polygon, polyline] = styledFeatures;
+                    expect(polygon.id).toBe('feature-01:symbolizer-01:polygon');
+                    expect(polygon.primitive.type).toBe('polygon');
+                    expect(polygon.primitive.entity.polygon.material.toString()).toEqual('(1, 0, 0, 0.5)');
+                    expect(polygon.primitive.entity.polygon.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
+                    expect(polyline.id).toBe('feature-01:symbolizer-01:polyline');
+                    expect(polyline.primitive.type).toBe('polyline');
+                    expect(polyline.primitive.entity.polyline.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
+                    expect(polyline.primitive.entity.polyline.width).toBe(2);
+                    expect(polyline.primitive.entity.polyline.material.color.toString()).toBe('(0, 1, 0, 0.25)');
+                    expect(polyline.primitive.entity.polyline.clampToGround).toBe(true);
+                    expect(polyline.primitive.entity.polyline.material.dashPattern.getValue()).toBe(65280);
+                    done();
+                }).catch(done);
         });
         it('should write a style function with fill symbolizer, clampToGround=false', (done) => {
             const style = {
@@ -90,35 +98,41 @@ describe('CesiumStyleParser', () => {
                                 outlineOpacity: 0.25,
                                 outlineWidth: 2,
                                 msClassificationType: 'terrain',
-                                msClampToGround: false
+                                msClampToGround: false,
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     }
                 ]
             };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'Polygon',
-                            coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
-                        }
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then(() => {
-                                expect({ ...entities[0].polygon.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
-                                expect(entities[0].polygon.classificationType).toBeFalsy();
-                                expect(entities[0].polyline.classificationType).toBeFalsy();
-                                expect(entities[0].polyline.width.getValue()).toBe(2);
-                                expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 0, green: 1, blue: 0, alpha: 0.25 });
-                                expect(entities[0].polyline.clampToGround.getValue()).toBe(false);
-                                done();
-                            }).catch(done);
-                    });
-                });
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(2);
+                    const [polygon, polyline] = styledFeatures;
+                    expect(polygon.id).toBe('feature-01:symbolizer-01:polygon');
+                    expect(polygon.primitive.type).toBe('polygon');
+                    expect(polygon.primitive.entity.polygon.material.toString()).toEqual('(1, 0, 0, 0.5)');
+                    expect(polygon.primitive.entity.polygon.classificationType).toBeFalsy();
+                    expect(polyline.id).toBe('feature-01:symbolizer-01:polyline');
+                    expect(polyline.primitive.type).toBe('polyline');
+                    expect(polyline.primitive.entity.polyline.classificationType).toBeFalsy();
+                    expect(polyline.primitive.entity.polyline.width).toBe(2);
+                    expect(polyline.primitive.entity.polyline.material.toString()).toBe('(0, 1, 0, 0.25)');
+                    expect(polyline.primitive.entity.polyline.clampToGround).toBe(false);
+                    done();
+                }).catch(done);
         });
         it('should write a style function with line symbolizer', (done) => {
             const style = {
@@ -133,32 +147,34 @@ describe('CesiumStyleParser', () => {
                                 color: '#ff0000',
                                 opacity: 0.5,
                                 width: 2,
-                                msClampToGround: true
+                                msClampToGround: true,
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     }
                 ]
             };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'LineString',
-                            coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
-                        }
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then(() => {
-                                expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
-                                expect(entities[0].polyline.width.getValue()).toBe(2);
-                                expect(entities[0].polyline.clampToGround.getValue()).toBe(true);
-                                done();
-                            }).catch(done);
-                    });
-                });
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(polyline.primitive.entity.polyline.material.toString()).toBe('(1, 0, 0, 0.5)');
+                    expect(polyline.primitive.entity.polyline.width).toBe(2);
+                    expect(polyline.primitive.entity.polyline.clampToGround).toBe(true);
+                    done();
+                }).catch(done);
         });
         it('should write a style function with line symbolizer with dasharray', (done) => {
             const style = {
@@ -173,32 +189,34 @@ describe('CesiumStyleParser', () => {
                                 color: '#ff0000',
                                 opacity: 0.5,
                                 width: 2,
-                                dasharray: [4, 4]
+                                dasharray: [4, 4],
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     }
                 ]
             };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'LineString',
-                            coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
-                        }
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then(() => {
-                                expect({ ...entities[0].polyline.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
-                                expect(entities[0].polyline.material.dashLength.getValue()).toBe(8);
-                                expect(entities[0].polyline.material.dashPattern.getValue()).toBe(65280);
-                                done();
-                            }).catch(done);
-                    });
-                });
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(polyline.primitive.entity.polyline.material.color.toString()).toBe('(1, 0, 0, 0.5)');
+                    expect(polyline.primitive.entity.polyline.material.dashLength.getValue()).toBe(8);
+                    expect(polyline.primitive.entity.polyline.material.dashPattern.getValue()).toBe(65280);
+                    done();
+                }).catch(done);
         });
         it('should write a style function with mark symbolizer', (done) => {
 
@@ -219,35 +237,38 @@ describe('CesiumStyleParser', () => {
                                 strokeWidth: 3,
                                 radius: 16,
                                 rotate: 90,
-                                msBringToFront: true
+                                msBringToFront: true,
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     }
                 ]
             };
 
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [7, 41]
+                }
+            };
+
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [7, 41]
-                        }
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then(() => {
-                                expect(entities[0].billboard.image.getValue().tagName).toBe('CANVAS');
-                                expect(entities[0].billboard.scale.getValue()).toBe(1);
-                                expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
-                                expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
-                                expect(entities[0].billboard.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
-                                done();
-                            }).catch(done);
-                    });
-                });
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [billboard] = styledFeatures;
+                    expect(billboard.primitive.entity.billboard.image.tagName).toBe('CANVAS');
+                    expect(billboard.primitive.entity.billboard.scale).toBe(1);
+                    expect(billboard.primitive.entity.billboard.rotation).toBe(-Math.PI / 2);
+                    expect(billboard.primitive.entity.billboard.disableDepthTestDistance).toBe(Number.POSITIVE_INFINITY);
+                    expect(billboard.primitive.entity.billboard.heightReference).toBe(Cesium.HeightReference.NONE);
+                    done();
+                }).catch(done);
         });
         it('should write a style function with icon symbolizer', (done) => {
 
@@ -265,36 +286,40 @@ describe('CesiumStyleParser', () => {
                                 opacity: 0.5,
                                 size: 32,
                                 rotate: 90,
-                                msBringToFront: true
+                                msBringToFront: true,
+                                anchor: 'bottom-left',
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     }
                 ]
             };
-
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [7, 41]
+                }
+            };
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [7, 41]
-                        }
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then(() => {
-                                expect(entities[0].billboard.image.getValue().src).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
-                                expect({ ...entities[0].billboard.color.getValue() }).toEqual({ red: 1, green: 1, blue: 1, alpha: 0.5 });
-                                expect(entities[0].billboard.scale.getValue()).toBe(32);
-                                expect(entities[0].billboard.rotation.getValue()).toBe(-Math.PI / 2);
-                                expect(entities[0].billboard.disableDepthTestDistance.getValue()).toBe(Number.POSITIVE_INFINITY);
-                                expect(entities[0].billboard.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
-                                done();
-                            }).catch(done);
-                    });
-                });
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [billboard] = styledFeatures;
+                    expect(billboard.primitive.entity.billboard.image.src).toBe('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
+                    expect(billboard.primitive.entity.billboard.color.toString()).toBe('(1, 1, 1, 0.5)');
+                    expect(billboard.primitive.entity.billboard.scale).toBe(32);
+                    expect(billboard.primitive.entity.billboard.rotation).toBe(-Math.PI / 2);
+                    expect(billboard.primitive.entity.billboard.disableDepthTestDistance).toBe(Number.POSITIVE_INFINITY);
+                    expect(billboard.primitive.entity.billboard.horizontalOrigin).toBe(Cesium.HorizontalOrigin.LEFT);
+                    expect(billboard.primitive.entity.billboard.verticalOrigin).toBe(Cesium.VerticalOrigin.BOTTOM);
+                    expect(billboard.primitive.entity.billboard.heightReference).toBe(Cesium.HeightReference.NONE);
+                    done();
+                }).catch(done);
         });
         it('should write a style function with model symbolizer', (done) => {
 
@@ -315,35 +340,35 @@ describe('CesiumStyleParser', () => {
                                 color: '#ffffff',
                                 opacity: 0.5,
                                 msHeightReference: 'relative',
-                                height: 10
+                                height: 10,
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     }
                 ]
             };
-
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [7, 41]
+                }
+            };
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'Feature',
-                        properties: {},
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [7, 41]
-                        }
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then(() => {
-                                expect(entities[0].model.uri.getValue()._url).toBe('/path/to/file.glb');
-                                expect({ ...entities[0].model.color.getValue() }).toEqual({ red: 1, green: 1, blue: 1, alpha: 0.5 });
-                                expect(entities[0].model.scale.getValue()).toBe(1);
-                                expect(entities[0].model.heightReference.getValue()).toBe(Cesium.HeightReference.RELATIVE_TO_GROUND);
-                                done();
-                            })
-                            .catch(done);
-                    });
-                });
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [model] = styledFeatures;
+                    expect(model.primitive.entity.model.uri._url).toBe('/path/to/file.glb');
+                    expect(model.primitive.entity.model.color.toString()).toBe('(1, 1, 1, 0.5)');
+                    expect(model.primitive.entity.model.scale).toBe(1);
+                    expect(model.primitive.entity.model.heightReference).toBe(Cesium.HeightReference.RELATIVE_TO_GROUND);
+                    done();
+                }).catch(done);
         });
         it('should write a style function with text symbolizer', (done) => {
 
@@ -365,39 +390,43 @@ describe('CesiumStyleParser', () => {
                                 fontWeight: 'bold',
                                 font: ['Arial'],
                                 size: 32,
-                                rotate: 90
+                                rotate: 90,
+                                anchor: 'top-right',
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     }
                 ]
             };
-
+            const feature = {
+                type: 'Feature',
+                id: 'feature-01',
+                properties: {
+                    text: 'Hello'
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [7, 41]
+                }
+            };
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'Feature',
-                        properties: {
-                            text: 'Hello'
-                        },
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [7, 41]
-                        }
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then(() => {
-                                expect(entities[0].label.text.getValue()).toBe('Hello World!');
-                                expect(entities[0].label.font.getValue()).toBe('italic bold 32px Arial');
-                                expect({ ...entities[0].label.pixelOffset.getValue() }).toEqual({ x: 16, y: 16 });
-                                expect({ ...entities[0].label.fillColor.getValue() }).toEqual({ red: 0, green: 0, blue: 0, alpha: 1 });
-                                expect({ ...entities[0].label.outlineColor.getValue() }).toEqual({ red: 1, green: 1, blue: 1, alpha: 1 });
-                                expect(entities[0].label.outlineWidth.getValue()).toBe(2);
-                                expect(entities[0].label.heightReference.getValue()).toBe(Cesium.HeightReference.NONE);
-                                done();
-                            }).catch(done);
-                    });
-                });
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [label] = styledFeatures;
+                    expect(label.primitive.entity.label.text).toBe('Hello World!');
+                    expect(label.primitive.entity.label.font).toBe('italic bold 32px Arial');
+                    expect(label.primitive.entity.label.pixelOffset.toString()).toBe('(16, 16)');
+                    expect(label.primitive.entity.label.fillColor.toString()).toBe('(0, 0, 0, 1)');
+                    expect(label.primitive.entity.label.outlineColor.toString()).toBe('(1, 1, 1, 1)');
+                    expect(label.primitive.entity.label.outlineWidth).toBe(2);
+                    expect(label.primitive.entity.label.horizontalOrigin).toBe(Cesium.HorizontalOrigin.RIGHT);
+                    expect(label.primitive.entity.label.verticalOrigin).toBe(Cesium.VerticalOrigin.TOP);
+                    expect(label.primitive.entity.label.heightReference).toBe(Cesium.HeightReference.NONE);
+                    done();
+                }).catch(done);
         });
         it('should add leader line to all point geometries symbolizer', (done) => {
 
@@ -425,7 +454,8 @@ describe('CesiumStyleParser', () => {
                                 radius: 16,
                                 rotate: 90,
                                 msBringToFront: true,
-                                ...leaderLineOptions
+                                ...leaderLineOptions,
+                                symbolizerId: 'symbolizer-01'
                             }
                         ]
                     },
@@ -441,7 +471,8 @@ describe('CesiumStyleParser', () => {
                                 size: 32,
                                 rotate: 90,
                                 msBringToFront: true,
-                                ...leaderLineOptions
+                                ...leaderLineOptions,
+                                symbolizerId: 'symbolizer-02'
                             }
                         ]
                     },
@@ -461,7 +492,8 @@ describe('CesiumStyleParser', () => {
                                 font: ['Arial'],
                                 size: 32,
                                 rotate: 90,
-                                ...leaderLineOptions
+                                ...leaderLineOptions,
+                                symbolizerId: 'symbolizer-03'
                             }
                         ]
                     },
@@ -480,65 +512,68 @@ describe('CesiumStyleParser', () => {
                                 opacity: 0.5,
                                 msHeightReference: 'relative',
                                 height: 10,
-                                ...leaderLineOptions
+                                ...leaderLineOptions,
+                                symbolizerId: 'symbolizer-04'
                             }
                         ]
                     }
                 ]
             };
-
+            const features = [1, 2, 3, 4].map(id => ({
+                type: 'Feature',
+                id,
+                properties: {
+                    text: 'Hello',
+                    id
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [7, 41, 500]
+                }
+            }));
             parser.writeStyle(style)
-                .then((styleFunc) => {
-                    Cesium.GeoJsonDataSource.load({
-                        type: 'FeatureCollection',
-                        features: [1, 2, 3, 4].map(id => ({
-                            type: 'Feature',
-                            properties: {
-                                text: 'Hello',
-                                id
-                            },
-                            geometry: {
-                                type: 'Point',
-                                coordinates: [7, 41, 500]
-                            }
-                        }))
-                    }).then((dataSource) => {
-                        const entities = dataSource?.entities?.values;
-                        return styleFunc({ entities })
-                            .then((styledEntities) => {
-                                expect(styledEntities.length).toBe(4);
-                                const [
-                                    markKind,
-                                    iconKind,
-                                    textKind,
-                                    modelKind
-                                ] = styledEntities;
-                                expect(markKind.billboard).toBeTruthy();
-                                expect(iconKind.billboard).toBeTruthy();
-                                expect(textKind.label).toBeTruthy();
-                                expect(modelKind.model).toBeTruthy();
+                .then((styleFunc) => styleFunc({
+                    features: features.map((feature) => ({ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }))
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(9);
+                    const [
+                        mark,
+                        markLeaderLine,
+                        icon,
+                        iconLeaderLine,
+                        text,
+                        textLeaderLine,
+                        textOffset,
+                        model,
+                        modelLeaderLine
+                    ] = styledFeatures;
+                    expect(mark.primitive.entity.billboard).toBeTruthy();
+                    expect(markLeaderLine.primitive.entity.polyline).toBeTruthy();
+                    expect(icon.primitive.entity.billboard).toBeTruthy();
+                    expect(iconLeaderLine.primitive.entity.polyline).toBeTruthy();
+                    expect(text.primitive.entity.label).toBeTruthy();
+                    expect(textLeaderLine.primitive.entity.polyline).toBeTruthy();
+                    expect(textOffset.primitive.entity.billboard).toBeTruthy();
+                    expect(model.primitive.entity.model).toBeTruthy();
+                    expect(modelLeaderLine.primitive.entity.polyline).toBeTruthy();
+                    [
+                        markLeaderLine,
+                        iconLeaderLine,
+                        textLeaderLine,
+                        modelLeaderLine
+                    ].forEach(leaderLine => {
+                        expect(leaderLine.primitive.entity.polyline.material.toString()).toBe('(1, 0, 0, 0.5)');
+                        expect(leaderLine.primitive.entity.polyline.width).toBe(2);
+                    });
 
-                                expect(markKind.polyline).toBeTruthy();
-                                expect(iconKind.polyline).toBeTruthy();
-                                expect(textKind.polyline).toBeTruthy();
-                                expect(modelKind.polyline).toBeTruthy();
-
-                                styledEntities.forEach(entity => {
-                                    expect({ ...entity.polyline.material.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
-                                    expect(entity.polyline.width.getValue()).toBe(2);
-                                });
-
-                                expect(textKind.billboard).toBeTruthy();
-                                expect({ ...textKind.billboard.color.getValue() }).toEqual({ red: 1, green: 0, blue: 0, alpha: 0.5 });
-                                expect({ ...textKind.billboard.pixelOffset.getValue() }).toEqual({ x: 8, y: 8 });
-                                const leaderLineCanvas = textKind.billboard.image.getValue();
-                                expect(leaderLineCanvas.width).toBe(16);
-                                expect(leaderLineCanvas.height).toBe(16);
-                                done();
-                            })
-                            .catch(done);
-                    }).catch(done);
-                });
+                    expect(textOffset.primitive.entity.billboard.color.toString()).toBe('(1, 0, 0, 0.5)');
+                    expect(textOffset.primitive.entity.billboard.pixelOffset.toString()).toBe('(8, 8)');
+                    const leaderLineCanvas = textOffset.primitive.entity.billboard.image;
+                    expect(leaderLineCanvas.width).toBe(16);
+                    expect(leaderLineCanvas.height).toBe(16);
+                    done();
+                }).catch(done);
         });
         it('should add leader line where HeightReference is Relative', (done) => {
             const style = {
@@ -569,27 +604,36 @@ describe('CesiumStyleParser', () => {
                     }
                 ]
             };
-
+            const feature = {
+                type: "Feature",
+                id: 'feature-01',
+                properties: {},
+                geometry: {
+                    type: "Point",
+                    coordinates: [9, 45]
+                }
+            };
             const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
-            parser.writeStyle(style).then((styleFunc) => {
-                return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
-                    .then((dataSource) => {
-                        const entities = dataSource.entities.values;
-                        const mockMap = {terrainProvider: {ready: true}};
-                        return styleFunc({entities, map: mockMap, sampleTerrain: sampleTerrainTest }).then((styledEntities) => {
-                            expect(styledEntities.length).toBe(1);
-                            expect(styledEntities[0].billboard).toBeTruthy();
-                            expect(styledEntities[0].polyline).toBeTruthy();
-                            const cartographicPosition = Cesium.Cartographic.fromCartesian(styledEntities[0].position._value);
-                            const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[0]);
-                            const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[1]);
-                            expect(Math.round(cartographicPosition.height)).toBe(5000);
-                            expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
-                            expect(Math.round(leaderLineCartographicPositionB.height)).toBe(6000);
-                            done();
-                        });
-                    });
-            }).catch(done);
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(2);
+                    const [billboard, leaderLine] = styledFeatures;
+                    expect(billboard.primitive.entity.billboard).toBeTruthy();
+                    expect(leaderLine.primitive.entity.polyline).toBeTruthy();
+                    const cartographicPosition = Cesium.Cartographic.fromCartesian(billboard.primitive.geometry);
+                    const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(leaderLine.primitive.geometry[0][0]);
+                    const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(leaderLine.primitive.geometry[0][1]);
+                    expect(Math.round(cartographicPosition.height)).toBe(5000);
+                    expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
+                    expect(Math.round(leaderLineCartographicPositionB.height)).toBe(6000);
+                    done();
+                }).catch(done);
         });
 
         it('should add leader line where HeightReference is none', (done) => {
@@ -621,26 +665,36 @@ describe('CesiumStyleParser', () => {
                     }
                 ]
             };
+            const feature = {
+                type: "Feature",
+                id: 'feature-01',
+                properties: {},
+                geometry: {
+                    type: "Point",
+                    coordinates: [9, 45]
+                }
+            };
             const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
-            parser.writeStyle(style).then((styleFunc) => {
-                return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
-                    .then((dataSource) => {
-                        const entities = dataSource.entities.values;
-                        const mockMap = {terrainProvider: {ready: true}};
-                        return styleFunc({entities, map: mockMap, sampleTerrain: sampleTerrainTest }).then((styledEntities) => {
-                            expect(styledEntities.length).toBe(1);
-                            expect(styledEntities[0].billboard).toBeTruthy();
-                            expect(styledEntities[0].polyline).toBeTruthy();
-                            const cartographicPosition = Cesium.Cartographic.fromCartesian(styledEntities[0].position._value);
-                            const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[0]);
-                            const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[1]);
-                            expect(Math.round(cartographicPosition.height)).toBe(5000);
-                            expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
-                            expect(Math.round(leaderLineCartographicPositionB.height)).toBe(5000);
-                            done();
-                        });
-                    });
-            }).catch(done);
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(2);
+                    const [billboard, leaderLine] = styledFeatures;
+                    expect(billboard.primitive.entity.billboard).toBeTruthy();
+                    expect(leaderLine.primitive.entity.polyline).toBeTruthy();
+                    const cartographicPosition = Cesium.Cartographic.fromCartesian(billboard.primitive.geometry);
+                    const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(leaderLine.primitive.geometry[0][0]);
+                    const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(leaderLine.primitive.geometry[0][1]);
+                    expect(Math.round(cartographicPosition.height)).toBe(5000);
+                    expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
+                    expect(Math.round(leaderLineCartographicPositionB.height)).toBe(5000);
+                    done();
+                }).catch(done);
         });
 
         it('should add leader line where HeightReference is clamp', (done) => {
@@ -672,26 +726,739 @@ describe('CesiumStyleParser', () => {
                     }
                 ]
             };
+            const feature = {
+                type: "Feature",
+                id: 'feature-01',
+                properties: {},
+                geometry: {
+                    type: "Point",
+                    coordinates: [9, 45]
+                }
+            };
             const sampleTerrainTest = () => Promise.resolve([new Cesium.Cartographic(9, 45, 1000)]);
-            parser.writeStyle(style).then((styleFunc) => {
-                return Cesium.GeoJsonDataSource.load({type: "FeatureCollection", features: [{type: "Feature", properties: {}, geometry: {type: "Point", coordinates: [9, 45]}}]})
-                    .then((dataSource) => {
-                        const entities = dataSource.entities.values;
-                        const mockMap = {terrainProvider: {ready: true}};
-                        return styleFunc({entities, map: mockMap, sampleTerrain: sampleTerrainTest }).then((styledEntities) => {
-                            expect(styledEntities.length).toBe(1);
-                            expect(styledEntities[0].billboard).toBeTruthy();
-                            expect(styledEntities[0].polyline).toBeTruthy();
-                            const cartographicPosition = Cesium.Cartographic.fromCartesian(styledEntities[0].position._value);
-                            const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[0]);
-                            const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(styledEntities[0].polyline.positions._value[1]);
-                            expect(Math.round(cartographicPosition.height)).toBe(5000);
-                            expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
-                            expect(Math.round(leaderLineCartographicPositionB.height)).toBe(1000);
-                            done();
-                        });
-                    });
-            }).catch(done);
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(2);
+                    const [billboard, leaderLine] = styledFeatures;
+                    expect(billboard.primitive.entity.billboard).toBeTruthy();
+                    expect(leaderLine.primitive.entity.polyline).toBeTruthy();
+                    const cartographicPosition = Cesium.Cartographic.fromCartesian(billboard.primitive.geometry);
+                    const leaderLineCartographicPositionA = Cesium.Cartographic.fromCartesian(leaderLine.primitive.geometry[0][0]);
+                    const leaderLineCartographicPositionB = Cesium.Cartographic.fromCartesian(leaderLine.primitive.geometry[0][1]);
+                    expect(Math.round(cartographicPosition.height)).toBe(5000);
+                    expect(Math.round(leaderLineCartographicPositionA.height)).toBe(1000);
+                    expect(Math.round(leaderLineCartographicPositionB.height)).toBe(1000);
+                    done();
+                }).catch(done);
+        });
+
+        it('should write a style function with circle symbolizer', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Circle',
+                                color: '#ff0000',
+                                opacity: 0.5,
+                                outlineColor: '#00ff00',
+                                outlineWidth: 2,
+                                radius: 1000000,
+                                geodesic: true,
+                                outlineOpacity: 0.25,
+                                outlineDasharray: [10, 10],
+                                symbolizerId: 'symbolizer-01'
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [7, 41]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(2);
+                    const [polygon, polyline] = styledFeatures;
+                    expect(polygon.id).toBe('feature-01:symbolizer-01:polygon');
+                    expect(polygon.primitive.type).toBe('polygon');
+                    expect(polygon.primitive.entity.polygon.material.toString()).toEqual('(1, 0, 0, 0.5)');
+                    expect(polyline.id).toBe('feature-01:symbolizer-01:polyline');
+                    expect(polyline.primitive.type).toBe('polyline');
+                    expect(polyline.primitive.entity.polyline.width).toBe(2);
+                    expect(polyline.primitive.entity.polyline.material.color.toString()).toBe('(0, 1, 0, 0.25)');
+                    expect(polyline.primitive.entity.polyline.material.dashPattern.getValue()).toBe(65280);
+                    done();
+                }).catch(done);
+        });
+
+        it('should be able to use feature properties as style value', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Fill',
+                                color: {
+                                    name: 'property',
+                                    args: ['color']
+                                },
+                                fillOpacity: {
+                                    name: 'property',
+                                    args: ['opacity']
+                                },
+                                outlineColor: '#00ff00',
+                                outlineOpacity: 0.25,
+                                outlineWidth: {
+                                    name: 'property',
+                                    args: ['size']
+                                },
+                                outlineDasharray: [10, 10],
+                                msClassificationType: 'terrain',
+                                msClampToGround: true,
+                                symbolizerId: 'symbolizer-01'
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                id: 'feature-01',
+                properties: {
+                    color: '#ff0000',
+                    opacity: 0.5,
+                    size: 2
+                },
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(2);
+                    const [polygon, polyline] = styledFeatures;
+                    expect(polygon.id).toBe('feature-01:symbolizer-01:polygon');
+                    expect(polygon.primitive.type).toBe('polygon');
+                    expect(polygon.primitive.entity.polygon.material.toString()).toEqual('(1, 0, 0, 0.5)');
+                    expect(polygon.primitive.entity.polygon.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
+                    expect(polyline.id).toBe('feature-01:symbolizer-01:polyline');
+                    expect(polyline.primitive.type).toBe('polyline');
+                    expect(polyline.primitive.entity.polyline.classificationType).toBe(Cesium.ClassificationType.TERRAIN);
+                    expect(polyline.primitive.entity.polyline.width).toBe(2);
+                    expect(polyline.primitive.entity.polyline.material.color.toString()).toBe('(0, 1, 0, 0.25)');
+                    expect(polyline.primitive.entity.polyline.clampToGround).toBe(true);
+                    expect(polyline.primitive.entity.polyline.material.dashPattern.getValue()).toBe(65280);
+                    done();
+                }).catch(done);
+        });
+        it('should write a style function with model symbolizer with x/y translation', (done) => {
+
+            const translateDelta = 100;
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Model',
+                                model: '/path/to/file.glb',
+                                scale: 1,
+                                heading: 0,
+                                roll: 0,
+                                pitch: 0,
+                                color: '#ffffff',
+                                opacity: 0.5,
+                                msHeightReference: 'relative',
+                                height: 10,
+                                msTranslateX: translateDelta,
+                                msTranslateY: translateDelta,
+                                msLeaderLineColor: '#ff0000',
+                                msLeaderLineOpacity: 0.5,
+                                msLeaderLineWidth: 2,
+                                symbolizerId: 'symbolizer-01'
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const lng = 7;
+            const lat = 41;
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [lng, lat]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(2);
+                    const [model, modelLeaderLine] = styledFeatures;
+                    const expectedTranslatedDistance = Math.round(Math.sqrt(2) * translateDelta);
+                    const initialPosition = Cesium.Cartesian3.fromDegrees(lng, lat);
+                    const distancePosition = Math.round(Cesium.Cartesian3.distance(
+                        initialPosition,
+                        model.primitive.geometry
+                    ));
+                    expect(distancePosition).toBe(expectedTranslatedDistance);
+                    const leaderLinePositions = modelLeaderLine.primitive.geometry[0];
+                    const distanceLeaderLineA = Math.round(Cesium.Cartesian3.distance(
+                        initialPosition,
+                        leaderLinePositions[0]
+                    ));
+                    expect(distanceLeaderLineA).toBe(0);
+                    const distanceLeaderLineB = Math.round(Cesium.Cartesian3.distance(
+                        initialPosition,
+                        leaderLinePositions[1]
+                    ));
+                    expect(distanceLeaderLineB).toBe(expectedTranslatedDistance);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (none height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                symbolizerId: 'symbolizer-01',
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polygon] = styledFeatures;
+                    expect(polygon.primitive.entity.polygon.height).toBe(10);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(20);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (relative height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                symbolizerId: 'symbolizer-01',
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'relative',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates[0].map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polygon] = styledFeatures;
+                    expect(polygon.primitive.entity.polygon.height).toBe(undefined);
+                    expect(Math.round(Cesium.Cartographic.fromCartesian(polygon.primitive.geometry[0][0]).height)).toBe(110);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(120);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (clamp height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                symbolizerId: 'symbolizer-01',
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'clamp',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates[0].map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polygon] = styledFeatures;
+                    expect(polygon.primitive.entity.polygon.height).toBe(undefined);
+                    expect(Math.round(Cesium.Cartographic.fromCartesian(polygon.primitive.geometry[0][0]).height)).toBe(100);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(120);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (none height reference and relative extrusion)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                symbolizerId: 'symbolizer-01',
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: true
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polygon] = styledFeatures;
+                    expect(polygon.primitive.entity.polygon.height).toBe(undefined);
+                    expect(Math.round(Cesium.Cartographic.fromCartesian(polygon.primitive.geometry[0][0]).height)).toBe(10);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(30);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (relative height reference and relative extrusion)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                symbolizerId: 'symbolizer-01',
+                                kind: 'Fill',
+                                color: '#ff0000',
+                                fillOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'relative',
+                                msExtrusionRelativeToGeometry: true
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'Polygon',
+                    coordinates: [[[7, 41], [14, 41], [14, 46], [7, 46], [7, 41]]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates[0].map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polygon] = styledFeatures;
+                    expect(polygon.primitive.entity.polygon.height).toBe(undefined);
+                    expect(Math.round(Cesium.Cartographic.fromCartesian(polygon.primitive.geometry[0][0]).height)).toBe(110);
+                    expect(polygon.primitive.entity.polygon.extrudedHeight).toBe(130);
+                    done();
+                }).catch(done);
+        });
+        it('should write a style function with line symbolizer and circle extrusion', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrudedHeight: 100,
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msExtrusionType: 'Circle'
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polylineVolume] = styledFeatures;
+                    expect(polylineVolume.primitive.entity.polylineVolume.material.toString()).toBe('(1, 0, 0, 0.5)');
+                    expect(polylineVolume.primitive.entity.polylineVolume.shape.length).toBe(360);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (none height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(10);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(20);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (relative height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'relative',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates.map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(110);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(120);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (clamp height reference)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'clamp',
+                                msExtrusionRelativeToGeometry: false
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates.map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(100);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(120);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (none height reference and relative extrusion)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'none',
+                                msExtrusionRelativeToGeometry: true
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(10);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(30);
+                    done();
+                }).catch(done);
+        });
+        it('should write style function with extruded fill symbolizer (relative height reference and relative extrusion)', (done) => {
+            const style = {
+                name: '',
+                rules: [
+                    {
+                        filter: undefined,
+                        name: '',
+                        symbolizers: [
+                            {
+                                kind: 'Line',
+                                symbolizerId: 'symbolizer-01',
+                                msExtrusionColor: '#ff0000',
+                                msExtrusionOpacity: 0.5,
+                                msHeight: 10,
+                                msExtrudedHeight: 20,
+                                msHeightReference: 'relative',
+                                msExtrusionRelativeToGeometry: true
+                            }
+                        ]
+                    }
+                ]
+            };
+            const feature = {
+                type: 'Feature',
+                properties: {},
+                id: 'feature-01',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[7, 41], [14, 41], [14, 46], [7, 46]]
+                }
+            };
+            const sampleTerrainTest = () => Promise.resolve(feature.geometry.coordinates.map(([lng, lat]) => {
+                return new Cesium.Cartographic(lng, lat, 100);
+            }));
+            const mockMap = {terrainProvider: {ready: true}};
+            parser.writeStyle(style)
+                .then((styleFunc) => styleFunc({
+                    features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }],
+                    sampleTerrain: sampleTerrainTest,
+                    map: mockMap
+                }))
+                .then((styledFeatures) => {
+                    expect(styledFeatures.length).toBe(1);
+                    const [polyline] = styledFeatures;
+                    expect(Math.round(polyline.primitive.minimumHeights[0][0])).toBe(110);
+                    expect(Math.round(polyline.primitive.maximumHeights[0][0])).toBe(130);
+                    done();
+                }).catch(done);
         });
     });
 });

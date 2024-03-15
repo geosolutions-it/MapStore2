@@ -23,9 +23,12 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     files: [
         ...files,
         // add all assets needed for Cesium library
-        { pattern: './node_modules/cesium/Build/CesiumUnminified/**/*', included: false }
+        { pattern: './node_modules/cesium/Build/CesiumUnminified/**/*', included: false },
+        { pattern: './node_modules/web-ifc/**/*', included: false }
     ],
-
+    proxies: {
+        "/web-ifc/": "/base/node_modules/web-ifc/"
+    },
     plugins: [
         require('karma-chrome-launcher'),
         'karma-webpack',
@@ -139,7 +142,7 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
             alias: assign({}, {
                 jsonix: '@boundlessgeo/jsonix',
                 // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
-                // proj4: '@geosolutions/proj4',
+                proj4: '@geosolutions/proj4',
                 "react-joyride": '@geosolutions/react-joyride'
             }, alias),
             extensions: ['.js', '.json', '.jsx']

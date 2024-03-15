@@ -5,8 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React from 'react';
-import Message from '../../../../components/I18N/Message';
+
 import Layers from '../../../../utils/openlayers/Layers';
 import isNil from 'lodash/isNil';
 import isEqual from 'lodash/isEqual';
@@ -16,20 +15,14 @@ import assign from 'object-assign';
 import axios from '../../../../libs/ajax';
 import CoordinatesUtils from '../../../../utils/CoordinatesUtils';
 import { getProjection } from '../../../../utils/ProjectionUtils';
-import {needProxy, getProxyUrl} from '../../../../utils/ProxyUtils';
 import { getConfigProp } from '../../../../utils/ConfigUtils';
 
 import {optionsToVendorParams} from '../../../../utils/VendorParamsUtils';
 import {addAuthenticationToSLD, addAuthenticationParameter, getAuthenticationHeaders} from '../../../../utils/SecurityUtils';
-import { creditsToAttribution, getWMSVendorParams } from '../../../../utils/LayersUtils';
-
-import { getResolutionsForProjection } from '../../../../utils/MapUtils';
-import  {loadTile, getElevation as getElevationFunc} from '../../../../utils/ElevationUtils';
 
 import ImageLayer from 'ol/layer/Image';
 import ImageWMS from 'ol/source/ImageWMS';
 import {get} from 'ol/proj';
-import TileGrid from 'ol/tilegrid/TileGrid';
 import TileLayer from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
 
@@ -38,24 +31,8 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
-import { generateEnvString } from '../../../../utils/LayerLocalizationUtils';
-import { getTileGridFromLayerOptions } from '../../../../utils/WMSUtils';
 
-/**
- * Check source and apply proxy
- * when `forceProxy` is set on layer options
- * @param {boolean} forceProxy
- * @param {string} src
- * @returns {string}
- */
-const proxySource = (forceProxy, src) => {
-    let newSrc = src;
-    if (forceProxy && needProxy(src)) {
-        let proxyUrl = getProxyUrl();
-        newSrc = proxyUrl + encodeURIComponent(src);
-    }
-    return newSrc;
-};
+import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
 
 const loadFunction = (options, headers) => function(image, src) {
     // fixes #3916, see https://gis.stackexchange.com/questions/175057/openlayers-3-wms-styling-using-sld-body-and-post-request
@@ -110,138 +87,17 @@ const loadFunction = (options, headers) => function(image, src) {
         }
     }
 };
-/**
-    @param {object} options of the layer
-    @return the Openlayers options from the layers ones and/or default.
-    tiled params must be tru if not defined
-*/
-function wmsToOpenlayersOptions(options) {
-    const params = optionsToVendorParams(options);
-    // NOTE: can we use opacity to manage visibility?
-    const result = assign({}, options.baseParams, {
-        LAYERS: options.name,
-        STYLES: options.style || "",
-        FORMAT: options.format || 'image/png',
-        TRANSPARENT: options.transparent !== undefined ? options.transparent : true,
-        SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
-        CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
-        ...getWMSVendorParams(options),
-        VERSION: options.version || "1.3.0"
-    }, assign(
-        {},
-        (options._v_ ? {_v_: options._v_} : {}),
-        (params || {}),
-        (options.localizedLayerStyles &&
-            options.env && options.env.length &&
-            options.group !== 'background' ? {ENV: generateEnvString(options.env) } : {})
-    ));
-    return addAuthenticationToSLD(result, options);
-}
 
-function getWMSURLs( urls ) {
-    return urls.map((url) => url.split("\?")[0]);
-}
-
-function tileCoordsToKey(coords) {
-    return coords.join(':');
-}
-
-function elevationLoadFunction(forceProxy, imageTile, src) {
-    let newSrc = proxySource(forceProxy, src);
-    const coords = imageTile.getTileCoord();
-    imageTile.getImage().src = "";
-    loadTile(newSrc, coords, tileCoordsToKey(coords));
-}
-
-function addTileLoadFunction(sourceOptions, options) {
+const createLayer = (options, map, mapId) => {
+    // the useForElevation in wms types will be deprecated
+    // as support for existing configuration
+    // we can use this fallback
     if (options.useForElevation) {
-        return assign({}, sourceOptions, { tileLoadFunction: elevationLoadFunction.bind(null, [options.forceProxy]) });
+        return Layers.createLayer('elevation', {
+            ...options,
+            provider: 'wms'
+        }, map, mapId);
     }
-    return sourceOptions;
-}
-
-function getTileFromCoords(layer, pos) {
-    const map = layer.get('map');
-    const tileGrid = layer.getSource().getTileGrid();
-    return tileGrid.getTileCoordForCoordAndZ(pos, map.getView().getZoom());
-}
-
-
-function getTileRelativePixel(layer, pos, tilePoint) {
-    const tileGrid = layer.getSource().getTileGrid();
-    const extent = tileGrid.getTileCoordExtent(tilePoint);
-    const ratio = tileGrid.getTileSize() / (extent[2] - extent[0]);
-    const x = Math.floor((pos[0] - extent[0]) * ratio);
-    const y = Math.floor((extent[3] - pos[1]) * ratio);
-    return { x, y };
-}
-
-function getElevation(pos) {
-    try {
-        const tilePoint = getTileFromCoords(this, pos);
-        const tileSize = this.getSource().getTileGrid().getTileSize();
-        const elevation = getElevationFunc(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'), this.get('littleEndian'));
-        if (elevation.available) {
-            return elevation.value;
-        }
-        return <Message msgId={elevation.message} />;
-    } catch (e) {
-        return <Message msgId="elevationLoadingError" />;
-    }
-}
-const toOLAttributions = credits => credits && creditsToAttribution(credits) || undefined;
-
-const generateTileGrid = (options, map) => {
-    const mapSrs = map?.getView()?.getProjection()?.getCode() || 'EPSG:3857';
-    const normalizedSrs = CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS);
-    const tileSize = options.tileSize ? options.tileSize : 256;
-    const extent = get(normalizedSrs).getExtent() || getProjection(normalizedSrs).extent;
-    const { TILED } = getWMSVendorParams(options);
-    const customTileGrid = TILED && options.tileGridStrategy === 'custom' && options.tileGrids
-        ? getTileGridFromLayerOptions({ tileSize, projection: normalizedSrs, tileGrids: options.tileGrids })
-        : null;
-    if (customTileGrid
-        && (customTileGrid.resolutions || customTileGrid.scales)
-        && (customTileGrid.origins || customTileGrid.origin)
-        && (customTileGrid.tileSizes || customTileGrid.tileSize)) {
-        const {
-            resolutions: customTileGridResolutions,
-            scales,
-            origin,
-            origins,
-            tileSize: customTileGridTileSize,
-            tileSizes
-        } = customTileGrid;
-        const projection = get(normalizedSrs);
-        const metersPerUnit = projection.getMetersPerUnit();
-        const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
-        const resolutions = customTileGridResolutions
-            ? customTileGridResolutions
-            : scales.map(scale => scaleToResolution(scale));
-        return new TileGrid({
-            extent,
-            resolutions,
-            tileSizes,
-            tileSize: customTileGridTileSize,
-            origin,
-            origins
-        });
-    }
-    const resolutions = options.resolutions || getResolutionsForProjection(normalizedSrs, {
-        tileWidth: tileSize,
-        tileHeight: tileSize,
-        extent
-    });
-    const origin = options.origin ? options.origin : [extent[0], extent[1]];
-    return new TileGrid({
-        extent,
-        resolutions,
-        tileSize,
-        origin
-    });
-};
-
-const createLayer = (options, map) => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const queryParameters = wmsToOpenlayersOptions(options) || {};
     urls.forEach(url => addAuthenticationParameter(url, queryParameters, options.securityToken));
@@ -266,14 +122,14 @@ const createLayer = (options, map) => {
             })
         });
     }
-    const sourceOptions = addTileLoadFunction({
+    const sourceOptions = {
         attributions: toOLAttributions(options.credits),
         urls: urls,
         crossOrigin: options.crossOrigin,
         params: queryParameters,
         tileGrid: generateTileGrid(options, map),
         tileLoadFunction: loadFunction(options, headers)
-    }, options);
+    };
     const wmsSource = new TileWMS({ ...sourceOptions });
     const layerConfig = {
         msId: options.id,
@@ -306,13 +162,8 @@ const createLayer = (options, map) => {
     if (vectorFormat) {
         layer.set('wmsSource', wmsSource);
         if (options.vectorStyle) {
-            applyStyle(options.vectorStyle, layer);
+            applyStyle(options.vectorStyle, layer, map);
         }
-    }
-    if (options.useForElevation) {
-        layer.set('nodata', options.nodata);
-        layer.set('littleEndian', options.littleendian ?? false);
-        layer.set('getElevation', getElevation.bind(layer));
     }
     return layer;
 };
@@ -344,7 +195,7 @@ Layers.registerType('wms', {
         }
         let needsRefresh = false;
         if (newIsVector && newOptions.vectorStyle && !isEqual(newOptions.vectorStyle, oldOptions.vectorStyle || {})) {
-            applyStyle(newOptions.vectorStyle, layer);
+            applyStyle(newOptions.vectorStyle, layer, map);
             needsRefresh = true;
         }
 

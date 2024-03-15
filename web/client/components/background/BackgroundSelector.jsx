@@ -126,7 +126,7 @@ class BackgroundSelector extends React.Component {
                                 }}
                                 tooltipId="backgroundSelector.deleteTooltip"
                             />}
-                            {this.props.mapIsEditable && !this.props.enabledCatalog && !!(layer.type === 'wms' || layer.type === 'wmts' || layer.type === 'tms' || layer.type === 'tileprovider') &&
+                            {this.props.mapIsEditable && !this.props.enabledCatalog && ['wms', 'wmts', 'tms', 'tileprovider', 'cog'].includes(layer.type) &&
                                 <ToolbarButton
                                     glyph="wrench"
                                     className="square-button-md background-tool-button edit-button"

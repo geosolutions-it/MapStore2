@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-    Col,
     ControlLabel,
     FormGroup,
     Glyphicon,
@@ -59,14 +58,14 @@ const FilterCode = ({ type, code, setCode, error }) => {
     const filterProp = `${type}Filter`;
     return (
         <FormGroup>
-            <Col xs={4}>
+            <div className="label-pre-textarea">
                 <ControlLabel>
                     <Message msgId={`catalog.filter.${type}.label`} />
                 </ControlLabel>
                 <FilterInfo tooltip={tooltip(type)} />
                 {error[type] && renderError}
-            </Col>
-            <Col xs={8} style={{ marginBottom: 5 }}>
+            </div>
+            <div className="textarea-code">
                 <CodeMirror
                     value={code[filterProp]}
                     options={options}
@@ -75,7 +74,7 @@ const FilterCode = ({ type, code, setCode, error }) => {
                     }}
                 />
                 {type === 'dynamic' && renderHelpText}
-            </Col>
+            </div>
         </FormGroup>
     );
 };
@@ -92,7 +91,8 @@ export default ({
         const _filter = template(cswGetRecordsXml)({
             filterXml: value,
             startPosition: 1,
-            maxRecords: 4
+            maxRecords: 4,
+            sortBy: ''
         });
         return !new DOMParser()
             .parseFromString(_filter, "application/xml")

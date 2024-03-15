@@ -605,7 +605,7 @@ describe('This test for RecordItem', () => {
             }
         };
         let actionsSpy = expect.spyOn(actions, "onError");
-        const item = ReactDOM.render(<RecordItem
+        let item = ReactDOM.render(<RecordItem
             record={sampleRecord2}
             onError={actions.onError}
             crs="EPSG:3857"/>, document.getElementById("container"));
@@ -617,6 +617,22 @@ describe('This test for RecordItem', () => {
         expect(button).toBeTruthy();
         button.click();
         expect(actionsSpy.calls.length).toBe(1);
+
+        // With source metadata
+        const record = {...sampleRecord2, serviceType: "cog", sourceMetadata: {crs: "EPSG:3946"}};
+        item = ReactDOM.render(<RecordItem
+            record={record}
+            onError={actions.onError}
+            crs="EPSG:3857"/>, document.getElementById("container"));
+        expect(item).toBeTruthy();
+
+        button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toBeTruthy();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(2);
+
     });
     it('check add layer with bounding box', (done) => {
         let actions = {

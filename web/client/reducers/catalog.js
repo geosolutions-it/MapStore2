@@ -30,6 +30,7 @@ import {
     TOGGLE_TEMPLATE,
     TOGGLE_ADVANCED_SETTINGS,
     FORMAT_OPTIONS_LOADING,
+    SHOW_FORMAT_ERROR,
     SET_FORMAT_OPTIONS,
     NEW_SERVICE_STATUS
 } from '../actions/catalog';
@@ -60,6 +61,7 @@ function catalog(state = {
     },
     delayAutoSearch: 1000,
     loading: false,
+    showFormatError: false,
     pageSize: 4,
     services: {},
     selectedService: "",
@@ -112,6 +114,7 @@ function catalog(state = {
             newService: action.isNew ? emptyService : assign({}, state.services && state.services[state.selectedService || ""] || {}, {oldService: state.selectedService || ""}),
             mode: action.mode,
             result: null,
+            showFormatError: false,
             loadingError: null,
             layerError: null});
     case MAP_CONFIG_LOADED: {
@@ -133,7 +136,7 @@ function catalog(state = {
     case CHANGE_TITLE:
         return set("newService.title", action.title, state);
     case CHANGE_URL:
-        return set("newService.url", action.url, state);
+        return set("newService.url", action.url, set("showFormatError", false, state));
     case CHANGE_SERVICE_FORMAT:
         return set("newService.format", action.format, state);
     case CHANGE_TYPE: {
@@ -210,6 +213,9 @@ function catalog(state = {
     }
     case FORMAT_OPTIONS_LOADING: {
         return set("formatsLoading", action.loading, state);
+    }
+    case SHOW_FORMAT_ERROR: {
+        return set("showFormatError", action.status, state);
     }
     case SET_FORMAT_OPTIONS: {
         return set("newService.supportedFormats", action.formats, set("newService.formatUrlUsed", action.url, state));

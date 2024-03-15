@@ -30,7 +30,6 @@ import {
     TOGGLE_MODE,
     MODES,
     GEOMETRY_CHANGED,
-    HIDE_SYNC_POPOVER,
     TOGGLE_SHOW_AGAIN_FLAG,
     DELETE_GEOMETRY_FEATURE,
     START_DRAWING_FEATURE,
@@ -55,7 +54,6 @@ import { MAP_CONFIG_LOADED } from '../actions/config';
 import { FEATURE_TYPE_LOADED, QUERY_CREATE, UPDATE_QUERY } from '../actions/wfsquery';
 import { CHANGE_DRAWING_STATUS } from '../actions/draw';
 import uuid from 'uuid';
-import { getApi } from '../api/userPersistedStorage';
 
 const emptyResultsState = {
     advancedFilters: {},
@@ -70,7 +68,6 @@ const emptyResultsState = {
     canEdit: false,
     focusOnEdit: false,
     showAgain: false,
-    showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : true,
     mode: MODES.VIEW,
     changes: [],
     pagination: {
@@ -156,7 +153,6 @@ function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
         return assign({}, state, {
-            showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : true,
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
             editingAllowedGroups: action.options.editingAllowedGroups || state.editingAllowedGroups || [],
             virtualScroll: !!action.options.virtualScroll,
@@ -237,7 +233,6 @@ function featuregrid(state = emptyResultsState, action) {
         });
     case TOGGLE_MODE: {
         return assign({}, state, {
-            showPopoverSync: getApi().getItem("showPopoverSync") !== null ? getApi().getItem("showPopoverSync") === "true" : action.mode !== MODES.EDIT,
             tools: action.mode === MODES.EDIT ? {} : state.tools,
             mode: action.mode,
             multiselect: action.mode === MODES.EDIT,
@@ -330,7 +325,8 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case OPEN_FEATURE_GRID: {
         return assign({}, state, {
-            open: true
+            open: true,
+            closer: null
         });
     }
     case CLOSE_FEATURE_GRID: {
@@ -346,7 +342,8 @@ function featuregrid(state = emptyResultsState, action) {
             deleteConfirm: false,
             drawing: false,
             newFeatures: [],
-            changes: []
+            changes: [],
+            closer: action.closer
         });
     }
     case DISABLE_TOOLBAR: {
@@ -431,9 +428,6 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case GRID_QUERY_RESULT: {
         return assign({}, state, {features: action.features || [], pages: action.pages || []});
-    }
-    case HIDE_SYNC_POPOVER: {
-        return assign({}, state, {showPopoverSync: false});
     }
     case TOGGLE_SHOW_AGAIN_FLAG: {
         return assign({}, state, {showAgain: !state.showAgain});

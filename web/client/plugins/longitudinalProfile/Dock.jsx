@@ -8,21 +8,28 @@
 import React, {useState, useMemo, useEffect} from "react";
 import {toPng} from 'html-to-image';
 import isEmpty from 'lodash/isEmpty';
+import omit from 'lodash/omit';
 import pdfMake from 'pdfmake';
 import PropTypes from 'prop-types';
-import {ButtonGroup, Col, Glyphicon, Nav, NavItem, Row} from 'react-bootstrap';
+import { Row, Col, Nav, InputGroup, FormGroup, NavItem, ControlLabel, Button as ButtonRB, Glyphicon } from 'react-bootstrap';
 import ContainerDimensions from 'react-container-dimensions';
 import ReactDOM from 'react-dom';
+import Select from 'react-select';
+import { saveAs } from 'file-saver';
+import DXFWriter from 'dxf-writer';
+
 
 import Message from "../../components/I18N/Message";
-import Button from "../../components/misc/Button";
 import tooltip from "../../components/misc/enhancers/tooltip";
 import LoadingView from "../../components/misc/LoadingView";
 import ResponsivePanel from "../../components/misc/panels/ResponsivePanel";
 import Toolbar from "../../components/misc/toolbar/Toolbar";
-import Chart from "./Chart";
+import Chart from "../../components/charts/WidgetChart";
+import { reprojectGeoJson } from '../../utils/CoordinatesUtils';
+import { getMessageById } from '../../utils/LocaleUtils';
 
 const NavItemT = tooltip(NavItem);
+const Button = tooltip(ButtonRB);
 
 /**
  * Component used to show the chart
@@ -45,6 +52,8 @@ const ChartData = ({
     chartTitle,
     config,
     dockStyle,
+    defaultDownloadFormat = "json",
+    downloadFormat = ["dxf", "json", "png", "pdf", "csv"],
     loading,
     maximized,
     messages,
@@ -56,42 +65,6 @@ const ChartData = ({
     onExportCSV,
     onHideMarker
 }) => {
-    const data = useMemo(() => points ? points.map((point) => ({
-        distance: point.totalDistanceToThisPoint,
-        x: point.x,
-        y: point.y,
-        altitude: point.altitude,
-        incline: point.slope
-    })) : [], [points]);
-    const [marker, setMarker] = useState({});
-    const [isTainted, setIsTainted] = useState(false);
-
-    useEffect(() => {
-        if (!isEmpty(marker)) {
-            onAddMarker({lng: marker.x, lat: marker.y, projection: 'EPSG:4326'});
-        } else {
-            onHideMarker();
-        }
-    }, [marker]);
-
-    const series = [{dataKey: "altitude", color: `#078aa3`}];
-    const xAxis = {dataKey: "distance", show: false, showgrid: true};
-    const options = {
-        xAxisAngle: 0,
-        yAxis: true,
-        yAxisLabel: messages.longitudinalProfile.elevation,
-        legend: false,
-        tooltip: false,
-        cartesian: true,
-        popup: false,
-        xAxisOpts: {
-            hide: false
-        },
-        yAxisOpts: {
-            tickSuffix: ' m'
-        },
-        xAxisLabel: messages.longitudinalProfile.distance
-    };
 
     const generateChartImageUrl = () => {
         const toolbar = document.querySelector('.chart-toolbar');
@@ -106,6 +79,169 @@ const ChartData = ({
                 return dataUrl;
             });
     };
+    const [marker, setMarker] = useState({});
+    const [isTainted, setIsTainted] = useState(false);
+    const [selectedDownloadFormat, setSelectedDownloadFormat] = useState(defaultDownloadFormat);
+
+    const downloadOptions = {
+        "dxf": {
+            onDownload: (data) => {
+                try {
+                    let d = new DXFWriter();
+                    d.setUnits('meters');
+                    d.addLayer('profile', DXFWriter.ACI.LAYER, 'CONTINUOUS')
+                        .setActiveLayer('profile')
+                        .drawPolyline3d(data.map(point => ([point.x, point.y, point.altitude])));
+                    const file = d.toDxfString();
+                    saveAs(new Blob([file], {type: 'image/x-dxf;charset=utf-8' }), `${chartTitle}.dxf`);
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+            label: "longitudinalProfile.downloadDXF"
+        },
+        "json": {
+            onDownload: (data) => {
+                try {
+                    let features = data.map((point) => {
+                        return reprojectGeoJson({
+                            type: "Feature",
+                            geometry: {
+                                type: "Point",
+                                coordinates: [point.x, point.y]
+                            },
+                            properties: {
+                                ...(omit(point, ["x", "y"]))
+                            }
+                        }, projection);
+                    });
+
+                    const geoJSON = {
+                        type: "FeatureCollection",
+                        features: features
+                    };
+                    saveAs(new Blob([JSON.stringify(geoJSON)], {type: 'application/json;charset=utf-8' }), `${chartTitle}.json`);
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+            label: "longitudinalProfile.downloadGeoJSON"
+        },
+        "png": {
+            onDownload: () => {
+                generateChartImageUrl()
+                    .then(function(dataUrlChart) {
+                        let link = document.createElement('a');
+                        link.download = `${chartTitle}.png`;
+                        link.href = dataUrlChart;
+                        link.click();
+                    })
+                    .catch(function(error) {
+                        console.error('oops, something went wrong!', error);
+                        onError('longitudinalProfile.errors.cannotDownloadPNG');
+                    });
+            },
+            label: "longitudinalProfile.downloadPNG"
+        },
+        "pdf": {
+            onDownload: () => {
+                toPng(document.querySelector('.ol-unselectable canvas'))
+                    .then(function(dataUrlMap) {
+                        generateChartImageUrl()
+                            .then((dataUrlChart) => {
+                                try {
+                                    pdfMake.createPdf({
+                                        content: [
+                                            {
+                                                image: "chart",
+                                                width: 450
+                                            },
+                                            {
+                                                image: "map",
+                                                width: 555,
+                                                margin: [0, 60]
+                                            }
+                                        ],
+                                        pageMargins: [ 20, 40, 20, 40 ],
+                                        images: {
+                                            chart: dataUrlChart,
+                                            map: dataUrlMap
+                                        }
+                                    }).download(`${chartTitle}.pdf`);
+                                } catch (err) {
+                                    console.error('oops, something went wrong!', err);
+                                    onError('longitudinalProfile.errors.cannotDownloadPDF');
+
+                                }
+
+                            });
+
+                    })
+                    .catch(function(error) {
+                        console.error('oops, something went wrong!', error);
+                        onError('longitudinalProfile.errors.cannotDownloadPDF');
+                        setIsTainted(true);
+                    });
+            },
+            label: "longitudinalProfile.downloadPDF"
+        },
+        "csv": {
+            onDownload: (data) => {
+                onExportCSV({data, title: `${chartTitle}`});
+            },
+            label: "longitudinalProfile.downloadCSV"
+        }
+    };
+
+    const data = useMemo(() => points ? points.map((point) => ({
+        distance: point.totalDistanceToThisPoint,
+        x: point.x,
+        y: point.y,
+        altitude: point.altitude,
+        incline: point.slope
+    })) : [], [points]);
+
+
+    useEffect(() => {
+        if (!isEmpty(marker)) {
+            onAddMarker({lng: marker.x, lat: marker.y, projection: 'EPSG:4326'});
+        } else {
+            onHideMarker();
+        }
+    }, [marker]);
+
+    const options = {
+        traces: [{
+            id: 'longitudinal-profile-trace',
+            type: 'line',
+            style: {
+                line: {
+                    color: `#078aa3`
+                }
+            },
+            options: {
+                groupByAttributes: 'distance',
+                aggregationAttribute: 'altitude'
+            }
+        }],
+        xAxisOpts: [{
+            id: 0,
+            angle: 0,
+            hide: false,
+            title: messages.longitudinalProfile.distance,
+            fontSize: 11
+        }],
+        yAxisOpts: [{
+            id: 0,
+            title: messages.longitudinalProfile.elevation,
+            tickSuffix: ' m',
+            hide: false,
+            fontSize: 11
+        }],
+        legend: false,
+        cartesian: true
+    };
+
 
     const content = loading
         ? <LoadingView />
@@ -144,9 +280,8 @@ const ChartData = ({
                                 {...options}
                                 height={maximized ? height - 115 : 400}
                                 width={maximized ? width - (dockStyle?.right ?? 0) - (dockStyle?.left ?? 0) : 520 }
-                                data={data}
-                                series={series}
-                                xAxis={xAxis}
+                                // using multiple traces data is array of arrays of data
+                                data={[data]}
                             />
                             {config.referential && projection ? <table className="data-used">
                                 <tr>
@@ -168,78 +303,35 @@ const ChartData = ({
                 </ContainerDimensions>
             </div>
             {data.length ? (
-                <ButtonGroup className="downloadButtons">
-                    <Button bsStyle="primary" onClick={() => onExportCSV({data, title: 'Test'})} className="export">
-                        <Glyphicon glyph="download"/> <Message msgId="longitudinalProfile.downloadCSV" />
-                    </Button>
-                    <Button
-                        className="export"
-                        bsStyle="primary"
-                        onClick={() => {
-                            generateChartImageUrl()
-                                .then(function(dataUrlChart) {
-                                    let link = document.createElement('a');
-                                    link.download = chartTitle + '.png';
-                                    link.href = dataUrlChart;
-                                    link.click();
-                                })
-                                .catch(function(error) {
-                                    console.error('oops, something went wrong!', error);
-                                    onError('longitudinalProfile.errors.cannotDownloadPNG');
-                                });
-
-                        }}>
-                        <Glyphicon glyph="download"/> <Message msgId="longitudinalProfile.downloadPNG" />
-                    </Button>
-                    <Button
-                        className="export"
-                        bsStyle="primary"
-                        disabled={isTainted}
-                        onClick={() => {
-                            toPng(document.querySelector('canvas.ol-unselectable'))
-                                .then(function(dataUrlMap) {
-                                    generateChartImageUrl()
-                                        .then((dataUrlChart) => {
-                                            try {
-                                                pdfMake.createPdf({
-                                                    content: [
-                                                        {
-                                                            image: "chart",
-                                                            width: 450
-                                                        },
-                                                        {
-                                                            image: "map",
-                                                            width: 555,
-                                                            margin: [0, 60]
-                                                        }
-                                                    ],
-                                                    pageMargins: [ 20, 40, 20, 40 ],
-                                                    images: {
-                                                        chart: dataUrlChart,
-                                                        map: dataUrlMap
-                                                    }
-                                                }).download(chartTitle + ".pdf");
-                                            } catch (err) {
-                                                console.error('oops, something went wrong!', err);
-                                                onError('longitudinalProfile.errors.cannotDownloadPDF');
-
-                                            }
-
-                                        });
-
-                                })
-                                .catch(function(error) {
-                                    console.error('oops, something went wrong!', error);
-                                    onError('longitudinalProfile.errors.cannotDownloadPDF');
-                                    setIsTainted(true);
-
-                                });
-
-                        }}>
-                        <Glyphicon glyph="download"/> <Message msgId="longitudinalProfile.downloadPDF" />
-                    </Button>
-                </ButtonGroup>
+                <FormGroup className="form-group-flex" style={{padding: "0px 15px"}}>
+                    <ControlLabel><Message msgId="layerdownload.format" /></ControlLabel>
+                    <InputGroup style={{ zIndex: 0 }}>
+                        <Select
+                            value={selectedDownloadFormat}
+                            options={downloadFormat.map(key => ({
+                                value: key,
+                                label: getMessageById(messages, downloadOptions[key].label),
+                                disabled: key === "pdf" && isTainted
+                            }))}
+                            onChange={(val) => {
+                                setSelectedDownloadFormat(val?.value);
+                            }}
+                        />
+                        <InputGroup.Button>
+                            <Button
+                                bsStyle="primary"
+                                onClick={() => {
+                                    downloadOptions?.[selectedDownloadFormat]?.onDownload(data);
+                                }}
+                                className="export"
+                            >
+                                <Glyphicon glyph="download"/> <Message msgId="longitudinalProfile.export" />
+                            </Button>
+                        </InputGroup.Button>
+                    </InputGroup>
+                </FormGroup>
             ) : null}
+
             </>
         );
 

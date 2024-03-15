@@ -24,7 +24,7 @@ By clicking on the <img src="../img/button/add_to_map_button.jpg" class="ms-docb
 !!! note
     For those layers which have long descriptions or long metadata information, the content is truncated in order to fit the *Layer Card* size. In order to access the complete information, the user can expand the card using the <img src="../img/button/expand_card_icon.jpg" class="ms-docbutton" style="max-height:20px;"/> button:
 
-    <img src="../img/catalog/expand_card.gif" class="ms-docimage" style="max-width:400px;"/>
+    <video class="ms-docimage" style="max-width:400px;" controls><source src="../img/catalog/expand_card.mp4"></video>
 
 ## Managing Remote Services
 
@@ -87,14 +87,17 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 <img src="../img/catalog/advanced_settings_csw.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
-* *Format*: the default image format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
-
-* *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
-
 * *Server Type*: to specify the server type of WMS online resources referred by metadata exposed by the CSW service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other.
 
 !!! note
     If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
+
+* *Format*: to assign the default *Tile* format for the layers added to the map (e.g. `png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`) and to define the default *Information sheet* format for the layers added to the map (`text/plain`, `text/html`, `application/json` or `application/geo+json`). The list of available formats is automatically retrieved from the ones supported by the WMS server and can be also manually fetched through the **Fetch supported formats** <img src = "../img/button/update_button.jpg" Button = "ms-docbutton" /> button when necessary.
+
+!!! note
+    The *Tile* and the *Information sheet* configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured the default *Tile* used is `image/png` and the default *Information sheet* used is`text/plain`). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings) tool as usual.
+
+* *Tile size (WMS)*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
 * *Set Visibility Limit*: if checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source.
 
@@ -149,7 +152,7 @@ In this case it is possible to add a text like the following, in order to presen
 
 Inserting this text and saving, the result should be that each layer will show its properties in catalog with the format we set:
 
-<img src="../img/catalog/metadata-det.gif" class="ms-docimage"  style="max-width:500px;"/>
+<video class="ms-docimage"  style="max-width:500px;" controls><source src="../img/catalog/metadata-det.mp4"></video>
 
 !!! note
     If some metadata are missing, the server response will be `source Not Available`
@@ -198,6 +201,8 @@ WMS and WMTS Services are [OGC Standards](https://www.ogc.org/standards) protoco
 
 In **General Settings** the user can set the title he wants to assign to this service and the URL of the service to configure the service and its URL.
 
+#### Advanced Settings
+
 In addition to the standard options, only for WMS catalog sources, through the **Advanced Settings** the user can configure also the following options:
 
 <img src="../img/catalog/advanced_settings_wms.jpg" class="ms-docimage"  style="max-width:500px;" />
@@ -218,17 +223,17 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 * *Allow not secure layers*: if enabled allows the unsecure catalog URLs to be used (http only). Adding layers from WMS sources with this option active will also force the layer to use the proxy for all the requests, skipping the mixed content limitation of the browser.
 
-* *Format*: the default image format for layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`). The format configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured a default `image/png` is used). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](layer-settings.md#display) tool as usual.
-
-!!! note
-    In case of WMS services, the list of available formats is retrieved from the WMS server
-
-* *Layer tile size*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
-
 * *Server Type*: to specify the server type of the used WMS service URL. Possible options are two: `Geoserver` or `No Vendor` which can be for example MapProxy, MapServer or other.
 
 !!! note
     If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
+
+* *Format*: to define the default *Tile* format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`) and to define the default *Information sheet* format for the layers added to the map (`text/plain`, `text/html`, `application/json` or `application/geo+json`). The list of available formats is automatically retrieved from the ones supported by the WMS server and can be also manually fetched through the **Fetch supported formats** <img src = "../img/button/update_button.jpg" Button = "ms-docbutton" /> button when necessary.
+
+!!! note
+    The *Tile* and the *Information sheet* configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured the default *Tile* used is `image/png` and the default *Information sheet* used is`text/plain`). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings) tool as usual.
+
+* *Tile size (WMS)*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
 * *Domain aliases*: available only for WMS catalogs type. This option is used to improve the performances of the application for tiled layer requests when multiple domains can be defined server side for the configured catalog source in MapStore (domain sharding). The user can configure multiple URLs referring to the same WMS service through the **Add alias** <img src = "../img/button/++.jpg" Button = "ms-docbutton" /> button. Useful information about other kind of performance improvements can be found in the [MapStore online training documentation](https://training.mapstore.geosolutionsgroup.com/administration/best.html#performances).
 
@@ -274,15 +279,15 @@ When the user saves this custom catalog service and clicks on search, he will se
 <img src="../img/catalog/custom_tms_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse custom TMS service. It contains only one result</p>
 
-## Sample custom
+##### Sample custom
 
 ```text
 url: https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png
 ```
 
-## Sample custom with advanced options
+##### Sample custom with advanced options
 
- ```text
+```text
 url: https://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg
 ```
 
@@ -299,7 +304,7 @@ url: https://nls-{s}.tileserver.com/nls/{z}/{x}/{y}.jpg
 }
 ```
 
-### TMS 1.0.0
+#### TMS 1.0.0
 
 Selecting the "TMS 1.0.0" provider the user can insert the URL of the Tile Map Service (see [TMS Specification](https://wiki.osgeo.org/wiki/Tile_Map_Service_Specification)). For instance, in GeoServer, it is the URL of the "TMS" link in the home page.
 
@@ -314,7 +319,7 @@ When saved this, the user will be allowed to browse and add to the map the TMS l
 <img src="../img/catalog/tms100_browse.jpg" class="ms-docimage"  style="max-width:400px;"/>
 <p class="ms-doc-caption">Browse TMS 1.0.0 layers</p>
 
-#### sample TMS 1.0.0 services
+##### Sample TMS 1.0.0 services
 
 ```text
 https://public.sig.rennesmetropole.fr/geowebcache/service/tms/1.0.0
@@ -322,7 +327,7 @@ https://osm.geobretagne.fr/gwc01/service/tms/1.0.0
 https://gs-stable.geosolutionsgroup.com/geoserver/gwc/service/tms/1.0.0
 ```
 
-#### TMS Known Services
+##### TMS Known Services
 
 The other known services are listed as providers below "custom" and "TMS 1.0.0". They are a static list configured inside the application. Selecting one of the provider listed and saving the new catalog service allows to browse al the variants known for that service. For more information about the list of available providers, see the developer documentation about [Tile Providers](../../developer-guide/maps-configuration/#tileprovider)
 
@@ -334,9 +339,61 @@ The other known services are listed as providers below "custom" and "TMS 1.0.0".
 
 ### 3D Tiles Catalog
 
-3D Tiles is an [OGC specification](https://www.ogc.org/standards/3DTiles) designed for streaming and rendering massive 3D geospatial content such as Photogrammetry, 3D Buildings, BIM/CAD, and Point Clouds across desktop, web and mobile applications.
-MapStore allows to publish 3D Tiles contents in its 3D mode on top of the [CesiumJS capabilities](https://github.com/CesiumGS/3d-tiles). Through the Catalog tool, a specific source type to load 3D Tiles in the Cesium Map can be configured as follows by specifying the URL of a reachable *tileset.json*.
+**3D Tiles** is an [OGC specification](https://www.ogc.org/standards/3DTiles) designed for streaming and rendering massive 3D geospatial content such as Photogrammetry, 3D Buildings, BIM/CAD, and Point Clouds across desktop, web and mobile applications.
 
-In **general settings of** 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.
+MapStore allows to publish 3D Tiles contents in its 3D mode on top of the [CesiumJS capabilities](https://github.com/CesiumGS/3d-tiles). Through the *Catalog* tool, a specific source type to load 3D Tiles in the Cesium Map can be configured as follows by specifying the URL of a reachable `tileset.json`.
+
+In **General Settings** of 3D Tiles service, the user can specify the title to assign to this service and the URL of the service.
 
 <img src="../img/catalog/3dtiles_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+!!! warning
+    MapStore allows you to load also [Google Photorealistic 3D Tiles](https://cloud.google.com/blog/products/maps-platform/create-immersive-3d-map-experiences-photorealistic-3d-tiles) and some constraints need to be respected in this case.
+    Since the Google Photorealistic 3D Tiles are not ‘survey-grade’ at this time, the use of certain MapStore tools could be considered derivative and, for this reason, prohibited. Please, make sure you have read the [Google conditions of use](https://developers.google.com/maps/documentation/tile/policies)
+    (some [FAQs](https://cloud.google.com/blog/products/maps-platform/commonly-asked-questions-about-our-recently-launched-photorealistic-3d-tiles) are also available online for this purpose) before providing Google Photorealistic 3D Tile in your MapStore maps in order to enable only allowed tools (e.g. *Measurement* and *Identify* tools should be probably disabled).
+    For this purpose it is possible to appropriately set the [configuration of MapStore plugins](../../developer-guide/maps-configuration/#map-options)  to exclude tools that could conflict with Google policies. Alternatively, it is possible to use a dedicated [application context](application-context.md#configure-plugins) to show Photorealistic 3D Tiles by including only the permitted tools within it.
+
+### COG Catalog
+
+A **Cloud Optimized GeoTIFF** ([COG](https://www.cogeo.org)) is a regular GeoTIFF file, aimed at being hosted on a HTTP file server, with an internal organization that enables more efficient workflows on the cloud environment. It does this by leveraging the ability of clients issuing ​HTTP GET range requests to ask for just the parts of a file they need.
+
+MapStore allows to add COG layers (also as a background) through its *Catalog* tool where a specific source type can be configured as follows by specifying the URL of a reachable COG `.tif` resource.
+
+In **General Settings** of a COG source type, it is possible to specify the service `Title` and its `URL`.
+
+<img src="../img/catalog/cog_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+!!! Note
+    To properly display COG layers in your MapStore map, it is necessary to add the reference system definition supported by the COG in the MapStore [projectionDefs configuration](../../developer-guide/local-config/#projectiondefs-configuration)
+
+!!! warning
+     The COG catalog type in MapStore is still in experimental state and for this reason not directly available in the default service types list of the Catalog tool.
+    In order to enable this service, update the default [Catalog tool configuration](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.MetadataExplorer) in `localConfig.json`  or inside the application context wizard as shown below:
+
+    ```diff
+    {
+        "name": "MetadataExplorer",
+        "cfg": {
+            ...
+            serviceTypes: [
+                ...
+    +           { name: "cog", label: "COG" }
+            ]
+        }
+    }
+    ```
+
+#### Advanced Settings
+
+In addition to the standard options, only for COG catalog sources, through the **Advanced Settings** the user can configure also the following option:
+
+<img src="../img/catalog/advanced_settings_cog.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+* *Download file metadata on search*: this option will fetch metadata to support the zoom to layer when the layer is added to the [TOC](toc.md#table-of-contents).
+
+!!! Note
+    The tool capabilities currently available for  COG layers are:
+
+    * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and customize the *Opacity* value and the *Visibility limits* from the [Display](layer-settings.md#display) tab
+    * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>

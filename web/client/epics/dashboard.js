@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import Rx from 'rxjs';
+import { mapValues, isObject, keys, isNil } from 'lodash';
 
 import { NEW, INSERT, EDIT, OPEN_FILTER_EDITOR, editNewWidget, onEditorChange} from '../actions/widgets';
 
@@ -35,7 +36,7 @@ import { isLoggedIn } from '../selectors/security';
 import { getEditingWidgetLayer, getEditingWidgetFilter, getWidgetFilterKey } from '../selectors/widgets';
 import { pathnameSelector } from '../selectors/router';
 import { download, readJson } from '../utils/FileUtils';
-import { createResource, updateResource, getResource } from '../api/persistence';
+import { createResource, updateResource, getResource, updateResourceAttribute } from '../api/persistence';
 import { wrapStartStop } from '../observables/epics';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
 import { convertDependenciesMappingForCompatibility } from "../utils/WidgetsUtils";
@@ -161,9 +162,32 @@ export const reloadDashboardOnLoginLogout = (action$) =>
 // saving dashboard flow (both creation and update)
 export const saveDashboard = action$ => action$
     .ofType(SAVE_DASHBOARD)
-    .exhaustMap(({resource} = {}) =>
-        (!resource.id ? createResource(resource) : updateResource(resource))
-            .switchMap(rid => Rx.Observable.of(
+    .exhaustMap(({resource} = {}) =>{
+        // convert to json if attribute is an object
+        const attributesFixed = mapValues(resource.attributes, attr => {
+            if (isObject(attr)) {
+                let json = null;
+                try {
+                    json = JSON.stringify(attr);
+                } catch (e) {
+                    json = null;
+                }
+                return json;
+            }
+            return attr;
+        });
+        // filter out invalid attributes
+            // thumbnails and details are handled separately(linked resources)
+        const validAttributesNames = keys(attributesFixed)
+            .filter(attrName => attrName !== 'thumbnail' && attrName !== 'details' && !isNil(attributesFixed[attrName]));
+        return Rx.Observable.forkJoin(
+            (!resource.id ? createResource(resource) : updateResource(resource)))
+            .switchMap(([rid]) => (validAttributesNames.length > 0 ?
+                Rx.Observable.forkJoin(validAttributesNames.map(attrName => updateResourceAttribute({
+                    id: rid,
+                    name: attrName,
+                    value: attributesFixed[attrName]
+                }))) : Rx.Observable.of([])) .switchMap(() => Rx.Observable.of(
                 dashboardSaved(rid),
                 resource.id ? triggerSave(false) : triggerSaveAs(false),
                 !resource.id
@@ -175,15 +199,14 @@ export const saveDashboard = action$ => action$
                     title: "saveDialog.saveSuccessTitle",
                     message: "saveDialog.saveSuccessMessage"
                 })).delay(!resource.id ? 1000 : 0) // delay to allow loading
-            )
-            )
-            .let(wrapStartStop(
-                dashboardLoading(true, "saving"),
-                dashboardLoading(false, "saving")
             ))
-            .catch(
-                ({ status, statusText, data, message, ...other } = {}) => Rx.Observable.of(dashboardSaveError(status ? { status, statusText, data } : message || other), dashboardLoading(false, "saving"))
-            )
+                .let(wrapStartStop(
+                    dashboardLoading(true, "saving"),
+                    dashboardLoading(false, "saving")
+                )
+                ));
+    }).catch(
+        ({ status, statusText, data, message, ...other } = {}) => Rx.Observable.of(dashboardSaveError(status ? { status, statusText, data } : message || other), dashboardLoading(false, "saving"))
     );
 
 export const exportDashboard = action$ => action$

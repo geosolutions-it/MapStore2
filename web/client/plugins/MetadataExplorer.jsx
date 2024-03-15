@@ -73,7 +73,8 @@ import {
     formatsLoadingSelector,
     getSupportedFormatsSelector,
     getSupportedGFIFormatsSelector,
-    getNewServiceStatusSelector
+    getNewServiceStatusSelector,
+    showFormatErrorSelector
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
@@ -87,6 +88,7 @@ export const DEFAULT_ALLOWED_PROVIDERS = ["OpenStreetMap", "OpenSeaMap", "Stamen
 
 const metadataExplorerSelector = createStructuredSelector({
     searchOptions: searchOptionsSelector,
+    showFormatError: showFormatErrorSelector,
     result: resultSelector,
     loadingError: loadingErrorSelector,
     selectedService: selectedServiceSelector,
@@ -177,7 +179,7 @@ class MetadataExplorerComponent extends React.Component {
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
-        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }],
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, {name: "model", label: "IFC Model"}],
         active: false,
         wrap: false,
         modal: true,
@@ -277,7 +279,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
 })(MetadataExplorerComponent);
 
 /**
- * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS and WFS).
+ * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS, WFS and COG).
  * Some useful flags in `localConfig.json`:
  * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
  *

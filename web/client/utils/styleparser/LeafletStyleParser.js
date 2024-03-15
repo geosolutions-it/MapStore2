@@ -8,16 +8,19 @@
 
 import L from 'leaflet';
 import { castArray, flatten } from 'lodash';
+import 'ol/geom/Polygon';
 import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
     drawIcons,
-    getImageIdFromSymbolizer
+    getImageIdFromSymbolizer,
+    parseSymbolizerExpressions
 } from './StyleParserUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
+import { circleToPolygon } from '../DrawGeometryUtils';
 
 const geometryTypeToKind = {
-    'Point': ['Mark', 'Icon', 'Text'],
+    'Point': ['Mark', 'Icon', 'Text', 'Circle'],
     'MultiPoint': ['Mark', 'Icon', 'Text'],
     'LineString': ['Line'],
     'MultiLineString': ['Line'],
@@ -27,9 +30,57 @@ const geometryTypeToKind = {
 
 const getGeometryFunction = geometryFunctionsLibrary.geojson();
 
-function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
-    images
-}) {
+const anchorToPoint = (anchor, width, height) => {
+    switch (anchor) {
+    case 'top-left':
+        return [0, 0];
+    case 'top':
+        return [width / 2, 0];
+    case 'top-right':
+        return [width, 0];
+    case 'left':
+        return [0, height / 2];
+    case 'center':
+        return [width / 2, height / 2];
+    case 'right':
+        return [width, height / 2];
+    case 'bottom-left':
+        return [0, height];
+    case 'bottom':
+        return [width / 2, height];
+    case 'bottom-right':
+        return [width, height];
+    default:
+        return [width / 2, height / 2];
+    }
+};
+
+const anchorToTransform = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return ['0px', '0px'];
+    case 'top':
+        return ['-50%', '0px'];
+    case 'top-right':
+        return ['-100%', '0px'];
+    case 'left':
+        return ['0px', '-50%'];
+    case 'center':
+        return ['-50%', '-50%'];
+    case 'right':
+        return ['-100%', '-50%'];
+    case 'bottom-left':
+        return ['0px', '-100%'];
+    case 'bottom':
+        return ['-50%', '-100%'];
+    case 'bottom-right':
+        return ['-100%', '-100%'];
+    default:
+        return ['-50%', '-50%'];
+    }
+};
+
+function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }) {
 
     // the last rules of the array should the one we'll apply
     // in case we have multiple symbolizers on the same features
@@ -38,8 +89,9 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
     const rules = [...geoStylerStyleRules].reverse();
     return ({
         opacity: globalOpacity = 1,
-        layer = {}
-    } = {}) => {
+        layer = {},
+        features
+    } = {}) => drawIcons({ rules: geoStylerStyleRules }, { features }).then((images = []) =>  {
 
         if (layer._msAdditionalLayers) {
             layer._msAdditionalLayers.forEach((additionalLayer) => {
@@ -47,11 +99,12 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
             });
         }
 
-        layer._msAdditionalLayer = [];
+        layer._msAdditionalLayers = [];
 
-        const pointToLayer = ({ symbolizer, latlng, feature }) => {
+        const pointToLayer = ({ symbolizer: _symbolizer, latlng, feature }) => {
+            const symbolizer = parseSymbolizerExpressions(_symbolizer, feature);
             if (symbolizer.kind === 'Mark') {
-                const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
+                const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
                 if (image) {
                     const aspect = width / height;
                     const size = symbolizer.radius * 2;
@@ -72,7 +125,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                 }
             }
             if (symbolizer.kind === 'Icon') {
-                const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
+                const { image, src, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
                 if (image) {
                     const aspect = width / height;
                     let iconSizeW = symbolizer.size;
@@ -85,7 +138,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         icon: L.icon({
                             iconUrl: src,
                             iconSize: [iconSizeW, iconSizeH],
-                            iconAnchor: [iconSizeW / 2, iconSizeH / 2]
+                            iconAnchor: anchorToPoint(symbolizer.anchor, iconSizeW, iconSizeH)
                         }),
                         opacity: symbolizer.opacity * globalOpacity
                     });
@@ -97,6 +150,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                     -webkit-text-stroke-width:${symbolizer.haloWidth}px;
                     -webkit-text-stroke-color:${symbolizer.haloColor || ''};
                 `;
+                const [anchorH, anchorV] = anchorToTransform(symbolizer.anchor);
                 const textIcon = L.divIcon({
                     html: `<div style="
                         color:${symbolizer.color};
@@ -106,7 +160,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         font-size: ${symbolizer.size}px;
 
                         position: absolute;
-                        transform: translate(${symbolizer?.offset?.[0] ?? 0}px, ${symbolizer?.offset?.[1] ?? 0}px) rotateZ(${symbolizer?.rotate ?? 0}deg);
+                        transform: translate(calc(${anchorH} + ${symbolizer?.offset?.[0] ?? 0}px), calc(${anchorV} + ${symbolizer?.offset?.[1] ?? 0}px)) rotateZ(${symbolizer?.rotate ?? 0}deg);
 
                         ${symbolizer.haloWidth > 0 ? haloProperties : ''}
                     ">
@@ -118,6 +172,25 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                     icon: textIcon,
                     opacity: 1 * globalOpacity
                 });
+            }
+            if (symbolizer.kind === 'Circle') {
+                const radius = symbolizer.radius;
+                const geodesic = symbolizer.geodesic;
+                const geoJSONLayer = L.geoJSON({
+                    ...feature,
+                    geometry: circleToPolygon(feature.geometry.coordinates, radius, geodesic)
+                });
+                geoJSONLayer.setStyle({
+                    fill: true,
+                    stroke: true,
+                    fillColor: symbolizer.color,
+                    fillOpacity: symbolizer.opacity * globalOpacity,
+                    color: symbolizer.outlineColor,
+                    opacity: (symbolizer.outlineOpacity ?? 0) * globalOpacity,
+                    weight: symbolizer.outlineWidth ?? 0,
+                    ...(symbolizer.outlineDasharray && { dashArray: symbolizer.outlineDasharray.join(' ') })
+                });
+                return geoJSONLayer;
             }
             return null;
         };
@@ -154,7 +227,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                 symbolizers.forEach((symbolizer, idx) => {
                     if (idx > 0) {
                         const pointLayer = pointToLayer({ symbolizer, latlng, feature });
-                        layer._msAdditionalLayer.push(pointLayer);
+                        layer._msAdditionalLayers.push(pointLayer);
                         layer.addLayer(pointLayer);
                     }
                 });
@@ -166,6 +239,9 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                 });
             },
             style: (feature) => {
+                if (feature?.geometry?.type === 'Point') {
+                    return null;
+                }
                 const geometryType = feature?.geometry?.type;
                 const supportedKinds = geometryTypeToKind[geometryType] || [];
                 const validRules = rules
@@ -177,14 +253,15 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                 (['LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'].includes(geometryType)
                     ? flatten(validRules.map((rule) => rule.symbolizers.filter(({ kind }) => ['Mark', 'Icon', 'Text'].includes(kind))))
                     : [])
-                    .forEach((symbolizer) => {
+                    .forEach((_symbolizer) => {
+                        const symbolizer = parseSymbolizerExpressions(_symbolizer, feature);
                         const geometryFunction = getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...symbolizer});
                         if (geometryFunction) {
                             const coordinates = geometryFunction(feature);
                             if (coordinates) {
                                 const latlng = L.latLng(coordinates[1], coordinates[0]);
                                 const pointLayer = pointToLayer({ symbolizer, latlng, feature });
-                                layer._msAdditionalLayer.push(pointLayer);
+                                layer._msAdditionalLayers.push(pointLayer);
                                 layer.addLayer(pointLayer);
                             }
                         }
@@ -195,7 +272,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         // the symbolizer should be included in the supported ones
                         rule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind))
                     ) || {};
-                const firstValidSymbolizer = firstValidRule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind)) || {};
+                const firstValidSymbolizer = parseSymbolizerExpressions(firstValidRule?.symbolizers?.find(symbolizer => supportedKinds.includes(symbolizer.kind)) || {}, feature);
                 if (firstValidSymbolizer.kind === 'Line') {
                     const geometryFunction = getGeometryFunction(firstValidSymbolizer);
                     const style = {
@@ -212,7 +289,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                         const coordinates = geometryFunction(feature);
                         const geoJSONLayer = L.geoJSON({ ...feature, geometry: { type: 'LineString', coordinates }});
                         geoJSONLayer.setStyle(style);
-                        layer._msAdditionalLayer.push(geoJSONLayer);
+                        layer._msAdditionalLayers.push(geoJSONLayer);
                         layer.addLayer(geoJSONLayer);
                         return {
                             stroke: false,
@@ -223,15 +300,28 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                     return style;
                 }
                 if (firstValidSymbolizer.kind === 'Fill') {
-                    return {
+                    const geometryFunction = getGeometryFunction(firstValidSymbolizer);
+                    const style = {
                         fill: true,
                         stroke: true,
                         fillColor: firstValidSymbolizer.color,
                         fillOpacity: firstValidSymbolizer.fillOpacity * globalOpacity,
                         color: firstValidSymbolizer.outlineColor,
                         opacity: (firstValidSymbolizer.outlineOpacity ?? 0) * globalOpacity,
-                        weight: firstValidSymbolizer.outlineWidth ?? 0
+                        weight: firstValidSymbolizer.outlineWidth ?? 0,
+                        ...(firstValidSymbolizer.outlineDasharray && { dashArray: firstValidSymbolizer.outlineDasharray.join(' ') })
                     };
+                    if (geometryFunction && feature.geometry.type === 'Polygon') {
+                        const coordinates = geometryFunction(feature);
+                        const geoJSONLayer = L.geoJSON({ ...feature, geometry: { type: 'Polygon', coordinates }});
+                        geoJSONLayer.setStyle(style);
+                        layer._msAdditionalLayers.push(geoJSONLayer);
+                        layer.addLayer(geoJSONLayer);
+                        return {
+                            stroke: false,
+                            fill: false
+                        };
+                    }
                 }
                 return {
                     stroke: false,
@@ -239,7 +329,7 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }, {
                 };
             }
         };
-    };
+    });
 }
 
 class LeafletStyleParser {
@@ -257,11 +347,8 @@ class LeafletStyleParser {
     writeStyle(geoStylerStyle) {
         return new Promise((resolve, reject) => {
             try {
-                drawIcons(geoStylerStyle)
-                    .then((images = []) => {
-                        const styleFunc = getStyleFuncFromRules(geoStylerStyle, { images });
-                        resolve(styleFunc);
-                    });
+                const styleFunc = getStyleFuncFromRules(geoStylerStyle);
+                resolve(styleFunc);
             } catch (error) {
                 reject(error);
             }

@@ -56,9 +56,8 @@ function CompactRichTextEditor({
                 options: toolbarOptions || ['fontFamily', 'blockType', 'inline', 'textAlign', 'list', 'link', 'colorPicker', 'remove', 'image', 'embedded'],
                 image: {
                     urlEnabled: true,
-                    // disable the upload at the moment
-                    // it will increase the size of the map too much
-                    uploadEnabled: false,
+                    // upload controlled via props, disabled by default
+                    uploadEnabled: props.uploadEnabled || false,
                     alignmentEnabled: false,
                     uploadCallback: (file) => new Promise((resolve, reject) => {
                         const reader = new FileReader();
@@ -79,14 +78,15 @@ function CompactRichTextEditor({
                     }),
                     previewImage: true,
                     inputAccept: 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
-                    alt: { present: false, mandatory: false },
+                    alt: props.alt || { present: false, mandatory: false },
                     defaultSize: {
                         height: 'auto',
                         width: '100%'
                     }
                 },
                 fontFamily: {
-                    options: DEFAULT_FONT_FAMILIES
+                    // Setup fonts via props or use default from GeoStories
+                    options: props.fonts || DEFAULT_FONT_FAMILIES
                 },
                 link: {
                     inDropdown: false,

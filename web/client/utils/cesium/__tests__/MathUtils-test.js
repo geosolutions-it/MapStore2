@@ -13,7 +13,12 @@ import {
     computeNormal,
     computeAngles,
     computeTriangleMiddlePoint,
-    computeSlopes
+    computeSlopes,
+    computeArea,
+    computeDistance,
+    computeHeightSign,
+    cartesianToCartographicArray,
+    computeGeodesicCoordinates
 } from '../MathUtils';
 
 describe('Test MathUtils', () => {
@@ -67,5 +72,52 @@ describe('Test MathUtils', () => {
             new Cesium.Cartesian3(4687713.081782806, 1340971.716433566, 4098045.430648446)
         ], new Cesium.Cartesian3(6352463.924705475, 1070597.5587672037, 5895546.60193573));
         expect(Math.round(result)).toBe(1);
+    });
+    it('computeArea', () => {
+        const result = computeArea([
+            new Cesium.Cartesian3(4740254.317185668, 1095572.8088459417, 4110460.560372613),
+            new Cesium.Cartesian3(4577316.286468084, 1240656.4763755186, 4250569.528458886),
+            new Cesium.Cartesian3(4687713.081782806, 1340971.716433566, 4098045.430648446)
+        ]);
+        expect(Math.round(result)).toBe(24721604192);
+    });
+    it('computeDistance', () => {
+        expect(Math.round(computeDistance([
+            new Cesium.Cartesian3(4740254.317185668, 1095572.8088459417, 4110460.560372613),
+            new Cesium.Cartesian3(4577316.286468084, 1240656.4763755186, 4250569.528458886)
+        ]))).toBe(259285);
+        expect(Math.round(computeDistance([
+            new Cesium.Cartesian3(4740254.317185668, 1095572.8088459417, 4110460.560372613),
+            new Cesium.Cartesian3(4577316.286468084, 1240656.4763755186, 4250569.528458886)
+        ], true))).toBe(259304);
+    });
+    it('computeHeightSign', () => {
+        expect(computeHeightSign([
+            Cesium.Cartographic.toCartesian(Cesium.Cartographic.fromDegrees(9, 45, 0)),
+            Cesium.Cartographic.toCartesian(Cesium.Cartographic.fromDegrees(9, 45, 10))
+        ])).toBe(1);
+        expect(computeHeightSign([
+            Cesium.Cartographic.toCartesian(new Cesium.Cartographic(9, 45, 10)),
+            Cesium.Cartographic.toCartesian(new Cesium.Cartographic(9, 45, 0))
+        ])).toBe(-1);
+    });
+    it('cartesianToCartographicArray', () => {
+        expect(
+            cartesianToCartographicArray(Cesium.Cartographic.toCartesian(Cesium.Cartographic.fromDegrees(9, 45, 10))).map(Math.round)
+        ).toEqual([9, 45, 10]);
+        expect(
+            cartesianToCartographicArray(
+                Cesium.Cartographic.toCartesian(Cesium.Cartographic.fromDegrees(9, 45, 10)),
+                true
+            ).map(Math.round)
+        ).toEqual([9, 45, 0]);
+    });
+    it('computeGeodesicCoordinates', () => {
+        expect(
+            computeGeodesicCoordinates(
+                [Cesium.Cartographic.toCartesian(Cesium.Cartographic.fromDegrees(9, 45, 10))],
+                () => 5
+            ).map((cartesian) => cartesianToCartographicArray(cartesian).map(Math.round))
+        ).toEqual([[9, 45, 5]]);
     });
 });

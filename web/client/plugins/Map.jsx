@@ -9,7 +9,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect, createPlugin } from '../utils/PluginsUtils';
-import { loadFont } from '../utils/AgentUtils';
 import Spinner from 'react-spinkit';
 import './map/css/map.css';
 import Message from '../components/I18N/Message';
@@ -34,6 +33,7 @@ import catalog from "../epics/catalog";
 import backgroundSelector from "../epics/backgroundselector";
 import API from '../api/catalog';
 import { MapLibraries } from '../utils/MapTypeUtils';
+import {getHighlightLayerOptions} from "../utils/HighlightUtils";
 
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
@@ -107,8 +107,6 @@ import { MapLibraries } from '../utils/MapTypeUtils';
  *    {
  *      "name": "Map",
  *      "cfg": {
- *        "shouldLoadFont": true,
- *        "fonts": ['FontAwesome'],
  *        "tools": ["overview", "scalebar", "draw", {
  *          "leaflet": {
  *            "name": "test",
@@ -127,20 +125,8 @@ import { MapLibraries } from '../utils/MapTypeUtils';
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
  *
- * You can also specify a list of fonts that have to be loaded before map rendering
- * if the shouldLoadFont is true
- * This font pre-load list is required if you're using canvas based mapping libraries (e.g. OpenLayers) and you need to show markers with symbols (e.g. Annotations).
- * For each font you must specify the font name used in the `@font-face` inside the "fonts" array property. Note: the `@font-face` declaration must be present in css of the page, otherwise the font can not be loaded anyway.
- * ```
- * {
- *    "name": "Map",
- *    "cfg": {
- *      "shouldLoadFont": true,
- *      "fonts": ['FontAwesome']
- *    }
- *  }
- * ```
- * For more info on metadata visit [fontfaceobserver](https://github.com/bramstein/fontfaceobserver)
+ * You can no longer specify a list of fonts that have to be loaded before map rendering, we are now only loading FontAwesome for the icons
+ * We will pre-load FontAwesome only if needed, i.e you need to show markers with symbols (e.g. Annotations).
  *
  * An additional feature to is limit the area and/or the minimum level of zoom in the localConfig.json file using "mapConstraints" property
  *
@@ -209,7 +195,6 @@ class MapPlugin extends React.Component {
         loadingSpinner: PropTypes.bool,
         loadingError: PropTypes.string,
         tools: PropTypes.array,
-        fonts: PropTypes.array,
         options: PropTypes.object,
         mapOptions: PropTypes.object,
         projectionDefs: PropTypes.array,
@@ -218,14 +203,14 @@ class MapPlugin extends React.Component {
         actions: PropTypes.object,
         features: PropTypes.array,
         securityToken: PropTypes.string,
-        shouldLoadFont: PropTypes.bool,
         elevationEnabled: PropTypes.bool,
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         localizedLayerStylesName: PropTypes.string,
         currentLocaleLanguage: PropTypes.string,
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
-        onMapTypeLoaded: PropTypes.func
+        onMapTypeLoaded: PropTypes.func,
+        pluginsCreator: PropTypes.func
     };
 
     static defaultProps = {
@@ -237,7 +222,6 @@ class MapPlugin extends React.Component {
         tools: ["scalebar", "draw", "highlight", "popup", "box"],
         options: {},
         mapOptions: {},
-        fonts: ['FontAwesome'],
         toolsOptions: {
             measurement: {},
             locate: {},
@@ -259,37 +243,19 @@ class MapPlugin extends React.Component {
         },
         securityToken: '',
         additionalLayers: [],
-        shouldLoadFont: false,
         elevationEnabled: false,
         onResolutionsChange: () => {},
         items: [],
         onLoadingMapPlugins: () => {},
-        onMapTypeLoaded: () => {}
+        onMapTypeLoaded: () => {},
+        pluginsCreator
     };
     state = {
         canRender: true
     };
 
     UNSAFE_componentWillMount() {
-        const {shouldLoadFont, fonts} = this.props;
-
-        // load each font before rendering (see issue #3155)
-        if (shouldLoadFont && fonts) {
-            this.setState({canRender: false});
-
-            Promise.all(
-                fonts.map(f =>
-                    loadFont(f, {
-                        timeoutAfter: 5000 // 5 seconds in milliseconds
-                    }).catch((error) => {
-                        console.warn("Fonts loading check for map style responded slowly or with an error. Fonts in map may not be rendered correctly. This is not necessarily an issue.", error);  // eslint-disable-line no-console
-                    }
-                    ))
-            ).then(() => {
-                this.setState({canRender: true});
-            });
-
-        }
+        // moved the font load of FontAwesome only to styleParseUtils (#9653)
         this.updatePlugins(this.props);
         this._isMounted = true;
     }
@@ -306,10 +272,21 @@ class MapPlugin extends React.Component {
 
     getHighlightLayer = (projection, index, env) => {
         const plugins = this.state.plugins;
-        return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}} env={env}>
-            {this.props.features.map( (feature) => {
+        const {features, ...options} = getHighlightLayerOptions({features: this.props.features});
+        return (<plugins.Layer type="vector"
+            srs={projection}
+            position={index}
+            key="highlight"
+            env={env}
+            options={{
+                name: "highlight",
+                ...options,
+                features
+            }} >
+            {features.map( (feature) => {
                 return (<plugins.Feature
                     msId={feature.id}
+                    properties={feature.properties}
                     key={feature.id}
                     crs={projection}
                     type={feature.type}
@@ -345,7 +322,8 @@ class MapPlugin extends React.Component {
             });
         }
         const plugins = this.state.plugins;
-        return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
+        // all layers must have a valid id to avoid useless re-render
+        return [...this.props.layers, ...this.props.additionalLayers.map(({ id, ...layer }, idx) => ({ ...layer, id: id ? id : `additional-layers-${idx}` }))].filter(this.filterLayer).map((layer, index) => {
             return (
                 <plugins.Layer
                     type={layer.type}
@@ -441,14 +419,17 @@ class MapPlugin extends React.Component {
         </div>);
     }
     filterLayer = (layer) => {
-        return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
+        if (layer.useForElevation) {
+            return this.props.mapType === 'cesium' || this.props.elevationEnabled;
+        }
+        return layer.type !== 'elevation' || this.props.elevationEnabled;
     };
     updatePlugins = (props) => {
         this.currentMapType = props.mapType;
         props.onLoadingMapPlugins(true);
         // reset the map plugins to avoid previous map library in children
         this.setState({plugins: undefined });
-        pluginsCreator(props.mapType, props.actions).then((plugins) => {
+        this.props.pluginsCreator(props.mapType, props.actions).then((plugins) => {
             // #6652 fix mismatch on multiple concurrent plugins loading
             // to make the last mapType match the list of plugins
             if (this._isMounted && plugins.mapType === this.currentMapType) {

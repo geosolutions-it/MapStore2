@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-import React, { useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {DropdownButton, Glyphicon, MenuItem, NavDropdown} from 'react-bootstrap';
 import {connect} from "react-redux";
@@ -23,6 +23,8 @@ import {
     isParametersOpenSelector
 } from "../../selectors/longitudinalProfile";
 import { isCesium } from '../../selectors/maptype';
+import { getOffsetTop, getOffsetBottom } from '../../utils/DOMUtil';
+
 
 const TNavDropdown = tooltip(NavDropdown);
 const TDropdownButton = tooltip(DropdownButton);
@@ -30,63 +32,92 @@ const TDropdownButton = tooltip(DropdownButton);
 /**
  * A DropDown menu for longitudinal profile
  */
-const UserMenu = ({
+const Menu = ({
     className,
     dataSourceMode,
     initialized,
+    menuItem,
     isParametersOpen,
     menuIsActive,
     nav,
-    showDrawOption = true,
+    showDrawOption,
     tooltipPosition,
     onActivateTool,
     onToggleParameters,
     onToggleSourceMode
 }) => {
     let DropDown = nav ? TNavDropdown : TDropdownButton;
-
+    const [dropUp, setDropUp ] = useState(false);
     const onToggleTool = useCallback((toolName) => () => {
         onActivateTool();
         onToggleSourceMode(toolName);
     }, []);
+    useEffect(() => {
+        const ButtonElement = document.getElementById("longitudinal-tool");
+        const offsetTop = getOffsetTop(ButtonElement);
+        const offsetBottom = getOffsetBottom(ButtonElement);
+        const dropUpVal = offsetTop > 130 || offsetBottom < 130;
+        setDropUp(dropUpVal);
+    }, []);
+    const [open, setMenuOpen ] = useState(false);
+    const body = (<>
+        {showDrawOption ? <MenuItem active={dataSourceMode === 'draw'} key="draw" onClick={onToggleTool('draw')}>
+            <Glyphicon glyph="pencil"/><Message msgId="longitudinalProfile.draw"/>
+        </MenuItem> : null}
+        <MenuItem active={dataSourceMode === 'import'} key="import" onClick={onToggleTool('import')}>
+            <Glyphicon glyph="upload"/> <Message msgId="longitudinalProfile.import"/>
+        </MenuItem>
+        <MenuItem active={dataSourceMode === 'select'} key="select" onClick={onToggleTool('select')}>
+            <Glyphicon glyph="1-layer"/> <Message msgId="longitudinalProfile.select"/>
+        </MenuItem>
+        <MenuItem key="divider" divider/>
+        <MenuItem active={isParametersOpen} key="parameters" onClick={onToggleParameters}>
+            <Glyphicon glyph="cog"/> <Message msgId="longitudinalProfile.parameters"/>
+        </MenuItem>
+    </>);
+    if (!initialized) {
+        return false;
+    }
+    if (menuItem) {
+        // inside extra tools
+        return (<>
+            {open &&
+                <div className="open dropup btn-group btn-group-tray" style={{display: "inline"}}>
+                    <ul role="menu" className="dropdown-menu dropdown-menu-right" aria-labelledby="longitudinal-tool">
+                        {body}
+                    </ul>
+                </div>}
+            <MenuItem active={menuIsActive || open} key="menu" onClick={() => setMenuOpen(!open)}>
+                <Glyphicon glyph="1-line"/>
+                <Message msgId="longitudinalProfile.title"/>
+            </MenuItem></>);
+    }
+    return  (<DropDown
+        dropup={dropUp}
+        open={open}
+        onToggle={(val) => setMenuOpen(val)}
+        id="longitudinal-tool"
+        className={className}
+        pullRight
+        bsStyle={menuIsActive ? "primary" : "tray"}
+        title={<Glyphicon glyph="1-line"/>}
+        tooltipId="longitudinalProfile.title"
+        tooltipPosition={tooltipPosition}
+        noCaret
+    >
+        {body}
+    </DropDown>);
 
-    return initialized ? (
-        <React.Fragment>
-            <DropDown
 
-                id="longitudinal-tool"
-                className={className}
-                pullRight
-                bsStyle={menuIsActive ? "primary" : "tray"}
-                title={<Glyphicon glyph="1-line"/>}
-                tooltipId="longitudinalProfile.title"
-                tooltipPosition={tooltipPosition}
-                noCaret
-            >
-                {showDrawOption ? <MenuItem active={dataSourceMode === 'draw'} key="draw" onClick={onToggleTool('draw')}>
-                    <Glyphicon glyph="pencil"/><Message msgId="longitudinalProfile.draw"/>
-                </MenuItem> : null}
-                <MenuItem active={dataSourceMode === 'import'} key="import" onClick={onToggleTool('import')}>
-                    <Glyphicon glyph="upload"/> <Message msgId="longitudinalProfile.import"/>
-                </MenuItem>
-                <MenuItem active={dataSourceMode === 'select'} key="select" onClick={onToggleTool('select')}>
-                    <Glyphicon glyph="1-layer"/> <Message msgId="longitudinalProfile.select"/>
-                </MenuItem>
-                <MenuItem key="divider" divider/>
-                <MenuItem active={isParametersOpen} key="parameters" onClick={onToggleParameters}>
-                    <Glyphicon glyph="cog"/> <Message msgId="longitudinalProfile.parameters"/>
-                </MenuItem>
-            </DropDown>
-        </React.Fragment>
-    ) : false;
 };
 
-UserMenu.propTypes = {
+Menu.propTypes = {
     className: PropTypes.string,
     dataSourceMode: PropTypes.string,
     initialized: PropTypes.bool,
     isParametersOpen: PropTypes.bool,
     menuIsActive: PropTypes.bool,
+    menuItem: PropTypes.bool,
     nav: PropTypes.bool,
     showDrawOption: PropTypes.bool,
     tooltipPosition: PropTypes.string,
@@ -95,7 +126,7 @@ UserMenu.propTypes = {
     onToggleSourceMode: PropTypes.func
 };
 
-UserMenu.defaultProps = {
+Menu.defaultProps = {
     className: "square-button",
     menuIsActive: false,
     nav: false,
@@ -103,10 +134,10 @@ UserMenu.defaultProps = {
     onActivateTool: () => {},
     onToggleParameters: () => {},
     onToggleSourceMode: () => {},
-    tooltipPosition: 'bottom'
+    tooltipPosition: 'left'
 };
 
-const UserMenuConnected =  connect((state) => ({
+const MenuConnected =  connect((state) => ({
     menuIsActive: isActiveMenuSelector(state),
     dataSourceMode: dataSourceModeSelector(state),
     isParametersOpen: isParametersOpenSelector(state),
@@ -116,6 +147,6 @@ const UserMenuConnected =  connect((state) => ({
     onActivateTool: setControlProperty.bind(null, "longitudinalProfileTool", "enabled", true),
     onToggleSourceMode: toggleMode,
     onToggleParameters: setControlProperty.bind(null, "LongitudinalProfileToolParameters", "enabled", true, true)
-})(UserMenu);
+})(Menu);
 
-export default UserMenuConnected;
+export default MenuConnected;

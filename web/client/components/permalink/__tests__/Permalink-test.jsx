@@ -9,7 +9,7 @@
 import React from 'react';
 
 import ReactDOM from 'react-dom';
-import Permalink from '../Permalink';
+import Permalink, {getPathinfo} from '../Permalink';
 import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
 
@@ -72,6 +72,28 @@ describe('Permalink tests', () => {
         expect(args.resource.category).toBe('PERMALINK');
         expect(args.resource.attributes).toBeTruthy();
         expect(args.resource.attributes.pathTemplate).toBe("/context/${name}?category=PERMALINK");
+    });
+    it('test permalink - getPathinfo', () => {
+        let pathInfo = getPathinfo("/#/");
+        expect(pathInfo).toEqual({type: "map", pathTemplate: "/viewer/${id}"});
+        pathInfo = getPathinfo("/#/map");
+        expect(pathInfo).toEqual({type: "map", pathTemplate: "/map/${id}"});
+        pathInfo = getPathinfo("/#/map/12");
+        expect(pathInfo).toEqual({type: "map", pathTemplate: "/map/${id}"});
+        pathInfo = getPathinfo("/#/viewer/");
+        expect(pathInfo).toEqual({type: "map", pathTemplate: "/viewer/${id}"});
+        pathInfo = getPathinfo("/#/viewer/12");
+        expect(pathInfo).toEqual({type: "map", pathTemplate: "/viewer/${id}"});
+        pathInfo = getPathinfo("/#/dashboard/12");
+        expect(pathInfo).toEqual({type: "dashboard", pathTemplate: "/dashboard/${id}"});
+        pathInfo = getPathinfo("/#/geostory/12");
+        expect(pathInfo).toEqual({type: "geostory", pathTemplate: "/geostory/${id}"});
+        pathInfo = getPathinfo("/#/geostory/shared/12");
+        expect(pathInfo).toEqual({type: "geostory", pathTemplate: "/geostory/shared/${id}"});
+        pathInfo = getPathinfo("/#/context/12");
+        expect(pathInfo).toEqual({type: "context", pathTemplate: "/context/${name}?category=PERMALINK"});
+        pathInfo = getPathinfo("/#/context/cname/12");
+        expect(pathInfo).toEqual({type: "context", pathTemplate: "/context/${name}?category=PERMALINK"});
     });
     it('test show permalink link panel', () => {
         ReactDOM.render(<Permalink shareUrl="#/viewer/22" settings={{name: 1}} />, document.getElementById("container"));

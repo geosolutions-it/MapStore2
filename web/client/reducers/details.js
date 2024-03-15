@@ -13,7 +13,7 @@ import {
 const details = (state = {}, action) => {
     switch (action.type) {
     case UPDATE_DETAILS: {
-        return {...state, detailsText: action.detailsText};
+        return {...state, detailsText: action.detailsText, id: action.id};
     }
     default:
         return state;

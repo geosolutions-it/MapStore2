@@ -73,11 +73,12 @@ describe('Test correctness of the search actions', () => {
         expect(retval2.append).toBe(true);
     });
     it('search item selected', () => {
-        const retval = selectSearchItem("A", "B", {color: '#ff0000'});
+        const retval = selectSearchItem("A", "B", "C", {color: '#ff0000'});
         expect(retval).toExist();
         expect(retval.type).toBe(TEXT_SEARCH_ITEM_SELECTED);
         expect(retval.item).toEqual("A");
         expect(retval.mapConfig).toBe("B");
+        expect(retval.service).toBe("C");
         expect(retval.resultsStyle).toEqual({color: '#ff0000'});
     });
     it('search item cancelled', () => {

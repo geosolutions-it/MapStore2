@@ -13,7 +13,8 @@ import {
     updateAdditionalLayer,
     updateOptionsByOwner,
     removeAdditionalLayer,
-    removeAllAdditionalLayers
+    removeAllAdditionalLayers,
+    mergeOptionsByOwner
 } from '../../actions/additionallayers';
 
 import additionallayers from '../additionallayers';
@@ -34,6 +35,36 @@ describe('Test additional layers reducer', () => {
                 owner,
                 actionType,
                 options
+            }
+        ]);
+    });
+    it('merge an additional layer', () => {
+        const id = 'layer_001';
+        const owner = 'owner';
+        const actionType = 'override';
+        const options = {
+            style: 'generic'
+        };
+        const newOptions = {
+            features: []
+        };
+        const state = additionallayers([
+            {
+                id,
+                owner,
+                actionType,
+                options
+            }
+        ], mergeOptionsByOwner(owner, newOptions));
+        expect(state).toEqual([
+            {
+                id,
+                owner,
+                actionType,
+                options: {
+                    ...options,
+                    ...newOptions
+                }
             }
         ]);
     });

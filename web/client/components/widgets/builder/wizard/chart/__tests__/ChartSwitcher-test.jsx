@@ -13,7 +13,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 import ChartSwitcher from '../ChartSwitcher';
 
-const charts = [{chartId: 1, layer: {title: 'm1'}}, {chartId: 2, layer: {title: 'm2'}}];
+const charts = [{chartId: 1}, {chartId: 2}];
 describe('ChartSwitcher component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -32,7 +32,7 @@ describe('ChartSwitcher component', () => {
         const switcherDropdown = container.querySelector('.Select');
         expect(switcherDropdown).toBeTruthy();
         const switcherValue = container.querySelector('.Select-value-label');
-        expect(switcherValue.textContent).toBe('m1');
+        expect(switcherValue.textContent).toBe('[Chart 1]');
     });
     it('ChartSwitcher render without container', () => {
         ReactDOM.render(<ChartSwitcher charts={charts}/>, document.getElementById("container"));

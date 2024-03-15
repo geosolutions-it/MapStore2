@@ -73,15 +73,15 @@ Once a new record is created, it's possible to draw a geometry for it, by clicki
 
 * For *Polygons* and *Multipolygons* layers, each click on the map add a new vertex (the minimum is 3). Once the vertex are set, it is possible to change the shape by creating new vertices or dragging the existing ones:
 
-<img src="../img/attributes-table/drawing-polygon-shape.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/attributes-table/drawing-polygon-shape.mp4"/></video>
 
 * For *Lines* and *Multilines* layers the shape drawing function works more or less in the same way. The only difference is that you need at least two vertices to draw a line and not three like for polygons:
 
-<img src="../img/attributes-table/drawing-line-shape.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/attributes-table/drawing-line-shape.mp4"/></video>
 
 * For *Points* layers a point is drawn for each click on the map
 
-<img src="../img/attributes-table/drawing-point-shape.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/attributes-table/drawing-point-shape.mp4"/></video>
 
 The user is always allowed to delete the drawn shape through the <img src="../img/button/delete-geometry-button.jpg" class="ms-docbutton"/> button.
 
@@ -89,13 +89,13 @@ The user is always allowed to delete the drawn shape through the <img src="../im
 
 To fine tune the vertex position while editing or creating a new feature geometry, it is possible to leverage on the Snapping functionality. Through this function <img src="../img/button/snapping.jpg" class="ms-docbutton"/> it is possible to snap to other vertices of features belonging to the same layer or to others while editing a feature.
 
-<img src="../img/attributes-table/add-new-snapping-geometry.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/attributes-table/add-new-snapping-geometry.mp4"/></video>
 
 The tool provides the ability to tune the snapping function so that the user can:
 
 * Choose one of the visible map layers in TOC to be used for the snapping
 
-<img src="../img/attributes-table/snap-new-layer.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/attributes-table/snap-new-layer.mp4"/></video>
 
 * Choose where to snap the layer, enabling/disabling the **Edge** or/and the **Vertex**
 
@@ -112,11 +112,11 @@ The tool provides the ability to tune the snapping function so that the user can
 
 In order to edit an existing feature, it is necessary to switch the Attribute Table in editing mode by clicking the *Edit mode* <img src="../img/button/editing-button.jpg" class="ms-docbutton"/> button. If the goal is to edit the Attribute Table records, the user can simply select them and type the desired value into the input field. However, it is also possible to modify the geometry associated with a record by editing it on the map (adding or changing its vertices).
 
-<img src="../img/attributes-table/update-polygon-shape.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/attributes-table/update-polygon-shape.mp4"/></video>
 
 !!! note
     It is possible to edit the value of an attribute for multiple records at once by selecting the corresponding cell in the table and dragging the content onto the multiple cells, as follows:
-    <img src="../img/attributes-table/multiple_features.gif" class="ms-docimage" style="max-width:300px;"/>
+    <video  class="ms-docimage" style="max-width:300px;" controls><source src="../img/attributes-table/multiple_features.mp4"/></video>
 
 With a click on **Save changes** <img src="../img/button/save-changes.jpg" class="ms-docbutton"/> these changes will be persistent.<br> In *Edit mode*, the user can also delete some features by selecting them in the table and clicking on the <img src="../img/button/delete-features-button.jpg" class="ms-docbutton" /> button.
 
@@ -154,8 +154,8 @@ With a click on the <img src="../img/button/export_at.jpg" class="ms-docbutton"/
 
 * Ordering the records in alphabetic order (if it's a text field) or from the minimum to the maximum value and viceversa (if it's a numerical field):
 
-<img src="../img/attributes-table/ordering_records.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/attributes-table/ordering_records.mp4"/></video>
 
 * Deciding which columns to show and which to hide through the <img src="../img/button/hide_show_col.jpg" class="ms-docbutton"/> button:
 
-<img src="../img/attributes-table/show_hide_columns.gif" class="ms-docimage"/>
+<video  class="ms-docimage" controls><source src="../img/attributes-table/show_hide_columns.mp4"/></video>

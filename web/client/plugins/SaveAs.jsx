@@ -20,6 +20,10 @@ import {resetMapSaveError} from '../actions/config';
 import SaveBaseDialog from './maps/MapSave';
 
 const showMapSaveAsSelector = state => state.controls && state.controls.mapSaveAs && state.controls.mapSaveAs.enabled;
+export const omitResourceProperties = (show, resource) => {
+    const {id, attributes, name, description, detailsSettings, creator, editor, advertised, creation, lastUpdate, ...others} = resource || {};
+    return { show, resource: others };
+};
 
 /**
  * Plugin for Create/Clone a Map. Saves the map as a new Resource (using the persistence API).
@@ -33,10 +37,7 @@ export default createPlugin('SaveAs', {
         connect(createSelector(
             showMapSaveAsSelector,
             mapInfoSelector,
-            (show, resource) => {
-                const {id, attributes, name, description, detailsSettings, ...others} = resource || {};
-                return {show, resource: others};
-            }),
+            omitResourceProperties),
         {
             onClose: toggleControl.bind(null, 'mapSaveAs', false),
             onResetMapSaveError: resetMapSaveError

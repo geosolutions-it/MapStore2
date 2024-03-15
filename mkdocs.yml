@@ -1,14 +1,29 @@
 site_name: MapStore
 site_url: 'https://mapstore.geosolutionsgroup.com'
+copyright: <b><a href="https://mapstore.geosolutionsgroup.com" target="_blank">MapStore&copy;</a></b> is Free and Open Source software and is licensed under the Simplified BSD License.
 use_directory_urls: true
 theme:
   name: 'material'
+  highlightjs: true
+  icon:
+    logo: 'img/mapstore2-logo.png'
+    repo: 'fontawesome/brands/github-alt'
+  favicon: 'img/favicon.ico'
   custom_dir: 'docs/theme'
   language: 'en'
-  feature:
-    tabs: true
+  features:
+    - header.autohide
+    - navigation.instant
+    - navigation.top
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.path
+    - navigation.indexes
+    - navigation.footer
+    - content.code.copy
   logo: 'img/mapstore2-logo.png'
   company_url: 'http://www.geo-solutions.it'
+  company_logo: 'img/geosolutions-brand.png'
   company_contacts: 'GeoSolutions | sales@geosolutionsgroup.com '
   palette:
     primary: 'teal'
@@ -20,14 +35,14 @@ extra:
       icon: 'fontawesome/brands/github'
       link: 'https://github.com/geosolutions-it'
     - type: 'twitter'
-      icon: 'fontawesome/brands/twitter'
+      icon: 'fontawesome/brands/x-twitter'
       link: 'https://twitter.com/geosolutions_it'
     - type: 'linkedin'
       icon: 'fontawesome/brands/linkedin'
       link: 'https://it.linkedin.com/company/geosolutions-s-a-s-'
 extra_javascript:
   - 'https://code.jquery.com/jquery-3.3.1.min.js'
-  - 'https://unpkg.com/mermaid@9.1.3/dist/mermaid.min.js'
+  - 'https://unpkg.com/mermaid@10.6.0/dist/mermaid.min.js'
 extra_css:
   - 'theme/css/extra.css'
 repo_name: 'geosolutions-it/MapStore2'
@@ -45,7 +60,9 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_div_format
 nav:
-  - Home: 'index.md' # To include in pdf
+  - Home:
+    - Home: 'index.md' # To include in pdf
+    - Quick Start: 'quick-start.md'
   - User Guide:
     - Home Page Overview: 'user-guide/home-page.md'
     - Managing Users and Groups:
@@ -77,6 +94,7 @@ nav:
       - Map Views: 'user-guide/map-views.md'
       - Street View: 'user-guide/street-view.md'
       - Longitudinal Profile: 'user-guide/longitudinal-profile.md'
+      - GeoProcessing Tool: 'user-guide/geoprocessing-tool.md'
       - Navigation Toolbar: 'user-guide/navigation-toolbar.md'
       - Background Selector: 'user-guide/background.md'
       - Timeline: 'user-guide/timeline.md'
@@ -140,6 +158,7 @@ nav:
       - Externalize Configuration: 'developer-guide/externalized-configuration.md'
       - Configuration of Application Context Manager: 'developer-guide/context-editor-config.md'
       - Filters: 'developer-guide/LayerFilter.md'
+      - Styles: 'developer-guide/vector-style.md'
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - Users:
@@ -157,10 +176,20 @@ nav:
     - Communicating with MapStore:
       - API usage: 'developer-guide/API-usage.md'
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
-  - Quick Start: 'quick-start.md'
 plugins:
   - search
-  - pdf-export:
-      combined: true
-      combined_output_path: pdf/mapstore_documentation.pdf
+  - with-pdf:
+      author: GeoSolutionsGroup
+      copyright: 'MapStore©'
+      #
+      #cover: false
+      #back_cover: true
+      cover_logo: 'img/mapstore2-logo.png'
+      cover_title: MapStore Documentation
+      cover_subtitle: User Guide and Developer Guide
+      toc_level: 3
+      output_path: pdf/mapstore_documentation.pdf
       enabled_if_env: ENABLE_PDF_EXPORT
+      debug_html: true
+      show_anchors: true
+      verbose: true

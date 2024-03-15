@@ -12,10 +12,13 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Calendar } from 'react-widgets';
 import localizer from 'react-widgets/lib/localizers/moment';
-import { Tooltip } from 'react-bootstrap';
-import { isDate, isNil } from 'lodash';
+import { Tooltip, Glyphicon } from 'react-bootstrap';
+import { isDate, isNil, omit } from 'lodash';
 import OverlayTrigger from '../OverlayTrigger';
 import Hours from './Hours';
+import Popover from '../../styleeditor/Popover';
+import {getMessageById} from '../../../utils/LocaleUtils';
+import QuickTimeSelectors from './QuickTimeSelectors';
 
 localizer(moment);
 
@@ -54,6 +57,7 @@ const formats = {
 class DateTimePicker extends Component {
 
     static propTypes = {
+        className: PropTypes.string,
         format: PropTypes.string,
         type: PropTypes.string,
         placeholder: PropTypes.string,
@@ -66,16 +70,25 @@ class DateTimePicker extends Component {
         culture: PropTypes.string,
         toolTip: PropTypes.string,
         tabIndex: PropTypes.string,
-        options: PropTypes.object
+        options: PropTypes.object,
+        isWithinAttrTbl: PropTypes.bool,
+        disabled: PropTypes.bool,
+        quickDateTimeSelectors: PropTypes.array,
+        onPopoverOpen: PropTypes.func
     }
-
+    static contextTypes = {
+        messages: PropTypes.object,
+        locale: PropTypes.string
+    };
     static defaultProps = {
         placeholder: 'Type date...',
         calendar: true,
         time: true,
         onChange: () => { },
         value: null,
-        popupPosition: 'bottom'
+        popupPosition: 'bottom',
+        isWithinAttrTbl: false,
+        onPopoverOpen: () => {}
     }
 
     state = {
@@ -95,6 +108,7 @@ class DateTimePicker extends Component {
         if (prevProps.value !== this.props.value || prevProps.operator !== this.props.operator) {
             const { value, operator } = this.props;
             this.setDateFromValueProp(value, operator);
+            if (this.props.operator === 'isNull') this.setState({ inputValue: '', date: null });
         }
     }
 
@@ -104,18 +118,74 @@ class DateTimePicker extends Component {
         return format ? format : !time && calendar ? dateFormat : time && !calendar ? timeFormat : defaultFormat;
     }
 
-    renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible) => {
+    renderQuickTimeSelectors = () => {
+        return (
+            <QuickTimeSelectors
+                type={this.props.type}
+                quickDateTimeSelectors={this.props.quickDateTimeSelectors}
+                onMouseDown={this.handleMouseDown}
+                onChangeDate={this.handleCalendarChange}
+                onChangeTime={(date, type) => this.handleTimeSelect({date}, type)}
+            />
+        );
+    }
+
+    renderCustomDateTimePopup = () => {
+        const { inputValue, operator, open } = this.state;
+        const { tabIndex, type } = this.props;
+
+        const timeVisible = open === 'time';
+        const props = omit(this.props, ['placeholder', 'calendar', 'time', 'onChange', 'value']);
+        const calendarVal = this.props.value?.startDate ?? this.props.value;
+        let timePlaceholderMsgId = getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.time");
+
+        return (
+            <div style={{display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto', height: 'inherit'}}>
+                    <div className="date-time-container">
+                        <Calendar
+                            tabIndex="-1"
+                            ref={this.attachCalRef}
+                            onMouseDown={this.handleMouseDown}
+                            onChange={this.handleCalendarChange}
+                            {...props}
+                            value={!isNil(calendarVal) ? new Date(calendarVal) : undefined}
+                        />
+                        <div>
+                            <div className="date-time-hour-input">
+                                {this.renderInput(inputValue, operator, '', timePlaceholderMsgId, tabIndex, false, true, 'form-control')}
+                                <span className="time-icon">
+                                    <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
+                                        <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
+                                    </button>
+                                </span>
+                            </div>
+                            <div className="dateTime-picker-hours" style={{display: timeVisible ? 'block' : 'none', background: 'white', position: 'relative', zIndex: 1}}>
+                                <Hours style={{maxHeight: "120px"}} ref={this.attachTimeRef} value={inputValue} {...props} onClose={this.close} onSelect={(time) => this.handleTimeSelect(time, type)} />
+                            </div>
+                        </div>
+                        {this.renderQuickTimeSelectors()}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+    renderInput = (inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible, className) => {
+        let inputV = this.props.isWithinAttrTbl ? `${inputValue}` : `${operator}${inputValue}`;
+        let isNullOperator = this.props.operator === 'isNull';
+        if (isNullOperator) inputV = '';
+        const inputEl = <input type="text" disabled={this.props.disabled || isNullOperator} id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={inputV} className={`rw-input ${className ? className : ''}`} onChange={this.handleValueChange} />;
         if (toolTip) {
             return (<OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">{toolTip}</Tooltip>}>
-                <input type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={`${operator}${inputValue}`} className="rw-input" onChange={this.handleValueChange} />
+                {inputEl}
             </OverlayTrigger>);
         }
-        return (<input type="text" id="rw_1_input" role="combobox" onBlur={this.handleInputBlur} placeholder={placeholder} aria-expanded={calendarVisible || timeVisible} aria-haspopup="true" aria-busy="false" aria-owns="rw_1_cal rw_1_time_listbox" tabIndex={tabIndex} autoComplete="off" value={`${operator}${inputValue}`} className="rw-input" onChange={this.handleValueChange} />);
+        return inputEl;
     }
 
     render() {
-        const { open, inputValue, operator, focused } = this.state;
-        const { calendar, time, toolTip, placeholder, tabIndex, popupPosition } = this.props;
+        const { open, inputValue, operator, focused, openDateTime } = this.state;
+        const { calendar, time, toolTip, placeholder, tabIndex, type, popupPosition, className } = this.props;
         const props = Object.keys(this.props).reduce((acc, key) => {
             if (['placeholder', 'calendar', 'time', 'onChange', 'value'].includes(key)) {
                 // remove these props because they might have undesired effects to the subsequent components
@@ -127,42 +197,93 @@ class DateTimePicker extends Component {
         }, {});
         const calendarVisible = open === 'date';
         const timeVisible = open === 'time';
+        const dateTimeVisible = openDateTime === 'dateTime';
+        const calendarVal =  this.props.value?.startDate ?? this.props.value;
+        let timePlaceholderMsgId = getMessageById(this.context.messages, "featuregrid.attributeFilter.placeholders.time");
 
-        return (
-            <div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${focused ? 'rw-state-focus' : ''}`}>
-                {this.renderInput(inputValue, operator, toolTip, placeholder, tabIndex, calendarVisible, timeVisible)}
-                {calendar || time ?
+        if (type === 'date-time') {
+            return (<div tabIndex="-1" ref={elem => {this.dateTimeRef = elem;}} onBlur={() => this.handleWidgetBlur(type)} onKeyDown={this.handleKeyDown} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker range-time-input rw-widget ${focused ? 'rw-state-focus' : ''}`}>
+                {this.renderInput(inputValue, operator, dateTimeVisible ? '' : toolTip, placeholder, tabIndex, true, true)}
+                <span className="rw-select" >
+                    <Popover
+                        onClick={this.toggleDateTime}
+                        disabled={false}
+                        placement={popupPosition}
+                        onOpen={this.props.onPopoverOpen}
+                        triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
+                        content={
+                            <div className={`shadow-soft picker-container date-time ${className}`}>
+                                {this.renderCustomDateTimePopup()}
+                            </div>
+                        }
+                    >
+                        <button disabled={this.props.disabled} tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn">
+                            <Glyphicon glyph={'date-time'} />
+                        </button>
+                    </Popover>
+                </span>
+            </div>);
+        } else if (type === 'time') {
+            return (
+                <div tabIndex="-1" onBlur={this.handleWidgetBlur} onKeyDown={this.handleKeyDown} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
+                    {this.renderInput(inputValue, operator, timeVisible ? '' : toolTip, timePlaceholderMsgId, tabIndex, calendarVisible, timeVisible)}
                     <span className="rw-select">
-                        {
-                            calendar ? <button tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" onClick={this.toggleCalendar}>
-                                <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
-                            </button> : ''
-                        }
-                        {
-                            time ? <button tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" onClick={this.toggleTime}>
+                        <Popover
+                            onClick={this.toggleTime}
+                            disabled={false}
+                            placement={popupPosition}
+                            onOpen={this.props.onPopoverOpen}
+                            triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}
+                            content={
+                                <div className="shadow-soft" style={{position: "relative", width: 300, height: 'fit-content', overflow: "auto" }}>
+                                    <div className="dateTime-picker-hours" style={{display: 'block', background: 'white', position: 'relative', zIndex: 1}}>
+                                        <div style={{ height: '120px' }}>
+                                            <Hours style={{maxHeight: "120px"}} ref={this.attachTimeRef} value={inputValue} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        >
+                            <button disabled={this.props.disabled} tabIndex="-1" title="Select Time" type="button" aria-disabled="false" aria-label="Select Time" className="rw-btn-time rw-btn" >
                                 <span aria-hidden="true" className="rw-i rw-i-clock-o"></span>
-                            </button> : ''
-                        }
+                            </button>
+                        </Popover>
+                    </span>
+                </div>
+            );
+        }
+        return (
+            <div tabIndex="-1" onKeyDown={this.handleKeyDown} onBlur={this.handleWidgetBlur} onFocus={this.handleWidgetFocus} className={`rw-datetimepicker rw-widget ${calendar && time ? 'rw-has-both' : ''} ${!calendar && !time ? 'rw-has-neither' : ''} ${type === 'time' ? 'time-type' : ''} ${focused ? 'rw-state-focus' : ''}`}>
+                {this.renderInput(inputValue, operator, calendarVisible ? '' : toolTip, placeholder, tabIndex, calendarVisible, timeVisible)}
+                {calendar ?
+                    <span className="rw-select">
+                        <Popover
+                            onClick={this.toggleCalendar}
+                            disabled={false}
+                            placement={popupPosition}
+                            onOpen={this.props.onPopoverOpen}
+                            triggerScrollableElement={document.querySelector('.feature-grid-container .react-grid-Container .react-grid-Canvas')}       // table element to trigger its scroll
+                            content={
+                                <div className={`shadow-soft picker-container ${className}`}>
+                                    <Calendar
+                                        tabIndex="-1"
+                                        ref={this.attachCalRef}
+                                        onMouseDown={this.handleMouseDown}
+                                        onChange={this.handleCalendarChange}
+                                        {...props}
+                                        value={!isNil(calendarVal) ? new Date(calendarVal) : undefined}
+                                    />
+                                    {this.renderQuickTimeSelectors()}
+                                </div>
+                            }
+                        >
+                            <button disabled={this.props.disabled} tabIndex="-1" title="Select Date" type="button" aria-disabled="false" aria-label="Select Date" className="rw-btn-calendar rw-btn" >
+                                <span aria-hidden="true" className="rw-i rw-i-calendar"></span>
+                            </button>
+                        </Popover>
                     </span>
                     : ''
                 }
-                <div className={`rw-popup-container rw-popup-animating ${popupPosition === 'top' ? 'rw-dropup' : ''}`} style={{ display: timeVisible ? "block" : "none", overflow: timeVisible ? "visible" : "hidden", height: "216px" }}>
-                    <div className={`rw-popup rw-widget`} style={{ transform: timeVisible ? 'translateY(0)' : 'translateY(-100%)', position: timeVisible ? '' : 'absolute' }}>
-                        <Hours ref={this.attachTimeRef} onMouseDown={this.handleMouseDown} {...props} onClose={this.close} onSelect={this.handleTimeSelect} />
-                    </div>
-                </div>
-                <div className={`rw-calendar-popup rw-popup-container ${popupPosition === 'top' ? 'rw-dropup' : ''} ${!calendarVisible ? 'rw-popup-animating' : ''}`} style={{ display: calendarVisible ? 'block' : 'none', overflow: calendarVisible ? 'visible' : 'hidden', height: '285px' }}>
-                    <div className={`rw-popup`} style={{ transform: calendarVisible ? 'translateY(0)' : 'translateY(-100%)', padding: '0', borderRadius: '4px', position: calendarVisible ? '' : 'absolute' }}>
-                        <Calendar
-                            tabIndex="-1"
-                            ref={this.attachCalRef}
-                            onMouseDown={this.handleMouseDown}
-                            onChange={this.handleCalendarChange}
-                            {...props}
-                            value={!isNil(this.props.value) ? new Date(this.props.value) : undefined}
-                        />
-                    </div>
-                </div>
             </div>
         );
     }
@@ -172,15 +293,22 @@ class DateTimePicker extends Component {
     ignoreBlur = false;
 
     handleWidgetFocus = () => {
-        this.setState({ focused: true });
-        this.ignoreBlur = false;
+        if (!this.props.disabled) {
+            this.setState({ focused: true });
+            this.ignoreBlur = false;
+        }
     }
 
-    handleWidgetBlur = () => {
+    handleWidgetBlur = (type) => {
         if (this.ignoreBlur) {
             return;
         }
-        this.setState({ open: '', focused: false });
+        if (type === 'date-time') {
+            // this.dateTimeRef.click();
+            this.setState({ openDateTime: '', focused: false });
+        } else {
+            this.setState({ open: '', focused: false });
+        }
     }
 
     handleMouseDown = () => {
@@ -190,7 +318,9 @@ class DateTimePicker extends Component {
     toggleCalendar = () => {
         this.setState(prevState => ({ open: prevState.open !== 'date' ? 'date' : '' }));
     }
-
+    toggleDateTime = () => {
+        this.setState(prevState => ({ openDateTime: prevState.openDateTime !== 'dateTime' ? 'dateTime' : '', open: '' }));
+    }
     toggleTime = () => {
         this.setState(prevState => ({ open: prevState.open !== 'time' ? 'time' : '' }));
     }
@@ -236,7 +366,7 @@ class DateTimePicker extends Component {
     }
 
     close = () => {
-        this.setState({ open: '' });
+        this.setState({ open: '', openDateTime: '' });
     }
 
     open = () => {
@@ -273,11 +403,11 @@ class DateTimePicker extends Component {
         }
 
         if (timeVisible) {
-            this.timeRef.handleKeyDown(e);
+            this.timeRef?.handleKeyDown(e);
         }
 
         if (calVisible) {
-            this.calRef.refs.inner.handleKeyDown(e);
+            this.calRef?.refs?.inner?.handleKeyDown(e);
         }
 
         if (!timeVisible && !calVisible && e.key === 'Enter') {
@@ -303,13 +433,16 @@ class DateTimePicker extends Component {
     }
 
     handleCalendarChange = value => {
-        const date = setTime(value, this.state.date || new Date());
+        const date = setTime(value, this.state.date || new Date(value));
         const inputValue = this.format(date);
         this.setState({ date, inputValue, open: '' });
         this.props.onChange(date, `${this.state.operator}${inputValue}`);
     }
 
-    handleTimeSelect = time => {
+    handleTimeSelect = (time, pickerType) => {
+        if (pickerType === 'date-time') {
+            this.ignoreBlur = true;
+        }
         const selectedDate = this.state.date || new Date();
         const date = setTime(selectedDate, time.date);
         const inputValue = this.format(date);

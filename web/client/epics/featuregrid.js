@@ -273,11 +273,11 @@ const createLoadPageFlow = (store) => ({page, size, reason} = {}) => {
 
 const createInitialQueryFlow = (action$, store, {url, name, id, fields} = {}) => {
     const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
-    const createInitialQuery = () => createQuery(url, filterObj || {
+    const createInitialQuery = (action) => createQuery(url, filterObj || {
         featureTypeName: name,
         filterType: 'OGC',
         ogcVersion: '1.1.0'
-    });
+    }, action.owner);
 
     return Rx.Observable.of(featureTypeSelected(url, name, fields)).merge(
         action$.ofType(FEATURE_TYPE_LOADED).filter(({typeName} = {}) => typeName === name)
@@ -356,8 +356,8 @@ export const featureGridLayerSelectionInitialization = (action$) =>
  */
 export const featureGridStartupQuery = (action$, store) =>
     action$.ofType(QUERY_CREATE)
-        .switchMap(() => Rx.Observable.of(changePage(0))
-            .concat(modeSelector(store.getState()) === MODES.VIEW ? Rx.Observable.of(toggleViewMode()) : Rx.Observable.empty()));
+        .switchMap(({ owner }) => Rx.Observable.of(changePage(0))
+            .concat(modeSelector(store.getState()) === MODES.VIEW && owner !== "widgets" ? Rx.Observable.of(toggleViewMode()) : Rx.Observable.empty()));
 /**
  * Create sorted queries on sort action
  * With virtualScroll active reset to page 0 but the grid will reload
@@ -1038,7 +1038,7 @@ export const onOpenAdvancedSearch = (action$, store) =>
             // hide selected features from map
             selectFeatures([]),
             loadFilter(get(store.getState(), `featuregrid.advancedFilters["${selectedLayerIdSelector(store.getState())}"]`)),
-            closeFeatureGrid(),
+            closeFeatureGrid('queryPanel'),
             setControlProperty('queryPanel', "enabled", true)
         )
             .merge(
@@ -1049,7 +1049,8 @@ export const onOpenAdvancedSearch = (action$, store) =>
                             createQuery(action.searchUrl, action.filterObj),
                             storeAdvancedSearchFilter(assign({}, queryFormUiStateSelector(store.getState()), action.filterObj)),
                             setControlProperty('queryPanel', "enabled", false),
-                            openFeatureGrid()
+                            openFeatureGrid(),
+                            isSyncWmsActive(store.getState()) ? startSyncWMS() : Rx.Observable.empty()          // to keep sync icon active if it is previously active before opening advanced search
                         );
                     }),
                     action$.ofType(TOGGLE_CONTROL)
@@ -1103,9 +1104,21 @@ export const stopSyncWmsFilter = (action$, store) =>
      */
 export const deactivateSyncWmsFilterOnFeatureGridClose = (action$, store) =>
     action$.ofType(CLOSE_FEATURE_GRID)
+        .switchMap(() => {
+            let state = store.getState();
+            let isQueryPanelClosingFeatureGrid  = state.featuregrid?.closer === 'queryPanel';
+            if (isQueryPanelClosingFeatureGrid  && isSyncWmsActive(state)) {        // in case close grid by queryPanel, remove filter to dislay all feats on map
+                return Rx.Observable.of(removeFilterFromWMSLayer(store.getState()));
+            } else if (isSyncWmsActive(state) && !isQueryPanelClosingFeatureGrid ) {            // if close feature grid by others---> reset wms sync
+                return Rx.Observable.of(toggleSyncWms());
+            }
+            return Rx.Observable.empty();
+        });
+export const activateSyncWmsFilterOnFeatureGridOpen = (action$, store) =>
+    action$.ofType(OPEN_FEATURE_GRID)
         .filter(() => isSyncWmsActive(store.getState()))
         .switchMap(() => {
-            return Rx.Observable.of(toggleSyncWms());
+            return Rx.Observable.of(startSyncWMS());
         });
 /**
  * Sync map with filter.

@@ -222,7 +222,7 @@
             "plugins": [
                 "web/client/plugins/index.jsdoc",
                 "web/client/plugins/AddGroup.jsx",
-                "web/client/plugins/Annotations.jsx",
+                "web/client/plugins/Annotations/index.js",
                 "web/client/plugins/AutoMapUpdate.jsx",
                 "web/client/plugins/BackgroundSelector.jsx",
                 "web/client/plugins/BurgerMenu.jsx",
@@ -247,6 +247,7 @@
                 "web/client/plugins/FilterLayer.jsx",
                 "web/client/plugins/FloatingLegend.jsx",
                 "web/client/plugins/FullScreen.jsx",
+                "web/client/plugins/GeoProcessing.jsx",
                 "web/client/plugins/GeoStory.jsx",
                 "web/client/plugins/GeoStories.jsx",
                 "web/client/plugins/GeoStoryEditor.jsx",

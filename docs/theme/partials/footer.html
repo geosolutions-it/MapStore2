@@ -1,78 +1,122 @@
-{% import "partials/language.html" as lang with context %}
+<!--
+  Copyright (c) 2016-2023 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Footer -->
 <footer class="md-footer">
-  {% if page.previous_page or page.next_page %}
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid">
+
+  <!-- Link to previous and/or next page -->
+  {% if "navigation.footer" in features %}
+    {% if page.previous_page or page.next_page %}
+      {% if page.meta and page.meta.hide %}
+        {% set hidden = "hidden" if "footer" in page.meta.hide %}
+      {% endif %}
+      <!-- customized wrapping nav in this div to apply the color -->
+      <div class="md-footer-nav">
+      <nav
+        class="md-footer__inner md-grid"
+        aria-label="{{ lang.t('footer') }}"
+        {{ hidden }}
+      >
+
+        <!-- Link to previous page -->
         {% if page.previous_page %}
-          <a href="{{ page.previous_page.url | url }}" title="{{ page.previous_page.title }}" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+          {% set direction = lang.t("footer.previous") %}
+          <a
+            href="{{ page.previous_page.url | url }}"
+            class="md-footer__link md-footer__link--prev"
+            aria-label="{{ direction }}: {{ page.previous_page.title | e }}"
+            rel="prev"
+          >
+            <div class="md-footer__button md-icon">
+              {% set icon = config.theme.icon.previous or "material/arrow-left" %}
+              {% include ".icons/" ~ icon ~ ".svg" %}
             </div>
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  {{ lang.t("footer.previous") }}
-                </span>
-                {{ page.previous_page.title }}
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                {{ direction }}
               </span>
+              <div class="md-ellipsis">
+                {{ page.previous_page.title }}
+              </div>
             </div>
           </a>
         {% endif %}
+
+        <!-- Link to next page -->
         {% if page.next_page %}
-          <a href="{{ page.next_page.url | url }}" title="{{ page.next_page.title }}" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-              <span class="md-flex__ellipsis">
-                <span class="md-footer-nav__direction">
-                  {{ lang.t("footer.next") }}
-                </span>
-                {{ page.next_page.title }}
+          {% set direction = lang.t("footer.next") %}
+          <a
+            href="{{ page.next_page.url | url }}"
+            class="md-footer__link md-footer__link--next"
+            aria-label="{{ direction }}: {{ page.next_page.title | e }}"
+            rel="next"
+          >
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                {{ direction }}
               </span>
+              <div class="md-ellipsis">
+                {{ page.next_page.title }}
+              </div>
             </div>
-            <div class="md-flex__cell md-flex__cell--shrink">
-              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            <div class="md-footer__button md-icon">
+              {% set icon = config.theme.icon.next or "material/arrow-right" %}
+              {% include ".icons/" ~ icon ~ ".svg" %}
             </div>
           </a>
         {% endif %}
       </nav>
-    </div>
+        </div>
+    {% endif %}
   {% endif %}
+
+  <!-- Further information -->
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
-      <div class="md-footer-items md-footer-license">
-          <b><a href="{{ config.site }}" target="_blank">MapStore</a></b> is Free and Open Source software and is licensed under the Simplified BSD License.
-      </div>
-      <div class="md-footer-items">
-          <small>If you find something in this documentation that requires further clarifications, it is not correct or does not match your experience with MapStore, please report a <big><b><a href="{{ config.repo_issues_doc }}" target="_blank">documentation issue</a></b></big> on GitHub.</small>
-          <br/>
-          <small>We also welcome any contributions, take a look at our <big><b><a href="{{ config.repo_issues }}" target="_blank">issues</a></b></big> on GitHub.</small>
-      </div>
-      <div class="md-footer-items">
-          Play with the <big><b><a href="https://mapstore.geosolutionsgroup.com" target="_blank">MapStore online Demo</a></b></big>.
-      </div>
-      <div class="md-footer-items md-footer-brand">
-          <a href="{{ config.theme.company_url }}" target="_blank">
-              <img class="md-footer-brand-img" src="img/geosolutions-brand.png"
-                onerror="this.onerror=null;this.src='../img/geosolutions-brand.png';this.src='../../img/geosolutions-brand.png'">
-          </a>
-      </div>
-      <div class="md-footer-items">
-          <small>{{ config.theme.company_contacts }}</small>
-      </div>
-      {% block social %}
+      {% include "partials/copyright.html" %}
+    <!-- Customization -->
+    <div class="custom-footer-section md-grid">
+        <div>
+            <small>If you find something in this documentation that requires further clarifications, it is not correct or does not match your experience with MapStore, please report a <b><a href="{{ config.repo_issues_doc }}" target="_blank">documentation issue</a></b> on GitHub.</small>
+            <br/>
+            <small>We also welcome any contributions, take a look at our <b><a href="{{ config.repo_issues }}" target="_blank">issues</a></b> on GitHub.</small>
+        </div>
+        <div>
+            Play with the <b><a href="https://mapstore.geosolutionsgroup.com" target="_blank">MapStore online Demo</a></b>.
+        </div>
+        <div className="md-footer-brand">
+            <a href="{{ config.theme.company_url }}" target="_blank">
+                   <img class="md-footer-brand-img" src="{{ base_url }}/img/geosolutions-brand.png">
+            </a>
+        </div>
+        <div>
+            <small>{{ config.theme.company_contacts }}</small>
+        </div>
+        </div>
+      <!-- End of customization-->
+      <!-- Social links -->
+      {% if config.extra.social %}
         {% include "partials/social.html" %}
-      {% endblock %}
-      <div class="md-footer-copyright">
-        {% if config.copyright %}
-          <div class="md-footer-copyright__highlight">
-            {{ config.copyright }}
-          </div>
-        {% endif %}
-        powered by
-        <a href="https://www.mkdocs.org" target="_blank">MkDocs</a>
-        and
-        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank">
-          Material for MkDocs</a>
-      </div>
+      {% endif %}
     </div>
   </div>
 </footer>

@@ -7,6 +7,7 @@
 */
 import {
     literalData,
+    complexData,
     processData,
     processParameter,
     rawDataOutput,
@@ -31,7 +32,7 @@ const prepareGeometry = (geometry) => {
 export const profileEnLong = ({identifier, geometry, distance, referential}) => executeProcessXML(
     identifier,
     [
-        processParameter('linestringEWKT', processData(literalData(prepareGeometry(geometry), "application/wkt"))),
+        processParameter('geometry', processData(complexData(prepareGeometry(geometry), "application/ewkt"))),
         processParameter('targetProjection', processData(literalData("EPSG:3857"))), // parametrized?
         processParameter('distance', processData(literalData(distance))),
         processParameter('layerName', processData(literalData(referential)))

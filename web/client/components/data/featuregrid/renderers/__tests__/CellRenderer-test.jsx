@@ -11,7 +11,7 @@ import expect from 'expect';
 import {compose, withContext} from 'recompose';
 
 import CellRenderer from '../CellRenderer';
-import booleanFormatter from '../../formatters';
+import {getFormatter} from '../../formatters';
 import { set } from '../../../../../utils/ImmutableUtils';
 
 
@@ -33,7 +33,7 @@ describe('Tests <CellRenderer> component', () => {
         column: {
             key: "Boolean",
             name: "Boolean",
-            formatter: booleanFormatter.getFormatter({localType: "boolean"})
+            formatter: getFormatter({localType: "boolean"})
         },
         cellMetaData: {
             onDeleteSubRow: () => {}

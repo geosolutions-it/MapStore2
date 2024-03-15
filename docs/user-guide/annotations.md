@@ -29,21 +29,21 @@ After selecting a geometry type, the editor can:
 
 * Draw a *Geometry* on the map.
 
-<img src="../img/annotations/polygon_annotation_drawing.gif" class="ms-docimage" style="max-width:700px;"/>
+<video class="ms-docimage" style="max-width:700px;"controls><source src="../img/annotations/polygon_annotation_drawing.mp4" ></video>
 
 * Enter the vertices of the geometry or modify the existing ones through the **Coordinates editor** using `Decimal` or `Aeronautical` formats.
 
-<img src="../img/annotations/coordinates_format_switcher.gif" class="ms-docimage" style="max-width:700px;" />
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/annotations/coordinates_format_switcher.mp4" ></video>
 
 * For *Line* and *Polygon*, add new vertices using the <img src="../img/button/++.jpg" class="ms-docbutton" /> button and typing the `latitude` and `longitude` values.
 
-<img src="../img/annotations/add_vertex_button.gif" class="ms-docimage" style="max-width:700px;"/>
+<video class="ms-docimage" style="max-width:700px;"controls><source src="../img/annotations/add_vertex_button.mp4" ></video>
 
 !!! note
     If the vertices are invalid, they are notified with a red exclamation point.
     <img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
     In this case, it is not possible to add new geometry or save the annotation until a valid value is entered. It is still possible to interact with the geometries already present in the annotation, by zooming in on it or deleting it, as follows:
-    <img src="../img/annotations/invalid_vertex2.gif" class="ms-docimage" style="max-width:500px;" />
+    <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/annotations/invalid_vertex2.mp4" ></video>
 
 * Customize the **Style** of the annotation, as explained in the following paragraph.
 
@@ -139,6 +139,6 @@ In particular, the editor can:
 
 * Change the *Coordinates* and the *Style* by clicking a geometry from list of geometries.
 
-<img src="../img/annotations/editing_annotations.gif" class="ms-docimage" style="max-width:700px;" />
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/annotations/editing_annotations.mp4" ></video>
 
 * **Download** the annotation in `json` format and reused in other maps by clicking on <img src="../img/button/download_annotation_button.jpg" class="ms-docbutton" > button

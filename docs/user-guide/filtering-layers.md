@@ -24,11 +24,11 @@ This filter is applicable from the **Filter layer** button <img src="../img/butt
 
 * Using other tools like the [Identify tool](navigation-toolbar.md#identify-tool):
 
-<img src="../img/filtering-layers/get_filtered_features_info.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/filtering-layers/get_filtered_features_info.mp4"/></video>
 
 * Applying another type of filter
 
-<img src="../img/filtering-layers/filtered_advanced_filtering.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/filtering-layers/filtered_advanced_filtering.mp4"/></video>
 
 * Opening the map next time (you need to Save the map from the [Side Toolbar](mapstore-toolbars.md#side-toolbar) after applying a filter)
 
@@ -54,7 +54,7 @@ This filter, applicable from **Advanced Search** button <img src="../img/button/
 
 * It is possible to sync this filter with the map through the <img src="../img/button/sync.jpg" class="ms-docbutton"/> icon:
 
-<img src="../img/filtering-layers/ar_sync.gif" class="ms-docimage" style="max-width:500px;"/>
+<video class="ms-docimage" style="max-width:500px;" controls><source src="../img/filtering-layers/ar_sync.mp4"/></video>
 
 * It will be automatically removed/reapplied by closing/opening the [Attribute Table](attributes-table.md#attribute-table)
 
@@ -74,7 +74,7 @@ The user can perform three type of quick filters:
 
 This filter is available for each colum in the [Attribute Table](attributes-table.md#attribute-table) just below the field names and it can be also used in combination with other filter applied:
 
-<img src="../img/filtering-layers/filtered_quick_filter.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/filtering-layers/filtered_quick_filter.mp4"/></video>
 
 The user has the possibility to apply simple filters by attributes simply typing the filter's value in the available input fields (Date or Time pickers are available according to real attributes data types and a tooltip usually gives an information on how to fill the filter's input field). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md#attribute-table) are automatically filtered accordingly.
 
@@ -108,11 +108,11 @@ It is possible to filter records in the [Attribute Table](attributes-table.md#at
 
 * Add multiple features to the selection by pressing Ctrl and clicking again over other features in map
 
-<img src="../img/filtering-layers/filter_geometry.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/filtering-layers/filter_geometry.mp4"/></video>
 
 * Add multiple features to the selection by pressing Ctrl + Alt and drawing a selection box in map
 
- <img src="../img/filtering-layers/filter_geometries.gif" class="ms-docimage"/>
+ <video class="ms-docimage" controls><source src="../img/filtering-layers/filter_geometries.mp4"/></video>
 
 The list of records in the *Attribute Table* will be automatically filtered according to such user selection and then the user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
 
@@ -120,7 +120,7 @@ The list of records in the *Attribute Table* will be automatically filtered acco
 
 From the [Attribute Table](attributes-table.md#attribute-table) the user can filter data by map viewport through the **Filter by viewport** <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button. Once clicked, the toggle button turns its state to green and the list of records in the *Attribute Table* is filtered by showing only records corresponding to layer features present in the current map viewport.
 
-<img src="../img/filtering-layers/filter_viewport.gif" class="ms-docimage" style="max-width:500px;"/>
+<video class="ms-docimage" style="max-width:500px;" controls><source src="../img/filtering-layers/filter_viewport.mp4"/></video>
 
 The list of records in the *Attribute Table* is automatically updated when the user pan/zoom the map view. It is possible to deactivate the **Filter by viewport** <img src="../img/button/filter-by-viewport-enable.jpg" class="ms-docbutton"/> by clicking again the same toggle button.
 
@@ -164,7 +164,7 @@ A condition can be set by selecting a value for each of the three input boxes:
 
 A simple *Attribute Filter* applied for a numerical field can be, for example:
 
-<img src="../img/filtering-layers/att_filter.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/att_filter.mp4"/></video>
 
 ### Region of interest
 
@@ -176,7 +176,7 @@ In order to set this filter the user can:
 
 Applying a *Circle* filter with *Intersect* operation, for example, the process could be similar to the following:
 
-<img src="../img/filtering-layers/geom_filter.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/geom_filter.mp4"/></video>
 
 Once this filter is set, it is always possible to edit the coordinates and the dimensions of the drawn filter's geometry by clicking on the **Details** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/>. Editing a circle, for example, it is possible to change the center coordinates (*x*, *y*) and the radius dimension (*m*):
 
@@ -203,4 +203,4 @@ In order to better understand this type of filter, let's make an example. We sup
 
 In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
 
-<img src="../img/filtering-layers/layer_filter.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/filtering-layers/layer_filter.mp4"/></video>

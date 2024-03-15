@@ -14,7 +14,7 @@ import JSONEditor from '../../../misc/codeEditors/JSONEditor';
 import Message from "../../../I18N/Message";
 import HTML from "../../../I18N/HTML";
 
-import { FormGroup, Checkbox, Col, ControlLabel } from "react-bootstrap";
+import { FormGroup, Checkbox, ControlLabel } from "react-bootstrap";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
 
 // TODO: add variants
@@ -64,29 +64,27 @@ export default ({
     };
     return (<div>
         <FormGroup controlId="autoload" key="autoload">
-            <Col xs={12}>
-                {service.autoload !== undefined && <Checkbox key="autoload" value="autoload"
-                    onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
-                    checked={!isNil(service.autoload) ? service.autoload : false}>
-                    <Message msgId="catalog.autoload" />
-                </Checkbox>}
-                <Checkbox key="thumbnail" value="thumbnail"
-                    onChange={() => onToggleThumbnail()}
-                    checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>
-                    <Message msgId="catalog.showPreview" />
+            {service.autoload !== undefined && <Checkbox key="autoload" value="autoload"
+                onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
+                checked={!isNil(service.autoload) ? service.autoload : false}>
+                <Message msgId="catalog.autoload" />
+            </Checkbox>}
+            <Checkbox key="thumbnail" value="thumbnail"
+                onChange={() => onToggleThumbnail()}
+                checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>
+                <Message msgId="catalog.showPreview" />
+            </Checkbox>
+            {service.provider === "tms"
+                ? <Checkbox key="forceDefaultTileGrid" value="forceDefaultTileGrid" onChange={(e) => onChangeServiceProperty("forceDefaultTileGrid", e.target.checked)}
+                    checked={!isNil(service.forceDefaultTileGrid) ? service.forceDefaultTileGrid : false}>
+                    <Message msgId="catalog.tms.forceDefaultTileGrid" />&nbsp;<InfoPopover text={<Message msgId="catalog.tms.forceDefaultTileGridDescription" />} />
                 </Checkbox>
-                {service.provider === "tms"
-                    ? <Checkbox key="forceDefaultTileGrid" value="forceDefaultTileGrid" onChange={(e) => onChangeServiceProperty("forceDefaultTileGrid", e.target.checked)}
-                        checked={!isNil(service.forceDefaultTileGrid) ? service.forceDefaultTileGrid : false}>
-                        <Message msgId="catalog.tms.forceDefaultTileGrid" />&nbsp;<InfoPopover text={<Message msgId="catalog.tms.forceDefaultTileGridDescription" />} />
-                    </Checkbox>
-                    : null}
-            </Col>
+                : null}
             {!service.provider || service.provider === "custom"
-                ? <Col>
+                ? <div>
                     <ControlLabel><Message msgId="catalog.tms.customTMSConfiguration" />&nbsp;&nbsp;<InfoPopover text={<HTML msgId="catalog.tms.customTMSConfigurationHint" />} /></ControlLabel>
                     <JSONEditor json={settings || INITIAL_CODE_VALUE} onValid={onValid} onError={onError} />
-                </Col>
+                </div>
                 : null}
         </FormGroup>
     </div>);

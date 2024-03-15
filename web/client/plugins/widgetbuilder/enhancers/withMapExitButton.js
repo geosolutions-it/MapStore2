@@ -45,6 +45,7 @@ export default compose(
     }),
     withProps(({ returnToFeatureGrid, backFromWizard = () => {} }) => ({
         exitButton: {
+            id: 'map-exit-button',
             onClick: backFromWizard,
             glyph: 'arrow-left',
             tooltipId: returnToFeatureGrid ? "widgets.builder.wizard.backToFeatureGrid" : "widgets.builder.wizard.backToWidgetTypeSelection"

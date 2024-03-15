@@ -29,6 +29,7 @@
         "collapse": "Zuklappen",
         "Links": "Links",
         "Forbidden": "Verboten",
+        "height": "Höhe",
         "layerNameChangeError": {
             "title": "Namensänderungsfehler",
             "message": "Die Ebene konnte nicht mit einem geänderten Namen neu geladen werden"
@@ -57,8 +58,8 @@
             "404": "Übersetzungsdatei nicht gefunden"
         },
         "details": {
-            "title": "Infos zu dieser Karte",
-            "tooltip": "Infos zu dieser Karte"
+            "title": "Infos zu dieser Inhalt",
+            "tooltip": "Infos zu dieser Inhalt"
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
@@ -90,6 +91,8 @@
             "groupProperties": "Gruppeneigenschaften",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Antwortformat festlegen",
+            "guideText": "In der URL des Bildes können Sie Platzhalter wie $\\{properties.YOUR_ATTRIBUTE\\} verwenden, um die URL abhängig von den Feature-Attributen parametrisch zu machen. Es unterstützt sowohl URLs als auch „Data URI“, die in Base64 codiert sind",
+            "imageNotFound": "Für die korrekte Darstellung dieses Bildes ist möglicherweise eine Feature-Info-Anfrage erforderlich",
             "legenderror": "Legende ist nicht verfügbar",
             "editCustomFormat": "Bearbeiten Sie das benutzerdefinierte Format",
             "exampleOfResponse": "Beispiel",
@@ -114,6 +117,7 @@
             "heightOffset": "Höhenversatz (m)",
             "wmsLayerTileSize": "Kachelgröße (WMS)",
             "serverType": "Servertyp",
+            "formatError": "Es war nicht möglich, Format und Informationsblattformat vom konfigurierten Dienst abzurufen. Wahrscheinlich verwenden Sie einen No-Vendor-Dienst und dieser wird nicht unterstützt (z. B. GeoNetwork).",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -154,6 +158,31 @@
                 "scale": "Maßstab",
                 "resolution": "Auflösung"
             },
+            "3dTiles": {
+                "format": "Format",
+                "3dModel": "3D-Modell",
+                "pointCloud": "Punktwolke",
+                "pointCloudShading": {
+                    "title": "Visualisierungsoptionen",
+                    "attenuationInfo": "Punktabschwächung basierend auf der Entfernung vom aktuellen Blickpunkt durchführen",
+                    "attenuation": "Dämpfung aktivieren",
+                    "maximumAttenuation": "Maximale Dämpfung",
+                    "eyeDomeLightingInfo": "Dies ermöglicht eine Augenkuppelbeleuchtung, um die Visualisierung der Punktwolke zu verbessern. Dies stellt nicht das echte Sonnenlicht dar",
+                    "eyeDomeLighting": "Beleuchtung aktivieren",
+                    "eyeDomeLightingStrength": "Lichtstärke",
+                    "eyeDomeLightingRadius": "Beleuchtungsradius"
+                }
+            },
+            "modelLayer": {
+                "modelCenterLat": "Breitengrad des Zentrums (DD)",
+                "modelCenterLng": "Längengrad des Zentrums (DD)",
+                "height": "Höhe (m)",
+                "heading": "Kurswinkel (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "Das Modell wird aus folgenden Gründen in der Mitte der aktuellen Ansicht platziert: Das Modell verfügt über eine CRS-Projektion {modelProjection}, diese wird jedoch nicht unterstützt.",
+                    "projectedCrsNotProvided": "Das Modell wird aus folgenden Gründen in der Mitte der aktuellen Ansicht platziert: Das Modell verfügt über keine definierte CRS-Projektion."
+                }
+            },
             "tooltip": {
                 "label": "QuickInfo",
                 "title": "Titel",
@@ -180,6 +209,8 @@
             },
             "format": {
                 "title": "Format",
+                "tile": "Fliese",
+                "information": "Infoblatt",
                 "refresh": "Unterstützte Formate abrufen",
                 "loading": "Wird geladen...",
                 "noOption": "Keine Option",
@@ -220,7 +251,8 @@
             "warningSaveUpdatedMap": "Einige Ebenen wurden nicht korrekt aktualisiert",
             "saveUpdatedMap": "Alle Ebenen wurden erfolgreich aktualisiert",
             "incompatibleBackgroundAndProjection":"Die von Ihnen ausgewählte Projektion ist nicht mit der Hintergrundkarte kompatibel. Wechseln Sie zu einer kompatiblen oder leeren Hintergrundkarte und wählen Sie danach diese Projektion aus!",
-            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt"
+            "incompatibleDataAndProjection":"Die aktuellen Ebenen und die Kartenprojektion sind nicht vollständig kompatibel. Teile oder alle Daten werden möglicherweise nicht auf der Karte angezeigt",
+            "errorLoadingGF":"Fehler laden GF GEOM"
         },
         "dock": {
             "row": "{rowsSelected}. Zeile ausgewählt",
@@ -331,7 +363,7 @@
         },
         "home":{
             "open": "Öffnen",
-            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://mapstore.readthedocs.io/en/latest/\">dokumentationsseite</a></small>",
+            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">dokumentationsseite</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"https://mapstore.readthedocs.io/en/latest/\">Homepage</a> für mehr Details.",
             "Applications": "Anwendungen",
@@ -608,6 +640,7 @@
             "browseData": "Attributtabelle der ausgewählten Ebene öffnen",
             "removeLayer": "Ebene entfernen",
             "loadingerror": "Diese Ebene wurde nicht korrekt geladen oder ist nicht verfügbar",
+            "sourceCRSNotCompatible": "Die Quelldatenprojektionsdefinition {sourceCRS} des Layers ist in der Anwendung nicht für die Neuprojektion der Daten in der aktuellen Karte verfügbar",
             "measure": "Messen",
             "backgroundSwitcher": "Hintergrund",
             "layers": "Ebenen",
@@ -630,6 +663,7 @@
             "notVisibleZoomIn": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Zoomen Sie hinein, um die Ebene anzuzeigen",
             "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
             "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",
+            "notVisibleSwitchTo2D": "Wechseln Sie in den 2D-Kartenmodus, um diesen Layer anzuzeigen",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -695,7 +729,7 @@
                 "configuration": "Konfiguration",
                 "apply": "Klassifizierung anwenden",
                 "restore": "Anpassungen zurücksetzen",
-                "go_to_cfg": "Konfigurieren...",
+                "goToCfg": "Konfigurieren...",
                 "go_to_thema": "Verwenden Sie diese Konfiguration",
                 "cfgError": "Fehler in der Konfigurations-JSON",
                 "classify": "Klassifizieren",
@@ -735,11 +769,14 @@
             },
             "legend": {
                 "font": "Beschriftungseinstellungen:",
-                "forceLabels": "Beschriftungen erzwingen:",
-                "antiAliasing": "Anti Aliasing Schrift:",
-                "iconsSize": "Symbolgröße:",
+                "forceLabels": "Beschriftungen erzwingen",
+                "antiAliasing": "Anti Aliasing Schrift",
+                "forceIconsSize": "Überschreiben Sie die Symbolgröße",
+                "iconsWidth": "Breite der Symbole:",
+                "iconsHeight": "Höhe der Symbole:",
                 "dpi": "dpi:"
             },
+            "rotation": "Rotation",
             "layoutWarning": "Layout nicht erlaubt",
             "scale": "Maßstab",
             "includeScale": "in Druck einschließen",
@@ -846,6 +883,7 @@
             "aeronautical": "Luftfahrt",
             "changeSearchInputField": "Suchwerkzeug ändern",
             "addressSearch": "Suche nach Standortname",
+            "searchOnAllServices": "Suchen Sie unten nach allen Diensten",
             "coordinatesSearch": "Suche nach Koordinaten",
             "searchservicesbutton": "Suchdienste konfigurieren",
             "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",
@@ -898,6 +936,8 @@
             "s_wfs_opt_props_label" : "Optionale Eigenschaften",
             "s_result_props_label": "Ergebnisanzeigeeigenschaften",
             "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, niedrigere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
+            "s_placeholder": "Platzhalter für die Sucheingabe",
+            "s_tooltip": "Kurzinfo zum Servicemenü",
             "serviceslistempty": "Keine benutzerdefinierten Services definiert",
             "service_missing": "{serviceType} dienst ist nicht konfiguriert",
             "generic_error": "Bei der Suche ist ein Fehler aufgetreten. Fehlerdetails: {message}",
@@ -1129,7 +1169,18 @@
                     "wrong_range": "Die untere Grenze muss kleiner als die obere Grenze sein"
                 },
                 "datefield": {
-                    "wrong_date_range": "Das Datum des Beginns muss früher als das des Endes sein"
+                    "wrong_date_range": "Das Datum des Beginns muss früher als das des Endes sein",
+                    "placeholder": "Datum einfügen",
+                    "tooltip": "Geben Sie das Datum im Format {format} ein",
+                    "quickSelectors": {
+                        "today": "Heute",
+                        "now": "Jetzt",
+                        "tomorrow": "Morgen",
+                        "yesterday": "Gestern",
+                        "thisWeek": "Diese Woche",
+                        "thisMonth": "Diesen Monat",
+                        "nDaysFrom": "{n} Tage ab {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Keine Ergebnisse",
@@ -1282,7 +1333,10 @@
             },
             "geometryError": "Geometriekonfiguration ist ungültig",
             "annotationSaveGeometryError": "Das Speichern ist aufgrund einer ungültigen Geometrie deaktiviert. Bitte korrigieren Sie dies, um die Anmerkung zu speichern",
-            "resolveAllErrors": "Bitte beheben Sie alle Validierungsfehler, bevor Sie andere Geometrien bearbeiten"
+            "resolveAllErrors": "Bitte beheben Sie alle Validierungsfehler, bevor Sie andere Geometrien bearbeiten",
+            "selectAnnotationFeature": "Wählen Sie im linken Bereich ein Anmerkungsfeature aus, um Koordinaten und Stile zu bearbeiten",
+            "properties": "Eigenschaften",
+            "deactivatedMapInteraction": "Die Interaktionen zum Zeichnen von Anmerkungen wurden deaktiviert, da das Plugin '{pluginName}' aktiviert wurde. Bitte schließen Sie das Plugin '{pluginName}', um die Interaktionen zum Zeichnen von Anmerkungen zu aktivieren."
         },
         "user":{
             "login": "Login",
@@ -1529,6 +1583,10 @@
             "title": "Katalog",
             "tooltip": "Fügen Sie der Karte Ebenen hinzu",
             "autoload": "Suche in Dienstauswahl",
+            "fetchMetadata": {
+                "label": "Dateimetadaten beim Speichern herunterladen",
+                "tooltip": "Diese Option ruft Metadaten ab, um das Zoomen auf Ebene zu unterstützen. Es kann den Suchvorgang verlangsamen, wenn die Bilder zu groß oder zu viele sind."
+            },
             "clearValueText": "Auswahl aufheben",
             "noResultsText": "keine Ergebnisse gefunden",
             "addToMap": "Zur Karte hinzufügen",
@@ -1562,11 +1620,16 @@
               "urlTemplate": "URL-Vorlage",
               "urlTemplateHint": "<p> Vorlagen-URL für Ihren benutzerdefinierten TMS-Dienst mit der Möglichkeit, Variablen einzufügen (ausgedrückt in geschweiften Klammern, z. B. <code> {var_name} </ code>), die von der Anwendung ersetzt werden. <br />. Die Variablen <code> {x} </ code>, <code> {y} </ code> und <code> {z} </ code> sind für Kachelgitterkoordinatenwerte reserviert. Sie können auch Variablen verwenden <code> {s} </ code> für Subdomains. Jede andere in der URL angegebene Variable muss auch in den Optionen unter \"Benutzerdefinierte TMS-Konfiguration\" (Erweiterte Einstellungen) angegeben werden.</p>",
               "customTMSConfiguration": "Benutzerdefinierte TMS-Konfiguration",
-              "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",                  "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
+              "customTMSConfigurationHint": "<p> Optionen können Folgendes enthalten: <br/> <ul> <ul> <li> <code>\"subdomains\": ['a', 'b'] </ code>: Wird für mehrere Domains verwendet. Ersetzen des <code> {s} </code> in der URL-Vorlage </li> <li> <code> \"maxNativeZoom\": 20 </code>: Maximaler Zoom vom Server </li> </ul> </p>",
+              "forceDefaultTileGrid": "Standard-Kachelraster erzwingen",
               "forceDefaultTileGridDescription": "Verwenden Sie das Kachelraster der globalen Projektion anstelle des vom Server bereitgestellten Ursprungs und der vom Server bereitgestellten Auflösungen. Dies ist nützlich für einige TMS-Dienste, die falsche Ursprünge oder Ergebnisse anzeigen."
             },
             "tileprovider": {
               "tooltip": "x, y, z sind Kachelpositionen, s ist die Unterdomäne (Standard)"
+            },
+            "urls": "URL(s)",
+            "cog": {
+                "urlTemplateHint": "Mehrere URLs können durch Komma-Trennung hinzugefügt werden. Jede URL wird als einzelne Ebene behandelt"
             },
             "missingReference": "Fehlende OGC-Referenzmetadaten",
             "showDescription": "Vollständige Beschreibung anzeigen",
@@ -1624,6 +1687,11 @@
           "allowUnsecureLayers": {
               "label": "Nicht sichere Ebenen zulassen",
               "tooltip": "Das Hinzufügen einer Ebene zur Karte mit aktivierter Option zwingt die Anwendung, Proxy anzuwenden"
+          },
+          "sortBy": {
+            "label": "Sortiere nach",
+            "tooltip": "Namespace-Präfix zur Namenseigenschaft hinzufügen. d.h. ${namespace}:${name}",
+            "placeholder": "Name eingeben"
           }
         },
         "uploader": {
@@ -1792,6 +1860,7 @@
                 "placeholders": {
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "date": "Geben Sie das zu filternde Datum ein...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein..."
                 },
@@ -1799,6 +1868,7 @@
                     "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein. Examples: 10, > 2, < 10",
                     "date": "Geben Sie ein Datum oder einen Ausdruck ein. Verwenden Sie {format} für das Datum.",
                     "geometry": {
@@ -1806,6 +1876,33 @@
                         "enabled": "Klicken Sie auf die Karte, um ein Feature auszuwählen / Alt + Maus ziehen, um einen Boxfilter zu zeichnen. Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere Features auszuwählen",
                         "applied": "Auswahl bereinigen"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Beispiele...",
+                    "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
+                    "date": "Geben Sie das zu filternde Datum ein...",
+                    "number": "Geben Sie eine Zahl ...",
+                    "range": "Bitte eingeben ..."
+                },
+                "tooltips": {
+                    "editMode": "Die Schnellsuche ist im Bearbeitungsmodus nicht verfügbar",
+                    "default": "Beispiele...",
+                    "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "time": "Geben Sie Zeit ein, um die Ergebnisse zu filtern ...",
+                    "number": "Geben Sie eine Zahl ...",
+                    "date": "Geben Sie ein Datum. Verwenden Sie {format} für das Datum.",
+                    "geometry": {
+                        "disabled": "Klicken Sie auf die Karte, um zu filtern / Alt + Maus ziehen, um einen Box-Filter zu zeichnen. Halten Sie auch die Strg-Taste gedrückt, um dem aktuellen Filter weitere Funktionen hinzuzufügen",
+                        "enabled": "Klicken Sie auf die Karte, um ein Feature auszuwählen / Alt + Maus ziehen, um einen Boxfilter zu zeichnen. Halten Sie die Strg-Taste gedrückt und klicken Sie, um mehrere Features auszuwählen",
+                        "applied": "Auswahl bereinigen"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Start",
+                    "end": "Ende"
                 }
             },
             "toolbar": {
@@ -2006,7 +2103,8 @@
                         "editCustomColors": "Benutzerdefinierte Farben bearbeiten",
                         "maxValue": "Höchster Wert",
                         "minValue": "Mindestwert",
-                        "title": "Benutzerdefinierte Farbeinstellungen"
+                        "title": "Benutzerdefinierte Farbeinstellungen",
+                        "removeCustomColors": "Benutzerdefinierte Klassen entfernen"
                     }
                 },
                 "errors": {
@@ -2021,7 +2119,17 @@
                 },
                 "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten",
                 "addNewLayers": "Neue Ebene(n) hinzufügen",
-                "deleteChart": "Aktuelles Diagramm löschen"
+                "deleteChart": "Aktuelles Diagramm löschen",
+                "editTraceTitle": "Trace-Titel bearbeiten",
+                "addNewTrace": "Neuen Trace hinzufügen",
+                "deleteTrace": "Aktuellen Trace löschen",
+                "selectLayer": "Ebene auswählen",
+                "filterLayer": "Aktuelle Ebene filtern",
+                "editChartTitle": "Diagrammtitel bearbeiten",
+                "addNewCharts": "Neue Diagramm(e) hinzufügen",
+                "editAxisTitle": "Achsentitel bearbeiten",
+                "addNewAxis": "Neue Achse hinzufügen",
+                "removeAxis": "Aktuelle Achse entfernen"
             },
             "widget": {
                 "menu": {
@@ -2134,16 +2242,19 @@
             },
             "mapSync": "Live-Filter nach Ansichtsfenster",
             "displayLegend": {
+                "default": "Legende anzeigen",
                 "line": "Legende anzeigen",
                 "pie": "Legende anzeigen",
                 "bar": "Legende anzeigen",
                 "gauge": "Legende anzeigen"
             },
             "advanced": {
+                "font": "Schriftart",
                 "displayCartesian": "Gitter ausblenden",
                 "xAxis": "X-Achse",
                 "xAxisAngle": "Beschriftungsdrehung",
                 "hideLabels": "Beschriftung ausblenden",
+                "includeLegendPercent": "Include percentages in legend",
                 "format": "Format",
                 "prefix": "Präfix",
                 "suffix": "Suffix",
@@ -2162,6 +2273,28 @@
                 "barChartType": "Balkendiagrammtyp",
                 "groupedBarChart": "Gruppiert",
                 "stackedBarChart": "Gestapelt",
+                "valueFormatting": "Wertformatierung verfolgen",
+                "traceAxes": "Achsen verfolgen",
+                "traceData": "Trace-Daten",
+                "traceLegendOptions": "Optionen für Tracelegende",
+                "traces": "Spuren",
+                "axes": "Achsen",
+                "traceStyle": "Trace-Stil",
+                "mode": "Modus",
+                "lineColor": "Linienfarbe",
+                "lineWidth": "Linienbreite",
+                "markerColor": "Markerfarbe",
+                "markerSize": "Markergröße",
+                "layout": "Layout",
+                "left": "Links",
+                "right": "Richtig",
+                "free": "Frei",
+                "top": "Top",
+                "bottom": "Unten",
+                "side": "Seite",
+                "anchor": "Anker",
+                "sortBy": "Sortieren nach",
+                "reverseRampColor": "Rampenfarbe umkehren",
                 "axisTypes": {
                   "auto": "Auto",
                   "linear": "linear",
@@ -2426,8 +2559,8 @@
             "fontStyleItalic": "Italic",
             "fontWeightNormal": "Normal",
             "fontWeightBold": "Bold",
-            "boolTrue": "True",
-            "boolFalse": "False",
+            "boolTrue": "Aktiv",
+            "boolFalse": "Inaktiv",
             "colorMapType": {
               "label": "Farbkartentyp",
               "ramp": "Rampe",
@@ -2488,6 +2621,8 @@
             "alertForceTranslate": "Sie verlieren alle im Code-Editor gemachten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
             "stayInTextareaEditor": "Nein, weiter im Code-Editor",
             "useLatestValidStyle": "Ja, zum visuellen Editor wechseln",
+            "alertCustomParamsNotValid": "Sie verlieren alle im Textmodus hinzugefügten Änderungen, indem Sie den benutzerdefinierten Params -Editor schließen. Sind Sie sicher, den Herausgeber zu schließen?",
+            "closeCustomParamsEditor": "Ja, schließen Sie den Herausgeber",
             "validationError": "Validierungsfehler",
             "incorrectPropertyInputError": "Dies liegt wahrscheinlich an einem fehlenden oder ungültigen Wert in den Eigenschaftseingaben des Stileditors.",
             "emptyRuleEditorTitle": "Neue Regeln hinzufügen",
@@ -2531,7 +2666,43 @@
             "startPoint": "Startpunkt",
             "endPoint": "Endpunkt",
             "line": "Linie",
-            "geodesicLine": "Geodätische Linie"
+            "geodesicLine": "Geodätische Linie",
+            "geodesic": "Geodätisch",
+            "outlineStyle": "Umrissstil",
+            "strokeStyle": "Strichstil",
+            "anchor": "Ankerpunkt",
+            "addCircleRule": "Kreisregel hinzufügen",
+            "left": "Links",
+            "right": "Rechts",
+            "topLeft": "Oben links",
+            "top": "Oben",
+            "topRight": "Oben rechts",
+            "bottomLeft": "Unten links",
+            "bottom": "Unten",
+            "bottomRight": "Unten rechts",
+            "glyph": "Glyphe",
+            "marker": "Marker",
+            "filterByName": "Nach name filtern...",
+            "fillOpacity": "Deckkraft füllen",
+            "outlineColorOpacity": "Umrissdeckkraft",
+            "strokeColorOpacity": "Stroke-Deckkraft",
+            "selectProperty": "Eigenschaft auswählen",
+            "leaderLineColorOpacity": "Deckkraft der Führungslinie",
+            "colorOpacity": "Deckkraft",
+            "offset": "Offset",
+            "propertyValue": "Eigenschaftswert",
+            "colorPropertyInfoMessage": "Der Farbeigenschaftswert muss eine hexadezimale Zeichenfolge sein. Beispiel: \"#ffffff\"",
+            "pointCloudSizeInfo": "Der Punktwolkenradius wird nur angewendet, wenn die Dämpfungsoptionen deaktiviert sind. Die Dämpfungsoption hat Vorrang vor dieser Eigenschaft.",
+            "msTranslateX": "Versatz x",
+            "msTranslateY": "Versatz y",
+            "geometryHeight": "Geometriehöhe",
+            "msExtrusionRelativeToGeometry": "Extrusion relativ zur Geometrie",
+            "msExtrudedHeight": "Extrudierte Höhe",
+            "msExtrusionColor": "Extrusionsfarbe",
+            "msExtrusionType": "Extrusionstyp",
+            "wall": "Wand",
+            "customParams": "Benutzerdefinierte Parameter",
+            "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
         },
         "playback": {
             "settings": {
@@ -2635,7 +2806,8 @@
                 "layer": "Ebenen suchen",
                 "access": "Zugriff suchen",
                 "ip": "###.###.###.###/##",
-                "priority": "Priorität festlegen"
+                "priority": "Priorität festlegen",
+                "filterAny": "beliebig"
             },
             "menutitle": "GeoFence-Regeln Verwalten",
             "tooltip": {
@@ -2646,7 +2818,9 @@
                 "deleteT": "Entferne ausgewählte Regeln",
                 "cacheT": "Cache leeren",
                 "save": "Aktuelle Regel speichern",
-                "close": "Beenden Sie die Regelerstellung"
+                "close": "Beenden Sie die Regelerstellung",
+                "showAllRules": "Toon alle in aanmerking komende regels",
+                "filterRuleList": "Filterlijst met geselecteerde waarde"
             },
             "navItems": {
                 "main": "Allgemeine Regel",
@@ -2913,7 +3087,10 @@
             "saveSuccessTitle": "Erfolg",
             "saveSuccessMessage": "Erfolgreich gespeichert",
             "saveTooltip": "Speichern",
-            "saveAsTooltip": "Speichern als"
+            "saveAsTooltip": "Speichern als",
+            "unadvertised": "Nicht geworben",
+            "creator": "Erstellt von",
+            "editor": "Zuletzt geändert von"
         },
         "mapEditor": {
             "modalTitle": "Karteneditor",
@@ -2992,7 +3169,7 @@
             "title": "Titel",
             "titlePlaceholder": "Den angezeigten Namen eingeben",
             "add": "Hinzufügen",
-            "thumbnailMessage": "Die Größe der Bilder sollte ein Quadrat von 98 x 98 Pixel oder 128 x 128 Pixel sein, maximal 500kb",
+            "thumbnailMessage": "Quadratisches Bild mit 128 x 128 Pixel, maximal 500 KB",
             "imageUploadMessage": "Klicken Sie auf oder ziehen Sie sie ab, um ein Bild hinzuzufügen",
             "additionalParameters": "Zusätzliche Parameter",
             "addAdditionalParameterTooltip": "Parameter hinzufügen",
@@ -3067,6 +3244,10 @@
           "FilterLayer": {
             "description": "Ermöglicht das Hinzufügen eines Filters zu einer Ebene",
             "title": "Ebenenfilter"
+          },
+          "GeoProcessing": {
+            "description": "Ermöglicht die Geoverarbeitung von Layern zur Generierung eines neuen Layers mithilfe von WPS-Prozessen für Puffer und Schnittpunkte",
+            "title": "Geoverarbeitung"
           },
           "HelpLink": {
             "description": "Eine Schaltfläche für den Zugriff auf die MapStore-Dokumentation",
@@ -3808,6 +3989,24 @@
           "messages": {
             "noDataForPosition": "keine Street-View-Daten für diese Position",
             "unknownError": "Unbekannter Fehler, siehe Konsole"
+          },
+          "loadingAPI": "API wird geladen...",
+          "cyclomedia": {
+            "initializing": "Initialisiere Street Smart API...",
+            "loadingAPI": "Lade Street Smart API...",
+            "changeCredentials": "Street Smart-Anmeldeinformationen ändern",
+            "insertCredentials": "Geben Sie Ihre Street Smart-Anmeldeinformationen ein",
+            "emptyDescription": "Klicken Sie auf einen der blauen Punkte auf der Karte, um mit der Durchsuchung der Street-View-Bilder zu beginnen",
+            "username": "Benutzername",
+            "password": "Passwort",
+            "submit": "Senden",
+            "zoomIn": "Bitte zoomen Sie in die Karte, um die Street-View-Abdeckung zu sehen",
+            "errorOccurred": "Fehler aufgetreten: ",
+            "errors": {
+                "invalidCredentials": "Ungültige Anmeldeinformationen",
+                "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
+            },
+            "reloadAPI": "API neu laden"
           }
         },
         "sidebarMenu": {
@@ -3832,6 +4031,9 @@
           "fileSelected": "Datei ausgewählt: ",
           "uomMeters": "meter",
           "source": "Quelle",
+          "export": "Export",
+          "downloadGeoJSON": "GeoJSON",
+          "downloadDXF": "DXF",
           "downloadCSV": "CSV",
           "downloadPNG": "PNG",
           "downloadPDF": "PDF",
@@ -3876,6 +4078,84 @@
             "selectFiles": "Datei aussuchen...",
             "infoSupported": "<p><small>Unterstützte Dateitypen: GeoJSON, DXF, Shapefiles</small></p>",
             "dxfGeometryNotSupported": "Es wird nur LWPOLYLINE unterstützt"
+          }
+        },
+        "GeoProcessing": {
+          "title": "Geoverarbeitung",
+          "emptyTitle": "Diese WPS-Prozesse müssen im Geoserver installiert sein, um diesen Prozess nutzen zu können:",
+          "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "sourceLayer": "Quellebene",
+          "sourceFeature": "Quellfunktion",
+          "tool": "Wählen Sie einen Prozess aus, den Sie verwenden möchten",
+          "highlight": "Markieren Sie Funktionen",
+          "bufferTool": "Puffer",
+          "distance": "Distanz",
+          "distanceUom": "Maßeinheiten",
+          "km": "km",
+          "m": "m",
+          "run": "Laufen",
+          "intersectionTool": "Überschneidung",
+          "noMatchedLayer": "Keine Ebene entspricht dem aktuellen Filter",
+          "noMatchedFeature": "Keine Funktion entspricht dem aktuellen Filter",
+          "intersectionLayer": "Schnittebene",
+          "intersectionFeature": "Kreuzungsfunktion",
+          "advancedSettings": "Erweiterte Einstellungen",
+          "quadrantSegments": "Quadrantensegmente",
+          "quadrantSegmentsTooltip": "Anzahl der Segmente",
+          "capStyle": "Stil",
+          "capStyleTooltip": "Stil für die Pufferendkappen",
+          "round": "Runden",
+          "flat": "Wohnung",
+          "square": "Quadrat",
+          "firstAttributeToRetain": "Erstes Attribut, das beibehalten werden soll",
+          "secondAttributeToRetain": "Zweites Attribut, das beibehalten werden soll",
+          "intersectionMode": "Kreuzungsmodus",
+          "percentagesEnabled": "Prozentsätze aktiviert",
+          "areasEnabled": "Bereiche aktiviert",
+          "firstAttributeToRetainTooltip": "Erstes einzuschließendes Feature-Sammlungsattribut",
+          "secondAttributeToRetainTooltip": "Zweites einzuschließendes Feature-Sammlungsattribut",
+          "intersectionModeTooltip": "Gibt die für sich überschneidende Features berechnete Geometrie an",
+          "percentagesEnabledTooltip": "Gibt an, ob Prozentsätze der Feature-Fläche ausgegeben werden sollen",
+          "areasEnabledTooltip": "Gibt an, ob Featurebereiche ausgegeben werden sollen",
+          "noMatchedMode": "Kein Modus entspricht dem aktuellen Filter",
+          "INTERSECTION": "ÜBERSCHNEIDUNG",
+          "FIRST": "ERSTE",
+          "SECOND": "ZWEITE",
+          "true": "wahr",
+          "false": "falsch",
+          "notifications": {
+            "errorMissingUrl": "Um Geometrien für diese Layer {layerName} zu erfassen, muss eine Geoserver-WPS-URL angegeben werden. Sie können die wpsUrl-Eigenschaft im GeoProcessing-Plugin konfigurieren",
+            "errorIntersectGFI": "Beim Überschneiden der Features ist ein Fehler aufgetreten. Der Schnittpunkt-Layer konnte nicht erstellt werden.",
+            "errorGFI": "Beim Laden der Funktion ist ein Fehler aufgetreten",
+            "errorGetFeature": "Beim Laden des Features zum Abrufen seiner Geometrie ist ein Fehler aufgetreten",
+            "layerNotSupported": "Ausgewählte Ebene wird nicht unterstützt. Bitte wählen Sie WMS, WFS oder Vektorebene aus.",
+             "noFeatureInPoint": "Am ausgewählten Punkt wurde kein Feature gefunden.",
+             "featureFound": "Am ausgewählten Punkt wurde ein Feature gefunden.",
+             "noLayerSelected": "Bitte wählen Sie zuerst die Ebene aus.",
+             "successfulIntersection": "Der Schnittvorgang war erfolgreich und ein neuer Layer wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
+             "successfulBuffer": "Der Puffervorgang war erfolgreich und eine neue Ebene wurde erstellt und dem Inhaltsverzeichnis hinzugefügt",
+             "errorBuffer": "Der Puffervorgang ist fehlgeschlagen",
+             "emptyIntersection": "Es gibt keine Schnittmenge zwischen den angegebenen Datensätzen.",
+             "errorGettingFC": "Es war nicht möglich, die Geometrie aus der Ebene zu erfassen {layerName}",
+             "errorGettingFeaturesList": "Es war nicht möglich, die Liste der Features aus dem Layer abzurufen {layerName}"
+          },
+          "warningTitle": "Warnung",
+          "warningBody": "Sie haben keine Funktion ausgewählt und dies kann die Leistung im Geoserver verlangsamen. Möchten Sie fortfahren?",
+          "warningConfirmText": "Ja",
+          "warningCancel": "Abbrechen",
+          "tooltip": {
+            "clickToSelectFeature": "Klicken, um Funktion auszuwählen",
+            "invalidLayers": "Eine der von Ihnen ausgewählten Ebenen kann in diesem Prozess nicht verwendet werden",
+            "fillRequiredDataIntersection": "Bitte wählen Sie mindestens den Quell-Layer und den Schnittpunkt-Layer aus",
+            "fillRequiredDataBuffer": "Bitte wählen Sie mindestens die Quellebene aus",
+            "pointAndPolygon": "Sie können einen Punktlayer nur für den Schnittpunktlayer auswählen",
+            "siderBarBtn": "Geoverarbeitung",
+            "selectFeature": "Bitte wählen Sie eine Funktion aus",
+            "validFeature": "Diese Funktion ist gültig",
+            "invalidFeature": "Diese Funktion ist ungültig",
+            "selectLayer": "Bitte wählen Sie eine Ebene aus",
+            "validLayer": "Diese Ebene ist gültig und kann in diesem Prozess verwendet werden",
+            "invalidLayer": "Dieser Layer unterstützt weder die erforderlichen WPS-Prozesse \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\noch handelt es sich um einen Raster-Layer."
           }
         }
     }

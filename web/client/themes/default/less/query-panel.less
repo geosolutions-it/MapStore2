@@ -38,6 +38,10 @@
             .border-left-color-var(@theme-vars[main-color]);
         }
     }
+    .mapstore-query-map {
+        .background-color-var(@theme-vars[main-bg]);
+        box-shadow: inset 0 0 10px #6e6e6e;
+    }
 }
 
 // **************
@@ -226,5 +230,24 @@
         .query-field-value+.query-field-value {
             margin-left: 8px;
         }
+    }
+}
+.mapstore-query-map {
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+    /* left: 0; */
+    bottom: 0;
+    right: 0;
+    width: calc(100% - 600px); // TODO: 600px is width of query panel. It should be calculated dynamically or set in config
+    padding: 10px;
+    animation: query-map-fade-in 0.3s ease-in;
+}
+@keyframes query-map-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }

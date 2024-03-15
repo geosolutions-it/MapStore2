@@ -8,7 +8,7 @@
 
 import urlUtil from 'url';
 
-import { castArray, isNil, isObject } from 'lodash';
+import { isArray, castArray, isNil, isObject } from 'lodash';
 import Rx from 'rxjs';
 import { parseString } from 'xml2js';
 import { stripPrefix } from 'xml2js/lib/processors';
@@ -195,7 +195,8 @@ export const getJSONFeature = (searchUrl, filterObj, options = {}) => {
     return Rx.Observable.defer(() =>
         axios.post(queryString, data, {
             timeout: 60000,
-            headers: { 'Accept': 'application/json', 'Content-Type': `application/xml` }
+            headers: { 'Accept': 'application/json', 'Content-Type': `application/xml` },
+            ...options?.requestOptions
         }))
         .let(interceptOGCError)
         .map((response) => workaroundGEOS7233(response.data, getPagination(filterObj, options), options.totalFeatures));
@@ -259,7 +260,7 @@ export const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {so
                     } : getFeature(
                         query(name,
                             [
-                                sortBy(pn[0]),
+                                sortBy(isArray(pn) ? pn[0] : pn),
                                 ...(pn ? [propertyName(pn)] : []),
                                 ...(filter ? castArray(filter) : [])
                             ]),

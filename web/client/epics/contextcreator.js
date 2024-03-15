@@ -8,7 +8,7 @@
 
 import Rx from 'rxjs';
 import jsonlint from 'jsonlint-mod';
-import {omit, pick, get, flatten, uniq, intersection, head, keys, values, findIndex, find, cloneDeep, isString, isEmpty} from 'lodash';
+import {pick, get, uniq, intersection, head, keys, values, findIndex, find, cloneDeep, isString, isEmpty} from 'lodash';
 import {push} from 'connected-react-router';
 import Api from '../api/GeoStoreDAO';
 
@@ -26,21 +26,21 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
 import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
-    wasTutorialShownSelector, selectedThemeSelector, customVariablesEnabledSelector, prefetchedDataSelector} from '../selectors/contextcreator';
+    wasTutorialShownSelector, prefetchedDataSelector, generateContextResource } from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
 import {changePreset} from '../actions/tutorial';
 import {initMap} from '../actions/map';
-import {mapSaveSelector} from '../selectors/mapsave';
 import {loadMapConfig} from '../actions/config';
 import {createResource, createCategory, updateResource, deleteResource, getResource} from '../api/persistence';
 import getPluginsConfig from '../observables/config/getPluginsConfig';
 import { upload, uninstall } from '../api/plugins';
 import { download, readJson } from "../utils/FileUtils";
 import { toggleControl } from "../actions/controls";
-import { mapSelector } from "../selectors/map";
+import { EXPORT_CONTEXT } from '../utils/ControlUtils';
+import { flattenPluginTree } from '../utils/ContextCreatorUtils';
 
 const saveContextErrorStatusToMessage = (status) => {
     switch (status) {
@@ -60,60 +60,9 @@ const loadTemplateErrorStatusToMessage = (status) => {
     }
 };
 
-const flattenPluginTree = (plugins = []) =>
-    flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(plugin.enabled ? flattenPluginTree(plugin.children) : [])));
-
-const makePlugins = (plugins = []) =>
-    plugins.map(plugin => ({...plugin.pluginConfig, ...(plugin.isUserPlugin ? {active: plugin.active} : {})}));
-
 const findPlugin = (plugins, pluginName) =>
     plugins && plugins.reduce((result, plugin) =>
         result || pluginName === plugin.name && plugin || findPlugin(plugin.children, pluginName), null);
-
-const generateContextResource = (state) => {
-    const mapConfig = mapSelector(state) ? mapSaveSelector(state) : {};
-    const plugins = pluginsSelector(state);
-    const context = newContextSelector(state);
-    const resource = resourceSelector(state);
-    const templates = templatesSelector(state);
-    const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled).map(plugin => plugin.name === 'MapTemplates' ? ({
-        ...plugin,
-        pluginConfig: {
-            ...plugin.pluginConfig,
-            cfg: {
-                ...(plugin.pluginConfig.cfg || {}),
-                allowedTemplates: templates.filter(template => template.enabled).map(template => pick(template, 'id'))
-            }
-        }
-    }) : plugin);
-    const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
-    const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
-    const theme = selectedThemeSelector(state);
-    const customVariablesEnabled = customVariablesEnabledSelector(state);
-
-    const newContext = {
-        ...context,
-        mapConfig,
-        theme,
-        customVariablesEnabled,
-        plugins: {desktop: unselectablePlugins},
-        userPlugins
-    };
-    return resource && resource.id ? {
-        ...omit(resource, 'name', 'description'),
-        data: newContext,
-        metadata: {
-            name: resource && resource.name,
-            description: resource.description
-        }
-    } : {
-        category: 'CONTEXT',
-        data: newContext,
-        metadata: {
-            name: resource && resource.name
-        }
-    };
-};
 
 /**
  * Handles saving context resource
@@ -922,7 +871,7 @@ export const exportContextEpic = (action$, { getState }) =>
                 "application/json"
             ])
                 .do((downloadArgs) => download(...downloadArgs))
-                .map(() => toggleControl("export"))
+                .map(() => toggleControl(EXPORT_CONTEXT))
                 .catch(() =>
                     Rx.Observable.of(
                         error({

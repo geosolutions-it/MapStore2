@@ -127,6 +127,43 @@ describe('test rules manager reducer', () => {
             filter3: "value3"
         });
     });
+    it('update set filter values', () => {
+        const oldState = {
+            filters: {
+                layer: "layer1"
+            }
+        };
+        var state = rulesmanager(oldState, {
+            type: 'RULES_MANAGER:SET_FILTER',
+            key: "workspace",
+            value: "workspace1"
+        });
+        expect(state.filters).toEqual({
+            layer: "layer1",
+            workspace: "workspace1"
+        });
+    });
+
+    it('update set reset filter values', () => {
+        const oldState = {
+            filters: {
+                workspace: "workspace1",
+                workspaceAny: false,
+                layer: "layer1"
+            }
+        };
+        var state = rulesmanager(oldState, {
+            type: 'RULES_MANAGER:SET_FILTER',
+            key: "workspace",
+            value: undefined,
+            isResetField: true
+        });
+        expect(state.filters).toEqual({
+            workspace: undefined,
+            workspaceAny: undefined,
+            layer: "layer1"
+        });
+    });
 
     it('options loaded', () => {
         const oldState = {

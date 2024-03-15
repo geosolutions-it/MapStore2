@@ -9,7 +9,7 @@
 const wellKnownName = [
     {
         value: 'Circle',
-        label: 'styleeditor.circle',
+        label: 'Circle',
         preview: {
             type: 'point',
             paths: [{
@@ -22,7 +22,7 @@ const wellKnownName = [
     },
     {
         value: 'Square',
-        label: 'styleeditor.square',
+        label: 'Square',
         preview: {
             type: 'point',
             paths: [{
@@ -35,7 +35,7 @@ const wellKnownName = [
     },
     {
         value: 'Triangle',
-        label: 'styleeditor.triangle',
+        label: 'Triangle',
         preview: {
             type: 'point',
             paths: [{
@@ -48,7 +48,7 @@ const wellKnownName = [
     },
     {
         value: 'Star',
-        label: 'styleeditor.star',
+        label: 'Star',
         preview: {
             type: 'point',
             paths: [{
@@ -61,7 +61,7 @@ const wellKnownName = [
     },
     {
         value: 'Cross',
-        label: 'styleeditor.cross',
+        label: 'Cross',
         preview: {
             type: 'point',
             paths: [{
@@ -74,7 +74,7 @@ const wellKnownName = [
     },
     {
         value: 'X',
-        label: 'styleeditor.x',
+        label: 'X',
         preview: {
             type: 'point',
             paths: [{
@@ -87,7 +87,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://vertline',
-        label: 'styleeditor.verticalLine',
+        label: 'Vertical Line',
         preview: {
             type: 'point',
             paths: [{
@@ -100,7 +100,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://horline',
-        label: 'styleeditor.horizontalLine',
+        label: 'Horizontal Line',
         preview: {
             type: 'point',
             paths: [{
@@ -113,7 +113,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://slash',
-        label: 'styleeditor.slash',
+        label: 'Slash',
         preview: {
             type: 'point',
             paths: [{
@@ -126,7 +126,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://backslash',
-        label: 'styleeditor.backslash',
+        label: 'Backslash',
         preview: {
             type: 'point',
             paths: [{
@@ -139,7 +139,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://dot',
-        label: 'styleeditor.dot',
+        label: 'Dot',
         preview: {
             type: 'point',
             paths: [{
@@ -152,7 +152,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://plus',
-        label: 'styleeditor.plus',
+        label: 'Plus',
         preview: {
             type: 'point',
             paths: [{
@@ -170,7 +170,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://times',
-        label: 'styleeditor.times',
+        label: 'Times',
         preview: {
             type: 'point',
             paths: [{
@@ -188,7 +188,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://oarrow',
-        label: 'styleeditor.openArrow',
+        label: 'Open Arrow',
         preview: {
             type: 'point',
             paths: [{
@@ -201,7 +201,7 @@ const wellKnownName = [
     },
     {
         value: 'shape://carrow',
-        label: 'styleeditor.closedArrow',
+        label: 'Closed Arrow',
         preview: {
             type: 'point',
             paths: [{

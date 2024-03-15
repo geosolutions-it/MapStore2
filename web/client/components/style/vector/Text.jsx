@@ -18,7 +18,7 @@ numberLocalizer();
 
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
-import { createFont } from '../../../utils/AnnotationsUtils';
+import { createFont } from '../../../utils/LegacyAnnotationsUtils';
 
 /**
  * Styler for the stroke properties of a vector style

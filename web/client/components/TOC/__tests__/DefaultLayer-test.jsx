@@ -466,4 +466,43 @@ describe('test DefaultLayer module component', () => {
             expect(button.length).toBe(1);
         }
     });
+    it('test with layer source crs', () => {
+        // Invalid CRS
+        let node = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            opacity: 0.5,
+            bbox: {
+                crs: "EPSG:3946"
+            }
+        };
+
+        let comp = ReactDOM.render(<Layer node={node}/>, document.getElementById("container"));
+        expect(ReactDOM.findDOMNode(comp)).toBeTruthy();
+        let layerNode = document.querySelector('.toc-default-layer.layer-error');
+        let errorTooltip = document.querySelector('.toc-layer-tool.toc-error');
+        expect(layerNode).toBeTruthy();
+        expect(errorTooltip).toBeTruthy();
+
+        // Valid CRS
+        node = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            opacity: 0.5,
+            bbox: {
+                crs: "EPSG:4326"
+            }
+        };
+
+        comp = ReactDOM.render(<Layer node={node}/>, document.getElementById("container"));
+        expect(ReactDOM.findDOMNode(comp)).toBeTruthy();
+        layerNode = document.querySelector('.toc-default-layer.layer-error');
+        errorTooltip = document.querySelector('.toc-layer-tool.toc-error');
+        expect(layerNode).toBeFalsy();
+        expect(errorTooltip).toBeFalsy();
+    });
 });

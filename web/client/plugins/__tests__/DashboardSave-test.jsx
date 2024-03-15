@@ -29,7 +29,7 @@ describe('DashboardSave Plugins (DashboardSave, DashboardSaveAs)', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    describe('DashboardSave', () => {
+    describe('DashboardSave within burger menu', () => {
         const DUMMY_ACTION = { type: "DUMMY_ACTION" };
         it('hidden by default, visibility of the button', () => {
             const { Plugin, containers } = getPluginForTest(DashboardSave, stateMocker(DUMMY_ACTION), {
@@ -54,7 +54,32 @@ describe('DashboardSave Plugins (DashboardSave, DashboardSaveAs)', () => {
             expect(document.getElementsByClassName('modal-fixed').length).toBe(1);
         });
     });
-    describe('DashboardSaveAs', () => {
+    describe('DashboardSave within sidebar menu', () => {
+        const DUMMY_ACTION = { type: "DUMMY_ACTION" };
+        it('hidden by default, visibility of the button', () => {
+            const { Plugin, containers } = getPluginForTest(DashboardSave, stateMocker(DUMMY_ACTION), {
+                SidebarMenuPlugin: {}
+            });
+            // check container for burger menu
+            expect(Object.keys(containers)).toContain('SidebarMenu');
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.getElementsByClassName('modal-fixed').length).toBe(0);
+            // check log-in logout properties selector for button in burger menu
+            // hide when not logged in
+            expect(containers.SidebarMenu.selector({ security: {} }).style.display).toBe("none");
+            // hide when logged in but without resource selected
+            expect(containers.SidebarMenu.selector({security: {user: {}}}).style.display).toBe("none");
+            // hide if you don't have permissions
+            expect(containers.SidebarMenu.selector({ security: { user: {} }, dashboard: { resource: { id: 1234, canEdit: false } } }).style.display ).toBe("none");
+        });
+        it('show when control is set to "save"', () => {
+            const storeState = stateMocker(DUMMY_ACTION, triggerSave(true));
+            const { Plugin } = getPluginForTest(DashboardSave, storeState);
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.getElementsByClassName('modal-fixed').length).toBe(1);
+        });
+    });
+    describe('DashboardSaveAs within burger menu', () => {
         const DUMMY_ACTION = { type: "DUMMY_ACTION" };
         it('hidden by default, visibility of the button', () => {
             const { Plugin, containers } = getPluginForTest(DashboardSaveAs, stateMocker(DUMMY_ACTION), {
@@ -71,6 +96,45 @@ describe('DashboardSave Plugins (DashboardSave, DashboardSaveAs)', () => {
             expect(containers.BurgerMenu.selector({ security: { user: {} } }).style.display).toNotExist();
             // show if resource is available for clone
             expect(containers.BurgerMenu.selector({
+                security: { user: {} },
+                geostory: { resource: { id: 1234, canEdit: false } }
+            }).style.display).toNotExist();
+        });
+        it('show when control is set to "saveAs"', () => {
+            const { Plugin } = getPluginForTest(DashboardSaveAs, stateMocker(DUMMY_ACTION, triggerSaveAs(true)));
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.getElementsByClassName('modal-fixed').length).toBe(1);
+        });
+        it('title is editable', () => {
+            const { Plugin } = getPluginForTest(DashboardSaveAs, stateMocker(DUMMY_ACTION, triggerSaveAs(true)));
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            const modal = document.getElementsByClassName('modal-fixed')[0];
+            expect(modal).toExist();
+            const inputEl = modal.getElementsByTagName('input')[1];
+            expect(inputEl).toExist();
+            inputEl.value = 'f';
+            TestUtils.Simulate.change(inputEl);
+            expect(inputEl.value).toBe('f');
+        });
+    });
+
+    describe('DashboardSaveAs within sidebar menu', () => {
+        const DUMMY_ACTION = { type: "DUMMY_ACTION" };
+        it('hidden by default, visibility of the button', () => {
+            const { Plugin, containers } = getPluginForTest(DashboardSaveAs, stateMocker(DUMMY_ACTION), {
+                SidebarMenuPlugin: {}
+            });
+            // check container for burger menu
+            expect(Object.keys(containers)).toContain('SidebarMenu');
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.getElementsByClassName('modal-fixed').length).toBe(0);
+            // check log-in logout properties selector for button in burger menu
+            // hide when not logged in
+            expect(containers.SidebarMenu.selector({ security: {} }).style.display).toBe("none");
+            // always show when user logged in
+            expect(containers.SidebarMenu.selector({ security: { user: {} } }).style.display).toNotExist();
+            // show if resource is available for clone
+            expect(containers.SidebarMenu.selector({
                 security: { user: {} },
                 geostory: { resource: { id: 1234, canEdit: false } }
             }).style.display).toNotExist();

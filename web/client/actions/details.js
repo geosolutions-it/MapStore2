@@ -17,9 +17,9 @@ export const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
  * @memberof actions.details
  * @return {action}        type `UPDATE_DETAILS`
 */
-export const updateDetails = (detailsText) => ({
+export const updateDetails = (detailsText, resourceId) => ({
     type: UPDATE_DETAILS,
-    detailsText
+    detailsText, id: resourceId
 });
 
 /**
@@ -27,9 +27,9 @@ export const updateDetails = (detailsText) => ({
  * @memberof actions.details
  * @return {action}        type `DETAILS_LOADED`
 */
-export const detailsLoaded = (mapId, detailsUri, detailsSettings) => ({
+export const detailsLoaded = (resourceId, detailsUri, detailsSettings) => ({
     type: DETAILS_LOADED,
-    mapId,
+    id: resourceId,
     detailsUri,
     detailsSettings
 });

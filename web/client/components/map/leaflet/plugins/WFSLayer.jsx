@@ -24,18 +24,25 @@ import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 const setStyle = (layer, options) => {
     layerToGeoStylerStyle(options)
         .then((style) => {
-            getStyle(applyDefaultStyleToVectorLayer({ ...options, style }), 'leaflet')
+            const collection = layer['@wfsFeatureCollection'];
+            getStyle(applyDefaultStyleToVectorLayer({
+                ...options,
+                features: collection.features,
+                style
+            }), 'leaflet')
                 .then((styleUtils) => {
-                    const {
-                        style: styleFunc,
-                        pointToLayer = () => null,
-                        filter: filterFunc = () => true
-                    } = styleUtils && styleUtils({ opacity: options.opacity, layer }) || {};
-                    layer.clearLayers();
-                    layer.options.pointToLayer = pointToLayer;
-                    layer.options.filter = filterFunc;
-                    layer.addData(layer._msFeatures);
-                    layer.setStyle(styleFunc);
+                    styleUtils({ opacity: options.opacity, layer, features: layer?.['@wfsFeatureCollection']?.features })
+                        .then(({
+                            style: styleFunc,
+                            pointToLayer = () => null,
+                            filter: filterFunc = () => true
+                        } = {}) => {
+                            layer.clearLayers();
+                            layer.options.pointToLayer = pointToLayer;
+                            layer.options.filter = filterFunc;
+                            layer.addData(layer['@wfsFeatureCollection']);
+                            layer.setStyle(styleFunc);
+                        });
                 });
         });
 };
@@ -59,7 +66,7 @@ const loadFeatures = (layer, options) => {
             // store features in a custom property
             // to avoid issue due to style filtering
             // where `const { features } = layer.toGeoJSON();` could return a partial collection
-            layer._msFeatures = {...response.data};
+            layer['@wfsFeatureCollection'] = {...response.data};
             layer.addData(response.data);
             layer.fireEvent('load');
             setStyle(layer, options);

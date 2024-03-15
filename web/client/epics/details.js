@@ -7,42 +7,42 @@
 */
 
 import Rx from 'rxjs';
-import { find } from 'lodash';
 
 import {
     OPEN_DETAILS_PANEL,
     CLOSE_DETAILS_PANEL,
     NO_DETAILS_AVAILABLE,
     updateDetails,
-    detailsLoaded,
-    openDetailsPanel,
     closeDetailsPanel
 } from '../actions/details';
-import { MAP_INFO_LOADED } from '../actions/config';
 import { toggleControl, setControlProperty } from '../actions/controls';
 
 import {
-    mapIdSelector, mapInfoDetailsUriFromIdSelector
+    mapIdSelector
 } from '../selectors/map';
+import { getDashboardId } from '../selectors/dashboard';
 
 import GeoStoreApi from '../api/GeoStoreDAO';
 
-import { EMPTY_RESOURCE_VALUE } from '../utils/MapInfoUtils';
 import { getIdFromUri } from '../utils/MapUtils';
 import { basicError } from '../utils/NotificationUtils';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
+import { detailsUriSelector } from '../selectors/details';
 
 export const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
         .switchMap(() => {
             const state = store.getState();
-            const detailsUri = mapInfoDetailsUriFromIdSelector(state);
+            const mapId = mapIdSelector(state);
+            const dashboardId = getDashboardId(state);
+            const detailsUri = detailsUriSelector(state);
             const detailsId = getIdFromUri(detailsUri);
+            const resourceId = dashboardId || mapId;
             return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
                 .then(data => data))
                 .switchMap((details) => {
                     return Rx.Observable.of(
-                        updateDetails(details)
+                        updateDetails(details, resourceId)
                     );
                 }).startWith(toggleControl("details", "enabled"))
                 .catch(() => {
@@ -59,38 +59,6 @@ export const closeDetailsPanelEpic = (action$) =>
             setControlProperty("details", "enabled", false)
         ])
         );
-
-export const storeDetailsInfoEpic = (action$, store) =>
-    action$.ofType(MAP_INFO_LOADED)
-        .switchMap(() => {
-            const mapId = mapIdSelector(store.getState());
-            const isTutorialRunning = store.getState()?.tutorial?.run;
-            return !mapId ?
-                Rx.Observable.empty() :
-                Rx.Observable.fromPromise(
-                    GeoStoreApi.getResourceAttributes(mapId)
-                )
-                    .switchMap((attributes) => {
-                        let details = find(attributes, {name: 'details'});
-                        const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
-                        let detailsSettings = {};
-
-                        if (!details || details.value === EMPTY_RESOURCE_VALUE) {
-                            return Rx.Observable.empty();
-                        }
-
-                        try {
-                            detailsSettings = JSON.parse(detailsSettingsAttribute.value);
-                        } catch (e) {
-                            detailsSettings = {};
-                        }
-
-                        return Rx.Observable.of(
-                            detailsLoaded(mapId, details.value, detailsSettings),
-                            ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
-                        );
-                    });
-        });
 
 export const closeDetailsPanelOn3DToggle = (action$) =>
     action$.ofType(VISUALIZATION_MODE_CHANGED)

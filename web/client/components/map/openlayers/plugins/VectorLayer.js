@@ -19,7 +19,14 @@ Layers.registerType('vector', {
         let features = [];
 
         const source = new VectorSource({
-            features: features
+            features: features,
+            // spatial index is removing feature that are not currently in view
+            // usually vector layer has a low count of features (eg annotation)
+            // so we could disable it (doc states it improve performance at false with low count of features)
+            // this helps also to make the circle style visible even if the center is out of the view
+            // when the spatial index is active the renderBuffer of vector layer is used to filter features
+            // we could implement a different loading strategy to visualize correctly the Circle style and Geodesic lines
+            useSpatialIndex: false
         });
 
         const layer = new VectorLayer({
@@ -35,10 +42,14 @@ Layers.registerType('vector', {
         getStyle(applyDefaultStyleToVectorLayer({ ...options, asPromise: true }))
             .then((style) => {
                 if (style) {
-                    const olStyle = style.__geoStylerStyle
-                        ? style({ map })
-                        : style;
-                    layer.setStyle(olStyle);
+                    if (style.__geoStylerStyle) {
+                        style({ map, features: options.features })
+                            .then((olStyle) => {
+                                layer.setStyle(olStyle);
+                            });
+                    } else {
+                        layer.setStyle(style);
+                    }
                 }
             });
 
@@ -53,14 +64,30 @@ Layers.registerType('vector', {
             });
         }
 
-        if (!isEqual(oldOptions.style, newOptions.style) || oldOptions.styleName !== newOptions.styleName) {
+        /**
+         * we need to also check when features changes because there could be styles depending of features
+         * so when the latter changes we have to redraw to redo the checks and apply correct style based on new feature props
+        */
+        const areFeaturesChanged = !isEqual(oldOptions.features, newOptions.features);
+
+        const isStyleChanged = !isEqual(oldOptions.style, newOptions.style);
+        const isStyleNameChanged = oldOptions.styleName !== newOptions.styleName;
+        if (
+            isStyleChanged ||
+            isStyleNameChanged ||
+            areFeaturesChanged
+        ) {
             getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, asPromise: true }))
                 .then((style) => {
                     if (style) {
-                        const olStyle = style.__geoStylerStyle
-                            ? style({ map })
-                            : style;
-                        layer.setStyle(olStyle);
+                        if (style.__geoStylerStyle) {
+                            style({ map, features: newOptions.features })
+                                .then((olStyle) => {
+                                    layer.setStyle(olStyle);
+                                });
+                        } else {
+                            layer.setStyle(style);
+                        }
                     }
                 });
         }

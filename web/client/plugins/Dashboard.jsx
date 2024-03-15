@@ -30,7 +30,8 @@ import {
     dashboardResource,
     isBrowserMobile,
     isDashboardLoading,
-    showConnectionsSelector
+    showConnectionsSelector,
+    isDashboardAvailable
 } from '../selectors/dashboard';
 import { currentLocaleLanguageSelector, currentLocaleSelector } from '../selectors/locale';
 import { isLocalizedLayerStylesEnabledSelector, localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
@@ -46,6 +47,9 @@ import {
 import dashboardReducers from '../reducers/dashboard';
 import dashboardEpics from '../epics/dashboard';
 import widgetsEpics from '../epics/widgets';
+import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
+import { createPlugin } from '../utils/PluginsUtils';
+import { canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 
 const WidgetsView = compose(
     connect(
@@ -65,8 +69,9 @@ const WidgetsView = compose(
             localizedLayerStylesEnvSelector,
             getMaximizedState,
             currentLocaleSelector,
+            isDashboardAvailable,
             (resource, widgets, layouts, dependencies, selectionActive, editingWidget, groups, showGroupColor, loading, isMobile, currentLocaleLanguage, isLocalizedLayerStylesEnabled,
-                env, maximized, currentLocale) => ({
+                env, maximized, currentLocale, isDashboardOpened) => ({
                 resource,
                 loading,
                 canEdit: isMobile ? !isMobile : resource && !!resource.canEdit,
@@ -80,7 +85,8 @@ const WidgetsView = compose(
                 language: isLocalizedLayerStylesEnabled ? currentLocaleLanguage : null,
                 env,
                 maximized,
-                currentLocale
+                currentLocale,
+                isDashboardOpened
             })
         ), {
             editWidget,
@@ -109,12 +115,7 @@ const WidgetsView = compose(
                      * if it has other connection that are for sure map or table
                      * then make it non selectable
                     */
-                    target.widgetType === "table" &&
-                        (editingWidget.widgetType !== "map" &&
-                            editingWidget.widgetType === "chart"
-                            ? (target.layer && editingWidget && editingWidget?.charts?.map(c => c?.layer?.name)?.includes(target.layer.name))
-                            : (target.layer && editingWidget.layer && target.layer.name === editingWidget.layer.name)
-                        || editingWidget.widgetType === "map") && !target.mapSync
+                    target.widgetType === "table" && canTableWidgetBeDependency(editingWidget, target) && !target.mapSync
                 ) && target.id !== editingWidget.id
     })
 )(Dashboard);
@@ -156,11 +157,13 @@ class DashboardPlugin extends React.Component {
         rowHeight: PropTypes.number,
         cols: PropTypes.object,
         minLayoutWidth: PropTypes.number,
-        widgetOpts: PropTypes.object
+        widgetOpts: PropTypes.object,
+        enableZoomInTblWidget: PropTypes.bool
     };
     static defaultProps = {
         enabled: true,
-        minLayoutWidth: 480
+        minLayoutWidth: 480,
+        enableZoomInTblWidget: true
     };
     render() {
         return this.props.enabled
@@ -170,6 +173,7 @@ class DashboardPlugin extends React.Component {
                 rowHeight={this.props.rowHeight}
                 cols={this.props.cols}
                 minLayoutWidth={this.props.minLayoutWidth}
+                enableZoomInTblWidget={this.props.enableZoomInTblWidget}
                 widgetOpts={this.props.widgetOpts}
             />
             : null;
@@ -177,14 +181,24 @@ class DashboardPlugin extends React.Component {
     }
 }
 
-export default {
-    DashboardPlugin: withResizeDetector(DashboardPlugin),
+export default createPlugin("Dashboard", {
+    component: withResizeDetector(DashboardPlugin),
     reducers: {
         dashboard: dashboardReducers,
         widgets: widgetsReducers
+    },
+    containers: {
+        SidebarMenu: {
+            name: "Dashboard-spinner",
+            alwaysVisible: true,
+            position: 2000,
+            tool: connect((state) => ({
+                loading: isDashboardLoading(state)
+            }))(GlobalSpinner)
+        }
     },
     epics: {
         ...dashboardEpics,
         ...widgetsEpics
     }
-};
+});

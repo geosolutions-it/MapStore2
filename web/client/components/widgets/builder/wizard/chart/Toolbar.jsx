@@ -33,47 +33,24 @@ const getSaveTooltipId = (step, {id} = {}) => {
     return "widgets.builder.wizard.addTheWidget";
 };
 
-const onDelete = (editorData, onChange) => {
-    const charts = editorData?.charts?.filter(c => c.chartId !== editorData?.selectedChartId);
-    onChange('chart-delete', charts.length ? charts : undefined);
-};
-
 export default ({
-    step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {}, onChange = () => {},
+    step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {},
     stepButtons = [],
-    openFilterEditor = () => {},
-    toggleLayerSelector = () => {},
-    errors,
-    noAttributes = false,
-    dashBoardEditing = false
+    errors
 } = {}) => {
     const disable = !valid || (editorData?.mapSync && Object.values(errors).some(error => error));
     return (
         <Toolbar btnDefaultProps={{
             bsStyle: "primary",
-            bsSize: "sm"
+            bsSize: "sm",
+            className: "square-button-md"
         }}
         buttons={[{
             onClick: () => setPage(Math.max(0, step - 1)),
             visible: step > 0,
             glyph: "arrow-left",
             tooltipId: getBackTooltipId(step)
-        }, ...stepButtons, {
-            onClick: openFilterEditor,
-            disabled: noAttributes,
-            glyph: "filter",
-            tooltipId: "widgets.builder.setupFilter"
-        }, {
-            onClick: () => toggleLayerSelector(true),
-            visible: dashBoardEditing && step === 0,
-            glyph: "plus",
-            tooltipId: "widgets.builder.addNewLayers"
-        }, {
-            onClick: () => onDelete(editorData, onChange),
-            visible: dashBoardEditing && step === 0,
-            glyph: "trash",
-            tooltipId: "widgets.builder.deleteChart"
-        }, {
+        }, ...stepButtons.filter(button => !['dashboard-exit-button', 'map-exit-button'].includes(button.id)), {
             onClick: () => setPage(Math.min(step + 1, 1)),
             visible: step === 0,
             disabled: step === 0 && disable,

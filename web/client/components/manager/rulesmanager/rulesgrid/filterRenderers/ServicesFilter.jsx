@@ -16,7 +16,8 @@ import { filterSelector, servicesSelector } from '../../../../../selectors/rules
 
 const selector = createSelector(filterSelector, servicesSelector, (filter, services) => ({
     selected: filter.service,
-    services
+    services,
+    anyFieldVal: filter.serviceAny
 }));
 
 export default compose(
@@ -27,12 +28,15 @@ export default compose(
         valueField: "value",
         parentsFilter: {},
         filter: "startsWith",
-        placeholder: "rulesmanager.placeholders.filter",
+        placeholder: "rulesmanager.placeholders.filterAny",
+        unCheckedAnyField: "rulesmanager.tooltip.filterRuleList",
+        checkedAnyField: "rulesmanager.tooltip.showAllRules",
         data: [
             {value: "WMS", label: "WMS"},
             {value: "WFS", label: "WFS"},
             {value: "WCS", label: "WCS"}
-        ]
+        ],
+        anyFilterRuleMode: 'serviceAny'
     }),
     withPropsOnChange(["services"], ({services, data}) => ({data: services || data})),
     withHandlers({
@@ -40,6 +44,6 @@ export default compose(
             onFilterChange({column, filterTerm});
         }
     }),
-    localizedProps(["placeholder"]),
+    localizedProps(["placeholder", "checkedAnyField", "unCheckedAnyField"]),
     fixedOptions
 )(PagedCombo);

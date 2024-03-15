@@ -43,6 +43,8 @@ const normalizeKey = (key) => {
         return 'userName';
     case 'rolename':
         return 'groupName';
+    case 'roleAny':
+        return 'groupAny';
     default:
         return key;
     }
@@ -83,7 +85,7 @@ const Api = ({addBaseUrl, addBaseUrlGS, getGeoServerInstance}) => ({
             .then( (response) => {
                 return toJSONPromise(response.data);
             }
-            ).then(({RuleList = {}}) => ({rules: RuleList.rule || []}));
+            ).then(({RuleList = {}}) => ({rules: [].concat(RuleList.rule || [])}));
     },
 
     getRulesCount: (rulesFiltersValues) => {

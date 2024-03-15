@@ -26,25 +26,23 @@ export const geometryFunctionsLibrary = {
      * @returns {function} geometry function utils for cesium
      */
     cesium: ({ Cesium }) => {
-        const getPositions = (entity) => {
-            if (entity._msStoredCoordinates.polygon) {
-                const hierarchy = entity._msStoredCoordinates.polygon.getValue(Cesium.JulianDate.now());
+        const getPositions = (feature) => {
+            if (feature?.positions) {
                 return {
-                    type: 'Polygon',
-                    positions: hierarchy.positions.filter((pos, idx) => idx < hierarchy.positions.length - 1)
+                    type: feature.geometry.type,
+                    positions: feature?.positions[0]
                 };
             }
-            if (entity._msStoredCoordinates.polyline) {
-                return {
-                    type: 'LineString',
-                    positions: entity._msStoredCoordinates.polyline.getValue(Cesium.JulianDate.now())
-                };
-            }
-            return { positions: [] };
+            const coordinates = feature.geometry.type === 'Polygon' ? feature.geometry.coordinates[0] : feature.geometry.coordinates;
+            const positions = coordinates.map(coords => Cesium.Cartesian3.fromDegrees(coords[0], coords[1], coords[2]));
+            return {
+                type: feature.geometry.type,
+                positions
+            };
         };
         const geometryFunctions = {
-            centerPoint: (entity) => {
-                const { positions, type } = getPositions(entity);
+            centerPoint: (feature) => {
+                const { positions, type } = getPositions(feature);
                 const cartographic = positions.map(position => {
                     const { longitude, latitude, height } = Cesium.Cartographic.fromCartesian(position);
                     return [Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude), height];
@@ -81,40 +79,37 @@ export const geometryFunctionsLibrary = {
                         ),
                         new Cesium.Cartesian3()
                     );
-                    entity.position = Cesium.Cartesian3.add(
-                        minCartesian,
-                        Cesium.Cartesian3.multiplyByScalar(
-                            normal,
-                            deltaDistance,
+                    return {
+                        position: Cesium.Cartesian3.add(
+                            minCartesian,
+                            Cesium.Cartesian3.multiplyByScalar(
+                                normal,
+                                deltaDistance,
+                                new Cesium.Cartesian3()
+                            ),
                             new Cesium.Cartesian3()
-                        ),
-                        new Cesium.Cartesian3()
-                    );
-                    return entity;
+                        )
+                    };
                 }
 
                 const { geometry } = turfCenter({ type: 'Polygon', coordinates: [[ ...cartographic, cartographic[0] ]] }) || {};
                 const averageHeight = cartographic.reduce((sum, [ , , hgt]) => sum + hgt, 0) / cartographic.length;
                 const coordinates = [geometry.coordinates[0], geometry.coordinates[1], averageHeight] || [0, 0, 0];
 
-                entity.position = Cesium.Cartographic.toCartesian(Cesium.Cartographic.fromDegrees(...coordinates));
-                return entity;
+                return {
+                    position: Cesium.Cartographic.toCartesian(Cesium.Cartographic.fromDegrees(...coordinates))
+                };
             },
-            lineToArc: (entity) => {
-                if (entity.polyline) {
-                    entity.polyline.arcType = Cesium.ArcType.GEODESIC;
-                }
-                return entity;
+            lineToArc: () => {
+                return { arcType: Cesium.ArcType.GEODESIC, perPositionHeight: undefined };
             },
-            startPoint: (entity) => {
-                const { positions } = getPositions(entity);
-                entity.position = positions[0];
-                return entity;
+            startPoint: (feature) => {
+                const { positions } = getPositions(feature);
+                return { position: positions[0].clone() };
             },
-            endPoint: (entity) => {
-                const { positions } = getPositions(entity);
-                entity.position = positions[positions.length - 1];
-                return entity;
+            endPoint: (feature) => {
+                const { positions } = getPositions(feature);
+                return { position: positions[feature.geometry.type === 'Polygon' ? positions.length - 2 : positions.length - 1].clone() };
             }
         };
         return (symbolizer) => {
@@ -130,6 +125,7 @@ export const geometryFunctionsLibrary = {
      * @param {object} options
      * @param {class} options.Point ol/geom/Point class
      * @param {class} options.LineString ol/geom/LineString class
+     * @param {class} options.Polygon ol/geom/Polygon class
      * @param {class} options.GeoJSON ol/format/GeoJSON class
      * @param {function} options.getCenter from ol/extent
      * @returns {function} geometry function utils for OpenLayers
@@ -137,6 +133,7 @@ export const geometryFunctionsLibrary = {
     openlayers: ({
         Point,
         LineString,
+        Polygon,
         GeoJSON,
         getCenter
     }) => {
@@ -180,6 +177,17 @@ export const geometryFunctionsLibrary = {
                         const point = reproject(c, 'EPSG:4326', mapProjection);
                         return [point.x, point .y];
                     }));
+                }
+                if (type === 'Polygon') {
+                    let coordinates = feature.getGeometry().getCoordinates()[0]; // not managing holes
+                    coordinates = transformLineToArcs(coordinates.map(c => {
+                        const point = reproject(c, mapProjection, 'EPSG:4326');
+                        return [point.x, point .y];
+                    }));
+                    return new Polygon([coordinates.map(c => {
+                        const point = reproject(c, 'EPSG:4326', mapProjection);
+                        return [point.x, point .y];
+                    })]);
                 }
                 return feature.getGeometry();
             },
@@ -236,6 +244,9 @@ export const geometryFunctionsLibrary = {
             lineToArc: (feature) => {
                 if (feature.geometry.type === 'LineString') {
                     return transformLineToArcs(feature.geometry.coordinates);
+                }
+                if (feature.geometry.type === 'Polygon') {
+                    return feature.geometry.coordinates.map(transformLineToArcs);
                 }
                 return null;
             },

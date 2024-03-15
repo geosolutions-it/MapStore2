@@ -10,6 +10,7 @@ import './print/print.css';
 
 import head from 'lodash/head';
 import castArray from "lodash/castArray";
+import isNil from "lodash/isNil";
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -22,12 +23,13 @@ import { configurePrintMap, printError, printSubmit, printSubmitting, addPrintPa
 import Message from '../components/I18N/Message';
 import Dialog from '../components/misc/Dialog';
 import printReducers from '../reducers/print';
+import printEpics from '../epics/print';
 import { printSpecificationSelector } from "../selectors/print";
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapSelector, scalesSelector } from '../selectors/map';
 import { mapTypeSelector } from '../selectors/maptype';
-import { normalizeSRS, reprojectBbox } from '../utils/CoordinatesUtils';
+import { normalizeSRS, reprojectBbox, convertDegreesToRadian } from '../utils/CoordinatesUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
@@ -223,6 +225,11 @@ function mergeItems(standard, overrides) {
         .map(handleRemoved);
 }
 
+function filterLayer(layer = {}) {
+    // Skip layer with error and type cog
+    return !layer.loadingError && layer.type !== "cog";
+}
+
 export default {
     PrintPlugin: assign({
         loadPlugin: (resolve) => {
@@ -392,9 +399,10 @@ export default {
                     };
                     getPreviewResolution = (zoom, projection) => {
                         const dpu = dpi2dpu(DEFAULT_SCREEN_DPI, projection);
+                        const roundZoom = Math.round(zoom);
                         const scale = this.props.useFixedScales
-                            ? getPrintScales(this.props.capabilities)[zoom]
-                            : this.props.scales[zoom];
+                            ? getPrintScales(this.props.capabilities)[roundZoom]
+                            : this.props.scales[roundZoom];
                         return scale / dpu;
                     };
                     getLayout = (props) => {
@@ -447,6 +455,7 @@ export default {
                             notAllowedLayers: this.isBackgroundIgnored(this.props.layers, map?.projection),
                             actionConfig: this.props.submitConfig,
                             validations: this.props.printingService.validate(),
+                            rotation: !isNil(this.props.printSpec.rotation) ? convertDegreesToRadian(Number(this.props.printSpec.rotation)) : 0,
                             actions: {
                                 print: this.print,
                                 addParameter: this.addParameter
@@ -629,7 +638,7 @@ export default {
                     error,
                     map,
                     layers: [
-                        ...layers.filter(l => !l.loadingError),
+                        ...layers.filter(filterLayer),
                         ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(
                             l => {
                                 const isVector = l.type === 'vector';
@@ -692,5 +701,6 @@ export default {
             priority: 2
         }
     }),
-    reducers: {print: printReducers}
+    reducers: {print: printReducers},
+    epics: {...printEpics}
 };

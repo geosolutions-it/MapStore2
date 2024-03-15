@@ -22,15 +22,50 @@ import { createRegisterHooks, ZOOM_TO_EXTENT_HOOK } from '../../../utils/MapUtil
  * @returns {object} the map with center and zoom updated
  */
 export default compose(
-
+    withPropsOnChange(["id"],
+        ({hookRegister = null, id}) => ({
+            hookRegister: hookRegister?.id !== id ? createRegisterHooks(id) : hookRegister
+        })),
+    compose(
+        withPropsOnChange((props = {}, nextProps = {}) => {
+            const currentExtentObj = props.widgets?.find(i=>i?.dependencies?.extentObj);
+            const nextExtentObj = nextProps.widgets?.find(i=>i?.dependencies?.extentObj);
+            return !(isEqual(currentExtentObj, nextExtentObj)) && nextExtentObj;
+        },
+        ({ id, widgets, updateProperty, hookRegister })=>{
+            const tblWidgetWithExtentObj = widgets?.find(i=>i?.dependencies?.extentObj);
+            const extentObj = tblWidgetWithExtentObj?.dependencies?.extentObj;
+            const mapWidgetID = id;
+            let connectedMaps;
+            if (!tblWidgetWithExtentObj) return {};
+            if (tblWidgetWithExtentObj?.mapSync) {
+                const mapWidget = widgets?.find(i=>tblWidgetWithExtentObj?.dependenciesMap?.mapSync.includes(i.id) && i.id === mapWidgetID);
+                connectedMaps = mapWidget?.maps?.find(i=>i.mapStateSource === mapWidget.id);
+            }
+            if (!connectedMaps || !tblWidgetWithExtentObj?.mapSync) {
+                const mapWidgets = widgets.filter(i=>i.widgetType === 'map' && i?.dependenciesMap && i?.dependenciesMap?.mapSync?.includes(tblWidgetWithExtentObj?.id) && i.id === mapWidgetID);
+                connectedMaps = mapWidgets?.length ? [...mapWidgets] : undefined;
+            }
+            const hook = hookRegister?.getHook("ZOOM_TO_EXTENT_HOOK");
+            if (hook && hookRegister?.id === id && connectedMaps) {          // a condition to detect which connected map with its id to zoom within
+                // trigger "internal" zoom to extent
+                hook(extentObj.extent, {
+                    crs: extentObj.crs, maxZoom: extentObj.maxZoom
+                });
+                // remove extentObj from state
+                updateProperty(tblWidgetWithExtentObj.id, `dependencies.extentObj`, undefined);
+            }
+            return {};
+        })
+    ),
     branch(
         ({mapSync, dependencies} = {}) => {
             return mapSync && (!isEmpty(dependencies.quickFilters) || !isEmpty(dependencies.filter));
         },
         compose(
             withPropsOnChange(["id"],
-                ({hookRegister = null}) => ({
-                    hookRegister: hookRegister || createRegisterHooks()
+                ({hookRegister = null, id}) => ({
+                    hookRegister: hookRegister?.id !== id ? createRegisterHooks(id) : hookRegister
                 })),
             mapPropsStream(props$ => {
                 return props$

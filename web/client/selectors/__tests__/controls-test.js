@@ -17,7 +17,8 @@ import {
     drawerEnabledControlSelector,
     showCoordinateEditorSelector,
     shareSelector,
-    showConfirmDeleteMapModalSelector
+    showConfirmDeleteMapModalSelector,
+    isGeoProcessingEnabledSelector
 } from '../controls';
 
 const state = {
@@ -56,7 +57,6 @@ describe('Test controls selectors', () => {
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
-
     it('test wfsDownloadSelector', () => {
         const retVal = wfsDownloadSelector(state);
         expect(retVal).toExist();
@@ -105,5 +105,15 @@ describe('Test controls selectors', () => {
     it('test showConfirmDeleteMapModalSelector', () => {
         const showConfirmDelete = showConfirmDeleteMapModalSelector(state);
         expect(showConfirmDelete).toBe(true);
+    });
+    it('isGeoProcessingEnabledSelector', () => {
+        const controls = {
+            GeoProcessing: {
+                enabled: true
+            }
+        };
+        expect(isGeoProcessingEnabledSelector({
+            controls
+        })).toEqual(true);
     });
 });

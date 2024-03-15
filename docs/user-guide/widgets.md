@@ -8,7 +8,7 @@ In [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) it is possible
     Some widgets (in maps or in dashboards) need some WPS back-end support to work:
 
     * The `map widgets` (dashboards) needs the WPS process `gs:Bounds` to zoom to filtered data, if connected to a table.
-    
+
     * For aggregate operations, `chart` and `counter` widgets need the WPS process `gs:Aggregate` available in GeoServer to work.
 
 ## Add a Widget
@@ -81,11 +81,11 @@ Inside this modal, the user is allowed to:
 
 * Change the default **Color** of bars or slices (depending on the chart type) through the *Color Picker*. This color will be applied for all values for which a *Class Color* has not been configured.
 
-<img src="../img/widgets/custom_colors.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/widgets/custom_colors.mp4"/></video>
 
 * Select an *Attribute* in the dropdown list as a **Classification attribute**.
 
-<img src="../img/widgets/classification-attribute.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/widgets/classification-attribute.mp4"/></video>
 
 Once the attribute is chosen, new options appear in the *Custom Color Settings* panel that allow the user to:
 
@@ -115,7 +115,7 @@ When the values of a classification attribute are of type String, the user can:
 
 An example of *Bar charts* corresponding to this type of classification can be the following:
 
-<img src="../img/widgets/color-customization-alhanumeric-attribute.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/widgets/color-customization-alhanumeric-attribute.mp4"/></video>
 
 Through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button the user can add new values before through the <img src="../img/widgets/add-new-entry-before.jpg" class="ms-docimage"/> button or after through <img src="../img/widgets/add-new-entry-after.jpg" class="ms-docimage"/> button.
 
@@ -138,7 +138,7 @@ When the values of a classification attribute are numbers, the user can configur
 
 An example of Bar chart corresponding to this type of classification can be the following:
 
-<img src="../img/widgets/color-customization-numeric-attribute.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/widgets/color-customization-numeric-attribute.mp4"/></video>
 
 #### Bar Chart Type
 
@@ -188,7 +188,8 @@ Through this section, the user is allowed to:
 <img src="../img/widgets/legend_name.jpg" class="ms-docimage"/>
 
 !!! Note
-        The tooltips of the X and Y axis labels are available by hovering the mouse over the charts. This way the labels are available even if the **Hide labels** option for the X and Y axis is enabled.  <img src="../img/widgets/label_tooltips.gif" class="ms-docimage"/>
+        The tooltips of the X and Y axis labels are available by hovering the mouse over the charts. This way the labels are available even if the **Hide labels** option for the X and Y axis is enabled.
+        <video class="ms-docimage" controls><source src="../img/widgets/label_tooltips.mp4" /></video>
 
 !!! Warning
     In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
@@ -259,6 +260,9 @@ Here the user can:
 * Format the text through the [Text Editor Toolbar](text-editor-toolbar.md#text-editor-toolbar)
 
 !!! note
+    From the *Text Editor Toolbar* the user can also add an **URL Image** through the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button and add an **Embedded Link** through the <img src="../img/button/embedded_link_buttton.jpg" class="ms-docbutton"/> button.
+
+!!! note
     None of these options are mandatory, you can add the widget to the map without filling in these fields.
 
 An example of text widget could be:
@@ -275,18 +279,18 @@ The toolbar on the top of this panel is similar to the one present in [Chart sec
 
 * **Enable/Disable** the layer fields that will be displayed in the widget as columns.
 
-<img src="../img/widgets/table-attribute.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/widgets/table-attribute.mp4"/></video>
 
 !!!warning
     At least one field must be selected in order to move to the next configuration step.
 
 * Enter a **Title** for each column to be displayed as the table header in place of the *Name* of the layer field
 
-<img src="../img/widgets/table-title.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/widgets/table-title.mp4"/></video>
 
 * Enter a **Description** for each field to be displayed as a tooltip, visible moving the mouse on the column header.
 
-<img src="../img/widgets/table-description.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/widgets/table-description.mp4"/></video>
 
 Once the desired fields are selected, a click on the <img src="../img/button/next.jpg" class="ms-docbutton"/> button opens the following panel:
 
@@ -296,6 +300,9 @@ In this last step of the widget creation, the toolbar and the information to be 
 An example of table widget could be:
 
 <img src="../img/widgets/table-ex.jpg" class="ms-docimage"/>
+
+!!! Note
+    If the *Table* is connected to a map or if maps are connected to a *Table*, the user can **Zoom to feature** through the <img src="../img/button/zoom-feature.jpg" class="ms-docbutton"/> button available on each record.
 
 ### Counter
 
@@ -335,13 +342,13 @@ Through the buttons available on each widget the user can  perform the followin
 
 * Drag and drop the widget to move it within the map area of the viewer and **resize** it through the <img src="../img/button/resize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
-<img src="../img/widgets/ded-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
+<video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/ded-widgets.mp4"/></video>
 
 * **Pin** the position and the dimension of the widget through the <img src="../img/button/pin.jpg" class="ms-docbutton"/> button
 
 * **Collapse** the widget through the <img src="../img/button/collapse-button.jpg" class="ms-docbutton"/> button and expand it again by clicking the related button in the *Widgets Tray*
 
-<img src="../img/widgets/collapse-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
+<video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/collapse-widgets.mp4"/></video>
 
 !!!note
     The *Widgets Tray* allows the user to expand/collapse each single widget individually <img src="../img/button/wid-tray-single.jpg" class="ms-docbutton"/> or all of them at once by using the <img src="../img/button/wid-tray-all.jpg" class="ms-docbutton"/> button.
@@ -351,7 +358,7 @@ Through the buttons available on each widget the user can  perform the followin
 
 * Make the widget **Full screen** through the <img src="../img/button/maximize-button.jpg" class="ms-docbutton"/> button (also available for widgets present in a dashboard)
 
-<img src="../img/widgets/maximize-widgets.gif" class="ms-docimage" style="max-width:500px;"/>
+<video class="ms-docimage" style="max-width:500px;" controls><source src="../img/widgets/maximize-widgets.mp4"/></video>
 
 * Access to the *Title* and *Description* info through the <img src="../img/button/info.jpg" class="ms-docbutton"/> button, if this information has been provided during the widget configuration/creation
 

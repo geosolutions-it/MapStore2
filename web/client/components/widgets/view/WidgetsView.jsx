@@ -33,6 +33,7 @@ export default pure(({
     widgets = [],
     layouts,
     dependencies,
+    compactType = null,
     compactMode,
     useDefaultWidthProvider = true,
     measureBeforeMount,
@@ -71,6 +72,10 @@ export default pure(({
         className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
         rowHeight={rowHeight}
         autoSize
+        // TODO: this prop triggers a deprecation warning
+        // we should remove it keeping the current behavior
+        // a user should be able to move cards everywhere without force cards on first row
+        compactType={compactType}
         compactMode={compactMode}
         breakpoints={breakpoints}
         cols={cols}

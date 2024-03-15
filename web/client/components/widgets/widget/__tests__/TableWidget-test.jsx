@@ -12,6 +12,8 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import { compose, defaultProps } from 'recompose';
 import { waitFor } from '@testing-library/react';
+import {Provider} from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 
 import describePois from '../../../../test-resources/wfs/describe-pois.json';
 import museam from '../../../../test-resources/wfs/museam.json';
@@ -23,8 +25,12 @@ const TableWidget = compose(
     tableWidget
 )(TableWidgetComp);
 
+const mockStore = configureMockStore();
+
 describe('TableWidget component', () => {
+    let store;
     beforeEach((done) => {
+        store = mockStore();
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
@@ -34,7 +40,7 @@ describe('TableWidget component', () => {
         setTimeout(done);
     });
     it('TableWidget rendering with defaults', () => {
-        ReactDOM.render(<TableWidget />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><TableWidget /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
         expect(el).toExist();
@@ -42,7 +48,7 @@ describe('TableWidget component', () => {
         expect(container.querySelector('.glyphicon-trash')).toExist();
     });
     it('view only mode', () => {
-        ReactDOM.render(<TableWidget canEdit={false} />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><TableWidget canEdit={false} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         expect(container.querySelector('.glyphicon-pencil')).toNotExist();
         expect(container.querySelector('.glyphicon-trash')).toNotExist();
@@ -52,27 +58,27 @@ describe('TableWidget component', () => {
             onEdit: () => { }
         };
         const spyonEdit = expect.spyOn(actions, 'onEdit');
-        ReactDOM.render(<TableWidget onEdit={actions.onEdit} />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><TableWidget onEdit={actions.onEdit} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.glyphicon-pencil');
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonEdit).toHaveBeenCalled();
     });
     it('TableWidget loading', () => {
-        ReactDOM.render(<TableWidget loading />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><TableWidget loading /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.loader-container');
         expect(el).toExist();
     });
     it('TableWidget empty', (done) => {
-        ReactDOM.render(<TableWidget describeFeatureType={describePois} features={[]} />, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><TableWidget describeFeatureType={describePois} features={[]} /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         waitFor(() =>expect( container.querySelector('.react-grid-Empty')).toBeTruthy())
             .then(() => done());
     });
     it('TableWidget with default gridOpts', () => {
-        ReactDOM.render(<TableWidget
-            virtualScroll={false} describeFeatureType={describePois} enableColumnFilters features={museam.features}/>, document.getElementById("container"));
+        ReactDOM.render(<Provider store={store}><TableWidget
+            virtualScroll={false} describeFeatureType={describePois} enableColumnFilters features={museam.features}/></Provider>, document.getElementById("container"));
         const gridHeaderRows = document.getElementsByClassName('react-grid-HeaderRow');
         expect(gridHeaderRows.length).toBe(2);
         const headerRowHeight = gridHeaderRows[0]?.getAttribute('height');
@@ -81,9 +87,9 @@ describe('TableWidget component', () => {
         expect(Number(headerFiltersHeight)).toBe(28);
     });
     it('TableWidget with custom gridOpts', () => {
-        ReactDOM.render(<TableWidget
+        ReactDOM.render(<Provider store={store}><TableWidget
             gridOpts={{ headerRowHeight: 35, headerFiltersHeight: 35}}
-            virtualScroll={false} describeFeatureType={describePois} enableColumnFilters features={museam.features}/>, document.getElementById("container"));
+            virtualScroll={false} describeFeatureType={describePois} enableColumnFilters features={museam.features}/></Provider>, document.getElementById("container"));
         const gridHeaderRows = document.getElementsByClassName('react-grid-HeaderRow');
         expect(gridHeaderRows.length).toBe(2);
         const headerRowHeight = gridHeaderRows[0]?.getAttribute('height');
@@ -101,7 +107,7 @@ describe('TableWidget component', () => {
             "localType": "number"
         }]}]};
         ReactTestUtils.act(()=>{
-            ReactDOM.render(<TableWidget enableColumnFilters id={1} updateProperty={(id, path, attribute)=>{
+            ReactDOM.render(<Provider store={store}><TableWidget enableColumnFilters id={1} updateProperty={(id, path, attribute)=>{
                 try {
                     expect(id).toBe(1);
                     expect(path).toBe("quickFilters.FLOAT");
@@ -113,7 +119,7 @@ describe('TableWidget component', () => {
                     done(e);
                 }
                 done();
-            }} describeFeatureType={_d} features={[]} />, document.getElementById("container"));
+            }} describeFeatureType={_d} features={[]} /></Provider>, document.getElementById("container"));
         });
         const container = document.getElementById('container');
         const filterFields = container.querySelectorAll("input");

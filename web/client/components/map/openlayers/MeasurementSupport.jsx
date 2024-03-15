@@ -26,6 +26,7 @@ import {getMessageById} from '../../../utils/LocaleUtils';
 import {createOLGeometry} from '../../../utils/openlayers/DrawUtils';
 
 import {Polygon, LineString} from 'ol/geom';
+import { never } from 'ol/events/condition';
 import Overlay from 'ol/Overlay';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
@@ -599,6 +600,7 @@ export default class MeasurementSupport extends React.Component {
         // create an interaction to draw with
         draw = new Draw({
             source: new VectorSource(),
+            freehandCondition: never,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
             style: new Style({
                 fill: new Fill({
@@ -621,9 +623,9 @@ export default class MeasurementSupport extends React.Component {
             })
         });
 
-        this.clickListener = this.props.map.on('click', this.updateMeasurementResults.bind(this, this.props));
+        this.clickListener = this.props.map.on('click', this.updateMeasurementResults.bind(this));
         if (this.props.updateOnMouseMove) {
-            this.props.map.on('pointermove', this.updateMeasurementResults.bind(this, this.props));
+            this.props.map.on('pointermove', this.updateMeasurementResults.bind(this));
         }
 
         this.props.map.on('pointermove', (evt) => this.pointerMoveHandler(evt));
@@ -837,6 +839,11 @@ export default class MeasurementSupport extends React.Component {
                 clonedNewFeature = set("geometry.coordinates", newCoords, clonedNewFeature);
             } else if (!this.props.measurement.disableLabels && this.props.measurement.areaMeasureEnabled) {
                 // the one before the last is a dummy
+                let oldCoords = clonedNewFeature.geometry.coordinates;
+                let newCoords = transformLineToArcs(oldCoords[0]);
+                clonedNewFeature = set("geometry.coordinates", [newCoords], clonedNewFeature);
+
+                // edit geom for drawing geodesic lines
                 this.textLabels.splice(this.segmentOverlays.length - 2, 1);
                 this.props.map.removeOverlay(this.segmentOverlays[this.segmentOverlays.length - 2]);
                 this.segmentOverlayElements[this.segmentOverlays.length - 2].parentNode.removeChild(
@@ -896,10 +903,10 @@ export default class MeasurementSupport extends React.Component {
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
             this.sketchFeature = null;
-            this.props.map.un('click', this.updateMeasurementResults.bind(this, this.props), this);
+            this.props.map.un('click', this.updateMeasurementResults.bind(this), this);
             unByKey(this.clickListener);
             if (this.props.updateOnMouseMove) {
-                this.props.map.un('pointermove', this.updateMeasurementResults.bind(this, this.props), this);
+                this.props.map.un('pointermove', this.updateMeasurementResults.bind(this), this);
             }
         }
     };
@@ -929,13 +936,13 @@ export default class MeasurementSupport extends React.Component {
         this.helpTooltipElement.classList.remove('hidden');
     };
 
-    updateMeasurementResults = (props) => {
+    updateMeasurementResults = () => {
         if (!this.sketchFeature) {
             return;
         }
         let sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
 
-        if (props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
+        if (this.props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
             // calculate the azimuth as base for bearing information
             if (sketchCoords.length > 2) {
                 this.drawInteraction.sketchCoords_ = [sketchCoords[0], sketchCoords[1], sketchCoords[0]];

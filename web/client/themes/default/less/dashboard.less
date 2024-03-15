@@ -28,18 +28,21 @@
 
     #mapstore-navbar-container {
         margin-bottom: 0;
-        z-index: 100;
+        z-index: 1032;
     }
 
     .ms2-border-layout-content {
         position: relative;
         overflow: auto;
     }
-}
 
+}
+#mapstore-sidebar-menu-container {
+    order: 2;
+}
 .dashboard-editor {
     /* flex column */
-    order: -1;
+    order: 1;
     z-index: 1;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12);
 

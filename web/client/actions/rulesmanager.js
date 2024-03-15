@@ -30,11 +30,12 @@ export function delRules(ids) {
     };
 }
 
-export function setFilter(key, value) {
+export function setFilter(key, value, isResetField) {
     return {
         type: SET_FILTER,
         key,
-        value
+        value,
+        isResetField
     };
 }
 

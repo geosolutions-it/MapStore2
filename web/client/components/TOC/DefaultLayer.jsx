@@ -10,7 +10,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import Node from './Node';
-import { isObject, castArray, find } from 'lodash';
+import { isObject, castArray, find, isNil } from 'lodash';
 import { Grid, Row, Col, Glyphicon } from 'react-bootstrap';
 import draggableComponent from './enhancers/draggableComponent';
 import VisibilityCheck from './fragments/VisibilityCheck';
@@ -21,8 +21,9 @@ import OpacitySlider from './fragments/OpacitySlider';
 import ToggleFilter from './fragments/ToggleFilter';
 import tooltip from '../misc/enhancers/tooltip';
 import localizedProps from '../misc/enhancers/localizedProps';
-import { isInsideResolutionsLimits } from '../../utils/LayersUtils';
+import { isInsideResolutionsLimits, getLayerTypeGlyph } from '../../utils/LayersUtils';
 import StyleBasedLegend from './fragments/StyleBasedLegend';
+import { isSRSAllowed } from '../../utils/CoordinatesUtils';
 
 const GlyphIndicator = localizedProps('tooltip')(tooltip(Glyphicon));
 
@@ -97,15 +98,28 @@ class DefaultLayer extends React.Component {
     };
 
     getVisibilityMessage = () => {
-        if (this.props.node.exclusiveMapType) return this.props.node?.type === '3dtiles' && 'toc.notVisibleSwitchTo3D';
+        if (this.props.node.exclusiveMapType) {
+            return ['3dtiles', 'model'].includes(this.props.node?.type) ? 'toc.notVisibleSwitchTo3D' : this.props.node?.type === 'cog' ? 'toc.notVisibleSwitchTo2D' : '';
+        }
         const maxResolution = this.props.node.maxResolution || Infinity;
         return this.props.resolution >=  maxResolution
             ? 'toc.notVisibleZoomIn'
             : 'toc.notVisibleZoomOut';
     };
 
+    getErrorTooltipParams = () => {
+        if (!this.isCRSCompatible()) {
+            return {
+                tooltip: "toc.sourceCRSNotCompatible",
+                msgParams: {sourceCRS: this.getSourceCRS()}
+            };
+        }
+        return { tooltip: "toc.loadingerror" };
+    }
+    getSourceCRS = () => this.props.node?.bbox?.crs || this.props.node?.sourceMetadata?.crs;
+
     renderOpacitySlider = (hideOpacityTooltip) => {
-        return (this.props.activateOpacityTool && this.props.node?.type !== '3dtiles') ? (
+        return (this.props.activateOpacityTool && !['3dtiles', 'model'].includes(this.props.node?.type)) ? (
             <OpacitySlider
                 opacity={this.props.node.opacity}
                 disabled={!this.props.node.visibility}
@@ -134,10 +148,10 @@ class DefaultLayer extends React.Component {
     };
 
     renderVisibility = () => {
-        return this.props.node.loadingError === 'Error' ?
+        return this.isLayerError() ?
             (<LayersTool key="loadingerror"
                 glyph="exclamation-mark text-danger"
-                tooltip="toc.loadingerror"
+                {...this.getErrorTooltipParams()}
                 className="toc-error" />)
             :
             (<VisibilityCheck key="visibilitycheck"
@@ -148,7 +162,7 @@ class DefaultLayer extends React.Component {
     }
 
     renderToolsLegend = (isEmpty) => {
-        return this.props.node.loadingError === 'Error' || isEmpty ?
+        return this.isLayerError() || isEmpty ?
             null
             :
             (<LayersTool
@@ -175,11 +189,13 @@ class DefaultLayer extends React.Component {
                 || ['wfs', 'vector'].includes(this.props.node.type) && this.props.node?.style?.format === 'geostyler'
             )
         );
+        const glyph = getLayerTypeGlyph(this.props.node);
         const head = (isDummy ?
             <div style={{padding: 0, height: 10}} className="toc-default-layer-head"/> :
             <div className="toc-default-layer-head">
                 {grab}
                 {this.renderVisibility()}
+                {glyph && <Glyphicon glyph={glyph} />}
                 <ToggleFilter node={this.props.node} propertiesChangeHandler={this.props.propertiesChangeHandler}/>
                 <Title
                     tooltipOptions={this.props.tooltipOptions}
@@ -198,7 +214,7 @@ class DefaultLayer extends React.Component {
         return (
             <Node className={(this.props.isDragging || this.props.node.placeholder ? "is-placeholder " : "") + 'toc-default-layer' + hide + selected + error + warning} style={this.props.style} type="layer" {...other}>
                 {other.isDraggable && !isDummy ? this.props.connectDragPreview(head) : head}
-                {isDummy || !this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
+                {isDummy || !this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.isLayerError() ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
                 {isDummy || isEmpty ? null : this.renderCollapsible()}
             </Node>
         );
@@ -208,9 +224,9 @@ class DefaultLayer extends React.Component {
         let {children, propertiesChangeHandler, onToggle, connectDragSource, connectDropTarget, ...other } = this.props;
         const hide = !this.props.node.visibility || this.props.node.invalid || this.props.node.exclusiveMapType || !isInsideResolutionsLimits(this.props.node, this.props.resolution) ? ' visibility' : '';
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
-        const error = this.props.node.loadingError === 'Error' ? ' layer-error' : '';
+        const error = this.isLayerError() ? ' layer-error' : '';
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
-        const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
+        const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="grab-handle"/> : <span className="toc-layer-tool toc-grab"/>;
         const isDummy = !!this.props.node.dummy;
         const filteredNode = !isDummy && this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, warning, isDummy, other) : null;
         const tocListItem = (
@@ -227,9 +243,16 @@ class DefaultLayer extends React.Component {
     filterLayers = (layer) => {
         const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
         const title = translation || layer.name;
-        return title.toLowerCase().indexOf(this.props.filterText.toLowerCase()) !== -1;
+        return (title || '').toLowerCase().indexOf(this.props.filterText.toLowerCase()) !== -1;
     };
 
+    isLayerError = () => this.props.node.loadingError === 'Error' || !this.isCRSCompatible();
+
+    isCRSCompatible = () => {
+        const CRS = this.getSourceCRS();
+        // Check if source crs is compatible
+        return !isNil(CRS) ? isSRSAllowed(CRS) : true;
+    }
 }
 
 export default draggableComponent('LayerOrGroup', DefaultLayer);

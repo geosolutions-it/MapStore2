@@ -26,6 +26,7 @@ import '../plugins/ThreeDTilesLayer';
 import '../plugins/VectorLayer';
 import '../plugins/WFSLayer';
 import '../plugins/TerrainLayer';
+import '../plugins/ElevationLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -98,7 +99,9 @@ describe('Cesium layer', () => {
     });
 
     it('creates a osm layer for cesium map', () => {
-        var options = {};
+        var options = {
+            visibility: true
+        };
         // create layers
         var layer = ReactDOM.render(
             <CesiumLayer type="osm"
@@ -113,7 +116,8 @@ describe('Cesium layer', () => {
             "source": "osm",
             "title": "Open Street Map",
             "name": "mapnik",
-            "group": "background"
+            "group": "background",
+            "visibility": true
         };
         // create layer
         var layer = ReactDOM.render(
@@ -455,7 +459,8 @@ describe('Cesium layer', () => {
             "title": "Bing Aerial",
             "name": "Aerial",
             "group": "background",
-            "apiKey": "required"
+            "apiKey": "required",
+            "visibility": true
         };
         // create layers
         var layer = ReactDOM.render(
@@ -472,7 +477,7 @@ describe('Cesium layer', () => {
                 options={{}} position={0} map={map}/>, document.getElementById("container"));
 
         expect(layer).toExist();
-        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers.length).toBe(0);
         // not visibile layers are removed from the leaflet maps
         layer = ReactDOM.render(
             <CesiumLayer type="osm"
@@ -584,7 +589,8 @@ describe('Cesium layer', () => {
 
         let options = {
             id: 'overlay-1',
-            position: { x: 13, y: 43 }
+            position: { x: 13, y: 43 },
+            visibility: true
         };
         // create layers
         let layer = ReactDOM.render(
@@ -612,7 +618,8 @@ describe('Cesium layer', () => {
             position: { x: 13, y: 43 },
             onClose: () => {
                 closed = true;
-            }
+            },
+            visibility: true
         };
         // create layers
         let layer = ReactDOM.render(
@@ -639,7 +646,8 @@ describe('Cesium layer', () => {
         document.body.appendChild(element);
         let options = {
             id: 'overlay-1',
-            position: { x: 13, y: 43 }
+            position: { x: 13, y: 43 },
+            visibility: true
         };
         // create layers
         let layer = ReactDOM.render(
@@ -655,7 +663,8 @@ describe('Cesium layer', () => {
 
     it('creates a marker layer for cesium map', () => {
         let options = {
-            point: { lng: 13, lat: 43 }
+            point: { lng: 13, lat: 43 },
+            visibility: true
         };
         // create layers
         let layer = ReactDOM.render(
@@ -1262,7 +1271,8 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.getTileSet).toBeFalsy();
+        expect(cmp.layer.getTileSet).toBeTruthy();
+        expect(cmp.layer.getTileSet()).toBe(undefined);
     });
     it('should create a 3d tiles layer with and offset applied to the height', (done) => {
         const options = {
@@ -1345,7 +1355,7 @@ describe('Cesium layer', () => {
             }).catch(done);
     });
 
-    it('should create a vector layer', (done) => {
+    it('should create a vector layer', () => {
         const options = {
             type: 'vector',
             features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [0, 0] } }],
@@ -1370,12 +1380,11 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.dataSource).toBeTruthy();
+        expect(cmp.layer.styledFeatures).toBeTruthy();
         expect(cmp.layer.detached).toBe(true);
-        waitFor(() => expect(cmp.layer.dataSource.entities.values.length).toBe(1))
-            .then(() => done());
+        expect(cmp.layer.styledFeatures._features.length).toBe(1);
     });
-    it('should create a vector layer queryable', (done) => {
+    it('should create a vector layer queryable', () => {
         const options = {
             type: 'vector',
             features: [{ type: 'Feature', properties: {}, geometry: { type: 'Point', coordinates: [0, 0] } }],
@@ -1401,11 +1410,10 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.dataSource).toBeTruthy();
+        expect(cmp.layer.styledFeatures).toBeTruthy();
         expect(cmp.layer.detached).toBe(true);
-        expect(cmp.layer.dataSource.queryable).toBe(false);
-        waitFor(() => expect(cmp.layer.dataSource.entities.values.length).toBe(1))
-            .then(() => done());
+        expect(cmp.layer.styledFeatures._queryable).toBe(false);
+        expect(cmp.layer.styledFeatures._features.length).toBe(1);
     });
     it('should create a wfs layer', () => {
         const options = {
@@ -1434,10 +1442,10 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
-        expect(cmp.layer.dataSource).toBeTruthy();
-        expect(cmp.layer.dataSource.entities.values.length).toBe(0);
-        expect(cmp.layer.dataSource.name).toBe('ws:layer_id');
-        expect(cmp.layer.dataSource.queryable).toBe(true);
+        expect(cmp.layer.styledFeatures).toBeTruthy();
+        expect(cmp.layer.styledFeatures._features.length).toBe(0);
+        expect(cmp.layer.styledFeatures._msId).toBe('ws:layer_id');
+        expect(cmp.layer.styledFeatures._queryable).toBe(true);
         expect(cmp.layer.detached).toBe(true);
     });
     it('should create a non-queriable wfs layer', () => {
@@ -1466,7 +1474,7 @@ describe('Cesium layer', () => {
                 options={options}
                 map={map}
             />, document.getElementById('container'));
-        expect(cmp.layer.dataSource.queryable).toBe(false);
+        expect(cmp.layer.styledFeatures._queryable).toBe(false);
     });
 
     it('should create a bil terrain provider from wms layer (deprecated)', (done) => {
@@ -1595,5 +1603,23 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.terrainProvider).toBeTruthy();
+    });
+    it('should create am elevation layer from wms layer', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.getElevation).toBeTruthy();
     });
 });

@@ -36,7 +36,7 @@ In this page it is possible to:
 
 * Set the translation of the layer title by opening the **Localize Text** popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. This way the language of the title changes according to the  current language setting in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)
 
-<img src="../img/layer-settings/lacalize-layer-title.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/layer-settings/lacalize-layer-title.mp4"/></video>
 
 * Take a look at the **Name** of the layer
 
@@ -92,7 +92,7 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
     When the **Check available tile grids information** <img src="../img/button/update_button.jpg" class="ms-docbutton"/> button is clicked, an info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> appears to inform the user if the current map settings (Projection, Tile size, Image Format) are properly matching the ones of the given Tile Grids defined on the server side configuration for the layer.
 
     <img src="../img/layer-settings/default_gridset_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
-    
+
     When the **Use remote custom tile grids** button is enabled, it turns green <img src="../img/button/tile_grid_green.jpg" class="ms-docbutton"/> and a WMTS request is performed by MapStore to fetch precise information to more finely adapt the layer settings on the client side to the ones of the matching Tile Grid defined on the server. The scope of the info icon <img src="../img/button/info_ion.jpg" class="ms-docbutton"/> in this case is still the same but through this strategy MapStore provides a finer tuning of the client side layer settings to better fit the tile grid defined on the server side and so provide better accuracy of cache matching.
 
     <img src="../img/layer-settings/green_info.jpg" class="ms-docimage"  style="max-width:300px;"/>
@@ -114,11 +114,15 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 !!!Warning
     On the *Display* tab, only the following options are available for a **3D Tile** layer:
 
+    <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
     * The **Visibility limits** to display the layer only within certain scale limits, as reported above.
 
     * The **Height Offset** above the ground.
 
-    <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
+    * The **Format** choosing between `3D Model` and `Point Cloud`. The *Point Cloud* option allows the user to customize the `Maximum Attenuation` of the points based on the distance from the current viewpoint and customize the `Lighting strength` and the `Lighting radius` to improve visualization of the point cloud.
+
+    <img src="../img/layer-settings/display-point-cloud.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
 ## Fields
 
@@ -144,23 +148,23 @@ The aliases configured in Layers Settings will be used for the following support
 
 * [Attribute Table](attributes-table.md)
 
-<img src="../img/layer-settings/lacalize-attribute-table.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/layer-settings/lacalize-attribute-table.mp4"/></video>
 
 * [Filter layer](filtering-layers.md#layer-filter)
 
-<img src="../img/layer-settings/localize-filter.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/layer-settings/localize-filter.mp4"/></video>
 
 * [Identify](navigation-toolbar.md#identify-tool) (only `properties` output format)
 
-<img src="../img/layer-settings/localize-identify.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/layer-settings/localize-identify.mp4"/></video>
 
 * [Visual Style Editor](layer-settings.md#visual-editor-style)
 
-<img src="../img/layer-settings/localize-style.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/layer-settings/localize-style.mp4"/></video>
 
 * [Charts Widget](widgets.md#chart) and [Table Widget](widgets.md#table)
 
-<img src="../img/layer-settings/localize-widget.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/layer-settings/localize-widget.mp4"/></video>
 
 Through the toolbar available on the top-center of the *Fields* panel, it is possible to:
 
@@ -214,7 +218,7 @@ Here the user can set the *Title* and the *Abstract* (optional), and through the
 
 Existing styles can be edited clicking on the <img src="../img/button/style_editor_edit_button.jpg" class="ms-docbutton"/> button. The page that opens allows the user to customize the style in the related format:
 
-<img src="../img/layer-settings/style_editor_edit_new_style.gif" class="ms-docimage"  style="max-width:700px;">
+<video class="ms-docimage"  style="max-width:700px;" controls><source src="../img/layer-settings/style_editor_edit_new_style.mp4"></video>
 
 The editor is easy to approach thanks also to the following functions:
 
@@ -273,13 +277,13 @@ The line rule is used to style linear features of the layer: clicking on the <im
 
 The editor can change the `Stroke color`, the `Stroke width`, the `Line style` (*continuous*, *dashed*, etc), the `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). An example can be the following one:
 
-<img src="../img/layer-settings/ex_line_style.gif" class="ms-docimage">
+<video class="ms-docimage" controls><source src="../img/layer-settings/ex_line_style.mp4"></video>
 
 #### Fill
 
 The Fill rule is used to style polygon features. Clicking on <img src="../img/button/add_fill_button.jpg" class="ms-docbutton"/> button, the editor is allowed to customize the `Fill color`, the `Outline color` and the `Outline width`:
 
-<img src="../img/layer-settings/ex_fill_style.gif" class="ms-docimage">
+<video class="ms-docimage" controls><source src="../img/layer-settings/ex_fill_style.mp4"></video>
 
 #### Text
 
@@ -289,7 +293,7 @@ The Text rule is used to style features as text labels. Text labels are position
 
 The editor is allowed to type the name of the layer attribute to use for the `Label` and the dropdown list is filtered accordingly to show the existing attributes that are matching the entered text (the user can anyway directly select an attribute from the list). Moreover, the style editor can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
 
-<img src="../img/layer-settings/ex_text_style.gif" class="ms-docimage">
+<video class="ms-docimage" controls><source src="../img/layer-settings/ex_text_style.mp4"></video>
 
 ### Style Methods
 
@@ -355,7 +359,7 @@ The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Styl
 
 * Customization of the **Fill color**
 
-<img src="../img/layer-settings/ex_3dtiles_style.gif" class="ms-docimage">
+<video class="ms-docimage" controls><source src="../img/layer-settings/ex_3dtiles_style.mp4"></video>
 
 * Style Rule filtering based on the available [properties dictionary](https://github.com/CesiumGS/3d-tiles/tree/1.0/specification#properties) defined in the tileset.json
 
@@ -374,13 +378,13 @@ In 3D mode [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows
   In addition the **3D model** rule type is also available.
 From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model symbolizer panel opens to allow adding a 3D model (based on [glTF](https://github.com/KhronosGroup/glTF), GLB is also allowed) as an external graphic by specifying its *URL* (see also the [Cesium documentation](https://cesium.com/learn/cesiumjs/ref-doc/ModelGraphics.html?classFilter=Model)). Furthermore, it is possible to customize the 3D model `Scale`, `Rotation` and `Color`. Take a look at the following example.
 
-<img src="../img/layer-settings/3d-model-style-ex.gif" class="ms-docimage">
+<video class="ms-docimage" controls><source src="../img/layer-settings/3d-model-style-ex.mp4"></video>
 
 !!!Warning
     For the Vector layer, the *Visual Style Editor* have some limitations:
 
     * It's possible to apply only one type of symbolizer at the time, so if the rule editor shows multiple rule with the same filter, only the first one is used.
-    
+
     * For the *Line symbolizers*: the *Line cap* and *Line join* options are not available as properties in Cesium
 
 Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds some additional styling options in the *Visual Style Editor* such as:
@@ -455,8 +459,17 @@ In particular, by clicking on the <img src="../img/button/edit_button.jpg" class
 <img src="../img/layer-settings/edit_custom_format.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
 !!!note
-    The Identify Template editor, by clicking the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button, allows to insert images using direct URLs of resources available on the web. At the same point it also allows to parse needed image URLs from available feature attributes (eg. attributes reporting image URL values or images in base64). The same markdown syntax (eg. `${properties.IMAGE}`) can also be used in this case so that, at run time, MapStore is able to parse attribute values to finally display images accordingly in the Identify panel.
-    <img src="../img/layer-settings/image_on_template.gif" class="ms-docimage"  style="max-width:600px;"/>
+    Clicking on the <img src="../img/button/image_button.jpg" class="ms-docbutton"/> button, the Identify Template editor allows to insert images in different ways:
+
+    * Using direct URLs of resources available on the web
+    
+    * Using URIs encoded in base64
+
+    * Parsing needed image URLs from available feature attributes (eg. attributes with URL value). The usual syntax can be used in this case to refer the attribute value (eg. `${properties.IMAGE}`)
+
+    * Parsing image URIs encoded in base64 from available feature attributes (eg. attributes with base64 URIs values). The usual syntax can be used in this case to refer the attribute value (eg. `${properties.IMAGE}`)
+    
+    <video class="ms-docimage"  style="max-width:600px;" controls><source src="../img/layer-settings/image_on_template.mp4"/></video>
 
 Here it is possible to insert the text to be displayed through the [Identify Tool](navigation-toolbar.md#identify-tool), with the possibility to wrap the desired properties. <br>
 Let's make an example: we assume to have a layer where each record corresponds to a USA State geometry in the map. In the [Attribute Table](attributes-table.md#attribute-table) of this layer there's the `STATE_NAME` field that, for each record, contains a text value with the name of the State. <br>

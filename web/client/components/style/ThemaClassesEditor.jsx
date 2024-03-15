@@ -47,18 +47,25 @@ class ThemaClassesEditor extends React.Component {
     };
 
     renderFieldByClassification = (classItem, index, uniqueValuesClasses, autoCompleteOptions) => {
-        let fieldRender;
-        if (!isNil(classItem.unique)) {
+        if (classItem.unique !== undefined) { // unique could be null
+            if (classItem.unique === null) {
+                return (<FormControl
+                    value={'null'}
+                    type="text"
+                    disabled
+                />);
+            }
             if (isNumber(classItem.unique)) {
-                fieldRender = (<NumberPicker
+                return (<NumberPicker
                     format="- ###.###"
                     value={classItem.unique}
                     onChange={(value) => this.updateUnique(index, value, 'number')}
                 />);
+            }
             /** field classes with preset values - drop down autocomplete input */
-            } else if (uniqueValuesClasses && autoCompleteOptions) {
+            if (uniqueValuesClasses && autoCompleteOptions) {
                 const { dropUpAutoComplete, classificationAttribute, layer } = autoCompleteOptions;
-                fieldRender = (
+                return (
                     <AutocompleteCombobox
                         dropUp={dropUpAutoComplete}
                         openOnFocus={false}
@@ -71,16 +78,16 @@ class ThemaClassesEditor extends React.Component {
                         value={classItem.unique}
                         filter="contains"
                         autocompleteStreamFactory={createPagedUniqueAutompleteStream}/>);
-            /** field classes without preset values - text input  */
-            } else {
-                fieldRender = (<FormControl
-                    value={classItem.unique}
-                    type="text"
-                    onChange={ e => this.updateUnique(index, e.target.value)}
-                />);
             }
-        } else if (!isNil(classItem.min)) {
-            fieldRender =  <>
+            /** field classes without preset values - text input  */
+            return (<FormControl
+                value={classItem.unique}
+                type="text"
+                onChange={ e => this.updateUnique(index, e.target.value)}
+            />);
+        }
+        if (!isNil(classItem.min)) {
+            return  <>
                 <NumberPicker
                     format="- ###.###"
                     value={classItem.min}
@@ -93,17 +100,15 @@ class ThemaClassesEditor extends React.Component {
                     onChange={(value) => this.updateMax(index, value)}
                 />
             </>;
-        } else {
-            fieldRender = <>
-                <FormControl value={classItem.label} type="text" onChange={ e => this.updateRaster(index, e.target.value)} />
-                <NumberPicker
-                    format="- ###.###"
-                    value={classItem.quantity}
-                    onChange={(value) => this.updateRaster(index, value, 'number')}
-                />
-            </>;
         }
-        return fieldRender;
+        return (<>
+            <FormControl value={classItem.label} type="text" onChange={ e => this.updateRaster(index, e.target.value)} />
+            <NumberPicker
+                format="- ###.###"
+                value={classItem.quantity}
+                onChange={(value) => this.updateRaster(index, value, 'number')}
+            />
+        </>);
     }
 
     renderClasses = () => {

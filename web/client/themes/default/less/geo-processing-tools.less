@@ -1,0 +1,65 @@
+//
+// Copyright 2023, GeoSolutions Sas.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree.
+//
+
+// **************
+// Theme
+// **************
+// #ms-components-theme(@theme-vars) {
+//   #GeoProcessing-root {}
+// }
+
+// **************
+// Layout
+// **************
+
+#GeoProcessing-root {
+    z-index: 1023;
+    .geo-processing-tool-panel > .ms2-border-layout-body {
+        padding: 15px;
+    }
+    .Select-menu-outer {
+        z-index: 101;
+    }
+    .gpt-distance {
+        .distance {
+            display: flex;
+            input {
+                height: auto;
+            }
+            .Select {
+                min-width: 60px;
+            }
+        }
+    }
+    .mapstore-switch-panel {
+        padding: 0;
+        .btn-group {
+            margin: 7px 0 !important;
+            margin-right: 0 !important;
+        }
+    }
+    .highlight {
+        display: flex;
+        align-items: baseline;
+        .mapstore-switch-btn {
+            margin-right: 10px;
+        }
+
+    }
+    .run {
+        display: flex;
+        align-items: center;
+        button {
+            display: flex;
+            align-items: center;
+        }
+        span.mapstore-info-popover {
+            margin-left: 10px;
+        }
+    }
+}

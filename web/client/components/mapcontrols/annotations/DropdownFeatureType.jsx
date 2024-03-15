@@ -8,7 +8,7 @@
 import { Glyphicon, DropdownButton, MenuItem } from 'react-bootstrap';
 
 import tooltip from '../../misc/enhancers/tooltip';
-import { DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring } from '../../../utils/AnnotationsUtils';
+import { DEFAULT_ANNOTATIONS_STYLES, getStartEndPointsForLinestring } from '../../../utils/LegacyAnnotationsUtils';
 import React from 'react';
 import uuidv1 from 'uuid/v1';
 import assign from 'object-assign';

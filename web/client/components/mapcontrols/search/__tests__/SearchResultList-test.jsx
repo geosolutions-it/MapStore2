@@ -132,7 +132,10 @@ describe("test the SearchResultList", () => {
         var items = [{
             osm_id: 1,
             display_name: "Name",
-            boundingbox: [1, 2, 3, 4]
+            boundingbox: [1, 2, 3, 4],
+            __SERVICE__: {
+                type: 'nominatim'
+            }
         }];
         const spy = expect.spyOn(testHandlers, 'clickHandler');
         const mapConfig = {size: 100, projection: "EPSG:4326"};
@@ -145,7 +148,7 @@ describe("test the SearchResultList", () => {
         let elem1 = TestUtils.findRenderedDOMComponentWithClass(elem[0], "search-result");
         ReactDOM.findDOMNode(elem1).click();
         expect(spy.calls.length).toEqual(1);
-        expect(spy).toHaveBeenCalledWith(items[0], mapConfig);
+        expect(spy).toHaveBeenCalledWith(items[0], mapConfig, items[0].__SERVICE__);
     });
 
     it('test showGFI button is enabled when openFeatureInfoButton=true', () => {

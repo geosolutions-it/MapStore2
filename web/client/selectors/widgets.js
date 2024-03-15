@@ -6,17 +6,18 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import { find, get, castArray, isArray, flatten } from 'lodash';
+import { find, get, castArray, flatten } from 'lodash';
 
 import { mapSelector } from './map';
 import { getSelectedLayer } from './layers';
 import { pathnameSelector } from './router';
 import { DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX } from '../actions/widgets';
-import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData } from '../utils/WidgetsUtils';
+import { getWidgetsGroups, getWidgetDependency, getSelectedWidgetData, extractTraceData, canTableWidgetBeDependency } from '../utils/WidgetsUtils';
 import { dashboardServicesSelector, isDashboardAvailable, isDashboardEditing } from './dashboard';
 import { createSelector, createStructuredSelector } from 'reselect';
 import { createShallowSelector } from '../utils/ReselectUtils';
 import { getAttributesNames } from "../utils/FeatureGridUtils";
+
 
 export const getEditorSettings = state => get(state, "widgets.builder.settings");
 export const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
@@ -24,8 +25,8 @@ export const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k
 export const getEditingWidget = state => get(state, "widgets.builder.editor");
 export const getSelectedChartId = state => get(getEditingWidget(state), 'selectedChartId');
 export const getEditingWidgetLayer = state => {
-    const { layer, charts, selectedChartId } = getEditingWidget(state) || {};
-    return layer ? layer : charts?.find(c => c.chartId === selectedChartId)?.layer;
+    const { layer, charts, selectedChartId, selectedTraceId } = getEditingWidget(state) || {};
+    return charts ? extractTraceData({ selectedChartId, selectedTraceId, charts })?.layer : layer;
 };
 export const getWidgetLayer = createSelector(
     getEditingWidgetLayer,
@@ -98,8 +99,6 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
     pathnameSelector,
     getEditingWidget,
     (ws = [], tableWidgets = [], map = {}, pathname, editingWidget) => {
-        const isChart = editingWidget && editingWidget.widgetType === 'chart';
-        const editingLayer = editingWidget && editingWidget.widgetType !== "map" ? isChart ? (editingWidget?.charts?.map(c => c?.layer?.name) || []) : editingWidget && editingWidget.layer || {} : editingWidget && editingWidget.map && editingWidget.map.layers || [];
         return {
             availableDependencies:
                 flatten(ws
@@ -109,7 +108,7 @@ export const availableDependenciesForEditingWidgetSelector = createSelector(
                     .concat(
                         castArray(tableWidgets)
                             .filter(() => pathname.indexOf("viewer") === -1)
-                            .filter((w) => (!isChart && isArray(editingLayer)) || (isChart ? editingLayer.includes(w.layer.name) : editingLayer.name === w.layer.name))
+                            .filter((w) => canTableWidgetBeDependency(editingWidget, w))
                             .filter((w) => editingWidget && editingWidget.id !== w.id)
                             .map(({id}) => `widgets[${id}]`)
                     )
@@ -181,7 +180,16 @@ export const widgetsConfig = createStructuredSelector({
  * @param {object} state the state
  */
 export const getWidgetFilterKey = (state) => {
-    const selectedChartId = getSelectedChartId(state);
+    const { selectedChartId, charts = [],  selectedTraceId } = getEditingWidget(state) || {};
+    if (!selectedChartId) {
+        return 'filter';
+    }
+    const selectedTrace = extractTraceData({ selectedChartId, selectedTraceId, charts });
     // Set chart key if editor widget type is chart
-    return selectedChartId ? `charts[${selectedChartId}].filter` : "filter";
+    return `charts[${selectedChartId}].traces[${selectedTrace?.id}].filter`;
+};
+
+export const getTblWidgetZoomLoader = state => {
+    let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
+    return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };

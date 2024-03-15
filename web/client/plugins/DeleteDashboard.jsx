@@ -90,6 +90,22 @@ export default createPlugin('DeleteDashboard', {
             ),
             priority: 1,
             doNotHide: true
+        }, SidebarMenu: {
+            name: 'dashboardDelete',
+            tooltip: "dashboard.delete",
+            position: 300,
+            text: <Message msgId="dashboard.delete"/>,
+            icon: <Glyphicon glyph="trash"/>,
+            action: setControl.bind(null, Controls.SHOW_DELETE, true),
+            selector: createSelector(
+                isLoggedIn,
+                dashboardResource,
+                (loggedIn, {canEdit, id} = {}) => ({
+                    style: loggedIn && (id && canEdit) ? {} : { display: "none" } // save is present only if the resource already exists and you can save
+                })
+            ),
+            priority: 1,
+            doNotHide: true
         }
     }
 });

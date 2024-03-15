@@ -26,6 +26,12 @@ import {
 } from '../../utils/VectorStyleUtils';
 import { getCapabilities } from '../../api/ThreeDTiles';
 import { describeFeatureType } from '../../api/WFS';
+import { classificationVector } from '../../api/StyleEditor';
+import SLDService from '../../api/SLDService';
+import { classifyGeoJSON, availableMethods } from '../../api/GeoJSONClassification';
+import { getLayerJSONFeature } from '../../observables/wfs';
+
+const { getColors } = SLDService;
 
 const editors = {
     visual: VisualStyleEditor,
@@ -130,10 +136,12 @@ function VectorStyleEditor({
     }
 
     const isMounted = useRef();
+    const geojson = useRef();
     useEffect(() => {
         isMounted.current = true;
         return () => {
             isMounted.current = false;
+            geojson.current = undefined;
         };
     }, []);
 
@@ -186,9 +194,26 @@ function VectorStyleEditor({
     const { format, metadata, body } = style.current || {};
     const { editorType, styleJSON } = metadata || {};
 
+    function getLayerFeatureCollection() {
+        if (geojson.current) {
+            return Promise.resolve(geojson.current);
+        }
+        if (layer.type === 'vector') {
+            return Promise.resolve({ type: 'FeatureCollection', features: layer.features });
+        }
+        if (layer.type === 'wfs') {
+            return getLayerJSONFeature(layer).toPromise().then(({ features }) => {
+                geojson.current = { type: 'FeatureCollection', features };
+                return geojson.current;
+            });
+        }
+        return Promise.resolve({ type: 'FeatureCollection', features: [] });
+    }
+
     return (
         <StyleEditor
             canEdit
+            layer={layer}
             code={!loading && body}
             error={error}
             editorType={editorType || 'textarea'}
@@ -203,9 +228,22 @@ function VectorStyleEditor({
             onError={handleError}
             exactMatchGeometrySymbol
             enable3dStyleOptions={enable3dStyleOptions}
+            getColors={getColors}
+            methods={availableMethods}
+            styleUpdateTypes={{
+                classificationVector: (options) => {
+                    return classificationVector({
+                        ...options,
+                        classificationRequest: ({ params }) => getLayerFeatureCollection()
+                            .then((collection) => classifyGeoJSON(collection, params))
+                    });
+                }
+            }}
             config={{
-                simple: true,
-                fonts
+                simple: !['wfs', 'vector'].includes(layer?.type),
+                supportedSymbolizerMenuOptions: ['Simple', 'Extrusion', 'Classification'],
+                fonts,
+                enableFieldExpression: ['vector', 'wfs'].includes(layer.type)
             }}
         />
     );

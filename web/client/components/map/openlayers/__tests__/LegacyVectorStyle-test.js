@@ -9,7 +9,7 @@ import expect from 'expect';
 import { getStyle, styleFunction, firstPointOfPolylineStyle, lastPointOfPolylineStyle, startEndPolylineStyle } from '../LegacyVectorStyle';
 
 import {geomCollFeature, multipointFt, lineStringFt, polygonFt, multipolygonFt} from '../../../../test-resources/drawsupport/features';
-import {DEFAULT_ANNOTATIONS_STYLES, STYLE_CIRCLE, STYLE_POLYGON} from '../../../../utils/AnnotationsUtils';
+import {DEFAULT_ANNOTATIONS_STYLES, STYLE_CIRCLE, STYLE_POLYGON} from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 
 import Feature from 'ol/Feature';
 import {Point, LineString, MultiLineString, Polygon, MultiPolygon} from 'ol/geom';

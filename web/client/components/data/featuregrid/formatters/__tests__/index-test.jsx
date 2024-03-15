@@ -5,81 +5,236 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import React from "react";
+import ReactDOM, {unmountComponentAtNode} from "react-dom";
+import expect from "expect";
+import { act } from "react-dom/test-utils";
 
-import expect from 'expect';
+import {
+    getFormatter,
+    registerFormatter,
+    unregisterFormatter
+} from "../index";
+let container = null;
 
-import NumberFormat from '../../../../I18N/Number';
-import {getFormatter} from '../index';
+describe("Tests for the formatter functions", () => {
+    beforeEach(() => {
+        // setup a DOM element as a render target
+        container = document.createElement("div");
+        document.body.appendChild(container);
+    });
 
-describe('Tests for the formatter functions', () => {
-    it('test getFormatter for booleans', () => {
-        const formatter = getFormatter({localType: "boolean"});
-        expect(typeof formatter).toBe("function");
-        expect(formatter()).toBe(null);
-        expect(formatter({value: true}).type).toBe("span");
-        expect(formatter({value: true}).props.children).toBe("true");
-        expect(formatter({value: false}).props.children).toBe("false");
-        expect(formatter({value: null})).toBe(null);
-        expect(formatter({value: undefined})).toBe(null);
+    afterEach(() => {
+        // cleanup on exiting
+        unmountComponentAtNode(container);
+        container.remove();
+        container = null;
     });
-    it('test getFormatter for strings', () => {
-        const value = 'Test https://google.com with google link';
-        const formatter = getFormatter({localType: "string"});
-        expect(typeof formatter).toBe("function");
-        expect(formatter()).toBe(null);
-        expect(formatter({value: 'Test no links'})[0]).toBe('Test no links');
-        expect(formatter({value})[0]).toBe('Test ');
-        expect(formatter({value})[1].props.href).toBe('https://google.com');
-        expect(formatter({value})[2]).toBe(' with google link');
-        expect(formatter({value: null})).toBe(null);
-        expect(formatter({value: undefined})).toBe(null);
+    it("test getFormatter for booleans", () => {
+        const formatter = getFormatter({ localType: "boolean" });
+        act(() => {
+            ReactDOM.render(formatter({ value: true }), container);
+        });
+        expect(container.textContent).toBe("true");
+
+        act(() => {
+            ReactDOM.render(formatter({ value: false }), container);
+        });
+        expect(container.textContent).toBe("false");
     });
-    it('test getFormatter for number', () => {
-        const formatter = getFormatter({localType: "number"});
-        expect(typeof formatter).toBe("function");
-        expect(formatter()).toBe(null);
-        expect(formatter({value: 44.3333434353535}).type).toBe(NumberFormat);
-        expect(formatter({value: 44.3333434353535}).props.value).toBe(44.3333434353535);
-        expect(formatter({value: null})).toBe(null);
-        expect(formatter({value: undefined})).toBe(null);
-        expect(formatter({value: 0}).props.value).toBe(0);
+    it("test getFormatter for strings", () => {
+        const value = "Test https://google.com with google link";
+        const Formatter = getFormatter({ localType: "string" });
+        act(() => {
+            ReactDOM.render(<Formatter value={value} />, container);
+        });
+        expect(container.textContent).toBe(value);
     });
-    it('test getFormatter for int', () => {
-        const formatter = getFormatter({localType: "int"});
-        expect(typeof formatter).toBe("function");
-        expect(formatter()).toBe(null);
-        expect(formatter({value: 2455567}).type).toBe(NumberFormat);
-        expect(formatter({value: 2455567}).props.value).toBe(2455567);
-        expect(formatter({value: null})).toBe(null);
-        expect(formatter({value: undefined})).toBe(null);
-        expect(formatter({value: 0}).props.value).toBe(0);
+    it("test getFormatter for number", () => {
+        const Formatter = getFormatter({ localType: "number" });
+        act(() => {
+            ReactDOM.render(<Formatter />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter  value={44.3333434353535} />, container);
+        });
+        expect(container.textContent).toBe("44.3333434353535");
+        act(() => {
+            ReactDOM.render(<Formatter  value={null} />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter  value={undefined} />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter  value={0} />, container);
+        });
+        expect(container.textContent).toBe("0");
     });
-    it('test getFormatter for geometry', () => {
-        const formatter = getFormatter({localType: "Geometry"});
-        expect(typeof formatter).toBe("function");
-        expect(formatter()).toBe(null);
-        expect(formatter({value: {properties: {}, geometry: {type: "Point", coordinates: [1, 2]}}})).toBe(null);
-        expect(formatter({value: null})).toBe(null);
-        expect(formatter({value: undefined})).toBe(null);
+    it("test getFormatter for int", () => {
+        const Formatter = getFormatter({ localType: "int" });
+        act(() => {
+            ReactDOM.render(<Formatter />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter value={2455567} />, container);
+        });
+        expect(container.textContent).toBe("2455567");
+        act(() => {
+            ReactDOM.render(<Formatter value={null} />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter value={undefined} />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter value={0} />, container);
+        });
+        expect(container.textContent).toBe("0");
     });
-    it('test getFormatter for date / date-time / time', () => {
+
+    it("test getFormatter for geometry", () => {
+        const Formatter = getFormatter({ localType: "Geometry" });
+        act(() => {
+            ReactDOM.render(<Formatter />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter value={{
+                properties: {},
+                geometry: { type: "Point", coordinates: [1, 2] }
+            }} />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter value={null} />, container);
+        });
+        expect(container.textContent).toBe("");
+        act(() => {
+            ReactDOM.render(<Formatter value={undefined} />, container);
+        });
+        expect(container.textContent).toBe("");
+    });
+
+    describe("test featureGridFormatter", () => {
+        beforeEach((done) => {
+            document.body.innerHTML = '<div id="container"></div>';
+            setTimeout(done);
+        });
+
+        afterEach((done) => {
+            ReactDOM.unmountComponentAtNode(
+                document.getElementById("container")
+            );
+            document.body.innerHTML = "";
+            setTimeout(done);
+        });
+        it("base", () => {
+            try {
+                registerFormatter("test", ({ config, value }) => {
+                    expect(config).toExist();
+                    expect(value).toBe("test");
+                    return <div>test</div>;
+                });
+                const Formatter = getFormatter(
+                    { localType: "test" },
+                    { featureGridFormatter: { name: "test" } }
+                );
+                ReactDOM.render(
+                    <Formatter value="test" />,
+                    document.getElementById("container")
+                );
+                expect(document.getElementById("container").innerHTML).toBe(
+                    "<div>test</div>"
+                );
+            } finally {
+                unregisterFormatter("test");
+            }
+        });
+        it("with directRender option", () => {
+            try {
+                const TEST_FUNC = () => <div>test</div>;
+                registerFormatter("test", TEST_FUNC);
+                const formatter = getFormatter(
+                    { localType: "test" },
+                    {
+                        featureGridFormatter: {
+                            name: "test",
+                            directRender: true
+                        }
+                    }
+                );
+                expect(formatter).toBe(TEST_FUNC);
+            } finally {
+                unregisterFormatter("test");
+            }
+        });
+    });
+    it("test getFormatter for date / date-time / time", () => {
         const dateFormats = {
-            date: 'YYYY',
-            "date-time": 'YYYY DD',
-            time: 'HH:mm'
+            date: "YYYY",
+            "date-time": "YYYY DD",
+            time: "HH:mm"
         };
-        const dateFormatter = getFormatter({localType: "date"}, dateFormats);
-        const dateTimeFormatter = getFormatter({localType: "date-time"}, dateFormats);
-        const timeFormatter = getFormatter({localType: "time"}, dateFormats);
-        expect(typeof dateFormatter).toBe("function");
-        expect(dateFormatter()).toBe(null);
-        expect(dateFormatter({value: '2015-02-01T12:45:00Z'})).toBe('2015');
-        expect(typeof dateTimeFormatter).toBe("function");
-        expect(dateTimeFormatter()).toBe(null);
-        expect(dateTimeFormatter({value: '2015-02-01Z'})).toBe('2015 01');
-        expect(typeof timeFormatter).toBe("function");
-        expect(timeFormatter()).toBe(null);
-        expect(timeFormatter({value: '12:45:00Z'})).toBe('12:45');
-        expect(timeFormatter({ value: '1970-01-01T02:30:00Z' })).toBe('02:30'); // still able to format time even when found a full date (sometimes GeoServer returns full date instead of time only)
+        const row = {
+            dateFormats
+        };
+        const DateFormatter = getFormatter({ localType: "date" });
+        const DateTimeFormatter = getFormatter({ localType: "date-time" });
+        const TimeFormatter = getFormatter({ localType: "time" });
+
+        act(() => {
+            ReactDOM.render(<DateFormatter value="2015-02-01T12:45:00Z" row={row} />, container);
+        });
+        expect(container.textContent).toBe("2015");
+
+        act(() => {
+            ReactDOM.render(<DateTimeFormatter value="2015-02-01Z" row={row} />, container);
+        });
+        expect(container.textContent).toBe("2015 01");
+
+        act(() => {
+            ReactDOM.render(<TimeFormatter value="12:45:00Z" row={row} />, container);
+        });
+        expect(container.textContent).toBe("12:45");
+
+        act(() => {
+            ReactDOM.render(<TimeFormatter value="1970-01-01T02:30:00Z" row={row} />, container);
+        });
+        expect(container.textContent).toBe("02:30");
+    });
+
+    it("test getFormatter for invalid date-time YYYY-MM-DD[Z]", () => {
+        const dateFormats = {
+            "date-time": "YYYY-MM-DD[Z]"
+        };
+        const row = {
+            dateFormats
+        };
+        const DateTimeWithZFormatter = getFormatter({ localType: "date-time" });
+
+        act(() => {
+            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01Z" row={row} />, container);
+        });
+        expect(container.textContent).toBe("2015-02-01Z");
+
+        act(() => {
+            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01" row={row}/>, container);
+        });
+        expect(container.textContent).toBe("2015-02-01Z");
+
+        act(() => {
+            ReactDOM.render(<DateTimeWithZFormatter value="2015/02/01 03:20:10" row={row}/>, container);
+        });
+        expect(container.textContent).toBe("2015-02-01Z");
+
+        act(() => {
+            ReactDOM.render(<DateTimeWithZFormatter value="2015-02-01T12:45:00Z" row={row}/>, container);
+        });
+        expect(container.textContent).toBe("2015-02-01Z");
     });
 });

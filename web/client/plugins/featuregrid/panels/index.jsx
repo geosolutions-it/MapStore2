@@ -43,7 +43,6 @@ import {
     selectedFeaturesCount,
     selectedLayerNameSelector,
     showAgainSelector,
-    showPopoverSyncSelector,
     showTimeSync,
     timeSyncActive,
     isViewportFilterActive,
@@ -82,9 +81,8 @@ const Toolbar = connect(
         hasChanges: hasChangesSelector,
         hasNewFeatures: hasNewFeaturesSelector,
         hasGeometry: hasGeometrySelector,
-        syncPopover: state => ({
+        syncPopover: (state) => ({
             showAgain: showAgainSelector(state),
-            showPopoverSync: showPopoverSyncSelector(state),
             dockSize: mapLayoutValuesSelector(state, {dockSize: true}).dockSize + 3.2 + "%"
         }),
         isDrawing: isDrawingSelector,
@@ -186,30 +184,44 @@ export const getFooter = (props) => {
 export const getEmptyRowsView = () => {
     return EmptyRowsView;
 };
-export const getFilterRenderers = createSelector((d) => d,
-    (describe) =>
-        describe ? (getFeatureTypeProperties(describe) || []).reduce( (out, cur) => ({
-            ...out,
-            [cur.name]: connect(
-                createSelector(
-                    (state) => getAttributeFilter(state, cur.name),
-                    modeSelector,
-                    (filter, mode) => {
-                        const props = {
-                            value: filter && (filter.rawValue || filter.value),
-                            ...(isGeometryType(cur) ? {
-                                filterEnabled: filter?.enabled,
-                                filterDeactivated: filter?.deactivated
-                            } : {})
-                        };
-                        const editProps = !isGeometryType(cur) ? {
-                            disabled: true,
-                            tooltipMsgId: "featuregrid.filter.tooltips.editMode"
-                        } : {};
-                        return mode === "EDIT" ? {...props, ...editProps} : props;
-                    }
-                ))(getFilterRenderer(isGeometryType(cur) ? 'geometry' : cur.localType, {name: cur.name}))
-        }), {}) : {});
+
+/**
+ * Returns an object with field name as key and a filterRenderer components as value
+ * @param {object} describe describeFeatureType object in json format
+ * @param {object[]} fields array of fields (with `filterRenderer` property)
+ * @returns {object} object with field name as key and filterRenderer as value
+ */
+export const getFilterRenderers =  (describe, fields = [], isWithinAttrTbl) => {
+    if (describe) {
+        return (getFeatureTypeProperties(describe) || []).reduce( (out, cur) => {
+            const field = fields.find(f => f.name === cur.name);
+            return {
+                ...out,
+                [cur.name]: connect(
+                    createSelector(
+                        (state) => getAttributeFilter(state, cur.name),
+                        modeSelector,
+                        (filter, mode) => {
+                            const props = {
+                                value: filter && (filter.rawValue || filter.value),
+                                operator: filter && (filter.operator),
+                                ...(isGeometryType(cur) ? {
+                                    filterEnabled: filter?.enabled,
+                                    filterDeactivated: filter?.deactivated
+                                } : {})
+                            };
+                            const editProps = !isGeometryType(cur) ? {
+                                disabled: true,
+                                tooltipMsgId: "featuregrid.filter.tooltips.editMode"
+                            } : {};
+                            return mode === "EDIT" ? {...props, ...editProps} : props;
+                        }
+                    ))(getFilterRenderer({type: isGeometryType(cur) ? 'geometry' : cur.localType, name: field?.filterRenderer?.name, options: field?.filterRenderer?.options, isWithinAttrTbl}))
+            };
+        }, {});
+    }
+    return {};
+};
 export const getDialogs = (tools = {}) => {
     return Object.keys(tools)
         .filter(t => tools[t] && dialogs[t])

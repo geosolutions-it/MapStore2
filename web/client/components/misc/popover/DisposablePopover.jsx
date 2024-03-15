@@ -40,7 +40,7 @@ export default function DisposablePopover({
     glyph = "question-sign",
     popoverClassName
 }) {
-    const [show, setShow] = useState(showOnRender);
+    const [show, setShow] = useState(() => showOnRender);
     let target = useRef(null);
     return (
         <>

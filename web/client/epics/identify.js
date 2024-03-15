@@ -11,13 +11,13 @@ import { get, find, reverse} from 'lodash';
 import uuid from 'uuid';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import {
-    LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO,
+    LOAD_FEATURE_INFO, ERROR_FEATURE_INFO,
     FEATURE_INFO_CLICK, CLOSE_IDENTIFY, TOGGLE_HIGHLIGHT_FEATURE,
     PURGE_MAPINFO_RESULTS, EDIT_LAYER_FEATURES,
     UPDATE_FEATURE_INFO_CLICK_POINT,
     featureInfoClick, updateCenterToMarker, purgeMapInfoResults,
-    exceptionsFeatureInfo, loadFeatureInfo, errorFeatureInfo,
-    noQueryableLayers, newMapInfoRequest, getVectorInfo,
+    loadFeatureInfo, errorFeatureInfo,
+    noQueryableLayers, newMapInfoRequest,
     showMapinfoMarker, hideMapinfoMarker, setCurrentEditFeatureQuery,
     SET_MAP_TRIGGER, CLEAR_WARNING
 } from '../actions/mapInfo';
@@ -29,7 +29,7 @@ import { QUERY_CREATE } from '../actions/wfsquery';
 import { CHANGE_MOUSE_POINTER, CLICK_ON_MAP, UNREGISTER_EVENT_LISTENER, CHANGE_MAP_VIEW, MOUSE_MOVE, zoomToPoint, changeMapView,
     registerEventListener, unRegisterEventListener } from '../actions/map';
 import { browseData } from '../actions/layers';
-import { closeAnnotations } from '../actions/annotations';
+import { closeAnnotations } from '../plugins/Annotations/actions/annotations';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 import {addPopup, cleanPopups, removePopup, REMOVE_MAP_POPUP} from '../actions/mapPopups';
 import { cancelSelectedItem } from '../actions/search';
@@ -129,12 +129,8 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                             // this delay allows the panel to open and show the spinner for the first one
                             // this delay mitigates the freezing of the app when there are a great amount of queried layers at the same time
                             .delay(0)
-                            .map((response) =>
-                                response.data.exceptions
-                                    ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
-                                    : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs }, layer)
-                            )
-                            .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
+                            .map((response) =>loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features, featuresCrs: response.featuresCrs }, layer))
+                            .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e, requestParams, lMetaData)))
                             .concat(Rx.Observable.defer(() => {
                                 // update the layout only after the initial response
                                 // we don't need to trigger this for each query layer
@@ -146,7 +142,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
                             }))
                             .startWith(newMapInfoRequest(reqId, param));
                     }
-                    return Rx.Observable.of(getVectorInfo(layer, request, metadata, queryableLayers), forceUpdateMapLayout());
+                    return Rx.Observable.of(forceUpdateMapLayout());
                 });
             // NOTE: multiSelection is inside the event
             // TODO: move this flag in the application state
@@ -161,12 +157,12 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
  */
 export const handleMapInfoMarker = (action$, {getState}) =>
     action$.ofType(FEATURE_INFO_CLICK).filter(() => !isMapPopup(getState()))
-        .map(({ layer }) => layer
-            ? hideMapinfoMarker()
-            : showMapinfoMarker()
+        // we should not hide the marker anymore
+        // the visibility of the marker should manage by the identify tool
+        .map(() => showMapinfoMarker()
         );
 export const closeFeatureGridFromIdentifyEpic = (action$, store) =>
-    action$.ofType(LOAD_FEATURE_INFO, GET_VECTOR_INFO)
+    action$.ofType(LOAD_FEATURE_INFO)
         .switchMap(() => {
             if (isFeatureGridOpen(store.getState())) {
                 return Rx.Observable.of(closeFeatureGrid());
@@ -306,7 +302,7 @@ export const closeFeatureInfoOnCatalogOpenEpic = (action$, store) =>
  * Clean state on annotation open
  */
 export const closeFeatureInfoOnAnnotationOpenEpic = (action$, {getState}) =>
-    action$.ofType(TOGGLE_CONTROL)
+    action$.ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY)
         .filter(({control} = {}) => control === 'annotations' && get(getState(), "controls.annotations.enabled", false))
         .mapTo(purgeMapInfoResults());
 /**

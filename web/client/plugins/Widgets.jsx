@@ -12,7 +12,6 @@ import {connect} from 'react-redux';
 import {createSelector} from 'reselect';
 import {compose, defaultProps, withHandlers, withProps, withPropsOnChange, withState} from 'recompose';
 
-
 import {createPlugin} from '../utils/PluginsUtils';
 
 import {mapIdSelector} from '../selectors/map';
@@ -22,7 +21,8 @@ import {
     getFloatingWidgetsLayout,
     getMaximizedState,
     getVisibleFloatingWidgets,
-    isTrayEnabled
+    isTrayEnabled,
+    getTblWidgetZoomLoader
 } from '../selectors/widgets';
 import {
     changeLayout,
@@ -33,7 +33,8 @@ import {
     toggleCollapse,
     toggleCollapseAll,
     toggleMaximize,
-    updateWidgetProperty
+    updateWidgetProperty,
+    init
 } from '../actions/widgets';
 import editOptions from './widgets/editOptions';
 import autoDisableWidgets from './widgets/autoDisableWidgets';
@@ -56,7 +57,8 @@ compose(
             (state) => mapLayoutValuesSelector(state, { right: true}),
             state => state.browser && state.browser.mobile,
             getFloatingWidgets,
-            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets) => ({
+            getTblWidgetZoomLoader,
+            (id, widgets, layouts, maximized, dependencies, mapLayout, isMobileAgent, dropdownWidgets, recordZoomLoading) => ({
                 id,
                 widgets,
                 layouts,
@@ -64,7 +66,8 @@ compose(
                 dependencies,
                 mapLayout,
                 isMobileAgent,
-                dropdownWidgets
+                dropdownWidgets,
+                recordZoomLoading
             })
         ), {
             editWidget,
@@ -99,6 +102,8 @@ compose(
         }),
         withProps(({
             width,
+            rowHeight,
+            cols,
             height,
             maximized,
             leftOffset,
@@ -112,7 +117,7 @@ compose(
                 ? (height - backgroundSelectorOffset - 120) / 2
                 : height - backgroundSelectorOffset - 120;
             const nRows = isSingleWidgetLayout ? 1 : 4;
-            const rowHeight = !isSingleWidgetLayout
+            const rowHeightRecalculated = !isSingleWidgetLayout
                 ? Math.floor(divHeight / nRows - 20)
                 : divHeight > singleWidgetLayoutMaxHeight
                     ? singleWidgetLayoutMaxHeight
@@ -139,13 +144,13 @@ compose(
             } : {};
             const widthOptions = width ? {width: viewWidth - 1} : {};
             const baseHeight = isSingleWidgetLayout
-                ? rowHeight
-                : Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10);
+                ? rowHeight || rowHeightRecalculated
+                : Math.floor((height - 100) / (rowHeightRecalculated + 10)) * (rowHeightRecalculated + 10);
             return ({
-                rowHeight,
+                rowHeight: isSingleWidgetLayout ? rowHeightRecalculated : rowHeight || rowHeightRecalculated,
                 className: "on-map",
                 breakpoints: isSingleWidgetLayout ? { xxs: 0 } : { md: 0 },
-                cols: { md: 6, xxs: 1 },
+                cols: cols || { md: 6, xxs: 1 },
                 ...widthOptions,
                 useDefaultWidthProvider: false,
                 style: {
@@ -273,11 +278,16 @@ compose(
 
 class Widgets extends React.Component {
     static propTypes = {
-        enabled: PropTypes.bool
+        enabled: PropTypes.bool,
+        enableZoomInTblWidget: PropTypes.bool
     };
     static defaultProps = {
-        enabled: true
+        enabled: true,
+        enableZoomInTblWidget: true
     };
+    componentDidMount() {
+        this.props.onMount(this.props.pluginCfg?.defaults);
+    }
     render() {
         return this.props.enabled ? <WidgetsView {...this.props /* pass options to the plugin */ } /> : null;
     }
@@ -296,6 +306,26 @@ class Widgets extends React.Component {
  * @prop {boolean|string|array} [toolsOptions.showPin] show lock tool. By default is visible only to the admin
  * @prop {boolean|string|array} [toolsOptions.showHide] show the "hide tool" for the widget (the tool allows to hide the widget to users that have `seeHidden=false` ). By default is false, in the most common case it should be the same of `seeHidden`.
  * @prop {boolean|string|array} [toolsOptions.seeHidden] hides the widgets under particular conditions
+ * @prop {number} cfg.rowHeight Rows have a static height
+ * @prop {object} cfg.cols Number of columns in this layout. default is { md: 6, xxs: 1 }
+ * @prop {object} cfg.defaults options that are used to initialize the plugin when mounted
+ * @prop {object} cfg.defaults.initialSize new widget's default sizes in grid units. It contains 2 integers, `w` and `h`, representing the initial size of the new widget. This is useful when customizing `rowHeight` and/or `cols`, to generate a widget with a proportionated size.
+ * @example
+ * ```
+ * {
+ *   "name": "Widgets",
+ *   "cfg": {
+ *     "cols": { "md": 48, "xxs": 1 },
+ *     "rowHeight": 10,
+ *     "defaults": {
+ *       "initialSize": {
+ *         "h": 8,
+ *         "w": 8
+ *       }
+ *     }
+ *   }
+ * }
+ * ```
  * @prop {object} [dateFormats] object containing custom formats for date/time attribute types ( in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601)  format). Once specified, custom formats will be applied for specific attribute types in Table widget. Following keys are supported: `date-time`, `date`, `time`. Example:
  * ```
  * "dateFormats": {
@@ -306,7 +336,9 @@ class Widgets extends React.Component {
  * ```
  *
  */
-const WidgetsPlugin = autoDisableWidgets(Widgets);
+
+const WidgetsPlugin = connect(null, {onMount: init}
+)(autoDisableWidgets(Widgets));
 
 export default createPlugin("WidgetsPlugin", {
     component: WidgetsPlugin,

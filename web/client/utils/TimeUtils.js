@@ -334,3 +334,117 @@ export const getBufferedTime = (timeString, timeBuffer, bufferType) => {
     const bufferedDate = bufferType === 'add' ? refDate.add(timeBuffer, 'seconds') : refDate.subtract(timeBuffer, 'seconds');
     return bufferedDate.toISOString();
 };
+
+/**
+ * Parse the parameter given in input to get the start and end time values.
+ * The value can be a string or an array of strings.
+ * In case of string it will parse the DescribeDomain possible outputs like:
+ * - "2016-02-23T06:00:00.000Z" (single value)
+ * - "2016-02-23T06:00:00.000Z,2017-02-23T06:00:00.000Z" (multiple values)
+ * - "2016-02-23T06:00:00.000Z/2017-02-23T06:00:00.000Z": (interval values)
+ * - "2016-02-23T06:00:00.000Z/2017-02-23T06:00:00.000Z,2018-02-23T06:00:00.000Z/2019-02-23T06:00:00.000Z" (multiple interval values)
+ * - "2016-02-23T06:00:00.000Z--2017-02-23T06:00:00.000Z" (domain interval)
+ * In case of array it will parse the values as dates.
+ * After extracting the dates from the input, it will return the start and end time values on all the data extracted (parsing also endTime of interval values)
+ * @param {string|array} value the domain attributes value or array of values
+ * @returns {string[]} start and end time values. **In case of single value, returns only the start value**
+ */
+export const getStartEndDomainValues = (value) => {
+    let values;
+
+    // convert to array
+    if (isString(value)) {
+        if (value.indexOf('--') > 0) {
+            values = value.split('--');
+        } else if (value.indexOf(',') > 0) {
+            values = value.split(',');
+        } else {
+            values = [value]; // single value is the last chance
+        }
+    } else {
+        values = value;
+    }
+    // if values are intervals (separated by /) spread them in the array
+    values = values.reduce((acc, v) => acc.concat(v.split('/')), []).sort();
+    if (values.length > 2) {
+        values = [values[0], values[values.length - 1]]; // more than 2 values, start and end are the first and last values
+    }
+
+    let [startTime, endTime] = values?.filter(v => !!v) || [];
+    return [startTime, endTime];
+};
+
+/**
+ * @param {Date|string} date to parse
+ * @return {string} date part of the TimeStamp for local time not UTC
+ **/
+export const getLocalTimePart = (date) => {
+    let dateToParse = date;
+    if (!isDate(date) & isString(date)) {
+        dateToParse = new Date(date);
+    }
+    let hours = dateToParse.getHours();
+    hours = hours < 10 ? "0" + hours : hours;
+    let minutes = dateToParse.getMinutes();
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    let seconds = dateToParse.getSeconds();
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    return `${hours}:${minutes}:${seconds}`;
+};
+
+/**
+ * Parse the date time template string to get parts
+ * Ex: `{now}+P1D` will result in `now`, `+` and `P1D`
+ * @param {string} value template string
+ * @returns parsed parts of the string
+ */
+export const parseDateTimeTemplate = (value) => {
+    const REGEX_DATE_TIME_TEMPLATE = /\{([^}]+)\}([+-])?(.*)/g;
+    const [, placeholderKey, sign, durationExp] = REGEX_DATE_TIME_TEMPLATE.exec(value) ?? [];
+    return { placeholderKey, sign, durationExp };
+};
+
+/**
+ * Get parsed date from date time template string
+ * Ex: `{now}+P1D`, `{now}-P1Y9M8DT2H25M30S`
+ * @param {string} value template string
+ * @param {string} rangeType one of 'start' & 'end'
+ * @returns {Date} parsed date
+ */
+export const getDateFromTemplate = (value, rangeType = "start") => {
+    let date;
+    const { placeholderKey, sign, durationExp } = parseDateTimeTemplate(value);
+    const isStartDate = rangeType === "start";
+
+    switch (placeholderKey) {
+    case "today":
+        date = moment()[isStartDate ? "startOf" : "endOf"]('day');
+        break;
+    case "thisWeekStart":
+        date = moment().startOf('isoWeek');
+        break;
+    case "thisWeekEnd":
+        date = moment().endOf('isoWeek');
+        break;
+    case "thisMonthStart":
+        date = moment().startOf('month');
+        break;
+    case "thisMonthEnd":
+        date = moment().endOf('month');
+        break;
+    case "thisYearStart":
+        date = moment().startOf('year');
+        break;
+    case "thisYearEnd":
+        date = moment().endOf('year');
+        break;
+    default:
+        date = isStartDate ? moment() : moment().endOf('day');
+        break;
+    }
+    if (sign && durationExp) {
+        date = date[sign === "+" ? 'add' : 'subtract'](moment.duration(durationExp).asSeconds(), "seconds");
+    }
+    date = date.toDate();
+    return date;
+};

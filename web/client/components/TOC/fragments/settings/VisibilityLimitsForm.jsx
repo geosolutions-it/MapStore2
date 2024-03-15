@@ -95,7 +95,7 @@ function SelectInput({
 function VisibilityLimitsForm({
     title,
     layer,
-    zoom,
+    zoom: zoomProp,
     projection,
     resolutions = getResolutions(),
     defaultLimitsType,
@@ -103,6 +103,8 @@ function VisibilityLimitsForm({
     dpi,
     onChange
 }) {
+
+    const zoom = Math.round(zoomProp || 0);
 
     const [limitsType, setLimitsType] = useState(defaultLimitsType || limitsTypesOptions[0].value);
 
@@ -251,13 +253,6 @@ function VisibilityLimitsForm({
         setOptions(newOptions);
         clearMessages();
     }, [ dpu,  resolutionString ]);
-
-    useEffect(() => {
-        if (isMounted.current && (!isNil(maxResolution) || !isNil(minResolution))) {
-            setCapabilitiesMessage(maxResolution, minResolution);
-            setRangeError(maxResolution, minResolution);
-        }
-    }, [isMounted]);
 
     return (
         <div className="ms-visibility-limits-form">

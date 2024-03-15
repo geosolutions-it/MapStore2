@@ -71,7 +71,7 @@ describe('widgets selectors', () => {
         expect(getEditingWidgetFilter(state)).toExist();
     });
     it('getEditingWidgetFilter - chart', () => {
-        const state = set(`widgets.builder.editor`, {widgetType: "chart", charts: [{chartId: "1", filter: { name: "TEST" } }], selectedChartId: "1" }, {});
+        const state = set(`widgets.builder.editor`, {widgetType: "chart", charts: [{chartId: "1", traces: [{ filter: { name: "TEST" }}] }], selectedChartId: "1" }, {});
         expect(getEditingWidgetFilter(state)).toBeTruthy();
     });
     it('getEditorSettings', () => {
@@ -152,12 +152,12 @@ describe('widgets selectors', () => {
         const widgetLayer = set(`widgets.builder.editor`, { layer: { name: "TEST2" } }, dashboardNoLayer);
         expect(getWidgetLayer(widgetLayer).name).toBe("TEST2");
         const chartWidgetLayer = set(`widgets.builder.editor`,
-            { selectedChartId: "1", charts: [{ chartId: "1", layer: {name: "TEST2"} }] }, dashboardNoLayer);
+            { selectedChartId: "1", charts: [{ chartId: "1", traces: [{ layer: {name: "TEST2"} }] }] }, dashboardNoLayer);
         expect(getWidgetLayer(chartWidgetLayer).name).toBe("TEST2");
     });
     it('getEditingWidgetLayer charts', () => {
         const chartWidgetLayer =
-            getEditingWidgetLayer(set(`widgets.builder.editor`, { selectedChartId: "1", charts: [{ chartId: "1", layer: {name: "TEST2"} }] }, {}));
+            getEditingWidgetLayer(set(`widgets.builder.editor`, { selectedChartId: "1", charts: [{ chartId: "1", traces: [{ layer: {name: "TEST2"} }] }] }, {}));
         expect(chartWidgetLayer.name).toBe("TEST2");
     });
     it('getWidgetLayers charts', () => {
@@ -213,8 +213,10 @@ describe('widgets selectors', () => {
                 },
                 builder: {
                     editor: {
-                        layers: [{
-                            name: "layername"
+                        maps: [{
+                            layers: [{
+                                name: "layername"
+                            }]
                         }],
                         widgetType: "map",
                         id: "mapId"
@@ -259,9 +261,9 @@ describe('widgets selectors', () => {
                         charts: [
                             {
                                 chartId: "1",
-                                layer: {
-                                    name: "layername"
-                                }
+                                traces: [{
+                                    layer: { name: "layername" }
+                                }]
                             }
                         ],
                         widgetType: "chart",
@@ -645,8 +647,8 @@ describe('widgets selectors', () => {
         expect(getWidgetFilterKey(state)).toBe("filter");
     });
     it('getWidgetFilterKey with chart', () => {
-        const state = set("widgets.builder.editor", { widgetType: "chart", selectedChartId: "chart-01" }, {});
-        expect(getWidgetFilterKey(state)).toBe("charts[chart-01].filter");
+        const state = set("widgets.builder.editor", { widgetType: "chart", selectedChartId: "chart-01", charts: [{ chartId: 'chart-01', traces: [{ id: 'trace-01' }] }] }, {});
+        expect(getWidgetFilterKey(state)).toBe("charts[chart-01].traces[trace-01].filter");
     });
 
 });

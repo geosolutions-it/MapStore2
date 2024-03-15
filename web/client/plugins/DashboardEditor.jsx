@@ -12,22 +12,17 @@ import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createPlugin } from '../utils/PluginsUtils';
-
-
-import { dashboardHasWidgets, getWidgetsDependenciesGroups } from '../selectors/widgets';
-import { isDashboardEditing, showConnectionsSelector, isDashboardLoading, buttonCanEdit } from '../selectors/dashboard';
+import { isDashboardEditing, isDashboardLoading, isDashboardAvailable } from '../selectors/dashboard';
 import { dashboardSelector, dashboardsLocalizedSelector } from './widgetbuilder/commons';
 
-import { createWidget, toggleConnection } from '../actions/widgets';
+import { toggleConnection } from '../actions/widgets';
 
 import { setEditing, setEditorAvailable, triggerShowConnections } from '../actions/dashboard';
 
 import withDashboardExitButton from './widgetbuilder/enhancers/withDashboardExitButton';
-import LoadingSpinner from '../components/misc/LoadingSpinner';
 import WidgetTypeBuilder from './widgetbuilder/WidgetTypeBuilder';
 import epics from '../epics/dashboard';
 import dashboard from '../reducers/dashboard';
-import Toolbar from '../components/misc/toolbar/Toolbar';
 
 const Builder =
     compose(
@@ -38,51 +33,6 @@ const Builder =
         })),
         withDashboardExitButton
     )(WidgetTypeBuilder);
-const EditorToolbar = compose(
-    connect(
-        createSelector(
-            showConnectionsSelector,
-            dashboardHasWidgets,
-            buttonCanEdit,
-            getWidgetsDependenciesGroups,
-            (showConnections, hasWidgets, edit, groups = []) => ({
-                showConnections,
-                hasConnections: groups.length > 0,
-                hasWidgets,
-                canEdit: edit
-            })
-        ),
-        {
-            onShowConnections: triggerShowConnections,
-            onAddWidget: createWidget
-        }
-    ),
-    withProps(({
-        onAddWidget = () => { },
-        hasWidgets,
-        canEdit,
-        hasConnections,
-        showConnections,
-        onShowConnections = () => { }
-    }) => ({
-        buttons: [{
-            glyph: 'plus',
-            tooltipId: 'dashboard.editor.addACardToTheDashboard',
-            bsStyle: 'primary',
-            visible: canEdit,
-            id: 'ms-add-card-dashboard',
-            onClick: () => onAddWidget()
-        },
-        {
-            glyph: showConnections ? 'bulb-on' : 'bulb-off',
-            tooltipId: showConnections ? 'dashboard.editor.hideConnections' : 'dashboard.editor.showConnections',
-            bsStyle: showConnections ? 'success' : 'primary',
-            visible: !!hasWidgets && !!hasConnections || !canEdit,
-            onClick: () => onShowConnections(!showConnections)
-        }]
-    }))
-)(Toolbar);
-
 
 /**
  * Side toolbar that allows to edit dashboard widgets.
@@ -98,7 +48,6 @@ class DashboardEditorComponent extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         editing: PropTypes.bool,
-        loading: PropTypes.bool,
         limitDockHeight: PropTypes.bool,
         fluid: PropTypes.bool,
         zIndex: PropTypes.number,
@@ -118,7 +67,6 @@ class DashboardEditorComponent extends React.Component {
         id: "dashboard-editor",
         editing: false,
         dockSize: 500,
-        loading: true,
         limitDockHeight: true,
         zIndex: 10000,
         fluid: false,
@@ -140,11 +88,18 @@ class DashboardEditorComponent extends React.Component {
         const defaultServices = this.props.pluginCfg.services || {};
 
         return this.props.editing
-            ? <div className="dashboard-editor de-builder"><Builder disableEmptyMap={this.props.disableEmptyMap} defaultSelectedService={defaultSelectedService} defaultServices={defaultServices} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog} /></div>
-            : (<div className="ms-vertical-toolbar dashboard-editor de-toolbar" id={this.props.id}>
-                <EditorToolbar transitionProps={false} btnGroupProps={{ vertical: true }} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary' }} />
-                {this.props.loading ? <LoadingSpinner style={{ position: 'fixed', bottom: 0}} /> : null}
-            </div>);
+            ? <div
+                className="dashboard-editor de-builder">
+                <Builder
+                    disableEmptyMap={this.props.disableEmptyMap}
+                    defaultSelectedService={defaultSelectedService}
+                    defaultServices={defaultServices}
+                    enabled={this.props.editing}
+                    onClose={() => this.props.setEditing(false)}
+                    catalog={this.props.catalog}
+                />
+            </div>
+            : false;
     }
 }
 
@@ -152,7 +107,8 @@ const Plugin = connect(
     createSelector(
         isDashboardEditing,
         isDashboardLoading,
-        (editing, loading) => ({ editing, loading })
+        isDashboardAvailable,
+        (editing, isDashboardOpened) => ({ editing, isDashboardOpened })
     ), {
         setEditing,
         onMount: () => setEditorAvailable(true),

@@ -53,7 +53,7 @@ const urlQuery = url.parse(window.location.href, true).query;
   *                      "containerPosition": "header",
   *                    "className": "navbar shadow navbar-home"
   *                 }
-  *         }, "ManagerMenu", "Login", "Language", "NavMenu",
+  *         }, "Home", "ManagerMenu", "Login", "Language", "NavMenu",
   *         "Attribution", "RulesDataGrid", "Notifications"
   *         ,{
   *              "name": "RulesEditor",

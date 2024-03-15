@@ -33,6 +33,9 @@ export const defaultUnitOfMeasure = {
 };
 
 export const measureIcons = {
+    [MeasureTypes.LENGTH]: '1-measure-length',
+    [MeasureTypes.AREA]: '1-measure-area',
+    [MeasureTypes.BEARING]: '1-measure-bearing',
     [MeasureTypes.POLYLINE_DISTANCE_3D]: 'polyline-3d',
     [MeasureTypes.AREA_3D]: 'polygon-3d',
     [MeasureTypes.POINT_COORDINATES]: 'point-coordinates',
@@ -80,6 +83,22 @@ export const mapUomAreaToLength = {
     sqkm: { value: 'km', label: 'km' },
     sqmi: { value: 'mi', label: 'mi' },
     sqnm: { value: 'nm', label: 'nm' }
+};
+
+export const mapUomLabels = {
+    ft: 'ft',
+    m: 'm',
+    km: 'km',
+    mi: 'mi',
+    nm: 'nm',
+    sqft: 'ft²',
+    sqm: 'm²',
+    sqkm: 'km²',
+    sqmi: 'mi²',
+    sqnm: 'nm²',
+    deg: '°',
+    rad: 'rad',
+    percentage: '%'
 };
 
 export function degToDms(deg) {

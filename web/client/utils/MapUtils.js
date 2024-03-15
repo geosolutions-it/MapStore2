@@ -842,7 +842,7 @@ export const compareMapChanges = (map1 = {}, map2 = {}) => {
  * used to override default ones in order to have a local hooks object
  * one for each map widget
  */
-export const createRegisterHooks = () => {
+export const createRegisterHooks = (id) => {
     let hooksCustom = {};
     return {
         registerHook: (name, hook) => {
@@ -858,7 +858,8 @@ export const createRegisterHooks = () => {
                 return dontExistCallback();
             }
             return null;
-        }
+        },
+        id
     };
 };
 
@@ -912,7 +913,7 @@ export function calculateExtent(center = {x: 0, y: 0, crs: "EPSG:3857"}, resolut
 
 export const reprojectZoom = (zoom, mapProjection, printProjection) => {
     const multiplier = METERS_PER_UNIT[getUnits(mapProjection)] / METERS_PER_UNIT[getUnits(printProjection)];
-    const mapResolution = getResolutions(mapProjection)[zoom] * multiplier;
+    const mapResolution = getResolutions(mapProjection)[Math.round(zoom)] * multiplier;
     const printResolutions = getResolutions(printProjection);
 
     const printResolution = printResolutions.reduce((nearest, current) => {

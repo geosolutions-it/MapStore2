@@ -39,6 +39,52 @@ describe("test the SearchBar", () => {
         expect(rootDiv).toExist();
     });
 
+    it('test search service menu', () => {
+        ReactDOM.render(<SearchBar searchOptions={{services: [{type: "nominatim"}]}}/>, document.getElementById("container"));
+        let search = document.getElementsByClassName("glyphicon-search");
+        expect(search).toBeTruthy();
+        expect(search.length).toBe(2);
+    });
+    it('test search with multiple services', () => {
+        ReactDOM.render(<SearchBar searchOptions={{services: [{type: "nominatim"}, {type: "wfs", name: "test"}]}}/>, document.getElementById("container"));
+        let search = document.getElementsByClassName("glyphicon-search");
+        let menuItems = document.querySelectorAll('[role="menuitem"]');
+        expect(search).toBeTruthy();
+        expect(search.length).toBe(4);
+        expect(menuItems.length).toBe(4);
+        expect(menuItems[1].innerText).toBe('nominatim');
+        expect(menuItems[2].innerText).toBe('test'); // Service name is menu name
+    });
+    it('test onSearch with multiple services', () => {
+        const actions = {
+            onSearch: () => {}
+        };
+        const services = [{type: "nominatim"}, {type: "wfs", name: "test"}];
+        const spyOnSearch = expect.spyOn(actions, 'onSearch');
+        ReactDOM.render(<SearchBar onSearch={actions.onSearch} searchText="test" searchOptions={{services}}/>, document.getElementById("container"));
+        let search = document.getElementsByClassName("glyphicon-search");
+        let input = document.querySelector(".searchInput");
+        let menuItems = document.querySelectorAll('[role="menuitem"]');
+        expect(search).toBeTruthy();
+        expect(input).toBeTruthy();
+        expect(search.length).toBe(4);
+
+        expect(menuItems.length).toBe(4);
+        TestUtils.Simulate.click(menuItems[1]); // Select single search
+
+        TestUtils.Simulate.keyDown(input, { key: 'Enter', keyCode: 13 });
+        expect(spyOnSearch).toHaveBeenCalled();
+        expect(spyOnSearch.calls[0].arguments[0]).toBe("test");
+        expect(spyOnSearch.calls[0].arguments[1]).toEqual({"services": [services[0]]});
+        expect(spyOnSearch.calls[0].arguments[2]).toBe(15);
+
+        TestUtils.Simulate.click(menuItems[0]); // Select all search
+        TestUtils.Simulate.keyDown(input, { key: 'Enter', keyCode: 13 });
+        expect(spyOnSearch).toHaveBeenCalled();
+        expect(spyOnSearch.calls[1].arguments[0]).toBe("test");
+        expect(spyOnSearch.calls[1].arguments[1]).toEqual({services});
+        expect(spyOnSearch.calls[1].arguments[2]).toBe(30);
+    });
     it('test search and reset buttons', () => {
         const renderSearchBar = (testHandlers, text) => {
             return ReactDOM.render(
@@ -211,7 +257,7 @@ describe("test the SearchBar", () => {
         let search = document.getElementsByClassName("glyphicon-search");
         expect(reset).toExist();
         expect(search).toExist();
-        expect(search.length).toBe(2);
+        expect(search.length).toBe(1);
     });
     it('test only search present, splitTools=false', () => {
         ReactDOM.render(<SearchBar splitTools={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
@@ -237,7 +283,7 @@ describe("test the SearchBar", () => {
         let reset = document.getElementsByClassName("glyphicon-1-close")[0];
         let search = document.getElementsByClassName("glyphicon-search");
         expect(reset).toExist();
-        expect(search.length).toBe(1);
+        expect(search.length).toBe(0);
     });
     it('test zoomToPoint, with search, with decimal, with reset', () => {
         const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({search: {coordinate: {lat: 2, lon: 2}}})};
@@ -246,7 +292,7 @@ describe("test the SearchBar", () => {
         let search = document.getElementsByClassName("glyphicon-search");
         let cog = document.getElementsByClassName("glyphicon-cog");
         expect(reset.length).toBe(1);
-        expect(search.length).toBe(2);
+        expect(search.length).toBe(1);
         expect(cog.length).toBe(1);
     });
 
@@ -258,7 +304,7 @@ describe("test the SearchBar", () => {
         let cog = document.getElementsByClassName("glyphicon-cog");
         let inputs = document.getElementsByTagName("input");
         expect(reset.length).toBe(0);
-        expect(search.length).toBe(2);
+        expect(search.length).toBe(1);
         expect(cog.length).toBe(1);
         expect(inputs.length).toBe(6);
     });
@@ -404,9 +450,9 @@ describe("test the SearchBar", () => {
         TestUtils.Simulate.click(buttons[1]);
         const links = container.querySelectorAll('a');
         const bookmark = container.getElementsByClassName('glyphicon-bookmark');
-        expect(links.length).toBe(3);
+        expect(links.length).toBe(2);
         expect(bookmark).toExist();
-        expect(links[2].innerText).toBe('Search by bookmark');
+        expect(links[1].innerText).toBe('Search by bookmark');
     });
     it('test searchByBookmark, search button disabled', () => {
         const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({searchbookmarkconfig: {selected: {}}})};

@@ -444,4 +444,16 @@ describe('Featuregrid toolbar component', () => {
             expect(spy.calls[1].arguments[0]).toBe(true);
         });
     });
+    describe('showing/hiding PopoverSync in feature grid', () => {
+        it('check showPopoverSync false', () => {
+            ReactDOM.render(<Toolbar pluginCfg={{showPopoverSync: false}} />, document.getElementById("container"));
+            const el = document.getElementById("sync-popover");
+            expect(el).toBe(null);
+        });
+        it('check showPopoverSync true', () => {
+            ReactDOM.render(<Toolbar pluginCfg={{showPopoverSync: true}} />, document.getElementById("container"));
+            const el = document.getElementById("sync-popover");
+            expect(el).toExist();
+        });
+    });
 });

@@ -21,6 +21,7 @@ import isNil from 'lodash/isNil';
 import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
+import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 
 let LayersUtils;
 
@@ -404,12 +405,43 @@ export const getDimension = (dimensions, dimension) => {
 export const getLayerId = (layerObj) => {
     return layerObj && layerObj.id || `${layerObj.name ? `${layerObj.name}__` : ''}${uuidv1()}`;
 };
+
 /**
- * Normalizes the layer to assign missing Ids
+ * it creates an id of a feature if not existing
+ * @param {object} feature list of layers to check
+  * @return {string} the id
+ */
+export const createFeatureId = (feature = {}) => {
+    return {
+        ...feature,
+        id: feature.id || feature.properties?.id || uuidv1()
+    };
+};
+/**
+ * Normalizes the layer to assign missing Ids and features for vector layers
  * @param {object} layer the layer to normalize
  * @returns {object} the normalized layer
  */
-export const normalizeLayer = (layer) => layer.id ? layer : { ...layer, id: LayersUtils.getLayerId(layer) };
+
+export const normalizeLayer = (layer) => {
+    // con uuid
+    let _layer = layer;
+    if (layer.type === "vector") {
+        _layer = _layer?.features?.length ? {
+            ..._layer,
+            features: _layer?.features?.map(createFeatureId)
+        } : layer;
+    }
+    // regenerate geodesic lines as property since that info has not been saved
+    if (_layer.id === ANNOTATIONS) {
+        _layer = updateAnnotationsLayer(_layer)[0];
+    }
+
+    return {
+        ..._layer,
+        id: _layer.id || LayersUtils.getLayerId(_layer)};
+
+};
 /**
  * Normalizes the map adding missing ids, default groups.
  * @param {object} map the map
@@ -641,8 +673,10 @@ export const saveLayer = (layer) => {
         tooltipPlacement: layer.tooltipPlacement,
         legendOptions: layer.legendOptions,
         tileSize: layer.tileSize,
-        version: layer.version
+        version: layer.version,
+        expanded: layer.expanded || false
     },
+    layer.sources ? { sources: layer.sources } : {},
     layer.heightOffset ? { heightOffset: layer.heightOffset } : {},
     layer.params ? { params: layer.params } : {},
     layer.extendedParams ? { extendedParams: layer.extendedParams } : {},
@@ -652,8 +686,11 @@ export const saveLayer = (layer) => {
     layer.tileGrids ? { tileGrids: layer.tileGrids } : {},
     layer.tileGridStrategy ? { tileGridStrategy: layer.tileGridStrategy } : {},
     layer.tileGridCacheSupport ? { tileGridCacheSupport: layer.tileGridCacheSupport } : {},
+    isString(layer.rowViewer) ? { rowViewer: layer.rowViewer } : {},
     !isNil(layer.forceProxy) ? { forceProxy: layer.forceProxy } : {},
-    !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {});
+    !isNil(layer.disableFeaturesEditing) ? { disableFeaturesEditing: layer.disableFeaturesEditing } : {},
+    layer.pointCloudShading ? { pointCloudShading: layer.pointCloudShading } : {},
+    !isNil(layer.sourceMetadata) ? { sourceMetadata: layer.sourceMetadata } : {});
 };
 
 /**
@@ -780,9 +817,9 @@ export const excludeGoogleBackground = ll => {
     }
     return layers;
 };
-export const creditsToAttribution = ({ imageUrl, link, title }) => {
+export const creditsToAttribution = ({ imageUrl, link, title, text }) => {
     // TODO: check if format is valid for an img (svg, for instance, may not work)
-    const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
+    const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title || text || "credits";
     return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
 };
 
@@ -854,9 +891,26 @@ export const getWMSVendorParams = (layer) =>  {
     return { TILED: layer.singleTile ? false : (!isNil(layer.tiled) ? layer.tiled : true)};
 };
 
+/**
+ * Utility function to check if the node allows to show fields tab
+ * @param {object} node the node of the TOC (including layer properties)
+ * @returns {boolean} true if the node allows to show fields
+ */
+export const hasWFSService = ({type, search = {}} = {}) =>
+    type === 'wfs' // pure WFS layer
+        || (type === 'wms' && search.type === 'wfs'); // WMS backed by WFS (search)
+
+export const getLayerTypeGlyph = (layer) => {
+    if (isAnnotationLayer(layer)) {
+        return 'comment';
+    }
+    return '';
+};
+
 LayersUtils = {
     getGroupByName,
     getLayerId,
+    hasWFSService,
     normalizeLayer,
     getNotEmptyGroup,
     getLayersByGroup,
@@ -867,3 +921,4 @@ LayersUtils = {
     isInsideResolutionsLimits,
     visibleTimelineLayers
 };
+

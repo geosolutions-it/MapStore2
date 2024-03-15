@@ -19,6 +19,7 @@ export default compose(
     }),
     withProps(({ backFromWizard = () => {} }) => ({
         exitButton: {
+            id: 'dashboard-exit-button',
             onClick: backFromWizard,
             glyph: 'arrow-left',
             tooltipId: "widgets.builder.wizard.backToLayerSelection"

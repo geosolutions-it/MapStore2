@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { find, isEqual } from 'lodash';
+import { find, isEqual, omit } from 'lodash';
 import React from 'react';
 import {connect} from 'react-redux';
 import {branch, compose, createEventHandler, mapPropsStream, withHandlers, withProps, withPropsOnChange, withStateHandlers} from 'recompose';
@@ -39,7 +39,7 @@ export default compose(
         ({ resources, resourceId, map = {}}) => {
             const cleanedMap = {...map, layers: (map.layers || []).map(l => l ? l : undefined)};
             const resource = find(resources, { id: resourceId }) || {};
-            return { map: createMapObject(resource.data, cleanedMap)};
+            return { map: createMapObject(omit(resource.data, ['context']), cleanedMap)};
         }
     ));
 /**

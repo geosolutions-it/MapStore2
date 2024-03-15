@@ -35,7 +35,7 @@ import { openQueryBuilder } from '../actions/layerFilter';
 import { getLayerCapabilities } from '../actions/layerCapabilities';
 import { zoomToExtent } from '../actions/map';
 import { error } from '../actions/notifications';
-
+import { getSelectedAnnotationLayer  } from './Annotations/selectors/annotations';
 import {
     groupsSelector,
     layersSelector,
@@ -89,7 +89,7 @@ const addFilteredAttributesGroups = (nodes, filters) => {
 const filterLayersByTitle = (layer, filterText, currentLocale) => {
     const translation = isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title;
     const title = translation || layer.name;
-    return title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
+    return (title || '').toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
 };
 
 const tocSelector = createShallowSelectorCreator(isEqual)(
@@ -112,7 +112,8 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
     isCesium,
     userSelector,
     isLocalizedLayerStylesEnabledSelector,
-    (enabled, groups, settings, swipeSettings, layerMetadata, layerdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled) => ({
+    getSelectedAnnotationLayer,
+    (enabled, groups, settings, swipeSettings, layerMetadata, layerdownload, map, currentLocale, currentLocaleLanguage, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat, isCesiumActive, user, isLocalizedLayerStylesEnabled, selectedAnnotationLayer) => ({
         enabled,
         groups,
         settings,
@@ -154,13 +155,14 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
             },
             {
                 options: { exclusiveMapType: true },
-                func: (node) => node.type === "3dtiles" && !isCesiumActive
+                func: (node) => (["3dtiles", 'model'].includes(node.type) && !isCesiumActive) || (node.type === "cog" && isCesiumActive)
             }
         ]),
         catalogActive,
         activateWidgetTool,
         user,
-        isLocalizedLayerStylesEnabled
+        isLocalizedLayerStylesEnabled,
+        selectedAnnotationLayer
     })
 );
 
@@ -603,7 +605,8 @@ const checkPluginsEnhancer = branch(
             "activateLayerFilterTool",
             "activateSettingsTool",
             "FeatureEditor",
-            "activateLayerInfoTool"
+            "activateLayerInfoTool",
+            "selectedAnnotationLayer"
         ],
         ({
             items = [],
@@ -614,11 +617,14 @@ const checkPluginsEnhancer = branch(
             activateLayerFilterTool = true,
             activateWidgetTool = true,
             activateLayerInfoTool = true,
-            activateDownloadTool = true
+            activateDownloadTool = true,
+            // TODO: we should extract the toolbar button that could be injected (eg. TOCItemsSettings)
+            // in this way the logic could be moved in that plugin instead
+            selectedAnnotationLayer
         }) => ({
             activateAddLayerButton: activateAddLayerButton && !!find(items, { name: "MetadataExplorer" }) || false, // requires MetadataExplorer (Catalog)
             activateAddGroupButton: activateAddGroupButton && !!find(items, { name: "AddGroup" }) || false,
-            activateSettingsTool: activateSettingsTool && !!find(items, { name: "TOCItemsSettings"}) || false,
+            activateSettingsTool: activateSettingsTool && !selectedAnnotationLayer && !!find(items, { name: "TOCItemsSettings"}) || false,
             activateQueryTool: activateQueryTool && !!find(items, {name: "FeatureEditor"}) || false,
             activateLayerFilterTool: activateLayerFilterTool && !!find(items, {name: "FilterLayer"}) || false,
             // NOTE: activateWidgetTool is already controlled by a selector. TODO: Simplify investigating on the best approach

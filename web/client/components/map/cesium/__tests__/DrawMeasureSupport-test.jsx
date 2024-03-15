@@ -84,13 +84,13 @@ describe('Cesium DrawMeasureSupport', () => {
                                 try {
                                     expect(collection).toBeTruthy();
                                     expect(collection.features.length).toBe(1);
-                                    expect(ref.map.scene.primitives.length).toBe(6);
-                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(0);
+                                    expect(ref.map.scene.primitives.length).toBe(8);
+                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(2);
                                     expect(staticPrimitivesCollection.length).toBe(1);
                                     expect(staticPrimitivesCollection.get(0).geometryInstances.geometry instanceof Cesium.PolylineGeometry).toBe(true);
-                                    const staticBillboardCollection = ref.map.scene.primitives.get(1);
+                                    const staticBillboardCollection = ref.map.scene.primitives.get(3);
                                     expect(staticBillboardCollection.length).toBe(0);
-                                    const staticLabelsCollection = ref.map.scene.primitives.get(2);
+                                    const staticLabelsCollection = ref.map.scene.primitives.get(4);
                                     expect(staticLabelsCollection.length).toBe(2);
                                     expect(staticLabelsCollection.get(0).text).toBe('7609361.39 m');
                                     expect(staticLabelsCollection.get(1).text).toBe('7609361.39 m');
@@ -147,14 +147,14 @@ describe('Cesium DrawMeasureSupport', () => {
                                 try {
                                     expect(collection).toBeTruthy();
                                     expect(collection.features.length).toBe(1);
-                                    expect(ref.map.scene.primitives.length).toBe(6);
-                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(0);
+                                    expect(ref.map.scene.primitives.length).toBe(8);
+                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(2);
                                     expect(staticPrimitivesCollection.length).toBe(2);
                                     expect(staticPrimitivesCollection.get(0).geometryInstances.geometry instanceof Cesium.PolygonGeometry).toBe(true);
                                     expect(staticPrimitivesCollection.get(1).geometryInstances.geometry instanceof Cesium.PolylineGeometry).toBe(true);
-                                    const staticBillboardCollection = ref.map.scene.primitives.get(1);
+                                    const staticBillboardCollection = ref.map.scene.primitives.get(3);
                                     expect(staticBillboardCollection.length).toBe(0);
-                                    const staticLabelsCollection = ref.map.scene.primitives.get(2);
+                                    const staticLabelsCollection = ref.map.scene.primitives.get(4);
                                     expect(staticLabelsCollection.length).toBe(4);
                                     expect(staticLabelsCollection.get(0).text).toBe('7609361.39 m');
                                     expect(staticLabelsCollection.get(1).text).toBe('6114731.67 m');
@@ -205,12 +205,12 @@ describe('Cesium DrawMeasureSupport', () => {
                                 try {
                                     expect(collection).toBeTruthy();
                                     expect(collection.features.length).toBe(1);
-                                    expect(ref.map.scene.primitives.length).toBe(6);
-                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(0);
+                                    expect(ref.map.scene.primitives.length).toBe(8);
+                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(2);
                                     expect(staticPrimitivesCollection.length).toBe(0);
-                                    const staticBillboardCollection = ref.map.scene.primitives.get(1);
+                                    const staticBillboardCollection = ref.map.scene.primitives.get(3);
                                     expect(staticBillboardCollection.length).toBe(1);
-                                    const staticLabelsCollection = ref.map.scene.primitives.get(2);
+                                    const staticLabelsCollection = ref.map.scene.primitives.get(4);
                                     expect(staticLabelsCollection.length).toBe(1);
                                     expect(staticLabelsCollection.get(0).text).toBe('latitude: -56.281481\nlongitude: -147.042205\naltitude: 0.00 m');
                                 } catch (e) {
@@ -256,13 +256,13 @@ describe('Cesium DrawMeasureSupport', () => {
                                 try {
                                     expect(collection).toBeTruthy();
                                     expect(collection.features.length).toBe(1);
-                                    expect(ref.map.scene.primitives.length).toBe(6);
-                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(0);
+                                    expect(ref.map.scene.primitives.length).toBe(8);
+                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(2);
                                     expect(staticPrimitivesCollection.length).toBe(1);
                                     expect(staticPrimitivesCollection.get(0).geometryInstances.geometry instanceof Cesium.PolylineGeometry).toBe(true);
-                                    const staticBillboardCollection = ref.map.scene.primitives.get(1);
+                                    const staticBillboardCollection = ref.map.scene.primitives.get(3);
                                     expect(staticBillboardCollection.length).toBe(1);
-                                    const staticLabelsCollection = ref.map.scene.primitives.get(2);
+                                    const staticLabelsCollection = ref.map.scene.primitives.get(4);
                                     expect(staticLabelsCollection.length).toBe(1);
                                     expect(staticLabelsCollection.get(0).text).toBe('10.00 m');
                                 } catch (e) {
@@ -316,14 +316,14 @@ describe('Cesium DrawMeasureSupport', () => {
                                 try {
                                     expect(collection).toBeTruthy();
                                     expect(collection.features.length).toBe(1);
-                                    expect(ref.map.scene.primitives.length).toBe(6);
-                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(0);
+                                    expect(ref.map.scene.primitives.length).toBe(8);
+                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(2);
                                     expect(staticPrimitivesCollection.length).toBe(2);
                                     expect(staticPrimitivesCollection.get(0).geometryInstances.geometry instanceof Cesium.PolylineGeometry).toBe(true);
                                     expect(staticPrimitivesCollection.get(1).geometryInstances.geometry instanceof Cesium.PolylineGeometry).toBe(true);
-                                    const staticBillboardCollection = ref.map.scene.primitives.get(1);
+                                    const staticBillboardCollection = ref.map.scene.primitives.get(3);
                                     expect(staticBillboardCollection.length).toBe(0);
-                                    const staticLabelsCollection = ref.map.scene.primitives.get(2);
+                                    const staticLabelsCollection = ref.map.scene.primitives.get(4);
                                     expect(staticLabelsCollection.length).toBe(1);
                                     expect(staticLabelsCollection.get(0).text).toBe('90.00 °');
                                 } catch (e) {
@@ -379,14 +379,14 @@ describe('Cesium DrawMeasureSupport', () => {
                                 try {
                                     expect(collection).toBeTruthy();
                                     expect(collection.features.length).toBe(1);
-                                    expect(ref.map.scene.primitives.length).toBe(6);
-                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(0);
+                                    expect(ref.map.scene.primitives.length).toBe(8);
+                                    const staticPrimitivesCollection = ref.map.scene.primitives.get(2);
                                     expect(staticPrimitivesCollection.length).toBe(2);
                                     expect(staticPrimitivesCollection.get(0).geometryInstances.geometry instanceof Cesium.PolygonGeometry).toBe(true);
                                     expect(staticPrimitivesCollection.get(1).geometryInstances.geometry instanceof Cesium.PolylineGeometry).toBe(true);
-                                    const staticBillboardCollection = ref.map.scene.primitives.get(1);
+                                    const staticBillboardCollection = ref.map.scene.primitives.get(3);
                                     expect(staticBillboardCollection.length).toBe(0);
-                                    const staticLabelsCollection = ref.map.scene.primitives.get(2);
+                                    const staticLabelsCollection = ref.map.scene.primitives.get(4);
                                     expect(staticLabelsCollection.length).toBe(1);
                                     expect(staticLabelsCollection.get(0).text).toBe('72.94 °');
                                 } catch (e) {

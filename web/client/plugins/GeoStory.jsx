@@ -71,7 +71,8 @@ const GeoStory = ({
     }, []);
 
     useEffect(() => {
-        onUpdate("settings.theme.fontFamilies", fontFamilies, "merge");
+        // Appended options in actions for key handling to avoid fonts duplication
+        onUpdate("settings.theme.fontFamilies", fontFamilies, "merge", {uniqueByKey: "family"});
         // we need to store settings for media editor
         // so we could use them later when we open the media editor plugin
         if (mediaEditorSettings) {

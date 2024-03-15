@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEqual, get, castArray } from 'lodash';
+import { isEqual, get, castArray, isString } from 'lodash';
 
 import axios from '../libs/ajax';
 import StylesAPI from './geoserver/Styles';
@@ -116,6 +116,9 @@ const getRasterClassificationError = (params, errorMsg) => {
  * @returns {object} return classification
  */
 const updateRulesWithColors = (data, params) => {
+    if (data.classification) {
+        return { classification: data.classification };
+    }
     const _rules = get(data, 'Rules.Rule');
     const _rulesRaster = _rules && get(_rules, 'RasterSymbolizer.ColorMap.ColorMapEntry');
     const intervalsForUnique = params.type === "classificationRaster"
@@ -202,6 +205,49 @@ export function updateStyleService({ baseUrl, styleService }) {
     return API.geoserver.updateStyleService({ baseUrl, styleService });
 }
 /**
+ * Default classification promise that uses the SLD service
+ * @param {object} config configuration properties
+ * @param {object} config.layer WMS layer options
+ * @param {object} config.params parameters for a SLD service classification { intervals, method, attribute, intervalsForUnique }
+ * @param {object} config.params.intervals number of intervals of the classification
+ * @param {object} config.params.method classification method
+ * @param {object} config.params.attribute feature attribute to classify
+ * @param {object} config.params.intervalsForUnique maximum of number of interval for `uniqueInterval` method
+ * @param {object} config.styleService the style service information { baseUrl, isStatic }
+ * @param {string} config.styleService.baseUrl base url of a GeoServer supporting sldservice rest endpoint
+ * @param {string} config.styleService.isStatic if false it tries to request the layer info based on WMS layer object, if true uses the baseUrl
+ * @returns {promise} return classification from an SLD service
+ */
+const defaultClassificationRequest = ({
+    layer,
+    params,
+    styleService
+}) => {
+
+    const viewparams = Object.keys(params.msViewParams || {})
+        .map((key) => {
+            const property = params.msViewParams[key];
+            if (property === undefined) {
+                return null;
+            }
+            // arrays need escaped comma
+            // strings need sourronding single quotes
+            const value = castArray(property)
+                .map(val => isString(val) ? `'${val}'` : val)
+                .join('\\,');
+            return `${key}:${value}`;
+        }).filter((value) => value).join(';');
+
+    let paramSLDService = {
+        intervals: params.intervals,
+        method: params.method,
+        attribute: params.attribute,
+        intervalsForUnique: params.intervalsForUnique,
+        ...(viewparams && { viewparams })
+    };
+    return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService, styleService));
+};
+/**
  * Update rules of a style for a vector layer using external SLD services
  * @memberof API.StyleEditor
  * @method classificationVector
@@ -210,6 +256,7 @@ export function updateStyleService({ baseUrl, styleService }) {
  * @param {array} rules rules of a style object
  * @param {object} layer layer configuration object
  * @param {object} styleService style service configuration object
+ * @param {function} classificationRequest a function that allow to override the classification promise, it should return a valid classification object
  * @returns {promise} return new rules with updated property and classification
  */
 export function classificationVector({
@@ -217,7 +264,8 @@ export function classificationVector({
     properties,
     rules,
     layer,
-    styleService
+    styleService,
+    classificationRequest = defaultClassificationRequest
 }) {
 
     let paramsKeys = [
@@ -226,7 +274,8 @@ export function classificationVector({
         'reverse',
         'attribute',
         'ramp',
-        'intervalsForUnique'
+        'intervalsForUnique',
+        'msViewParams'
     ];
     let params = { ...properties, ...values };
     const { ruleId } = properties;
@@ -255,7 +304,7 @@ export function classificationVector({
 
     const previousParams = paramsKeys.reduce((acc, key) => ({ ...acc, [key]: properties[key] }), {});
     const currentParams = paramsKeys.reduce((acc, key) => ({ ...acc, [key]: params[key] }), {});
-    const validParameters = !paramsKeys.find(key => params[key] === undefined);
+    const validParameters = !paramsKeys.filter((key) => key !== 'msViewParams').find(key => params[key] === undefined);
     const needsRequest = validParameters && !isEqual(previousParams, currentParams)
         // not request if the entries are updated manually
         && values?.ramp !== 'custom'
@@ -272,13 +321,11 @@ export function classificationVector({
     };
 
     if (needsRequest) {
-        const paramSLDService = {
-            intervals: params.intervals,
-            method: params.method,
-            attribute: params.attribute,
-            intervalsForUnique: params.intervalsForUnique
-        };
-        return axios.get(SLDService.getStyleMetadataService(layer, paramSLDService, styleService))
+        return classificationRequest({
+            layer,
+            params,
+            styleService
+        })
             .then(({ data }) => {
                 return updateRules(ruleId, rules, (rule) => ({
                     ...rule,

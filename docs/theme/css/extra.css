@@ -17,35 +17,30 @@ a:hover {
     height: 63px;
     width: auto;
 }
-.md-footer-nav {
-    background-color: rgba(21, 147, 93, 0.89) !important;
-}
-.md-footer-nav__link {
-    padding-top: 1rem;
-    padding-bottom: 0rem;
-}
-.md-footer-items {
-    margin-top: 10px;
-    margin-bottom: 10px;
+/* footer */
+
+.md-footer {
     text-align: center;
-    color: white;
 }
+
 .md-footer-brand-img {
-    /* margin-top: 40px; */
-    /* max-height: 30px; */
     max-height: 30px;
     width: auto;
 }
-.md-footer-copyright, .md-footer-social {
+.md-copyright, .md-social, .md-custom-content {
     width: 100%;
     max-width: 100%;
     text-align: center;
     margin-left: 0px;
     margin-right: 0px;
 }
-.md-footer-license {
-    /* margin-bottom: 40px; */
+.md-social {
+    justify-content: center;
 }
+.md-footer .md-footer-nav {
+    background-color: rgba(21, 147, 93, 0.89) !important;
+}
+/* end footer */
 .md-container {
     padding-top: 80px;
 }
@@ -94,6 +89,12 @@ li.md-tabs__item:hover{
     float: right;
 }
 
-.md-tabs__item:nth-child(2){
-    display: none;
+.pdf-icon {
+    background-image: url(../img/download-pdf-icon.png);
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+    background-position: center;
+    background-repeat: no-repeat;
 }

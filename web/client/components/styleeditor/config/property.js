@@ -22,9 +22,11 @@ const property = {
         disableAlpha,
         getGroupParams,
         getGroupConfig,
-        isDisabled
+        isDisabled,
+        propertySelectorInfoMessageId = 'styleeditor.colorPropertyInfoMessage'
     }) => ({
         type: 'color',
+        valueType: 'string',
         label,
         config: {
             stroke,
@@ -32,7 +34,9 @@ const property = {
             disableAlpha,
             getGroupParams,
             getGroupConfig,
-            graphicKey
+            graphicKey,
+            opacityKey,
+            propertySelectorInfoMessageId
         },
         setValue: (value, properties) => {
             if (pattern && properties[graphicKey]?.kind) {
@@ -53,14 +57,15 @@ const property = {
             return {
                 [key]: tinycolor({ ...color, a: 1 }).toHexString(),
                 [opacityKey]: a,
-                ...(pattern && {[graphicKey]: undefined})
+                ...(pattern && { [graphicKey]: undefined })
             };
         },
         isDisabled
     }),
-    width: ({ key = 'width', label = 'Width', fallbackValue = 1, dasharrayKey = 'dasharray', isDisabled }) => ({
+    width: ({ key = 'width', label = 'Width', fallbackValue = 1, isDisabled }) => ({
         type: 'input',
         label,
+        valueType: 'number',
         config: {
             min: 0,
             fallbackValue,
@@ -71,63 +76,41 @@ const property = {
         setValue: (value) => {
             return value === undefined ? fallbackValue : parseFloat(value);
         },
-        getValue: (value, properties) => {
+        getValue: (value) => {
             const width = value === undefined ? fallbackValue : parseFloat(value);
-            const dasharray = properties[dasharrayKey];
-            const previousWidth = properties[key];
             return {
-                [key]: width,
-                ...(dasharray && {
-                    // dasharray should scale based on width
-                    [dasharrayKey]: width
-                        ? dasharray.map(entry => Math.round(entry / previousWidth * width))
-                        : undefined
-                })
+                [key]: width
             };
         },
         isDisabled
     }),
-    dasharray: ({ key = 'dasharray', label = 'Dash array' }) => ({
+    dasharray: ({ key = 'dasharray', label = 'Dash array', disablePropertySelection = true, isDisabled }) => ({
         type: 'dash',
         label,
         config: {
-            options: [{
-                value: '0'
-            }, {
-                value: '1 4'
-            }, {
-                value: '1 12'
-            }, {
-                value: '8 8'
-            }, {
-                value: '8 16'
-            }, {
-                value: '8 8 1 8'
-            }, {
-                value: '8 8 1 4 1 8'
-            }]
+            disablePropertySelection
         },
-        setValue: (value, properties) => {
-            const width = properties.width === undefined ? 1 : properties.width;
+        setValue: (value) => {
             return value !== undefined
-                ? value.map(entry => Math.round(entry / width))
+                ? value.map(entry => Math.round(entry))
                 : [0];
         },
-        getValue: (value, properties) => {
-            if (isEqual(value, ['0'])) {
+        getValue: (value) => {
+            if (isEqual(value, ['0']) || isEqual(value, ['1', '0'])) {
                 return { [key]: undefined };
             }
-            const width = properties.width === undefined ? 1 : properties.width;
             const isValid = !(value || []).find((entry) => isNaN(parseFloat(entry)));
             return {
                 [key]: value !== undefined && isValid
-                    ? value.map((entry) => parseFloat(entry) * width)
+                    ? value.map((entry) => parseFloat(entry))
                     : undefined
             };
-        }
+        },
+        isDisabled
     }),
     cap: ({ key = 'cap', label = 'Line cap', isDisabled }) => ({
         type: 'toolbar',
+        valueType: 'string',
         label,
         config: {
             options: [{
@@ -150,6 +133,7 @@ const property = {
     }),
     join: ({ key = 'join', label = 'Line join', isDisabled }) => ({
         type: 'toolbar',
+        valueType: 'string',
         label,
         config: {
             options: [{
@@ -192,8 +176,9 @@ const property = {
         },
         isDisabled
     }),
-    size: ({ key = 'radius', label = 'Radius', range, fallbackValue = 1 }) => ({
+    size: ({ key = 'radius', label = 'Radius', range, fallbackValue = 1, infoMessageId }) => ({
         type: 'input',
+        valueType: 'number',
         label,
         config: {
             fallbackValue,
@@ -201,7 +186,8 @@ const property = {
             maxWidth: 105,
             uom: 'px',
             min: range?.min ?? 0,
-            max: range?.max
+            max: range?.max,
+            infoMessageId
         },
         setValue: (value = 1) => {
             return value === undefined ? fallbackValue : parseFloat(value);
@@ -212,8 +198,9 @@ const property = {
             };
         }
     }),
-    number: ({ key = 'scale', label = 'Scale', min, max, fallbackValue, maxWidth, uom, isDisabled }) => ({
+    number: ({ key = 'scale', label = 'Scale', min, max, fallbackValue, maxWidth, uom, isDisabled, placeholderId }) => ({
         type: 'input',
+        valueType: 'number',
         label,
         config: {
             min,
@@ -221,7 +208,8 @@ const property = {
             fallbackValue,
             type: 'number',
             maxWidth,
-            uom
+            uom,
+            placeholderId
         },
         setValue: (value) => {
             return value === undefined ? fallbackValue : parseFloat(value);
@@ -233,10 +221,12 @@ const property = {
         },
         isDisabled
     }),
-    opacity: ({ key = 'opacity', label = 'Opacity' }) => ({
+    opacity: ({ key = 'opacity', label = 'Opacity', disablePropertySelection }) => ({
         type: 'slider',
+        valueType: 'number',
         label,
         config: {
+            disablePropertySelection,
             range: { min: 0, max: 1 }
         },
         setValue: (value = 1) => {
@@ -249,38 +239,27 @@ const property = {
             };
         }
     }),
-    offset: ({ key = 'offset', label = '', axis = '', fallbackValue = 0 }) => ({
+    offset: ({ key = 'offset', label = '', fallbackValue = [0, 0], disablePropertySelection = true }) => ({
         key,
-        type: 'input',
+        type: 'xyInput',
         label,
         config: {
             fallbackValue,
-            type: 'number',
-            maxWidth: 105,
-            uom: 'px'
+            uom: 'px',
+            disablePropertySelection
         },
-        setValue: (value = []) => {
-            const currentValue = axis === 'y' ? parseFloat(value[1]) : parseFloat(value[0]);
-            return  currentValue === undefined ? fallbackValue : parseFloat(currentValue);
+        setValue: (value = [0, 0]) => {
+            return value === undefined ? fallbackValue : value;
         },
-        getValue: (value, properties) => {
-            const offset = value === undefined ? fallbackValue : parseFloat(value);
-            const currentOffset = properties[key] || [0, 0];
+        getValue: (value) => {
             return {
-                [key]: axis === 'y'
-                    ? [
-                        currentOffset[0],
-                        offset
-                    ]
-                    : [
-                        offset,
-                        currentOffset[1]
-                    ]
+                [key]: value === undefined ? fallbackValue : value
             };
         }
     }),
     rotate: ({ key = 'rotate', label = 'Rotation (deg)', fallbackValue = 0 }) => ({
         type: 'input',
+        valueType: 'number',
         label,
         config: {
             fallbackValue,
@@ -297,17 +276,12 @@ const property = {
             };
         }
     }),
-    msClampToGround: ({ key = 'msClampToGround', label = 'Clamp to ground', isDisabled }) => ({
-        type: 'toolbar',
+    msClampToGround: ({ key = 'msClampToGround', label = 'Clamp to ground', isDisabled, disablePropertySelection = true }) => ({
+        type: 'checkbox',
+        valueType: 'string',
         label,
         config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }]
+            disablePropertySelection
         },
         getValue: (value) => {
             return {
@@ -317,17 +291,12 @@ const property = {
         setValue: (value) => !!value,
         isDisabled
     }),
-    msBringToFront: ({ key = 'msBringToFront', label = 'Arrange', isDisabled }) => ({
-        type: 'toolbar',
+    msBringToFront: ({ key = 'msBringToFront', label = 'Arrange', isDisabled, disablePropertySelection = true }) => ({
+        type: 'checkbox',
+        valueType: 'string',
         label,
         config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }]
+            disablePropertySelection
         },
         getValue: (value) => {
             return {
@@ -343,6 +312,7 @@ const property = {
         isDisabled
     }) => ({
         type: 'toolbar',
+        valueType: 'string',
         label,
         config: {
             options: [{
@@ -365,6 +335,7 @@ const property = {
     }),
     msHeightReference: ({ key = 'msHeightReference', label = 'Height reference from ground', isDisabled }) => ({
         type: 'toolbar',
+        valueType: 'string',
         label,
         config: {
             options: [{
@@ -380,23 +351,29 @@ const property = {
         },
         getValue: (value) => {
             return {
-                [key]: value,
-                ...(value === 'clamp' && { msHeight: undefined })
+                [key]: value
             };
         },
         isDisabled
     }),
-    shape: ({ label, key = 'wellKnownName' }) => ({
+    shape: ({ label, key = 'wellKnownName', options, excludeSvg, isDisabled }) => ({
         type: 'mark',
+        valueType: 'string',
         label,
+        config: {
+            options,
+            excludeSvg
+        },
         getValue: (value = '') => {
             return {
                 [key]: value
             };
-        }
+        },
+        isDisabled
     }),
     image: ({ label, key = 'image' }) => ({
         type: 'image',
+        valueType: 'string',
         label,
         config: {},
         getValue: (value = '') => {
@@ -407,6 +384,7 @@ const property = {
     }),
     model: ({ label, key = 'model', isDisabled }) => ({
         type: 'model',
+        valueType: 'string',
         label,
         config: {},
         getValue: (value = '') => {
@@ -417,6 +395,7 @@ const property = {
     }),
     fontStyle: ({ label, key = 'fontStyle' }) => ({
         type: 'toolbar',
+        valueType: 'string',
         label,
         config: {
             options: [{
@@ -435,6 +414,7 @@ const property = {
     }),
     fontWeight: ({ label, key = 'fontWeight' }) => ({
         type: 'toolbar',
+        valueType: 'string',
         label,
         config: {
             options: [{
@@ -454,18 +434,13 @@ const property = {
     bool: ({
         key = 'label',
         label,
-        isDisabled
+        isDisabled,
+        disablePropertySelection
     }) => ({
-        type: 'toolbar',
+        type: 'checkbox',
         label,
         config: {
-            options: [{
-                labelId: 'styleeditor.boolTrue',
-                value: true
-            }, {
-                labelId: 'styleeditor.boolFalse',
-                value: false
-            }]
+            disablePropertySelection
         },
         isDisabled,
         getValue: (value) => {
@@ -478,11 +453,13 @@ const property = {
         key = 'intervals',
         label,
         isDisabled = (value, properties) =>
-            properties?.method === 'customInterval'
+            properties?.method === 'customInterval',
+        disablePropertySelection = true
     }) => ({
         type: 'slider',
         label,
         config: {
+            disablePropertySelection,
             range: { min: 2, max: 25 },
             format: {
                 from: value => Math.round(value),
@@ -499,13 +476,15 @@ const property = {
             };
         }
     }),
-    select: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled, isVisible, setValue, getValue }) => ({
+    select: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled, isVisible, setValue, getValue, disablePropertySelection }) => ({
         type: 'select',
+        valueType: 'string',
         label,
         config: {
             getOptions,
             selectProps,
-            isValid
+            isValid,
+            disablePropertySelection
         },
         getValue: getValue ? getValue : (value) => {
             return {
@@ -516,48 +495,11 @@ const property = {
         isVisible,
         setValue
     }),
-    multiInput: ({ label, key = '', initialOptionValue, getSelectOptions = () => [], isDisabled, isVisible, fallbackValue = 0 }) => ({
-        type: 'multiInput',
-        label,
-        config: {
-            initialOptionValue,
-            getSelectOptions,
-            fallbackValue
-        },
-        setValue: (value) => {
-            if (value === undefined) {
-                return { type: 'initial' };
-            }
-            if (!isObject(value)) {
-                return {
-                    type: 'constant',
-                    value: value === undefined ? fallbackValue : parseFloat(value)
-                };
-            }
-            return value;
-        },
-        getValue: (value) => {
-            if (value?.type === 'initial') {
-                return {
-                    [key]: undefined
-                };
-            }
-            if (value?.type === 'constant') {
-                return {
-                    [key]: value?.value === undefined ? fallbackValue : parseFloat(value.value)
-                };
-            }
-            return {
-                [key]: value
-            };
-        },
-        isDisabled,
-        isVisible
-    }),
-    colorRamp: ({ label, key = '', getOptions = () => [] }) => ({
+    colorRamp: ({ label, key = '', getOptions = () => [], disablePropertySelection = true }) => ({
         type: 'colorRamp',
         label,
         config: {
+            disablePropertySelection,
             getOptions
         },
         getValue: (value = '') => {
@@ -566,9 +508,12 @@ const property = {
             };
         }
     }),
-    colorMap: ({ label, key = '' }) => ({
+    colorMap: ({ label, key = '', disablePropertySelection = true }) => ({
         type: 'colorMap',
         label,
+        config: {
+            disablePropertySelection
+        },
         getValue: (value = {}, properties) => {
             const {
                 classification,
@@ -602,7 +547,28 @@ const property = {
                 contrastEnhancement: value.contrastEnhancement
             };
         }
-    })
+    }),
+    customParams: ({ label, key = '', getOptions = () => [], selectProps, isValid, isDisabled, isVisible, setValue, getValue, disablePropertySelection }) => {
+        return ({
+            type: 'customParams',
+            valueType: 'string',
+            label,
+            config: {
+                getOptions,
+                selectProps: { ...selectProps, clearable: true},
+                isValid,
+                disablePropertySelection
+            },
+            getValue: getValue ? getValue : (value, props) => {
+                return {
+                    [key]: {...(props[key] || {}), ...value}
+                };
+            },
+            isDisabled,
+            isVisible,
+            setValue
+        });
+    }
 };
 
 export default property;

@@ -76,7 +76,8 @@ import {
     isDockOpenSelector,
     isListeningClickSelector,
     isMaximizedSelector,
-    isSupportedLayerSelector
+    isSupportedLayerSelector,
+    noDataThresholdSelector
 } from "../selectors/longitudinalProfile";
 import {mapSelector} from "../selectors/map";
 import {
@@ -182,6 +183,7 @@ export const LPonChartPropsChangeEpic = (action$, store) =>
             const referential = configSelector(state)?.referential;
             const distance = configSelector(state)?.distance;
             const wpsBody = profileEnLong({identifier, geometry, distance, referential });
+            const noDataThreshold = noDataThresholdSelector(state);
             return executeProcess(wpsurl, wpsBody, {outputsExtractor: makeOutputsExtractor()})
                 .switchMap((result) => {
                     if (typeof result === "string" && result.includes("ows:ExceptionReport")) {
@@ -207,7 +209,8 @@ export const LPonChartPropsChangeEpic = (action$, store) =>
                         f,
                         geometry.projection
                     )) : styledFeatures;
-                    return infos && points ? Rx.Observable.from([
+                    const filteredPoints = points.filter(point => point.altitude < noDataThreshold);
+                    return infos && filteredPoints ? Rx.Observable.from([
                         updateAdditionalLayer(
                             LONGITUDINAL_VECTOR_LAYER_ID,
                             LONGITUDINAL_OWNER,
@@ -238,7 +241,7 @@ export const LPonChartPropsChangeEpic = (action$, store) =>
                                 visibility: true
                             }),
                         zoomToExtent([minx, minY, maxX, maxY], 'EPSG:4326', 21),
-                        addProfileData(infos, points, geometry.projection)
+                        addProfileData(infos, filteredPoints, geometry.projection)
                     ]) : Rx.Observable.empty();
                 })
                 .catch(e => {
@@ -300,8 +303,7 @@ export const LPonAddMarkerEpic = (action$) =>
                                             image: defaultIcon,
                                             opacity: 1,
                                             size: 32,
-                                            anchor: [0.5, 1],
-                                            offset: [0, -16],
+                                            anchor: "bottom",
                                             rotate: 0,
                                             msBringToFront: true,
                                             msHeightReference: 'none',

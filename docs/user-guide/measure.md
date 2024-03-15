@@ -27,7 +27,7 @@ Through this window it is possible to:
 
 As soon as the measure window opens, by default the measure distance option is selected <img src="../img/button/measure-distance-green.jpg" class="ms-docbutton"/>. In order to perform a distance measure, each click on the map correspond to a segment of the line (at least one segment is needed) while the double click inserts the last line segment and ends the drawing session.
 
-<img src="../img/measure/measure-distance-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-distance-ex.mp4"/></video>
 
 The available units of measure are:
 
@@ -40,7 +40,7 @@ The available units of measure are:
 
 Once the **Measure Area** button is selected <img src="../img/button/measure-area-green.jpg" class="ms-docbutton"/>, it is possible to start the drawing session (in this case at least 3 vertices need to be indicated). Same as measuring the distance, each click correspond to a vertex and the double click will indicate the last one.
 
-<img src="../img/measure/measure-area-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-area-ex.mp4"/></video>
 
 In this case the available units of measure are:
 
@@ -54,7 +54,7 @@ In this case the available units of measure are:
 The Bearing measurements allows you to measure directions and angles. In the quadrant bearing system, the bearing of a line is measured as an angle from the reference meridian, either the north or the south, toward the east or the west. Bearings in the quadrant bearing system are written as a meridian, an angle and a direction. For example, a bearing of N 30 W defines an angle of 30 degrees west measured from north. A bearing of S 15 E defines an angle of 15 degrees east measured from the south.<br>
 After selecting the **Measure Bearing** button <img src="../img/button/measure-bearing-green.jpg" class="ms-docbutton"/> the user can draw a line with only two vertices that indicates respectively the starting and the ending point.
 
-<img src="../img/measure/measure-bearing-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-bearing-ex.mp4"/></video>
 
 ## Export the measure
 
@@ -78,38 +78,41 @@ From this step the creation process is the same described in the [Annotations se
 
 When the [3D Navigation](navigation-toolbar.md#3d-navigation) is enabled, the user has the ability to perform distance, area, point coordinates, height from terrain, angle and slope measurements on the 3D map.
 
+!!! note
+    The MapStore 3D works on top of CesiumJS mapping library where the ellipsoidal coordinate system is used to represents mapping features. For this reason all measurements performed with the MapStore measurement tool should be interpreted as having a height calculated above the ellipsoid.
+
 ### Measure distance on the 3D navigation
 
 As soon as the measure window opens, by default the **Measure distance in 3D space** option is selected <img src="../img/button/measure-distance-on-3d.jpg" class="ms-docbutton"/>. In order to perform a distance measure, each click on the map correspond to a segment of the line (at least one segment is needed) while the double click inserts the last line segment and ends the drawing session.
 
-<img src="../img/measure/measure-distance-3d-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-distance-3d-ex.mp4"/></video>
 
 ### Measure area on the 3D navigation
 
 Once the **Measure Area in 3D space** button is selected <img src="../img/button/measure-area-on-3d.jpg" class="ms-docbutton"/>, it is possible to start the drawing session (in this case, at least 3 vertices need to be indicated). Same as measuring the distance, each click corresponds to a vertex and the double click will indicate the last one.
 
-<img src="../img/measure/measure-area-3d-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-area-3d-ex.mp4"/></video>
 
 ### Measure point coordinates
 
 After selecting the **Measure point coordinates** button <img src="../img/button/measure-point-coordinate-on-3d.jpg" class="ms-docbutton"/> the editor can click on a point on the map and know latitude, longitude and altitude of that point.
 
-<img src="../img/measure/measure-point-3d-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-point-3d-ex.mp4"/></video>
 
 ### Measure height from terrain
 
 Once the **Measure height from terrain** button is selected <img src="../img/button/measure-height-from-terrain-on-3d.jpg" class="ms-docbutton"/>, it is possible to click on a point on the map and know the distance from the point to the terrain.
 
-<img src="../img/measure/measure-height-from-terrain-3d-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-height-from-terrain-3d-ex.mp4"/></video>
 
 ### Measure angle
 
 Once the **Measure angle in 3D space** button is selected <img src="../img/button/measure-angle-on-3d.jpg" class="ms-docbutton"/>, the editor can draw three points on the map and get the angle value.
 
-<img src="../img/measure/measure-angle-3d-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-angle-3d-ex.mp4"/></video>
 
 ### Measure slope
 
 Once the **Measure slope** button is selected <img src="../img/button/measure-slope-on-3d.jpg" class="ms-docbutton"/>, the editor can draw three points on the map to create a triangular surface and get the slope value.
 
-<img src="../img/measure/measure-slope-3d-ex.gif" class="ms-docimage" style="max-width:600px;"/>
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-slope-3d-ex.mp4"/></video>

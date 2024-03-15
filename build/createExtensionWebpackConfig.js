@@ -35,6 +35,9 @@ module.exports = ({ prod = true, name, exposes, sharedLibrariesEager = true, ali
     resolve: {
         fallback: {
             path: false,
+            http: false,
+            https: false,
+            zlib: false,
             timers: false,
             stream: false
         },

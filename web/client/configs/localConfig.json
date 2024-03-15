@@ -65,13 +65,6 @@
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
-        "annotations": {
-          "config": {
-            "multiGeometry": true,
-            "validationErrors": {}
-          },
-          "defaultTextAnnotation": "New"
-        },
         "catalog": {
           "default": {
             "newService": {
@@ -104,48 +97,134 @@
             },
             "staticServices": {
               "default_map_backgrounds": {
-                "type": "backgrounds",
-                "title": "Default Backgrounds",
-                "titleMsgId": "defaultMapBackgroundsServiceTitle",
-                "autoload": true,
-                "backgrounds": [{
-                    "type": "osm",
-                    "title": "Open Street Map",
-                    "name": "mapnik",
-                    "source": "osm",
-                    "group": "background"
-                }, {
-                    "type": "tileprovider",
-                    "title": "NASAGIBS Night 2012",
-                    "provider": "NASAGIBS.ViirsEarthAtNight2012",
-                    "name": "Night2012",
-                    "source": "nasagibs",
-                    "group": "background"
-                }, {
-                    "type": "tileprovider",
-                    "title": "OpenTopoMap",
-                    "provider": "OpenTopoMap",
-                    "name": "OpenTopoMap",
-                    "source": "OpenTopoMap",
-                    "group": "background"
-                }, {
-                    "format": "image/jpeg",
-                    "group": "background",
-                    "name": "s2cloudless:s2cloudless",
-                    "opacity": 1,
-                    "title": "Sentinel 2 Cloudless",
-                    "type": "wms",
-                    "url": "https://1maps.geo-solutions.it/geoserver/wms",
-                    "source": "s2cloudless",
-                    "singleTile": false
-                }, {
-                    "source": "ol",
-                    "group": "background",
-                    "title": "Empty Background",
-                    "fixed": true,
-                    "type": "empty"
-                }]
-              }
+				"type": "backgrounds",
+				"title": "Default Backgrounds",
+				"titleMsgId": "defaultMapBackgroundsServiceTitle",
+				"autoload": true,
+				"backgrounds": [{
+						"format": "image/jpeg",
+						"group": "background",
+						"name": "osm:osm_simple_light",
+						"opacity": 1,
+						"title": "OSM Simple Light",
+						"thumbURL": "product/assets/img/osm-simple-light.jpg",
+						"type": "wms",
+						"url": [
+							"https://maps1.geosolutionsgroup.com/geoserver/wms",
+							"https://maps2.geosolutionsgroup.com/geoserver/wms",
+							"https://maps3.geosolutionsgroup.com/geoserver/wms",
+							"https://maps4.geosolutionsgroup.com/geoserver/wms",
+							"https://maps5.geosolutionsgroup.com/geoserver/wms",
+							"https://maps6.geosolutionsgroup.com/geoserver/wms"
+						],
+            "tileSize": 512,
+						"visibility": false,
+						"singleTile": false,
+						"credits": {
+							"title": "OSM Simple Light | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+						}
+					}, {
+						"format": "image/jpeg",
+						"group": "background",
+						"name": "osm:osm_simple_dark",
+						"opacity": 1,
+						"title": "OSM Simple Dark",
+						"thumbURL": "product/assets/img/osm-simple-dark.jpg",
+						"type": "wms",
+						"url": [
+							"https://maps6.geosolutionsgroup.com/geoserver/wms",
+							"https://maps3.geosolutionsgroup.com/geoserver/wms",
+							"https://maps1.geosolutionsgroup.com/geoserver/wms",
+							"https://maps4.geosolutionsgroup.com/geoserver/wms",
+							"https://maps2.geosolutionsgroup.com/geoserver/wms",
+							"https://maps5.geosolutionsgroup.com/geoserver/wms"
+						],
+            "tileSize": 512,
+						"visibility": false,
+						"singleTile": false,
+						"credits": {
+							"title": "OSM Simple Dark | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+						}
+					}, {
+						"format": "image/jpeg",
+						"group": "background",
+						"name": "osm:osm",
+						"opacity": 1,
+						"title": "OSM Bright",
+						"thumbURL": "product/assets/img/osm-bright.jpg",
+						"type": "wms",
+						"url": [
+							"https://maps1.geosolutionsgroup.com/geoserver/wms",
+							"https://maps2.geosolutionsgroup.com/geoserver/wms",
+							"https://maps3.geosolutionsgroup.com/geoserver/wms",
+							"https://maps4.geosolutionsgroup.com/geoserver/wms",
+							"https://maps5.geosolutionsgroup.com/geoserver/wms",
+							"https://maps6.geosolutionsgroup.com/geoserver/wms"
+						],
+            "tileSize": 512,
+						"visibility": true,
+						"singleTile": false,
+						"credits": {
+							"title": "OSM Bright | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+						}
+					}, {
+						"format": "image/jpeg",
+						"group": "background",
+						"name": "ne:ne-political",
+						"opacity": 1,
+						"title": "NE Political",
+						"thumbURL": "product/assets/img/ne-political.jpg",
+						"type": "wms",
+						"url": [
+							"https://maps1.geosolutionsgroup.com/geoserver/wms",
+							"https://maps2.geosolutionsgroup.com/geoserver/wms",
+							"https://maps3.geosolutionsgroup.com/geoserver/wms",
+							"https://maps4.geosolutionsgroup.com/geoserver/wms",
+							"https://maps5.geosolutionsgroup.com/geoserver/wms",
+							"https://maps6.geosolutionsgroup.com/geoserver/wms"
+						],
+            "tileSize": 512,
+						"visibility": false,
+						"singleTile": false,
+						"credits": {
+							"title": "<p></p>\n"
+						}
+					}, {
+						"format": "image/jpeg",
+						"group": "background",
+						"name": "s2cloudless:s2cloudless",
+						"opacity": 1,
+						"title": "Sentinel 2 Cloudless",
+						"type": "wms",
+						"url": [
+							"https://maps1.geosolutionsgroup.com/geoserver/wms",
+							"https://maps2.geosolutionsgroup.com/geoserver/wms",
+							"https://maps3.geosolutionsgroup.com/geoserver/wms",
+							"https://maps4.geosolutionsgroup.com/geoserver/wms",
+							"https://maps5.geosolutionsgroup.com/geoserver/wms",
+							"https://maps6.geosolutionsgroup.com/geoserver/wms"
+						],
+            "tileSize": 512,
+						"source": "s2cloudless",
+						"singleTile": false,
+						"visibility": false
+					}, {
+						"type": "osm",
+						"title": "Open Street Map",
+						"name": "mapnik",
+						"source": "osm",
+						"group": "background",
+						"visibility": false
+					}, {
+						"source": "ol",
+						"group": "background",
+						"title": "Empty Background",
+						"fixed": true,
+						"type": "empty",
+						"visibility": false
+					}
+				]
+			  }
             }
           }
         },
@@ -318,10 +397,7 @@
               }
             }
           }, "AutoMapUpdate", "HelpLink", "DrawerMenu", "Notifications", "BackgroundSelector", "Swipe", {
-            "name": "Annotations",
-            "cfg": {
-              "measurementAnnotationEdit": false
-            }
+            "name": "Annotations"
           },
             {
               "name": "Share",
@@ -485,7 +561,9 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", "Widgets",
+            "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", {
+              "name": "Widgets"
+            },
             "WidgetsTray",
             {
               "name": "Timeline",
@@ -671,10 +749,19 @@
           "FeedbackMask"
         ],
         "dashboard": [
-          "BurgerMenu",
-          "Dashboard",
+          "Details",
+          "AddWidgetDashboard",
+          "MapConnectionDashboard",
+          {
+            "name": "SidebarMenu",
+            "cfg" : {
+              "containerPosition": "columns"
+              }
+          },
+          {
+            "name": "Dashboard"
+          },
           "Notifications",
-          "Login",
           {
             "name": "About",
             "cfg": {
@@ -686,7 +773,22 @@
           "DashboardSave",
           "DashboardSaveAs",
           "Attribution",
-          "Home",
+          {
+            "name": "Home",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
+          {
+            "name": "Login",
+            "override": {
+              "OmniBar": {
+                "priority": 5
+              }
+            }
+          },
           { "name": "DeleteDashboard" },
           { "name": "DashboardExport" },
           { "name": "DashboardImport" },
@@ -744,8 +846,19 @@
             "cfg": {
               "toolsOptions": {
                 "hideCrossLayer": true,
-                "hideSpatialFilter": true
+                "useEmbeddedMap": true
               },
+              "spatialPanelExpanded": false,
+              "spatialOperations": [
+                  {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+                  {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+                  {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
+              ],
+              "spatialMethodOptions": [
+                  {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+                  {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+                  {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
+              ],
               "containerPosition": "columns"
             }
           },
@@ -898,5 +1011,5 @@
         ],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
         "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
-    }
+      }
 }

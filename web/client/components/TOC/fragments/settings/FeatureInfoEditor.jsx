@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 
 import Message from '../../../I18N/Message';
@@ -15,6 +16,7 @@ import ResizableModal from '../../../misc/ResizableModal';
 import CompactRichTextEditor from '../../../mapviews/settings/CompactRichTextEditor';
 import withDebounceOnCallback from '../../../misc/enhancers/withDebounceOnCallback';
 import { htmlToDraftJSEditorState, draftJSEditorStateToHtml } from '../../../../utils/EditorUtils';
+import { getMessageById } from '../../../../utils/LocaleUtils';
 
 const DescriptionEditor = withDebounceOnCallback('onEditorStateChange', 'editorState')(CompactRichTextEditor);
 /**
@@ -35,9 +37,28 @@ const FeatureInfoEditor = ({
     onShowEditor,
     onChange,
     enableIFrameModule
-}) => {
+}, {messages}) => {
+    const [, setCounter] = useState(0);
+    useEffect(() => {
+        const imageButton = document.querySelector(".rdw-image-wrapper");
+        const clickImageToolbarListener = () => {
+            setTimeout(() => {
+                setCounter(value => value + 1);
+            });
+        };
+        if (imageButton) {
+            imageButton.addEventListener("click", clickImageToolbarListener);
+        }
+        return () => {
+            if (imageButton) {
+                imageButton?.removeEventListener("click", clickImageToolbarListener);
+            }
+        };
 
-    const [editorState, setEditorState] = useState(htmlToDraftJSEditorState(element?.featureInfo?.template || ''));
+    }, [showEditor]);
+
+    const [template, setTemplate] = useState(element?.featureInfo?.template || '');
+    const [editorState, setEditorState] = useState(htmlToDraftJSEditorState(template));
     const onClose = () => {
         onShowEditor(!showEditor);
         onChange('featureInfo', {
@@ -45,9 +66,11 @@ const FeatureInfoEditor = ({
             template: draftJSEditorStateToHtml(editorState)
         });
     };
+    const imageField = document.querySelector(".rdw-image-modal-url-section");
     return (
         <Portal>
             <ResizableModal
+                modalClassName="ms-feature-info-editor"
                 fade
                 show={showEditor}
                 title={<Message msgId="layerProperties.editCustomFormat"/>}
@@ -63,14 +86,25 @@ const FeatureInfoEditor = ({
                     }
                 ]}>
                 <div id="ms-template-editor" className="ms-editor">
+                    <style dangerouslySetInnerHTML={{__html: ".DraftEditor-editorContainer img::after {content: '" + getMessageById(messages, "layerProperties.imageNotFound") + "'}"} }/>
+                    {imageField ? createPortal(<div className="guide-text"><Message msgId="layerProperties.guideText"/></div>, imageField) : null}
+
                     <DescriptionEditor
                         toolbarOptions={['fontFamily', 'blockType', 'inline', 'textAlign', 'list', 'link', 'colorPicker', 'remove', 'image'].concat(enableIFrameModule ? ['embedded'] : [])}
                         editorState={editorState}
                         onEditorStateChange={(newEditorState) => {
                             const previousHTML = draftJSEditorStateToHtml(editorState);
+                            const images = document.querySelectorAll(".DraftEditor-editorContainer img");
                             const newHTML = draftJSEditorStateToHtml(newEditorState);
+                            for (const img of images) {
+                                // an alt value is needed for firefox to show the ::after and ::after pseudo elements
+                                // empty space to avoid to show the alt value
+                                // this is a different behaviour from chrome
+                                img.alt = " ";
+
+                            }
                             if (newHTML !== previousHTML) {
-                                onChange({ template: draftJSEditorStateToHtml(newEditorState) });
+                                setTemplate(draftJSEditorStateToHtml(newEditorState));
                                 setEditorState(newEditorState);
                             }
                         }}
@@ -87,6 +121,9 @@ FeatureInfoEditor.propTypes = {
     onChange: PropTypes.func,
     onShowEditor: PropTypes.func,
     enableIFrameModule: PropTypes.bool
+};
+FeatureInfoEditor.contextTypes = {
+    messages: PropTypes.object
 };
 
 FeatureInfoEditor.defaultProps = {

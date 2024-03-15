@@ -10,6 +10,7 @@ import { ContentState, EditorState, convertToRaw, Entity } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 
+
 // customGetEntityId is a utility function used by html-to-draftjs library in order
 // to create anhor tag chunks
 export const customGetEntityId = (node) => {
@@ -79,7 +80,8 @@ export const customEntityTransform = (entity, text) => {
             'display: block; margin: 0 auto 0 auto;' :
             `float: ${alignment};`;
 
-        return `<img src="${entity.data.src}" alt="${entity.data.alt}" style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}" />`;
+        // on error will replace value of src and we have to keep original value that we can replace in the template viewer
+        return  `<img title="${entity.data.src}" src="${entity.data.src}" alt="${entity.data.alt || " "}" style="height: ${entity.data.height}; width: ${entity.data.width}; ${alignmentStyle}"/>`;
     }
 
     if (entity.type === 'EMBEDDED_LINK') {

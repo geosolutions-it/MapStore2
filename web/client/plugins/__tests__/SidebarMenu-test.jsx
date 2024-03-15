@@ -39,4 +39,23 @@ describe('SidebarMenu Plugin', () => {
         const elements = document.querySelectorAll('#mapstore-sidebar-menu > button, #mapstore-sidebar-menu #extra-items + .dropdown-menu li');
         expect(elements.length).toBe(2);
     });
+
+    it('sidebar menu with full height', () => {
+        document.getElementById('container').style.height = '600px';
+        const { Plugin } = getPluginForTest(SidebarMenu, {});
+        const items = [{
+            name: 'test',
+            position: 1,
+            text: 'Test Item'
+        }, {
+            name: 'test2',
+            position: 2,
+            text: 'Test Item 2'
+        }];
+        ReactDOM.render(<Plugin items={items} did={123} />, document.getElementById("container"));
+        const sidebarMenuContainer = document.getElementById('mapstore-sidebar-menu-container');
+        expect(sidebarMenuContainer).toExist();
+        const elements = document.querySelectorAll('#mapstore-sidebar-menu > button, #mapstore-sidebar-menu #extra-items + .dropdown-menu li');
+        expect(elements.length).toBe(2);
+    });
 });

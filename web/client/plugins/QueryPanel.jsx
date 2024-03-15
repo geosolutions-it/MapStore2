@@ -20,6 +20,7 @@ import { changeDrawingStatus } from '../actions/draw';
 import { getLayerCapabilities } from '../actions/layerCapabilities';
 import { queryPanelSelector } from '../selectors/controls';
 import { applyFilter, discardCurrentFilter, storeCurrentFilter } from '../actions/layerFilter';
+
 import {
     changeGroupProperties,
     changeLayerProperties,
@@ -74,6 +75,7 @@ import queryFormEpics from '../epics/queryform';
 import {featureTypeSelectedEpic, redrawSpatialFilterEpic, viewportSelectedEpic, wfsQueryEpic} from '../epics/wfsquery';
 import layerFilterReducers from '../reducers/layerFilter';
 import queryReducers from '../reducers/query';
+import drawReducers from '../reducers/draw';
 import queryformReducers from '../reducers/queryform';
 import { isDashboardAvailable } from '../selectors/dashboard';
 import { groupsSelector, selectedLayerLoadingErrorSelector } from '../selectors/layers';
@@ -212,41 +214,21 @@ const tocSelector = createSelector(
 
 class QueryPanel extends React.Component {
     static propTypes = {
-        id: PropTypes.number,
-        buttonContent: PropTypes.node,
-        groups: PropTypes.array,
-        settings: PropTypes.object,
-        queryPanelEnabled: PropTypes.bool,
-        groupStyle: PropTypes.object,
-        groupPropertiesChangeHandler: PropTypes.func,
-        layerPropertiesChangeHandler: PropTypes.func,
-        onToggleGroup: PropTypes.func,
-        onToggleLayer: PropTypes.func,
-        onToggleQuery: PropTypes.func,
-        onZoomToExtent: PropTypes.func,
-        retrieveLayerData: PropTypes.func,
-        onSort: PropTypes.func,
-        onInit: PropTypes.func,
-        onSettings: PropTypes.func,
-        hideSettings: PropTypes.func,
-        updateSettings: PropTypes.func,
-        updateNode: PropTypes.func,
-        removeNode: PropTypes.func,
-        activateRemoveLayer: PropTypes.bool,
-        activateLegendTool: PropTypes.bool,
-        activateZoomTool: PropTypes.bool,
-        activateSettingsTool: PropTypes.bool,
-        visibilityCheckType: PropTypes.string,
-        settingsOptions: PropTypes.object,
-        layout: PropTypes.object,
-        toolsOptions: PropTypes.object,
-        appliedFilter: PropTypes.object,
-        storedFilter: PropTypes.object,
         advancedToolbar: PropTypes.bool,
-        onSaveFilter: PropTypes.func,
-        onRestoreFilter: PropTypes.func,
+        appliedFilter: PropTypes.object,
         items: PropTypes.array,
-        selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+        layout: PropTypes.object,
+        loadingError: PropTypes.bool,
+        onInit: PropTypes.func,
+        onRestoreFilter: PropTypes.func,
+        onSaveFilter: PropTypes.func,
+        onToggleQuery: PropTypes.func,
+        queryPanelEnabled: PropTypes.bool,
+        selectedLayer: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        spatialMethodOptions: PropTypes.array,
+        spatialOperations: PropTypes.array,
+        storedFilter: PropTypes.object,
+        toolsOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -279,11 +261,15 @@ class QueryPanel extends React.Component {
         super(props);
         this.state = {showModal: false};
     }
+
     UNSAFE_componentWillReceiveProps(newProps) {
-        if (newProps.queryPanelEnabled === true && this.props.queryPanelEnabled === false) {
+        // triggering the init only if not using the embedded map since this was happening too early
+        // making the redraw of spatial filter not happening
+        if (!newProps.toolsOptions.useEmbeddedMap && newProps.queryPanelEnabled === true && this.props.queryPanelEnabled === false) {
             this.props.onInit();
         }
     }
+
     getNoBackgroundLayers = (group) => {
         return group.name !== 'background';
     };
@@ -295,10 +281,11 @@ class QueryPanel extends React.Component {
                 sidebar={this.renderQueryPanel()}
                 sidebarClassName="query-form-panel-container"
                 touch={false}
+                rootClassName="query-form-root"
                 styles={{
                     sidebar: {
                         ...this.props.layout,
-                        zIndex: 1024,
+                        zIndex: 1044,
                         width: 600
                     },
                     overlay: {
@@ -336,6 +323,7 @@ class QueryPanel extends React.Component {
         this.props.onSaveFilter();
         this.props.onToggleQuery();
     }
+
     renderQueryPanel = () => {
         return (<div className="mapstore-query-builder">
             <SmartQueryForm
@@ -412,13 +400,9 @@ class QueryPanel extends React.Component {
  *   - srsName {string} The projection of the requested features fetched via wfs
  * Plugin acts as container and by default it have three panels: "AttributesFilter", "SpatialFilter" and "CrossLayerFilter" (see "standardItems" variable)
  * Panels can be customized by injection from another plugins (see example below).
- * Targets available for injection: "start", "attributes", "afterAttributes", "spatial", "afterSpatial", "layers", "end".
+ * Targets available for injection: "start", "attributes", "afterAttributes", "spatial", "afterSpatial", "layers", "end", "map"
 
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
- * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
- * @prop {boolean} cfg.toolsOptions.hideAttributeFilter force attribute filter panel to hide (when is not used or not usable). In general any `hide${CapitailizedItemId}` works to hide a particular panel of the query panel.
- * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
- *
  * @example
  * // This example configure a layer with polygons geometry as spatial filter method
  * "spatialOperations": [
@@ -454,6 +438,19 @@ class QueryPanel extends React.Component {
  *        },
  *        "customItemClassName": "customItemClassName"
  *    }
+ * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
+ * @prop {boolean} cfg.toolsOptions.hideAttributeFilter force attribute filter panel to hide (when is not used or not usable). In general any `hide${CapitailizedItemId}` works to hide a particular panel of the query panel.
+ * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
+ * @prop {boolean} cfg.toolsOptions.useEmbeddedMap if spatial filter panel is present, this option allows to use the embedded map instead of the map plugin
+ * @prop {boolean} cfg.toolsOptions.quickDateTimeSelectors selectors allow quick selection of configured date/date-time in both single and range Date/DateTime picker.
+ * The quick time selectors basically uses the template string `{predefinedPlaceholds}[+/-][durationExpression]` to define selectors. Range is denoted as `{startDate}/{endDate}` using the same template string format
+ * - predefinedPlaceholds: `today`, `now`, `thisWeekStart`, `thisWeekEnd`, `thisMonthStart`, `thisMonthEnd`, `thisYearStart`, `thisYearEnd`
+ * - durationExpression: duration expression uses ISO 8601 (https://en.wikipedia.org/wiki/ISO_8601#Durations) format `P[n]Y[n]M[n]DT[n]H[n]M[n]S` or `P[n]W`
+ *
+ * *Note*: `now` - uses current date time (for range, start time - 'current time' and end time - '23:59') where `today` uses 00:00 time of the current day (for range, start time - '00:00' and end time - '23:59')
+ * @example
+ * single - `{now}`, `{today}`, `{today}+P1D` - Tomorrow, `{now}-P10M` - 10 months from now
+ * range - `{now}/{now}+P1D` - start date is current date time and end date is tomorrow
  *
  * @example
  * // customize the QueryPanels UI via plugin(s)
@@ -517,6 +514,7 @@ const QueryPanelPlugin = connect(tocSelector, {
 export default {
     QueryPanelPlugin,
     reducers: {
+        draw: drawReducers,
         queryform: queryformReducers,
         query: queryReducers,
         layerFilter: layerFilterReducers

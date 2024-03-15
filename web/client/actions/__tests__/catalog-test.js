@@ -238,6 +238,13 @@ describe('Test correctness of the catalog actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(ADD_SERVICE);
     });
+    it('addService with options', () => {
+        const options = {"test": "1"};
+        var retval = addService(options);
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_SERVICE);
+        expect(retval.options).toEqual(options);
+    });
     it('addCatalogService', () => {
         var retval = addCatalogService(service);
 

@@ -33,7 +33,9 @@ export default function streetView(state = INITIAL_STATE, action) {
     case API_LOADED: {
         return {
             ...state,
-            apiLoaded: true
+            apiLoaded: {
+                [action.provider]: true
+            }
         };
     }
     case RESET: {

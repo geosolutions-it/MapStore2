@@ -26,7 +26,8 @@ import {
     getValidatorsChain,
     getPrintVendorParams,
     resetDefaultPrintingService,
-    getDefaultPrintingService
+    getDefaultPrintingService,
+    getLegendIconsSize
 } from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
@@ -141,9 +142,10 @@ const featureLine = {
         ]
     },
     "properties": {
+        "id": "feature-1",
         "serial_num": "12C324776"
     },
-    "id": 0
+    "id": "feature-1"
 };
 
 const featureCollection = {
@@ -189,17 +191,33 @@ const annotationsVectorLayer = {
     "type": "vector",
     "visibility": true,
     "group": "Local shape",
-    "id": "annotations",
-    "name": "web2014all_mv",
+    "id": "annotations:1",
+    "title": "Annotations",
     "hideLoading": true,
-    "features": [featureCollection],
+    "features": featureCollection?.features,
+    "rowViewer": "annotations",
     "style": {
-        "weight": 3,
-        "radius": 10,
-        "opacity": 1,
-        "fillOpacity": 0.1,
-        "color": "rgb(0, 0, 255)",
-        "fillColor": "rgb(0, 0, 255)"
+        "format": "geostyler",
+        "body": {
+            "name": "Annotations",
+            "rules": [
+                {
+                    "filter": ["==", "id", featureCollection?.features?.[0]?.id],
+                    "name": "",
+                    "symbolizers": [
+                        {
+                            "kind": "Line",
+                            "color": 'rgb(0, 0, 255)',
+                            "width": 3,
+                            "opacity": 1,
+                            "cap": "round",
+                            "join": "round",
+                            "msClampToGround": true
+                        }
+                    ]
+                }
+            ]
+        }
     }
 };
 
@@ -210,14 +228,29 @@ const measurementVectorLayer = {
     "id": "aaa",
     "name": "Measurements",
     "hideLoading": true,
-    "features": [featureCollection],
+    "features": featureCollection?.features,
     "style": {
-        "weight": 3,
-        "radius": 10,
-        "opacity": 1,
-        "fillOpacity": 0.1,
-        "color": "rgb(0, 0, 255)",
-        "fillColor": "rgb(0, 0, 255)"
+        "format": "geostyler",
+        "body": {
+            "name": "Annotations",
+            "rules": [
+                {
+                    "filter": ["==", "id", featureCollection?.features?.[0]?.id],
+                    "name": "",
+                    "symbolizers": [
+                        {
+                            "kind": "Line",
+                            "color": 'rgb(0, 0, 255)',
+                            "width": 3,
+                            "opacity": 1,
+                            "cap": "round",
+                            "join": "round",
+                            "msClampToGround": true
+                        }
+                    ]
+                }
+            ]
+        }
     }
 };
 let vector2 = { ...vectorLayer };
@@ -362,6 +395,17 @@ describe('PrintUtils', () => {
         const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, {}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
+        expect(specs[0].classes.length).toBe(1);
+        // legendURL is a GetLegendGraphic request
+        expect(specs[0].classes[0].icons[0].indexOf('GetLegendGraphic') !== -1).toBe(true);
+        // LANGUAGE, if not included, should not be a parameter of the legend URL
+        expect(specs[0].classes[0].icons[0].indexOf('LANGUAGE')).toBe(-1);
+        const specs2 = getMapfishLayersSpecification([layer], { projection: "EPSG:3857", language: 'de' }, {}, 'legend');
+        expect(specs2).toExist();
+        expect(specs2.length).toBe(1);
+        expect(specs2[0].classes.length).toBe(1);
+        // LANGUAGE, if included, should be a parameter of the legend URL
+        expect(specs2[0].classes[0].icons[0].indexOf('LANGUAGE=de')).toBeGreaterThan(0);
     });
     it('toOpenLayers2Style for vector layer wich contains a FeatureCollection using the default style', () => {
         const style = toOpenLayers2Style(vectorWithFtCollInside, null, "FeatureCollection");
@@ -536,6 +580,38 @@ describe('PrintUtils', () => {
         const params = getPrintVendorParams(noVendorLayer);
         expect(params).toExist();
         expect(params).toEqual({});
+    });
+    it('getLegendIconsSize', () => {
+        // with layer legend options
+        let spec = {forceIconsSize: false};
+        let _layer = {legendOptions: {legendWidth: 20, legendHeight: 20}};
+        let iconSize = getLegendIconsSize(spec, _layer);
+        expect(iconSize.width).toBe(20);
+        expect(iconSize.height).toBe(20);
+        expect(iconSize.minSymbolSize).toBe(20);
+
+        // with override legend options
+        spec = {forceIconsSize: true, iconsWidth: 10, iconsHeight: 10};
+        iconSize = getLegendIconsSize(spec, _layer);
+        expect(iconSize.width).toBe(10);
+        expect(iconSize.height).toBe(10);
+        expect(iconSize.minSymbolSize).toBe(10);
+
+        // with layer as background
+        spec = {forceIconsSize: false, iconsWidth: 10, iconsHeight: 10};
+        _layer = {..._layer, group: "background"};
+        iconSize = getLegendIconsSize(spec, _layer);
+        expect(iconSize.width).toBe(10);
+        expect(iconSize.height).toBe(10);
+        expect(iconSize.minSymbolSize).toBe(10);
+
+        // with default layer legend option
+        spec = {forceIconsSize: false, iconsWidth: 10, iconsHeight: 10};
+        iconSize = getLegendIconsSize(spec, {});
+        expect(iconSize.width).toBe(12);
+        expect(iconSize.height).toBe(12);
+        expect(iconSize.minSymbolSize).toBe(12);
+
     });
 
     describe('specCreators', () => {

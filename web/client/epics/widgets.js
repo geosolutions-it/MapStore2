@@ -1,3 +1,12 @@
+/*
+ * Copyright 2023, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+*/
+
+
 import Rx from 'rxjs';
 import { endsWith, has, get, includes, isEqual, omit, omitBy } from 'lodash';
 
@@ -18,10 +27,14 @@ import {
     UPDATE_PROPERTY,
     replaceWidgets,
     WIDGETS_MAPS_REGEX,
-    EDITOR_CHANGE
+    EDITOR_CHANGE,
+    OPEN_FILTER_EDITOR
 } from '../actions/widgets';
 
+import { changeMapEditor } from '../actions/queryform';
 import { MAP_CONFIG_LOADED } from '../actions/config';
+import { TOGGLE_CONTROL } from '../actions/controls';
+import { queryPanelSelector } from '../selectors/controls';
 
 import {
     availableDependenciesSelector,
@@ -30,8 +43,8 @@ import {
     getFloatingWidgets,
     getWidgetLayer
 } from '../selectors/widgets';
-
 import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } from '../actions/layers';
+
 import { getLayerFromId } from '../selectors/layers';
 import { pathnameSelector } from '../selectors/router';
 import { isDashboardEditing } from '../selectors/dashboard';
@@ -40,8 +53,10 @@ import { DASHBOARD_LOADED } from '../actions/dashboard';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
 import {downloadCanvasDataURL} from '../utils/FileUtils';
+import {reprojectBbox} from '../utils/CoordinatesUtils';
 import converter from 'json-2-csv';
-import { updateDependenciesMapOfMapList } from "../utils/WidgetsUtils";
+import { defaultGetZoomForExtent } from '../utils/MapUtils';
+import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/WidgetsUtils";
 
 const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => {
     const tableDependencies = ["layer", "filter", "quickFilters", "options"];
@@ -49,7 +64,7 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
     const id = (WIDGETS_REGEX.exec(targetId) || [])[1];
     const cleanDependenciesMap = omitBy(dependenciesMap, i => i.indexOf(id) === -1);
 
-
+    const depToTheWidget = targetId.split(".maps")[0];
     const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => {
         if (!endsWith(targetId, "map") && includes(tableDependencies, k)) {
             return {
@@ -66,12 +81,12 @@ const updateDependencyMap = (active, targetId, { dependenciesMap, mappings}) => 
             }
             return {
                 ...ov,
-                [k]: `${targetId.replace(/.map$/, "")}.${mappings[k]}`
+                [k]: `${depToTheWidget}.${mappings[k]}`
             };
         }
         return ov;
     }, {});
-    const depToTheWidget = targetId.split(".maps")[0];
+
     return active
         ? { ...cleanDependenciesMap, ...overrides, ["dependenciesMap"]: `${depToTheWidget}.dependenciesMap`, ["mapSync"]: `${depToTheWidget}.mapSync`}
         : omit(cleanDependenciesMap, [Object.keys(mappings)]);
@@ -106,11 +121,11 @@ const getValidLocationChange = action$ =>
  * @param {string} dependency the dependency element id to add
  * @param {object} options dependency mapping options. Must contain `mappings` object
  */
-const configureDependency = (active, dependency, options, targetDependenciesMap) =>
+const configureDependency = (active, dependency, options) =>
     Rx.Observable.of(
         onEditorChange("mapSync", active),
         onEditorChange('dependenciesMap',
-            updateDependencyMap(active, dependency, options, targetDependenciesMap)
+            updateDependencyMap(active, dependency, options)
         )
     );
 
@@ -184,7 +199,7 @@ export const toggleWidgetConnectFlow = (action$, {getState = () => {}} = {}) =>
                             if (widget.widgetType === 'map') {
                                 deps = deps.filter(d => (WIDGETS_MAPS_REGEX.exec(d) || [])[2] === widget.selectedMapId);
                             }
-                            return configureDependency(active, deps[0], options, widget.dependeciesMap).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
+                            return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
                         }).takeUntil(
                             action$.ofType(LOCATION_CHANGE)
                                 .merge(action$.filter(({ type, key } = {}) => type === EDITOR_SETTING_CHANGE && key === DEPENDENCY_SELECTOR_KEY))
@@ -301,9 +316,41 @@ export const onWidgetCreationFromMap = (action$, store) =>
             const state = store.getState();
             const layer = getWidgetLayer(state);
             if (layer) {
-                observable$ = Rx.Observable.of(onEditorChange('chart-layers', [layer]));
+                observable$ = Rx.Observable.of(
+                    onEditorChange('chart-layers', [layer])
+                );
             }
             return observable$;
+        });
+
+
+export const onOpenFilterEditorEpic = (action$, store) =>
+    action$.ofType(OPEN_FILTER_EDITOR)
+        .switchMap(() => {
+            const state = store.getState();
+            const layer = getWidgetLayer(state);
+            const zoom = defaultGetZoomForExtent(reprojectBbox(layer.bbox.bounds, "EPSG:4326", "EPSG:3857", true), DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
+            const map = {
+                ...DEFAULT_MAP_SETTINGS,
+                zoom,
+                center: {
+                    crs: layer.bbox.crs,
+                    x: (layer.bbox.bounds.maxx + layer.bbox.bounds.minx) / 2,
+                    y: (layer.bbox.bounds.maxy + layer.bbox.bounds.miny) / 2
+                }
+            };
+            const mapData = layer?.bbox ? map : null;
+            return Rx.Observable.of( changeMapEditor(mapData) );
+        });
+
+
+export const onResetMapEpic = (action$, store) =>
+    action$.ofType(TOGGLE_CONTROL)
+        .filter((type, control) => !queryPanelSelector(store.getState()) && control === "queryPanel" && isDashboardEditing(store.getState()))
+        .switchMap(() => {
+            return Rx.Observable.of(
+                changeMapEditor(null)
+            );
         });
 
 export default {
@@ -315,5 +362,7 @@ export default {
     updateLayerOnLayerPropertiesChange,
     updateLayerOnLoadingErrorChange,
     updateDependenciesMapOnMapSwitch,
-    onWidgetCreationFromMap
+    onWidgetCreationFromMap,
+    onOpenFilterEditorEpic,
+    onResetMapEpic
 };

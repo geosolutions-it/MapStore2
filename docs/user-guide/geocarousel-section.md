@@ -53,7 +53,7 @@ Once a card is selected in edit mode, the story editor can perform the following
 
 <img src="../img/geocarousel-section/items_toolbar.jpg" class="ms-docimage" style="width:180px"/>
 
-* **Edit** <img src="../img/button/edit-card-button.jpg" class="ms-docbutton"/> the card: clicking on this button the **Edit Card** panel opens to allow adding *Thumbnail* and *Title*. An example can be the following:  
+* **Edit** <img src="../img/button/edit-card-button.jpg" class="ms-docbutton"/> the card: clicking on this button the **Edit Card** panel opens to allow adding *Thumbnail* and *Title*. An example can be the following:
 
 <img src="../img/geocarousel-section/edit_card_panel.jpg" class="ms-docimage" style="width:500px"/>
 
@@ -61,7 +61,7 @@ Once a card is selected in edit mode, the story editor can perform the following
 
 * **Add marker** <img src="../img/button/add_marker_button.jpg" class="ms-docbutton"/> on map or modify the current marker position: clicking on this button the **Map Inline Editor** opens, and the story editor can click a point on map to add a new marker or change its position as follows:
 
-<img src="../img/geocarousel-section/add_marker.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/geocarousel-section/add_marker.mp4"/></video>
 
 In the upper left corner of the Carousel panel, a **Carousel toolbar** allows to:
 
@@ -80,12 +80,12 @@ In a GeoCarousel section, in [view Mode](exploring-stories.md#view-mode), the us
 
 * Select a *carousel card* to view related descriptive content
 
-<img src="../img/geocarousel-section/items.gif" class="ms-docimage" style="width:700px"/>
+<video class="ms-docimage" style="width:700px" controls><source src="../img/geocarousel-section/items.mp4"/></video>
 
 * Select a *marker* on the map to display its carousel card name popup and view its descriptive content
 
-<img src="../img/geocarousel-section/marker.gif" class="ms-docimage" style="width:700px"/>
+<video class="ms-docimage" style="width:700px" controls><source src="../img/geocarousel-section/marker.mp4"/></video>
 
 * Use the left and right arrows <img src="../img/button/left_right_arrow.jpg" class="ms-docbutton"/> to browse the different geocarousel content
 
-<img src="../img/geocarousel-section/arrows.gif" class="ms-docimage" style="width:700px"/>
+<video class="ms-docimage" style="width:700px" controls><source src="../img/geocarousel-section/arrows.mp4"/></video>

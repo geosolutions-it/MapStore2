@@ -115,6 +115,7 @@ export const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, si
     return { startIndex: nPs[0] * size, maxFeatures: needPages * size };
 };
 
+
 /**
  * Utility function to get from a describeFeatureType response the columns to use in the react-data-grid
  * @param {object} describe describeFeatureType response
@@ -129,11 +130,11 @@ export const featureTypeToGridColumns = (
     columnSettings = {},
     fields = [],
     {editable = false, sortable = true, resizable = true, filterable = true, defaultSize = 200, options = []} = {},
-    {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}} = {}) =>
+    {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}, getHeaderRenderer = () => {}, isWithinAttrTbl = false} = {}) =>
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
         const field = fields.find(f => f.name === desc.name);
-        return {
+        let columnProp = {
             sortable,
             key: desc.name,
             width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
@@ -145,10 +146,12 @@ export const featureTypeToGridColumns = (
             resizable,
             editable,
             filterable,
-            editor: getEditor(desc),
-            formatter: getFormatter(desc),
-            filterRenderer: getFilterRenderer(desc, desc.name)
+            editor: getEditor(desc, field),
+            formatter: getFormatter(desc, field),
+            filterRenderer: getFilterRenderer(desc, field)
         };
+        if (isWithinAttrTbl) columnProp.width = 300;
+        return columnProp;
     });
 /**
  * Create a column from the configruation. Maps the events to call a function with the whole property
@@ -223,7 +226,7 @@ export const getOperatorAndValue = (value, type) => {
 };
 
 
-export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
+export const gridUpdateToQueryUpdate = ({attribute, operator, value, type, filters = []} = {}, oldFilterObj = {}) => {
 
     const cleanGroupFields = oldFilterObj.groupFields?.filter((group) => attribute !== group.id && group.id !== 1 ) || [];
     if ((type === 'string' || type === 'number') && isString(value) && value?.indexOf(",") !== -1) {
@@ -238,6 +241,7 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
                     groupId: 1,
                     index: 0
                 }]),
+            filters: (oldFilterObj?.filters?.filter((filter) => attribute !== filter?.attribute) ?? []).concat(filters),
             filterFields: cleanFilterFields.concat(multipleValues.map((v) => {
                 let {operator: op, newVal} = getOperatorAndValue(v, type);
 
@@ -264,7 +268,8 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
                 groupId: 1,
                 index: 0
             }]),
-        filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value)
+        filters: (oldFilterObj?.filters?.filter((filter) => attribute !== filter?.attribute) ?? []).concat(filters),
+        filterFields: type === 'geometry' ? oldFilterObj.filterFields : !isNil(value) || operator === 'isNull'
             ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                 attribute,
                 rowId: Date.now(),
@@ -358,6 +363,12 @@ export const getAttributesList = (attributes, customAttributesSettings) => {
  */
 export const getAttributesNames = (attributes) => {
     return attributes?.map(attribute => isPlainObject(attribute) ? attribute.name : attribute);
+};
+
+export const DATE_TYPE = {
+    DATE_TIME: "date-time",
+    TIME: "time",
+    DATE: "date"
 };
 
 export const dateFormats = {

@@ -25,6 +25,7 @@ import getBlocks from './config/blocks';
 import Rule from './Rule';
 import InfoPopover from '../widgets/widget/InfoPopover';
 import ButtonRB from '../misc/Button';
+import RuleLegendIcon from './RuleLegendIcon';
 
 const Button = tooltip(ButtonRB);
 const FormControl = localizedProps('placeholder')(FormControlRB);
@@ -65,6 +66,8 @@ function EmptyRules() {
  * @prop {array} config.methods classification methods
  * @prop {function} config.getColors get color ramp available for ramp selector
  * @prop {bool} config.simple hide the symbolizer option for advanced style (eg patterns, classification)
+ * @prop {string} config.svgSymbolsPath the URL to the JSON file index of the SVG symbols. By convention this JSON is an array of `name`,`label`  objects. The URL of each symbol by default is relative to the index file, so in the same folder, and named as `<name>.svg`.
+ * @prop {object[]} config.lineDashOptions [{value: ["line1 gap1 line2 gap2 line3..."]}, {...}] defines how dashed lines are displayed.
  * @prop {object} ruleBlock describe all the properties and related configuration of special rules (eg: classification)
  * @prop {object} symbolizerBlock describe all the properties and related configuration of symbolizers
  * @prop {func} onUpdate return changes that needs an async update, argument contains property of the rule to update
@@ -92,7 +95,12 @@ const RulesEditor = forwardRef(({
         getColors,
         classification,
         format,
-        simple
+        simple,
+        svgSymbolsPath,
+        lineDashOptions,
+        supportedSymbolizerMenuOptions,
+        enableFieldExpression,
+        thematicCustomParams            // layer.thematic.params in layers state
     } = config;
 
     // needed for slider
@@ -253,7 +261,9 @@ const RulesEditor = forwardRef(({
                         ruleId,
                         kind: ruleKind,
                         errorId: ruleErrorId,
-                        msgParams: ruleMsgParams
+                        msgParams: ruleMsgParams,
+                        mandatory,
+                        collapsed
                     } = rule;
 
                     const {
@@ -280,6 +290,11 @@ const RulesEditor = forwardRef(({
                             errorId={ruleErrorId}
                             msgParams={ruleMsgParams}
                             onSort={handleSortRules}
+                            icon={<RuleLegendIcon rule={rule} />}
+                            collapsed={collapsed}
+                            onCollapse={(_collapsed) =>
+                                handleChanges({ values: { collapsed: _collapsed }, ruleId }, true)
+                            }
                             title={
                                 hideInputLabel
                                     ? <Message msgId={`styleeditor.rule${ruleKind}`}/>
@@ -320,14 +335,14 @@ const RulesEditor = forwardRef(({
                                         zoom={zoom}
                                         onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     />}
-                                    <Button
+                                    {!mandatory && <Button
                                         className="square-button-md no-border"
                                         tooltipId="styleeditor.removeRule"
                                         onClick={() => handleRemove(ruleId)}>
                                         <Glyphicon
                                             glyph="trash"
                                         />
-                                    </Button>
+                                    </Button>}
                                 </>
                             }
                         >
@@ -341,10 +356,12 @@ const RulesEditor = forwardRef(({
                                     glyph={ruleGlyph}
                                     classificationType={classificationType}
                                     config={classification || {}}
+                                    supportedSymbolizerMenuOptions={supportedSymbolizerMenuOptions}
                                     params={ruleParams}
                                     methods={methods}
                                     getColors={getColors}
                                     bands={bands}
+                                    fonts={fonts}
                                     attributes={attributes && attributes.map((attribute) => ({
                                         ...attribute,
                                         ...( rule.method === "customInterval"
@@ -356,6 +373,8 @@ const RulesEditor = forwardRef(({
                                     onChange={(values) => handleChanges({ values, ruleId }, true)}
                                     onReplace={handleReplaceRule}
                                     format={format}
+                                    enableFieldExpression={enableFieldExpression}
+                                    thematicCustomParamsProperty={thematicCustomParams}     // layer.thematic.params in layers state
                                 />
                                 : symbolizers.map(({ kind = '', symbolizerId, ...properties }) => {
                                     const { params, glyph, hideMenu } = getSymbolizerInfo(kind);
@@ -368,6 +387,7 @@ const RulesEditor = forwardRef(({
                                             tools={
                                                 (!simple && <SymbolizerMenu
                                                     hide={hideMenu}
+                                                    supportedOptions={supportedSymbolizerMenuOptions}
                                                     symbolizerKind={kind}
                                                     ruleBlock={ruleBlock}
                                                     symbolizerBlock={symbolizerBlock}
@@ -384,7 +404,10 @@ const RulesEditor = forwardRef(({
                                                 config={{
                                                     bands,
                                                     attributes,
-                                                    fonts
+                                                    fonts,
+                                                    svgSymbolsPath,
+                                                    lineDashOptions,
+                                                    enableFieldExpression
                                                 }}
                                                 onChange={(values) => handleChanges({ values, ruleId, symbolizerId })}
                                             />

@@ -5,7 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+import React from "react";
+import ReactDOM from "react-dom";
 import expect from 'expect';
+
 import {
     updatePages,
     gridUpdateToQueryUpdate,
@@ -18,6 +21,18 @@ import {
 
 
 describe('FeatureGridUtils', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(
+            document.getElementById("container")
+        );
+        document.body.innerHTML = "";
+        setTimeout(done);
+    });
     it('Test updatePages when needPages * size is less then features', () => {
         const oldFeatures = Array(350);
         const features = Array(60);
@@ -118,6 +133,39 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter.filterFields[2].operator).toBe("<");
 
     });
+    it('gridUpdateToQueryUpdate with isNull operator', () => {
+        const gridUpdate1 = {
+            type: "number",
+            attribute: "ATTRIBUTE",
+            operator: "isNull",
+            value: "",
+            rawValue: ""
+        };
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.filterFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("AND");
+        expect(queryUpdateFilter.filterFields[0].value).toBe('');
+        expect(queryUpdateFilter.filterFields[0].operator).toBe("isNull");
+
+    });
+    it('gridUpdateToQueryUpdate with range operator', () => {
+        const gridUpdate1 = {
+            type: "date",
+            attribute: "ATTR_2_DATE",
+            operator: "><",
+            value: "2023-01-01 >< 2023-01-10",
+            rawValue: "2023-01-01 >< 2023-01-10"
+        };
+
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, {});
+        expect(queryUpdateFilter.filterFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields.length).toBe(1);
+        expect(queryUpdateFilter.groupFields[0].logic).toBe("AND");
+        expect(queryUpdateFilter.filterFields[0].value).toBe('2023-01-01 >< 2023-01-10');
+        expect(queryUpdateFilter.filterFields[0].operator).toBe("><");
+
+    });
     it('gridUpdateToQueryUpdate with multiple numbers and multiple strings', () => {
         const gridUpdate1 = {
             type: "number",
@@ -164,6 +212,36 @@ describe('FeatureGridUtils', () => {
         expect(queryUpdateFilter.filterFields[3].operator).toBe("=");
         expect(queryUpdateFilter.filterFields[4].value).toBe(10);
         expect(queryUpdateFilter.filterFields[4].operator).toBe("<");
+    });
+    it('gridUpdateToQueryUpdate with cql filters in filters', () => {
+        const gridUpdate1 = {
+            filters: [{format: 'cql', body: 'STATE_NAME = \'Texas\''}]
+        };
+
+        const oldFilterObject = {
+            "groupFields": [{"id": "ATTR_1_STRING", "logic": "OR", "groupId": 1, "index": 0}],
+            "filterFields": [
+                {
+                    "attribute": "ATTR_1_STRING",
+                    "rowId": 1608204971082,
+                    "type": "string",
+                    "groupId": "ATTR_1_STRING",
+                    "operator": "ilike",
+                    "value": "cat"
+                },
+                {"attribute": "ATTR_1_STRING",
+                    "rowId": 1608204971082,
+                    "type": "string",
+                    "groupId": "ATTR_1_STRING",
+                    "operator": "ilike",
+                    "value": "to"
+                }
+            ]};
+        const queryUpdateFilter = gridUpdateToQueryUpdate(gridUpdate1, oldFilterObject);
+        expect(queryUpdateFilter.filters.length).toBe(1);
+        expect(queryUpdateFilter.filters[0].format).toBe('cql');
+        expect(queryUpdateFilter.filters[0].body).toBe('STATE_NAME = \'Texas\'');
+        expect(queryUpdateFilter.filterFields.length).toBe(2);
     });
     it('getAttributesList', () => {
         const attributes = [
@@ -288,6 +366,31 @@ describe('FeatureGridUtils', () => {
             expect(fgColumns.editor).toBeTruthy();
         });
     });
+    it('test featureTypeToGridColumns with headerRenderer, filterRenderer, formatter and editor for attribute table', () => {
+        const DUMMY = () => {};
+        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const columnSettings = {name: 'Test1', hide: false};
+        const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => DUMMY, getEditor: () => DUMMY, isWithinAttrTbl: true});
+        expect(featureGridColumns.length).toBe(2);
+        featureGridColumns.forEach((fgColumns, index) => {
+            if (index === 0) {
+                expect(fgColumns.description).toBe('Some description');
+                expect(fgColumns.title).toBe('Some title');
+                expect(fgColumns.showTitleTooltip).toBeTruthy();
+            }
+            expect(['Test1', 'Test2'].includes(fgColumns.name)).toBeTruthy();
+            expect(fgColumns.resizable).toBeTruthy();
+            expect(fgColumns.filterable).toBeTruthy();
+            expect(fgColumns.editable).toBeFalsy();
+            expect(fgColumns.sortable).toBeTruthy();
+            expect(fgColumns.width).toBe(300);          // for attribute table
+            expect(fgColumns.headerRenderer).toBeTruthy();
+            expect(fgColumns.filterRenderer).toBeTruthy();
+            expect(fgColumns.formatter).toBeTruthy();
+            expect(fgColumns.editor).toBeTruthy();
+        });
+    });
     it('featureTypeToGridColumns with fields', () => {
         const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
         const columnSettings = {name: 'Test1', hide: false};
@@ -301,6 +404,24 @@ describe('FeatureGridUtils', () => {
         expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": "XX"}}])[0].title.default).toEqual('XX');
         // test localized alias with empty default
         expect(featureTypeToGridColumns(describe, columnSettings, [{name: "Test1", alias: {"default": ""}}])[0].title.default).toEqual('Test1');
+
+    });
+    it('featureTypeToGridColumns formatters', () => {
+        const DUMMY = () => {};
+        const formatterWrapper = () => (<div>testtttt</div>);
+        const describe = {featureTypes: [{properties: [{name: 'Test1', type: "xsd:number"}, {name: 'Test2', type: "xsd:number"}]}]};
+        const columnSettings = {name: 'Test1', hide: false};
+        const options = [{name: 'Test1', title: 'Some title', description: 'Some description'}];
+        const featureGridColumns = featureTypeToGridColumns(describe, columnSettings, [], {options}, {getHeaderRenderer: () => DUMMY, getFilterRenderer: () => DUMMY, getFormatter: () => formatterWrapper, getEditor: () => DUMMY});
+        expect(featureGridColumns.length).toBe(2);
+        featureGridColumns.forEach((fgColumns)=>{
+            const Formatter = fgColumns.formatter;
+            ReactDOM.render(
+                <Formatter/>,
+                document.getElementById("container")
+            );
+            expect(document.getElementById("container").innerHTML).toExist();
+        });
 
     });
     describe("supportsFeatureEditing", () => {

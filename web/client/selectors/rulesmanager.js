@@ -21,11 +21,17 @@ export const rulesSelector = (state) => {
         assign(formattedRule, {'id': rule.id});
         assign(formattedRule, {'priority': rule.priority});
         assign(formattedRule, {'roleName': rule.roleName ? rule.roleName : '*'});
+        assign(formattedRule, {'roleAny': rule.roleAny ? rule.roleAny : '*'});
         assign(formattedRule, {'userName': rule.userName ? rule.userName : '*'});
+        assign(formattedRule, {'userAny': rule.userAny ? rule.userAny : '*'});
         assign(formattedRule, {'service': rule.service ? rule.service : '*'});
+        assign(formattedRule, {'serviceAny': rule.serviceAny ? rule.serviceAny : '*'});
         assign(formattedRule, {'request': rule.request ? rule.request : '*'});
+        assign(formattedRule, {'requestAny': rule.requestAny ? rule.requestAny : '*'});
         assign(formattedRule, {'workspace': rule.workspace ? rule.workspace : '*'});
+        assign(formattedRule, {'workspaceAny': rule.workspaceAny ? rule.workspaceAny : '*'});
         assign(formattedRule, {'layer': rule.layer ? rule.layer : '*'});
+        assign(formattedRule, {'layerAny': rule.layerAny ? rule.layerAny : '*'});
         assign(formattedRule, {'access': rule.access});
         return formattedRule;
     });

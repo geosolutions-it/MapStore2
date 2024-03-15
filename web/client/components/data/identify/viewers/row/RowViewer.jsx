@@ -10,7 +10,7 @@ import React from 'react';
 import { isString } from 'lodash';
 import PropertiesViewer from './PropertiesViewer';
 import { getRowViewer } from '../../../../../utils/MapInfoUtils';
-import { ANNOTATIONS } from '../../../../../utils/AnnotationsUtils';
+import { ANNOTATIONS } from '../../../../../plugins/Annotations/utils/AnnotationsUtils';
 import PropTypes from 'prop-types';
 import {omit} from "lodash/object";
 

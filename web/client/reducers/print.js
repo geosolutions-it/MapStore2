@@ -28,7 +28,8 @@ import set from "lodash/set";
 
 const initialSpec = {
     antiAliasing: true,
-    iconSize: 24,
+    iconsWidth: 24,
+    iconsHeight: 24,
     legendDpi: 96,
     fontFamily: "Verdana",
     fontSize: 8,
@@ -37,7 +38,8 @@ const initialSpec = {
     resolution: 96,
     name: '',
     description: '',
-    outputFormat: "pdf"
+    outputFormat: "pdf",
+    rotation: 0
 };
 
 const getSheetName = (name = '') => {

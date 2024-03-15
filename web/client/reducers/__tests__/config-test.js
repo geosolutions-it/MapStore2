@@ -75,7 +75,7 @@ describe('Test the mapConfig reducer', () => {
         expect(state.map.info).toExist();
         expect(state.map.info.canEdit).toBe(true);
     });
-    it('DETAILS_LOADED', () => {
+    it('DETAILS_LOADED Map', () => {
         const detailsUri = "details/uri";
         var state = mapConfig({
             map: {
@@ -83,10 +83,23 @@ describe('Test the mapConfig reducer', () => {
                     mapId: 1
                 }
             }
-        }, {type: DETAILS_LOADED, mapId: 1, detailsUri});
+        }, {type: DETAILS_LOADED, id: 1, detailsUri});
         expect(state.map).toExist();
         expect(state.map.info).toExist();
         expect(state.map.info.details).toBe(detailsUri);
+    });
+    it('DETAILS_LOADED Dahboard', () => {
+        const detailsUri = "details/uri";
+        var state = mapConfig({
+            dashboard: {
+                resource: {
+                    id: "1", attributes: {}
+                }
+            }
+        }, {type: DETAILS_LOADED, id: "1", detailsUri});
+        expect(state.dashboard).toExist();
+        expect(state.dashboard.resource).toExist();
+        expect(state.dashboard.resource.attributes.details).toBe(detailsUri);
     });
 
     it('map created', () => {
@@ -125,21 +138,26 @@ describe('Test the mapConfig reducer', () => {
                     type: "FeatureCollection",
                     features: [{
                         type: "Feature",
+                        id: 'feature-01',
                         geometry: {
                             type: "MultiPoint",
                             coordinates: [[1, 2], [4, 5]]
                         },
                         properties: {
+                            id: 'feature-01',
                             useGeodesicLines: true
                         }
                     },
                     {
                         type: "Feature",
+                        id: 'feature-02',
                         geometry: {
                             type: "LineString",
                             coordinates: [[1, 2], [4, 5]]
                         },
-                        properties: {},
+                        properties: {
+                            id: 'feature-02'
+                        },
                         style: [{
                             color: "#303030"
                         }]
@@ -148,15 +166,24 @@ describe('Test the mapConfig reducer', () => {
             }] }}});
         expect(state.map).toExist();
         expect(state.layers).toExist();
-        const newAnnotationsFeature = state.layers[0].features[0].features[0];
-        const otherLineString = state.layers[0].features[0].features[1];
+        const newAnnotationsFeature = state.layers[0].features[0];
+        const otherLineString = state.layers[0].features[1];
         expect(newAnnotationsFeature.geometry).toEqual({
             type: "MultiPoint",
             coordinates: [[1, 2], [4, 5]]
         });
-        expect(newAnnotationsFeature.properties.geometryGeodesic.type).toBe("LineString");
-        expect(newAnnotationsFeature.properties.geometryGeodesic.coordinates.length).toBe(100);
-        expect(otherLineString.properties).toEqual({});
+        expect(newAnnotationsFeature.properties).toEqual({
+            geodesic: true,
+            id: 'feature-01',
+            annotationType: 'MultiPoint',
+            name: 'MultiPoint'
+        });
+        expect(otherLineString.properties).toEqual({
+            geodesic: false,
+            id: 'feature-02',
+            annotationType: 'LineString',
+            name: 'LineString'
+        });
         expect(otherLineString.geometry).toEqual({
             type: "LineString",
             coordinates: [[1, 2], [4, 5]]

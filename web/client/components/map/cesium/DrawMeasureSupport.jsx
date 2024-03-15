@@ -333,19 +333,19 @@ function DrawMeasureSupport({
             staticPrimitivesCollection.current = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
             map.scene.primitives.add(staticPrimitivesCollection.current);
 
-            staticBillboardCollection.current = new Cesium.BillboardCollection();
+            staticBillboardCollection.current = new Cesium.BillboardCollection({ scene: map.scene });
             map.scene.primitives.add(staticBillboardCollection.current);
 
-            staticLabelsCollection.current = new Cesium.LabelCollection();
+            staticLabelsCollection.current = new Cesium.LabelCollection({ scene: map.scene });
             map.scene.primitives.add(staticLabelsCollection.current);
 
             dynamicPrimitivesCollection.current = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
             map.scene.primitives.add(dynamicPrimitivesCollection.current);
 
-            dynamicBillboardCollection.current = new Cesium.BillboardCollection();
+            dynamicBillboardCollection.current = new Cesium.BillboardCollection({ scene: map.scene });
             map.scene.primitives.add(dynamicBillboardCollection.current);
 
-            dynamicLabelsCollection.current = new Cesium.LabelCollection();
+            dynamicLabelsCollection.current = new Cesium.LabelCollection({ scene: map.scene });
             map.scene.primitives.add(dynamicLabelsCollection.current);
 
             cursorImage.current = createCircleMarkerImage(12, { stroke: '#ffffff', strokeWidth: 2, fill: false});
@@ -579,9 +579,6 @@ function DrawMeasureSupport({
             break;
         case MeasureTypes.ANGLE_3D:
             tooltipLabelText = tooltips.start;
-            if (coordinates.length > 1) {
-                dynamicPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.lineDrawing, coordinates: [...coordinates] }));
-            }
             if (coordinates.length === 3) {
                 const [angle] = computeAngles(coordinates);
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, angle, 'deg'));
@@ -594,11 +591,7 @@ function DrawMeasureSupport({
             break;
         case MeasureTypes.SLOPE:
             tooltipLabelText = tooltips.start;
-            if (coordinates.length > 1) {
-                dynamicPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.lineDrawing, coordinates: [...coordinates] }));
-            }
             if (coordinates.length === 3) {
-                dynamicPrimitivesCollection.current.add(createPolygonPrimitive({ ...style?.areaDrawing, coordinates: [...coordinates] }));
                 const [slope] = computeSlopes(coordinates, map?.camera?.position);
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, slope, 'deg'));
                 infoLabelTextPosition = computeTriangleMiddlePoint(coordinates);
@@ -609,8 +602,8 @@ function DrawMeasureSupport({
             if (coordinates[0]) {
                 const cartographic = Cesium.Cartographic.fromCartesian(coordinates[0]);
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, cartographic.height, 'm'), {
-                    latitude: cartographic.latitude,
-                    longitude: cartographic.longitude
+                    latitude: Cesium.Math.toDegrees(cartographic.latitude),
+                    longitude: Cesium.Math.toDegrees(cartographic.longitude)
                 });
             }
             break;
@@ -619,7 +612,6 @@ function DrawMeasureSupport({
             if (coordinates.length > 1) {
                 tooltipLabelText = tooltips.end;
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, distance, 'm'));
-                dynamicPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.lineDrawing, coordinates: [...coordinates] }));
                 addSegmentsLabels(dynamicLabelsCollection.current, coordinates, MeasureTypes.POLYLINE_DISTANCE_3D);
                 coordinates.forEach((cartesian, idx) => {
                     if (idx !== (coordinates.length - 1)) {
@@ -635,8 +627,6 @@ function DrawMeasureSupport({
         case MeasureTypes.AREA_3D:
             tooltipLabelText = tooltips.start;
             if (coordinates.length > 1) {
-                dynamicPrimitivesCollection.current.add(createPolygonPrimitive({ ...style?.areaDrawing, coordinates: [...coordinates] }));
-                dynamicPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.lineDrawing, coordinates: [...coordinates] }));
                 addSegmentsLabels(dynamicLabelsCollection.current, coordinates, MeasureTypes.AREA_3D);
                 coordinates.forEach((cartesian, idx) => {
                     if (idx !== (coordinates.length - 1)) {
@@ -660,14 +650,6 @@ function DrawMeasureSupport({
             break;
         }
         if (coordinates.length > 0) {
-            dynamicBillboardCollection.current.add({
-                position: coordinates[coordinates.length - 1],
-                image: cursorImage.current,
-                color: getCesiumColor({
-                    ...style?.cursor
-                }),
-                disableDepthTestDistance: Number.POSITIVE_INFINITY
-            });
             dynamicLabelsCollection.current.add({
                 position: coordinates[coordinates.length - 1],
                 text: tooltipLabelText,
@@ -680,6 +662,8 @@ function DrawMeasureSupport({
                     ...getPrimaryLabelStyle()
                 });
             }
+            // needed to avoid flickering
+            dynamicLabelsCollection.current.update(map.scene.frameState);
         }
         map.scene.requestRender();
     }

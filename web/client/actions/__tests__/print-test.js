@@ -12,6 +12,7 @@ import {
     PRINT_CAPABILITIES_LOADED,
     PRINT_CAPABILITIES_ERROR,
     SET_PRINT_PARAMETER,
+    ADD_PRINT_TRANSFORMER,
     CONFIGURE_PRINT_MAP,
     CHANGE_PRINT_ZOOM_LEVEL,
     CHANGE_MAP_PRINT_PREVIEW,
@@ -21,6 +22,7 @@ import {
     PRINT_CANCEL,
     loadPrintCapabilities,
     setPrintParameter,
+    addPrintTransformer,
     configurePrintMap,
     changePrintZoomLevel,
     changeMapPrintPreview,
@@ -61,6 +63,15 @@ describe('Test correctness of the print actions', () => {
         expect(retVal.type).toBe(SET_PRINT_PARAMETER);
         expect(retVal.name).toBe('name');
         expect(retVal.value).toBe('val');
+    });
+
+    it('addPrintTransformer', () => {
+        const retVal = addPrintTransformer('transformerName', () => "mycustom_transformer", 1.5);
+        expect(retVal).toExist();
+        expect(retVal.type).toBe(ADD_PRINT_TRANSFORMER);
+        expect(retVal.name).toBe('transformerName');
+        expect(retVal.transformer()).toBe('mycustom_transformer');
+        expect(retVal.position).toBe(1.5);
     });
 
     it('configurePrintMap', () => {

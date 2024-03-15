@@ -643,11 +643,19 @@ export function getVectorLayerFromContents({
         id: `geostory-vector-${id}`,
         name: `geostory-vector-${id}`,
         type: 'vector',
+        // TODO: review style using geostyler format
+        // this will help remove legacy code such as VectorStyle file for ol
         features: contents.reduce((acc, content, idx) => [
             ...acc, ...(
                 (content?.features || [])
                     .map((feature) => ({
                         ...feature,
+                        properties: {
+                            ...feature.properties,
+                            title: content.title,
+                            sectionId: id,
+                            contentId: content.id
+                        },
                         contentRefId: content.id,
                         ...(featureStyle && {
                             style: featureStyle({ content, feature }, idx)

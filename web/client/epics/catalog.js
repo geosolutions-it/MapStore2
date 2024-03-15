@@ -9,8 +9,8 @@
 import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
-import { DOMParser } from 'xmldom';
 import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
+
 import {
     ADD_SERVICE,
     ADD_LAYERS_FROM_CATALOGS,
@@ -19,7 +19,6 @@ import {
     GET_METADATA_RECORD_BY_ID,
     TEXT_SEARCH,
     CATALOG_CLOSE,
-    FORMAT_OPTIONS_FETCH,
     addCatalogService,
     setLoading,
     deleteCatalogService,
@@ -31,15 +30,13 @@ import {
     resetCatalog,
     textSearch,
     changeSelectedService,
-    formatsLoading,
-    setSupportedFormats,
     ADD_LAYER_AND_DESCRIBE,
     describeError,
     addLayer,
     setNewServiceStatus
 } from '../actions/catalog';
 import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
-import { error, success } from '../actions/notifications';
+import { error, success, warning } from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
 import { allowBackgroundsDeletion } from '../actions/backgroundselector';
@@ -53,7 +50,6 @@ import {
     selectedCatalogSelector,
     searchOptionsSelector,
     catalogSearchInfoSelector,
-    getFormatUrlUsedSelector,
     isActiveSelector, servicesSelectorWithBackgrounds
 } from '../selectors/catalog';
 import { metadataSourceSelector } from '../selectors/backgroundselector';
@@ -64,16 +60,18 @@ import {
     buildSRSMap,
     extractOGCServicesReferences
 } from '../utils/CatalogUtils';
-import { getSupportedFormat, getCapabilities, describeLayers, flatLayers } from '../api/WMS';
+import { getCapabilities, describeLayers, flatLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace} from '../utils/LayersUtils';
-import { wrapStartStop } from '../observables/epics';
+
 import {zoomToExtent} from "../actions/map";
 import CSW from '../api/CSW';
-import { projectionSelector } from '../selectors/map';
-import { getResolutions } from "../utils/MapUtils";
-
+import { projectionSelector, mapSelector } from '../selectors/map';
+import { getResolutions, METERS_PER_UNIT } from "../utils/MapUtils";
+import { describeFeatureType } from '../api/WFS';
+import { extractGeometryType } from '../utils/WFSLayerUtils';
+import { createDefaultStyle } from '../utils/StyleUtils';
 const onErrorRecordSearch = (isNewService, errObj) => {
     if (isNewService) {
         return Rx.Observable.of(
@@ -103,10 +101,9 @@ export default (API) => ({
     recordSearchEpic: (action$, store) =>
         action$.ofType(TEXT_SEARCH)
             .switchMap(({ format, url, startPosition, maxRecords, text, options }) => {
-                const filter = get(options, 'service.filter') || get(options, 'filter');
                 const isNewService = get(options, 'isNewService', false);
                 return Rx.Observable.defer(() =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, { options, filter, ...catalogSearchInfoSelector(store.getState()) })
+                    API[format].textSearch(url, startPosition, maxRecords, text, { options, ...catalogSearchInfoSelector(store.getState()) })
                 )
                     .switchMap((result) => {
                         if (result.error) {
@@ -276,6 +273,63 @@ export default (API) => ({
                         .merge(Rx.Observable.from(actions))
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }
+                if (layer.type === 'wfs') {
+                    return Rx.Observable.defer(() => describeFeatureType(layer.url, layer.name))
+                        .switchMap((result) => {
+                            const extractedGeometryType = (extractGeometryType(result) || '').replace('Multi', '');
+                            const geometryType = ['Point', 'LineString', 'Polygon'].includes(extractedGeometryType)
+                                ? extractedGeometryType
+                                : 'GeometryCollection';
+                            return Rx.Observable.of(changeLayerProperties(id, {
+                                style: createDefaultStyle({ geometryType })
+                            }));
+                        })
+                        .merge(Rx.Observable.from(actions))
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
+                }
+                if (layer.type === 'model') {
+                    const properties = layer?.features?.[0]?.properties || {};
+                    if (properties?.projectedCrsNotSupported || !properties?.projectedCrs) {
+                        const { center: mapCenter } = mapSelector(state) || {};
+                        const center = CoordinatesUtils.reproject(mapCenter, mapCenter.crs, 'EPSG:4326');
+                        const longitude = center.x;
+                        const latitude = center.y;
+                        const size = properties.size || [2, 2];
+                        const newLayer = {
+                            ...layer,
+                            bbox: {
+                                bounds: {
+                                    minx: (longitude || 0) - ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                                    miny: (latitude || 0) - ((size[1] / 2) / METERS_PER_UNIT.degrees),
+                                    maxx: (longitude || 0) + ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                                    maxy: (latitude || 0) + ((size[1] / 2) / METERS_PER_UNIT.degrees)
+                                },
+                                crs: 'EPSG:4326'
+                            },
+                            features: [
+                                {
+                                    ...layer?.features?.[0],
+                                    geometry: {
+                                        type: 'Point',
+                                        coordinates: [longitude, latitude, 0]
+                                    }
+                                }
+                            ]
+                        };
+                        return Rx.Observable.from(
+                            // add notification warning,
+                            [addNewLayer({...newLayer, id}), warning({
+                                title: "notification.warning",
+                                message: properties?.projectedCrsNotSupported ? "layerProperties.modelLayer.warnings.projectedCrsNotSupported" : "layerProperties.modelLayer.warnings.projectedCrsNotProvided",
+                                autoDismiss: 15,
+                                values: {
+                                    modelProjection: properties?.projectedCrsNotSupported ? `(${properties?.projectedCrs})` : ""
+                                },
+                                position: "tc"
+                            })]
+                        );
+                    }
+                }
                 return Rx.Observable.from(actions);
             })
             .catch(() => {
@@ -292,7 +346,7 @@ export default (API) => ({
     */
     newCatalogServiceAdded: (action$, store) =>
         action$.ofType(ADD_SERVICE)
-            .switchMap(() => {
+            .switchMap(({options} = {}) => {
                 const state = store.getState();
                 const newService = newServiceSelector(state);
                 const maxRecords = pageSizeSelector(state);
@@ -310,7 +364,7 @@ export default (API) => ({
                                 startPosition: 1,
                                 maxRecords,
                                 text: "",
-                                options: {service, isNewService: true}
+                                options: {service, isNewService: true, ...options}
                             })
                         );
                     })
@@ -411,7 +465,9 @@ export default (API) => ({
 
                         const metadataFlow = Rx.Observable.defer(() => axios.get(metadataUrl, {headers: {'Accept': 'application/xml'}}))
                             .pluck('data')
-                            .map(metadataXml => new DOMParser().parseFromString(metadataXml))
+                            .map(metadataXml => {
+                                return (new DOMParser()).parseFromString(metadataXml, "text/xml");
+                            })
                             .map(metadataDoc => {
                                 const selectXpath = xpathlib.useNamespaces(metadataOptions.xmlNamespaces || {});
 
@@ -482,8 +538,8 @@ export default (API) => ({
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
                 const service = selectedCatalogSelector(state);
-                const { type, url, filter } = service;
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: { service, filter }}));
+                const { type, url } = service;
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: { service }}));
             }),
 
     catalogCloseEpic: (action$, store) =>
@@ -501,36 +557,8 @@ export default (API) => ({
             }),
 
     /**
-     * Fetch all supported formats of a WMS service configured (infoFormats and imageFormats)
-     * Dispatches an action that sets the supported formats of the service.
-     * @param {Observable} action$ the actions triggered
-     * @param {object} getState store object
-     * @memberof epics.catalog
-     * @return {external:Observable}
-     */
-    getSupportedFormatsEpic: (action$, {getState = ()=> {}} = {}) =>
-        action$.ofType(FORMAT_OPTIONS_FETCH)
-            .filter((action)=> action.force || getFormatUrlUsedSelector(getState()) !== action?.url)
-            .switchMap(({url = ''} = {})=> {
-                return Rx.Observable.defer(() => getSupportedFormat(url, true))
-                    .switchMap((supportedFormats) => Rx.Observable.of(setSupportedFormats(supportedFormats, url)))
-                    .let(
-                        wrapStartStop(
-                            formatsLoading(true),
-                            formatsLoading(false),
-                            () => {
-                                return Rx.Observable.of(
-                                    error({ title: "layerProperties.format.error.title", message: 'layerProperties.format.error.message' }),
-                                    formatsLoading(false)
-                                );
-                            }
-                        )
-                    );
-            }),
-
-    /**
     * Sets control property to currently selected group when catalogue is open
-    * Sets the currently selected group as the detination of new layers in catalogue
+    * Sets the currently selected group as the destination of new layers in catalogue
     * if a layer instead of a group is selected it resets the groupId to Default
     *  Action performed: setControlProperty (only if catalogue is open)
     * @memberof epics.layers

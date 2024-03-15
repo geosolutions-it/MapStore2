@@ -20,7 +20,239 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2023.01.xx to 2023.02.00
+## Migration from 2023.02.02 to 2024.01.00
+
+### Maven project update
+
+With this release the maven `pom.xml` files has been restructured to centralize dependencies version in the `dependencyManagement` section and then in some properties in the root `pom.xml` file.
+This regards also the projects that now hold the versions of the dependencies in the properties section.
+Your projects will work in any case, but we suggest to update your `pom.xml` files to align them to the new structure (see template file in the MapStore2 repository for more details).
+
+### Print config file update
+
+Due to the introduction of the new `Jackson Yaml` parser, the MapStore `config.yaml` file has been reviewed and updated. Below are reported all the relevant changes that need to be applied also to `config.yaml` of MapStore donwstream projects where the printing engine is present.
+
+Due to the new library being stricter on the format of the Yaml, some changes in the configuration files were made, to make them compliant with yaml format:
+
+- Removed not allowed characters from property values (`@` in `@shared.privileged.geoserver.pass@`)
+- Removed references without anchors (document declares link to `*commonFooter` but anchor `&commonFooter` was not defined previously)
+- Added a space between key\value pairs (`"absoluteX: 30"` instead of `"absoluteX:30"`)
+
+Some additional updates has been provided due to parsing issue with the new library:
+
+```yaml
+- !ipMatch
+    host: 127.0.0.1
+    # Allow to all hosts
+    mask: 0.0.0.0
+```
+
+`!ipMatch` is mapped to [AddressHostMatcher](https://github.com/mapfish/mapfish-print-v2/blob/0c055e2a36bec3b12eafd207144ff8eb7b37f987/src/main/java/org/mapfish/print/config/AddressHostMatcher.java#L26), which does not have host property. Should instead use ip property (e.g IP: 127.0.0.1)
+
+```yaml
+- !text
+              width: 300
+              text: '${comment}'
+              ...
+```
+
+`!text` is mapped to [TextBlock class](https://github.com/mapfish/mapfish-print-v2/blob/4b73912e5565ae206af5b5c434ef37454a98c252/src/main/java/org/mapfish/print/config/layout/TextBlock.java#L37). It does not have width property, so it should be removed.
+
+```yaml
+lastPage:
+    rotation: true
+    ...
+```
+
+lastPage is mapped to [LastPage class](https://github.com/mapfish/mapfish-print-v2/blob/4b73912e5565ae206af5b5c434ef37454a98c252/src/main/java/org/mapfish/print/config/layout/LastPage.java#L30), and does not have rotation property.
+
+### Database update
+
+The resource metadata has been recently extented to include  information about resource creator and editor and to provide the advertises/unadvertised resource functionalities.
+If your installation has the [database creation mode](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/database-setup/#database-creation-mode) set to `update` (the default), the columns will be added automatically and you do not have to do any action. If it is set to `validate` instead you will have to run the update scripts.
+
+*In any case*, the update scripts contain also a part to populate the `creator` column, that can not be applied automatically with  [database creation mode](https://docs.mapstore.geosolutionsgroup.com/en/latest/developer-guide/database-setup/#database-creation-mode) set to `update`.
+So if you want to see this information, even if it is not strictily required, you will have to run the migration scripts anyway.
+
+- For script reference see:
+
+    [postgresql migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.0.0-to-v2.1.0.sql)
+
+    [h2 migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/h2/h2-migration-from-v.2.0.0-to-v2.1.0.sql)
+
+    [oracle migration script 2.0.0 to 2.1.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/oracle/oracle-migration-from-v.2.0.0-to-v2.1.0.sql)
+
+### Restructuring of Login and Home in Dashboard page
+
+We recently added the sidebar to the dashboard page and by doing so we wanted to keep a uniform position of login and home plugins, by putting them in the omnibar container rather than the sidebar one. The viewer is a specific case that will be reviewed in the future.
+
+In order to align the configuration of the two mentioned plugin you have to:
+
+- edit `localConfig.json` `plugins.dashboard` section
+- remove `BurgerMenu`, `Home` and `Login` items
+- add the following
+
+```json
+"Details",
+"AddWidgetDashboard",
+"MapConnectionDashboard",
+{
+  "name": "SidebarMenu",
+  "cfg": {
+    "containerPosition": "columns"
+  }
+},
+{
+  "name": "Home",
+  "override": {
+    "OmniBar": {
+      "priority": 5
+    }
+  }
+},
+{
+  "name": "Login",
+  "override": {
+    "OmniBar": {
+      "priority": 5
+    }
+  }
+},
+```
+
+### Using `elevation` layer type instead of wms layer with useForElevation property
+
+The wms layer with `useForElevation` property is deprecated and a `elevation` layer introduced in substitution.
+The new `elevation` layer is used only to display height information inside the mouse position plugin and it will not provide a support for terrain model of the 3D visualziation mode. In order to provide this support, you need to add a `terrain` layer too. See documentation about [Elevation layer](maps-configuration.md#elevation) and [Terrain layer](maps-configuration.md#terrain) for more details.
+A configuration update example:
+
+```diff
+{
+    "name": "Map",
+    "cfg": {
+        "additionalLayers": [
+            {
+-               "type": "wms",
++               "type": "elevation",
+                "url": "/geoserver/wms",
+                "name": "workspace:layername",
+-               "format": "application/bil16",
+                "visibility": true,
+-               "useForElevation": true,
+                "littleEndian": false
+            },
+            // only needed for 3D terrain
++           {
++               "type": "terrain",
++               "provider": "wms",
++               "url": "/geoserver/wms",
++               "name": "workspace:layername",
++               "littleEndian": false,
++               "visibility": true,
++               "crs": "CRS:84"
+            }
+        ]
+    }
+}
+```
+
+### Removing possibility to add custom fonts to the Map
+
+From this version we limited the load of the font to FontAwesome.
+
+If you have changed the property **fonts** inside Map plugin it will not longer load the font. A possible fix would be to add the font to the `*.html` files in your application.
+
+- make sure that the `localConfig.json` does not have **fonts** property in  **Map**  plugin
+
+The following css is added automatically if needed `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>` inside the *head* tag.
+
+### Fixing background config
+
+From this version in order to fix default 3d background config a change is needed here:
+
+- update `localConfig.json` by adding **visibility: false**  to the Empty Background entry in `intialState.defaultState.catalog.default.staticServices.default_map_backgrounds.backgrounds`
+- update `new.json` by adding **visibility: false**  to the Empty Background entry.
+
+### Adding spatial filter to dashboard widgets
+
+In order to enable the possibility to add in and the spatial filter to the widgets ( see [#9098](https://github.com/geosolutions-it/MapStore2/issues/9098) ) you have to edit the `QueryPanel` config in the `plugins.dashboard` array of the `localConfig.json` file by adding:
+
+- **useEmbeddedMap**: flag to enable the embedded map
+- **spatialOperations**: The list of spatial operations allowed for this plugin
+- **spatialMethodOptions**: the list of spatial methods to use.
+
+```json
+...
+"dashboard": [
+...
+{
+    "name": "QueryPanel",
+    "cfg": {
+        "toolsOptions": {
+            "hideCrossLayer": true,
+            "useEmbeddedMap": true
+        },
+        "spatialPanelExpanded": false,
+        "spatialOperations": [
+            {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+            {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+            {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
+        ],
+        "spatialMethodOptions": [
+            {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+            {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+            {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
+        ],
+        "containerPosition": "columns"
+    }
+}
+
+```
+
+### MapFish Print update
+
+The **MapFish Print** library has been updated to work with the latest GeoTools version and Java 11 as well as being aligned with the same dependency used by the official GeoServer printing extension (see this issue <https://github.com/geosolutions-it/mapfish-print/issues/65>)
+For this reason, if you are using the printing plugin in your project you have to update it by following the following steps:
+
+- Change the version of the mapfish-print dependency in the project `pom.xml` file:
+
+```diff
+                <!-- mapfish-print -->
+                <dependency>
+                    <groupId>org.mapfish.print</groupId>
+                    <artifactId>print-lib</artifactId>
+-                    <version>geosolutions-2.3-SNAPSHOT</version>
++                    <version>2.4-SNAPSHOT</version>
+
+```
+
+- Add the mvn repository where this library is hosted in the `repositories` section of the same `pom.xml` (usually in `web` folder of a project)
+
+```diff
+        <repository>
+            <id>osgeo-snapshot</id>
+            <name>Open Source Geospatial Foundation Repository</name>
+            <url>https://repo.osgeo.org/repository/snapshot/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+```
+
+### Annotations plugin refactor
+
+The Annotation plugin has been updated to be supported also in 3D maps. This update introduced some changes:
+
+- All the configurations related to the "Annotations" plugin has been removed from `localConfig.json` `defaultState` entry and moved to the `cfg` property of the plugin
+- The annotations reducers is not needed anymore inside the default reducers of the app
+
+Please update by:
+
+- Removing `annotations` entry from your `localConfig.json` `defaultState`
+- If you customized the app, you can remove the `annotations` reducer from default reducers.
+- If some customizations were applied to the Annotations plugin in `defaultState`, apply these changes to the plugin configuration, following the documentation of the plugin.
+
+## Migration from 2023.01.02 to 2023.02.00
 
 ### About plugin cfg changes
 
@@ -385,7 +617,7 @@ with
  <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-slf4j-impl</artifactId>
-    <version>1.7.2</version>
+    <version>2.19.0</version>
  </dependency>
 
 ```

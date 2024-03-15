@@ -434,7 +434,7 @@ describe('Test correctness of the SLDService APIs', () => {
     });
     it('check getColors only standard', () => {
         const result = API.getColors(undefined, layer, 10);
-        expect(result.length).toBe(5 + 36 /* 36 color brewer ramps */);
+        expect(result.length).toBe(6 + 36 /* 36 color brewer ramps */);
         expect(result[0].colors).toExist();
         expect(result[0].colors.length).toBe(10);
     });
@@ -452,7 +452,7 @@ describe('Test correctness of the SLDService APIs', () => {
     });
     it('check getColors layer with additional colors', () => {
         const result = API.getColors(undefined, layerWithAdditionalColors, 10);
-        expect(result.length).toBe(6 + 36 /* 36 color brewer ramps */);
+        expect(result.length).toBe(7 + 36 /* 36 color brewer ramps */);
         expect(result[0].colors).toExist();
         expect(result[0].colors.length).toBe(10);
     });

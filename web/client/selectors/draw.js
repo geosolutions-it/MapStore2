@@ -28,7 +28,7 @@ export const snappingConfig = state => get(state, 'draw.snapConfig', false);
 export const availableSnappingLayers = createShallowSelectorCreator(
     (a, b) => {
         return a === b
-            || isObject(a) && isObject(b) && a?.id === b?.id && a?.title === b?.title;
+            || isObject(a) && isObject(b) && a?.id === b?.id && a?.title === b?.title && a?.visibility === b?.visibility;
     }
 )([
     layersSelector,

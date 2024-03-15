@@ -48,8 +48,11 @@ import OlStyleRegularshape from 'ol/style/RegularShape';
 import { METERS_PER_UNIT } from 'ol/proj/Units';
 import { getCenter } from 'ol/extent';
 import OlGeomLineString from 'ol/geom/LineString';
+import OlGeomCircle from 'ol/geom/Circle';
 import { toContext } from 'ol/render';
 import GeoJSON from 'ol/format/GeoJSON';
+import OlGeomPolygon, { circular } from 'ol/geom/Polygon';
+import { transform } from 'ol/proj';
 import {
     expressionsUtils,
     resolveAttributeTemplate,
@@ -66,12 +69,104 @@ import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 const getGeometryFunction = geometryFunctionsLibrary.openlayers({
     Point: OlGeomPoint,
     LineString: OlGeomLineString,
+    Polygon: OlGeomPolygon,
     GeoJSON,
     getCenter
 });
+// create a cached accessor for image src data
+export const createGetImagesSrc = () => {
+    // note that images are canvas elements, identified by ID.
+    const imgCache = {};
+    const getImageSrcFromCache = (image, id) => {
+        if (!id) {
+            return image.toDataURL();
+        }
+        if (!imgCache[id]) {
+            imgCache[id] = image.toDataURL();
+        }
+        return imgCache[id];
+    };
+    return getImageSrcFromCache;
+};
+const anchorStringToFraction = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return [0.0, 0.0];
+    case 'top':
+        return [0.5, 0.0];
+    case 'top-right':
+        return [1.0, 0.0];
+    case 'left':
+        return [0.0, 0.5];
+    case 'center':
+        return [0.5, 0.5];
+    case 'right':
+        return [1.0, 0.5];
+    case 'bottom-left':
+        return [0.0, 1.0];
+    case 'bottom':
+        return [0.5, 1.0];
+    case 'bottom-right':
+        return [1.0, 1.0];
+    default:
+        return [0.5, 0.5];
+    }
+};
 
-const WELLKNOWNNAME_TTF_REGEXP = /^ttf:\/\/(.+)#(.+)$/;
-const DUMMY_MARK_SYMBOLIZER_FONT = 'geostyler-mark-symbolizer';
+const anchorStringToTextProperties = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return {
+            textBaseline: 'top',
+            textAlign: 'left'
+        };
+    case 'top':
+        return {
+            textBaseline: 'top',
+            textAlign: 'center'
+        };
+    case 'top-right':
+        return {
+            textBaseline: 'top',
+            textAlign: 'right'
+        };
+    case 'left':
+        return {
+            textBaseline: 'middle',
+            textAlign: 'left'
+        };
+    case 'center':
+        return {
+            textBaseline: 'middle',
+            textAlign: 'center'
+        };
+    case 'right':
+        return {
+            textBaseline: 'middle',
+            textAlign: 'right'
+        };
+    case 'bottom-left':
+        return {
+            textBaseline: 'bottom',
+            textAlign: 'left'
+        };
+    case 'bottom':
+        return {
+            textBaseline: 'bottom',
+            textAlign: 'center'
+        };
+    case 'bottom-right':
+        return {
+            textBaseline: 'bottom',
+            textAlign: 'right'
+        };
+    default:
+        return {
+            textBaseline: 'top',
+            textAlign: 'center'
+        };
+    }
+};
 
 const getRgbaColor = (_colorString, _opacity) => {
     let colorString = _colorString;
@@ -106,46 +201,6 @@ const getRgbaColor = (_colorString, _opacity) => {
         opacity = 1;
     }
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + opacity + ')';
-};
-/**
-     * Returns true if the given mark symbolizer is based on a font glyph
-     * (i.e. has a well known name property starting with 'ttf://').
-     *
-     * @param symbolizer The TextSymbolizer to derive the font string from
-     */
-const getIsFontGlyphBased = (symbolizer) => {
-    return WELLKNOWNNAME_TTF_REGEXP.test(symbolizer.wellKnownName);
-};
-
-/**
- * Returns an OL compliant font string, to be used for mark symbolizers
- * using a font glyph.
- * This also includes a dummy DUMMY_MARK_SYMBOLIZER_FONT font name at the end of the
- * string to allow determining that this font was intended for a mark symbolizer
- * later on.
- *
- * @param symbolizer The TextSymbolizer to derive the font string from
- */
-const getTextFontForMarkSymbolizer = (symbolizer) => {
-    const parts = symbolizer.wellKnownName.match(WELLKNOWNNAME_TTF_REGEXP);
-    if (!parts) {
-        throw new Error(`Could not parse font-based well known name: ${symbolizer.wellKnownName}`);
-    }
-    const fontFamily = parts[1];
-    return `Normal ${symbolizer.radius || 5}px '${fontFamily}', ${DUMMY_MARK_SYMBOLIZER_FONT}`;
-};
-
-/**
- * Returns a 1-char string to be used as text for mark symbolizers using a font glyph.
- *
- * @param symbolizer The MarkSymbolizer to derive the character string from
- */
-const getCharacterForMarkSymbolizer = (symbolizer) => {
-    const parts = symbolizer.wellKnownName.match(WELLKNOWNNAME_TTF_REGEXP);
-    if (!parts) {
-        throw new Error(`Could not parse font-based well known name: ${symbolizer.wellKnownName}`);
-    }
-    return String.fromCharCode(parseInt(parts[2], 16));
 };
 
 /**
@@ -294,32 +349,20 @@ export class OlStyleParser {
      * @return The Promise resolving with one of above mentioned style types.
      */
     writeStyle(geoStylerStyle) {
-        return drawIcons(geoStylerStyle)
-            .then((images) => {
-                this._computeIconScaleBasedOnSymbolizer = (symbolizer) => {
-                    const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
-                    if (image && width && height) {
-                        const side = width > height ? width : height;
-                        const scale = symbolizer.size / side;
-                        return scale;
-                    }
-                    return symbolizer.size;
-                };
-                return new Promise((resolve) => {
-                    const unsupportedProperties = this.checkForUnsupportedProperties(geoStylerStyle);
-                    try {
-                        const olStyle = this.getOlStyleTypeFromGeoStylerStyle(geoStylerStyle);
-                        resolve(olStyle, {
-                            unsupportedProperties,
-                            warnings: unsupportedProperties && ['Your style contains unsupportedProperties!']
-                        });
-                    } catch (error) {
-                        resolve({
-                            errors: [error]
-                        });
-                    }
+        return new Promise((resolve) => {
+            const unsupportedProperties = this.checkForUnsupportedProperties(geoStylerStyle);
+            try {
+                const olStyle = this.getOlStyleTypeFromGeoStylerStyle(geoStylerStyle);
+                resolve(olStyle, {
+                    unsupportedProperties,
+                    warnings: unsupportedProperties && ['Your style contains unsupportedProperties!']
                 });
-            });
+            } catch (error) {
+                resolve({
+                    errors: [error]
+                });
+            }
+        });
     }
 
     checkForUnsupportedProperties(geoStylerStyle) {
@@ -382,66 +425,80 @@ export class OlStyleParser {
      */
     geoStylerStyleToOlParserStyleFct(geoStylerStyle) {
         const rules = geoStylerStyle.rules;
-        const olStyle = ({ map } = {}) => (feature, resolution) => {
-            this._getMap = () => map;
-            const styles = [];
-
-            // calculate scale for resolution (from ol-util MapUtil)
-            const units = map
-                ? map.getView().getProjection().getUnits()
-                : 'm';
-            const dpi = 25.4 / 0.28;
-            const mpu = METERS_PER_UNIT[units];
-            const inchesPerMeter = 39.37;
-            const scale = resolution * mpu * inchesPerMeter * dpi;
-
-            rules.forEach((rule) => {
-                // handling scale denominator
-                let minScale = rule?.scaleDenominator?.min;
-                let maxScale = rule?.scaleDenominator?.max;
-                let isWithinScale = true;
-                if (minScale || maxScale) {
-                    minScale = isGeoStylerFunction(minScale) ? expressionsUtils.evaluateNumberFunction(minScale) : minScale;
-                    maxScale = isGeoStylerFunction(maxScale) ? expressionsUtils.evaluateNumberFunction(maxScale) : maxScale;
-                    if (minScale && scale < minScale) {
-                        isWithinScale = false;
+        const olStyle = ({ map, features } = {}) => drawIcons(geoStylerStyle, { features })
+            .then((images) => {
+                this._getImages = () => images;
+                this._getImageSrc = createGetImagesSrc();
+                this._computeIconScaleBasedOnSymbolizer = (symbolizer, _symbolizer) => {
+                    const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer, _symbolizer)) || {};
+                    if (image && width && height) {
+                        const side = width > height ? width : height;
+                        const scale = symbolizer.size / side;
+                        return scale;
                     }
-                    if (maxScale && scale >= maxScale) {
-                        isWithinScale = false;
-                    }
-                }
+                    return symbolizer.size;
+                };
+                return (feature, resolution) => {
+                    this._getMap = () => map;
+                    const styles = [];
 
-                // handling filter
-                let matchesFilter = false;
-                if (!rule.filter) {
-                    matchesFilter = true;
-                } else {
-                    try {
-                        matchesFilter = geoStylerStyleFilter(feature, rule.filter);
-                    } catch (e) {
-                        matchesFilter = false;
-                    }
-                }
+                    // calculate scale for resolution (from ol-util MapUtil)
+                    const units = map
+                        ? map.getView().getProjection().getUnits()
+                        : 'm';
+                    const dpi = 25.4 / 0.28;
+                    const mpu = METERS_PER_UNIT[units];
+                    const inchesPerMeter = 39.37;
+                    const scale = resolution * mpu * inchesPerMeter * dpi;
 
-                if (isWithinScale && matchesFilter) {
-                    rule.symbolizers.forEach((symb) => {
-                        const olSymbolizer = this.getOlSymbolizerFromSymbolizer(symb, feature);
+                    rules.forEach((rule) => {
+                        // handling scale denominator
+                        let minScale = rule?.scaleDenominator?.min;
+                        let maxScale = rule?.scaleDenominator?.max;
+                        let isWithinScale = true;
+                        if (minScale || maxScale) {
+                            minScale = isGeoStylerFunction(minScale) ? expressionsUtils.evaluateNumberFunction(minScale) : minScale;
+                            maxScale = isGeoStylerFunction(maxScale) ? expressionsUtils.evaluateNumberFunction(maxScale) : maxScale;
+                            if (minScale && scale < minScale) {
+                                isWithinScale = false;
+                            }
+                            if (maxScale && scale >= maxScale) {
+                                isWithinScale = false;
+                            }
+                        }
 
-                        // either an OlStyle or an ol.StyleFunction. OpenLayers only accepts an array
-                        // of OlStyles, not ol.StyleFunctions.
-                        // So we have to check it and in case of an ol.StyleFunction call that function
-                        // and add the returned style to const styles.
-                        if (typeof olSymbolizer !== 'function') {
-                            styles.push(olSymbolizer);
+                        // handling filter
+                        let matchesFilter = false;
+                        if (!rule.filter) {
+                            matchesFilter = true;
                         } else {
-                            const styleFromFct = olSymbolizer(feature, resolution);
-                            styles.push(styleFromFct);
+                            try {
+                                matchesFilter = geoStylerStyleFilter(feature, rule.filter);
+                            } catch (e) {
+                                matchesFilter = false;
+                            }
+                        }
+
+                        if (isWithinScale && matchesFilter) {
+                            rule.symbolizers.forEach((symb) => {
+                                const olSymbolizer = this.getOlSymbolizerFromSymbolizer(symb, feature);
+
+                                // either an OlStyle or an ol.StyleFunction. OpenLayers only accepts an array
+                                // of OlStyles, not ol.StyleFunctions.
+                                // So we have to check it and in case of an ol.StyleFunction call that function
+                                // and add the returned style to const styles.
+                                if (typeof olSymbolizer !== 'function') {
+                                    styles.push(olSymbolizer);
+                                } else {
+                                    const styleFromFct = olSymbolizer(feature, resolution);
+                                    styles.push(styleFromFct);
+                                }
+                            });
                         }
                     });
-                }
+                    return styles;
+                };
             });
-            return styles;
-        };
         const olStyleFct = olStyle;
         olStyleFct.__geoStylerStyle = geoStylerStyle;
         return olStyleFct;
@@ -472,6 +529,9 @@ export class OlStyleParser {
             break;
         case 'Fill':
             olSymbolizer = this.getOlPolygonSymbolizerFromFillSymbolizer(symbolizer, feature);
+            break;
+        case 'Circle':
+            olSymbolizer = this.getOlCircleSymbolizerFromCircleSymbolizer(symbolizer, feature);
             break;
         default:
             // Return the OL default style since the TS type binding does not allow
@@ -504,222 +564,36 @@ export class OlStyleParser {
      * @param markSymbolizer A GeoStyler-Style MarkSymbolizer.
      * @return The OL Style object
      */
-    getOlPointSymbolizerFromMarkSymbolizer(markSymbolizer, feature) {
-        let stroke;
-
+    getOlPointSymbolizerFromMarkSymbolizer(_markSymbolizer, feature) {
+        const markSymbolizer = {..._markSymbolizer};
         for (const key of Object.keys(markSymbolizer)) {
             if (isGeoStylerFunction(markSymbolizer[key])) {
                 markSymbolizer[key] = expressionsUtils.evaluateFunction(markSymbolizer[key], feature);
             }
         }
-
-        const strokeColor = markSymbolizer.strokeColor;
-        const strokeOpacity = markSymbolizer.strokeOpacity;
-
-        const sColor = strokeColor && (strokeOpacity !== undefined)
-            ? getRgbaColor(strokeColor, strokeOpacity)
-            : markSymbolizer.strokeColor;
-
-        if (markSymbolizer.strokeColor || markSymbolizer.strokeWidth !== undefined) {
-            stroke = new this.OlStyleStrokeConstructor({
-                color: sColor,
-                width: markSymbolizer.strokeWidth
+        const geometryFunc = getGeometryFunction(markSymbolizer, feature, this._getMap());
+        const images = this._getImages();
+        const imageId = getImageIdFromSymbolizer(markSymbolizer, _markSymbolizer);
+        const { image, width, height } = images.find(({ id }) => id === imageId) || {};
+        if (image) {
+            const side = width > height ? width : height;
+            const scale = (markSymbolizer.radius * 2) / side;
+            // const src = this._getImageSrc(image, imageId);
+            // if _getImageSrc is not defined, perform the image.toDataURL() here
+            const src = this._getImageSrc?.(image, imageId) ?? image.toDataURL();
+            return new this.OlStyleConstructor({
+                image: new this.OlStyleIconConstructor({
+                    src,
+                    crossOrigin: 'anonymous',
+                    opacity: 1,
+                    scale,
+                    // Rotation in openlayers is radians while we use degree
+                    rotation: (typeof (markSymbolizer.rotate) === 'number' ? markSymbolizer.rotate * Math.PI / 180 : undefined)
+                }),
+                ...geometryFunc
             });
         }
-        const { geometry } = getGeometryFunction(markSymbolizer, feature, this._getMap()) || {};
-        const color = markSymbolizer.color;
-        const opacity = markSymbolizer.opacity;
-        const radius = markSymbolizer.radius;
-        const fillOpacity = markSymbolizer.fillOpacity;
-        const fColor = color && (fillOpacity !== undefined)
-            ? getRgbaColor(color, fillOpacity ?? 1)
-            : color;
-
-        const fill = new this.OlStyleFillConstructor({
-            color: fColor
-        });
-
-        let olStyle;
-        const shapeOpts = {
-            fill: fill,
-            radius: radius ?? 5,
-            rotation: typeof (markSymbolizer.rotate) === 'number' ? markSymbolizer.rotate * Math.PI / 180 : undefined,
-            stroke: stroke,
-            displacement: typeof (markSymbolizer.offset) === 'number' ? markSymbolizer.offset : undefined
-        };
-
-        switch (markSymbolizer.wellKnownName.toLowerCase()) {
-        case 'shape://dot':
-        case 'circle':
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleCircleConstructor(shapeOpts)
-            });
-            break;
-        case 'square':
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 4,
-                    angle: 45 * Math.PI / 180
-                })
-            });
-            break;
-        case 'triangle':
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 3,
-                    angle: 0
-                })
-            });
-            break;
-        case 'star':
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 5,
-                    radius2: shapeOpts.radius / 2.5,
-                    angle: 0
-                })
-            });
-            break;
-        case 'shape://plus':
-        case 'cross':
-            // openlayers does not seem to set a default stroke color,
-            // which is needed for regularshapes with radius2 = 0
-            if (shapeOpts.stroke === undefined) {
-                shapeOpts.stroke = new this.OlStyleStrokeConstructor({
-                    color: '#000'
-                });
-            }
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 4,
-                    radius2: 0,
-                    angle: 0
-                })
-            });
-            break;
-        case 'shape://times':
-        case 'x':
-            // openlayers does not seem to set a default stroke color,
-            // which is needed for regularshapes with radius2 = 0
-            if (shapeOpts.stroke === undefined) {
-                shapeOpts.stroke = new this.OlStyleStrokeConstructor({
-                    color: '#000'
-                });
-            }
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 4,
-                    radius2: 0,
-                    angle: 45 * Math.PI / 180
-                })
-            });
-            break;
-        case 'shape://backslash':
-            // openlayers does not seem to set a default stroke color,
-            // which is needed for regularshapes with radius2 = 0
-            if (shapeOpts.stroke === undefined) {
-                shapeOpts.stroke = new this.OlStyleStrokeConstructor({
-                    color: '#000'
-                });
-            }
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 2,
-                    angle: 2 * Math.PI - (Math.PI / 4)
-                })
-            });
-            break;
-        case 'shape://horline':
-            // openlayers does not seem to set a default stroke color,
-            // which is needed for regularshapes with radius2 = 0
-            if (shapeOpts.stroke === undefined) {
-                shapeOpts.stroke = new this.OlStyleStrokeConstructor({
-                    color: '#000'
-                });
-            }
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 2,
-                    angle: Math.PI / 2
-                })
-            });
-            break;
-        // so far, both arrows are closed arrows. Also, shape is a regular triangle with
-        // all sides of equal length. In geoserver arrows only have two sides of equal length.
-        // TODO redefine shapes of arrows?
-        case 'shape://oarrow':
-        case 'shape://carrow':
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 3,
-                    angle: Math.PI / 2
-                })
-            });
-            break;
-        case 'shape://slash':
-            // openlayers does not seem to set a default stroke color,
-            // which is needed for regularshapes with radius2 = 0
-            if (shapeOpts.stroke === undefined) {
-                shapeOpts.stroke = new this.OlStyleStrokeConstructor({
-                    color: '#000'
-                });
-            }
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 2,
-                    angle: Math.PI / 4
-                })
-            });
-            break;
-        case 'shape://vertline':
-            // openlayers does not seem to set a default stroke color,
-            // which is needed for regularshapes with radius2 = 0
-            if (shapeOpts.stroke === undefined) {
-                shapeOpts.stroke = new this.OlStyleStrokeConstructor({
-                    color: '#000'
-                });
-            }
-            olStyle = new this.OlStyleConstructor({
-                image: new this.OlStyleRegularshapeConstructor({
-                    ...shapeOpts,
-                    points: 2,
-                    angle: 0
-                })
-            });
-            break;
-        default:
-            if (getIsFontGlyphBased(markSymbolizer)) {
-                olStyle = new this.OlStyleConstructor({
-                    text: new this.OlStyleTextConstructor({
-                        text: getCharacterForMarkSymbolizer(markSymbolizer),
-                        font: getTextFontForMarkSymbolizer(markSymbolizer),
-                        fill: shapeOpts.fill,
-                        stroke: shapeOpts.stroke,
-                        rotation: shapeOpts.rotation
-                    })
-                });
-                break;
-            }
-            throw new Error('MarkSymbolizer cannot be parsed. Unsupported WellKnownName.');
-        }
-
-        if (Number.isFinite(opacity) && olStyle.getImage()) {
-            olStyle.getImage().setOpacity(opacity);
-        }
-
-        if (geometry) {
-            olStyle.setGeometry(geometry);
-        }
-        return olStyle;
+        return new this.OlStyleConstructor();
     }
 
     /**
@@ -729,9 +603,10 @@ export class OlStyleParser {
      * @return The OL Style object
      */
     getOlIconSymbolizerFromIconSymbolizer(
-        symbolizer,
+        _symbolizer,
         feat
     ) {
+        let symbolizer = { ..._symbolizer };
         for (const key of Object.keys(symbolizer)) {
             if (isGeoStylerFunction(symbolizer[key])) {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
@@ -742,11 +617,11 @@ export class OlStyleParser {
             src: symbolizer.image,
             crossOrigin: 'anonymous',
             opacity: symbolizer.opacity,
-            scale: this._computeIconScaleBasedOnSymbolizer(symbolizer),
+            scale: this._computeIconScaleBasedOnSymbolizer(symbolizer, _symbolizer),
             // Rotation in openlayers is radians while we use degree
             rotation: (typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined),
             displacement: symbolizer.offset,
-            anchor: symbolizer.anchor
+            anchor: anchorStringToFraction(symbolizer.anchor)
 
         };
         // check if IconSymbolizer.image contains a placeholder
@@ -802,7 +677,8 @@ export class OlStyleParser {
      * @param symbolizer A GeoStyler-Style LineSymbolizer.
      * @return The OL Style object
      */
-    getOlLineSymbolizerFromLineSymbolizer(symbolizer, feat) {
+    getOlLineSymbolizerFromLineSymbolizer(_symbolizer, feat) {
+        let symbolizer = { ..._symbolizer };
         for (const key of Object.keys(symbolizer)) {
             if (isGeoStylerFunction(symbolizer[key])) {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
@@ -834,12 +710,14 @@ export class OlStyleParser {
      * @param symbolizer A GeoStyler-Style FillSymbolizer.
      * @return The OL Style object
      */
-    getOlPolygonSymbolizerFromFillSymbolizer(symbolizer, feat) {
+    getOlPolygonSymbolizerFromFillSymbolizer(_symbolizer, feat) {
+        let symbolizer = { ..._symbolizer };
         for (const key of Object.keys(symbolizer)) {
             if (isGeoStylerFunction(symbolizer[key])) {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
             }
         }
+        const geometryFunc = getGeometryFunction(symbolizer, feat, this._getMap());
 
         const color = symbolizer.color;
         // fillOpacity is needed for legacy support
@@ -865,8 +743,78 @@ export class OlStyleParser {
         }) : undefined;
 
         const olStyle = new this.OlStyleConstructor({
+            ...geometryFunc,
             fill,
             stroke
+        });
+
+        if (symbolizer.graphicFill) {
+            const pattern = this.getOlPatternFromGraphicFill(symbolizer.graphicFill);
+            if (!fill) {
+                fill = new this.OlStyleFillConstructor({});
+            }
+            if (pattern) {
+                fill.setColor(pattern);
+            }
+            olStyle.setFill(fill);
+        }
+
+        return olStyle;
+    }
+
+    /**
+     * Get the OL Style object from an GeoStyler-Style Custom CircleSymbolizer.
+     *
+     * @param symbolizer A GeoStyler-Style Custom CircleSymbolizer.
+     * @return The OL Style object
+     */
+    getOlCircleSymbolizerFromCircleSymbolizer(_symbolizer, feat) {
+        let symbolizer = {..._symbolizer};
+        for (const key of Object.keys(symbolizer)) {
+            if (isGeoStylerFunction(symbolizer[key])) {
+                symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
+            }
+        }
+
+        const color = symbolizer.color;
+        const opacity = symbolizer.opacity;
+        const fColor = color && Number.isFinite(opacity)
+            ? getRgbaColor(color, opacity)
+            : color;
+
+        let fill = color
+            ? new this.OlStyleFillConstructor({ color: fColor })
+            : undefined;
+
+        const outlineColor = symbolizer.outlineColor;
+        const outlineOpacity = symbolizer.outlineOpacity;
+        const oColor = (outlineColor && Number.isFinite(outlineOpacity))
+            ? getRgbaColor(outlineColor, outlineOpacity)
+            : outlineColor;
+
+        const stroke = outlineColor || symbolizer.outlineWidth ? new this.OlStyleStrokeConstructor({
+            color: oColor,
+            width: symbolizer.outlineWidth,
+            lineDash: symbolizer.outlineDasharray
+        }) : undefined;
+
+        const olStyle = new this.OlStyleConstructor({
+            fill,
+            stroke,
+            geometry: (feature) => {
+                const map = this._getMap();
+                if (symbolizer.geodesic) {
+                    const projectionCode = map.getView().getProjection().getCode();
+                    const center = transform(feature.getGeometry().getCoordinates(), projectionCode, 'EPSG:4326');
+                    const circle = circular(center, symbolizer.radius, 128);
+                    circle.transform('EPSG:4326', projectionCode);
+                    return  new OlGeomPolygon(circle.getCoordinates());
+                }
+                return new OlGeomCircle(
+                    feature.getGeometry().getCoordinates(),
+                    symbolizer.radius / METERS_PER_UNIT[map.getView().getProjection().getUnits()]
+                );
+            }
         });
 
         if (symbolizer.graphicFill) {
@@ -948,9 +896,10 @@ export class OlStyleParser {
      * @return {object} The OL StyleFunction
      */
     getOlTextSymbolizerFromTextSymbolizer(
-        symbolizer,
+        _symbolizer,
         feat
     ) {
+        let symbolizer = { ..._symbolizer };
         for (const key of Object.keys(symbolizer)) {
             if (isGeoStylerFunction(symbolizer[key])) {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
@@ -984,10 +933,8 @@ export class OlStyleParser {
             overflow: symbolizer.allowOverlap,
             offsetX: (symbolizer.offset ? symbolizer.offset[0] : 0),
             offsetY: (symbolizer.offset ? symbolizer.offset[1] : 0),
-            rotation: typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined
-            // TODO check why props match
-            // textAlign: symbolizer.pitchAlignment,
-            // textBaseline: symbolizer.anchor
+            rotation: typeof (symbolizer.rotate) === 'number' ? symbolizer.rotate * Math.PI / 180 : undefined,
+            ...anchorStringToTextProperties(symbolizer.anchor)
         };
 
         // check if TextSymbolizer.label contains a placeholder

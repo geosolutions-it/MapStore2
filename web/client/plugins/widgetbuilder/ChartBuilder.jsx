@@ -31,16 +31,27 @@ import LayerSelector from './ChartLayerSelector';
 import BuilderHeader from './BuilderHeader';
 import Toolbar from '../../components/widgets/builder/wizard/chart/Toolbar';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
-import { getDependantWidget } from "../../utils/WidgetsUtils";
+import { getDependantWidget, isChartCompatibleWithTableWidget } from "../../utils/WidgetsUtils";
 
+/**
+ * Enhancer allows us to check if charts along with traces has layers
+ * incompatible to disallow dependency mapping with other targetable dependencies
+ * 1. Checks for the geometry property (needed for synchronization with a map or any other sort of spatial filter) presence on all layers of the charts
+ * 2. Checks for all the names of the layers to be matching with the name of the dependent `table` widget when dependency target widget is table
+ * @param {object} editorData current chart widget in edit
+ * @param {object[]} widgets list of all the available widgets
+ * @returns {object} with flag determining whether to allow or disallow depedency support on the current chart widget
+ */
+const setMultiDependencySupport = ({editorData = {}, widgets = []} = {}) => {
 
-const setMultiDependencySupport = ({editorData = {}, disableMultiDependencySupport: disableSupport, widgets = []} = {}) => {
-    let disableMultiDependencySupport = disableSupport || editorData?.charts?.some(f => !f.geomProp);
+    let disableMultiDependencySupport = editorData?.charts?.some(({ traces }) =>
+        traces.some(trace => !trace.geomProp)
+    );
     const dependantWidget = getDependantWidget({widgets, dependenciesMap: editorData?.dependenciesMap});
     if (dependantWidget?.widgetType === 'table') {
         // Disable dependency support when some layers in multi chart
         // doesn't match dependant table widget
-        disableMultiDependencySupport = disableMultiDependencySupport || editorData?.charts?.some(c => c.layer.name !==  dependantWidget?.layer?.name);
+        disableMultiDependencySupport = disableMultiDependencySupport || !isChartCompatibleWithTableWidget(editorData, dependantWidget);
     }
     return { disableMultiDependencySupport };
 };
@@ -48,6 +59,7 @@ const setMultiDependencySupport = ({editorData = {}, disableMultiDependencySuppo
 const Builder = connect(
     wizardSelector,
     {
+        openFilterEditor,
         setPage,
         setValid: valid => changeEditorSetting("valid", valid),
         onEditorChange,
@@ -87,12 +99,13 @@ const ChartToolbar = compose(
 const chooseLayerEnhancer = compose(
     withState('showLayers', "toggleLayerSelector", false),
     withState('errors', 'setErrors', {}),
-    withState('noAttributes', 'setNoAttributes', false),
     connect(wizardSelector, null, wizardStateToProps),
     viewportBuilderConnectMask,
     catalogEditorEnhancer,
     branch(
-        ({layer, showLayers} = {}) => !layer || showLayers,
+        ({layer, showLayers} = {}) => {
+            return !layer || showLayers;
+        },
         renderComponent(chartLayerSelector(LayerSelector))
     )
 );
@@ -110,7 +123,6 @@ export default chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, 
                     onClose={onClose}
                     toggleLayerSelector={props.toggleLayerSelector}
                     errors={props.errors}
-                    noAttributes={props.noAttributes}
                     dashboardEditing={props.dashboardEditing}
                 />
             </BuilderHeader>}

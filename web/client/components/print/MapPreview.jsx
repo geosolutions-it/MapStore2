@@ -15,6 +15,7 @@ import { getMapZoom, getResolutionMultiplier } from '../../utils/PrintUtils';
 import ScaleBox from '../mapcontrols/scale/ScaleBox';
 import Button from '../misc/Button';
 import isNil from 'lodash/isNil';
+import isEmpty from 'lodash/isEmpty';
 import { MapLibraries } from '../../utils/MapTypeUtils';
 
 let PMap;
@@ -40,6 +41,7 @@ class MapPreview extends React.Component {
         layout: PropTypes.string,
         layoutSize: PropTypes.object,
         useFixedScales: PropTypes.bool,
+        rotation: PropTypes.number,
         env: PropTypes.object,
         onLoadingMapPlugins: PropTypes.func
     };
@@ -133,7 +135,12 @@ class MapPreview extends React.Component {
             height: this.props.height + "px"
         });
         const resolutions = this.getResolutions();
-        const mapOptions = resolutions ? {view: {resolutions}} : {};
+        let mapOptions = !isEmpty(resolutions) || !isNil(this.props.rotation) ? {
+            view: {
+                ...(!isEmpty(resolutions) && {resolutions}),
+                rotation: !isNil(this.props.rotation) ? Number(this.props.rotation) : 0
+            }
+        } : {};
         const projection = this.props.map && this.props.map.projection || 'EPSG:3857';
         return this.props.map && this.props.map.center ?
 

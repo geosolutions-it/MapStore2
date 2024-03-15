@@ -72,6 +72,18 @@ const DashboardExportPlugin = createPlugin('DashboardExport', {
                 toggle: true,
                 doNotHide: true
             };
+        }, SidebarMenu: () => {
+            return {
+                name: "export",
+                position: 4,
+                text: <Message msgId="mapExport.title" />,
+                tooltip: "mapExport.title",
+                icon: <Glyphicon glyph="download" />,
+                action: () => toggleControl('export'),
+                priority: 2,
+                toggle: true,
+                doNotHide: true
+            };
         }
     }
 });

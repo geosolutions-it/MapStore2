@@ -36,7 +36,7 @@ describe('widgets dependenciesToExtent enhancer', () => {
     it('dependenciesToExtent default', (done) => {
         const Sink = dependenciesToExtent(createSink( props => {
             expect(props).toExist();
-            expect(props).toEqual({});
+            expect(props.hookRegister).toEqual(null);
             done();
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
@@ -55,7 +55,7 @@ describe('widgets dependenciesToExtent enhancer', () => {
             '<?xml version="1.0" encoding="UTF-8"?><ows:BoundingBox xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" crs="EPSG:4326"><ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner><ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner></ows:BoundingBox>'
         );
 
-        const hookRegister = MapUtils.createRegisterHooks();
+        const hookRegister = MapUtils.createRegisterHooks("id");
         hookRegister.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, {hookName: MapUtils.ZOOM_TO_EXTENT_HOOK});
         ReactDOM.render(<Sink
             id="id"
@@ -85,7 +85,7 @@ describe('widgets dependenciesToExtent enhancer', () => {
             '<?xml version="1.0" encoding="UTF-8"?><ows:BoundingBox xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" crs="EPSG:4326"><ows:LowerCorner>-124.731422 24.955967</ows:LowerCorner><ows:UpperCorner>-66.969849 49.371735</ows:UpperCorner></ows:BoundingBox>'
         );
 
-        const hookRegister = MapUtils.createRegisterHooks();
+        const hookRegister = MapUtils.createRegisterHooks("id");
         hookRegister.registerHook(MapUtils.ZOOM_TO_EXTENT_HOOK, {hookName: MapUtils.ZOOM_TO_EXTENT_HOOK});
         ReactDOM.render(<Sink
             id="id"

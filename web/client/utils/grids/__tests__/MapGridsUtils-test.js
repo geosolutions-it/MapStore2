@@ -245,12 +245,12 @@ describe("getGridGeoJson", () => {
         expect(geoJson.features[5].geometry.coordinates).toEqual([[-180, -90], [180, -90]]);
         expect(geoJson.features[7].geometry.coordinates).toEqual([[-180, 90], [180, 90]]);
     });
-    it("map and grid in EPSG:4326 and zoom 5, no labels", () => {
+    it("map and grid in EPSG:4326 and zoom 5.2, no labels", () => {
         const geoJson = getGridGeoJson({
             mapProjection: "EPSG:4326",
             gridProjection: "EPSG:4326",
             extent: [5, 40, 10, 44],
-            zoom: 5
+            zoom: 5.2
         });
         expect(geoJson.type).toBe("FeatureCollection");
         expect(geoJson.features.length).toBe(7);

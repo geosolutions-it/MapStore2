@@ -159,7 +159,7 @@ export const  ogcStringField = (attribute, operator, value, nsplaceholder) => {
                         attribute +
                     propertyTagReference[nsplaceholder].endTag
                 );
-        } else if (operator === "=") {
+        } else if (operator === "=" || operator === "<>") {
             fieldFilter =
                 ogcComparisonOperators[operator](nsplaceholder,
                     propertyTagReference[nsplaceholder].startTag +
@@ -549,10 +549,13 @@ export const processOGCSpatialFilter = function(version, spatialField, nsplaceho
     if (spatialField.collectGeometries) {
         return FilterUtils.processOGCCrossLayerFilter(spatialField);
     }
-    let ogc =
-        propertyTagReference[nsplaceholder].startTag +
-            spatialField.attribute +
-        propertyTagReference[nsplaceholder].endTag;
+    // spatial attribute name is not mandatory for bbox, and sometimes not present.
+    // Filter should be generated anyway
+    let ogc = spatialField.attribute
+        ? propertyTagReference[nsplaceholder].startTag +
+                spatialField.attribute +
+            propertyTagReference[nsplaceholder].endTag
+        : '';
 
     switch (spatialField.operation) {
     case "INTERSECTS":
@@ -1159,16 +1162,17 @@ export const isFilterValid = (f = {}) =>
 const composeSpatialFields = (...spatialFields) => {
     return flatten(spatialFields.filter(v => !!v));
 };
-export const composeAttributeFilters = (filters, logic = "AND", spatialFieldOperator = "AND") => {
+export const composeAttributeFilters = (filterObjs, logic = "AND", spatialFieldOperator = "AND") => {
     const rootGroup = {
         id: new Date().getTime(),
         index: 0,
         logic
     };
-    return filters.reduce((filter, {filterFields = [], groupFields = [], spatialField} = {}, idx) => {
+    return filterObjs.reduce((filter, {filterFields = [], groupFields = [], spatialField, filters = []} = {}, idx) => {
         return ({
             groupFields: filter.groupFields.concat(filterFields.length > 0 && groupFields.map(g => ({groupId: g.index === 0 && rootGroup.id || `${g.groupId}_${idx}`, logic: g.logic, id: `${g.id}_${idx}`, index: 1 + g.index })) || []),
             filterFields: filter.filterFields.concat(filterFields.map(f => ({...f, groupId: `${f.groupId}_${idx}`}))),
+            filters: (filter?.filters ?? []).concat(filters),
             spatialField: composeSpatialFields(filter.spatialField, spatialField),
             spatialFieldOperator
         });

@@ -8,8 +8,9 @@
 
 import React from 'react';
 import Message from '../I18N/Message';
+import InfoPopover from '../widgets/widget/InfoPopover';
 
-function PropertyField({ children, label, tools, divider, invalid, warning, disabled }) {
+function PropertyField({ children, label, tools, divider, invalid, warning, disabled, valueStyle, infoMessageId }) {
 
     if (divider) {
         return <div className="ms-symbolizer-field-divider"></div>;
@@ -20,9 +21,13 @@ function PropertyField({ children, label, tools, divider, invalid, warning, disa
     return (
         <div
             className={'ms-symbolizer-field' + disabledClassName}>
-            <div className="ms-symbolizer-label"><Message msgId={label} /></div>
+            <div className="ms-symbolizer-label">
+                <Message msgId={label} />
+                {infoMessageId ? <>&nbsp;<InfoPopover text={<Message msgId={infoMessageId} />}/></> : null}
+            </div>
             <div
                 className={'ms-symbolizer-value' + validationClassName + warningClassName}
+                style={valueStyle}
                 // prevent drag and drop when interacting with property input
                 onDragStart={(event) => {
                     event.stopPropagation();

@@ -17,8 +17,7 @@ import {
     NO_DETAILS_AVAILABLE
 } from "../actions/details";
 
-import { mapIdSelector, mapInfoDetailsUriFromIdSelector, mapInfoDetailsSettingsFromIdSelector } from '../selectors/map';
-import { detailsTextSelector } from '../selectors/details';
+import { detailsTextSelector, detailsUriSelector, detailsSettingsSelector } from '../selectors/details';
 import { mapLayoutValuesSelector } from '../selectors/maplayout';
 
 import DetailsViewer from '../components/resources/modals/fragments/DetailsViewer';
@@ -32,6 +31,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import details from '../reducers/details';
 import * as epics from '../epics/details';
 import {createStructuredSelector} from "reselect";
+import { getDashboardId } from '../selectors/dashboard';
 
 /**
  * Allow to show details for the map.
@@ -51,7 +51,8 @@ const DetailsPlugin = ({
     dockStyle,
     detailsText,
     showAsModal = false,
-    onClose = () => {}
+    onClose = () => {},
+    isDashboard
 }) => {
     const viewer = (<DetailsViewer
         className="ms-details-preview-container"
@@ -59,7 +60,7 @@ const DetailsPlugin = ({
         loading={!detailsText}
         detailsText={detailsText === NO_DETAILS_AVAILABLE ? null : detailsText}/>);
 
-    return showAsModal ?
+    return showAsModal && active ?
         <ResizableModal
             bodyClassName="details-viewer-modal"
             fitContent
@@ -69,8 +70,9 @@ const DetailsPlugin = ({
             title={<Message msgId="details.title"/>}
             onClose={onClose}>
             {viewer}
-        </ResizableModal> :
+        </ResizableModal> : active &&
         <DetailsPanel
+            isDashboard={isDashboard}
             width={550}
             dockStyle={dockStyle}
             active={active}
@@ -81,10 +83,24 @@ const DetailsPlugin = ({
 
 export default createPlugin('Details', {
     component: connect(createStructuredSelector({
+        isDashboard: (state) => {
+            return getDashboardId(state) ? true : false;
+        },
         active: state => get(state, "controls.details.enabled"),
-        dockStyle: state => mapLayoutValuesSelector(state, { height: true, right: true }, true),
+        dockStyle: state => {
+            const isDashbaord = getDashboardId(state);
+            let layoutValues = mapLayoutValuesSelector(state, { height: true, right: true }, true);
+            if (isDashbaord) {
+                layoutValues = { ...layoutValues, right: 0, height: '100%'};
+            }
+            return layoutValues;
+        },
         detailsText: detailsTextSelector,
-        showAsModal: state => mapInfoDetailsSettingsFromIdSelector(state)?.showAsModal
+        showAsModal: state => {
+            let detailsSettings = detailsSettingsSelector(state);
+            if (detailsSettings && typeof detailsSettings === 'string') detailsSettings = JSON.parse(detailsSettings);
+            return  detailsSettings?.showAsModal;
+        }
     }), {
         onClose: closeDetailsPanel
     })(DetailsPlugin),
@@ -99,8 +115,7 @@ export default createPlugin('Details', {
             icon: <Glyphicon glyph="sheet"/>,
             action: openDetailsPanel,
             selector: (state) => {
-                const mapId = mapIdSelector(state);
-                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                const detailsUri = detailsUriSelector(state);
                 if (detailsUri) {
                     return {};
                 }
@@ -117,8 +132,7 @@ export default createPlugin('Details', {
             icon: <Glyphicon glyph="sheet"/>,
             action: openDetailsPanel,
             selector: (state) => {
-                const mapId = mapIdSelector(state);
-                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                const detailsUri = detailsUriSelector(state);
                 if (detailsUri) {
                     return {};
                 }
@@ -134,8 +148,7 @@ export default createPlugin('Details', {
             icon: <Glyphicon glyph="sheet"/>,
             action: openDetailsPanel,
             selector: (state) => {
-                const mapId = mapIdSelector(state);
-                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
+                const detailsUri = detailsUriSelector(state);
                 if (detailsUri) {
                     return {
                         bsStyle: state.controls.details && state.controls.details.enabled ? 'primary' : 'tray',

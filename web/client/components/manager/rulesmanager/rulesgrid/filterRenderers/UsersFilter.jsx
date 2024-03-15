@@ -16,7 +16,8 @@ import { createSelector } from 'reselect';
 import { filterSelector } from '../../../../../selectors/rulesmanager';
 import { error } from '../../../../../actions/notifications';
 const selector = createSelector(filterSelector, (filter) => ({
-    selected: filter.username
+    selected: filter.username,
+    anyFieldVal: filter.userAny
 }));
 
 export default compose(
@@ -28,17 +29,20 @@ export default compose(
         loadData: getUsers,
         parentsFilter: {},
         filter: false,
-        placeholder: "rulesmanager.placeholders.filter",
+        placeholder: "rulesmanager.placeholders.filterAny",
+        unCheckedAnyField: "rulesmanager.tooltip.filterRuleList",
+        checkedAnyField: "rulesmanager.tooltip.showAllRules",
         loadingErrorMsg: {
             title: "rulesmanager.errorTitle",
             message: "rulesmanager.errorLoadingUsers"
-        }
+        },
+        anyFilterRuleMode: 'userAny'
     }),
     withHandlers({
         onValueSelected: ({column = {}, onFilterChange = () => {}}) => filterTerm => {
             onFilterChange({column, filterTerm});
         }
     }),
-    localizedProps(["placeholder"]),
+    localizedProps(["placeholder", "loadingErroMsg", "checkedAnyField", "unCheckedAnyField"]),
     autoComplete
 )(PagedCombo);

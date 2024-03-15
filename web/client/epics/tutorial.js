@@ -27,9 +27,9 @@ import { CONTEXT_TUTORIALS } from '../actions/contextcreator';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { isEmpty, isArray, isObject } from 'lodash';
 import { getApi } from '../api/userPersistedStorage';
-import { mapSelector } from '../selectors/map';
 import {REDUCERS_LOADED} from "../actions/storemanager";
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
+import { detailsSettingsSelector } from '../selectors/details';
 
 const findTutorialId = path => path.match(/\/(viewer)\/(\w+)\/(\d+)/) && path.replace(/\/(viewer)\/(\w+)\/(\d+)/, "$2")
     || path.match(/\/(\w+)\/(\d+)/) && path.replace(/\/(\w+)\/(\d+)/, "$1")
@@ -168,7 +168,14 @@ export const getActionsFromStepEpic = (action$) =>
 
 export const openDetailsPanelEpic = (action$, store) =>
     action$.ofType(CLOSE_TUTORIAL)
-        .filter(() => mapSelector(store.getState())?.info?.detailsSettings?.showAtStartup )
+        .filter(() => {
+            const state = store.getState();
+            let detailsSettings = detailsSettingsSelector(state);
+            if (detailsSettings && typeof detailsSettings === 'string') {
+                detailsSettings = JSON.parse(detailsSettings);
+            }
+            return detailsSettings?.showAtStartup;
+        })
         .switchMap( () => {
             return Rx.Observable.of(openDetailsPanel());
         });

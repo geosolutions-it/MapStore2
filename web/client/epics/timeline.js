@@ -61,9 +61,9 @@ import {
     layersWithTimeDataSelector
 } from '../selectors/dimension';
 
-import { getNearestDate, roundRangeResolution, isTimeDomainInterval } from '../utils/TimeUtils';
+import { getNearestDate, roundRangeResolution, isTimeDomainInterval, getStartEndDomainValues } from '../utils/TimeUtils';
 import { getHistogram, describeDomains } from '../api/MultiDim';
-import { getTimeDomainsObservable } from '../observables/multidim';
+import { getNearestTimesObservable } from '../observables/multidim';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 
 const TIME_DIMENSION = "time";
@@ -98,7 +98,7 @@ const snapTime = (getState, group, time) => {
     const state = getState();
     if (selectedLayerName(state)) {
         const snapType = snapTypeSelector(state);
-        return getTimeDomainsObservable(domainArgs, false, getState, snapType, time).map(values => {
+        return getNearestTimesObservable(domainArgs, true, getState, snapType, time).map(values => {
             return getNearestDate(values.filter(v => !!v), time, snapType) || time;
         });
     }
@@ -122,12 +122,13 @@ const RATIO = 5; // ratio of the size of the offset to set relative to the curre
  * @returns a stream of data with histogram and/or domain values
  */
 const loadRangeData = (id, timeData, getState) => {
-    /**
-     * when there is no timeline state rangeSelector(getState()) returns undefined, so instead we use the timeData[id] range
-     */
-    const dataRange = timeData.domain.split('--');
-
-    const initialRange = rangeSelector(getState()) || {start: new Date(dataRange[0]), end: new Date(dataRange[1])};
+    let initialRange = rangeSelector(getState());
+    // when there is no timeline state rangeSelector(getState()) returns undefined, so instead we use the timeData[id] range
+    if (!initialRange) {
+        const dataRange = getStartEndDomainValues(timeData.domain);
+        // dateRange is only 1 value for single values (extreme case, to avoid errors)
+        initialRange = {start: new Date(dataRange[0]), end: new Date(dataRange[1] || dataRange[0])};
+    }
 
     const {range, resolution} = roundRangeResolution( initialRange, MAX_HISTOGRAM);
     const layerName = getLayerFromId(getState(), id).name;
@@ -212,7 +213,7 @@ const updateRangeOnInit = (state, value, currentTime) => {
     // The startTime and endTime is full range of the layer
     let values;
 
-    // convert to array
+    // convert to array (evaluate to use getStartEndDomainValues instead)
     if (isString(value)) {
         if (value.indexOf('--') > 0) {
             values = value.split('--');
@@ -473,7 +474,7 @@ export const setRangeOnInit = (action$, { getState = () => { } } = {}) =>
             };
             const { domain } = layerDimensionDataSelectorCreator(layerId, "time")(state) || {};
             const currentTime = currentTimeSelector(state);
-            const getTimeDomain = (time) => getTimeDomainsObservable(domainArgs, false, getState, snapType, time);
+            const getTimeDomain = (time) => getNearestTimesObservable(domainArgs, false, getState, snapType, time);
             const updateRangeObs = (time) => getTimeDomain().switchMap((values) => updateRangeOnInit(rangeState, values, time));
 
             if (!isEmpty(domain) && !isEmpty(currentTime)) {

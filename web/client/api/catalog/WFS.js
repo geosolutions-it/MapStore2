@@ -17,7 +17,6 @@ import {
     testService as commonTestService,
     preprocess as commonPreprocess
 } from './common';
-
 import { get, castArray } from 'lodash';
 
 const capabilitiesCache = {};
@@ -77,14 +76,6 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
 };
 
 const recordToLayer = (record) => {
-    const DEFAULT_VECTOR_STYLE = {
-        "weight": 1,
-        "color": "rgba(0, 0, 255, 1)",
-        "opacity": 1,
-        "fillColor": "rgba(0, 0, 255, 0.1)",
-        "fillOpacity": 0.1,
-        radius: 10
-    };
     return {
         type: record.type || "wfs",
         search: {
@@ -99,7 +90,6 @@ const recordToLayer = (record) => {
         description: record.description || "",
         bbox: record.boundingBox,
         links: getRecordLinks(record),
-        style: DEFAULT_VECTOR_STYLE,
         ...record.layerOptions
     };
 };

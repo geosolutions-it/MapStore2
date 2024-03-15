@@ -11,7 +11,7 @@ import { every, get, some } from 'lodash';
 import { compose, createEventHandler, mapPropsStream } from 'recompose';
 import Rx from 'rxjs';
 
-import { isAnnotation } from '../../../../utils/AnnotationsUtils';
+import { isAnnotation, importJSONToAnnotations } from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {
     MIME_LOOKUPS,
@@ -146,7 +146,7 @@ export default compose(
                                     jsonObjects.filter(json => isGeoJSON(json))
                                         .map(json => (isAnnotation(json) ?
                                             // annotation GeoJSON to layers
-                                            { name: "Annotations", features: json?.features || [], filename: json.filename} :
+                                            { name: "Annotations", features: importJSONToAnnotations(json), filename: json.filename} :
                                             // other GeoJSON to layers
                                             {...geoJSONToLayer(json), filename: json.filename}))
                                 ),

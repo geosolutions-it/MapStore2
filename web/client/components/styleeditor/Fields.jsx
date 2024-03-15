@@ -7,7 +7,7 @@
  */
 
 import React, { useRef, useState } from 'react';
-import { FormGroup, InputGroup } from 'react-bootstrap';
+import { FormGroup, InputGroup, Glyphicon, MenuItem, DropdownButton, Checkbox } from 'react-bootstrap';
 import isObject from 'lodash/isObject';
 import omit from 'lodash/omit';
 import isNil from 'lodash/isNil';
@@ -25,8 +25,9 @@ import Band from './Band';
 import IconInput from './IconInput';
 import ModelInput from './ModelInput';
 import SelectInput from './SelectInput';
-import MultiInput from './MultiInput';
 import DebouncedFormControl from '../misc/DebouncedFormControl';
+import MarkerIconSelector from './MarkerIconSelector';
+import PropertySelector from './PropertySelector';
 
 export const fields = {
     color: ({
@@ -56,7 +57,7 @@ export const fields = {
             const blockConfig = config?.getGroupConfig(value.kind) || {};
             const properties = value;
             return (
-                <>
+                <div className="ms-symbolizer-nested-fields">
                     <Fields
                         properties={properties}
                         params={blockConfig.omittedKeys ? omit(params, blockConfig.omittedKeys) : params}
@@ -67,7 +68,7 @@ export const fields = {
                         format={format}
                     />
                     <PropertyField divider/>
-                </>
+                </div>
             );
         }
 
@@ -109,11 +110,57 @@ export const fields = {
             </PropertyField>
         );
     },
-    input: ({ label, value, config = {}, onChange = () => {}, disabled, placeholderId }) => {
+    xyInput: ({ label, value, config = {}, onChange = () => {}, disabled }) => {
         return (
             <PropertyField
                 label={label}
-                disabled={disabled}>
+                disabled={disabled}
+                valueStyle={{ flexWrap: 'wrap' }}>
+                <FormGroup>
+                    <InputGroup style={config?.maxWidth ? { maxWidth: config?.maxWidth } : {}}>
+                        <InputGroup.Addon style={{ padding: '0.2em' }}>x</InputGroup.Addon>
+                        <DebouncedFormControl
+                            type="number"
+                            value={value[0]}
+                            disabled={disabled}
+                            min={config.min}
+                            max={config.max}
+                            fallbackValue={config.fallbackValue[0]}
+                            placeholder={config.placeholderId}
+                            style={{ zIndex: 0 }}
+                            onChange={eventValue => onChange([eventValue, value[1] || config.fallbackValue[1] ])}/>
+                        {config.uom && <InputGroup.Addon>
+                            {config.uom}
+                        </InputGroup.Addon>}
+                    </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                    <InputGroup style={config?.maxWidth ? { maxWidth: config?.maxWidth } : {}}>
+                        <InputGroup.Addon style={{ padding: '0.2em' }}>y</InputGroup.Addon>
+                        <DebouncedFormControl
+                            type="number"
+                            value={value[1]}
+                            disabled={disabled}
+                            min={config.min}
+                            max={config.max}
+                            fallbackValue={config.fallbackValue[1]}
+                            placeholder={config.placeholderId}
+                            style={{ zIndex: 0 }}
+                            onChange={eventValue => onChange([ value[0] || config.fallbackValue[0], eventValue ])}/>
+                        {config.uom && <InputGroup.Addon>
+                            {config.uom}
+                        </InputGroup.Addon>}
+                    </InputGroup>
+                </FormGroup>
+            </PropertyField>
+        );
+    },
+    input: ({ label, value, config = {}, onChange = () => {}, disabled }) => {
+        return (
+            <PropertyField
+                label={label}
+                disabled={disabled}
+                infoMessageId={config.infoMessageId}>
                 <FormGroup>
                     <InputGroup style={config?.maxWidth ? { maxWidth: config?.maxWidth } : {}}>
                         <DebouncedFormControl
@@ -123,7 +170,7 @@ export const fields = {
                             min={config.min}
                             max={config.max}
                             fallbackValue={config.fallbackValue}
-                            placeholder={placeholderId}
+                            placeholder={config.placeholderId}
                             style={{ zIndex: 0 }}
                             onChange={eventValue => onChange(eventValue)}/>
                         {config.uom && <InputGroup.Addon>
@@ -134,12 +181,17 @@ export const fields = {
             </PropertyField>
         );
     },
-    multiInput: (props) => {
+    checkbox: ({ label, value, config = {}, onChange = () => {}, disabled }) => {
         return (
             <PropertyField
-                label={props.label}
-                disabled={props.disabled}>
-                <MultiInput {...props} />
+                label={label}
+                disabled={disabled}
+                infoMessageId={config.infoMessageId}>
+                <FormGroup>
+                    <Checkbox style={{ margin: 0 }} disabled={disabled} checked={!!value} onChange={(event) => onChange(!!event.target.checked)}>
+                        <Message msgId={!!value ? 'styleeditor.boolTrue' : 'styleeditor.boolFalse'} />
+                    </Checkbox>
+                </FormGroup>
             </PropertyField>
         );
     },
@@ -169,42 +221,46 @@ export const fields = {
                     }))}/>
         </PropertyField>
     ),
-    mark: ({ label, ...props }) => (
+    mark: ({ label, disabled, ...props }) => (
         <PropertyField
-            label={label}>
-            <MarkSelector { ...props }/>
+            label={label}
+            disabled={disabled}>
+            <MarkSelector { ...props } disabled={disabled}/>
         </PropertyField>
     ),
-    image: ({
-        label,
-        value,
-        config: {},
-        onChange
-    }) => {
+    image: (props) => {
+        const {
+            label,
+            value,
+            config: {},
+            onChange
+        } = props;
         const [error, setError] = useState(false);
-        const currentValue = isObject(value)
-            ? value.src
-            : value;
+        const isMarkerIcon = isObject(value) && value?.name === 'msMarkerIcon';
         return (
             <PropertyField
                 label={label}
                 invalid={!!(error?.type === 'error')}
                 warning={!!(error?.type === 'warning')}>
-                <IconInput
-                    label={label}
-                    value={currentValue}
-                    onChange={(newValue) => {
-                        onChange(newValue);
-                        setError(false);
-                    }}
-                    onLoad={(err, src) => {
-                        setError(err);
-                        if (err) {
-                            // send the error to VisualStyleEditor component
-                            onChange({ src, errorId: err.messageId });
-                        }
-                    }}
-                />
+                {isMarkerIcon
+                    ? <MarkerIconSelector { ...props }/>
+                    : <IconInput
+                        label={label}
+                        value={isObject(value)
+                            ? value.src
+                            : value}
+                        onChange={(newValue) => {
+                            onChange(newValue);
+                            setError(false);
+                        }}
+                        onLoad={(err, src) => {
+                            setError(err);
+                            if (err) {
+                                // send the error to VisualStyleEditor component
+                                onChange({ src, errorId: err.messageId });
+                            }
+                        }}
+                    />}
             </PropertyField>
         );
     },
@@ -444,17 +500,30 @@ export const fields = {
         label,
         value,
         onChange,
-        config: {
-            options
-        }
+        lineDashOptions = [
+            { value: '0' },
+            { value: '1 4' },
+            { value: '1 12' },
+            { value: '8 8' },
+            { value: '8 16' },
+            { value: '8 8 1 8' },
+            { value: '8 8 1 4 1 8' },
+            { value: '10 50 30' },
+            { value: '6 6' },
+            { value: '20 20' },
+            { value: '30 30' }
+        ],
+        disabled
     }) => {
         return (
             <PropertyField
-                label={label}>
+                label={label}
+                disabled={disabled}>
                 <DashArray
+                    disabled={disabled}
                     dashArray={value}
                     onChange={onChange}
-                    options={options}
+                    options={lineDashOptions}
                     defaultStrokeWidth={2}
                     isValidNewOption={(option) => {
                         if (option.label) {
@@ -466,6 +535,63 @@ export const fields = {
                     creatable
                 />
             </PropertyField>
+        );
+    },
+    customParams: (props) => {
+        const {
+            label,
+            value,
+            config: {
+                isValid
+            },
+            thematicCustomParams,
+            onChange
+        } = props;
+        // if there is no params it will be hidden
+        if (!(thematicCustomParams?.length)) {
+            return null;
+        }
+        const valid = !isValid || isValid({ value });
+        const handleCustomParamChange = (key, selectedVal) => {
+            onChange({
+                [key]: selectedVal
+            });
+        };
+
+        return (
+            <div style={{ width: '100%' }}>
+                <hr />
+                <div className="ms-symbolizer-field"><Message msgId={label} /></div>
+                <div>
+                    {thematicCustomParams?.map(param=> {
+                        const currentValue = value ? value[param?.field] : undefined;
+                        const valueObj = param?.values?.find(val => val.value === currentValue);
+                        return (
+                            <PropertyField
+                                key={param?.field}
+                                label={param?.title || param?.field}
+                                invalid={!valid}>
+                                <SelectInput
+                                    {...props}
+                                    value={valueObj?.value
+                                        ? { value: valueObj.value, label: valueObj.name ?? valueObj.value }
+                                        : currentValue }
+                                    onChange={(val)=> handleCustomParamChange(param.field, val)}
+                                    config={{...props.config, getOptions: () => {
+                                        return param?.values?.map(val => {
+                                            return {
+                                                value: val.value,
+                                                label: val.name
+                                            };
+                                        });
+                                    }}}
+                                />
+                            </PropertyField>
+                        );
+                    })}
+                </div>
+                <hr />
+            </div>
         );
     }
 };
@@ -490,7 +616,7 @@ export const fields = {
 function Fields({
     properties,
     params,
-    config: fieldsConfig,
+    config: _fieldsConfig,
     onChange,
     format
 }) {
@@ -502,24 +628,63 @@ function Fields({
     state.current = {
         properties
     };
-
+    // currently expression are supported only as property selection
+    // in future we could extend the UI to support complex expressions
+    const { enableFieldExpression, ...fieldsConfig } = _fieldsConfig || {};
     return <>
         {Object.keys(params)
             .map((keyParam) => {
-                const { type, setValue, getValue, isDisabled, config, label, key: keyProperty, isVisible } = params[keyParam] || {};
+                const { type, setValue, getValue, isDisabled, config, label, key: keyProperty, isVisible, valueType } = params[keyParam] || {};
                 const key = keyProperty || keyParam;
                 const FieldComponent = fields[type];
-                const value = setValue && setValue(properties[key], state.current.properties);
-                return FieldComponent && <FieldComponent
-                    {...fieldsConfig}
-                    key={key}
-                    label={label || key}
-                    config={config}
-                    format={format}
-                    visible={isVisible && isVisible(properties[key], state.current.properties, format)}
-                    disabled={isDisabled && isDisabled(properties[key], state.current.properties, fieldsConfig)}
-                    value={!isNil(value) ? value : properties[key]}
-                    onChange={(values) => onChange(getValue && getValue(values, state.current.properties) || values)}/>;
+                if (!FieldComponent) {
+                    return null;
+                }
+                const hasAttributes = (fieldsConfig?.attributes || []).some((attribute) => attribute.type === valueType);
+                const { disablePropertySelection } = config || {};
+                const isPropertyField = hasAttributes && !disablePropertySelection && properties[key]?.name === 'property';
+                const value = !isPropertyField ? setValue && setValue(properties[key], state.current.properties) : properties[key];
+                const Component = isPropertyField ? PropertySelector : FieldComponent;
+                const disabled = isDisabled && isDisabled(properties[key], state.current.properties, fieldsConfig);
+                const visible = isVisible ? isVisible(properties[key], state.current.properties, format) : true;
+                return visible ? (<div className="ms-symbolizer-field-wrapper">
+                    <Component
+                        {...fieldsConfig}
+                        key={key}
+                        fieldKey={key}
+                        label={label || key}
+                        valueType={valueType}
+                        properties={properties}
+                        config={config}
+                        format={format}
+                        visible={visible}
+                        disabled={disabled}
+                        value={!isNil(value) ? value : properties[key]}
+                        onChange={(values) => onChange(isPropertyField
+                            ? values
+                            : getValue && getValue(values, state.current.properties) || values)}/>
+                    {enableFieldExpression && !disablePropertySelection && <DropdownButton
+                        className="no-border"
+                        noCaret
+                        pullRight
+                        disabled={disabled}
+                        style={{ padding: 0 }}
+                        title={<Glyphicon glyph="option-vertical" />}>
+                        <MenuItem
+                            key="constant"
+                            active={!isPropertyField}
+                            onClick={() => onChange({ [key]: setValue && setValue(undefined, state.current.properties) })}>
+                            <Message msgId="styleeditor.constantValue" />
+                        </MenuItem>
+                        <MenuItem
+                            key="attribute"
+                            active={isPropertyField}
+                            onClick={() => onChange({ [key]: { name: 'property', args: [] } })}>
+                            <Message msgId="styleeditor.propertyValue" />
+                        </MenuItem>
+                    </DropdownButton>}
+                    {enableFieldExpression && disablePropertySelection && <div style={{ width: 14 }} />}
+                </div>) : null;
             })}
     </>;
 }

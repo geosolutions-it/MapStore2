@@ -16,7 +16,6 @@ const {
     autoSearchEpic,
     openCatalogEpic,
     recordSearchEpic,
-    getSupportedFormatsEpic,
     updateGroupSelectedMetadataExplorerEpic,
     newCatalogServiceAdded
 } = catalog(API);
@@ -34,9 +33,6 @@ import {
     RECORD_LIST_LOADED,
     RECORD_LIST_LOAD_ERROR,
     SET_LOADING,
-    formatOptionsFetch,
-    FORMAT_OPTIONS_LOADING,
-    SET_FORMAT_OPTIONS,
     ADD_LAYER_AND_DESCRIBE,
     addLayerAndDescribe,
     DESCRIBE_ERROR,
@@ -169,7 +165,6 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(TEXT_SEARCH);
             expect(actions[0].options).toEqual({
-                filter: "test",
                 service: {
                     type: "csw",
                     url: "url",
@@ -747,35 +742,6 @@ describe('catalog Epics', () => {
                 }
             });
     });
-    it('getSupportedFormatsEpic wms', (done) => {
-        const NUM_ACTIONS = 3;
-        const url = "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml";
-        testEpic(addTimeoutEpic(getSupportedFormatsEpic, 0), NUM_ACTIONS, formatOptionsFetch(url), (actions) => {
-            expect(actions.length).toBe(NUM_ACTIONS);
-            try {
-                actions.map((action) => {
-                    switch (action.type) {
-                    case SET_FORMAT_OPTIONS:
-                        expect(action.formats).toBeTruthy();
-                        expect(action.formats.imageFormats).toEqual(['image/png', 'image/gif', 'image/jpeg', 'image/png8', 'image/png; mode=8bit', 'image/vnd.jpeg-png']);
-                        expect(action.formats.infoFormats).toEqual(['text/plain', 'text/html', 'application/json']);
-                        break;
-                    case FORMAT_OPTIONS_LOADING:
-                        break;
-                    case TEST_TIMEOUT:
-                        break;
-                    default:
-                        expect(true).toBe(false);
-                    }
-                });
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, {
-            catalog: {}
-        });
-    });
 
     it('updateGroupSelectedMetadataExplorerEpic allows clicking on group to set destination to current group', done => {
         const state = {
@@ -943,6 +909,190 @@ describe('catalog Epics', () => {
         });
     });
 
+    describe('addLayerAndDescribeEpic wfs layer', () => {
+
+        beforeEach(done => {
+            mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+
+        afterEach(done => {
+            mockAxios.restore();
+            setTimeout(done);
+        });
+
+        it('wfs layer polygon', (done) => {
+            const layer = {
+                type: 'wfs',
+                url: '/geoserver/wfs',
+                visibility: true,
+                name: 'workspace:vector_layer',
+                title: 'workspace:vector_layer',
+                bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}}
+            };
+            mockAxios.onGet().reply(() => ([ 200, {
+                "elementFormDefault": "qualified",
+                "targetNamespace": "/geoserver/geoserver",
+                "targetPrefix": "gs",
+                "featureTypes": [
+                    {
+                        "typeName": "workspace:vector_layer",
+                        "properties": [
+                            {
+                                "name": "the_geom",
+                                "maxOccurs": 1,
+                                "minOccurs": 0,
+                                "nillable": true,
+                                "type": "gml:MultiPolygon",
+                                "localType": "MultiPolygon"
+                            }
+                        ]
+                    }
+                ]
+            } ]));
+            const NUM_ACTIONS = 3;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    expect(actions.length).toBe(NUM_ACTIONS);
+                    actions.map((action) => {
+                        switch (action.type) {
+                        case ADD_LAYER:
+                            expect(action.layer.name).toBe("workspace:vector_layer");
+                            expect(action.layer.title).toBe("workspace:vector_layer");
+                            expect(action.layer.type).toBe("wfs");
+                            expect(action.layer.url).toEqual(layer.url);
+                            break;
+                        case CHANGE_LAYER_PROPERTIES:
+                            expect(action.newProperties.style).toBeTruthy();
+                            expect(action.newProperties.style.body.rules.length).toBe(1);
+                            expect(action.newProperties.style.body.rules[0].symbolizers.length).toBe(1);
+                            expect(action.newProperties.style.body.rules[0].symbolizers[0].kind).toBe('Fill');
+                            break;
+                        case TEST_TIMEOUT:
+                            break;
+                        default:
+                            expect(true).toBe(false);
+                        }
+                    });
+                    done();
+                }, {});
+        });
+        it('wfs layer line', (done) => {
+            const layer = {
+                type: 'wfs',
+                url: '/geoserver/wfs',
+                visibility: true,
+                name: 'workspace:vector_layer',
+                title: 'workspace:vector_layer',
+                bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}}
+            };
+            mockAxios.onGet().reply(() => ([ 200, {
+                "elementFormDefault": "qualified",
+                "targetNamespace": "/geoserver/geoserver",
+                "targetPrefix": "gs",
+                "featureTypes": [
+                    {
+                        "typeName": "workspace:vector_layer",
+                        "properties": [
+                            {
+                                "name": "the_geom",
+                                "maxOccurs": 1,
+                                "minOccurs": 0,
+                                "nillable": true,
+                                "type": "gml:LineString",
+                                "localType": "LineString"
+                            }
+                        ]
+                    }
+                ]
+            } ]));
+            const NUM_ACTIONS = 3;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    expect(actions.length).toBe(NUM_ACTIONS);
+                    actions.map((action) => {
+                        switch (action.type) {
+                        case ADD_LAYER:
+                            expect(action.layer.name).toBe("workspace:vector_layer");
+                            expect(action.layer.title).toBe("workspace:vector_layer");
+                            expect(action.layer.type).toBe("wfs");
+                            expect(action.layer.url).toEqual(layer.url);
+                            break;
+                        case CHANGE_LAYER_PROPERTIES:
+                            expect(action.newProperties.style).toBeTruthy();
+                            expect(action.newProperties.style.body.rules.length).toBe(1);
+                            expect(action.newProperties.style.body.rules[0].symbolizers.length).toBe(1);
+                            expect(action.newProperties.style.body.rules[0].symbolizers[0].kind).toBe('Line');
+                            break;
+                        case TEST_TIMEOUT:
+                            break;
+                        default:
+                            expect(true).toBe(false);
+                        }
+                    });
+                    done();
+                }, {});
+        });
+        it('wfs layer point', (done) => {
+            const layer = {
+                type: 'wfs',
+                url: '/geoserver/wfs',
+                visibility: true,
+                name: 'workspace:vector_layer',
+                title: 'workspace:vector_layer',
+                bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}}
+            };
+            mockAxios.onGet().reply(() => ([ 200, {
+                "elementFormDefault": "qualified",
+                "targetNamespace": "/geoserver/geoserver",
+                "targetPrefix": "gs",
+                "featureTypes": [
+                    {
+                        "typeName": "workspace:vector_layer",
+                        "properties": [
+                            {
+                                "name": "the_geom",
+                                "maxOccurs": 1,
+                                "minOccurs": 0,
+                                "nillable": true,
+                                "type": "gml:Point",
+                                "localType": "Point"
+                            }
+                        ]
+                    }
+                ]
+            } ]));
+            const NUM_ACTIONS = 3;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    expect(actions.length).toBe(NUM_ACTIONS);
+                    actions.map((action) => {
+                        switch (action.type) {
+                        case ADD_LAYER:
+                            expect(action.layer.name).toBe("workspace:vector_layer");
+                            expect(action.layer.title).toBe("workspace:vector_layer");
+                            expect(action.layer.type).toBe("wfs");
+                            expect(action.layer.url).toEqual(layer.url);
+                            break;
+                        case CHANGE_LAYER_PROPERTIES:
+                            expect(action.newProperties.style).toBeTruthy();
+                            expect(action.newProperties.style.body.rules.length).toBe(1);
+                            expect(action.newProperties.style.body.rules[0].symbolizers.length).toBe(1);
+                            expect(action.newProperties.style.body.rules[0].symbolizers[0].kind).toBe('Mark');
+                            break;
+                        case TEST_TIMEOUT:
+                            break;
+                        default:
+                            expect(true).toBe(false);
+                        }
+                    });
+                    done();
+                }, {});
+        });
+    });
     describe('addLayersFromCatalogsEpic geojson', () => {
         it('should add layer with title from geojson', (done) => {
             const NUM_ACTIONS = 1;

@@ -127,8 +127,9 @@ class LeafletLayer extends React.Component {
             maxResolution = Infinity,
             disableResolutionLimits
         } = options || {};
-        if (!disableResolutionLimits && !isNil(resolutions[zoom])) {
-            const resolution = resolutions[zoom];
+        const zoomRound = Math.round(zoom);
+        if (!disableResolutionLimits && !isNil(resolutions[zoomRound])) {
+            const resolution = resolutions[zoomRound];
             // use similar approach of ol
             // maxResolution is exclusive
             // minResolution is inclusive

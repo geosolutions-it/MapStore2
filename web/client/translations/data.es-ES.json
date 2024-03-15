@@ -13,7 +13,7 @@
         "about_ul0_li0": "MapViewer es un visualizador simple de mapas preconfigurados (almacenados opcionalmente en una base de datos GeoStore)",
         "about_ul0_li1": "MapPublisher está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros. Para más información: ",
         "about_h20": "Licencia",
-        "about_p3": "MapStore es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
+        "about_p3": "Mapstore es un software libre y de código abiertas, basado en OpenLayers, Leaflet y ReactJS, y está  disponible bajo licencia BSD.",
         "about_p5-0": "Para más información, consulte",
         "about_a0": "esta",
         "about_p5-1": "página.",
@@ -30,6 +30,7 @@
         "expand": "Expandir",
         "Links": "Enlaces",
         "Forbidden": "Prohibido",
+        "height": "Altura",
         "layerNameChangeError": {
             "title": "Error de cambio de nombre",
             "message": "La capa no se pudo recargar con un nombre cambiado"
@@ -57,8 +58,8 @@
             "404": "Archivo de traducción no encontrado"
         },
         "details": {
-            "title": "Información en este mapa",
-            "tooltip": "Información en este mapa"
+            "title": "Información en este contenido",
+            "tooltip": "Información en este contenido"
         },
         "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
@@ -90,6 +91,8 @@
             "groupProperties": "Propiedades del grupo",
             "featureInfo": "Información de la capa",
             "featureInfoFormatLbl": "Identificar el formato de respuesta",
+            "guideText": "En la URL de la imagen, puede utilizar marcadores de posición como $\\{properties.YOUR_ATTRIBUTE\\} para hacer que la URL sea paramétrica, según los atributos de la característica. Admite URL o \"Data URI\" codificados en base64",
+            "imageNotFound": "Es posible que esta imagen necesite una solicitud de información de función para renderizarse correctamente",
             "legenderror": "La leyenda no está disponible",
             "editCustomFormat": "Editar formato personalizado",
             "exampleOfResponse": "Ejemplo",
@@ -111,6 +114,7 @@
             "heightOffset": "Desplazamiento de altura (m)",
             "wmsLayerTileSize": "Tamaño del mosaico (WMS)",
             "serverType": "Tipo de servidor",
+            "formatError": "No fue posible recuperar el formato y el formato de la hoja de información del servicio configurado. Probablemente esté utilizando un servicio sin proveedor y no es compatible (por ejemplo, GeoNetwork)",
             "serverTypeOption": {
                 "noVendor": "No Vendor",
                 "geoserver": "GeoServer"
@@ -151,6 +155,31 @@
                 "scale": "Escala",
                 "resolution": "Resolución"
             },
+            "3dTiles": {
+                "format": "Formato",
+                "3dModel": "Modelo 3D",
+                "pointCloud": "Nube de puntos",
+                "pointCloudShading": {
+                    "title": "Opciones de visualización",
+                    "attenuationInfo": "Realiza atenuación de puntos según la distancia desde el punto de vista actual",
+                    "attenuation": "Habilitar atenuación",
+                    "maximumAttenuation": "Atenuación máxima",
+                    "eyeDomeLightingInfo": "Esto habilita una iluminación de domo ocular para mejorar la visualización de la nube de puntos. Esto no representa la iluminación solar real",
+                    "eyeDomeLighting": "Habilitar iluminación",
+                    "eyeDomeLightingStrength": "Intensidad de iluminación",
+                    "eyeDomeLightingRadius": "Radio de iluminación"
+                }
+            },
+            "modelLayer": {
+                "modelCenterLat": "Latitud del centro (DD)",
+                "modelCenterLng": "Longitud del centro (DD)",
+                "height": "Altura (m)",
+                "heading": "Ángulo de rumbo (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "El modelo se coloca en el centro de la vista actual porque: el modelo tiene una proyección CRS {modelProjection} pero no es soportado",
+                    "projectedCrsNotProvided": "El modelo se coloca en el centro de la vista actual porque: el modelo no tiene una proyección CRS definida."
+                }
+            },
             "tooltip": {
                 "label": "Información sobre herramientas",
                 "title": "Título",
@@ -180,6 +209,8 @@
             },
             "format": {
                 "title": "Formato",
+                "tile": "Teja",
+                "information": "Identificar el formato de respuesta",
                 "refresh": "Obtener formatos admitidos",
                 "loading": "Cargando...",
                 "noOption": "Sin opcion",
@@ -220,7 +251,8 @@
             "warningSaveUpdatedMap": "Algunas capas no han sido actualizadas correctamente",
             "saveUpdatedMap": "Todas las capas han sido actulizadas correctamente",
             "incompatibleBackgroundAndProjection":"La proyección que seleccionó no es compatible con el fondo, cambie a un fondo compatible -o un vacío-, luego seleccione esta proyección!",
-            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa"
+            "incompatibleDataAndProjection":"la (s) capa (s) actual (es) y la proyección del mapa no son completamente compatibles. Partes o todos los datos podrían no aparecer en el mapa",
+            "errorLoadingGF":"Error de carga de GF Geometry"
         },
         "dock": {
             "row": "{rowsSelected} fila seleccionada",
@@ -331,7 +363,7 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Webmapping moderno con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentación</a></small>",
+            "shortDescription": "Webmapping moderno con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentación</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que proporcione protocolos estándar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"https://mapstore.readthedocs.io/en/latest/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
@@ -570,6 +602,7 @@
             "browseData": "Abrir la tabla de atributos",
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
+            "sourceCRSNotCompatible": "La definición de proyección de datos de origen de la capa {sourceCRS} no está disponible en la aplicación para reproyectar los datos en el mapa actual",
             "measure": "Medir",
             "layers": "Capas",
             "drawerButton": "Capas",
@@ -591,6 +624,7 @@
             "notVisibleZoomIn": "La capa no es visible porque está fuera de los límites de resolución. Acercar para mostrar la capa",
             "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
             "notVisibleSwitchTo3D": "Cambie al modo de mapa 3D para ver esta capa",
+            "notVisibleSwitchTo2D": "Cambie al modo de mapa 2D para ver esta capa",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -656,7 +690,7 @@
                 "configuration": "Configuración",
                 "apply": "Aplicar clasificación",
                 "restore": "Restablecer personalizaciones",
-                "go_to_cfg": "Configurar ...",
+                "goToCfg": "Configurar ...",
                 "go_to_thema": "Utilizar esta configuración",
                 "cfgError": "Error en la configuración JSON",
                 "classify": "Clasificar",
@@ -696,11 +730,14 @@
             },
             "legend": {
                 "font": "Configuración de las etiquetas:",
-                "forceLabels": "Forzar las etiquetas:",
-                "antiAliasing": "Fuentes Anti Aliasing:",
-                "iconsSize": "Tamaño de los iconos:",
+                "forceLabels": "Forzar las etiquetas",
+                "antiAliasing": "Fuentes Anti Aliasing",
+                "forceIconsSize": "Anular el tamaño de los iconos",
+                "iconsWidth": "Ancho de los iconos:",
+                "iconsHeight": "Altura de los iconos:",
                 "dpi": "ppp:"
             },
+            "rotation": "Rotation",
             "layoutWarning": "Lienzo no permitido",
             "scale": "escala",
             "includeScale": "incluir en la impresión",
@@ -807,6 +844,7 @@
             "aeronautical": "Aeronáutica",
             "changeSearchInputField": "Cambiar la herramienta de búsqueda",
             "addressSearch": "Buscar por nombre de ubicación",
+            "searchOnAllServices": "Busque en todos los servicios a continuación",
             "coordinatesSearch": "buscar por coordenadas",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un servicio de búsqueda",
@@ -859,6 +897,8 @@
             "s_wfs_opt_props_label" : "Propiedades opcionales",
             "s_result_props_label": "Resultados de la visualización de las propiedades",
             "s_priority_info": "Usado para ordenar los resultados de búsqueda, de menor a mayor. Los resultados Nominatim tienen prioridad = 5",
+            "s_placeholder": "Marcador de posición de entrada de búsqueda",
+            "s_tooltip": "Información sobre herramientas del menú de servicio",
             "serviceslistempty": "No se ha definido ningún servicio personalizado",
             "service_missing": "el servicio {serviceType} no está configurado",
             "generic_error": "Se ha producido un error durante la búsqueda. Error de detalles: {message}",
@@ -1090,7 +1130,18 @@
                     "wrong_range": "El límite inferior ha de ser más pequeño que el superior"
                 },
                 "datefield": {
-                    "wrong_date_range": "La fecha de comienzo ha de ser anterior a la de fin"
+                    "wrong_date_range": "La fecha de comienzo ha de ser anterior a la de fin",
+                    "placeholder": "Insertar la fecha",
+                    "tooltip": "Insertar fecha en formato {format}",
+                    "quickSelectors": {
+                        "today": "Hoy",
+                        "now": "Ahora",
+                        "tomorrow": "Mañana",
+                        "yesterday": "Ayer",
+                        "thisWeek": "Esta semana",
+                        "thisMonth": "Este mes",
+                        "nDaysFrom": "{n} días desde {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Ningún resultado",
@@ -1243,7 +1294,10 @@
             },
             "geometryError": "La configuración de geometría no es válida",
             "annotationSaveGeometryError": "El guardado está deshabilitado debido a una geometría no válida, corríjalo para guardar la anotación",
-            "resolveAllErrors": "Corrija los errores de validación antes de editar otras geometrías"
+            "resolveAllErrors": "Corrija los errores de validación antes de editar otras geometrías",
+            "selectAnnotationFeature": "Seleccione una característica de anotación en el panel izquierdo para editar coordenadas y estilos",
+            "properties": "Propiedades",
+            "deactivatedMapInteraction": "Las interacciones de dibujo de anotaciones se han desactivado porque el complemento '{pluginName}' ha sido activado. Cierra el complemento '{pluginName}' para activar las interacciones de dibujo de anotaciones"
         },
         "user":{
             "login": "Iniciar sesión",
@@ -1491,6 +1545,10 @@
             "title": "Catálogo",
             "tooltip": "agregar capas al mapa",
             "autoload": "Buscar en la selección de servicios",
+            "fetchMetadata": {
+                "label": "Descargar metadatos del archivo al guardar",
+                "tooltip": "Esta opción recuperará metadatos para admitir el zoom a la capa. Puede ralentizar la operación de búsqueda si las imágenes son demasiado grandes o demasiadas."
+            },
             "clearValueText": "Borrar selección",
             "noResultsText": "No se encontraron resultados",
             "addToMap": "Añadir al mapa",
@@ -1530,6 +1588,10 @@
             },
             "tileprovider": {
               "tooltip": "x, y, z son la posición del mosaico, s es el subdominio (predeterminado)"
+            },
+            "urls": "URL(s)",
+            "cog": {
+                "urlTemplateHint": "Se pueden agregar varias URL mediante separación por comas. Cada URL será tratada como una capa individual."
             },
             "missingReference": "Faltan metadatos de referencia OGC",
             "showDescription": "Mostrar descripción completa",
@@ -1587,7 +1649,12 @@
             "allowUnsecureLayers": {
               "label": "Permitir capas no seguras",
               "tooltip": "Agregar una capa al mapa con esta opción habilitada obliga a la aplicación a aplicar proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Ordenar por",
+                "tooltip": "Agregue el prefijo del espacio de nombres a la propiedad del nombre. es decir, ${namespace}:${name}",
+                "placeholder": "Ingresar nombre"
+              }
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -1755,6 +1822,7 @@
                 "placeholders": {
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
+                    "time": "Escriba el tiempo para filtrar ...",
                     "date": "Escriba la fecha para filtrar...",
                     "number": "Escriba el número o la expresión..."
                 },
@@ -1762,6 +1830,7 @@
                     "editMode": "La búsqueda rápida no está disponible en modo de edición",
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
+                    "time": "Escriba el tiempo para filtrar ...",
                     "number": "Escriba el número o la expresión. Ejemplos: 10, > 2, < 10",
                     "date": "Escriba una fecha o una expresión. Usa {format} para la fecha.",
                     "geometry": {
@@ -1769,6 +1838,33 @@
                         "enabled": "Haga clic en el mapa para seleccionar una característica / Alt + arrastre del mouse para dibujar un filtro de cuadro. Mantenga presionada la tecla Ctrl y haga clic para seleccionar varias características",
                         "applied": "Limpiar la selección"
                     }
+                }
+            },
+            "attributeFilter": {
+                "placeholders": {
+                    "default": "Buscar...",
+                    "string": "Escribe texto para filtrar...",
+                    "time": "Escriba el tiempo para filtrar ...",
+                    "date": "Escriba la fecha para filtrar...",
+                    "number": "Escriba el número...",
+                    "range": "Por favor escribe ..."
+                },
+                "tooltips": {
+                    "editMode": "La búsqueda rápida no está disponible en modo de edición",
+                    "default": "Buscar...",
+                    "string": "Escribe texto para filtrar...",
+                    "time": "Escriba el tiempo para filtrar ...",
+                    "number": "Escriba el número",
+                    "date": "Escriba una fecha. Usa {format} para la fecha.",
+                    "geometry": {
+                        "disabled": "Hacer clic en el filtro en el mapa / Alt + arrastrar el mouse para dibujar un filtro de cuadro. Mantenga presionada también la tecla Ctrl para agregar más funciones al filtro actual",
+                        "enabled": "Haga clic en el mapa para seleccionar una característica / Alt + arrastre del mouse para dibujar un filtro de cuadro. Mantenga presionada la tecla Ctrl y haga clic para seleccionar varias características",
+                        "applied": "Limpiar la selección"
+                    }
+                },
+                "rangeTab": {
+                    "start": "Comenzar",
+                    "end": "Fin"
                 }
             },
             "toolbar": {
@@ -1969,7 +2065,8 @@
                         "editCustomColors": "Editar Colores Personalizados",
                         "maxValue": "Valor máximo",
                         "minValue": "Valor mínimo",
-                        "title": "Configuración de Colores Personalizados"
+                        "title": "Configuración de Colores Personalizados",
+                        "removeCustomColors": "Eliminar clases personalizadas"
                     }
                 },
                 "errors": {
@@ -1984,7 +2081,17 @@
                 },
                 "setupFilter": "Configurar un filtro para los datos del widget",
                 "addNewLayers": "Agregar nuevas capas",
-                "deleteChart": "Eliminar gráfico actual"
+                "deleteChart": "Eliminar gráfico actual",
+                "editTraceTitle": "Editar título de seguimiento",
+                "addNewTrace": "Agregar nuevo trace",
+                "deleteTrace": "Eliminar el seguimiento actual",
+                "selectLayer": "Seleccionar capa",
+                "filterLayer": "Filtrar capa actual",
+                "editChartTitle": "Editar título del gráfico",
+                "addNewCharts": "Agregar nuevos gráficos",
+                "editAxisTitle": "Editar título del eje",
+                "addNewAxis": "Agregar nuevo ej",
+                "removeAxis": "Eliminar el eje actual"
             },
             "widget": {
                 "menu": {
@@ -2097,16 +2204,19 @@
             },
             "mapSync": "Filtro dinámico por extensión de la vista actual",
             "displayLegend": {
+                "default": "Mostrar leyenda",
                 "line": "Mostrar leyenda",
                 "pie": "Mostrar leyenda",
                 "bar": "Mostrar leyenda",
                 "gauge": "Mostrar etiquetas"
             },
             "advanced": {
+              "font": "Fuente",
               "displayCartesian": "Ocultar cuadrícula",
               "xAxis": "Eje X",
               "xAxisAngle": "Rotación de etiquetas",
               "hideLabels": "Ocultar etiquetas",
+              "includeLegendPercent": "Include percentages in legend",
               "format": "Formato",
               "prefix": "Prefijo",
               "suffix": "Sufijo",
@@ -2125,6 +2235,28 @@
               "barChartType": "Tipo de Gráfico de Barras",
               "groupedBarChart": "Agrupado",
               "stackedBarChart": "Apilado",
+              "valueFormatting": "Formato del valor de trace",
+              "traceAxes": "Trazar ejes",
+              "traceData": "Datos de trace",
+              "traceLegendOptions": "Opciones de leyenda de trace",
+              "traces": "Traces",
+              "axes": "Ejes",
+              "traceStyle": "Estilo de trace",
+              "mode": "Modo",
+              "lineColor": "Color de línea",
+              "lineWidth": "Ancho de línea",
+              "markerColor": "Color del marcador",
+              "markerSize": "Tamaño del marcador",
+              "layout": "Diseño",
+              "left": "Izquierda",
+              "right": "Bien",
+              "free": "Free",
+              "top": "Arriba",
+              "bottom": "Abajo",
+              "side": "Lado",
+              "anchor": "Ancla",
+              "sortBy": "Ordenar por",
+              "reverseRampColor": "Color de rampa inversa",
               "axisTypes": {
                 "auto": "Auto",
                 "linear": "Lineal",
@@ -2389,8 +2521,8 @@
             "fontStyleItalic": "Cursiva",
             "fontWeightNormal": "Normal",
             "fontWeightBold": "Negrita",
-            "boolTrue": "Verdadero",
-            "boolFalse": "Falso",
+            "boolTrue": "Activo",
+            "boolFalse": "Inactivo",
             "colorMapType": {
               "label": "Tipo de mapa de color",
               "ramp": "Rampa",
@@ -2451,6 +2583,8 @@
             "alertForceTranslate": "Perderá todos los cambios agregados en el texto al cambiar al editor visual. ¿Está seguro de cambiar al modo editor de estilo visual?",
             "stayInTextareaEditor": "No, continuar en textarea",
             "useLatestValidStyle": "Sí, cambie al editor visual",
+            "alertCustomParamsNotValid": "Perderá todos los cambios agregados en el modo de texto cerrando el editor de parámetros personalizados. ¿Estás seguro de cerrar el editor?",
+            "closeCustomParamsEditor": "Sí, cierre el editor",
             "validationError": "Error de validación",
             "incorrectPropertyInputError": "Esto probablemente se deba a un valor faltante o no válido en las entradas de propiedad del editor de estilos",
             "emptyRuleEditorTitle": "Agregar nuevas reglas",
@@ -2494,7 +2628,43 @@
             "startPoint": "Punto de inicio",
             "endPoint": "Punto final",
             "line": "Línea",
-            "geodesicLine": "Línea geodésica"
+            "geodesicLine": "Línea geodésica",
+            "geodesic": "Geodésico",
+            "outlineStyle": "Estilo de esquema",
+            "strokeStyle": "Estilo de trazo",
+            "anchor": "Punto de anclaje",
+            "addCircleRule": "Agregar regla de círculo",
+            "left": "izquierda",
+            "right": "bien",
+            "topLeft": "Arriba izquierda",
+            "top": "arriba",
+            "topRight": "Arriba derecha",
+            "bottomLeft": "Abajo izquierda",
+            "bottom": "Abajo",
+            "bottomRight": "Abajo derecha",
+            "glyph": "Glifo",
+            "marker": "Marcador",
+            "filterByName": "Filtrar por nombre...",
+            "fillOpacity": "Rellenar opacidad",
+            "outlineColorOpacity": "Opacidad del contorno",
+            "strokeColorOpacity": "Opacidad del trazo",
+            "selectProperty": "Seleccionar propiedad",
+            "leaderLineColorOpacity": "Opacidad de la línea guía",
+            "colorOpacity": "Opacidad",
+            "offset": "Desplazamiento",
+            "propertyValue": "Valor de la propiedad",
+            "colorPropertyInfoMessage": "El valor de la propiedad de color debe ser una cadena hexadecimal. Ejemplo: \"#ffffff\"",
+            "pointCloudSizeInfo": "El radio de la nube de puntos se aplica sólo cuando las opciones de atenuación están deshabilitadas. La opción de atenuación tiene prioridad sobre esta propiedad.",
+            "msTranslateX": "Desplazamiento x",
+            "msTranslateY": "Desplazamiento y",
+            "geometryHeight": "Altura de la geometría",
+            "msExtrusionRelativeToGeometry": "Extrusión relativa a la geometría",
+            "msExtrudedHeight": "Altura extruida",
+            "msExtrusionColor": "Color de extrusión",
+            "msExtrusionType": "Tipo de extrusión",
+            "wall": "Muro",
+            "customParams": "Parámetros personalizados",
+            "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!"
         },
         "playback": {
             "settings": {
@@ -2598,7 +2768,8 @@
                 "layer": "Escriba para buscar Capas",
                 "access": "Escriba para buscar Acceso",
                 "ip": "###.###.###.###/##",
-                "priority": "Seleccionar prioridad"
+                "priority": "Seleccionar prioridad",
+                "filterAny": "Cualquier"
             },
             "menutitle": "Administrar reglas de GeoFence",
             "tooltip": {
@@ -2609,7 +2780,9 @@
                 "deleteT": "Eliminar las reglas seleccionadas",
                 "cacheT": "Limpiar cache",
                 "save": "Guardar la regla actual",
-                "close": "Salir de crear regla"
+                "close": "Salir de crear regla",
+                "showAllRules": "Mostrar todas las reglas elegibles",
+                "filterRuleList": "Lista de filtros usando un valor seleccionado"
             },
             "navItems": {
                 "main": "Regla general",
@@ -2876,7 +3049,10 @@
             "saveSuccessTitle": "éxito",
             "saveSuccessMessage": "Guardado con éxito",
             "saveTooltip": "Salvar",
-            "saveAsTooltip": "Guardar como"
+            "saveAsTooltip": "Guardar como",
+            "unadvertised": "Sin publicidad",
+            "creator": "Creado por",
+            "editor": "Última modificación por"
         },
         "mapEditor": {
             "modalTitle": "Map Editor",
@@ -2955,7 +3131,7 @@
             "title": "Título",
             "titlePlaceholder": "Ingrese el nombre que se muestra",
             "add": "Añadir",
-            "thumbnailMessage": "El tamaño de las imágenes debe ser un cuadrado de 98 px x 98 px o 128 px x 128 px, máximo 500kb",
+            "thumbnailMessage": "Imagen cuadrada de 128px x 128px, máximo 500kb",
             "imageUploadMessage": "Haga clic, o arrastre y suelte para agregar una imagen",
             "additionalParameters": "Parámetros adicionales",
             "addAdditionalParameterTooltip": "Agregar parámetro",
@@ -3030,6 +3206,10 @@
           "FilterLayer": {
             "description": "Permite agregar un filtro a una capa",
             "title": "Capa de filtro"
+          },
+          "GeoProcessing": {
+            "description": "Permite geoprocesar capas para generar una nueva, utilizando procesos wps buffer e intersección",
+            "title": "Geoprocesamiento"
           },
           "HelpLink": {
             "description": "Un botón para acceder a la documentación de MapStore",
@@ -3771,6 +3951,24 @@
           "messages": {
             "noDataForPosition": "no hay datos de Street View para esta",
             "unknownError": "error desconocido, ver consola"
+          },
+          "loadingAPI": "Cargando API...",
+          "cyclomedia": {
+            "initializing": "Inicializando la API de Street Smart...",
+            "loadingAPI": "Cargando la API de Street Smart...",
+            "changeCredentials": "Cambiar credenciales de Street Smart",
+            "insertCredentials": "Inserte sus credenciales de Street Smart",
+            "emptyDescription": "Haga clic en uno de los puntos azules en el mapa para comenzar a navegar por las imágenes de vista de calle",
+            "username": "Nombre de usuario",
+            "password": "Contraseña",
+            "submit": "Enviar",
+            "zoomIn": "Por favor, acerque el mapa para ver la cobertura de vista de calle",
+            "errorOccurred": "Se produjo un error: ",
+            "errors": {
+                "invalidCredentials": "Credenciales inválidas",
+                "projectionNotAvailable": "La proyección {srs} configurada no está disponible. Por favor, contacte al administrador."
+            },
+            "reloadAPI": "Recargar API"
           }
         },
         "sidebarMenu": {
@@ -3795,6 +3993,9 @@
           "fileSelected": "archivo seleccionado: ",
           "uomMeters": "metros",
           "source": "Fuente",
+          "export": "Exportar",
+          "downloadGeoJSON": "GeoJSON",
+          "downloadDXF": "DXF",
           "downloadCSV": "CSV",
           "downloadPNG": "PNG",
           "downloadPDF": "PDF",
@@ -3839,6 +4040,84 @@
             "selectFiles": "Seleccione Archivo...",
             "infoSupported": "<p><small>Tipos de archivos compatibles: GeoJSON, DXF, Shapefiles</small></p>",
             "dxfGeometryNotSupported": "Solo se admite LWPOLYLINE"
+          }
+        },
+        "GeoProcessing": {
+          "title": "Geoprocesamiento",
+          "emptyTitle": "Estos procesos WPS deben estar instalados en Geoserver para poder utilizar este proceso:",
+          "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+          "sourceLayer": "Capa de origen",
+          "sourceFeature": "Característica de origen",
+          "tool": "Seleccione un proceso para usar",
+          "highlight": "Características destacadas",
+          "bufferTool": "Buffer",
+          "distance": "Distancia",
+          "distanceUom": "Unidades de medida",
+          "km": "km",
+          "m": "m",
+          "run": "Ejecutar",
+          "intersectionTool": "Intersección",
+          "noMatchedLayer": "Ninguna capa coincide con el filtro actual",
+          "noMatchedFeature": "Ninguna característica coincide con el filtro actual",
+          "intersectionLayer": "Capa de intersección",
+          "intersectionFeature": "Característica de intersección",
+          "advancedSettings": "Ajustes avanzados",
+          "quadrantSegments": "Segmentos de cuadrante",
+          "quadrantSegmentsTooltip": "Número de segmentos",
+          "capStyle": "Estilo",
+          "capStyleTooltip": "Estilo para las tapas de los extremos del búfer",
+          "round": "Redonda",
+          "flat": "Plana",
+          "square": "Cuadrada",
+          "firstAttributeToRetain": "Primer atributo a retener",
+          "secondAttributeToRetain": "Segundo atributo a retener",
+          "intersectionMode": "Modo de intersección",
+          "percentagesEnabled": "Porcentajes habilitados",
+          "areasEnabled": "Áreas habilitadas",
+          "firstAttributeToRetainTooltip": "Primer atributo de colección de características para incluir",
+          "secondAttributeToRetainTooltip": "Segundo atributo de colección de características a incluir",
+          "intersectionModeTooltip": "Especifica la geometría calculada para las entidades de intersección",
+          "percentagesEnabledTooltip": "Indica si se deben generar porcentajes de áreas de características",
+          "areasEnabledTooltip": "Indica si generar áreas de características",
+          "noMatchedMode": "Ningún modo coincide con el filtro actual",
+          "INTERSECTION": "INTERSECCIÓN",
+          "FIRST": "PRIMERA",
+          "SECOND": "SEGUNDA",
+          "true": "Verdadera",
+          "false": "falsa",
+          "notifications": {
+            "errorMissingUrl": "Se debe proporcionar una URL de geoserver wps para recopilar geometrías para estas capas {layerName}. Puede configurar la propiedad wpsUrl en el complemento GeoProcessing",
+            "errorIntersectGFI": "Hubo un error al cruzar las entidades. No fue posible crear la capa de intersección.",
+            "errorGFI": "Hubo un error al cargar la característica",
+            "errorGetFeature": "Hubo un error al cargar la función para obtener su geometría",
+            "layerNotSupported": "La capa seleccionada no es compatible. Seleccione WMS, WFS o capa vectorial.",
+            "noFeatureInPoint": "No se encontró ninguna entidad en el punto seleccionado.",
+            "featureFound": "Se encontró una entidad en el punto seleccionado.",
+            "noLayerSelected": "Por favor seleccione la capa primero.",
+            "successfulIntersection": "La operación de intersección fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
+            "successfulBuffer": "La operación de búfer fue exitosa y se creó una nueva capa y se agregó a la tabla de contenido",
+            "errorBuffer": "La operación de búfer ha fallado",
+            "emptyIntersection": "No hay intersección entre los conjuntos de datos dados.",
+            "errorGettingFC": "No fue posible recopilar la geometría de la capa {layerName}",
+            "errorGettingFeaturesList": "No fue posible recuperar la lista de entidades de la capa {layerName}"
+          },
+          "warningTitle": "Advertencia",
+          "warningBody": "No ha seleccionado una función y esto puede ralentizar el rendimiento en el geoservidor. ¿Desea continuar?",
+          "warningConfirmText": "Sí",
+          "warningCancel": "Cancelar",
+          "tooltip": {
+            "clickToSelectFeature": "Haga clic para seleccionar la característica",
+            "invalidLayers": "Una de las capas que ha seleccionado no se puede utilizar dentro de este proceso",
+            "fillRequiredDataIntersection": "Seleccione al menos la capa de origen y la capa de intersección",
+            "fillRequiredDataBuffer": "Seleccione al menos la capa de origen",
+            "pointAndPolygon": "Puede seleccionar una capa de puntos solo para la capa de intersección",
+            "siderBarBtn": "Geoprocesamiento",
+            "selectFeature": "Seleccione una función",
+            "validFeature": "Esta función es válida",
+            "invalidFeature": "Esta función no es válida",
+            "selectLayer": "Seleccione una capa",
+            "validLayer": "Esta capa es válida y se puede utilizar en este proceso.",
+            "invalidLayer": "Esta capa no soporta los procesos wps necesarios \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\ni es una capa Raster"
           }
         }
     }

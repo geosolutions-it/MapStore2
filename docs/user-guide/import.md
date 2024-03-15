@@ -23,13 +23,13 @@ A map context is, for example, the file that an user download selecting the <img
 
 Adding a MapStore configuration file the behavior is similar to the following:
 
-<img src="../img/import/export-import.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/import/export-import.mp4"/></video>
 
 * The <img src="../img/button/wmc_format_button.jpg" class="ms-docbutton"/> (Web Map Context) file, is a `xml` format where only WMS layers present in the map are exported including their settings related to projections, coordinates, zoom and extension (additional information can be found in the  [Maps Configuration](../developer-guide/maps-configuration.md#web-map-context) section of the [Developer Guide](https://mapstore.readthedocs.io/en/latest/developer-guide/)).
 
 Adding a WMC configuration file the behavior is similar to the following:
 
-<img src="../img/import/wmc_import.gif" class="ms-docimage"/>
+<video class="ms-docimage" controls><source src="../img/import/wmc_import.mp4"/></video>
 
 !!! warning
     Adding a map context file the current map context will be overridden.

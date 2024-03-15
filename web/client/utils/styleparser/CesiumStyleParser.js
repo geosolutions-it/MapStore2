@@ -7,35 +7,30 @@
  */
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
-import { castArray, isNumber, isEmpty, isEqual, pick, range } from 'lodash';
+import { castArray, isNumber, isEqual, range } from 'lodash';
 import { needProxy, getProxyUrl } from '../ProxyUtils';
 import {
     resolveAttributeTemplate,
     geoStylerStyleFilter,
     drawIcons,
-    getImageIdFromSymbolizer
+    getImageIdFromSymbolizer,
+    parseSymbolizerExpressions
 } from './StyleParserUtils';
 import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
+import EllipseGeometryLibrary from '@cesium/engine/Source/Core/EllipseGeometryLibrary';
+import CylinderGeometryLibrary from '@cesium/engine/Source/Core/CylinderGeometryLibrary';
 
 const getGeometryFunction = geometryFunctionsLibrary.cesium({ Cesium });
 
 function getCesiumColor({ color, opacity }) {
+    if (!color) {
+        return new Cesium.Color(0, 0, 0, 0);
+    }
     const [r, g, b, a] = chroma(color).gl();
     if (opacity !== undefined) {
         return new Cesium.Color(r, g, b, opacity);
     }
     return new Cesium.Color(r, g, b, a);
-}
-
-function getPositionByGraphicKey(graphicKey, entity) {
-    switch (graphicKey) {
-    case 'polyline':
-        return entity[graphicKey]?.positions;
-    case 'polygon':
-        return entity[graphicKey]?.hierarchy;
-    default:
-        return null;
-    }
 }
 
 function getCesiumDashArray({ color, opacity, dasharray }) {
@@ -53,84 +48,108 @@ function getCesiumDashArray({ color, opacity, dasharray }) {
     });
 }
 
-const getNumberAttributeValue = (value, properties) => {
+const getNumberAttributeValue = (value) => {
     const constantHeight = parseFloat(value);
-
     if (!isNaN(constantHeight) && isNumber(constantHeight)) {
         return constantHeight;
-    }
-
-    const attributeValue = value?.type === "attribute" && parseFloat(properties[value.name]);
-
-    if (!isNaN(attributeValue) && isNumber(attributeValue)) {
-        return attributeValue;
     }
     return null;
 };
 
-const isGlobalOpacityChanged = (entity, globalOpacity) => (entity._msGlobalOpacity ?? 1) !== globalOpacity;
-
-function getLeaderLinePositions({
+const getPositionsRelativeToTerrain = ({
     map,
-    cartographic,
-    heightReference,
-    sampleTerrain
-}) {
-    return new Promise(resolve => {
-        const drawLine = (zValue) => {
-            const computedHeight = {
-                none: cartographic.height,
-                relative: cartographic.height + zValue,
-                clamp: zValue
-            };
-            resolve(
-                zValue === cartographic.height
-                    ? undefined
-                    : Cesium.Cartesian3.fromRadiansArrayHeights([
-                        cartographic.longitude,
-                        cartographic.latitude,
-                        zValue,
-                        cartographic.longitude,
-                        cartographic.latitude,
-                        computedHeight[heightReference ?? "none"]
-                    ])
+    positions,
+    heightReference: _heightReference,
+    sampleTerrain,
+    initialHeight
+}) => {
+
+    const heightReference = _heightReference  ?? 'none';
+
+    const heightReferenceMap = {
+        none: (originalHeight) => originalHeight,
+        relative: (originalHeight, sampledHeight) => originalHeight + sampledHeight,
+        clamp: (originalHeight, sampledHeight) => sampledHeight
+    };
+
+    let originalHeights = [];
+
+    const computeHeight = (cartographicPositions) => {
+        const computeHeightReference = heightReferenceMap[heightReference];
+        let minHeight = Infinity;
+        let maxHeight = -Infinity;
+        let minSampledHeight = Infinity;
+        let maxSampledHeight = -Infinity;
+        const newPositions = cartographicPositions.map((cartographic, idx) => {
+            const originalHeight = originalHeights[idx] || 0;
+            const sampledHeight = heightReference === 'none' ? 0 : cartographic.height || 0;
+            const height = computeHeightReference(originalHeight, sampledHeight);
+            minHeight = height < minHeight ? height : minHeight;
+            maxHeight = height > maxHeight ? height : maxHeight;
+            minSampledHeight = sampledHeight < minSampledHeight ? sampledHeight : minSampledHeight;
+            maxSampledHeight = sampledHeight > maxSampledHeight ? sampledHeight : maxSampledHeight;
+            return Cesium.Cartesian3.fromRadians(
+                cartographic.longitude,
+                cartographic.latitude,
+                height
             );
-        };
-        const terrainProvider = map?.terrainProvider;
-        if (!terrainProvider) {
-            drawLine(0);
-            return;
-        }
-
-        const readyPromise = terrainProvider.ready
-            ? Promise.resolve(true)
-            : terrainProvider.readyPromise;
-
-        readyPromise.then(() => {
-            const promise = terrainProvider?.availability
-                ? Cesium.sampleTerrainMostDetailed(
-                    terrainProvider,
-                    [new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0)]
-                )
-                : sampleTerrain(
-                    terrainProvider,
-                    terrainProvider?.sampleTerrainZoomLevel ?? 18,
-                    [new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, 0)]
-                );
-            if (Cesium.defined(promise)) {
-                promise
-                    .then((updatedPositions) => drawLine(updatedPositions?.[0]?.height ?? 0))
-                    // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
-                    // and it resolve everything in the .then
-                    // while the sampleTerrain uses .catch
-                    // the optional chain help us to avoid error if catch is not exposed by the promise
-                    ?.catch?.(() => drawLine(0));
-            } else {
-                drawLine(0);
-            }
         });
+        return {
+            height: {
+                min: minHeight,
+                max: maxHeight
+            },
+            sampledHeight: {
+                min: minSampledHeight,
+                max: maxSampledHeight
+            },
+            positions: newPositions
+        };
+    };
+
+    const cartographicPositions = positions.map(cartesian => {
+        const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        originalHeights.push(initialHeight ?? cartographic.height ?? 0);
+        return new Cesium.Cartographic(cartographic.longitude, cartographic.latitude, initialHeight ?? 0);
     });
-}
+
+    const terrainProvider = map?.terrainProvider;
+
+    if (heightReference === 'none' || !terrainProvider) {
+        return Promise.resolve(computeHeight(cartographicPositions));
+    }
+
+    const readyPromise = terrainProvider.ready
+        ? Promise.resolve(true)
+        : terrainProvider.readyPromise;
+
+    return readyPromise.then(() => {
+        const promise = terrainProvider?.availability
+            ? Cesium.sampleTerrainMostDetailed(
+                terrainProvider,
+                cartographicPositions
+            )
+            : sampleTerrain(
+                terrainProvider,
+                terrainProvider?.sampleTerrainZoomLevel ?? 18,
+                cartographicPositions
+            );
+        if (Cesium.defined(promise)) {
+            return promise
+                .then((updatedCartographicPositions) => {
+                    return computeHeight(updatedCartographicPositions);
+                })
+                // the sampleTerrainMostDetailed from the Cesium Terrain is still using .otherwise
+                // and it resolve everything in the .then
+                // while the sampleTerrain uses .catch
+                // the optional chain help us to avoid error if catch is not exposed by the promise
+                ?.catch?.(() => {
+                    return computeHeight(cartographicPositions);
+                });
+        }
+        return computeHeight(cartographicPositions);
+    });
+};
 
 const cachedLeaderLineCanvas = {};
 
@@ -160,101 +179,18 @@ function createLeaderLineCanvas({
     return canvas;
 }
 
-function addLeaderLineGraphic({
-    map,
-    symbolizer,
-    entity,
-    globalOpacity,
-    sampleTerrain
-}) {
-    const compareKeys = [
-        'msLeaderLineColor',
-        'msLeaderLineOpacity',
-        'msLeaderLineWidth',
-        'msHeight',
-        'msHeightReference',
-        'offset'
-    ];
-    const shouldNotUpdateLeaderLine = entity._msSymbolizer
-        && !isGlobalOpacityChanged(entity, globalOpacity)
-        && isEqual(
-            pick(symbolizer, compareKeys),
-            pick(entity._msSymbolizer, compareKeys)
-        );
-    if (shouldNotUpdateLeaderLine) {
-        return Promise.resolve({
-            polyline: entity.polyline,
-            billboard: entity.billboard,
-            updated: false
-        });
-    }
-
-    if (!symbolizer.msLeaderLineWidth) {
-        return Promise.resolve({
-            updated: entity.polyline !== undefined
-        });
-    }
-
-    const cartographic = Cesium.Cartographic.fromCartesian(entity.position.getValue(Cesium.JulianDate.now()));
-    const heightReference = symbolizer.msHeightReference;
-    return (
-        (
-            symbolizer?.msHeight !== entity._msSymbolizer?.msHeight
-            || symbolizer?.msHeightReference !== entity._msSymbolizer?.msHeightReference
-            || !entity.polyline
+const translatePoint = (cartesian, symbolizer) => {
+    const { msTranslateX, msTranslateY } = symbolizer || {};
+    const x = getNumberAttributeValue(msTranslateX);
+    const y = getNumberAttributeValue(msTranslateY);
+    return (x || y)
+        ? Cesium.Matrix4.multiplyByPoint(
+            Cesium.Transforms.eastNorthUpToFixedFrame(cartesian),
+            new Cesium.Cartesian3(x || 0, y || 0, 0),
+            new Cesium.Cartesian3()
         )
-            ? getLeaderLinePositions({ map, cartographic, heightReference, sampleTerrain })
-                .then((positions) => new Cesium.PolylineGraphics({ positions }))
-            : Promise.resolve(entity.polyline)
-    )
-        .then((polyline) => {
-            const color = getCesiumColor({
-                color: symbolizer.msLeaderLineColor || '#000000',
-                opacity: (symbolizer.msLeaderLineOpacity ?? 1) * globalOpacity
-            });
-            if (polyline) {
-                polyline.material = color;
-                polyline.width = symbolizer.msLeaderLineWidth ?? 1;
-            }
-            if (symbolizer.offset && (symbolizer.offset[0] !== 0 || symbolizer.offset[1] !== 0)) {
-                const canvas = createLeaderLineCanvas(symbolizer);
-                const billboard = new Cesium.BillboardGraphics({
-                    image: canvas,
-                    scale: 1,
-                    pixelOffset: new Cesium.Cartesian2(
-                        (symbolizer.offset[0] || 0) / 2,
-                        (symbolizer.offset[1] || 0) / 2
-                    ),
-                    color
-                });
-                return {
-                    billboard,
-                    polyline,
-                    updated: true
-                };
-            }
-            return { polyline, updated: true };
-        });
-}
-
-function modifyPointHeight({ entity, symbolizer, properties }) {
-    // store the initial position of the feature created from the GeoJSON feature
-    if (!entity._msPosition) {
-        entity._msPosition = entity.position.getValue(Cesium.JulianDate.now());
-    }
-
-    const height = getNumberAttributeValue(symbolizer.msHeight, properties);
-
-    if (height === null) {
-        entity.position.setValue(entity._msPosition);
-        return;
-    }
-
-    const cartographic = Cesium.Cartographic.fromCartesian(entity._msPosition);
-    cartographic.height = height;
-    entity.position.setValue(Cesium.Cartographic.toCartesian(cartographic));
-    return;
-}
+        : cartesian;
+};
 
 const HEIGHT_REFERENCE_CONSTANTS_MAP = {
     none: 'NONE',
@@ -262,416 +198,892 @@ const HEIGHT_REFERENCE_CONSTANTS_MAP = {
     clamp: 'CLAMP_TO_GROUND'
 };
 
-const GRAPHIC_KEYS = [
-    'billboard',
-    'box',
-    'corridor',
-    'cylinder',
-    'ellipse',
-    'ellipsoid',
-    'label',
-    'model',
-    'tileset',
-    'path',
-    'plane',
-    'point',
-    'polygon',
-    'polyline',
-    'polylineVolume',
-    'rectangle',
-    'wall'
-];
+const anchorToOrigin = (anchor) => {
+    switch (anchor) {
+    case 'top-left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'top':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'top-right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.TOP
+        };
+    case 'left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'center':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    case 'bottom-left':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    case 'bottom':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    case 'bottom-right':
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.RIGHT,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+        };
+    default:
+        return {
+            horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+            verticalOrigin: Cesium.VerticalOrigin.CENTER
+        };
+    }
+};
 
-const getGraphics = ({
-    symbolizer,
-    images,
-    entity,
-    globalOpacity,
-    properties,
-    map,
-    sampleTerrain
-}) => {
-    if (symbolizer.kind === 'Mark') {
-        modifyPointHeight({ entity, symbolizer, properties });
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
-        if (image) {
-            const side = width > height ? width : height;
-            const scale = (symbolizer.radius * 2) / side;
-            return addLeaderLineGraphic({
-                map,
-                symbolizer,
-                entity,
-                globalOpacity,
-                sampleTerrain
-            }).then(({ polyline }) => ({
-                polyline,
-                billboard: new Cesium.BillboardGraphics({
-                    image,
-                    scale,
-                    rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
-                    disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
-                    heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'],
-                    color: getCesiumColor({
-                        color: '#ffffff',
-                        opacity: 1 * globalOpacity
-                    })
-                })
-            }));
-        }
-    }
-    if (symbolizer.kind === 'Icon') {
-        modifyPointHeight({ entity, symbolizer, properties });
-        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(symbolizer)) || {};
-        if (image) {
-            const side = width > height ? width : height;
-            const scale = symbolizer.size / side;
-            return addLeaderLineGraphic({
-                map,
-                symbolizer,
-                entity,
-                globalOpacity,
-                sampleTerrain
-            }).then(({ polyline }) =>({
-                polyline,
-                billboard: new Cesium.BillboardGraphics({
-                    image,
-                    scale,
-                    pixelOffset: symbolizer.offset ? new Cesium.Cartesian2(symbolizer.offset[0], symbolizer.offset[1]) : null,
-                    rotation: Cesium.Math.toRadians(-1 * symbolizer.rotate || 0),
-                    disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
-                    heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'],
-                    color: getCesiumColor({
-                        color: '#ffffff',
-                        opacity: symbolizer.opacity * globalOpacity
-                    })
-                })
-            }));
-        }
-    }
-    if (symbolizer.kind === 'Text') {
-        modifyPointHeight({ entity, symbolizer, properties });
-        return addLeaderLineGraphic({
-            map,
-            symbolizer,
-            entity,
-            globalOpacity,
-            sampleTerrain
-        }).then(({ polyline, billboard }) => ({
-            billboard,
-            polyline,
-            label: new Cesium.LabelGraphics({
-                text: resolveAttributeTemplate({ properties }, symbolizer.label, ''),
-                font: [symbolizer.fontStyle, symbolizer.fontWeight,  `${symbolizer.size}px`, castArray(symbolizer.font || ['serif']).join(', ')]
-                    .filter(val => val)
-                    .join(' '),
-                fillColor: getCesiumColor({
-                    color: symbolizer.color,
-                    opacity: 1 * globalOpacity
-                }),
-                disableDepthTestDistance: symbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
-                heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'],
-                pixelOffset: new Cesium.Cartesian2(symbolizer?.offset?.[0] ?? 0, symbolizer?.offset?.[1] ?? 0),
-                // rotation is not available as property
-                ...(symbolizer.haloWidth > 0 && {
-                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-                    outlineColor: getCesiumColor({
-                        color: symbolizer.haloColor,
-                        opacity: 1 * globalOpacity
-                    }),
-                    outlineWidth: symbolizer.haloWidth
-                })
-            })
-        }));
-    }
-    if (symbolizer.kind === 'Model') {
-        if (!symbolizer?.model) {
-            return Promise.resolve({});
-        }
-        const compareKeys = ['model'];
-        const shouldNotUpdateGraphics = entity.model
-            && entity._msSymbolizer
-            && isEqual(
-                pick(symbolizer, compareKeys),
-                pick(entity._msSymbolizer, compareKeys)
+const getVolumeShape = (shape = 'Square', radius = 1) => {
+    if (shape === 'Circle') {
+        const positions = [];
+        for (let i = 0; i < 360; i++) {
+            const radians = Cesium.Math.toRadians(i);
+            positions.push(
+                new Cesium.Cartesian2(
+                    radius * Math.cos(radians),
+                    radius * Math.sin(radians)
+                )
             );
-
-        const model = shouldNotUpdateGraphics
-            ? entity.model
-            : new Cesium.ModelGraphics({
-                uri: new Cesium.Resource({
-                    proxy: needProxy(symbolizer?.model) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined,
-                    url: symbolizer?.model
-                })
-            });
-        modifyPointHeight({ entity, symbolizer, properties });
-        const position = entity._msPosition;
-        const heading = Cesium.Math.toRadians(symbolizer?.heading ?? 0);
-        const pitch = Cesium.Math.toRadians(symbolizer?.pitch ?? 0);
-        const roll = Cesium.Math.toRadians(symbolizer?.roll ?? 0);
-        const hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
-        const orientation = Cesium.Transforms.headingPitchRollQuaternion(position, hpr);
-        entity.orientation = orientation;
-
-        model.scale = symbolizer?.scale ?? 1;
-        model.color = getCesiumColor({
-            color: symbolizer.color ?? '#ffffff',
-            opacity: (symbolizer.opacity ?? 1) * globalOpacity
-        });
-
-        model.heightReference = Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[symbolizer.msHeightReference] || 'NONE'];
-
-        return addLeaderLineGraphic({
-            map,
-            symbolizer,
-            entity,
-            globalOpacity,
-            sampleTerrain
-        }).then(({ polyline, updated  }) => ({
-            ...((!shouldNotUpdateGraphics || updated) && {
-                model,
-                polyline
-            })
-        }));
-    }
-    if (symbolizer.kind === 'Line') {
-        const polyline = new Cesium.PolylineGraphics({
-            material: symbolizer?.dasharray
-                ? getCesiumDashArray({
-                    color: symbolizer.color,
-                    opacity: symbolizer.opacity * globalOpacity,
-                    dasharray: symbolizer.dasharray
-                })
-                : getCesiumColor({
-                    color: symbolizer.color,
-                    opacity: symbolizer.opacity * globalOpacity
-                }),
-            width: symbolizer.width,
-            positions: entity._msStoredCoordinates.polyline,
-            clampToGround: symbolizer.msClampToGround,
-            arcType: symbolizer.msClampToGround
-                ? Cesium.ArcType.GEODESIC
-                : Cesium.ArcType.NONE
-        });
-        const geometryFunction = getGeometryFunction(symbolizer);
-        if (geometryFunction) {
-            geometryFunction({ polyline });
         }
-
-        return Promise.resolve({ polyline });
+        return positions;
     }
-    if (symbolizer.kind === 'Fill') {
-        const polygon = new Cesium.PolygonGraphics({
-            material: getCesiumColor({
-                color: symbolizer.color,
-                opacity: symbolizer.fillOpacity * globalOpacity
-            }),
-            hierarchy: entity._msStoredCoordinates.polygon,
-            // height should be introduced with concept of extrusion
-            // height: 0,
-            perPositionHeight: !symbolizer.msClampToGround,
-            ...(!symbolizer.msClampToGround ? undefined : {classificationType: symbolizer.msClassificationType === 'terrain' ?
-                Cesium.ClassificationType.TERRAIN :
-                symbolizer.msClassificationType === '3d' ?
-                    Cesium.ClassificationType.CESIUM_3D_TILE :
-                    Cesium.ClassificationType.BOTH} ),
-            arcType: symbolizer.msClampToGround
-                ? Cesium.ArcType.GEODESIC
-                : Cesium.ArcType.NONE
-        });
+    if (shape === 'Square') {
+        return [
+            new Cesium.Cartesian2(-radius, -radius),
+            new Cesium.Cartesian2(radius, -radius),
+            new Cesium.Cartesian2(radius, radius),
+            new Cesium.Cartesian2(-radius, radius)
+        ];
+    }
+    return [];
+};
 
-        let polyline;
+const isCompatibleGeometry = ({ geometry, symbolizer }) => {
+    if (geometry.type === 'Point' && ['Fill', 'Line'].includes(symbolizer.kind)) {
+        return false;
+    }
+    if (geometry.type === 'LineString' && ['Fill'].includes(symbolizer.kind)) {
+        return false;
+    }
+    if (geometry.type === 'Polygon' && ['Line'].includes(symbolizer.kind)) {
+        return false;
+    }
+    return true;
+};
+
+const getOrientation = (position, symbolizer) => {
+    const { heading, pitch, roll } = symbolizer || {};
+    if (heading || pitch || roll) {
+        const hpr = new Cesium.HeadingPitchRoll(
+            Cesium.Math.toRadians(heading ?? 0),
+            Cesium.Math.toRadians(pitch ?? 0),
+            Cesium.Math.toRadians(roll ?? 0));
+        const orientation = Cesium.Transforms.headingPitchRollQuaternion(position, hpr);
+        return orientation;
+    }
+    return null;
+};
+
+const getCirclePositions = (position, symbolizer) => {
+    const radius = symbolizer.radius;
+    const geodesic = symbolizer.geodesic;
+    const slices = 128;
+    const center = position;
+    let positions;
+    if (geodesic) {
+        const { outerPositions } = EllipseGeometryLibrary.computeEllipsePositions({
+            granularity: 0.02,
+            semiMajorAxis: radius,
+            semiMinorAxis: radius,
+            rotation: 0,
+            center
+        }, false, true);
+        positions = Cesium.Cartesian3.unpackArray(outerPositions);
+        positions = [...positions, positions[0]];
+    } else {
+        const modelMatrix = Cesium.Matrix4.multiplyByTranslation(
+            Cesium.Transforms.eastNorthUpToFixedFrame(
+                center
+            ),
+            new Cesium.Cartesian3(0, 0, 0),
+            new Cesium.Matrix4()
+        );
+        positions = CylinderGeometryLibrary.computePositions(0.0, radius, radius, slices, false);
+        positions = Cesium.Cartesian3.unpackArray(positions);
+        positions = [...positions.splice(0, Math.ceil(positions.length / 2))];
+        positions = positions.map((cartesian) =>
+            Cesium.Matrix4.multiplyByPoint(modelMatrix, cartesian, new Cesium.Cartesian3())
+        );
+        positions = [...positions, positions[0]];
+    }
+    return positions;
+};
+
+const changePositionHeight = (cartesian, symbolizer) =>{
+    const { msHeight } = symbolizer || {};
+    const height = getNumberAttributeValue(msHeight);
+    if (height !== null) {
+        const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+        return Cesium.Cartesian3.fromRadians(
+            cartographic.longitude,
+            cartographic.latitude,
+            height
+        );
+    }
+    return cartesian;
+};
+
+const primitiveGeometryTypes = {
+    point: (options) => {
+        const { feature, primitive, parsedSymbolizer } = options;
+        if (feature.geometry.type === 'Point') {
+            const position = changePositionHeight(feature.positions[0][0], parsedSymbolizer);
+            const orientation = getOrientation(position, parsedSymbolizer);
+            return {
+                ...options,
+                primitive: {
+                    ...primitive,
+                    orientation,
+                    geometry: translatePoint(position, parsedSymbolizer)
+                }
+            };
+        }
+        const geometryFunction = getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...parsedSymbolizer });
+        const { position } = geometryFunction(feature);
+        const orientation = getOrientation(position, parsedSymbolizer);
+        return {
+            ...options,
+            primitive: {
+                ...primitive,
+                orientation,
+                geometry: translatePoint(
+                    changePositionHeight(position, parsedSymbolizer),
+                    parsedSymbolizer
+                )
+            }
+        };
+    },
+    leaderLine: (options, { map, sampleTerrain }) => {
+        const { parsedSymbolizer } = options;
+        // remove the translations and height options
+        // to get the original position
+        const { msTranslateX, msTranslateY, msHeight, ...pointParsedSymbolizer } = parsedSymbolizer;
+        // use point function to compute geometry transformations
+        const { primitive } = primitiveGeometryTypes.point({ ...options, parsedSymbolizer: pointParsedSymbolizer });
+        return Promise.all([
+            getPositionsRelativeToTerrain({
+                map,
+                positions: [primitive.geometry],
+                heightReference: 'clamp',
+                sampleTerrain
+            }).then((computed) => computed.positions[0]),
+            getPositionsRelativeToTerrain({
+                map,
+                positions: [
+                    translatePoint(
+                        changePositionHeight(primitive.geometry, parsedSymbolizer),
+                        parsedSymbolizer
+                    )
+                ],
+                heightReference: parsedSymbolizer.msHeightReference,
+                sampleTerrain
+            }).then((computed) => computed.positions[0])
+        ]).then((positions) => {
+            return {
+                ...options,
+                primitive: {
+                    ...primitive,
+                    geometry: [positions]
+                }
+            };
+        });
+    },
+    polyline: (options, { map, sampleTerrain }) => {
+        const { feature, primitive, parsedSymbolizer } = options;
+        const extrudedHeight = getNumberAttributeValue(parsedSymbolizer.msExtrudedHeight);
+        const height = getNumberAttributeValue(parsedSymbolizer.msHeight);
+        if (height !== null || !!parsedSymbolizer.msExtrusionRelativeToGeometry) {
+            let minHeight = Infinity;
+            let maxHeight = -Infinity;
+            return Promise.all(feature?.positions.map((positions) => {
+                return getPositionsRelativeToTerrain({
+                    map,
+                    positions,
+                    heightReference: parsedSymbolizer.msHeightReference,
+                    sampleTerrain,
+                    initialHeight: height
+                }).then((computed) => {
+                    const computedHeight = computed[parsedSymbolizer.msExtrusionRelativeToGeometry ? 'height' : 'sampledHeight'];
+                    minHeight = computedHeight.min < minHeight ? computedHeight.min : minHeight;
+                    maxHeight = computedHeight.max > maxHeight ? computedHeight.max : maxHeight;
+                    return computed.positions;
+                });
+            })).then((geometry) => {
+                return {
+                    ...options,
+                    primitive: {
+                        ...primitive,
+                        geometry,
+                        // in case of relative or clamp
+                        // extrusion will be relative to the height
+                        // so 0 value should be considered undefined
+                        extrudedHeight: extrudedHeight
+                            ? extrudedHeight + (
+                                extrudedHeight > 0
+                                    ? maxHeight
+                                    : minHeight
+                            )
+                            : undefined
+                    }
+                };
+            });
+        }
+        return {
+            ...options,
+            primitive: {
+                ...primitive,
+                geometry: feature?.positions,
+                ...(extrudedHeight !== null && { extrudedHeight })
+            }
+        };
+    },
+    wall: (options, configs) => {
+        return Promise.resolve(primitiveGeometryTypes.polyline(options, configs))
+            .then(({ primitive }) => {
+                return {
+                    ...options,
+                    primitive: {
+                        ...primitive,
+                        geometry: primitive?.geometry,
+                        minimumHeights: primitive?.geometry?.map((positions) => {
+                            return positions.map((cartesian) => {
+                                return Cesium.Cartographic.fromCartesian(cartesian).height;
+                            });
+                        }),
+                        maximumHeights: primitive?.geometry?.map((positions) => {
+                            return positions.map(() => {
+                                return primitive.extrudedHeight;
+                            });
+                        })
+                    }
+                };
+            });
+    },
+    polygon: (options, { map, sampleTerrain }) => {
+        const { feature, primitive, parsedSymbolizer } = options;
+        const extrudedHeight = getNumberAttributeValue(parsedSymbolizer.msExtrudedHeight);
+        const height = getNumberAttributeValue(parsedSymbolizer.msHeight);
+        if ((parsedSymbolizer.msHeightReference || 'none') !== 'none' || !!parsedSymbolizer.msExtrusionRelativeToGeometry) {
+            let minHeight = Infinity;
+            let maxHeight = -Infinity;
+            return Promise.all(feature?.positions.map((positions) => {
+                return getPositionsRelativeToTerrain({
+                    map,
+                    positions,
+                    heightReference: parsedSymbolizer.msHeightReference,
+                    sampleTerrain,
+                    initialHeight: height
+                }).then((computed) => {
+                    const computedHeight = computed[parsedSymbolizer.msExtrusionRelativeToGeometry ? 'height' : 'sampledHeight'];
+                    minHeight = computedHeight.min < minHeight ? computedHeight.min : minHeight;
+                    maxHeight = computedHeight.max > maxHeight ? computedHeight.max : maxHeight;
+                    return computed.positions;
+                });
+            })).then((geometry) => {
+                const extrusionParams = {
+                    // height will be computed on the geometry
+                    height: undefined,
+                    // in case of relative or clamp
+                    // extrusion will be relative to the height
+                    // so 0 value should be considered undefined
+                    extrudedHeight: extrudedHeight
+                        ? extrudedHeight + (
+                            extrudedHeight > 0
+                                ? maxHeight
+                                : minHeight
+                        )
+                        : undefined
+                };
+                return {
+                    ...options,
+                    primitive: {
+                        ...primitive,
+                        geometry,
+                        ...(primitive?.entity?.polygon
+                            ? {
+                                entity: {
+                                    polygon: {
+                                        ...primitive?.entity?.polygon,
+                                        ...extrusionParams
+                                    }
+                                }
+                            }
+                            : extrusionParams)
+                    }
+                };
+            });
+        }
+        const extrusionParams = {
+            ...(extrudedHeight !== null && { extrudedHeight }),
+            ...(height !== null && {
+                height,
+                perPositionHeight: false
+            })
+        };
+        return {
+            ...options,
+            primitive: {
+                ...primitive,
+                geometry: feature?.positions,
+                ...(primitive?.entity?.polygon
+                    ? {
+                        entity: {
+                            polygon: {
+                                ...primitive?.entity?.polygon,
+                                ...extrusionParams
+                            }
+                        }
+                    }
+                    : extrusionParams)
+            }
+        };
+    },
+    circlePolyline: (options) => {
+        const { feature, primitive, parsedSymbolizer } = options;
+        if (feature.geometry.type === 'Point') {
+            const position = Cesium.Cartesian3.fromDegrees(
+                feature.geometry.coordinates[0],
+                feature.geometry.coordinates[1],
+                feature.geometry.coordinates[2] || 0
+            );
+            const positions = getCirclePositions(position, parsedSymbolizer);
+            return {
+                ...options,
+                primitive: {
+                    ...primitive,
+                    geometry: [positions]
+                }
+            };
+        }
+        return options;
+    },
+    circlePolygon: (options) => {
+        const { feature, primitive, parsedSymbolizer } = options;
+        if (feature.geometry.type === 'Point') {
+            const position = Cesium.Cartesian3.fromDegrees(
+                feature.geometry.coordinates[0],
+                feature.geometry.coordinates[1],
+                feature.geometry.coordinates[2] || 0
+            );
+            const positions = getCirclePositions(position, parsedSymbolizer);
+            return {
+                ...options,
+                primitive: {
+                    ...primitive,
+                    geometry: [positions]
+                }
+            };
+        }
+        return options;
+    }
+};
+
+const symbolizerToPrimitives = {
+    Mark: ({ parsedSymbolizer, globalOpacity, images, symbolizer }) => {
+        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
+        const side = width > height ? width : height;
+        const scale = (parsedSymbolizer.radius * 2) / side;
+        return image ? [
+            {
+                type: 'point',
+                geometryType: 'point',
+                entity: {
+                    billboard: {
+                        image,
+                        scale,
+                        rotation: Cesium.Math.toRadians(-1 * parsedSymbolizer.rotate || 0),
+                        disableDepthTestDistance: parsedSymbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
+                        heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[parsedSymbolizer.msHeightReference] || 'NONE'],
+                        color: getCesiumColor({
+                            color: '#ffffff',
+                            opacity: 1 * globalOpacity
+                        })
+                    }
+                }
+            },
+            ...(parsedSymbolizer.msLeaderLineWidth ? [
+                {
+                    type: 'leaderLine',
+                    geometryType: 'leaderLine',
+                    entity: {
+                        polyline: {
+                            material: getCesiumColor({
+                                color: parsedSymbolizer.msLeaderLineColor || '#000000',
+                                opacity: (parsedSymbolizer.msLeaderLineOpacity ?? 1) * globalOpacity
+                            }),
+                            width: parsedSymbolizer.msLeaderLineWidth
+                        }
+                    }
+                }
+            ] : [])
+        ] : [];
+    },
+    Icon: ({ parsedSymbolizer, globalOpacity, images, symbolizer }) => {
+        const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
+        const side = width > height ? width : height;
+        const scale = parsedSymbolizer.size / side;
+        return image ? [{
+            type: 'point',
+            geometryType: 'point',
+            entity: {
+                billboard: {
+                    image,
+                    scale,
+                    ...anchorToOrigin(parsedSymbolizer.anchor),
+                    pixelOffset: parsedSymbolizer.offset ? new Cesium.Cartesian2(parsedSymbolizer.offset[0], parsedSymbolizer.offset[1]) : null,
+                    rotation: Cesium.Math.toRadians(-1 * parsedSymbolizer.rotate || 0),
+                    disableDepthTestDistance: parsedSymbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
+                    heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[parsedSymbolizer.msHeightReference] || 'NONE'],
+                    color: getCesiumColor({
+                        color: '#ffffff',
+                        opacity: parsedSymbolizer.opacity * globalOpacity
+                    })
+                }
+            }
+        },
+        ...(parsedSymbolizer.msLeaderLineWidth ? [
+            {
+                type: 'leaderLine',
+                geometryType: 'leaderLine',
+                entity: {
+                    polyline: {
+                        material: getCesiumColor({
+                            color: parsedSymbolizer.msLeaderLineColor || '#000000',
+                            opacity: (parsedSymbolizer.msLeaderLineOpacity ?? 1) * globalOpacity
+                        }),
+                        width: parsedSymbolizer.msLeaderLineWidth
+                    }
+                }
+            }
+        ] : [])] : [];
+    },
+    Text: ({ parsedSymbolizer, feature, globalOpacity }) => {
+        const offsetX = getNumberAttributeValue(parsedSymbolizer?.offset?.[0]);
+        const offsetY = getNumberAttributeValue(parsedSymbolizer?.offset?.[1]);
+        return [
+            {
+                type: 'point',
+                geometryType: 'point',
+                entity: {
+                    label: {
+                        text: resolveAttributeTemplate({ properties: feature.properties }, parsedSymbolizer.label, ''),
+                        font: [parsedSymbolizer.fontStyle, parsedSymbolizer.fontWeight,  `${parsedSymbolizer.size}px`, castArray(parsedSymbolizer.font || ['serif']).join(', ')]
+                            .filter(val => val)
+                            .join(' '),
+                        fillColor: getCesiumColor({
+                            color: parsedSymbolizer.color,
+                            opacity: 1 * globalOpacity
+                        }),
+                        ...anchorToOrigin(parsedSymbolizer.anchor),
+                        disableDepthTestDistance: parsedSymbolizer.msBringToFront ? Number.POSITIVE_INFINITY : 0,
+                        heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[parsedSymbolizer.msHeightReference] || 'NONE'],
+                        pixelOffset: new Cesium.Cartesian2(offsetX ?? 0, offsetY ?? 0),
+                        // rotation is not available as property
+                        ...(parsedSymbolizer.haloWidth > 0 && {
+                            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                            outlineColor: getCesiumColor({
+                                color: parsedSymbolizer.haloColor,
+                                opacity: 1 * globalOpacity
+                            }),
+                            outlineWidth: parsedSymbolizer.haloWidth
+                        })
+                    }
+                }
+            },
+            ...(parsedSymbolizer.msLeaderLineWidth ? [
+                {
+                    type: 'leaderLine',
+                    geometryType: 'leaderLine',
+                    entity: {
+                        polyline: {
+                            material: getCesiumColor({
+                                color: parsedSymbolizer.msLeaderLineColor || '#000000',
+                                opacity: (parsedSymbolizer.msLeaderLineOpacity ?? 1) * globalOpacity
+                            }),
+                            width: parsedSymbolizer.msLeaderLineWidth
+                        }
+                    }
+                }
+            ] : []),
+            ...(parsedSymbolizer.msLeaderLineWidth && (offsetX || offsetY) ? [
+                {
+                    type: 'offset',
+                    geometryType: 'point',
+                    entity: {
+                        billboard: {
+                            image: createLeaderLineCanvas(parsedSymbolizer),
+                            scale: 1,
+                            pixelOffset: new Cesium.Cartesian2(
+                                (offsetX || 0) / 2,
+                                (offsetY || 0) / 2
+                            ),
+                            color: getCesiumColor({
+                                color: parsedSymbolizer.msLeaderLineColor || '#000000',
+                                opacity: (parsedSymbolizer.msLeaderLineOpacity ?? 1) * globalOpacity
+                            })
+                        }
+                    }
+                }
+            ] : [])
+        ];
+    },
+    Model: ({ parsedSymbolizer, globalOpacity }) => {
+        return parsedSymbolizer?.model ? [
+            {
+                type: 'point',
+                geometryType: 'point',
+                entity: {
+                    model: {
+                        uri: new Cesium.Resource({
+                            proxy: needProxy(parsedSymbolizer?.model) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined,
+                            url: parsedSymbolizer?.model
+                        }),
+                        color: getCesiumColor({
+                            color: parsedSymbolizer.color ?? '#ffffff',
+                            opacity: (parsedSymbolizer.opacity ?? 1) * globalOpacity
+                        }),
+                        scale: parsedSymbolizer?.scale ?? 1,
+                        heightReference: Cesium.HeightReference[HEIGHT_REFERENCE_CONSTANTS_MAP[parsedSymbolizer.msHeightReference] || 'NONE']
+                    }
+                }
+            },
+            ...(parsedSymbolizer.msLeaderLineWidth ? [
+                {
+                    type: 'leaderLine',
+                    geometryType: 'leaderLine',
+                    entity: {
+                        polyline: {
+                            material: getCesiumColor({
+                                color: parsedSymbolizer.msLeaderLineColor || '#000000',
+                                opacity: (parsedSymbolizer.msLeaderLineOpacity ?? 1) * globalOpacity
+                            }),
+                            width: parsedSymbolizer.msLeaderLineWidth
+                        }
+                    }
+                }
+            ] : [])
+        ] : [];
+    },
+    Line: ({ parsedSymbolizer, feature, globalOpacity }) => {
+        const geometryFunction = getGeometryFunction(parsedSymbolizer);
+        const additionalOptions = geometryFunction ? geometryFunction(feature) : {};
+        return [
+            ...(parsedSymbolizer.color && parsedSymbolizer.width !== 0 ? [{
+                type: 'polyline',
+                geometryType: 'polyline',
+                entity: {
+                    polyline: {
+                        material: parsedSymbolizer?.dasharray
+                            ? getCesiumDashArray({
+                                color: parsedSymbolizer.color,
+                                opacity: parsedSymbolizer.opacity * globalOpacity,
+                                dasharray: parsedSymbolizer.dasharray
+                            })
+                            : getCesiumColor({
+                                color: parsedSymbolizer.color,
+                                opacity: parsedSymbolizer.opacity * globalOpacity
+                            }),
+                        width: parsedSymbolizer.width,
+                        clampToGround: parsedSymbolizer.msClampToGround,
+                        arcType: parsedSymbolizer.msClampToGround
+                            ? Cesium.ArcType.GEODESIC
+                            : Cesium.ArcType.NONE,
+                        ...additionalOptions
+                    }
+                }
+            }] : []),
+            ...((!parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedHeight && !parsedSymbolizer.msExtrusionType) ? [{
+                type: 'polylineVolume',
+                geometryType: 'wall',
+                entity: {
+                    wall: {
+                        material: getCesiumColor({
+                            color: parsedSymbolizer.msExtrusionColor || '#000000',
+                            opacity: (parsedSymbolizer.msExtrusionOpacity ?? 1) * globalOpacity
+                        })
+                    }
+                }
+            }] : []),
+            ...((!parsedSymbolizer.msClampToGround && parsedSymbolizer.msExtrudedHeight && parsedSymbolizer.msExtrusionType) ? [{
+                type: 'polylineVolume',
+                geometryType: 'polyline',
+                entity: {
+                    polylineVolume: {
+                        material: getCesiumColor({
+                            color: parsedSymbolizer.msExtrusionColor || '#000000',
+                            opacity: (parsedSymbolizer.msExtrusionOpacity ?? 1) * globalOpacity
+                        }),
+                        shape: getVolumeShape(parsedSymbolizer.msExtrusionType, parsedSymbolizer.msExtrudedHeight / 2)
+                    }
+                }
+            }] : [])
+        ];
+    },
+    Fill: ({ parsedSymbolizer, feature, globalOpacity }) => {
+        const isExtruded = !parsedSymbolizer.msClampToGround && !!parsedSymbolizer.msExtrudedHeight;
+        const geometryFunction = getGeometryFunction(parsedSymbolizer);
+        const additionalOptions = geometryFunction ? geometryFunction(feature) : {};
+        return [
+            {
+                type: 'polygon',
+                geometryType: 'polygon',
+                clampToGround: parsedSymbolizer.msClampToGround,
+                entity: {
+                    polygon: {
+                        material: getCesiumColor({
+                            color: parsedSymbolizer.color,
+                            opacity: parsedSymbolizer.fillOpacity * globalOpacity
+                        }),
+                        perPositionHeight: !parsedSymbolizer.msClampToGround,
+                        ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
+                            Cesium.ClassificationType.TERRAIN :
+                            parsedSymbolizer.msClassificationType === '3d' ?
+                                Cesium.ClassificationType.CESIUM_3D_TILE :
+                                Cesium.ClassificationType.BOTH} ),
+                        arcType: parsedSymbolizer.msClampToGround
+                            ? Cesium.ArcType.GEODESIC
+                            : undefined,
+                        ...additionalOptions
+                    }
+                }
+            },
+            // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
+            // this is a workaround to visualize the outline with the correct side
+            // this only for the footprint
+            ...(parsedSymbolizer.outlineColor && parsedSymbolizer.outlineWidth !== 0 && !isExtruded ? [
+                {
+                    type: 'polyline',
+                    geometryType: 'polyline',
+                    entity: {
+                        polyline: {
+                            material: parsedSymbolizer?.outlineDasharray
+                                ? getCesiumDashArray({
+                                    color: parsedSymbolizer.outlineColor,
+                                    opacity: parsedSymbolizer.outlineOpacity * globalOpacity,
+                                    dasharray: parsedSymbolizer.outlineDasharray
+                                })
+                                : getCesiumColor({
+                                    color: parsedSymbolizer.outlineColor,
+                                    opacity: parsedSymbolizer.outlineOpacity * globalOpacity
+                                }),
+                            width: parsedSymbolizer.outlineWidth,
+                            clampToGround: parsedSymbolizer.msClampToGround,
+                            ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
+                                Cesium.ClassificationType.TERRAIN :
+                                parsedSymbolizer.msClassificationType === '3d' ?
+                                    Cesium.ClassificationType.CESIUM_3D_TILE :
+                                    Cesium.ClassificationType.BOTH} ),
+                            arcType: parsedSymbolizer.msClampToGround
+                                ? Cesium.ArcType.GEODESIC
+                                : Cesium.ArcType.NONE,
+                            ...additionalOptions
+                        }
+                    }
+                }
+            ] : [])
+        ];
+    },
+    Circle: ({ parsedSymbolizer, globalOpacity }) => {
+        return [{
+            type: 'polygon',
+            geometryType: 'circlePolygon',
+            clampToGround: parsedSymbolizer.msClampToGround,
+            entity: {
+                polygon: {
+                    material: getCesiumColor({
+                        color: parsedSymbolizer.color,
+                        opacity: parsedSymbolizer.opacity * globalOpacity
+                    }),
+                    ...(parsedSymbolizer.geodesic
+                        ? {
+                            perPositionHeight: !parsedSymbolizer.msClampToGround,
+                            ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
+                                Cesium.ClassificationType.TERRAIN :
+                                parsedSymbolizer.msClassificationType === '3d' ?
+                                    Cesium.ClassificationType.CESIUM_3D_TILE :
+                                    Cesium.ClassificationType.BOTH} ),
+                            arcType: Cesium.ArcType.GEODESIC
+                        }
+                        : {
+                            perPositionHeight: true,
+                            arcType: undefined
+                        })
+                }
+            }
+        },
         // outline properties is not working in some browser see https://github.com/CesiumGS/cesium/issues/40
         // this is a workaround to visualize the outline with the correct side
         // this only for the footprint
-        if (symbolizer.outlineColor && symbolizer.outlineWidth !== 0) {
-            polyline = new Cesium.PolylineGraphics({
-                material: getCesiumColor({
-                    color: symbolizer.outlineColor,
-                    opacity: symbolizer.outlineOpacity * globalOpacity
-                }),
-                width: symbolizer.outlineWidth,
-                positions: entity._msStoredCoordinates.polygon.getValue().positions,
-                clampToGround: symbolizer.msClampToGround,
-                ...(!symbolizer.msClampToGround ? undefined : {classificationType: symbolizer.msClassificationType === 'terrain' ?
-                    Cesium.ClassificationType.TERRAIN :
-                    symbolizer.msClassificationType === '3d' ?
-                        Cesium.ClassificationType.CESIUM_3D_TILE :
-                        Cesium.ClassificationType.BOTH} ),
-                arcType: symbolizer.msClampToGround
-                    ? Cesium.ArcType.GEODESIC
-                    : Cesium.ArcType.NONE
-            });
-        }
-        return Promise.resolve({
-            polygon,
-            ...(polyline && { polyline })
-        });
+        ...(parsedSymbolizer.outlineColor && parsedSymbolizer.outlineWidth !== 0) ? [{
+            type: 'polyline',
+            geometryType: 'circlePolyline',
+            entity: {
+                polyline: {
+                    material: parsedSymbolizer?.outlineDasharray
+                        ? getCesiumDashArray({
+                            color: parsedSymbolizer.outlineColor,
+                            opacity: parsedSymbolizer.outlineOpacity * globalOpacity,
+                            dasharray: parsedSymbolizer.outlineDasharray
+                        })
+                        : getCesiumColor({
+                            color: parsedSymbolizer.outlineColor,
+                            opacity: parsedSymbolizer.outlineOpacity * globalOpacity
+                        }),
+                    width: parsedSymbolizer.outlineWidth,
+                    ...(parsedSymbolizer.geodesic
+                        ? {
+                            clampToGround: parsedSymbolizer.msClampToGround,
+                            ...(!parsedSymbolizer.msClampToGround ? undefined : {classificationType: parsedSymbolizer.msClassificationType === 'terrain' ?
+                                Cesium.ClassificationType.TERRAIN :
+                                parsedSymbolizer.msClassificationType === '3d' ?
+                                    Cesium.ClassificationType.CESIUM_3D_TILE :
+                                    Cesium.ClassificationType.BOTH} ),
+                            arcType: Cesium.ArcType.GEODESIC
+                        }
+                        : {
+                            clampToGround: false,
+                            arcType: Cesium.ArcType.NONE
+                        })
+                }
+            }
+        }] : []];
     }
-    return Promise.resolve({});
+};
+
+const isGeometryChanged = (previousSymbolizer, currentSymbolizer) => {
+    return previousSymbolizer?.msGeometry?.name !== currentSymbolizer?.msGeometry?.name
+        || previousSymbolizer?.msHeight !== currentSymbolizer?.msHeight
+        || previousSymbolizer?.msHeightReference !== currentSymbolizer?.msHeightReference
+        || previousSymbolizer?.msExtrudedHeight !== currentSymbolizer?.msExtrudedHeight
+        || previousSymbolizer?.msExtrusionRelativeToGeometry !== currentSymbolizer?.msExtrusionRelativeToGeometry
+        || previousSymbolizer?.msExtrusionType !== currentSymbolizer?.msExtrusionType
+        || previousSymbolizer?.msTranslateX !== currentSymbolizer?.msTranslateX
+        || previousSymbolizer?.msTranslateY !== currentSymbolizer?.msTranslateY
+        || previousSymbolizer?.heading !== currentSymbolizer?.heading
+        || previousSymbolizer?.pitch !== currentSymbolizer?.pitch
+        || previousSymbolizer?.roll !== currentSymbolizer?.roll;
+};
+
+const isSymbolizerChanged = (previousSymbolizer, currentSymbolizer) => {
+    const { msGeometry: previousMsGeometry, ...previous } = previousSymbolizer;
+    const { msGeometry, ...current } = currentSymbolizer;
+    return !isEqual(previous, current);
+};
+
+const getStyledFeatures = ({ rules, features, globalOpacity, images }) => {
+    return rules?.map((rule) => {
+        const filteredFeatures = features
+            .filter(({ properties }) => !rule.filter || geoStylerStyleFilter({ properties: properties || {}}, rule.filter));
+        return rule.symbolizers.map((symbolizer) => {
+            return filteredFeatures.filter(({ geometry }) => isCompatibleGeometry({ geometry, symbolizer })).map((feature) => {
+                const parsedSymbolizer = parseSymbolizerExpressions(symbolizer, feature);
+                const primitivesFunction = symbolizerToPrimitives[parsedSymbolizer.kind]
+                    ? symbolizerToPrimitives[parsedSymbolizer.kind]
+                    : () => [];
+                return primitivesFunction({
+                    feature,
+                    symbolizer,
+                    images,
+                    parsedSymbolizer,
+                    globalOpacity
+                }).map((primitive) => ({
+                    id: `${feature.id}:${parsedSymbolizer.symbolizerId}:${primitive.type}`,
+                    feature,
+                    primitive,
+                    symbolizer,
+                    parsedSymbolizer
+                }));
+            }).flat();
+        }).flat();
+    }).flat();
 };
 
 function getStyleFuncFromRules({
     rules = []
-} = {}, {
-    images = []
-}) {
+} = {}) {
     return ({
-        entities,
-        map,
         opacity: globalOpacity = 1,
+        features,
+        getPreviousStyledFeature = () => {},
+        map,
         sampleTerrain = Cesium.sampleTerrain
-    }) => Promise.all(
-        ([...(entities || [])]).map((entity) => new Promise(resolve => {
-            if (entity._msAdditional) {
-                entity.entityCollection.remove(entity);
-                return resolve(null);
-            }
-            let coordinates = {};
-            GRAPHIC_KEYS.forEach((graphicKey) => {
-                if (!entity._msStoredCoordinates) {
-                    coordinates[graphicKey] = getPositionByGraphicKey(graphicKey, entity) || undefined;
-                }
-            });
-            if (entity._msAdditionalEntities) {
-                entity._msAdditionalEntities.forEach(additionalEntity => {
-                    entity.entityCollection.remove(additionalEntity);
-                });
-                entity._msAdditionalEntities = undefined;
-            }
-            if (!entity._msStoredCoordinates) {
-                entity._msStoredCoordinates = coordinates;
-            }
-            const properties = entity?.properties?.getValue(Cesium.JulianDate.now()) || {};
-            const entityRules = rules?.filter((rule) => !rule.filter || geoStylerStyleFilter({ properties: properties || {}}, rule.filter));
-
-            if (entityRules?.length > 0) {
-                const entitySymbolizers = entityRules.reduce((acc, rule) => [...acc, ...rule?.symbolizers], []);
-                const pointGeometrySymbolizers = entitySymbolizers.filter((symbolizer) =>
-                    ['Mark', 'Icon', 'Text', 'Model'].includes(symbolizer.kind) && entity.position
-                );
-                const polylineGeometrySymbolizers = entitySymbolizers.filter((symbolizer) =>
-                    symbolizer.kind === 'Line' && entity._msStoredCoordinates.polyline
-                );
-                const polygonGeometrySymbolizers = entitySymbolizers.filter((symbolizer) =>
-                    symbolizer.kind === 'Fill' && entity._msStoredCoordinates.polygon
-                );
-
-                const additionalPointSymbolizers = entitySymbolizers.filter((symbolizer, idx) =>
-                    ['Mark', 'Icon', 'Text', 'Model'].includes(symbolizer.kind)
-                    && (
-                        entity._msStoredCoordinates.polygon
-                        || entity._msStoredCoordinates.polyline
-                        || entity.position && idx < pointGeometrySymbolizers.length - 1
-                    )
-                );
-
-                const getAdditionalEntities = () => {
-                    if (additionalPointSymbolizers.length > 0) {
-                        entity._msAdditionalEntities = [];
-                        return Promise.all([...additionalPointSymbolizers].reverse().map((symbolizer, idx) => {
-                            return new Promise(resolveAdditional => {
-                                const geometryFunction = entity.position
-                                    ? () => null
-                                    : getGeometryFunction({ msGeometry: { name: 'centerPoint' }, ...symbolizer });
-                                if (geometryFunction) {
-                                    const additionalEntity = entity.entityCollection.add({
-                                        position: entity.position
-                                            ? entity.position.getValue(Cesium.JulianDate.now()).clone()
-                                            : new Cesium.Cartesian3(0, 0, 0)
-                                    });
-                                    additionalEntity._msStoredCoordinates = entity._msStoredCoordinates;
-                                    additionalEntity._msAdditional = true;
-                                    additionalEntity.properties = entity.properties;
-                                    geometryFunction(additionalEntity);
-                                    entity._msAdditionalEntities.push(additionalEntity);
-                                    return getGraphics({
-                                        symbolizer,
-                                        images,
-                                        entity: additionalEntity,
-                                        globalOpacity,
-                                        properties,
-                                        map,
-                                        sampleTerrain
-                                    }).then((graphics) => {
-                                        GRAPHIC_KEYS.forEach((graphicKey) => {
-                                            additionalEntity[graphicKey] = undefined;
-                                        });
-                                        Object.keys(graphics).forEach(graphicKey => {
-                                            additionalEntity[graphicKey] = graphics[graphicKey];
-                                        });
-                                        if (additionalEntity.billboard) {
-                                            // use eyeOffset as zIndex
-                                            additionalEntity.billboard.eyeOffset = new Cesium.Cartesian3(0, 0, (idx + 1) * 10);
-                                        }
-                                        resolveAdditional(additionalEntity);
-                                    });
-                                }
-                                return resolveAdditional(null);
+    }) => {
+        return drawIcons({ rules }, { features })
+            .then((images) => {
+                const styledFeatures = getStyledFeatures({ rules, features, globalOpacity, images });
+                return Promise.all(styledFeatures.map((currentFeature) => {
+                    const previousFeature = getPreviousStyledFeature(currentFeature);
+                    if (!previousFeature || isGeometryChanged(previousFeature.parsedSymbolizer, currentFeature.parsedSymbolizer)) {
+                        const computeGeometry = primitiveGeometryTypes[currentFeature?.primitive?.geometryType]
+                            ? primitiveGeometryTypes[currentFeature?.primitive?.geometryType]
+                            : () => currentFeature;
+                        return Promise.resolve(computeGeometry(currentFeature, { map, sampleTerrain }))
+                            .then((payload) => {
+                                return {
+                                    ...payload,
+                                    action: 'replace'
+                                };
                             });
-                        }));
                     }
-                    return Promise.resolve(null);
-                };
-
-                const symbolizer = pointGeometrySymbolizers[pointGeometrySymbolizers.length - 1]
-                    || polylineGeometrySymbolizers[polylineGeometrySymbolizers.length - 1]
-                    || polygonGeometrySymbolizers[polygonGeometrySymbolizers.length - 1];
-
-                const clearEntity = () => {
-                    if (!symbolizer && entity._msSymbolizer) {
-                        GRAPHIC_KEYS.forEach((graphicKey) => {
-                            entity[graphicKey] = undefined;
-                        });
-                        entity._msSymbolizer = undefined;
-                        entity._msGlobalOpacity = undefined;
-                    }
-                    resolve(entity);
-                };
-
-                if ((symbolizer && (
-                    !isEqual(symbolizer, entity._msSymbolizer)
-                    || isGlobalOpacityChanged(entity, globalOpacity)
-                )) || additionalPointSymbolizers.length > 0) {
-                    return getAdditionalEntities().then(() => symbolizer
-                        ? getGraphics({
-                            symbolizer,
-                            images,
-                            entity,
-                            globalOpacity,
-                            properties,
-                            map,
-                            sampleTerrain
-                        }).then((graphics) => {
-                            if (!isEmpty(graphics)) {
-                                GRAPHIC_KEYS.forEach((graphicKey) => {
-                                    entity[graphicKey] = undefined;
-                                });
-                                Object.keys(graphics).forEach(graphicKey => {
-                                    entity[graphicKey] = graphics[graphicKey];
-                                });
+                    return Promise.resolve({
+                        ...currentFeature,
+                        primitive: {
+                            ...previousFeature?.primitive,
+                            ...currentFeature?.primitive,
+                            geometry: previousFeature?.primitive?.geometry,
+                            entity: {
+                                ...(Object.keys(currentFeature?.primitive?.entity || {}).reduce((acc, key) => {
+                                    return {
+                                        ...acc,
+                                        [key]: {
+                                            ...previousFeature?.primitive?.entity?.[key],
+                                            ...currentFeature?.primitive?.entity?.[key]
+                                        }
+                                    };
+                                }, {}))
                             }
-                            entity._msSymbolizer = symbolizer;
-                            entity._msGlobalOpacity = globalOpacity;
-                            if (entity.billboard) {
-                                // use eyeOffset as zIndex
-                                entity.billboard.eyeOffset = new Cesium.Cartesian3(0, 0, 0);
-                            }
-                            resolve(entity);
-                        })
-                        : clearEntity());
-                }
-
-                return clearEntity();
-            }
-
-            GRAPHIC_KEYS.forEach((graphicKey) => {
-                entity[graphicKey] = undefined;
+                        },
+                        action: isSymbolizerChanged(previousFeature.parsedSymbolizer, currentFeature.parsedSymbolizer)
+                            ? 'update'
+                            : 'none'
+                    });
+                }));
+            })
+            .then((updatedStyledFeatures) => {
+                // remove all styled features without geometry
+                return updatedStyledFeatures.filter(({ primitive }) => !!primitive.geometry);
             });
-            entity._msSymbolizer = undefined;
-            entity._msGlobalOpacity = undefined;
-            return resolve(entity);
-        }))
-    );
+    };
 }
 
 class CesiumStyleParser {
@@ -689,11 +1101,8 @@ class CesiumStyleParser {
     writeStyle(geoStylerStyle) {
         return new Promise((resolve, reject) => {
             try {
-                drawIcons(geoStylerStyle)
-                    .then((images = []) => {
-                        const styleFunc = getStyleFuncFromRules(geoStylerStyle, { images });
-                        resolve(styleFunc);
-                    });
+                const styleFunc = getStyleFuncFromRules(geoStylerStyle);
+                resolve(styleFunc);
             } catch (error) {
                 reject(error);
             }

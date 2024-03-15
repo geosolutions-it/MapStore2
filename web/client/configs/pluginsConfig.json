@@ -177,7 +177,7 @@
       "title": "plugins.Annotations.title",
       "description": "plugins.Annotations.description",
       "dependencies": [
-        "SidebarMenu"
+        "TOC"
       ]
     },
     {
@@ -490,16 +490,21 @@
       "denyUserSelection": true,
       "title": "plugins.Save.title",
       "description": "plugins.Save.description",
-      "dependencies": [
-        "SidebarMenu",
+      "children": [
         "SaveAs"
+      ],
+      "autoEnableChildren": [
+        "SaveAs"
+      ],
+      "dependencies": [
+        "SidebarMenu"
       ]
     },
     {
       "name": "SaveAs",
       "glyph": "floppy-open",
       "title": "plugins.SaveAs.title",
-      "hidden": true,
+      "hidden": false,
       "description": "plugins.SaveAs.description",
       "dependencies": [
         "SidebarMenu"
@@ -509,7 +514,7 @@
       "name": "DeleteMap",
       "glyph": "trash",
       "title": "plugins.DeleteMap.title",
-      "hidden": true,
+      "hidden": false,
       "description": "plugins.DeleteMap.description",
       "dependencies": [
         "SidebarMenu"
@@ -645,6 +650,15 @@
       "glyph": "1-line",
       "title": "plugins.LongitudinalProfileTool.title",
       "description": "plugins.LongitudinalProfileTool.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+    },
+    {
+      "name": "GeoProcessing",
+      "glyph": "globe-settings",
+      "title": "plugins.GeoProcessing.title",
+      "description": "plugins.GeoProcessing.description",
       "dependencies": [
         "SidebarMenu"
       ]

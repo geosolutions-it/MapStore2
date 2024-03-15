@@ -11,6 +11,7 @@ import expect from 'expect';
 import {
     LAYER_SELECTED_FOR_SEARCH,
     FEATURE_TYPE_SELECTED,
+    FEATURE_TYPE_LOADED,
     FEATURE_TYPE_ERROR,
     FEATURE_LOADING,
     FEATURE_LOADED,
@@ -25,6 +26,7 @@ import {
     initQueryPanel,
     layerSelectedForSearch,
     featureTypeSelected,
+    featureTypeLoaded,
     featureTypeError,
     featureLoading,
     featureLoaded,
@@ -47,12 +49,35 @@ describe('wfsquery actions', () => {
         let {type} = initQueryPanel();
         expect(type).toBe(INIT_QUERY_PANEL);
     });
-    it('featureTypeSelected', () => {
+    it('featureTypeSelected without owner', () => {
         let {type, url, typeName, fields} = featureTypeSelected("/geoserver/", "topp:states", [{name: "name", alias: "alias"}]);
         expect(type).toBe(FEATURE_TYPE_SELECTED);
         expect(url).toBe("/geoserver/");
         expect(typeName).toBe("topp:states");
         expect(fields).toEqual([{name: "name", alias: "alias"}]);
+    });
+
+    it('featureTypeSelected with owner as parameter', () => {
+        let {type, url, typeName, fields, owner} = featureTypeSelected("/geoserver/", "topp:states", [{name: "name", alias: "alias"}], "owner");
+        expect(type).toBe(FEATURE_TYPE_SELECTED);
+        expect(url).toBe("/geoserver/");
+        expect(typeName).toBe("topp:states");
+        expect(fields).toEqual([{name: "name", alias: "alias"}]);
+        expect(owner).toBe("owner");
+    });
+    it('featureTypeLoaded without owner', () => {
+        let {type, typeName, featureType} = featureTypeLoaded("topp:states", "featureType");
+        expect(type).toBe(FEATURE_TYPE_LOADED);
+        expect(typeName).toBe("topp:states");
+        expect(featureType).toBe("featureType");
+    });
+
+    it('featureTypeLoaded with owner as parameter', () => {
+        let {type, typeName, featureType, owner} = featureTypeLoaded("topp:states", "featureType", "owner");
+        expect(type).toBe(FEATURE_TYPE_LOADED);
+        expect(typeName).toBe("topp:states");
+        expect(featureType).toBe("featureType");
+        expect(owner).toBe("owner");
     });
     it('featureTypeError', () => {
         let {type, error, typeName} = featureTypeError("topp:states", "ERROR");
@@ -66,6 +91,12 @@ describe('wfsquery actions', () => {
         expect(isLoading).toBe(true);
     });
     it('featureLoaded', () => {
+        let {type, typeName, feature} = featureLoaded("topp:states", "feature");
+        expect(type).toBe(FEATURE_LOADED);
+        expect(typeName).toBe("topp:states");
+        expect(feature).toBe(feature);
+    });
+    it('featureLoaded with owner as parameter', () => {
         let {type, typeName, feature} = featureLoaded("topp:states", "feature");
         expect(type).toBe(FEATURE_LOADED);
         expect(typeName).toBe("topp:states");
@@ -94,6 +125,13 @@ describe('wfsquery actions', () => {
         expect(type).toBe(QUERY_CREATE);
         expect(searchUrl).toBe("searchUrl");
         expect(filterObj).toBe("filterObj");
+    });
+    it('createQuery with owner param', () => {
+        let {type, searchUrl, filterObj, owner} = createQuery("searchUrl", "filterObj", "owner");
+        expect(type).toBe(QUERY_CREATE);
+        expect(searchUrl).toBe("searchUrl");
+        expect(filterObj).toBe("filterObj");
+        expect(owner).toBe("owner");
     });
     it('query', () => {
         let {type, searchUrl, filterObj} = query("searchUrl", "filterObj");

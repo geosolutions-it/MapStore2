@@ -77,6 +77,7 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   * @prop {array} cfg.filterByViewport Activate filter by viewport tool by default.
   * @prop {array} cfg.showFilterByViewportTool Show button to toggle filter by viewport in toolbar.
   * @prop {object} cfg.dateFormats Allows to specify custom date formats ( in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601)  format) to use to display dates in the table. `date` `date-time` and `time` are the supported entries for the date format. Example:
+  * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
   * ```
   * "dateFormats": {
   *    "date-time": "MM DD YYYY - HH:mm:ss",

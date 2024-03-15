@@ -9,11 +9,24 @@
 import { Observable } from 'rxjs';
 import isObject from 'lodash/isObject';
 import { getCurrentResolution } from '../MapUtils';
+import { isAnnotationLayer } from '../../plugins/Annotations/utils/AnnotationsUtils';
 import isNil from 'lodash/isNil';
 
 export default {
     buildRequest: (layer, props) => {
-        const { features = [] } = props?.point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
+        const { features: layerIntersectedFeatures = [] } = props?.point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
+        const title = isObject(layer.title)
+            ? layer.title[props?.currentLocale] || layer.title.default
+            : layer.title;
+        const features = isAnnotationLayer(layer) && layerIntersectedFeatures.length > 0
+            ? [{
+                type: 'Feature',
+                geometry: null,
+                properties: {
+                    ...layer
+                }
+            }]
+            : layerIntersectedFeatures;
         return {
             request: {
                 features: [...features],
@@ -23,9 +36,7 @@ export default {
             },
             metadata: {
                 fields: layer.features?.[0]?.properties && Object.keys(layer.features[0].properties) || [],
-                title: isObject(layer.title)
-                    ? layer.title[props?.currentLocale] || layer.title.default
-                    : layer.title,
+                title,
                 resolution: isNil(props?.map?.resolution)
                     ? props?.map?.zoom && getCurrentResolution(props.map.zoom, 0, 21, 96)
                     : props.map.resolution,
@@ -35,10 +46,7 @@ export default {
                 viewer: layer.viewer,
                 layerId: layer.id
             },
-            // this will force to use the getIdentifyFlow
-            // instead of the getVectorInfo action
-            // when a layer is not an annotation
-            url: layer.id === 'annotations' ? undefined : 'client'
+            url: 'client'
         };
     },
     getIdentifyFlow: (layer, baseURL, { features = [] } = {}) => {

@@ -17,9 +17,19 @@ import {hideMapinfoMarker, toggleMapInfoState} from '../../../actions/mapInfo';
 import { mapInfoEnabledSelector } from "../../../selectors/mapInfo";
 
 import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "../constants";
-import { apiLoadedSelector, enabledSelector, getStreetViewMarkerLayer, locationSelector, povSelector, useStreetViewDataLayerSelector, streetViewDataLayerSelector} from "../selectors/streetView";
-import {setLocation, SET_LOCATION, SET_POV } from '../actions/streetView';
-import { getLocation } from '../api/gMaps';
+import {
+    streetViewProviderSelector,
+    currentProviderApiLoadedSelector,
+    enabledSelector,
+    getStreetViewMarkerLayer,
+    getStreetViewDataLayer,
+    locationSelector,
+    povSelector,
+    useStreetViewDataLayerSelector,
+    streetViewDataLayerSelector
+} from "../selectors/streetView";
+import {setLocation, SET_LOCATION, SET_POV, UPDATE_STREET_VIEW_LAYER } from '../actions/streetView';
+import API from '../api';
 import {shutdownToolOnAnotherToolDrawing} from "../../../utils/ControlUtils";
 
 const getNavigationArrowSVG = function({rotation = 0}) {
@@ -114,6 +124,7 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
                     .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
                     .filter(({control}) => control === CONTROL_NAME)
                     .filter(() => !enabledSelector(getState()))
+                    .merge(action$.ofType(RESET_CONTROLS))
                     .take(1)
                     .switchMap(() => {
                         return  Rx.Observable.from([
@@ -122,7 +133,6 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
                             removeAdditionalLayer({id: MARKER_LAYER_ID, owner: STREET_VIEW_OWNER})
                         ]);
                     })
-                    .takeUntil(action$.ofType(RESET_CONTROLS))
             );
         });
 /**
@@ -135,16 +145,22 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
 export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
     return action$.ofType(CLICK_ON_MAP)
         .filter(() => enabledSelector(getState()))
-        .filter(() => apiLoadedSelector(getState()))
+        .filter(() => currentProviderApiLoadedSelector(getState()))
         .switchMap(({point}) => {
-            const latLng = point.latlng;
+            const provider = streetViewProviderSelector(getState());
+            const getLocation = API[provider]?.getLocation;
+            if (!getLocation) {
+                return Rx.Observable.of(
+                    error({title: "streetView.title", message: "streetView.messages.providerNotSupported"})
+                );
+            }
             return Rx.Observable
-                .defer(() => getLocation(latLng))
+                .defer(() => getLocation(point))
                 .map(setLocation)
                 .catch((e) => {
                     if (e.code === "ZERO_RESULTS") {
                         return Rx.Observable.of(
-                            info({title: "streetView.title", message: "streetView.messages.noDataForPosition"}) // LOCALIZE
+                            info({title: "streetView.title", message: "streetView.messages.noDataForPosition"})
                         );
                     }
                     console.error(e); //
@@ -157,7 +173,7 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
 /**
  * On location update events updates the map layer.
  * the state.
- * @param {external:Observable} action$ manages `SET_LOCATION`
+ * @param {external:Observable} action$ manages `SET_LOCATION`, `UPDATE_STREET_VIEW_LAYER`
  * @param getState
  * @return {external:Observable}
  */
@@ -202,7 +218,15 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
                 "overlay", {...options, features: [feature]}
             );
         });
-    });
+    })
+        .merge(action$.ofType(UPDATE_STREET_VIEW_LAYER).switchMap(({updates = {}}) => {
+            const options = getStreetViewDataLayer(getState());
+            return Rx.Observable.of(updateAdditionalLayer(
+                STREET_VIEW_DATA_LAYER_ID,
+                STREET_VIEW_OWNER,
+                'overlay',
+                {...options, ...updates}));
+        }));
 };
 
 /**

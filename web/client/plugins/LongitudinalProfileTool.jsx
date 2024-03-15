@@ -10,7 +10,8 @@ import { createSelector } from 'reselect';
 
 import GlobalSpinner from '../components/misc/spinners/GlobalSpinner/GlobalSpinner';
 import Main from './longitudinalProfile/Main';
-import UserMenuConnected from './longitudinalProfile/Menu';
+import MenuConnected from './longitudinalProfile/Menu';
+import MenuForBurger from './longitudinalProfile/MenuForBurger';
 import { setControlProperty } from "../actions/controls";
 import {
     addMarker,
@@ -70,6 +71,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  * @prop {Object} cfg.config the plugin configuration
  * @prop {string} cfg.config.wpsurl optional, the geoserver url the the wps endpoint to use. It can be an absolute url. default is "/geoserver/wps".
  * @prop {string} cfg.config.chartTitle the default title of the chart
+ * @prop {number} cfg.config.noDataThreshold the number that beyond it will exclude data
  * @prop {number} cfg.config.defaultDistance the default distance value in meters
  * @prop {string} cfg.config.identifier the profile to use in the wps request, defaulted to gs:LongitudinalProfile
  * @prop {string} cfg.config.defaultReferentialName the default referential name
@@ -86,6 +88,7 @@ import { createPlugin } from '../utils/PluginsUtils';
  *       "wpsurl": "/geoserver/wps",
  *       "chartTitle": "Longitudinal profile",
  *       "defaultDistance": 75,
+ *       "noDataThreshold": 999999,
  *       "defaultReferentialName": "sfdem",
  *       "referentials": [{
  *          "layerName": "sfdem",
@@ -95,10 +98,9 @@ import { createPlugin } from '../utils/PluginsUtils';
  *      "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
  *      "additionalCRS": {
  *        "EPSG:3003": { "label": "EPSG:3003" }
- *       },
+ *       }
  *    }
  * }
- * `
  */
 const MainComponent = connect(
     createSelector(
@@ -200,8 +202,15 @@ export default createPlugin(
                 name: 'LongitudinalProfileTool',
                 position: 2100,
                 doNotHide: true,
-                tool: UserMenuConnected,
+                tool: MenuConnected,
                 priority: 1
+            },
+            BurgerMenu: {
+                tool: MenuForBurger,
+                name: 'LongitudinalProfileTool',
+                position: 2100,
+                doNotHide: true,
+                priority: 2
             },
             Toolbar: {
                 name: "LongitudinalProfileTool-spinner",

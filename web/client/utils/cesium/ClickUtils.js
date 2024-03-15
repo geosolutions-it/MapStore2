@@ -66,6 +66,58 @@ export const getMouseTile = (viewer, event) => {
     return viewer.scene.globe.pickTile(ray, scene);
 };
 
+
+/*
+ * This function performs some test to get the correct intersected feature or globe
+ * inside a Cesium scene
+ */
+export function computePositionInfo(map, movement, {
+    pickObjectsLimit = Number.MAX_VALUE
+} = {}) {
+
+    const scene = map.scene;
+    const camera = map.camera;
+    const position = movement.position || movement.endPosition;
+
+    const feature = scene.pick(position);
+    const depthCartesian = scene.pickPosition(position);
+    if (!(feature?.primitive instanceof Cesium.GroundPrimitive)
+    && !(feature?.primitive instanceof Cesium.GroundPolylinePrimitive)
+    && !!(feature && depthCartesian)) {
+        return {
+            cartesian: depthCartesian,
+            cartographic: Cesium.Cartographic.fromCartesian(depthCartesian),
+            feature
+        };
+    }
+
+    const ray = camera.getPickRay(position);
+
+    const drillPickFeature = scene.drillPickFromRay(ray, pickObjectsLimit)
+        .find(({ exclude, object, position: rayIntersectionPosition }) =>
+            !exclude && rayIntersectionPosition && object) || null;
+
+    if (drillPickFeature) {
+        return {
+            cartesian: drillPickFeature.position,
+            cartographic: Cesium.Cartographic.fromCartesian(drillPickFeature.position),
+            feature: drillPickFeature?.object?.primitive
+        };
+    }
+
+    const globeCartesian = scene.globe.pick(ray, scene);
+
+    if (globeCartesian) {
+        const cartographic =  Cesium.Cartographic.fromCartesian(globeCartesian);
+        return {
+            cartesian: globeCartesian,
+            cartographic
+        };
+    }
+
+    return {};
+}
+
 export default {
     getMouseXYZ,
     getMouseTile

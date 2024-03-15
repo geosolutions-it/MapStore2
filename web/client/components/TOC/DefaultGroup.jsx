@@ -86,7 +86,7 @@ class DefaultGroup extends React.Component {
         let {children, onToggle, connectDragPreview, connectDragSource, connectDropTarget, ...other } = this.props;
         const selected = this.props.selectedNodes.filter((s) => s === this.props.node.id).length > 0 ? ' selected' : '';
         const error = this.props.node.loadingError ? ' group-error' : '';
-        const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabGroupIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
+        const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabGroupIcon" className="toc-grab" ref="target" glyph="grab-handle"/> : <span className="toc-layer-tool toc-grab"/>;
         const groupHead = (
             <div className="toc-default-group-head">
                 {grab}

@@ -102,7 +102,7 @@ describe('CesiumMap', () => {
         expect(ref.map.imageryLayers.length).toBe(1);
     });
 
-    it('check layers for elevation', () => {
+    it('check layers for elevation (deprecated)', () => {
         const options = {
             "url": "http://fake",
             "name": "mylayer",
@@ -118,6 +118,24 @@ describe('CesiumMap', () => {
         expect(ref).toBeTruthy();
         expect(ref.map.terrainProvider).toBeTruthy();
         expect(ref.map.terrainProvider.layerName).toBe('mylayer');
+    });
+    it('check layers for elevation', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        let ref;
+        act(() => {
+            ReactDOM.render(<CesiumMap ref={value => { ref = value; } } center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                <CesiumLayer type={options.type} options={options} />
+            </CesiumMap>, document.getElementById("container"));
+        });
+        expect(ref).toBeTruthy();
+        expect(ref.map.msElevationLayers).toBeTruthy();
+        expect(ref.map.msElevationLayers.length).toBe(1);
     });
     it('check wmts layer for custom attribution', () => {
         const options = {
@@ -168,7 +186,7 @@ describe('CesiumMap', () => {
                         try {
                             expect(Math.round(Math.round(center.y * precision) / precision)).toBe(30);
                             expect(Math.round(Math.round(center.x * precision) / precision)).toBe(20);
-                            expect(zoom).toBe(5);
+                            expect(Math.round(zoom)).toBe(5);
                             expect(bbox.bounds).toBeTruthy();
                             expect(bbox.crs).toBeTruthy();
                             expect(size.height).toBeTruthy();
@@ -244,11 +262,11 @@ describe('CesiumMap', () => {
                                         id: 'vector',
                                         features: [
                                             {
-                                                type: 'Feature', properties: { category: 'boundary' },
+                                                type: 'Feature', properties: { category: 'area' },
                                                 geometry: null
                                             },
                                             {
-                                                type: 'Feature', properties: { category: 'area' },
+                                                type: 'Feature', properties: { category: 'boundary' },
                                                 geometry: null
                                             }
                                         ]
@@ -364,20 +382,43 @@ describe('CesiumMap', () => {
                 </CesiumMap>
                 , document.getElementById("container"));
         });
-        waitFor(() => expect(ref.map.dataSourceDisplay.ready).toBe(true), {
+        let prevReady = false;
+        let countReady = 0;
+        // the data source switches twice from false to true
+        // here we are waiting the second render
+        const checkReadyDataSource = () => {
+            const currentReady = ref.map.dataSourceDisplay.ready;
+            if (currentReady !== prevReady) {
+                if (currentReady) {
+                    countReady += 1;
+                }
+                prevReady = ref.map.dataSourceDisplay.ready;
+            }
+            if (countReady === 2) {
+                return true;
+            }
+            return false;
+        };
+        // first we check we got data source ready twice
+        // then we verify that the dataSources entities are available
+        waitFor(() => expect(checkReadyDataSource()
+        && !!ref.map.dataSources.get(0).entities.values.length).toBe(true), {
             timeout: 5000
         })
             .then(() => {
                 expect(ref.map.dataSources.length).toBe(1);
                 const dataSource = ref.map.dataSources.get(0);
                 expect(dataSource).toBeTruthy();
-                expect(dataSource.entities.values.length).toBe(2);
+                expect(dataSource.entities.values.length).toBe(4);
                 const mapCanvas = ref.map.canvas;
                 const { width, height } = mapCanvas.getBoundingClientRect();
-                simulateClick(mapCanvas, {
-                    clientX: width / 2,
-                    clientY: height / 2
-                });
+                // adding additional timeout to ensure the complete render
+                setTimeout(() => {
+                    simulateClick(mapCanvas, {
+                        clientX: width / 2,
+                        clientY: height / 2
+                    });
+                }, 1000);
             })
             .catch(done);
     }).timeout(5000);
@@ -440,9 +481,9 @@ describe('CesiumMap', () => {
         act(() => {
             ReactDOM.render(
                 <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                    <CesiumLayer type="wms" position={6} options={{ url: '/wms', name: 'layer03' }} />
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
+                    <CesiumLayer type="wms" position={6} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
                 </CesiumMap>,
                 document.getElementById('container')
             );
@@ -455,9 +496,9 @@ describe('CesiumMap', () => {
         act(() => {
             ReactDOM.render(
                 <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                    <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03' }} />
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
+                    <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
                 </CesiumMap>,
                 document.getElementById('container')
             );
@@ -468,9 +509,9 @@ describe('CesiumMap', () => {
         act(() => {
             ReactDOM.render(
                 <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01' }} />
-                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02' }} />
-                    <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03' }} />
+                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
+                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
+                    <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
                 </CesiumMap>,
                 document.getElementById('container')
             );

@@ -69,6 +69,7 @@ import {
 import axios from "../../libs/ajax";
 import MockAdapter from "axios-mock-adapter";
 import {TOGGLE_CONTROL} from "../../actions/controls";
+import { EXPORT_CONTEXT } from '../../utils/ControlUtils';
 
 describe('contextcreator epics', () => {
     let mockAxios;
@@ -965,7 +966,7 @@ describe('contextcreator epics', () => {
     it('exportContextEpic, export context with plugins and themes', (done) => {
         testEpic(exportContextEpic, 1, onContextExport('file.json'), ([a]) => {
             expect(a.type).toEqual(TOGGLE_CONTROL);
-            expect(a.control).toEqual("export");
+            expect(a.control).toEqual(EXPORT_CONTEXT);
             done();
         }, {
             map: {

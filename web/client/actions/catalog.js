@@ -45,6 +45,7 @@ export const SAVING_SERVICE = 'CATALOG:SAVING_SERVICE';
 export const CATALOG_INITED = 'CATALOG:INIT';
 export const GET_METADATA_RECORD_BY_ID = 'CATALOG:GET_METADATA_RECORD_BY_ID';
 export const SET_LOADING = 'CATALOG:SET_LOADING';
+export const SHOW_FORMAT_ERROR = 'CATALOG:SHOW_FORMAT_ERROR';
 export const TOGGLE_TEMPLATE = 'CATALOG:TOGGLE_TEMPLATE';
 export const TOGGLE_THUMBNAIL = 'CATALOG:TOGGLE_THUMBNAIL';
 export const TOGGLE_ADVANCED_SETTINGS = 'CATALOG:TOGGLE_ADVANCED_SETTINGS';
@@ -170,9 +171,10 @@ export function changeUrl(url) {
         url
     };
 }
-export function addService() {
+export function addService(options) {
     return {
-        type: ADD_SERVICE
+        type: ADD_SERVICE,
+        options
     };
 }
 export function addCatalogService(service) {
@@ -284,6 +286,7 @@ export const toggleThumbnail = () => ({type: TOGGLE_THUMBNAIL});
 export const formatOptionsFetch = (url, force) => ({type: FORMAT_OPTIONS_FETCH, url, force});
 export const formatsLoading = (loading) => ({type: FORMAT_OPTIONS_LOADING, loading});
 export const setSupportedFormats = (formats, url) => ({type: SET_FORMAT_OPTIONS, formats, url});
+export const showFormatError = (status) => ({type: SHOW_FORMAT_ERROR, status});
 
 import {error} from './notifications';
 

@@ -81,6 +81,7 @@ class SideBarComponent extends React.Component {
                  size={this.props.dockSize}
                  zIndex={this.props.zIndex}
                  position={this.props.position}
+                 className="widgets-builder"
                  bsStyle="primary"
                  hideHeader
                  style={{...this.props.layout, background: "white"}}>

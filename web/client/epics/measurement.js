@@ -19,12 +19,10 @@ import {
     ADD_MEASURE_AS_ANNOTATION,
     ADD_AS_LAYER,
     SET_ANNOTATION_MEASUREMENT,
-    setMeasurementConfig,
     changeMeasurement,
     changeCoordinates
 } from '../actions/measurement';
-import {addLayer} from '../actions/layers';
-import {STYLE_TEXT} from '../utils/AnnotationsUtils';
+import { addLayer } from '../actions/layers';
 import {
     setControlProperty,
     SET_CONTROL_PROPERTY,
@@ -35,33 +33,42 @@ import {createControlEnabledSelector, measureSelector} from '../selectors/contro
 import {geomTypeSelector, isActiveSelector} from '../selectors/measurement';
 import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../actions/map';
 import {
-    newAnnotation,
-    setEditingFeature,
-    cleanHighlight,
-    toggleVisibilityAnnotation
-} from '../actions/annotations';
+    editAnnotation,
+    mergeAnnotationsFeatures
+} from '../plugins/Annotations/actions/annotations';
 import {updateDockPanelsList} from "../actions/maplayout";
+import { getSelectedAnnotationLayer } from '../plugins/Annotations/selectors/annotations';
 import {shutdownToolOnAnotherToolDrawing} from "../utils/ControlUtils";
+import { ANNOTATIONS } from '../plugins/Annotations/utils/AnnotationsUtils';
 
 export const addAnnotationFromMeasureEpic = (action$, store) =>
     action$.ofType(ADD_MEASURE_AS_ANNOTATION)
-        .switchMap((a) => {
+        .switchMap((action) => {
             // transform measure feature into geometry collection
             // add feature property to manage text annotation with value and uom
-            const {features, textLabels, uom, save, properties} = a;
-            const {id = uuidv1(), visibility = true} = properties || {};
-            const newFeature = {
-                ...convertMeasuresToAnnotation(features, textLabels, uom, id, 'Annotations created from measurements', STYLE_TEXT),
-                newFeature: save,
-                visibility
-            };
-
-            return Rx.Observable.from([
-                ...(createControlEnabledSelector('annotations')(store.getState()) ? [] : [setControlProperty('annotations', 'enabled', true)]),
-                newAnnotation(),
-                setMeasurementConfig("exportToAnnotation", false),
-                setEditingFeature(newFeature)
-            ]);
+            const { features, textLabels, uom, properties } = action;
+            const { id = uuidv1(), visibility = true } = properties || {};
+            const annotation = convertMeasuresToAnnotation(features, textLabels, uom, id, 'Annotations created from measurements');
+            const state = store.getState();
+            const selected = getSelectedAnnotationLayer(state);
+            const commonActions = [
+                changeMeasurement(null),
+                changeMeasurement('LineString')
+            ];
+            if (selected && createControlEnabledSelector(ANNOTATIONS)(state)) {
+                return Rx.Observable.of(
+                    ...commonActions,
+                    mergeAnnotationsFeatures(selected.id, annotation)
+                );
+            }
+            return Rx.Observable.of(
+                ...commonActions,
+                addLayer({
+                    ...annotation,
+                    visibility
+                }),
+                editAnnotation(annotation.id)
+            );
         });
 
 export const addAsLayerEpic = (action$) =>
@@ -118,7 +125,7 @@ export const closeMeasureEpics = (action$, store) =>
                 area: 0,
                 bearing: 0
             };
-            const actions = [changeMeasurement(newMeasureState), cleanHighlight(), unRegisterEventListener('click', 'measure')];
+            const actions = [changeMeasurement(newMeasureState), unRegisterEventListener('click', 'measure')];
 
             const {showCoordinateEditor} = store.getState()?.controls?.measure || {};
             if (showCoordinateEditor) {
@@ -129,12 +136,11 @@ export const closeMeasureEpics = (action$, store) =>
 
 export const setMeasureStateFromAnnotationEpic = (action$, store) =>
     action$.ofType(SET_ANNOTATION_MEASUREMENT)
-        .switchMap(({features, properties}) => {
+        .switchMap(({features}) => {
             const isGeomSelected = geomTypeSelector(store.getState()) === getGeomTypeSelected(features)?.[0];
             return Rx.Observable.of( !isGeomSelected && changeMeasurement({geomType: getGeomTypeSelected(features)?.[0]}),
                 setControlProperty("measure", "enabled", true),
-                setControlProperty("annotations", "enabled", false),
-                toggleVisibilityAnnotation(properties.id, false));
+                setControlProperty("annotations", "enabled", false));
         });
 
 export const addCoordinatesEpic = (action$, {getState = () => {}}) =>

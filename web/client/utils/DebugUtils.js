@@ -11,13 +11,23 @@ import url from 'url';
 
 const urlQuery = url.parse(window.location.href, true).query;
 
+export const isDebugMode = () => {
+    return urlQuery && urlQuery.debug && __DEVTOOLS__;
+};
+
+export const logError = (error) => {
+    if (isDebugMode) {
+        console.error(error.message);
+    }
+};
+
 export function createDebugStore(reducer, initialState, userMiddlewares, enhancer) {
     return createStore({
         rootReducer: reducer,
         state: initialState,
         middlewares: userMiddlewares,
         enhancer,
-        debug: urlQuery && urlQuery.debug && __DEVTOOLS__
+        debug: isDebugMode()
     });
 }
 

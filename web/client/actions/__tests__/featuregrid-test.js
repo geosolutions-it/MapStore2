@@ -85,8 +85,6 @@ import {
     GRID_QUERY_RESULT,
     moreFeatures,
     LOAD_MORE_FEATURES,
-    hideSyncPopover,
-    HIDE_SYNC_POPOVER,
     toggleShowAgain,
     TOGGLE_SHOW_AGAIN_FLAG,
     setSyncTool,
@@ -152,11 +150,6 @@ describe('Test correctness of featurgrid actions', () => {
         const retval = clearChangeConfirmed();
         expect(retval).toExist();
         expect(retval.type).toBe(CLEAR_CHANGES_CONFIRMED);
-    });
-    it('Test hideSyncPopover action creator', () => {
-        const retval = hideSyncPopover();
-        expect(retval).toExist();
-        expect(retval.type).toBe(HIDE_SYNC_POPOVER);
     });
     it('Test toggleShowAgain action creator', () => {
         const retval = toggleShowAgain();
@@ -278,6 +271,12 @@ describe('Test correctness of featurgrid actions', () => {
         const retval = closeFeatureGrid();
         expect(retval).toExist();
         expect(retval.type).toBe(CLOSE_FEATURE_GRID);
+    });
+    it('Test closeFeatureGrid with closer', () => {
+        const retval = closeFeatureGrid('closer1');
+        expect(retval).toExist();
+        expect(retval.type).toBe(CLOSE_FEATURE_GRID);
+        expect(retval.closer).toBe('closer1');
     });
     it('Test closeFeatureGridConfirm', () => {
         const retval = closeFeatureGridConfirm();

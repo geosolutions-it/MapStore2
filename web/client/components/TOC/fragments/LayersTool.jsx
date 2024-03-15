@@ -21,6 +21,7 @@ class LayersTool extends React.Component {
         style: PropTypes.object,
         glyph: PropTypes.string,
         tooltip: PropTypes.string,
+        msgParams: PropTypes.object,
         className: PropTypes.string
     };
 
@@ -34,7 +35,7 @@ class LayersTool extends React.Component {
             glyph={this.props.glyph}
             onClick={() => this.props.onClick(this.props.node)}/>);
         return this.props.tooltip ?
-            <OverlayTrigger placement="bottom" overlay={(<Tooltip id={"Tooltip-" + this.props.tooltip}><strong><Message msgId={this.props.tooltip}/></strong></Tooltip>)}>
+            <OverlayTrigger placement="bottom" overlay={(<Tooltip id={"Tooltip-" + this.props.tooltip}><strong><Message msgId={this.props.tooltip} msgParams={this.props.msgParams}/></strong></Tooltip>)}>
                 {tool}
             </OverlayTrigger> : tool;
 

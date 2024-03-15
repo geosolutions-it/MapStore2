@@ -9,10 +9,11 @@
 import {setControlProperty} from "../actions/controls";
 import Rx from "rxjs";
 import {createControlEnabledSelector} from "../selectors/controls";
-import {START_DRAWING} from "../actions/annotations";
 import {CHANGE_DRAWING_STATUS} from "../actions/draw";
 import {REGISTER_EVENT_LISTENER} from "../actions/map";
 import {OPEN_FEATURE_GRID} from "../actions/featuregrid";
+
+export const EXPORT_CONTEXT = "export-context";
 
 /**
  * Common part of the workflow that toggles one plugin off when another plugin intend to perform drawing action
@@ -27,7 +28,7 @@ export const shutdownToolOnAnotherToolDrawing = (action$, store, toolName,
     apply = (state, tool) => Rx.Observable.from([setControlProperty(tool, "enabled", null)]),
     isActiveCallback = (state, name) => createControlEnabledSelector(name)(state)
 ) =>
-    action$.ofType(START_DRAWING, CHANGE_DRAWING_STATUS, REGISTER_EVENT_LISTENER, OPEN_FEATURE_GRID)
+    action$.ofType(CHANGE_DRAWING_STATUS, REGISTER_EVENT_LISTENER, OPEN_FEATURE_GRID)
         .filter(({type, status, owner, eventName, toolName: name}) => {
             const isActive = isActiveCallback(store.getState(), toolName);
             switch (type) {
@@ -38,7 +39,6 @@ export const shutdownToolOnAnotherToolDrawing = (action$, store, toolName,
             case CHANGE_DRAWING_STATUS:
                 return isActive &&
                     (status === 'drawOrEdit' || status === 'start') && owner !== toolName;
-            case START_DRAWING:
             default:
                 return isActive && toolName !== 'annotations';
             }

@@ -37,96 +37,27 @@ const polygon = {
 describe('GeometryFunctionsUtils', () => {
     describe('cesium', () => {
         const getGeometryFunction = geometryFunctionsLibrary.cesium({ Cesium });
-        it('centerPoint', (done) => {
-            Cesium.GeoJsonDataSource.load({
-                type: 'FeatureCollection',
-                features: [lineString, polygon]
-            }).then((dataSource) => {
-                try {
-                    const [lineStringEntity, polygonEntity] = dataSource?.entities?.values;
-
-                    lineStringEntity._msStoredCoordinates = {};
-                    lineStringEntity._msStoredCoordinates.polyline = lineStringEntity.polyline.positions;
-                    expect(lineStringEntity.position).toBe(undefined);
-                    getGeometryFunction({ msGeometry: { name: 'centerPoint' } })(lineStringEntity);
-                    expect(lineStringEntity.position.getValue(Cesium.JulianDate.now()).toString()).toBe('(6377168.903116016, 55648.499534066716, 55284.387412283315)');
-
-                    polygonEntity._msStoredCoordinates = {};
-                    polygonEntity._msStoredCoordinates.polygon = polygonEntity.polygon.hierarchy;
-                    expect(polygonEntity.position).toBe(undefined);
-                    getGeometryFunction({ msGeometry: { name: 'centerPoint' } })(polygonEntity);
-                    expect(polygonEntity.position.getValue(Cesium.JulianDate.now()).toString()).toBe('(6377652.9150632555, 55656.9338051044, 55286.450279746416)');
-                } catch (e) {
-                    done(e);
-                }
-                done();
-            });
+        it('centerPoint', () => {
+            const { position: lineStringPosition } = getGeometryFunction({ msGeometry: { name: 'centerPoint' } })(lineString);
+            expect(lineStringPosition.toString()).toBe('(6377168.903116016, 55648.499534066716, 55284.387412283315)');
+            const { position: polygonPosition } = getGeometryFunction({ msGeometry: { name: 'centerPoint' } })(polygon);
+            expect(polygonPosition.toString()).toBe('(6377652.9150632555, 55656.9338051044, 55286.450279746416)');
         });
-        it('lineToArc', (done) => {
-            Cesium.GeoJsonDataSource.load({
-                type: 'FeatureCollection',
-                features: [lineString]
-            }).then((dataSource) => {
-                try {
-                    const [lineStringEntity] = dataSource?.entities?.values;
-                    lineStringEntity.polyline.arcType = Cesium.ArcType.NONE;
-                    getGeometryFunction({ msGeometry: { name: 'lineToArc' } })(lineStringEntity);
-                    expect(lineStringEntity.polyline.arcType.getValue(Cesium.JulianDate.now())).toBe(Cesium.ArcType.GEODESIC);
-                } catch (e) {
-                    done(e);
-                }
-                done();
-            });
+        it('lineToArc', () => {
+            const { arcType } = getGeometryFunction({ msGeometry: { name: 'lineToArc' } })();
+            expect(arcType).toBe(Cesium.ArcType.GEODESIC);
         });
-        it('startPoint', (done) => {
-            Cesium.GeoJsonDataSource.load({
-                type: 'FeatureCollection',
-                features: [lineString, polygon]
-            }).then((dataSource) => {
-                try {
-                    const [lineStringEntity, polygonEntity] = dataSource?.entities?.values;
-
-                    lineStringEntity._msStoredCoordinates = {};
-                    lineStringEntity._msStoredCoordinates.polyline = lineStringEntity.polyline.positions;
-                    expect(lineStringEntity.position).toBe(undefined);
-                    getGeometryFunction({ msGeometry: { name: 'startPoint' } })(lineStringEntity);
-                    expect(lineStringEntity.position.getValue(Cesium.JulianDate.now()).toString()).toBe('(6378137, 0, 0)');
-
-                    polygonEntity._msStoredCoordinates = {};
-                    polygonEntity._msStoredCoordinates.polygon = polygonEntity.polygon.hierarchy;
-                    expect(polygonEntity.position).toBe(undefined);
-                    getGeometryFunction({ msGeometry: { name: 'startPoint' } })(polygonEntity);
-                    expect(polygonEntity.position.getValue(Cesium.JulianDate.now()).toString()).toBe('(6378137, 0, 0)');
-                } catch (e) {
-                    done(e);
-                }
-                done();
-            });
+        it('startPoint', () => {
+            const { position: lineStringPosition } = getGeometryFunction({ msGeometry: { name: 'startPoint' } })(lineString);
+            expect(lineStringPosition.toString()).toBe('(6378137, 0, 0)');
+            const { position: polygonPosition } = getGeometryFunction({ msGeometry: { name: 'startPoint' } })(polygon);
+            expect(polygonPosition.toString()).toBe('(6378137, 0, 0)');
         });
-        it('endPoint', (done) => {
-            Cesium.GeoJsonDataSource.load({
-                type: 'FeatureCollection',
-                features: [lineString, polygon]
-            }).then((dataSource) => {
-                try {
-                    const [lineStringEntity, polygonEntity] = dataSource?.entities?.values;
-
-                    lineStringEntity._msStoredCoordinates = {};
-                    lineStringEntity._msStoredCoordinates.polyline = lineStringEntity.polyline.positions;
-                    expect(lineStringEntity.position).toBe(undefined);
-                    getGeometryFunction({ msGeometry: { name: 'endPoint' } })(lineStringEntity);
-                    expect(lineStringEntity.position.getValue(Cesium.JulianDate.now()).toString()).toBe('(6376200.806232033, 111296.99906813345, 110568.77482456663)');
-
-                    polygonEntity._msStoredCoordinates = {};
-                    polygonEntity._msStoredCoordinates.polygon = polygonEntity.polygon.hierarchy;
-                    expect(polygonEntity.position).toBe(undefined);
-                    getGeometryFunction({ msGeometry: { name: 'endPoint' } })(polygonEntity);
-                    expect(polygonEntity.position.getValue(Cesium.JulianDate.now()).toString()).toBe('(6376200.806232033, 111296.99906813345, 110568.77482456663)');
-                } catch (e) {
-                    done(e);
-                }
-                done();
-            });
+        it('endPoint', () => {
+            const { position: lineStringPosition } = getGeometryFunction({ msGeometry: { name: 'endPoint' } })(lineString);
+            expect(lineStringPosition.toString()).toBe('(6376200.806232033, 111296.99906813345, 110568.77482456663)');
+            const { position: polygonPosition } = getGeometryFunction({ msGeometry: { name: 'endPoint' } })(polygon);
+            expect(polygonPosition.toString()).toBe('(6376200.806232033, 111296.99906813345, 110568.77482456663)');
         });
     });
     describe('openlayers', () => {

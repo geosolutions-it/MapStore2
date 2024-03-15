@@ -14,7 +14,7 @@ import {
     buildSRSMap,
     getRecordLinks
 } from '../../utils/CatalogUtils';
-import {isAllowedSRS} from '../../utils/CoordinatesUtils';
+import { isAllowedSRS, isSRSAllowed } from '../../utils/CoordinatesUtils';
 import HtmlRenderer from '../misc/HtmlRenderer';
 import {parseCustomTemplate} from '../../utils/TemplateUtils';
 import {getMessageById} from '../../utils/LocaleUtils';
@@ -125,6 +125,16 @@ class RecordItem extends React.Component {
 
     };
 
+    isSRSNotAllowed = (record) => {
+        if (record.serviceType !== 'cog') {
+            const ogcReferences = record.ogcReferences || { SRS: [] };
+            const allowedSRS = ogcReferences?.SRS?.length > 0 && buildSRSMap(ogcReferences.SRS);
+            return allowedSRS && !isAllowedSRS(this.props.crs, allowedSRS);
+        }
+        const crs = record?.sourceMetadata?.crs;
+        return crs && !isSRSAllowed(crs);
+    }
+
     getButtons = (record) => {
         const links = this.props.showGetCapLinks ? getRecordLinks(record) : [];
         return [
@@ -136,9 +146,7 @@ class RecordItem extends React.Component {
                 loading: this.state.loading,
                 glyph: 'plus',
                 onClick: () => {
-                    const ogcReferences = record.ogcReferences || { SRS: [] };
-                    const allowedSRS = ogcReferences?.SRS?.length > 0 && buildSRSMap(ogcReferences.SRS);
-                    if (allowedSRS && !isAllowedSRS(this.props.crs, allowedSRS)) {
+                    if (this.isSRSNotAllowed(record)) {
                         return this.props.onError('catalog.srs_not_allowed');
                     }
                     this.setState({ loading: true });

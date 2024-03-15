@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import OpenlayersLayer from '../Layer';
-
+import { waitFor } from '@testing-library/react';
 import assign from 'object-assign';
 import Layers from '../../../../utils/openlayers/Layers';
 import '../plugins/OSMLayer';
@@ -24,11 +24,15 @@ import '../plugins/OverlayLayer';
 import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/WFS3Layer';
+import '../plugins/ElevationLayer';
 
 import {
-    setStore
+    setStore,
+    setCredentials
 } from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
+import { ServerTypes } from '../../../../utils/LayersUtils';
+
 
 import { Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
@@ -483,20 +487,17 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
         expect(layer.layer.constructor.name).toBe('VectorTileLayer');
         expect(layer.layer.getSource().format_.constructor.name).toBe('GeoJSON');
-        setTimeout(() => {
-            try {
-                const style = layer.layer.getStyle()()()[0];
-                expect(style).toBeTruthy();
-                expect(style.getStroke().getColor()).toBe('#FF0000');
-                // currently SLD parser use fillOpacity instead of opacity
-                // and probably this cause wrong parsing of opacity
-                // added a wrapper to the openlayers parser to manage the issue related to opacity
-                expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, 0);
+        waitFor(() => {
+            const style = layer.layer.getStyle()()[0];
+            expect(style).toBeTruthy();
+            expect(style.getStroke().getColor()).toBe('#FF0000');
+            // currently SLD parser use fillOpacity instead of opacity
+            // and probably this cause wrong parsing of opacity
+            // added a wrapper to the openlayers parser to manage the issue related to opacity
+            return expect(style.getFill().getColor()).toBe('rgba(255, 255, 0, 0.5)');
+        })
+            .then(() => done())
+            .catch(done);
     });
 
     it('wms layer attribution with credits - create and update layer', () => {
@@ -2718,6 +2719,43 @@ describe('Openlayers layer', () => {
             map={map} />, document.getElementById("container"));
         expect(layer.layer.getSource()).toBeTruthy();
     });
+    it('render wfs layer with legacy style', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
+            return [200, SAMPLE_FEATURE_COLLECTION];
+        });
+        const options = {
+            type: 'wfs',
+            visibility: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile',
+            style: {
+                color: 'rgba(0, 0, 255, 1)',
+                fillColor: 'rgba(0, 0, 255, 0.1)',
+                fillOpacity: 0.1,
+                opacity: 1,
+                radius: 10,
+                weight: 1
+            }
+        };
+        let layer;
+        map.on('rendercomplete', () => {
+            if (layer.layer.getSource().getFeatures().length > 0) {
+                const f = layer.layer.getSource().getFeatures()[0];
+                expect(f.getGeometry().getCoordinates()[0]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[0]);
+                expect(f.getGeometry().getCoordinates()[1]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[1]);
+                done();
+            }
+        });
+        // first render
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wfs"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource()).toBeTruthy();
+    });
     it('render wfs layer with error', () => {
         mockAxios.onGet().reply(r => {
             expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
@@ -3033,6 +3071,162 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getSource()).toBeTruthy();
     });
 
+    describe('WFS', () => {
+        // this function create a WFS layer with the given options.
+        const createWFSLayerTest = (options, done, onRenderComplete = () => {}, checkFeatures = true) => {
+            let layer;
+            map.on('rendercomplete', () => {
+                if (layer.layer.getSource().getFeatures().length > 0 && checkFeatures) {
+                    const f = layer.layer.getSource().getFeatures()[0];
+                    expect(f.getGeometry().getCoordinates()[0]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[0]);
+                    expect(f.getGeometry().getCoordinates()[1]).toBe(SAMPLE_FEATURE_COLLECTION.features[0].geometry.coordinates[1]);
+                    onRenderComplete(layer);
+                }
+                done();
+            });
+            // first render
+            layer = ReactDOM.render(<OpenlayersLayer
+                type="wfs"
+                options={{
+                    ...options
+                }}
+                map={map} />, document.getElementById("container"));
+            expect(layer.layer.getSource()).toBeTruthy();
+        };
+        describe('serverType: no-vendor', () => {
+            it('test basic post request', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR
+                }, done);
+            });
+            it('test layerFilter', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    expect(data).toContain(
+                        '<ogc:Filter>'
+                        + '<ogc:And>'
+                            + '<ogc:PropertyIsEqualTo><ogc:PropertyName>a</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>'
+                        + '</ogc:And>'
+                    + '</ogc:Filter>');
+
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    layerFilter: {
+                        filters: [{
+                            format: 'cql',
+                            body: 'a = 1'
+                        }]
+                    }
+                }, done);
+            });
+            it('test strategy "bbox"', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    data,
+                    method
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(data).toContain('<wfs:GetFeature');
+                    expect(data).toContain('<wfs:Query typeName="osm:vector_tile"');
+                    expect(data).toContain('<ogc:PropertyIsEqualTo><ogc:PropertyName>a</ogc:PropertyName><ogc:Literal>1</ogc:Literal></ogc:PropertyIsEqualTo>');
+                    expect(data).toContain('<ogc:BBOX>');
+
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    strategy: 'bbox',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    layerFilter: {
+                        filters: [{
+                            format: 'cql',
+                            body: 'a = 1'
+                        }]
+                    }
+                }, done);
+            });
+            it('test security basic authentication', (done) => {
+                mockAxios.onPost().reply(({
+                    url,
+                    method,
+                    headers
+                }) => {
+                    expect(url.indexOf('SAMPLE_URL') >= 0).toBeTruthy();
+                    expect(method).toBe('post');
+                    expect(headers.Authorization).toEqual(`Basic ${btoa("test:test")}`);
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                setCredentials("TEST_SOURCE", {username: "test", password: "test"});
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    security: {
+                        type: 'basic',
+                        sourceId: 'TEST_SOURCE'
+                    }
+                }, done, () => {
+                    setCredentials("TEST_SOURCE", undefined);
+                });
+            });
+            it('test security basic authentication with no credentials', (done) => {
+                mockAxios.onPost().reply(({
+
+                }) => {
+                    done("should not be called"); // request should not be performed to avoid basic authentication popup
+                    return [200, SAMPLE_FEATURE_COLLECTION];
+                });
+                setCredentials("TEST_SOURCE", undefined);
+                createWFSLayerTest({
+                    type: 'wfs',
+                    visibility: true,
+                    url: 'SAMPLE_URL',
+                    name: 'osm:vector_tile',
+                    serverType: ServerTypes.NO_VENDOR,
+                    security: {
+                        type: 'basic',
+                        sourceId: 'TEST_SOURCE'
+                    }
+                }, done, () => {
+                    setCredentials("TEST_SOURCE", undefined);
+                }, false);
+            });
+        });
+    });
     it('should apply native ol min and max resolution on vector layer', () => {
         const minResolution = 1222; // ~ zoom 7 Web Mercator
         const maxResolution = 39135; // ~ zoom 2 Web Mercator
@@ -3155,5 +3349,22 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getMinResolution()).toBe(0);
         expect(layer.layer.getMaxResolution()).toBe(Infinity);
     });
-
+    it('should create am elevation layer from wms layer', () => {
+        const options = {
+            type: 'elevation',
+            provider: 'wms',
+            url: 'https://host-sample/geoserver/wms',
+            name: 'workspace:layername',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <OpenlayersLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.get('getElevation')).toBeTruthy();
+    });
 });

@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import { isNil } from 'lodash';
-import { FormGroup, Checkbox, Col } from "react-bootstrap";
+import { FormGroup, Checkbox } from "react-bootstrap";
 
 import Message from "../../../I18N/Message";
 import InfoPopover from '../../../widgets/widget/InfoPopover';
@@ -25,34 +25,36 @@ export default ({
     onChangeServiceProperty = () => { },
     onToggleThumbnail = () => { }
 }) => (
-    <div>
+    <>
         <FormGroup controlId="autoload" key="autoload">
-            <Col xs={12}>
-                {service.autoload !== undefined && <Checkbox value="autoload" onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
-                    checked={!isNil(service.autoload) ? service.autoload : false}>
-                    <Message msgId="catalog.autoload" />
-                </Checkbox>}
-            </Col>
+            {service.autoload !== undefined && <Checkbox value="autoload" onChange={(e) => onChangeServiceProperty("autoload", e.target.checked)}
+                checked={!isNil(service.autoload) ? service.autoload : false}>
+                <Message msgId="catalog.autoload" />
+            </Checkbox>}
         </FormGroup>
         <FormGroup controlId="thumbnail" key="thumbnail">
-            <Col xs={12}>
-                <Checkbox
-                    onChange={() => onToggleThumbnail()}
-                    checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>
-                    <Message msgId="catalog.showPreview" />
-                </Checkbox>
-            </Col>
+            <Checkbox
+                onChange={() => onToggleThumbnail()}
+                checked={!isNil(service.hideThumbnail) ? !service.hideThumbnail : true}>
+                <Message msgId="catalog.showPreview" />
+            </Checkbox>
         </FormGroup>
         {!isNil(service.type) && service.type === "wfs" &&
             <FormGroup controlId="allowUnsecureLayers" key="allowUnsecureLayers">
-                <Col xs={12}>
-                    <Checkbox
-                        onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
-                        checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
-                        <Message msgId="catalog.allowUnsecureLayers.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.allowUnsecureLayers.tooltip" />} />
-                    </Checkbox>
-                </Col>
+                <Checkbox
+                    onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
+                    checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
+                    <Message msgId="catalog.allowUnsecureLayers.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.allowUnsecureLayers.tooltip" />} />
+                </Checkbox>
+            </FormGroup>}
+        {!isNil(service.type) && service.type === "cog" &&
+            <FormGroup controlId="fetchMetadata" key="fetchMetadata">
+                <Checkbox
+                    onChange={(e) => onChangeServiceProperty("fetchMetadata", e.target.checked)}
+                    checked={!isNil(service.fetchMetadata) ? service.fetchMetadata : true}>
+                    <Message msgId="catalog.fetchMetadata.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.fetchMetadata.tooltip" />} />
+                </Checkbox>
             </FormGroup>}
         {children}
-    </div>
+    </>
 );

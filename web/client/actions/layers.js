@@ -190,13 +190,15 @@ export function addLayer(layer, foreground = true) {
  * @param {string} group title of group
  * @param {string} parent parent group described with dot notation (eg parent.nested )
  * @param {object} options Additional properties to assign to the group. They will override the default ones.
+ * @param {boolean} asFirst added at the top of the groups
  */
-export function addGroup(group, parent, options) {
+export function addGroup(group, parent, options, asFirst = false) {
     return {
         type: ADD_GROUP,
         group,
         parent,
-        options
+        options,
+        asFirst
     };
 }
 

@@ -22,15 +22,15 @@ export default compose(
             toggleTableView: ({ setShowTable, showTable }) => () => setShowTable(!showTable)
         }),
         // entry in the menu
-        withProps(({ widgetTools = [], toggleTableView = () => {}}) => ({
+        withProps(({ widgetTools = [], toggleTableView = () => {}, traces }) => ({
             widgetTools: [
                 ...widgetTools,
-                {
+                ...(traces?.length === 1 ? [{
                     glyph: "features-grid",
                     target: "menu",
                     textId: "widgets.widget.menu.showChartData",
                     onClick: () => toggleTableView()
-                }
+                }] : [])
             ]
         }))
     ),

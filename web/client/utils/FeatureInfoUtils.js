@@ -6,24 +6,32 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+export const TEXT_PLAIN_MIME_TYPE = 'text/plain';
+export const TEXT_HTML_MIME_TYPE = 'text/html';
+export const JSONP_MIME_TYPE = 'text/javascript';
+export const JSON_MIME_TYPE = 'application/json';
+export const GEOJSON_MIME_TYPE = 'application/geo+json';
+export const GML2_MIME_TYPE = 'application/vnd.ogc.gml';
+export const GML3_MIME_TYPE = 'application/vnd.ogc.gml/3.1.1';
+
 export const INFO_FORMATS = {
-    "TEXT": "text/plain",
-    "HTML": "text/html",
-    "JSONP": "text/javascript",
-    "PROPERTIES": "application/json",
-    "JSON": "application/json",
-    "GML2": "application/vnd.ogc.gml",
-    "GML3": "application/vnd.ogc.gml/3.1.1",
-    "TEMPLATE": "application/json"
+    "TEXT": TEXT_PLAIN_MIME_TYPE,
+    "HTML": TEXT_HTML_MIME_TYPE,
+    "JSONP": JSONP_MIME_TYPE,
+    "JSON": JSON_MIME_TYPE,
+    "GEOJSON": GEOJSON_MIME_TYPE,
+    "GML2": GML2_MIME_TYPE,
+    "GML3": GML3_MIME_TYPE
 };
 
 export const INFO_FORMATS_BY_MIME_TYPE = {
-    "text/plain": "TEXT",
-    "text/html": "HTML",
-    "text/javascript": "JSONP",
-    "application/json": "PROPERTIES",
-    "application/vnd.ogc.gml": "GML2",
-    "application/vnd.ogc.gml/3.1.1": "GML3"
+    [TEXT_PLAIN_MIME_TYPE]: "TEXT",
+    [TEXT_HTML_MIME_TYPE]: "HTML",
+    [JSONP_MIME_TYPE]: "JSONP",
+    [JSON_MIME_TYPE]: "JSON",
+    [GEOJSON_MIME_TYPE]: "GEOJSON",
+    [GML2_MIME_TYPE]: "GML2",
+    [GML3_MIME_TYPE]: "GML3"
 };
 
 const regexpXML = /^[\s\S]*<gml:featureMembers[^>]*>([\s\S]*)<\/gml:featureMembers>[\s\S]*$/i;
@@ -93,15 +101,15 @@ export const Validator = {
             return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
         }
     },
-    PROPERTIES: {
+    GEOJSON: {
         /**
-         *Parse the JSON to get only the valid json responses
+         *Parse the GEOJSON to get only the valid json responses
          */
         getValidResponses(responses) {
             return responses.filter((res) => res.response && res.response.features && res.response.features.length);
         },
         /**
-         * Parse the JSON to get only the NOT valid json responses
+         * Parse the GEOJSON to get only the NOT valid json responses
          */
         getNoValidResponses(responses) {
             return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
@@ -119,20 +127,6 @@ export const Validator = {
          */
         getNoValidResponses(responses) {
             return responses.filter((res) => {return !parseXMLResponse(res); });
-        }
-    },
-    TEMPLATE: {
-        /**
-         *Parse the JSON to get only the valid json responses
-         */
-        getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
-        },
-        /**
-         * Parse the JSON to get only the NOT valid json responses
-         */
-        getNoValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
         }
     }
 };

@@ -45,6 +45,7 @@ const getThumbnail = (files, options) => {
  * @prop {node} message display node message inside thumbnail
  * @prop {string} thumbnail source of thumbnail
  * @prop {number} maxFileSize max size of file
+ * @prop {boolean} checkOriginalFileSize if true it checks maxFileSize compared to source image
  * @prop {array} supportedImageTypes array of images supported mime types
  * @prop {options} thumbnailOptions options to scale the thumbnail to fit a specific size
  * @prop {object} dropZoneProps props for dropzone component
@@ -64,6 +65,7 @@ const Thumbnail = forwardRef(({
     removeTooltipId = 'removeThumbnail',
     style = {},
     maxFileSize = 500000,
+    checkOriginalFileSize = false,
     supportedImageTypes = ['image/png', 'image/jpeg', 'image/jpg'],
     thumbnailOptions,
     dropZoneProps = {
@@ -89,9 +91,13 @@ const Thumbnail = forwardRef(({
 
     const handleDrop = (files) => {
         const imageType = files?.[0]?.type;
+        const imageSize = files?.[0]?.size;
         const isASupportedImage = supportedImageTypes.indexOf(imageType) !== -1;
+        if (checkOriginalFileSize && imageSize >= maxFileSize) {
+            return onError(['SIZE'], files);
+        }
         setPending(true);
-        getThumbnail(files, thumbnailOptions)
+        return getThumbnail(files, thumbnailOptions)
             .then(({ data, size }) => {
                 if (!mounted.current) {
                     return null;
@@ -112,6 +118,7 @@ const Thumbnail = forwardRef(({
                 setPending(false);
                 return onError(e);
             });
+
     };
 
     const handleRemove = (event) => {

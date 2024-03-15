@@ -61,7 +61,7 @@ describe("test the CoordinatesEditor Panel", () => {
         expect(editor).toExist();
         const mainContainer = TestUtils.scryRenderedDOMComponentsWithClass(editor, "coordinates-editor");
         expect(mainContainer).toExist();
-        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-grab-handle");
         expect(hamburgerMenus.length).toBe(0);
 
         const spans = TestUtils.scryRenderedDOMComponentsWithTag(editor, "span");
@@ -112,7 +112,7 @@ describe("test the CoordinatesEditor Panel", () => {
             />, document.getElementById("container")
         );
         expect(editor).toExist();
-        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-grab-handle");
         expect(hamburgerMenus.length).toBe(0);
 
         const spans = TestUtils.scryRenderedDOMComponentsWithTag(editor, "span");
@@ -192,7 +192,7 @@ describe("test the CoordinatesEditor Panel", () => {
             />, document.getElementById("container")
         );
         expect(editor).toExist();
-        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-grab-handle");
         expect(hamburgerMenus.length).toBe(3);
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         const labelTexts = TestUtils.scryRenderedDOMComponentsWithClass(editor, "label-texts");
@@ -551,7 +551,7 @@ describe("test the CoordinatesEditor Panel", () => {
         inputRadius.value = 10000;
         TestUtils.Simulate.change(inputRadius);
         expect(spyOnChangeRadius).toHaveBeenCalled();
-        expect(spyOnChangeRadius).toHaveBeenCalledWith(10000, [], mapProjection);
+        expect(spyOnChangeRadius).toHaveBeenCalledWith(10000, [[0, 0]], mapProjection);
         expect(spyOnSetInvalidSelected).toNotHaveBeenCalled();
     });
 
@@ -577,7 +577,7 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-grab-handle");
         expect(hamburgerMenus.length).toBe(0);
         const inputs = TestUtils.scryRenderedDOMComponentsWithTag(editor, "input");
         expect(inputs).toExist();
@@ -670,7 +670,7 @@ describe("test the CoordinatesEditor Panel", () => {
         inputLat.value = "";
         TestUtils.Simulate.change(inputLat);
 
-        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-grab-handle");
         expect(hamburgerMenus.length).toBe(0);
 
         expect(spyOnHighlightPoint).toNotHaveBeenCalled();
@@ -883,7 +883,7 @@ describe("test the CoordinatesEditor Panel", () => {
         );
         expect(editor).toExist();
 
-        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-menu-hamburger");
+        const hamburgerMenus = TestUtils.scryRenderedDOMComponentsWithClass(editor, "glyphicon-grab-handle");
         expect(hamburgerMenus.length).toBe(5);
         let buttons = TestUtils.scryRenderedDOMComponentsWithClass(editor, "btn-default");
         expect(buttons.length).toBe(18);

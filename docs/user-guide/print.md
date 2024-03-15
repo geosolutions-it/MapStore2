@@ -20,6 +20,8 @@ Through this window it is possible to:
 
 * Change the **Coordinates System** (`EPSG:3857`, `EPSG:4326`)
 
+* Change the **Rotation** of the map (value in degrees)
+
 * Change the **Resolution** of the print (`96 dpi`, `150 dpi`, `300 dpi`)
 
 * Accessing **Layout** settings
@@ -29,7 +31,7 @@ Through this window it is possible to:
 !!!note
     In *Print settings* preview there's the map portion that will be displayed on the print sheet. In order to center the map the user can pan it until the preview displays the desired extension
 
-    <img src="../img/print/print.gif" class="ms-docimage"/>
+    <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/print/print.mp4" /></video>
 
 ### Layout
 
@@ -61,7 +63,7 @@ Through this menu the user is allowed to:
 
 * Enable the *Font Anti Aliasing* (when Anti Aliasing is on, the borders of the labels font are smoothed improving the image quality)
 
-* Set the *Icons size*
+* Enable the *Override icon size* option to have the ability to change the *Height* and *Width* of the icons (by default, the icon sizes are `24x24`)
 
 * Set the *Dpi* resolution of the legend
 

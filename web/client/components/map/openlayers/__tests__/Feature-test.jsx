@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import Feature from '../Feature';
 import '../../../../utils/openlayers/Layers';
-import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../utils/AnnotationsUtils';
+import {DEFAULT_ANNOTATIONS_STYLES} from '../../../../plugins/Annotations/utils/AnnotationsUtils';
 import '../plugins/VectorLayer';
 
 import { Map, View } from 'ol';

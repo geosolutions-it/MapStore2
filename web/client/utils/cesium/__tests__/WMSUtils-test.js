@@ -6,7 +6,11 @@
  * LICENSE file in the root directory of this source tree.
 */
 import expect from 'expect';
-import { wmsToCesiumOptionsBIL } from '../WMSUtils';
+import {
+    wmsToCesiumOptionsBIL,
+    wmsToCesiumOptions,
+    wmsToCesiumOptionsSingleTile
+} from '../WMSUtils';
 
 const testLayerConfig = {
     "type": "terrain",
@@ -39,5 +43,35 @@ describe('Test the WMSUtil for Cesium', () => {
         expect(config.proxy.getURL("test")).toBe("test");
         expect(config.layerName).toBe(testConfig.name);
         expect(config.crs).toBe(testConfig.crs);
+    });
+    it('wmsToCesiumOptions', () => {
+        const options = {
+            type: 'wms',
+            url: '/geoserver/wms',
+            name: 'workspace:layer'
+        };
+        const cesiumOptions = wmsToCesiumOptions(options);
+        expect(cesiumOptions.url.url).toBe('{s}');
+        expect(cesiumOptions.subdomains).toEqual([ '/geoserver/wms' ]);
+        expect(cesiumOptions.layers).toBe('workspace:layer');
+        expect(cesiumOptions.parameters).toEqual({
+            styles: '',
+            format: 'image/png',
+            transparent: true,
+            opacity: 1,
+            tiled: true,
+            width: 256,
+            height: 256
+        });
+    });
+    it('wmsToCesiumOptionsSingleTile', () => {
+        const options = {
+            type: 'wms',
+            url: '/geoserver/wms',
+            name: 'workspace:layer',
+            _v_: '0123456789'
+        };
+        const cesiumOptions = wmsToCesiumOptionsSingleTile(options);
+        expect(cesiumOptions.url.url).toBe('/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&styles=&format=image%2Fpng&transparent=true&opacity=1&TILED=true&layers=workspace%3Alayer&width=2000&height=2000&bbox=-180.0%2C-90%2C180.0%2C90&srs=EPSG%3A4326&_v_=0123456789');
     });
 });

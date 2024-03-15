@@ -13,7 +13,7 @@ import { Checkbox } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import Spinner from 'react-spinkit';
 
-import { ANNOTATION_TYPE } from '../../../utils/AnnotationsUtils';
+import { ANNOTATION_TYPE } from '../../../plugins/Annotations/utils/AnnotationsUtils';
 import { readGeoJson } from '../../../utils/FileUtils';
 import Message from '../../I18N/Message';
 import ResizableModal from '../../misc/ResizableModal';
