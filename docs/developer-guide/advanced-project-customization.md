@@ -119,7 +119,7 @@ import { setLocalConfigurationFile} from '@mapstore/utils/ConfigUtils';
 setLocalConfigurationFile(['configs/localConfig.json', 'configs/localConfig.patch.json']);
 ```
 
-This alternative version  uses [`@mapstore/patcher`](https://github.com/geosolutions-it/Patcher) and allow perform more complex overrides, even if requires this change to be applied to the code, so it will not work with the standard product. 
+This alternative version  uses [`@mapstore/patcher`](https://github.com/geosolutions-it/Patcher) and allow perform more complex overrides, even if requires this change to be applied to the code, so it will not work with the standard product.
 
 The patch file can serve as the central hub for these customizations (see example below), essentially linking the whole content of the custom datadir folder and allowing for:
 
