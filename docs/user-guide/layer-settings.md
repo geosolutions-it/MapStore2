@@ -322,7 +322,7 @@ It this case the editor is allowed to choose a `Color ramp` and the order (with 
 <img src="../img/layer-settings/classification_style_ex.jpg" class="ms-docimage">
 
 !!!note
-    The *Classification style* method is available for **WMS**,  **WFS** and **Vector** layers. In case of **WMS** layers the *Classification style* can work only against GeoServer where the [SLD Service module](https://docs.geoserver.org/main/en/user/extensions/sldservice/index.html) need to be installed. In case of **WFS** and **Vector** layers, the same classification capabilities are entirely managed client. 
+    The *Classification style* method is available for **WMS**,  **WFS** and **Vector** layers. In case of **WMS** layers the *Classification style* can work only against GeoServer where the [SLD Service module](https://docs.geoserver.org/main/en/user/extensions/sldservice/index.html) need to be installed. In case of **WFS** and **Vector** layers, the same classification capabilities are entirely managed client.
 
 !!!note
 
@@ -436,6 +436,10 @@ Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.c
 * **Clamp to ground reference** to choose whether the drape effect, should affect `3D Tiles`, `Terrain` or `Both`. This option is available for Fill symbolizers and it is only enabled when the *Clamp to ground* option is set to `True`
 
 <img src="../img/layer-settings/polygon-type.jpg" class="ms-docimage">
+
+* **Extrusion Height** (available for Line and Fill symbolizers) to configure the height value of the symbol to extrude. It is also possible to enable/disable the **Extrusion relative to geometry** and, only for the *Line* symbolizers, the user can customize the **Color** and the **Type**, choosing between `Wall`, `Circle` and `Square` options, for the extruded features.
+
+<img src="../img/layer-settings/extrusion.jpg" class="ms-docimage">
 
 ## Feature Info Form
 
