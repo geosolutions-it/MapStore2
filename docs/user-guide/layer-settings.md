@@ -329,7 +329,7 @@ It this case the editor is allowed to choose a `Color ramp` and the order (with 
     From the *Classification style* options, it is also possible to manage **Custom Parameter** thought the <img src="../img/button/configute_lite_button.jpg" class="ms-docbutton"/> button. That's really useful to style [SQL Views](https://docs.geoserver.org/latest/en/user/data/database/sqlview.html) defined in GeoServer by using one of the available _viewparams_
     <img src="../img/layer-settings/configure_popup.jpg" class="ms-docimage" style="max-width:400px;">
 
-    Here the user can add custom parameters that will be visible in the *Visual Style Editor*, above the *Color Palette* option. The *Thematic Layer* property provides an array of fields where each one represents a select input, once a user selects one of this input the associated view parameter is included in the classify.json request to the SLD service. An example can be the following one:
+    Here the user can add custom parameters that will be visible in the *Visual Style Editor*, above the *Color Palette* option. The *Custom Parameters* requires an array of fields to be configured according to the available viewparams defined in the SQL View. 
 
     <video class="ms-docimage" controls><source src="../img/layer-settings/thematic-layer.mp4"></video>
 
