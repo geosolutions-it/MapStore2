@@ -76,29 +76,23 @@ This filter is available for each colum in the [Attribute Table](attributes-tabl
 
 <video class="ms-docimage" controls><source src="../img/filtering-layers/filtered_quick_filter.mp4"/></video>
 
-The user has the possibility to apply simple filters by attributes simply typing the filter's value in the available input fields (Date or Time pickers are available according to real attributes data types and a tooltip usually gives an information on how to fill the filter's input field). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md#attribute-table) are automatically filtered accordingly.
+The user has the possibility to apply simple filters by attributes typing the filter's value in the available input fields (Date or Time pickers are available according to the attributes data types). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md#attribute-table) are automatically filtered accordingly.
 
-If the user wants to filter by an attribute of type String, he can simply write something inside the input box and the list of records in table will be automatically filtered by matching with the input text.
+If the user wants to filter by an attribute, he can simply write the desired filter value inside the input box and the list of records in table will be automatically filtered by matching with the input text.
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-1.jpg" class="ms-docimage"/>
 
-If the User wants to filter by a numeric attribute, he can type directly a number or an expression using the following operators:
+The user can also filter an attribute using the operation input box. From the dropdown menu it is possible to choose the operation to perform (for the *String* attribute can be `=`, `like`, `ilike` or `isNull`, for the *Integer*, *Data* or *Time* attribute, can be `=`, `>`, `<`, `>=`, `<=`, `<>` or `isNull`)
 
-* Not equal (**!=** or **!==** or **<>**)
-
-* Equal or less than (**<=**)
-
-* Equal or greater than (**>=**)
-
-* Less than (**<**)
-
-* Greater than (**>**)
-
-* Equal (**===** or **==** or *=*)
+<img src="../img/filtering-layers/operations_drop_down_menu.jpg" class="ms-docimage"/>
 
 In order to filter a numerical filed matching the records *greater than* or *equal* to a certain threshold value, an example can be:
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
+
+The user can also filter the records, of the *Date*, *Time* and *DateTime* attributes, through the *Date Picker* option by clicking on the <img src="../img/button/date_picker.jpg" class="ms-docbutton"/> button for *Date* attributes, the <img src="../img/button/time_picker.jpg" class="ms-docbutton"/> button for *Time* attributes and the <img src="../img/button/date_time_picker.jpg" class="ms-docbutton"/> button for *DateTime* attributes. To filter a *DateTime* attribute using the *Date Picker* option, an example can be the following:
+
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/filtering-layers/data_time_picker_example.mp4"/></video>
 
 #### Quick Filter by map interaction
 
