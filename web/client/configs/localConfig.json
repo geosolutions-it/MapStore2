@@ -58,7 +58,7 @@
       {"name": "featuregridmode", "path": "featuregrid.mode"},
       {"name": "userrole", "path": "security.user.role"},
       {"name": "printEnabled", "path": "print.capabilities"},
-      {"name": "streetView", "path": "streetView"}
+      {"name": "streetView", "path": "streetView.configuration.provider"}
     ],
     "userSessions": {
       "enabled": true

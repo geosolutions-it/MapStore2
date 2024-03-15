@@ -3945,8 +3945,10 @@
           "emptyDescription": "Haga clic en el mapa para comenzar a navegar por las imágenes de Street View",
           "messages": {
             "noDataForPosition": "no hay datos de Street View para esta",
-            "unknownError": "error desconocido, ver consola"
-          },
+            "unknownError": "error desconocido, ver consola",
+            "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada",
+            "errorRetriveingLayerData": "Hubo un error al cargar los datos de la capa"
+        },
           "loadingAPI": "Cargando API...",
           "cyclomedia": {
             "initializing": "Inicializando la API de Street Smart...",

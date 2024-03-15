@@ -1,6 +1,7 @@
 
 import Rx from 'rxjs';
-
+import axios from 'axios';
+import bbox from '@turf/bbox';
 import {
     RESET_CONTROLS,
     SET_CONTROL_PROPERTIES,
@@ -10,7 +11,7 @@ import {
 import { info, error } from '../../../actions/notifications';
 
 import { updateAdditionalLayer, removeAdditionalLayer } from '../../../actions/additionallayers';
-import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../../../actions/map';
+import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener, zoomToExtent} from '../../../actions/map';
 
 
 import {hideMapinfoMarker, toggleMapInfoState} from '../../../actions/mapInfo';
@@ -33,23 +34,7 @@ import {setLocation, SET_LOCATION, SET_POV, UPDATE_STREET_VIEW_LAYER } from '../
 import API from '../api';
 import {shutdownToolOnAnotherToolDrawing} from "../../../utils/ControlUtils";
 import { mapTypeSelector } from '../../../selectors/maptype';
-
-const getNavigationArrowSVG = function({rotation = 0}) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">
-		<g transform="translate(50,50) scale(2)">
-            <circle style="stroke: #a5ff91; stroke-width: 2; fill: #5bA640; fill-opacity:0.6; opacity: 1;" vector-effect="non-scaling-stroke" cx="0" cy="0" r="13"/>
-        </g>
-        <g transform="translate(50,50) scale(2) rotate(${rotation})">
-            <polygon style="stroke: #a5ff91; stroke-width: 2; fill: #228D4F; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke" points="0,-12 5,-5 0,-8 -5,-5 "/>
-        </g>
-        <g transform="translate(50,50) translate(0,-5) scale(1.5)">
-            <circle style="stroke: #3100aa; stroke-width: 2; fill: #037dff; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke" cx="0" cy="0" r="3"/>
-        </g>
-        <g transform="translate(50,50) scale(2) translate(5,5) rotate(180)">
-            <path d="M0,0 a1,1 0 0,0 10,0" style="stroke: #3100aa; stroke-width: 2; fill: #037dff; fill-opacity:1; opacity: 1;" vector-effect="non-scaling-stroke"/>
-        </g>
-</svg>`;
-};
+import StreetViewCirclewIcon from '../../../product/assets/img/circle-streetview-marker-icon.png';
 
 /**
  * Intercept on `TOGGLE_CONTROL` of street-view component
@@ -95,51 +80,77 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
             // setup
             let streetViewConfigration = streetViewConfigurationSelector(getState());
             let streetViewDataLayer = { ...streetViewDataLayerSelector(getState()) };
-            if (streetViewConfigration?.provider === 'mapillary') {
-                streetViewDataLayer = { ...streetViewDataLayer, url: streetViewConfigration?.providerSettings?.ApiURL, type: streetViewConfigration?.providerSettings?.type || 'vector' };
+            const isMapillaryProvider = streetViewConfigration?.provider === 'mapillary';
+            if (isMapillaryProvider) {
+                const providedApiURL = streetViewConfigration?.providerSettings?.ApiURL;
+                // show notification in case the service url is not provided
+                if (!providedApiURL) {
+                    return Rx.Observable.of(
+                        error({title: "streetView.title", message: "streetView.messages.errorServiceUrl"})
+                    );
+                }
+                streetViewDataLayer = { ...streetViewDataLayer, url: providedApiURL, type: streetViewConfigration?.providerSettings?.type || 'vector' };
             }
-            return Rx.Observable.from([
-                registerEventListener('click', CONTROL_NAME),
-                ...(useStreetViewDataLayerSelector(getState())
-                    ? [updateAdditionalLayer(
-                        STREET_VIEW_DATA_LAYER_ID,
+            const isMapillaryCustomLayer = streetViewDataLayer.url && isMapillaryProvider;
+
+            // in case of mapillary custom data --> get featureCollection and pass it to layer
+            return Rx.Observable.fromPromise(
+                isMapillaryCustomLayer ? axios.get(streetViewDataLayer.url).then(res => res.data).catch(err => {
+                    err.code = 'FAIL_TO_FETCH_DATA';
+                    throw err;
+                }) : new Promise(resolve => resolve())).switchMap((featureCollcetion) => {
+                let actions = [];
+                // in case custom layer for mapillary and feature collection data --> add zoom to extent action assuming the srs = EPSG:4326 as a default
+                if (isMapillaryCustomLayer && featureCollcetion?.features?.length) actions.push(zoomToExtent(bbox(featureCollcetion), "EPSG:4326"));
+                // the default actions for any streetView provider
+                actions.push(registerEventListener('click', CONTROL_NAME),
+                    ...(useStreetViewDataLayerSelector(getState())
+                        ? [updateAdditionalLayer(
+                            STREET_VIEW_DATA_LAYER_ID,
+                            STREET_VIEW_OWNER,
+                            'overlay',
+                            {
+                                id: STREET_VIEW_DATA_LAYER_ID,
+                                name: STREET_VIEW_DATA_LAYER_ID,
+                                visibility: true,
+                                ...streetViewDataLayer,
+                                features: featureCollcetion?.features || []
+                            })]
+                        : []
+                    ),
+                    updateAdditionalLayer(
+                        MARKER_LAYER_ID,
                         STREET_VIEW_OWNER,
                         'overlay',
                         {
-                            id: STREET_VIEW_DATA_LAYER_ID,
-                            name: STREET_VIEW_DATA_LAYER_ID,
-                            visibility: true,
-                            ...streetViewDataLayer
-                        })]
-                    : []
-                ),
-                updateAdditionalLayer(
-                    MARKER_LAYER_ID,
-                    STREET_VIEW_OWNER,
-                    'overlay',
-                    {
-                        id: MARKER_LAYER_ID,
-                        type: "vector",
-                        name: MARKER_LAYER_ID,
-                        visibility: true
+                            id: MARKER_LAYER_ID,
+                            type: "vector",
+                            name: MARKER_LAYER_ID,
+                            visibility: true
 
-                    })
-            ]).concat(
-                // tear down
-                action$
-                    .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
-                    .filter(({control}) => control === CONTROL_NAME)
-                    .filter(() => !enabledSelector(getState()))
-                    .merge(action$.ofType(RESET_CONTROLS))
-                    .take(1)
-                    .switchMap(() => {
-                        return  Rx.Observable.from([
-                            unRegisterEventListener('click', CONTROL_NAME),
-                            ...(useStreetViewDataLayerSelector(getState()) ? [removeAdditionalLayer({id: STREET_VIEW_DATA_LAYER_ID, owner: STREET_VIEW_OWNER})] : []),
-                            removeAdditionalLayer({id: MARKER_LAYER_ID, owner: STREET_VIEW_OWNER})
-                        ]);
-                    })
-            );
+                        })
+                );
+                return Rx.Observable.from(actions).concat(
+                    // tear down
+                    action$
+                        .ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
+                        .filter(({control}) => control === CONTROL_NAME)
+                        .filter(() => !enabledSelector(getState()))
+                        .merge(action$.ofType(RESET_CONTROLS))
+                        .take(1)
+                        .switchMap(() => {
+                            return  Rx.Observable.from([
+                                unRegisterEventListener('click', CONTROL_NAME),
+                                ...(useStreetViewDataLayerSelector(getState()) ? [removeAdditionalLayer({id: STREET_VIEW_DATA_LAYER_ID, owner: STREET_VIEW_OWNER})] : []),
+                                removeAdditionalLayer({id: MARKER_LAYER_ID, owner: STREET_VIEW_OWNER})
+                            ]);
+                        })
+                );
+            }).catch((err) => {
+                return Rx.Observable.of(
+                    error({title: "streetView.title", message: err.code === 'FAIL_TO_FETCH_DATA' ? "streetView.messages.errorRetriveingLayerData" : "streetView.messages.unknownError"})
+                );
+            });
         });
 /**
  * Intercept street view Click events to retrieve location info from street view API and update
@@ -185,31 +196,9 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
  */
 export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
 
-    const locationToFeature = (location, pov, isCesium) => {
+    const locationToFeature = (location) => {
         if (!location) return null;
         const {lat, lng, h = 0} = location?.latLng;
-        const style = isCesium ?
-            [{
-                opacity: 1,
-                anchor: 'center',
-                iconSize: [100],
-                iconUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(getNavigationArrowSVG({rotation: pov?.heading || 0})),
-                leaderLine: true,
-                id: "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d",
-                weight: 4,
-                rotation: pov?.heading || 0
-            }] : [{
-                iconAnchor: [0.5, 0.5],
-                anchorXUnits: "fraction",
-                anchorYUnits: "fraction",
-                opacity: 1,
-                size: 100,
-                symbolUrl: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(getNavigationArrowSVG({rotation: pov?.heading || 0})),
-                shape: "triangle",
-                id: "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d",
-                highlight: false,
-                weight: 4
-            }];
         return {
             type: "Feature",
             geometry: {
@@ -219,8 +208,7 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
             },
             properties: {
                 id: "c65cadc0-9b46-11ea-a138-dd5f1faf9a0d"
-            },
-            style
+            }
         };
     };
     return action$.ofType(SET_LOCATION, SET_POV).switchMap(() => {
@@ -237,7 +225,22 @@ export const streetViewSyncLayer = (action$, {getState = () => {}}) => {
             return updateAdditionalLayer(
                 MARKER_LAYER_ID,
                 STREET_VIEW_OWNER,
-                "overlay", {...options, features: [feature]}
+                "overlay", {...options, features: [feature], style: {
+                    format: 'geostyler',
+                    body: {
+                        rules: [
+                            { symbolizers: [{
+                                "kind": "Icon",
+                                image: StreetViewCirclewIcon,
+                                opacity: 1,
+                                size: 100,
+                                anchor: "center",
+                                rotate: pov?.heading || 0,
+                                msBringToFront: true,
+                                msHeightReference: 'none'
+                            }]
+                            }]
+                    }}}
             );
         });
     })

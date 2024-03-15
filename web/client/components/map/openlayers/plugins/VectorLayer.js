@@ -12,7 +12,6 @@ import {getStyle} from '../VectorStyle';
 import isEqual from 'lodash/isEqual';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 
 Layers.registerType('vector', {
@@ -27,12 +26,8 @@ Layers.registerType('vector', {
             // this helps also to make the circle style visible even if the center is out of the view
             // when the spatial index is active the renderBuffer of vector layer is used to filter features
             // we could implement a different loading strategy to visualize correctly the Circle style and Geodesic lines
-            useSpatialIndex: options?.url && options?.isGeojson ? true : false,
-            format: new GeoJSON()
+            useSpatialIndex: false
         });
-        if (options?.url && options?.isGeojson) {
-            source.setUrl(options?.url);
-        }
         const layer = new VectorLayer({
             msId: options.id,
             source: source,

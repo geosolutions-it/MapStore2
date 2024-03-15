@@ -26,31 +26,10 @@ const MapillaryView = (props) => {
     } = props;
     const divRef = useRef();
     const [viewer, setViewer] = useState();
-    // initialize components
-    useEffect(() => {
-        // clean up
-        return () => {
-            viewer?.remove && viewer.remove();
-            setViewer();
-            props?.resetStViewData && props.resetStViewData();
-        };
-    }, []);
-    const intiateMapViewer = async(isCustomDataProvider, options) => {
-        const loadAPI = () => import('mapillary-js').then((module) =>  module.Viewer);
-        const Viewer = await loadAPI();
-        let dataProvider = {};
-        if (isCustomDataProvider && options?.url) {
-            const res = await axios.get(options.url);
-            const geojson = res.data;
-            let pathURL = getPathURLFromFileUrl(options.url);
-            dataProvider = new GeoJSONDataProvider({
-                url: pathURL,
-                geometryLevel: options?.geometryLevel || 14,
-                geojson,
-                debug: !!options?.debugTiles,
-                getImageFromUrl: options?.getImageFromUrl
-            });
-        }
+    const [loading, setLoading] = useState(false);
+
+    const getMapillaryViewer = () => import('mapillary-js').then((module) =>  module.Viewer);
+    const initiateMapillaryViewer = (Viewer, dataProvider = {}) => {
         const mly = new Viewer({
             container: divRef.current,
             dataProvider,
@@ -81,25 +60,70 @@ const MapillaryView = (props) => {
             );
         });
     };
-    useEffect(() => {
-        if (location) {
-            if (!viewer) {
-                const options = {
-                    url: providerSettings?.ApiURL,
-                    geometryLevel: providerSettings?.geometryLevel || 14,
-                    debugTiles: providerSettings?.debugTiles || false,
-                    getImageFromUrl: providerSettings?.getImageFromUrl || ''
-                };
-                let isCustomDataProvider = providerSettings?.ApiURL;
-                intiateMapViewer(isCustomDataProvider, options);
-            } else {
-                const id = location?.properties?.imageId || location?.properties?.filename;
-                if (id && viewer.isNavigable) {
-                    viewer.moveTo(id);
+    const addMapillaryViewer = (isCustomDataProvider, options) => {
+        setLoading(true);
+        getMapillaryViewer().then( Viewer => {
+            let promise = new Promise((resolve, reject) => {
+                if (isCustomDataProvider && options?.url) {
+                    axios.get(options.url).then(res => {
+                        const geojson = res.data;
+                        resolve(geojson);
+                    }).catch(err=> reject(err));
+                    return;
                 }
+                resolve();
+            });
+            promise.then((geojson) => {
+                let pathURL = getPathURLFromFileUrl(options.url);
+                let defaultGeojson = {
+                    type: "FeatureCollection", features: []
+                };
+                const dataProvider = new GeoJSONDataProvider({
+                    url: pathURL,
+                    geometryLevel: options?.geometryLevel || 14,
+                    geojson: geojson || defaultGeojson,
+                    debug: !!options?.debugTiles,
+                    getImageFromUrl: options?.getImageFromUrl
+                });
+                initiateMapillaryViewer(Viewer, dataProvider);
+                setLoading(false);
+            });
+        }).catch(err=>{
+            setLoading(false);
+            console.error(err);
+        });
+    };
+    // initialize components
+    useEffect(() => {
+        // clean up (will unmount)
+        return () => {
+            viewer?.remove && viewer.remove();
+            props?.resetStViewData && props.resetStViewData();
+        };
+    }, []);
+    // update images in viewer based on location change
+    useEffect(() => {
+        if (location && viewer) {
+            const id = location?.properties?.imageId || location?.properties?.filename;
+            if (id && viewer.isNavigable) {
+                viewer.moveTo(id);
             }
         }
     }, [location]);
+
+    // initiate mapillary viewer first time
+    useEffect(() => {
+        if (!viewer && location) {
+            const options = {
+                url: providerSettings?.ApiURL,
+                geometryLevel: providerSettings?.geometryLevel || 14,
+                debugTiles: providerSettings?.debugTiles || false,
+                getImageFromUrl: providerSettings?.getImageFromUrl || ''
+            };
+            let isCustomDataProvider = providerSettings?.ApiURL;
+            addMapillaryViewer(isCustomDataProvider, options);
+        }
+    }, [viewer, location]);
 
     // handle resize events to resize the panorama
     useEffect(() => {
@@ -108,9 +132,8 @@ const MapillaryView = (props) => {
         }
     }, [size]);
     return (<>
-        <div className={className} style={{display: !viewer ? "block" : "none", ...style}} ><EmptyStreetView /></div>
+        <div className={className} style={{display: !viewer ? "block" : "none", ...style}} ><EmptyStreetView loading={loading} /></div>
         <div className={className} style={{
-            // display: viewer ? "block" : "none",
             position: "absolute", margin: style.margin, height: style.height, width: style.width}} ref={divRef}>
         </div>
     </>);

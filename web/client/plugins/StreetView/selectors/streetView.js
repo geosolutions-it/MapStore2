@@ -112,9 +112,7 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
     }
 };
 const MAPILLARY_DATA_LAYER_DEFAULTS = {
-    // type: "vector",
     provider: "custom",
-    // url: "http://localhost:4000/output/run_04/index.json",
     isGeojson: true,
     owner: 'mapillaryViewer',
     style: {
@@ -205,7 +203,9 @@ export function cyclomediaAPIKeySelector(state) {
  * @returns the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.mapillaryAPIKey`.
  */
 export function mapillaryAPIKeySelector(state) {
-    return streetViewConfigurationSelector(state)?.apiKey
+    const mapillaryConfig = streetViewConfigurationSelector(state);
+    if (mapillaryConfig?.providerSettings?.ApiURL) return {};
+    return mapillaryConfig?.apiKey
         ?? localConfigSelector(state)?.apiKeys?.mapillaryAPIKey;
 }
 /**
