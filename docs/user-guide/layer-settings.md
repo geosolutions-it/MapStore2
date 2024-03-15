@@ -322,7 +322,7 @@ It this case the editor is allowed to choose a `Color ramp` and the order (with 
 <img src="../img/layer-settings/classification_style_ex.jpg" class="ms-docimage">
 
 !!!note
-    The *Classification style* method is also available for **WFS** and **Vector** layers.
+    The *Classification style* method is available for **WMS**,  **WFS** and **Vector** layers. In case of **WMS** layers the *Classification style* can work only against GeoServer where the [SLD Service module](https://docs.geoserver.org/main/en/user/extensions/sldservice/index.html) need to be installed. In case of **WFS** and **Vector** layers, the same classification capabilities are entirely managed client. 
 
 !!!note
 
