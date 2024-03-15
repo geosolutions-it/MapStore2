@@ -353,7 +353,7 @@ The style editor can configure the *Icon* as explained [here](#icon) along with 
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
 
-#### Style with properties
+#### Style with property value
 
 [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to choose a property of a layer's feature as the value for a symbolizer option. The *Style with properties* function is available for *Marker*, *Icon*, *Line*, *Fill*, *Text* and *3D model* by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button of each symbolizer option supported by this function and choosing **Property value** option from the dropdown menu.
 
