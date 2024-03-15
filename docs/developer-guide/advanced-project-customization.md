@@ -110,7 +110,7 @@ For the purpose of this guideline we will adhere to the following folder structu
 
 In the `customA/configs/localConfig.json.patch` file, we can patch the base configuration that is supplied by the `configs/localConfig.json` file inside root of the custom project, effectively customizing for this particular installation.
 
-To include both these files into your build, import the `setLocalConfigurationFile` helper function provided by MapStore inside `js/app.jsx` and call it by providing the paths to both files:
+In alternative to `localConfig.json.patch`, that is applied server side, you can insert in the same directory `localConfig.patch.json` (noted the inverted suffix) in the same directory, and configure MapStore to use it by editing the `js/app.jsx` file.
 
 ```js
 import { setLocalConfigurationFile} from '@mapstore/utils/ConfigUtils';
@@ -119,7 +119,9 @@ import { setLocalConfigurationFile} from '@mapstore/utils/ConfigUtils';
 setLocalConfigurationFile(['configs/localConfig.json', 'configs/localConfig.patch.json']);
 ```
 
-The `localConfig.json.patch` file can serve as the central hub for these customizations (see example below), essentially linking the whole content of the custom datadir folder and allowing for:
+This alternative version  uses [`@mapstore/patcher`](https://github.com/geosolutions-it/Patcher) and allow perform more complex overrides, even if requires this change to be applied to the code, so it will not work with the standard product. 
+
+The patch file can serve as the central hub for these customizations (see example below), essentially linking the whole content of the custom datadir folder and allowing for:
 
 * Adding custom plugins in the application.
 * Replacing default MapStore plugins.
