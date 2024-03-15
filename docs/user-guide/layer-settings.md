@@ -111,18 +111,47 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 !!!Warning
     The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources.
 
-!!!Warning
-    On the *Display* tab, only the following options are available for a **3D Tile** layer:
+### Display tab for other layer types
 
-    <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
+#### 3D Tiles layer
 
-    * The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+On the *Display* tab, only the following options are available for a **3D Tile** layer:
 
-    * The **Height Offset** above the ground.
+<img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-    * The **Format** choosing between `3D Model` and `Point Cloud`. The *Point Cloud* option allows the user to customize the `Maximum Attenuation` of the points based on the distance from the current viewpoint and customize the `Lighting strength` and the `Lighting radius` to improve visualization of the point cloud.
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
 
-    <img src="../img/layer-settings/display-point-cloud.jpg" class="ms-docimage"  style="max-width:450px;"/>
+* The **Height Offset** above the ground.
+
+* The **Format** choosing between `3D Model` and `Point Cloud`. The *Point Cloud* option allows the user to customize the `Maximum Attenuation` of the points based on the distance from the current viewpoint and customize the `Lighting strength` and the `Lighting radius` to improve visualization of the point cloud.
+
+<img src="../img/layer-settings/display-point-cloud.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+#### COG layer
+
+On the *Display* tab, only the following options are available for a **COG** layer:
+
+<img src="../img/layer-settings/display-cog.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* The **Opacity** to change the layer opacity.
+
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
+#### IFC layer
+
+On the *Display* tab, only the following options are available for a **IFC** layer:
+
+<img src="../img/layer-settings/display-ifc.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
+* The **Center Longitude** to change the center longitude of the layer (`DD`).
+
+* The **Center Latitude** to change the center latitude of the layer (`DD`).
+
+* The **Height** to set the layer height from the ground (`m`).
+
+* The **Heading** to set the layer heading (`DD`).
 
 ## Fields
 
