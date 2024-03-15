@@ -367,7 +367,7 @@ By default, **Constant value** is selected. If the user chooses **Property value
     As a *Property value* only attributes of type `string` or `number` are currently supported.
 
 !!!note
-    The *Style with properties* method is also available for **WFS** and **Vector** layers.
+    The *Style with property* method is available only for **WFS** and **Vector** layers.
 
 ### Styling on the 3D navigation
 
