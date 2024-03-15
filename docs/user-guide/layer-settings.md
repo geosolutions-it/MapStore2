@@ -359,7 +359,7 @@ The style editor can configure the *Icon* as explained [here](#icon) along with 
 
 <img src="../img/layer-settings/properties_style.jpg" class="ms-docimage"  style="max-width:500px;">
 
-By default, **Constant value** is selected. If the user chooses **Property value**, a drop-down menu appears so that the desired layer attribute can be selected to use the necessary values from the styling property.
+By default, **Constant value** is selected. If the user chooses **Property value**, a drop-down menu appears so that the desired layer attribute can be selected to use its values for the styling property.
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/property-value-example.mp4"></video>
 
