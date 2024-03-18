@@ -41,7 +41,7 @@ From the chart configuration page, the user can first perform the following oper
 
 * *Edit* the current *Chart Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* *Add new chart* with a new layer to the existing chart configuration through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+* *Add new chart* to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
 * *Delete* the current chart and its related chart configuration from the wizard through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
