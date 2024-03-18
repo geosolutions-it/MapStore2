@@ -25,7 +25,8 @@ import {
     dashboardSaveServiceSelector,
     dashboardResourceInfoSelector,
     dashbaordInfoDetailsUriFromIdSelector,
-    dashboardInfoDetailsSettingsFromIdSelector
+    dashboardInfoDetailsSettingsFromIdSelector,
+    canEditServiceSelector
 } from '../dashboard';
 
 describe('dashboard selectors', () => {
@@ -148,5 +149,115 @@ describe('dashboard selectors', () => {
                 }
             }
         }})).toBe("detailsSettings");
+    });
+    describe("canEditServiceSelector", () => {
+        it('test ADMIN role ', () => {
+            const canEdit = canEditServiceSelector({
+                dashboard: {
+                    servicesPermission: {
+                        editingAllowedRoles: ['ADMIN'],
+                        editingAllowedGroups: []
+                    }
+                },
+                security: {
+                    user: {
+                        role: "ADMIN"
+                    }
+                }
+            });
+            expect(canEdit).toBe(true);
+        });
+        it("test ALL user role", () => {
+            const canEdit = canEditServiceSelector({
+                dashboard: {
+                    servicesPermission: {
+                        editingAllowedRoles: ['ALL'],
+                        editingAllowedGroups: []
+                    }
+                },
+                security: {
+                    user: {
+                        role: "ADMIN"
+                    }
+                }
+            });
+            expect(canEdit).toBe(true);
+        });
+        it("test custom user role", () => {
+            const canEdit = canEditServiceSelector({
+                dashboard: {
+                    servicesPermission: {
+                        editingAllowedRoles: ['ROLE1'],
+                        editingAllowedGroups: []
+                    }
+                },
+                security: {
+                    user: {
+                        role: "ROLE1"
+                    }
+                }
+            });
+            expect(canEdit).toBe(true);
+        });
+        it("test user role not matching", () => {
+            const canEdit = canEditServiceSelector({
+                dashboard: {
+                    servicesPermission: {
+                        editingAllowedRoles: ['ADMIN'],
+                        editingAllowedGroups: []
+                    }
+                },
+                security: {
+                    user: {
+                        role: "ROLE1"
+                    }
+                }
+            });
+            expect(canEdit).toBe(false);
+        });
+        it("test group matching", () => {
+            const canEdit = canEditServiceSelector({
+                dashboard: {
+                    servicesPermission: {
+                        editingAllowedRoles: [],
+                        editingAllowedGroups: ['group1']
+                    }
+                },
+                security: {
+                    user: {
+                        role: "ROLE1",
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: "group1"
+                            }
+                        }
+                    }
+                }
+            });
+            expect(canEdit).toBe(true);
+        });
+        it("test group not matching", () => {
+            const canEdit = canEditServiceSelector({
+                dashboard: {
+                    servicesPermission: {
+                        editingAllowedRoles: [],
+                        editingAllowedGroups: ['group1']
+                    }
+                },
+                security: {
+                    user: {
+                        role: "ROLE1",
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: "geo"
+                            }
+                        }
+                    }
+                }
+            });
+            expect(canEdit).toBe(false);
+        });
     });
 });

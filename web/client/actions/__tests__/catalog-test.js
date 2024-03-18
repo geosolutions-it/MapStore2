@@ -70,7 +70,9 @@ import {
     FORMAT_OPTIONS_LOADING,
     formatsLoading,
     SET_FORMAT_OPTIONS,
-    setSupportedFormats, addLayerAndDescribe, ADD_LAYER_AND_DESCRIBE
+    setSupportedFormats, addLayerAndDescribe, ADD_LAYER_AND_DESCRIBE,
+    INIT_PLUGIN,
+    initPlugin
 } from '../catalog';
 
 import { SHOW_NOTIFICATION } from '../notifications';
@@ -372,5 +374,11 @@ describe('Test correctness of the catalog actions', () => {
         expect(action.type).toBe(SET_FORMAT_OPTIONS);
         expect(action.formats).toEqual(formats);
         expect(action.url).toEqual(url);
+    });
+    it('test initPlugin', () => {
+        const options = {editingAllowedRoles: ['test']};
+        const action = initPlugin(options);
+        expect(action.type).toBe(INIT_PLUGIN);
+        expect(action.options).toEqual(options);
     });
 });

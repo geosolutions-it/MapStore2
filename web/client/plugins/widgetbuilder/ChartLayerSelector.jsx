@@ -56,7 +56,8 @@ export default connect((state) =>({
     onItemClick,
     showLayers,
     toggleLayerSelector,
-    selectedCatalog
+    selectedCatalog,
+    canEditService
 }) => {
     const _canProceed = showLayers ? canProceed && !isEmpty(layer) : canProceed && selected && layer && castArray(selected).length === castArray(layer).length;
     const getProcessArguments = () => {
@@ -111,6 +112,7 @@ export default connect((state) =>({
                     <Glyphicon glyph="info-sign" />
                 </Button>
             </>}
+            canEditService={canEditService}
         />
     </BorderLayout>);
 });
