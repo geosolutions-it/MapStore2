@@ -182,7 +182,7 @@ An example of a custom trace value tooltip can be the following:
 
 ##### Trace legend options
 
-For the *Pie Charts*, the *Trace legend options* is available and is displayed as follows:
+For the *Pie Charts*, the *Trace legend options* is available and it is displayed as follows:
 
 <img src="../img/widgets/trace_legend_options.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
