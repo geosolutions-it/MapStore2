@@ -176,3 +176,7 @@ Furthermore, for the [3D Navigation](navigation-toolbar.md#3d-navigation), [MapS
 * **Clamp to ground reference** to choose whether the drape effect, should affect `3D Tiles`, `Terrain` or `Both`. This option is available for Line, Polygon and Circle geometries and it is only enabled when the *Clamp to ground* option is set to `True`.
 
 <img src="../img/annotations/polygon-type.jpg" class="ms-docimage">
+
+* **Extrusion Height** (available for Line and Fill geometries) to configure the height value of the feature to be extruded. It is also possible to enable/disable the **Extrusion relative to geometry** (from the highest point of the feature geometry) and, only for the *Line* geometries, the user can customize the **Extrusion color** and the **Extrusion type**, choosing between `Wall`, `Circle` and `Square` options, for the extruded features.
+
+<img src="../img/annotations/extrusion-geometry.jpg" class="ms-docimage">
