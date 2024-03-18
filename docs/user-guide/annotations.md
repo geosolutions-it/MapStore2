@@ -71,6 +71,9 @@ Based on which type of annotation is chosen, [MapStore](https://mapstore.geosolu
 
 <img src="../img/annotations/annotations_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
+!!! note
+    For each style symbolizer there are many 3D style options available, as shown in the [Styling on 3D](annotations.md#styling-on-3d) section below.
+
 ***Marker***
 
 MapStore provides different *Marker* annotation style:
@@ -89,6 +92,9 @@ The icon can have different `Image`. Clicking on it, the user can choose a *Mark
 <video class="ms-docimage" controls><source src="../img/annotations/icon_style_editor.mp4" ></video>
 
 The icon is also customizable with different `Opacity`, `Size`, `Rotation` and `Anchor point`.
+
+!!! note
+    For Marker annotation, in 3D Navigation, the *3D model* symbolizer type is also available, as shown in the [Styling on 3D](annotations.md#styling-on-3d) section below.
 
 ***Line***
 
@@ -110,7 +116,7 @@ Also for the polygon itis possible to add a *Mark* <img src="../img/button/add_m
 
 ***Text***
 
-Defining a point geometry with an associated text, the *Text* annotation allows to customize label trough many options such as: `Font Family` (*DejaVu Sans*, *Serif*, etc), the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and it allows also to select the desired `Anchor point `(*Center*, *Bottom left*, etc), `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one.
+Defining a point geometry with an associated text, the *Text* annotation allows to customize label trough many options such as: `Font Family` (*DejaVu Sans*, *Serif*, etc), the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and it allows also to select the desired `Anchor point`(*Center*, *Bottom left*, etc), `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one.
 
 <img src="../img/annotations/text_annotation_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
