@@ -139,9 +139,6 @@ This tool is used to define advanced filters in [MapStore](https://mapstore.geos
 
 <img src="../img/filtering-layers/query-panel.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-!!! note
-    The **Layer Filter** option is only available for [Maps](exploring-maps.md) and not for [Dashboards](exploring-dashboards.md)
-
 ### Attribute filter
 
 This filter allows to set one or more conditions referred to the [Attribute Table](attributes-table.md#attribute-table) fields. <br>
@@ -185,6 +182,10 @@ Once this filter is set, it is always possible to edit the coordinates and the d
 
 <img src="../img/filtering-layers/edit_geom.jpg" class="ms-docimage" style="max-width:500px;"/>
 
+!!! note
+     For [Dashboard](exploring-dashboards.md) [widgets](widgets.md) (charts, table and counter) the **Region of Interest** option is called **Area of interest**. With this type of filter the user can define a spatial filter without connecting the widget to the map widget. An example can be the following:
+     <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/area-filter-dash.mp4"/></video>
+
 ### Layer filter
 
 This tool allows to set [cross-layer filters](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html) for a layer by using another layer or even the same one.
@@ -207,3 +208,6 @@ In order to better understand this type of filter, let's make an example. We sup
 In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
 
 <video class="ms-docimage" controls><source src="../img/filtering-layers/layer_filter.mp4"/></video>
+
+!!! note
+    In the [widgets](widgets.md) tool, the **Layer Filter** option is only available for [Maps](exploring-maps.md) and not for [Dashboards](exploring-dashboards.md).
