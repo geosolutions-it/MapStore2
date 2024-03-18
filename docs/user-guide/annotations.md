@@ -110,7 +110,7 @@ Also for the polygon is possible to add a *Mark* <img src="../img/button/add_mar
 
 ***Text***
 
-*Text* annotations are a bit different from the geometric ones. They display a formatted text on a given point of the map the user can customize the `Font Family` (*DejaVu Sans*, *Serif*, etc), choose the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and select the desired `Anchor point`(*Center*, *Bottom left*, etc), `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one
+Defining a point geometry with an associated text, the *Text* annotation allows to customize label trough many options such as: `Font Family` (*DejaVu Sans*, *Serif*, etc), the font `Color`, `Size`, `Style` (*Normal* or *Italic*) and `Halo weight` (*Normal* or *Bold*) and it allows also to select the desired `Anchor point `(*Center*, *Bottom left*, etc), `Halo color` and `Halo weight`. It is also possible to choose the text `Rotation` and `Offset` (*x* and *y*). En example can be the following one.
 
 <img src="../img/annotations/text_annotation_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
