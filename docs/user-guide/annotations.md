@@ -120,7 +120,7 @@ The *Circle* annotation has its own symbolizer panel to customize the `Color` an
 
 <img src="../img/annotations/circle_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-The *Center* can be also customized adding a *Mark* <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> or an *Icon* <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/>.
+The *Center* of a *Circle* annotation can be also customized by adding a *Mark* <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> or an *Icon* <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> symbolizer in the same way as Line and polygon annotations.
 
 ## Settings Annotations
 
