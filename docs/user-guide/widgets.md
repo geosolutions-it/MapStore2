@@ -39,7 +39,7 @@ Selecting a *Layer* or *Layers*, the following *Chart* options is presented to u
 
 From the chart configuration page, the user can first perform the following operation:
 
-* *Edit* the current *Chart Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
+* *Edit* the *Chart Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
 * *Add new chart* to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
