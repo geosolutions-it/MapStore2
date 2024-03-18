@@ -80,7 +80,7 @@ The *Trace data* is displayed as follows:
 
 In this section the user can:
 
-* Change the trace layer through the <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> button
+* Change the trace layer through the <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> button (by default the layer is automatically the same of the first trace defined)
 
 * Open the [*Query Panel*](filtering-layers.md#query-panel) to set up a **Layer Filter** through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
 
