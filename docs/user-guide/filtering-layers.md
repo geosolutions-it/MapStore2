@@ -210,4 +210,4 @@ In particular, if our goal is to take a look at the Italian Regions that contain
 <video class="ms-docimage" controls><source src="../img/filtering-layers/layer_filter.mp4"/></video>
 
 !!! note
-    In the [widgets](widgets.md) tool, the **Layer Filter** option is only available for [Maps](exploring-maps.md) and not for [Dashboards](exploring-dashboards.md).
+    The **Layer Filter** option is only available for [widgets](widgets.md) defined in [Map viewer](exploring-maps.md) and not for [Dashboards](exploring-dashboards.md) widgets.
