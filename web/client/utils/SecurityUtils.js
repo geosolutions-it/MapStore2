@@ -16,6 +16,8 @@ import isArray from "lodash/isArray";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
 
+export const USER_GROUP_ALL = 'everyone';
+
 /**
  * Stores the logged user security information.
  */
@@ -264,7 +266,8 @@ const SecurityUtils = {
     addAuthenticationToSLD,
     getAuthKeyParameter,
     cleanAuthParamsFromURL,
-    getAuthenticationHeaders
+    getAuthenticationHeaders,
+    USER_GROUP_ALL
 };
 
 export default SecurityUtils;
