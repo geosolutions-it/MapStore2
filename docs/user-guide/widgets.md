@@ -202,7 +202,7 @@ Through this section, for each axis, the user is allowed to:
 
 * *Edit* the current **Axis Title** through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* If there is more than one [Traces](#traces), *Add new axis* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+* If there is more than one [Trace](#traces), *Add new axis* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
 * If there is more than one [Traces](#traces), *Delete* the current axis through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
