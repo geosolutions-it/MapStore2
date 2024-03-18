@@ -106,7 +106,7 @@ The *Polygon* annotation can have different `Fill` color and `Outline` with diff
 
 <img src="../img/annotations/polygon_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-Also for the polygon is possible to add a *Mark* <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> and an *Icon* <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/>.
+Also for the polygon itis possible to add a *Mark* <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> or an *Icon* <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> symbolizer in the same way as for Line annotations.
 
 ***Text***
 
