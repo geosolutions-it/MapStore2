@@ -79,7 +79,7 @@ MapStore provides different *Marker* annotation style:
 
 <img src="../img/annotations/marker_type_selection.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-The mark can have different `Shape`, `Color`, `Stroke` with different `Color`, `Width` and `Style` and customizable `Radius` and `Rotation`. Take a look at the following example.
+The Mark can have different `Shape`, `Fill color` and `Stroke` with different, `Stroke color`, `Width`, `Stoke style` and customizable `Radius` and `Rotation`. Take a look at the following example.
 
 <img src="../img/annotations/marker_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
