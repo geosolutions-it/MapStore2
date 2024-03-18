@@ -183,7 +183,7 @@ Once this filter is set, it is always possible to edit the coordinates and the d
 <img src="../img/filtering-layers/edit_geom.jpg" class="ms-docimage" style="max-width:500px;"/>
 
 !!! note
-     For [Dashboard](exploring-dashboards.md) [widgets](widgets.md) (charts, table and counter) the **Region of Interest** option is called **Area of interest**. With this type of filter the user can define a spatial filter without connecting the widget to the map widget. An example can be the following:
+     Also for [Dashboard](exploring-dashboards.md) [widgets](widgets.md) (charts, table and counter) it is possible to define a spatial filter without necessarily connect the widget to the map widget by using the usual **Area of interest** filtering section. The example below sows how:
      <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/area-filter-dash.mp4"/></video>
 
 ### Layer filter
