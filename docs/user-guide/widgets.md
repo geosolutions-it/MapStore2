@@ -194,7 +194,7 @@ The user can:
 
 #### Axes
 
-[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the **Y axis** and the **X axis** for the *Bar Charts* and the *Line Charts* through the *Axes*.
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the **Y axis** and the **X axis** for the *Bar Charts* and the *Line Charts* through the *Axes* tab.
 
 <img src="../img/widgets/axes_tab.jpg" class="ms-docimage"/>
 
