@@ -138,7 +138,7 @@ The **Visibility limits** allow the annotation to be displayed only within cer
 
 ### Geometries on 3D
 
-On the [3D Navigation](navigation-toolbar.md#3d-navigation), after selecting a geometry type and drawing the geometry on the map, the editor can also modify the geometry by changing the **Height** of each of the vertices.
+On the [3D Navigation](navigation-toolbar.md#3d-navigation), after selecting a geometry type and drawing the geometry on the map, the user can also modify the geometry **Height** for each coordinate.
 
 <video class="ms-docimage" style="max-width:700px;" controls><source src="../img/annotations/height_switcher.mp4" ></video>
 
