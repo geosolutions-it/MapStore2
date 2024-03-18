@@ -40,7 +40,7 @@ From the **Side Toolbar** the user can:
 
 * **Export** dashboard in `json` format by clicking the <img src="../img/button/export2.jpg" class="ms-docbutton"/> button
 
-* **Import** `json` dashboard files from your computer by clicking the <img src="../img/button/import2.jpg" class="ms-docbutton"/> button (it will replace without asking the current dashboard)
+* **Import** `json` dashboard files from your computer by clicking the <img src="../img/button/import2.jpg" class="ms-docbutton"/> button (it will replace the current dashboard directly)
 
 * **Save** the dashboard by clicking the <img src="../img/button/save2.jpg" class="ms-docbutton"/> button, in order to apply the changes made in an existing dashboard. Selecting this option, the [Resources Properties](resources-properties.md) window opens, already filled with the current dashboard properties
 
