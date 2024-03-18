@@ -1,6 +1,6 @@
 # Annotations
 
-[Mapstore](https://mapstore.geosolutionsgroup.com/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) lets you enrich the map with special features which expose additional information, mark particular position on the map and so on.
 Those features make up the so-called **Annotations** layers.
 
 Starting from a new map or an already existing one, the editor can access the **Annotations** <img src="../img/button/annotations2.jpg" class="ms-docbutton" style="max-height:30px;"/> button from the [TOC](toc.md) <img src="../img/button/show-layers.jpg" class="ms-docbutton" style="max-height:30px;"/> panel in the top-left corner of the map viewer.
