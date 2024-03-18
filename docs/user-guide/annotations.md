@@ -124,7 +124,7 @@ The *Center* can be also customized adding a *Mark* <img src="../img/button/add_
 
 ## Settings Annotations
 
-Once all the *Geometries* have been created, the user can enable the **Visibility limits** clicking on the *Settings* tab.
+Once all the annotation *Geometries* are created, the user can customize the usual **Visibility limits** by clicking on the *Settings* tab.
 
 <img src="../img/annotations/settings_tab.jpg" class="ms-docimage" style="max-width:500px;" />
 
