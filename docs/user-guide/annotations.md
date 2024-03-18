@@ -102,7 +102,7 @@ The line annotation is also customizable adding a Mark symbolizer by clicking on
 
 ***Polygon***
 
-*Polygon* annotations, can have different `Fill` color and `Outline` with different `Color`, `Width` and `Style`. Take a look at the following example.
+The *Polygon* annotation can have different `Fill` color and `Outline` with different `Color`, `Width` and `Style`. Take a look at the following example.
 
 <img src="../img/annotations/polygon_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
