@@ -67,7 +67,7 @@ From the [TOC](toc.md), the *Annotations toolbar* allows the user to:
 
 ## Styling Annotations
 
-Based on which type of annotation was chosen, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to customize the annotation style through a powerful editor. It is accessible from the *Style* tab of the annotation viewer.
+Based on which type of annotation is chosen, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the annotation style through a powerful style editor. It is accessible from the *Style* tab of the annotation viewer.
 
 <img src="../img/annotations/annotations_toolbar.jpg" class="ms-docimage" style="max-width:500px;"/>
 
