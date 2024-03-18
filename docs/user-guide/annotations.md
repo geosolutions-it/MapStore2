@@ -132,7 +132,7 @@ The **Visibility limits** allow the annotation to be displayed only within cer
 
 ## Annotations on the 3D navigation
 
-Thanks to the new improvements, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the visualization of the *Annotations* also for the [3D Navigation](navigation-toolbar.md#3d-navigation).
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the visualization of the *Annotations* also for the [3D Navigation](navigation-toolbar.md#3d-navigation).
 
 <img src="../img/annotations/3d_annotations.jpg" class="ms-docimage" style="max-width:500px;" />
 
