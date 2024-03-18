@@ -61,7 +61,7 @@ For each chart [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) al
 
 * *Edit* the current *Trace Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* *Add new trace* with a new layer through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+* *Add new trace* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
 * *Delete* the current trace through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
