@@ -83,7 +83,7 @@ The Mark can have different `Shape`, `Fill color` and `Stroke` with different, `
 
 <img src="../img/annotations/marker_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-* The *Icon* types: clicking on the <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button, an icon panel appears.
+* The *Icon* type: clicking on the <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button, the Icon symbolizer panel opens.
 The icon can have different `Image`. Clicking on it, the user can choose a *Marker* and a *Glyph*, as follows:
 
 <video class="ms-docimage" controls><source src="../img/annotations/icon_style_editor.mp4" ></video>
