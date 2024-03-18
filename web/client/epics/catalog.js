@@ -9,7 +9,7 @@
 import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
-import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
+import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray, truncate} from 'lodash';
 
 import {
     ADD_SERVICE,
@@ -73,18 +73,26 @@ import { describeFeatureType } from '../api/WFS';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
 const onErrorRecordSearch = (isNewService, errObj) => {
+    // Exception text is shown as is while the network errors are shown
+    // with generic error message in the notification
+    const [errorMsg] = castArray(errObj?.error);
+    console.warn("Catalog error", errorMsg);
+
     if (isNewService) {
+        const message = errorMsg
+            ? truncate(errorMsg, { length: 200 })
+            : "catalog.notification.errorServiceUrl";
         return Rx.Observable.of(
             error({
                 title: "notification.warning",
-                message: "catalog.notification.errorServiceUrl",
+                message,
                 autoDismiss: 6,
                 position: "tc"
             }),
             savingService(false)
         );
     }
-    return Rx.Observable.of(recordsLoadError(errObj));
+    return Rx.Observable.of(recordsLoadError(errorMsg));
 };
 /**
     * Epics for CATALOG
