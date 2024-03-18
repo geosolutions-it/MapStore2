@@ -72,10 +72,16 @@ import { getResolutions, METERS_PER_UNIT } from "../utils/MapUtils";
 import { describeFeatureType } from '../api/WFS';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
+import { removeDuplicateLines } from '../utils/StringUtils';
+
 const onErrorRecordSearch = (isNewService, errObj) => {
     // Exception text is shown as is while the network errors are shown
     // with generic error message in the notification
-    const [errorMsg] = castArray(errObj?.error);
+    let [errorMsg] = castArray(errObj?.error);
+    if (errorMsg) {
+        // Remove any instance of duplicated line string from the exception text
+        errorMsg = removeDuplicateLines(errorMsg);
+    }
     console.warn("Catalog error", errorMsg);
 
     if (isNewService) {
