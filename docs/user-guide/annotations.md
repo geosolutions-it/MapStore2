@@ -116,7 +116,7 @@ Defining a point geometry with an associated text, the *Text* annotation allows 
 
 ***Circle***
 
-*Circle* annotations, can have different `Color` color and `Outline` with different `Color`, `Width` and `Style`. Take a look at the following example.
+The *Circle* annotation has its own symbolizer panel to customize the `Color` and the `Outline` with different `Color`, `Width` and `Style`. Take a look at the following example.
 
 <img src="../img/annotations/circle_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
