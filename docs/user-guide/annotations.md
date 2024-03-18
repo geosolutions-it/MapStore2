@@ -75,7 +75,7 @@ Based on which type of annotation is chosen, [MapStore](https://mapstore.geosolu
 
 MapStore provides different *Marker* annotation style:
 
-* The *Mark* types: clicking on the <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button, a mark panel appears.
+* The *Mark* type: clicking on the <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button, the Mark symbolizer panel opens.
 
 <img src="../img/annotations/marker_type_selection.jpg" class="ms-docimage" style="max-width:500px;"/>
 
