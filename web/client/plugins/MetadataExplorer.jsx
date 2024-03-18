@@ -213,7 +213,7 @@ class MetadataExplorerComponent extends React.Component {
         group: null,
         services: {},
         servicesWithBackgrounds: {},
-        editingAllowedRoles: ["ADMIN"]
+        editingAllowedRoles: ["ALL"]
     };
 
     componentDidMount() {
