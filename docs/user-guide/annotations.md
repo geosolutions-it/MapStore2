@@ -36,7 +36,7 @@ After selecting a geometry type, the editor can:
 <video class="ms-docimage" style="max-width:700px;"controls><source src="../img/annotations/add_vertex_button.mp4" ></video>
 
 !!! note
-    If the vertices are invalid, they are notified with a red exclamation point.
+    If the vertices are invalid, they are notified with a red exclamation point and the geometry field is outlined in red.
     <img src="../img/annotations/invalid_vertex.jpg" class="ms-docimage" style="max-width:500px;" />
     In this case, the geometries on the map is red and it is not possible to save it as an annotation, as follows:
     <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/annotations/invalid_vertex2.mp4" ></video>
