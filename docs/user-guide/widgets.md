@@ -234,7 +234,7 @@ Through this section, for each axis, the user is allowed to:
 
 #### Layout
 
-Through the *Layout* tab, the user can also customize the **Layout** of the chart and the default **Font** for all the texts present in the chart.
+Through the *Layout* tab, the user can also customize the **Layout** of the chart and the default **Font** for all the labels present in the chart.
 
 <img src="../img/widgets/layout.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
