@@ -53,7 +53,7 @@ From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" clas
 
 #### Traces
 
-On [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) each trace corresponds to a layer that is inserted into the chart. Just below the chart's preview, there is the *Traces* tab, where the user can:
+For each chart [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to define multiple Traces. With a Trace it is possible to define an additional chart representation (for the same layer by default) to be displayed in the same chart view: all traces are displayed together in the same chart. Just below the chart's preview, there is the *Traces* tab, where the user can:
 
 <img src="../img/widgets/traces_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
