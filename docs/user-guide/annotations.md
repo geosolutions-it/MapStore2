@@ -144,7 +144,7 @@ On the [3D Navigation](navigation-toolbar.md#3d-navigation), after selecting a g
 
 ### Styling on 3D
 
-As *Marker* annotation on the [3D Navigation](navigation-toolbar.md#3d-navigation), the **3D model** type is also available.
+For *Marker* annotations, on the [3D Navigation](navigation-toolbar.md#3d-navigation) the **3D model** symbolizer type is also available.
 From the *Style* tab, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model option opens to allow adding a 3D model (based on [glTF](https://github.com/KhronosGroup/glTF), GLB is also allowed) as an external graphic by specifying its *URL* (see also the [Cesium documentation](https://cesium.com/learn/cesiumjs/ref-doc/ModelGraphics.html?classFilter=Model)). Furthermore, it is possible to customize the 3D model `Scale`, `Rotation` and `Color`. Take a look at the following example.
 
 <img src="../img/annotations/3d_model_type.jpg" class="ms-docimage" style="max-width:500px;" />
