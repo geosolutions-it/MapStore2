@@ -96,7 +96,7 @@ The *Line* annotation has a dedicated styling panel with a customizable `Stroke`
 
 <img src="../img/annotations/polyline_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
-The line is also customizable by clicking the mark <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button or the icon <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button and choose *Start Point*, *Center* or *End Point* from the `Geometry transformation` option.
+The line annotation is also customizable adding a Mark symbolizer by clicking on the <img src="../img/button/add_mark_button.jpg" class="ms-docbutton"/> button or the Icon one with the <img src="../img/button/add_icon_button.jpg" class="ms-docbutton"/> button and choose *Start Point*, *Center* or *End Point* from the `Geometry transformation` option.
 
 <video class="ms-docimage" controls><source src="../img/annotations/start_point_option.mp4" ></video>
 
