@@ -49,7 +49,7 @@ For each geometry created, the editor can perform the following operations:
 
 * **Delete** the geometry annotation through the <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> button
 
-Once all the geometries have been created, the editor can return to the [TOC](toc.md) by clicking the <img src="../img/button/x2.jpg" class="ms-docbutton" /> button. A new annotation layer will appear here.
+Once all the geometries are created, the user can go back to the [TOC](toc.md) by clicking the <img src="../img/button/x2.jpg" class="ms-docbutton" /> button. A new annotation layer will appear here.
 
 <img src="../img/annotations/annotation2.jpg" class="ms-docimage" />
 
