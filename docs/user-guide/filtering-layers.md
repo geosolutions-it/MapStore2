@@ -139,6 +139,9 @@ This tool is used to define advanced filters in [MapStore](https://mapstore.geos
 
 <img src="../img/filtering-layers/query-panel.jpg" class="ms-docimage" style="max-width:500px;"/>
 
+!!! note
+    For configuring layer filtering in [Widgets](widgets.md) the **Layer Filter** option is only available for [Maps](exploring-maps.md) and not for [Dashboards](exploring-dashboards.md)
+
 ### Attribute filter
 
 This filter allows to set one or more conditions referred to the [Attribute Table](attributes-table.md#attribute-table) fields. <br>

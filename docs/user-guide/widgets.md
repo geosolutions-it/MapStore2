@@ -37,6 +37,14 @@ Selecting a *Layer* or *Layers*, the following *Chart* options is presented to u
 
 <img src="../img/widgets/chart-options.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
+From the top toolbar of this panel the user is allowed to:
+
+* Going back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget type section.
+
+* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
+
+* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
+
 From the chart configuration page, the user can first perform the following operation:
 
 * *Edit* the *Chart Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
@@ -44,12 +52,6 @@ From the chart configuration page, the user can first perform the following oper
 * *Add new chart* to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
 * *Delete* the selected chart and its configuration from the widget through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
-
-From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" class="ms-docbutton"/> the user is allowed to:
-
-* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
-
-* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
 
 #### Traces
 
@@ -345,7 +347,17 @@ Adding a table widget to the map, a panel like the following opens:
 
 <img src="../img/widgets/table-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-The toolbar on the top of this panel is similar to the one present in [Chart section](#chart). Here the user is allowed to:
+From the top toolbar of this panel the user is allowed to:
+
+* Going back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget type section.
+
+* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
+
+* Open the [*Query Panel*](filtering-layers.md#query-panel) to configure a **Layer Filter** for the selected layer through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
+
+* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
+
+In the *Table Widget* the user can:
 
 * **Enable/Disable** the layer fields that will be displayed in the widget as columns.
 
@@ -377,7 +389,8 @@ Selecting the counter option, the following window opens:
 
 <img src="../img/widgets/counter-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-Also in this case the toolbar is similar to the one present in [Chart section](#chart). The user is allowed to:
+The top toolbar of this panel is similar to the one present in [Table section](#table). <br>
+Here the user is allowed to:
 
 * Select the attribute to **Use**
 
