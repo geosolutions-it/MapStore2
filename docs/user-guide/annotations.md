@@ -45,7 +45,7 @@ After selecting a geometry type, the editor can:
 
 For each geometry created, the editor can perform the following operations:
 
-* **Zoom** to the geometry annotation on map through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton" /> button
+* **Zoom** to the annotation geometry on map through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton" /> button
 
 * **Delete** the geometry annotation through the <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> button
 
