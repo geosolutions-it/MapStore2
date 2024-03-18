@@ -43,7 +43,7 @@ From the chart configuration page, the user can first perform the following oper
 
 * *Add new chart* to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-* *Delete* the current chart and its related chart configuration from the wizard through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
+* *Delete* the selected chart and its configuration from the widget through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
 From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" class="ms-docbutton"/> the user is allowed to:
 
