@@ -65,7 +65,7 @@ For each chart [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) al
 
 * *Delete* the current trace through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
-Once the graph type has been chosen, the user can customize the trace with the following options:
+Once the chart type is chosen, it is possible to set up the trace with the following options:
 
 * **Trace data**
 * **Trace style**
