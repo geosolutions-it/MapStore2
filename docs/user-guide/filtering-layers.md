@@ -133,7 +133,7 @@ This tool is used to define advanced filters in [MapStore](https://mapstore.geos
 
 * **Attribute Filter**
 
-* **Region of Interest**
+* **Area of Interest**
 
 * **Layer Filter**
 
@@ -166,7 +166,7 @@ A simple *Attribute Filter* applied for a numerical field can be, for example:
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/att_filter.mp4"/></video>
 
-### Region of interest
+### Area of interest
 
 In order to set this filter the user can:
 
@@ -174,7 +174,7 @@ In order to set this filter the user can:
 
 * Select the *Geometric operation* by choosing between **Intersects**, **Is contained**, **Contains**
 
-Applying a *Circle* filter with *Intersect* operation, for example, the process could be similar to the following:
+Applying a *Rectangle* filter with *Intersect* operation, for example, the process could be similar to the following:
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/geom_filter.mp4"/></video>
 
