@@ -206,7 +206,7 @@ Through this section, for each axis, the user is allowed to:
 
 * If there is more than one [Trace](#traces), *Delete* the current axis through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
-* Choose the **Type** (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at the data (*Auto* option is automatically managed and selected by the tool and it is usually good as the default setting).
+* Choose the **Type** (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at the data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting).
 
 * Change the **Color** through the color picker
 
