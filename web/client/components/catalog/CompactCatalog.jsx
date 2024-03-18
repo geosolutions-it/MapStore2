@@ -127,7 +127,9 @@ export default compose(
     onChangeSelectedService = () => {},
     selectedService, onChangeCatalogMode = () => {},
     getItems = (_items) => getCatalogItems(_items, selected),
-    onItemClick = ({record} = {}) => onRecordSelected(record, catalog)}) => {
+    onItemClick = ({record} = {}) => onRecordSelected(record, catalog),
+    canEditService
+}) => {
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm onChangeCatalogMode={onChangeCatalogMode} onChangeSelectedService={onChangeSelectedService}
@@ -135,7 +137,8 @@ export default compose(
             selectedService={services[selectedService]} showCatalogSelector={showCatalogSelector}
             title={title}
             searchText={searchText}
-            onSearchTextChange={setSearchText}/>}
+            onSearchTextChange={setSearchText}
+            canEditService={canEditService}/>}
         footer={<div className="catalog-footer">
             {loading ? <LoadingSpinner /> : null}
             {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}

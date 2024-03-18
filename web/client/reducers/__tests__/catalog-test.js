@@ -55,7 +55,8 @@ import {
     changeServiceFormat,
     setLoading,
     formatsLoading,
-    setSupportedFormats
+    setSupportedFormats,
+    initPlugin
 } from '../../actions/catalog';
 
 import { MAP_CONFIG_LOADED } from '../../actions/config';
@@ -343,5 +344,24 @@ describe('Test the catalog reducer', () => {
         }, setSupportedFormats(formats, url));
         expect(state.newService.formatUrlUsed).toBe(url);
         expect(state.newService.supportedFormats).toEqual(formats);
+    });
+    it('INIT_PLUGIN ', () => {
+        const option = {
+            editingAllowedRoles: ["ADMIN"],
+            editingAllowedGroups: []
+        };
+        let state = catalog({
+            newService: {}
+        }, initPlugin(option));
+        expect(state.editingAllowedRoles).toEqual(option.editingAllowedRoles);
+        expect(state.editingAllowedGroups).toEqual(option.editingAllowedGroups);
+
+        state = catalog({
+            newService: {},
+            editingAllowedRoles: ["ADMIN"],
+            editingAllowedGroups: []
+        }, initPlugin());
+        expect(state.editingAllowedRoles).toEqual(option.editingAllowedRoles);
+        expect(state.editingAllowedGroups).toEqual(option.editingAllowedGroups);
     });
 });

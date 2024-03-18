@@ -22,7 +22,8 @@ import {
     setDashboardCatalogMode,
     setDashboardServiceSaveLoading,
     dashboardDeleteService,
-    updateDashboardService
+    updateDashboardService,
+    initPlugin
 } from '../../actions/dashboard';
 
 import { insertWidget, updateWidget, deleteWidget } from '../../actions/widgets';
@@ -146,5 +147,14 @@ describe('Test the dashboard reducer', () => {
         expect(state.selectedService).toBe('test');
 
     });
+    it('dashboard onInitPlugin', () => {
+        let action = initPlugin({option: "test"});
+        let state = dashboard({}, action);
+        expect(state.option).toBeTruthy();
+        expect(state.option).toBe("test");
 
+        action = initPlugin();
+        state = dashboard({serviceStarted: false}, action);
+        expect(state).toEqual({serviceStarted: false});
+    });
 });
