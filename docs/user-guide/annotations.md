@@ -92,7 +92,7 @@ The icon is also customizable with different `Opacity`, `Size`, `Rotation` and `
 
 ***Line***
 
-*Line* annotations, have customizable `Stroke` with different `Color`, `Width` and `Style` and different `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). Take a look at the following example.
+The *Line* annotation has a dedicated styling panel with a customizable `Stroke` with different `Color`, `Width` and `Style` and different `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). Take a look at the following image.
 
 <img src="../img/annotations/polyline_style_editor.jpg" class="ms-docimage" style="max-width:500px;"/>
 
