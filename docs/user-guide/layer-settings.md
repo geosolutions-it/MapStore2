@@ -437,7 +437,7 @@ Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.c
 
 <img src="../img/layer-settings/polygon-type.jpg" class="ms-docimage">
 
-* **Extrusion Height** (available for Line and Fill symbolizers) to configure the height value of the symbol to extrude. It is also possible to enable/disable the **Extrusion relative to geometry** and, only for the *Line* symbolizers, the user can customize the **Color** and the **Type**, choosing between `Wall`, `Circle` and `Square` options, for the extruded features.
+* **Extrusion Height** (available for Line and Fill symbolizers) to configure the height value of the feature to be extruded. It is also possible to enable/disable the **Extrusion relative to geometry** (from the highest point of the feature geometry) and, only for the *Line* symbolizers, the user can customize the **Extrusion color** and the **Extrusion type**, choosing between `Wall`, `Circle` and `Square` options, for the extruded features.
 
 <img src="../img/layer-settings/extrusion.jpg" class="ms-docimage">
 
