@@ -235,7 +235,13 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   "filter": { // applicable only for CSW service
       "staticFilter": "filter is always applied, even when search text is NOT PRESENT",
       "dynamicFilter": "filter is used when search text is PRESENT and is applied in `AND` with staticFilter. The template is used with ${searchText} placeholder to append search string"
-  }
+  },
+  "fetchMetadata": "if true, the metadata is fetched for the service" // applicable only for COG service
+  "records": [{ "array of the COG layers of the service. COG url separated by comma where each url attributes to a layer" // applicable only for COG service
+    "sourceMetadata": "metadata of the COG layer",
+    "bbox": "bbox formulated for the COG layer",
+    "url": "the url pointing to the COG layer data"
+  }]
 }
 ```
 
@@ -249,6 +255,34 @@ CSW service
         "staticFilter": "<ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or>",
         "dynamicFilter": "<ogc:PropertyIsLike wildCard='%' singleChar='_' escapeChar='\\'><ogc:PropertyName>csw:AnyText</ogc:PropertyName><ogc:Literal>%${searchText}%</ogc:Literal></ogc:PropertyIsLike>"
     }
+}
+```
+
+COG service
+<br> `fetchMetadata` - By default, the metadata is fetched on saving the COG service for each layer (url) configured<br>
+<br> `records` -  Records of the COG layer <br>
+<br>Example:<br>
+
+```javascript
+{
+    "fetchMetadata": true,
+    "records": [{
+        "url": "https://example.tif",
+        "sourceMetadata": {
+            "crs": "EPSG:32632",
+            "extent": [463560, 5758030, 469410, 5767210],
+            "height": 900,
+            "width": 500,
+            "tileWidth": 256,
+            "tileHeight": 256,
+            "origin": [463560, 5767210, 0],
+            "resolution": [10, -10, 0]
+        },
+        "bbox": {
+            "crs": "EPSG:32632"
+            "bounds": {minx: 463560, miny: 5758030, maxx: 469410, maxy: 5767210}
+        }
+    }]
 }
 ```
 

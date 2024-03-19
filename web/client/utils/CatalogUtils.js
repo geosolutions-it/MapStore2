@@ -7,8 +7,9 @@
  */
 
 import assign from 'object-assign';
-import { head, isArray } from 'lodash';
+import { head, isArray, get } from 'lodash';
 import CoordinatesUtils from './CoordinatesUtils';
+export const COG_LAYER_TYPE = 'cog';
 
 export const buildSRSMap = (srs) => {
     return srs.filter(s => CoordinatesUtils.isSRSAllowed(s)).reduce((previous, current) => {
@@ -91,4 +92,20 @@ export const toURLArray = (url) => {
         return url.split(',').map(u => u.trim());
     }
     return url;
+};
+
+export const updateServiceData = (options, result) => {
+    const isCOGService = get(options, 'service.type') === COG_LAYER_TYPE;
+
+    if (isCOGService) {
+        const records = get(options, 'service.records', []);
+        return {
+            ...options.service,
+            records: records.map(record => ({
+                ...record,
+                ...result?.records?.find(_record => _record.url === record.url)
+            }))
+        };
+    }
+    return options.service;
 };
