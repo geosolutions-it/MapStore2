@@ -236,8 +236,8 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
       "staticFilter": "filter is always applied, even when search text is NOT PRESENT",
       "dynamicFilter": "filter is used when search text is PRESENT and is applied in `AND` with staticFilter. The template is used with ${searchText} placeholder to append search string"
   },
-  "fetchMetadata": "if true, the metadata is fetched for the service" // applicable only for COG service
-  "records": [{ "array of the COG layers of the service. COG url separated by comma where each url attributes to a layer" // applicable only for COG service
+  "fetchMetadata": true, // "if true, the metadata is fetched for the service, applicable only for COG service
+  "records": [{ // array of the COG layers of the service, applicable only for COG service
     "sourceMetadata": "metadata of the COG layer",
     "bbox": "bbox formulated for the COG layer",
     "url": "the url pointing to the COG layer data"
