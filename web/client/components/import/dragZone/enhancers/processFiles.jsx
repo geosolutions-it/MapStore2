@@ -41,7 +41,7 @@ const tryUnzip = (file) => {
 const checkFileType = (file) => {
     return new Promise((resolve, reject) => {
         const ext = recognizeExt(file.name);
-        const type = file.type || MIME_LOOKUPS[ext];
+        const type = MIME_LOOKUPS[ext] || file.type;
         if (type === 'application/x-zip-compressed'
             || type === 'application/zip'
             || type === 'application/vnd.google-earth.kml+xml'
@@ -63,7 +63,7 @@ const checkFileType = (file) => {
  */
 const readFile = (onWarnings) => (file) => {
     const ext = recognizeExt(file.name);
-    const type = file.type || MIME_LOOKUPS[ext];
+    const type = MIME_LOOKUPS[ext] || file.type;
     const projectionDefs = ConfigUtils.getConfigProp('projectionDefs') || [];
     const supportedProjections = (projectionDefs.length && projectionDefs.map(({code})  => code) || []).concat(["EPSG:4326", "EPSG:3857", "EPSG:900913"]);
     if (type === 'application/vnd.google-earth.kml+xml') {
