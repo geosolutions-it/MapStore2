@@ -23,7 +23,8 @@ import {
     DASHBOARD_ADD_NEW_SERVICE,
     DASHBOARD_CATALOG_MODE,
     DASHBOARD_DELETE_SERVICE,
-    DASHBOARD_SAVE_SERVICE_LOADING
+    DASHBOARD_SAVE_SERVICE_LOADING,
+    INIT_PLUGIN
 } from '../actions/dashboard';
 
 import { INSERT, UPDATE, DELETE } from '../actions/widgets';
@@ -36,6 +37,9 @@ function dashboard(state = {
     saveServiceLoading: false
 }, action) {
     switch (action.type) {
+    case INIT_PLUGIN: {
+        return { ...state, ...action?.options };
+    }
     case SET_EDITOR_AVAILABLE: {
         return set("editor.available", action.available, state);
     }

@@ -32,7 +32,8 @@ import {
     FORMAT_OPTIONS_LOADING,
     SHOW_FORMAT_ERROR,
     SET_FORMAT_OPTIONS,
-    NEW_SERVICE_STATUS
+    NEW_SERVICE_STATUS,
+    INIT_PLUGIN
 } from '../actions/catalog';
 
 import { MAP_CONFIG_LOADED } from '../actions/config';
@@ -68,6 +69,12 @@ function catalog(state = {
     newService: {}
 }, action) {
     switch (action.type) {
+    case INIT_PLUGIN:
+        return {
+            ...state,
+            editingAllowedRoles: action?.options?.editingAllowedRoles || state.editingAllowedRoles,
+            editingAllowedGroups: action?.options?.editingAllowedGroups || state.editingAllowedGroups
+        };
     case SAVING_SERVICE:
         return {
             ...state,
