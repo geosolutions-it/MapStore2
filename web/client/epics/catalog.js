@@ -58,7 +58,8 @@ import { getSelectedLayer, selectedNodesSelector } from '../selectors/layers';
 
 import {
     buildSRSMap,
-    extractOGCServicesReferences
+    extractOGCServicesReferences,
+    updateServiceData
 } from '../utils/CatalogUtils';
 import { getCapabilities, describeLayers, flatLayers } from '../api/WMS';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
@@ -130,7 +131,7 @@ export default (API) => ({
                                 // The records are saved to catalog state on successful saving of the service.
                                 // The flag is used to show/hide records on load in Catalog
                                 setNewServiceStatus(true),
-                                addCatalogService(options.service),
+                                addCatalogService(updateServiceData(options, result)),
                                 success({
                                     title: "notification.success",
                                     message: "catalog.notification.addCatalogService",
