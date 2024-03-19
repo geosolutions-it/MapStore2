@@ -127,7 +127,7 @@ This tool is used to define advanced filters in [MapStore](https://mapstore.geos
 
 * **Attribute Filter**
 
-* **Region of Interest**
+* **Area of Interest**
 
 * **Layer Filter**
 
@@ -160,7 +160,7 @@ A simple *Attribute Filter* applied for a numerical field can be, for example:
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/att_filter.mp4"/></video>
 
-### Region of interest
+### Area of interest
 
 In order to set this filter the user can:
 
@@ -168,13 +168,17 @@ In order to set this filter the user can:
 
 * Select the *Geometric operation* by choosing between **Intersects**, **Is contained**, **Contains**
 
-Applying a *Circle* filter with *Intersect* operation, for example, the process could be similar to the following:
+Applying a *Rectangle* filter with *Intersect* operation, for example, the process could be similar to the following:
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/geom_filter.mp4"/></video>
 
 Once this filter is set, it is always possible to edit the coordinates and the dimensions of the drawn filter's geometry by clicking on the **Details** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/>. Editing a circle, for example, it is possible to change the center coordinates (*x*, *y*) and the radius dimension (*m*):
 
 <img src="../img/filtering-layers/edit_geom.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+!!! note
+     Also for [Dashboard](exploring-dashboards.md) [widgets](widgets.md) (charts, table and counter) it is possible to define a spatial filter without necessarily connect the widget to the map widget by using the usual **Area of interest** filtering section. The example below sows how:
+     <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/area-filter-dash.mp4"/></video>
 
 ### Layer filter
 
@@ -198,3 +202,6 @@ In order to better understand this type of filter, let's make an example. We sup
 In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
 
 <video class="ms-docimage" controls><source src="../img/filtering-layers/layer_filter.mp4"/></video>
+
+!!! note
+    The **Layer Filter** option is only available for [widgets](widgets.md) defined in [Map viewer](exploring-maps.md) and not for [Dashboards](exploring-dashboards.md) widgets.
