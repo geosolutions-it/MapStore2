@@ -76,6 +76,8 @@ import { removeDuplicateLines } from '../utils/StringUtils';
 import { logError } from '../utils/DebugUtils';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
+    logError({message: errObj});
+
     // Exception text is shown as is while the network errors are shown
     // with generic error message in the notification
     let [errorMsg] = castArray(errObj?.error);
@@ -83,8 +85,6 @@ const onErrorRecordSearch = (isNewService, errObj) => {
         // Remove any instance of duplicated line string from the exception text
         errorMsg = removeDuplicateLines(errorMsg);
     }
-    logError({message: errorMsg});
-
     if (isNewService) {
         const message = errorMsg
             ? truncate(errorMsg, { length: 400 })
