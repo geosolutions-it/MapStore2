@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import castArray from "lodash/castArray";
@@ -52,10 +52,9 @@ const MultiBandEditor = ({
     element: layer,
     bands: defaultBands,
     rbgBandLabels,
-    onUpdateNode
+    onUpdateNode,
+    onChange
 }) => {
-    const [enableBand, setEnableBand] = useState(true);
-
     /**
      * Samples per pixel are a combination of image samples + extra samples (alpha)
      * Each pixel can have N extra samples, however currently only +1 extra sample included
@@ -81,12 +80,8 @@ const MultiBandEditor = ({
         });
     };
 
-    useEffect(() => {
-        !isRGB && updateStyle([...defaultSingleColorExpression]);
-    }, [isRGB]);
-
     const onEnableBandStyle = (flag) => {
-        setEnableBand(flag);
+        onChange("enableBandStyling", flag);
         let color;
         if (flag) {
             color = [...(isRGB ? defaultRGBAColorExpression : defaultSingleColorExpression)];
@@ -128,8 +123,8 @@ const MultiBandEditor = ({
                     <div className="enable-band">
                         <ControlLabel><Message msgId="styleeditor.enableBanding"/></ControlLabel>
                         <SwitchButton
-                            onChange={() => onEnableBandStyle(!enableBand)}
-                            checked={enableBand}
+                            onChange={() => onEnableBandStyle(!layer.enableBandStyling)}
+                            checked={layer.enableBandStyling}
                         />
                     </div>
                     {isRGB ? (
@@ -141,7 +136,7 @@ const MultiBandEditor = ({
                                 <PropertyField label={rbgBandLabels[index]}>
                                     <Select
                                         clearable={isAlpha}
-                                        disabled={!enableBand}
+                                        disabled={!layer.enableBandStyling}
                                         placeholder={'styleeditor.selectChannel'}
                                         options={getBandOptions(bands)}
                                         value={bandColors[index]}
@@ -156,7 +151,7 @@ const MultiBandEditor = ({
                         <PropertyField label={`styleeditor.grayChannel`}>
                             <Select
                                 clearable={false}
-                                disabled={!enableBand}
+                                disabled={!layer.enableBandStyling}
                                 options={[getBandOptions(bands)[0]]}
                                 value={bandColors[0]}
                             />
@@ -204,7 +199,8 @@ MultiBandEditor.defaultProps = {
         "styleeditor.blueChannel",
         "styleeditor.alphaChannel"
     ],
-    onUpdateNode: () => {}
+    onUpdateNode: () => {},
+    onChange: () => {}
 };
 
 export default MultiBandEditor;

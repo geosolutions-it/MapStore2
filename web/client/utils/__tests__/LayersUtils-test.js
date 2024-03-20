@@ -1309,6 +1309,15 @@ describe('LayersUtils', () => {
                 l => {
                     expect(l.sourceMetadata).toBeTruthy();
                 }
+            ],
+            // Save enableBandStyling
+            [
+                {
+                    enableBandStyling: true
+                },
+                l => {
+                    expect(l.enableBandStyling).toBeTruthy();
+                }
             ]
         ];
         layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
