@@ -99,6 +99,8 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 * *Tile size (WMS)*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
 
+* *Sorty By*: to retrieve the catalog result in sorted order, user can add the `propertyName` of the attributes that the user wants to filter and select the sort order (`ASC` or `DESC`).
+
 * *Set Visibility Limit*: if checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source.
 
 * *Show metadata template*: this can be enabled when the user wants to insert in the layer description a text with metadata information
