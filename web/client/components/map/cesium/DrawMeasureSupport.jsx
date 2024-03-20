@@ -474,7 +474,7 @@ function DrawMeasureSupport({
             }
             break;
         case MeasureTypes.LENGTH:
-            if (coordinates.length > 1) {
+            if (geodesicCoordinates.length > 1) {
                 const coords4326 = geodesicCoordinates.map((cartesianPoint) => {
                     const {longitude, latitude} = Cesium.Cartographic.fromCartesian(cartesianPoint);
                     return [Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude)];
