@@ -81,7 +81,8 @@ class Catalog extends React.Component {
         layerBaseConfig: PropTypes.object,
         service: PropTypes.object,
         isNewServiceAdded: PropTypes.bool,
-        setNewServiceStatus: PropTypes.func
+        setNewServiceStatus: PropTypes.func,
+        canEdit: PropTypes.func
     };
 
     static contextTypes = {
@@ -323,7 +324,7 @@ class Catalog extends React.Component {
                         <ControlLabel><Message msgId="catalog.service" /></ControlLabel>
                     </FormGroup>
                     <FormGroup controlId="service" key="service">
-                        <InputGroup>
+                        <InputGroup style={{width: '100%'}}>
                             <Select
                                 clearValueText={getMessageById(this.context.messages, "catalog.clearValueText")}
                                 noResultsText={getMessageById(this.context.messages, "catalog.noResultsText")}
@@ -332,13 +333,13 @@ class Catalog extends React.Component {
                                 value={this.props.selectedService}
                                 onChange={(val) => this.props.onChangeSelectedService(val && val.value ? val.value : "")}
                                 placeholder={getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
-                            {this.isValidServiceSelected() && !this.props.services[this.props.selectedService].readOnly ? (<InputGroup.Addon className="btn"
+                            {this.props.canEdit && this.isValidServiceSelected() && !this.props.services[this.props.selectedService].readOnly ? (<InputGroup.Addon className="btn"
                                 onClick={() => this.props.onChangeCatalogMode("edit", false)}>
                                 <Glyphicon glyph="pencil" />
                             </InputGroup.Addon>) : null}
-                            <InputGroup.Addon className="btn" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
+                            {this.props.canEdit && <InputGroup.Addon className="btn" onClick={() => this.props.onChangeCatalogMode("edit", true)}>
                                 <Glyphicon glyph="plus" />
-                            </InputGroup.Addon>
+                            </InputGroup.Addon>}
                         </InputGroup>
                     </FormGroup>
                     {this.props.services?.[this.props.selectedService]?.type !== '3dtiles' && <FormGroup controlId="searchText" key="searchText">

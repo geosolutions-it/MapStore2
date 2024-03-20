@@ -5,7 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { getLayerFromRecord, getCatalogRecords, validate, COG_LAYER_TYPE } from '../COG';
+import { getLayerFromRecord, getCatalogRecords, validate } from '../COG';
+import { COG_LAYER_TYPE } from '../../../utils/CatalogUtils';
 import expect from 'expect';
 
 

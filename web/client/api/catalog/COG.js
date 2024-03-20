@@ -14,8 +14,8 @@ import { Observable } from 'rxjs';
 import { isValidURL } from '../../utils/URLUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
 import LayerUtils from '../../utils/cog/LayerUtils';
+import { COG_LAYER_TYPE } from '../../utils/CatalogUtils';
 
-export const COG_LAYER_TYPE = 'cog';
 const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
     const filteredLayers = layers
         .filter(({ title = "" } = {}) => !text
@@ -40,11 +40,11 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
         layers = service.records?.map((record) => {
             const url = record.url;
             let layer = {
-                ...service,
+                ...record,
                 title: record.title,
-                type: COG_LAYER_TYPE,
-                sources: [{url}],
-                options: service.options || {}
+                type: record.type ?? COG_LAYER_TYPE,
+                sources: record.sources ?? [{url}],
+                options: record.options ?? (service.options || {})
             };
             const controller = get(info, 'options.controller');
             const isSave = get(info, 'options.save', false);

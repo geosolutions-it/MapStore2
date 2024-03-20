@@ -12,6 +12,7 @@ import ReactDOM from "react-dom";
 import ReactTestUtils from "react-dom/test-utils";
 
 import PermissionEditor from "../PermissionEditor";
+import { USER_GROUP_ALL } from "../../../../../utils/SecurityUtils";
 
 describe("PermissionEditor component", () => {
     beforeEach((done) => {
@@ -48,5 +49,39 @@ describe("PermissionEditor component", () => {
         });
         const selectMenuOuter = ReactDOM.findDOMNode(permissionsTable).querySelector('.insert-row .Select-menu-outer');
         expect(selectMenuOuter).toExist();
+    });
+    it('test group name all and permission', () => {
+        const availableGroups = [
+            { groupName: USER_GROUP_ALL, id: 'group1' },
+            { groupName: 'somegroup', id: 'group2' }
+        ];
+
+        // selecting write permission first and then selecting all user group
+        ReactDOM.render(<PermissionEditor newPermission="canWrite" availableGroups={availableGroups} />, document.getElementById('container'));
+        let permissionsTable = document.getElementsByClassName('permissions-table')[0];
+        let input = ReactDOM.findDOMNode(permissionsTable).querySelector('input');
+        expect(input).toBeTruthy();
+        ReactTestUtils.act(() => {
+            ReactTestUtils.Simulate.focus(input);
+            ReactTestUtils.Simulate.click(input);
+            ReactTestUtils.Simulate.keyDown(input, { key: 'ArrowDown', keyCode: 40 });
+        });
+        const selectMenuOuter = ReactDOM.findDOMNode(permissionsTable).querySelector('.insert-row .Select-menu-outer');
+        expect(selectMenuOuter).toBeTruthy();
+        let options = ReactDOM.findDOMNode(permissionsTable).querySelectorAll('.Select-option');
+        expect(options.length).toBe(1);
+
+        // selecting USER_GROUP_ALL
+        ReactDOM.render(<PermissionEditor newGroup={availableGroups[0]} availableGroups={availableGroups} />, document.getElementById('container'));
+        permissionsTable = document.getElementsByClassName('permissions-table')[0];
+        input = ReactDOM.findDOMNode(permissionsTable).querySelectorAll('input')?.[1];
+        expect(input).toBeTruthy();
+        ReactTestUtils.act(() => {
+            ReactTestUtils.Simulate.focus(input);
+            ReactTestUtils.Simulate.click(input);
+            ReactTestUtils.Simulate.keyDown(input, { key: 'ArrowDown', keyCode: 40 });
+        });
+        options = document.querySelectorAll('.Select')[1].querySelectorAll('.Select-option');
+        expect(options.length).toBe(1);
     });
 });

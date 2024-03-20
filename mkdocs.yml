@@ -173,6 +173,7 @@ nav:
     - Projects:
       - MapStore Projects: 'developer-guide/mapstore-projects.md'
       - Project Creation Script: 'developer-guide/project-creation-script.md'
+      - Advanced Project Customization: 'developer-guide/advanced-project-customization.md'
     - Communicating with MapStore:
       - API usage: 'developer-guide/API-usage.md'
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'

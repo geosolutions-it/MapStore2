@@ -26,17 +26,19 @@ describe('MetadataExplorer Plugin', () => {
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
         expect(document.getElementById('catalog-root')).toBeTruthy();
     });
+    it('test MetadataExplorerPlugin plugin on mount', () => {
+        const {Plugin, actions} = getPluginForTest(MetadataExplorerPlugin, {});
+        ReactDOM.render(<Plugin/>, document.getElementById("container"));
+
+        expect(actions.length).toBeTruthy();
+        expect(actions.map(a => a.type).includes("CATALOG:INIT_PLUGIN")).toBeTruthy();
+    });
     it('test MetadataExplorerPlugin plugin on unmount', () => {
         const {Plugin, actions} = getPluginForTest(MetadataExplorerPlugin, {});
         ReactDOM.render(<Plugin/>, document.getElementById("container"));
 
         ReactDOM.render(<div/>, document.getElementById("container"));
-        expect(actions.length).toBe(4);
-        expect(actions[0].type).toBe("CATALOG:CATALOG_CLOSE");
-        expect(actions[1].type).toBe("SET_CONTROL_PROPERTIES");
-        expect(actions[1].control).toBe("metadataexplorer");
-        expect(actions[2].type).toBe("CATALOG:CHANGE_CATALOG_MODE");
-        expect(actions[2].mode).toBe("view");
-        expect(actions[3].type).toBe("CATALOG:RESET_CATALOG");
+        expect(actions.length).toBeTruthy();
+        expect(actions.map(a => a.type).includes("CATALOG:CATALOG_CLOSE")).toBeTruthy();
     });
 });

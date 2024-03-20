@@ -12,7 +12,8 @@ import {
     convertMeasuresToAnnotation,
     getGeomTypeSelected,
     convertMeasuresToGeoJSON,
-    getMeasureType
+    getMeasureType,
+    computeFeatureMeasurement
 } from '../MeasurementUtils';
 import { MeasureTypes, defaultUnitOfMeasure } from '../MeasureUtils';
 
@@ -132,7 +133,12 @@ describe('MeasurementUtils', () => {
         ]);
     });
     it('convertMeasuresToAnnotation with Polygon', () => {
-        const fts = [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[10.042417613994017, 53.9617045912569], [21.29241761399402, 57.23667168428492], [22.522886363994022, 53.17884325605559], [10.042417613994017, 53.9617045912569]]], "textLabels": [{"text": "793.737,01 m", "position": [15.667417613994019, 55.633387330220785]}, {"text": "457.894,01 m", "position": [21.90765198899402, 55.25951976945266]}, {"text": "827.598,36 m", "position": [16.28265198899402, 53.57208559899865]}]}, "properties": {"values": [{"value": 175074750490.87378, "formattedValue": "175.074.750.490,87 m²", "position": [18.148330256039472, 55.25951976945266], "type": "area"}, {"value": 2079229.382, "formattedValue": "2.079.229,38 m", "position": [10.042417613994017, 53.9617045912569], "uom": {"length": {"unit": "m", "label": "m", "value": "m"}, "area": {"unit": "sqm", "label": "m²", "value": "sqm"}, "bearing": {"unit": "deg", "label": "°", "value": "deg"}, "POLYLINE_DISTANCE_3D": {"unit": "m", "label": "m", "value": "m"}, "AREA_3D": {"unit": "sqm", "label": "m²", "value": "sqm"}, "POINT_COORDINATES": {"unit": "m", "label": "m", "value": "m"}, "HEIGHT_FROM_TERRAIN": {"unit": "m", "label": "m", "value": "m"}, "SLOPE": {"unit": "deg", "label": "°", "value": "deg"}, "ANGLE_3D": {"unit": "deg", "label": "°", "value": "deg"}}, "type": "length"}]}}];
+        const fts = [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[
+            [10.042417613994017, 53.9617045912569],
+            [21.29241761399402, 57.23667168428492],
+            [22.522886363994022, 53.17884325605559],
+            [10.042417613994017, 53.9617045912569]
+        ]], "textLabels": [{"text": "793.737,01 m", "position": [15.667417613994019, 55.633387330220785]}, {"text": "457.894,01 m", "position": [21.90765198899402, 55.25951976945266]}, {"text": "827.598,36 m", "position": [16.28265198899402, 53.57208559899865]}]}, "properties": {"values": [{"value": 175074750490.87378, "formattedValue": "175.074.750.490,87 m²", "position": [18.148330256039472, 55.25951976945266], "type": "area"}, {"value": 2079229.382, "formattedValue": "2.079.229,38 m", "position": [10.042417613994017, 53.9617045912569], "uom": {"length": {"unit": "m", "label": "m", "value": "m"}, "area": {"unit": "sqm", "label": "m²", "value": "sqm"}, "bearing": {"unit": "deg", "label": "°", "value": "deg"}, "POLYLINE_DISTANCE_3D": {"unit": "m", "label": "m", "value": "m"}, "AREA_3D": {"unit": "sqm", "label": "m²", "value": "sqm"}, "POINT_COORDINATES": {"unit": "m", "label": "m", "value": "m"}, "HEIGHT_FROM_TERRAIN": {"unit": "m", "label": "m", "value": "m"}, "SLOPE": {"unit": "deg", "label": "°", "value": "deg"}, "ANGLE_3D": {"unit": "deg", "label": "°", "value": "deg"}}, "type": "length"}]}}];
         const layer = convertMeasuresToAnnotation(fts, [{"text": "793.737,01 m", "position": [15.667417613994019, 55.633387330220785], "type": "Polygon", "textId": 0}, {"text": "457.894,01 m", "position": [21.90765198899402, 55.25951976945266], "type": "Polygon", "textId": 0}, {"text": "827.598,36 m", "position": [16.28265198899402, 53.57208559899865], "type": "Polygon", "textId": 0}], testUom, 'id');
         expect(layer).toBeTruthy();
         expect(layer.id).toBe('annotations:id');
@@ -169,6 +175,33 @@ describe('MeasurementUtils', () => {
                 });
             }
         });
+    });
+    it('computeFeatureMeasurement with Polygon', () => {
+        const fts = {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[
+            [10.042417613994017, 53.9617045912569],
+            [21.29241761399402, 57.23667168428492],
+            [22.522886363994022, 53.17884325605559],
+            [10.042417613994017, 53.9617045912569]
+        ]], "textLabels": [{"text": "793.737,01 m", "position": [15.667417613994019, 55.633387330220785]}, {"text": "457.894,01 m", "position": [21.90765198899402, 55.25951976945266]}, {"text": "827.598,36 m", "position": [16.28265198899402, 53.57208559899865]}]}, "properties": {
+            label: '175.074.750.490,87 m²',
+            geodesic: true,
+            length: 2079229.382,
+            lengthUom: 'm',
+            lengthTargetUom: 'm',
+            area: 175074750490.87378,
+            areaUom: 'sqm',
+            areaTargetUom: 'sqm',
+            type: 'measurement',
+            measureType: 'area',
+            annotationType: 'Polygon',
+            name: 'area'
+        }};
+        const featuresList = computeFeatureMeasurement(fts, {
+            formatNumber: v => v
+        });
+        expect(featuresList).toBeTruthy();
+        expect(featuresList.length).toBe(4);
+        expect(featuresList[0].properties.label).toEqual('175466734247.21 m²\n2079229.38 m');
     });
 
     it('getGeomTypeSelected', ()=>{
