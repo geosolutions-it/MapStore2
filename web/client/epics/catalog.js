@@ -73,6 +73,7 @@ import { describeFeatureType } from '../api/WFS';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
 import { removeDuplicateLines } from '../utils/StringUtils';
+import { logError } from '../utils/DebugUtils';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     // Exception text is shown as is while the network errors are shown
@@ -82,11 +83,11 @@ const onErrorRecordSearch = (isNewService, errObj) => {
         // Remove any instance of duplicated line string from the exception text
         errorMsg = removeDuplicateLines(errorMsg);
     }
-    console.warn("Catalog error", errorMsg);
+    logError({message: errorMsg});
 
     if (isNewService) {
         const message = errorMsg
-            ? truncate(errorMsg, { length: 200 })
+            ? truncate(errorMsg, { length: 400 })
             : "catalog.notification.errorServiceUrl";
         return Rx.Observable.of(
             error({
