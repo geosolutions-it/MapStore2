@@ -195,7 +195,7 @@ export const loadMapInfoEpic = action$ =>
         );
 
 /**
- * Incerpt MAP_INFO_LOADED and load detail resource linked to the map
+ * Intercepts MAP_INFO_LOADED and load detail resource linked to the map
  * Epic is placed here to better intercept and load details info,
  * when loading context with map that has a linked resource
  * and to avoid race condition when loading plugins and map configuration
@@ -206,6 +206,7 @@ export const loadMapInfoEpic = action$ =>
  */
 export const storeDetailsInfoEpic = (action$, store) =>
     action$.ofType(MAP_INFO_LOADED)
+        .take(1)
         .switchMap(() => {
             const mapId = mapIdSelector(store.getState());
             const isTutorialRunning = store.getState()?.tutorial?.run;
@@ -217,8 +218,18 @@ export const storeDetailsInfoEpic = (action$, store) =>
                     let details = find(attributes, {name: 'details'});
                     const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
                     let detailsSettings = {};
+                    const mapInfoLoadedUpdateAction = mapInfoLoaded(
+                        {
+                            attributes: attributes.reduce((acc, curr) => ({
+                                ...acc,
+                                [curr.name]: curr.value
+                            }), {})
+                        },
+                        mapId,
+                        true
+                    );
                     if (!details || details.value === EMPTY_RESOURCE_VALUE) {
-                        return Observable.empty();
+                        return Observable.of(mapInfoLoadedUpdateAction);
                     }
 
                     try {
@@ -227,9 +238,10 @@ export const storeDetailsInfoEpic = (action$, store) =>
                         detailsSettings = {};
                     }
 
-                    return Observable.of(
+                    return Observable.from([
+                        mapInfoLoadedUpdateAction,
                         detailsLoaded(mapId, details.value, detailsSettings),
-                        ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
+                        ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])]
                     );
                 });
         });

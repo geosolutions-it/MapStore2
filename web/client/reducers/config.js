@@ -81,7 +81,10 @@ function mapConfig(state = null, action) {
     case MAP_INFO_LOADED:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && (`${map.mapId}` === `${action.mapId}` || !map.mapId && !action.mapId)) {
-            map = assign({}, map, {info: action.info, loadingInfo: false});
+            map = assign({}, map, {info: action.merge ? {
+                ...map.info,
+                ...action.info
+            } : action.info, loadingInfo: false});
             return assign({}, state, {map: map});
         }
         return state;
