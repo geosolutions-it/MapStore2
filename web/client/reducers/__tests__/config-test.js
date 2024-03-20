@@ -10,6 +10,7 @@ import expect from 'expect';
 import mapConfig from '../config';
 import { MAP_CREATED } from '../../actions/maps';
 import { DETAILS_LOADED } from '../../actions/details';
+import { MAP_INFO_LOADED } from './../../actions/config';
 
 
 describe('Test the mapConfig reducer', () => {
@@ -188,6 +189,30 @@ describe('Test the mapConfig reducer', () => {
             type: "LineString",
             coordinates: [[1, 2], [4, 5]]
         });
+    });
+
+    it('test MAP_INFO_LOADED with merge of info', () => {
+        var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', mapId: "1", config: { version: 2, map: {center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
+        state = mapConfig({
+            ...state,
+            map: {
+                ...state.map,
+                info: {
+                    ...state.map.info,
+                    canEdit: true
+                }
+            }
+        }, {
+            type: MAP_INFO_LOADED,
+            mapId: "1",
+            info: {attributes: ["newattributes"]},
+            merge: true
+        });
+        expect(state.map).toExist();
+        expect(state.map.info).toExist();
+        expect(state.map.info.attributes).toEqual(["newattributes"]);
+        // expect(state.map.info.canEdit).toBeTruthy();
+        state = {};
     });
     it('test MAP_INFO_LOADED accepts string or numeric mapId', () => {
         var state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', mapId: "1", config: { version: 2, map: {center: {x: 1, y: 1}, zoom: 11, layers: [] }}});
