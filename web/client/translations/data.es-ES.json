@@ -1649,7 +1649,12 @@
             "allowUnsecureLayers": {
               "label": "Permitir capas no seguras",
               "tooltip": "Agregar una capa al mapa con esta opción habilitada obliga a la aplicación a aplicar proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Ordenar por",
+                "tooltip": "Agregue el prefijo del espacio de nombres a la propiedad del nombre. es decir, ${namespace}:${name}",
+                "placeholder": "Ingresar nombre"
+              }
         },
         "uploader": {
             "filename": "Nombre del fichero",

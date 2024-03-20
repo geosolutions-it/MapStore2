@@ -9,7 +9,7 @@
 import * as Rx from 'rxjs';
 import axios from 'axios';
 import xpathlib from 'xpath';
-import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray} from 'lodash';
+import {head, get, find, isArray, isString, isObject, keys, toPairs, merge, castArray, truncate} from 'lodash';
 
 import {
     ADD_SERVICE,
@@ -72,19 +72,34 @@ import { getResolutions, METERS_PER_UNIT } from "../utils/MapUtils";
 import { describeFeatureType } from '../api/WFS';
 import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
+import { removeDuplicateLines } from '../utils/StringUtils';
+import { logError } from '../utils/DebugUtils';
+
 const onErrorRecordSearch = (isNewService, errObj) => {
+    logError({message: errObj});
+
+    // Exception text is shown as is while the network errors are shown
+    // with generic error message in the notification
+    let [errorMsg] = castArray(errObj?.error);
+    if (errorMsg) {
+        // Remove any instance of duplicated line string from the exception text
+        errorMsg = removeDuplicateLines(errorMsg);
+    }
     if (isNewService) {
+        const message = errorMsg
+            ? truncate(errorMsg, { length: 400 })
+            : "catalog.notification.errorServiceUrl";
         return Rx.Observable.of(
             error({
                 title: "notification.warning",
-                message: "catalog.notification.errorServiceUrl",
+                message,
                 autoDismiss: 6,
                 position: "tc"
             }),
             savingService(false)
         );
     }
-    return Rx.Observable.of(recordsLoadError(errObj));
+    return Rx.Observable.of(recordsLoadError(errorMsg));
 };
 /**
     * Epics for CATALOG
@@ -101,10 +116,9 @@ export default (API) => ({
     recordSearchEpic: (action$, store) =>
         action$.ofType(TEXT_SEARCH)
             .switchMap(({ format, url, startPosition, maxRecords, text, options }) => {
-                const filter = get(options, 'service.filter') || get(options, 'filter');
                 const isNewService = get(options, 'isNewService', false);
                 return Rx.Observable.defer(() =>
-                    API[format].textSearch(url, startPosition, maxRecords, text, { options, filter, ...catalogSearchInfoSelector(store.getState()) })
+                    API[format].textSearch(url, startPosition, maxRecords, text, { options, ...catalogSearchInfoSelector(store.getState()) })
                 )
                     .switchMap((result) => {
                         if (result.error) {
@@ -539,8 +553,8 @@ export default (API) => ({
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
                 const service = selectedCatalogSelector(state);
-                const { type, url, filter } = service;
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: { service, filter }}));
+                const { type, url } = service;
+                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: { service }}));
             }),
 
     catalogCloseEpic: (action$, store) =>
