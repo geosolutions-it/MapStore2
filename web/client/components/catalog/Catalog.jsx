@@ -180,7 +180,7 @@ class Catalog extends React.Component {
             }
             return this.renderRecords();
         } else if (this.props.loadingError) {
-            return this.renderError();
+            return this.renderError(this.props.loadingError);
         }
         return null;
     };
