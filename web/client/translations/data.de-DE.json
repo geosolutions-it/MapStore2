@@ -858,6 +858,7 @@
             "saveMeasure": "Speichern Sie die Messungen in Notizen / Zeichnungen",
             "resetTooltip": "Messung entfernen",
             "addAsLayer": "Als Ebene hinzufügen",
+            "lengthMeasure": "Messen Sie die geodätische Entfernung im 3D-Raum",
             "polylineDistance3DMeasure": "Entfernung im 3D-Raum messen",
             "area3DMeasure": "Fläche im 3D-Raum messen",
             "pointCoordinatesMeasure": "Punktkoordinaten messen",
