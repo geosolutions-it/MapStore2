@@ -67,7 +67,7 @@ const MultiBandEditor = ({
      * There are instances where the sample is 3 or above with PhotometricInterpretation as 0 or 1 [gray scale indicator],
      * this could be because the band channels are not properly defined.
      * Hence we consider if the sample is >=3 or PhotometricInterpretation is not a gray scale image,
-     * to determin the RGB image
+     * to determine the RGB image
      */
     const isRGB = samples >= 3
     || ![0, 1].includes(get(layer, "sourceMetadata.fileDirectory.PhotometricInterpretation"));
