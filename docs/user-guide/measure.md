@@ -78,6 +78,9 @@ From this step the creation process is the same described in the [Annotations se
 
 When the [3D Navigation](navigation-toolbar.md#3d-navigation) is enabled, the user has the ability to perform distance, area, point coordinates, height from terrain, angle and slope measurements on the 3D map.
 
+!!! note
+    The MapStore 3D works on top of CesiumJS mapping library where the ellipsoidal coordinate system is used to represents mapping features. For this reason all measurements performed with the MapStore measurement tool should be interpreted as having a height calculated above the ellipsoid.
+
 ### Measure distance on the 3D navigation
 
 As soon as the measure window opens, by default the **Measure distance in 3D space** option is selected <img src="../img/button/measure-distance-on-3d.jpg" class="ms-docbutton"/>. In order to perform a distance measure, each click on the map correspond to a segment of the line (at least one segment is needed) while the double click inserts the last line segment and ends the drawing session.
