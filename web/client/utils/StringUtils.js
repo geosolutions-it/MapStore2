@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import isEmpty from "lodash/isEmpty";
+
 /**
  * Utility functions for String manipulations.
  * @memberof utils
@@ -31,3 +33,21 @@ export const isValidEmail = (str, regexp = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-
     return regexp.test(str);
 };
 
+/**
+ * Remove duplicate lines in a sentence
+ * @param {string} value
+ * @returns string with unique lines
+ */
+export const removeDuplicateLines = (value) => {
+    const lines = value.split('\n');
+    const uniqueLines = [];
+
+    lines.forEach((line) => {
+        const trimmedLine = line.trim();
+        if (isEmpty(uniqueLines) || !uniqueLines.some(l => l.includes(trimmedLine))) {
+            uniqueLines.push(trimmedLine);
+        }
+    });
+
+    return uniqueLines.join(' ');
+};
