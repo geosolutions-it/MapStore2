@@ -480,6 +480,7 @@ function DrawMeasureSupport({
                     return [Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude)];
                 });
                 const geodesicDistance = calculateDistance(coords4326);
+                infoLabelTextPosition = geodesicCoordinates[geodesicCoordinates.length - 1];
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, geodesicDistance, 'm'));
                 staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...geodesicCoordinates], geodesic: true }));
                 segments = addSegmentsLabels(staticLabelsCollection.current, geodesicCoordinates, MeasureTypes.LENGTH, true);
