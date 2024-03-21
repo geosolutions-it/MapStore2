@@ -214,7 +214,7 @@ const DefaultGroup = ({
     return (
         connectDragPreview(
             <li
-                className={`ms-node ms-node-group${className ? ` ${className}` : ''}`}
+                className={`ms-node ms-node-group${node?.dragging ? ' dragging' : ''}${className ? ` ${className}` : ''}`}
                 style={style}
                 onClick={event => event.stopPropagation()}
                 onContextMenu={handleOnContextMenu}

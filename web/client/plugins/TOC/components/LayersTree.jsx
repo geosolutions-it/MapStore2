@@ -94,6 +94,11 @@ const LayersTree = ({
     const containerNode = useRef();
     const root = singleDefaultGroup ? tree[0].nodes : tree;
     const rootParentId = singleDefaultGroup ? defaultGroupId : rootGroupId;
+    const [sortId, setSortId] = useState(null);
+    const parseSortId = (id) => {
+        const parts = (id || '').split('.');
+        return parts[parts.length - 1];
+    };
 
     const [isContainerEmpty, setIsContainerEmpty] = useState(false);
     useLayoutEffect(() => {
@@ -129,7 +134,14 @@ const LayersTree = ({
     };
 
     return (
-        <div className={`ms-layers-tree${className ? ` ${className}` : ''}${theme ? ` ${theme}-tree` : ''}${!config.showFullTitle && !filterText ? ' single-line-title' : ''}`}>
+        <div
+            className={`ms-layers-tree${className ? ` ${className}` : ''}${theme ? ` ${theme}-tree` : ''}${!config.showFullTitle && !filterText ? ' single-line-title' : ''}`}
+            onPointerLeave={() => {
+                if (sortId) {
+                    setSortId(null);
+                }
+            }}
+        >
             <ul
                 ref={containerNode}
                 data-root-parent-id={rootParentId}
@@ -147,14 +159,17 @@ const LayersTree = ({
                             groupElement={getGroup()}
                             layerElement={getLayer()}
                             nodeTypes={nodeTypes}
-                            replaceNodeOptions={(currentNode, nodeType) => ({
-                                ...currentNode,
-                                ...(filterText && { sortable: false }),
-                                ...(nodeType === nodeTypes.GROUP && filterText && { expanded: true }),
-                                ...(nodeType === nodeTypes.GROUP && currentNode?.id === defaultGroupId && { sortable: false }),
-                                ...(nodeType === nodeTypes.GROUP && loopGroupCondition(currentNode, childNode => childNode.loadingError === 'Error') && { error: true }),
-                                ...(nodeType === nodeTypes.GROUP && loopGroupCondition(currentNode, childNode => childNode.loading ) && { loading: true })
-                            })}
+                            replaceNodeOptions={(currentNode, nodeType) => {
+                                return {
+                                    ...currentNode,
+                                    ...(sortId && parseSortId(sortId) === parseSortId(currentNode.id) && { dragging: true }),
+                                    ...(filterText && { sortable: false }),
+                                    ...(nodeType === nodeTypes.GROUP && filterText && { expanded: true }),
+                                    ...(nodeType === nodeTypes.GROUP && currentNode?.id === defaultGroupId && { sortable: false }),
+                                    ...(nodeType === nodeTypes.GROUP && loopGroupCondition(currentNode, childNode => childNode.loadingError === 'Error') && { error: true }),
+                                    ...(nodeType === nodeTypes.GROUP && loopGroupCondition(currentNode, childNode => childNode.loading ) && { loading: true })
+                                };
+                            }}
                             getNodeStyle={getNodeStyle}
                             getNodeClassName={getNodeClassName}
                             filterText={filterText}
@@ -174,8 +189,14 @@ const LayersTree = ({
                                 return true;
                             }}
                             sort={{
+                                beginDrag: (id) => {
+                                    setSortId(id);
+                                },
                                 hover: (id, groupId, newIndex) => {
                                     onSort(id, groupId, newIndex);
+                                },
+                                drop: () => {
+                                    setSortId(null);
                                 }
                             }}
                             onChange={onChange}

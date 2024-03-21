@@ -9,9 +9,8 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import localizedProps from '../../../components/misc/enhancers/localizedProps';
 const Button = tooltip(({ children, ...props }) => <button {...props}>{children}</button>);
-const GlyphIndicator = localizedProps('tooltip')(tooltip(Glyphicon));
+const GlyphIndicator = tooltip(Glyphicon);
 
 /**
  * Item component to provide consistent interface for node tools

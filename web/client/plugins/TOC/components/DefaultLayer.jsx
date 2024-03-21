@@ -22,6 +22,7 @@ import VisibilityCheck from './VisibilityCheck';
 import NodeHeader from './NodeHeader';
 import NodeTool from './NodeTool';
 import ExpandButton from './ExpandButton';
+import Message from '../../../components/I18N/Message';
 
 const getLayerVisibilityWarningMessageId = (node, config = {}) => {
     if (config.visualizationMode === VisualizationModes._2D && ['3dtiles', 'model'].includes(node.type)) {
@@ -151,6 +152,7 @@ const DefaultLayerNode = ({
                 }
                 afterTitle={
                     <>
+                        {error ? <NodeTool tooltip={<Message msgId={error.msgId} msgParams={error.msgParams} />}  glyph="exclamation-mark" /> : null}
                         {visibilityWarningMessageId && <NodeTool glyph="info-sign" tooltipId={visibilityWarningMessageId} />}
                         {config?.layerOptions?.indicators ? castArray(config.layerOptions.indicators).map( indicator =>
                             (indicator.type === 'dimension'
@@ -244,7 +246,7 @@ const DefaultLayer = ({
     const error = replacedNode?.error ?? getLayerErrorMessage(replacedNode);
     const visibilityWarningMessageId = getLayerVisibilityWarningMessageId(replacedNode, config);
     const node = {
-        ...nodeProp,
+        ...replacedNode,
         error,
         visibilityWarningMessageId
     };
@@ -291,7 +293,6 @@ const DefaultLayer = ({
                 </div>
             ) : <div className="grab-handle disabled" />,
         visibilityCheck: (<VisibilityCheck
-            error={error}
             hide={config?.hideVisibilityButton}
             mutuallyExclusive={mutuallyExclusive}
             value={!!node?.visibility}
@@ -308,7 +309,7 @@ const DefaultLayer = ({
     return (
         connectDragPreview(
             <li
-                className={`ms-node ms-node-layer${className ? ` ${className}` : ''}`}
+                className={`ms-node ms-node-layer${node?.dragging ? ' dragging' : ''}${className ? ` ${className}` : ''}`}
                 style={style}
                 onContextMenu={handleOnContextMenu}>
                 <DropNode

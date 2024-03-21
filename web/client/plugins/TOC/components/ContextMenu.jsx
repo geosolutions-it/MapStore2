@@ -112,7 +112,8 @@ function ContextMenu({
                 // portal components inside buttons
                 display: show ? 'flex' : 'none',
                 flexDirection: 'column',
-                zIndex: 10
+                // we need an high number for map editor inside modal (eg. geostory map editor)
+                zIndex: 5000
             }}
             onClick={onClick}
         >

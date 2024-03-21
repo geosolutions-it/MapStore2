@@ -183,6 +183,9 @@ export const selectedNodesIdsToObject = (selectedNodesIds, layers, tree) => {
             return { id: nodeId, node: { ...layer, error }, type: NodeTypes.LAYER };
         }
         const group = findGroup(nodeId, { nodes: tree });
-        return { id: nodeId, node: group, type: NodeTypes.GROUP };
-    });
+        if (group) {
+            return { id: nodeId, node: group, type: NodeTypes.GROUP };
+        }
+        return null;
+    }).filter(selectedNode => !!selectedNode);
 };

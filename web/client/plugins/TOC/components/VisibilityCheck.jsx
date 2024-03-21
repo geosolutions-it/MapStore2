@@ -9,7 +9,6 @@
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import tooltip from '../../../components/misc/enhancers/tooltip';
-import Message from '../../../components/I18N/Message';
 const Button = tooltip(({ children, ...props }) => <button {...props}>{children}</button>);
 
 /**
@@ -18,20 +17,15 @@ const Button = tooltip(({ children, ...props }) => <button {...props}>{children}
  * @prop {boolean} value the visibility value
  * @prop {function} onChange callback that returns the changed value on click
  * @prop {boolean} mutuallyExclusive if true change the icon from checkbox to radio button
- * @prop {object} error error message to display on the tooltip
  */
 const VisibilityCheck = ({
     hide,
     value,
     onChange,
-    mutuallyExclusive,
-    error
+    mutuallyExclusive
 }) => {
 
     const getIcon = () => {
-        if (error) {
-            return 'exclamation-mark';
-        }
         if (mutuallyExclusive) {
             return value ? 'radio-on' : 'radio-off';
         }
@@ -43,10 +37,7 @@ const VisibilityCheck = ({
     }
     return (
         <Button
-            tooltip={error
-                ? <Message msgId={error.msgId} msgParams={error.msgParams} />
-                : null}
-            className={`ms-visibility-check${value && !error ? ' active' : ''}`}
+            className={`ms-visibility-check${value ? ' active' : ''}`}
             onClick={(event) => {
                 event.stopPropagation();
                 onChange(!value);

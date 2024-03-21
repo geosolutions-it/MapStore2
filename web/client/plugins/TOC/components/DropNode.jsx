@@ -62,8 +62,8 @@ const computeSorting = (props, monitor) => {
 
     const hoverBoundingRect = hoverNode.getBoundingClientRect();
     const dragBoundingRect = dragNode.getBoundingClientRect();
-    const dragY = hoverBoundingRect.top;
-    const hoverY = dragBoundingRect.top;
+    const dragY = dragBoundingRect.top;
+    const hoverY = hoverBoundingRect.top;
     const hoverIndex = index;
     // Determine rectangle on screen
     // Get vertical middle
@@ -80,22 +80,30 @@ const computeSorting = (props, monitor) => {
         return [dragItem.id, id || rootParentId, 0];
     }
 
-    if (position === 'after' && dragY > hoverY) {
-        return [dragItem.id, parentId || rootParentId, hoverIndex];
+    if (position === 'after' && dragY < hoverY && hoverClientY > hoverMiddleY) {
+        const hoverParentId =  parentId || rootParentId;
+        // we should increase the detected index by one
+        // in case a node change the parent group
+        // this fix the behoviour of sorting from top to bottom
+        // when inserterting a node after a group
+        const targetIndex = dragParentNodeId !== hoverParentId
+            ? hoverIndex + 1
+            : hoverIndex;
+        return [dragItem.id, hoverParentId, targetIndex];
     }
 
-    if (position === 'after') {
+    if (['after', 'before'].includes(position)) {
         return null;
     }
 
-    if (hoverNodeType === nodeTypes.GROUP && dragY > hoverY) {
+    if (hoverNodeType === nodeTypes.GROUP && dragY < hoverY) {
         return null;
     }
 
-    if (dragY < hoverY && hoverClientY > hoverMiddleY) {
+    if (dragY > hoverY && hoverClientY > hoverMiddleY) {
         return null;
     }
-    if (dragY > hoverY && hoverClientY < hoverMiddleY) {
+    if (dragY < hoverY && hoverClientY < hoverMiddleY) {
         return null;
     }
 
@@ -119,9 +127,8 @@ const drop = dropTarget(ITEM_KEY,
             }
         }
     },
-    (_connect, monitor) => ({
-        connectDropTarget: _connect.dropTarget(),
-        isOver: monitor.isOver({ shallow: false })
+    (_connect) => ({
+        connectDropTarget: _connect.dropTarget()
     })
 );
 
@@ -132,7 +139,6 @@ const Drop = drop(({
     style,
     children,
     connectDropTarget,
-    isOver,
     nodeType
 }) => {
 
@@ -141,7 +147,7 @@ const Drop = drop(({
             data-id={formatDataId(id, position, true)}
             data-node-id={id}
             data-parent-node-id={parentId}
-            className={`ms-drop-node${isOver ? ' over' : ''}${nodeType ? ` ${nodeType}` : ''}`}
+            className={`ms-drop-node${nodeType ? ` ${nodeType}` : ''}`}
             style={style}
         >
             {children}

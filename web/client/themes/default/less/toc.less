@@ -11,6 +11,14 @@
 // **************
 
 #ms-components-theme(@theme-vars) {
+    .ms-toc-container {
+        .toc-empty-message {
+            .border-top-color-var(@theme-vars[main-border-color]);
+            .glyphicon {
+                .color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
     .ms-toc-toolbar-container,
     .ms-toc-header,
     .ms-context-menu,
@@ -54,8 +62,8 @@
                 .outline-color-var(@theme-vars[danger]);
             }
         }
-        .ms-drop-node {
-            &.over {
+        .ms-node {
+            &.dragging {
                 .outline-color-var(@theme-vars[focus-color]);
             }
         }
@@ -97,6 +105,23 @@
     }
     .ms-layers-tree {
         padding-top: 0;
+    }
+    &.empty {
+        display: flex;
+        flex-direction: column;
+    }
+    .toc-empty-message {
+        position: relative;
+        flex: 1;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border-top: 1px solid transparent;
+        .glyphicon {
+            font-size: 64px;
+        }
     }
 }
 
@@ -250,12 +275,12 @@
         &.error {
             outline: 1px solid transparent;
         }
+        &.dragging {
+            outline: 1px solid transparent;
+        }
     }
     .ms-drop-node {
         position: relative;
-        &.over {
-            outline: 1px dashed transparent;
-        }
     }
 
     .ms-node-header {

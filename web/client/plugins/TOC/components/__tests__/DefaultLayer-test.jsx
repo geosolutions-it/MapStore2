@@ -372,7 +372,7 @@ describe('test DefaultLayer module component', () => {
         ReactDOM.render(<Layer node={node} getNodeClassName={getNodeClassName} />, document.getElementById("container"));
 
         let layerNode = document.querySelector('.layer-error');
-        let errorTooltip = document.querySelector('.ms-visibility-check .glyphicon-exclamation-mark');
+        let errorTooltip = document.querySelector('.glyphicon-exclamation-mark');
         expect(layerNode).toBeTruthy();
         expect(errorTooltip).toBeTruthy();
 
@@ -390,7 +390,7 @@ describe('test DefaultLayer module component', () => {
         ReactDOM.render(<Layer node={node} getNodeClassName={getNodeClassName}/>, document.getElementById("container"));
 
         layerNode = document.querySelector('.layer-error');
-        errorTooltip = document.querySelector('.ms-visibility-check .glyphicon-exclamation-mark');
+        errorTooltip = document.querySelector('.glyphicon-exclamation-mark');
         expect(layerNode).toBeFalsy();
         expect(errorTooltip).toBeFalsy();
     });

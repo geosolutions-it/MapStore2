@@ -287,7 +287,8 @@ registerCustomSaveHandler('toc', (state) => (state?.toc?.config));
  *               "color": "#dddddd",
  *               "float": "right"
  *          },
- *          "tooltip": "dateFilter.supportedDateFilter", // tooltip (can be also a localized msgId)
+ *          "tooltip": "Date filter",
+ *          "tooltipId": "dateFilter.supportedDateFilter", // tooltipId is a localized msgId that has priority on tooltip
  *          "placement": "bottom" // tooltip position
  *      },
  *      "condition": { // condition (lodash style) to satisfy ( for type dimension, the condition is to match at least one of the "dimensions" )
@@ -436,8 +437,11 @@ function TOC({
         }
     }, [init]);
 
+    const targetTree = singleDefaultGroup ? tree?.[0]?.nodes : tree;
+    const isEmpty = targetTree?.length === 0;
+
     return (
-        <div className="ms-toc-container" onContextMenu={handleGlobalContextMenu}>
+        <div className={`ms-toc-container${isEmpty ? ' empty' : ''}`} onContextMenu={handleGlobalContextMenu}>
             <div className="ms-toc-header">
                 {activateMapTitle && title ? <div className="ms-toc-title"><Glyphicon glyph="1-map"/> {title} </div> : null}
                 {activateFilterLayer ? <div className="ms-toc-filter">
@@ -532,8 +536,13 @@ function TOC({
                 rootGroupId={ROOT_GROUP_ID}
                 config={config}
             /> : null}
-            {!tree?.length && <div>
-                <Message msgId="toc.emptyLayerTree" />
+            {isEmpty && <div className="toc-empty-message">
+                <div>
+                    <Glyphicon glyph="1-layer" />
+                    <div>
+                        <Message msgId="toc.emptyLayerTree" />
+                    </div>
+                </div>
             </div>}
         </div>
     );
