@@ -146,6 +146,14 @@
     .ms-rule-collapse * {
         .color-var(@theme-vars[main-color]);
     }
+
+    .ms-style-band-container {
+        .ms-style-band-editor {
+            .ms-style-band {
+                .border-color-var(@theme-vars[main-border-color]);
+            }
+        }
+    }
     .ms-classification-layer-settings {
         .color-var(@theme-vars[main-color]);
         .background-color-var(@theme-vars[main-bg]);
@@ -795,6 +803,23 @@ Ported to CodeMirror by Peter Kroon
     svg {
         width: 16px;
         height: 16px;
+    }
+}
+.ms-style-band-container {
+    padding: 8px;
+    .ms-style-band-editor {
+        padding: 8px;
+        .shadow-soft;
+        .ms-style-band {
+            padding: 8px;
+            border: 1px solid @ms-main-border-color;
+            .enable-band {
+                display: flex;
+                justify-content: flex-end;
+                gap: 4px;
+                padding-right: 4px;
+            }
+        }
     }
 }
 

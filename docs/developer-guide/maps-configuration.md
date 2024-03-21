@@ -1292,9 +1292,16 @@ i.e.
     "visibility": false,
     "name": "Name",
     "sources": [
-        { "url": "https://host-sample/cog1.tif" },
-        { "url": "https://host-sample/cog2.tif" }
-    ]
+        { "url": "https://host-sample/cog1.tif", min: 1, max: 100, nodata: 0},
+        { "url": "https://host-sample/cog2.tif", min: 1, max: 100, nodata: 255}
+    ],
+    "style": {
+        "body": { // cog style currently supports only RGB with alpha band or single/gray band
+            "color": ["array", ["band", 1], ["band", 2], ["band", 3], ["band", 4]] // RGB with alpha band
+            // "color": ["array", ["band", 1], ["band", 1], ["band", 1], ["band", 2]]  - single/gray band
+        },
+        "format": "openlayers",
+    }
 }
 ```
 
