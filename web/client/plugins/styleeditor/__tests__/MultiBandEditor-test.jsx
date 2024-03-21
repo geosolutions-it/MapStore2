@@ -88,27 +88,12 @@ describe("MultiBandEditor", () => {
         expect(spyOnUpdate.calls[0].arguments[2].style.body.color).toBeTruthy();
 
         props = {
-            element: {sourceMetadata: {samples: 4}, enableBandStyling: true}
+            element: {sourceMetadata: {samples: 4}, style: {body: {color: ["array"]}}}
         };
         render(<MultiBandEditor {...props} onUpdateNode={action.onUpdateNode}/>, document.getElementById("container"));
         TestUtils.Simulate.change(enableBandBtn, { "target": { "checked": false }});
         expect(spyOnUpdate).toHaveBeenCalled();
         expect(spyOnUpdate.calls[1].arguments[1]).toBe("layers");
         expect(spyOnUpdate.calls[1].arguments[2].style).toEqual({ body: { color: undefined }, format: 'openlayers' });
-    });
-    it("editor on enabling band styling", () => {
-        const props = {
-            element: {sourceMetadata: {fileDirectory: {PhotometricInterpretation: 3}}, sources: [{url: "test.com"}] }
-        };
-        const action = { onChange: () => {} };
-        const spyOnChange = expect.spyOn(action, 'onChange');
-
-        render(<MultiBandEditor {...props} onChange={action.onChange}/>, document.getElementById("container"));
-        const enableBandBtn = document.querySelector('.enable-band .mapstore-switch-btn input');
-        expect(enableBandBtn).toBeTruthy();
-
-        TestUtils.Simulate.change(enableBandBtn, { "target": { "checked": true }});
-        expect(spyOnChange).toHaveBeenCalled();
-        expect(spyOnChange.calls[0].arguments).toEqual(["enableBandStyling", true]);
     });
 });

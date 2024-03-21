@@ -62,12 +62,17 @@ export const getLayerConfig = ({ url, layer, controller }) => {
             const samples = image.getSamplesPerPixel();
             const { STATISTICS_MINIMUM, STATISTICS_MAXIMUM } = image.getGDALMetadata() ?? {};
 
+            // `nodata` is usually present in the tif's source data, currently defaults to 0 when not present. (TODO should be made configurable in the future)
+            // Adds an alpha channel when present and helps with visualization and eliminates no data tile around the image
+            const nodata = image.getGDALNoData() ?? 0;
+
             const  updatedLayer = {
                 ...layer,
                 sources: layer?.sources?.map(source => ({
                     ...source,
                     min: source.min ?? STATISTICS_MINIMUM,
-                    max: source.max ?? STATISTICS_MAXIMUM
+                    max: source.max ?? STATISTICS_MAXIMUM,
+                    nodata
                 })),
                 sourceMetadata: {
                     crs,

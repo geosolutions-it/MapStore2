@@ -41,7 +41,7 @@ const FormControl = withDebounceOnCallback(
 const getBandOptions = (bands = []) =>
     bands.map((band) => ({ value: band, label: `Band ${band}` }));
 const defaultRGBAColorExpression = ["array", ["band", 1], ["band", 2], ["band", 3], ["band", 4]];
-const defaultSingleColorExpression = ["array", ["band", 1], ["band", 1], ["band", 1], 1];
+const defaultSingleColorExpression = ["array", ["band", 1], ["band", 1], ["band", 1], ["band", 2]];
 
 /**
  * Multi-Band Editor component
@@ -52,11 +52,11 @@ const MultiBandEditor = ({
     element: layer,
     bands: defaultBands,
     rbgBandLabels,
-    onUpdateNode,
-    onChange
+    onUpdateNode
 }) => {
+    const isBandStylingEnabled = !isEmpty(get(layer, "style.body.color"));
     /**
-     * Samples per pixel are a combination of image samples + extra samples (alpha)
+     * Samples per pixel are a combination of image samples + extra samples (alpha) [nodata presence adds the alpha channel]
      * Each pixel can have N extra samples, however currently only +1 extra sample included
      * i.e Multi extra samples are not supported
      * Sample >=3 is generally considered 'RGB' as the GeoTIFF source is set with convertToRGB:'auto'
@@ -81,7 +81,6 @@ const MultiBandEditor = ({
     };
 
     const onEnableBandStyle = (flag) => {
-        onChange("enableBandStyling", flag);
         let color;
         if (flag) {
             color = [...(isRGB ? defaultRGBAColorExpression : defaultSingleColorExpression)];
@@ -123,8 +122,8 @@ const MultiBandEditor = ({
                     <div className="enable-band">
                         <ControlLabel><Message msgId="styleeditor.enableBanding"/></ControlLabel>
                         <SwitchButton
-                            onChange={() => onEnableBandStyle(!layer.enableBandStyling)}
-                            checked={layer.enableBandStyling}
+                            onChange={() => onEnableBandStyle(!isBandStylingEnabled)}
+                            checked={isBandStylingEnabled}
                         />
                     </div>
                     {isRGB ? (
@@ -136,7 +135,7 @@ const MultiBandEditor = ({
                                 <PropertyField label={rbgBandLabels[index]}>
                                     <Select
                                         clearable={isAlpha}
-                                        disabled={!layer.enableBandStyling}
+                                        disabled={!isBandStylingEnabled}
                                         placeholder={'styleeditor.selectChannel'}
                                         options={getBandOptions(bands)}
                                         value={bandColors[index]}
@@ -151,7 +150,7 @@ const MultiBandEditor = ({
                         <PropertyField label={`styleeditor.grayChannel`}>
                             <Select
                                 clearable={false}
-                                disabled={!layer.enableBandStyling}
+                                disabled={!isBandStylingEnabled}
                                 options={[getBandOptions(bands)[0]]}
                                 value={bandColors[0]}
                             />
@@ -199,8 +198,7 @@ MultiBandEditor.defaultProps = {
         "styleeditor.blueChannel",
         "styleeditor.alphaChannel"
     ],
-    onUpdateNode: () => {},
-    onChange: () => {}
+    onUpdateNode: () => {}
 };
 
 export default MultiBandEditor;
