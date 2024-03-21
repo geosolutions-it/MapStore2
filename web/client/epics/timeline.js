@@ -63,7 +63,7 @@ import {
 
 import { getNearestDate, roundRangeResolution, isTimeDomainInterval, getStartEndDomainValues } from '../utils/TimeUtils';
 import { getHistogram, describeDomains } from '../api/MultiDim';
-import { getTimeDomainsObservable } from '../observables/multidim';
+import { getNearestTimesObservable } from '../observables/multidim';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 
 const TIME_DIMENSION = "time";
@@ -98,7 +98,7 @@ const snapTime = (getState, group, time) => {
     const state = getState();
     if (selectedLayerName(state)) {
         const snapType = snapTypeSelector(state);
-        return getTimeDomainsObservable(domainArgs, false, getState, snapType, time).map(values => {
+        return getNearestTimesObservable(domainArgs, true, getState, snapType, time).map(values => {
             return getNearestDate(values.filter(v => !!v), time, snapType) || time;
         });
     }
@@ -474,7 +474,7 @@ export const setRangeOnInit = (action$, { getState = () => { } } = {}) =>
             };
             const { domain } = layerDimensionDataSelectorCreator(layerId, "time")(state) || {};
             const currentTime = currentTimeSelector(state);
-            const getTimeDomain = (time) => getTimeDomainsObservable(domainArgs, false, getState, snapType, time);
+            const getTimeDomain = (time) => getNearestTimesObservable(domainArgs, false, getState, snapType, time);
             const updateRangeObs = (time) => getTimeDomain().switchMap((values) => updateRangeOnInit(rangeState, values, time));
 
             if (!isEmpty(domain) && !isEmpty(currentTime)) {

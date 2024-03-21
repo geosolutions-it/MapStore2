@@ -365,6 +365,12 @@ export const getAttributesNames = (attributes) => {
     return attributes?.map(attribute => isPlainObject(attribute) ? attribute.name : attribute);
 };
 
+export const DATE_TYPE = {
+    DATE_TIME: "date-time",
+    TIME: "time",
+    DATE: "date"
+};
+
 export const dateFormats = {
     'date-time': 'YYYY-MM-DDTHH:mm:ss[Z]',
     'time': 'HH:mm:ss[Z]',

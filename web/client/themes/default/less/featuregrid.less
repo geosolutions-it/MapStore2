@@ -33,7 +33,13 @@
                     .background-color-var(@theme-vars[main-variant-bg]);
                 }
             }
+            .quick-time-selector {
+                .border-top-color-var(@theme-vars[main-border-color])
+            }
         }
+    }
+    .glyphicon-date-time {
+        .color-var(@theme-vars[primary])
     }
 }
 
@@ -138,12 +144,7 @@
                 left:auto;
             }
         }
-        span.glyphicon-date-time{
-            color: var(--ms-primary, #078aa3);
-        }
-    }
-    
-     
+    } 
 }
 /* minimize calendar row height in feature-grid that renders within popover */
 .ms-popover-overlay{
@@ -167,8 +168,16 @@
         position: relative;
         width: 300px;
         height: 290px; 
+        &.query-date {
+            height: 100%;
+            max-height: 500px;
+        }
         &.range {
-            height: 328px; 
+            height: 328px;
+            &.query-date {
+                height: 100%;
+                max-height: 500px;
+            }
         }
         &.date-time, &.time {
             height: 100%;
@@ -196,6 +205,14 @@
                     }
                 }
             }
+        }
+        .quick-time-selector {
+            display: flex;
+            gap: 4px;
+            padding: 8px 4px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+            border-top: 1px solid;
         }
         overflow: auto;
         .rw-widget {

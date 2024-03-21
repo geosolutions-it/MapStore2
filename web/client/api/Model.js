@@ -7,6 +7,7 @@
  */
 import axios from 'axios';
 import proj4 from 'proj4';
+import { METERS_PER_UNIT } from '../utils/MapUtils';
 
 /**
  * get ifc model main info such as: longitude, latitude, height and scale
@@ -192,6 +193,30 @@ export const getIFCModel = (url) => {
                 });
         });
 };
+
+const getSize = ({ modelID, ifcModule, data }) => {
+    const { ifcApi, WebIFC } = ifcModule;
+    const boundingBoxSize = ifcApi.GetLineIDsWithType(modelID, WebIFC.IFCBOUNDINGBOX).size(); // eslint-disable-line
+    if (boundingBoxSize) {
+        const sizes = [...Array(boundingBoxSize).keys()].map((index) => {
+            const ifcBBoxLineID = ifcApi.GetLineIDsWithType(modelID, WebIFC.IFCBOUNDINGBOX).get(index); // eslint-disable-line
+            const ifcBBoxEntity = ifcApi.GetLine(modelID, ifcBBoxLineID); // eslint-disable-line
+            const corner = ifcApi.GetLine(modelID, ifcBBoxEntity.Corner.value); // eslint-disable-line
+            const coordinates = (corner?.Coordinates || []).map((coord) => coord?.value || 0);
+            // adding the corner because it could not be 0,0,0
+            return [
+                ifcBBoxEntity.XDim.value + Math.abs(coordinates[0]),
+                ifcBBoxEntity.YDim.value + Math.abs(coordinates[1]),
+                ifcBBoxEntity.ZDim.value + Math.abs(coordinates[2])
+            ];
+        });
+        return sizes[0];
+    }
+    // if there is not bounding box we could compute the size from the data itself
+    const { size } = ifcDataToJSON({ data, ifcModule });
+    return size;
+};
+
 /**
  * Common requests to IFC
  * @module api.IFC
@@ -215,19 +240,21 @@ export const getCapabilities = (url) => {
             let capabilities = extractCapabilities(ifcModule, modelID, url);
             // extract model origin info by reading IFCProjectedCRS, IFCMapCONVERSION in case of IFC4
             const modelOriginProperties = getModelOriginCoords(ifcModule, capabilities.version, modelID);
+            const size = getSize({ modelID, ifcModule, data });
             capabilities.properties = {
                 ...capabilities.properties,
-                ...modelOriginProperties
+                ...modelOriginProperties,
+                size
             };
             ifcApi.CloseModel(modelID);     // eslint-disable-line
             let properties = capabilities.properties;
             // todo: getting bbox needs to enhance to get the accurate bbox of the ifc model
             let bbox = {
                 bounds: {
-                    minx: properties.longitude || 0 - 0.001,
-                    miny: properties.latitude || 0 - 0.001,
-                    maxx: properties.longitude || 0 + 0.001,
-                    maxy: properties.latitude || 0 + 0.001
+                    minx: (properties.longitude || 0) - ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                    miny: (properties.latitude || 0) - ((size[1] / 2) / METERS_PER_UNIT.degrees),
+                    maxx: (properties.longitude || 0) + ((size[0] / 2) / METERS_PER_UNIT.degrees),
+                    maxy: (properties.latitude || 0) + ((size[1] / 2) / METERS_PER_UNIT.degrees)
                 },
                 crs: 'EPSG:4326'
             };

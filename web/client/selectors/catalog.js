@@ -11,6 +11,7 @@ import { get } from 'lodash';
 
 import { projectionSelector } from './map';
 import { getDefaultSupportedGetFeatureInfoFormats } from '../utils/WMSUtils';
+import { isUserAllowedSelectorCreator } from './security';
 
 export const staticServicesSelector = (state) => get(state, "catalog.default.staticServices");
 export const servicesSelector = (state) => get(state, "catalog.services");
@@ -65,3 +66,19 @@ export const getSupportedGFIFormatsSelector = (state) => get(state, "catalog.new
 export const getFormatUrlUsedSelector = (state) => get(state, "catalog.newService.formatUrlUsed", '');
 export const getNewServiceStatusSelector = (state) => get(state, "catalog.isNewServiceAdded", false);
 export const showFormatErrorSelector = (state) => get(state, "catalog.showFormatError", false);
+export const editingAllowedRolesSelector = (state) => get(state, "catalog.editingAllowedRoles", []);
+export const editingAllowedGroupsSelector = (state) => get(state, "catalog.editingAllowedGroups", []);
+/**
+ * selects canEdit status of styleeditor service from state
+ * @memberof selectors.styleeditor
+ * @param  {object} state the state
+ * @return {bool}
+ */
+export const canEditServiceSelector = (state) => {
+    const allowedRoles = editingAllowedRolesSelector(state);
+    const allowedGroups = editingAllowedGroupsSelector(state);
+    return isUserAllowedSelectorCreator({
+        allowedRoles,
+        allowedGroups
+    })(state);
+};

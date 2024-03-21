@@ -29,6 +29,7 @@ import undoable from 'redux-undo';
 
 import InfoPopover from '../widgets/widget/InfoPopover';
 import Message from '../I18N/Message';
+import ClassificationLayerSettings from './ClassificationLayerSettings';
 
 const UPDATE_STYLE = 'UPDATE_STYLE';
 const UNDO_STYLE = 'UNDO_STYLE';
@@ -172,7 +173,8 @@ function VisualStyleEditor({
     debounceTime,
     styleService,
     exactMatchGeometrySymbol,
-    enable3dStyleOptions
+    enable3dStyleOptions,
+    onUpdateNode
 }) {
     const { symbolizerBlock, ruleBlock } = getBlocks({ exactMatchGeometrySymbol, enable3dStyleOptions });
     const [updating, setUpdating] = useState(false);
@@ -304,6 +306,16 @@ function VisualStyleEditor({
                             onClick: () => dispatch({ type: REDO_STYLE })
                         },
                         {
+                            visible: ['wms'].includes(layer?.type) && !!find(state.current?.style?.rules, ({ kind }) => (kind === 'Classification')),
+                            thematicCustomParams: layer?.thematic,
+                            onUpdate: (params) => {
+                                onUpdateNode(layer.id, "layers", {thematic: {
+                                    ...params
+                                }});
+                            },
+                            Element: ClassificationLayerSettings
+                        },
+                        {
                             visible: !!error,
                             Element: () => <div
                                 className="square-button-md"
@@ -356,6 +368,7 @@ function VisualStyleEditor({
                 methods,
                 getColors,
                 format,
+                thematicCustomParams: layer?.thematic?.params,      // layer.thematic.params in layers state
                 ...config
             }}
             // reverse rules order to show top rendered style
@@ -404,7 +417,8 @@ VisualStyleEditor.propTypes = {
     methods: PropTypes.array,
     getColors: PropTypes.func,
     styleUpdateTypes: PropTypes.object,
-    debounceTime: PropTypes.number
+    debounceTime: PropTypes.number,
+    onUpdateNode: PropTypes.func
 };
 
 VisualStyleEditor.defaultProps = {
@@ -414,7 +428,8 @@ VisualStyleEditor.defaultProps = {
     getColors: () => {},
     styleUpdateTypes: {},
     debounceTime: 300,
-    defaultStyleJSON: null
+    defaultStyleJSON: null,
+    onUpdateNode: () => {}
 };
 
 export default VisualStyleEditor;

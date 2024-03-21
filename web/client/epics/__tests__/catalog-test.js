@@ -165,7 +165,6 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(TEXT_SEARCH);
             expect(actions[0].options).toEqual({
-                filter: "test",
                 service: {
                     type: "csw",
                     url: "url",
@@ -322,7 +321,7 @@ describe('catalog Epics', () => {
             newService: service
         } });
     });
-    it('recordSearchEpic with exception', (done) => {
+    it('recordSearchEpic with network error', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
             format: "csw",
@@ -339,8 +338,62 @@ describe('catalog Epics', () => {
                     expect(action.loading).toBe(true);
                     break;
                 case RECORD_LIST_LOAD_ERROR:
-                    expect(action.error.status).toBe(404);
-                    expect(action.error.statusText).toBe("Not Found");
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, { });
+    });
+    it('recordSearchEpic with exception', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
+            format: "csw",
+            url: "base/web/client/test-resources/csw/getRecordsResponseException.xml",
+            startPosition: 1,
+            maxRecords: 1,
+            text: "a",
+            options: {}
+        }), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case SET_LOADING:
+                    expect(action.loading).toBe(true);
+                    break;
+                case RECORD_LIST_LOAD_ERROR:
+                    expect(action.error).toContain('IllegalArgumentException');
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, { });
+    });
+    it('recordSearchEpic with exception with new service', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
+            format: "csw",
+            url: "base/web/client/test-resources/csw/getRecordsResponseEsxception.xml",
+            startPosition: 1,
+            maxRecords: 1,
+            text: "a",
+            options: {isNewService: true}
+        }), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case SAVING_SERVICE:
+                    expect(action.status).toBe(true);
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.message).toBe('catalog.notification.errorServiceUrl');
                     break;
                 case TEST_TIMEOUT:
                     break;

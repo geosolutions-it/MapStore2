@@ -469,7 +469,7 @@
                 "configuration": "Prilagodba",
                 "apply": "Primijeni klasifikaciju",
                 "restore": "Reset prilagodbe",
-                "go_to_cfg": "Prilagodi...",
+                "goToCfg": "Prilagodi...",
                 "go_to_thema": "Koristi ovu prilagodbu",
                 "cfgError": "Greška u konfiguracijskom JSON-u",
                 "classify": "Klasificiraj",

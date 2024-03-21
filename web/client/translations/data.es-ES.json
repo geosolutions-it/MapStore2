@@ -176,7 +176,7 @@
                 "height": "Altura (m)",
                 "heading": "Ángulo de rumbo (DD)",
                 "warnings": {
-                    "projectedCrsNotSupported": "El modelo se coloca en el centro de la vista actual porque: el modelo tiene una proyección CRS pero no es soportado",
+                    "projectedCrsNotSupported": "El modelo se coloca en el centro de la vista actual porque: el modelo tiene una proyección CRS {modelProjection} pero no es soportado",
                     "projectedCrsNotProvided": "El modelo se coloca en el centro de la vista actual porque: el modelo no tiene una proyección CRS definida."
                 }
             },
@@ -702,7 +702,7 @@
                 "configuration": "Configuración",
                 "apply": "Aplicar clasificación",
                 "restore": "Restablecer personalizaciones",
-                "go_to_cfg": "Configurar ...",
+                "goToCfg": "Configurar ...",
                 "go_to_thema": "Utilizar esta configuración",
                 "cfgError": "Error en la configuración JSON",
                 "classify": "Clasificar",
@@ -831,6 +831,7 @@
             "saveMeasure": "Guarde las medidas en la anotación",
             "resetTooltip": "Medidas claras",
             "addAsLayer": "Agregar como capa",
+            "lengthMeasure": "Medir la distancia geodésica en el espacio 3D",
             "polylineDistance3DMeasure": "Medir distancia en el espacio 3D",
             "area3DMeasure": "Medir área en espacio 3D",
             "pointCoordinatesMeasure": "Medir las coordenadas del punto",
@@ -1142,7 +1143,18 @@
                     "wrong_range": "El límite inferior ha de ser más pequeño que el superior"
                 },
                 "datefield": {
-                    "wrong_date_range": "La fecha de comienzo ha de ser anterior a la de fin"
+                    "wrong_date_range": "La fecha de comienzo ha de ser anterior a la de fin",
+                    "placeholder": "Insertar la fecha",
+                    "tooltip": "Insertar fecha en formato {format}",
+                    "quickSelectors": {
+                        "today": "Hoy",
+                        "now": "Ahora",
+                        "tomorrow": "Mañana",
+                        "yesterday": "Ayer",
+                        "thisWeek": "Esta semana",
+                        "thisMonth": "Este mes",
+                        "nDaysFrom": "{n} días desde {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Ningún resultado",
@@ -1650,7 +1662,12 @@
             "allowUnsecureLayers": {
               "label": "Permitir capas no seguras",
               "tooltip": "Agregar una capa al mapa con esta opción habilitada obliga a la aplicación a aplicar proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Ordenar por",
+                "tooltip": "Agregue el prefijo del espacio de nombres a la propiedad del nombre. es decir, ${namespace}:${name}",
+                "placeholder": "Ingresar nombre"
+              }
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -2579,6 +2596,8 @@
             "alertForceTranslate": "Perderá todos los cambios agregados en el texto al cambiar al editor visual. ¿Está seguro de cambiar al modo editor de estilo visual?",
             "stayInTextareaEditor": "No, continuar en textarea",
             "useLatestValidStyle": "Sí, cambie al editor visual",
+            "alertCustomParamsNotValid": "Perderá todos los cambios agregados en el modo de texto cerrando el editor de parámetros personalizados. ¿Estás seguro de cerrar el editor?",
+            "closeCustomParamsEditor": "Sí, cierre el editor",
             "validationError": "Error de validación",
             "incorrectPropertyInputError": "Esto probablemente se deba a un valor faltante o no válido en las entradas de propiedad del editor de estilos",
             "emptyRuleEditorTitle": "Agregar nuevas reglas",
@@ -2656,7 +2675,9 @@
             "msExtrudedHeight": "Altura extruida",
             "msExtrusionColor": "Color de extrusión",
             "msExtrusionType": "Tipo de extrusión",
-            "wall": "Muro"
+            "wall": "Muro",
+            "customParams": "Parámetros personalizados",
+            "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!"
         },
         "playback": {
             "settings": {

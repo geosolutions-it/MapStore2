@@ -8,13 +8,115 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import { intlShape } from 'react-intl';
+import { getContext } from 'recompose';
+import isNil from 'lodash/isNil';
+import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 momentLocalizer(moment);
+
+import { getDateTimeFormat } from '../../../utils/TimeUtils';
+import { getMessageById } from '../../../utils/LocaleUtils';
+
 import utcDateWrapper from '../../misc/enhancers/utcDateWrapper';
 import Message from '../../I18N/Message';
-import { getDateTimeFormat } from '../../../utils/TimeUtils';
-import { DateTimePicker } from 'react-widgets';
+import DateTimePicker from '../../misc/datetimepicker';
+import RangedDateTimePicker from '../../misc/datetimepicker/RangedDateTimePicker';
+import { DATE_TYPE } from '../../../utils/FeatureGridUtils';
+
+const DEFAULT_QUICK_TIME_SELECTORS = [
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{today}+P0D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.today"
+    },
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{today}-P1D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.yesterday"
+    },
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{today}+P1D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.tomorrow"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{now}+P0D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.now"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{now}-P1D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.yesterday"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{now}+P1D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.tomorrow"
+    },
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{today}/{today}",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.today"
+    },
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{thisWeekStart}/{thisWeekEnd}",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.thisWeek"
+    },
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{thisMonthStart}/{thisMonthEnd}",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.thisMonth"
+    },
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{today}/{today}+P7D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.nDaysFrom"
+    },
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{today}/{today}+P30D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.nDaysFrom"
+    },
+    {
+        "type": DATE_TYPE.DATE,
+        "value": "{today}/{today}+P90D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.nDaysFrom"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{now}/{now}",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.now"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{thisWeekStart}/{thisWeekEnd}",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.thisWeek"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{thisMonthStart}/{thisMonthEnd}",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.thisMonth"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{now}/{now}+P7D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.nDaysFrom"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{now}/{now}+P30D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.nDaysFrom"
+    },
+    {
+        "type": DATE_TYPE.DATE_TIME,
+        "value": "{now}/{now}+P90D",
+        "labelId": "queryform.attributefilter.datefield.quickSelectors.nDaysFrom"
+    }
+];
 
 /**
  * Date time picker enhanced with UTC and timezone offset
@@ -26,6 +128,12 @@ const UTCDateTimePicker = utcDateWrapper({
     dateTypeProp: "type",
     setDateProp: "onChange"
 })(DateTimePicker);
+
+const UTCDateTimePickerWithRange = utcDateWrapper({
+    dateProp: "value",
+    dateTypeProp: "type",
+    setDateProp: "onChange"
+})(RangedDateTimePicker);
 
 /**
  * This enhanced Component is used for supporting "date", "time" or "date-time" attribute types
@@ -42,10 +150,15 @@ class DateField extends React.Component {
         onUpdateField: PropTypes.func,
         onUpdateExceptionField: PropTypes.func,
         showLabels: PropTypes.bool,
-        timeEnabled: PropTypes.bool
+        timeEnabled: PropTypes.bool,
+        quickDateTimeSelectors: PropTypes.array,
+        placeholderMsgId: PropTypes.string,
+        tooltipMsgId: PropTypes.string,
+        className: PropTypes.string
     };
 
     static contextTypes = {
+        messages: PropTypes.object,
         locale: PropTypes.string
     };
 
@@ -60,66 +173,90 @@ class DateField extends React.Component {
         fieldException: null,
         onUpdateField: () => {},
         onUpdateExceptionField: () => {},
-        showLabels: false
+        showLabels: false,
+        className: "query-date",
+        placeholderMsgId: "queryform.attributefilter.datefield.placeholder",
+        tooltipMsgId: "queryform.attributefilter.datefield.tooltip",
+        quickDateTimeSelectors: DEFAULT_QUICK_TIME_SELECTORS
     };
     render() {
-        // these values are already parsed by the enhancer
-        const startdate = this.props.fieldValue && this.props.fieldValue.startDate || null;
-        const enddate = this.props.fieldValue && this.props.fieldValue.endDate || null;
+        const format = getDateTimeFormat(this.context.locale, this.props.attType);
+        const placeholder = getMessageById(this.context.messages, this.props.placeholderMsgId) || "Insert date";
+        const toolTip = this.props.intl && this.props.intl.formatMessage({id: `${this.props.tooltipMsgId}`}, {format}) || `Insert date in ${format} format`;
 
-        // needed to initialize the time parts to 00:00:00
-
-        let dateRow = this.props.operator === "><" ?
+        return this.props.operator === "><" ?
             (<div className="query-field">
-                <div className="query-field-value date-filter-left">
-                    {this.props.showLabels && <Message msgId="queryform.from"/>}
-                    <UTCDateTimePicker
-                        type={this.props.attType}
-                        defaultValue={startdate}
-                        value={startdate}
-                        calendar={this.props.dateEnabled}
-                        time={this.props.timeEnabled}
-                        format={getDateTimeFormat(this.context.locale, this.props.attType)}
-                        onChange={(date) => this.updateValueState({startDate: date, endDate: enddate})}/>
-                </div>
-                <div className="query-field-value date-filter-right">
-                    {this.props.showLabels && <Message msgId="queryform.to"/>}
-                    <UTCDateTimePicker
-                        type={this.props.attType}
-                        defaultValue={enddate}
-                        value={enddate}
-                        calendar={this.props.dateEnabled}
-                        time={this.props.timeEnabled}
-                        format={getDateTimeFormat(this.context.locale, this.props.attType)}
-                        onChange={(date) => this.updateValueState({startDate: startdate, endDate: date})}/>
-                </div>
+                <UTCDateTimePickerWithRange
+                    isWithinAttrTbl
+                    key={'query-range'}
+                    className={this.props.className}
+                    format={format}
+                    placeholder={placeholder}
+                    value={this.props.fieldValue}
+                    toolTip={toolTip}
+                    operator={this.props.operator}
+                    popupPosition={'bottom'}
+                    type={this.props.attType}
+                    time={this.props.attType === DATE_TYPE.TIME}
+                    calendar={this.props.attType === DATE_TYPE.DATE_TIME || this.props.attType === DATE_TYPE.DATE}
+                    onChange={this.handleChangeRangeFilter}
+                    quickDateTimeSelectors={this.getQuickTimeSelectors(true)}
+                />
             </div>)
             : (<div>
                 {this.props.showLabels && <Message msgId="queryform.date"/>}
                 <UTCDateTimePicker
-                    disabled={this.props.operator === "isNull"}
+                    isWithinAttrTbl
+                    key={'query-single'}
+                    className={this.props.className}
+                    format={format}
+                    placeholder={placeholder}
+                    value={this.props.fieldValue?.startDate}
+                    toolTip={toolTip}
+                    operator={this.props.operator}
                     type={this.props.attType}
-                    defaultValue={startdate}
-                    value={startdate}
-                    time={this.props.timeEnabled}
-                    calendar={this.props.dateEnabled}
-                    format={getDateTimeFormat(this.context.locale, this.props.attType)}
-                    onChange={(date) => {
-                        this.updateValueState({startDate: date, endDate: null});
-                    }}/>
+                    popupPosition={'bottom'}
+                    time={this.props.attType === DATE_TYPE.DATE_TIME || this.props.attType === DATE_TYPE.TIME}
+                    calendar={this.props.attType === DATE_TYPE.DATE_TIME || this.props.attType === DATE_TYPE.DATE}
+                    onChange={this.handleChange}
+                    quickDateTimeSelectors={this.getQuickTimeSelectors()}
+                />
             </div>);
-        return (
-            dateRow
-        );
     }
 
-    updateValueState = (value) => {
-        if (value.startDate && value.endDate && value.startDate > value.endDate) {
-            this.props.onUpdateExceptionField(this.props.fieldRowId, "queryform.attributefilter.datefield.wrong_date_range");
+    handleChange = (value) => {
+        this.props.onUpdateExceptionField(this.props.fieldRowId, null);
+        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, {startDate: value}, this.props.attType);
+    }
+
+    handleChangeRangeFilter = (value, _, order = 'start') => {
+        let reqVal = {};
+        if (order === 'end') {
+            reqVal = {
+                startDate: this.props.fieldValue?.startDate,
+                endDate: value
+            };
         } else {
-            this.props.onUpdateExceptionField(this.props.fieldRowId, null);
+            reqVal = {
+                startDate: value,
+                endDate: this.props.fieldValue?.endDate
+            };
         }
-        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType);
+        this.props.onUpdateExceptionField(this.props.fieldRowId, null);
+        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, reqVal, this.props.attType);
+    }
+
+    getQuickTimeSelectors = (isRange) => {
+        return this.props.quickDateTimeSelectors
+            ?.filter(({type, value} = {}) => {
+                if (!isEmpty(value) && type === this.props.attType) {
+                    const endDate = value.split('/')?.[1];
+                    return isRange ? !isNil(endDate) : isNil(endDate);
+                }
+                return false;
+            });
     };
 }
-export default DateField;
+export default getContext({
+    intl: intlShape
+})(DateField);

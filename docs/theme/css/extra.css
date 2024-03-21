@@ -89,3 +89,12 @@ li.md-tabs__item:hover{
     float: right;
 }
 
+.pdf-icon {
+    background-image: url(../img/download-pdf-icon.png);
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
