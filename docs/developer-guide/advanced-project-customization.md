@@ -79,7 +79,7 @@ As a final step, we will re-set the `datadir.location` system property outlined 
 
 > java -Ddatadir.location=/etc/mapstore/datadir/customA
 
-## Customize confiuration, assets and translations
+## Customize configuration, assets and translations
 
 Inside our example installation folder `datadir/customA` we can include customizations pertinent to this instance only and excluded from the other two instances exemplified in the section above.
 
