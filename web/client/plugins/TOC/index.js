@@ -51,8 +51,104 @@ const FormControl = localizedProps('placeholder')(FormControlRB);
 registerCustomSaveHandler('toc', (state) => (state?.toc?.config));
 
 /**
- * Provides Table Of Content visualization. Lists the layers on the map, organized in groups and provides the possibility to select them.
- * The mode to inject tools in the TOC is by using `target`. TOC supports following targets:
+ * Provides Table Of Content visualization.
+ * Lists the layers on the map, organized in groups and provides the possibility to select them.
+ * @memberof plugins
+ * @name TOC
+ * @class
+ * @prop {boolean} cfg.activateFilterLayer: activate filter layers tool, default `true`
+ * @prop {boolean} cfg.activateMapTitle: show map title, default `true`
+ * @prop {boolean} cfg.activateToolsContainer: activate layers and group global toolbar, default `true`
+ * @prop {boolean} cfg.activateRemoveLayer: activate remove layer tool, default `true`
+ * @prop {boolean} cfg.activateRemoveGroup if set to false, do not show the remove button for layer groups. default `true`
+ * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
+ * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `true`
+ * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
+ * @prop {boolean} cfg.activateLayerInfoTool: activate a button to enable the layer info
+ * @prop {boolean} [addLayersPermissions=true] if false, only users of role ADMIN can see the "add layers" button. Default true.
+ * @prop {boolean} [removeLayersPermissions=true] if false, only users of role ADMIN have the permission to remove layers. Default true.
+ * @prop {boolean} [sortingPermissions=true] if false, only users of role ADMIN have the permission to move layers in the TOC. Default true.
+ * @prop {boolean} [addGroupsPermissions=true] if false, only users of role ADMIN have the permission to add groups to the TOC. Default true.
+ * @prop {boolean} [removeGroupsPermissions=true] if false, only users of role ADMIN can remove groups from the TOC. Default true.
+ * @prop {boolean} [layerInfoToolPermissions=false] if false, only users of role ADMIN can see the layer info tool. Default false.
+ * @prop {boolean} cfg.activateZoomTool: activate zoom to extension tool, default `true`
+ * @prop {boolean} cfg.activateOpacityTool: show opacity slider in collapsible panel of layer, default `true`
+ * @prop {boolean} cfg.activateTitleTooltip: show tooltip with full title on layers and groups, default `true`
+ * @prop {boolean} cfg.activateLegendTool: show legend in collapsible panel, default `true`
+ * @prop {boolean} cfg.hideOpacityTooltip hide tooltip on opacity sliders
+ * @prop {boolean} cfg.hideSettings hide toc settings
+ * @prop {object} cfg.layerOptions: options to pass to the layer.
+ * @prop {object} cfg.layerOptions.legendOptions default options for legend
+ * Some of the `layerOptions` are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend CSS.
+ * this example is to make the legend scrollable horizontally
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *    "legendContainerStyle": {
+ *     "overflowX": "auto"
+ *    },
+ *    "legendStyle": {
+ *      "maxWidth": "250%"
+ *    }
+ *   }
+ *  }
+ * ```
+ * Other `legendOptions` entries can be:
+ * - `WMSLegendOptions` it is styling prop for the wms legend.
+ * - `legendWidth`: default `width` in pixel to send to the WMS `GetLegendGraphic`. (Can be customized from `LayerSettings`)
+ * - `legendHeight`: default `height` in pixel to send to the WMS `GetLegendGraphic`. (Can be customized from `LayerSettings`)
+ * - `scaleDependent`, this option activates / deactivates scale dependency.
+ * example:
+ * ```
+ * "layerOptions": {
+ *  "legendOptions": {
+ *   "scaleDependent": true,
+ *   "WMSLegendOptions": "forceLabels:on",
+ *   "legendWidth": 12,
+ *   "legendHeight": 12
+ *  }
+ * }
+ * ```
+ * @prop {object} cfg.layerOptions.indicators Another `layerOptions` entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
+ * For the moment only indicators of type `dimension` are supported.
+ * example :
+ * ```
+ * "layerOptions" : {
+ *   "indicators": [{
+ *      "key": "dimension", // key: required id for the entry to render
+ *      "type": "dimension", // type: only one supported is dimension
+ *      "glyph": "calendar", // glyph to use
+ *      "props": { // props to pass to the indicator
+ *          "style": {
+ *               "color": "#dddddd",
+ *               "float": "right"
+ *          },
+ *          "tooltip": "Date filter",
+ *          "tooltipId": "dateFilter.supportedDateFilter", // tooltipId is a localized msgId that has priority on tooltip
+ *          "placement": "bottom" // tooltip position
+ *      },
+ *      "condition": { // condition (lodash style) to satisfy ( for type dimension, the condition is to match at least one of the "dimensions" )
+ *          "name": "time"
+ *      }
+ *   }]
+ * }
+ * ```
+ * @prop {object} cfg.layerOptions.tooltipOptions Another `layerOptions` entry is `tooltipOptions` which contains options for customizing the tooltip
+ * You can customize the max length for the tooltip with `maxLength` (Default is 807)
+ * You can change the conjunction string in the "both" case with `separator` (Default is " - ")
+ * for example
+ * ```
+ * "layerOptions" : {
+ *   "tooltipOptions": {
+ *     "maxLength": 200,
+ *     "separator": " : "
+ *   }
+ * }
+ * ```
+ * @prop {object[]} items this property contains the items injected from the other plugins,
+ * using the `containers` option in the plugin that want to inject the components.
+ * You can select the position where to insert the components adding the `target` property.
+ * The allowed targets are:
  * - `toolbar` target add a button in the main toolbar below the filter
  * ```javascript
  * const MyToolbarComponent = connect(selector, { onActivateTool })(({
@@ -214,100 +310,6 @@ registerCustomSaveHandler('toc', (state) => (state?.toc?.config));
  *              selector: ({ nodeType, nodeTypes }) => nodeType === nodeTypes.GROUP
  *          },
  * // ...
- * ```
- * @memberof plugins
- * @name TOC
- * @class
- * @prop {boolean} cfg.activateFilterLayer: activate filter layers tool, default `true`
- * @prop {boolean} cfg.activateMapTitle: show map title, default `true`
- * @prop {boolean} cfg.activateToolsContainer: activate layers and group global toolbar, default `true`
- * @prop {boolean} cfg.activateRemoveLayer: activate remove layer tool, default `true`
- * @prop {boolean} cfg.activateRemoveGroup if set to false, do not show the remove button for layer groups. default `true`
- * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
- * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `true`
- * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
- * @prop {boolean} cfg.activateLayerInfoTool: activate a button to enable the layer info
- * @prop {boolean} [addLayersPermissions=true] if false, only users of role ADMIN can see the "add layers" button. Default true.
- * @prop {boolean} [removeLayersPermissions=true] if false, only users of role ADMIN have the permission to remove layers. Default true.
- * @prop {boolean} [sortingPermissions=true] if false, only users of role ADMIN have the permission to move layers in the TOC. Default true.
- * @prop {boolean} [addGroupsPermissions=true] if false, only users of role ADMIN have the permission to add groups to the TOC. Default true.
- * @prop {boolean} [removeGroupsPermissions=true] if false, only users of role ADMIN can remove groups from the TOC. Default true.
- * @prop {boolean} [layerInfoToolPermissions=false] if false, only users of role ADMIN can see the layer info tool. Default false.
- * @prop {boolean} cfg.activateZoomTool: activate zoom to extension tool, default `true`
- * @prop {element} cfg.groupNodeComponent render a custom component for group node
- * @prop {element} cfg.layerNodeComponent render a custom component for layer node
- * @prop {boolean} cfg.activateOpacityTool: show opacity slider in collapsible panel of layer, default `true`
- * @prop {boolean} cfg.activateTitleTooltip: show tooltip with full title on layers and groups, default `true`
- * @prop {boolean} cfg.activateLegendTool: show legend in collapsible panel, default `true`
- * @prop {boolean} cfg.hideOpacityTooltip hide tooltip on opacity sliders
- * @prop {boolean} cfg.hideSettings hide toc settings
- * @prop {object} cfg.layerOptions: options to pass to the layer.
- * @prop {object} cfg.layerOptions.legendOptions default options for legend
- * Some of the `layerOptions` are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend CSS.
- * this example is to make the legend scrollable horizontally
- * ```
- * "layerOptions": {
- *  "legendOptions": {
- *    "legendContainerStyle": {
- *     "overflowX": "auto"
- *    },
- *    "legendStyle": {
- *      "maxWidth": "250%"
- *    }
- *   }
- *  }
- * ```
- * Other `legendOptions` entries can be:
- * - `WMSLegendOptions` it is styling prop for the wms legend.
- * - `legendWidth`: default `width` in pixel to send to the WMS `GetLegendGraphic`. (Can be customized from `LayerSettings`)
- * - `legendHeight`: default `height` in pixel to send to the WMS `GetLegendGraphic`. (Can be customized from `LayerSettings`)
- * - `scaleDependent`, this option activates / deactivates scale dependency.
- * example:
- * ```
- * "layerOptions": {
- *  "legendOptions": {
- *   "scaleDependent": true,
- *   "WMSLegendOptions": "forceLabels:on",
- *   "legendWidth": 12,
- *   "legendHeight": 12
- *  }
- * }
- * ```
- * @prop {object} cfg.layerOptions.indicators Another `layerOptions` entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
- * For the moment only indicators of type `dimension` are supported.
- * example :
- * ```
- * "layerOptions" : {
- *   "indicators": [{
- *      "key": "dimension", // key: required id for the entry to render
- *      "type": "dimension", // type: only one supported is dimension
- *      "glyph": "calendar", // glyph to use
- *      "props": { // props to pass to the indicator
- *          "style": {
- *               "color": "#dddddd",
- *               "float": "right"
- *          },
- *          "tooltip": "Date filter",
- *          "tooltipId": "dateFilter.supportedDateFilter", // tooltipId is a localized msgId that has priority on tooltip
- *          "placement": "bottom" // tooltip position
- *      },
- *      "condition": { // condition (lodash style) to satisfy ( for type dimension, the condition is to match at least one of the "dimensions" )
- *          "name": "time"
- *      }
- *   }]
- * }
- * ```
- * @prop {object} cfg.layerOptions.tooltipOptions Another `layerOptions` entry is `tooltipOptions` which contains options for customizing the tooltip
- * You can customize the max length for the tooltip with `maxLength` (Default is 807)
- * You can change the conjunction string in the "both" case with `separator` (Default is " - ")
- * for example
- * ```
- * "layerOptions" : {
- *   "tooltipOptions": {
- *     "maxLength": 200,
- *     "separator": " : "
- *   }
- * }
  * ```
  */
 function TOC({
