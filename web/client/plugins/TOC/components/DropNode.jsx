@@ -31,7 +31,8 @@ const computeSorting = (props, monitor) => {
         return null;
     }
     const rootParentId = containerNode.getAttribute('data-root-parent-id');
-    const hoverNode = containerNode.querySelector(`[data-id=${formatDataId(id || rootParentId, position, true)}]`);
+    const hoverTargetId = id || rootParentId;
+    const hoverNode = containerNode.querySelector(`[data-id=${formatDataId(hoverTargetId, position, true)}]`);
     const dragNode = containerNode.querySelector(`[data-id=${formatDataId(dragItem.id || rootParentId, dragItem.position, true)}]`);
 
     if (!hoverNode?.getBoundingClientRect || !dragNode?.getBoundingClientRect) {
@@ -42,7 +43,7 @@ const computeSorting = (props, monitor) => {
 
     const hoverNodeId = hoverNode.getAttribute('data-node-id');
     const dragNodeId = dragNode.getAttribute('data-node-id');
-    const dragParentNodeId = dragNode.getAttribute('data-parent-node-id');
+    const dragParentNodeId = dragNode.getAttribute('data-parent-node-id') || rootParentId;
     // Note: we're mutating the monitor item here!
     // Generally it's better to avoid mutations,
     // but it's good here for the sake of performance
@@ -76,8 +77,8 @@ const computeSorting = (props, monitor) => {
     // When dragging downwards, only move when the cursor is below 50%
     // When dragging upwards, only move when the cursor is above 50%
 
-    if (position === 'before') {
-        return [dragItem.id, id || rootParentId, 0];
+    if (position === 'before' && dragParentNodeId !== hoverTargetId) {
+        return [dragItem.id, hoverTargetId, 0];
     }
 
     if (position === 'after' && dragY < hoverY && hoverClientY > hoverMiddleY) {
