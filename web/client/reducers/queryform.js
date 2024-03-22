@@ -590,12 +590,17 @@ function queryform(state = initialState, action) {
     case LOAD_FILTER:
         const {attribute, ...other} = initialState.spatialField;
         const cleanInitialState = assign({}, initialState, {spatialField: {...other}});
-        const {spatialField, filterFields, groupFields, crossLayerFilter, attributePanelExpanded, spatialPanelExpanded, crossLayerExpanded, filters} = (action.filter || cleanInitialState);
+        const {spatialField, filterFields, groupFields, crossLayerFilter, attributePanelExpanded, spatialPanelExpanded, filters} = (action.filter || cleanInitialState);
         return {...state,
             ...{
                 attributePanelExpanded,
                 spatialPanelExpanded,
-                crossLayerExpanded,
+                // if callers do not explicitly set crossLayerExpanded flag when making the loadFilter call,
+                // a bug will appear on the second re-render of the QueryPanel.CrossLayerFilter section
+                // specifically the crossLayer is not persisted between repeated accesses to the panel.
+                // Unburden callers to add the flag always, set it if they do and set from initial state as fallback.
+                // Do not let it become undefined.
+                crossLayerExpanded: (action?.filter?.crossLayerExpanded || cleanInitialState.crossLayerExpanded),
                 spatialField: {
                     ...spatialField,
                     // This prevents an empty filter to override attribute settings made before from previous CHANGE_SPATIAL_ATTRIBUTE
