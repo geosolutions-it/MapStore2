@@ -6,95 +6,145 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import React, {Component} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import get from 'lodash/get';
 import Portal from '../components/misc/Portal';
 import ResizableModal from '../components/misc/ResizableModal';
 import Message from '../components/I18N/Message';
-import {FormControl, FormGroup} from 'react-bootstrap';
-import {setControlProperties} from '../actions/controls';
-import {addGroup} from '../actions/layers';
+import { FormControl, FormGroup } from 'react-bootstrap';
+import { setControlProperties } from '../actions/controls';
+import { addGroup } from '../actions/layers';
 import { createPlugin } from '../utils/PluginsUtils';
 
-class AddGroup extends Component {
-    static propTypes = {
-        enabled: PropTypes.bool,
-        parent: PropTypes.string,
-        onClose: PropTypes.func,
-        onAdd: PropTypes.func
+function AddGroup({
+    enabled,
+    parent,
+    onClose,
+    onAdd
+}) {
+
+    const [groupName, setGroupName] = useState('');
+
+    useEffect(() => {
+        setGroupName('');
+    }, [enabled]);
+
+    const isValid = (name) => {
+        return name !== '';
     };
 
-    static defaultProps = {
-        enabled: false,
-        parent: null,
-        onClose: () => {},
-        onAdd: () => {}
+    const changeName = (el) => {
+        setGroupName(el.target.value);
     };
 
-    state = {
-        groupName: ""
-    };
-
-    UNSAFE_componentWillReceiveProps(newProps) {
-        if (newProps.enabled && !this.props.enabled) {
-            this.setState({
-                groupName: ""
-            });
-        }
-    }
-
-    render() {
-        return (<Portal>
+    return (
+        <Portal>
             <ResizableModal
                 size="xs"
                 clickOutEnabled={false}
                 showClose={false}
                 title={<Message msgId="toc.addGroup" />}
-                show={this.props.enabled}
+                show={enabled}
+                fitContent
                 buttons={[{
                     text: <Message msgId="cancel" />,
                     onClick: () => {
-                        this.props.onClose();
+                        onClose();
                     }
                 }, {
                     bsStyle: "primary",
-                    disabled: !this.isValid(this.state.groupName),
+                    disabled: !isValid(groupName),
                     text: <Message msgId="addgroup.addbtn" />,
                     onClick: () => {
-                        this.props.onAdd(this.state.groupName, this.props.parent);
-                        this.props.onClose();
+                        onAdd(groupName, parent);
+                        onClose();
                     }
                 }]}>
                 <div id="mapstore-add-toc-group">
                     <FormGroup>
                         <label htmlFor="groupName"><Message msgId="addgroup.groupName"/></label>
-                        <FormControl name="groupName" onChange={this.changeName} value={this.state.groupName}/>
+                        <FormControl name="groupName" onChange={changeName} value={groupName}/>
                     </FormGroup>
                 </div>
             </ResizableModal>
-        </Portal>);
-    }
-
-    changeName = (el) => {
-        this.setState({
-            groupName: el.target.value
-        });
-    };
-
-    isValid = (name) => {
-        return name !== '';
-    };
+        </Portal>
+    );
 }
 
-const AddGroupPlugin = connect((state) => ({
+AddGroup.propTypes = {
+    enabled: PropTypes.bool,
+    parent: PropTypes.string,
+    onClose: PropTypes.func,
+    onAdd: PropTypes.func
+};
+
+AddGroup.defaultProps = {
+    enabled: false,
+    parent: null,
+    onClose: () => {},
+    onAdd: () => {}
+};
+
+const selector = (state) => ({
     enabled: get(state, "controls.addgroup.enabled", false),
     parent: get(state, "controls.addgroup.parent", null)
-}), {
+});
+
+const AddGroupPlugin = connect(selector, {
     onClose: setControlProperties.bind(null, "addgroup", "enabled", false, "parent", null),
     onAdd: addGroup
 })(AddGroup);
+
+const AddGroupButton = connect(selector, {
+    onClick: setControlProperties.bind(null, 'addgroup', 'enabled', true, 'parent')
+})(({
+    onClick,
+    status,
+    itemComponent,
+    selectedNodes,
+    statusTypes,
+    rootGroupId,
+    defaultGroupId,
+    nodeTypes,
+    config,
+    ...props
+}) => {
+
+    const ItemComponent = itemComponent;
+
+    // deprecated TOC configuration
+    if (config.activateAddGroupButton === false) {
+        return null;
+    }
+
+    if ([statusTypes.DESELECT, statusTypes.GROUP].includes(status)) {
+        const parseParent = (value) => {
+            return value === rootGroupId ? undefined : value;
+        };
+        const node = selectedNodes?.[0];
+        const group = node?.type === nodeTypes.GROUP
+            ? node?.id
+            : node?.parentId;
+        const parsedGroup = parseParent(group);
+        const value = parsedGroup
+            ? parsedGroup
+            : config.singleDefaultGroup
+                ? defaultGroupId
+                : undefined;
+        return (
+            <ItemComponent
+                {...props}
+                glyph="add-folder"
+                labelId={node?.type === nodeTypes.GROUP ? 'toc.addSubGroup' : 'toc.addGroup'}
+                tooltipId={node?.type === nodeTypes.GROUP ? 'toc.addSubGroup' : 'toc.addGroup'}
+                onClick={() => onClick(value)}
+            />
+        );
+    }
+    return null;
+});
 
 /**
  * Adds to the {@link #plugins.TOC|TOC} plugin a button for creating new layer groups.
@@ -106,9 +156,16 @@ const AddGroupPlugin = connect((state) => ({
 export default createPlugin('AddGroup', {
     component: AddGroupPlugin,
     containers: {
-        TOC: {
-            doNotHide: true,
-            name: "AddGroup"
-        }
+        TOC: [{
+            name: "AddGroup",
+            target: 'toolbar',
+            Component: AddGroupButton,
+            position: 3
+        }, {
+            name: "AddGroup",
+            target: 'context-menu',
+            Component: AddGroupButton,
+            position: 3
+        }]
     }
 });

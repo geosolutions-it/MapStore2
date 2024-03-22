@@ -10,12 +10,11 @@ import { createSelector } from 'reselect';
 
 import { getCurrentResolution } from '../utils/MapUtils';
 import {getMarkerLayer, defaultQueryableFilter} from '../utils/MapInfoUtils';
-import { denormalizeGroups, isInsideResolutionsLimits } from '../utils/LayersUtils';
+import { denormalizeGroups, isInsideResolutionsLimits, getDerivedLayersVisibility, flattenGroups, getTitle } from '../utils/LayersUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import { getNormalizedLatLon } from '../utils/CoordinatesUtils';
 import { clickedPointWithFeaturesSelector } from './mapInfo';
 import { get, head, isEmpty, find, isObject, isArray, castArray, isNil } from 'lodash';
-import { flattenGroups, getTitle } from '../utils/TOCUtils';
 import { mapSelector } from './map';
 import { getSelectedMapView } from './mapviews';
 import { mergeViewLayers } from '../utils/MapViewsUtils';
@@ -38,16 +37,25 @@ export const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMar
 export const additionalLayersSelector = state => get(state, "additionallayers", []);
 export const getAdditionalLayerFromId = (state, id) => head(additionalLayersSelector(state).filter(l => l.id === id))?.options;
 
+export const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
+export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 export const layerSelectorWithMarkers = createSelector(
-    [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector,
-        highlightPointSelector],
-    (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint) => {
+    [
+        layersSelector,
+        rawGroupsSelector,
+        clickedPointWithFeaturesSelector,
+        geoColderSelector,
+        centerToMarkerSelector,
+        additionalLayersSelector,
+        highlightPointSelector
+    ],
+    (layers = [], groups, markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint) => {
 
         // Perform an override action on the layers using options retrieved from additional layers
         const overrideLayers = additionalLayers.filter(({actionType}) => actionType === 'override');
         const overlayLayers = additionalLayers.filter(({actionType}) => actionType === 'overlay').map(l => l.options);
-        let newLayers = layers.map(layer => {
+        let newLayers = getDerivedLayersVisibility(layers, groups).map(layer => {
             const { options } = head(overrideLayers.filter(overrideLayer => overrideLayer.id === layer.id)) || {};
             return options ? {...layer, ...options} : {...layer};
         });
@@ -90,9 +98,6 @@ export const layerSelectorWithMarkers = createSelector(
         return newLayers;
     }
 );
-
-export const rawGroupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups || [];
-export const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 export const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
 

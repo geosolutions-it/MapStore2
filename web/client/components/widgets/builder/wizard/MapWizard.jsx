@@ -16,6 +16,7 @@ import Preview from './map/PreviewMap';
 import MapSwitcher from "../wizard/map/MapSwitcher";
 import EmptyView from '../../../misc/EmptyView';
 import Message from "../../../I18N/Message";
+import { getDerivedLayersVisibility } from "../../../../utils/LayersUtils";
 const Wizard = wizardHandlers(WizardContainer);
 
 export default ({
@@ -66,7 +67,7 @@ export default ({
                     preview={<Preview
                         key={editorData.selectedMapId}
                         onChange={onChange}
-                        layers={selectedMap && selectedMap.layers}
+                        layers={getDerivedLayersVisibility(selectedMap.layers, selectedMap.groups)}
                         map={selectedMap}
                         env={env}
                         options={{ style: { margin: 10, height: 'calc(100% - 20px)' } }} /> }

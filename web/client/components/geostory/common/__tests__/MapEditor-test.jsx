@@ -273,17 +273,17 @@ describe('MapEditor component', () => {
         /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-geostory-map-editor');
-        expect(el).toExist();
-        const layersCards = container.querySelectorAll(".toc-title");
+        expect(el).toBeTruthy();
+        const layersCards = container.querySelectorAll(".ms-node-layer .ms-node-header");
         expect(layersCards.length).toBe(3);
         ReactTestUtils.Simulate.click(layersCards.item(0));
-        const selected = container.querySelector(".layer-collapsed.toc-default-layer.selected");
-        expect(selected).toExist();
+        const selected = container.querySelector(".ms-node-layer.selected");
+        expect(selected).toBeTruthy();
     });
     it('MapEditor call update  ', (done) => {
         const update = (path, val) => {
-            expect(path).toBe('sections[{"id": "fd6a659f-b520-462d-bcbf-966135043e07"}].contents[{"id": "3d230926-e1a7-41c3-a1b9-20d7c1dabab4"}].contents[{"id": "76d5b94a-80bd-4e89-b226-a816d977af31"}].map.layers[2].visibility');
-            expect(val).toBeFalsy();
+            expect(path).toBe('sections[{"id": "fd6a659f-b520-462d-bcbf-966135043e07"}].contents[{"id": "3d230926-e1a7-41c3-a1b9-20d7c1dabab4"}].contents[{"id": "76d5b94a-80bd-4e89-b226-a816d977af31"}].map[layers]');
+            expect(val[2].visibility).toBe(false);
             done();
         };
         ReactDOM.render(<Provider store={store}>
@@ -296,7 +296,7 @@ describe('MapEditor component', () => {
             /></Provider>, document.getElementById("container"));
         const container = document.getElementById('container');
 
-        const visibilityBtn = container.querySelector(".toc-list-item .toc-layer-tool.visibility-check");
+        const visibilityBtn = container.querySelector(".ms-visibility-check");
 
         ReactTestUtils.Simulate.click(visibilityBtn);
 

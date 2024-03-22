@@ -7,41 +7,68 @@
  */
 import {compose, withHandlers, withProps} from 'recompose';
 
-import { get } from 'lodash';
+import { castArray, get } from 'lodash';
 import deleteWidget from './deleteWidget';
 import { editableWidget, defaultIcons, withHeaderTools } from './tools';
 import { getScales } from '../../../utils/MapUtils';
 import { WIDGETS_MAPS_REGEX } from "../../../actions/widgets";
+import { getInactiveNode, DEFAULT_GROUP_ID } from '../../../utils/LayersUtils';
 
 /**
  * map dependencies to layers, scales and current zoom level to show legend items for current zoom.
  * Add also base tools and menu to the widget
  */
 export default compose(
-    withProps(({ dependencies = {}, dependenciesMap = {} }) => ({
-        layers: dependencies[dependenciesMap.layers] || dependencies.layers || [],
-        dependencyMapPath: dependenciesMap.layers || '',
-        scales: getScales(
-            // TODO: this is a fallback that checks the viewport if projection is not defined. We should use only projection
-            dependencies.projection || dependencies.viewport && dependencies.viewport.crs || 'EPSG:3857',
-            get( dependencies, "mapOptions.view.DPI")
-        ),
-        currentZoomLvl: dependencies.zoom
-    })),
-    // filter backgrounds
-    withProps(
-        ({ layers = [] }) => ({
-            layers: layers.filter((l = {}) => l.group !== "background" && l.type !== "vector"),
-            allLayers: layers
-        })
-    ),
+    withProps(({ dependencies = {}, dependenciesMap = {} }) => {
+        const allLayers = dependencies[dependenciesMap.layers] || dependencies.layers || [];
+        const groups = castArray(dependencies[dependenciesMap.groups] || dependencies.groups || []);
+        const layers = allLayers
+            // filter backgrounds and inactive layer
+            // the inactive layers are the one with a not visible parent group
+            .filter((layer = {}) =>
+                layer.group !== 'background' && !getInactiveNode(layer?.group || DEFAULT_GROUP_ID, groups)
+            )
+            .map(({ group, ...layer }) => layer);
+        return {
+            allLayers,
+            map: {
+                layers,
+                // use empty so it creates the default group that will be hidden in the layers tree
+                groups: []
+            },
+            dependencyMapPath: dependenciesMap.layers || '',
+            scales: getScales(
+                // TODO: this is a fallback that checks the viewport if projection is not defined. We should use only projection
+                dependencies.projection || dependencies.viewport && dependencies.viewport.crs || 'EPSG:3857',
+                get( dependencies, "mapOptions.view.DPI")
+            ),
+            currentZoomLvl: dependencies.zoom
+        };
+    }),
     withHandlers({
-        updateProperty: ({updateProperty, dependencyMapPath, allLayers = []}) => (lProp, value, lId) => {
+        updateProperty: ({ updateProperty, dependencyMapPath, allLayers = [] }) => (key, value) => {
             if (dependencyMapPath) {
                 const [, widgetId, mapId] = WIDGETS_MAPS_REGEX.exec(dependencyMapPath) || [];
-                if (mapId) {
-                    const _layers = allLayers.map((l) => l.id === lId ? {...l, [lProp]: value} : l);
-                    updateProperty(widgetId, "maps", {mapId, layers: _layers}, 'merge');
+                if (mapId && key === 'map') {
+                    const updatedLayers = value?.layers || [];
+                    const newLayers = allLayers.map(layer => {
+                        const updateLayer = updatedLayers.find(l => l.id === layer.id);
+                        if (updateLayer) {
+                            return {
+                                ...layer,
+                                visibility: updateLayer.visibility,
+                                opacity: updateLayer.opacity,
+                                expanded: updateLayer.expanded
+                            };
+                        }
+                        return layer;
+                    });
+                    updateProperty(widgetId, "maps", { mapId, layers: newLayers }, 'merge');
+                    /*
+                    if (groupsConnected) {
+                        updateProperty(widgetId, "maps", { mapId, groups: value?.groups }, 'merge');
+                    }
+                    */
                 }
             }
         }
