@@ -17,7 +17,7 @@
         <dependency>
             <groupId>it.geosolutions.mapstore</groupId>
             <artifactId>mapstore-product</artifactId>
-            <version>1.7-SNAPSHOT</version>
+            <version>${project.version}</version>
             <type>war</type>
             <scope>runtime</scope>
         </dependency>
