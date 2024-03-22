@@ -1475,5 +1475,52 @@ describe('Test styleeditor epics, with mock axios', () => {
             state);
 
     });
+    it('test toggleStyleEditorEpic enabled to true', (done) => {
 
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        url: [
+                            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+                            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+                            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+                        ]
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ]
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        const results = (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                    case LOADING_STYLE:
+                        expect(action.status).toBe('global');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
+            results,
+            state);
+
+    });
 });

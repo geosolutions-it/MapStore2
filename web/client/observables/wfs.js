@@ -127,7 +127,7 @@ const getFeaturesFiltered = (features, filterObj) => {
  * @param {*} downloadOption selected format for query
  * @returns {Object} The data and query string
  */
-const getFeatureUtilities = (searchUrl, filterObj, options = {}, downloadOption = 'json') => {
+export const getFeatureUtilities = (searchUrl, filterObj, options = {}, downloadOption = 'json') => {
     const data = getWFSFilterData(filterObj, options);
 
     const urlParsedObj = urlUtil.parse(getDefaultUrl(searchUrl), true);

@@ -18,7 +18,7 @@ import WMS from "../api/WMS";
 import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
 import { getDefaultUrl } from '../utils/URLUtils';
 
-const parseUrl = (url) => {
+export const parseUrl = (url) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, { search: null }, {
         query: assign({

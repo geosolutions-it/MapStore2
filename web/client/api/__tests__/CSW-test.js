@@ -13,7 +13,7 @@ import GRDCResponse from 'raw-loader!../../test-resources/csw/getRecordsResponse
 import GRDCResponseWith3DLayersAt1st from 'raw-loader!../../test-resources/csw/getRecordsResponseDCWith3DLayersAt1st.xml';
 import GRDCResponseWith3DLayersAtMiddle from 'raw-loader!../../test-resources/csw/getRecordsResponseDCWith3DLayersAtMiddle.xml';
 import GRDCResponseWith3DLayersAtLast from 'raw-loader!../../test-resources/csw/getRecordsResponseDCWith3DLayersAtLast.xml';
-import API, {constructXMLBody, getLayerReferenceFromDc } from '../CSW';
+import API, {constructXMLBody, getLayerReferenceFromDc, parseUrl } from '../CSW';
 
 import tileSetResponse from '../../test-resources/3dtiles/tileSetSample2.json';
 
@@ -456,7 +456,15 @@ describe("getLayerReferenceFromDc", () => {
         expect(layerRef.type).toBe('arcgis');
         expect(layerRef.url).toBe('http://esri_url');
     });
+    it('parseUrl', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
 
+        expect(parseUrl(_url).split('?')[0]).toBe(_url[0]);
+    });
 });
 
 
