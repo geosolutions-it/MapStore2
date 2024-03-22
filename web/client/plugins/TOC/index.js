@@ -65,12 +65,12 @@ registerCustomSaveHandler('toc', (state) => (state?.toc?.config));
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `true`
  * @prop {boolean} cfg.activateAddGroupButton: activate a button to add a new group, default `true`
  * @prop {boolean} cfg.activateLayerInfoTool: activate a button to enable the layer info
- * @prop {boolean} [addLayersPermissions=true] if false, only users of role ADMIN can see the "add layers" button. Default true.
- * @prop {boolean} [removeLayersPermissions=true] if false, only users of role ADMIN have the permission to remove layers. Default true.
- * @prop {boolean} [sortingPermissions=true] if false, only users of role ADMIN have the permission to move layers in the TOC. Default true.
- * @prop {boolean} [addGroupsPermissions=true] if false, only users of role ADMIN have the permission to add groups to the TOC. Default true.
- * @prop {boolean} [removeGroupsPermissions=true] if false, only users of role ADMIN can remove groups from the TOC. Default true.
- * @prop {boolean} [layerInfoToolPermissions=false] if false, only users of role ADMIN can see the layer info tool. Default false.
+ * @prop {boolean} [cfg.addLayersPermissions=true] if false, only users of role ADMIN can see the "add layers" button. Default true.
+ * @prop {boolean} [cfg.removeLayersPermissions=true] if false, only users of role ADMIN have the permission to remove layers. Default true.
+ * @prop {boolean} [cfg.sortingPermissions=true] if false, only users of role ADMIN have the permission to move layers in the TOC. Default true.
+ * @prop {boolean} [cfg.addGroupsPermissions=true] if false, only users of role ADMIN have the permission to add groups to the TOC. Default true.
+ * @prop {boolean} [cfg.removeGroupsPermissions=true] if false, only users of role ADMIN can remove groups from the TOC. Default true.
+ * @prop {boolean} [cfg.layerInfoToolPermissions=false] if false, only users of role ADMIN can see the layer info tool. Default false.
  * @prop {boolean} cfg.activateZoomTool: activate zoom to extension tool, default `true`
  * @prop {boolean} cfg.activateOpacityTool: show opacity slider in collapsible panel of layer, default `true`
  * @prop {boolean} cfg.activateTitleTooltip: show tooltip with full title on layers and groups, default `true`
