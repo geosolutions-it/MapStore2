@@ -1475,7 +1475,7 @@ describe('Test styleeditor epics, with mock axios', () => {
             state);
 
     });
-    it('test toggleStyleEditorEpic enabled to true', (done) => {
+    it('test toggleStyleEditorEpic enabled to true and layer url is array', (done) => {
 
         const state = {
             layers: {
@@ -1483,11 +1483,7 @@ describe('Test styleeditor epics, with mock axios', () => {
                     {
                         id: 'layerId',
                         name: 'layerName',
-                        url: [
-                            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
-                            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
-                            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
-                        ]
+                        url: ['/geoserver1/', '/geoserver2/', '/geoserver3/']
                     }
                 ],
                 selected: [
