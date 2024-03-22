@@ -324,7 +324,7 @@ The editor is allowed to type the name of the layer attribute to use for the `La
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/ex_text_style.mp4"></video>
 
-### Style Methods
+### Style Methods for Vector layer
 
 Different styles methods can be used for each style rule. Clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel of each symbolizer, the editor can choose one of the following depending on the rule type:
 
@@ -397,6 +397,38 @@ By default, **Constant value** is selected. If the user chooses **Property value
 
 !!!note
     The *Style with property* method is available only for **WFS** and **Vector** layers.
+
+### Style Methods for Raster layer
+
+Different styles methods can be used through the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel, the editor can choose one of the following depending on the rule type:
+
+* Single band
+* RGB bands
+* Pseudo color
+
+#### Single band
+
+The Single band is the default one.
+
+#### RGB bands
+
+#### Pseudo color
+
+#### Styling for COG layer
+
+With the *Visual Style Editor*, the editor has the ability to customize the style of **COG layer**:
+
+<img src="../img/layer-settings/cog-layer_style.jpg" class="ms-docimage">
+
+Here the editor can:
+
+* Associate, when the *Band styling* is enable,  the **Channels** (`Red`, `Green`, `Blue` and `Alpha`) to the **Bands** of the COG layer
+
+<video class="ms-docimage" controls><source src="../img/layer-settings/band_styling.mp4"></video>
+
+* Set the minimum (**Min**) and maximum (**Max**) source data value
+
+<img src="../img/layer-settings/min-max-data-value.jpg" class="ms-docimage">
 
 ### Styling on the 3D navigation
 
