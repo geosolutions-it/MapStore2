@@ -935,6 +935,11 @@ const getBlocks = ({
                     }
                 },
                 {
+                    msViewParams: property.customParams({
+                        key: 'msViewParams',
+                        label: 'styleeditor.customParams',
+                        disablePropertySelection: true
+                    }),
                     classification: property.colorMap({
                         key: 'classification',
                         rampKey: 'ramp'

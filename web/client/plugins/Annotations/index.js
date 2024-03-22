@@ -109,7 +109,8 @@ export default createPlugin('Annotations', {
             doNotHide: true,
             name: 'Annotations',
             target: 'toolbar',
-            Component: AnnotationsTOCButton
+            Component: AnnotationsTOCButton,
+            position: 12
         },
         Map: {
             name: 'Annotations',

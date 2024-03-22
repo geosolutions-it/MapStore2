@@ -1,0 +1,72 @@
+name: Update dependencies versions
+on:
+  workflow_dispatch:
+    inputs:
+      mapfish-version:
+        description: Mapfish print version to use (e.g. 2.4-SNAPSHOT)
+        required: true
+      geostore-version:
+        description: GeoStore version to use (e.g. 2.2-SNAPSHOT).
+        required: true
+      http-proxy-version:
+        description: Http proxy version to use (e.g. 1.5-SNAPSHOT).
+        required: true
+jobs:
+  update-versions:
+    name: Uptate dependency versions (Mapfish, GeoStore, Http Proxy)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.main-branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update versions
+        id: create-versions
+        env:
+          MAPFISH_GROUP: org.mapfish.print
+          MAPFISH_VERSION: ${{ github.event.inputs.mapfish-version }}
+          GEOSTORE_GROUP: it.geosolutions.geostore
+          GEOSTORE_VERSION:  ${{ github.event.inputs.geostore-version }}
+          HTTP_PROXY_GROUP: proxy
+          HTTP_PROXY_VERSION:  ${{ github.event.inputs.http-proxy-version }}
+
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAIN_BRANCH: ${{ github.event.inputs.main-branch }}
+          PR_OPTIONS: ${{ github.event.inputs.pr-options }}
+          RUN_ID: ${{ github.run_id }}
+
+        run: |
+          # script will go here
+          echo "Initializing git"
+          # Optional
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          # Find all pom.xml files and update-dependencies on them
+          echo "Updating versions of dependencies in all pom.xml files to versions mapfish: $MAPFISH_VERSION, geostore: $GEOSTORE_VERSION, http-proxy: $HTTP_PROXY_VERSION"
+
+          ## Update the versions of the dependencies in the project
+          # updating in main `pom.xml` (the mvn properties `geostore-webapp.version` and `http_proxy.version`, `print-lib.version` contain the versions of the dependencies to update)
+          mvn versions:set-property -Dproperty=print-lib.version -DnewVersion=$MAPFISH_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          mvn versions:set-property -Dproperty=geostore-webapp.version -DnewVersion=$GEOSTORE_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          mvn versions:set-property -Dproperty=http_proxy.version -DnewVersion=$HTTP_PROXY_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          git add pom.xml
+          ## Update the versions of the dependencies in the project templates
+          POM_FILES=$(git ls-files project/standard/templates/ | grep 'pom\.xml$')
+          for POM_FILE in $POM_FILES; do
+              mvn versions:set-property -f $POM_FILE -Dproperty=print-lib.version -DnewVersion=$MAPFISH_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+              mvn versions:set-property -f $POM_FILE -Dproperty=geostore-webapp.version -DnewVersion=$GEOSTORE_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+              mvn versions:set-property -f $POM_FILE -Dproperty=http_proxy.version -DnewVersion=$HTTP_PROXY_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+          done
+          pr_branch_name="up_versions-${RUN_ID}"
+          echo "Creating a PR on branch: ${pr_branch_name} for ${{ github.ref_name }}"
+          git checkout -b "${pr_branch_name}"
+          echo $POM_FILES | xargs git add
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Set versions of main dependencies (geostore, mapfish, http-proxy)"
+          else
+            echo "::notice::No version changes in dependencies to commit. Please make sure to make this version fixed later"
+          fi
+          git push origin "${pr_branch_name}"
+          pr_url=$(gh pr create -B "${{ github.ref_name }}" -H "${pr_branch_name}" --title "[github-action] ${{ github.ref_name }} - Dependencies versions update" --body "This automatic pull request bumps version of ${{ github.ref_name }} branch for java packages. It updates the versions of the main dependencies (geostore, mapfish, http-proxy) to the versions: mapfish: $MAPFISH_VERSION, geostore: $GEOSTORE_VERSION, http-proxy: $HTTP_PROXY_VERSION")
+          sleep 10

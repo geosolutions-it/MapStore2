@@ -402,7 +402,7 @@ describe("constructXMLBody", () => {
             dynamicFilter: "<ogc:PropertyIsLike wildCard='*' singleChar='_' escapeChar='\\'><ogc:PropertyName>csw:AnyText</ogc:PropertyName><ogc:Literal>${searchText}*</ogc:Literal></ogc:PropertyIsLike>"
         };
         // With search text
-        let body = constructXMLBody(1, 5, "text", {filter});
+        let body = constructXMLBody(1, 5, "text", {options: {service: {filter}}});
 
         expect(body.indexOf("text*")).toNotBe(-1); // Dynamic filter
 
@@ -410,6 +410,11 @@ describe("constructXMLBody", () => {
         body = constructXMLBody(1, 5, null);
         expect(body.indexOf("dc:type")).toNotBe(-1); // Static filter
         expect(body.indexOf("text*")).toBe(-1); // Dynamic filter
+    });
+    it("construct body with sortBy properties", () => {
+        const body = constructXMLBody(1, 5, "text", {options: {service: {sortBy: {name: "dc:title", order: "DESC"}}}});
+        expect(body.indexOf("dc:title")).toNotBe(-1);
+        expect(body.indexOf("DESC")).toNotBe(-1);
     });
 });
 

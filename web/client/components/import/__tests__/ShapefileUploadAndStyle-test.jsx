@@ -86,7 +86,7 @@ describe("Test ShapefileUploadAndStyle component", () => {
                     const layer = args[0][0];
                     expect(layer.type).toEqual("vector");
                     expect(layer.visibility).toEqual(true);
-                    expect(layer.group).toEqual("Local shape");
+                    expect(layer.group).toBe(undefined);
                     expect(layer.name).toEqual("LineGeoJSON");
                     expect(layer.hideLoading).toEqual(true);
                     expect(layer.bbox).toEqual({

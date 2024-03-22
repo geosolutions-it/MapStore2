@@ -37,7 +37,8 @@ import {
     getNode,
     extractSourcesFromLayers,
     updateAvailableTileMatrixSetsOptions,
-    getTileMatrixSetLink
+    getTileMatrixSetLink,
+    DEFAULT_GROUP_ID
 } from './LayersUtils';
 import assign from 'object-assign';
 
@@ -489,7 +490,9 @@ export const groupSaveFormatted = (node) => {
         description: node.description,
         tooltipOptions: node.tooltipOptions,
         tooltipPlacement: node.tooltipPlacement,
-        expanded: node.expanded
+        expanded: node.expanded,
+        visibility: node.visibility,
+        nodesMutuallyExclusive: node.nodesMutuallyExclusive
     };
 };
 
@@ -700,8 +703,8 @@ export const mergeMapConfigs = (cfg1 = {}, cfg2 = {}) => {
 
 export const addRootParentGroup = (cfg = {}, groupTitle = 'RootGroup') => {
     const groups = get(cfg, 'map.groups', []);
-    const groupsWithoutDefault = groups.filter(({id}) => id !== 'Default');
-    const defaultGroup = find(groups, ({id}) => id === 'Default');
+    const groupsWithoutDefault = groups.filter(({id}) => id !== DEFAULT_GROUP_ID);
+    const defaultGroup = find(groups, ({id}) => id === DEFAULT_GROUP_ID);
     const fixedDefaultGroup = defaultGroup && {
         id: uuidv1(),
         title: groupTitle,
@@ -724,7 +727,7 @@ export const addRootParentGroup = (cfg = {}, groupTitle = 'RootGroup') => {
             groups: groupsWithFixedDefault,
             layers: get(cfg, 'map.layers', []).map(({group, ...other}) => ({
                 ...other,
-                group: defaultGroup && group !== 'background' && (group === 'Default' || !group) ? fixedDefaultGroup.id :
+                group: defaultGroup && group !== 'background' && (group === DEFAULT_GROUP_ID || !group) ? fixedDefaultGroup.id :
                     defaultGroup && find(groupsWithFixedDefault, ({id}) => id.slice(id.indexOf('.') + 1) === group)?.id || group
             }))
         }

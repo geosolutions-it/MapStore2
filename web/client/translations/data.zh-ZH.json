@@ -363,11 +363,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Show layers",
-            "showLegend": "Show legend",
-            "hideLegend": "Hide legend"
-        },
         "toc": {
             "toggleLayerVisibility": "切换图层可见性",
             "displayLegendAndTools": "显示图例和工具",
@@ -444,7 +439,7 @@
                 "configuration": "Configuration",
                 "apply": "Apply classification",
                 "restore": "Reset customizations",
-                "go_to_cfg": "Configure...",
+                "goToCfg": "Configure...",
                 "go_to_thema": "Use this configuration",
                 "cfgError": "Error in configuration JSON",
                 "classify": "Classify",

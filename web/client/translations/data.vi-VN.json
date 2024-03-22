@@ -454,11 +454,6 @@
             "tools": "Bảng công cụ",
             "yesButton": "Có"
         },
-        "floatinglegend": {
-            "hideLegend": "Ẩn chú giải",
-            "showLegend": "Hiện thị chú giải",
-            "showTOC": "Hiển thị các lớp"
-        },
         "fullscreen": {
             "tooltipActivate": "Chuyển sang toàn màn hình",
             "tooltipDeactivate": "Thoát toàn màn hình",
@@ -1504,7 +1499,7 @@
                 "configuration": "Cấu hình",
                 "data_panel": "Dữ liệu",
                 "fields_error": "Lỗi khi tải danh sách các trường: {message}",
-                "go_to_cfg": "Cấu hình",
+                "goToCfg": "Cấu hình",
                 "go_to_thema": "Sử dụng cấu hình này",
                 "interval_limit": "Các khoảng nên là một số trong khoảng từ {min} đến {max}",
                 "invalid_classes": "Tối đa phải lớn hơn tối thiểu trong mỗi lớp",

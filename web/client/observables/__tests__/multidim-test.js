@@ -18,7 +18,7 @@ import {
 import {playbackRangeSelector, statusSelector} from "../../selectors/playback";
 import {STATUS} from "../../actions/playback";
 import DOMAIN_INTERVAL_VALUES_RESPONSE from 'raw-loader!../../test-resources/wmts/DomainIntervalValues.xml';
-import {getTimeDomainsObservable} from "../multidim";
+import {getNearestTimesObservable} from "../multidim";
 import {currentTimeSelector} from "../../selectors/dimension";
 import expect from "expect";
 
@@ -78,13 +78,32 @@ describe('multidim Observables', () => {
     };
 
 
-    it('test getTimeDomainsObservable', (done) => {
-        mock.onGet('MOCK_DOMAIN_VALUES').reply(200, DOMAIN_INTERVAL_VALUES_RESPONSE);
-        const time = currentTimeSelector(() => ANIMATION_MOCK_STATE);
+    it('test getNearestTimesObservable', (done) => {
+        const time = currentTimeSelector(ANIMATION_MOCK_STATE);
+        let ascCount = 0;
+        let descCount = 0;
+        mock.onGet('MOCK_DOMAIN_VALUES').reply(({params}) => {
+            expect(params).toExist();
+            expect(params.limit).toBe(1);
+            const {sort, fromValue } = params;
+            if (sort === 'asc') {
+                expect(fromValue < time).toBeTruthy(); // check buffer is applied
+                ascCount++;
+                return [200, DOMAIN_INTERVAL_VALUES_RESPONSE];
+            } else if (sort === 'desc') {
+                expect(fromValue > time).toBeTruthy(); // check buffer is applied
+                descCount++;
+                return [200, DOMAIN_INTERVAL_VALUES_RESPONSE];
+            }
+            return [200, DOMAIN_INTERVAL_VALUES_RESPONSE];
+        });
+
         const snapType = snapTypeSelector(() => ANIMATION_MOCK_STATE);
-        getTimeDomainsObservable(domainArgs, true, () => ANIMATION_MOCK_STATE, snapType, time).subscribe(args => {
+        getNearestTimesObservable(domainArgs, true, () => ANIMATION_MOCK_STATE, snapType, time).subscribe(args => {
             expect(args[0]).toBe('2021-09-08T22:00:00.000Z/2021-10-21T22:00:00.000Z');
             expect(args[1]).toBe('2021-09-08T22:00:00.000Z/2021-10-21T22:00:00.000Z');
+            expect(ascCount).toBe(1); // asc should be called only once
+            expect(descCount).toBe(1); // desc should be called only once
             done();
         });
     });

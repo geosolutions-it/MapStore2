@@ -62,8 +62,8 @@ export const handleMapUpdate = withHandlers({
             update(`${focusedContent.path}.map.${path}`, value, "merge");
         },
     onChange: ({update, focusedContent = {}}) =>
-        (path, value) => {
-            update(focusedContent.path + `.${path}`, value, "merge");
+        (path, value, mode = 'merge') => {
+            update(focusedContent.path + `.${path}`, value, mode);
         }
 });
 

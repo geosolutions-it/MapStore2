@@ -91,7 +91,7 @@ function SelectInput({
                         : undefined);
                 }
                 setNewOptions(updateOptions(newOptions, option));
-                return onChange(option.value);
+                return onChange(option?.value);
             }}
         />
     );

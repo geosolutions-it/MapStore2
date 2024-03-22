@@ -493,11 +493,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Ukázať vrstvy",
-            "showLegend": "Ukázať legendu",
-            "hideLegend": "Schovať legendu"
-        },
         "addgroup": {
             "addbtn": "Pridať",
             "groupName": "Meno skupiny"
@@ -621,7 +616,7 @@
                 "configuration": "Konfigurácia",
                 "apply": "Použiť konfiguráciu",
                 "restore": "Obnoviť prispôsobenie",
-                "go_to_cfg": "Konfigurujem...",
+                "goToCfg": "Konfigurujem...",
                 "go_to_thema": "Použiť túto konfiguráciu",
                 "cfgError": "Chyba v konfigurácii JSON",
                 "classify": "Klasifikovať",

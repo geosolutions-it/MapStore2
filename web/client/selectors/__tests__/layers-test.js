@@ -673,15 +673,18 @@ describe('Test layers selectors', () => {
                             "loading": false,
                             "loadingError": false,
                             "group": "first.second.third",
-                            "expanded": false
+                            "expanded": false,
+                            inactive: false
                         }
                     ],
                     "expanded": true,
-                    "visibility": true
+                    "visibility": true,
+                    inactive: false
                 }
             ],
             "expanded": true,
-            "visibility": true
+            "visibility": true,
+            inactive: false
         };
         expect(elementSelector(state)).toEqual(element);
 

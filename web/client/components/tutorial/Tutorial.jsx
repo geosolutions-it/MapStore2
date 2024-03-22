@@ -97,7 +97,7 @@ class Tutorial extends React.Component {
         steps: [],
         run: true,
         autoStart: true,
-        keyboardNavigation: true,
+        keyboardNavigation: false,
         resizeDebounce: false,
         resizeDebounceDelay: 200,
         holePadding: 0,

@@ -91,7 +91,8 @@ export default ({
         const _filter = template(cswGetRecordsXml)({
             filterXml: value,
             startPosition: 1,
-            maxRecords: 4
+            maxRecords: 4,
+            sortBy: ''
         });
         return !new DOMParser()
             .parseFromString(_filter, "application/xml")

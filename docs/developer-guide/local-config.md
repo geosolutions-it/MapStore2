@@ -46,7 +46,7 @@ This is the main structure:
   "authenticationRules": [
   { // every rule has a `urlPattern` regex to match
     "urlPattern": ".*geostore.*",
-    // and a authentication `method` to use (basic, authkey, browserWithCredentials)
+    // and a authentication `method` to use (basic, authkey, browserWithCredentials, header)
     "method": "basic"
   }, {
     "urlPattern": "\\/geoserver.*",
@@ -142,9 +142,26 @@ For configuring plugins, see the [Configuring Plugins Section](plugins-documenta
 
 ## Explanation of some config properties
 
-- **loadAfterTheme** is a flag that allows to load mapstore.js after the theme which can be versioned or not(default.css). default is false
-- **initialState** is an object that will initialize the state with some default values and this WILL OVERRIDE the initialState imposed by plugins & reducers.
-- **projectionDefs** is an array of objects that contain definitions for Coordinate Reference Systems
+- `loadAfterTheme`: is a flag that allows to load mapstore.js after the theme which can be versioned or not(default.css). default is false
+- `initialState`: is an object that will initialize the state with some default values and this WILL OVERRIDE the initialState imposed by plugins & reducers.
+- `projectionDefs`: is an array of objects that contain definitions for Coordinate Reference Systems
+- `useAuthenticationRules`: if this flag is set to true, the `authenticationRules` will be used to authenticate every ajax and mapping request. If the flag is set to false, the `authenticationRules` will be ignored.
+- `authenticationRules`: is an array of objects that contain rules to match for authentication. Each rule has a `urlPattern` regex to match and a `method` to use (`basic`, `authkey`, `header`, `browserWithCredentials`). If the URL of a request matches the `urlPattern` of a rule, the `method` will be used to authenticate the request. The `method` can be:
+  - `basic` will use the basic authentication method getting the credentials from the user that logged in (adding the header `Authorization` `Basic <base64(username:password)>` to the request). ***Note**: this method is not implemented for image tile requests (e.g. layers) but only for ajax requests.*
+  - `authkey` will use the authkey method getting the credentials from the user that logged in. The token of the current MapStore session will be used as the authkey value, so this works only with the geoserver integration.
+  - `bearer` will use the header `Authorization` `Bearer <token>` getting the credentials from the user that logged in. The token of the current MapStore session will be used as the bearer value, so this works only with the geoserver integration.
+  - `header` will use the header method getting the credentials from the user that logged in. You can add an `headers` object containing the static headers to this rule to specify witch headers to use. e.g.
+  - `browserWithCredentials` will add the `withCredentials` parameter to ajax requests, so the browser will send the cookies and the authentication headers to the server. This method is useful when you have a proxy that needs to authenticate the user. ***Note**: this method is not implemented for image tile requests (e.g. layers) but only for ajax requests.*
+
+  ```json
+    {
+        "urlPattern": ".*geostore.*",
+        "method": "header",
+        "headers": {
+            "X-Auth-Token": "mytoken"
+        }
+    }
+    ```
 
 ### initialState configuration
 
@@ -218,7 +235,13 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
   "filter": { // applicable only for CSW service
       "staticFilter": "filter is always applied, even when search text is NOT PRESENT",
       "dynamicFilter": "filter is used when search text is PRESENT and is applied in `AND` with staticFilter. The template is used with ${searchText} placeholder to append search string"
-  }
+  },
+  "fetchMetadata": true, // "if true, the metadata is fetched for the service, applicable only for COG service
+  "records": [{ // array of the COG layers of the service, applicable only for COG service
+    "sourceMetadata": "metadata of the COG layer",
+    "bbox": "bbox formulated for the COG layer",
+    "url": "the url pointing to the COG layer data"
+  }]
 }
 ```
 
@@ -232,6 +255,34 @@ CSW service
         "staticFilter": "<ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo><ogc:PropertyIsEqualTo><ogc:PropertyName>dc:type</ogc:PropertyName><ogc:Literal>http://purl.org/dc/dcmitype/Dataset</ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or>",
         "dynamicFilter": "<ogc:PropertyIsLike wildCard='%' singleChar='_' escapeChar='\\'><ogc:PropertyName>csw:AnyText</ogc:PropertyName><ogc:Literal>%${searchText}%</ogc:Literal></ogc:PropertyIsLike>"
     }
+}
+```
+
+COG service
+<br> `fetchMetadata` - By default, the metadata is fetched on saving the COG service for each layer (url) configured<br>
+<br> `records` -  Records of the COG layer <br>
+<br>Example:<br>
+
+```javascript
+{
+    "fetchMetadata": true,
+    "records": [{
+        "url": "https://example.tif",
+        "sourceMetadata": {
+            "crs": "EPSG:32632",
+            "extent": [463560, 5758030, 469410, 5767210],
+            "height": 900,
+            "width": 500,
+            "tileWidth": 256,
+            "tileHeight": 256,
+            "origin": [463560, 5767210, 0],
+            "resolution": [10, -10, 0]
+        },
+        "bbox": {
+            "crs": "EPSG:32632"
+            "bounds": {minx: 463560, miny: 5758030, maxx: 469410, maxy: 5767210}
+        }
+    }]
 }
 ```
 

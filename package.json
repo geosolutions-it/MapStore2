@@ -1,6 +1,6 @@
 {
   "name": "mapstore2",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "MapStore 2",
   "repository": "https://github.com/geosolutions-it/MapStore2",
   "main": "index.js",
@@ -157,7 +157,7 @@
     "ag-grid-community": "20.2.0",
     "ag-grid-react": "20.2.0",
     "assert": "2.0.0",
-    "axios": "0.24.0",
+    "axios": "0.28.0",
     "b64-to-blob": "1.2.19",
     "babel-polyfill": "6.8.0",
     "babel-standalone": "6.7.7",
@@ -312,7 +312,6 @@
     "webfontloader": "1.6.28",
     "wellknown": "0.5.0",
     "xml2js": "0.4.17",
-    "xmldom": "0.3.0",
     "xpath": "0.0.27"
   },
   "scripts": {
