@@ -14,7 +14,7 @@ import {
     Alert
 } from 'react-bootstrap';
 import Select from 'react-select';
-import { getTitle } from '../../../utils/TOCUtils';
+import { getTitle } from '../../../utils/LayersUtils';
 import {
     DefaultViewValues,
     mergeViewLayers

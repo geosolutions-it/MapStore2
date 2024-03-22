@@ -155,7 +155,8 @@ describe('contextcreator selectors', () => {
                     },
                     featureGrid: {
                         attributes: undefined
-                    }
+                    },
+                    toc: undefined
                 },
                 theme: {
                     variables: {

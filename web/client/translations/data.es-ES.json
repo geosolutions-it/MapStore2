@@ -557,11 +557,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Mostrar capas",
-            "showLegend": "Mostrar leyenda",
-            "hideLegend": "Ocultar leyenda"
-        },
         "addgroup": {
             "addbtn": "Añadir",
             "groupName": "Nombre del grupo"
@@ -588,6 +583,7 @@
             "layerFilterTooltip": "Filtrar capas",
             "toolDownloadTooltip": "Exportar datos de la capa",
             "noFilteredResults": "Ningún resultado",
+            "emptyLayerTree": "El árbol de capas está vacío. Agregue una nueva capa del catálogo",
             "filterPlaceholder": "Filtrar capas",
             "clearFilter": "Quitar filtro",
             "toolReloadLayerTooltip": "Fuerza la recarga de la capa seleccionada",
@@ -625,6 +621,22 @@
             "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
             "notVisibleSwitchTo3D": "Cambie al modo de mapa 3D para ver esta capa",
             "notVisibleSwitchTo2D": "Cambie al modo de mapa 2D para ver esta capa",
+            "toolGroupShowAllChildren": "Activar la visibilidad de todos los nodos secundarios",
+            "toolGroupHideAllChildren": "Desactivar la visibilidad de todos los nodos secundarios",
+            "activateToolGroupMutuallyExclusive": "Activar visibilidad mutuamente excluyente de nodos secundarios",
+            "deactivateToolGroupMutuallyExclusive": "Desactivar la visibilidad mutuamente excluyente de los nodos secundarios",
+            "toolGroupCollapseAllChildren": "Contraer todos los nodos secundarios",
+            "toolGroupExpandAllChildren": "Expandir todos los nodos secundarios",
+            "closeOnMapInitialization": "Mantener cerrado durante la inicialización del mapa",
+            "openOnMapInitialization": "Abrir al inicializar el mapa",
+            "defaultTheme": "Tema predeterminado",
+            "legendTheme": "Tema de leyenda",
+            "showFullTitle": "Mostrar título completo",
+            "hideFullTitle": "Título en una sola línea",
+            "showOpacitySlider": "Mostrar control deslizante de opacidad",
+            "hideOpacitySlider": "Ocultar control deslizante de opacidad",
+            "showOpacityTooltip": "Mostrar información sobre herramientas de opacidad",
+            "hideOpacityTooltip": "Ocultar información sobre herramientas de opacidad",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
