@@ -41,6 +41,7 @@ class DefaultLayer extends React.Component {
         sortableStyle: PropTypes.object,
         activateLegendTool: PropTypes.bool,
         activateOpacityTool: PropTypes.bool,
+        legendType: PropTypes.string,
         indicators: PropTypes.array,
         visibilityCheckType: PropTypes.string,
         currentZoomLvl: PropTypes.number,
@@ -51,6 +52,7 @@ class DefaultLayer extends React.Component {
         selectedNodes: PropTypes.array,
         filterText: PropTypes.string,
         onUpdateNode: PropTypes.func,
+        onLayerFilterByLegend: PropTypes.func,
         titleTooltip: PropTypes.bool,
         filter: PropTypes.func,
         showFullTitleOnExpand: PropTypes.bool,
@@ -75,6 +77,7 @@ class DefaultLayer extends React.Component {
         onSelect: () => {},
         activateLegendTool: false,
         activateOpacityTool: true,
+        legendType: '',
         indicators: [],
         visibilityCheckType: "glyph",
         additionalTools: [],
@@ -83,6 +86,7 @@ class DefaultLayer extends React.Component {
         selectedNodes: [],
         filterText: '',
         onUpdateNode: () => {},
+        onLayerFilterByLegend: () => {},
         filter: () => true,
         titleTooltip: false,
         showFullTitleOnExpand: false,
@@ -133,10 +137,11 @@ class DefaultLayer extends React.Component {
             <div key="legend" position="collapsible" className="collapsible-toc">
                 <Grid fluid>
                     {this.props.showFullTitleOnExpand ? <Row><Col xs={12} className="toc-full-title">{this.getTitle(this.props.node)}</Col></Row> : null}
+                    {/** todo: add wmsJsonLegend here */}
                     {this.props.activateLegendTool && this.props.node.type === 'wms' &&
                         <Row>
                             <Col xs={12}>
-                                <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} language={this.props.language} {...this.props.legendOptions} />
+                                <WMSLegend onLayerFilterByLegend={this.props.onLayerFilterByLegend} node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} language={this.props.language} {...this.props.legendOptions} />
                             </Col>
                         </Row>}
                     {this.props.activateLegendTool && ['wfs', 'vector'].includes(this.props.node.type) &&

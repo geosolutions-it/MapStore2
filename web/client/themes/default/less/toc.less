@@ -126,7 +126,15 @@
                     .color-var(@theme-vars[danger]);
                 }
             }
-
+            .wms-legend {
+                .wms-json-legend-rule:hover {
+                    .color-var(@theme-vars[primary]);
+                }
+                .wms-json-legend-rule.active {
+                    .background-color-var(@theme-vars[primary]);
+                    .color-var(@theme-vars[primary-contrast]);
+                }
+            }
             .collapsible-toc {
                 // force white background to match the legend image background
                 color: #333333;
@@ -1115,7 +1123,15 @@
     padding: 5px;
     background-color: #dddddd;
 }
-
+.wms-legend {
+    .wms-json-legend-rule {
+        display: flex;
+        margin-bottom: @padding-left-square-md;
+        .ms-rule-legend-icon {
+            margin-right: 8px;
+        }
+    }
+}
 .fluid-container {
     padding-top: 15px;
     padding-bottom: 15px;

@@ -23,6 +23,8 @@ import { getSupportedFormat } from '../../../../api/WMS';
 import WMSCacheOptions from './WMSCacheOptions';
 import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
+import StyleBasedWMSJsonLegend from '../StyleBasedWMSJsonLegend';
+
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -261,7 +263,20 @@ export default class extends React.Component {
                         <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
                         </Col>
-                        <Col xs={12} sm={6} className="first-selectize">
+                        {/** append the interactive legened checkbox here */}
+                        { this.props.element?.serverType !== ServerTypes.NO_VENDOR &&
+                            <Col xs={12}>
+                                <Checkbox
+                                    data-qa="display-interactive-legend-option"
+                                    value="enableInteractiveLegend"
+                                    key="enableInteractiveLegend"
+                                    onChange={(e) => this.props.onChange("enableInteractiveLegend", e.target.checked)}
+                                    checked={this.props.element.enableInteractiveLegend} >
+                                    <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
+                                    &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.tooltip" />} />
+                                </Checkbox>
+                            </Col>}
+                        {!this.props.element?.enableInteractiveLegend && <><Col xs={12} sm={6} className="first-selectize">
                             <FormGroup validationState={this.getValidationState("legendWidth")}>
                                 <ControlLabel><Message msgId="layerProperties.legendOptions.legendWidth" /></ControlLabel>
                                 <IntlNumberFormControl
@@ -290,20 +305,31 @@ export default class extends React.Component {
                                     onBlur={this.onBlur}
                                 />
                             </FormGroup>
-                        </Col>
+                        </Col></>}
                         <Col xs={12} className="legend-preview">
                             <ControlLabel><Message msgId="layerProperties.legendOptions.legendPreview" /></ControlLabel>
                             <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
-                                <Legend
-                                    style={this.setOverFlow() && {} || undefined}
-                                    layer={this.props.element}
-                                    legendHeight={
-                                        this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
-                                    legendWidth={
-                                        this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
-                                    language={
-                                        this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
-                                />
+                                { this.props.element?.enableInteractiveLegend ?
+                                    <StyleBasedWMSJsonLegend
+                                        style={this.setOverFlow() && {} || undefined}
+                                        layer={this.props.element}
+                                        legendHeight={
+                                            this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
+                                        legendWidth={
+                                            this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
+                                        language={
+                                            this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
+                                    /> :
+                                    <Legend
+                                        style={this.setOverFlow() && {} || undefined}
+                                        layer={this.props.element}
+                                        legendHeight={
+                                            this.useLegendOptions() && this.state.legendOptions.legendHeight || undefined}
+                                        legendWidth={
+                                            this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
+                                        language={
+                                            this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
+                                    />}
                             </div>
                         </Col>
                     </div>

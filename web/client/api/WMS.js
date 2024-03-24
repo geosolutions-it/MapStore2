@@ -305,6 +305,16 @@ export const getSupportedFormat = (url, includeGFIFormats = false) => {
         .catch(() => includeGFIFormats ? { imageFormats: [], infoFormats: [] } : []);
 };
 
+let layerLegendJsonData = {};
+export const getJsonWMSLegend = (url) => {
+    const request = layerLegendJsonData[url]
+        ? () => Promise.resolve(layerLegendJsonData[url])
+        : () => axios.get(url).then(({ data }) => {
+            return data?.Legend || [];
+        });
+    return request().then((data) => data);
+};
+
 const Api = {
     flatLayers,
     parseUrl,

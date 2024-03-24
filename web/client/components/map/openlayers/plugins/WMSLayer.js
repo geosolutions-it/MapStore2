@@ -178,6 +178,7 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || isVectorFormat(oldOptions.format) && isVectorFormat(newOptions.format) && oldOptions.format !== newOptions.format
         || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
         || oldOptions.tileSize !== newOptions.tileSize
+        || oldOptions.enableInteractiveLegend !== newOptions.enableInteractiveLegend
         || oldOptions.forceProxy !== newOptions.forceProxy
         || oldOptions.tileGridStrategy !== newOptions.tileGridStrategy
         || !isEqual(oldOptions.tileGrids, newOptions.tileGrids)

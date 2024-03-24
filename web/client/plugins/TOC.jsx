@@ -31,7 +31,7 @@ import {
     download
 } from '../actions/layers';
 
-import { openQueryBuilder } from '../actions/layerFilter';
+import { openQueryBuilder, layerFilterByLegend } from '../actions/layerFilter';
 import { getLayerCapabilities } from '../actions/layerCapabilities';
 import { zoomToExtent } from '../actions/map';
 import { error } from '../actions/notifications';
@@ -206,6 +206,7 @@ class LayerTree extends React.Component {
         hideSettings: PropTypes.func,
         updateSettings: PropTypes.func,
         updateNode: PropTypes.func,
+        layerFilterByLegend: PropTypes.func,
         removeNode: PropTypes.func,
         activateTitleTooltip: PropTypes.bool,
         showFullTitleOnExpand: PropTypes.bool,
@@ -285,6 +286,7 @@ class LayerTree extends React.Component {
         onRefreshLayer: () => {},
         onNewWidget: () => {},
         updateNode: () => {},
+        layerFilterByLegend: () => {},
         removeNode: () => {},
         onSelectNode: () => {},
         selectedNodes: [],
@@ -392,6 +394,7 @@ class LayerTree extends React.Component {
                 selectedNodes={this.props.selectedNodes}
                 filterText={this.props.filterText}
                 onUpdateNode={this.props.updateNode}
+                onLayerFilterByLegend={this.props.layerFilterByLegend}
                 hideOpacityTooltip={this.props.hideOpacityTooltip}
                 language={this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : null}
                 resolution={resolution}
@@ -901,6 +904,7 @@ const TOCPlugin = connect(tocSelector, {
     hideSettings,
     updateSettings,
     updateNode,
+    layerFilterByLegend,
     removeNode,
     onSelectNode: selectNode,
     onFilter: filterLayers,

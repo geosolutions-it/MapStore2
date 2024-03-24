@@ -21,9 +21,9 @@ import {
     initLayerFilter,
     DISCARD_CURRENT_FILTER,
     APPLY_FILTER,
-    storeAppliedFilter
+    storeAppliedFilter,
+    LAYER_FILTER_BY_LEGEND
 } from '../actions/layerFilter';
-
 import { featureTypeSelected, toggleLayerFilter, initQueryPanel } from '../actions/wfsquery';
 import { getSelectedLayer } from '../selectors/layers';
 import { changeDrawingStatus } from '../actions/draw';
@@ -114,8 +114,63 @@ export const onApplyFilter = (action$, {getState}) =>
 
         });
 
+/**
+ * It applies the legend filter for wms layer
+ * @memberof epics.layerFilter
+ * @param {external:Observable} action$ manages `LAYER_FILTER_BY_LEGEND`
+ * @return {external:Observable} `APPLIED_FILTER`
+ */
+export const applyWMSCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
+    return  action$.ofType(LAYER_FILTER_BY_LEGEND)
+        .switchMap((action) => {
+            const state = getState();
+            const layer = head(state.layers.flat.filter(l => l.id === action.layerId));
+            const queryFormFilterObj = {...get(getState(), "queryform", {})};
+            let filterObj = layer.layerFilter ? layer.layerFilter : queryFormFilterObj;
+            let searchUrl = layer.search.url;
+            // reset thte filter if legendCQLFilter is empty
+            if (!action.legendCQLFilter) {
+                // todo: clear legend filter
+                const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+                if (isLegendFilterExist) {
+                    filterObj = {
+                        ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+                    };
+                }
+                let newFilter = isNotEmptyFilter(filterObj) ? filterObj : undefined;
+                return Rx.Observable.of(search(searchUrl, newFilter), addFilterToLayer(layer.id, newFilter), storeAppliedFilter(newFilter));
+            }
+            let cqlStatement = action.legendCQLFilter;
+            if (cqlStatement) {
+                // remove the unnecessaru brackets
+                // "[LAND_KM >= '5062.5' AND LAND_KM < '20300.35']" ---> to be "LAND_KM >= '5062.5' AND LAND_KM < '20300.35'"
+                cqlStatement = cqlStatement.includes("[") ? cqlStatement.slice(1, cqlStatement.length - 1) : cqlStatement;
+            }
+            let filter = {
+                ...(filterObj || {}), filters: [
+                    ...(filterObj?.filters?.filter(f => f.id !== 'interactiveLegend') || []), ...[
+                        {
+                            "id": "interactiveLegend",
+                            "format": "logic",
+                            "version": "1.0.0",
+                            "logic": "AND",
+                            "filters": [{
+                                "format": "cql",
+                                "version": "1.0.0",
+                                "body": cqlStatement,
+                                "id": `[${cqlStatement}]`
+                            }]
+                        }
+                    ]
+                ]
+            };
+            return Rx.Observable.of(search(searchUrl, filter), addFilterToLayer(layer.id, filter), storeAppliedFilter(filter));
+        });
+};
+
 export default {
     handleLayerFilterPanel,
     restoreSavedFilter,
-    onApplyFilter
+    onApplyFilter,
+    applyWMSCQLFilterBasedOnLegendFilter
 };

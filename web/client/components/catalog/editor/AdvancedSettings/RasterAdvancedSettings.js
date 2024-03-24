@@ -157,9 +157,23 @@ export default ({
                 <Select
                     value={service.layerOptions?.serverType}
                     options={serverTypeOptions}
-                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
+                    onChange={event => {
+                        if (event?.value === ServerTypes.NO_VENDOR) onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: undefined});
+                        onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value });
+                    }} />
             </InputGroup>
         </FormGroup>
+        {/**
+         * service.layerOptions?.serverType
+         */}
+        {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
+            <Checkbox data-qa="display-interactive-legend-option"
+                onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: e.target.checked})}
+                checked={!isNil(service.layerOptions?.enableInteractiveLegend) ? service.layerOptions?.enableInteractiveLegend : false}>
+                <Message msgId="layerProperties.enableInteractiveLegendInfo.label" />
+                &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.tooltip" />} />
+            </Checkbox>
+        </FormGroup>}
         <hr style={{margin: "8px 0"}}/>
         <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
             <ControlLabel className="strong"><Message msgId="layerProperties.format.title" /></ControlLabel>

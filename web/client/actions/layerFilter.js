@@ -26,6 +26,7 @@ export const APPLY_FILTER = 'LAYER_FILTER:APPLY_FILTER';
  */
 export const OPEN_QUERY_BUILDER = 'LAYER_FILTER:OPEN_QUERY_BUILDER';
 
+export const LAYER_FILTER_BY_LEGEND = 'LAYER_FILTER:LAYER_FILTER_BY_LEGEND';
 
 export function storeCurrentFilter() {
     return {
@@ -62,3 +63,11 @@ export function initLayerFilter(filter) {
     };
 }
 
+export function layerFilterByLegend(layerId, nodeType, legendCQLFilter) {
+    return {
+        type: LAYER_FILTER_BY_LEGEND,
+        legendCQLFilter,
+        nodeType,
+        layerId
+    };
+}
