@@ -20,7 +20,7 @@ import {
     objectToAttributes,
     assignNamespace
 } from '../../XMLUtils';
-import {getLayerUrl} from '../../LayersUtils';
+import {getLayerUrl, DEFAULT_GROUP_ID} from '../../LayersUtils';
 
 import { reprojectBbox } from '../../CoordinatesUtils';
 
@@ -285,9 +285,9 @@ export const toMapConfig = (wmcString, generateLayersGroup = false) => {
                 expanded: parseBoolean(attrExtractor(group, 'expanded'))
             }));
 
-            const groups = msGroupsTag && msGroups || [...(layers.filter(layer => !layer.group || layer.group === 'Default').length > 0 ? [{
-                id: 'Default',
-                title: 'Default',
+            const groups = msGroupsTag && msGroups || [...(layers.filter(layer => !layer.group || layer.group === DEFAULT_GROUP_ID).length > 0 ? [{
+                id: DEFAULT_GROUP_ID,
+                title: DEFAULT_GROUP_ID,
                 expanded: true
             }] : []), ...(generateLayersGroup ? [{
                 id: layerGroup,

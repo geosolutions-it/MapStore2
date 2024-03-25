@@ -463,11 +463,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Visa lager",
-            "showLegend": "Visa legend",
-            "hideLegend": "Dölj legend"
-        },
         "addgroup": {
             "addbtn": "Lägg till",
             "groupName": "Gruppnamn"
@@ -591,7 +586,7 @@
                 "configuration": "Konfiguration",
                 "apply": "Tillämpa klassificering",
                 "restore": "Återställ anpassningar",
-                "go_to_cfg": "Konfigurera ...",
+                "goToCfg": "Konfigurera ...",
                 "go_to_thema": "Använd den här konfigurationen",
                 "cfgError": "Fel i konfigurationen JSON",
                 "classify": "Klassificera",

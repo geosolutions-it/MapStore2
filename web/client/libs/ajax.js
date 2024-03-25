@@ -88,6 +88,10 @@ function addAuthenticationToAxios(axiosConfig) {
         addHeaderToAxiosConfig(axiosConfig, 'Authorization', "Bearer " + token);
         return axiosConfig;
     }
+    case 'header': {
+        Object.entries(rule.headers).map(([headerName, headerValue]) => addHeaderToAxiosConfig(axiosConfig, headerName, headerValue));
+        return axiosConfig;
+    }
     default:
         // we cannot handle the required authentication method
         return axiosConfig;

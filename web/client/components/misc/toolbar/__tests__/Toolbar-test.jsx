@@ -9,7 +9,6 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import Toolbar from '../Toolbar';
 
 describe("Toolbar component", () => {

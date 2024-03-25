@@ -15,6 +15,7 @@ import LoadingSpinner from '../../misc/LoadingSpinner';
 import MapViewComp from './MapView';
 import WidgetContainer from './WidgetContainer';
 import MapSwitcher from "../builder/wizard/map/MapSwitcher";
+import { getDerivedLayersVisibility } from "../../../utils/LayersUtils";
 
 const MapView = withHandlers({
     onMapViewChanges: ({ updateProperty = () => { }, id }) => ({layers, ...map}) => updateProperty(id, 'maps', map, "merge")
@@ -73,7 +74,7 @@ export default ({
                 }}
                 mapStateSource={mapStateSource}
                 hookRegister={hookRegister}
-                layers={map && map.layers}
+                layers={getDerivedLayersVisibility(map.layers, map.groups)}
                 options={{ style: { margin: '0 10px 10px 10px', height: 'calc(100% - 10px)' }}}
                 env={env}
             />

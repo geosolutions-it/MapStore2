@@ -557,11 +557,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Mostra layers",
-            "showLegend": "Mostra legenda",
-            "hideLegend": "Nascondi legenda"
-        },
         "addgroup": {
             "addbtn": "Aggiungi",
             "groupName": "Nome del gruppo"
@@ -588,6 +583,7 @@
             "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
+            "emptyLayerTree": "La lista dei layer è vuota. Aggiungi un nuovo layer dal catalogo",
             "filterPlaceholder": "Filtra layers",
             "clearFilter": "Pulisci filtro",
             "toolReloadLayerTooltip": "Forza caricamento del livello selezionato",
@@ -625,6 +621,22 @@
             "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
             "notVisibleSwitchTo3D": "Passa alla modalità mappa 3D per vedere questo layer",
             "notVisibleSwitchTo2D": "Passa alla modalità mappa 2D per vedere questo layer",
+            "toolGroupShowAllChildren": "Mostra di tutti i nodi secondari",
+            "toolGroupHideAllChildren": "Nascondi di tutti i nodi secondari",
+            "activateToolGroupMutuallyExclusive": "Attiva la visibilità mutuamente esclusiva dei nodi secondari",
+            "deactivateToolGroupMutuallyExclusive": "Disattiva la visibilità mutuamente esclusiva dei nodi secondari",
+            "toolGroupCollapseAllChildren": "Comprimi tutti i nodi secondari",
+            "toolGroupExpandAllChildren": "Espandi tutti i nodi secondari",
+            "closeOnMapInitialization": "Mantieni chiuso all'inizializzazione della mappa",
+            "openOnMapInitialization": "Apri all'inizializzazione della mappa",
+            "defaultTheme": "Tema predefinito",
+            "legendTheme": "Tema legenda",
+            "showFullTitle": "Mostra titolo completo",
+            "hideFullTitle": "Titolo su una sola riga",
+            "showOpacitySlider": "Mostra strumento opacità",
+            "hideOpacitySlider": "Nascondi strumento opacità",
+            "showOpacityTooltip": "Mostra valore dell'opacità",
+            "hideOpacityTooltip": "Nascondi valore dell'opacità",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -690,7 +702,7 @@
                 "configuration": "Configurazione",
                 "apply": "Applicare la classificazione",
                 "restore": "Annulla le personalizzazioni",
-                "go_to_cfg": "Configura ...",
+                "goToCfg": "Configura ...",
                 "go_to_thema": "Usa questa configurazione",
                 "cfgError": "Errore nella configurazione JSON",
                 "classify": "Classificazione",
@@ -819,6 +831,7 @@
             "saveMeasure": "Salva le misure nell'annotazione",
             "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello",
+            "lengthMeasure": "Misurare la distanza geodesica nello spazio 3D",
             "polylineDistance3DMeasure": "Misurare la distanza nello spazio 3D",
             "area3DMeasure": "Misurare l'area nello spazio 3D",
             "pointCoordinatesMeasure": "Misurare le coordinate di un punto",
@@ -1648,7 +1661,12 @@
             "allowUnsecureLayers": {
               "label": "Consenti livelli non sicuri",
               "tooltip": "L'aggiunta di un livello da mappare con questa opzione abilitata, costringe l'applicazione ad applicare il proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Ordina per",
+                "tooltip": "Aggiungi il prefisso dello spazio dei nomi alla proprietà del nome. cioè ${namespace}:${name}",
+                "placeholder": "Inserisci un nome"
+              }
         },
         "uploader": {
             "filename": "File Name",
@@ -2579,6 +2597,8 @@
             "alertForceTranslate": "Passando all'editor visuale perderai tutte le modifiche applicate con l'editor testuale. Sei sicuro di passare alla modalità editor visuale?",
             "stayInTextareaEditor": "No, continua con l'editor testuale",
             "useLatestValidStyle": "Sì, passa all'editor visuale",
+            "alertCustomParamsNotValid": "Perderai tutte le modifiche aggiunte nella modalità di testo chiudendo l'editor parametri personalizzati. Sei sicuro di chiudere l'editor?",
+            "closeCustomParamsEditor": "Sì, chiudi l'editore",
             "validationError": "Errore di validazione",
             "incorrectPropertyInputError": "Questo è probabilmente dovuto ad un valore mancante o non valido negli input delle proprietà dell'editor di stile.",
             "emptyRuleEditorTitle": "Aggiungi nuove regole",
@@ -2590,6 +2610,7 @@
             "redChannel": "Canale rosso",
             "greenChannel": "Canale verde",
             "blueChannel": "Canale blue",
+            "alphaChannel": "Canale alfa",
             "grayChannel": "Canale",
             "ruleClassification": "Classificazione",
             "ruleRaster": "Raster",
@@ -2656,7 +2677,15 @@
             "msExtrudedHeight": "Altezza estrusa",
             "msExtrusionColor": "Colore estrusione",
             "msExtrusionType": "Tipo estrusione",
-            "wall": "Muro"
+            "wall": "Muro",
+            "enableBanding": "Stile a fascia",
+            "selectChannel": "Seleziona una banda",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Valore minimo dei dati di origine",
+            "maxSourceValue": "Valore massimo dei dati di origine",
+            "customParams": "Parametri personalizzati",
+            "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!"
         },
         "playback": {
             "settings": {

@@ -14,7 +14,8 @@ import {
     customVariablesEnabledSelector,
     isNewContext,
     prefetchedDataSelector,
-    disableImportSelector
+    disableImportSelector,
+    generateContextResource
 } from '../contextcreator';
 
 const testState = {
@@ -78,5 +79,100 @@ describe('contextcreator selectors', () => {
                 stepId: "configure-map"
             }
         })).toBeTruthy();
+    });
+    it('generateContextResource', () => {
+        expect(generateContextResource({})).toEqual({
+            category: 'CONTEXT',
+            data: {
+                mapConfig: {},
+                theme: undefined,
+                customVariablesEnabled: false,
+                plugins: { desktop: [] },
+                userPlugins: []
+            },
+            metadata: {
+                name: undefined
+            }
+        });
+        expect(generateContextResource({
+            map: {
+                present: {
+                    zoom: 10
+                }
+            },
+            contextcreator: {
+                plugins: [{ name: 'Map' }],
+                customVariablesEnabled: true,
+                selectedTheme: {
+                    variables: {
+                        'ms-main-color': '#000000',
+                        'ms-main-bg': '#9b3232',
+                        'ms-primary-contrast': '#FFFFFF',
+                        'ms-primary': '#0D7185',
+                        'ms-success-contrast': '#FFFFFF',
+                        'ms-success': '#398439'
+                    }
+                }
+            }
+        })).toEqual({
+            category: 'CONTEXT',
+            data: {
+                mapConfig: {
+                    version: 2,
+                    map: {
+                        center: undefined,
+                        maxExtent: undefined,
+                        projection: undefined,
+                        units: undefined,
+                        mapInfoControl: undefined,
+                        zoom: 10,
+                        mapOptions: {},
+                        layers: [],
+                        groups: [],
+                        backgrounds: [],
+                        text_search_config: undefined,
+                        bookmark_search_config: undefined
+                    },
+                    catalogServices: {
+                        services: undefined,
+                        selectedService: undefined
+                    },
+                    widgetsConfig: {
+                        widgets: undefined,
+                        layouts: undefined,
+                        collapsed: undefined
+                    },
+                    mapInfoConfiguration: {},
+                    dimensionData: {
+                        currentTime: undefined,
+                        offsetTime: undefined
+                    },
+                    timelineData: {
+                        selectedLayer: undefined,
+                        endValuesSupport: undefined,
+                        snapRadioButtonEnabled: false,
+                        layers: undefined
+                    },
+                    featureGrid: {
+                        attributes: undefined
+                    },
+                    toc: undefined
+                },
+                theme: {
+                    variables: {
+                        'ms-main-color': '#000000',
+                        'ms-main-bg': '#9b3232',
+                        'ms-primary-contrast': '#FFFFFF',
+                        'ms-primary': '#0D7185',
+                        'ms-success-contrast': '#FFFFFF',
+                        'ms-success': '#398439'
+                    }
+                },
+                customVariablesEnabled: true,
+                plugins: { desktop: [] },
+                userPlugins: []
+            },
+            metadata: { name: undefined }
+        });
     });
 });

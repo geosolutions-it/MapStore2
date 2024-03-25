@@ -557,11 +557,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Mostrar capas",
-            "showLegend": "Mostrar leyenda",
-            "hideLegend": "Ocultar leyenda"
-        },
         "addgroup": {
             "addbtn": "Añadir",
             "groupName": "Nombre del grupo"
@@ -588,6 +583,7 @@
             "layerFilterTooltip": "Filtrar capas",
             "toolDownloadTooltip": "Exportar datos de la capa",
             "noFilteredResults": "Ningún resultado",
+            "emptyLayerTree": "El árbol de capas está vacío. Agregue una nueva capa del catálogo",
             "filterPlaceholder": "Filtrar capas",
             "clearFilter": "Quitar filtro",
             "toolReloadLayerTooltip": "Fuerza la recarga de la capa seleccionada",
@@ -625,6 +621,22 @@
             "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
             "notVisibleSwitchTo3D": "Cambie al modo de mapa 3D para ver esta capa",
             "notVisibleSwitchTo2D": "Cambie al modo de mapa 2D para ver esta capa",
+            "toolGroupShowAllChildren": "Activar la visibilidad de todos los nodos secundarios",
+            "toolGroupHideAllChildren": "Desactivar la visibilidad de todos los nodos secundarios",
+            "activateToolGroupMutuallyExclusive": "Activar visibilidad mutuamente excluyente de nodos secundarios",
+            "deactivateToolGroupMutuallyExclusive": "Desactivar la visibilidad mutuamente excluyente de los nodos secundarios",
+            "toolGroupCollapseAllChildren": "Contraer todos los nodos secundarios",
+            "toolGroupExpandAllChildren": "Expandir todos los nodos secundarios",
+            "closeOnMapInitialization": "Mantener cerrado durante la inicialización del mapa",
+            "openOnMapInitialization": "Abrir al inicializar el mapa",
+            "defaultTheme": "Tema predeterminado",
+            "legendTheme": "Tema de leyenda",
+            "showFullTitle": "Mostrar título completo",
+            "hideFullTitle": "Título en una sola línea",
+            "showOpacitySlider": "Mostrar control deslizante de opacidad",
+            "hideOpacitySlider": "Ocultar control deslizante de opacidad",
+            "showOpacityTooltip": "Mostrar información sobre herramientas de opacidad",
+            "hideOpacityTooltip": "Ocultar información sobre herramientas de opacidad",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -690,7 +702,7 @@
                 "configuration": "Configuración",
                 "apply": "Aplicar clasificación",
                 "restore": "Restablecer personalizaciones",
-                "go_to_cfg": "Configurar ...",
+                "goToCfg": "Configurar ...",
                 "go_to_thema": "Utilizar esta configuración",
                 "cfgError": "Error en la configuración JSON",
                 "classify": "Clasificar",
@@ -819,6 +831,7 @@
             "saveMeasure": "Guarde las medidas en la anotación",
             "resetTooltip": "Medidas claras",
             "addAsLayer": "Agregar como capa",
+            "lengthMeasure": "Medir la distancia geodésica en el espacio 3D",
             "polylineDistance3DMeasure": "Medir distancia en el espacio 3D",
             "area3DMeasure": "Medir área en espacio 3D",
             "pointCoordinatesMeasure": "Medir las coordenadas del punto",
@@ -1649,7 +1662,12 @@
             "allowUnsecureLayers": {
               "label": "Permitir capas no seguras",
               "tooltip": "Agregar una capa al mapa con esta opción habilitada obliga a la aplicación a aplicar proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Ordenar por",
+                "tooltip": "Agregue el prefijo del espacio de nombres a la propiedad del nombre. es decir, ${namespace}:${name}",
+                "placeholder": "Ingresar nombre"
+              }
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -2578,6 +2596,8 @@
             "alertForceTranslate": "Perderá todos los cambios agregados en el texto al cambiar al editor visual. ¿Está seguro de cambiar al modo editor de estilo visual?",
             "stayInTextareaEditor": "No, continuar en textarea",
             "useLatestValidStyle": "Sí, cambie al editor visual",
+            "alertCustomParamsNotValid": "Perderá todos los cambios agregados en el modo de texto cerrando el editor de parámetros personalizados. ¿Estás seguro de cerrar el editor?",
+            "closeCustomParamsEditor": "Sí, cierre el editor",
             "validationError": "Error de validación",
             "incorrectPropertyInputError": "Esto probablemente se deba a un valor faltante o no válido en las entradas de propiedad del editor de estilos",
             "emptyRuleEditorTitle": "Agregar nuevas reglas",
@@ -2589,6 +2609,7 @@
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
+            "alphaChannel": "Alpha channel",
             "grayChannel": "Channel",
             "ruleClassification": "Clasificación",
             "ruleRaster": "Ráster",
@@ -2655,7 +2676,15 @@
             "msExtrudedHeight": "Altura extruida",
             "msExtrusionColor": "Color de extrusión",
             "msExtrusionType": "Tipo de extrusión",
-            "wall": "Muro"
+            "wall": "Muro",
+            "enableBanding": "Estilo de banda",
+            "selectChannel": "Selecciona una banda",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Valor mínimo de datos de origen",
+            "maxSourceValue": "Valor máximo de datos de origen",
+            "customParams": "Parámetros personalizados",
+            "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!"
         },
         "playback": {
             "settings": {

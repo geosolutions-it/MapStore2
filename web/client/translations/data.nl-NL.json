@@ -545,11 +545,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Toon lagen",
-            "showLegend": "Toon legende",
-            "hideLegend": "Verberg legende"
-        },
         "addgroup": {
             "addbtn": "Toevoegen",
             "groupName": "Groepsnaam"
@@ -678,7 +673,7 @@
                 "configuration": "Configuratie",
                 "apply": "Classificatie toepassen",
                 "restore": "Reset aanpassingen",
-                "go_to_cfg": "Configureren...",
+                "goToCfg": "Configureren...",
                 "go_to_thema": "Gebruik deze configuratie",
                 "cfgError": "Fout in JSON configuratie",
                 "classify": "Classificeren",

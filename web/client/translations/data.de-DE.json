@@ -595,11 +595,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Ebenen anzeigen",
-            "showLegend": "Legende anzeigen",
-            "hideLegend": "Legende ausblenden"
-        },
         "addgroup": {
             "addbtn": "Hinzufügen",
             "groupName": "Gruppenname"
@@ -626,6 +621,7 @@
             "layerFilterTooltip": "Ausgewählte Ebene filtern",
             "toolDownloadTooltip": "Daten zur ausgewählten Ebene exportieren",
             "noFilteredResults": "Keine Ergebnisse",
+            "emptyLayerTree": "Der Ebenenbaum ist leer. Bitte fügen Sie eine neue Ebene aus dem Katalog hinzu",
             "filterPlaceholder": "Ebenen filtern",
             "clearFilter": "Filter löschen",
             "toolReloadLayerTooltip": "Erneutes Laden der ausgewählten Ebene erzwingen",
@@ -664,6 +660,22 @@
             "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
             "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",
             "notVisibleSwitchTo2D": "Wechseln Sie in den 2D-Kartenmodus, um diesen Layer anzuzeigen",
+            "toolGroupShowAllChildren": "Sichtbarkeit aller untergeordneten Knoten aktivieren",
+            "toolGroupHideAllChildren": "Sichtbarkeit aller untergeordneten Knoten deaktivieren",
+            "activateToolGroupMutuallyExclusive": "Aktivieren Sie sich gegenseitig ausschließende Sichtbarkeit von untergeordneten Knoten",
+            "deactivateToolGroupMutuallyExclusive": "Deaktivieren Sie sich gegenseitig ausschließende Sichtbarkeit von untergeordneten Knoten",
+            "toolGroupCollapseAllChildren": "Alle untergeordneten Knoten reduzieren",
+            "toolGroupExpandAllChildren": "Alle untergeordneten Knoten erweitern",
+            "closeOnMapInitialization": "Bei Karteninitialisierung geschlossen bleiben",
+            "openOnMapInitialization": "Bei Karteninitialisierung öffnen",
+            "defaultTheme": "Standardthema",
+            "legendTheme": "Legendenthema",
+            "showFullTitle": "Vollständigen Titel anzeigen",
+            "hideFullTitle": "Titel in einer einzelnen Zeile",
+            "showOpacitySlider": "Deckkraft-Schieberegler anzeigen",
+            "hideOpacitySlider": "Deckkraft-Schieberegler ausblenden",
+            "showOpacityTooltip": "Deckkraft-Tooltip anzeigen",
+            "hideOpacityTooltip": "Deckkraft-Tooltip ausblenden",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -729,7 +741,7 @@
                 "configuration": "Konfiguration",
                 "apply": "Klassifizierung anwenden",
                 "restore": "Anpassungen zurücksetzen",
-                "go_to_cfg": "Konfigurieren...",
+                "goToCfg": "Konfigurieren...",
                 "go_to_thema": "Verwenden Sie diese Konfiguration",
                 "cfgError": "Fehler in der Konfigurations-JSON",
                 "classify": "Klassifizieren",
@@ -858,6 +870,7 @@
             "saveMeasure": "Speichern Sie die Messungen in Notizen / Zeichnungen",
             "resetTooltip": "Messung entfernen",
             "addAsLayer": "Als Ebene hinzufügen",
+            "lengthMeasure": "Messen Sie die geodätische Entfernung im 3D-Raum",
             "polylineDistance3DMeasure": "Entfernung im 3D-Raum messen",
             "area3DMeasure": "Fläche im 3D-Raum messen",
             "pointCoordinatesMeasure": "Punktkoordinaten messen",
@@ -1687,6 +1700,11 @@
           "allowUnsecureLayers": {
               "label": "Nicht sichere Ebenen zulassen",
               "tooltip": "Das Hinzufügen einer Ebene zur Karte mit aktivierter Option zwingt die Anwendung, Proxy anzuwenden"
+          },
+          "sortBy": {
+            "label": "Sortiere nach",
+            "tooltip": "Namespace-Präfix zur Namenseigenschaft hinzufügen. d.h. ${namespace}:${name}",
+            "placeholder": "Name eingeben"
           }
         },
         "uploader": {
@@ -2616,6 +2634,8 @@
             "alertForceTranslate": "Sie verlieren alle im Code-Editor gemachten Änderungen, wenn Sie zum visuellen Editor wechseln. Sind Sie sicher, dass Sie zum visuellen Stil-Editor wechseln?",
             "stayInTextareaEditor": "Nein, weiter im Code-Editor",
             "useLatestValidStyle": "Ja, zum visuellen Editor wechseln",
+            "alertCustomParamsNotValid": "Sie verlieren alle im Textmodus hinzugefügten Änderungen, indem Sie den benutzerdefinierten Params -Editor schließen. Sind Sie sicher, den Herausgeber zu schließen?",
+            "closeCustomParamsEditor": "Ja, schließen Sie den Herausgeber",
             "validationError": "Validierungsfehler",
             "incorrectPropertyInputError": "Dies liegt wahrscheinlich an einem fehlenden oder ungültigen Wert in den Eigenschaftseingaben des Stileditors.",
             "emptyRuleEditorTitle": "Neue Regeln hinzufügen",
@@ -2627,6 +2647,7 @@
             "redChannel": "Roter Kanal",
             "greenChannel": "Grüner Kanal",
             "blueChannel": "Blauer Kanal",
+            "alphaChannel": "Alpha Kanal",
             "grayChannel": "Graukanal",
             "ruleClassification": "Klassifikation",
             "ruleRaster": "Raster",
@@ -2693,7 +2714,15 @@
             "msExtrudedHeight": "Extrudierte Höhe",
             "msExtrusionColor": "Extrusionsfarbe",
             "msExtrusionType": "Extrusionstyp",
-            "wall": "Wand"
+            "wall": "Wand",
+            "enableBanding": "Band styling",
+            "selectChannel": "Wählen Sie eine Band aus",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Mindestwert der Quelldaten",
+            "maxSourceValue": "Maximaler Quelldatenwert",
+            "customParams": "Benutzerdefinierte Parameter",
+            "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
         },
         "playback": {
             "settings": {
