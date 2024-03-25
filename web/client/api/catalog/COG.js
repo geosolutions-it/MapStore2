@@ -77,7 +77,7 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                 sources: [{url: _url}],
                 options: service.options || {}
             };
-            return LayerUtils.getLayerConfig({_url, layer, controller})
+            return LayerUtils.getLayerConfig({url: _url, layer, controller})
                 .then(lyr => {
                     const records = [lyr];
                     return {
