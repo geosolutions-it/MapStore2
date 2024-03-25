@@ -1475,34 +1475,53 @@ describe('Test styleeditor epics, with mock axios', () => {
             state);
 
     });
-    it('test toggleStyleEditorEpic enabled to true and layer url is array', (done) => {
+    it('test toggleStyleEditorEpic style service where layer url is array', (done) => {
+        mockAxios.onGet(/\/manifest/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'gt-css-2.16' }]} }];
+        });
+
+        mockAxios.onGet(/\/version/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        mockAxios.onGet(/\/fonts/).reply(() => {
+            return [ 200, { fonts: ['Arial'] }];
+        });
 
         const state = {
             layers: {
                 flat: [
                     {
                         id: 'layerId',
-                        name: 'layerName',
+                        name: 'layerWorkspace:layerName',
                         url: ['/geoserver1/', '/geoserver2/', '/geoserver3/']
                     }
                 ],
                 selected: [
                     'layerId'
-                ]
+                ],
+                settings: {
+                    options: {
+                        opacity: 1
+                    }
+                }
             }
         };
-        const NUMBER_OF_ACTIONS = 1;
 
+        const NUMBER_OF_ACTIONS = 3;
         const results = (actions) => {
-            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
-                actions.map((action) => {
-                    switch (action.type) {
-                    case LOADING_STYLE:
-                        expect(action.status).toBe('global');
-                        break;
-                    default:
-                        expect(true).toBe(false);
+                const service = actions.pop()?.service;
+
+                expect(service).toEqual({
+                    baseUrl: state.layers.flat[0].url[0],
+                    version: '2.16',
+                    formats: [ 'css', 'sld' ],
+                    availableUrls: [],
+                    fonts: ['Arial'],
+                    classificationMethods: {
+                        vector: [ 'equalInterval', 'quantile', 'jenks' ],
+                        raster: [ 'equalInterval', 'quantile', 'jenks' ]
                     }
                 });
             } catch (e) {
@@ -1517,6 +1536,5 @@ describe('Test styleeditor epics, with mock axios', () => {
             toggleStyleEditor(undefined, true),
             results,
             state);
-
     });
 });

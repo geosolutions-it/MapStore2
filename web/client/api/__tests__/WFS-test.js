@@ -4,7 +4,10 @@ import expect from 'expect';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
 import {
-    getFeatureLayer
+    getFeatureLayer,
+    toDescribeURL,
+    getCapabilitiesURL,
+    getFeatureURL
 } from '../WFS';
 
 let mockAxios;
@@ -118,6 +121,33 @@ describe('Test WFS ogc API functions', () => {
                 done();
             });
         });
+    });
+    it('toDescribeURL with URL array', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
+
+        expect(toDescribeURL(_url, 'testName').split('?')[0]).toBe(_url[0]);
+    });
+    it('getCapabilitiesURL with URL array', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
+
+        expect(getCapabilitiesURL(_url).split('?')[0]).toBe(_url[0]);
+    });
+    it('getFeatureURL with URL array', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
+
+        expect(getFeatureURL(_url).split('?')[0]).toBe(_url[0]);
     });
 
 });

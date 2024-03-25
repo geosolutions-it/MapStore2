@@ -163,7 +163,7 @@ export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
         if (wms) {
             let urlObj = urlUtil.parse(getDefaultUrl(wms.value), true);
             let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
-            return toReference('wms', { ...wms, name: layerName }, options);
+            return toReference('wms', { ...wms, value: urlUtil.format(urlObj), name: layerName }, options);
         }
         if (checkEsri) {
             // checks for esri arcgis in geonode csw
