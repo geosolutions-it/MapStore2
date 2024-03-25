@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate } from '../URLUtils';
+import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate, getPathURLFromFileUrl } from '../URLUtils';
 
 const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
 const url2 = "https://demo.geo-solutions.it/geoserver/wfs";
@@ -20,6 +20,7 @@ const urlPartsResult1 = {
     rootPath: "/geoserver/wfs",
     applicationRootPath: 'geoserver'
 };
+const filePathURL = "http://localhost:3000/output/run_04/index.json";
 describe('URLUtils', () => {
     it('test urlParts', () => {
         const data = urlParts(url1);
@@ -169,6 +170,10 @@ describe('URLUtils', () => {
     ];
     it('isValidURLTemplate', () => {
         SAMPLE_URL_TEMPLATES.map(url => expect(isValidURLTemplate(url)).toBeTruthy());
+    });
+    it('test getPathURLFromFileUrl', () => {
+        let pathFolderUrl = getPathURLFromFileUrl(filePathURL);
+        expect(pathFolderUrl).toEqual("http://localhost:3000/output/run_04/");
     });
 });
 

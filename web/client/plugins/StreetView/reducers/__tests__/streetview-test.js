@@ -20,7 +20,7 @@ import {
     cyclomediaAPIKeySelector,
     povSelector
 } from '../../selectors/streetView';
-import { configure, streetViewAPILoaded, setLocation, setPov } from '../../actions/streetView';
+import { configure, streetViewAPILoaded, setLocation, setPov, resetViewerData } from '../../actions/streetView';
 
 describe('StreetView reducer', () => {
     const stateMocker = createStateMocker({ streetView });
@@ -63,5 +63,21 @@ describe('StreetView reducer', () => {
         expect(apiLoadedSelectorCreator('cyclomedia')(state)).toBeTruthy();
         expect(currentProviderApiLoadedSelector(state)).toBeTruthy();
     });
-
+    it('reset data viewer', () => {
+        const TEST_PANO = "TEST_PANO";
+        const LOCATION = {
+            pano: TEST_PANO,
+            latLng: {
+                lat: location?.latLng?.lat(),
+                lng: location?.latLng?.lng()
+            }
+        };
+        const TEST_POV = {heading: 1, pitch: 2};
+        const state = stateMocker(setLocation(LOCATION), setPov(TEST_POV));
+        expect(locationSelector(state)).toEqual(LOCATION);
+        expect(povSelector(state)).toEqual(TEST_POV);
+        const editedState = stateMocker(resetViewerData());
+        expect(locationSelector(editedState)).toEqual(undefined);
+        expect(povSelector(editedState)).toEqual(undefined);
+    });
 });

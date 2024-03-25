@@ -17,7 +17,6 @@ import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
 
 const createLayer = (options, map) => {
-
     if (!options.visibility) {
         return {
             detached: true,
@@ -43,7 +42,6 @@ const createLayer = (options, map) => {
                     styledFeatures.setStyleFunction(styleFunc);
                 });
         });
-
     return {
         detached: true,
         styledFeatures,

@@ -7,8 +7,7 @@ import { setControlProperty } from '../../../../actions/controls';
 
 import { streetViewSyncLayer, streetViewSetupTearDown } from '../streetView';
 import { setPov, setLocation, updateStreetViewLayer } from '../../actions/streetView';
-import {REGISTER_EVENT_LISTENER} from '../../../../actions/map';
-
+import {REGISTER_EVENT_LISTENER, ZOOM_TO_EXTENT} from '../../../../actions/map';
 
 describe('StreetView epics', () => {
     it('update layer on setLocation', (done) => {
@@ -19,7 +18,7 @@ describe('StreetView epics', () => {
         testEpic(streetViewSyncLayer, NUM_ACTIONS, action, ([update]) => {
             expect(update).toExist();
             expect(update.type).toBe(UPDATE_ADDITIONAL_LAYER);
-            expect(update.options.features[0].geometry.coordinates).toEqual([LNG, LAT]);
+            expect(update.options.features[0].geometry.coordinates).toEqual([LNG, LAT, 0]);
             done();
         }, {streetView: {location: {latLng: {lat: LAT, lng: LNG}}}});
     });
@@ -32,8 +31,7 @@ describe('StreetView epics', () => {
         testEpic(streetViewSyncLayer, NUM_ACTIONS, action, ([update]) => {
             expect(update).toExist();
             expect(update.type).toBe(UPDATE_ADDITIONAL_LAYER);
-            expect(update.options.features[0].geometry.coordinates).toEqual([LNG, LAT]);
-            expect(decodeURIComponent(update.options.features[0].style[0].symbolUrl).includes(`rotate(${rotation})`)).toBeTruthy();
+            expect(update.options.features[0].geometry.coordinates).toEqual([LNG, LAT, 0]);
             done();
         }, {streetView: {pov: {heading: rotation}, location: {latLng: {lat: LAT, lng: LNG}}}});
     });
@@ -76,6 +74,47 @@ describe('StreetView epics', () => {
                     latLng: {
                         lat: 1,
                         lng: 2
+                    }
+                }
+            },
+            controls: {
+                [CONTROL_NAME]: {
+                    enabled: true
+                }
+            }
+        });
+    });
+    it('streetViewSetupTearDown for mapillary', (done) => {
+        let action = setControlProperty(CONTROL_NAME, 'enabled', false);
+        const NUM_ACTIONS = 4;
+        testEpic(streetViewSetupTearDown, NUM_ACTIONS, action, ([
+            zoomToExtent,
+            register,
+            updateAdditionalLayers1,
+            updateAdditionalLayers2
+        ]) => {
+            expect(zoomToExtent.type).toBe(ZOOM_TO_EXTENT);
+            expect(zoomToExtent.crs).toBe('EPSG:4326');
+            expect(register.type).toBe(REGISTER_EVENT_LISTENER);
+            expect(register.eventName).toBe('click');
+            expect(register.toolName).toBe(CONTROL_NAME);
+            expect(updateAdditionalLayers1.type).toBe(UPDATE_ADDITIONAL_LAYER);
+            expect(updateAdditionalLayers1.options.owner).toBe('mapillaryViewer');
+            expect(updateAdditionalLayers1.options.isGeojson).toBe(true);
+            expect(updateAdditionalLayers2.type).toBe(UPDATE_ADDITIONAL_LAYER);
+            done();
+        }, {
+            streetView: {
+                location: {
+                    latLng: {
+                        lat: 1,
+                        lng: 2
+                    }
+                },
+                configuration: {
+                    provider: 'mapillary',
+                    providerSettings: {
+                        ApiURL: "base/web/client/test-resources/mapillary/output/run_04/index.json"
                     }
                 }
             },

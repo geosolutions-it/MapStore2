@@ -1,5 +1,5 @@
 
-import { CONFIGURE, SET_LOCATION, SET_POV, API_LOADING, API_LOADED, RESET } from '../actions/streetView';
+import { CONFIGURE, SET_LOCATION, SET_POV, API_LOADING, API_LOADED, RESET, RESET_STREET_VIEW_DATA } from '../actions/streetView';
 
 const INITIAL_STATE = {};
 export default function streetView(state = INITIAL_STATE, action) {
@@ -36,6 +36,13 @@ export default function streetView(state = INITIAL_STATE, action) {
             apiLoaded: {
                 [action.provider]: true
             }
+        };
+    }
+    case RESET_STREET_VIEW_DATA: {
+        return {
+            ...state,
+            location: undefined,
+            pov: undefined
         };
     }
     case RESET: {

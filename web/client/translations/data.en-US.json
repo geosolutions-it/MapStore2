@@ -3981,7 +3981,9 @@
           "emptyDescription": "Click on the map to start browsing the images of street view",
           "messages": {
             "noDataForPosition": "no street-view data for this position",
-            "unknownError": "unknown error, see console"
+            "unknownError": "unknown error, see console",
+            "errorServiceUrl": "Service not available. Please, check the provided URL",
+            "errorRetriveingLayerData": "There was an error loading the layer data"
           },
           "loadingAPI": "Loading API...",
           "cyclomedia": {

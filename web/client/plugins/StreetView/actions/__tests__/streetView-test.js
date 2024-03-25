@@ -7,8 +7,8 @@ import {
     configure, CONFIGURE,
     reset, RESET,
     toggleStreetView,
-    updateStreetViewLayer, UPDATE_STREET_VIEW_LAYER
-
+    updateStreetViewLayer, UPDATE_STREET_VIEW_LAYER,
+    resetViewerData, RESET_STREET_VIEW_DATA
 } from '../streetView';
 import { TOGGLE_CONTROL } from '../../../../actions/controls';
 import { CONTROL_NAME } from '../../constants';
@@ -98,5 +98,10 @@ describe('StreetView actions', () => {
         expect(ret).toExist();
         expect(ret.type).toBe(UPDATE_STREET_VIEW_LAYER);
         expect(ret.updates).toBe(updates);
+    });
+    it('resetViewerData', () => {
+        const ret = resetViewerData();
+        expect(ret).toExist();
+        expect(ret.type).toBe(RESET_STREET_VIEW_DATA);
     });
 });

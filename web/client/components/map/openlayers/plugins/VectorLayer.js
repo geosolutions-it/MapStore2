@@ -28,7 +28,6 @@ Layers.registerType('vector', {
             // we could implement a different loading strategy to visualize correctly the Circle style and Geodesic lines
             useSpatialIndex: false
         });
-
         const layer = new VectorLayer({
             msId: options.id,
             source: source,
