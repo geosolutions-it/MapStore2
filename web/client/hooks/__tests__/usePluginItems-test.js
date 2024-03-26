@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
