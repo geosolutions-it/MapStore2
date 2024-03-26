@@ -8,7 +8,7 @@
 
 import expect from 'expect';
 
-import API, { getLayerTileMatrixSetsInfo } from '../WMTS';
+import API, { getLayerTileMatrixSetsInfo, parseUrl } from '../WMTS';
 import { getGetTileURL } from '../../utils/WMTSUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
@@ -249,5 +249,14 @@ describe('Test correctness of the WMTS APIs (mock axios)', () => {
                 done();
             })
             .catch(done);
+    });
+    it('parseUrl', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
+
+        expect(parseUrl(_url).split('?')[0]).toBe(_url[0]);
     });
 });

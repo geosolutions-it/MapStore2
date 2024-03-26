@@ -10,9 +10,10 @@ import urlUtil from 'url';
 import assign from 'object-assign';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 import {toOGCFilterParts} from '../utils/FilterUtils';
+import { getDefaultUrl } from '../utils/URLUtils';
 
 export const toDescribeURL = (url, typeName) => {
-    const parsed = urlUtil.parse(url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(
         {
             ...parsed,
@@ -45,7 +46,7 @@ export const getFeatureSimple = function(baseUrl, params) {
 };
 
 export const getCapabilitiesURL = (url, {version = "1.1.0"} = {}) => {
-    const parsed = urlUtil.parse(url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, {
         query: assign({
             service: "WFS",
@@ -56,7 +57,7 @@ export const getCapabilitiesURL = (url, {version = "1.1.0"} = {}) => {
 };
 
 export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = {}) => {
-    const parsed = urlUtil.parse(url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, {
         query: assign({
             service: "WFS",
@@ -130,7 +131,7 @@ export const getCapabilities = function(url) {
  * @deprecated
  */
 export const describeFeatureTypeOGCSchemas = function(url, typeName) {
-    const parsed = urlUtil.parse(url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     const describeLayerUrl = urlUtil.format(assign({}, parsed, {
         query: assign({
             service: "WFS",

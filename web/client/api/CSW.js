@@ -16,9 +16,10 @@ import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
 import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG, getExtentFromNormalized } from '../utils/CoordinatesUtils';
 import WMS from "../api/WMS";
 import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
+import { getDefaultUrl } from '../utils/URLUtils';
 
-const parseUrl = (url) => {
-    const parsed = urlUtil.parse(url, true);
+export const parseUrl = (url) => {
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, { search: null }, {
         query: assign({
             service: "CSW",
@@ -170,9 +171,9 @@ export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
         const refs = castArray(dc.references);
         const wms = head(refs.filter((ref) => { return ref.scheme && REGEX_WMS_EXPLICIT.some(regex => ref.scheme.match(regex)); }));
         if (wms) {
-            let urlObj = urlUtil.parse(wms.value, true);
+            let urlObj = urlUtil.parse(getDefaultUrl(wms.value), true);
             let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
-            return toReference('wms', { ...wms, name: layerName }, options);
+            return toReference('wms', { ...wms, value: urlUtil.format(urlObj), name: layerName }, options);
         }
         if (checkEsri) {
             // checks for esri arcgis in geonode csw

@@ -7,7 +7,7 @@
  */
 import expect from 'expect';
 
-import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate } from '../URLUtils';
+import { urlParts, isSameUrl, sameQueryParams, isValidURL, isValidURLTemplate, getDefaultUrl } from '../URLUtils';
 
 const url1 = "https://demo.geo-solutions.it:443/geoserver/wfs";
 const url2 = "https://demo.geo-solutions.it/geoserver/wfs";
@@ -169,6 +169,15 @@ describe('URLUtils', () => {
     ];
     it('isValidURLTemplate', () => {
         SAMPLE_URL_TEMPLATES.map(url => expect(isValidURLTemplate(url)).toBeTruthy());
+    });
+    it('getDefaultUrl', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
+
+        expect(getDefaultUrl(_url)).toBe(_url[0]);
     });
 });
 
