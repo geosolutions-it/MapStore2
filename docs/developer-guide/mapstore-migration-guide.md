@@ -28,44 +28,6 @@ With this release the maven `pom.xml` files has been restructured to centralize 
 This regards also the projects that now hold the versions of the dependencies in the properties section.
 Your projects will work in any case, but we suggest to update your `pom.xml` files to align them to the new structure (see template file in the MapStore2 repository for more details).
 
-### Print config file update
-
-Due to the introduction of the new `Jackson Yaml` parser, the MapStore `config.yaml` file has been reviewed and updated. Below are reported all the relevant changes that need to be applied also to `config.yaml` of MapStore donwstream projects where the printing engine is present.
-
-Due to the new library being stricter on the format of the Yaml, some changes in the configuration files were made, to make them compliant with yaml format:
-
-- Removed not allowed characters from property values (`@` in `@shared.privileged.geoserver.pass@`)
-- Removed references without anchors (document declares link to `*commonFooter` but anchor `&commonFooter` was not defined previously)
-- Added a space between key\value pairs (`"absoluteX: 30"` instead of `"absoluteX:30"`)
-
-Some additional updates has been provided due to parsing issue with the new library:
-
-```yaml
-- !ipMatch
-    host: 127.0.0.1
-    # Allow to all hosts
-    mask: 0.0.0.0
-```
-
-`!ipMatch` is mapped to [AddressHostMatcher](https://github.com/mapfish/mapfish-print-v2/blob/0c055e2a36bec3b12eafd207144ff8eb7b37f987/src/main/java/org/mapfish/print/config/AddressHostMatcher.java#L26), which does not have host property. Should instead use ip property (e.g IP: 127.0.0.1)
-
-```yaml
-- !text
-              width: 300
-              text: '${comment}'
-              ...
-```
-
-`!text` is mapped to [TextBlock class](https://github.com/mapfish/mapfish-print-v2/blob/4b73912e5565ae206af5b5c434ef37454a98c252/src/main/java/org/mapfish/print/config/layout/TextBlock.java#L37). It does not have width property, so it should be removed.
-
-```yaml
-lastPage:
-    rotation: true
-    ...
-```
-
-lastPage is mapped to [LastPage class](https://github.com/mapfish/mapfish-print-v2/blob/4b73912e5565ae206af5b5c434ef37454a98c252/src/main/java/org/mapfish/print/config/layout/LastPage.java#L30), and does not have rotation property.
-
 ### Database update
 
 The resource metadata has been recently extented to include  information about resource creator and editor and to provide the advertises/unadvertised resource functionalities.
@@ -229,6 +191,44 @@ For this reason, if you are using the printing plugin in your project you have t
             </snapshots>
         </repository>
 ```
+
+#### Print config file update
+
+Due to the introduction of the new `Jackson Yaml` parser, the MapStore `config.yaml` file has been reviewed and updated. Below are reported all the relevant changes that need to be applied also to `config.yaml` of MapStore donwstream projects where the printing engine is present.
+
+Due to the new library being stricter on the format of the Yaml, some changes in the configuration files were made, to make them compliant with yaml format:
+
+- Removed not allowed characters from property values (`@` in `@shared.privileged.geoserver.pass@`)
+- Removed references without anchors (document declares link to `*commonFooter` but anchor `&commonFooter` was not defined previously)
+- Added a space between key\value pairs (`"absoluteX: 30"` instead of `"absoluteX:30"`)
+
+Some additional updates has been provided due to parsing issue with the new library:
+
+```yaml
+- !ipMatch
+    host: 127.0.0.1
+    # Allow to all hosts
+    mask: 0.0.0.0
+```
+
+`!ipMatch` is mapped to [AddressHostMatcher](https://github.com/mapfish/mapfish-print-v2/blob/0c055e2a36bec3b12eafd207144ff8eb7b37f987/src/main/java/org/mapfish/print/config/AddressHostMatcher.java#L26), which does not have host property. Should instead use ip property (e.g IP: 127.0.0.1)
+
+```yaml
+- !text
+              width: 300
+              text: '${comment}'
+              ...
+```
+
+`!text` is mapped to [TextBlock class](https://github.com/mapfish/mapfish-print-v2/blob/4b73912e5565ae206af5b5c434ef37454a98c252/src/main/java/org/mapfish/print/config/layout/TextBlock.java#L37). It does not have width property, so it should be removed.
+
+```yaml
+lastPage:
+    rotation: true
+    ...
+```
+
+lastPage is mapped to [LastPage class](https://github.com/mapfish/mapfish-print-v2/blob/4b73912e5565ae206af5b5c434ef37454a98c252/src/main/java/org/mapfish/print/config/layout/LastPage.java#L30), and does not have rotation property.
 
 ### Annotations plugin refactor
 
