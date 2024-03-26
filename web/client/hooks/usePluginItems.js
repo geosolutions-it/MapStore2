@@ -60,8 +60,9 @@ const usePluginItems = ({
         loadedPlugins,
         loaderComponent
     };
+    const itemsKeys = items.map(({ name }) => name).join(',');
     const loadedPluginsKeys = join(Object.keys(loadedPlugins || {}), ',');
-    const configuredItems = useMemo(() => configurePluginItems(props.current), [loadedPluginsKeys, ...dependencies]);
+    const configuredItems = useMemo(() => configurePluginItems(props.current), [loadedPluginsKeys, itemsKeys, ...dependencies]);
     return configuredItems;
 };
 
