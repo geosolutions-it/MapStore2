@@ -404,7 +404,7 @@ In addition to the standard options, only for COG catalog sources, through the *
     The tool capabilities currently available for COG layers are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
-    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the[Display](layer-settings.md#cog-layer) options
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#cog-layer) options and the [Style](layer-settings.md#styling-for-cog-layer)
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
 
 ### IFC Model Catalog
