@@ -30,9 +30,9 @@ import {
     computeMiddlePoint,
     computeAngles,
     computeTriangleMiddlePoint,
-    computeSlopes
+    computeSlopes,
+    computeGeodesicCoordinates
 } from '../../../utils/cesium/MathUtils';
-
 function computeAngleLineCoordinates(coordinates) {
     const aDistance = Cesium.Cartesian3.distance(coordinates[1], coordinates[0]);
     const bDistance = Cesium.Cartesian3.distance(coordinates[1], coordinates[2]);
@@ -546,8 +546,10 @@ function DrawMeasureSupport({
 
         const newFeatures = features.map((feature) => {
             const coordinates = measureFeatureToCartesianCoordinates(feature);
+            const geodesicCoordinates = computeGeodesicCoordinates(coordinates);
             return featureToPrimitives({
                 coordinates,
+                geodesicCoordinates,
                 feature,
                 measureType: feature?.properties?.measureType
             });
@@ -587,7 +589,7 @@ function DrawMeasureSupport({
 
     function updateDynamicCoordinates({
         coordinates,
-        geodesicCoordinates,
+        geodesicCoordinates = [],
         area,
         distance
     } = {}) {
