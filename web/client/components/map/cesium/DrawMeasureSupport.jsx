@@ -480,10 +480,10 @@ function DrawMeasureSupport({
                     return [Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude)];
                 });
                 const geodesicDistance = calculateDistance(coords4326);
-                infoLabelTextPosition = geodesicCoordinates[geodesicCoordinates.length - 1];
+                infoLabelTextPosition = coordinates[coordinates.length - 1];
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, geodesicDistance, 'm'));
-                staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...geodesicCoordinates], geodesic: true }));
-                segments = addSegmentsLabels(staticLabelsCollection.current, geodesicCoordinates, MeasureTypes.LENGTH, true);
+                staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...coordinates], geodesic: true }));
+                segments = addSegmentsLabels(staticLabelsCollection.current, coordinates, MeasureTypes.LENGTH, true);
             }
             break;
 
@@ -672,9 +672,9 @@ function DrawMeasureSupport({
                 });
                 const geodesicDistance = calculateDistance(coords4326);
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, geodesicDistance, 'm'));
-                addSegmentsLabels(dynamicLabelsCollection.current, geodesicCoordinates, MeasureTypes.LENGTH, true);
-                geodesicCoordinates.forEach((cartesian, idx) => {
-                    if (idx !== (geodesicCoordinates.length - 1)) {
+                addSegmentsLabels(dynamicLabelsCollection.current, coordinates, MeasureTypes.LENGTH, true);
+                coordinates.forEach((cartesian, idx) => {
+                    if (idx !== (coordinates.length - 1)) {
                         dynamicBillboardCollection.current.add({
                             position: cartesian,
                             image: coordinateNodeImage.current,

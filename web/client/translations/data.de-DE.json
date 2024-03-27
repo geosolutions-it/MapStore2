@@ -870,7 +870,7 @@
             "saveMeasure": "Speichern Sie die Messungen in Notizen / Zeichnungen",
             "resetTooltip": "Messung entfernen",
             "addAsLayer": "Als Ebene hinzufügen",
-            "lengthMeasure": "Messen Sie die geodätische Entfernung im 3D-Raum",
+            "lengthMeasure": "Messen Sie die geodätische Entfernung im 3D-Raum, die auf dem Ellipsoid berechnet, aber dort gerendert wird, wo Sie klicken",
             "polylineDistance3DMeasure": "Entfernung im 3D-Raum messen",
             "area3DMeasure": "Fläche im 3D-Raum messen",
             "pointCoordinatesMeasure": "Punktkoordinaten messen",

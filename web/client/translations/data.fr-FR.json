@@ -831,7 +831,7 @@
             "saveMeasure": "Enregistrer les mesures dans l'annotation",
             "resetTooltip": "Effacer les mesures",
             "addAsLayer": "Ajouter comme couche",
-            "lengthMeasure": "Mesurer la distance géodésique dans l'espace 3D",
+            "lengthMeasure": "Mesurez la distance géodésique dans l'espace 3D qui est calculée sur l'ellipsoïde, mais rendue là où vous cliquez",
             "polylineDistance3DMeasure": "Mesurer la distance dans l'espace 3D",
             "area3DMeasure": "Mesurer la zone dans l'espace 3D",
             "pointCoordinatesMeasure": "Mesurer les coordonnées du point",
