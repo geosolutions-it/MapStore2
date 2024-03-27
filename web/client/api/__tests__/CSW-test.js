@@ -13,7 +13,7 @@ import GRDCResponse from 'raw-loader!../../test-resources/csw/getRecordsResponse
 import GRDCResponseWith3DLayersAt1st from 'raw-loader!../../test-resources/csw/getRecordsResponseDCWith3DLayersAt1st.xml';
 import GRDCResponseWith3DLayersAtMiddle from 'raw-loader!../../test-resources/csw/getRecordsResponseDCWith3DLayersAtMiddle.xml';
 import GRDCResponseWith3DLayersAtLast from 'raw-loader!../../test-resources/csw/getRecordsResponseDCWith3DLayersAtLast.xml';
-import API, {constructXMLBody, getLayerReferenceFromDc } from '../CSW';
+import API, {constructXMLBody, getLayerReferenceFromDc, parseUrl } from '../CSW';
 
 import tileSetResponse from '../../test-resources/3dtiles/tileSetSample2.json';
 
@@ -424,14 +424,14 @@ describe("getLayerReferenceFromDc", () => {
         const layerRef = getLayerReferenceFromDc(dc);
         expect(layerRef.params.name).toBe('some_layer');
         expect(layerRef.type).toBe('OGC:WMS');
-        expect(layerRef.url).toBe('http://wmsurl');
+        expect(layerRef.url).toBe('http://wmsurl/');
     });
     it("test layer reference with dc.references of scheme OGC:WMS-http-get-map", () => {
         const dc = {references: [{value: "http://wmsurl", scheme: 'OGC:WMS-http-get-map'}, {value: "wfsurl", scheme: 'OGC:WFS'}], alternative: "some_layer"};
         const layerRef = getLayerReferenceFromDc(dc);
         expect(layerRef.params.name).toBe('some_layer');
         expect(layerRef.type).toBe('OGC:WMS-http-get-map');
-        expect(layerRef.url).toBe('http://wmsurl');
+        expect(layerRef.url).toBe('http://wmsurl/');
     });
     it("test layer reference with dc.URI of scheme serviceType/ogc/wms and options", () => {
         const dc = {URI: [{value: "wmsurl?service=wms&layers=some_layer&version=1.3.0", protocol: 'serviceType/ogc/wms'}, {value: "wfsurl", protocol: 'OGC:WFS'}]};
@@ -461,7 +461,25 @@ describe("getLayerReferenceFromDc", () => {
         expect(layerRef.type).toBe('arcgis');
         expect(layerRef.url).toBe('http://esri_url');
     });
+    it('parseUrl', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
 
+        expect(parseUrl(_url).split('?')[0]).toBe(_url[0]);
+    });
+    it('getLayerReferenceFromDc ', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
+        const dc = {references: [{value: _url, scheme: 'OGC:WMS'}, {value: "wfsurl", scheme: 'OGC:WFS'}], alternative: "some_layer"};
+
+        expect(getLayerReferenceFromDc(dc).url).toBe(_url[0]);
+    });
 });
 
 
