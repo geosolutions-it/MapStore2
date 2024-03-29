@@ -56,6 +56,8 @@ expected changes in the `pluginsConfig.json` file:
 {
     "name": "MetadataInfo"
 }
+```
+
 ### Maven project update
 
 With this release the maven `pom.xml` files has been restructured to centralize dependencies version in the `dependencyManagement` section and then in some properties in the root `pom.xml` file.
