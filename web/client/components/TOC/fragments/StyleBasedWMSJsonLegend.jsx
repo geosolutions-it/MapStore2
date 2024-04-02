@@ -22,7 +22,7 @@ import {
 import { getJsonWMSLegend } from '../../../api/WMS';
 import Message from '../../I18N/Message';
 
-class Legend extends React.Component {
+class StyleBasedWMSJsonLegend extends React.Component {
     static propTypes = {
         layer: PropTypes.object,
         legendHeight: PropTypes.number,
@@ -50,6 +50,18 @@ class Legend extends React.Component {
         jsonLegend: {}
     }
     componentDidMount() {
+        this.getLegendData();
+    }
+
+    componentDidUpdate(prevProps) {
+        const prevLayerStyle = prevProps?.layer?.style;
+        const currentLayerStyle = this.props?.layer?.style;
+        if (currentLayerStyle !== prevLayerStyle) {
+            this.getLegendData();
+        }
+    }
+
+    getLegendData() {
         let jsonLegendUrl = this.getUrl(this.props);
         getJsonWMSLegend(jsonLegendUrl).then(data => {
             this.setState({ jsonLegend: data[0], loading: false });
@@ -132,4 +144,4 @@ class Legend extends React.Component {
     }
 }
 
-export default Legend;
+export default StyleBasedWMSJsonLegend;

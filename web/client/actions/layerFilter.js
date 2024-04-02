@@ -28,6 +28,8 @@ export const OPEN_QUERY_BUILDER = 'LAYER_FILTER:OPEN_QUERY_BUILDER';
 
 export const LAYER_FILTER_BY_LEGEND = 'LAYER_FILTER:LAYER_FILTER_BY_LEGEND';
 
+export const RESET_LAYER_FILTER_BY_LEGEND = 'LAYER_FILTER:RESET_LAYER_FILTER_BY_LEGEND';
+
 export function storeCurrentFilter() {
     return {
         type: STORE_CURRENT_APPLIED_FILTER
@@ -69,5 +71,12 @@ export function layerFilterByLegend(layerId, nodeType, legendCQLFilter) {
         legendCQLFilter,
         nodeType,
         layerId
+    };
+}
+
+export function resetLegendFilter(style) {
+    return {
+        type: RESET_LAYER_FILTER_BY_LEGEND,
+        newSelectedStyle: style
     };
 }

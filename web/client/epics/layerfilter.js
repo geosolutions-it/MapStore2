@@ -22,7 +22,8 @@ import {
     DISCARD_CURRENT_FILTER,
     APPLY_FILTER,
     storeAppliedFilter,
-    LAYER_FILTER_BY_LEGEND
+    LAYER_FILTER_BY_LEGEND,
+    RESET_LAYER_FILTER_BY_LEGEND
 } from '../actions/layerFilter';
 import { featureTypeSelected, toggleLayerFilter, initQueryPanel } from '../actions/wfsquery';
 import { getSelectedLayer } from '../selectors/layers';
@@ -168,9 +169,38 @@ export const applyWMSCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
         });
 };
 
+export const applyResetLegendFilter = (action$, {getState}) => {
+    return  action$.ofType(RESET_LAYER_FILTER_BY_LEGEND)
+        .switchMap((action) => {
+            const state = getState();
+            const layer = getSelectedLayer(state);
+            // check if the chnaged param is style or not, if not cancel the epic
+            // const isChangeStyleParam = Object.keys(action.newParams).length === 1 && action.newParams?.style;
+            // check if the selected style is different than the current layer's one, if not cancel the epic
+            const isNewStyleSelected = layer.style !== action?.newSelectedStyle;
+            // check if the layer has interactive legend or not, if not cancel the epic
+            const isLayerWithJSONLegend = layer?.enableInteractiveLegend;
+            if (!isNewStyleSelected || !isLayerWithJSONLegend) return Rx.Observable.empty();
+            const queryFormFilterObj = {...get(getState(), "queryform", {})};
+            let filterObj = layer.layerFilter ? layer.layerFilter : queryFormFilterObj;
+            let searchUrl = layer.search.url;
+            // reset thte filter if legendCQLFilter is empty
+            const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+            if (isLegendFilterExist) {
+                filterObj = {
+                    ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+                };
+                let newFilter = isNotEmptyFilter(filterObj) ? filterObj : undefined;
+                return Rx.Observable.of(search(searchUrl, newFilter), addFilterToLayer(layer.id, newFilter), storeAppliedFilter(newFilter));
+            }
+            return Rx.Observable.empty();
+        });
+};
+
 export default {
     handleLayerFilterPanel,
     restoreSavedFilter,
     onApplyFilter,
-    applyWMSCQLFilterBasedOnLegendFilter
+    applyWMSCQLFilterBasedOnLegendFilter,
+    applyResetLegendFilter
 };
