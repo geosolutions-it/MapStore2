@@ -85,8 +85,9 @@ describe('PluginsUtils', () => {
                 test: "statetest"
             })
         };
-        const app = ReactDOM.render(<Provider store={store}><Connected test="propstest" pluginCfg={{test: "plugintest"}}/></Provider>, document.getElementById("container"));
-        const domElement = ReactDOM.findDOMNode(app);
+        const container = document.getElementById("container");
+        ReactDOM.render(<Provider store={store}><Connected test="propstest" pluginCfg={{test: "plugintest"}}/></Provider>, container);
+        const domElement = container.firstElementChild;
         expect(domElement.innerText).toBe("plugintest");
     });
     it('handleExpression', () => {
