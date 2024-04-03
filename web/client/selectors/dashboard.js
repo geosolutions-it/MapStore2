@@ -30,7 +30,7 @@ export const dashboardCatalogModeSelector = state => state && state.dashboard &&
 export const dashboardIsNewServiceSelector = state => state.dashboard?.isNew || false;
 export const dashboardSaveServiceSelector =  state => state.dashboard?.saveServiceLoading || false;
 export const dashboardResourceInfoSelector = state => get(state, "dashboard.resource");
-export const dashbaordInfoDetailsUriFromIdSelector = state => state?.dashboard?.resource?.attributes?.details;
+export const dashboardInfoDetailsUriFromIdSelector = state => state?.dashboard?.resource?.attributes?.details;
 export const dashboardInfoDetailsSettingsFromIdSelector = state => get(dashboardResource(state), "attributes.detailsSettings");
 export const editingAllowedRolesSelector = state => get(state, "dashboard.servicesPermission.editingAllowedRoles", []);
 export const editingAllowedGroupsSelector = state => get(state, "dashboard.servicesPermission.editingAllowedGroups", []);
