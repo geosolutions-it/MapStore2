@@ -87,7 +87,7 @@ describe('Test the mapConfig reducer', () => {
         }, {type: DETAILS_LOADED, id: 1, detailsUri});
         expect(state.map).toExist();
         expect(state.map.info).toExist();
-        expect(state.map.info.details).toBe(detailsUri);
+        expect(state.map.info.attributes.details).toBe(detailsUri);
     });
     it('DETAILS_LOADED Dahboard', () => {
         const detailsUri = "details/uri";
