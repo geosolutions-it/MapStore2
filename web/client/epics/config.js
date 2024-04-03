@@ -212,13 +212,13 @@ export const storeDetailsInfoEpic = (action$, store) =>
         })
         .switchMap(({mapId, info: {attributes}}) => {
             const isTutorialRunning = store.getState()?.tutorial?.run;
-            let details = attributes.details;
-            const detailsSettings = attributes.detailsSettings;
+            let details = attributes?.details;
+            const detailsSettings = attributes?.detailsSettings;
             if (!details || details.value === EMPTY_RESOURCE_VALUE) {
                 return Observable.empty();
             }
             return Observable.from([
-                detailsLoaded(mapId, details.value, detailsSettings),
+                detailsLoaded(mapId, details, detailsSettings),
                 ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])]
             );
         });

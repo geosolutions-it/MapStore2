@@ -94,7 +94,7 @@ describe('contextcreator selectors', () => {
                 name: undefined
             }
         });
-        expect(generateContextResource({
+        const source = {
             map: {
                 present: {
                     zoom: 10
@@ -114,7 +114,8 @@ describe('contextcreator selectors', () => {
                     }
                 }
             }
-        })).toEqual({
+        };
+        const expected = {
             category: 'CONTEXT',
             data: {
                 mapConfig: {
@@ -155,8 +156,7 @@ describe('contextcreator selectors', () => {
                     },
                     featureGrid: {
                         attributes: undefined
-                    },
-                    toc: undefined
+                    }
                 },
                 theme: {
                     variables: {
@@ -173,6 +173,8 @@ describe('contextcreator selectors', () => {
                 userPlugins: []
             },
             metadata: { name: undefined }
-        });
+        };
+        const generatedSource = generateContextResource(source);
+        expect(generatedSource).toEqual(expected);
     });
 });

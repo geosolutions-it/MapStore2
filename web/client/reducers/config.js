@@ -104,9 +104,9 @@ function mapConfig(state = null, action) {
                 info: {
                     ...map.info,
                     attributes: {
-                        ...map.info.attributes,
-                        details: action.detailsUri || map.info.attributes.details,
-                        detailsSettings: action.detailsSettings || map.info.attributes.detailsSettings
+                        ...map.info?.attributes,
+                        details: action.detailsUri || map.info?.attributes?.details,
+                        detailsSettings: action.detailsSettings || map.info?.attributes?.detailsSettings
                     }
                 }
             };
