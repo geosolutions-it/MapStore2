@@ -557,11 +557,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Mostra layers",
-            "showLegend": "Mostra legenda",
-            "hideLegend": "Nascondi legenda"
-        },
         "addgroup": {
             "addbtn": "Aggiungi",
             "groupName": "Nome del gruppo"
@@ -588,6 +583,7 @@
             "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
+            "emptyLayerTree": "La lista dei layer è vuota. Aggiungi un nuovo layer dal catalogo",
             "filterPlaceholder": "Filtra layers",
             "clearFilter": "Pulisci filtro",
             "toolReloadLayerTooltip": "Forza caricamento del livello selezionato",
@@ -625,6 +621,22 @@
             "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
             "notVisibleSwitchTo3D": "Passa alla modalità mappa 3D per vedere questo layer",
             "notVisibleSwitchTo2D": "Passa alla modalità mappa 2D per vedere questo layer",
+            "toolGroupShowAllChildren": "Mostra di tutti i nodi secondari",
+            "toolGroupHideAllChildren": "Nascondi di tutti i nodi secondari",
+            "activateToolGroupMutuallyExclusive": "Attiva la visibilità mutuamente esclusiva dei nodi secondari",
+            "deactivateToolGroupMutuallyExclusive": "Disattiva la visibilità mutuamente esclusiva dei nodi secondari",
+            "toolGroupCollapseAllChildren": "Comprimi tutti i nodi secondari",
+            "toolGroupExpandAllChildren": "Espandi tutti i nodi secondari",
+            "closeOnMapInitialization": "Mantieni chiuso all'inizializzazione della mappa",
+            "openOnMapInitialization": "Apri all'inizializzazione della mappa",
+            "defaultTheme": "Tema predefinito",
+            "legendTheme": "Tema legenda",
+            "showFullTitle": "Mostra titolo completo",
+            "hideFullTitle": "Titolo su una sola riga",
+            "showOpacitySlider": "Mostra strumento opacità",
+            "hideOpacitySlider": "Nascondi strumento opacità",
+            "showOpacityTooltip": "Mostra valore dell'opacità",
+            "hideOpacityTooltip": "Nascondi valore dell'opacità",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",

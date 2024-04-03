@@ -22,6 +22,40 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2023.02.02 to 2024.01.00
 
+### TOC plugin refactor
+
+The table of content (TOC) has been refactored with following changes:
+
+- Removal of hardcoded tools from the toolbar. Now all the toolbar's elements are injected by related plugins. This includes also the introduction of a new plugin called `MetadataInfo` for layer metadata.
+- Refactors of TOC components
+- Review of plugin configuration (cfg). List of changed configuration properties:
+  - `activateSettingsTool` removed property, now the button will be added directly from `TOCItemsSettings` when available
+  - `activateQueryTool` removed property, now the button will be directly added by `FilterLayer` plugin, when available
+  - `activateDownloadTool` removed property, now the button will be added directly from `LayerDownload` when available
+  - `activateMetedataTool` removed property, now the button will be added directly from `MetadataInfo` when availables
+  - `checkPlugins` remove property, now availability of tools rely on the related plugin so this check is not needed anymore  
+  - `showFullTitleOnExpand`  removed property, the new style allows for seeing the full title inline without duplicating it
+  - `metadataTemplate` this configuration has been moved to `MetadataInfo` plugin
+  - `metadataOptions` this configuration has been moved to `MetadataInfo` plugin
+
+### Introduction of MetadataInfo plugin
+
+The `MetadataInfo` plugin has been introduced to include the layer metadata info button of the TOC toolbar has separated plugin as expected by the new TOC.
+Some steps are needed to correctly configure it:
+
+- Ensure to import the `MetadataInfo` plugin in the downstream project
+- Include the plugin definition in the `pluginsConfig.json` to make it available inside contexts
+- Move the related configuration (cfg) from the TOC to the `MetadataInfo` plugin definition in `localConfig.json` file. This is only necessary if the layer metadata button was configured at the application level
+- Update your contexts to use `MetadataInfo` plugin, properly configured, when needed
+
+expected changes in the `pluginsConfig.json` file:
+
+- add `MetadataInfo` entry to the list
+
+```js
+{
+    "name": "MetadataInfo"
+}
 ### Maven project update
 
 With this release the maven `pom.xml` files has been restructured to centralize dependencies version in the `dependencyManagement` section and then in some properties in the root `pom.xml` file.

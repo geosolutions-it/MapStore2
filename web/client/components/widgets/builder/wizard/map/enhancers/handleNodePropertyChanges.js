@@ -66,5 +66,5 @@ export default withHandlers({
                 }
                 onChange(`${getMapPath(map)}.groups[${correctGroupIndex}].${key}`, value);
             },
-    updateMapEntries: ({ onChange = () => { }, map = {} }) => (obj = {}) => Object.keys(obj).map(k => onChange(`${getMapPath(map)}[${k}]`, obj[k]))
+    updateMapEntries: ({ onChange = () => { }, map = {} }) => (obj = {}, mode) => Object.keys(obj).map(k => onChange(`${getMapPath(map)}[${k}]`, obj[k], mode))
 });
