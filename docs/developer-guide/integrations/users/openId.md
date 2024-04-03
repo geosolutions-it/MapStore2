@@ -18,6 +18,7 @@ You can remove the `geostore` entry from `authenticationProviders` list to remov
 
 MapStore allows to integrate with the following OpenID providers.
 
+- OIDC (generic)
 - Google
 - Keycloak
 
@@ -27,7 +28,76 @@ For each service you want to add you have to:
 - modify `localConfig.json` adding a proper entry to the `authenticationProviders`.
 
 !!! note
-    For the moment we can configure only one authentication per service type (only one for google, only one for keycloak ...).
+    For the moment we can configure only one authentication per service type (only one for oidc, one for google, only one for keycloak ...).
+
+### OIDC (generic)
+
+MapStore allows to configure a generic OpenID Connect provider. This is useful when you have to configure a provider that is not directly supported by MapStore.
+
+#### Configure MapStore back-end for OIDC OpenID
+
+In order to configure the generic OpenID provider you have to:
+
+- create/edit `mapstore-ovr.properties` file (in data-dir or class path) to configure the generic provider this way:
+
+```properties
+# enables the keycloak OpenID Connect filter
+oidcOAuth2Config.enabled=true
+
+# note: this is the client id have to be present on the OpenID provider
+oidcOAuth2Config.clientId=mapstore-server
+oidcOAuth2Config.clientSecret=<THE_CLIENT_SECRET>
+# the discovery URL
+oidcOAuth2Config.discoveryUrl=http://keycloak:8080/auth/realms/mapstore/.well-known/openid-configuration
+oidcOAuth2Config.sendClientSecret=true
+# create the user if not present
+oidcOAuth2Config.autoCreateUser=true
+oidcOAuth2Config.redirectUri=http://localhost:8080/mapstore/rest/geostore/openid/oidc/callback
+# Internal redirect URI (you can set it to relative path like this `../../..` to make this config work across domain)
+oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
+# user name attribute (default is `email`)
+# oidcOAuth2Config.principalKey=email
+# Optional role claims, if a claim contains roles, you can map them to MapStore roles. (roles can be only ADMIN or USER)
+# oidcOAuth2Config.rolesClaim=roles
+# Optional group claims, if a claim contains groups, you can map them to MapStore groups.
+# oidcOAuth2Config.groupsClaim=groups
+```
+
+- `oidcOAuth2Config.clientId`: the client id. This is the client id that have to be present on the OpenID provider
+- `oidcOAuth2Config.clientSecret`: the client secret. This is the client secret for the client id on the OpenID provider
+- `oidcOAuth2Config.discoveryUrl`: the discovery URL. This is the URL that contains all the information for the specific service.
+- `oidcOAuth2Config.sendClientSecret`: if `true`, the client secret will be sent to the OpenID provider. If `false`, the client secret will not be sent.
+- `oidcOAuth2Config.autoCreateUser`: if `true`, the user will be created if not present in the MapStore database. If `false`, the user will not be created ( useful if the user is managed by an external service like Keycloak or LDAP).
+- `oidcOAuth2Config.redirectUri`: the redirect URI. This is the URI that the OpenID provider, and it must be the effective URI of the MapStore application, with the path `/rest/geostore/openid/oidc/callback`.
+- `oidcOAuth2Config.internalRedirectUri`: the internal redirect URI. This is the URI that the MapStore will redirect to after the login. It must be the effective URI of the MapStore application.
+- `oidcOAuth2Config.principalKey`: (*optional*) the user name attribute. This is the attribute that will be used as the user name. The default is `email`.
+- `oidcOAuth2Config.rolesClaim`: (*optional*) the role claims. If a claim contains roles, you can map them to MapStore roles. The roles can be only `ADMIN` or `USER`. If the claim is not present, the default role will be `USER`.
+- `oidcOAuth2Config.groupsClaim`: (*optional*) the group claims. If a claim contains groups, you can map them to MapStore groups. If the claim is not present, no group will be assigned (except the default `everyone` group).
+
+!!! note
+    The `rolesClaim` and `groupsClaim` are optional. If you don't need to map roles or groups, you can omit them. At the moment, there is no mapping for roles and groups for the generic OIDC provider. If you need to map roles and groups, you can use the `keycloak` provider.
+
+#### Configure MapStore front-end for OIDC OpenID
+
+- Add an entry for `oidc` in `authenticationProviders` inside `localConfig.json` file.
+
+```json
+{
+    "authenticationProviders": [
+      {
+        "type": "openID",
+        "provider": "oidc",
+        "title": "My custom identity provider"
+      },
+      {
+        "type": "basic",
+        "provider": "geostore"
+      }
+    ]
+}
+```
+
+You can customize the `title` to show in the login form, add an `imageURL` or use only one `authenticationProviders` entry if you want to use only the OpenID provider. In this case the user will be redirected directly to the OpenID provider without showing the login form.
 
 ### Google
 
