@@ -20,7 +20,7 @@ const EMPTY_RULE = {
     workspace: ""
 };
 
-const cleanConstraints = (rule) => {
+export const cleanConstraints = (rule) => {
     if (!rule.constraints) {
         return rule;
     } else if (rule.grant === "DENY") {
@@ -28,9 +28,9 @@ const cleanConstraints = (rule) => {
         return r;
     }
     let constraints = { ...rule.constraints };
-    constraints.allowedStyles = constraints.allowedStyles && constraints.allowedStyles.style || [];
-    constraints.attributes = constraints.attributes && constraints.attributes.attribute || [];
-    if (constraints.restrictedAreaWkt) constraints.restrictedAreaWkt = constraints.restrictedAreaWkt;
+    constraints.allowedStyles = constraints?.allowedStyles?.style ?? [];
+    constraints.attributes = constraints?.attributes?.attribute ?? [];
+    if (!constraints.restrictedAreaWkt) constraints.restrictedAreaWkt = null; // cannot be empty string, may cause API call to fail
     return { ...rule, constraints };
 };
 
