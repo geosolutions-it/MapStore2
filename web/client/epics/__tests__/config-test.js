@@ -330,12 +330,12 @@ describe('config epics', () => {
                 checkActions
             );
         });
-        it('loadMapInfo will not fetch data and attributes', (done) => {
+        it('loadMapInfo will not fetch data', (done) => {
             const checkActions = ([a, b]) => {
                 expect(a).toExist();
                 expect(b).toExist();
                 expect(b.type).toBe(MAP_INFO_LOADED);
-                expect(b?.info?.data).toBeFalsy();
+                expect(b?.info?.data).toEqual({});
                 done();
             };
             testEpic(loadMapInfoEpic,
@@ -360,63 +360,25 @@ describe('config epics', () => {
             id: mapId,
             name: "name"
         };
-        const mapAttributesEmptyDetails = {
-            "AttributeList": {
-                "Attribute": [
-                    {
-                        "name": "details",
-                        "type": "STRING",
-                        "value": EMPTY_RESOURCE_VALUE
-                    }
-                ]
+        const mapWithAttr = {
+            id: mapId,
+            name: "name",
+            attributes: {
+                details: "blabla",
+                detailsSettings: {}
             }
         };
 
-        const mapAttributesWithoutDetails = {
-            "AttributeList": {
-                "Attribute": []
-            }
-        };
-
-        const mapAttributesWithDetails = {
-            AttributeList: {
-                Attribute: [
-                    {
-                        name: 'details',
-                        type: 'STRING',
-                        value: 'rest\/geostore\/data\/1\/raw?decode=datauri'
-                    },
-                    {
-                        name: "thumbnail",
-                        type: "STRING",
-                        value: 'rest\/geostore\/data\/1\/raw?decode=datauri'
-                    },
-                    {
-                        name: 'owner',
-                        type: 'STRING',
-                        value: 'admin'
-                    }
-                ]
-            }
-        };
         it('test storeDetailsInfoEpic', (done) => {
-            mockAxios.onGet().reply(200, mapAttributesWithDetails);
-            const NUM_ACTION = 2;
-            testEpic(addTimeoutEpic(storeDetailsInfoEpic), NUM_ACTION, mapInfoLoaded(map, mapId), actions => {
+            const NUM_ACTION = 1;
+            testEpic(storeDetailsInfoEpic, NUM_ACTION, mapInfoLoaded(mapWithAttr, mapId), actions => {
                 expect(actions.length).toBe(NUM_ACTION);
                 actions.map((action) => {
 
                     switch (action.type) {
                     case DETAILS_LOADED:
                         expect(action.id).toBe(mapId);
-                        expect(action.detailsUri).toBe("rest/geostore/data/1/raw?decode=datauri");
-                        break;
-                    case MAP_INFO_LOADED:
-                        expect(action.info.attributes).toEqual({
-                            details: "rest/geostore/data/1/raw?decode=datauri",
-                            owner: "admin",
-                            thumbnail: "rest/geostore/data/1/raw?decode=datauri"
-                        });
+                        expect(action.detailsUri).toBe("blabla");
                         break;
                     default:
                         expect(true).toBe(false);
@@ -429,22 +391,10 @@ describe('config epics', () => {
         });
         it('test storeDetailsInfoEpic when api returns NODATA value', (done) => {
             // const mock = new MockAdapter(axios);
-            mockAxios.onGet().reply(200, mapAttributesEmptyDetails);
             const NUM_ACTION = 1;
             testEpic(addTimeoutEpic(storeDetailsInfoEpic), NUM_ACTION, mapInfoLoaded(map, mapId), actions => {
                 expect(actions.length).toBe(NUM_ACTION);
-                actions.map((action) => expect(action.type).toBe(MAP_INFO_LOADED));
-                done();
-            }, {mapInitialConfig: {
-                "mapId": mapId
-            }});
-        });
-        it('test storeDetailsInfoEpic when api doesnt return details', (done) => {
-            mockAxios.onGet().reply(200, mapAttributesWithoutDetails);
-            const NUM_ACTION = 1;
-            testEpic(addTimeoutEpic(storeDetailsInfoEpic), NUM_ACTION, mapInfoLoaded(map, mapId), actions => {
-                expect(actions.length).toBe(NUM_ACTION);
-                actions.map((action) => expect(action.type).toBe(MAP_INFO_LOADED));
+                actions.map((action) => expect(action.type).toBe("EPICTEST:TIMEOUT"));
                 done();
             }, {mapInitialConfig: {
                 "mapId": mapId
