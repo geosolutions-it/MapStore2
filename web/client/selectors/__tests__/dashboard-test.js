@@ -24,7 +24,7 @@ import {
     dashboardIsNewServiceSelector,
     dashboardSaveServiceSelector,
     dashboardResourceInfoSelector,
-    dashbaordInfoDetailsUriFromIdSelector,
+    dashboardInfoDetailsUriFromIdSelector,
     dashboardInfoDetailsSettingsFromIdSelector,
     canEditServiceSelector
 } from '../dashboard';
@@ -132,8 +132,8 @@ describe('dashboard selectors', () => {
             resource: resource
         }})).toBe(resource);
     });
-    it("test dashbaordInfoDetailsUriFromIdSelector", () => {
-        expect(dashbaordInfoDetailsUriFromIdSelector({dashboard: {
+    it("test dashboardInfoDetailsUriFromIdSelector", () => {
+        expect(dashboardInfoDetailsUriFromIdSelector({dashboard: {
             resource: {
                 attributes: {
                     details: "Details"
