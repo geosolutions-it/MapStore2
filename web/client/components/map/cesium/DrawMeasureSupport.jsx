@@ -405,7 +405,6 @@ function DrawMeasureSupport({
 
     function featureToPrimitives({
         coordinates,
-        geodesicCoordinates = [],
         feature,
         measureType
     }) {
@@ -474,16 +473,17 @@ function DrawMeasureSupport({
             }
             break;
         case MeasureTypes.LENGTH:
-            if (geodesicCoordinates.length > 1) {
-                const coords4326 = geodesicCoordinates.map((cartesianPoint) => {
+            if (coordinates.length > 1) {
+                const coords4326 = coordinates.map((cartesianPoint) => {
                     const {longitude, latitude} = Cesium.Cartographic.fromCartesian(cartesianPoint);
                     return [Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude)];
                 });
+                const geodesicCoordinatesInitialHeight = computeGeodesicCoordinates(coordinates, (cartographic) => cartographic[cartographic.length - 1].height);
                 const geodesicDistance = calculateDistance(coords4326);
-                infoLabelTextPosition = coordinates[coordinates.length - 1];
+                infoLabelTextPosition = geodesicCoordinatesInitialHeight[coordinates.length - 1];
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, geodesicDistance, 'm'));
-                staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...coordinates], geodesic: true }));
-                segments = addSegmentsLabels(staticLabelsCollection.current, coordinates, MeasureTypes.LENGTH, true);
+                staticPrimitivesCollection.current.add(createPolylinePrimitive({ ...style?.line, coordinates: [...geodesicCoordinatesInitialHeight], geodesic: true }));
+                segments = addSegmentsLabels(staticLabelsCollection.current, geodesicCoordinatesInitialHeight, MeasureTypes.LENGTH, true);
             }
             break;
 
@@ -546,10 +546,8 @@ function DrawMeasureSupport({
 
         const newFeatures = features.map((feature) => {
             const coordinates = measureFeatureToCartesianCoordinates(feature);
-            const geodesicCoordinates = computeGeodesicCoordinates(coordinates);
             return featureToPrimitives({
                 coordinates,
-                geodesicCoordinates,
                 feature,
                 measureType: feature?.properties?.measureType
             });
@@ -563,13 +561,11 @@ function DrawMeasureSupport({
 
     function updateStaticCoordinates({
         coordinates,
-        geodesicCoordinates,
         feature
     }) {
 
         const updatedFeature = featureToPrimitives({
             coordinates,
-            geodesicCoordinates,
             feature,
             measureType: type
         });
@@ -589,7 +585,6 @@ function DrawMeasureSupport({
 
     function updateDynamicCoordinates({
         coordinates,
-        geodesicCoordinates = [],
         area,
         distance
     } = {}) {
@@ -666,16 +661,17 @@ function DrawMeasureSupport({
             break;
         case MeasureTypes.LENGTH:
             tooltipLabelText = tooltips.start;
-            if (geodesicCoordinates.length > 1) {
+            if (coordinates.length > 1) {
                 tooltipLabelText = tooltips.end;
-                const coords4326 = geodesicCoordinates.map((cartesianPoint) => {
+                const coords4326 = coordinates.map((cartesianPoint) => {
                     const {longitude, latitude} = Cesium.Cartographic.fromCartesian(cartesianPoint);
                     return [Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude)];
                 });
                 const geodesicDistance = calculateDistance(coords4326);
+                const geodesicCoordinatesInitialHeight = computeGeodesicCoordinates(coordinates, (cartographic) => cartographic[cartographic.length - 1].height);
                 infoLabelText = infoLabelFormat(convertMeasure(unitOfMeasure, geodesicDistance, 'm'));
-                addSegmentsLabels(dynamicLabelsCollection.current, coordinates, MeasureTypes.LENGTH, true);
-                coordinates.forEach((cartesian, idx) => {
+                addSegmentsLabels(dynamicLabelsCollection.current, geodesicCoordinatesInitialHeight, MeasureTypes.LENGTH, true);
+                geodesicCoordinatesInitialHeight.forEach((cartesian, idx) => {
                     if (idx !== (coordinates.length - 1)) {
                         dynamicBillboardCollection.current.add({
                             position: cartesian,
@@ -732,13 +728,11 @@ function DrawMeasureSupport({
 
     function handleDrawUpdate({
         coordinates,
-        geodesicCoordinates,
         area,
         distance
     }) {
         updateDynamicCoordinates({
             coordinates,
-            geodesicCoordinates,
             area,
             distance
         });
@@ -746,13 +740,11 @@ function DrawMeasureSupport({
 
     function handleDrawEnd({
         coordinates,
-        geodesicCoordinates,
         feature
     }) {
         if (coordinates && feature) {
             updateStaticCoordinates({
                 coordinates,
-                geodesicCoordinates,
                 feature
             });
         }
