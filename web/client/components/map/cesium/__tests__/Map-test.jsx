@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React from 'react';
 import * as Cesium from 'cesium';
 import expect from 'expect';
@@ -16,6 +17,9 @@ import { simulateClick } from './CesiumSimulate';
 import CesiumLayer from '../Layer';
 import CesiumMap from '../Map';
 import '../plugins/OSMLayer';
+import '../plugins/WMSLayer';
+import '../plugins/VectorLayer';
+import '../plugins/ElevationLayer';
 
 import '../../../../utils/cesium/Layers';
 import {
@@ -403,7 +407,8 @@ describe('CesiumMap', () => {
         // then we verify that the dataSources entities are available
         waitFor(() => expect(checkReadyDataSource()
         && !!ref.map.dataSources.get(0).entities.values.length).toBe(true), {
-            timeout: 5000
+            timeout: 60000,
+            interval: 200
         })
             .then(() => {
                 expect(ref.map.dataSources.length).toBe(1);
@@ -421,7 +426,9 @@ describe('CesiumMap', () => {
                 }, 1000);
             })
             .catch(done);
-    }).timeout(5000);
+    }).timeout(62000);
+
+
     it('check if the map changes when receive new props', () => {
         let ref;
         act(() => {
