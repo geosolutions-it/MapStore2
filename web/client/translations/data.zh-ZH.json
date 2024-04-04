@@ -278,7 +278,8 @@
                 "errorWhenDeleting": "An error occurred during deleting process",
                 "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
             },
-			"search": "搜索地图..."
+			"search": "搜索地图...",
+      "searchButton": "搜索地图"
 		},
         "resources": {
             "deleteConfirmTitle": "Are you sure",

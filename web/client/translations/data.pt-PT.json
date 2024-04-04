@@ -279,7 +279,8 @@
               "errorWhenDeleting": "Ocorreu um erro durante o processo de remoção",
               "errorSizeExceeded": "Por favor, reduza a quantidade dos detalhes ou a qualidade das imagens"
           },
-    			"search": "pesquisar..."
+    			"search": "pesquisar...",
+          "searchButton": "Pesquisar mapas"
     		},
         "resources": {
             "deleteConfirmTitle": "Tem a certeza",

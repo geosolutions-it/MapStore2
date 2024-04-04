@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
  */
 import React from 'react';
 
-import { Glyphicon, Tooltip } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import ToggleButton from '../../../components/buttons/ToggleButton';
 import Message from '../../../components/I18N/Message';
 

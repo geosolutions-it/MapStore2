@@ -458,7 +458,8 @@
                 "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder",
                 "errorLoadingContexts": "Beim Laden des Karten-Kontexts ist ein Fehler aufgetreten"
             },
-            "search": "Suche..."
+            "search": "Suche...",
+            "searchButton": "Suche in Karten"
         },
         "resources": {
             "successSaved": "Diese Ressource wurde korrekt gespeichert",

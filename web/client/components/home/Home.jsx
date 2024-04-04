@@ -49,16 +49,19 @@ class Home extends React.Component {
         let tooltip = <Tooltip id="toolbar-home-button">{<Message msgId="gohome"/>}</Tooltip>;
         return hidden ? false : (
             <React.Fragment>
-                <OverlayTrigger overlay={tooltip} placement={tooltipPosition}>
-                    <Button
-                        id="home-button"
-                        className="square-button"
-                        bsStyle={this.props.bsStyle}
-                        onClick={this.checkUnsavedChanges}
-                        tooltip={tooltip}
-                        {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children', 'icon', 'bsStyle', 'className'])}
-                    ><Glyphicon glyph={this.props.icon}/></Button>
-                </OverlayTrigger>
+                <Message msgId="gohome">
+                    {(label) => <OverlayTrigger overlay={tooltip} placement={tooltipPosition}>
+                        <Button
+                            id="home-button"
+                            className="square-button"
+                            bsStyle={this.props.bsStyle}
+                            onClick={this.checkUnsavedChanges}
+                            tooltip={tooltip}
+                            aria-label={label}
+                            {...pick(restProps, ['disabled', 'active', 'block', 'componentClass', 'href', 'children', 'icon', 'bsStyle', 'className'])}
+                        ><Glyphicon glyph={this.props.icon}/></Button>
+                    </OverlayTrigger>}
+                </Message>
                 <ConfirmModal
                     ref="unsavedMapModal"
                     show={this.props.displayUnsavedDialog || false}
