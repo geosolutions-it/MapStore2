@@ -483,5 +483,58 @@ describe('TOCPlugin Plugin', () => {
             expect(document.querySelector(WIDGET_BUILDER_SELECTOR)).toBeTruthy("widget doesn't exist");
             expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy("remove doesn't exist");
         });
+        it('should render the zoom to layer button if there is a vector layer with valid features', () => {
+            const { Plugin } = getPluginForTest(TOCPlugin, {
+                layers: {
+                    flat: [
+                        {
+                            id: 'topp:states__6',
+                            name: 'topp:states',
+                            type: 'vector',
+                            visibility: true,
+                            features: [{
+                                type: 'Feature',
+                                properties: {},
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: [0, 0]
+                                }
+                            }]
+                        }
+                    ],
+                    groups: [
+                        {
+                            id: 'Default',
+                            title: 'Default',
+                            name: 'Default',
+                            nodes: [
+                                'topp:states__6'
+                            ],
+                            expanded: true
+                        }
+                    ],
+                    selected: [
+                        'topp:states__6'
+                    ],
+                    settings: {
+                        expanded: false,
+                        node: null,
+                        nodeType: null,
+                        options: {}
+                    },
+                    layerMetadata: {
+                        expanded: false,
+                        metadataRecord: {},
+                        maskLoading: false
+                    }
+                }
+            });
+            const WrappedPlugin = dndContext(Plugin);
+            ReactDOM.render(<WrappedPlugin />, document.getElementById("container"));
+            // check zoom and remove selector
+            expect(document.querySelectorAll(TOOL_BUTTON_SELECTOR).length).toBe(3);
+            expect(document.querySelector(ZOOM_TO_SELECTOR)).toBeTruthy();
+            expect(document.querySelector(REMOVE_SELECTOR)).toBeTruthy();
+        });
     });
 });

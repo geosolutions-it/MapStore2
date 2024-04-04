@@ -12,10 +12,37 @@ import Proj4js from 'proj4';
 import uniq from 'lodash/uniq';
 import { zoomToExtent } from '../../../actions/map';
 import Message from '../../../components/I18N/Message';
+import turfBbox from '@turf/bbox';
 
 const getCRS = (layers = []) => {
     const crsValues = uniq(layers.map((layer) => layer?.bbox?.crs).filter(value => !!value));
     return crsValues.length === 1 ? crsValues[0] : '';
+};
+
+const addVectorBbox = (layers = []) => {
+    return layers.map((layer) => {
+        // we can compute the extent from features
+        // if the vector layer does not have a bounding box
+        if (layer.type === 'vector' && !layer.bbox && layer?.features?.length) {
+            const extent = turfBbox({
+                type: "FeatureCollection",
+                features: layer.features
+            });
+            return {
+                ...layer,
+                bbox: {
+                    bounds: {
+                        minx: extent[0],
+                        miny: extent[1],
+                        maxx: extent[2],
+                        maxy: extent[3]
+                    },
+                    crs: 'EPSG:4326'
+                }
+            };
+        }
+        return layer;
+    });
 };
 
 function computeBoundingBoxFromLayers(layers) {
@@ -66,13 +93,14 @@ const ZoomToLayersButton = connect(() => ({}), {
 
     const ItemComponent = itemComponent;
     if ([statusTypes.LAYER, statusTypes.GROUP, statusTypes.LAYERS, statusTypes.GROUPS, statusTypes.BOTH].includes(status)) {
-        const layers = getGroupLayers({ nodes: selectedNodes.map(selected => selected?.node) }).filter(layer => layer?.bbox);
-        const crs = getCRS(layers);
+        const layers = getGroupLayers({ nodes: selectedNodes.map(selected => selected?.node) });
+        const layersWithBbox = addVectorBbox(layers).filter(layer => layer?.bbox);
+        const crs = getCRS(layersWithBbox);
         if (!crs) {
             return null;
         }
         const crsIsSupported = crs && Proj4js.defs(crs);
-        const boundingBox = computeBoundingBoxFromLayers(layers);
+        const boundingBox = computeBoundingBoxFromLayers(layersWithBbox);
         if (!boundingBox) {
             return null;
         }
@@ -83,10 +111,10 @@ const ZoomToLayersButton = connect(() => ({}), {
                 style={crsIsSupported
                     ? { opacity: 1.0, cursor: 'pointer' }
                     : { opacity: 0.5, cursor: 'default' }}
-                labelId={layers.length > 1 ? 'toc.toolZoomToLayersTooltip' : 'toc.toolZoomToLayerTooltip'}
+                labelId={layersWithBbox.length > 1 ? 'toc.toolZoomToLayersTooltip' : 'toc.toolZoomToLayerTooltip'}
                 tooltip={
                     crsIsSupported
-                        ? <Message msgId={layers.length > 1 ? 'toc.toolZoomToLayersTooltip' : 'toc.toolZoomToLayerTooltip'}/>
+                        ? <Message msgId={layersWithBbox.length > 1 ? 'toc.toolZoomToLayersTooltip' : 'toc.toolZoomToLayerTooltip'}/>
                         : <Message msgId="toc.epsgNotSupported" msgParams={{ epsg: crs || ' ' }}/>
                 }
                 onClick={!crsIsSupported ? () => {} : () => onZoomTo(boundingBox.bounds, boundingBox.crs)}
