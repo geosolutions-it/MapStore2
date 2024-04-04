@@ -35,8 +35,8 @@ export const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId") && 
 export const mapInfoSelector = state => get(mapSelector(state), "info");
 export const mapInfoLoadingSelector = state => get(mapSelector(state), "loadingInfo", false);
 export const mapSaveErrorsSelector = state => get(mapSelector(state), "mapSaveErrors");
-export const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "details");
-export const mapInfoDetailsSettingsFromIdSelector = state => get(mapInfoSelector(state), "detailsSettings");
+export const mapInfoDetailsUriFromIdSelector = state => get(mapInfoSelector(state), "attributes.details");
+export const mapInfoDetailsSettingsFromIdSelector = state => get(mapInfoSelector(state), "attributes.detailsSettings");
 export const mapIsEditableSelector = state => {
     const mapInfoCanEdit = get(mapInfoSelector(state), 'canEdit');
     if (mapInfoCanEdit === undefined) {
