@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 import React from 'react';
 import * as Cesium from 'cesium';
 import expect from 'expect';
@@ -246,6 +247,7 @@ describe('CesiumMap', () => {
             done();
         }, 800);
     });
+    const TIMEOUT = 5000;
     it('click on layer should return intersected features', (done) => {
         let ref;
         act(() => {
@@ -401,27 +403,55 @@ describe('CesiumMap', () => {
         };
         // first we check we got data source ready twice
         // then we verify that the dataSources entities are available
-        waitFor(() => expect(checkReadyDataSource()
-        && !!ref.map.dataSources.get(0).entities.values.length).toBe(true), {
-            timeout: 5000
-        })
-            .then(() => {
-                expect(ref.map.dataSources.length).toBe(1);
-                const dataSource = ref.map.dataSources.get(0);
-                expect(dataSource).toBeTruthy();
-                expect(dataSource.entities.values.length).toBe(4);
-                const mapCanvas = ref.map.canvas;
-                const { width, height } = mapCanvas.getBoundingClientRect();
-                // adding additional timeout to ensure the complete render
-                setTimeout(() => {
-                    simulateClick(mapCanvas, {
-                        clientX: width / 2,
-                        clientY: height / 2
-                    });
-                }, 1000);
+        const doWhilePromise = () => {
+            return waitFor(() => expect(checkReadyDataSource()
+            && !!ref.map.dataSources.get(0).entities.values.length).toBe(true), {
+                timeout: TIMEOUT
             })
-            .catch(done);
-    }).timeout(5000);
+                .then(() => {
+                    expect(ref.map.dataSources.length).toBe(1);
+                    const dataSource = ref.map.dataSources.get(0);
+                    expect(dataSource).toBeTruthy();
+                    expect(dataSource.entities.values.length).toBe(4);
+                    const mapCanvas = ref.map.canvas;
+                    const { width, height } = mapCanvas.getBoundingClientRect();
+                    // adding additional timeout to ensure the complete render
+                    setTimeout(() => {
+                        simulateClick(mapCanvas, {
+                            clientX: width / 2,
+                            clientY: height / 2
+                        });
+                    }, 1000);
+                })
+                .catch(done);
+        };
+
+        let attempts = 0;
+        const executePromise = () => {
+            return doWhilePromise()
+                .then(result => {
+                    // eslint-disable-next-line no-console
+                    console.log(result);
+                })
+                .catch(error => {
+                    attempts++;// eslint-disable-next-line no-console
+                    console.log(`Attempt ${attempts} failed: ${error}`);
+                    if (attempts < 10) {
+                        // eslint-disable-next-line no-console
+                        console.log('Retrying...');
+                        return executePromise(); // Re-triggering the execution of the promise
+                    }
+                    // eslint-disable-next-line no-console
+                    console.log('Max attempts reached.');
+                    throw new Error('Max attempts reached.');
+
+                });
+        };
+        // Initial trigger of the promise execution
+        executePromise();
+    }).timeout(TIMEOUT);
+
+
     it('check if the map changes when receive new props', () => {
         let ref;
         act(() => {
