@@ -89,7 +89,7 @@ As soon as the measure window opens, by default the **Measure distance in 3D spa
 
 ### Measure geodesic distance
 
-Once the **Measure geodesic distance** button is selected <img src="../img/button/measure-geodesic.jpg" class="ms-docbutton"/>, it is possible to start the drawing session. Same as measuring the distance, each click corresponds to a vertex (at least two vertices are needed) and the double click will indicate the last one.
+Once the **Measure geodesic distance** button is selected <img src="../img/button/measure-distance-green.jpg" class="ms-docbutton"/>, it is possible to start the drawing session. Same as measuring the distance, each click corresponds to a vertex (at least two vertices are needed) and the double click will indicate the last one.
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-geodesic-ex.mp4"/></video>
 
