@@ -122,9 +122,10 @@ In order to have a full running MapStore in development environment, you need to
 This runs automatically with `npm start`. If you want to run only the backend, you can use `npm run be:start`.
 
 The back end will run on port 8080 and will look for the front-end at port 8081. If you want to change the back-end port, you can set the environment variable `MAPSTORE_BACKEND_PORT` to the desired port.
+Optionally you can set the data dir location by setting the environment variable `MAPSTORE_DATA_DIR`.
 
 ```sh
-export MAPSTORE_BACKEND_PORT=8082
+export MAPSTORE_BACKEND_PORT=8082 # set a different backend port
 export MAPSTORE_DATA_DIR=/usr/datadir # set the datadir location
 npm start # or npm run be:start
 ```
