@@ -405,7 +405,7 @@ function DrawMeasureSupport({
 
     function featureToPrimitives({
         coordinates,
-        geodesicCoordinates,
+        geodesicCoordinates = [],
         feature,
         measureType
     }) {
