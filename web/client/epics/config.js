@@ -213,7 +213,13 @@ export const storeDetailsInfoEpic = (action$, store) =>
         .switchMap(({mapId, info: {attributes}}) => {
             const isTutorialRunning = store.getState()?.tutorial?.run;
             let details = attributes?.details;
-            const detailsSettings = attributes?.detailsSettings;
+            let detailsSettings;
+            try {
+                detailsSettings = JSON.parse(attributes?.detailsSettings);
+            } catch (e) {
+                detailsSettings = {};
+            }
+
             if (!details || details.value === EMPTY_RESOURCE_VALUE) {
                 return Observable.empty();
             }
