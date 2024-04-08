@@ -77,7 +77,8 @@ function VectorStyleEditor({
         'Courier New',
         'Brush Script MT'
     ],
-    onUpdateNode = () => {}
+    onUpdateNode = () => {},
+    resetLegendFilter = () => {}
 }) {
 
     const request = capabilitiesRequest[layer?.type];
@@ -90,6 +91,8 @@ function VectorStyleEditor({
     function handleClearStyle() {
         setError(null);
         onUpdateNode(layer.id, 'layers', { style: getVectorDefaultStyle(layer) });
+        // apply reset legend filter in case of change style
+        resetLegendFilter('style');
     }
 
     function handleUpdateMetadata(metadata) {
@@ -100,6 +103,11 @@ function VectorStyleEditor({
                 ...metadata
             }
         };
+        // apply reset legend filter in case of change style
+        if (['wfs', 'vector'].includes(layer.type) && layer?.enableInteractiveLegend) {
+            resetLegendFilter('style', style.current?.metadata?.styleJSON);
+        }
+
         onUpdateNode(layer?.id, 'layers', {
             style: { ...style.current }
         });

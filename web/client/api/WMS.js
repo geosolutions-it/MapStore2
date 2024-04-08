@@ -310,6 +310,7 @@ export const getJsonWMSLegend = (url) => {
     const request = layerLegendJsonData[url]
         ? () => Promise.resolve(layerLegendJsonData[url])
         : () => axios.get(url).then(({ data }) => {
+            layerLegendJsonData[url] = data?.Legend;
             return data?.Legend || [];
         });
     return request().then((data) => data);

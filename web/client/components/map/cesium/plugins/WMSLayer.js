@@ -50,8 +50,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     if (newParameters.length > 0 ||
         newOptions.securityToken !== oldOptions.securityToken ||
         !isEqual(newOptions.layerFilter, oldOptions.layerFilter) ||
-        newOptions.tileSize !== oldOptions.tileSize ||
-        newOptions.enableInteractiveLegend !== oldOptions.enableInteractiveLegend) {
+        newOptions.tileSize !== oldOptions.tileSize) {
         return createLayer(newOptions);
     }
     return null;

@@ -116,12 +116,12 @@ export const onApplyFilter = (action$, {getState}) =>
         });
 
 /**
- * It applies the legend filter for wms layer
+ * It applies the legend filter for wms/wms/vector layer
  * @memberof epics.layerFilter
  * @param {external:Observable} action$ manages `LAYER_FILTER_BY_LEGEND`
  * @return {external:Observable} `APPLIED_FILTER`
  */
-export const applyWMSCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
+export const applyCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
     return  action$.ofType(LAYER_FILTER_BY_LEGEND)
         .switchMap((action) => {
             const state = getState();
@@ -131,7 +131,7 @@ export const applyWMSCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
             let searchUrl = layer.search.url;
             // reset thte filter if legendCQLFilter is empty
             if (!action.legendCQLFilter) {
-                // todo: clear legend filter
+                // clear legend filter with id = 'interactiveLegend'
                 const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
                 if (isLegendFilterExist) {
                     filterObj = {
@@ -143,10 +143,11 @@ export const applyWMSCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
             }
             let cqlStatement = action.legendCQLFilter;
             if (cqlStatement) {
-                // remove the unnecessaru brackets
-                // "[LAND_KM >= '5062.5' AND LAND_KM < '20300.35']" ---> to be "LAND_KM >= '5062.5' AND LAND_KM < '20300.35'"
+                // remove the unnecessaru brackets --> in some cases wms getLegendGraphic provides filter with brackets
+                // "[FIELD_01 >= '1' AND FIELD_01 < '0']" ---> to be "FIELD_01 >= '1' AND FIELD_01 < '0'"
                 cqlStatement = cqlStatement.includes("[") ? cqlStatement.slice(1, cqlStatement.length - 1) : cqlStatement;
             }
+            // add legend filter with id = 'interactiveLegend' in cql format
             let filter = {
                 ...(filterObj || {}), filters: [
                     ...(filterObj?.filters?.filter(f => f.id !== 'interactiveLegend') || []), ...[
@@ -168,19 +169,34 @@ export const applyWMSCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
             return Rx.Observable.of(search(searchUrl, filter), addFilterToLayer(layer.id, filter), storeAppliedFilter(filter));
         });
 };
-
+/**
+ * It applies a reset for legend filter for wms/wms/vector layer
+ * @memberof epics.layerFilter
+ * @param {external:Observable} action$ manages `RESET_LAYER_FILTER_BY_LEGEND`
+ * @return {external:Observable} `APPLIED_FILTER`
+ */
 export const applyResetLegendFilter = (action$, {getState}) => {
     return  action$.ofType(RESET_LAYER_FILTER_BY_LEGEND)
         .switchMap((action) => {
             const state = getState();
             const layer = getSelectedLayer(state);
-            // check if the chnaged param is style or not, if not cancel the epic
-            // const isChangeStyleParam = Object.keys(action.newParams).length === 1 && action.newParams?.style;
+            const layerType = layer.type;
+            const isWFSVectorLayer = ['wfs', 'vector'].includes(layerType);
+            const isWMSLayer = layerType === 'wms';
+            const isResetForStyle = action.reason === 'style';      // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
+            let needReset;
             // check if the selected style is different than the current layer's one, if not cancel the epic
-            const isNewStyleSelected = layer.style !== action?.newSelectedStyle;
+            if (isWFSVectorLayer && isResetForStyle) {
+                needReset = action.reason === 'style' && layer.style?.metadata?.styleJSON !== action?.value;
+            } else if (isWMSLayer && isResetForStyle) {
+                needReset = action.reason === 'style' && layer.style !== action?.value;
+            } else if (!isResetForStyle) {
+                // in case of reason === 'disableEnableInteractiveLegend'
+                needReset = true;
+            }
             // check if the layer has interactive legend or not, if not cancel the epic
             const isLayerWithJSONLegend = layer?.enableInteractiveLegend;
-            if (!isNewStyleSelected || !isLayerWithJSONLegend) return Rx.Observable.empty();
+            if (!needReset || !isLayerWithJSONLegend) return Rx.Observable.empty();
             const queryFormFilterObj = {...get(getState(), "queryform", {})};
             let filterObj = layer.layerFilter ? layer.layerFilter : queryFormFilterObj;
             let searchUrl = layer.search.url;
@@ -201,6 +217,6 @@ export default {
     handleLayerFilterPanel,
     restoreSavedFilter,
     onApplyFilter,
-    applyWMSCQLFilterBasedOnLegendFilter,
+    applyCQLFilterBasedOnLegendFilter,
     applyResetLegendFilter
 };

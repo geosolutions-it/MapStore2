@@ -126,14 +126,12 @@
                     .color-var(@theme-vars[danger]);
                 }
             }
-            .wms-legend {
-                .wms-json-legend-rule:hover {
-                    .color-var(@theme-vars[primary]);
-                }
-                .wms-json-legend-rule.active {
-                    .background-color-var(@theme-vars[primary]);
-                    .color-var(@theme-vars[primary-contrast]);
-                }
+            .wms-json-legend-rule:hover, .wfs-legend-rule.json-legend-rule:hover {
+                .color-var(@theme-vars[primary]);
+            }
+            .wms-json-legend-rule.active, .wfs-legend-rule.json-legend-rule.active {
+                .background-color-var(@theme-vars[primary]);
+                .color-var(@theme-vars[primary-contrast]);
             }
             .collapsible-toc {
                 // force white background to match the legend image background

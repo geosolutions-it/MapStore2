@@ -67,7 +67,6 @@ Layers.registerType('wms', {
     update: function(layer, newOptions, oldOptions) {
         if (oldOptions.singleTile !== newOptions.singleTile ||
             oldOptions.tileSize !== newOptions.tileSize ||
-            oldOptions.enableInteractiveLegend !== newOptions.enableInteractiveLegend ||
             oldOptions.securityToken !== newOptions.securityToken && newOptions.visibility) {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);

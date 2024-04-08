@@ -8,10 +8,10 @@
 
 import expect from 'expect';
 
-import { openQueryBuilder, discardCurrentFilter, applyFilter } from '../../actions/layerFilter';
+import { openQueryBuilder, discardCurrentFilter, applyFilter, layerFilterByLegend, resetLegendFilter } from '../../actions/layerFilter';
 import { QUERY_FORM_SEARCH } from '../../actions/queryform';
 import { testEpic } from './epicTestUtils';
-import { handleLayerFilterPanel, restoreSavedFilter, onApplyFilter } from '../layerfilter';
+import { handleLayerFilterPanel, restoreSavedFilter, onApplyFilter, applyCQLFilterBasedOnLegendFilter, applyResetLegendFilter } from '../layerfilter';
 
 describe('layerFilter Epics', () => {
     it("handleLayerFilterPanel is correctly initiated and react to QUERY_FORM_SEARCH", (done) => {
@@ -82,5 +82,196 @@ describe('layerFilter Epics', () => {
             done();
 
         });
+    });
+
+    it("applyCQLFilterBasedOnLegendFilter to apply legend filter", (done) => {
+        let action = [layerFilterByLegend('topp:states__5', 'layers', "[FIELD_01 >= '5' AND FIELD_01 < '1']")];
+
+        // State need a selected layers
+        const state = {layers: {
+            flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url"}],
+            selected: ["topp:states__5"]}
+        };
+        testEpic(applyCQLFilterBasedOnLegendFilter, 3, action, (actions) => {
+            expect(actions[0].type).toBe("QUERY_FORM_SEARCH");
+            expect(actions[0].searchUrl).toBe("searchUrl");
+            expect(actions[0].filterObj.filters[0].id).toBe("interactiveLegend");
+            expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
+            expect(actions[2].type).toBe("LAYER_FILTER:APPLIED_FILTER");
+            done();
+
+        }, state);
+    });
+
+    it("applyCQLFilterBasedOnLegendFilter to reset legend filter", (done) => {
+        let action = [layerFilterByLegend('topp:states__5', 'layers', "")];
+
+        // State need a selected layers
+        const state = {
+            layers: {
+                flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url",
+                    enableInteractiveLegend: true,
+                    layerFilter: {
+                        filters: [
+                            {
+                                "id": "interactiveLegend",
+                                "format": "logic",
+                                "version": "1.0.0",
+                                "logic": "AND",
+                                "filters": [
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
+                                        "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
+                                    }
+                                ]
+                            }
+                        ]
+                    }}],
+                selected: ["topp:states__5"]
+            }
+        };
+        testEpic(applyCQLFilterBasedOnLegendFilter, 3, action, (actions) => {
+            expect(actions[0].type).toBe("QUERY_FORM_SEARCH");
+            expect(actions[0].searchUrl).toBe("searchUrl");
+            expect(actions[0].filterObj).toBe(undefined);
+            expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
+            expect(actions[2].type).toBe("LAYER_FILTER:APPLIED_FILTER");
+            done();
+
+        }, state);
+    });
+
+    it("applyResetLegendFilter to reset legend filter in case change 'style' for wms", (done) => {
+        let action = [resetLegendFilter('style', 'style_02')];
+
+        // State need a selected layers
+        const state = {
+            layers: {
+                flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url", type: 'wms',
+                    enableInteractiveLegend: true,
+                    style: 'style_01',
+                    layerFilter: {
+                        filters: [
+                            {
+                                "id": "interactiveLegend",
+                                "format": "logic",
+                                "version": "1.0.0",
+                                "logic": "AND",
+                                "filters": [
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
+                                        "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
+                                    }
+                                ]
+                            }
+                        ]
+                    }}],
+                selected: ["topp:states__5"]
+            }
+        };
+        testEpic(applyResetLegendFilter, 3, action, (actions) => {
+            expect(actions[0].type).toBe("QUERY_FORM_SEARCH");
+            expect(actions[0].searchUrl).toBe("searchUrl");
+            expect(actions[0].filterObj).toBe(undefined);
+            expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
+            expect(actions[2].type).toBe("LAYER_FILTER:APPLIED_FILTER");
+            done();
+
+        }, state);
+    });
+    it("applyResetLegendFilter to reset legend filter in case change 'style' for wfs", (done) => {
+        let action = [resetLegendFilter('style', '{"rules":[{"name":"Style 01 wfs","ruleId2":"ruleId","symbolizers":[{"kind":"Fill","color":"#0920ff","fillOpacity":1,"outlineColor":"#3075e9","outlineOpacity":1,"outlineWidth":2,"symbolizerId":"symbolizerId1"}]}]}')];
+
+        // State need a selected layers
+        const state = {
+            layers: {
+                flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url", type: 'wfs',
+                    enableInteractiveLegend: true,
+                    style: {
+                        body: {}, format: 'geostyler', metadate: {
+                            editorType: 'visual',
+                            styleJSON: `{"rules": [{"name": "Style 02 wfs","ruleId":"ruleId2","symbolizers":[{"kind":"Fill","color":"#0920ff","fillOpacity":1,"outlineColor":"#3075e9","outlineOpacity":1,"outlineWidth":2,"symbolizerId":"symbolizerId2"}]}]}`
+                        }
+                    },
+                    layerFilter: {
+                        filters: [
+                            {
+                                "id": "interactiveLegend",
+                                "format": "logic",
+                                "version": "1.0.0",
+                                "logic": "AND",
+                                "filters": [
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
+                                        "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
+                                    }
+                                ]
+                            }
+                        ]
+                    }}],
+                selected: ["topp:states__5"]
+            }
+        };
+        testEpic(applyResetLegendFilter, 3, action, (actions) => {
+            expect(actions[0].type).toBe("QUERY_FORM_SEARCH");
+            expect(actions[0].searchUrl).toBe("searchUrl");
+            expect(actions[0].filterObj).toBe(undefined);
+            expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
+            expect(actions[2].type).toBe("LAYER_FILTER:APPLIED_FILTER");
+            done();
+
+        }, state);
+    });
+
+    it("applyResetLegendFilter to reset legend filter in case change 'style' for vector", (done) => {
+        let action = [resetLegendFilter('style', '{"rules":[{"name":"Style 01 vector","ruleId2":"ruleId","symbolizers":[{"kind":"Fill","color":"#0920ff","fillOpacity":1,"outlineColor":"#3075e9","outlineOpacity":1,"outlineWidth":2,"symbolizerId":"symbolizerId1"}]}]}')];
+
+        // State need a selected layers
+        const state = {
+            layers: {
+                flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url", type: 'vector',
+                    enableInteractiveLegend: true,
+                    style: {
+                        body: {}, format: 'geostyler', metadate: {
+                            editorType: 'visual',
+                            styleJSON: `{"rules": [{"name": "Style 02 vector","ruleId":"ruleId2","symbolizers":[{"kind":"Fill","color":"#0920ff","fillOpacity":1,"outlineColor":"#3075e9","outlineOpacity":1,"outlineWidth":2,"symbolizerId":"symbolizerId2"}]}]}`
+                        }
+                    },
+                    layerFilter: {
+                        filters: [
+                            {
+                                "id": "interactiveLegend",
+                                "format": "logic",
+                                "version": "1.0.0",
+                                "logic": "AND",
+                                "filters": [
+                                    {
+                                        "format": "cql",
+                                        "version": "1.0.0",
+                                        "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
+                                        "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
+                                    }
+                                ]
+                            }
+                        ]
+                    }}],
+                selected: ["topp:states__5"]
+            }
+        };
+        testEpic(applyResetLegendFilter, 3, action, (actions) => {
+            expect(actions[0].type).toBe("QUERY_FORM_SEARCH");
+            expect(actions[0].searchUrl).toBe("searchUrl");
+            expect(actions[0].filterObj).toBe(undefined);
+            expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
+            expect(actions[2].type).toBe("LAYER_FILTER:APPLIED_FILTER");
+            done();
+
+        }, state);
     });
 });

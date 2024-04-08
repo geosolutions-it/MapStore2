@@ -9,7 +9,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import {
-    // parseSymbolizerExpressions,
     getWellKnownNameImageFromSymbolizer
 } from '../../utils/styleparser/StyleParserUtils';
 
@@ -151,13 +150,15 @@ function createSymbolizerForPoint(pointSymbolizer) {
         strokeOpacity: pointSymbolizer.graphics[0]['stroke-opacity'] ? +pointSymbolizer.graphics[0]['stroke-opacity'] : 1,
         strokeWidth: pointSymbolizer.graphics[0]['stroke-width'] ? +pointSymbolizer.graphics[0]['stroke-width'] : 0,
         strokeDasharray: pointSymbolizer.graphics[0]['strock-dasharray'] ? "18 18" : null,
-        radius: pointSymbolizer.size ? +pointSymbolizer.size : 5
+        radius: pointSymbolizer.size ? +pointSymbolizer.size : 5,
+        rotate: pointSymbolizer?.rotate || 0,
+        opacity: pointSymbolizer?.opacity || 1
     };
     if (pointSymbolizer.graphics) symbolizer.graphics = pointSymbolizer.graphics;
     return symbolizer;
 }
 
-function RuleLegendIcon({
+function WMSJsonLegendIcon({
     rule
 }) {
     const ruleSymbolizers = rule?.symbolizers;
@@ -183,4 +184,4 @@ function RuleLegendIcon({
     return icons.length ? <> {icons.map(({ Icon, symbolizer }, idx) => <div key={'icons-wms-json' + idx} className="ms-rule-legend-icon"><Icon symbolizer={symbolizer}/></div>)} </> : null;
 }
 
-export default RuleLegendIcon;
+export default WMSJsonLegendIcon;

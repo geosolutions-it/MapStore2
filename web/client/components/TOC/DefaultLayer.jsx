@@ -41,7 +41,6 @@ class DefaultLayer extends React.Component {
         sortableStyle: PropTypes.object,
         activateLegendTool: PropTypes.bool,
         activateOpacityTool: PropTypes.bool,
-        legendType: PropTypes.string,
         indicators: PropTypes.array,
         visibilityCheckType: PropTypes.string,
         currentZoomLvl: PropTypes.number,
@@ -77,7 +76,6 @@ class DefaultLayer extends React.Component {
         onSelect: () => {},
         activateLegendTool: false,
         activateOpacityTool: true,
-        legendType: '',
         indicators: [],
         visibilityCheckType: "glyph",
         additionalTools: [],
@@ -137,7 +135,6 @@ class DefaultLayer extends React.Component {
             <div key="legend" position="collapsible" className="collapsible-toc">
                 <Grid fluid>
                     {this.props.showFullTitleOnExpand ? <Row><Col xs={12} className="toc-full-title">{this.getTitle(this.props.node)}</Col></Row> : null}
-                    {/** todo: add wmsJsonLegend here */}
                     {this.props.activateLegendTool && this.props.node.type === 'wms' &&
                         <Row>
                             <Col xs={12}>
@@ -145,7 +142,7 @@ class DefaultLayer extends React.Component {
                             </Col>
                         </Row>}
                     {this.props.activateLegendTool && ['wfs', 'vector'].includes(this.props.node.type) &&
-                        <StyleBasedLegend style={this.props.node.style}/>
+                        <StyleBasedLegend style={this.props.node.style} onLayerFilterByLegend={this.props.onLayerFilterByLegend} layer={this.props.node} />
                     }
                 </Grid>
                 {this.renderOpacitySlider(this.props.hideOpacityTooltip)}

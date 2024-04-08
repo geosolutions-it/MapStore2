@@ -60,7 +60,7 @@ const StyleList = ({
     enabledStyle,
     defaultStyle,
     availableStyles = [],
-    onSelect,
+    onSelect = () => {},
     onResetLegendFilterStyle = () => {},
     formatColors = {
         sld: "#33ffaa",
@@ -82,7 +82,7 @@ const StyleList = ({
         <SideGrid
             size="sm"
             onItemClick={({ name }) => {
-                onResetLegendFilterStyle(name);
+                onResetLegendFilterStyle('style', name);
                 onSelect({ style: name }, true);
             }}
             items={availableStyles

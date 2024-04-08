@@ -1,5 +1,5 @@
 /**
- * Copyright 2015, GeoSolutions Sas.
+ * Copyright 2024, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -56,6 +56,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
     componentDidUpdate(prevProps) {
         const prevLayerStyle = prevProps?.layer?.style;
         const currentLayerStyle = this.props?.layer?.style;
+        // get the new json legend and rerender it in case change style
         if (currentLayerStyle !== prevLayerStyle) {
             this.getLegendData();
         }
@@ -63,6 +64,11 @@ class StyleBasedWMSJsonLegend extends React.Component {
 
     getLegendData() {
         let jsonLegendUrl = this.getUrl(this.props);
+        if (!jsonLegendUrl) {
+            this.setState({ error: true });
+            return;
+        }
+        this.setState({ loading: true });
         getJsonWMSLegend(jsonLegendUrl).then(data => {
             this.setState({ jsonLegend: data[0], loading: false });
         }).catch(() => {

@@ -20,7 +20,11 @@ import {
     DISCARD_CURRENT_FILTER,
     discardCurrentFilter,
     applyFilter,
-    APPLY_FILTER
+    APPLY_FILTER,
+    LAYER_FILTER_BY_LEGEND,
+    layerFilterByLegend,
+    RESET_LAYER_FILTER_BY_LEGEND,
+    resetLegendFilter
 } from '../layerFilter';
 
 
@@ -62,6 +66,18 @@ describe('Test correctness of the layerFilter actions', () => {
         var retval = applyFilter();
         expect(retval).toExist();
         expect(retval.type).toBe(APPLY_FILTER);
+    });
+
+    it('layerFilterByLegend', () => {
+        var retval = layerFilterByLegend();
+        expect(retval).toExist();
+        expect(retval.type).toBe(LAYER_FILTER_BY_LEGEND);
+    });
+
+    it('resetLegendFilter', () => {
+        var retval = resetLegendFilter();
+        expect(retval).toExist();
+        expect(retval.type).toBe(RESET_LAYER_FILTER_BY_LEGEND);
     });
 
 });

@@ -15,8 +15,7 @@
           "https://gs-stable.geosolutionsgroup.com:443/geoserver",
           "http://gs-stable.geosolutionsgroup.com/geoserver",
           "http://gs-stable.geosolutionsgroup.com:443/geoserver",
-          "https://tile.googleapis.com",
-          "http://localhost:8080"
+          "https://tile.googleapis.com"
         ]
     },
     "geoStoreUrl": "rest/geostore/",

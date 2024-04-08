@@ -38,12 +38,14 @@ export default class extends React.Component {
         isCesiumActive: PropTypes.bool,
         projection: PropTypes.string,
         resolutions: PropTypes.array,
-        zoom: PropTypes.number
+        zoom: PropTypes.number,
+        resetLegendFilter: PropTypes.func
     };
 
     static defaultProps = {
         onChange: () => {},
-        opacityText: <Message msgId="opacity"/>
+        opacityText: <Message msgId="opacity"/>,
+        resetLegendFilter: () => {}
     };
 
     constructor(props) {
@@ -218,7 +220,27 @@ export default class extends React.Component {
                     layer={this.props.element}
                     onChange={this.props.onChange}
                 />
-
+                {['wfs', 'vector'].includes(this.props.element.type) &&
+                    <div className={"legend-options"}>
+                        <Col xs={12} className={"legend-label"}>
+                            <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
+                        </Col>
+                        <Col xs={12}>
+                            <Checkbox
+                                data-qa="display-interactive-legend-option"
+                                value="enableInteractiveLegend"
+                                key="enableInteractiveLegend"
+                                onChange={(e) => {
+                                    if (!e.target.checked) this.props.resetLegendFilter('disableEnableInteractiveLegend');
+                                    this.props.onChange("enableInteractiveLegend", e.target.checked);
+                                }}
+                                checked={this.props.element.enableInteractiveLegend} >
+                                <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
+                                &nbsp;{this.props.element.type === 'wfs' && <InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.tooltip" />} />}
+                            </Checkbox>
+                        </Col>
+                    </div>
+                }
                 {this.props.element.type === "wms" &&
                 <Row>
                     <Col xs={12}>
@@ -263,14 +285,16 @@ export default class extends React.Component {
                         <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
                         </Col>
-                        {/** append the interactive legened checkbox here */}
                         { this.props.element?.serverType !== ServerTypes.NO_VENDOR &&
                             <Col xs={12}>
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"
                                     value="enableInteractiveLegend"
                                     key="enableInteractiveLegend"
-                                    onChange={(e) => this.props.onChange("enableInteractiveLegend", e.target.checked)}
+                                    onChange={(e) => {
+                                        if (!e.target.checked) this.props.resetLegendFilter('disableEnableInteractiveLegend');
+                                        this.props.onChange("enableInteractiveLegend", e.target.checked);
+                                    }}
                                     checked={this.props.element.enableInteractiveLegend} >
                                     <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
                                     &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.tooltip" />} />

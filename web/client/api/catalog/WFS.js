@@ -75,7 +75,13 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
     };
 };
 
-const recordToLayer = (record) => {
+const recordToLayer = (record, {
+    service
+}) => {
+    // this is for getting the configration of interactive legend
+    const {
+        layerOptions
+    } = service || {};
     return {
         type: record.type || "wfs",
         search: {
@@ -90,7 +96,8 @@ const recordToLayer = (record) => {
         description: record.description || "",
         bbox: record.boundingBox,
         links: getRecordLinks(record),
-        ...record.layerOptions
+        ...record.layerOptions,
+        ...layerOptions
     };
 };
 

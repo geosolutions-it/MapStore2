@@ -74,7 +74,7 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(13);
+        expect(inputs.length).toBe(14);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -246,8 +246,8 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[11];
-        const legendHeight = inputs[12];
+        const legendWidth = inputs[12];
+        const legendHeight = inputs[13];
         // Default legend values
         expect(legendWidth.value).toBe('12');
         expect(legendHeight.value).toBe('12');
@@ -269,7 +269,8 @@ describe('test Layer Properties Display module component', () => {
             legendOptions: {
                 legendWidth: 15,
                 legendHeight: 15
-            }
+            },
+            enableInteractiveLegend: false
         };
         const settings = {
             options: {
@@ -286,9 +287,10 @@ describe('test Layer Properties Display module component', () => {
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
         expect(legendPreview).toExist();
         expect(inputs).toExist();
-        expect(inputs.length).toBe(13);
-        let legendWidth = inputs[11];
-        let legendHeight = inputs[12];
+        expect(inputs.length).toBe(14);
+        let interactiveLegendConfig = inputs[11];
+        let legendWidth = inputs[12];
+        let legendHeight = inputs[13];
         const img = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, 'img');
 
         // Check value in img src
@@ -329,6 +331,14 @@ describe('test Layer Properties Display module component', () => {
         expect(params.get("width")).toBe('12');
         expect(params.get("height")).toBe('12');
 
+        // change enableInteractiveLegend to enable interactive legend
+        interactiveLegendConfig.checked = true;
+        ReactTestUtils.Simulate.change(interactiveLegendConfig);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[4].arguments[0]).toEqual("enableInteractiveLegend");
+        expect(spy.calls[4].arguments[1]).toEqual(true);
+
+
     });
 
     it("tests Layer Properties Legend component with values from layers", () => {
@@ -353,8 +363,8 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(13);
-        expect(inputs[11].value).toBe("20");
-        expect(inputs[12].value).toBe("40");
+        expect(inputs.length).toBe(14);
+        expect(inputs[12].value).toBe("20");
+        expect(inputs[13].value).toBe("40");
     });
 });

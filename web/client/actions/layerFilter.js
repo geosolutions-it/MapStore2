@@ -74,9 +74,10 @@ export function layerFilterByLegend(layerId, nodeType, legendCQLFilter) {
     };
 }
 
-export function resetLegendFilter(style) {
+export function resetLegendFilter(reason, value) {
     return {
         type: RESET_LAYER_FILTER_BY_LEGEND,
-        newSelectedStyle: style
+        reason,     // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
+        value
     };
 }

@@ -13,7 +13,6 @@ import {
     lineStringElement,
     closePolygon
 } from './ogc/GML';
-import uuidv1 from 'uuid/v1';
 
 import {canConvert, getConverter} from './filter/converters';
 
@@ -30,7 +29,7 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
     return toFilter(read(cqlFilter));
 };
 
-import { get, isNil, isArray, find, findIndex, isString, flatten, isNumber } from 'lodash';
+import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
 let FilterUtils;
 
 const wrapValueWithWildcard = (value, condition) => {
@@ -1145,6 +1144,7 @@ export const getWFSFilterData = (filterObj, options) => {
 };
 export const isLikeOrIlike = (operator) => operator === "ilike" || operator === "like";
 export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {}, filters = [] } = {}) => {
+    // exclude the legend filter from filters not to be included in this check
     let filtersArr = filters?.filter(f => f.id !== 'interactiveLegend');
     return !(filterFields.filter((field) => field.value || field.value === 0 || field.operator === "isNull").length > 0)
     && !spatialField.geometry
@@ -1301,44 +1301,6 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
 
     return filterString;
 };
-
-export function cqlToFilterObject(cqlObj) {
-    let groupFields = [{logic: cqlObj?.type?.toUpperCase() || 'AND', id: 1, index: 0}];
-    let filterFields = cqlObj.filters?.map(i=>{
-        const isOperatorIsNull = i.type === 'isNull';
-        const value = isOperatorIsNull ? '' : i.args[1].value;
-        const valueTypeIsNumber = value && parseFloat(value);
-        return {
-            rowId: uuidv1(),
-            groupId: 1,
-            attribute: i.args[0].name,
-            operator: i.type,
-            type: valueTypeIsNumber && isNumber(valueTypeIsNumber) ? 'number' : 'string',
-            value: value,
-            fieldOptions: {
-                valuesCount: 0, currentPage: 1
-            }, exception: null
-        };
-    }) || [];
-    if (cqlObj?.args?.length) {
-        const value = cqlObj.args[1].value;
-        const valueTypeIsNumber = value && parseFloat(value);
-        filterFields = [...filterFields, {
-            rowId: uuidv1(),
-            groupId: 1,
-            attribute: cqlObj.args[0].name,
-            operator: cqlObj.type,
-            type: valueTypeIsNumber && isNumber(valueTypeIsNumber) ? 'number' : 'string',
-            value: value,
-            fieldOptions: {
-                valuesCount: 0, currentPage: 1
-            }, exception: null
-        }];
-    }
-    return {
-        groupFields, filterFields
-    };
-}
 
 FilterUtils = {
     processOGCFilterGroup,
