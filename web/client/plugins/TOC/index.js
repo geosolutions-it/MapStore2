@@ -145,6 +145,7 @@ registerCustomSaveHandler('toc', (state) => (state?.toc?.config));
  *   }
  * }
  * ```
+ * @prop {boolean} defaultOpen if true will open the table of content at initialization
  * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `containers` option in the plugin that want to inject the components.
  * You can select the position where to insert the components adding the `target` property.
