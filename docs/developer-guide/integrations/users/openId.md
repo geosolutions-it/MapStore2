@@ -18,7 +18,7 @@ You can remove the `geostore` entry from `authenticationProviders` list to remov
 
 MapStore allows to integrate with the following OpenID providers.
 
-- OIDC (generic)
+- OpenID Connect (generic)
 - Google
 - Keycloak
 
@@ -28,11 +28,78 @@ For each service you want to add you have to:
 - modify `localConfig.json` adding a proper entry to the `authenticationProviders`.
 
 !!! note
-    For the moment we can configure only one authentication per service type (only one for oidc, one for google, only one for keycloak ...).
+    For the moment we can configure only one authentication per service type (only one for `oidc`, one for `google`, one for `keycloak` ...).
 
-### OIDC (generic)
+### OpenID connect (generic)
 
 MapStore allows to configure a generic OpenID Connect provider. This is useful when you have to configure a provider that is not directly supported by MapStore.
+In order to configure the generic OpenID provider you have to:
+
+- Configure and get the information from your OpenID provider (generically configure the valid redirect URI and get the `discoveryUrl`, `clientId`, `clientSecret`).
+- create/edit `mapstore-ovr.properties` file (in data-dir or class path) to configure the generic provider
+- add an entry for `oidc` in `authenticationProviders` inside `localConfig.json` file.
+
+#### Configure and get the information from your OpenID provider
+
+This depends on the specific OpenID provider you are using. Here we show an example with Microsoft Azure.
+
+##### Example with Microsoft Azure
+
+Microsoft Azure provides OpenID Connect support. This is an example of how to configure MapStore to use Microsoft Azure as an OpenID provider. The same steps can be applied to other OpenID providers. Please refer to the specific documentation of the OpenID provider you are using.
+
+Here a quick summary of the steps to configure Microsoft Azure as an OpenID provider and get the information needed to configure MapStore:
+
+1. Create a new application ![Create azure application](img/azure-1.jpg)
+2. Set the proper valid redirect URLs ![set redirect URL](img/azure-2.jpg) to: `https://<your-domain>/mapstore/rest/geostore/openid/oidc/callback`
+3. Create and copy client secret ![Create and copy client secret](img/azure-3.jpg)
+4. Add optional claims if needed ![Add optional claims](img/azure-4.jpg)
+5. Copy endpoints and data to configure MapStore ![Copy endpoints](img/azure-5.jpg)
+
+These steps are based on the [Microsoft Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app).
+Please refer the official documentation for any detail or additional configuration.
+
+Here also some sample configurations for MapStore (see the following sections for details):
+
+`mapstore-ovr.properties`:
+
+```properties
+# enables the keycloak OpenID Connect filter
+oidcOAuth2Config.enabled=true
+
+# note: this is the client id you have created in Keycloak
+oidcOAuth2Config.clientId=<CLIENT_ID>
+oidcOAuth2Config.clientSecret=<CLIENT_SECRET>
+
+# DISCOVERY_URL something like https://login.microsoftonline.com/abc-dfe-ghi-123-345-567-789/v2.0/.well-known/openid-configuration
+oidcOAuth2Config.discoveryUrl=<DISCOVERY_URL>
+oidcOAuth2Config.sendClientSecret=true
+# create the user if not present
+oidcOAuth2Config.autoCreateUser=true
+# Here you have to set your redirect URI (here is configured for localhost)
+oidcOAuth2Config.redirectUri=http://localhost:8080/mapstore/rest/geostore/openid/oidc/callback
+# Internal redirect URI (you can set it to relative path like this `../../..` to make this config work across domain)
+oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
+```
+
+`localConfig.json.patch` ( *with a custom title and an image with the Microsoft logo* to show in the login form)
+
+```json
+    {
+        "authenticationProviders" [
+                {
+                    "type": "openID",
+                    "provider": "oidc",
+                    "title": "Microsoft",
+                    "imageURL": "data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgdmlld0JveD0iMCAwIDI1IDI1IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGl0ZW1wcm9wPSJsb2dvIiBpdGVtc2NvcGU9Iml0ZW1zY29wZSI+CgkJCTxwYXRoIGQ9Ik0xMS41MjE2IDAuNUgwVjExLjkwNjdIMTEuNTIxNlYwLjVaIiBmaWxsPSIjZjI1MDIyIj48L3BhdGg+CgkJCTxwYXRoIGQ9Ik0yNC4yNDE4IDAuNUgxMi43MjAyVjExLjkwNjdIMjQuMjQxOFYwLjVaIiBmaWxsPSIjN2ZiYTAwIj48L3BhdGg+CgkJCTxwYXRoIGQ9Ik0xMS41MjE2IDEzLjA5MzNIMFYyNC41SDExLjUyMTZWMTMuMDkzM1oiIGZpbGw9IiMwMGE0ZWYiPjwvcGF0aD4KCQkJPHBhdGggZD0iTTI0LjI0MTggMTMuMDkzM0gxMi43MjAyVjI0LjVIMjQuMjQxOFYxMy4wOTMzWiIgZmlsbD0iI2ZmYjkwMCI+PC9wYXRoPgoJCTwvc3ZnPgo="
+                },
+                {
+                    "type": "basic",
+                    "provider": "geostore"
+                }
+            ]
+
+    }
+```
 
 #### Configure MapStore back-end for OIDC OpenID
 
@@ -97,7 +164,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 }
 ```
 
-You can customize the `title` to show in the login form, add an `imageURL` or use only one `authenticationProviders` entry if you want to use only the OpenID provider. In this case the user will be redirected directly to the OpenID provider without showing the login form.
+You can customize the `title` to show in the login form, add an `imageURL` or use only one `authenticationProviders`, removing the `geostore` entry, if you want to use only the OpenID provider. In this case the user will be redirected directly to the OpenID provider without showing the login form.
 
 ### Google
 
