@@ -1471,6 +1471,7 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
+
     it('change layer visibility for Google Layer', () => {
         var google = {
             maps: {
