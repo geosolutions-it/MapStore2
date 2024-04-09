@@ -20,7 +20,6 @@ const urlPartsResult1 = {
     rootPath: "/geoserver/wfs",
     applicationRootPath: 'geoserver'
 };
-
 describe('URLUtils', () => {
     it('test urlParts', () => {
         const data = urlParts(url1);
