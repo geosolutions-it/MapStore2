@@ -49,7 +49,7 @@ describe('Test Raster advanced settings', () => {
         const fields = document.querySelectorAll(".form-group");
         const cswFilters = document.getElementsByClassName("catalog-csw-filters");
         const sortBy = document.getElementsByClassName("sort-by");
-        expect(fields.length).toBe(12);
+        expect(fields.length).toBe(13);
         expect(cswFilters).toBeTruthy();
         expect(sortBy).toBeTruthy();
     });
@@ -60,7 +60,7 @@ describe('Test Raster advanced settings', () => {
         const fields = document.querySelectorAll(".form-group");
         const cswFilters = document.getElementsByClassName("catalog-csw-filters");
         const sortBy = document.getElementsByClassName("sort-by");
-        expect(fields.length).toBe(11);
+        expect(fields.length).toBe(12);
         expect(cswFilters).toBeTruthy();
         expect(sortBy).toBeTruthy();
     });
