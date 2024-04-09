@@ -37,7 +37,6 @@ describe('FeatureInfoUtils', () => {
     });
     it('HTML Validator', () => {
         const responseValidator = validator("HTML");
-        let valid;
 
         // Default fetch all values
         expect(responseValidator.isValidResponse({response: rowHTML})).toBe(true);
@@ -47,6 +46,7 @@ describe('FeatureInfoUtils', () => {
         let validRegex = "<div[^>]*>[\\s\\S]*<\\/div>";
         let invalidRegex = "<table[^>]*>[\\s\\S]*<\\/table>";
 
+        let valid;
         valid = responseValidator.isValidResponse({response: rowHTML, layerMetadata: {regex: validRegex }});
         expect(valid).toBe(true);
 
