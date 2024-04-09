@@ -18,7 +18,8 @@ function CesiumMapLocationSupport({
     location,
     pov,
     map,
-    markerColor = 'rgba(255, 0, 0, 0.6)'
+    markerColor = 'rgba(255, 0, 0, 0.6)',
+    onUpdate = () => {}
 }) {
 
     const { latLng } = location || {};
@@ -33,7 +34,9 @@ function CesiumMapLocationSupport({
     useEffect(() => {
         const _dataSource = new Cesium.CustomDataSource('streetViewDataSource');
         dataSource.current = _dataSource;
-        map.dataSources.add(_dataSource);
+        if (map) {
+            map.dataSources.add(_dataSource);
+        }
         return () => {
             if (map?.isDestroyed && !map.isDestroyed()) {
                 map.dataSources.remove(_dataSource);
@@ -65,6 +68,7 @@ function CesiumMapLocationSupport({
             dataSource.current.entities.values[0].position = position;
             dataSource.current.entities.values[0].orientation = orientation;
             map.scene.requestRender();
+            onUpdate();
         }
     }, [latitude, longitude, height, heading]);
     return null;

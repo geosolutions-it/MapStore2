@@ -24,7 +24,8 @@ function OLMapLocationSupport({
     location,
     pov,
     map,
-    markerColor = 'rgba(255, 0, 0, 0.6)'
+    markerColor = 'rgba(255, 0, 0, 0.6)',
+    onUpdate = () => {}
 }) {
 
     const { latLng } = location || {};
@@ -46,7 +47,9 @@ function OLMapLocationSupport({
                 features: [_position]
             })
         });
-        map.addLayer(_vectorLayer);
+        if (map) {
+            map.addLayer(_vectorLayer);
+        }
         _position.setGeometry(null);
         const [r, g, b, a] = chroma(markerColor).rgba();
         _position.setStyle(
@@ -86,6 +89,7 @@ function OLMapLocationSupport({
             });
             position.current.setGeometry(feature.getGeometry());
             position.current.getStyle().getImage().setRotation(heading * Math.PI / 180);
+            onUpdate();
         }
     }, [latitude, longitude, height, heading]);
     return null;
