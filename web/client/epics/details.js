@@ -7,6 +7,7 @@
 */
 
 import Rx from 'rxjs';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import {
     OPEN_DETAILS_PANEL,
@@ -54,7 +55,7 @@ export const fetchDataForDetailsPanel = (action$, store) =>
         });
 
 export const closeDetailsPanelEpic = (action$) =>
-    action$.ofType(CLOSE_DETAILS_PANEL)
+    action$.ofType(CLOSE_DETAILS_PANEL, LOCATION_CHANGE)
         .switchMap(() => Rx.Observable.from( [
             setControlProperty("details", "enabled", false)
         ])

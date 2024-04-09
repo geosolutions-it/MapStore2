@@ -112,15 +112,14 @@ export const isValidURLTemplate = (url, params, regexp = /^(http(s{0,1}):\/\/)+?
 
 };
 
-export const getPathURLFromFileUrl = (fileUrl) => {
-    let parts = fileUrl?.split(".") || [];
-    let pathUrl = () => {
-        if (parts.length > 1) {
-            let hashSplittedPathUrl = parts[0].split("/");
-            hashSplittedPathUrl.pop();
-            return hashSplittedPathUrl.join("/") + "/";
-        }
-        return parts[0];
-    };
-    return pathUrl();
+/**
+ * Helper for working with a single string url.
+ * Use when calling implementations that do not know about array of urls, such as the `urlUtil` library,
+ * while still supporting our implementation of domain aliases and domain sharding.
+ *
+ * @param {string || array} url - Either a string representing a valid url or an array of strings which are all valid urls.
+ * @returns {string} Returns the argument if the argument is string, otherwise if the argument is an array, returns the first element.
+ */
+export const getDefaultUrl = (url) => {
+    return isArray(url) ? url[0] : url;
 };

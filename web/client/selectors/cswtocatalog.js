@@ -10,6 +10,7 @@ import assign from 'object-assign';
 
 import { head } from 'lodash';
 import urlUtil from 'url';
+import { getDefaultUrl } from '../utils/URLUtils';
 
 
 export const getBaseCatalogUrl = (url) => {
@@ -38,7 +39,7 @@ export const cswToCatalogSelector = (catalog) => {
             if (!wms && dc.references) {
                 let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
                 wms = head([].filter.call( refs, (ref) => { return ref.scheme === "OGC:WMS-1.1.1-http-get-map" || ref.scheme === "OGC:WMS"; }));
-                let urlObj = urlUtil.parse(wms.value, true);
+                let urlObj = urlUtil.parse(getDefaultUrl(wms.value), true);
                 let layerName = urlObj.query && urlObj.query.layers;
                 wms = assign({}, wms, {name: layerName} );
             }

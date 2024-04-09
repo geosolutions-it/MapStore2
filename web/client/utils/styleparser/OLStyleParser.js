@@ -69,6 +69,7 @@ import { geometryFunctionsLibrary } from './GeometryFunctionsUtils';
 const getGeometryFunction = geometryFunctionsLibrary.openlayers({
     Point: OlGeomPoint,
     LineString: OlGeomLineString,
+    Polygon: OlGeomPolygon,
     GeoJSON,
     getCenter
 });
@@ -716,6 +717,7 @@ export class OlStyleParser {
                 symbolizer[key] = expressionsUtils.evaluateFunction(symbolizer[key], feat);
             }
         }
+        const geometryFunc = getGeometryFunction(symbolizer, feat, this._getMap());
 
         const color = symbolizer.color;
         // fillOpacity is needed for legacy support
@@ -741,6 +743,7 @@ export class OlStyleParser {
         }) : undefined;
 
         const olStyle = new this.OlStyleConstructor({
+            ...geometryFunc,
             fill,
             stroke
         });

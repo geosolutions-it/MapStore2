@@ -25,7 +25,6 @@ This steps have to be followed always when preparing a new release.
   With the following Parameters:
   - [ ] Use workflow from branch `master`
   - [ ] MapStore branch name to use: `YYYY.XX.xx`
-  - [ ] Version of *MapFish Print*, *GeoStore* and *HTTP-Proxy* accordingly to the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
   - [ ] use the default value for the other parameters
 - [ ] Wait for the process to complete. At the end:
     - A Pull request will be created to the master
@@ -40,7 +39,7 @@ This steps have to be followed always when preparing a new release.
 
 ## Before the Release
 
-- [ ] Check `pom.xml` dependencies are all in fixed stable versions ( no `-SNAPSHOT` usage release). If not, You use the action  [`Update dependencies versions`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/update_dependencies_versions.yml) to fix them, setting:
+- [ ] Check `pom.xml` dependencies are all in fixed stable versions ( no `-SNAPSHOT` usage release). If not, You use the action  [`Update dependencies versions`](https://github.com/geosolutions-it/MapStore2/actions/workflows/update_dependencies_versions.yml) to fix them, setting:
     - [ ] the branch to `YYYY.XX.xx`
     - [ ] the of geostore, http_proxy and mapfish-print versions accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
 - [ ] Check that [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository is aligned and working

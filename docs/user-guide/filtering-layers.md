@@ -76,29 +76,23 @@ This filter is available for each colum in the [Attribute Table](attributes-tabl
 
 <video class="ms-docimage" controls><source src="../img/filtering-layers/filtered_quick_filter.mp4"/></video>
 
-The user has the possibility to apply simple filters by attributes simply typing the filter's value in the available input fields (Date or Time pickers are available according to real attributes data types and a tooltip usually gives an information on how to fill the filter's input field). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md#attribute-table) are automatically filtered accordingly.
+The user has the possibility to apply simple filters by attributes typing the filter's value in the available input fields (Date or Time pickers are available according to the attributes data types). Filtering by one or more attributes, layer records in [Attribute Table](attributes-table.md#attribute-table) are automatically filtered accordingly.
 
-If the user wants to filter by an attribute of type String, he can simply write something inside the input box and the list of records in table will be automatically filtered by matching with the input text.
+If the user wants to filter by an attribute, he can simply write the desired filter value inside the input box and the list of records in table will be automatically filtered by matching with the input text.
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-1.jpg" class="ms-docimage"/>
 
-If the User wants to filter by a numeric attribute, he can type directly a number or an expression using the following operators:
+The user can also filter an attribute using the operation input box. From the dropdown menu it is possible to choose the operation to perform (for the *String* attribute can be `=`, `like`, `ilike` or `isNull`, for the *Integer*, *Data* or *Time* attribute, can be `=`, `>`, `<`, `>=`, `<=`, `<>` or `isNull`)
 
-* Not equal (**!=** or **!==** or **<>**)
-
-* Equal or less than (**<=**)
-
-* Equal or greater than (**>=**)
-
-* Less than (**<**)
-
-* Greater than (**>**)
-
-* Equal (**===** or **==** or *=*)
+<img src="../img/filtering-layers/operations_drop_down_menu.jpg" class="ms-docimage"/>
 
 In order to filter a numerical filed matching the records *greater than* or *equal* to a certain threshold value, an example can be:
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
+
+The user can also filter the records, of the *Date*, *Time* and *DateTime* attributes, through the *Date Picker* option by clicking on the <img src="../img/button/date_picker.jpg" class="ms-docbutton"/> button for *Date* attributes, the <img src="../img/button/time_picker.jpg" class="ms-docbutton"/> button for *Time* attributes and the <img src="../img/button/date_time_picker.jpg" class="ms-docbutton"/> button for *DateTime* attributes. To filter a *DateTime* attribute using the *Date Picker* option, an example can be the following:
+
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/filtering-layers/data_time_picker_example.mp4"/></video>
 
 #### Quick Filter by map interaction
 
@@ -133,7 +127,7 @@ This tool is used to define advanced filters in [MapStore](https://mapstore.geos
 
 * **Attribute Filter**
 
-* **Region of Interest**
+* **Area of Interest**
 
 * **Layer Filter**
 
@@ -166,7 +160,7 @@ A simple *Attribute Filter* applied for a numerical field can be, for example:
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/att_filter.mp4"/></video>
 
-### Region of interest
+### Area of interest
 
 In order to set this filter the user can:
 
@@ -174,13 +168,17 @@ In order to set this filter the user can:
 
 * Select the *Geometric operation* by choosing between **Intersects**, **Is contained**, **Contains**
 
-Applying a *Circle* filter with *Intersect* operation, for example, the process could be similar to the following:
+Applying a *Rectangle* filter with *Intersect* operation, for example, the process could be similar to the following:
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/geom_filter.mp4"/></video>
 
 Once this filter is set, it is always possible to edit the coordinates and the dimensions of the drawn filter's geometry by clicking on the **Details** button <img src="../img/button/edit-icon-1.jpg" class="ms-docbutton"/>. Editing a circle, for example, it is possible to change the center coordinates (*x*, *y*) and the radius dimension (*m*):
 
 <img src="../img/filtering-layers/edit_geom.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+!!! note
+     Also for [Dashboard](exploring-dashboards.md) [widgets](widgets.md) (charts, table and counter) it is possible to define a spatial filter without necessarily connect the widget to the map widget by using the usual **Area of interest** filtering section. The example below sows how:
+     <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/filtering-layers/area-filter-dash.mp4"/></video>
 
 ### Layer filter
 
@@ -204,3 +202,6 @@ In order to better understand this type of filter, let's make an example. We sup
 In particular, if our goal is to take a look at the Italian Regions that contain the Unesco sites with *serial code=1*, the operations to perform can be the following:
 
 <video class="ms-docimage" controls><source src="../img/filtering-layers/layer_filter.mp4"/></video>
+
+!!! note
+    The **Layer Filter** option is only available for [widgets](widgets.md) defined in [Map viewer](exploring-maps.md) and not for [Dashboards](exploring-dashboards.md) widgets.

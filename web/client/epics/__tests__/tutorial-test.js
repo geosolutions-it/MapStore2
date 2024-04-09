@@ -597,8 +597,10 @@ describe('tutorial Epics', () => {
                     present: {
                         mapId: "123",
                         info: {
-                            detailsSettings: {
-                                showAtStartup: true
+                            attributes: {
+                                detailsSettings: {
+                                    showAtStartup: true
+                                }
                             }
                         }
                     }
