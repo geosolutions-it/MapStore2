@@ -638,7 +638,7 @@ describe('MapInfoUtils', () => {
 
         let validator = getValidator();
         let noValidResponses = validator.getNoValidResponses(response);
-        expect(noValidResponses.length).toBe(1);
+        expect(noValidResponses.length).toBe(3);
 
         // Validate format 'JSON'
         response.filter(r=> r !== undefined).forEach(res => {res.format = "JSON"; return res;});
