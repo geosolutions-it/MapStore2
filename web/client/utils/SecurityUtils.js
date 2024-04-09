@@ -16,6 +16,8 @@ import isArray from "lodash/isArray";
 
 import {setStore as stateSetStore, getState} from "./StateUtils";
 
+export const USER_GROUP_ALL = 'everyone';
+
 /**
  * Stores the logged user security information.
  */
@@ -156,6 +158,10 @@ export function getAuthenticationHeaders(url, securityToken) {
             "Authorization": `Bearer ${token}`
         };
     }
+    case 'header': {
+        const rule = getAuthenticationRule(url);
+        return rule.headers;
+    }
     default:
         // we cannot handle the required authentication method
         return null;
@@ -260,7 +266,8 @@ const SecurityUtils = {
     addAuthenticationToSLD,
     getAuthKeyParameter,
     cleanAuthParamsFromURL,
-    getAuthenticationHeaders
+    getAuthenticationHeaders,
+    USER_GROUP_ALL
 };
 
 export default SecurityUtils;

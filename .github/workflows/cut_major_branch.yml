@@ -5,18 +5,6 @@ on:
       release-branch:
         description: MapStore branch name to use (YYYY.MM.xx). E.g. 2024.01.xx
         required: true
-      mapfish-version:
-        description: Mapfish print version to use (e.g. 2.3-SNAPSHOT)
-        required: true
-        default: '2.3-SNAPSHOT'
-      geostore-version:
-        description: GeoStore version to use (e.g. 2.0.0).
-        required: true
-        default: '2.0.0'
-      http-proxy-version:
-        description: Http proxy version to use (e.g. 2.4).
-        required: true
-        default: '1.4.0'
       main-branch:
         description: main branch
         default: master
@@ -36,15 +24,8 @@ jobs:
       - name: Create release branch and generate PR body
         id: create-branch
         env:
-          MAPFISH_GROUP: org.mapfish.print
-          MAPFISH_VERSION: ${{ github.event.inputs.mapfish-version }}
-          GEOSTORE_GROUP: it.geosolutions.geostore
-          GEOSTORE_VERSION:  ${{ github.event.inputs.geostore-version }}
-          HTTP_PROXY_GROUP: proxy
-          HTTP_PROXY_VERSION:  ${{ github.event.inputs.http-proxy-version }}
-          RELEASE_BRANCH:  ${{ github.event.inputs.release-branch }}
-
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BRANCH: ${{ github.event.inputs.release-branch }}
           MAIN_BRANCH: ${{ github.event.inputs.main-branch }}
           PR_OPTIONS: ${{ github.event.inputs.pr-options }}
           RUN_ID: ${{ github.run_id }}

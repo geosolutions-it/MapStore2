@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import {
     MAP_CONFIG_LOADED,
@@ -33,6 +34,12 @@ import {
 function mapConfig(state = null, action) {
     let map;
     switch (action.type) {
+    case LOCATION_CHANGE: {
+        return {
+            ...state,
+            mapInitialConfig: {}
+        };
+    }
     case MAP_CONFIG_LOADED:
         let size = state && state.map && state.map.present && state.map.present.size || state && state.map && state.map.size;
         // bbox is taken from the state to keep widgets having correct dataset after map is saved or saved as.
@@ -81,7 +88,10 @@ function mapConfig(state = null, action) {
     case MAP_INFO_LOADED:
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && (`${map.mapId}` === `${action.mapId}` || !map.mapId && !action.mapId)) {
-            map = assign({}, map, {info: action.info, loadingInfo: false});
+            map = assign({}, map, {info: action.merge ? {
+                ...map.info,
+                ...action.info
+            } : action.info, loadingInfo: false});
             return assign({}, state, {map: map});
         }
         return state;
@@ -89,13 +99,17 @@ function mapConfig(state = null, action) {
         let dashboardResource = state.dashboard?.resource;
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map && map.mapId.toString() === action.id.toString()) {
-            map = assign({}, map, {
-                info:
-                    assign({}, map.info, {
-                        details: action.detailsUri,
-                        detailsSettings: action.detailsSettings
-                    })
-            });
+            map = {
+                ...map,
+                info: {
+                    ...map.info,
+                    attributes: {
+                        ...map.info?.attributes,
+                        details: action.detailsUri || map.info?.attributes?.details,
+                        detailsSettings: action.detailsSettings || map.info?.attributes?.detailsSettings
+                    }
+                }
+            };
             return assign({}, state, {map: map});
         } else if (dashboardResource && dashboardResource.id === action.id.toString()) {
             dashboardResource = assign({}, dashboardResource, {

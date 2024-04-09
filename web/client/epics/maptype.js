@@ -15,11 +15,14 @@ import {
     findMapType,
     removeMapType,
     getVisualizationModeFromMapLibrary,
-    getDefaultVisualizationMode
+    getDefaultVisualizationMode,
+    MapLibraries
 } from '../utils/MapTypeUtils';
 
 import { DASHBOARD_RESET } from '../actions/dashboard';
 import { LOAD_GEOSTORY } from '../actions/geostory';
+
+const AVAILABLE_MAP_LIBRARIES = Object.keys(MapLibraries).map((key) => MapLibraries[key]);
 
 /**
  * Keep in sync mapType in state with mapType in URL.
@@ -63,7 +66,7 @@ export const syncMapType = (action$, store) =>
                 const pathname = state?.router?.location?.pathname;
                 const hashMapType = findMapType(pathname);
                 // if the URL hash contains the mapType and it is not in sync with the new path, syncronize
-                if (hashMapType) {
+                if (AVAILABLE_MAP_LIBRARIES.includes(hashMapType)) {
                     const newPath = removeMapType(pathname);
                     // in this case the URL change
                     if (newPath !== pathname) {

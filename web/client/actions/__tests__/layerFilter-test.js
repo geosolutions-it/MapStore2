@@ -70,13 +70,13 @@ describe('Test correctness of the layerFilter actions', () => {
 
     it('layerFilterByLegend', () => {
         var retval = layerFilterByLegend();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(LAYER_FILTER_BY_LEGEND);
     });
 
     it('resetLegendFilter', () => {
         var retval = resetLegendFilter();
-        expect(retval).toExist();
+        expect(retval).toBeTruthy();
         expect(retval.type).toBe(RESET_LAYER_FILTER_BY_LEGEND);
     });
 

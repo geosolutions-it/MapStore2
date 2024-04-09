@@ -55,7 +55,10 @@
 @ms-warning: @ms2-color-warning;
 @ms-danger: @ms2-color-danger;
 
-@ms-focus-color: rgba(@ms-primary, 0.4);
+@ms-focus-color: #6298fa;
+@ms-selected-color: #0075ff;
+@ms-selected-bg: rgba(@ms-focus-color, 0.4); 
+@ms-selected-hover-bg: rgba(@ms-focus-color, 0.1); // #ecf3ff;
 @ms-placeholder-color: lighten(@ms-main-color, 30%);
 
 @ms-jumbotron-color: @ms-main-color;
@@ -115,6 +118,10 @@
     // **************
     // outline color or border color for focused element
     focus-color: --ms-focus-color, @ms-focus-color;
+
+    selected-color: --ms-selected-color, @ms-selected-color;
+    selected-bg: --ms-selected-bg, @ms-selected-bg;
+    selected-hover-bg: --ms-selected-hover-bg, @ms-selected-hover-bg;
 
     // **************
     // text color for placeholders

@@ -561,11 +561,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Show layers",
-            "showLegend": "Show legend",
-            "hideLegend": "Hide legend"
-        },
         "addgroup": {
             "addbtn": "Add",
             "groupName": "Group name"
@@ -592,6 +587,7 @@
             "layerFilterTooltip": "Filter layer",
             "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "No results",
+            "emptyLayerTree": "Layers tree is empty. Please add a new layer from the catalog",
             "filterPlaceholder": "Filter layers",
             "clearFilter": "Clear filter",
             "toolReloadLayerTooltip": "Force reload of selected layer",
@@ -629,6 +625,22 @@
             "notVisibleZoomOut": "The layer is not visible because it is outside the resolution limits. Zoom out to show the layer",
             "notVisibleSwitchTo3D": "Switch to 3D map mode in order to see this layer",
             "notVisibleSwitchTo2D": "Switch to 2D map mode in order to see this layer",
+            "toolGroupShowAllChildren": "Show all child nodes",
+            "toolGroupHideAllChildren": "Hide all child nodes",
+            "activateToolGroupMutuallyExclusive": "Activate mutually exclusive visibility of child nodes",
+            "deactivateToolGroupMutuallyExclusive": "Deactivate mutually exclusive visibility of children nodes",
+            "toolGroupCollapseAllChildren": "Collapse all child nodes",
+            "toolGroupExpandAllChildren": "Expand all child nodes",
+            "closeOnMapInitialization": "Keep closed on map initialization",
+            "openOnMapInitialization": "Open on map initialization",
+            "defaultTheme": "Default theme",
+            "legendTheme": "Legend theme",
+            "showFullTitle": "Show full title",
+            "hideFullTitle": "Title on a single line",
+            "showOpacitySlider": "Show opacity slider",
+            "hideOpacitySlider": "Hide opacity slider",
+            "showOpacityTooltip": "Show opacity tooltip",
+            "hideOpacityTooltip": "Hide opacity tooltip",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -823,6 +835,7 @@
             "exportToGeoJSON": "Export to GeoJSON",
             "resetTooltip": "Clear measures",
             "addAsLayer": "Add as layer",
+            "lengthMeasure": "Measure geodesic distance in 3D space which is calculated on the ellipsoid, but rendered where you click",
             "polylineDistance3DMeasure": "Measure distance in 3D space",
             "area3DMeasure": "Measure area in 3D space",
             "pointCoordinatesMeasure": "Measure point coordinates",
@@ -1652,6 +1665,11 @@
             "helpTooltip": "This option is used to split content across multiple subdomains",
             "addAliasTooltip": "Add alias",
             "removeAliasTooltip": "Remove alias"
+          },
+          "sortBy": {
+            "label": "Sort By",
+            "tooltip": "Add namespace prefix to name property. i.e. ${namespace}:${name}",
+            "placeholder": "Enter a name"
           }
         },
         "uploader": {
@@ -2605,6 +2623,7 @@
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
+            "alphaChannel": "Alpha channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
@@ -2672,6 +2691,12 @@
             "msExtrusionColor": "Extrusion color",
             "msExtrusionType": "Extrusion type",
             "wall": "Wall",
+            "enableBanding": "Band styling",
+            "selectChannel": "Select a band",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Minimum source data value",
+            "maxSourceValue": "Maximum source data value",
             "customParams": "Custom Parameters",
             "wrongFormatMsg": "The entered configuration is in wrong format !!"
         },

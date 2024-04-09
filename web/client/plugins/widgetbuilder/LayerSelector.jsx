@@ -31,7 +31,7 @@ const Catalog = compose(
  * @prop {function} [layerValidationStream]
  */
 export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, defaultServices,
-    onChangeSelectedService, defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService} = {}) =>
+    onChangeSelectedService, defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -47,5 +47,6 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
         <Catalog
             onChangeCatalogMode={onChangeCatalogMode}
             selectedService={dashboardSelectedService === "" ? dashboardSelectedService : dashboardSelectedService === undefined ? defaultSelectedService : dashboardSelectedService}
-            onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
+            onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)}
+            canEditService={canEditService}/>
     </BorderLayout>);

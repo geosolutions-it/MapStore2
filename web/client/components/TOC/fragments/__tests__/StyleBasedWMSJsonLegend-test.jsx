@@ -81,12 +81,12 @@ describe('test StyleBasedWMSJsonLegend module component', () => {
         await TestUtils.act(async() => comp);
 
         const domNode = ReactDOM.findDOMNode(comp);
-        expect(domNode).toExist();
+        expect(domNode).toBeTruthy();
 
         const legendElem = document.querySelector('.wms-legend');
-        expect(legendElem).toExist();
+        expect(legendElem).toBeTruthy();
         const legendRuleElem = domNode.querySelectorAll('.wms-json-legend-rule');
-        expect(legendRuleElem).toExist();
+        expect(legendRuleElem).toBeTruthy();
         expect(legendRuleElem.length).toEqual(2);
     });
 });

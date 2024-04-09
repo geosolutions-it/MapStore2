@@ -8,6 +8,7 @@
 
 import React, { useEffect, useRef, useState }  from 'react';
 import uniq from 'lodash/uniq';
+import isEqual from 'lodash/isEqual';
 import { StyleEditor } from './StyleCodeEditor';
 import TextareaEditor from '../../components/styleeditor/Editor';
 import VisualStyleEditor from '../../components/styleeditor/VisualStyleEditor';
@@ -92,10 +93,13 @@ function VectorStyleEditor({
         setError(null);
         onUpdateNode(layer.id, 'layers', { style: getVectorDefaultStyle(layer) });
         // apply reset legend filter in case of change style
-        resetLegendFilter('style');
+        if (['wfs'].includes(layer.type)) {
+            resetLegendFilter('style');
+        }
     }
 
     function handleUpdateMetadata(metadata) {
+        const isStyleChanged = !isEqual(style.current?.metadata?.styleJSON, metadata?.styleJSON);
         style.current = {
             ...style.current,
             metadata: {
@@ -104,7 +108,7 @@ function VectorStyleEditor({
             }
         };
         // apply reset legend filter in case of change style
-        if (['wfs', 'vector'].includes(layer.type) && layer?.enableInteractiveLegend) {
+        if (isStyleChanged && ['wfs'].includes(layer.type) && layer?.enableInteractiveLegend) {
             resetLegendFilter('style', style.current?.metadata?.styleJSON);
         }
 

@@ -47,8 +47,10 @@ flowchart TD
     X --> Cut
     Cut[[GH Action: Cut Release Branch]] -->|
     create branch
-    fix dependencies versions
     PR to master with packages versions update
+    | Update[[GH Action: Update dependencies versions]] -->|
+        fix package versions for geostore, http-proxy, print lib
+        excluding snapshots
     | Fixes
     Fixes[Fixes...] --> Tests[Tests...]
     Tests --> start(((start release)))

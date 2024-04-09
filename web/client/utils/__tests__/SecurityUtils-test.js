@@ -90,6 +90,16 @@ const tokenAuthenticationRules = [
     }
 ];
 
+const headerAuthenticationRules = [
+    {
+        "urlPattern": ".*header-site.*",
+        "method": "header",
+        "headers": {
+            "X-Auth-Token": "goodtoken"
+        }
+    }
+];
+
 describe('Test security utils methods', () => {
     afterEach(() => {
         expect.restoreSpies();
@@ -223,6 +233,12 @@ describe('Test security utils methods', () => {
         ConfigUtils.setConfigProp("useAuthenticationRules", true);
         ConfigUtils.setConfigProp('authenticationRules', tokenAuthenticationRules);
         expect(SecurityUtils.addAuthenticationParameter("a test url", null)).toEqual({'authkey': 'goodtoken'});
+    });
+    it('test getAuthenticationHeaders for header rule', () => {
+        setSecurityInfo(securityInfoToken);
+        ConfigUtils.setConfigProp("useAuthenticationRules", true);
+        ConfigUtils.setConfigProp('authenticationRules', headerAuthenticationRules);
+        expect(SecurityUtils.getAuthenticationHeaders("http://header-site.com/something", null)).toEqual({'X-Auth-Token': 'goodtoken'});
     });
     it('cleanAuthParamsFromURL', () => {
         // mocking the authentication rules

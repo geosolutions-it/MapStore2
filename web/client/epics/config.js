@@ -188,14 +188,14 @@ export const loadMapInfoEpic = action$ =>
     action$.ofType(LOAD_MAP_INFO)
         .switchMap(({mapId}) =>
             Observable
-                .defer(() => Persistence.getResource(mapId, { includeAttributes: false, withData: false }))
+                .defer(() => Persistence.getResource(mapId, { includeAttributes: true, withData: false }))
                 .map(resource => mapInfoLoaded(resource, mapId))
                 .catch((e) => Observable.of(mapInfoLoadError(mapId, e)))
                 .startWith(mapInfoLoadStart(mapId))
         );
 
 /**
- * Incerpt MAP_INFO_LOADED and load detail resource linked to the map
+ * Intercepts MAP_INFO_LOADED and load detail resource linked to the map
  * Epic is placed here to better intercept and load details info,
  * when loading context with map that has a linked resource
  * and to avoid race condition when loading plugins and map configuration
@@ -206,32 +206,27 @@ export const loadMapInfoEpic = action$ =>
  */
 export const storeDetailsInfoEpic = (action$, store) =>
     action$.ofType(MAP_INFO_LOADED)
-        .switchMap(() => {
+        .filter(() => {
             const mapId = mapIdSelector(store.getState());
+            return !!mapId;
+        })
+        .switchMap(({mapId, info: {attributes}}) => {
             const isTutorialRunning = store.getState()?.tutorial?.run;
-            return !mapId
-                ? Observable.empty()
-                : Observable.fromPromise(
-                    GeoStoreApi.getResourceAttributes(mapId)
-                ).switchMap((attributes) => {
-                    let details = find(attributes, {name: 'details'});
-                    const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
-                    let detailsSettings = {};
-                    if (!details || details.value === EMPTY_RESOURCE_VALUE) {
-                        return Observable.empty();
-                    }
+            let details = attributes?.details;
+            let detailsSettings;
+            try {
+                detailsSettings = JSON.parse(attributes?.detailsSettings);
+            } catch (e) {
+                detailsSettings = {};
+            }
 
-                    try {
-                        detailsSettings = JSON.parse(detailsSettingsAttribute.value);
-                    } catch (e) {
-                        detailsSettings = {};
-                    }
-
-                    return Observable.of(
-                        detailsLoaded(mapId, details.value, detailsSettings),
-                        ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])
-                    );
-                });
+            if (!details || details.value === EMPTY_RESOURCE_VALUE) {
+                return Observable.empty();
+            }
+            return Observable.from([
+                detailsLoaded(mapId, details, detailsSettings),
+                ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])]
+            );
         });
 export const storeDetailsInfoDashboardEpic = (action$, store) =>
     action$.ofType(DASHBOARD_LOADED)

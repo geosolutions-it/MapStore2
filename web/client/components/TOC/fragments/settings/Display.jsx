@@ -15,7 +15,7 @@ const Button = tooltip(ButtonRB);
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 import Message from '../../../I18N/Message';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
-import Legend from '../legend/Legend';
+import Legend from '../../../../plugins/TOC/components/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
 import { ServerTypes } from '../../../../utils/LayersUtils';
 import Select from 'react-select';
@@ -220,7 +220,7 @@ export default class extends React.Component {
                     layer={this.props.element}
                     onChange={this.props.onChange}
                 />
-                {['wfs', 'vector'].includes(this.props.element.type) &&
+                {['wfs'].includes(this.props.element.type) &&
                     <div className={"legend-options"}>
                         <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>

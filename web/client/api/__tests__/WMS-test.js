@@ -314,10 +314,10 @@ describe('Test get json wms graphic legend (mock axios)', () => {
         API.getJsonWMSLegend(url).then(result => {
             try {
                 expect(result.length).toEqual(1);
-                expect(result[0]).toExist();
-                expect(result[0].layerName).toExist();
+                expect(result[0]).toBeTruthy();
+                expect(result[0].layerName).toBeTruthy();
                 expect(result[0].layerName).toEqual('layer');
-                expect(result[0].rules).toExist();
+                expect(result[0].rules).toBeTruthy();
                 expect(result[0].rules.length).toEqual(2);
                 done();
             } catch (ex) {

@@ -45,9 +45,9 @@ describe('test Layer Properties Display module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<Display element={l} settings={settings} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(5);
         ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].value).toBe('100');
@@ -71,9 +71,9 @@ describe('test Layer Properties Display module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(14);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
@@ -109,7 +109,7 @@ describe('test Layer Properties Display module component', () => {
         };
 
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const formatRefresh = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "format-refresh" );
         ReactTestUtils.Simulate.click(formatRefresh[0]);
     });
@@ -165,7 +165,7 @@ describe('test Layer Properties Display module component', () => {
         };
         ReactDOM.render(<Display isLocalizedLayerStylesEnabled element={l} settings={settings}/>, document.getElementById("container"));
         const isLocalizedLayerStylesOption = document.querySelector('[data-qa="display-lacalized-layer-styles-option"]');
-        expect(isLocalizedLayerStylesOption).toExist();
+        expect(isLocalizedLayerStylesOption).toBeTruthy();
     });
 
     it('tests Display component for wms with force proxy option displayed', () => {
@@ -243,7 +243,7 @@ describe('test Layer Properties Display module component', () => {
             onChange() {}
         };
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         const legendWidth = inputs[12];
@@ -282,11 +282,11 @@ describe('test Layer Properties Display module component', () => {
         };
         let spy = expect.spyOn(handlers, "onChange");
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
-        expect(legendPreview).toExist();
-        expect(inputs).toExist();
+        expect(legendPreview).toBeTruthy();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(14);
         let interactiveLegendConfig = inputs[11];
         let legendWidth = inputs[12];
@@ -360,9 +360,9 @@ describe('test Layer Properties Display module component', () => {
             }
         };
         const comp = ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(14);
         expect(inputs[12].value).toBe("20");
         expect(inputs[13].value).toBe("40");

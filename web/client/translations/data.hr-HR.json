@@ -382,11 +382,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Prikaži slojeve",
-            "showLegend": "Prikaži legendu",
-            "hideLegend": "Sakrij legendu"
-        },
         "addgroup": {
             "addbtn": "Dodaj",
             "groupName": "Naziv grupe"

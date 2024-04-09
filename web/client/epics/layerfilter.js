@@ -128,7 +128,7 @@ export const applyCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
             const layer = head(state.layers.flat.filter(l => l.id === action.layerId));
             const queryFormFilterObj = {...get(getState(), "queryform", {})};
             let filterObj = layer.layerFilter ? layer.layerFilter : queryFormFilterObj;
-            let searchUrl = layer.search.url;
+            let searchUrl = layer?.search?.url;
             // reset thte filter if legendCQLFilter is empty
             if (!action.legendCQLFilter) {
                 // clear legend filter with id = 'interactiveLegend'
@@ -181,12 +181,12 @@ export const applyResetLegendFilter = (action$, {getState}) => {
             const state = getState();
             const layer = getSelectedLayer(state);
             const layerType = layer.type;
-            const isWFSVectorLayer = ['wfs', 'vector'].includes(layerType);
+            const isWFSLayer = layerType === 'wfs';
             const isWMSLayer = layerType === 'wms';
             const isResetForStyle = action.reason === 'style';      // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
             let needReset;
             // check if the selected style is different than the current layer's one, if not cancel the epic
-            if (isWFSVectorLayer && isResetForStyle) {
+            if (isWFSLayer && isResetForStyle) {
                 needReset = action.reason === 'style' && layer.style?.metadata?.styleJSON !== action?.value;
             } else if (isWMSLayer && isResetForStyle) {
                 needReset = action.reason === 'style' && layer.style !== action?.value;
@@ -199,7 +199,7 @@ export const applyResetLegendFilter = (action$, {getState}) => {
             if (!needReset || !isLayerWithJSONLegend) return Rx.Observable.empty();
             const queryFormFilterObj = {...get(getState(), "queryform", {})};
             let filterObj = layer.layerFilter ? layer.layerFilter : queryFormFilterObj;
-            let searchUrl = layer.search.url;
+            let searchUrl = layer?.search?.url;
             // reset thte filter if legendCQLFilter is empty
             const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
             if (isLegendFilterExist) {

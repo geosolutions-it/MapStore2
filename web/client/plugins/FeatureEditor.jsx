@@ -15,6 +15,7 @@ import featuregrid from '../reducers/featuregrid';
 import FeatureEditorFallback from '../components/data/featuregrid/FeatureEditorFallback';
 import withSuspense from '../components/misc/withSuspense';
 import {compose, lifecycle} from "recompose";
+import { browseData } from "../actions/layers";
 import { initPlugin, setViewportFilter } from "../actions/featuregrid";
 import {isViewportFilterActive} from "../selectors/featuregrid";
 
@@ -202,6 +203,34 @@ const EditorPlugin = connect(
     )
 )((lazy(() => import('./featuregrid/FeatureEditor')))));
 
+const AttributeTableButton = connect(() => ({}), {
+    onClick: browseData
+})(({
+    onClick,
+    selectedNodes,
+    status,
+    itemComponent,
+    statusTypes,
+    ...props
+}) => {
+    const ItemComponent = itemComponent;
+    const layer = selectedNodes?.[0]?.node;
+    if ([statusTypes.LAYER].includes(status) && layer?.search && !layer?.error) {
+        return (
+            <ItemComponent
+                {...props}
+                glyph="features-grid"
+                tooltipId={'toc.toolFeaturesGridTooltip'}
+                onClick={() => onClick({
+                    ...layer,
+                    url: layer?.search?.url || layer.url
+                })}
+            />
+        );
+    }
+    return null;
+});
+
 export default createPlugin('FeatureEditor', {
     component: EditorPlugin,
     epics,
@@ -211,7 +240,10 @@ export default createPlugin('FeatureEditor', {
     containers: {
         TOC: {
             doNotHide: true,
-            name: "FeatureEditor"
+            name: "FeatureEditor",
+            Component: AttributeTableButton,
+            target: 'toolbar',
+            position: 7
         }
     }
 });
