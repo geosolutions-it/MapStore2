@@ -197,22 +197,10 @@ To run or debug the server side part of MapStore we suggest to run the backend i
 
 ### Enable Remote Debugging
 
-for embedded tomcat you can configure the following:
+for embedded tomcat you can run the following:
 
 ```bash
-# Linux
-
-```
-
-```bash
-# Windows
-set MAVEN_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n
-```
-
-then start tomcat
-
-```bash
-npm start # or npm run start:app, or npm run be:start (this last only for the backend)
+npm run be:start -- backend.debug.args"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 ```
 
 For your local tomcat, you can follow the standard procedure to debug with tomcat.
@@ -222,7 +210,7 @@ For your local tomcat, you can follow the standard procedure to debug with tomca
 * Run eclipse plugin
 
 ```bash
-mvn eclipse:eclipse
+mvn eclipse:eclipse 
 ```
 
 * Import the project in eclipse from **File --> Import**
