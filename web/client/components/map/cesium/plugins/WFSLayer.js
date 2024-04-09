@@ -7,10 +7,10 @@
  */
 
 import Layers from '../../../../utils/cesium/Layers';
+import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
-import axios from '../../../../libs/ajax';
-import { getFeature } from '../../../../api/WFS';
-import { needsReload } from '../../../../utils/WFSLayerUtils';
+import { getFeature, getFeatureLayer } from '../../../../api/WFS';
+import { needsReload, needsCredentials, getConfig } from '../../../../utils/WFSLayerUtils';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import {
     getStyle,
@@ -18,16 +18,39 @@ import {
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
+import { ServerTypes } from '../../../../utils/LayersUtils';
 
-const requestFeatures = (options, params, cancelToken) => {
+const requestFeatures = (options, params, config) => {
     return getFeature(options.url, options.name, {
         // ...(!params?.CQL_FILTER && { bbox: [minx, miny, maxx, maxy, projection].join(',') }),
         outputFormat: 'application/json',
         srsname: 'EPSG:4326',
         ...params
-    }, {
-        cancelToken
-    });
+    }, config);
+};
+
+const createLoader = (options) => {
+    if (options.serverType === ServerTypes.NO_VENDOR) {
+        if (needsCredentials(options)) {
+            return () => null;
+        }
+
+        if (options?.strategy === 'bbox') {
+            return (extent) => getFeatureLayer(options, { filters: [{
+                spatialField: {
+                    operation: 'BBOX',
+                    geometry: {
+                        projection: 'EPSG:4326',
+                        extent: [extent] // use array because bbox is buggy
+                    }
+                }
+            }], proj: 'EPSG:4326' }, getConfig(options));
+        }
+        return () => getFeatureLayer(options, { filters: [], proj: 'EPSG:4326' }, getConfig(options));
+    }
+    const params = optionsToVendorParams(options);
+    const config = getConfig(options);
+    return () => requestFeatures(options, params, config);
 };
 
 const createLayer = (options, map) => {
@@ -47,26 +70,61 @@ const createLayer = (options, map) => {
         opacity: options.opacity,
         queryable: options.queryable === undefined || options.queryable
     });
-    const params = optionsToVendorParams(options);
 
-    const cancelToken = axios.CancelToken;
-    const source = cancelToken.source();
-    requestFeatures(options, params, source.token)
-        .then(({ data: collection }) => {
-            styledFeatures.setFeatures(collection.features);
-            layerToGeoStylerStyle(options)
-                .then((style) => {
-                    getStyle(applyDefaultStyleToVectorLayer({
-                        ...options,
-                        features: collection.features,
-                        style
-                    }), 'cesium')
-                        .then((styleFunc) => {
-                            styledFeatures.setStyleFunction(styleFunc);
+    const loader = createLoader(options);
+    let loadingBbox;
+    let bboxTimeout;
+    if (options?.strategy === 'bbox') {
+        loadingBbox = () => {
+            if (bboxTimeout) {
+                clearTimeout(bboxTimeout);
+                bboxTimeout = undefined;
+            }
+            bboxTimeout = setTimeout(() => {
+                const viewRectangle = map.camera.computeViewRectangle();
+                const cameraPitch = Math.abs(Cesium.Math.toDegrees(map.camera.pitch));
+                if (viewRectangle && cameraPitch > 60) {
+                    loader([
+                        Cesium.Math.toDegrees(viewRectangle.west),
+                        Cesium.Math.toDegrees(viewRectangle.south),
+                        Cesium.Math.toDegrees(viewRectangle.east),
+                        Cesium.Math.toDegrees(viewRectangle.north)
+                    ])
+                        .then(({ data: collection }) => {
+                            styledFeatures.setFeatures(collection.features);
+                            layerToGeoStylerStyle(options)
+                                .then((style) => {
+                                    getStyle(applyDefaultStyleToVectorLayer({
+                                        ...options,
+                                        features: collection.features,
+                                        style
+                                    }), 'cesium')
+                                        .then((styleFunc) => {
+                                            styledFeatures.setStyleFunction(styleFunc);
+                                        });
+                                });
                         });
-                });
-        });
-
+                }
+            }, 300);
+        };
+        map.camera.moveEnd.addEventListener(loadingBbox);
+    } else {
+        loader()
+            .then(({ data: collection }) => {
+                styledFeatures.setFeatures(collection.features);
+                layerToGeoStylerStyle(options)
+                    .then((style) => {
+                        getStyle(applyDefaultStyleToVectorLayer({
+                            ...options,
+                            features: collection.features,
+                            style
+                        }), 'cesium')
+                            .then((styleFunc) => {
+                                styledFeatures.setStyleFunction(styleFunc);
+                            });
+                    });
+            });
+    }
     return {
         detached: true,
         styledFeatures,
@@ -74,6 +132,9 @@ const createLayer = (options, map) => {
             if (styledFeatures) {
                 styledFeatures.destroy();
                 styledFeatures = undefined;
+            }
+            if (loadingBbox) {
+                map.camera.moveEnd.removeEventListener(loadingBbox);
             }
         }
     };

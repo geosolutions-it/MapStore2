@@ -17,11 +17,11 @@ import {toggleStreetView, configure, reset, resetViewerData} from './actions/str
 import Message from '../../components/I18N/Message';
 import { enabledSelector } from './selectors/streetView';
 
-
 import streetView from './reducers/streetview';
 import * as epics from './epics/streetView';
 import './style/street-view.less';
 import { setControlProperty } from '../../actions/controls';
+import MapLocationSupport from './containers/MapLocationSupport';
 
 const StreetViewPluginComponent = ({onMount, onUnmount, resetStViewData, apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider = 'google', providerSettings, panelSize}) => {
     useEffect(() => {
@@ -66,24 +66,21 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *   - `providerSettings.srs` (optional). Coordinate reference system code to use for the API. Default: `EPSG:4326`. Note that the SRS used here must be supported by the StreetSmart API **and** defined in `localConfig.json` file, in `projectionDefs`.
  *
  * - `mapillary` provider:
- *   - `providerSettings.ApiURL` (optional). The URL of the the WFS/Geojson endpoint API. If existing, mapillary viewer will use GeoJSONDataProvider fetching the data and if not existing, mapillary viewer will use the default tiles`.
- *   - `providerSettings.type` (optional). The type of the the WFS/Geojson layer. By default it is 'vector'.
- *          - If 'vector', that means the data is geojson, and mapillary viewer will display vector layer with the data from ApiURL.
- *          - If 'wfs', that means the data is for WFS layer and mapillary viewer will display based on that the data from ApiURL.
- *
+ *   - `providerSettings.ApiURL` The URL of the the custom Geojson endpoint API. Currently is only supported a custom GeoJSON format. Example of endpoint is `https://hostname/directory-with-images/`, ensure the directory contains all the images and the index.json (GeoJSON) file
  * Generally speaking, you should prefer general settings in `localConfig.json` over the plugin configuration, in order to reuse the same configuration for default viewer and all the contexts, automatically. This way you will not need to configure the `apiKey` in every context.
  * <br>**Important**: You can use only **one** API-key for a MapStore instance. The api-key can be configured replicated in every plugin configuration or using one of the unique global settings (suggested) in `localConfig.json`). @see {@link https://github.com/googlemaps/js-api-loader/issues/5|here} and @see {@link https://github.com/googlemaps/js-api-loader/issues/100|here}
  * @property {boolean} [cfg.useDataLayer=true] If true, adds to the map a layer for street view data availability when the plugin is turned on.
  * @property {object} [cfg.dataLayerConfig] configuration for the data layer. By default `{provider: 'custom', type: "tileprovider", url: "https://mts1.googleapis.com/vt?hl=en-US&lyrs=svv|cb_client:apiv3&style=40,18&x={x}&y={y}&z={z}"}`
  * @property {object} [cfg.panoramaOptions] options to configure the panorama. {@link https://developers.google.com/maps/documentation/javascript/reference/street-view#panoramaOptions|Reference for google maps API}
  * @property {object} [cfg.panelSize] option to configure default street view modal panel size `width` and `height`. Example: `{"width": 500, "height": 500}`.
+ * @property {string} [cfg.markerColor] color for the location marker
  * @class
  */
 export default createPlugin(
     'StreetView',
     {
         options: {
-            disablePluginIf: "{state('mapType') === 'leaflet' || (state('mapType') === 'cesium' && (state('streetView') !== 'mapillary'))}"
+            disablePluginIf: "{state('mapType') === 'leaflet'}"
         },
         epics,
         reducers: {
@@ -116,6 +113,11 @@ export default createPlugin(
                         active: enabledSelector(state) || false
                     };
                 }
+            },
+            Map: {
+                Tool: MapLocationSupport,
+                name: 'StreetViewMapLocationSupport',
+                alwaysRender: true
             }
         }
     }

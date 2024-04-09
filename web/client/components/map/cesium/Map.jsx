@@ -379,6 +379,7 @@ class CesiumMap extends React.Component {
             const groupIntersectedFeatures = features.reduce((acc, feature) => {
                 let msId;
                 let properties;
+                let geometry = null;
                 if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
                     msId = feature.tileset.msId;
                     // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
@@ -389,6 +390,7 @@ class CesiumMap extends React.Component {
                     const getFeatureById = feature?.id?._msGetFeatureById || feature?.primitive?._msGetFeatureById;
                     const value = getFeatureById(feature.id);
                     properties = value.feature.properties;
+                    geometry = value.feature.geometry;
                     msId = value.msId;
                 }
                 if (!properties || !msId) {
@@ -397,8 +399,8 @@ class CesiumMap extends React.Component {
                 return {
                     ...acc,
                     [msId]: acc[msId]
-                        ? [...acc[msId], { type: 'Feature', properties, geometry: null }]
-                        : [{ type: 'Feature', properties, geometry: null }]
+                        ? [...acc[msId], { type: 'Feature', properties, geometry }]
+                        : [{ type: 'Feature', properties, geometry }]
                 };
             }, []);
             return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));

@@ -20,7 +20,7 @@ const urlPartsResult1 = {
     rootPath: "/geoserver/wfs",
     applicationRootPath: 'geoserver'
 };
-const filePathURL = "http://localhost:3000/output/run_04/index.json";
+
 describe('URLUtils', () => {
     it('test urlParts', () => {
         const data = urlParts(url1);

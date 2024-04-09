@@ -66,6 +66,34 @@ export const currentProviderApiLoadedSelector = state => apiLoadedSelectorCreato
  * @returns {object} the configuration for the current provider
  */
 export const providerSettingsSelector = state => streetViewConfigurationSelector(state)?.providerSettings ?? {};
+
+const VECTOR_STYLE = {
+    format: "geostyler",
+    body: {
+        name: "My Style",
+        rules: [
+            {
+                name: "",
+                symbolizers: [
+                    {
+                        kind: "Mark",
+                        color: "#3165ef",
+                        fillOpacity: 0.6,
+                        strokeColor: "#3165ef",
+                        strokeOpacity: 0.8,
+                        strokeWidth: 2,
+                        radius: 6,
+                        wellKnownName: "Circle",
+                        msHeightReference: "none",
+                        msBringToFront: true,
+                        symbolizerId: "d2c4dab1-a0e7-11ee-a734-df08d0913056"
+                    }
+                ],
+                ruleId: "d2c4dab0-a0e7-11ee-a734-df08d0913056"
+            }
+        ]
+    }
+};
 const GOOGLE_DATA_LAYER_DEFAULTS = {
     provider: 'custom',
     type: "tileprovider",
@@ -83,65 +111,11 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
     serverType: ServerTypes.NO_VENDOR, // do not support CQL filters
     url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
     name: "atlas:Recording",
-    style: {
-        format: "geostyler",
-        body: {
-            name: "My Style",
-            rules: [
-                {
-                    name: "",
-                    symbolizers: [
-                        {
-                            kind: "Mark",
-                            color: "#0000ff",
-                            fillOpacity: 1,
-                            strokeColor: "#000000",
-                            strokeOpacity: 1,
-                            strokeWidth: 1,
-                            radius: 5,
-                            wellKnownName: "Circle",
-                            msHeightReference: "none",
-                            msBringToFront: true,
-                            symbolizerId: "d2c4dab1-a0e7-11ee-a734-df08d0913056"
-                        }
-                    ],
-                    ruleId: "d2c4dab0-a0e7-11ee-a734-df08d0913056"
-                }
-            ]
-        }
-    }
+    style: VECTOR_STYLE
 };
 const MAPILLARY_DATA_LAYER_DEFAULTS = {
-    provider: "custom",
-    isGeojson: true,
-    owner: 'mapillaryViewer',
-    style: {
-        format: "geostyler",
-        body: {
-            name: "My Style",
-            rules: [
-                {
-                    name: "",
-                    symbolizers: [
-                        {
-                            kind: "Mark",
-                            color: "#0000ff",
-                            fillOpacity: 1,
-                            strokeColor: "#000000",
-                            strokeOpacity: 1,
-                            strokeWidth: 1,
-                            radius: 5,
-                            wellKnownName: "Circle",
-                            msHeightReference: "none",
-                            msBringToFront: true,
-                            symbolizerId: "d2c4dab1-a0e7-11ee-a734-df08d0913056"
-                        }
-                    ],
-                    ruleId: "d2c4dab0-a0e7-11ee-a734-df08d0913056"
-                }
-            ]
-        }
-    }
+    type: 'vector',
+    style: VECTOR_STYLE
 };
 /**
  * Gets the default data layer configuration for the current provider.
@@ -151,14 +125,20 @@ const MAPILLARY_DATA_LAYER_DEFAULTS = {
  */
 const providerDataLayerDefaultsSelector = createSelector(
     streetViewProviderSelector,
-    (provider) => {
+    streetViewConfigurationSelector,
+    (provider, configuration) => {
         switch (provider) {
         case PROVIDERS.GOOGLE:
             return GOOGLE_DATA_LAYER_DEFAULTS;
         case PROVIDERS.CYCLOMEDIA:
             return CYCLOMEDIA_DATA_LAYER_DEFAULTS;
         case PROVIDERS.MAPILLARY:
-            return MAPILLARY_DATA_LAYER_DEFAULTS;
+            // currently we are supporting only the custom type for mapillary
+            // so the layer type will be a vector layer
+            return {
+                ...MAPILLARY_DATA_LAYER_DEFAULTS,
+                url: configuration?.providerSettings?.ApiURL
+            };
         default:
             return {};
         }

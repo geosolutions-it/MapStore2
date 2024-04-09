@@ -11,7 +11,6 @@ import React, { useRef, useState, useEffect } from "react";
 import axios from 'axios';
 import EmptyStreetView from '../EmptyStreetView';
 import GeoJSONDataProvider from "../../utils/mapillaryUtils/GeoJSONDataProvider";
-import { getPathURLFromFileUrl } from '../../../../utils/URLUtils';
 import 'mapillary-js/dist/mapillary.css';
 
 const MapillaryView = (props) => {
@@ -65,7 +64,7 @@ const MapillaryView = (props) => {
         getMapillaryViewer().then( Viewer => {
             let promise = new Promise((resolve, reject) => {
                 if (isCustomDataProvider && options?.url) {
-                    axios.get(options.url).then(res => {
+                    axios.get(`${options.url}index.json`).then(res => {
                         const geojson = res.data;
                         resolve(geojson);
                     }).catch(err=> reject(err));
@@ -74,16 +73,13 @@ const MapillaryView = (props) => {
                 resolve();
             });
             promise.then((geojson) => {
-                let pathURL = getPathURLFromFileUrl(options.url);
-                let defaultGeojson = {
-                    type: "FeatureCollection", features: []
-                };
                 const dataProvider = new GeoJSONDataProvider({
-                    url: pathURL,
+                    url: options.url,
                     geometryLevel: options?.geometryLevel || 14,
-                    geojson: geojson || defaultGeojson,
-                    debug: !!options?.debugTiles,
-                    getImageFromUrl: options?.getImageFromUrl
+                    geojson: geojson || {
+                        type: "FeatureCollection",
+                        features: []
+                    }
                 });
                 initiateMapillaryViewer(Viewer, dataProvider);
                 setLoading(false);
@@ -97,8 +93,12 @@ const MapillaryView = (props) => {
     useEffect(() => {
         // clean up (will unmount)
         return () => {
-            viewer?.remove && viewer.remove();
-            props?.resetStViewData && props.resetStViewData();
+            if (viewer?.remove) {
+                viewer.remove();
+            }
+            if (props?.resetStViewData) {
+                props.resetStViewData();
+            }
         };
     }, []);
     // update images in viewer based on location change
@@ -116,9 +116,7 @@ const MapillaryView = (props) => {
         if (!viewer && location) {
             const options = {
                 url: providerSettings?.ApiURL,
-                geometryLevel: providerSettings?.geometryLevel || 14,
-                debugTiles: providerSettings?.debugTiles || false,
-                getImageFromUrl: providerSettings?.getImageFromUrl || ''
+                geometryLevel: providerSettings?.geometryLevel || 14
             };
             let isCustomDataProvider = providerSettings?.ApiURL;
             addMapillaryViewer(isCustomDataProvider, options);

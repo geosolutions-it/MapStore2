@@ -217,7 +217,8 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setLocation({
                 latLng: {
                     lat,
-                    lng
+                    lng,
+                    h: recording?.xyz?.[2] || 0
                 },
                 properties: {
                     ...recording,

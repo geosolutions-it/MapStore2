@@ -19,39 +19,9 @@ import GeoJSON from 'ol/format/GeoJSON';
 
 import { getFeature, getFeatureLayer } from '../../../../api/WFS';
 import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
-import { getCredentials } from '../../../../utils/SecurityUtils';
-import { needsReload } from '../../../../utils/WFSLayerUtils';
+import { needsReload, needsCredentials, getConfig } from '../../../../utils/WFSLayerUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
-const needsCredentials = (options) => {
-    const security = options?.security || {};
-    const {type, sourceId} = security;
-    const {username, password} = getCredentials(sourceId) ?? {};
-    return type?.toLowerCase?.() === "basic" && (!username || !password);
-};
-const getConfig = (options) => {
-    const security = options?.security || {};
-    const config = {};
-    const {type, sourceId} = security;
-    const credentials = getCredentials(sourceId);
-    if (credentials) {
-        const {username, password} = credentials;
-        switch (type?.toLowerCase?.()) {
-        case "basic":
-            config.headers = {
-                Authorization: `Basic ${btoa(`${username}:${password}`)}`
-            };
-            break;
-        case "bearer":
-            config.headers = {
-                Authorization: `Bearer ${credentials.token}`
-            };
-            break;
-        default:
-            break;
-        }
-    }
-    return config;
-};
+
 const createLoader = (source, options) => (extent, resolution, projection) => {
     let proj = projection.getCode();
     let req;

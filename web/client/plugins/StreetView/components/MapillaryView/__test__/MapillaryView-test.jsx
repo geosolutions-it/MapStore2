@@ -16,7 +16,7 @@ import { waitFor } from '@testing-library/react';
 describe('MapillaryView', () => {
     const testAPIKey = 'test';
     const mockProviderSettings = {
-        ApiURL: "base/web/client/test-resources/mapillary/output/run_04/index.json"
+        ApiURL: "base/web/client/test-resources/mapillary/output/run_04/"
     };
     const props = {
         apiKey: testAPIKey,
@@ -47,24 +47,24 @@ describe('MapillaryView', () => {
     it('Test the main lifecycle', () => {
         ReactDOM.render(<MapillaryView {...props} providerSettings={mockProviderSettings}/>, document.getElementById("container"));
         const div = emptyStreetView();
-        expect(div).toExist();
+        expect(div).toBeTruthy();
         expect(div.style.display).toEqual('block');
         const viewer = mapillaryStreetView();
-        expect(viewer).toExist();
-        expect(viewer.style.position).toExist();
+        expect(viewer).toBeTruthy();
+        expect(viewer.style.position).toBeTruthy();
     });
     it('Test displaying Mapillary viewer by associating location value', (done) => {
         ReactDOM.render(<MapillaryView {...props} location={{properties: {imageId: "image01"}}} providerSettings={mockProviderSettings}/>, document.getElementById("container"));
         const div = emptyStreetView();
-        expect(div).toExist();
+        expect(div).toBeTruthy();
         expect(div.style.display).toEqual('block');
         const viewer = mapillaryStreetView();
-        expect(viewer).toExist();
-        expect(viewer.style.position).toExist();
+        expect(viewer).toBeTruthy();
+        expect(viewer.style.position).toBeTruthy();
         waitFor(()=>expect(document.querySelector('.mapillary-dom')).toBeTruthy())
             .then(()=>{
                 let mapillaryDomElem = document.querySelector('.mapillary-dom');
-                expect(mapillaryDomElem).toExist();
+                expect(mapillaryDomElem).toBeTruthy();
                 done();
             }).catch(done);
     });
