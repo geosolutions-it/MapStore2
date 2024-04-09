@@ -59,7 +59,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *      - `apiKeys.googleAPIKey` - Use this if you have a general API key enabled for all Google APIs in MapStore.
  *      - `googleAPIKey` (for retro-compatibility only)
  * - `cyclomedia` provider: The API key is mandatory and can be configured only in the plugin configuration. It is not possible to configure it globally in `localConfig.json`, in `apiKeys.cyclomediaAPIKey`.
- * - `mapillary` provider: The API key is mandatory and can be configured only in the plugin configuration. It is not possible to configure it globally in `localConfig.json`, in `apiKeys.mapillaryAPIKey`.
+ * - `mapillary` provider: currently supporting only the custom GeoJSON data provider
  * @property {string} providerSettings The settings specific for the provider. Depending on the `provider` property, the following settings are available:
  * - `cyclomedia` provider:
  *   - `providerSettings.StreetSmartApiURL` (optional). The URL of the StreetSmart API. Default: `https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js`.
