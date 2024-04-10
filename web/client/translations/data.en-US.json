@@ -831,7 +831,7 @@
             "exportToGeoJSON": "Export to GeoJSON",
             "resetTooltip": "Clear measures",
             "addAsLayer": "Add as layer",
-            "lengthMeasure": "Measure geodesic distance in 3D space",
+            "lengthMeasure": "Measure geodesic distance in 3D space which is calculated on the ellipsoid, but rendered where you click",
             "polylineDistance3DMeasure": "Measure distance in 3D space",
             "area3DMeasure": "Measure area in 3D space",
             "pointCoordinatesMeasure": "Measure point coordinates",
