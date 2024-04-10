@@ -98,7 +98,7 @@ function mapConfig(state = null, action) {
     case DETAILS_LOADED:
         let dashboardResource = state.dashboard?.resource;
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
-        if (map && map.mapId.toString() === action.id.toString()) {
+        if (map && map.mapId?.toString() === action.id.toString()) {
             map = {
                 ...map,
                 info: {
@@ -111,7 +111,7 @@ function mapConfig(state = null, action) {
                 }
             };
             return assign({}, state, {map: map});
-        } else if (dashboardResource && dashboardResource.id === action.id.toString()) {
+        } else if (dashboardResource && dashboardResource.id?.toString() === action.id.toString()) {
             dashboardResource = assign({}, dashboardResource, {
                 attributes:
                     assign({}, dashboardResource.attributes, {
