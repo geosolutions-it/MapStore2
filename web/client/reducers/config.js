@@ -111,7 +111,7 @@ function mapConfig(state = null, action) {
                 }
             };
             return assign({}, state, {map: map});
-        } else if (dashboardResource && dashboardResource?.id?.toString() === action.id.toString()) {
+        } else if (dashboardResource && dashboardResource.id?.toString() === action.id.toString()) {
             dashboardResource = assign({}, dashboardResource, {
                 attributes:
                     assign({}, dashboardResource.attributes, {
