@@ -85,7 +85,7 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                         numberOfRecordsReturned: 1,
                         records
                     };
-                });
+                }).catch(() => ({...layer}));
         }
         return searchAndPaginate(_layers, startPosition, maxRecords, text);
     });
