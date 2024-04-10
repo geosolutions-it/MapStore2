@@ -188,7 +188,7 @@ export const loadMapInfoEpic = action$ =>
     action$.ofType(LOAD_MAP_INFO)
         .switchMap(({mapId}) =>
             Observable
-                .defer(() => Persistence.getResource(mapId, { includeAttributes: false, withData: false }))
+                .defer(() => Persistence.getResource(mapId, { includeAttributes: true, withData: false }))
                 .map(resource => mapInfoLoaded(resource, mapId))
                 .catch((e) => Observable.of(mapInfoLoadError(mapId, e)))
                 .startWith(mapInfoLoadStart(mapId))
@@ -206,44 +206,27 @@ export const loadMapInfoEpic = action$ =>
  */
 export const storeDetailsInfoEpic = (action$, store) =>
     action$.ofType(MAP_INFO_LOADED)
-        .take(1)
-        .switchMap(() => {
+        .filter(() => {
             const mapId = mapIdSelector(store.getState());
+            return !!mapId;
+        })
+        .switchMap(({mapId, info: {attributes}}) => {
             const isTutorialRunning = store.getState()?.tutorial?.run;
-            return !mapId
-                ? Observable.empty()
-                : Observable.fromPromise(
-                    GeoStoreApi.getResourceAttributes(mapId)
-                ).switchMap((attributes) => {
-                    let details = find(attributes, {name: 'details'});
-                    const detailsSettingsAttribute = find(attributes, {name: 'detailsSettings'});
-                    let detailsSettings = {};
-                    const mapInfoLoadedUpdateAction = mapInfoLoaded(
-                        {
-                            attributes: attributes.reduce((acc, curr) => ({
-                                ...acc,
-                                [curr.name]: curr.value
-                            }), {})
-                        },
-                        mapId,
-                        true
-                    );
-                    if (!details || details.value === EMPTY_RESOURCE_VALUE) {
-                        return Observable.of(mapInfoLoadedUpdateAction);
-                    }
+            let details = attributes?.details;
+            let detailsSettings;
+            try {
+                detailsSettings = JSON.parse(attributes?.detailsSettings);
+            } catch (e) {
+                detailsSettings = {};
+            }
 
-                    try {
-                        detailsSettings = JSON.parse(detailsSettingsAttribute.value);
-                    } catch (e) {
-                        detailsSettings = {};
-                    }
-
-                    return Observable.from([
-                        mapInfoLoadedUpdateAction,
-                        detailsLoaded(mapId, details.value, detailsSettings),
-                        ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])]
-                    );
-                });
+            if (!details || details.value === EMPTY_RESOURCE_VALUE) {
+                return Observable.empty();
+            }
+            return Observable.from([
+                detailsLoaded(mapId, details, detailsSettings),
+                ...(detailsSettings.showAtStartup && !isTutorialRunning ? [openDetailsPanel()] : [])]
+            );
         });
 export const storeDetailsInfoDashboardEpic = (action$, store) =>
     action$.ofType(DASHBOARD_LOADED)

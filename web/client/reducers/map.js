@@ -26,6 +26,7 @@ import {
     UPDATE_MAP_VIEW,
     UPDATE_MAP_OPTIONS
 } from '../actions/map';
+import { LOCATION_CHANGE } from 'connected-react-router';
 
 import assign from 'object-assign';
 import MapUtils from '../utils/MapUtils';
@@ -41,6 +42,8 @@ function mapConfig(state = {eventListeners: {}}, action) {
         return assign({}, state, {
             mousePointer: action.pointer
         });
+    case LOCATION_CHANGE:
+        return assign({}, {eventListeners: {}});
     case CHANGE_ZOOM_LVL:
         return assign({}, state, {
             zoom: action.zoom,
