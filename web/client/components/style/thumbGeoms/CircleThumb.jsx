@@ -36,7 +36,7 @@ class CircleThumb extends React.Component {
             <div className="ms-thumb-geom">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox={"0 0 100 100"}>
                     <svg height="100" width="100">
-                        <circle cx="50" cy="50" r="50" stroke={color || this.props.stroke} stroke-width={weight || this.props.strokeWidth} fill={fillColor || this.props.fillColor} />  {// eslint-disable-line -- TODO: need to be fixed
+                        <circle cx="50" cy="50" r="50" stroke={color || this.props.stroke} strokeWidth={weight || this.props.strokeWidth} fill={fillColor || this.props.fillColor} />  {
                         }
                     </svg>
                 /*<path
