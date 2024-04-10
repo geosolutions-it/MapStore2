@@ -59,7 +59,7 @@ describe('Test CatalogServiceEditor', () => {
         />, document.getElementById("container"));
 
         const formatFormGroups = [...document.querySelectorAll('.form-group-flex')];
-        expect(formatFormGroups.length).toBe(5);
+        expect(formatFormGroups.length).toBe(6);
         const formatSelect = formatFormGroups[2].querySelector('.Select-value-label');
         expect(formatSelect).toExist();
         expect(formatSelect.textContent).toBe('image/png8');

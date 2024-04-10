@@ -12,12 +12,12 @@ import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { createPlugin } from '../utils/PluginsUtils';
-import { isDashboardEditing, isDashboardLoading, isDashboardAvailable } from '../selectors/dashboard';
+import { isDashboardEditing, isDashboardLoading, canEditServiceSelector } from '../selectors/dashboard';
 import { dashboardSelector, dashboardsLocalizedSelector } from './widgetbuilder/commons';
 
 import { toggleConnection } from '../actions/widgets';
 
-import { setEditing, setEditorAvailable, triggerShowConnections } from '../actions/dashboard';
+import { initPlugin, setEditing, setEditorAvailable, triggerShowConnections } from '../actions/dashboard';
 
 import withDashboardExitButton from './widgetbuilder/enhancers/withDashboardExitButton';
 import WidgetTypeBuilder from './widgetbuilder/WidgetTypeBuilder';
@@ -42,6 +42,7 @@ const Builder =
  * @prop {object} cfg.catalog **Deprecated** in favor of `cfg.services`. Can contain a catalog configuration
  * @prop {object} cfg.services Object with the catalogs available to select layers for maps, charts and tables. The format is the same of the `Catalog` plugin.
  * @prop {string} cfg.selectedService the key of service selected by default from the list of `cfg.services`
+ * @prop {string} cfg.servicesPermission object with permission properties to manage catalog service. Configurations are `editingAllowedRoles` & `editingAllowedGroups`. By default `editingAllowedRoles: ["ADMIN"]`
  * @prop {boolean} cfg.disableEmptyMap disable empty map entry from the available maps of map widget
  */
 class DashboardEditorComponent extends React.Component {
@@ -61,7 +62,8 @@ class DashboardEditorComponent extends React.Component {
         style: PropTypes.object,
         pluginCfg: PropTypes.object,
         catalog: PropTypes.object,
-        disableEmptyMap: PropTypes.bool
+        disableEmptyMap: PropTypes.bool,
+        servicesPermission: PropTypes.object
     };
     static defaultProps = {
         id: "dashboard-editor",
@@ -74,9 +76,13 @@ class DashboardEditorComponent extends React.Component {
         position: "left",
         onMount: () => { },
         onUnmount: () => { },
-        setEditing: () => { }
+        setEditing: () => { },
+        servicesPermission: {
+            editingAllowedRoles: ["ALL"]
+        }
     };
     componentDidMount() {
+        this.props.onInit({ servicesPermission: this.props.servicesPermission });
         this.props.onMount();
     }
 
@@ -94,6 +100,7 @@ class DashboardEditorComponent extends React.Component {
                     disableEmptyMap={this.props.disableEmptyMap}
                     defaultSelectedService={defaultSelectedService}
                     defaultServices={defaultServices}
+                    canEditService={this.props.canEditService}
                     enabled={this.props.editing}
                     onClose={() => this.props.setEditing(false)}
                     catalog={this.props.catalog}
@@ -107,10 +114,11 @@ const Plugin = connect(
     createSelector(
         isDashboardEditing,
         isDashboardLoading,
-        isDashboardAvailable,
-        (editing, isDashboardOpened) => ({ editing, isDashboardOpened })
+        canEditServiceSelector,
+        (editing, isDashboardOpened, canEditService) => ({ editing, isDashboardOpened, canEditService })
     ), {
         setEditing,
+        onInit: initPlugin,
         onMount: () => setEditorAvailable(true),
         onUnmount: () => setEditorAvailable(false)
     }

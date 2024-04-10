@@ -116,7 +116,12 @@ import {
     sourceFeatureSelector,
     showHighlightLayersSelector,
     wpsUrlSelector,
-    availableLayersSelector
+    availableLayersSelector,
+    firstAttributeToRetainSelector,
+    secondAttributeToRetainSelector,
+    intersectionModeSelector,
+    percentagesEnabledSelector,
+    areasEnabledSelector
 } from '../selectors/geoProcessing';
 import {groupsSelector} from '../selectors/layers';
 import {additionalLayersSelector} from '../selectors/additionallayers';
@@ -744,6 +749,11 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                     }));
                     return Rx.Observable.from(errorActions);
                 }
+                const firstAttributeToRetain = firstAttributeToRetainSelector(state);
+                const secondAttributeToRetain = secondAttributeToRetainSelector(state);
+                const intersectionMode = intersectionModeSelector(state);
+                const percentagesEnabled = percentagesEnabledSelector(state);
+                const areasEnabled = areasEnabledSelector(state);
 
                 const executeProcess$ = executeProcess(
                     layerUrl || intersectionLayerUrl,
@@ -755,7 +765,13 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
                         secondFC: {
                             type: "FeatureCollection",
                             features: [{type: "Feature", geometry: secondGeom}]
-                        }
+                        },
+                        firstAttributeToRetain,
+                        secondAttributeToRetain,
+                        intersectionMode,
+                        percentagesEnabled,
+                        areasEnabled
+
                     }),
                     executeOptions,
                     {

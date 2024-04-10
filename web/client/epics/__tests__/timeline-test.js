@@ -8,9 +8,12 @@
 
 
 import expect from 'expect';
+import MockAdapter from 'axios-mock-adapter';
 
 import moment from 'moment';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
+import axios from '../../libs/ajax';
+
 
 import {
     setTimelineCurrentTime,
@@ -55,8 +58,9 @@ import { changeLayerProperties, removeNode } from '../../actions/layers';
 import { SET_CURRENT_TIME, SET_OFFSET_TIME, updateLayerDimensionData } from '../../actions/dimension';
 import { configureMap } from "../../actions/config";
 
-
 describe('timeline Epics', () => {
+
+
     it('setTimelineCurrentTime without selected layer', done => {
         const t = new Date().toISOString();
         testEpic(setTimelineCurrentTime, 1, selectTime(t), ([action]) => {
@@ -916,6 +920,14 @@ describe('timeline Epics', () => {
         });
     });
     describe('Timeline GuideLayer', () => {
+        let mockAxios;
+        beforeEach(() => {
+            mockAxios = new MockAdapter(axios);
+
+        });
+        afterEach(() => {
+            mockAxios.restore();
+        });
         const doAssertion = (NUM_ACTIONS, actions, layerId) => {
             expect(actions.length).toBe(NUM_ACTIONS);
             actions.map(action=>{
@@ -979,6 +991,116 @@ describe('timeline Epics', () => {
                 done();
             }, {...STATE_TIMELINE, timeline: { settings: {autoSelect: true, showHiddenLayers: true}}});
         });
+
+        // function to test time snap
+        function createDomainResponse(times) {
+            return `<?xml version="1.0" encoding="UTF-8"?><DomainValues xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1">
+                <ows:Identifier>time</ows:Identifier>
+                <Limit>2</Limit>
+                <Sort>asc</Sort>
+                <Domain>${times.join(',')}</Domain>
+                <Size>2</Size>
+                </DomainValues>`;
+        }
+        // utility function to test snapTimeGuideLayer
+        function testSnap({
+            currentTime,
+            prevResponseTimes,
+            nextResponseTimes,
+            expectedTime
+        }, done ) {
+
+            let ascCount = 0;
+            let descCount = 0;
+            mockAxios.onGet().reply(({ params }) => {
+                // expect 2 requests,1 asc,1 desc, with from value properly buffered to include the current time.
+                const {sort, fromValue } = params;
+                if (sort === 'asc') {
+                    expect(fromValue < currentTime).toBeTruthy(); // check buffer is applied
+                    ascCount++;
+                    return [200, createDomainResponse(prevResponseTimes)];
+                } else if (sort === 'desc') {
+                    expect(fromValue > currentTime).toBeTruthy(); // check buffer is applied
+                    descCount++;
+                    return [200, createDomainResponse(nextResponseTimes)];
+                }
+                done('unexpected request');
+                return [404, ''];
+
+            });
+            testEpic(snapTimeGuideLayer, NUM_ACTIONS, [selectLayer('TEST_LAYER')], ([action]) => {
+                expect(action.type).toBe(SET_CURRENT_TIME);
+                expect(action.time).toBe(expectedTime);
+                expect(ascCount).toBe(1);
+                expect(descCount).toBe(1);
+                done();
+            }, {
+                ...STATE_TIMELINE,
+                timeline: {
+                    selectedLayer: "TEST_LAYER",
+                    range: {
+                        start: "2000-01-01T00:00:00.000Z",
+                        end: "2023-12-31T00:00:00.000Z"
+                    },
+                    settings: {autoSelect: true, showHiddenLayers: true}
+
+                },
+                dimension: {
+                    currentTime: currentTime,
+                    data: {
+                        time: {
+                            TEST_LAYER: {
+                                name: "time",
+                                domain: "2000-01-01T00:00:00.000Z--2027-12-31T00:00:00.000Z"
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        // this verifies that, when switch layer, if the current time is a valid value to snap, the current time remains the same (by triggering an update with same value)
+        it('snapTimeGuideLayer with selected layer, currentTime = time to snap', done => {
+            const currentTime = "2021-09-08T22:00:00.000Z";
+            testSnap({
+                currentTime,
+                prevResponseTimes: [currentTime],
+                nextResponseTimes: [currentTime],
+                expectedTime: currentTime
+            }, done);
+        });
+        it('snapTimeGuideLayer with selected layer, snapping to nearest value after', done => {
+            const currentTime = "2021-09-09T00:00:00.000Z";
+            const previousTime = "2021-09-08T22:00:00.000Z";
+            const nextTime = "2021-09-09T01:00:00.000Z"; // this should be selected because it is nearest to the current time
+            const expectedTime = nextTime;
+            try {
+                testSnap({
+                    currentTime,
+                    prevResponseTimes: [previousTime],
+                    nextResponseTimes: [nextTime],
+                    expectedTime
+                }, done);
+            } catch (e) {
+                done(e);
+            }
+        });
+        it('snapTimeGuideLayer with selected layer, snapping to nearest value before', done => {
+            const currentTime = "2021-09-08T00:00:00.000Z";
+            const previousTime = "2021-09-08T23:00:00.000Z"; // this should be selected because it is nearest to the current time
+            const nextTime = "2021-09-08T23:02:00.000Z";
+            const expectedTime = previousTime;
+            try {
+                testSnap({
+                    currentTime,
+                    prevResponseTimes: [previousTime],
+                    nextResponseTimes: [nextTime],
+                    expectedTime
+                }, done);
+            } catch (e) {
+                done(e);
+            }
+        });
+
         it('snapTimeGuideLayer when autoselect disabled', done => {
             testEpic(addTimeoutEpic(snapTimeGuideLayer, 500), NUM_ACTIONS, [selectLayer('TEST_LAYER')], ([action]) => {
                 expect(action.type).toBe(TEST_TIMEOUT); // Don't trigger a snap time when snap to guide layer settings is turned off

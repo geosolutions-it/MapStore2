@@ -25,6 +25,7 @@ import {
     syncStatusSelector,
     errorSelector
 } from '../selectors/layerinfo';
+import { layersSelector as mapLayersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import {
     syncLayers,
@@ -81,6 +82,39 @@ const LayerInfoPlugin = ({
     );
 };
 
+const LayerInfoButton = connect((state) => ({
+    updatableLayersCount: (mapLayersSelector(state) || []).filter(l => l.group !== 'background' && (l.type === 'wms' || l.type === 'wmts')).length
+}), {
+    onClick: setControlProperty.bind(null, 'layerinfo', 'enabled', true, false)
+})(({
+    onClick,
+    status,
+    itemComponent,
+    statusTypes,
+    config,
+    updatableLayersCount,
+    ...props
+}) => {
+    const ItemComponent = itemComponent;
+
+    // deprecated TOC configuration
+    if (config.activateLayerInfoTool === false || updatableLayersCount === 0) {
+        return null;
+    }
+
+    if ([statusTypes.DESELECT].includes(status)) {
+        return (
+            <ItemComponent
+                {...props}
+                glyph="layer-info"
+                tooltipId={'toc.layerFilterTooltip'}
+                onClick={() => onClick()}
+            />
+        );
+    }
+    return null;
+});
+
 export default createPlugin('LayerInfo', {
     component: connect(createStructuredSelector({
         enabled: layerInfoControlEnabledSelector,
@@ -98,7 +132,10 @@ export default createPlugin('LayerInfo', {
     containers: {
         TOC: {
             name: 'LayerInfo',
-            doNotHide: true
+            doNotHide: true,
+            target: 'toolbar',
+            Component: LayerInfoButton,
+            position: 1
         }
     },
     reducers: {

@@ -155,7 +155,6 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
  * @prop {object} mapOptions map options grouped by map type
- * @prop {object} mapOptions[mapType] this object contains configuration specific for a map type. The mapType could be `openlayers`, `leaflet` or `cesium`
  * @prop {boolean} mapOptions.cesium.navigationTools enable cesium navigation tool (default false)
  * @prop {boolean} mapOptions.cesium.showSkyAtmosphere enable sky atmosphere of the globe (default true)
  * @prop {boolean} mapOptions.cesium.showGroundAtmosphere enable ground atmosphere of the globe (default false)

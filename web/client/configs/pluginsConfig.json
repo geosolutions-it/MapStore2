@@ -5,7 +5,6 @@
       "glyph": "1-map",
       "mandatory": true,
       "defaultConfig": {
-        "mapTypeOverride": "openlayers",
         "mapOptions": {
           "openlayers": {
             "interactions": {
@@ -59,7 +58,8 @@
         "FeatureEditor",
         "FilterLayer",
         "AddGroup",
-        "Swipe"
+        "Swipe",
+        "MetadataInfo"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
@@ -395,6 +395,9 @@
     },
     {
       "name": "Swipe"
+    },
+    {
+      "name": "MetadataInfo"
     },
     {
       "name": "SearchByBookmark"

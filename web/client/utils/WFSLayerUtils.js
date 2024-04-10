@@ -9,6 +9,7 @@
 import { optionsToVendorParams } from './VendorParamsUtils';
 import urlUtil from 'url';
 import {get, head} from 'lodash';
+import { getDefaultUrl } from './URLUtils';
 
 
 export const needsReload = (oldOptions, newOptions) => {
@@ -23,7 +24,7 @@ export const needsReload = (oldOptions, newOptions) => {
 };
 
 export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL } = {}) => {
-    const parsed = urlUtil.parse(describeFeatureTypeURL || search.url || url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(describeFeatureTypeURL || search.url || url), true);
     return urlUtil.format(
         {
             ...parsed,

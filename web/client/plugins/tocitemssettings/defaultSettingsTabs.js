@@ -28,6 +28,7 @@ import FeatureInfo from './tabs/FeatureInfo';
 
 
 import VectorStyleEditor from '../styleeditor/VectorStyleEditor';
+import MultiBandEditor from '../styleeditor/MultiBandEditor';
 import { mapSelector } from '../../selectors/map';
 
 
@@ -45,12 +46,13 @@ const ConnectedVectorStyleEditor = connect(
 
 const isLayerNode = ({settings = {}} = {}) => settings.nodeType === 'layers';
 const isVectorStylableLayer = ({element = {}} = {}) => element.type === "wfs" || element.type === "3dtiles" || element.type === "vector" && !isAnnotationLayer(element);
+const isCOGStylableLayer = ({element = {}} = {}) => element.type === "cog";
 const isWMS = ({element = {}} = {}) => element.type === "wms";
 const isWFS = ({element = {}} = {}) => element.type === "wfs";
 
 const isStylableLayer = (props) =>
     isLayerNode(props)
-    && (isWMS(props) || isVectorStylableLayer(props));
+    && (isWMS(props) || isVectorStylableLayer(props) || isCOGStylableLayer(props));
 
 
 const configuredPlugins = {};
@@ -73,6 +75,9 @@ export const getStyleTabPlugin = ({ settings, items = [], loadedPlugins, onToggl
 
     if (isVectorStylableLayer({element})) {
         return { Component: ConnectedVectorStyleEditor };
+    }
+    if (isCOGStylableLayer({element})) {
+        return { Component: MultiBandEditor };
     }
     // get Higher priority plugin that satisfies requirements.
     const candidatePluginItems =

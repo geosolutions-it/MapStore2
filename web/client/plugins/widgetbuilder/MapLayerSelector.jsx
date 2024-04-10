@@ -30,7 +30,7 @@ const Catalog = compose(
  */
 export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer,
     catalog, onChangeSelectedService, defaultServices,
-    defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService} = {}) =>
+    defaultSelectedService, onChangeCatalogMode, dashboardServices, dashboardSelectedService, canEditService} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -62,5 +62,6 @@ export default ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = 
             onChangeSelectedService={(service) => onChangeSelectedService(service, dashboardServices || defaultServices)} services={ dashboardServices || defaultServices}
             catalog={catalog}
             selected={selected}
-            onRecordSelected={r => setSelected(r)} />
+            onRecordSelected={r => setSelected(r)}
+            canEditService={canEditService} />
     </BorderLayout>);

@@ -528,11 +528,6 @@
         }
       }
     },
-    "floatinglegend": {
-      "showTOC": "Show layers",
-      "showLegend": "Show legend",
-      "hideLegend": "Hide legend"
-    },
     "addgroup": {
       "addbtn": "Add",
       "groupName": "Group name"

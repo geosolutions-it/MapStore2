@@ -33,6 +33,7 @@ import { isAdminUserSelector, isLoggedIn, userSelector } from "../selectors/secu
 import { widgetsConfig } from "../selectors/widgets";
 import { pathnameSelector } from "../selectors/router";
 import { wrapStartStop } from "../observables/epics";
+import SecurityUtils from "../utils/SecurityUtils";
 
 const PERMALINK = "PERMALINK";
 const PERMALINK_RESOURCES = {
@@ -134,7 +135,7 @@ export const savePermalinkEpic = (action$, { getState = () => {} }) =>
                 : Observable.of([])
         ).switchMap((groups) => {
             const publicGroup = groups.find(
-                ({groupName} = {}) => groupName === "everyone"
+                ({groupName} = {}) => groupName === SecurityUtils.USER_GROUP_ALL
             );
             if (allowAllUser && publicGroup) {
                 const permission = [

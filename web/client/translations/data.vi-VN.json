@@ -454,11 +454,6 @@
             "tools": "Bảng công cụ",
             "yesButton": "Có"
         },
-        "floatinglegend": {
-            "hideLegend": "Ẩn chú giải",
-            "showLegend": "Hiện thị chú giải",
-            "showTOC": "Hiển thị các lớp"
-        },
         "fullscreen": {
             "tooltipActivate": "Chuyển sang toàn màn hình",
             "tooltipDeactivate": "Thoát toàn màn hình",

@@ -20,7 +20,7 @@ import numberLocalizer from 'react-widgets/lib/localizers/simple-number';
 // not sure this is needed, TODO check!
 numberLocalizer();
 import Message from '../../I18N/Message';
-import OpacitySlider from '../../TOC/fragments/OpacitySlider';
+import OpacitySlider from '../../../plugins/TOC/components/OpacitySlider';
 import ColorSelector from '../ColorSelector';
 import DashArray from './DashArray';
 import { addOpacityToColor } from '../../../utils/VectorStyleUtils';

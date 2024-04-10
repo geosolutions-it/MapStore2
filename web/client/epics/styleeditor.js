@@ -59,6 +59,7 @@ import {
 import { getSelectedLayer, layerSettingSelector } from '../selectors/layers';
 import { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts, detectStyleCodeChanges } from '../utils/StyleEditorUtils';
 import { updateStyleService } from '../api/StyleEditor';
+import { getDefaultUrl } from '../utils/URLUtils';
 
 /*
  * Observable to get code of a style, it works only in edit status
@@ -258,7 +259,7 @@ export const toggleStyleEditorEpic = (action$, store) =>
                 return getAvailableStylesFromLayerCapabilities(layer);
             }
 
-            const layerUrl = layer.url.split(geoserverName);
+            const layerUrl = getDefaultUrl(layer.url).split(geoserverName);
             const baseUrl = `${layerUrl[0]}${geoserverName}`;
             const lastStyleService = styleServiceSelector(state);
 

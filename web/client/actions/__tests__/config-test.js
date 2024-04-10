@@ -16,7 +16,9 @@ import {
     MAP_CONFIG_LOAD_ERROR,
     LOAD_MAP_CONFIG,
     MAP_CONFIG_LOADED,
-    LOAD_MAP_INFO
+    LOAD_MAP_INFO,
+    mapInfoLoaded,
+    MAP_INFO_LOADED
 } from '../config';
 
 describe('Test configuration related actions', () => {
@@ -51,5 +53,14 @@ describe('Test configuration related actions', () => {
         expect(retVal).toExist();
         expect(retVal.type).toBe(LOAD_MAP_INFO);
         expect(retVal.mapId).toBe(1);
+    });
+    it('mapInfoLoaded', () => {
+        const retVal = mapInfoLoaded("info", "mapId", false);
+        expect(retVal).toEqual({
+            type: MAP_INFO_LOADED,
+            mapId: "mapId",
+            info: "info",
+            merge: false
+        });
     });
 });

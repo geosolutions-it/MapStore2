@@ -58,8 +58,8 @@
             "404": "Übersetzungsdatei nicht gefunden"
         },
         "details": {
-            "title": "Infos zu dieser Inhalt",
-            "tooltip": "Infos zu dieser Inhalt"
+            "title": "Infos zu diesem Inhalt",
+            "tooltip": "Infos zu diesem Inhalt"
         },
         "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
@@ -238,8 +238,8 @@
           "title": "Text lokalisieren",
           "default": "Standard"
         },
-        "longitude": "Längengrad",
-        "latitude": "Breitengrad",
+        "longitude": "Lon",
+        "latitude": "Lat",
         "notification": {
             "update": "Aktualisierung",
             "warning": "Warnung",
@@ -484,14 +484,14 @@
                 "titleNoCount": "Dashboards",
                 "create": "Dashboard erstellen",
                 "noDashboardAvailable": "Kein Dashboard verfügbar",
-                "createANewOne": "Erstelle ein neues",
+                "createANewOne": "Erstelle ein neues Dashboard",
                 "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten",
                 "errorLoadingDashboards": "Beim Laden des Dashboards ist ein Fehler aufgetreten"
             },
             "maps": {
                 "title": "Karten ({count})",
                 "noMapAvailable": "Keine Karte verfügbar",
-                "createNewOne": "Erstelle eine neue",
+                "createNewOne": "Erstelle eine neue Karte",
                 "unsavedMapConfirmTitle": "Nicht gespeicherte Änderungen",
                 "unsavedMapConfirmMessage": "Möchten Sie nicht gespeicherte Änderungen wirklich verwerfen?",
                 "unsavedMapConfirmButtonText": "Verwerfen",
@@ -503,7 +503,7 @@
                 "titleNoCount": "GeoStories",
                 "create": "GeoStory erstellen",
                 "noGeostoryAvailable": "Kein GeoStory verfügbar",
-                "createANewOne": "Erstelle eine neue",
+                "createANewOne": "Erstelle eine neue GeoStory",
                 "deleteError": "Beim Löschen der GeoStory ist ein Fehler aufgetreten",
                 "errorLoadingGeostories": "Beim Laden der GeoStories ist ein Fehler aufgetreten"
             },
@@ -595,11 +595,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Ebenen anzeigen",
-            "showLegend": "Legende anzeigen",
-            "hideLegend": "Legende ausblenden"
-        },
         "addgroup": {
             "addbtn": "Hinzufügen",
             "groupName": "Gruppenname"
@@ -626,6 +621,7 @@
             "layerFilterTooltip": "Ausgewählte Ebene filtern",
             "toolDownloadTooltip": "Daten zur ausgewählten Ebene exportieren",
             "noFilteredResults": "Keine Ergebnisse",
+            "emptyLayerTree": "Der Ebenenbaum ist leer. Bitte fügen Sie eine neue Ebene aus dem Katalog hinzu",
             "filterPlaceholder": "Ebenen filtern",
             "clearFilter": "Filter löschen",
             "toolReloadLayerTooltip": "Erneutes Laden der ausgewählten Ebene erzwingen",
@@ -664,6 +660,22 @@
             "notVisibleZoomOut": "Die Ebene ist nicht sichtbar, da sie außerhalb der Auflösungsgrenzen liegt. Verkleinern Sie die Ansicht, um die Ebene anzuzeigen",
             "notVisibleSwitchTo3D": "Wechseln Sie in den 3D-Kartenmodus, um diesen Layer anzuzeigen",
             "notVisibleSwitchTo2D": "Wechseln Sie in den 2D-Kartenmodus, um diesen Layer anzuzeigen",
+            "toolGroupShowAllChildren": "Sichtbarkeit aller untergeordneten Knoten aktivieren",
+            "toolGroupHideAllChildren": "Sichtbarkeit aller untergeordneten Knoten deaktivieren",
+            "activateToolGroupMutuallyExclusive": "Aktivieren Sie sich gegenseitig ausschließende Sichtbarkeit von untergeordneten Knoten",
+            "deactivateToolGroupMutuallyExclusive": "Deaktivieren Sie sich gegenseitig ausschließende Sichtbarkeit von untergeordneten Knoten",
+            "toolGroupCollapseAllChildren": "Alle untergeordneten Knoten reduzieren",
+            "toolGroupExpandAllChildren": "Alle untergeordneten Knoten erweitern",
+            "closeOnMapInitialization": "Bei Karteninitialisierung geschlossen bleiben",
+            "openOnMapInitialization": "Bei Karteninitialisierung öffnen",
+            "defaultTheme": "Standardthema",
+            "legendTheme": "Legendenthema",
+            "showFullTitle": "Vollständigen Titel anzeigen",
+            "hideFullTitle": "Titel in einer einzelnen Zeile",
+            "showOpacitySlider": "Deckkraft-Schieberegler anzeigen",
+            "hideOpacitySlider": "Deckkraft-Schieberegler ausblenden",
+            "showOpacityTooltip": "Deckkraft-Tooltip anzeigen",
+            "hideOpacityTooltip": "Deckkraft-Tooltip ausblenden",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -692,7 +704,7 @@
                 "metadataUrl": "Metadaten-URL",
                 "role": "Rolle",
                 "hoursOfService": "Öffnungszeiten",
-                "electronicMailAddress": "E-Mail-Addresse",
+                "electronicMailAddress": "E-Mail-Adresse",
                 "subject": "Betreff",
                 "type": "Typ",
                 "creator": "Ersteller",
@@ -808,7 +820,7 @@
         "identifyZoomToFeature": "Auf Objekt zoomen",
         "identifyStopHighlightingFeatures": "Objekte in Karte nicht mehr hervorheben",
         "identifyHighlightFeatures": "Objekte in Karte hervorheben",
-        "identifyRevGeocodeModalTitle": "Addresse",
+        "identifyRevGeocodeModalTitle": "Adresse",
         "identifyRevGeocodeSubmitText": "Mehr Informationen",
         "identifyRevGeocodeCloseText": "Schliessen",
         "identifyRevGeocodeError": "Konnte nicht geocodiert werden",
@@ -858,6 +870,7 @@
             "saveMeasure": "Speichern Sie die Messungen in Notizen / Zeichnungen",
             "resetTooltip": "Messung entfernen",
             "addAsLayer": "Als Ebene hinzufügen",
+            "lengthMeasure": "Messen Sie die geodätische Entfernung im 3D-Raum, die auf dem Ellipsoid berechnet, aber dort gerendert wird, wo Sie klicken",
             "polylineDistance3DMeasure": "Entfernung im 3D-Raum messen",
             "area3DMeasure": "Fläche im 3D-Raum messen",
             "pointCoordinatesMeasure": "Punktkoordinaten messen",
@@ -874,8 +887,8 @@
             "tooltipAngle3DStart": "Klicken Sie einmal, um 3 Punkte zu zeichnen, die die Eckpunkte der Winkel darstellen",
             "tooltipSlopeStart": "Klicken Sie einmal, um 3 Punkte zu zeichnen, die eine Dreiecksfläche darstellen.\nDer Neigungswert wird basierend auf der gezeichneten Dreiecksfläche berechnet",
             "altitude": "Höhe",
-            "latitude": "Breitengrad",
-            "longitude": "Längengrad"
+            "latitude": "Lat",
+            "longitude": "Lon"
         },
         "search":{
             "layerMustBeVisible": "Die Zielebene ist inaktiv",
@@ -1323,8 +1336,8 @@
                 "valid": "Geometrie ist gültig",
                 "radius": "Radius",
                 "text": "Text",
-                "lat": "Breitengrad",
-                "lon": "Längengrad",
+                "lat": "Lat",
+                "lon": "Lon",
                 "notValidMarker": "Fügen Sie eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Alle Koordinaten müssen gültig sein (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
@@ -1530,11 +1543,11 @@
             },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
-            "merge": "Mit der vorhandenen Annotationsebene zusammenführen",
-            "replace": "Ersetzen Sie die vorhandene Anmerkungsebene",
-            "success": " erfolgreich importiert",
-            "next": "Nächster",
-            "skip": "springen",
+            "merge": "Mit den vorhandenen Anmerkungen zusammenführen",
+            "replace": "Die vorhandenen Anmerkungen ersetzen",
+            "success": "Erfolgreich importiert",
+            "next": "Weiter",
+            "skip": "Überspringen",
             "finish": "Fertig",
             "layerOf": "Ebene {count} von {total}:",
             "styleCustomizationDisabled":"Diese Ebene hat bereits einen Stil definiert und kann nicht angepasst werden."
@@ -1545,7 +1558,7 @@
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkonfigurations- oder Vektordateien ab </h4> <small> oder nutzen Sie </small> </p>",
                     "selectFiles": "Dateien auswählen...",
-                    "infoSupported": "<p> <small> Unterstützte Dateien zur Kartenkonfiguration: MapStore Legacy-Format, WMC.<br />Unterstützte Vektor-Layer-Dateien: Shapefiles (müssen in einem Zip-Archiv enthalten sein), KML / KMZ, GPX, GeoJSON oder Annotations </small> </p>",
+                    "infoSupported": "<p> <small> Unterstützte Dateien zur Kartenkonfiguration: MapStore Legacy-Format, WMC.<br />Unterstützte Vektor-Layer-Dateien: Shapefiles (müssen in einem Zip-Archiv enthalten sein), KML / KMZ, GPX, GeoJSON oder Anmerkungen </small> </p>",
                     "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Karte wird bei der Verwendung von Kartenkonfigurationsdateien überschrieben </i> </small> </p>"
                 },
                 "errors": {
@@ -1687,7 +1700,12 @@
           "allowUnsecureLayers": {
               "label": "Nicht sichere Ebenen zulassen",
               "tooltip": "Das Hinzufügen einer Ebene zur Karte mit aktivierter Option zwingt die Anwendung, Proxy anzuwenden"
-          }
+            },
+            "sortBy": {
+              "label": "Sortiere nach",
+              "tooltip": "Namespace-Präfix zur Namenseigenschaft hinzufügen. d.h. ${namespace}:${name}",
+              "placeholder": "Name eingeben"
+            }
         },
         "uploader": {
             "filename": "Dateiname",
@@ -2398,8 +2416,8 @@
             }
         },
         "wizard": {
-            "next": "Nächster",
-            "prev": "Vorheriger",
+            "next": "Weiter",
+            "prev": "Zurück",
             "finish": "Fertig"
         },
         "vectorstyler": {
@@ -2629,6 +2647,7 @@
             "redChannel": "Roter Kanal",
             "greenChannel": "Grüner Kanal",
             "blueChannel": "Blauer Kanal",
+            "alphaChannel": "Alpha Kanal",
             "grayChannel": "Graukanal",
             "ruleClassification": "Klassifikation",
             "ruleRaster": "Raster",
@@ -2695,7 +2714,13 @@
             "msExtrudedHeight": "Extrudierte Höhe",
             "msExtrusionColor": "Extrusionsfarbe",
             "msExtrusionType": "Extrusionstyp",
-            "wall": "Wand",
+            "wall": "Wand",  
+            "enableBanding": "Band styling",
+            "selectChannel": "Wählen Sie eine Band aus",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Mindestwert der Quelldaten",
+            "maxSourceValue": "Maximaler Quelldatenwert",          
             "customParams": "Benutzerdefinierte Parameter",
             "wrongFormatMsg": "Die eingegebene Konfiguration ist in falschem Format !!"
         },
@@ -2846,8 +2871,8 @@
             "newButton": "Erstellen",
             "editButton": "Speichern",
             "close": "Schließen",
-            "previous": "vorheriger",
-            "next": "nächster",
+            "previous": "zurück",
+            "next": "weiter",
             "cacheCleaned": "Der Cache wurde erfolgreich bereinigt",
             "errorTitle": "Geofence",
             "errorCQL": "Geometrie nicht gültig!",
@@ -3083,7 +3108,7 @@
             "saveSuccessMessage": "Erfolgreich gespeichert",
             "saveTooltip": "Speichern",
             "saveAsTooltip": "Speichern als",
-            "unadvertised": "Nicht geworben",
+            "unadvertised": "Nicht beworben",
             "creator": "Erstellt von",
             "editor": "Zuletzt geändert von"
         },
@@ -3630,8 +3655,8 @@
             "globeTranslucency": "Globustransluzenz",
             "layersOptions": "Ebenenoptionen",
             "cameraPosition": "Kameraposition",
-            "longitude": "Längengrad",
-            "latitude": "Breitengrad",
+            "longitude": "Lon",
+            "latitude": "Lat",
             "height": "Höhe (m)",
             "centerPosition": "Mittelstellung",
             "captureThisViewPositions": "Positionen dieser Ansicht erfassen",

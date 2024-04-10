@@ -11,7 +11,7 @@ import emptyState from '../../misc/enhancers/emptyState';
 import Message from '../../I18N/Message';
 
 export default (asTooltip = true) => emptyState(
-    ({ layers = [] }) => layers.length === 0,
+    ({ map = {} }) => !map?.layers?.length,
     {
         [asTooltip ? "tooltip" : "title"]: <Message msgId="widgets.errors.noLegend" />,
         description: !asTooltip && <Message msgId="widgets.errors.noLegendDescription" />

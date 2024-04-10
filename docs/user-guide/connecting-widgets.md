@@ -5,7 +5,7 @@ In dashboards it is possible to connect the added widgets allowing the user to i
 
 <video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/widgets_interaction.mp4"/></video>
 
-Once at least one connection between widgets is set, it is possible to identify the connected widgets turning on the connections button in the dashboard [Sidebar](exploring-dashboards.md#sidebar) making it green <img src="../img/button/connections.jpg" class="ms-docbutton"/>. This will highlight the connected elements with a colored bar on their upper side.
+Once at least one connection between widgets is set, it is possible to identify the connected widgets turning on the connections button in the dashboard [Side Toolbar](exploring-dashboards.md#side-toolbar) making it green <img src="../img/button/connections.jpg" class="ms-docbutton"/>. This will highlight the connected elements with a colored bar on their upper side.
 
 <video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/connections_widgets.mp4"/></video>
 
@@ -37,7 +37,7 @@ As soon as more than one Map widget is added to the dashboard, the connect/disco
 
 With a click on it, if only another Map widget is present, by default the connection will be made towards that Map widgets. When more than one Map widget is present in the dashboard, instead, it is possible choose one through a page like the following:
 
-<img src="../img/connecting-widgets/map-to-connect.jpg" class="ms-docimage"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/map-to-connect.mp4"/></video>
 
 ### Maps with Charts, Tables and Counters
 
@@ -45,15 +45,15 @@ In order to connect Charts, Tables or Counters widget with Maps widget, the proc
 
 * Connecting Charts with Maps:
 
-<img src="../img/connecting-widgets/chart-map.jpg" class="ms-docimage"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/chart-map.mp4"/></video>
 
 * Connecting Tables with Maps:
 
-<img src="../img/connecting-widgets/table-map.jpg" class="ms-docimage"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/table-map.mp4"/></video>
 
 * Connecting Counters with Maps:
 
-<img src="../img/connecting-widgets/counter-map.jpg" class="ms-docimage"/>
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/connecting-widgets/counter-map.mp4"/></video>
 
 When a pan or zoom operation is performed in the Map widget, the other connected widgets are spatially filtered according to the Map viewport.
 

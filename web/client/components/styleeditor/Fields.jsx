@@ -647,7 +647,7 @@ function Fields({
                 const Component = isPropertyField ? PropertySelector : FieldComponent;
                 const disabled = isDisabled && isDisabled(properties[key], state.current.properties, fieldsConfig);
                 const visible = isVisible ? isVisible(properties[key], state.current.properties, format) : true;
-                return visible ? (<div className="ms-symbolizer-field-wrapper">
+                return visible ? (<div className={`ms-symbolizer-field-wrapper ${type || ""}`}>
                     <Component
                         {...fieldsConfig}
                         key={key}

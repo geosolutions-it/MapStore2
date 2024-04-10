@@ -15,6 +15,7 @@ import Select from 'react-select';
 
 import Message from '../../I18N/Message';
 import { findIndex } from 'lodash';
+import SecurityUtils from '../../../utils/SecurityUtils';
 
 // const ConfirmModal = require('./modals/ConfirmModal');
 // const GroupManager = require('./GroupManager');
@@ -44,14 +45,14 @@ class UserCard extends React.Component {
     };
 
     getDefaultGroups = () => {
-        return this.props.groups.filter((group) => group.groupName === "everyone");
+        return this.props.groups.filter((group) => group.groupName === SecurityUtils.USER_GROUP_ALL);
     };
 
     getOptions = () => {
         return this.props.groups.map((group) => ({
             label: group.groupName,
             value: group.id,
-            clearableValue: group.groupName !== "everyone"
+            clearableValue: group.groupName !== SecurityUtils.USER_GROUP_ALL
         }));
     };
 

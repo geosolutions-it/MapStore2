@@ -101,7 +101,7 @@ export const geometryFunctionsLibrary = {
                 };
             },
             lineToArc: () => {
-                return { arcType: Cesium.ArcType.GEODESIC };
+                return { arcType: Cesium.ArcType.GEODESIC, perPositionHeight: undefined };
             },
             startPoint: (feature) => {
                 const { positions } = getPositions(feature);
@@ -125,6 +125,7 @@ export const geometryFunctionsLibrary = {
      * @param {object} options
      * @param {class} options.Point ol/geom/Point class
      * @param {class} options.LineString ol/geom/LineString class
+     * @param {class} options.Polygon ol/geom/Polygon class
      * @param {class} options.GeoJSON ol/format/GeoJSON class
      * @param {function} options.getCenter from ol/extent
      * @returns {function} geometry function utils for OpenLayers
@@ -132,6 +133,7 @@ export const geometryFunctionsLibrary = {
     openlayers: ({
         Point,
         LineString,
+        Polygon,
         GeoJSON,
         getCenter
     }) => {
@@ -175,6 +177,17 @@ export const geometryFunctionsLibrary = {
                         const point = reproject(c, 'EPSG:4326', mapProjection);
                         return [point.x, point .y];
                     }));
+                }
+                if (type === 'Polygon') {
+                    let coordinates = feature.getGeometry().getCoordinates()[0]; // not managing holes
+                    coordinates = transformLineToArcs(coordinates.map(c => {
+                        const point = reproject(c, mapProjection, 'EPSG:4326');
+                        return [point.x, point .y];
+                    }));
+                    return new Polygon([coordinates.map(c => {
+                        const point = reproject(c, 'EPSG:4326', mapProjection);
+                        return [point.x, point .y];
+                    })]);
                 }
                 return feature.getGeometry();
             },
@@ -231,6 +244,9 @@ export const geometryFunctionsLibrary = {
             lineToArc: (feature) => {
                 if (feature.geometry.type === 'LineString') {
                     return transformLineToArcs(feature.geometry.coordinates);
+                }
+                if (feature.geometry.type === 'Polygon') {
+                    return feature.geometry.coordinates.map(transformLineToArcs);
                 }
                 return null;
             },

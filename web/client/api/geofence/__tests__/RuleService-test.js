@@ -14,7 +14,7 @@ import RULES from 'raw-loader!../../../test-resources/geofence/rest/rules/rules_
 
 import axios from '../../../libs/ajax';
 import GF_RULE from '../../../test-resources/geofence/rest/rules/full_rule1.json';
-import ruleServiceFactory from '../RuleService';
+import ruleServiceFactory, { cleanConstraints } from '../RuleService';
 
 const RuleService = ruleServiceFactory({
     addBaseUrl: (opts) => ({...opts, baseURL: BASE_URL}),
@@ -108,4 +108,21 @@ describe('RuleService API for GeoFence StandAlone', () => {
     });
     // TODO: updateRules, cleanCache
 
+    it("test cleanConstraints", () => {
+        let rule = {};
+        expect(cleanConstraints(rule)).toEqual(rule);
+        const grant = "DENY";
+        rule = {constraints: "some", grant};
+        expect(cleanConstraints(rule)).toEqual({grant});
+        rule = {constraints: {allowedStyles: undefined, attributes: null, restrictedAreaWkt: ""}};
+        expect(cleanConstraints(rule)).toEqual({constraints: {allowedStyles: [], attributes: [], restrictedAreaWkt: null}});
+        rule = {constraints: {allowedStyles: {style: {"color": "#000"}}, attributes: {attribute: [{access: "READONLY", name: "ID"}]}, restrictedAreaWkt: "POLYGON((10 10, 10, 20, 20 20, 20 10, 10 10))"}};
+        expect(cleanConstraints(rule)).toEqual({
+            constraints: {
+                allowedStyles: rule.constraints.allowedStyles.style,
+                attributes: rule.constraints.attributes.attribute,
+                restrictedAreaWkt: rule.constraints.restrictedAreaWkt
+            }
+        });
+    });
 });

@@ -63,7 +63,9 @@ describe('AddGroup Plugin', () => {
                 groups: [{id: 'group1', nodes: []}]
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        ReactTestUtils.act(() => {
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+        });
         const input = document.getElementsByTagName('input')[0];
         ReactTestUtils.Simulate.change(input, {
             target: {
@@ -94,7 +96,9 @@ describe('AddGroup Plugin', () => {
                 groups: [{ id: 'group1', nodes: [{id: 'group1.group2', nodes: []}] }]
             }
         });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        ReactTestUtils.act(() => {
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+        });
         const input = document.getElementsByTagName('input')[0];
         ReactTestUtils.Simulate.change(input, {
             target: {

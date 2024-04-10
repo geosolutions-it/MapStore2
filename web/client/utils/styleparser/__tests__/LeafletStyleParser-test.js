@@ -62,14 +62,8 @@ describe('LeafletStyleParser', () => {
                         }
                     };
                     expect(leafletStyleFunc(feature)).toEqual({
-                        fill: true,
-                        stroke: true,
-                        fillColor: '#ff0000',
-                        fillOpacity: 0.5,
-                        color: '#00ff00',
-                        opacity: 0.25,
-                        weight: 2,
-                        dashArray: '10 10'
+                        fill: false,
+                        stroke: false
                     });
                     done();
                 }).catch(done);
@@ -403,14 +397,8 @@ describe('LeafletStyleParser', () => {
                         }
                     };
                     expect(leafletStyleFunc(feature)).toEqual({
-                        fill: true,
-                        stroke: true,
-                        fillColor: '#ff0000',
-                        fillOpacity: 0.5,
-                        color: '#00ff00',
-                        opacity: 0.25,
-                        weight: 2,
-                        dashArray: '10 10'
+                        fill: false,
+                        stroke: false
                     });
                     done();
                 }).catch(done);

@@ -17,6 +17,7 @@ import tooltip from '../../../components/misc/enhancers/tooltip';
 import { withResizeDetector } from 'react-resize-detector';
 
 import { MapLibraries } from '../../../utils/MapTypeUtils';
+import { getDerivedLayersVisibility } from '../../../utils/LayersUtils';
 
 import ButtonRB from '../../misc/Button';
 const Button = tooltip(ButtonRB);
@@ -46,8 +47,8 @@ export default compose(
     ...props
 }) => {
 
-    const { layers = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
-
+    const { layers: flatLayers = [], groups = [], mapOptions = {}, description, ...m} = (map.data ? map.data : map);
+    const layers = getDerivedLayersVisibility(flatLayers, groups);
     const caption = contentCaption || description;
 
     const expandedMapOptions = active

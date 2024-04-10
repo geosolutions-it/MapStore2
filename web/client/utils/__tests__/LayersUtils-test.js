@@ -10,7 +10,7 @@ import uuidv1 from 'uuid/v1';
 import assign from 'object-assign';
 import * as LayersUtils from '../LayersUtils';
 
-const { extractTileMatrixSetFromLayers, splitMapAndLayers} = LayersUtils;
+const { extractTileMatrixSetFromLayers, splitMapAndLayers, flattenGroups, getTitle} = LayersUtils;
 const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
@@ -37,6 +37,72 @@ const noVendorWmsLayer = {
     type: 'wms',
     serverType: 'no-vendor'
 };
+const groupsExample = [{
+    "id": "first",
+    "title": "first",
+    "name": "first",
+    "nodes": [
+        {
+            "id": "first.second",
+            "title": "second",
+            "name": "second",
+            "nodes": [
+                {
+                    "id": "first.second.third",
+                    "title": "third",
+                    "name": "third",
+                    "nodes": [
+                        {
+                            "id": "topp:states__6",
+                            "format": "image/png8",
+                            "search": {
+                                "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+                                "type": "wfs"
+                            },
+                            "name": "topp:states",
+                            "opacity": 1,
+                            "description": "This is some census data on the states.",
+                            "title": "USA Population",
+                            "type": "wms",
+                            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+                            "bbox": {
+                                "crs": "EPSG:4326",
+                                "bounds": {
+                                    "minx": -124.73142200000001,
+                                    "miny": 24.955967,
+                                    "maxx": -66.969849,
+                                    "maxy": 49.371735
+                                }
+                            },
+                            "visibility": true,
+                            "singleTile": false,
+                            "allowedSRS": {},
+                            "dimensions": [],
+                            "hideLoading": false,
+                            "handleClickOnLayer": false,
+                            "catalogURL": "https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
+                            "useForElevation": false,
+                            "hidden": false,
+                            "params": {
+                                "layers": "topp:states"
+                            },
+                            "loading": false,
+                            "loadingError": false,
+                            "group": "first.second.third",
+                            "expanded": false
+                        }
+                    ],
+                    "expanded": true,
+                    "visibility": true
+                }
+            ],
+            "expanded": true,
+            "visibility": true
+        }
+    ],
+    "expanded": true,
+    "visibility": true
+}];
 describe('LayersUtils', () => {
     it('test normalizeLayer for vector layers', () => {
         const feature = {
@@ -140,7 +206,9 @@ describe('LayersUtils', () => {
                 description: 'description',
                 tooltipOptions: 'both',
                 tooltipPlacement: 'right',
-                nodes: ['layer005']
+                nodes: ['layer005'],
+                visibility: undefined,
+                nodesMutuallyExclusive: undefined
             },
             {
                 expanded: true,
@@ -151,15 +219,39 @@ describe('LayersUtils', () => {
                 tooltipOptions: undefined,
                 tooltipPlacement: undefined,
                 nodes: [
-                    {expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001',
+                    {
+                        expanded: true,
+                        id: 'custom.nested001',
+                        name: 'nested001',
+                        title: 'nested001',
                         nodes: [
-                            {expanded: false, id: 'custom.nested001.nested002', name: 'nested002', title: 'nested002',
-                                nodes: ['layer004']},
+                            {
+                                expanded: false,
+                                id: 'custom.nested001.nested002',
+                                name: 'nested002',
+                                title: 'nested002',
+                                nodes: ['layer004'],
+                                visibility: undefined,
+                                nodesMutuallyExclusive: undefined
+                            },
                             'layer003'
-                        ]}
-                ]
+                        ],
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
+                    }
+                ],
+                visibility: undefined,
+                nodesMutuallyExclusive: undefined
             },
-            {expanded: false, id: 'Default', name: 'Default', nodes: ['layer002', 'layer001'], title: 'Default'}
+            {
+                expanded: false,
+                id: 'Default',
+                name: 'Default',
+                nodes: ['layer002', 'layer001'],
+                title: 'Default',
+                visibility: undefined,
+                nodesMutuallyExclusive: undefined
+            }
         ]);
     });
 
@@ -1054,7 +1146,7 @@ describe('LayersUtils', () => {
         const layer = LayersUtils.geoJSONToLayer(feature, "layer-id");
         expect(layer.type).toEqual("vector");
         expect(layer.visibility).toEqual(true);
-        expect(layer.group).toEqual("Local shape");
+        expect(layer.group).toBe(undefined);
         expect(layer.name).toEqual("file.zip");
         expect(layer.hideLoading).toEqual(true);
         expect(layer.bbox).toEqual({
@@ -1087,7 +1179,7 @@ describe('LayersUtils', () => {
         const layer = LayersUtils.geoJSONToLayer(feature, "layer-id");
         expect(layer.type).toEqual("vector");
         expect(layer.visibility).toEqual(true);
-        expect(layer.group).toEqual("Local shape");
+        expect(layer.group).toBe(undefined);
         expect(layer.name).toEqual("file.zip");
         expect(layer.hideLoading).toEqual(true);
         expect(layer.bbox).toEqual({
@@ -1126,7 +1218,7 @@ describe('LayersUtils', () => {
         const layer = LayersUtils.geoJSONToLayer(ftColl, "layer-id");
         expect(layer.type).toEqual("vector");
         expect(layer.visibility).toEqual(true);
-        expect(layer.group).toEqual("Local shape");
+        expect(layer.group).toBe(undefined);
         expect(layer.name).toEqual("ft-coll-zip");
         expect(layer.hideLoading).toEqual(true);
         expect(layer.bbox).toEqual({
@@ -1518,5 +1610,66 @@ describe('LayersUtils', () => {
         const params = LayersUtils.getWMSVendorParams(wmsLayer);
         expect(params.TILED).toBe(true);
         expect(LayersUtils.getWMSVendorParams(noVendorWmsLayer)).toEqual({});
+    });
+    it('test flattenGroups, wholeGroup true', () => {
+        const allGroups = flattenGroups(groupsExample, 0, true);
+        expect(allGroups.length).toBe(3);
+        expect(allGroups[0].id).toBe("first");
+        expect(allGroups[0].value).toBe(undefined);
+        expect(allGroups[1].id).toBe("first.second");
+        expect(allGroups[1].value).toBe(undefined);
+        expect(allGroups[2].id).toBe("first.second.third");
+        expect(allGroups[2].value).toBe(undefined);
+    });
+    it('test flattenGroups, wholeGroup false', () => {
+        const allGroups = flattenGroups(groupsExample);
+        expect(allGroups.length).toBe(3);
+        expect(allGroups[0].id).toBe(undefined);
+        expect(allGroups[0].value).toBe("first");
+        expect(allGroups[0].label).toBe("first");
+        expect(allGroups[1].id).toBe(undefined);
+        expect(allGroups[1].value).toBe("first.second");
+        expect(allGroups[1].label).toBe("second");
+        expect(allGroups[2].id).toBe(undefined);
+        expect(allGroups[2].value).toBe("first.second.third");
+        expect(allGroups[2].label).toBe("third");
+    });
+    it('test flattenGroups, wholeGroup false with translation', () => {
+        const title = {
+            "default": "first",
+            "en-US": 'first-en'
+        };
+        const _groups = [{...groupsExample[0], title}];
+        const allGroups = flattenGroups(_groups);
+        expect(allGroups.length).toBe(3);
+        expect(allGroups[0].id).toBe(undefined);
+        expect(allGroups[0].value).toBe("first");
+        expect(allGroups[0].label).toBeTruthy();
+        expect(allGroups[0].label.default).toBe(title.default);
+        expect(allGroups[1].id).toBe(undefined);
+        expect(allGroups[1].value).toBe("first.second");
+        expect(allGroups[1].label).toBe("second");
+        expect(allGroups[2].id).toBe(undefined);
+        expect(allGroups[2].value).toBe("first.second.third");
+        expect(allGroups[2].label).toBe("third");
+    });
+    it('test parsed title getTitle', () => {
+        const title = "Default.Livello";
+        expect(getTitle(title)).toBe("Default/Livello");
+    });
+    it('test localized title getTitle from object', () => {
+        const title = {
+            'default': 'Layer',
+            'no-EX': 'Livello'
+        };
+        expect(getTitle(title)).toBe("Layer");
+    });
+    it('test localized title getTitle with locale', () => {
+        const locale = 'it-IT';
+        const title = {
+            'default': 'Layer',
+            [locale]: 'Livello'
+        };
+        expect(getTitle(title, locale)).toBe("Livello");
     });
 });

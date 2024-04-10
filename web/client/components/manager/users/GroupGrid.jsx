@@ -14,6 +14,7 @@ import Spinner from 'react-spinkit';
 import PropTypes from 'prop-types';
 import Message from '../../I18N/Message';
 import { getMessageById } from '../../../utils/LocaleUtils';
+import SecurityUtils from '../../../utils/SecurityUtils';
 
 class GroupsGrid extends React.Component {
     static propTypes = {
@@ -85,7 +86,7 @@ class GroupsGrid extends React.Component {
                 glyph: "remove-circle",
                 tooltip: getMessageById(this.context.messages, "usergroups.deleteGroup")
             }];
-            if ( group && group.groupName === "everyone") {
+            if ( group && group.groupName === SecurityUtils.USER_GROUP_ALL) {
                 actions = [];
             }
 

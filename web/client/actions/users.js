@@ -16,6 +16,8 @@ export const USERS_SEARCH_TEXT_CHANGED = 'USERS_SEARCH_TEXT_CHANGED';
 
 import API from '../api/GeoStoreDAO';
 import { get, assign } from 'lodash';
+import SecurityUtils from '../utils/SecurityUtils';
+
 export function getUsersloading(text, start, limit) {
     return {
         type: USERMANAGER_GETUSERS,
@@ -259,7 +261,7 @@ export function saveUser(user, options = {}) {
         let userToPost = {...newUser};
         if (newUser && newUser.groups) {
             userToPost = {...newUser, groups: { group: newUser.groups.filter((g) => {
-                return g.groupName !== "everyone"; // see:https://github.com/geosolutions-it/geostore/issues/149
+                return g.groupName !== SecurityUtils.USER_GROUP_ALL; // see:https://github.com/geosolutions-it/geostore/issues/149
             })}};
         }
         return API.createUser(userToPost, options).then((id) => {

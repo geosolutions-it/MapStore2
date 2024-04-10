@@ -20,12 +20,10 @@ import LayerNameEditField from './LayerNameEditField';
 import { getMessageById } from '../../../../utils/LocaleUtils';
 import {
     isValidNewGroupOption,
-    flattenGroups,
-    getLabelName as _getLabelName,
-    getTitle as _getTitle
-} from '../../../../utils/TOCUtils';
+    getLabelName as _getLabelName
+} from '../../../../plugins/TOC/utils/TOCUtils';
 import { supportsFeatureEditing } from "../../../../utils/FeatureGridUtils";
-
+import { DEFAULT_GROUP_ID, flattenGroups, getTitle as _getTitle } from '../../../../utils/LayersUtils';
 /**
  * General Settings form for layer
  */
@@ -76,7 +74,7 @@ class General extends React.Component {
             { value: "bottom", label: getMessageById(this.context.messages, "layerProperties.tooltip.bottom") }
         ];
         const groups = this.props.groups && flattenGroups(this.props.groups);
-        const eleGroupLabel = this.findGroupLabel(this.props.element && this.props.element.group || "Default");
+        const eleGroupLabel = this.findGroupLabel(this.props.element && this.props.element.group || DEFAULT_GROUP_ID);
 
         const SelectCreatable = this.props.allowNew ? Select.Creatable : Select;
 
@@ -117,7 +115,7 @@ class General extends React.Component {
                                 key="group-dropdown"
                                 options={
                                     uniqBy([
-                                        { value: 'Default', label: 'Default' },
+                                        { value: DEFAULT_GROUP_ID, label: DEFAULT_GROUP_ID },
                                         ...(groups || (this.props.element && this.props.element.group) || []).map(item => {
                                             if (isObject(item)) {
                                                 return {...item, label: this.getLabelName(item.label, groups)};
@@ -139,7 +137,7 @@ class General extends React.Component {
                                 value={{ label: this.getLabelName(eleGroupLabel, groups), value: eleGroupLabel}}
                                 placeholder={this.getLabelName(eleGroupLabel, groups)}
                                 onChange={(item) => {
-                                    this.updateEntry("group", { target: { value: item.value || "Default" } });
+                                    this.updateEntry("group", { target: { value: item.value || DEFAULT_GROUP_ID } });
                                 }}
                             />
                         </div> : null}
@@ -190,7 +188,7 @@ class General extends React.Component {
 
     findGroupLabel = () => {
         const wholeGroups = this.props.groups && flattenGroups(this.props.groups, 0, true);
-        const eleGroupName = this.props.element && this.props.element.group || "Default";
+        const eleGroupName = this.props.element && this.props.element.group || DEFAULT_GROUP_ID;
         const group = find(wholeGroups, (gp)=> gp.id === eleGroupName) || {};
         return this.getTitle(group.title);
     }

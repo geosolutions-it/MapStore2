@@ -17,6 +17,7 @@ import Spinner from 'react-spinkit';
 import {getMessageById} from '../../../../utils/LocaleUtils';
 import Message from '../../../I18N/Message';
 import Button from '../../../misc/Button';
+import SecurityUtils from '../../../../utils/SecurityUtils';
 
 class PermissionEditor extends React.Component {
     static propTypes = {
@@ -115,10 +116,16 @@ class PermissionEditor extends React.Component {
             ).filter(rule => rule.canRead || rule.canWrite));
     };
 
+    getCurrentPermission = () => {
+        return this.props.newPermission || head(this.props.availablePermissions);
+    }
+
     getSelectableGroups = () => {
         return this.props.availableGroups && this.props.availableGroups.filter((group) => {
             return !this.isPermissionPresent(group.groupName);
-        }).map((group) => ({ label: group.groupName, value: group.id }));
+        })
+            .filter(group => this.getCurrentPermission() === "canWrite" ? group.groupName !== SecurityUtils.USER_GROUP_ALL : true)
+            .map((group) => ({ label: group.groupName, value: group.id }));
     };
 
     getPermissionLabel = (perm) => {
@@ -132,8 +139,10 @@ class PermissionEditor extends React.Component {
         }
     };
 
-    getAvailablePermissions = () => {
-        return this.props.availablePermissions.map((perm) => ({ value: perm, label: this.getPermissionLabel(perm) }));
+    getAvailablePermissions = (groupName) => {
+        return this.props.availablePermissions
+            .map((perm) => ({ value: perm, label: this.getPermissionLabel(perm) }))
+            .filter(perm => (groupName ?? this.props.newGroup?.groupName) === SecurityUtils.USER_GROUP_ALL ? perm.value !== 'canWrite' : true);
     };
 
     renderPermissionRows = () => {
@@ -151,7 +160,7 @@ class PermissionEditor extends React.Component {
                                 ref={"permChoice" + index}
                                 onChange={(sel) => { this.onChangePermission.call(this, group.groupName, sel.value); }}
                                 clearable={false}
-                                options={this.getAvailablePermissions()}
+                                options={this.getAvailablePermissions(group.groupName)}
                                 value={canWrite ? "canWrite" : "canRead" } />
                         </td>
                         {
@@ -208,7 +217,7 @@ class PermissionEditor extends React.Component {
                                     ref="newChoice"
                                     clearable={false}
                                     options={this.getAvailablePermissions()}
-                                    value={this.props.newPermission || head(this.props.availablePermissions)}
+                                    value={this.getCurrentPermission()}
                                     onChange={(sel) => { this.props.onNewPermissionChoose(sel && sel.value); }} />
                             </td>
                             <td style={{ width: "50px" }}>

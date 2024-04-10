@@ -49,6 +49,8 @@
             .noUi-base {
                 .noUi-origin {
                     .noUi-handle {
+                        box-shadow: none;
+                        .background-color-var(@theme-vars[main-variant-bg]);
                         .noUi-tooltip {
                             .background-color-var(@theme-vars[main-variant-bg]);
                         }
@@ -169,6 +171,9 @@
 }
 
 .mapstore-slider {
+    .noUi-target.noUi-horizontal {
+        height: 3px;
+    }
     &.with-tooltip {
         .noUi-target {
             &.noUi-horizontal {
@@ -199,19 +204,19 @@
                             &:after {
                                 display: none;
                             }
-                            left: -18px;
-                            width: 36px;
-                            height: 16px;
-                            top: -8px;
+                            left: -12px;
+                            width: 24px;
+                            height: 10px;
+                            top: -5px;
                             .noUi-tooltip {
                                 padding: 0;
                                 top: 0;
                                 left: 0;
-                                font-size: 10px;
+                                font-size: 8px;
                                 border: none;
                                 border-radius: @border-radius-base;
-                                height: 15px;
-                                width: 36px;
+                                width: inherit;
+                                height: inherit;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
@@ -220,6 +225,23 @@
                         }
                     }
                 }
+            }
+        }
+    }
+    &:not(.with-tooltip) {
+        .noUi-target.noUi-horizontal .noUi-base .noUi-origin .noUi-handle {
+            width: 10px;
+            height: 10px;
+            left: 0;
+            top: 2px;
+            right: auto;
+            bottom: auto;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: none;
+            &:after,
+            &:before {
+                display: none;
             }
         }
     }

@@ -741,7 +741,7 @@ describe('Test the layers reducer', () => {
         const state = layers({flat: [{id: "layer"}], groups: [{id: "group", nodes: ["layer"]}]}, action);
         expect(state).toExist();
         expect(state.selected).toExist();
-        expect(state.selected).toEqual(['layer', 'group']);
+        expect(state.selected).toEqual(['group']);
     });
 
     it('select nested groups nodes', () => {
@@ -755,7 +755,7 @@ describe('Test the layers reducer', () => {
         const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}]}, action);
         expect(state).toExist();
         expect(state.selected).toExist();
-        expect(state.selected).toEqual(['layer', 'layer2', 'group001', 'group' ]);
+        expect(state.selected).toEqual(['group' ]);
     });
 
     it('select multiple layer nodes', () => {
@@ -783,7 +783,7 @@ describe('Test the layers reducer', () => {
         const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}], selected: ['layer2', 'group2']}, action);
         expect(state).toExist();
         expect(state.selected).toExist();
-        expect(state.selected).toEqual(['layer2', 'group2', 'layer', 'layer2', 'group001', 'group']);
+        expect(state.selected).toEqual(['layer2', 'group2', 'group']);
     });
 
     it('select node with no id', () => {

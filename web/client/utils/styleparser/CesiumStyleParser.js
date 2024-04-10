@@ -849,8 +849,10 @@ const symbolizerToPrimitives = {
             }] : [])
         ];
     },
-    Fill: ({ parsedSymbolizer, globalOpacity }) => {
+    Fill: ({ parsedSymbolizer, feature, globalOpacity }) => {
         const isExtruded = !parsedSymbolizer.msClampToGround && !!parsedSymbolizer.msExtrudedHeight;
+        const geometryFunction = getGeometryFunction(parsedSymbolizer);
+        const additionalOptions = geometryFunction ? geometryFunction(feature) : {};
         return [
             {
                 type: 'polygon',
@@ -870,7 +872,8 @@ const symbolizerToPrimitives = {
                                 Cesium.ClassificationType.BOTH} ),
                         arcType: parsedSymbolizer.msClampToGround
                             ? Cesium.ArcType.GEODESIC
-                            : undefined
+                            : undefined,
+                        ...additionalOptions
                     }
                 }
             },
@@ -902,7 +905,8 @@ const symbolizerToPrimitives = {
                                     Cesium.ClassificationType.BOTH} ),
                             arcType: parsedSymbolizer.msClampToGround
                                 ? Cesium.ArcType.GEODESIC
-                                : Cesium.ArcType.NONE
+                                : Cesium.ArcType.NONE,
+                            ...additionalOptions
                         }
                     }
                 }

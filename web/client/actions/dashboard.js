@@ -28,6 +28,7 @@ export const DASHBOARD_DELETE_SERVICE = "DASHBOARD:DELETE_SERVICE";
 export const DASHBOARD_SAVE_SERVICE_LOADING = "DASHBOARD:SAVE_SERVICE_LOADING";
 export const DASHBOARD_EXPORT = "DASHBOARD:EXPORT";
 export const DASHBOARD_IMPORT = "DASHBOARD:IMPORT";
+export const INIT_PLUGIN = "DASHBOARD:INIT_PLUGIN";
 
 export const setEditing = (editing) => ({type: SET_EDITING, editing });
 
@@ -92,3 +93,8 @@ export const dashboardDeleteService = (service, services) => ({ type: DASHBOARD_
  * @param {bolean} loading the loading state of the dashboard catalog saving
 */
 export const setDashboardServiceSaveLoading = loading => ({ type: DASHBOARD_SAVE_SERVICE_LOADING, loading});
+
+/**
+ * @param {options} options the options to be updated on plugin initialization
+*/
+export const initPlugin = (options) => ({ type: INIT_PLUGIN, options });

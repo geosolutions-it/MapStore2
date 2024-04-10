@@ -18,6 +18,8 @@ const actions = {
     onSetSwipeMode: () => {}
 };
 
+const TestItemComponent = ({ glyph, onClick }) => <button className={glyph} onClick={() => onClick()}></button>;
+
 describe('SwipeButton', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -30,49 +32,54 @@ describe('SwipeButton', () => {
         setTimeout(done);
     });
 
-    it('should render MenuItems in dropdown', () => {
+    it('should render buttons', () => {
         const settings = {
             active: true,
             mode: "swipe"
         };
-
         ReactDOM.render(<SwipeButton
+            status={'layer'}
+            statusTypes={{
+                LAYER: 'layer'
+            }}
+            itemComponent={TestItemComponent}
             onSetActive={actions.onSetActive}
             onSetSwipeMode={actions.onSetSwipeMode}
             swipeSettings={settings} />, document.getElementById("container"));
 
         const el = document.getElementById('container');
-        const splitDropdownBtn = el.getElementsByClassName('dropdown-menu')[0];
-        expect(splitDropdownBtn).toExist();
-        expect(splitDropdownBtn.getElementsByTagName('a').length).toBe(3);
+        const buttons = el.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect([...buttons].map(button => button.getAttribute('class'))).toEqual([
+            'transfer', 'search'
+        ]);
     });
 
-    it('should set tool or configuring state active', () => {
+    it('should set tool', () => {
         const spySetActive = expect.spyOn(actions, 'onSetActive');
         const spySetSwipeMode = expect.spyOn(actions, 'onSetSwipeMode');
-        const settings = {
-            active: true,
-            mode: "swipe"
-        };
+        const settings = {};
 
         ReactDOM.render(<SwipeButton
+            status={'layer'}
+            statusTypes={{
+                LAYER: 'layer'
+            }}
+            itemComponent={TestItemComponent}
             onSetActive={actions.onSetActive}
             onSetSwipeMode={actions.onSetSwipeMode}
             swipeSettings={settings} />, document.getElementById("container"));
 
         const el = document.getElementById('container');
-        const splitDropdownBtn = el.getElementsByClassName('dropdown-menu')[0];
-        const menuBtns = splitDropdownBtn.getElementsByTagName('a');
+        const buttons = el.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
 
-        TestUtils.Simulate.click(menuBtns[0]); // set swipe active
+        TestUtils.Simulate.click(buttons[0]); // set swipe active
         expect(spySetActive).toHaveBeenCalledWith(true);
         expect(spySetSwipeMode).toHaveBeenCalledWith('swipe');
 
-        TestUtils.Simulate.click(menuBtns[1]); // set spy active
+        TestUtils.Simulate.click(buttons[1]); // set spy active
         expect(spySetActive).toHaveBeenCalledWith(true);
         expect(spySetSwipeMode).toHaveBeenCalledWith('spy');
-
-        TestUtils.Simulate.click(menuBtns[2]); // set spy active
-        expect(spySetActive).toHaveBeenCalledWith(true, 'configuring');
     });
 });

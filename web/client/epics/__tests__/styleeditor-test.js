@@ -1475,5 +1475,66 @@ describe('Test styleeditor epics, with mock axios', () => {
             state);
 
     });
+    it('test toggleStyleEditorEpic style service where layer url is array', (done) => {
+        mockAxios.onGet(/\/manifest/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'gt-css-2.16' }]} }];
+        });
 
+        mockAxios.onGet(/\/version/).reply(() => {
+            return [ 200, { about: { resource: [{ '@name': 'GeoServer', version: '2.16' }] } }];
+        });
+
+        mockAxios.onGet(/\/fonts/).reply(() => {
+            return [ 200, { fonts: ['Arial'] }];
+        });
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerWorkspace:layerName',
+                        url: ['/geoserver1/', '/geoserver2/', '/geoserver3/']
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    options: {
+                        opacity: 1
+                    }
+                }
+            }
+        };
+
+        const NUMBER_OF_ACTIONS = 3;
+        const results = (actions) => {
+            try {
+                const service = actions.pop()?.service;
+
+                expect(service).toEqual({
+                    baseUrl: state.layers.flat[0].url[0],
+                    version: '2.16',
+                    formats: [ 'css', 'sld' ],
+                    availableUrls: [],
+                    fonts: ['Arial'],
+                    classificationMethods: {
+                        vector: [ 'equalInterval', 'quantile', 'jenks' ],
+                        raster: [ 'equalInterval', 'quantile', 'jenks' ]
+                    }
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
+            results,
+            state);
+    });
 });

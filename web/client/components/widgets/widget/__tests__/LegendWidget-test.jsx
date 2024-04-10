@@ -57,12 +57,14 @@ describe('LegendWidget component', () => {
     });
     it('LegendWidget rendering with layers', () => {
         const LAYERS = [{
+            id: 'layer:00',
             name: 'layer:00',
             title: 'Layer',
             visibility: true,
             type: 'wms'
         },
         {
+            id: 'layer:01',
             name: 'layer:01',
             title: 'Layer:01',
             visibility: false,
@@ -72,9 +74,8 @@ describe('LegendWidget component', () => {
         ];
         ReactDOM.render(<LegendWidget dependencies={{layers: LAYERS}} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.legend-widget');
+        const el = container.querySelector('.ms-layers-tree');
         expect(el).toBeTruthy();
-        expect(container.querySelector('.widget-legend-toc')).toBeTruthy();
     });
     it('LegendWidget rendering with layers specified in dependenciesMap', () => {
         const layers = [
@@ -109,8 +110,7 @@ describe('LegendWidget component', () => {
             dependencies={{"widgets[3fe79110-ac81-11e9-9a66-39723a13a30f].maps[213].layers": layers}}
             dependenciesMap={{layers: "widgets[3fe79110-ac81-11e9-9a66-39723a13a30f].maps[213].layers" }} />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.legend-widget');
+        const el = container.querySelector('.ms-layers-tree');
         expect(el).toBeTruthy();
-        expect(container.querySelector('.widget-legend-toc')).toBeTruthy();
     });
 });

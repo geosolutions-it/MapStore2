@@ -18,11 +18,12 @@ import { determineCrs, fetchProjRemotely, getProjUrl } from '../utils/Coordinate
 import { getCapabilitiesUrl } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import { cleanAuthParamsFromURL } from '../utils/SecurityUtils';
+import { getDefaultUrl } from '../utils/URLUtils';
 
 const proj4 = Proj4js;
 
 export const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
-    const parsed = urlUtil.parse(search.url || url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(search.url || url), true);
     return urlUtil.format(
         {
             ...parsed,

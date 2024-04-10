@@ -300,7 +300,8 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }) {
                     return style;
                 }
                 if (firstValidSymbolizer.kind === 'Fill') {
-                    return {
+                    const geometryFunction = getGeometryFunction(firstValidSymbolizer);
+                    const style = {
                         fill: true,
                         stroke: true,
                         fillColor: firstValidSymbolizer.color,
@@ -310,6 +311,17 @@ function getStyleFuncFromRules({ rules: geoStylerStyleRules = [] }) {
                         weight: firstValidSymbolizer.outlineWidth ?? 0,
                         ...(firstValidSymbolizer.outlineDasharray && { dashArray: firstValidSymbolizer.outlineDasharray.join(' ') })
                     };
+                    if (geometryFunction && feature.geometry.type === 'Polygon') {
+                        const coordinates = geometryFunction(feature);
+                        const geoJSONLayer = L.geoJSON({ ...feature, geometry: { type: 'Polygon', coordinates }});
+                        geoJSONLayer.setStyle(style);
+                        layer._msAdditionalLayers.push(geoJSONLayer);
+                        layer.addLayer(geoJSONLayer);
+                        return {
+                            stroke: false,
+                            fill: false
+                        };
+                    }
                 }
                 return {
                     stroke: false,

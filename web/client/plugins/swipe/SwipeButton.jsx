@@ -7,66 +7,58 @@
 */
 
 import React from 'react';
-
 import PropTypes from 'prop-types';
-import { Glyphicon, SplitButton, MenuItem } from 'react-bootstrap';
-import Message from '../../components/I18N/Message';
-import tooltip from '../../components/misc/enhancers/tooltip';
-
-const SplitButtonT = tooltip(SplitButton);
-const splitToolButtonConfig = {
-    title: <Glyphicon glyph="transfer"/>,
-    tooltipId: "toc.compareTool",
-    tooltipPosition: "top",
-    className: "square-button-md no-border",
-    pullRight: true
-};
 
 const SwipeButton = (props) => {
-    const { swipeSettings, onSetActive, onSetSwipeMode, status} = props;
+    const {
+        swipeSettings,
+        onSetActive,
+        onSetSwipeMode,
+        status,
+        statusTypes,
+        selectedNodes,
+        itemComponent,
+        swipeLayerId,
+        onSetSwipeLayer = () => {}
+    } = props;
 
-    const showConfiguration = () => {
-        if (!swipeSettings.configuring && (status === 'LAYER')) {
-            onSetActive(true, "configuring");
-        } else {
-            onSetActive(false, "configuring");
-        }
-    };
+    const ItemComponent = itemComponent;
 
-    const showSwipeTools = () => {
-        if (!swipeSettings.active && (status === 'LAYER')) {
-            onSetActive(true);
-        } else {
-            onSetActive(false);
+    const showSwipeTools = (layerId, mode) => {
+        onSetSwipeMode(mode);
+        if ((!swipeSettings.active && (status === statusTypes?.LAYER))
+        || (swipeSettings.active && swipeLayerId !== layerId)
+        || (swipeSettings.active && swipeSettings?.mode !== mode)) {
+            onSetSwipeLayer(layerId);
+            return onSetActive(true);
         }
+        onSetSwipeLayer();
+        return onSetActive(false);
     };
+    const layer = selectedNodes?.[0]?.node;
+    if (![statusTypes?.LAYER].includes(status) || layer?.error) {
+        return null;
+    }
+
+    const active = layer?.id === swipeLayerId;
 
     return (
-        <SplitButtonT
-            onClick={() => showSwipeTools()}
-            bsStyle={swipeSettings?.active ? "success" : "primary"}
-            {...splitToolButtonConfig}>
-            <MenuItem
-                active={swipeSettings?.mode === "swipe"}
-                onClick={() => {
-                    onSetSwipeMode("swipe");
-                    onSetActive(true);
-                }}>
-                <Glyphicon glyph="vert-dashed"/><Message msgId="toc.swipe" />
-            </MenuItem>
-            <MenuItem
-                active={swipeSettings?.mode === "spy"}
-                onClick={() => {
-                    onSetSwipeMode("spy");
-                    onSetActive(true);
-                }}>
-                <Glyphicon glyph="search" /><Message msgId="toc.spyGlass" />
-            </MenuItem>
-            <MenuItem
-                onClick={() => showConfiguration()}>
-                <Glyphicon glyph="cog" /><Message msgId="toc.configureTool" />
-            </MenuItem>
-        </SplitButtonT>
+        <>
+            <ItemComponent
+                {...props}
+                active={active && swipeSettings?.mode === "swipe"}
+                glyph="transfer"
+                labelId="toc.swipe"
+                onClick={() => showSwipeTools(layer?.id, "swipe")}
+            />
+            <ItemComponent
+                {...props}
+                active={active && swipeSettings?.mode === "spy"}
+                glyph="search"
+                labelId="toc.spyGlass"
+                onClick={() => showSwipeTools(layer?.id, "spy")}
+            />
+        </>
     );
 };
 

@@ -7,12 +7,8 @@
  */
 // handle selection
 
-import {findIndex} from 'lodash';
 import { compose, withProps, withStateHandlers } from 'recompose';
-const getGroupLayerIds = (id, map) =>
-    (map.layers || [])
-        .filter(({ group = "Default" } = {}) => group === id)
-        .map(({ id: lid } = {}) => lid);
+import { getSelectedNodes } from '../../../../../../utils/LayersUtils';
 
 /**
  * Allows management of node selection in localState. Useful to use TOC.
@@ -26,34 +22,15 @@ export default compose(
     withStateHandlers(
         () => ({ selectedLayers: [], selectedGroups: [] }),
         {
-            onNodeSelect: ({ selectedLayers = [], selectedGroups = [] }, { map = {} }) => (id, nodeType, ctrlKey) => ({
-                selectedLayers: nodeType === "group"
-                    ? findIndex(selectedGroups, item => item === id) >= 0
-                        // remove all layers
-                        ? selectedLayers.filter(item => findIndex(getGroupLayerIds(id, map), lid => lid === item) < 0)
-                        // add all layers
-                        : ctrlKey
-                            ? [...selectedLayers, ...getGroupLayerIds(id, map)]
-                            : [...getGroupLayerIds(id, map)]
-                    // layer selection
-                    : findIndex(selectedLayers, item => item === id) >= 0
-                        // remove
-                        ? selectedLayers.filter(i => i !== id)
-                        : ctrlKey
-                            ? [...selectedLayers, id]
-                            : [id],
-                selectedGroups: nodeType === "group"
-                    ? findIndex(selectedGroups, item => item === id) >= 0
-                        // remove group
-                        ? selectedGroups.filter(g => g !== id)
-                        // add group
-                        : ctrlKey
-                            ? [...selectedGroups, id]
-                            : [id]
-                    : ctrlKey
-                        ? selectedGroups
-                        : []
-            })
+            onNodeSelect: ({ selectedLayers = [], selectedGroups = [] }) => (id, nodeType, ctrlKey) => {
+                const selectedNodes = getSelectedNodes([...selectedLayers, ...selectedGroups], id, ctrlKey);
+                const selectedLayersIds = nodeType === 'layer' ? [...selectedLayers, id] : selectedLayers;
+                const selectedGroupsId = nodeType === 'group' ? [...selectedGroups, id] : selectedGroups;
+                return {
+                    selectedLayers: selectedNodes.filter((selectedId) => selectedLayersIds.includes(selectedId)),
+                    selectedGroups: selectedNodes.filter((selectedId) => selectedGroupsId.includes(selectedId))
+                };
+            }
         }
     ),
     withProps(({ selectedLayers, selectedGroups }) => ({

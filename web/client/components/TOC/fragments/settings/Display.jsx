@@ -15,7 +15,7 @@ const Button = tooltip(ButtonRB);
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 import Message from '../../../I18N/Message';
 import InfoPopover from '../../../widgets/widget/InfoPopover';
-import Legend from '../legend/Legend';
+import Legend from '../../../../plugins/TOC/components/Legend';
 import VisibilityLimitsForm from './VisibilityLimitsForm';
 import { ServerTypes } from '../../../../utils/LayersUtils';
 import Select from 'react-select';

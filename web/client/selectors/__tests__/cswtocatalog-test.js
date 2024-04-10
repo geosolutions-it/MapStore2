@@ -62,6 +62,31 @@ const sampleCSWRecord2 = {
         }]
     }
 };
+const sampleRecordName = 'workspace:layername1';
+const sampleCSWRecord3 = {
+    boundingBox: {
+        extent: [10.686,
+            44.931,
+            46.693,
+            12.54],
+        crs: "EPSG:4326"
+
+    },
+    dc: {
+        identifier: "test-identifier",
+        title: "sample title",
+        subject: ["subject1", "subject2"],
+        "abstract": "sample abstract",
+        "references": [{
+            scheme: "OGC:WMS-1.1.1-http-get-map",
+            value: [
+                'http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&layers=' + sampleRecordName,
+                'http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&layers=workspace:layername2',
+                'http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&layers=workspace:layername3'
+            ]
+        }]
+    }
+};
 const sampleRecord = {
     identifier: "test-identifier",
     title: "sample title",
@@ -121,5 +146,25 @@ describe('Test csw to catalog selector', () => {
         expect(records).toExist();
         expect(records[0]).toExist();
         expect(isEqual(records[0], sampleRecord)).toBe(true);
+    });
+    it('test correct conversion for multiple urls in dc.references', () => {
+        const testState = {
+            catalog: {
+                searchOptions: {
+                    catalogURL: "http://sample.com"
+                },
+                result: {
+                    records: [sampleCSWRecord3],
+                    numberOfRecordsMatched: 1,
+                    numberOfRecordsReturned: 1
+                }
+
+            }
+        };
+        const records = cswToCatalogSelector(testState.catalog);
+        const name = records[0].references[0].params.name;
+        expect(records).toExist();
+        expect(records[0]).toExist();
+        expect(name).toBe(sampleRecordName);
     });
 });

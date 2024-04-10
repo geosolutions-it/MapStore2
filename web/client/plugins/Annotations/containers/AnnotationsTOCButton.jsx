@@ -7,12 +7,9 @@
 */
 
 import React from 'react';
-import { Glyphicon } from "react-bootstrap";
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { ANNOTATIONS, isAnnotationLayer } from '../utils/AnnotationsUtils';
-import MSButton from '../../../components/misc/Button';
-import tooltip from '../../../components/misc/enhancers/tooltip';
 import {
     download,
     newAnnotation,
@@ -21,74 +18,68 @@ import {
 import { annotationsLayersSelector } from '../selectors/annotations';
 import { createControlEnabledSelector } from '../../../selectors/controls';
 
-const Button = tooltip(MSButton);
-
 function AnnotationsTOCButton({
     status,
     selectedLayers,
     onAdd = () => {},
     onDownload = () => {},
     onEdit = () => {},
-    annotationLayers = []
+    annotationLayers = [],
+    statusTypes,
+    itemComponent,
+    ...props
 }) {
-    if (status === 'DESELECT') {
+    const ItemComponent = itemComponent;
+    if (status === statusTypes.DESELECT) {
         return (
             <>
-                <Button
+                <ItemComponent
+                    {...props}
                     key="annotations"
-                    bsStyle="primary"
-                    className="square-button-md"
                     tooltipId="toc.addAnnotations"
-                    onClick={() => onAdd()}>
-                    <Glyphicon glyph="add-comment"/>
-                </Button>
-                {annotationLayers.length > 0 && <Button
+                    onClick={() => onAdd()}
+                    glyph="add-comment"
+                />
+                {annotationLayers.length > 0 && <ItemComponent
+                    {...props}
                     key="annotations-download"
-                    bsStyle="primary"
-                    className="square-button-md"
+                    glyph="download-comment"
                     tooltipId="annotations.downloadtooltip"
-                    onClick={() => onDownload(annotationLayers)}>
-                    <Glyphicon glyph="download-comment"/>
-                </Button>}
+                    onClick={() => onDownload(annotationLayers)}
+                />}
             </>
         );
     }
-    if (status === 'LAYER' && isAnnotationLayer(selectedLayers[0])) {
+    if (status === statusTypes.LAYER && isAnnotationLayer(selectedLayers[0])) {
         return (
             <>
-                <Button
+                <ItemComponent
+                    {...props}
                     key="annotations-edit"
-                    bsStyle="primary"
-                    className="square-button-md"
+                    glyph="pencil"
                     tooltipId="toc.editAnnotations"
-                    onClick={() => onEdit(selectedLayers[0].id)}>
-                    <Glyphicon glyph="pencil"/>
-                </Button>
-                <Button
+                    onClick={() => onEdit(selectedLayers[0].id)}/>
+                <ItemComponent
+                    {...props}
                     key="annotations-download"
-                    bsStyle="primary"
-                    className="square-button-md"
                     tooltipId="annotations.downloadcurrenttooltip"
-                    onClick={() => onDownload([selectedLayers[0]])}>
-                    <Glyphicon glyph="download-comment"/>
-                </Button>
+                    onClick={() => onDownload([selectedLayers[0]])}
+                    glyph="download-comment" />
             </>
         );
     }
-    const selectedAnnotationsLayers =  status === 'LAYERS'
+    const selectedAnnotationsLayers =  status === statusTypes.LAYERS
         ? selectedLayers.filter(isAnnotationLayer)
         : [];
     if (selectedAnnotationsLayers.length) {
         return (
             <>
-                <Button
+                <ItemComponent
+                    {...props}
                     key="annotations-download"
-                    bsStyle="primary"
-                    className="square-button-md"
                     tooltipId="annotations.downloadtooltip"
-                    onClick={() => onDownload(selectedAnnotationsLayers)}>
-                    <Glyphicon glyph="download-comment"/>
-                </Button>
+                    onClick={() => onDownload(selectedAnnotationsLayers)}
+                    glyph="download-comment" />
             </>
         );
     }

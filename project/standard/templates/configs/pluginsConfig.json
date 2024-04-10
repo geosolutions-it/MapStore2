@@ -5,7 +5,6 @@
       "glyph": "1-map",
       "mandatory": true,
       "defaultConfig": {
-        "mapTypeOverride": "openlayers",
         "mapOptions": {
           "openlayers": {
             "interactions": {

@@ -7,7 +7,10 @@
  */
 
 import {createSelector} from 'reselect';
-import {get} from 'lodash';
+import { get, omit, pick } from 'lodash';
+import { mapSelector } from './map';
+import { mapSaveSelector } from './mapsave';
+import { flattenPluginTree, makePlugins } from '../utils/ContextCreatorUtils';
 
 export const newContextSelector = state => state.contextcreator && state.contextcreator.newContext;
 export const mapConfigSelector = createSelector(newContextSelector, context => context && context.mapConfig);
@@ -45,3 +48,48 @@ export const customVariablesEnabledSelector = state => get(state, 'contextcreato
 export const isNewContext = state => state.contextcreator?.contextId === 'new';
 export const prefetchedDataSelector = state => get(state, 'contextcreator.prefetchedData', {});
 export const disableImportSelector = state => creationStepSelector(state) !== "general-settings";
+
+export const generateContextResource = (state) => {
+    const mapConfig = mapSelector(state) ? mapSaveSelector(state) : {};
+    const plugins = pluginsSelector(state);
+    const context = newContextSelector(state);
+    const resource = resourceSelector(state);
+    const templates = templatesSelector(state);
+    const pluginsArray = flattenPluginTree(plugins).filter(plugin => plugin.enabled).map(plugin => plugin.name === 'MapTemplates' ? ({
+        ...plugin,
+        pluginConfig: {
+            ...plugin.pluginConfig,
+            cfg: {
+                ...(plugin.pluginConfig.cfg || {}),
+                allowedTemplates: templates.filter(template => template.enabled).map(template => pick(template, 'id'))
+            }
+        }
+    }) : plugin);
+    const unselectablePlugins = makePlugins(pluginsArray.filter(plugin => !plugin.isUserPlugin));
+    const userPlugins = makePlugins(pluginsArray.filter(plugin => plugin.isUserPlugin));
+    const theme = selectedThemeSelector(state);
+    const customVariablesEnabled = customVariablesEnabledSelector(state);
+
+    const newContext = {
+        ...context,
+        mapConfig,
+        theme,
+        customVariablesEnabled,
+        plugins: {desktop: unselectablePlugins},
+        userPlugins
+    };
+    return resource && resource.id ? {
+        ...omit(resource, 'name', 'description'),
+        data: newContext,
+        metadata: {
+            name: resource && resource.name,
+            description: resource.description
+        }
+    } : {
+        category: 'CONTEXT',
+        data: newContext,
+        metadata: {
+            name: resource && resource.name
+        }
+    };
+};

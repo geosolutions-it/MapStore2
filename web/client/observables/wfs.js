@@ -18,11 +18,12 @@ import { createFeatureFilter, getWFSFilterData } from '../utils/FilterUtils';
 import { getCapabilitiesUrl } from '../utils/LayersUtils';
 import { interceptOGCError } from '../utils/ObservableUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
+import { getDefaultUrl } from '../utils/URLUtils';
 
 const {getFeature, query, sortBy, propertyName} = requestBuilder({ wfsVersion: "1.1.0" });
 
 export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} = {}) => {
-    const parsed = urlUtil.parse(describeFeatureTypeURL || search.url || url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(describeFeatureTypeURL || search.url || url), true);
     return urlUtil.format(
         {
             ...parsed,
@@ -126,10 +127,10 @@ const getFeaturesFiltered = (features, filterObj) => {
  * @param {*} downloadOption selected format for query
  * @returns {Object} The data and query string
  */
-const getFeatureUtilities = (searchUrl, filterObj, options = {}, downloadOption = 'json') => {
+export const getFeatureUtilities = (searchUrl, filterObj, options = {}, downloadOption = 'json') => {
     const data = getWFSFilterData(filterObj, options);
 
-    const urlParsedObj = urlUtil.parse(searchUrl, true);
+    const urlParsedObj = urlUtil.parse(getDefaultUrl(searchUrl), true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
     params.service = 'WFS';
     params.outputFormat = downloadOption;

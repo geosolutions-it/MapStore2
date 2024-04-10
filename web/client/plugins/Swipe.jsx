@@ -10,13 +10,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { getSelectedLayer } from '../selectors/layers';
-import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector } from '../selectors/swipe';
+import { layerSwipeSettingsSelector, swipeModeSettingsSelector, spyModeSettingsSelector, getSwipeLayerId } from '../selectors/swipe';
 import swipe from '../reducers/swipe';
 import epics from '../epics/swipe';
 import {
     setActive,
-    setMode
+    setMode,
+    setSwipeLayer
 } from '../actions/swipe';
 
 import { createPlugin } from '../utils/PluginsUtils';
@@ -35,12 +35,12 @@ export const Support = ({ mode, map, layer, active, swipeModeSettings, spyModeSe
 };
 
 const swipeSupportSelector = createSelector([
-    getSelectedLayer,
+    getSwipeLayerId,
     layerSwipeSettingsSelector,
     swipeModeSettingsSelector,
     spyModeSettingsSelector
 ], (layer, swipeSettings, swipeModeSettings, spyModeSettings) => ({
-    layer: layer?.id,
+    layer,
     active: swipeSettings.active || false,
     swipeModeSettings,
     spyModeSettings,
@@ -48,6 +48,8 @@ const swipeSupportSelector = createSelector([
 }));
 
 const MapSwipeSupport = connect(swipeSupportSelector, null)(Support);
+
+const tocToolsSelector = createSelector(getSwipeLayerId, layerSwipeSettingsSelector, (swipeLayerId, swipeSettings) => ({swipeLayerId, swipeSettings}));
 
 /**
  * Swipe. Add to the TOC the possibility to select a layer for Swipe.
@@ -63,18 +65,46 @@ export default createPlugin(
         },
         component: SwipeSettings,
         containers: {
-            TOC: {
+            TOC: [{
                 name: "Swipe",
-                target: "toolbar",
-                selector: ({ status }) => status === 'LAYER',
+                target: "context-menu",
                 Component: connect(
-                    createSelector(layerSwipeSettingsSelector, (swipeSettings) => ({swipeSettings})),
+                    tocToolsSelector,
                     {
                         onSetActive: setActive,
-                        onSetSwipeMode: setMode
+                        onSetSwipeMode: setMode,
+                        onSetSwipeLayer: setSwipeLayer
                     }
-                )(SwipeButton)
-            },
+                )(SwipeButton),
+                position: 13
+            }, {
+                name: "Swipe",
+                target: "node-tool",
+                Component: connect(tocToolsSelector, { onSetActive: setActive })(({
+                    itemComponent,
+                    node,
+                    swipeLayerId,
+                    swipeSettings,
+                    onSetActive
+                }) => {
+                    const ItemComponent = itemComponent;
+                    const showConfiguration = () => {
+                        onSetActive(!swipeSettings.configuring, "configuring");
+                    };
+                    if (!swipeLayerId || swipeLayerId !== node?.id) {
+                        return null;
+                    }
+                    return (
+                        <ItemComponent
+                            glyph={swipeSettings?.mode === "swipe" ? 'transfer' : 'search'}
+                            active={swipeLayerId === node?.id}
+                            tooltipId={'toc.configureTool'}
+                            onClick={() => showConfiguration()}
+                        />
+                    );
+                }),
+                position: 13
+            }],
             Map: {
                 name: "Swipe",
                 Tool: MapSwipeSupport

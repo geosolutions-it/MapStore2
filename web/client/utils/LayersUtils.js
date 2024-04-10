@@ -22,10 +22,19 @@ import get from 'lodash/get';
 import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
+import { getLocale } from './LocaleUtils';
 
 let LayersUtils;
 
 let regGeoServerRule = /\/[\w- ]*geoserver[\w- ]*\//;
+
+export const NodeTypes = {
+    LAYER: 'layers',
+    GROUP: 'groups'
+};
+
+export const DEFAULT_GROUP_ID = 'Default';
+export const ROOT_GROUP_ID = 'root';
 
 const getGroup = (groupId, groups) => {
     return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
@@ -34,7 +43,7 @@ const getLayer = (layerName, allLayers) => {
     return head(allLayers.filter((layer) => layer.id === layerName));
 };
 const getLayersId = (groupId, allLayers) => {
-    return allLayers.filter((layer) => (layer.group || 'Default') === groupId).map((layer) => layer.id).reverse();
+    return allLayers.filter((layer) => (layer.group || DEFAULT_GROUP_ID) === groupId).map((layer) => layer.id).reverse();
 };
 /**
  * utility to check
@@ -187,7 +196,7 @@ export const displayTitle = (id, groups) => {
             }
         }
     }
-    return 'Default';
+    return DEFAULT_GROUP_ID;
 };
 /**
  * adds or update node property in a nested node
@@ -450,22 +459,22 @@ export const normalizeLayer = (layer) => {
 export const normalizeMap = (rawMap = {}) =>
     [
         (map) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
-        (map) => map.groups ? map : {...map, groups: {id: "Default", expanded: true}}
+        (map) => map.groups ? map : {...map, groups: {id: DEFAULT_GROUP_ID, expanded: true}}
         // this is basically a compose
     ].reduce((f, g) => (...args) => f(g(...args)))(rawMap);
 /**
  * @param gid
  * @return function that filter by group
  */
-export const belongsToGroup = (gid) => l => (l.group || "Default") === gid || (l.group || "").indexOf(`${gid}.`) === 0;
+export const belongsToGroup = (gid) => l => (l.group || DEFAULT_GROUP_ID) === gid || (l.group || "").indexOf(`${gid}.`) === 0;
 export const getLayersByGroup = (configLayers, configGroups) => {
     let i = 0;
     let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));
     let groupNames = mapLayers.reduce((groups, layer) => {
-        return groups.indexOf(layer.group || 'Default') === -1 ? groups.concat([layer.group || 'Default']) : groups;
+        return groups.indexOf(layer.group || DEFAULT_GROUP_ID) === -1 ? groups.concat([layer.group || DEFAULT_GROUP_ID]) : groups;
     }, []).filter((group) => group !== 'background').reverse();
     return groupNames.reduce((groups, names)=> {
-        let name = names || 'Default';
+        let name = names || DEFAULT_GROUP_ID;
         name.split('.').reduce((subGroups, groupName, idx, array)=> {
             const groupId = name.split(".", idx + 1).join('.');
             let group = getGroup(groupId, subGroups);
@@ -504,26 +513,46 @@ export const reorderFunc = (groups, allLayers) => {
     return allLayers.filter((layer) => layer.group === 'background')
         .concat(reorderLayers(groups, allLayers));
 };
+
+export const getInactiveNode = (groupId, groups, nodeId) => {
+    const groupIds = groupId
+        .split('.')
+        .reverse()
+        .map((val, idx, arr) => [val, ...arr.filter((v, jdx) => jdx > idx)].reverse().join('.'));
+    const inactive = !!groups
+        .find((group) => nodeId !== group?.id && groupIds.includes(group?.id) && group.visibility === false);
+    return inactive;
+};
+
+export const getDerivedLayersVisibility = (layers = [], groups = []) => {
+    const flattenGroups = flattenArrayOfObjects(groups).filter(isObject);
+    return layers.map((layer) => {
+        const inactive = getInactiveNode(layer?.group || DEFAULT_GROUP_ID, flattenGroups);
+        return inactive ? { ...layer, visibility: false } : layer;
+    });
+};
+
 export const denormalizeGroups = (allLayers, groups) => {
-    let getGroupVisibility = (nodes) => {
-        let visibility = true;
-        nodes.forEach((node) => {
-            if (!node.visibility) {
-                visibility = false;
-            }
-        });
-        return visibility;
-    };
+    const flattenGroups = flattenArrayOfObjects(groups).filter(isObject);
     let getNormalizedGroup = (group, layers) => {
         const nodes = group.nodes.map((node) => {
             if (isObject(node)) {
                 return getNormalizedGroup(node, layers);
             }
-            return layers.filter((layer) => layer.id === node)[0];
+            return layers.find((layer) => layer.id === node);
         });
-        return assign({}, group, {nodes, visibility: getGroupVisibility(nodes)});
+        return {
+            ...group,
+            nodes,
+            inactive: getInactiveNode(group?.id || '', flattenGroups, group?.id),
+            visibility: group?.visibility === undefined ? true : group.visibility
+        };
     };
-    let normalizedLayers = allLayers.map((layer) => assign({}, layer, {expanded: layer.expanded || false}));
+    let normalizedLayers = allLayers.map((layer) => ({
+        ...layer,
+        inactive: getInactiveNode(layer?.group || DEFAULT_GROUP_ID, flattenGroups),
+        expanded: layer.expanded || false
+    }));
     return {
         flat: normalizedLayers,
         groups: groups.map((group) => getNormalizedGroup(group, normalizedLayers))
@@ -551,16 +580,21 @@ export const splitMapAndLayers = (mapState) => {
         if (isArray(mapState.groups)) {
             groups = mapState.groups.reduce((g, group) => {
                 let newGroups = g;
+                let groupMetadata = {
+                    expanded: group.expanded,
+                    visibility: group.visibility,
+                    nodesMutuallyExclusive: group.nodesMutuallyExclusive
+                };
                 if (group.title) {
-                    const groupMetadata = {
+                    groupMetadata = {
+                        ...groupMetadata,
                         title: group.title,
                         description: group.description,
                         tooltipOptions: group.tooltipOptions,
                         tooltipPlacement: group.tooltipPlacement
                     };
-                    newGroups = LayersUtils.deepChange(newGroups, group.id, groupMetadata);
                 }
-                newGroups = LayersUtils.deepChange(newGroups, group.id, 'expanded', group.expanded);
+                newGroups = LayersUtils.deepChange(newGroups, group.id, groupMetadata);
                 return newGroups;
             }, [].concat(groups));
         }
@@ -602,7 +636,6 @@ export const geoJSONToLayer = (geoJSON, id) => {
     return {
         type: 'vector',
         visibility: true,
-        group: 'Local shape',
         id,
         name: geoJSON.fileName,
         hideLoading: true,
@@ -904,7 +937,222 @@ export const getLayerTypeGlyph = (layer) => {
     if (isAnnotationLayer(layer)) {
         return 'comment';
     }
-    return '';
+    return '1-layer';
+};
+
+/**
+Removes a group even if it is nested
+It works for layers too
+**/
+export const deepRemove = (nodes, findValue) => {
+    if (nodes && isArray(nodes) && nodes.length > 0) {
+        return nodes.filter((node) => (node.id && node.id !== findValue) || (isString(node) && node !== findValue )).map((node) => isObject(node) ? assign({}, node, node.nodes ? {
+            nodes: deepRemove(node.nodes, findValue)
+        } : {}) : node);
+    }
+    return nodes;
+};
+
+const updateGroupIds = (node, parentGroupId, newLayers) => {
+    if (node) {
+        if (isString(node.id)) {
+            const lastDot = node.id.lastIndexOf('.');
+            const newId = lastDot !== -1 ?
+                parentGroupId + node.id.slice(lastDot + (parentGroupId === '' ? 1 : 0)) :
+                parentGroupId + (parentGroupId === '' ? '' : '.') + node.id;
+            return assign({}, node, {id: newId, nodes: node.nodes.map(x => updateGroupIds(x, newId, newLayers))});
+        } else if (isString(node)) {
+            // if it's just a string it means it is a layer id
+            for (let layer of newLayers) {
+                if (layer.id === node) {
+                    layer.group = parentGroupId;
+                }
+            }
+            return node;
+        }
+    }
+    return node;
+};
+
+export const sortGroups = (
+    {
+        groups: _groups,
+        layers: _layers
+    },
+    {
+        node: _node,
+        index: _index,
+        groupId: _groupId
+    }
+) => {
+    const node = getNode(_groups || [], _node);
+    const layerNode = getNode(_layers, _node);
+    if (node && _index >= 0 && node.id !== ROOT_GROUP_ID && node.id !== DEFAULT_GROUP_ID && !(!!layerNode && _groupId === ROOT_GROUP_ID)) {
+        const groupId = _groupId || DEFAULT_GROUP_ID;
+        const curGroupId = layerNode ? (layerNode.group || DEFAULT_GROUP_ID) : (() => {
+            const groups = node.id.split('.');
+            return groups[groups.length - 2] || ROOT_GROUP_ID;
+        })();
+
+        if (groupId === curGroupId) {
+            const curGroupNode = curGroupId === ROOT_GROUP_ID ? {nodes: _groups} : getNode(_groups, curGroupId);
+            let nodes = (curGroupNode && curGroupNode.nodes || []).slice();
+            const nodeIndex = nodes.findIndex(x => (x.id || x) === (node.id || node));
+
+            if (nodeIndex !== -1 && nodeIndex !== _index) {
+                const swapCnt = Math.abs(_index - nodeIndex);
+                const delta = nodeIndex < _index ? 1 : -1;
+                let pos = nodeIndex;
+                for (let i = 0; i < swapCnt; ++i, pos += delta) {
+                    const tmp = nodes[pos];
+                    nodes[pos] = nodes[pos + delta];
+                    nodes[pos + delta] = tmp;
+                }
+
+                const newGroups = curGroupId === ROOT_GROUP_ID ? nodes : deepChange(_groups, _groupId, 'nodes', nodes);
+
+                return {
+                    layers: sortLayers(newGroups, _layers),
+                    groups: newGroups
+                };
+            }
+        }
+        const groupsWithRemovedNode = deepRemove(_groups, node.id || node);
+        const dstGroup = groupId === ROOT_GROUP_ID ? {nodes: groupsWithRemovedNode} : getNode(groupsWithRemovedNode, _groupId);
+        if (dstGroup) {
+            const newLayers = _layers.map(layer => ({ ...layer }));
+            const newNode = updateGroupIds(node, groupId === ROOT_GROUP_ID ? '' : groupId, newLayers);
+            let newDestNodes = dstGroup.nodes.slice();
+            newDestNodes.splice(_index, 0, newNode);
+            const newGroups = groupId === ROOT_GROUP_ID ?
+                newDestNodes :
+                deepChange(groupsWithRemovedNode.slice(), dstGroup.id, 'nodes', newDestNodes);
+
+            return {
+                layers: sortLayers(newGroups, newLayers),
+                groups: newGroups
+            };
+        }
+    }
+    return null;
+};
+
+export const moveNode = (groups, node, groupId, newLayers, foreground = true) => {
+    // Remove node from old group
+    let newGroups = deepRemove(groups, node);
+    // Check if group to move to exists
+    let group = getNode(newGroups, groupId);
+    if (!group) {
+        // Create missing group
+        group = head(getLayersByGroup([getNode(newLayers, node)]));
+        // check for parent group if exist
+        const parentGroup = groupId.split('.').reduce((tree, gName, idx) => {
+            const gId = groupId.split(".", idx + 1).join('.');
+            const parent = getNode(newGroups, gId);
+            return parent ? tree.concat(parent) : tree;
+        }, []).pop();
+        if (parentGroup) {
+            group = getNode([group], parentGroup.id).nodes[0];
+            newGroups = deepChange(newGroups, parentGroup.id, 'nodes', foreground ? [group].concat(parentGroup.nodes) : parentGroup.nodes.concat(group));
+        } else {
+            newGroups = [group].concat(newGroups);
+        }
+    } else {
+        newGroups = deepChange(newGroups, group.id, 'nodes', foreground ? [node].concat(group.nodes.slice(0)) : group.nodes.concat(node));
+    }
+    return newGroups;
+};
+
+export const changeNodeConfiguration = ({
+    layers: _layers,
+    groups: _groups
+}, {
+    node,
+    nodeType,
+    options
+}) => {
+    const selector = nodeType === 'groups' ? 'group' : 'id';
+    if (selector === 'group') {
+        const groups = _groups ? [].concat(_groups) : [];
+        // updating correctly options in a (deep) subgroup
+        const newGroups = deepChange(groups, node, options);
+        return { groups: newGroups };
+    }
+
+    const flatLayers = (_layers || []);
+
+    // const newGroups = action.options && action.options.group && action.options.group !== layer;
+    let sameGroup = options.hasOwnProperty("group") ? false : true;
+
+    const newLayers = flatLayers.map((layer) => {
+        if (layer[selector] === node || layer[selector].indexOf(node + '.') === 0) {
+            if (layer.group === (options.group || DEFAULT_GROUP_ID)) {
+                // If the layer didn't change group, raise a flag to prevent groups update
+                sameGroup = true;
+            }
+            // Edit the layer with the new options
+            return { ...layer, ...options };
+        }
+        return layer;
+    });
+    let originalNode = head(flatLayers.filter((layer) => { return (layer[selector] === node || layer[selector].indexOf(node + '.') === 0); }));
+    if (!sameGroup && originalNode ) {
+        // Remove layers from old group
+        const groupId = (options.group || DEFAULT_GROUP_ID);
+        const newGroups = moveNode(_groups, node, groupId, newLayers);
+
+        let orderedNewLayers = sortLayers ? sortLayers(newGroups, newLayers) : newLayers;
+        return {
+            layers: orderedNewLayers,
+            groups: newGroups
+        };
+    }
+    return { layers: newLayers };
+};
+
+export const getSelectedNodes = (selectedIds = [], id, ctrlKey) => {
+    if (!id) {
+        return [];
+    }
+    if (ctrlKey) {
+        return selectedIds.includes(id)
+            ? selectedIds.filter((selectedId) => selectedId !== id)
+            : [...selectedIds, id];
+    }
+    return selectedIds.includes(id)
+        ? []
+        : [id];
+};
+
+
+/**
+ * Returns a parsed title
+ * @param {string/object} title title of the group
+ * @param {string} locale
+ */
+export const getTitle = (title, locale = '') => {
+    let _title = title || '';
+    if (isObject(title)) {
+        const _locale = locale || getLocale();
+        _title = title[_locale] || title.default;
+    }
+    return _title.replace(/\./g, '/').replace(/\${dot}/g, '.');
+};
+/**
+ * flatten groups and subgroups in a single array
+ * @param {object[]} groups node to get the groups and subgroups
+ * @param {number} idx
+ * @params {boolean} wholeGroup, if true it returns the whole node
+ * @return {object[]} array of nodes (groups and subgroups)
+*/
+export const flattenGroups = (groups, idx = 0, wholeGroup = false) => {
+    return groups.filter((group) => group.nodes).reduce((acc, g) => {
+        acc.push(wholeGroup ? g : {label: g.title, value: g.id});
+        if (g.nodes.length > 0) {
+            return acc.concat(flattenGroups(g.nodes, idx + 1, wholeGroup));
+        }
+        return acc;
+    }, []);
 };
 
 LayersUtils = {

@@ -20,9 +20,9 @@ import { compose } from 'recompose';
 import {setControlProperty} from '../actions/controls';
 
 import {mapLayoutValuesSelector} from '../selectors/maplayout';
-import {widgetBuilderSelector} from '../selectors/controls';
+import {widgetBuilderSelector, widgetBuilderAvailable} from '../selectors/controls';
 import { dependenciesSelector, availableDependenciesForEditingWidgetSelector} from '../selectors/widgets';
-import { toggleConnection } from '../actions/widgets';
+import { toggleConnection, createWidget } from '../actions/widgets';
 import withMapExitButton from './widgetbuilder/enhancers/withMapExitButton';
 import WidgetTypeBuilder from './widgetbuilder/WidgetTypeBuilder';
 import FeatureEditorButton from './widgetbuilder/FeatureEditorButton';
@@ -116,6 +116,31 @@ const Plugin = connect(
 
 )(SideBarComponent);
 
+const WidgetsBuilderButton = connect((state) => ({ available: widgetBuilderAvailable(state) }), {
+    onClick: createWidget
+})(({
+    onClick,
+    selectedNodes,
+    status,
+    itemComponent,
+    statusTypes,
+    available,
+    ...props
+}) => {
+    const ItemComponent = itemComponent;
+    const layer = selectedNodes?.[0]?.node;
+    if (available && [statusTypes.LAYER].includes(status) && layer?.search && layer.search !== 'vector' && !layer?.error) {
+        return (
+            <ItemComponent
+                {...props}
+                glyph="stats"
+                tooltipId={'toc.createWidget'}
+                onClick={() => onClick()}
+            />
+        );
+    }
+    return null;
+});
 
 export default createPlugin('WidgetsBuilder', {
     component: Plugin,
@@ -123,7 +148,10 @@ export default createPlugin('WidgetsBuilder', {
     containers: {
         TOC: {
             doNotHide: true,
-            name: "WidgetBuilder"
+            name: "WidgetBuilder",
+            target: 'toolbar',
+            Component: WidgetsBuilderButton,
+            position: 10
         },
         FeatureEditor: {
             doNotHide: true,

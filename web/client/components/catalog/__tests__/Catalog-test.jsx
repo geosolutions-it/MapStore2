@@ -182,4 +182,46 @@ describe('Test Catalog panel', () => {
         expect(spyOnSearch.calls[0].arguments[0]).toEqual({ format: 'csw', url: 'url', startPosition: 1, maxRecords: 4, text: '', options: {service: SERVICE} });
         expect(catalogPagination.length).toBe(1); // Pagination is displayed
     });
+    it('test manage service with permission', () => {
+        const SERVICE = {
+            type: "csw",
+            url: "url",
+            title: "csw"
+        };
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            canEdit
+            selectedService="csw"
+            isNewServiceAdded={false}
+            result={{numberOfRecordsMatched: 4, numberOfRecordsReturned: 10}}
+            searchOptions={{startPosition: 1}}
+        />, document.getElementById("container"));
+        const container = document.getElementById("container");
+        expect(container).toBeTruthy();
+        let editEl = document.querySelector('.glyphicon-pencil');
+        let addEl = document.querySelector('.glyphicon-plus');
+        expect(editEl).toBeTruthy();
+        expect(addEl).toBeTruthy();
+    });
+    it('test manage service with no permission', () => {
+        const SERVICE = {
+            type: "csw",
+            url: "url",
+            title: "csw"
+        };
+        ReactDOM.render(<Catalog
+            services={{ "csw": SERVICE}}
+            canEdit={false}
+            selectedService="csw"
+            isNewServiceAdded={false}
+            result={{numberOfRecordsMatched: 4, numberOfRecordsReturned: 10}}
+            searchOptions={{startPosition: 1}}
+        />, document.getElementById("container"));
+        const container = document.getElementById("container");
+        expect(container).toBeTruthy();
+        let editEl = document.querySelector('.glyphicon-pencil');
+        let addEl = document.querySelector('.glyphicon-plus');
+        expect(editEl).toBeFalsy();
+        expect(addEl).toBeFalsy();
+    });
 });

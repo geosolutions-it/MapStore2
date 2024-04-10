@@ -16,9 +16,10 @@ import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
 import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG, getExtentFromNormalized } from '../utils/CoordinatesUtils';
 import WMS from "../api/WMS";
 import { THREE_D_TILES, getCapabilities } from './ThreeDTiles';
+import { getDefaultUrl } from '../utils/URLUtils';
 
-const parseUrl = (url) => {
-    const parsed = urlUtil.parse(url, true);
+export const parseUrl = (url) => {
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, { search: null }, {
         query: assign({
             service: "CSW",
@@ -44,6 +45,13 @@ const defaultDynamicFilter = "<ogc:PropertyIsLike wildCard='%' singleChar='_' es
     "<ogc:Literal>%${searchText}%</ogc:Literal> " +
     "</ogc:PropertyIsLike> ";
 
+export const sortBy = "<ogc:SortBy>" +
+"<ogc:SortProperty>" +
+  "<ogc:PropertyName>${name}</ogc:PropertyName>" +
+  "<ogc:SortOrder>${order}</ogc:SortOrder>" +
+"</ogc:SortProperty>" +
+"</ogc:SortBy>";
+
 export const cswGetRecordsXml = '<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" ' +
     'xmlns:ogc="http://www.opengis.net/ogc" ' +
     'xmlns:gml="http://www.opengis.net/gml" ' +
@@ -60,6 +68,7 @@ export const cswGetRecordsXml = '<csw:GetRecords xmlns:csw="http://www.opengis.n
     '${filterXml} ' +
     '</ogc:Filter> ' +
     '</csw:Constraint> ' +
+    '${sortBy} ' +
     '</csw:Query> ' +
     '</csw:GetRecords>';
 
@@ -74,13 +83,15 @@ export const cswGetRecordsXml = '<csw:GetRecords xmlns:csw="http://www.opengis.n
  * @param {object} filter.dynamicFilter filter when search text is present and is applied in conjunction with static filter
  * @return {string} constructed xml string
  */
-export const constructXMLBody = (startPosition, maxRecords, searchText, { filter } = {}) => {
+export const constructXMLBody = (startPosition, maxRecords, searchText, { options: { service } = {} } = {}) => {
+    const { filter, sortBy: sortObj } = service ?? {};
     const staticFilter = filter?.staticFilter || defaultStaticFilter;
     const dynamicFilter = `<ogc:And>
         ${template(filter?.dynamicFilter || defaultDynamicFilter)({ searchText })}
         ${staticFilter}
     </ogc:And>`;
-    return template(cswGetRecordsXml)({ filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords });
+    const sortExp = sortObj?.name ? template(sortBy)({ name: sortObj?.name, order: sortObj?.order ?? "ASC"}) : '';
+    return template(cswGetRecordsXml)({ filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords, sortBy: sortExp});
 };
 
 // Extract the relevant information from the wms URL for (RNDT / INSPIRE)
@@ -160,9 +171,9 @@ export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
         const refs = castArray(dc.references);
         const wms = head(refs.filter((ref) => { return ref.scheme && REGEX_WMS_EXPLICIT.some(regex => ref.scheme.match(regex)); }));
         if (wms) {
-            let urlObj = urlUtil.parse(wms.value, true);
+            let urlObj = urlUtil.parse(getDefaultUrl(wms.value), true);
             let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
-            return toReference('wms', { ...wms, name: layerName }, options);
+            return toReference('wms', { ...wms, value: urlUtil.format(urlObj), name: layerName }, options);
         }
         if (checkEsri) {
             // checks for esri arcgis in geonode csw

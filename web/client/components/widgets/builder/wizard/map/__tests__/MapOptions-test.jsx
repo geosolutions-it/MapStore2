@@ -29,12 +29,12 @@ describe('MapOptions component', () => {
     it('MapOptions rendering with defaults', () => {
         ReactDOM.render(<MapOptions />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.mapstore-step-title')).toExist();
+        expect(container.querySelector('.mapstore-step-title')).toBeTruthy();
         // renders the TOC
-        expect(container.querySelector('#mapstore-layers')).toNotExist();
-        expect(container.querySelector('.empty-state-container')).toExist();
+        expect(container.querySelector('.ms-layers-tree')).toBeFalsy();
+        expect(container.querySelector('.empty-state-container')).toBeTruthy();
         // not the Editor
-        expect(container.querySelector('.ms-row-tab')).toNotExist();
+        expect(container.querySelector('.ms-row-tab')).toBeFalsy();
     });
     it('MapOptions rendering layers', () => {
         ReactDOM.render(<MapOptions
@@ -43,12 +43,12 @@ describe('MapOptions component', () => {
             layers={[{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }]}
         />, document.getElementById("container"));
         const container = document.getElementById('container');
-        expect(container.querySelector('.mapstore-step-title')).toExist();
+        expect(container.querySelector('.mapstore-step-title')).toBeTruthy();
         // renders the TOC
-        expect(container.querySelector('#mapstore-layers')).toExist();
-        expect(container.querySelector('.empty-state-container')).toNotExist();
+        expect(container.querySelector('.ms-layers-tree')).toBeTruthy();
+        expect(container.querySelector('.empty-state-container')).toBeFalsy();
         // not the Editor
-        expect(container.querySelector('.ms-row-tab')).toNotExist();
+        expect(container.querySelector('.ms-row-tab')).toBeFalsy();
     });
     it('MapOptions rendering node editor', () => {
         ReactDOM.render(<MapOptions
@@ -58,8 +58,8 @@ describe('MapOptions component', () => {
             editNode={"LAYER"} />, document.getElementById("container"));
         const container = document.getElementById('container');
         // renders the editor
-        expect(container.querySelector('.ms-row-tab')).toExist();
+        expect(container.querySelector('.ms-row-tab')).toBeTruthy();
         // not the TOC
-        expect(container.querySelector('#mapstore-layers')).toNotExist();
+        expect(container.querySelector('.ms-layers-tree')).toBeFalsy();
     });
 });

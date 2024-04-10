@@ -10,6 +10,7 @@ import React from 'react';
 
 import ReactDOM from 'react-dom';
 import expect from 'expect';
+import TestUtils from "react-dom/test-utils";
 import AttributesEditor from '../AttributesEditor.jsx';
 const constraints = {
     attributes: {
@@ -50,6 +51,54 @@ describe('Attributes Editor component', () => {
         const rows = container.querySelectorAll('.row');
         expect(rows).toExist();
         expect(rows.length).toBe(3);
+    });
+    it('render attributes on setOption', (done) => {
+        TestUtils.act(() => {
+            ReactDOM.render(<AttributesEditor
+                setOption={(value) => {
+                    try {
+                        expect(value.key).toBe('attributes');
+                        expect(value.value).toEqual({"attribute": [{"name": "the_geom", "access": "READONLY"}, {"access": "READONLY", "name": "cat"}]});
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+                attributes={attributes} active
+                constraints={constraints}
+            />, document.getElementById("container"));
+        });
+        const container = document.getElementById('container');
+        const rows = container.querySelectorAll('.row');
+        expect(rows).toBeTruthy();
+    });
+    it('render attributes on change value', (done) => {
+        TestUtils.act(() => {
+            ReactDOM.render(<AttributesEditor
+                setOption={(value) => {
+                    try {
+                        const isModified = value.value?.attribute?.some(attr => attr.access === 'READWRITE');
+                        if (isModified) {
+                            expect(value.key).toBe('attributes');
+                            expect(value.value).toEqual({"attribute": [{"name": "cat", "access": "READWRITE"}]});
+                        }
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }}
+                attributes={attributes} active
+                constraints={constraints}
+            />, document.getElementById("container"));
+        });
+        const container = document.getElementById('container');
+        const rows = container.querySelectorAll('.row');
+        expect(rows).toBeTruthy();
+        const rule = document.querySelectorAll('.Select-control')[1];
+        expect(rule).toBeTruthy();
+        TestUtils.Simulate.mouseDown(rule, { button: 0 });
+        TestUtils.Simulate.keyDown(rule, { keyCode: 40, key: 'ArrowDown' });
+        TestUtils.Simulate.keyDown(rule, { key: 'Enter', keyCode: 13 });
     });
     it('render attributes with highlighted DD', () => {
         ReactDOM.render(<AttributesEditor editedAttributes={["cat"]} attributes={attributes} active constraints={constraints} />, document.getElementById("container"));

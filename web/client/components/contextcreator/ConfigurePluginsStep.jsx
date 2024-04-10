@@ -292,7 +292,8 @@ const configurePluginsStep = ({
     setSelectedTemplates,
     setParsedTemplate,
     setFileDropStatus,
-    messages = {}
+    messages = {},
+    hideUploadExtension
 }) => {
     const uploadErrors = {
         [ERROR.WRONG_FORMAT]: "contextCreator.configurePlugins.uploadWrongFileFormatError",
@@ -348,7 +349,7 @@ const configurePluginsStep = ({
                         title: 'contextCreator.configurePlugins.searchResultsEmpty'
                     },
                     onFilter: onFilterAvailablePlugins,
-                    tools: [{
+                    tools: hideUploadExtension ? [] : [{
                         id: "upload", glyph: "upload", onClick: () => onEnableUpload(true), tooltipId: 'contextCreator.configurePlugins.tooltips.uploadPlugin'
                     }]
                 }}

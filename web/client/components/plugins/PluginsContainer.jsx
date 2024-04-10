@@ -146,7 +146,7 @@ class PluginsContainer extends React.Component {
             return (
                 <Component id={this.props.id} className={this.props.className} style={this.props.style} component={this.props.component} {...containerProps}>
                     {
-                        this.renderPlugins(bodyPlugins)
+                        this.renderPlugins(bodyPlugins || [])
                     }
                 </Component>
             );

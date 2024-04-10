@@ -42,7 +42,9 @@ const mapTestState = {
     map: {
         present: {
             info: {
-                details: encodeURIComponent(detailsUri)
+                attributes: {
+                    details: encodeURIComponent(detailsUri)
+                }
             }
         }
     },

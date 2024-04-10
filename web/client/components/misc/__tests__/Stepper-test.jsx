@@ -31,11 +31,10 @@ describe('Stepper component', () => {
 
         ReactDOM.render(<Stepper steps={steps} currentStepId="test"/>, document.getElementById("container"));
         const container = document.getElementById("container");
-        const stepper = container.getElementsByClassName('ms2-stepper')[0];
-        expect(stepper).toExist();
-        const footerStepBar = container.getElementsByClassName('footer-step-bar')[0];
-        expect(footerStepBar).toExist();
-        expect(footerStepBar.childElementCount).toBe(1);
+        const stepper = container.querySelector('.ms-stepper-container');
+        expect(stepper).toBeTruthy();
+        const footerStepBar = container.querySelector('.footer-step-bar');
+        expect(footerStepBar).toBeFalsy();
     });
 
     it('Stepper clickable on edit', (done) => {

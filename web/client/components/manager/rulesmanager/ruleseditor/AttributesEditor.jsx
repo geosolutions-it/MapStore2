@@ -6,9 +6,10 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-import { castArray } from 'lodash';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Grid, Row } from 'react-bootstrap';
+import castArray from 'lodash/castArray';
+import isEmpty from 'lodash/isEmpty';
 
 import Message from '../../../I18N/Message';
 import Select from '../AttributeAccessSelect';
@@ -22,12 +23,22 @@ const getAttributeValue = (name, constraints) => {
 
 export default ({attributes = [], constraints = {}, setOption = () => {}, active = false, setEditedAttributes = () => {}, editedAttributes = []}) => {
     const onChange = (at) => {
-        const {attributes: attrs} = constraints;
-        const attribute = ((attrs && attrs?.attribute?.length) ? attrs.attribute : (attrs?.attribute) ? [attrs.attribute] : [] || []).filter(e => e.name !== at.name).concat(at);
+        let {attributes: {attribute = []} = {}} = constraints ?? {};
+        attribute = castArray(attribute).map(attr => at.name === attr.name ? at : attr);
         setOption({key: "attributes", value: {attribute}});
         // add it to edited attribute
         if (!editedAttributes.includes(at.name)) setEditedAttributes(at.name);
     };
+    useEffect(() => {
+        if (!isEmpty(attributes)) {
+            const _constraints = attributes.map(attr => ({name: attr.name, access: "READONLY"}));
+            const {attributes: {attribute = []} = {}} = constraints ?? {};
+            const modifiedAttribute = _constraints.map(attr => {
+                return castArray(attribute).find(a=> a.name === attr.name) ?? attr;
+            });
+            setOption({key: "attributes", value: {attribute: modifiedAttribute}});
+        }
+    }, [attributes]);
     return (
         <Grid className="ms-rule-editor" fluid style={{ width: '100%', display: active ? 'block' : 'none'}}>
             <Row>

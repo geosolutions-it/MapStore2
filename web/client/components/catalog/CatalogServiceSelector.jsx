@@ -15,8 +15,9 @@ export default ({
     selectedService,
     onChangeSelectedService = () => {},
     onChangeCatalogMode = () => {},
-    isValidServiceSelected
-}) => (<InputGroup>
+    isValidServiceSelected,
+    canEdit
+}) => (<InputGroup style={{ width: '100%' }}>
     <Select
         clearValueText={"catalog.clearValueText"}
         noResultsText={"catalog.noResultsText"}
@@ -25,12 +26,12 @@ export default ({
         value={selectedService}
         onChange={(val) => onChangeSelectedService(val && val.value ? val.value : "")}
         placeholder={"catalog.servicePlaceholder"} />
-    {isValidServiceSelected ? (<InputGroup.Addon className="btn"
+    {canEdit && isValidServiceSelected ? (<InputGroup.Addon className="btn"
         onClick={() => onChangeCatalogMode("edit", false)}>
         <Glyphicon glyph="pencil"/>
     </InputGroup.Addon>) : null}
-    <InputGroup.Addon className="btn" onClick={() => onChangeCatalogMode("edit", true)}>
+    {canEdit && <InputGroup.Addon className="btn" onClick={() => onChangeCatalogMode("edit", true)}>
         <Glyphicon glyph="plus"/>
-    </InputGroup.Addon>
+    </InputGroup.Addon>}
 </InputGroup>
 );

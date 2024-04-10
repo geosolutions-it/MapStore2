@@ -384,11 +384,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Mostrar temas",
-            "showLegend": "Mostrar legenda",
-            "hideLegend": "Ocultar legenda"
-        },
         "toc": {
             "toggleLayerVisibility": "Activar visibilidade do tema",
             "displayLegendAndTools": "Visualizar legenda",

@@ -493,11 +493,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Ukázať vrstvy",
-            "showLegend": "Ukázať legendu",
-            "hideLegend": "Schovať legendu"
-        },
         "addgroup": {
             "addbtn": "Pridať",
             "groupName": "Meno skupiny"

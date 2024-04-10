@@ -350,21 +350,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: 'custom-description',
                         tooltipOptions: 'both',
-                        tooltipPlacement: 'right'
+                        tooltipPlacement: 'right',
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     layers: applyLayerDefaults([{
                         thumbURL: "THUMB_URL",
@@ -546,21 +552,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     layers: applyLayerDefaults([{
                         thumbURL: "THUMB_URL",
@@ -712,21 +724,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     layers: applyLayerDefaults([{
                         thumbURL: "THUMB_URL",
@@ -862,21 +880,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     layers: applyLayerDefaults([{
                         id: "layer001",
@@ -1041,21 +1065,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     text_search_config: '', bookmark_search_config: {} }
             });
@@ -1119,21 +1149,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     layers: applyLayerDefaults([{
                         id: "layer001",
@@ -1238,21 +1274,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     layers: applyLayerDefaults([{
                         id: "layer001",
@@ -1380,21 +1422,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     layers: applyLayerDefaults([{
                         thumbURL: "THUMB_URL",
@@ -1622,21 +1670,27 @@ describe('Test the MapUtils', () => {
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom',
                         title: 'custom',
                         expanded: false,
                         description: 'custom-description',
                         tooltipOptions: 'both',
-                        tooltipPlacement: 'right'
+                        tooltipPlacement: 'right',
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }, {
                         id: 'custom.nested001',
                         title: 'nested001',
                         expanded: true,
                         description: undefined,
                         tooltipOptions: undefined,
-                        tooltipPlacement: undefined
+                        tooltipPlacement: undefined,
+                        visibility: undefined,
+                        nodesMutuallyExclusive: undefined
                     }],
                     layers: applyLayerDefaults([{
                         thumbURL: "THUMB_URL",

@@ -9,6 +9,7 @@ import expect from 'expect';
 import {
     isAnnotationLayer,
     isAnnotation,
+    isGeodesicMeasure,
     createAnnotationId,
     validateCoords,
     coordToArray,
@@ -24,8 +25,16 @@ import {
     applyDefaultCoordinates,
     getFeatureIcon
 } from '../AnnotationsUtils';
+import { annotationsTest, annotationsTestResult, annotationsTestFromGeoJson } from './resources';
+
+import { MeasureTypes } from '../../../../utils/MeasureUtils';
 
 describe('AnnotationsUtils', () => {
+    it('isGeodesicMeasure', () => {
+        expect(isGeodesicMeasure(MeasureTypes.LENGTH)).toBe(true);
+        expect(isGeodesicMeasure(MeasureTypes.AREA)).toBe(true);
+        expect(isGeodesicMeasure(MeasureTypes.BEARING)).toBe(false);
+    });
     it('isAnnotationLayer', () => {
         expect(isAnnotationLayer({ id: 'annotations:01', rowViewer: 'annotations', features: [], type: 'vector' })).toBe(true);
         expect(isAnnotationLayer({ id: '01', features: [], type: 'vector' })).toBe(false);
@@ -498,6 +507,9 @@ describe('AnnotationsUtils', () => {
             ]
         });
     });
+    it('annotationsToGeoJSON with length and area measures', () => {
+        expect(annotationsToGeoJSON(annotationsTest)).toEqual(annotationsTestResult);
+    });
     it('geoJSONToAnnotations', () => {
         const geoJSON = {
             type: 'FeatureCollection',
@@ -543,6 +555,9 @@ describe('AnnotationsUtils', () => {
             { id: 'annotations:1', visibility: true, rowViewer: 'annotations', title: 'Annotation01', description: undefined, type: 'vector', style: { format: 'geostyler', body: { name: '', rules: [{ name: '', filter: ['==', 'id', 'feature-01'], symbolizers: [{ kind: 'Icon' }] }] } }, features: [{ type: 'Feature', id: 'feature-01', geometry: { type: 'Point', coordinates: [0, 0] }, properties: { id: 'feature-01', annotationType: 'Point' } }] },
             { id: 'annotations:2', visibility: true, rowViewer: 'annotations', title: 'Annotation02', description: '<p>description</p>', type: 'vector', style: { format: 'geostyler', body: { name: '', rules: [{ name: '', filter: ['==', 'id', 'feature-02'], symbolizers: [{ kind: 'Icon' }] }] } }, features: [{ type: 'Feature', id: 'feature-02', geometry: { type: 'Point', coordinates: [0, 0] }, properties: { id: 'feature-02', annotationType: 'Point' } }] }
         ]);
+    });
+    it('geoJSONToAnnotations with geodesic measures in input', () => {
+        expect(geoJSONToAnnotations(annotationsTestResult)).toEqual(annotationsTestFromGeoJson);
     });
     it('importJSONToAnnotations invalid', () => {
         expect(importJSONToAnnotations({})).toEqual([]);

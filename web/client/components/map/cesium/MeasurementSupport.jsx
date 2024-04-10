@@ -51,6 +51,7 @@ function MeasurementSupport({
     onUpdateFeatures,
     onChangeUnitOfMeasure,
     tools = [
+        MeasureTypes.LENGTH,
         MeasureTypes.POLYLINE_DISTANCE_3D,
         MeasureTypes.AREA_3D,
         MeasureTypes.POINT_COORDINATES,
@@ -101,6 +102,10 @@ function MeasurementSupport({
                 unitsOfMeasure={unitsOfMeasure}
                 onUpdateCollection={(collection) => onUpdateFeatures(collection?.features || [])}
                 tooltipLabels={{
+                    [MeasureTypes.LENGTH]: {
+                        start: getMessageById(messages, 'measureComponent.tooltipPolylineDistance3DStart'),
+                        end: getMessageById(messages, 'measureComponent.tooltipPolylineDistance3DEnd')
+                    },
                     [MeasureTypes.POLYLINE_DISTANCE_3D]: {
                         start: getMessageById(messages, 'measureComponent.tooltipPolylineDistance3DStart'),
                         end: getMessageById(messages, 'measureComponent.tooltipPolylineDistance3DEnd')
@@ -124,6 +129,7 @@ function MeasurementSupport({
                     }
                 }}
                 infoLabelsFormat={{
+                    [MeasureTypes.LENGTH]: value => value,
                     [MeasureTypes.POLYLINE_DISTANCE_3D]: value => value,
                     [MeasureTypes.AREA_3D]: value => value,
                     [MeasureTypes.POINT_COORDINATES]: (value, { latitude, longitude } = {}) =>

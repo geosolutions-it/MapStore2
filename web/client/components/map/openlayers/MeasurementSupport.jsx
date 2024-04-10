@@ -839,6 +839,11 @@ export default class MeasurementSupport extends React.Component {
                 clonedNewFeature = set("geometry.coordinates", newCoords, clonedNewFeature);
             } else if (!this.props.measurement.disableLabels && this.props.measurement.areaMeasureEnabled) {
                 // the one before the last is a dummy
+                let oldCoords = clonedNewFeature.geometry.coordinates;
+                let newCoords = transformLineToArcs(oldCoords[0]);
+                clonedNewFeature = set("geometry.coordinates", [newCoords], clonedNewFeature);
+
+                // edit geom for drawing geodesic lines
                 this.textLabels.splice(this.segmentOverlays.length - 2, 1);
                 this.props.map.removeOverlay(this.segmentOverlays[this.segmentOverlays.length - 2]);
                 this.segmentOverlayElements[this.segmentOverlays.length - 2].parentNode.removeChild(

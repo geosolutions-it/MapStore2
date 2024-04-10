@@ -71,11 +71,12 @@ export function loadMapConfig(configName, mapId, config, mapInfo, overrideConfig
         overrideConfig
     };
 }
-export function mapInfoLoaded(info, mapId) {
+export function mapInfoLoaded(info, mapId, merge = false) {
     return {
         type: MAP_INFO_LOADED,
         mapId,
-        info
+        info,
+        merge
     };
 }
 export function mapInfoLoadError(mapId, error) {

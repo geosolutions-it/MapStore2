@@ -168,8 +168,8 @@ export const loadingSelector = state => get(state, "timeline.loading");
 export const selectedLayerSelector = state => get(state, "timeline.selectedLayer");
 
 export const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
-export const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
-export const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && head(selectedLayerData(state).dimensions.filter((x) => x.name === "time"));
+export const selectedLayerName = state => selectedLayerData(state)?.name;
+export const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state)?.dimensions && head(selectedLayerData(state).dimensions.filter((x) => x.name === "time"));
 export const selectedLayerUrl = state => get(selectedLayerTimeDimensionConfiguration(state), "source.url");
 
 export const currentTimeRangeSelector = createSelector(

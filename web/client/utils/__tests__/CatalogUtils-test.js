@@ -46,4 +46,13 @@ describe('Test the CatalogUtils', () => {
         expect(mergedURL3).toBe("https://a.example.com/wms,https://b.example.com/wms,https://c.example.com/wms");
         expect(mergedURL4).toBe("https://a.example.com/wms,https://b.example.com/wms");
     });
+    it("updateServiceData", () => {
+        let records = [{"url": "https://example.tif", sourceMetadata: {crs: "EPSG:3003"}}];
+        let options = {service: {type: CatalogUtils.COG_LAYER_TYPE, records: [{url: "https://example.tif"}]}};
+        expect(CatalogUtils.updateServiceData(options, {records})).toEqual({...options.service, records});
+
+        records = [{"url": "https://example.tif", sourceMetadata: {crs: "EPSG:3003"}}];
+        options = {service: {type: "wms", "autoload": true}};
+        expect(CatalogUtils.updateServiceData(options, {records})).toEqual(options.service);
+    });
 });

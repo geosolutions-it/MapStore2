@@ -26,17 +26,19 @@ describe('LegendWizard component', () => {
         ReactDOM.render(<LegendWizard />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
-        expect(container.querySelector('.empty-state-container')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.empty-state-container')).toBeTruthy();
     });
     it('LegendWizard rendering with layers', () => {
         const LAYERS = [{
+            id: 'layer:00',
             name: 'layer:00',
             title: 'Layer',
             visibility: true,
             type: 'wms'
         },
         {
+            id: 'layer:01',
             name: 'layer:01',
             title: 'Layer:01',
             visibility: false,
@@ -48,13 +50,13 @@ describe('LegendWizard component', () => {
         ReactDOM.render(<LegendWizard valid dependencies={dependencies} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
-        expect(el).toExist();
-        expect(container.querySelector('.legend-widget')).toExist();
+        expect(el).toBeTruthy();
+        expect(container.querySelector('.ms-layers-tree')).toBeTruthy();
     });
     it('LegendWizard rendering options', () => {
         ReactDOM.render(<LegendWizard step={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.widget-options-form');
-        expect(el).toExist();
+        expect(el).toBeTruthy();
     });
 });

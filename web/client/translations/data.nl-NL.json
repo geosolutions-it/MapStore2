@@ -545,11 +545,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Toon lagen",
-            "showLegend": "Toon legende",
-            "hideLegend": "Verberg legende"
-        },
         "addgroup": {
             "addbtn": "Toevoegen",
             "groupName": "Groepsnaam"

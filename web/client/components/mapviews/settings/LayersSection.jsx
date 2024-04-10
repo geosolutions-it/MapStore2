@@ -9,7 +9,7 @@
 import React from 'react';
 import { FormGroup, Checkbox } from 'react-bootstrap';
 import Section from './Section';
-import { getTitle } from '../../../utils/TOCUtils';
+import { getTitle } from '../../../utils/LayersUtils';
 import { mergeViewLayers } from '../../../utils/MapViewsUtils';
 import LayerOverridesNode from './LayerOverridesNode';
 import Message from '../../I18N/Message';

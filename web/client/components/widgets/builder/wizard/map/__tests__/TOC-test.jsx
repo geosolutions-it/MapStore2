@@ -29,26 +29,23 @@ describe('TOC component', () => {
     it('TOC rendering with layer', () => {
         ReactDOM.render(<TOC
             map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", name: "LAYER", group: "GGG", options: {} }] }}
-            nodes={[{ id: 'GGG', nodes: [{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }] }]}
-            layers={[{ id: "LAYER", group: "GGG", options: {} }]}/>, document.getElementById("container"));
+        />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.toc-title');
-        expect(el).toExist();
+        const el = container.querySelector('.ms-node-title');
+        expect(el).toBeTruthy();
     });
     it('Test TOC onChange', () => {
         const actions = {
             onChange: () => {}
         };
-        const spyonChange = expect.spyOn(actions, 'onChange');
+        const spyOnChange = expect.spyOn(actions, 'onChange');
         ReactDOM.render(<TOC map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", name: "LAYER", group: "GGG", options: {} }] }}
-            nodes={[{ id: 'GGG', nodes: [{ id: "LAYER", group: "GGG", name: "LAYER", options: {} }] }]}
-            layers={[{ id: "LAYER", group: "GGG", options: {} }]}
             onChange={actions.onChange} />, document.getElementById("container"));
 
         const container = document.getElementById('container');
-        const el = container.querySelector('.visibility-check');
-        expect(el).toExist();
+        const el = container.querySelector('.ms-visibility-check');
+        expect(el).toBeTruthy();
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
-        expect(spyonChange).toHaveBeenCalled();
+        expect(spyOnChange).toHaveBeenCalled();
     });
 });

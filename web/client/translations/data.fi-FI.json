@@ -397,11 +397,6 @@
         }
       }
     },
-    "floatinglegend": {
-      "showTOC": "Näytä tasot",
-      "showLegend": "Näytä selite",
-      "hideLegend": "Piilota selite"
-    },
     "addgroup": {
       "addbtn": "Lisää",
       "groupName": "Ryhmän nimi"

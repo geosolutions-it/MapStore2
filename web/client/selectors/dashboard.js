@@ -8,6 +8,7 @@
 import { createSelector } from 'reselect';
 import {get} from 'lodash';
 import { pathnameSelector } from './router';
+import { isUserAllowedSelectorCreator } from './security';
 
 export const getDashboardId = state => state?.dashboard?.resource?.id;
 export const isDashboardAvailable = state => state && state.dashboard && state.dashboard.editor && state.dashboard.editor.available;
@@ -29,6 +30,16 @@ export const dashboardCatalogModeSelector = state => state && state.dashboard &&
 export const dashboardIsNewServiceSelector = state => state.dashboard?.isNew || false;
 export const dashboardSaveServiceSelector =  state => state.dashboard?.saveServiceLoading || false;
 export const dashboardResourceInfoSelector = state => get(state, "dashboard.resource");
-export const dashbaordInfoDetailsUriFromIdSelector = state => state?.dashboard?.resource?.attributes?.details;
+export const dashboardInfoDetailsUriFromIdSelector = state => state?.dashboard?.resource?.attributes?.details;
 export const dashboardInfoDetailsSettingsFromIdSelector = state => get(dashboardResource(state), "attributes.detailsSettings");
+export const editingAllowedRolesSelector = state => get(state, "dashboard.servicesPermission.editingAllowedRoles", []);
+export const editingAllowedGroupsSelector = state => get(state, "dashboard.servicesPermission.editingAllowedGroups", []);
+export const canEditServiceSelector = state => {
+    const allowedRoles = editingAllowedRolesSelector(state);
+    const allowedGroups = editingAllowedGroupsSelector(state);
+    return isUserAllowedSelectorCreator({
+        allowedRoles,
+        allowedGroups
+    })(state);
+};
 

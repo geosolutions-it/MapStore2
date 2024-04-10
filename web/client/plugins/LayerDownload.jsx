@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -20,7 +20,7 @@ import {
     checkExportDataEntries
 } from '../actions/layerdownload';
 import { toggleControl } from '../actions/controls';
-
+import { download } from '../actions/layers';
 import {
     layerDonwloadControlEnabledSelector,
     downloadOptionsSelector,
@@ -51,6 +51,34 @@ import * as epics from '../epics/layerdownload';
 import layerdownload from '../reducers/layerdownload';
 import { createPlugin } from '../utils/PluginsUtils';
 
+const LayerDownloadButton = connect(() => ({}), {
+    onClick: download
+})(({
+    onClick,
+    selectedNodes,
+    status,
+    itemComponent,
+    statusTypes,
+    ...props
+}) => {
+    const ItemComponent = itemComponent;
+    const layer = selectedNodes?.[0]?.node;
+    if ([statusTypes.LAYER].includes(status) && (layer?.type === 'wms' || layer?.search) && !layer?.error) {
+        return (
+            <ItemComponent
+                {...props}
+                glyph="download"
+                tooltipId={'toc.toolDownloadTooltip'}
+                onClick={() => onClick({
+                    url: layer.search?.url || layer.url,
+                    name: layer.name,
+                    id: layer.id
+                })}
+            />
+        );
+    }
+    return null;
+});
 /**
  * Provides advanced data export functionalities using [WPS download process](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html) or using WFS service, if WPS download process is missing.
  * @memberof plugins
@@ -133,7 +161,10 @@ const LayerDownloadPlugin = createPlugin('LayerDownload', {
     containers: {
         TOC: {
             doNotHide: true,
-            name: "LayerDownload"
+            name: "LayerDownload",
+            target: 'toolbar',
+            Component: LayerDownloadButton,
+            position: 11
         },
         FeatureEditor: {
             doNotHide: true,

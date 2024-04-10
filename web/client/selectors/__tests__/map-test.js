@@ -45,7 +45,9 @@ describe('Test map selectors', () => {
             map: {
                 present: {
                     info: {
-                        details
+                        attributes: {
+                            details
+                        }
                     }
                 }
             }});
