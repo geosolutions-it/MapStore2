@@ -384,7 +384,8 @@ The COG service endpoint does not contain a default property for the name of the
 
 GET: `#/viewer/config?actions=[{"type":"CATALOG:ADD_LAYERS_FROM_CATALOGS","layers":["My huge remote satellite COG"],"sources":[{"type":"cog","url":"https://example.com/satellite_imagery.tif"}]}]`
 
-Depending on the internal structure optimization done on the remote COG file, the map load time might be long.
+!!! note
+    Depending on the internal structure optimization done on the remote COG source, the map load time might be long. Furthermore, it is not feasible to cancel metadata fetching for the COG layer(s) when loading layers via query parameters.
 
 The 3D tiles service endpoint does not contain a default property for the name of the layer and it returns only a single record for this reason the name used in the layers array will be used to apply the title to the added 3D Tiles layer:
 
