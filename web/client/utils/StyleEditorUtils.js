@@ -217,7 +217,6 @@ export const filterObjectToFilterArray = (filterObj) => {
     const startGroupField = filterObj?.groupFields?.find(({ groupId }) => !groupId);
     return startGroupField && loopFilterObjToFilterArray(filterObj, startGroupField);
 };
-
 const loopFilterArrayToFilterObject = (filterArr, { index = 0, groupId } = {}, callback = () => {}) => {
     if (!filterArr) {
         return null;
@@ -239,11 +238,23 @@ const loopFilterArrayToFilterObject = (filterArr, { index = 0, groupId } = {}, c
         callback('groupField', {
             id: newGroupId,
             index,
-            logic: mapOperators[operator]
+            logic: mapOperators[operator],
+            groupId
         });
+        // check if operands contain array or not, if contain ---> loop on them with the same group id
+        if (operands.length && isFirstArray) {
+            operands.forEach((op, idx)=> {
+                let isItemArr = isArray(op);
+                let isItemNotGroup = isItemArr && !['||', '&&'].includes(op[0]);
+                loopFilterArrayToFilterObject(isItemNotGroup ? [op] : op, {
+                    index: idx,
+                    groupId: newGroupId
+                }, callback);
+            });
+        }
         return loopFilterArrayToFilterObject(others, {
             index: index + 1,
-            groupId: newGroupId
+            groupId: isFirstArray ? groupId : newGroupId
         }, callback);
     }
     if (operator) {
