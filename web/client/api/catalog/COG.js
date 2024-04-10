@@ -34,6 +34,7 @@ const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
 let capabilitiesCache = {};
 export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => {
     const service = get(info, 'options.service');
+    const controller = get(info, 'options.controller');
     let layers = [];
     if (service.records) {
         // each record/url corresponds to a layer
@@ -46,7 +47,6 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
                 sources: record.sources ?? [{url}],
                 options: record.options ?? (service.options || {})
             };
-            const controller = get(info, 'options.controller');
             const isSave = get(info, 'options.save', false);
             const cached = capabilitiesCache[url];
             if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
@@ -68,6 +68,25 @@ export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => 
         });
     }
     return Promise.all([...layers]).then((_layers) => {
+        if (!_layers.length) {
+            let layer = {
+                ...service,
+                title: text,
+                identifier: _url,
+                type: COG_LAYER_TYPE,
+                sources: [{url: _url}],
+                options: service.options || {}
+            };
+            return LayerUtils.getLayerConfig({url: _url, layer, controller})
+                .then(lyr => {
+                    const records = [lyr];
+                    return {
+                        numberOfRecordsMatched: 1,
+                        numberOfRecordsReturned: 1,
+                        records
+                    };
+                }).catch(() => ({...layer}));
+        }
         return searchAndPaginate(_layers, startPosition, maxRecords, text);
     });
 };
