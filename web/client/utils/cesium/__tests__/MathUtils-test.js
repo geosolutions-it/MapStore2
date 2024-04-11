@@ -108,9 +108,9 @@ describe('Test MathUtils', () => {
         expect(
             cartesianToCartographicArray(
                 Cesium.Cartographic.toCartesian(Cesium.Cartographic.fromDegrees(9, 45, 10)),
-                true
+                11
             ).map(Math.round)
-        ).toEqual([9, 45, 0]);
+        ).toEqual([9, 45, 11]);
     });
     it('computeGeodesicCoordinates', () => {
         expect(

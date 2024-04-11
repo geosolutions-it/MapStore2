@@ -163,6 +163,7 @@ function MeasurementSupport({
                                     className="square-button-md"
                                     bsStyle={measureType === type ? 'success' : 'primary'}
                                     tooltipId={`measureComponent.${camelCase(type)}Measure`}
+                                    tooltipPosition="bottom"
                                     active={measureType === type}
                                     onClick={handleChangeGeometryType.bind(null, type)}
                                 >

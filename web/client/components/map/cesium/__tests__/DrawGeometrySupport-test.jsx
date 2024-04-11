@@ -107,7 +107,7 @@ describe('Cesium DrawGeometrySupport', () => {
                         geodesic
                         geometryType="Point"
                         getPositionInfo={() => {
-                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            const cartographic = new Cesium.Cartographic(10, 43, 11);
                             return {
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -120,7 +120,7 @@ describe('Cesium DrawGeometrySupport', () => {
                                 expect(feature).toBeTruthy();
                                 expect(feature.geometry.type).toBe('Point');
                                 expect(feature.geometry.coordinates.length).toBe(3);
-                                expect(Math.round(feature.geometry.coordinates[2])).toBe(0);
+                                expect(Math.round(feature.geometry.coordinates[2])).toBe(11);
                                 expect(!!feature.properties.geodesic).toBe(true);
                             } catch (e) {
                                 done(e);
@@ -199,7 +199,7 @@ describe('Cesium DrawGeometrySupport', () => {
                         geodesic
                         geometryType="LineString"
                         getPositionInfo={() => {
-                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            const cartographic = new Cesium.Cartographic(10, 43, 11);
                             return {
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -212,7 +212,7 @@ describe('Cesium DrawGeometrySupport', () => {
                                 expect(feature).toBeTruthy();
                                 expect(feature.geometry.type).toBe('LineString');
                                 expect(feature.geometry.coordinates.length).toBe(2);
-                                expect(Math.round(feature.geometry.coordinates[0][2])).toBe(0);
+                                expect(Math.round(feature.geometry.coordinates[0][2])).toBe(11);
                                 expect(!!feature.properties.geodesic).toBe(true);
                             } catch (e) {
                                 done(e);
@@ -340,7 +340,7 @@ describe('Cesium DrawGeometrySupport', () => {
                         geodesic
                         geometryType="Polygon"
                         getPositionInfo={() => {
-                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            const cartographic = new Cesium.Cartographic(10, 43, 11);
                             return {
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -353,7 +353,7 @@ describe('Cesium DrawGeometrySupport', () => {
                                 expect(feature).toBeTruthy();
                                 expect(feature.geometry.type).toBe('Polygon');
                                 expect(feature.geometry.coordinates[0].length).toBe(4);
-                                expect(Math.round(feature.geometry.coordinates[0][0][2])).toBe(0);
+                                expect(Math.round(feature.geometry.coordinates[0][0][2])).toBe(11);
                                 expect(!!feature.properties.geodesic).toBe(true);
                             } catch (e) {
                                 done(e);
@@ -435,7 +435,7 @@ describe('Cesium DrawGeometrySupport', () => {
                         active
                         geometryType="Circle"
                         getPositionInfo={() => {
-                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            const cartographic = new Cesium.Cartographic(10, 43, 11);
                             return {
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -448,7 +448,7 @@ describe('Cesium DrawGeometrySupport', () => {
                                 expect(feature).toBeTruthy();
                                 expect(feature.geometry.type).toBe('Point');
                                 expect(feature.geometry.coordinates.length).toBe(3);
-                                expect(Math.round(feature.geometry.coordinates[2])).toBe(10);
+                                expect(Math.round(feature.geometry.coordinates[2])).toBe(11);
                                 expect(isNumber(feature.properties.radius)).toBe(true);
                                 expect(!!feature.properties.geodesic).toBe(false);
                             } catch (e) {
@@ -484,7 +484,7 @@ describe('Cesium DrawGeometrySupport', () => {
                         geometryType="Circle"
                         geodesic
                         getPositionInfo={() => {
-                            const cartographic = new Cesium.Cartographic(10, 43, 10);
+                            const cartographic = new Cesium.Cartographic(10, 43, 11);
                             return {
                                 cartesian: Cesium.Cartographic.toCartesian(cartographic),
                                 cartographic
@@ -498,7 +498,7 @@ describe('Cesium DrawGeometrySupport', () => {
                                 expect(feature.geometry.type).toBe('Point');
                                 expect(feature.geometry.coordinates.length).toBe(3);
                                 expect(isNumber(feature.properties.radius)).toBe(true);
-                                expect(Math.round(feature.geometry.coordinates[2])).toBe(0);
+                                expect(Math.round(feature.geometry.coordinates[2])).toBe(11);
                                 expect(!!feature.properties.geodesic).toBe(true);
                             } catch (e) {
                                 done(e);
