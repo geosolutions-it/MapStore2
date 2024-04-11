@@ -160,12 +160,12 @@ export function computeHeightSign(cartesianArray) {
 /**
  * Return the direction of the height, 1 if the first value is greater than the second one, -1 the opposite
  * @param {object} cartesian a Cesium.Cartesian instance
- * @param {boolean} geodesic if true the height will be forced to 0
+ * @param {number} height the alternative fixed height value
  * @returns array as [longitude, latitude, height]
  */
-export function cartesianToCartographicArray(cartesian, geodesic) {
-    const { longitude, latitude, height } = Cesium.Cartographic.fromCartesian(cartesian);
-    return [ Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude), geodesic ? 0 : height ];
+export function cartesianToCartographicArray(cartesian, height) {
+    const { longitude, latitude, height: cartesianHeight } = Cesium.Cartographic.fromCartesian(cartesian);
+    return [ Cesium.Math.toDegrees(longitude), Cesium.Math.toDegrees(latitude), height ?? cartesianHeight ];
 }
 /**
  * Given an array of cartesian value returns a set of cartesian value at a specific height
