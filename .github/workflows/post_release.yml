@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check branch
-      if: ${{ github.repository != 'geosolutions-it/geostore' || github.ref == 'master' }}
+      if: ${{ github.ref == 'master' }}
       uses: actions/github-script@v3
       with:
         script: |
@@ -44,5 +44,11 @@ jobs:
         find . -name 'pom.xml' | xargs git add
         git add package.json
         git commit -m "Restore java packages to $SNAPSHOT_VERSION and update package.json"
-        git push origin ${{ github.ref_name }}
-        echo "Snapshots version restored"
+    - name: "Push to protected branch"
+      uses: CasperWA/push-protected@v2
+      with:
+        # This requires a special token to be able to trigger checks on new branch creation
+        # admin permissions are required to temporarily disable branch protection for reviews
+        token: ${{ secrets.PUSH_PROTECTED }}
+        ref: ${{ github.ref }}
+        unprotect_reviews: true
