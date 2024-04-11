@@ -14,6 +14,7 @@ import { createSelector } from 'reselect';
 import { updateOptionsByOwner } from '../../actions/additionallayers';
 import { getLayerCapabilities } from '../../actions/layerCapabilities';
 import { updateSettingsParams } from '../../actions/layers';
+import { resetLegendFilter } from '../../actions/layerFilter';
 import {
     addStyle,
     createStyle,
@@ -121,7 +122,8 @@ export const StyleList = compose(
             })
         ),
         {
-            onSelect: updateSettingsParams
+            onSelect: updateSettingsParams,
+            onResetLegendFilterStyle: resetLegendFilter
         }
     ),
     withState('filterText', 'onFilter', ''),

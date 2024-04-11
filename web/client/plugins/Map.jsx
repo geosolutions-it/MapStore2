@@ -342,7 +342,8 @@ class MapPlugin extends React.Component {
     renderLayerContent = (layer, projection) => {
         const plugins = this.state.plugins;
         if (layer.features) {
-            return layer.features.filter(createFeatureFilter(layer.filterObj)).map( (feature) => {
+            const layerHasLegendFilter = layer?.geoStylerFilter;        // it is for filtering vector layer, it is used for filtering features based on legend filter [geostyler array]
+            return layer.features.filter(createFeatureFilter(layer.filterObj, layerHasLegendFilter)).map((feature) => {
                 return (
                     <plugins.Feature
                         key={feature.id}

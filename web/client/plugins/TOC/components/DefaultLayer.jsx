@@ -71,7 +71,8 @@ const DefaultLayerNode = ({
     error,
     visibilityWarningMessageId,
     visibilityCheck,
-    nodeIcon
+    nodeIcon,
+    onLayerFilterByLegend = () => {}
 }) => {
 
     const getContent = () => {
@@ -91,6 +92,8 @@ const DefaultLayerNode = ({
                         <li>
                             <VectorLegend
                                 style={node?.style}
+                                onLayerFilterByLegend={onLayerFilterByLegend}
+                                layer={node}
                             />
                         </li>
                     </>
@@ -107,6 +110,7 @@ const DefaultLayerNode = ({
                             scales={config?.scales}
                             language={config?.language}
                             {...config?.layerOptions?.legendOptions}
+                            onLayerFilterByLegend={onLayerFilterByLegend}
                         />
                     </li>
                 </>
@@ -239,7 +243,8 @@ const DefaultLayer = ({
     nodeToolItems = [],
     nodeItems = [],
     nodeTypes,
-    theme
+    theme,
+    onLayerFilterByLegend = () => {}
 }) => {
 
     const replacedNode = replaceNodeOptions(nodeProp, nodeType);
@@ -300,7 +305,8 @@ const DefaultLayer = ({
                 handleOnChange({ visibility });
             }}
         />),
-        nodeIcon: <Glyphicon className="ms-node-icon" glyph={icon} />
+        nodeIcon: <Glyphicon className="ms-node-icon" glyph={icon} />,
+        onLayerFilterByLegend: onLayerFilterByLegend
     };
     const style = getNodeStyle(node, nodeType);
     const className = getNodeClassName(node, nodeType);

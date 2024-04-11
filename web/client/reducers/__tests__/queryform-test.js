@@ -633,6 +633,50 @@ describe('Test the queryform reducer', () => {
         expect(state.spatialField.attribute).toEqual("GEOMETRY");
     });
 
+    it('Query Form Reset and keeping legend filter is exist', () => {
+        let testAction = {
+            type: "QUERY_FORM_RESET"
+        };
+
+        const initialState = {
+            test: true,
+            spatialField: {
+                attribute: "GEOMETRY"
+            },
+            filters: [
+                {
+                    format: "logic",
+                    logic: "AND",
+                    filters: [{
+                        format: 'cql',
+                        body: 'ATTRIBUTE1 = \'VALUE1\''
+                    }]
+                },
+                {
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "format": "cql",
+                            "version": "1.0.0",
+                            "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
+                            "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
+                        }
+                    ]
+                }
+            ]
+        };
+
+        let state = queryform(initialState, testAction);
+        expect(state).toBeTruthy();
+
+        expect(state.test).toEqual(true);
+        expect(state.spatialField.attribute).toEqual("GEOMETRY");
+        expect(state.filters.length).toEqual(1);
+    });
+
     it('Show Generated Filter', () => {
         let testAction = {
             type: "SHOW_GENERATED_FILTER",

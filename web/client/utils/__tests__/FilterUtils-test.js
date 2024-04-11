@@ -29,7 +29,8 @@ import {
     mergeFiltersToOGC,
     convertFiltersToOGC,
     convertFiltersToCQL,
-    isFilterEmpty
+    isFilterEmpty,
+    createFeatureFilter
 } from '../FilterUtils';
 
 
@@ -2310,11 +2311,113 @@ describe('FilterUtils', () => {
             filters: [{format: 'logic', logic: 'AND', filters: []}]
         })).toBe(false);
         expect(isFilterEmpty({
+            filterFields: [],
+            spatialField: {},
+            crossLayerFilter: {},
+            filters: [
+                {
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "AND",
+                    "filters": [
+                        {
+                            "format": "cql",
+                            "version": "1.0.0",
+                            "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
+                            "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
+                        }
+                    ]
+                }
+            ]
+        })).toBe(true);
+        expect(isFilterEmpty({
             filterFields: [{operator: "isNull"}],
             spatialField: {},
             crossLayerFilter: {},
             filters: []
         })).toBe(false);
 
+    });
+    it('test createFeatureFilter without geostylerFilter', () => {
+        let filterObj = {
+            filterFields: [{
+                groupId: 1,
+                attribute: "attribute1",
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "string",
+                value: "value1"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            spatialField: []
+        };
+        const features = [{
+            type: "Feature",
+            geometry: {},
+            properties: {
+                "attribute1": "value1"
+            }
+        }, {
+            type: "Feature",
+            geometry: {},
+            properties: {
+                "attribute1": "value2"
+            }
+        }];
+        let filteredFeatures = features.filter(createFeatureFilter(filterObj));
+        expect(filteredFeatures).toBeTruthy();
+        expect(filteredFeatures.length).toEqual(1);
+    });
+    it('test createFeatureFilter with geostylerFilter', () => {
+        let filterObj = {
+            filterFields: [{
+                groupId: 1,
+                attribute: "attribute1",
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "string",
+                value: "value1"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }],
+            spatialField: []
+        };
+        const features = [{
+            type: "Feature",
+            geometry: {},
+            properties: {
+                "attribute1": "value1"
+            }
+        },
+        {
+            type: "Feature",
+            geometry: {},
+            properties: {
+                "attribute1": "value1"
+            }
+        }, {
+            type: "Feature",
+            geometry: {},
+            properties: {
+                "attribute1": "value2"
+            }
+        }];
+        const layerHasGeostylerFilter = [
+            '||',
+            ["==", "attribute1", "value1"]
+        ];
+        let filteredFeatures = features.filter(createFeatureFilter(filterObj, layerHasGeostylerFilter));
+        expect(filteredFeatures).toBeTruthy();
+        expect(filteredFeatures.length).toEqual(2);
     });
 });

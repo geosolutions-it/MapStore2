@@ -47,7 +47,7 @@ describe('VectorLegend module component', () => {
             }
         };
         ReactDOM.render(<VectorLegend style={style} />, document.getElementById('container'));
-        const ruleElements = document.querySelectorAll('.ms-vector-legend-rule');
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some Line');
@@ -80,7 +80,7 @@ describe('VectorLegend module component', () => {
             }
         };
         ReactDOM.render(<VectorLegend style={style} />, document.getElementById('container'));
-        const ruleElements = document.querySelectorAll('.ms-vector-legend-rule');
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some Line');
@@ -113,7 +113,7 @@ describe('VectorLegend module component', () => {
             }
         };
         ReactDOM.render(<VectorLegend style={style} />, document.getElementById('container'));
-        const ruleElements = document.querySelectorAll('.ms-vector-legend-rule');
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some Line');
@@ -148,7 +148,7 @@ describe('VectorLegend module component', () => {
             }
         };
         ReactDOM.render(<VectorLegend style={style} />, document.getElementById('container'));
-        const ruleElements = document.querySelectorAll('.ms-vector-legend-rule');
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some polygon');
@@ -186,7 +186,7 @@ describe('VectorLegend module component', () => {
             }
         };
         ReactDOM.render(<VectorLegend style={style} />, document.getElementById('container'));
-        const ruleElements = document.querySelectorAll('.ms-vector-legend-rule');
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('Some mark');
@@ -220,7 +220,7 @@ describe('VectorLegend module component', () => {
             }
         };
         ReactDOM.render(<VectorLegend style={style} />, document.getElementById('container'));
-        const ruleElements = document.querySelectorAll('.ms-vector-legend-rule');
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(1);
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].getAttribute('class')).toBe('glyphicon glyphicon-point');
@@ -283,7 +283,7 @@ describe('VectorLegend module component', () => {
             }
         };
         ReactDOM.render(<VectorLegend style={style} />, document.getElementById('container'));
-        const ruleElements = document.querySelectorAll('.ms-vector-legend-rule');
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         expect(ruleElements.length).toBe(3);
     });
 
@@ -310,8 +310,259 @@ describe('VectorLegend module component', () => {
             }
         };
         ReactDOM.render(<VectorLegend style={style} />, document.getElementById('container'));
-        const ruleElements = document.querySelectorAll('.ms-vector-legend-rule');
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule');
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('');
+    });
+
+    it('Should render interactive item for "Polygon" symbolizer', () => {
+        const style = {
+            format: 'geostyler',
+            body: {
+                rules: [
+                    {
+                        "name": ">= 159.055 and < 137771.05799999996",
+                        "filter": [
+                            "&&",
+                            [
+                                ">=",
+                                "LAND_KM",
+                                159.055
+                            ],
+                            [
+                                "<",
+                                "LAND_KM",
+                                137771.05799999996
+                            ]
+                        ],
+                        "symbolizers": [
+                            {
+                                "kind": "Fill",
+                                "color": "#fff7ec",
+                                "fillOpacity": 1,
+                                "outlineColor": "#777777",
+                                "outlineWidth": 1,
+                                "msClassificationType": "both",
+                                "msClampToGround": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": ">= 137771.05799999996 and < 275383.0609999999",
+                        "filter": [
+                            "&&",
+                            [
+                                ">=",
+                                "LAND_KM",
+                                137771.05799999996
+                            ],
+                            [
+                                "<",
+                                "LAND_KM",
+                                275383.0609999999
+                            ]
+                        ],
+                        "symbolizers": [
+                            {
+                                "kind": "Fill",
+                                "color": "#fdd49e",
+                                "fillOpacity": 1,
+                                "outlineColor": "#777777",
+                                "outlineWidth": 1,
+                                "msClassificationType": "both",
+                                "msClampToGround": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wfs',
+            url: 'http://localhost:8080/geoserver/wfs',
+            enableInteractiveLegend: true
+        };
+        ReactDOM.render(<VectorLegend layer={l} style={style} />, document.getElementById('container'));
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule.json-legend-rule');
+        expect(ruleElements.length).toBe(2);
+        const textElement = ruleElements[0].getElementsByTagName('span');
+        expect(textElement[0].innerText).toBe('>= 159.055 and < 137771.05799999996');
+        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
+        expect(iconContainerElement.length).toBe(1);
+        expect(iconContainerElement[0].innerHTML).toBeTruthy();
+    });
+
+    it('Should render interactive item for "Line" symbolizer', () => {
+        const style = {
+            format: 'geostyler',
+            body: {
+                rules: [
+                    {
+                        "name": ">= 0.000145169491362 and < 4.969539144872505",
+                        "filter": [
+                            "&&",
+                            [
+                                ">=",
+                                "l_mile",
+                                0.000145169491362
+                            ],
+                            [
+                                "<",
+                                "l_mile",
+                                4.969539144872505
+                            ]
+                        ],
+                        "symbolizers": [
+                            {
+                                "kind": "Line",
+                                "color": "#7f0000",
+                                "width": 1,
+                                "opacity": 1,
+                                "cap": "round",
+                                "join": "round",
+                                "msClampToGround": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": ">= 4.969539144872505 and < 9.938933120253648",
+                        "filter": [
+                            "&&",
+                            [
+                                ">=",
+                                "l_mile",
+                                4.969539144872505
+                            ],
+                            [
+                                "<",
+                                "l_mile",
+                                9.938933120253648
+                            ]
+                        ],
+                        "symbolizers": [
+                            {
+                                "kind": "Line",
+                                "color": "#d7301f",
+                                "width": 1,
+                                "opacity": 1,
+                                "cap": "round",
+                                "join": "round",
+                                "msClampToGround": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wfs',
+            url: 'http://localhost:8080/geoserver/wfs',
+            enableInteractiveLegend: true
+        };
+        ReactDOM.render(<VectorLegend layer={l} style={style} />, document.getElementById('container'));
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule.json-legend-rule');
+        expect(ruleElements.length).toBe(2);
+        const textElement = ruleElements[0].getElementsByTagName('span');
+        expect(textElement[0].innerText).toBe('>= 0.000145169491362 and < 4.969539144872505');
+        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
+        expect(iconContainerElement.length).toBe(1);
+        expect(iconContainerElement[0].innerHTML).toBeTruthy();
+    });
+
+    it('Should render interactive item for "Point" symbolizer', () => {
+        const style = {
+            format: 'geostyler',
+            body: {
+                rules: [
+                    {
+                        "name": ">= 487 and < 790.2",
+                        "filter": [
+                            "&&",
+                            [
+                                ">=",
+                                "gid",
+                                487
+                            ],
+                            [
+                                "<",
+                                "gid",
+                                790.2
+                            ]
+                        ],
+                        "symbolizers": [
+                            {
+                                "kind": "Mark",
+                                "wellKnownName": "Circle",
+                                "color": "#fff7ec",
+                                "fillOpacity": 1,
+                                "strokeColor": "#777777",
+                                "strokeOpacity": 1,
+                                "strokeWidth": 1,
+                                "radius": 16,
+                                "rotate": 0,
+                                "msBringToFront": false,
+                                "msHeightReference": "none"
+                            }
+                        ]
+                    },
+                    {
+                        "name": ">= 790.2 and < 1093.4",
+                        "filter": [
+                            "&&",
+                            [
+                                ">=",
+                                "gid",
+                                790.2
+                            ],
+                            [
+                                "<",
+                                "gid",
+                                1093.4
+                            ]
+                        ],
+                        "symbolizers": [
+                            {
+                                "kind": "Mark",
+                                "wellKnownName": "Circle",
+                                "color": "#fdd49e",
+                                "fillOpacity": 1,
+                                "strokeColor": "#777777",
+                                "strokeOpacity": 1,
+                                "strokeWidth": 1,
+                                "radius": 16,
+                                "rotate": 0,
+                                "msBringToFront": false,
+                                "msHeightReference": "none"
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wfs',
+            url: 'http://localhost:8080/geoserver/wfs',
+            enableInteractiveLegend: true
+        };
+        ReactDOM.render(<VectorLegend layer={l} style={style} />, document.getElementById('container'));
+        const ruleElements = document.querySelectorAll('.wfs-legend-rule.json-legend-rule');
+        expect(ruleElements.length).toBe(2);
+        const textElement = ruleElements[0].getElementsByTagName('span');
+        expect(textElement[0].innerText).toBe('>= 487 and < 790.2');
+        const iconContainerElement = ruleElements[0].querySelectorAll('.ms-rule-legend-icon');
+        expect(iconContainerElement.length).toBe(1);
+        expect(iconContainerElement[0].innerHTML).toBeTruthy();
     });
 });
