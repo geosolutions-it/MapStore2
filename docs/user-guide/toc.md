@@ -18,7 +18,7 @@ The Table of Contents, briefly TOC from now on, is a space where all the layers 
 
 The user can access the TOC with the <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> button on the top-left corner of the map viewer. Once this is done, the following panel will appear:
 
-<img src="../img/toc/toc.jpg" class="ms-docimage"  style="max-width:300px;" />
+<img src="../img/toc/toc.jpg" class="ms-docimage"  style="max-width:200px;" />
 
 With the *TOC Toolbar* the user can:
 
@@ -107,7 +107,7 @@ For groups the user can instead:
 * Enable/disable the group visibility by using the check box to the left of the group leaf <img src="../img/button/check-box.jpg" class="ms-docbutton"/>
 
 !!! note
-   When the user turns off the visibility of a group, the visibility in map of all layers and groups inside it changes accordingly but their original visibility state in TOC remain untouched; simply all nested elements are grayed out to indicate they are not visible on map and other functions (e.g. via context menu) remain available. 
+   When the user turns off the visibility of a group, the visibility in map of all layers and groups inside it changes accordingly but their original visibility state in TOC remain untouched; simply all nested elements are grayed out to indicate they are not visible on map and other functions (e.g. via context menu) remain available.
 
 ## Group Settings and Toolbar
 
