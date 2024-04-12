@@ -123,7 +123,7 @@ Once a group is selected the following toolbar appears and the user can:
 
 * Open the **Group settings** through the <img src="../img/button/properties.jpg" class="ms-docbutton"/> button: the *Settings* panel opens and the user can:<br>
   **-** Change the **Title**<br>
-  **-** Set the translation of the group title by opening the **Localize Text** popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. This way the language of the title changes according to the  current language setting in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/)<br>
+  **-** Set the translation of the group title by opening the **Localize Text** popup through the <img src="../img/button/localize_button.jpg" class="ms-docbutton"/> button. This way the language of the title changes according to the  current [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) language <br>
   **-** Edit the group's **Description**<br>
   **-** Configure the **Tooltip** that appears moving the cursor over the group's item in TOC. In this case the user can decide that the *Title*, the *Description*, both or nothing will be displayed. Moreover you can set the *Placement* of the tooltip, choosing between *Top*, *Right* or *Bottom*.
 
