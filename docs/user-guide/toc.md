@@ -40,7 +40,7 @@ Here the user can:
 
 * Enable/disable the opening of the TOC on map initialization, through the <img src="../img/button/arrow-button.jpg" class="ms-docbutton"/> button.
 
-* Change the TOC theme by choosing between **Default Theme** or **Legend Theme**, through the <img src="../img/button/theme-button.jpg" class="ms-docbutton"/> button. With the *Legend Theme* the user does not have the ability to drag and drop the position of groups/layers.
+* Change the TOC theme by choosing between **Default Theme** or **Legend Theme**, through the <img src="../img/button/theme-button.jpg" class="ms-docbutton"/> button. With the *Legend Theme* the user does not have the ability to drag and drop the position of groups/layers. This mode provides a simplified and lighter TOC when necessary.
 
 * Enable/disable the possibility to display the entire title of groups/layers or just the first line, through the <img src="../img/button/text-button.jpg" class="ms-docbutton"/> button.
 
