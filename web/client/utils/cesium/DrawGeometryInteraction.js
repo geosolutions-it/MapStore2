@@ -82,6 +82,7 @@ function cesiumCoordinatesToGeoJSONFeature(geometryType, coordinates, {
     terrainCoordinates,
     geodesic
 }) {
+    const geodesicHeight = geodesic && coordinates?.[coordinates.length - 1] ? Cesium.Cartographic.fromCartesian(coordinates[coordinates.length - 1]).height : undefined;
     switch (geometryType) {
     case 'Point':
         return {
@@ -95,7 +96,7 @@ function cesiumCoordinatesToGeoJSONFeature(geometryType, coordinates, {
                 : { geodesic },
             geometry: {
                 type: 'Point',
-                coordinates: cartesianToCartographicArray(coordinates[coordinates.length - 1], geodesic)
+                coordinates: cartesianToCartographicArray(coordinates[coordinates.length - 1], geodesicHeight)
             }
         };
     case 'LineString':
@@ -104,7 +105,7 @@ function cesiumCoordinatesToGeoJSONFeature(geometryType, coordinates, {
             properties: { length, lengthUom, geodesic },
             geometry: {
                 type: 'LineString',
-                coordinates: coordinates.map((cartesian) => cartesianToCartographicArray(cartesian, geodesic))
+                coordinates: coordinates.map((cartesian) => cartesianToCartographicArray(cartesian, geodesicHeight))
             }
         };
     case 'Polygon':
@@ -114,7 +115,7 @@ function cesiumCoordinatesToGeoJSONFeature(geometryType, coordinates, {
             geometry: {
                 type: 'Polygon',
                 coordinates: [
-                    coordinates.map((cartesian) => cartesianToCartographicArray(cartesian, geodesic))
+                    coordinates.map((cartesian) => cartesianToCartographicArray(cartesian, geodesicHeight))
                 ]
             }
         };
@@ -125,7 +126,7 @@ function cesiumCoordinatesToGeoJSONFeature(geometryType, coordinates, {
             properties: { radius, radiusUom: 'm', geodesic },
             geometry: {
                 type: 'Point',
-                coordinates: cartesianToCartographicArray(coordinates[0], geodesic)
+                coordinates: cartesianToCartographicArray(coordinates[0], geodesicHeight)
             }
         };
     default:
