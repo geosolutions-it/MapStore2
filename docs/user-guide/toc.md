@@ -82,7 +82,7 @@ The same operation can also be done with any *Group* of layers.
 
 <video class="ms-docimage" controls><source src="../img/toc/ded-groups.mp4"/></video>
 
-Layers position can also be determined through the **Selected layer settings** button <img src="../img/button/properties.jpg" class="ms-docbutton"/> available in the toolbar that appears once a layer is selected. This button opens a panel where the user can choose the destination group (or subgroup):
+Layers position can also be changed by clicking on the **Layer settings** button <img src="../img/button/properties.jpg" class="ms-docbutton"/> available in the toolbar. It appears once a layer is selected in TOC. This button opens a panel where the user can choose the destination group:
 
 <img src="../img/toc/settings-group.jpg" class="ms-docimage"  style="max-width:350px;"/>
 
