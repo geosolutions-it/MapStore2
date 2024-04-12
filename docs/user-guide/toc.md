@@ -60,7 +60,7 @@ When right-clicking on the TOC body, in addition to the options available in the
 
 * Expand all groups present in the TOC by enabling the  **Expand all child nodes** through the <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> button. Each layer legend is also expanded.
 
-* Add a group under all the others groups present on TOC, through the <img src="../img/button/add-group.jpg" class="ms-docbutton"/> button.
+* Add a new group in TOC, through the <img src="../img/button/add-group.jpg" class="ms-docbutton"/> button.
 
 * Zoom the map to TOC's layers extent, through the <img src="../img/button/zoom-extent.jpg" class="ms-docbutton"/> button.
 
