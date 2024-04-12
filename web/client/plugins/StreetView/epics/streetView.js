@@ -1,7 +1,6 @@
 
 import Rx from 'rxjs';
 import axios from 'axios';
-import bbox from '@turf/bbox';
 import {
     RESET_CONTROLS,
     SET_CONTROL_PROPERTIES,
@@ -11,7 +10,7 @@ import {
 import { info, error } from '../../../actions/notifications';
 
 import { updateAdditionalLayer, removeAdditionalLayer } from '../../../actions/additionallayers';
-import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener, zoomToExtent} from '../../../actions/map';
+import { CLICK_ON_MAP, registerEventListener, unRegisterEventListener } from '../../../actions/map';
 
 
 import {hideMapinfoMarker, toggleMapInfoState} from '../../../actions/mapInfo';
@@ -114,10 +113,7 @@ export const streetViewSetupTearDown = (action$, {getState = ()=>{}}) =>
                                 STREET_VIEW_OWNER,
                                 'overlay',
                                 layer
-                            )] : []),
-                            ...(layer?.type === 'vector' && layer?.features?.length
-                                ? [zoomToExtent(bbox({ type: 'FeatureCollection', features: layer.features }), 'EPSG:4326')]
-                                : [])
+                            )] : [])
                         ]
                         : []
                     )
@@ -180,7 +176,7 @@ export const streetViewMapClickHandler = (action$, {getState = () => {}}) => {
 /**
  * On location update events updates the map layer.
  * the state.
- * @param {external:Observable} action$ manages `SET_LOCATION`, `UPDATE_STREET_VIEW_LAYER`
+ * @param {external:Observable} action$ manages `UPDATE_STREET_VIEW_LAYER`
  * @param getState
  * @return {external:Observable}
  */

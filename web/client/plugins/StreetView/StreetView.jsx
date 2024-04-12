@@ -23,9 +23,9 @@ import './style/street-view.less';
 import { setControlProperty } from '../../actions/controls';
 import MapLocationSupport from './containers/MapLocationSupport';
 
-const StreetViewPluginComponent = ({onMount, onUnmount, resetStViewData, apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider = 'google', providerSettings, panelSize}) => {
+const StreetViewPluginComponent = ({onMount, onUnmount, resetStViewData, apiKey, useDataLayer, clampToGround, dataLayerConfig, panoramaOptions, provider = 'google', providerSettings, panelSize}) => {
     useEffect(() => {
-        onMount({apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider, providerSettings});
+        onMount({apiKey, useDataLayer, dataLayerConfig, panoramaOptions, provider, providerSettings, clampToGround});
         return () => {
             onUnmount();
         };
@@ -74,6 +74,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  * @property {object} [cfg.panoramaOptions] options to configure the panorama. {@link https://developers.google.com/maps/documentation/javascript/reference/street-view#panoramaOptions|Reference for google maps API}
  * @property {object} [cfg.panelSize] option to configure default street view modal panel size `width` and `height`. Example: `{"width": 500, "height": 500}`.
  * @property {string} [cfg.markerColor] color for the location marker
+ * @property {boolean} [cfg.clampToGround] ensure to place markers on the globe surface
  * @class
  */
 export default createPlugin(

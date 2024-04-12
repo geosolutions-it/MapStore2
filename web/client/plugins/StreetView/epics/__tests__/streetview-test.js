@@ -7,7 +7,7 @@ import { setControlProperty } from '../../../../actions/controls';
 
 import { streetViewSyncLayer, streetViewSetupTearDown } from '../streetView';
 import { updateStreetViewLayer } from '../../actions/streetView';
-import {REGISTER_EVENT_LISTENER, ZOOM_TO_EXTENT} from '../../../../actions/map';
+import { REGISTER_EVENT_LISTENER } from '../../../../actions/map';
 
 describe('StreetView epics', () => {
     it('updateStreetViewLayer', (done) => {
@@ -50,11 +50,10 @@ describe('StreetView epics', () => {
     });
     it('streetViewSetupTearDown for mapillary', (done) => {
         let action = setControlProperty(CONTROL_NAME, 'enabled', false);
-        const NUM_ACTIONS = 3;
+        const NUM_ACTIONS = 2;
         testEpic(streetViewSetupTearDown, NUM_ACTIONS, action, ([
             register,
-            updateAdditionalLayers,
-            zoomToExtent
+            updateAdditionalLayers
         ]) => {
             try {
                 expect(register.type).toBe(REGISTER_EVENT_LISTENER);
@@ -63,8 +62,6 @@ describe('StreetView epics', () => {
                 expect(updateAdditionalLayers.type).toBe(UPDATE_ADDITIONAL_LAYER);
                 expect(updateAdditionalLayers.options.id).toBe('street-view-data');
                 expect(updateAdditionalLayers.options.features.length).toBe(2);
-                expect(zoomToExtent.type).toBe(ZOOM_TO_EXTENT);
-                expect(zoomToExtent.crs).toBe('EPSG:4326');
             } catch (e) {
                 done(e);
             }

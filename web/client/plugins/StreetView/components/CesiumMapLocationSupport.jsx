@@ -19,6 +19,7 @@ function CesiumMapLocationSupport({
     pov,
     map,
     markerColor = 'rgba(255, 0, 0, 0.6)',
+    clampToGround,
     onUpdate = () => {}
 }) {
 
@@ -61,7 +62,10 @@ function CesiumMapLocationSupport({
                     model: {
                         uri: markerUri,
                         color: new Cesium.Color(r, g, b, a),
-                        minimumPixelSize: 64
+                        minimumPixelSize: 64,
+                        heightReference: clampToGround
+                            ? Cesium.HeightReference.CLAMP_TO_GROUND
+                            : Cesium.HeightReference.NONE
                     }
                 });
             }
@@ -70,7 +74,7 @@ function CesiumMapLocationSupport({
             map.scene.requestRender();
             onUpdate();
         }
-    }, [latitude, longitude, height, heading]);
+    }, [latitude, longitude, height, heading, clampToGround]);
     return null;
 }
 

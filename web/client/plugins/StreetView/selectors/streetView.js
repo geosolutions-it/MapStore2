@@ -67,7 +67,7 @@ export const currentProviderApiLoadedSelector = state => apiLoadedSelectorCreato
  */
 export const providerSettingsSelector = state => streetViewConfigurationSelector(state)?.providerSettings ?? {};
 
-const VECTOR_STYLE = {
+const getVectorStyle = (overrides) => ({
     format: "geostyler",
     body: {
         name: "My Style",
@@ -76,7 +76,6 @@ const VECTOR_STYLE = {
                 name: "",
                 symbolizers: [
                     {
-                        kind: "Mark",
                         color: "#3165ef",
                         fillOpacity: 0.6,
                         strokeColor: "#3165ef",
@@ -86,6 +85,8 @@ const VECTOR_STYLE = {
                         wellKnownName: "Circle",
                         msHeightReference: "none",
                         msBringToFront: true,
+                        ...overrides,
+                        kind: "Mark",
                         symbolizerId: "d2c4dab1-a0e7-11ee-a734-df08d0913056"
                     }
                 ],
@@ -93,7 +94,7 @@ const VECTOR_STYLE = {
             }
         ]
     }
-};
+});
 const GOOGLE_DATA_LAYER_DEFAULTS = {
     provider: 'custom',
     type: "tileprovider",
@@ -110,12 +111,10 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
     maxResolution: CYCLOMEDIA_DEFAULT_MAX_RESOLUTION,
     serverType: ServerTypes.NO_VENDOR, // do not support CQL filters
     url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
-    name: "atlas:Recording",
-    style: VECTOR_STYLE
+    name: "atlas:Recording"
 };
 const MAPILLARY_DATA_LAYER_DEFAULTS = {
-    type: 'vector',
-    style: VECTOR_STYLE
+    type: 'vector'
 };
 /**
  * Gets the default data layer configuration for the current provider.
@@ -127,16 +126,18 @@ const providerDataLayerDefaultsSelector = createSelector(
     streetViewProviderSelector,
     streetViewConfigurationSelector,
     (provider, configuration) => {
+        const msHeightReference = configuration?.clampToGround ? 'clamp' : 'none';
         switch (provider) {
         case PROVIDERS.GOOGLE:
             return GOOGLE_DATA_LAYER_DEFAULTS;
         case PROVIDERS.CYCLOMEDIA:
-            return CYCLOMEDIA_DATA_LAYER_DEFAULTS;
+            return { ...CYCLOMEDIA_DATA_LAYER_DEFAULTS, style: getVectorStyle({ msHeightReference }) };
         case PROVIDERS.MAPILLARY:
             // currently we are supporting only the custom type for mapillary
             // so the layer type will be a vector layer
             return {
                 ...MAPILLARY_DATA_LAYER_DEFAULTS,
+                style: getVectorStyle({ msHeightReference }),
                 url: configuration?.providerSettings?.ApiURL
             };
         default:
