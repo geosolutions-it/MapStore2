@@ -52,7 +52,7 @@ When right-clicking on the TOC body, in addition to the options available in the
 
 <video class="ms-docimage" controls><source src="../img/toc/toc-settings-panel2.mp4"/></video>
 
-* Show all groups and layers present in the TOC, enabling the **Show all child nodes** through the <img src="../img/button/show-all-child-nodes.jpg" class="ms-docbutton"/> button.
+* Show all groups and layers present in the TOC by enabling the **Show all child nodes** through the <img src="../img/button/show-all-child-nodes.jpg" class="ms-docbutton"/> button.
 
 * Hide all groups and layers present in the TOC, enabling the **Hide all child nodes** through the <img src="../img/button/hide-all-child-nodes.jpg" class="ms-docbutton"/> button.
 
