@@ -143,7 +143,7 @@ By right clicking on a group, the user can change some properties of the group s
 
 * Collapse all groups present in the selected group, enabling the **Collapse all child nodes** through the <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> button.
 
-* Expand all groups present in the selected group, enabling the  **Expand all child nodes** through the <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> button. Each layer's legends are also expanded.
+* Expand all groups present in the selected group, enabling the  **Expand all child nodes** through the <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> button. Each layer legend is also expanded.
 
 * Add a subgroup under the selected group, through the <img src="../img/button/add-group.jpg" class="ms-docbutton"/> button.
 
