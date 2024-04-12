@@ -131,7 +131,7 @@ Once a group is selected the following toolbar appears and the user can:
 
 * **Remove selected group** and its content through the <img src="../img/button/delete.jpg" class="ms-docbutton"/> button
 
-Click-right on a group, the user can modify some group display properties such as:
+By right clicking on a group, the user can change some properties of the group such as:
 
 <video class="ms-docimage" controls><source src="../img/toc/group-settings-panel.mp4"/></video>
 
