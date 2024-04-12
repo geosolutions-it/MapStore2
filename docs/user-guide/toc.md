@@ -58,7 +58,7 @@ When right-clicking on the TOC body, in addition to the options available in the
 
 * Collapse all groups present in the TOC by enabling the **Collapse all child nodes** through the <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> button.
 
-* Expand all groups present in the TOC, enabling the  **Expand all child nodes** through the <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> button. Each layer's legends are also expanded.
+* Expand all groups present in the TOC by enabling the  **Expand all child nodes** through the <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> button. Each layer legend is also expanded.
 
 * Add a group under all the others groups present on TOC, through the <img src="../img/button/add-group.jpg" class="ms-docbutton"/> button.
 
