@@ -119,7 +119,7 @@ Once a group is selected the following toolbar appears and the user can:
 
 * **Add subgroup to the selected group** through the <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> button (it is possible to add one or more subgroups to the selected group)
 
-* **Zoom to selected layers extent** in order to zoom the map to all layers belonging to the group, through the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button
+* **Zoom to selected layers extent** in order to zoom the map to the extent covering all layers belonging to the given group, through the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button
 
 * Open the **Group settings** through the <img src="../img/button/properties.jpg" class="ms-docbutton"/> button: the *Settings* panel opens and the user can:<br>
   **-** Change the **Title**<br>
