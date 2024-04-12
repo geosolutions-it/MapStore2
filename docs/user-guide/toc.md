@@ -22,7 +22,7 @@ The user can access the TOC with the <img src="../img/button/show-layers.jpg" cl
 
 With the *TOC Toolbar* the user can:
 
-* **Add new layer** through the <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> button: the [Catalog](catalog.md#catalog-services) panel opens and the user can choose the desired layer and add it to the map, through the <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/> button.
+* **Add new layer** through the <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> button: the [Catalog](catalog.md#catalog-services) panel opens and the user can choose the desired layer to add it to the map, through the <img src="../img/button/add_to_map_button.jpg" class="ms-docbutton"/> button.
 
 <video class="ms-docimage" controls><source src="../img/toc/add-layer.mp4"/></video>
 
