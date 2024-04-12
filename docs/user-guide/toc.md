@@ -117,7 +117,7 @@ Once a group is selected the following toolbar appears and the user can:
 
 * **Add layer to selected group** through the <img src="../img/button/add_layer_button.jpg" class="ms-docbutton"/> button (it is possible to add one or more layers to the group)
 
-* **Add sub group to the selected group** through the <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> button (it is possible to add one or more subgroups to the selected group)
+* **Add subgroup to the selected group** through the <img src="../img/button/add_group_button.jpg" class="ms-docbutton"/> button (it is possible to add one or more subgroups to the selected group)
 
 * **Zoom to selected layers extent** in order to zoom the map to all layers belonging to the group, through the <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/> button
 
