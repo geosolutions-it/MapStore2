@@ -96,7 +96,7 @@ Directly from the TOC UI, the user can access different kind of display options.
 
 * Expand <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> or collapse <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> the layer legend.
 
-* Control the layer transparency in map by scrolling the opacity slider
+* Tune the layer transparency in map by scrolling the opacity slider.
 
 For the groups the user can:
 
