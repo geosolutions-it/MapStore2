@@ -72,7 +72,7 @@ With the TOC it is also possible to perform a search between the added layers. T
 
 ### Choose layers and groups position
 
-The user can decide to change the position of a *Layer* within the TOC by clicking on the layer <img src="../img/button/drag-drop-button.jpg" class="ms-docbutton"/> and drag and drop it. <br>
+The user can decide to change the position of a *Layer* within the TOC by clicking on the layer's drag and drop icon <img src="../img/button/drag-drop-button.jpg" class="ms-docbutton"/>. <br>
 It is possible to change layers position inside the same group, but also moving them between different groups. With this operation the position of the layer also changes on the map. <br>
 Changing layers position with the drag and drop, for example, it can display like the following:
 
