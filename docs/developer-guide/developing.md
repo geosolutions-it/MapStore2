@@ -143,14 +143,15 @@ npm start # or npm run be:start
 !!! note
     When the data directory is set using `npm start`, the `/configs` folder used by the dev server is anyway the one in `web/client/configs`. If you want to use the configuration override functionalities of the data directory of MapStore, you have to edit the `devServer.js` to proxy also the `/configs` directory and use the remote service running by the backend. Noticed that in this case the configuration files in `web/client/configs` will not be used anymore.
     Here a sample of the config to add to `devServer.js`.
+
     ```js
-        '/configs': {
-            target: MAPSTORE_BACKEND_URL,
-            secure: false,
-            headers: {
-                host: domain
-            }
-        },
+    '/configs': {
+        target: MAPSTORE_BACKEND_URL,
+        secure: false,
+        headers: {
+            host: domain
+        }
+    },
     ```
 
 ### Defaults Users and Database
