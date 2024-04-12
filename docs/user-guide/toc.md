@@ -78,7 +78,7 @@ Below is an example of changing the layer position through the drag and drop fun
 
 <video class="ms-docimage" controls><source src="../img/toc/ded-layers.mp4"/></video>
 
-The same operation can also be done with *Groups* and *Sub-groups*, no matter their layer, can be nested inside other groups and sub-groups, or can be separated from their parent-layer to create new main groups.
+The same operation can also be done with any *Group* of layers.
 
 <video class="ms-docimage" controls><source src="../img/toc/ded-groups.mp4"/></video>
 
