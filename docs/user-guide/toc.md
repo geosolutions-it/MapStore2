@@ -180,7 +180,7 @@ In this case the user is allowed to:
 !!! note
     The **Metadata Tool** is not configured by default in [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/). A complete documentation to configure it is available as part of the [TOC Plugins documentation](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.TOC) (see *metadataOptions*). Once the **Metadata Tool** has been configured, MapStore is able to load the layer metadata from the remote CSW service and parse it to be presented to the user according to the provided plugin configuration. This functionality automatically works in case of WMS layers coming from a CSW catalog source, while for layers coming directly from a WMS catalog source the [Metadata Link](https://docs.geoserver.org/latest/en/user/data/webadmin/layers.html#basic-info) must be present in the WMS Layer GetCapabilities.
 
-Click-right on a layer, the user can modify some layer display properties such as:
+By right clicking on a layer, the user can manage some layer properties such as:
 
 <video class="ms-docimage" controls><source src="../img/toc/layer-settings-panel.mp4"/></video>
 
