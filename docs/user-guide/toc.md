@@ -139,7 +139,7 @@ By right clicking on a group, the user can change some properties of the group s
 
 * Hide all groups and layers present in the selected group, enabling the **Hide all child nodes** through the <img src="../img/button/hide-all-child-nodes.jpg" class="ms-docbutton"/> button.
 
-* Activate mutually exclusive visibility of groups and layers present in the selected group, enabling the **Activate mutually exclusive visibility of child nodes** through the <img src="../img/button/mutually-exclusive-visibility.jpg" class="ms-docbutton"/> button
+* Activate a mutually exclusive visibility of groups and layers inside the selected group, enabling the **Activate mutually exclusive visibility of child nodes** through the <img src="../img/button/mutually-exclusive-visibility.jpg" class="ms-docbutton"/> button. In this way, only one layer or subgroup within it at a time can be visible on map.
 
 * Collapse all groups present in the selected group, enabling the **Collapse all child nodes** through the <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> button.
 
