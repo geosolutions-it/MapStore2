@@ -147,7 +147,7 @@ By right clicking on a group, the user can change some properties of the group s
 
 * Add a subgroup under the selected group, through the <img src="../img/button/add-group.jpg" class="ms-docbutton"/> button.
 
-* Zoom the map to the selected group's layers extent, through the <img src="../img/button/zoom-extent.jpg" class="ms-docbutton"/> button.
+* Zoom the map to the selected group layers extent, through the <img src="../img/button/zoom-extent.jpg" class="ms-docbutton"/> button.
 
 * Remove the selected group, through the <img src="../img/button/remove-button.jpg" class="ms-docbutton"/> button.
 
