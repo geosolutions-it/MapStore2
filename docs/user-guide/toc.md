@@ -92,7 +92,7 @@ Directly from the TOC UI, the user can access different kind of display options.
 
 <img src="../img/toc/layer-legend.jpg" class="ms-docimage"/>
 
-* Enable/disable the layer visibility by toggle the check box to the left of the layer name <img src="../img/button/check-box.jpg" class="ms-docbutton"/>
+* Enable/disable the layer visibility by using the check box to the left side of the layer leaf<img src="../img/button/check-box.jpg" class="ms-docbutton"/>
 
 * Expand <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> or collapse <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> the layer legend.
 
