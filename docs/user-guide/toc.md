@@ -56,7 +56,7 @@ When right-clicking on the TOC body, in addition to the options available in the
 
 * Hide all groups and layers present in the TOC by enabling the **Hide all child nodes** through the <img src="../img/button/hide-all-child-nodes.jpg" class="ms-docbutton"/> button.
 
-* Collapse all groups present in the TOC, enabling the **Collapse all child nodes** through the <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> button.
+* Collapse all groups present in the TOC by enabling the **Collapse all child nodes** through the <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> button.
 
 * Expand all groups present in the TOC, enabling the  **Expand all child nodes** through the <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> button. Each layer's legends are also expanded.
 
