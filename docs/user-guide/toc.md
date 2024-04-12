@@ -98,7 +98,7 @@ Directly from the TOC UI, the user can access different kind of display options.
 
 * Tune the layer transparency in map by scrolling the opacity slider.
 
-For the groups the user can:
+For groups the user can instead:
 
 <img src="../img/toc/group.jpg" class="ms-docimage" style="max-width:500px;"/>
 
