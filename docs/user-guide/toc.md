@@ -48,7 +48,7 @@ Here the user can:
 
 * If the *Opacity Slider* is enabled, **Show/hide the opacity tooltip** for layers, through the <img src="../img/button/opacity-tooltip-button.jpg" class="ms-docbutton"/> button.
 
-Click-right on TOC, the user can modify, in addition to the options in the *Settings TOC* button described above, some layers display properties such as:
+When right-clicking on the TOC body, in addition to the options available in the *TOC Settings* menu described above, the user can access some more settings such as:
 
 <video class="ms-docimage" controls><source src="../img/toc/toc-settings-panel2.mp4"/></video>
 
