@@ -42,7 +42,7 @@ Here the user can:
 
 * Change the TOC theme by choosing between **Default Theme** or **Legend Theme**, through the <img src="../img/button/theme-button.jpg" class="ms-docbutton"/> button. With the *Legend Theme* the user does not have the ability to drag and drop the position of groups/layers. This mode provides a simplified and lighter TOC when necessary.
 
-* Enable/disable the possibility to display the entire title of groups/layers or just the first line, through the <img src="../img/button/text-button.jpg" class="ms-docbutton"/> button.
+* Enable/disable the possibility to display the entire title of groups/layers, through the <img src="../img/button/text-button.jpg" class="ms-docbutton"/> button.
 
 * **Show/hide the opacity slider** for layers, through the <img src="../img/button/opacity-slider-button.jpg" class="ms-docbutton"/> button.
 
