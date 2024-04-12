@@ -124,11 +124,34 @@ This runs automatically with `npm start`. If you want to run only the backend, y
 The back end will run on port 8080 and will look for the front-end at port 8081. If you want to change the back-end port, you can set the environment variable `MAPSTORE_BACKEND_PORT` to the desired port.
 Optionally you can set the data dir location by setting the environment variable `MAPSTORE_DATA_DIR`.
 
+For Linux:
+
 ```sh
 export MAPSTORE_BACKEND_PORT=8082 # set a different backend port
 export MAPSTORE_DATA_DIR=/usr/datadir # set the datadir location
 npm start # or npm run be:start
 ```
+
+For Windows:
+
+```bat
+set MAPSTORE_BACKEND_PORT=8082 
+set MAPSTORE_DATA_DIR=C:/Users/user/datadir
+npm start # or npm run be:start
+```
+
+!!! note
+    When the data directory is set using `npm start`, the `/configs` folder used by the dev server is anyway the one in `web/client/configs`. If you want to use the configuration override functionalities of the data directory of MapStore, you have to edit the `devServer.js` to proxy also the `/configs` directory and use the remote service running by the backend. Noticed that in this case the configuration files in `web/client/configs` will not be used anymore.
+    Here a sample of the config to add to `devServer.js`.
+    ```js
+        '/configs': {
+            target: MAPSTORE_BACKEND_URL,
+            secure: false,
+            headers: {
+                host: domain
+            }
+        },
+    ```
 
 ### Defaults Users and Database
 
