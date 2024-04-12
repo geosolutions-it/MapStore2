@@ -6,10 +6,19 @@
         <artifactId>mapstore-root</artifactId>
         <version>1.7-SNAPSHOT</version>
     </parent>
-
     <groupId>it.geosolutions.mapstore</groupId>
     <artifactId>mapstore-product</artifactId>
     <packaging>war</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <tomcat.version>8.5.69</tomcat.version>
+        <tomcat.port>8080</tomcat.port>
+        <datadir.location>${env.MAPSTORE_DATA_DIR}</datadir.location>
+        <security.integration>default</security.integration>
+        <!-- <backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000</backend.debug.args> -->
+        <backend.debug.args></backend.debug.args>
+
+    </properties>
 
     <name>MapStore Product Web Application</name>
     <dependencies>
@@ -24,7 +33,7 @@
     </dependencies>
 
     <build>
-        <finalName>mapstore</finalName>
+    <finalName>mapstore</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -262,6 +271,10 @@
                 <configuration>
                     <container>
                         <containerId>tomcat8x</containerId>
+                        <systemProperties>
+                            <datadir.location>${datadir.location}</datadir.location>
+                            <security.integration>${security.integration}</security.integration>
+                        </systemProperties>
                         <zipUrlInstaller>
                             <url>
                                 https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.69/tomcat-8.5.69.zip
@@ -277,9 +290,7 @@
                             <cargo.servlet.port>${tomcat.port}</cargo.servlet.port>
                             <cargo.logging>low</cargo.logging>
                             <!-- setting javax.xml.parsers.SAXParserFactory is a workaround for issue https://github.com/geosolutions-it/geostore/issues/311 and can be removed when solved -->
-                            <cargo.jvmargs>
-                                -Djavax.xml.parsers.SAXParserFactory="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"
-                            </cargo.jvmargs>
+                            <cargo.jvmargs>${backend.debug.args} -Djavax.xml.parsers.SAXParserFactory="com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"</cargo.jvmargs>
                         </properties>
                     </configuration>
                     <deployables>

@@ -122,11 +122,37 @@ In order to have a full running MapStore in development environment, you need to
 This runs automatically with `npm start`. If you want to run only the backend, you can use `npm run be:start`.
 
 The back end will run on port 8080 and will look for the front-end at port 8081. If you want to change the back-end port, you can set the environment variable `MAPSTORE_BACKEND_PORT` to the desired port.
+Optionally you can set the data dir location by setting the environment variable `MAPSTORE_DATA_DIR`.
+
+For Linux:
 
 ```sh
-export MAPSTORE_BACKEND_PORT=8082
+export MAPSTORE_BACKEND_PORT=8082 # set a different backend port
+export MAPSTORE_DATA_DIR=/usr/datadir # set the datadir location
 npm start # or npm run be:start
 ```
+
+For Windows:
+
+```bat
+set MAPSTORE_BACKEND_PORT=8082 
+set MAPSTORE_DATA_DIR=C:/Users/user/datadir
+npm start # or npm run be:start
+```
+
+!!! note
+    When the data directory is set using `npm start`, the `/configs` folder used by the dev server is anyway the one in `web/client/configs`. If you want to use the configuration override functionalities of the data directory of MapStore, you have to edit the `devServer.js` to proxy also the `/configs` directory and use the remote service running by the backend. Noticed that in this case the configuration files in `web/client/configs` will not be used anymore.
+    Here a sample of the config to add to `devServer.js`.
+
+    ```js
+    '/configs': {
+        target: MAPSTORE_BACKEND_URL,
+        secure: false,
+        headers: {
+            host: domain
+        }
+    },
+    ```
 
 ### Defaults Users and Database
 
@@ -154,6 +180,29 @@ Now you are good to go, and you can start the frontend
 Your local backend will now start at [http://localhost:8080/mapstore/](http://localhost:8080/mapstore/).
 If you want to change the port you can edit the dedicated entry in `product/pom.xml`, just remember to change also the dev-server proxy configuration on the frontend in the same way.
 
+##### Embedded tomcat properties
+
+The command `npm run be:start` internally runs the maven command `mvn cargo:run` with some properties set.
+You can customize the properties by passing them as arguments to the command.
+
+```bash
+npm run be:start -- <java-properties>
+```
+
+The java properties are passed to the maven command as `-D<property-name>=<property-value>`.
+
+For example:
+
+```bash
+npm run be:start -- -Dsecurity.integration=ldap-direct -Ddatadir.location=/usr/datadir -Dbackend.debug.args="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
+```
+
+Here the list of the properties that you can set:
+
+* `datadir.location` : the location of the data directory. This can be set also as environment variable `MAPSTORE_DATA_DIR`.
+* `backend.debug.args` : the arguments to pass to the JVM for debugging. If you want to enable remote debugging, you can set this property to `-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000`
+* `security.integration` : the security integration to use. Possible values are `default`, `keycloak-direct`
+
 #### Local tomcat instance
 
 If you prefer, or if you have some problems with `mvn cargo:run`, you can run MapStore backend in a tomcat instance instead of using the embedded one.
@@ -168,26 +217,14 @@ Even in this case you can connect your frontend to point to this instance of Map
 
 ### Debug
 
-To run or debug the server side part of MapStore we suggest to run the backend in tomcat (embedded or installed) and connect in remote debugging to it. This guide explains how to do it with Eclipse. This procedure has been tested with Eclipse Luna.
+To run or debug the server side part of MapStore we suggest to run the backend in tomcat (embedded or installed) and connect in remote debugging to it.
 
 ### Enable Remote Debugging
 
-for embedded tomcat you can configure the following:
+for embedded tomcat you can run the following:
 
 ```bash
-# Linux
-export MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n"
-```
-
-```bash
-# Windows
-set MAVEN_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=4000,server=y,suspend=n
-```
-
-then start tomcat
-
-```bash
-npm start # or npm run start:app, or npm run be:start (this last only for the backend)
+npm run be:start -- backend.debug.args"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
 ```
 
 For your local tomcat, you can follow the standard procedure to debug with tomcat.
@@ -197,7 +234,7 @@ For your local tomcat, you can follow the standard procedure to debug with tomca
 * Run eclipse plugin
 
 ```bash
-mvn eclipse:eclipse
+mvn eclipse:eclipse 
 ```
 
 * Import the project in eclipse from **File --> Import**
