@@ -88,7 +88,7 @@ Layers position can also be changed by clicking on the **Layer settings** button
 
 ### Display options in panel
 
-Directly from the TOC panel, the user can set different types of display options. In particular, for layers, it is possible to:
+Directly from the TOC UI, the user can access different kind of display options. In particular, for layers, it is possible to:
 
 <img src="../img/toc/layer-legend.jpg" class="ms-docimage"/>
 
