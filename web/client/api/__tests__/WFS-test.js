@@ -150,4 +150,16 @@ describe('Test WFS ogc API functions', () => {
         expect(getFeatureURL(_url).split('?')[0]).toBe(_url[0]);
     });
 
+    it('getFeatureURL if it includes getCapabilites request', () => {
+        const _url = 'http://gs-stable.geosolutionsgroup.com:443/geoserver3/wfs?service=WFS&version=1.1.0&request=GetCapabilities';
+        const featureURL = getFeatureURL(_url, "layerName");
+        expect(featureURL.includes("request=GetFeature")).toBeTruthy();
+        expect(featureURL.split('?')[1]).toEqual('typeName=layerName&version=1.1.0&service=WFS&request=GetFeature');
+    });
+
+    it('getFeatureURL if it includes normal getFeature request with version different than the default one', () => {
+        const _url = 'http://gs-stable.geosolutionsgroup.com:443/geoserver3/wfs?service=WFS&version=1.1.1&request=GetFeature';
+        const featureURL = getFeatureURL(_url, "layerName");
+        expect(featureURL.split('?')[1]).toEqual('typeName=layerName&version=1.1.1&service=WFS&request=GetFeature');
+    });
 });
