@@ -104,7 +104,7 @@ For groups the user can instead:
 
 * Expand <img src="../img/button/expand-all-child-nodes.jpg" class="ms-docbutton"/> or collapse <img src="../img/button/collapse-all-child-nodes.jpg" class="ms-docbutton"/> layers or groups inside.
 
-* Enable/disable the group visibility by toggle the check box to the left of the group name <img src="../img/button/check-box.jpg" class="ms-docbutton"/>
+* Enable/disable the group visibility by using the check box to the left of the group leaf <img src="../img/button/check-box.jpg" class="ms-docbutton"/>
 
 !!! note
     When the user switch off the visibility of a group, the visibility of all layers and subgroups nested within it will not change.
