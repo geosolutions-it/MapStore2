@@ -107,7 +107,7 @@ For groups the user can instead:
 * Enable/disable the group visibility by using the check box to the left of the group leaf <img src="../img/button/check-box.jpg" class="ms-docbutton"/>
 
 !!! note
-    When the user switch off the visibility of a group, the visibility of all layers and subgroups nested within it will not change.
+   When the user turns off the visibility of a group, the visibility in map of all layers and groups inside it changes accordingly but their original visibility state in TOC remain untouched; simply all nested elements are grayed out to indicate they are not visible on map and other functions (e.g. via context menu) remain available. 
 
 ## Group Settings and Toolbar
 
