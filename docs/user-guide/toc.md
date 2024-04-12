@@ -62,7 +62,7 @@ When right-clicking on the TOC body, in addition to the options available in the
 
 * Add a new group in TOC, through the <img src="../img/button/add-group.jpg" class="ms-docbutton"/> button.
 
-* Zoom the map to TOC's layers extent, through the <img src="../img/button/zoom-extent.jpg" class="ms-docbutton"/> button.
+* Zoom the map to the extent covering all TOC layers, through the <img src="../img/button/zoom-extent.jpg" class="ms-docbutton"/> button.
 
 ### Search for layers
 
