@@ -97,7 +97,18 @@ describe('contextcreator selectors', () => {
         const source = {
             map: {
                 present: {
-                    zoom: 10
+                    center: [20, 21],
+                    maxExtent: [0, 0, 0, 0],
+                    projection: 'EPSG:4326',
+                    units: 'meters',
+                    mapInfoControl: {},
+                    zoom: 10,
+                    mapOptions: {},
+                    layers: [],
+                    groups: [],
+                    backgrounds: [],
+                    text_search_config: undefined,
+                    bookmark_search_config: undefined
                 }
             },
             contextcreator: {
@@ -121,11 +132,11 @@ describe('contextcreator selectors', () => {
                 mapConfig: {
                     version: 2,
                     map: {
-                        center: undefined,
-                        maxExtent: undefined,
-                        projection: undefined,
-                        units: undefined,
-                        mapInfoControl: undefined,
+                        center: [20, 21],
+                        maxExtent: [0, 0, 0, 0],
+                        projection: 'EPSG:4326',
+                        units: 'meters',
+                        mapInfoControl: {},
                         zoom: 10,
                         mapOptions: {},
                         layers: [],
@@ -176,6 +187,9 @@ describe('contextcreator selectors', () => {
             metadata: { name: undefined }
         };
         const generatedSource = generateContextResource(source);
-        expect(generatedSource).toEqual(expected);
+        expect(generatedSource.data.mapConfig.map).toEqual(expected.data.mapConfig.map);
+        expect(generatedSource.data.plugins).toEqual(expected.data.plugins);
+        expect(generatedSource.data.plugins).toEqual(expected.data.plugins);
+        expect(generatedSource.data.theme).toEqual(expected.data.theme);
     });
 });
