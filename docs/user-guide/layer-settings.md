@@ -426,7 +426,7 @@ With the **Pseudo color** the user has the possibility to customize the *Single 
 
 #### Styling for COG layer
 
-With the *Visual Style Editor*, the editor has the ability to customize the style of **COG layer**:
+With the *Visual Style Editor*, the editor has the ability to customize the style of **COG layers**:
 
 <img src="../img/layer-settings/cog-layer_style.jpg" class="ms-docimage">
 
