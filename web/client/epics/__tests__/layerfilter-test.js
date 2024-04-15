@@ -89,7 +89,7 @@ describe('layerFilter Epics', () => {
 
         // State need a selected layers
         const state = {layers: {
-            flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url"}],
+            flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url", type: 'wms'}],
             selected: ["topp:states__5"]}
         };
         testEpic(applyCQLFilterBasedOnLegendFilter, 3, action, (actions) => {
@@ -109,7 +109,7 @@ describe('layerFilter Epics', () => {
         // State need a selected layers
         const state = {
             layers: {
-                flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url",
+                flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url", type: 'wfs',
                     enableInteractiveLegend: true,
                     layerFilter: {
                         filters: [

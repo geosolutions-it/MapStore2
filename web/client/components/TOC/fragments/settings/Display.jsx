@@ -23,7 +23,7 @@ import { getSupportedFormat } from '../../../../api/WMS';
 import WMSCacheOptions from './WMSCacheOptions';
 import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
-import StyleBasedWMSJsonLegend from '../StyleBasedWMSJsonLegend';
+import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
 
 export default class extends React.Component {
     static propTypes = {
@@ -221,6 +221,7 @@ export default class extends React.Component {
                     onChange={this.props.onChange}
                 />
                 {['wfs'].includes(this.props.element.type) &&
+                <Row>
                     <div className={"legend-options"}>
                         <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
@@ -240,6 +241,7 @@ export default class extends React.Component {
                             </Checkbox>
                         </Col>
                     </div>
+                </Row>
                 }
                 {this.props.element.type === "wms" &&
                 <Row>

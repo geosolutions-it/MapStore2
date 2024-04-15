@@ -122,7 +122,12 @@ export const onApplyFilter = (action$, {getState}) =>
  * @return {external:Observable} `APPLIED_FILTER`
  */
 export const applyCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
-    return  action$.ofType(LAYER_FILTER_BY_LEGEND)
+    return  action$.ofType(LAYER_FILTER_BY_LEGEND).
+        filter(({layerId}) => {
+            const state = getState();
+            const layer = head(state.layers.flat.filter(l => l.id === layerId));
+            return ['wfs', 'wms', 'vector'].includes(layer.type);
+        })
         .switchMap((action) => {
             const state = getState();
             const layer = head(state.layers.flat.filter(l => l.id === action.layerId));
@@ -176,7 +181,8 @@ export const applyCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
  * @return {external:Observable} `APPLIED_FILTER`
  */
 export const applyResetLegendFilter = (action$, {getState}) => {
-    return  action$.ofType(RESET_LAYER_FILTER_BY_LEGEND)
+    return  action$.ofType(RESET_LAYER_FILTER_BY_LEGEND).
+        filter(() => ['wfs', 'wms', 'vector'].includes(getSelectedLayer(getState()).type))
         .switchMap((action) => {
             const state = getState();
             const layer = getSelectedLayer(state);
