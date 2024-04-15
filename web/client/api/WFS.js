@@ -48,24 +48,28 @@ export const getFeatureSimple = function(baseUrl, params) {
 export const getCapabilitiesURL = (url, {version = "1.1.0"} = {}) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, {
+        search: undefined, // this allows to merge parameters correctly
         query: assign({
-            service: "WFS",
             version,
+            ...parsed.query,
+            service: "WFS",
             request: "GetCapabilities"
-        }, parsed.query)
+        })
     }));
 };
 
 export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = {}) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, {
+        search: undefined, // this allows to merge parameters correctly
         query: assign({
-            service: "WFS",
             typeName,
             version,
+            ...parsed.query,
+            service: "WFS",
             request: "GetFeature",
             ...params
-        }, parsed.query)
+        })
     }));
 };
 /**
