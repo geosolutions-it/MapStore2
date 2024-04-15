@@ -87,6 +87,12 @@ As soon as the measure window opens, by default the **Measure distance in 3D spa
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-distance-3d-ex.mp4"/></video>
 
+### Measure geodesic distance
+
+Once the **Measure geodesic distance** button is selected <img src="../img/button/measure-distance-green.jpg" class="ms-docbutton"/>, it is possible to start the drawing session. Same as measuring the distance, each click corresponds to a vertex (at least two vertices are needed) and the double click will indicate the last one. With this measurement type it is possible also in 3D mode to have the geodesic distance calculated at the absolute zero of the WGS84 ellipsoid.  
+
+<video class="ms-docimage" style="max-width:600px;" controls><source src="../img/measure/measure-geodesic-ex.mp4"/></video>
+
 ### Measure area on the 3D navigation
 
 Once the **Measure Area in 3D space** button is selected <img src="../img/button/measure-area-on-3d.jpg" class="ms-docbutton"/>, it is possible to start the drawing session (in this case, at least 3 vertices need to be indicated). Same as measuring the distance, each click corresponds to a vertex and the double click will indicate the last one.
