@@ -220,29 +220,6 @@ export default class extends React.Component {
                     layer={this.props.element}
                     onChange={this.props.onChange}
                 />
-                {['wfs'].includes(this.props.element.type) &&
-                <Row>
-                    <div className={"legend-options"}>
-                        <Col xs={12} className={"legend-label"}>
-                            <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
-                        </Col>
-                        <Col xs={12}>
-                            <Checkbox
-                                data-qa="display-interactive-legend-option"
-                                value="enableInteractiveLegend"
-                                key="enableInteractiveLegend"
-                                onChange={(e) => {
-                                    if (!e.target.checked) this.props.resetLegendFilter('disableEnableInteractiveLegend');
-                                    this.props.onChange("enableInteractiveLegend", e.target.checked);
-                                }}
-                                checked={this.props.element.enableInteractiveLegend} >
-                                <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
-                                &nbsp;{this.props.element.type === 'wfs' && <InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.tooltip" />} />}
-                            </Checkbox>
-                        </Col>
-                    </div>
-                </Row>
-                }
                 {this.props.element.type === "wms" &&
                 <Row>
                     <Col xs={12}>

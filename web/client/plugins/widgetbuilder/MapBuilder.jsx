@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { branch, compose, renderComponent, withHandlers, withProps, withState } from 'recompose';
 import find from 'lodash/find';
 import { onEditorChange } from '../../actions/widgets';
+import { layerFilterByLegend } from '../../actions/layerFilter';
 
 import BorderLayout from '../../components/layout/BorderLayout';
 import handleNodeSelection from '../../components/widgets/builder/wizard/map/enhancers/handleNodeSelection';
@@ -74,7 +75,8 @@ const chooseMapEnhancer = compose(
 const Builder = connect(
     wizardSelector,
     {
-        onChange: onEditorChange
+        onChange: onEditorChange,
+        onLayerFilterByLegend: layerFilterByLegend
     },
     wizardStateToProps
 )(MapWizardComp);

@@ -193,3 +193,10 @@ export const getTblWidgetZoomLoader = state => {
     let tableWidgets = (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "table");
     return tableWidgets?.find(t=>t.dependencies?.zoomLoader) ? true : false;
 };
+
+export const getLayerByIdFromDashboardMapBuilder = (state, layerId) => {
+    const {selectedMapId, maps} = getEditingWidget(state);
+    const selectedMap = maps?.find(map=>map.mapId === selectedMapId);
+    const neededLayer = selectedMap?.layers?.find(layer=>layer.id === layerId);
+    return neededLayer;
+};

@@ -146,7 +146,8 @@ function TOC({
     nodeToolItems,
     singleDefaultGroup,
     nodeItems,
-    theme
+    theme,
+    onLayerFilterByLegend = () => {}
 }) {
     const { layers } = splitMapAndLayers(map) || {};
     const tree = denormalizeGroups(layers.flat || [], layers.groups || []).groups;
@@ -196,6 +197,7 @@ function TOC({
             nodeItems={nodeItems}
             nodeToolItems={nodeToolItems}
             singleDefaultGroup={singleDefaultGroup}
+            onLayerFilterByLegend={onLayerFilterByLegend}
         />
     );
 }

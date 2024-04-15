@@ -29,7 +29,8 @@ export default ({
     setEditNode = () => {},
     closeNodeEditor = () => {},
     isLocalizedLayerStylesEnabled,
-    env
+    env,
+    onLayerFilterByLegend = () => {}
 } = {}) => {
     const [selectedMap, setSelectedMap] = useState({});
     const [emptyMap, setEmptyMap] = useState(false);
@@ -63,6 +64,7 @@ export default ({
                     onNodeSelect={onNodeSelect}
                     selectedNodes={selectedNodes}
                     onChange={onChange}
+                    onLayerFilterByLegend={onLayerFilterByLegend}
                     isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled}
                     preview={<Preview
                         key={editorData.selectedMapId}

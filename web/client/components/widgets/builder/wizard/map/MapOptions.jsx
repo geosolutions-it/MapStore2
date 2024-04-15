@@ -43,7 +43,7 @@ const EditorTitle = compose(
 )(StepHeader);
 
 
-export default ({ preview, map = {}, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { }, isLocalizedLayerStylesEnabled }) => (<div>
+export default ({ preview, map = {}, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { }, isLocalizedLayerStylesEnabled, onLayerFilterByLegend = () => {} }) => (<div>
     <StepHeader title={<Message msgId={`widgets.builder.wizard.configureMapOptions`} />} />
     <div key="sample" style={{marginTop: 10}}>
         <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />
@@ -60,6 +60,7 @@ export default ({ preview, map = {}, onChange = () => { }, selectedNodes = [], o
                 onChange={onChange}
                 isLocalizedLayerStylesEnabled={isLocalizedLayerStylesEnabled} />
         ] : [<StepHeader title={<Message msgId={`layers`} />} />, <TOC
+            onLayerFilterByLegend={onLayerFilterByLegend}
             selectedNodes={selectedNodes}
             onSelect={onNodeSelect}
             onChange={onChange}
