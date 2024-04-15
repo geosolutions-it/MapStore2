@@ -466,6 +466,13 @@ class CesiumMap extends React.Component {
             // avoid errors like 44.40641479 !== 44.40641478999999
             return a.toFixed(12) - b.toFixed(12) <= 0.000000000001;
         };
+
+        // there are some transition cases where the center is not defined
+        // so we could avoid to compute the setView if the center value is missing
+        if (newProps.center === undefined) {
+            return;
+        }
+
         const centerIsUpdate = !isNearlyEqual(newProps.center.x, currentCenter.longitude) ||
                                !isNearlyEqual(newProps.center.y, currentCenter.latitude);
         const zoomChanged = newProps.zoom !== currentZoom;
