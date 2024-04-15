@@ -430,7 +430,7 @@ With the *Visual Style Editor*, the editor has the ability to customize the styl
 
 <img src="../img/layer-settings/cog-layer_style.jpg" class="ms-docimage">
 
-Here the editor can associate, when the *Band styling* is enable,  the **Channels** (`Red`, `Green`, `Blue` and `Alpha`) to the **Bands** of the COG layer and set the minimum (**Min**) and maximum (**Max**) source data value. Take a look at the following example.
+Enabling the *Band styling* section, here the editor can associate the **Channels** (`Red`, `Green`, `Blue` and `Alpha`) to the **Bands** of the COG layer and set the minimum (**Min**) and maximum (**Max**) source data value. Take a look at the following example.
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/band_styling.mp4"></video>
 
