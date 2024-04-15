@@ -12,13 +12,6 @@ import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 import {toOGCFilterParts} from '../utils/FilterUtils';
 import { getDefaultUrl } from '../utils/URLUtils';
 
-/**
-* @note from this ref: https://www.npmjs.com/package/url#urlformaturlobj
-* * in using [ url.format(urlObj) ] --> 'urlObj.search' will be used in place of 'urlObj.query'
-* * and 'urlObj.query' (object; see querystring) will only be used if 'urlObj.search' is absent.
-* * so in case adding new parameters or update existing ones in 'urlObj.query', we need to set 'urlObj.search' with undefined to ignore it
-*/
-
 export const toDescribeURL = (url, typeName) => {
     const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(
