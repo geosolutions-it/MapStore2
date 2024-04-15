@@ -18,7 +18,7 @@ The Table of Contents, briefly TOC from now on, is a space where all the layers 
 
 The user can access the TOC with the <img src="../img/button/show-layers.jpg" class="ms-docbutton"/> button on the top-left corner of the map viewer. Once this is done, the following panel will appear:
 
-<img src="../img/toc/toc.jpg" class="ms-docimage"  style="max-width:200px;" />
+<img src="../img/toc/toc.jpg" class="ms-docimage"  style="max-width:400px;" />
 
 With the *TOC Toolbar* the user can:
 
