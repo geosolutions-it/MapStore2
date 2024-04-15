@@ -88,10 +88,10 @@
             .background-color-var(@theme-vars[selected-bg]);
             .outline-color-var(@theme-vars[focus-color]);
         }
-        .wms-json-legend-rule:hover, .wfs-legend-rule.json-legend-rule:hover {
+        .wms-json-legend-rule:hover {
             .color-var(@theme-vars[primary]);
         }
-        .wms-json-legend-rule.active, .wfs-legend-rule.json-legend-rule.active {
+        .wms-json-legend-rule.active {
             .background-color-var(@theme-vars[primary]);
             .color-var(@theme-vars[primary-contrast]);
         }
@@ -411,13 +411,13 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    .ms-vector-legend-rule, .wfs-legend-rule {
+    .ms-vector-legend-rule {
         display: flex;
     }
     .ms-rule-legend-icon {
         margin-right: 4px;
     }
 }
-.wms-json-legend-rule:hover, .wfs-legend-rule.json-legend-rule:hover{
+.wms-json-legend-rule:hover {
     cursor: pointer;
 }
