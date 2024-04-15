@@ -324,7 +324,7 @@ The editor is allowed to type the name of the layer attribute to use for the `La
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/ex_text_style.mp4"></video>
 
-### Style Methods
+### Style Methods for Vector layer
 
 Different styles methods can be used for each style rule. Clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel of each symbolizer, the editor can choose one of the following depending on the rule type:
 
@@ -397,6 +397,42 @@ By default, **Constant value** is selected. If the user chooses **Property value
 
 !!!note
     The *Style with property* method is available only for **WFS** and **Vector** layers.
+
+### Style Methods for Raster layer
+
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) also allows to edit the **Raster Layers** style using a *Visual editor*. Through the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel, the editor can choose one of the following styles methods:
+
+* Single band
+* RGB bands
+* Pseudo color
+
+#### Single band
+
+The **Single band** is the default one and here the user can  choose the **Channel** to customize selecting the **Contrast enhancement** choosing between `None`, `Normalize` and `Histogram` and the change the **Opacity**. Take a look at the following example.
+
+<img src="../img/layer-settings/single_band_style.jpg" class="ms-docimage">
+
+#### RGB bands
+
+With the **RGB bands** the user can customize the three **Channels** of the layer, if they are available, and for each one selecting the **Contrast enhancement** choosing between `None`, `Normalize` and `Histogram` and the change the **Opacity**. Take a look at the following example.
+
+<img src="../img/layer-settings/rgb_band_style.jpg" class="ms-docimage">
+
+#### Pseudo color
+
+With the **Pseudo color** the user has the possibility to customize the *Single band* with a *Color ramp*. In this case, in addition to choosing **Channels**, **Contrast enhancement** and **Opacity**, the user can select **Color ramp**, enable **Reverse order** and the **Continuous Colors**, choose the **Color map type** (`Ramp`, `Intervals` and `Values`), the **Method** (`Quantile`, `Natural breaks`, `Equal interval` and `Unique interval`) and modify the **Intervals**. Take a look at the following example.
+
+<img src="../img/layer-settings/pseudo_color_style.jpg" class="ms-docimage">
+
+#### Styling for COG layer
+
+With the *Visual Style Editor*, the editor has the ability to customize the style of **COG layers**:
+
+<img src="../img/layer-settings/cog-layer_style.jpg" class="ms-docimage">
+
+Enabling the *Band styling* section, here the editor can associate the **Channels** (`Red`, `Green`, `Blue` and `Alpha`) to the **Bands** of the COG layer and set the minimum (**Min**) and maximum (**Max**) source data value. Take a look at the following example.
+
+<video class="ms-docimage" controls><source src="../img/layer-settings/band_styling.mp4"></video>
 
 ### Styling on the 3D navigation
 
