@@ -19,6 +19,7 @@ export const SET_LOCATION = "STREET_VIEW:SET_LOCATION";
 export const SET_POV = "STREET_VIEW:SET_POV";
 export const CONFIGURE = "STREET_VIEW:CONFIGURE";
 export const RESET = "STREET_VIEW:RESET";
+export const RESET_STREET_VIEW_DATA = "STREET_VIEW:RESET_STREET_VIEW_DATA";
 export const UPDATE_STREET_VIEW_LAYER = "STREET_VIEW:UPDATE_STREET_VIEW_LAYER";
 
 export function setAPILoading(loading) {
@@ -105,5 +106,14 @@ export function configure(configuration) {
 export function reset() {
     return {
         type: RESET
+    };
+}
+
+/**
+ * Resets the plugin on unmount
+ */
+export function resetViewerData() {
+    return {
+        type: RESET_STREET_VIEW_DATA
     };
 }

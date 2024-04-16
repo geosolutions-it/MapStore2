@@ -4008,8 +4008,10 @@
           "emptyDescription": "Klicken Sie auf die Karte, um die Bilder von Street-View zu durchsuchen",
           "messages": {
             "noDataForPosition": "keine Street-View-Daten für diese Position",
-            "unknownError": "Unbekannter Fehler, siehe Konsole"
-          },
+            "unknownError": "Unbekannter Fehler, siehe Konsole",
+            "errorServiceUrl": "Service nicht verfügbar. Bitte überprüfen Sie die angegebene URL",
+            "errorRetriveingLayerData": "Es gab einen Fehler beim Laden der Layer-Daten"
+        },
           "loadingAPI": "API wird geladen...",
           "cyclomedia": {
             "initializing": "Initialisiere Street Smart API...",
