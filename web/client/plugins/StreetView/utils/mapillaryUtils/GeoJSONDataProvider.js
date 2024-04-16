@@ -25,13 +25,21 @@ function generateCells(images, geometryProvider) {
     return cells;
 }
 
+const getFilenameInfo = (filename) => {
+    const parts = filename.split('/');
+    const imageName = parts[parts.length - 1];
+    const group = parts.length === 2 ? parts[0] : undefined;
+    return { imageName, group };
+};
+
 function featureToImage(feature, { imageId, meshId, clusterId, sequenceId, url }) {
     const geometry = {
         lat: feature.properties.MAPLatitude,
         lng: feature.properties.MAPLongitude
     };
+    const { imageName, group } = getFilenameInfo(feature.properties.filename);
     const thumbId = feature.properties.filename;
-    const thumbUrl = url + 'thumb/' + feature.properties.filename + '.jpg';
+    const thumbUrl = url + (group ? group + '/' : '' ) + 'thumb/' + imageName + '.jpg';
     const width = feature.properties.width;
     const height = feature.properties.height;
     const [yy, mm, dd, h, m, s] = feature.properties.MAPCaptureTime.split('_');
@@ -104,10 +112,11 @@ class GeoJSONDataProvider extends DataProviderBase {
                 return Promise.resolve(debugTiles(imageSize, request));
             }
             const tiles = getTilesAtZ(imageSize, request.z);
+            const { imageName, group } = getFilenameInfo(request.imageId);
             return Promise.resolve({
                 node: tiles.map(({ x, y, z }) => {
                     return {
-                        url: `${this._url}tiles/${request.imageId}/${z}_${x}_${y}.jpg`,
+                        url: `${this._url}${group ? `${group}/` : ''}tiles/${imageName}/${z}_${x}_${y}.jpg`,
                         x, y, z
                     };
                 }),
