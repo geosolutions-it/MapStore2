@@ -50,7 +50,15 @@ export const prefetchedDataSelector = state => get(state, 'contextcreator.prefet
 export const disableImportSelector = state => creationStepSelector(state) !== "general-settings";
 
 export const generateContextResource = (state) => {
-    const mapConfig = mapSelector(state) ? mapSaveSelector(state) : {};
+    // in some cases, 'mapSelector' doesn't include map configuration, so check and add the map config if missing
+    const map = mapSelector(state);
+    const isMapConfigPresent = !map?.center;
+    let mapConfig = {};
+    if (isMapConfigPresent) {
+        mapConfig = mapConfigSelector(state) || {};
+    } else {
+        mapConfig = map ? mapSaveSelector(state) : {};
+    }
     const plugins = pluginsSelector(state);
     const context = newContextSelector(state);
     const resource = resourceSelector(state);
