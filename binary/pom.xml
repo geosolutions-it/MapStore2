@@ -117,7 +117,7 @@
                         <configuration>
                             <tasks>
                                 <echo message="Downloading JRE..."/>
-                                <get src="https://www.dropbox.com/scl/fi/2rjaso3cxgab0jdjxwpjr/jre.tar.gz?dl=1"
+                                <get src="https://www.dropbox.com/scl/fi/2rjaso3cxgab0jdjxwpjr/jre.tar.gz?rlkey=1wrf6mcemn5d2e88t8u0wxbk3&amp;dl=1"
                                      dest="${project.build.directory}/jre.tar.gz"/>
                                 <echo message="Untar JRE..."/>
                                 <gunzip src="${project.build.directory}/jre.tar.gz"
