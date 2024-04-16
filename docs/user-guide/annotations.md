@@ -57,9 +57,9 @@ From the [TOC](toc.md), the *Annotations toolbar* allows the user to:
 
 <img src="../img/annotations/annotation3.jpg" class="ms-docimage" />
 
-* **Delete** the annotation through the <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> button
+* **Zoom** to annotation extent through the <img src="../img/button/zoom_button.jpg" class="ms-docbutton" /> button
 
-* Enable the [**Compare tool**](toc.md#toolbar-options) through the <img src="../img/button/compare_tool_button.jpg" class="ms-docbutton" /> button
+* **Delete** the annotation through the <img src="../img/button/delete_button.jpg" class="ms-docbutton" /> button
 
 * **Edit** the annotation through the <img src="../img/button/edit_button.jpg" class="ms-docbutton" /> button
 
