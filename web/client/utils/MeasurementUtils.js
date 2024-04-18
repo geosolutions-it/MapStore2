@@ -539,6 +539,9 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
     };
 };
 
+
+const maintainOriginalGeom = (measureType) => measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA;
+
 export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom) => {
 
     const { features } = convertMeasureToFeatureCollection(geometricFeatures, textLabels, uom);
@@ -549,17 +552,28 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
         msType: MEASURE_TYPE,
         features: features.map(ft => {
             const measureType = getMeasureType(ft);
-            return measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA ? {
-                ...ft,
-                geometry: {
+            let geom = ft.geometry;
+            if (measureType === MeasureTypes.LENGTH) {
+                geom = {
                     ...ft.geometry,
-                    coordinates: measureType === MeasureTypes.LENGTH ? transformLineToArcs(ft.geometry.coordinates) : ft.geometry.coordinates.map(transformLineToArcs)
-                },
+                    coordinates: transformLineToArcs(ft.geometry.coordinates)
+                        .map(c => [...c, ft.geometry.coordinates[ft.geometry.coordinates.length - 1][2] ?? 0]) // adding same height
+                };
+            }
+            if (measureType === MeasureTypes.AREA) {
+                geom = {
+                    ...ft.geometry,
+                    coordinates: ft.geometry.coordinates.map(coords => transformLineToArcs(coords))
+                };
+            }
+            return {
+                ...ft,
+                geometry: geom,
                 properties: {
                     ...ft.properties,
-                    ...(measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA ? { originalGeom: ft.geometry} : {})
+                    ...(maintainOriginalGeom(measureType) ? { originalGeom: ft.geometry} : {})
                 }
-            } : ft;
+            };
         }),
         style: {
             metadata: { editorType: 'visual' },
