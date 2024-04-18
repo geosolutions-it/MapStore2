@@ -670,6 +670,12 @@ where `LogManager` can be imported as:
 import org.apache.logging.log4j.LogManager;
 ```
 
+and `Logger` can be imported as:
+
+```java
+import org.apache.logging.log4j.Logger;
+```
+
 ### Update database schema
 
 This new version introduced the attributes for user groups. This requires an update to your database applying the scripts available [here](https://github.com/geosolutions-it/geostore/tree/master/doc/sql/migration). You have to apply the script `*-migration-from-v.1.5.0-to-v2.0.0` of your database. For instance on postgreSQL, you will have to execute the script `postgresql/postgresql-migration-from-v.1.5.0-to-v2.0.0`.
