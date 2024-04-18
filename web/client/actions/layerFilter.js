@@ -64,20 +64,3 @@ export function initLayerFilter(filter) {
         filter
     };
 }
-
-export function layerFilterByLegend(layerId, nodeType, legendCQLFilter) {
-    return {
-        type: LAYER_FILTER_BY_LEGEND,
-        legendCQLFilter,
-        nodeType,
-        layerId
-    };
-}
-
-export function resetLegendFilter(reason, value) {
-    return {
-        type: RESET_LAYER_FILTER_BY_LEGEND,
-        reason,     // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
-        value
-    };
-}

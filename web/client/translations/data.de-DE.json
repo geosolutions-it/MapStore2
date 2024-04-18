@@ -205,7 +205,9 @@
             },
             "enableInteractiveLegendInfo": {
                 "label": "Aktivieren Sie die interaktive Legende",
-                "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
+                "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer",
+                "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem auf Legendenelemente im Inhaltsverzeichnis für die aktivierte Ebene geklickt wird",
+                "fetchError": "Die Legenden Informationen konnten nicht vom Dienst abgerufen werden"
             },
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
@@ -1147,7 +1149,7 @@
             "title": "Erweiterte Suche",
             "query": "Suche",
             "apply": "Anwenden",
-            "reset": "Zurücksetzen",
+            "reset": "Zurücksetzen: Alle Filter zurücksetzen, einschließlich aller anderen externen Filter",
             "save": "Speichern",
             "discard": "Rückgängig machen",
             "query_request_exception": "Abfrage Fehler",

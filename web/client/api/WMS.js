@@ -309,11 +309,16 @@ let layerLegendJsonData = {};
 export const getJsonWMSLegend = (url) => {
     const request = layerLegendJsonData[url]
         ? () => Promise.resolve(layerLegendJsonData[url])
-        : () => axios.get(url).then(({ data }) => {
-            layerLegendJsonData[url] = data?.Legend;
-            return data?.Legend || [];
+        : () => axios.get(url).then((response) => {
+            if (typeof response?.data === 'string' && response.data.includes("Exception")) {
+                throw new Error("Faild to get json legend");
+            }
+            layerLegendJsonData[url] = response?.data?.Legend;
+            return response?.data?.Legend || [];
         });
-    return request().then((data) => data);
+    return request().then((data) => data).catch(err => {
+        throw err;
+    });
 };
 
 const Api = {

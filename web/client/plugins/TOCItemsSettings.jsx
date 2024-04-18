@@ -15,7 +15,6 @@ import {createSelector} from 'reselect';
 import {setControlProperty} from '../actions/controls';
 import {getLayerCapabilities} from '../actions/layerCapabilities';
 import {hideSettings, updateNode, updateSettings, updateSettingsParams, showSettings} from '../actions/layers';
-import { resetLegendFilter } from '../actions/layerFilter';
 import {toggleStyleEditor} from '../actions/styleeditor';
 import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
 import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
@@ -140,8 +139,7 @@ const TOCItemsSettingsPlugin = compose(
         onRetrieveLayerData: getLayerCapabilities,
         onSetTab: setControlProperty.bind(null, 'layersettings', 'activeTab'),
         onUpdateParams: updateSettingsParams,
-        onToggleStyleEditor: toggleStyleEditor,
-        resetLegendFilter: resetLegendFilter
+        onToggleStyleEditor: toggleStyleEditor
     }),
     updateSettingsLifecycle,
     defaultProps({

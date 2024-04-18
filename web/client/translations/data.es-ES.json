@@ -202,7 +202,9 @@
             },
             "enableInteractiveLegendInfo": {
                 "label": "Habilitar una leyenda interactiva",
-                "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+                "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer",
+                "info": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de la leyenda en TOC para la capa habilitada.",
+                "fetchError": "No se pudo obtener la información de la leyenda del servicio"
             },
             "templateFormatInfoAlertExample": "La identificación de la característica es <span style='white-space:nowrap'>${ properties.datos }</span> ora <span style='white-space:nowrap'>${ properties['datos-valor'] }</span>",
             "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
@@ -1108,7 +1110,7 @@
             "title": "Búsqueda avanzada",
             "query": "Búsqueda",
             "apply": "Aplicar",
-            "reset": "Eliminar",
+            "reset": "Eliminar: eliminar todos los filtros, incluido cualquier otro filtro externo",
             "save": "Guardar",
             "discard": "Desechar",
             "query_request_exception": "Error en la búsqueda",

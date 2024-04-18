@@ -88,10 +88,13 @@
             .background-color-var(@theme-vars[selected-bg]);
             .outline-color-var(@theme-vars[focus-color]);
         }
-        .wms-json-legend-rule:hover {
-            .color-var(@theme-vars[primary]);
+        .wms-json-legend-rule.filter-enabled:hover {
+            .background-color-var(@theme-vars[selected-hover-bg]);
         }
-        .wms-json-legend-rule.active {
+        .wms-json-legend-rule.filter-enabled.active {
+            .background-color-var(@theme-vars[selected-bg]);
+        }
+        .wms-json-legend-rule.filter-enabled.active {
             .background-color-var(@theme-vars[primary]);
             .color-var(@theme-vars[primary-contrast]);
         }
@@ -418,6 +421,6 @@
         margin-right: 4px;
     }
 }
-.wms-json-legend-rule:hover {
+.wms-json-legend-rule.filter-enabled:hover {
     cursor: pointer;
 }

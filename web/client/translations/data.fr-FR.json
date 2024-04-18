@@ -205,7 +205,9 @@
             },
             "enableInteractiveLegendInfo": {
                 "label": "Activer la légende interactive",
-                "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
+                "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer",
+                "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende sur la table des matières pour la couche activée.",
+                "fetchError": "Impossible d'obtenir les informations de légende du service"
             },
             "enableLocalizedLayerStyles": {
                 "label": "Activer le style localisé",
@@ -1108,7 +1110,7 @@
             "title": "Recherche avancée",
             "query": "Recherche",
             "apply": "Appliquer",
-            "reset": "Recommencer",
+            "reset": "Réinitialiser: réinitialiser tous les filtres, y compris tous les autres filtres externes",
             "save": "Enregistrer",
             "discard": "Annuler",
             "query_request_exception": "Erreur de requête",

@@ -12,6 +12,7 @@ import { isArray, isNil } from 'lodash';
 import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Tooltip, Glyphicon } from 'react-bootstrap';
 import Loader from '../../../components/misc/Loader';
 import WMSJsonLegendIcon from '../../../components/styleeditor/WMSJsonLegendIcon';
 import {
@@ -21,7 +22,8 @@ import {
 } from '../../../utils/SecurityUtils';
 import { getJsonWMSLegend } from '../../../api/WMS';
 import Message from '../../../components/I18N/Message';
-
+import {updateLayerLegendFilter} from '../../../utils/FilterUtils';
+import OverlayTrigger from '../../../components/misc/OverlayTrigger';
 class StyleBasedWMSJsonLegend extends React.Component {
     static propTypes = {
         layer: PropTypes.object,
@@ -33,7 +35,8 @@ class StyleBasedWMSJsonLegend extends React.Component {
         scales: PropTypes.array,
         scaleDependent: PropTypes.bool,
         language: PropTypes.string,
-        onLayerFilterByLegend: PropTypes.func
+        onChange: PropTypes.func,
+        owner: PropTypes.string
     };
 
     static defaultProps = {
@@ -42,12 +45,14 @@ class StyleBasedWMSJsonLegend extends React.Component {
         legendOptions: "forceLabels:on",
         style: {maxWidth: "100%"},
         scaleDependent: true,
-        onLayerFilterByLegend: () => {}
+        onChange: () => {},
+        owner: ''
     };
     state = {
         error: false,
         loading: false,
-        jsonLegend: {}
+        jsonLegend: {},
+        selectedFilters: []
     }
     componentDidMount() {
         this.getLegendData();
@@ -60,6 +65,12 @@ class StyleBasedWMSJsonLegend extends React.Component {
         if (currentLayerStyle !== prevLayerStyle) {
             this.getLegendData();
         }
+        // reset selected filters in case reset legend filter by external reason like reset from query form/change style ..etc
+        const isLegendFilterIncluded = this.props?.layer?.layerFilter?.filters?.find(f=>f.id === 'interactiveLegend');
+        const legendFilters = isLegendFilterIncluded ? isLegendFilterIncluded?.filters : [];
+        if (!legendFilters.length && this.state.selectedFilters.length) {
+            this.setState({selectedFilters: []});
+        }
     }
 
     getLegendData() {
@@ -70,7 +81,9 @@ class StyleBasedWMSJsonLegend extends React.Component {
         }
         this.setState({ loading: true });
         getJsonWMSLegend(jsonLegendUrl).then(data => {
-            this.setState({ jsonLegend: data[0], loading: false });
+            const isLegendFilterIncluded = this.props?.layer?.layerFilter?.filters?.find(f=>f.id === 'interactiveLegend');
+            const prevFilters = isLegendFilterIncluded ? isLegendFilterIncluded?.filters : [];
+            this.setState({ jsonLegend: data[0], loading: false, selectedFilters: prevFilters?.map(fil => fil.id) || [] });
         }).catch(() => {
             this.setState({ error: true, loading: false });
         });
@@ -125,14 +138,11 @@ class StyleBasedWMSJsonLegend extends React.Component {
         return '';
     }
     renderRules = (rules) => {
-        const isLegendFilterIncluded = this.props.layer?.layerFilter?.filters?.find(f=>f.id === 'interactiveLegend');
-        const prevFilter = isLegendFilterIncluded ? isLegendFilterIncluded?.filters?.[0]?.id : '';
-        const filterWMSLayerHandler = (filter) => {
-            if (!filter) return;
-            this.props.onLayerFilterByLegend(this.props.layer.id, 'layers', filter === prevFilter ? '' : filter);
-        };
         return (rules || []).map((rule) => {
-            return (<div className={`wms-json-legend-rule ${rule.filter && prevFilter === rule.filter ? 'active' : ''}`} key={rule.filter} onClick={() => filterWMSLayerHandler(rule.filter)}>
+            const isFilterExistBefore = this.state.selectedFilters?.find(f => f === rule.filter);
+            const isFilterDisabled = this.props?.layer?.layerFilter?.disabled;
+            const activeFilter = rule.filter && isFilterExistBefore;
+            return (<div className={`wms-json-legend-rule ${isFilterDisabled || this.props.owner === 'legendPreview' ? "" : "filter-enabled "} ${activeFilter ? 'active' : ''}`} key={rule.filter} onClick={() => this.filterWMSLayerHandler(rule.filter)}>
                 <WMSJsonLegendIcon rule={rule} />
                 <span>{rule.name || rule.title || ''}</span>
             </div>);
@@ -146,8 +156,31 @@ class StyleBasedWMSJsonLegend extends React.Component {
                 </div>
             </>;
         }
-        return <Message msgId="layerProperties.legenderror" />;
+        return (<div style={{ display: 'flex' }}>
+            <Message msgId="layerProperties.legenderror" />&nbsp;
+            <OverlayTrigger placement={"right"} overlay={<Tooltip id={"interactiveLegendInfoError"}>
+                <Message msgId={"layerProperties.enableInteractiveLegendInfo.fetchError"} />
+            </Tooltip>}>
+                <Glyphicon
+                    style={{ marginLeft: 4 }}
+                    glyph={"info-sign"}
+                />
+            </OverlayTrigger>
+        </div>);
     }
+    filterWMSLayerHandler = (filter) => {
+        const isFilterDisabled = this.props?.layer?.layerFilter?.disabled;
+        if (!filter || isFilterDisabled) return;
+        const newLayerFilter = updateLayerLegendFilter(this.props?.layer?.layerFilter, filter);
+        this.props.onChange({ layerFilter: newLayerFilter });
+        let updatedSelectedFilters = [...this.state.selectedFilters];
+        if (!updatedSelectedFilters.includes(filter)) {
+            updatedSelectedFilters = [...updatedSelectedFilters, filter];
+        } else {
+            updatedSelectedFilters = updatedSelectedFilters.filter(prevFilter => prevFilter !== filter);
+        }
+        this.setState({ selectedFilters: updatedSelectedFilters });
+    };
 }
 
 export default StyleBasedWMSJsonLegend;

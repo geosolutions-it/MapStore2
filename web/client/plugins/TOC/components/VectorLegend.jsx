@@ -16,7 +16,7 @@ import RuleLegendIcon from '../../../components/styleeditor/RuleLegendIcon';
 function VectorLegend({ style }) {
     const renderRules = (rules) => {
         return (rules || []).map((rule) => {
-            return (<div className="ms-vector-legend-rule" key={rule.ruleId || rule.name}>
+            return (<div className="ms-vector-legend-rule" key={rule.ruleId}>
                 <RuleLegendIcon rule={rule} />
                 <span>{rule.name || ''}</span>
             </div>);

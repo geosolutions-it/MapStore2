@@ -8,10 +8,10 @@
 
 import expect from 'expect';
 
-import { openQueryBuilder, discardCurrentFilter, applyFilter, layerFilterByLegend, resetLegendFilter } from '../../actions/layerFilter';
+import { openQueryBuilder, discardCurrentFilter, applyFilter } from '../../actions/layerFilter';
 import { QUERY_FORM_SEARCH } from '../../actions/queryform';
 import { testEpic } from './epicTestUtils';
-import { handleLayerFilterPanel, restoreSavedFilter, onApplyFilter, applyWMSLegendFilterForMap, applyResetLegendFilterForMaps } from '../layerfilter';
+import { handleLayerFilterPanel, restoreSavedFilter, onApplyFilter } from '../layerfilter';
 
 describe('layerFilter Epics', () => {
     it("handleLayerFilterPanel is correctly initiated and react to QUERY_FORM_SEARCH", (done) => {
@@ -84,112 +84,4 @@ describe('layerFilter Epics', () => {
         });
     });
 
-    it("applyWMSLegendFilterForMap to apply legend filter", (done) => {
-        let action = [layerFilterByLegend('topp:states__5', 'layers', "[FIELD_01 >= '5' AND FIELD_01 < '1']")];
-
-        // State need a selected layers
-        const state = {layers: {
-            flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url", type: 'wms'}],
-            selected: ["topp:states__5"]},
-        map: {
-            mapId: 1
-        }
-        };
-        testEpic(applyWMSLegendFilterForMap, 3, action, (actions) => {
-            expect(actions[0].type).toBe("QUERY_FORM_SEARCH");
-            expect(actions[0].searchUrl).toBe("searchUrl");
-            expect(actions[0].filterObj.filters[0].id).toBe("interactiveLegend");
-            expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
-            expect(actions[2].type).toBe("LAYER_FILTER:APPLIED_FILTER");
-            done();
-
-        }, state);
-    });
-
-    it("applyWMSLegendFilterForMap to reset legend filter", (done) => {
-        let action = [layerFilterByLegend('topp:states__5', 'layers', "")];
-
-        // State need a selected layers
-        const state = {
-            layers: {
-                flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url", type: 'wms',
-                    enableInteractiveLegend: true,
-                    layerFilter: {
-                        filters: [
-                            {
-                                "id": "interactiveLegend",
-                                "format": "logic",
-                                "version": "1.0.0",
-                                "logic": "AND",
-                                "filters": [
-                                    {
-                                        "format": "cql",
-                                        "version": "1.0.0",
-                                        "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
-                                        "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
-                                    }
-                                ]
-                            }
-                        ]
-                    }}],
-                selected: ["topp:states__5"]
-            },
-            map: {
-                mapId: 1
-            }
-        };
-        testEpic(applyWMSLegendFilterForMap, 3, action, (actions) => {
-            expect(actions[0].type).toBe("QUERY_FORM_SEARCH");
-            expect(actions[0].searchUrl).toBe("searchUrl");
-            expect(actions[0].filterObj).toBe(undefined);
-            expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
-            expect(actions[2].type).toBe("LAYER_FILTER:APPLIED_FILTER");
-            done();
-
-        }, state);
-    });
-
-    it("applyResetLegendFilterForMaps to reset legend filter in case change 'style' for wms", (done) => {
-        let action = [resetLegendFilter('style', 'style_02')];
-
-        // State need a selected layers
-        const state = {
-            layers: {
-                flat: [{id: "topp:states__5", name: "topp:states", search: {url: "searchUrl"}, url: "url", type: 'wms',
-                    enableInteractiveLegend: true,
-                    style: 'style_01',
-                    layerFilter: {
-                        filters: [
-                            {
-                                "id": "interactiveLegend",
-                                "format": "logic",
-                                "version": "1.0.0",
-                                "logic": "AND",
-                                "filters": [
-                                    {
-                                        "format": "cql",
-                                        "version": "1.0.0",
-                                        "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
-                                        "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
-                                    }
-                                ]
-                            }
-                        ]
-                    }}],
-                selected: ["topp:states__5"]
-            },
-            map: {
-                mapId: 1
-            }
-        };
-        testEpic(applyResetLegendFilterForMaps, 3, action, (actions) => {
-            expect(actions[0].type).toBe("QUERY_FORM_SEARCH");
-            expect(actions[0].searchUrl).toBe("searchUrl");
-            expect(actions[0].filterObj).toBe(undefined);
-            expect(actions[1].type).toBe("CHANGE_LAYER_PROPERTIES");
-            expect(actions[2].type).toBe("LAYER_FILTER:APPLIED_FILTER");
-            done();
-
-        }, state);
-    });
 });

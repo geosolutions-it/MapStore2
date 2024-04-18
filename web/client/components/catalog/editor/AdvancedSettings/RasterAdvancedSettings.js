@@ -166,15 +166,20 @@ export default ({
                     }} />
             </InputGroup>
         </FormGroup>
-        {/**
-         * service.layerOptions?.serverType
-         */}
         {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
             <Checkbox data-qa="display-interactive-legend-option"
                 onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: e.target.checked})}
                 checked={!isNil(service.layerOptions?.enableInteractiveLegend) ? service.layerOptions?.enableInteractiveLegend : false}>
                 <Message msgId="layerProperties.enableInteractiveLegendInfo.label" />
-                &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.tooltip" />} />
+                &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.tooltip" />} /> &nbsp;
+                <OverlayTrigger placement={"bottom"} overlay={<Tooltip id={"interactiveLegendInfo"}>
+                    <Message msgId={"layerProperties.enableInteractiveLegendInfo.info"} />
+                </Tooltip>}>
+                    <Glyphicon
+                        style={{ marginLeft: 4 }}
+                        glyph={"info-sign"}
+                    />
+                </OverlayTrigger>
             </Checkbox>
         </FormGroup>}
         <hr style={{margin: "8px 0"}}/>

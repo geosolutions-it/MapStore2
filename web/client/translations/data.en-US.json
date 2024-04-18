@@ -209,7 +209,9 @@
             },
             "enableInteractiveLegendInfo": {
                 "label": "Enable interactive legend",
-                "tooltip": "Note: This parameter requires specific configurations on GeoServer"
+                "tooltip": "Note: This parameter requires specific configurations on GeoServer",
+                "info": "If this option is enabled, filter by legend can be applied by clicking on legend items on TOC for the enabled layer",
+                "fetchError": "Failed to retrieve the legend info from the service"
             },
             "format": {
                 "title": "Format",
@@ -1108,7 +1110,7 @@
             "title": "Advanced search",
             "query": "Search",
             "apply": "Apply",
-            "reset": "Reset",
+            "reset": "Reset: reset all filters including any other external filter",
             "save": "Save",
             "discard": "Undo",
             "query_request_exception": "Request error",

@@ -17,7 +17,7 @@ import withLocal from '../misc/enhancers/localizedProps';
 import tooltip from '../misc/enhancers/tooltip';
 import FilterComp from '../misc/Filter';
 import SVGPreview from './SVGPreview';
-
+import {resetLayerLegendFilter} from '../../utils/FilterUtils';
 const Filter = withLocal('filterPlaceholder')(FilterComp);
 
 const Glyphicon = tooltip(GlyphiconRB);
@@ -61,7 +61,7 @@ const StyleList = ({
     defaultStyle,
     availableStyles = [],
     onSelect = () => {},
-    onResetLegendFilterStyle = () => {},
+    layer = {},
     formatColors = {
         sld: "#33ffaa",
         css: "#ffaa33"
@@ -82,7 +82,13 @@ const StyleList = ({
         <SideGrid
             size="sm"
             onItemClick={({ name }) => {
-                onResetLegendFilterStyle('style', name);
+                const isLayerFilterUpdated = resetLayerLegendFilter(layer, 'style', name);
+                // check if LayerFilterUpdated = falsy value --> this means there isn't a prev legend filter to reset
+                // else --> legend filter needs to reset
+                if (isLayerFilterUpdated) {
+                    onSelect( { layerFilter: isLayerFilterUpdated, style: name }, true );
+                    return;
+                }
                 onSelect({ style: name }, true);
             }}
             items={availableStyles

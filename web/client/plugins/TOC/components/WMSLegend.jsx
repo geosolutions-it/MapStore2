@@ -39,14 +39,14 @@ class WMSLegend extends React.Component {
         language: PropTypes.string,
         legendWidth: PropTypes.number,
         legendHeight: PropTypes.number,
-        onLayerFilterByLegend: PropTypes.func
+        onChange: PropTypes.func
     };
 
     static defaultProps = {
         legendContainerStyle: {},
         showOnlyIfVisible: false,
         scaleDependent: true,
-        onLayerFilterByLegend: () => {}
+        onChange: () => {}
     };
 
     constructor(props) {
@@ -96,11 +96,11 @@ class WMSLegend extends React.Component {
                     />
                 </div>
             );
-        } else if (showLegend) {
+        }
+        if (showLegend) {
             return (
                 <div style={!this.setOverflow() ? this.props.legendContainerStyle : this.state.legendContainerStyle} ref={this.containerRef}>
                     <StyleBasedWMSJsonLegend
-                        onLayerFilterByLegend={this.props.onLayerFilterByLegend}
                         style={!this.setOverflow() ? this.props.legendStyle : {}}
                         layer={node}
                         currentZoomLvl={this.props.currentZoomLvl}
@@ -122,6 +122,7 @@ class WMSLegend extends React.Component {
                         legendOptions={this.props.WMSLegendOptions}
                         scaleDependent={this.props.scaleDependent}
                         language={this.props.language}
+                        onChange={this.props.onChange}
                     />
                 </div>
             );

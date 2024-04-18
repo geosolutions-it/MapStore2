@@ -63,7 +63,6 @@ export function ControlledTOC({
     onChange = () => {},
     onSelectNode = () => {},
     onContextMenu = () => {},
-    onLayerFilterByLegend = () => {},
     groupNodeComponent,
     layerNodeComponent,
     filterText,
@@ -88,7 +87,6 @@ export function ControlledTOC({
                 onChange(currentNode.id, nodeType, options)
             }
             groupNodeComponent={groupNodeComponent}
-            onLayerFilterByLegend={onLayerFilterByLegend}
             layerNodeComponent={layerNodeComponent}
             contextMenu={contextMenu}
             onContextMenu={onContextMenu}
@@ -146,8 +144,7 @@ function TOC({
     nodeToolItems,
     singleDefaultGroup,
     nodeItems,
-    theme,
-    onLayerFilterByLegend = () => {}
+    theme
 }) {
     const { layers } = splitMapAndLayers(map) || {};
     const tree = denormalizeGroups(layers.flat || [], layers.groups || []).groups;
@@ -197,7 +194,6 @@ function TOC({
             nodeItems={nodeItems}
             nodeToolItems={nodeToolItems}
             singleDefaultGroup={singleDefaultGroup}
-            onLayerFilterByLegend={onLayerFilterByLegend}
         />
     );
 }

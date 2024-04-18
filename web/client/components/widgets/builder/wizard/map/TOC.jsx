@@ -19,8 +19,7 @@ function WidgetTOC({
     onSelect,
     selectedNodes,
     updateMapEntries = () => {},
-    map,
-    onLayerFilterByLegend = () => {}
+    map
 } = {}) {
     return (
         <TOC
@@ -44,7 +43,6 @@ function WidgetTOC({
                     hideLegend: false
                 }
             }}
-            onLayerFilterByLegend={onLayerFilterByLegend}
             onChangeMap={(newMap) => {
                 updateMapEntries({
                     layers: newMap?.layers,

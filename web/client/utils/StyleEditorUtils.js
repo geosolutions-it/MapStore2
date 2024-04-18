@@ -31,7 +31,6 @@ import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
 import { getStyleParser } from './VectorStyleUtils';
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 import xml2js from 'xml2js';
-import { toCQLFilter } from "./FilterUtils";
 
 const xmlBuilder = new xml2js.Builder();
 
@@ -765,12 +764,6 @@ export const styleValidation = {
     }
 };
 
-export const parseGeoStylerFilterToCql = (geostylerFilter) => {
-    const filterObject = filterArrayToFilterObject(geostylerFilter);
-    const cqlExpression = toCQLFilter(filterObject);
-    return cqlExpression;
-};
-
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
@@ -792,6 +785,5 @@ export default {
     getVectorLayerAttributes,
     getVectorLayerGeometryType,
     getVectorDefaultStyle,
-    styleValidation,
-    parseGeoStylerFilterToCql
+    styleValidation
 };

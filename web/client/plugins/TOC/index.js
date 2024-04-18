@@ -19,7 +19,6 @@ import {
     groupsSelector,
     selectedNodesSelector
 } from '../../selectors/layers';
-import { layerFilterByLegend } from '../../actions/layerFilter';
 import { userSelector } from '../../selectors/security';
 import { currentLocaleSelector, currentLocaleLanguageSelector } from '../../selectors/locale';
 import { mapSelector, mapNameSelector } from '../../selectors/map';
@@ -365,8 +364,7 @@ function TOC({
     toolbarButtonProps,
     init,
     onOpen,
-    onResetInit,
-    onLayerFilterByLegend = () => {}
+    onResetInit
 }, context) {
     const activateParameter = (allow, activate) => {
         const isUserAdmin = user && user.role === 'ADMIN' || false;
@@ -527,7 +525,6 @@ function TOC({
                 nodeToolItems={nodeToolItems}
                 nodeItems={nodeItems}
                 singleDefaultGroup={singleDefaultGroup}
-                onLayerFilterByLegend={onLayerFilterByLegend}
             />
             {activateToolsContainer ? <ContextMenu
                 value={contextMenu}
@@ -624,8 +621,7 @@ const ConnectedTOC = connect(tocSelector, {
     onChange: updateNode,
     onSelectNode: selectNode,
     onOpen: setControlProperty.bind(null, 'drawer', 'enabled', true),
-    onResetInit: updateTOCConfig.bind(null, { init: false }),
-    onLayerFilterByLegend: layerFilterByLegend
+    onResetInit: updateTOCConfig.bind(null, { init: false })
 })(TOC);
 
 export default createPlugin('TOC', {

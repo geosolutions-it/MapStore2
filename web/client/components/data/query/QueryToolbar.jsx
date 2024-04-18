@@ -263,7 +263,6 @@ class QueryToolbar extends React.Component {
         this.props.actions.onChangeDrawingStatus('clean', '', "queryform", []);
         this.props.actions.onReset();
         if (this.props.advancedToolbar) {
-            const isLgendFilterExist = this.props.appliedFilter?.filters?.find(f=>f.id === 'interactiveLegend');
             let filterObj = {
                 featureTypeName: this.props.featureTypeName,
                 groupFields: [],
@@ -271,7 +270,7 @@ class QueryToolbar extends React.Component {
                 spatialField: {
                     attribute: this.props.spatialField && this.props.spatialField.attribute
                 },
-                filters: isLgendFilterExist ? [isLgendFilterExist] : [],
+                filters: [],
                 pagination: this.props.pagination,
                 filterType: this.props.filterType,
                 ogcVersion: this.props.ogcVersion,
