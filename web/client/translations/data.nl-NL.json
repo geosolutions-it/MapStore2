@@ -408,7 +408,8 @@
                 "errorSizeExceeded": "Gelieve de afbeeldingen te verkleinen of de kwaliteit te verlagen",
                 "errorLoadingContexts": "Er is een fout opgetreden tijdens het laden van app-contexts"
             },
-			"search": "Zoeken..."
+			"search": "Zoeken...",
+      "searchButton": "Zoek kaarten"
 		},
         "resources": {
             "successSaved": "Deze resource is correct opgeslagen",

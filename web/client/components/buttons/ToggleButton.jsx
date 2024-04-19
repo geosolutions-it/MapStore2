@@ -11,8 +11,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Glyphicon } from 'react-bootstrap';
 import OverlayTrigger from '../misc/OverlayTrigger';
-import Button from '../misc/Button';
+import {ButtonWithTooltip} from '../misc/Button';
 import ImageButton from './ImageButton';
+import tooltip from "../misc/enhancers/tooltip";
 /**
  * Toggle button with tooltip and icons or image support.
  * @memberof components.buttons
@@ -70,18 +71,36 @@ class ToggleButton extends React.Component {
 
     renderNormalButton = () => {
         return (
-            <Button id={this.props.id} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.pressed ? this.props.pressedStyle : this.props.defaultStyle} style={this.props.style}>
+            <ButtonWithTooltip
+                id={this.props.id}
+                {...this.props.btnConfig}
+                onClick={this.onClick}
+                bsStyle={this.props.pressed ? this.props.pressedStyle : this.props.defaultStyle}
+                style={this.props.style}
+                tooltip={this.props.tooltip}
+                tooltipPosition={this.props.tooltipPlace}
+                keyProp={"overlay-trigger." + this.props.id}
+            >
                 {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
                 {this.props.glyphicon && this.props.text && !React.isValidElement(this.props.text) ? "\u00A0" : null}
                 {this.props.text}
                 {this.props.help}
-            </Button>
+            </ButtonWithTooltip>
         );
     };
 
     renderImageButton = () => {
+        const ImageButtonT = tooltip(ImageButton);
         return (
-            <ImageButton id={this.props.id} image={this.props.image} onClick={this.onClick} style={this.props.style}/>
+            <ImageButtonT
+                id={this.props.id}
+                image={this.props.image}
+                onClick={this.onClick}
+                style={this.props.style}
+                tooltip={this.props.tooltip}
+                tooltipPosition={this.props.tooltipPlace}
+                keyProp={"overlay-trigger." + this.props.id}
+            />
         );
     };
 
@@ -94,15 +113,7 @@ class ToggleButton extends React.Component {
     };
 
     render() {
-        var retval;
-        var btn = this.props.btnType === 'normal' ? this.renderNormalButton() : this.renderImageButton();
-        if (this.props.tooltip) {
-            retval = this.addTooltip(btn);
-        } else {
-            retval = btn;
-        }
-        return retval;
-
+        return this.props.btnType === 'normal' ? this.renderNormalButton() : this.renderImageButton();
     }
 }
 

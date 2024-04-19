@@ -420,7 +420,8 @@
                 "errorSizeExceeded": "S'il vous plaît, réduisez la taille ou la qualité des images",
                 "errorLoadingContexts": "Une erreur s'est produite lors du chargement des contextes"
             },
-            "search": "rechercher ..."
+            "search": "rechercher ...",
+          "searchButton": "Rechercher des cartes"
         },
         "resources": {
             "successSaved": "Cette ressource a été enregistrée correctement",

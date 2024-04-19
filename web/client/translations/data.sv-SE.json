@@ -341,7 +341,8 @@
                 "errorSizeExceeded": "Prova att minska storleken eller kvaliteten på bilderna",
                 "errorLoadingContexts": "Ett fel uppstod när webbkarta laddades"
             },
-			"search": "Sök..."
+			"search": "Sök...",
+      "searchButton": "Sök kartor"
 		},
         "resources": {
             "successSaved": "Den här resursen har sparats korrekt",

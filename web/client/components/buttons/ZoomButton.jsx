@@ -10,9 +10,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Button from '../misc/Button';
-import { Glyphicon, Tooltip } from 'react-bootstrap';
-import OverlayTrigger from '../misc/OverlayTrigger';
+import { ButtonWithTooltip } from '../misc/Button';
+import { Glyphicon } from 'react-bootstrap';
 
 class ZoomButton extends React.Component {
     static propTypes = {
@@ -49,34 +48,23 @@ class ZoomButton extends React.Component {
     };
 
     render() {
-        return this.addTooltip(
-            <Button
-                id={this.props.id}
-                style={this.props.style}
-                onClick={() => this.props.onZoom(this.props.currentZoom + this.props.step)}
-                className={this.props.className}
-                disabled={this.props.currentZoom + this.props.step > this.props.maxZoom || this.props.currentZoom + this.props.step < this.props.minZoom}
-                bsStyle={this.props.bsStyle}
-            >
-                {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
-                {this.props.glyphicon && this.props.text ? "\u00A0" : null}
-                {this.props.text}
-                {this.props.help}
-            </Button>
-        );
+        return (<ButtonWithTooltip
+            id={this.props.id}
+            style={this.props.style}
+            onClick={() => this.props.onZoom(this.props.currentZoom + this.props.step)}
+            className={this.props.className}
+            disabled={this.props.currentZoom + this.props.step > this.props.maxZoom || this.props.currentZoom + this.props.step < this.props.minZoom}
+            bsStyle={this.props.bsStyle}
+            tooltip={this.props.tooltip}
+            tooltipPosition={this.props.tooltipPlace}
+            keyProp={"overlay-trigger." + this.props.id}
+        >
+            {this.props.glyphicon ? <Glyphicon glyph={this.props.glyphicon}/> : null}
+            {this.props.glyphicon && this.props.text ? "\u00A0" : null}
+            {this.props.text}
+            {this.props.help}
+        </ButtonWithTooltip>);
     }
-
-    addTooltip = (btn) => {
-        if (!this.props.tooltip) {
-            return btn;
-        }
-        let tooltip = <Tooltip id="locate-tooltip">{this.props.tooltip}</Tooltip>;
-        return (
-            <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
-                {btn}
-            </OverlayTrigger>
-        );
-    };
 }
 
 export default ZoomButton;

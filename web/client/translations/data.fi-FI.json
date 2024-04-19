@@ -278,7 +278,8 @@
         "errorWhenDeleting": "Virhe poiston aikana",
         "errorSizeExceeded": "Pienennä yksityiskohtien kokoa tai kuvien laatua"
       },
-      "search": "Haku..."
+      "search": "Haku...",
+      "searchButton": "Hae karttoja"
     },
     "resources": {
       "successSaved": "Tämä resurssi on tallennettu oikein",

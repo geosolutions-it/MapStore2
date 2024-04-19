@@ -10,9 +10,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Glyphicon, Tooltip } from 'react-bootstrap';
-import OverlayTrigger from '../../misc/OverlayTrigger';
-import Button from '../../misc/Button';
+import { Glyphicon } from 'react-bootstrap';
+import {ButtonWithTooltip} from '../../misc/Button';
 
 class UndoBtn extends React.Component {
     static propTypes = {
@@ -40,44 +39,30 @@ class UndoBtn extends React.Component {
         }
     };
 
-    onClick = () => {
-        this.props.onClick();
-    };
-
     shouldComponentUpdate(nextProps) {
         return this.props.disabled !== nextProps.disabled;
     }
 
-    renderButton = () => {
-        return (
-            <Button id={this.props.id} disabled={this.props.disabled} {...this.props.btnConfig} onClick={this.onClick} bsStyle={this.props.buttonStyle} style={this.props.style}>
-                <Glyphicon glyph={this.props.glyph}/>{this.props.text}{this.props.help}
-            </Button>
-        );
+    onClick = () => {
+        this.props.onClick();
     };
-
-    addTooltip = (btn) => {
-        let tooltip = <Tooltip id="undo-btn-tooltip">{this.props.tooltip}</Tooltip>;
-        return (
-            <OverlayTrigger placement={this.props.tooltipPlace} key={"overlay-trigger." + this.props.id} overlay={tooltip}>
-                {btn}
-            </OverlayTrigger>
-        );
-    };
-
-    UNSAFE_componentWillMount() {
-        // none
-    }
 
     render() {
-        var retval;
-        var btn = this.renderButton();
-        if (this.props.tooltip) {
-            retval = this.addTooltip(btn);
-        } else {
-            retval = btn;
-        }
-        return retval;
+        return (
+            <ButtonWithTooltip
+                id={this.props.id}
+                disabled={this.props.disabled}
+                {...this.props.btnConfig}
+                onClick={this.onClick}
+                bsStyle={this.props.buttonStyle}
+                style={this.props.style}
+                tooltip={this.props.tooltip}
+                tooltipPosition={this.props.tooltipPlace}
+                keyProp={"overlay-trigger." + this.props.id}
+            >
+                <Glyphicon glyph={this.props.glyph}/>{this.props.text}{this.props.help}
+            </ButtonWithTooltip>
+        );
 
     }
 }

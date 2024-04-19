@@ -277,7 +277,8 @@
                 "errorWhenDeleting": "Došlo je do greške prilikom postupka brisanja",
                 "errorSizeExceeded": "Molimo, smanjite veličinu detalja ili kvalitetu slika"
             },
-			"search": "pretraži karte..."
+			"search": "pretraži karte...",
+        "searchButton": "Pretraži karte"
 		},
         "resources": {
             "deleteConfirmTitle": "Jeste li sigurni",

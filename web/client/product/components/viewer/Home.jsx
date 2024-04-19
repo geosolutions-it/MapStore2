@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
  */
 import React from 'react';
 
-import { Glyphicon, Tooltip } from 'react-bootstrap';
+import { Glyphicon } from 'react-bootstrap';
 import ToggleButton from '../../../components/buttons/ToggleButton';
 import Message from '../../../components/I18N/Message';
 
@@ -32,7 +32,6 @@ class Home extends React.Component {
     };
 
     render() {
-        let tooltip = <Tooltip id="toolbar-home-button">{this.props.buttonTooltip}</Tooltip>;
         return (
             <ToggleButton
                 id="home-button"
@@ -42,7 +41,7 @@ class Home extends React.Component {
                 glyphicon="home"
                 helpText={<Message msgId="helptexts.gohome"/>}
                 onClick={this.goHome}
-                tooltip={tooltip}
+                tooltip={this.props.buttonTooltip}
                 tooltipPlace="left"
             />
         );

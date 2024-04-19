@@ -12,6 +12,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import tooltip from '../tooltip';
 import { Button } from 'react-bootstrap';
+import Message from "../../../I18N/HTML";
+import Localized from "../../../I18N/Localized";
+
+const messages = {
+    "testMsg": "my message"
+};
+
 describe("tooltip enhancer", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -37,6 +44,17 @@ describe("tooltip enhancer", () => {
         expect(el).toExist();
         el.click();
         expect(el.getAttribute('aria-describedby')).toExist();
+    });
+    it('adds an aria-label property with localized content', () => {
+        const CMP = tooltip(Button);
+        const tip = <Message msgId="testMsg"/>;
+        ReactDOM.render(
+            <Localized locale="it-IT" messages={messages}>
+                <CMP tooltip={tip} tooltipTrigger={['click', 'focus', 'hover']} id="text-cmp">TEXT</CMP>
+            </Localized>, document.getElementById("container"));
+        const el = document.getElementById("text-cmp");
+        expect(el).toExist();
+        expect(el.getAttribute('aria-label')).toBe('my message');
     });
 
 });

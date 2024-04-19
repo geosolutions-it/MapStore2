@@ -420,7 +420,8 @@
                 "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini",
                 "errorLoadingContexts": "Si è verificato un errore durante il caricamento dei contesti"
             },
-			"search": "Cerca..."
+			"search": "Cerca...",
+      "searchButton": "Cerca mappe"
 		},
         "resources": {
             "successSaved": "Questa risorsa è stata salvata correttamente",
