@@ -114,6 +114,26 @@ class DecimalCoordinateEditor extends React.Component {
         }
         return null; // "success"
     }
+
+    validateDecimalX = (xCoordinate) => {
+        const min = this.props.constraints[this.props.format].xCoord.min;
+        const max = this.props.constraints[this.props.format].xCoord.max;
+
+        const xCoord = parseFloat(xCoordinate);
+        if (isNaN(xCoord) || xCoord < min || xCoord > max ) {
+            return "error";
+        }
+        return null; // "success"
+    };
+    validateDecimalY = (yCoordinate) => {
+        const min = this.props.constraints[this.props.format].yCoord.min;
+        const max = this.props.constraints[this.props.format].yCoord.max;
+        const yCoord = parseFloat(yCoordinate);
+        if (isNaN(yCoord) || yCoord < min || yCoord > max ) {
+            return "error";
+        }
+        return null; // "success"
+    }
 }
 
 export default DecimalCoordinateEditor;

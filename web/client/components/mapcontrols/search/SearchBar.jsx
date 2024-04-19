@@ -20,6 +20,7 @@ import SearchBarToolbar from '../../search/SearchBarToolbar';
 import { defaultSearchWrapper } from '../../search/SearchBarUtils';
 import BookmarkSelect, {BookmarkOptions} from "../searchbookmarkconfig/BookmarkSelect";
 import CoordinatesSearch, {CoordinateOptions} from "../searchcoordinates/CoordinatesSearch";
+import CurrentMapCRSCoordSearch from '../searchcoordinates/CurrentMapCRSCoordSearch';
 import tooltip from '../../misc/enhancers/tooltip';
 
 const TMenuItem = tooltip(MenuItem);
@@ -101,6 +102,7 @@ export default ({
     onZoomToPoint = () => {},
     onClearBookmarkSearch = () => {},
     onPurgeResults,
+    currentMapCRS = 'EPSG:4326',
     items = [],
     ...props
 }) => {
@@ -111,6 +113,13 @@ export default ({
             setSearchServiceSelected(-1);
         }
     }, [searchOptions?.services]);
+
+    useEffect(() => {
+        // if user changes the map crs and the search was in  mapCRSCoordinatesSearch tab in search --> switch to default coordniateSearch
+        if (currentMapCRS === 'EPSG:4326' && activeTool === 'mapCRSCoordinatesSearch') {
+            onChangeActiveSearchTool('coordinatesSearch');
+        }
+    }, [currentMapCRS]);
 
     const selectedServices = searchOptions?.services?.filter((_, index) => selectedSearchService >= 0 ? selectedSearchService === index : true) ?? [];
     const search = defaultSearchWrapper({
@@ -160,6 +169,7 @@ export default ({
                 clearSearch={clearSearch}
                 onChangeActiveSearchTool={onChangeActiveSearchTool}
                 onClearBookmarkSearch={onClearBookmarkSearch}
+                currentMapCRS={currentMapCRS}
             />);
     }
 
@@ -224,7 +234,10 @@ export default ({
                     onCancelSelectedItem={onCancelSelectedItem}
                     onPurgeResults={onPurgeResults}/>
                 {activeTool === "coordinatesSearch" && showCoordinatesSearchOption &&
-                    <CoordinatesSearch format={format} defaultZoomLevel={defaultZoomLevel} onClearCoordinatesSearch={onClearCoordinatesSearch} />
+                    <CoordinatesSearch currentMapCRS={currentMapCRS} format={format} defaultZoomLevel={defaultZoomLevel} onClearCoordinatesSearch={onClearCoordinatesSearch} />
+                }
+                {activeTool === "mapCRSCoordinatesSearch" && showCoordinatesSearchOption &&
+                    <CurrentMapCRSCoordSearch currentMapCRS={currentMapCRS} format={format} defaultZoomLevel={defaultZoomLevel} onClearCoordinatesSearch={onClearCoordinatesSearch} />
                 }
                 {
                     activeTool === "bookmarkSearch" && showBookMarkSearchOption &&
@@ -253,7 +266,7 @@ export default ({
                                     clearSearch();
                                 }
                             },
-                            ...(activeTool === "coordinatesSearch" &&
+                            ...(["coordinatesSearch", "mapCRSCoordinatesSearch"].includes(activeTool)  &&
                                 CoordinateOptions.removeIcon(activeTool, coordinate, onClearCoordinatesSearch, onChangeCoord))
                         }, {
                             glyph: searchIcon,
@@ -265,8 +278,8 @@ export default ({
                             visible: activeTool === "addressSearch" &&
                             (!(searchText !== "" || selectedItems && selectedItems.length > 0) || !splitTools),
                             onClick: () => isSearchClickable && search(),
-                            ...(activeTool === "coordinatesSearch" &&
-                                CoordinateOptions.searchIcon(activeTool, coordinate, onZoomToPoint, defaultZoomLevel)),
+                            ...(["coordinatesSearch", "mapCRSCoordinatesSearch"].includes(activeTool) &&
+                                CoordinateOptions.searchIcon(activeTool, coordinate, onZoomToPoint, defaultZoomLevel, currentMapCRS)),
                             ...(activeTool === "bookmarkSearch" &&
                                     BookmarkOptions.searchIcon(activeTool, props))
                         }, {

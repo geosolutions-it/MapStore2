@@ -207,6 +207,22 @@ export const  reprojectExtent = (extent, projection, isIDL) => {
         ].reduce((a, b) => [...a, b.x, b.y], []));
 };
 
+/**
+ * Get extent by EPSG projection
+ * @param projection {string} the projection of the needed extent
+ * @return {array} extent [minx, miny, maxy, maxy]
+ */
+export const  getExtentByCRSCode = (projection) => {
+    if (projection === 'EPSG:4326') {
+        return [-180, -85, 180, 85];
+    }
+    // here the acceptable range -180, -85, 180, 85
+    const lowerLeftPoint = reproject([-180, -85], 'EPSG:4326', projection, true);
+    const upperRightPoint = reproject([180, 85], 'EPSG:4326', projection, true);
+    return [lowerLeftPoint.x, lowerLeftPoint.y, upperRightPoint.x, upperRightPoint.y];
+};
+
+
 export const  getPolygonFromExtent = (extent) => {
     if (extent) {
         if (extent.hasOwnProperty('geometry') && extent.geometry.type === "Polygon") {

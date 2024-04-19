@@ -41,7 +41,8 @@ import {
     convertRadianToDegrees,
     convertDegreesToRadian,
     transformExtentToObj,
-    transformExtentToArray
+    transformExtentToArray,
+    getExtentByCRSCode
 } from '../CoordinatesUtils';
 
 import Proj4js from 'proj4';
@@ -960,5 +961,15 @@ describe('CoordinatesUtils', () => {
         const rad = convertDegreesToRadian('5729.6');
         const val = valueIsApproximatelyEqual(rad, 100);
         expect(val).toBe(true);
+    });
+    it('test getExtentByCRSCode to get extent of EPSG:3857', ()=> {
+        const projection = "EPSG:3857";
+        const extent = getExtentByCRSCode(projection);
+        expect(extent).toEqual([-20037508.342789244, -19971868.88040857, 20037508.342789244, 19971868.880408563 ]);
+    });
+    it('test getExtentByCRSCode to get extent of the default projection EPSG:4326', ()=> {
+        const projection = "EPSG:4326";
+        const extent = getExtentByCRSCode(projection);
+        expect(extent).toEqual([-180, -85, 180, 85]);
     });
 });
