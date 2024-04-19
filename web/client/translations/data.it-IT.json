@@ -859,7 +859,7 @@
             "addressSearch": "Cerca un indirizzo",
             "searchOnAllServices": "Cerca su tutti i servizi di seguito",
             "coordinatesSearch": "Cerca per coordinate",
-            "currentMapCRS": "Current Map CRS",
+            "currentMapCRS": "Sistema di coordinate della mappa corrente",
             "searchservicesbutton": "Configura servizi di ricerca",
             "configpaneltitle": "Aggiungi/modifica un servizio di ricerca",
             "serviceslistlabel": "Servizi disponibili",
