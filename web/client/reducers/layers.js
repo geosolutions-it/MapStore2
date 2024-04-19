@@ -226,7 +226,8 @@ function layers(state = { flat: [] }, action) {
             const newLayers = state.flat.filter((layer) => layer.id !== action.node);
             return assign({}, state, {
                 flat: newLayers,
-                groups: newGroups
+                groups: newGroups,
+                selected: (state?.selected || []).filter((selectedId) => selectedId !== action.node)
             });
         }
         return state;
