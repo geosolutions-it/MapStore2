@@ -380,10 +380,11 @@ function queryform(state = initialState, action) {
     case QUERY_FORM_RESET: {
         let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
         let crossLayerFilter = { attribute: state.crossLayerFilter && state.crossLayerFilter.attribute };
+        const isLegendFilterExist = state.filters?.find(i => i.id === 'interactiveLegend');
         return assign({}, state, initialState, {
             spatialField,
             crossLayerFilter,
-            filters: [],
+            filters: isLegendFilterExist ? [isLegendFilterExist] : [],
             map: state.map
         });
     }

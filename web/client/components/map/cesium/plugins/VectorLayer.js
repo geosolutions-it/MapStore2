@@ -15,6 +15,7 @@ import {
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
+import { geoStylerStyleFilter as filterVectorLayerFeatures } from '../../../../utils/styleparser/StyleParserUtils';
 
 const createLayer = (options, map) => {
 
@@ -26,8 +27,11 @@ const createLayer = (options, map) => {
         };
     }
 
-    const features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
-
+    let features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
+    const hasLegendFilter = options?.geoStylerFilter;
+    if (hasLegendFilter) {
+        features = features.filter(feat => filterVectorLayerFeatures(feat, hasLegendFilter));
+    }
     let styledFeatures = new GeoJSONStyledFeatures({
         features,
         id: options?.id,
@@ -59,11 +63,18 @@ const createLayer = (options, map) => {
 Layers.registerType('vector', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (!isEqual(newOptions.features, oldOptions.features)) {
+        const isStyleChanged = !isEqual(oldOptions.style, newOptions.style);
+        const areFeaturesChanged = !isEqual(oldOptions.features, newOptions.features);
+
+        const oldLegendFilter = oldOptions?.layerFilter?.filters?.find(f=>f.id === 'interactiveLegend');
+        const newLegendFilter = newOptions?.layerFilter?.filters?.find(f=>f.id === 'interactiveLegend');
+        const isLegendFilterChanged = !isEqual(oldLegendFilter, newLegendFilter);
+
+        if (areFeaturesChanged || isLegendFilterChanged) {
             return createLayer(newOptions, map);
         }
 
-        if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {
+        if ((layer?.styledFeatures && isStyleChanged)) {
             layerToGeoStylerStyle(newOptions)
                 .then((style) => {
                     getStyle(applyDefaultStyleToVectorLayer({ ...newOptions, style }), 'cesium')

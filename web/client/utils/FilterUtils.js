@@ -22,6 +22,7 @@ import { read } from './ogc/Filter/CQL/parser';
 import fromObject from './ogc/Filter/fromObject';
 import filterBuilder from './ogc/Filter/FilterBuilder';
 import { reprojectGeoJson, reproject } from './CoordinatesUtils';
+import { geoStylerStyleFilter as filterVectorLayerFeatures } from './styleparser/StyleParserUtils';
 
 export const cqlToOgc = (cqlFilter, fOpts) => {
     const fb = filterBuilder(fOpts);
@@ -1143,11 +1144,14 @@ export const getWFSFilterData = (filterObj, options) => {
     return data;
 };
 export const isLikeOrIlike = (operator) => operator === "ilike" || operator === "like";
-export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {}, filters = [] } = {}) =>
-    !(filterFields.filter((field) => field.value || field.value === 0 || field.operator === "isNull").length > 0)
+export const isFilterEmpty = ({ filterFields = [], spatialField = {}, crossLayerFilter = {}, filters = [] } = {}) => {
+    // exclude the legend filter from filters not to be included in this check
+    let filtersArr = filters?.filter(f => f.id !== 'interactiveLegend');
+    return !(filterFields.filter((field) => field.value || field.value === 0 || field.operator === "isNull").length > 0)
     && !spatialField.geometry
     && !(crossLayerFilter && crossLayerFilter.attribute && crossLayerFilter.operation)
-    && !(filters && filters.length > 0);
+    && !(filtersArr && filtersArr.length > 0);
+};
 export const isFilterValid = (f = {}) =>
     (f.filterFields && f.filterFields.length > 0)
     || (f.simpleFilterFields && f.simpleFilterFields.length > 0)
@@ -1220,8 +1224,11 @@ export const normalizeFilterCQL = (filter, nativeCrs) => {
  * Filter features (in geoJSON format) with the filterObject
  * @returns {function} the function for filtering the features
  */
-export const createFeatureFilter = (filterObj) => feature => {
+export const createFeatureFilter = (filterObj, geoStylerFilter) => feature => {
 
+    if (geoStylerFilter) {
+        return filterVectorLayerFeatures(feature, geoStylerFilter);
+    }
     if (!filterObj) {
         return true;
     }

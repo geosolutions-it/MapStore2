@@ -1,4 +1,4 @@
-    {
+{
     "locale": "it-IT",
     "messages": {
         "Language": "Lingua",
@@ -202,6 +202,10 @@
               "legendWidth": "Larghezza",
               "legendHeight": "Altezza",
               "legendPreview": "Anteprima"
+            },
+            "enableInteractiveLegendInfo": {
+                "label": "Abilita leggenda interattiva",
+                "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
             },
             "enableLocalizedLayerStyles": {
                 "label": "Abilita stile localizzato",

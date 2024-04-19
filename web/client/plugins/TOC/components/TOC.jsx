@@ -63,6 +63,7 @@ export function ControlledTOC({
     onChange = () => {},
     onSelectNode = () => {},
     onContextMenu = () => {},
+    onLayerFilterByLegend = () => {},
     groupNodeComponent,
     layerNodeComponent,
     filterText,
@@ -87,6 +88,7 @@ export function ControlledTOC({
                 onChange(currentNode.id, nodeType, options)
             }
             groupNodeComponent={groupNodeComponent}
+            onLayerFilterByLegend={onLayerFilterByLegend}
             layerNodeComponent={layerNodeComponent}
             contextMenu={contextMenu}
             onContextMenu={onContextMenu}

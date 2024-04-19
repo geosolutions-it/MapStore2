@@ -31,6 +31,8 @@ import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
 import { getStyleParser } from './VectorStyleUtils';
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 import xml2js from 'xml2js';
+import { toCQLFilter } from "./FilterUtils";
+
 const xmlBuilder = new xml2js.Builder();
 
 export const STYLE_ID_SEPARATOR = '___';
@@ -215,7 +217,6 @@ export const filterObjectToFilterArray = (filterObj) => {
     const startGroupField = filterObj?.groupFields?.find(({ groupId }) => !groupId);
     return startGroupField && loopFilterObjToFilterArray(filterObj, startGroupField);
 };
-
 const loopFilterArrayToFilterObject = (filterArr, { index = 0, groupId } = {}, callback = () => {}) => {
     if (!filterArr) {
         return null;
@@ -237,11 +238,23 @@ const loopFilterArrayToFilterObject = (filterArr, { index = 0, groupId } = {}, c
         callback('groupField', {
             id: newGroupId,
             index,
-            logic: mapOperators[operator]
+            logic: mapOperators[operator],
+            groupId
         });
+        // check if operands contain array or not, if contain ---> loop on them with the same group id
+        if (operands.length && isFirstArray) {
+            operands.forEach((op, idx)=> {
+                let isItemArr = isArray(op);
+                let isItemNotGroup = isItemArr && !['||', '&&'].includes(op[0]);
+                loopFilterArrayToFilterObject(isItemNotGroup ? [op] : op, {
+                    index: idx,
+                    groupId: newGroupId
+                }, callback);
+            });
+        }
         return loopFilterArrayToFilterObject(others, {
             index: index + 1,
-            groupId: newGroupId
+            groupId: isFirstArray ? groupId : newGroupId
         }, callback);
     }
     if (operator) {
@@ -752,6 +765,12 @@ export const styleValidation = {
     }
 };
 
+export const parseGeoStylerFilterToCql = (geostylerFilter) => {
+    const filterObject = filterArrayToFilterObject(geostylerFilter);
+    const cqlExpression = toCQLFilter(filterObject);
+    return cqlExpression;
+};
+
 export default {
     STYLE_ID_SEPARATOR,
     STYLE_OWNER_NAME,
@@ -773,5 +792,6 @@ export default {
     getVectorLayerAttributes,
     getVectorLayerGeometryType,
     getVectorDefaultStyle,
-    styleValidation
+    styleValidation,
+    parseGeoStylerFilterToCql
 };

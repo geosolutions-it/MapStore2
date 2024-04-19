@@ -14,16 +14,17 @@ import { get, head } from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { TOGGLE_CONTROL, setControlProperty } from '../actions/controls';
 import { QUERY_FORM_SEARCH, loadFilter, reset, search } from '../actions/queryform';
-import { changeLayerProperties } from '../actions/layers';
+import { changeLayerProperties, updateNode } from '../actions/layers';
 
 import {
     OPEN_QUERY_BUILDER,
     initLayerFilter,
     DISCARD_CURRENT_FILTER,
     APPLY_FILTER,
-    storeAppliedFilter
+    storeAppliedFilter,
+    LAYER_FILTER_BY_LEGEND,
+    RESET_LAYER_FILTER_BY_LEGEND
 } from '../actions/layerFilter';
-
 import { featureTypeSelected, toggleLayerFilter, initQueryPanel } from '../actions/wfsquery';
 import { getSelectedLayer } from '../selectors/layers';
 import { changeDrawingStatus } from '../actions/draw';
@@ -114,8 +115,127 @@ export const onApplyFilter = (action$, {getState}) =>
 
         });
 
+/**
+ * It applies the legend filter for wms/wms/vector layer
+ * @memberof epics.layerFilter
+ * @param {external:Observable} action$ manages `LAYER_FILTER_BY_LEGEND`
+ * @return {external:Observable} `APPLIED_FILTER`
+ */
+export const applyCQLFilterBasedOnLegendFilter = (action$, {getState}) => {
+    return  action$.ofType(LAYER_FILTER_BY_LEGEND)
+        .switchMap((action) => {
+            const state = getState();
+            const layer = head(state.layers.flat.filter(l => l.id === action.layerId));
+            const queryFormFilterObj = {...get(getState(), "queryform", {})};
+            let filterObj = layer.layerFilter ? layer.layerFilter : queryFormFilterObj;
+            let searchUrl = layer?.search?.url;
+            let actions = [];
+            // reset thte filter if legendCQLFilter is empty
+            if (!action.legendCQLFilter) {
+                // clear legend filter with id = 'interactiveLegend'
+                const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+                if (isLegendFilterExist) {
+                    filterObj = {
+                        ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+                    };
+                }
+                let newFilter = isNotEmptyFilter(filterObj) ? filterObj : undefined;
+                if (layer.type === 'vector') {
+                    actions.push(
+                        updateNode(layer.id, 'layer', {geoStylerFilter: undefined})
+                    );
+                }
+                actions.push(...[search(searchUrl, newFilter), addFilterToLayer(layer.id, newFilter), storeAppliedFilter(newFilter)]);
+                return Rx.Observable.from(actions);
+            }
+            let legendCQLFilter = action.legendCQLFilter;
+            let filter = {...(filterObj || {})};
+            if (legendCQLFilter) {
+                // remove the unnecessaru brackets --> in some cases wms getLegendGraphic provides filter with brackets
+                // "[FIELD_01 >= '1' AND FIELD_01 < '0']" ---> to be "FIELD_01 >= '1' AND FIELD_01 < '0'"
+                const cqlStatement = legendCQLFilter.includes("[") ? legendCQLFilter.slice(1, legendCQLFilter.length - 1) : legendCQLFilter;
+                // add legend filter with id = 'interactiveLegend' in cql format
+                filter.filters =  [
+                    ...(filterObj?.filters?.filter(f => f.id !== 'interactiveLegend') || []), ...[
+                        {
+                            "id": "interactiveLegend",
+                            "format": "logic",
+                            "version": "1.0.0",
+                            "logic": "AND",
+                            "filters": [{
+                                "format": "cql",
+                                "version": "1.0.0",
+                                "body": cqlStatement,
+                                "id": `[${cqlStatement}]`
+                            }]
+                        }
+                    ]
+                ];
+                if (layer.type === 'vector') {
+                    actions.push(
+                        updateNode(layer.id, 'layer', {geoStylerFilter: action.filterArr})
+                    );
+                }
+                actions.push(...[search(searchUrl, filter), addFilterToLayer(layer.id, filter), storeAppliedFilter(filter)]);
+            }
+            return Rx.Observable.from(actions);
+        });
+};
+/**
+ * It applies a reset for legend filter for wms/wms/vector layer
+ * @memberof epics.layerFilter
+ * @param {external:Observable} action$ manages `RESET_LAYER_FILTER_BY_LEGEND`
+ * @return {external:Observable} `APPLIED_FILTER`
+ */
+export const applyResetLegendFilter = (action$, {getState}) => {
+    return  action$.ofType(RESET_LAYER_FILTER_BY_LEGEND)
+        .switchMap((action) => {
+            const state = getState();
+            const layer = getSelectedLayer(state);
+            let actions = [];
+            const layerType = layer.type;
+            const isWFSOrVectorLayer = layerType === 'wfs' || layerType === 'vector';
+            const isWMSLayer = layerType === 'wms';
+            const isResetForStyle = action.reason === 'style';      // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
+            let needReset;
+            // check if the selected style is different than the current layer's one, if not cancel the epic
+            if (isWFSOrVectorLayer && isResetForStyle) {
+                needReset = action.reason === 'style' && layer.style?.metadata?.styleJSON !== action?.value;
+            } else if (isWMSLayer && isResetForStyle) {
+                needReset = action.reason === 'style' && layer.style !== action?.value;
+            } else if (!isResetForStyle) {
+                // in case of reason === 'disableEnableInteractiveLegend'
+                needReset = true;
+            }
+            // check if the layer has interactive legend or not, if not cancel the epic
+            const isLayerWithJSONLegend = layer?.enableInteractiveLegend;
+            if (!needReset || !isLayerWithJSONLegend) return Rx.Observable.empty();
+            const queryFormFilterObj = {...get(getState(), "queryform", {})};
+            let filterObj = layer.layerFilter ? layer.layerFilter : queryFormFilterObj;
+            let searchUrl = layer?.search?.url;
+            // reset thte filter if legendCQLFilter is empty
+            const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+            if (isLegendFilterExist) {
+                filterObj = {
+                    ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+                };
+                let newFilter = isNotEmptyFilter(filterObj) ? filterObj : undefined;
+                if (layer.type === 'vector') {
+                    actions.push(
+                        updateNode(layer.id, 'layer', {geoStylerFilter: undefined})
+                    );
+                }
+                actions.push(...[search(searchUrl, newFilter), addFilterToLayer(layer.id, newFilter), storeAppliedFilter(newFilter)]);
+                return Rx.Observable.from(actions);
+            }
+            return Rx.Observable.empty();
+        });
+};
+
 export default {
     handleLayerFilterPanel,
     restoreSavedFilter,
-    onApplyFilter
+    onApplyFilter,
+    applyCQLFilterBasedOnLegendFilter,
+    applyResetLegendFilter
 };

@@ -77,6 +77,7 @@ const LayersTree = ({
     layerNodeComponent = DefaultLayer,
     onContextMenu = () => {},
     onSelect = () => {},
+    onLayerFilterByLegend = () => {},
     contextMenu,
     selectedNodes = [],
     rootGroupId = ROOT_GROUP_ID,
@@ -204,6 +205,7 @@ const LayersTree = ({
                             onSelect={onSelect}
                             nodeItems={nodeItems}
                             nodeToolItems={nodeToolItems}
+                            onLayerFilterByLegend={onLayerFilterByLegend}
                         />
                     );
                 })}

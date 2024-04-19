@@ -207,6 +207,10 @@
                 "label": "Enable localized style",
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Enable interactive legend",
+                "tooltip": "Note: This parameter requires specific configurations on GeoServer"
+            },
             "format": {
                 "title": "Format",
                 "tile": "Tile",

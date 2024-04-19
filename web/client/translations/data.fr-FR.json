@@ -203,6 +203,10 @@
               "legendHeight": "Hauteur",
               "legendPreview": "Aperçu"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Activer la légende interactive",
+                "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
+            },
             "enableLocalizedLayerStyles": {
                 "label": "Activer le style localisé",
                 "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
