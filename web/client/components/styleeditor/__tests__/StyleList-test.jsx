@@ -162,6 +162,7 @@ describe('test StyleList module component', () => {
         expect(spyOnSelect).toHaveBeenCalledWith({ style: 'point' }, true);
     });
 
+
     it('test StyleList showDefaultStyleIcon', () => {
 
         ReactDOM.render(<StyleList
