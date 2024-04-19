@@ -54,6 +54,7 @@ export default ({
                 onDelete={() => {
                     setDetailsBackup(savedDetailsText);
                     onUpdateLinkedResource('details', 'NODATA', 'DETAILS');
+                    onUpdateResource('attributes.detailsSettings', {});
                 }}/>
             <DetailsSheet
                 loading={loading}
