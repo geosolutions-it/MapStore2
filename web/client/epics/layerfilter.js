@@ -23,6 +23,7 @@ import {
     APPLY_FILTER,
     storeAppliedFilter
 } from '../actions/layerFilter';
+
 import { featureTypeSelected, toggleLayerFilter, initQueryPanel } from '../actions/wfsquery';
 import { getSelectedLayer } from '../selectors/layers';
 import { changeDrawingStatus } from '../actions/draw';

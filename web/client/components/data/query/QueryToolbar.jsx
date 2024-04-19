@@ -240,7 +240,7 @@ class QueryToolbar extends React.Component {
         };
         const appliedFilter = this.props.appliedFilter || {};
         const applied = {
-            groupFields: appliedFilter.groupFields || [],
+            groupFields: appliedFilter.groupFields,
             filterFields: appliedFilter.attributePanelExpanded && appliedFilter.filterFields || [],
             spatialField: appliedFilter.spatialPanelExpanded && appliedFilter.spatialField || {
                 attribute: this.props.spatialField && this.props.spatialField.attribute
@@ -270,7 +270,7 @@ class QueryToolbar extends React.Component {
                 spatialField: {
                     attribute: this.props.spatialField && this.props.spatialField.attribute
                 },
-                filters: [],
+
                 pagination: this.props.pagination,
                 filterType: this.props.filterType,
                 ogcVersion: this.props.ogcVersion,

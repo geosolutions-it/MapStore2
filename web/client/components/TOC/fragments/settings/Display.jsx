@@ -9,7 +9,7 @@
 import { clamp, isNil, isNumber } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB, Tooltip } from 'react-bootstrap';
+import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB } from 'react-bootstrap';
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 const Button = tooltip(ButtonRB);
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
@@ -25,7 +25,6 @@ import WMSCacheOptions from './WMSCacheOptions';
 import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
 import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
-import OverlayTrigger from '../../../misc/OverlayTrigger';
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -264,6 +263,7 @@ export default class extends React.Component {
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
                         </Col>
                         { this.props.element?.serverType !== ServerTypes.NO_VENDOR &&
+                            <Col xs={12} className="first-selectize">
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"
                                     value="enableInteractiveLegend"
@@ -277,16 +277,9 @@ export default class extends React.Component {
                                     }}
                                     checked={this.props.element.enableInteractiveLegend} >
                                     <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
-                                    &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.tooltip" />} /> &nbsp;
-                                    <OverlayTrigger placement={"bottom"} overlay={<Tooltip id={"interactiveLegendInfo"}>
-                                        <Message msgId={"layerProperties.enableInteractiveLegendInfo.info"} />
-                                    </Tooltip>}>
-                                        <Glyphicon
-                                            style={{ marginLeft: 4 }}
-                                            glyph={"info-sign"}
-                                        />
-                                    </OverlayTrigger>
+                                    &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
                                 </Checkbox>
+                            </Col>
                         }
                         {!this.props.element?.enableInteractiveLegend && <><Col xs={12} sm={6} className="first-selectize">
                             <FormGroup validationState={this.getValidationState("legendWidth")}>

@@ -34,8 +34,7 @@ import {
     getVectorLayerGeometryType,
     getVectorDefaultStyle,
     styleValidation,
-    getAttributes,
-    parseGeoStylerFilterToCql
+    getAttributes
 } from '../StyleEditorUtils';
 
 describe('StyleEditorUtils test', () => {
@@ -1275,102 +1274,5 @@ describe('StyleEditorUtils test', () => {
             { attribute: 'name', label: 'alias', type: 'string' },
             { attribute: 'count', label: 'count', type: 'number' }
         ]);
-    });
-    describe('StyleEditorUtils parseGeoStylerFilterToCql', () => {
-        it('test parseGeoStylerFilterToCql with simple geostyler filter', () => {
-            const simpleGeostylerFilter = [
-                "&&",
-                [
-                    "<",
-                    "FIELD_01",
-                    10
-                ],
-                [
-                    ">",
-                    "FIELD_01",
-                    0
-                ]
-            ];
-            expect(parseGeoStylerFilterToCql(simpleGeostylerFilter)).toBe(`("FIELD_01" < \'10\' AND "FIELD_01" > \'0\')`);
-        });
-        it('test parseGeoStylerFilterToCql with a geostyler filter with direct group', () => {
-            const geostylerFilterWithDirectGroup = [
-                "&&",
-                [
-                    "<",
-                    "FIELD_01",
-                    10
-                ],
-                [
-                    ">",
-                    "FIELD_01",
-                    0
-                ],
-                [
-                    "&&",
-                    [
-                        "<",
-                        "FIELD_02",
-                        200000
-                    ],
-                    [
-                        ">",
-                        "FIELD_02",
-                        150000
-                    ]
-                ]
-            ];
-            expect(parseGeoStylerFilterToCql(geostylerFilterWithDirectGroup)).toBe(`("FIELD_01" < \'10\' AND "FIELD_01" > \'0\' AND ("FIELD_02" < \'200000\' AND "FIELD_02" > \'150000\'))`);
-        });
-        it('test parseGeoStylerFilterToCql with complex geostyler filter', () => {
-            const complexGeostylerFilter = [
-                "||",
-                [
-                    ">",
-                    "FIELD_02",
-                    2000
-                ],
-                [
-                    "&&",
-                    [
-                        ">",
-                        "FIELD_01",
-                        0
-                    ],
-                    [
-                        "<",
-                        "FIELD_01",
-                        100000
-                    ],
-                    [
-                        "&&",
-                        [
-                            "<",
-                            "FIELD_01",
-                            210000
-                        ],
-                        [
-                            ">",
-                            "FIELD_01",
-                            152000
-                        ]
-                    ]
-                ],
-                [
-                    "&&",
-                    [
-                        "<",
-                        "FIELD_01",
-                        200000
-                    ],
-                    [
-                        ">",
-                        "FIELD_01",
-                        150000
-                    ]
-                ]
-            ];
-            expect(parseGeoStylerFilterToCql(complexGeostylerFilter)).toBe(`("FIELD_02" > \'2000\' OR ("FIELD_01" > \'0\' AND "FIELD_01" < \'100000\' AND ("FIELD_01" < \'210000\' AND "FIELD_01" > \'152000\')) OR ("FIELD_01" < \'200000\' AND "FIELD_01" > \'150000\'))`);
-        });
     });
 });

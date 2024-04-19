@@ -2310,27 +2310,6 @@ describe('FilterUtils', () => {
             filters: [{format: 'logic', logic: 'AND', filters: []}]
         })).toBe(false);
         expect(isFilterEmpty({
-            filterFields: [],
-            spatialField: {},
-            crossLayerFilter: {},
-            filters: [
-                {
-                    "id": "interactiveLegend",
-                    "format": "logic",
-                    "version": "1.0.0",
-                    "logic": "AND",
-                    "filters": [
-                        {
-                            "format": "cql",
-                            "version": "1.0.0",
-                            "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
-                            "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
-                        }
-                    ]
-                }
-            ]
-        })).toBe(true);
-        expect(isFilterEmpty({
             filterFields: [{operator: "isNull"}],
             spatialField: {},
             crossLayerFilter: {},

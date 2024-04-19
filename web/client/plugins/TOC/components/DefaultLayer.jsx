@@ -91,7 +91,6 @@ const DefaultLayerNode = ({
                         <li>
                             <VectorLegend
                                 style={node?.style}
-                                layer={node}
                             />
                         </li>
                     </>

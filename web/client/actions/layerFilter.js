@@ -26,9 +26,6 @@ export const APPLY_FILTER = 'LAYER_FILTER:APPLY_FILTER';
  */
 export const OPEN_QUERY_BUILDER = 'LAYER_FILTER:OPEN_QUERY_BUILDER';
 
-export const LAYER_FILTER_BY_LEGEND = 'LAYER_FILTER:LAYER_FILTER_BY_LEGEND';
-
-export const RESET_LAYER_FILTER_BY_LEGEND = 'LAYER_FILTER:RESET_LAYER_FILTER_BY_LEGEND';
 
 export function storeCurrentFilter() {
     return {
@@ -52,6 +49,7 @@ export function storeAppliedFilter(filter) {
         filter
     };
 }
+
 export function applyFilter() {
     return {
         type: APPLY_FILTER
