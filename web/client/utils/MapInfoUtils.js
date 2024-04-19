@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, JSON_MIME_TYPE, GEOJSON_MIME_TYPE, Validator } from './FeatureInfoUtils';
+import { INFO_FORMATS, INFO_FORMATS_BY_MIME_TYPE, JSON_MIME_TYPE, GEOJSON_MIME_TYPE, validator } from './FeatureInfoUtils';
 
 import pointOnSurface from 'turf-point-on-surface';
 import { findIndex } from 'lodash';
@@ -286,45 +286,49 @@ export const getIdentifyFlow = (layer, baseURL, params) => {
     }
     return null;
 };
+
+const deduceInfoFormat = (response) => {
+    let infoFormat;
+    // Handle WMS, WMTS
+    if (response.queryParams && response.queryParams.hasOwnProperty('info_format')) {
+        infoFormat = response.queryParams.info_format;
+    }
+    // handle WFS
+    if (response.queryParams && response.queryParams.hasOwnProperty('outputFormat')) {
+        infoFormat = response.queryParams.outputFormat;
+    }
+    return infoFormat;
+};
+
+const determineValidatorFormat = (response, format) => {
+    if (response.format) return response.format;
+
+    const infoFormat = deduceInfoFormat(response);
+    return INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format];
+};
+
+const determineValidator = (response, format) => {
+    const validatorFormat = determineValidatorFormat(response, format);
+    return validator(validatorFormat);
+};
+
 export const getValidator = (format) => {
-    const defaultValidator = {
-        getValidResponses: (responses) => responses,
-        getNoValidResponses: () => []
-    };
     return {
         getValidResponses: (responses) => {
-            return responses.reduce((previous, current) => {
+            return responses.filter((current) => {
                 if (current) {
-                    let infoFormat;
-                    // Handle WMS, WMTS
-                    if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
-                        infoFormat = current.queryParams.info_format;
-                    }
-                    // handle WFS
-                    if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
-                        infoFormat = current.queryParams.outputFormat;
-                    }
-                    const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
-                    return [...previous, ...valid];
+                    return determineValidator(current, format).isValidResponse(current);
                 }
-                return [...previous];
-            }, []);
+                return false;
+            });
         },
         getNoValidResponses: (responses) => {
-            return responses.reduce((previous, current) => {
+            return responses.filter((current) => {
                 if (current) {
-                    let infoFormat;
-                    if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
-                        infoFormat = current.queryParams.info_format;
-                    }
-                    if (current.queryParams && current.queryParams.hasOwnProperty('outputFormat')) {
-                        infoFormat = current.queryParams.outputFormat;
-                    }
-                    const valid = (Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
-                    return [...previous, ...valid];
+                    return !determineValidator(current, format).isValidResponse(current);
                 }
-                return [...previous];
-            }, []);
+                return false;
+            });
         }
     };
 };
