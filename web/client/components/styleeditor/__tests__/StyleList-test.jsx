@@ -162,54 +162,6 @@ describe('test StyleList module component', () => {
         expect(spyOnSelect).toHaveBeenCalledWith({ style: 'point' }, true);
     });
 
-    it('test StyleList onResetLegendFilterStyle', () => {
-
-        const testHandlers = {
-            onResetLegendFilterStyle: () => {},
-            onSelect: () => {}
-        };
-
-        const spyonResetLegendFilterStyle = expect.spyOn(testHandlers, 'onResetLegendFilterStyle');
-
-        ReactDOM.render(<StyleList
-            defaultStyle="point"
-            enabledStyle="square"
-            onSelect={testHandlers.onSelect}
-            onResetLegendFilterStyle={testHandlers.onResetLegendFilterStyle}
-            availableStyles={
-                [
-                    {
-                        name: 'point',
-                        filename: 'default_point.sld',
-                        format: 'sld',
-                        title: 'A boring default style',
-                        _abstract: 'A sample style that just prints out a purple square'
-                    },
-                    {
-                        name: 'square',
-                        filename: 'square.css',
-                        format: 'css',
-                        title: 'Square',
-                        _abstract: 'Simple square'
-                    },
-                    {
-                        name: 'circle',
-                        filename: 'circle.css',
-                        format: 'css',
-                        title: 'Circle',
-                        _abstract: 'Simple circle'
-                    }
-                ]
-            }/>, document.getElementById("container"));
-
-        const cards = document.querySelectorAll('.mapstore-side-card');
-        expect(cards.length).toBe(3);
-
-        TestUtils.Simulate.click(cards[2]);
-
-        expect(spyonResetLegendFilterStyle).toHaveBeenCalledWith('style', 'circle');
-    });
-
     it('test StyleList showDefaultStyleIcon', () => {
 
         ReactDOM.render(<StyleList

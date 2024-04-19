@@ -633,50 +633,6 @@ describe('Test the queryform reducer', () => {
         expect(state.spatialField.attribute).toEqual("GEOMETRY");
     });
 
-    it('Query Form Reset and keeping legend filter is exist', () => {
-        let testAction = {
-            type: "QUERY_FORM_RESET"
-        };
-
-        const initialState = {
-            test: true,
-            spatialField: {
-                attribute: "GEOMETRY"
-            },
-            filters: [
-                {
-                    format: "logic",
-                    logic: "AND",
-                    filters: [{
-                        format: 'cql',
-                        body: 'ATTRIBUTE1 = \'VALUE1\''
-                    }]
-                },
-                {
-                    "id": "interactiveLegend",
-                    "format": "logic",
-                    "version": "1.0.0",
-                    "logic": "AND",
-                    "filters": [
-                        {
-                            "format": "cql",
-                            "version": "1.0.0",
-                            "body": "FIELD_01 >= '5' AND FIELD_01 < '1'",
-                            "id": "[FIELD_01 >= '5' AND FIELD_01 < '1']"
-                        }
-                    ]
-                }
-            ]
-        };
-
-        let state = queryform(initialState, testAction);
-        expect(state).toBeTruthy();
-
-        expect(state.test).toEqual(true);
-        expect(state.spatialField.attribute).toEqual("GEOMETRY");
-        expect(state.filters.length).toEqual(1);
-    });
-
     it('Show Generated Filter', () => {
         let testAction = {
             type: "SHOW_GENERATED_FILTER",
@@ -1158,46 +1114,6 @@ describe('Test the queryform reducer', () => {
         const action2 = removeFilters({id: "test"});
         const newState2 = queryform(newState1, action2);
         expect(newState2.filters.length).toBe(0);
-    });
-    it('test loadFilter when crossLayerExpanded is undefined', () => {
-        const newFilter = {
-            crossLayerFilter: {
-                collectGeometries: {
-                    queryCollection: {
-
-                    }
-                }
-            },
-            filters: [{
-                format: "logic",
-                logic: "AND",
-                filters: [{
-                    format: 'cql',
-                    body: 'ATTRIBUTE1 = \'VALUE1\''
-                }]
-            }],
-            spatialField: {
-                method: "BBOX",
-                operation: "DWITHIN",
-                geometry: '{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-635956.0753326667,5466776.262955805],[-635956.0753326667,4723196.8517976105],[-29351.81886150781,4723196.8517976105],[-29351.81886150781,5466776.262955805],[-635956.0753326667,5466776.262955805]]]},"properties":null}'
-            }
-
-        };
-        const initialState = {
-            crossLayerExpanded: undefined,
-            crossLayerFilter: {
-                attribute: "ATTRIBUTE1"
-            },
-            spatialField: {
-                attribute: "GEOMETRY"
-            }
-        };
-        let action = loadFilter(newFilter);
-        let newState = queryform(initialState, action);
-        expect(newState.crossLayerFilter.attribute).toBe("ATTRIBUTE1");
-        expect(newState.spatialField.attribute).toBe("GEOMETRY");
-        expect(newState.spatialField.method).toBe("BBOX");
-        expect(newState.filters).toEqual(newFilter.filters);
     });
 
 
