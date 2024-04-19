@@ -49,7 +49,6 @@ export function storeAppliedFilter(filter) {
         filter
     };
 }
-
 export function applyFilter() {
     return {
         type: APPLY_FILTER

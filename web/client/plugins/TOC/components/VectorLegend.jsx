@@ -13,6 +13,7 @@ import RuleLegendIcon from '../../../components/styleeditor/RuleLegendIcon';
  * @prop {object} style a layer style object in geostyler format
  */
 function VectorLegend({ style }) {
+
     const renderRules = (rules) => {
         return (rules || []).map((rule) => {
             return (<div className="ms-vector-legend-rule" key={rule.ruleId}>

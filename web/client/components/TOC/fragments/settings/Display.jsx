@@ -218,6 +218,7 @@ export default class extends React.Component {
                     layer={this.props.element}
                     onChange={this.props.onChange}
                 />
+
                 {this.props.element.type === "wms" &&
                 <Row>
                     <Col xs={12}>

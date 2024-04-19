@@ -18,6 +18,7 @@ import tooltip from '../misc/enhancers/tooltip';
 import FilterComp from '../misc/Filter';
 import SVGPreview from './SVGPreview';
 import {resetLayerLegendFilter} from '../../utils/FilterUtils';
+
 const Filter = withLocal('filterPlaceholder')(FilterComp);
 
 const Glyphicon = tooltip(GlyphiconRB);

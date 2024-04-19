@@ -31,7 +31,6 @@ import { baseTemplates, customTemplates } from './styleeditor/stylesTemplates';
 import { getStyleParser } from './VectorStyleUtils';
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 import xml2js from 'xml2js';
-
 const xmlBuilder = new xml2js.Builder();
 
 export const STYLE_ID_SEPARATOR = '___';
