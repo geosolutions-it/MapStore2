@@ -151,14 +151,20 @@ class CesiumMap extends React.Component {
         this.subscribeClickEvent(map);
 
         this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-        map.camera.setView({
-            destination: Cesium.Cartesian3.fromDegrees(
-                this.props.viewerOptions?.cameraPosition?.longitude ?? this.props.center.x,
-                this.props.viewerOptions?.cameraPosition?.latitude ?? this.props.center.y,
-                this.props.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(this.props.zoom)
-            ),
-            orientation: this.props.viewerOptions?.orientation
-        });
+
+        const destination = [
+            this.props.viewerOptions?.cameraPosition?.longitude ?? this.props.center?.x,
+            this.props.viewerOptions?.cameraPosition?.latitude ?? this.props.center?.y,
+            this.props.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(this.props.zoom)
+        ];
+        // sometimes the center is undefined on browser history navigation
+        // we should not perform setView in these cases
+        if (destination[0] !== undefined && destination[1] !== undefined) {
+            map.camera.setView({
+                destination: Cesium.Cartesian3.fromDegrees(...destination),
+                orientation: this.props.viewerOptions?.orientation
+            });
+        }
 
         this.setMousePointer(this.props.mousePointer);
 
@@ -466,6 +472,13 @@ class CesiumMap extends React.Component {
             // avoid errors like 44.40641479 !== 44.40641478999999
             return a.toFixed(12) - b.toFixed(12) <= 0.000000000001;
         };
+
+        // there are some transition cases where the center is not defined
+        // so we could avoid to compute the setView if the center value is missing
+        if (newProps.center === undefined) {
+            return;
+        }
+
         const centerIsUpdate = !isNearlyEqual(newProps.center.x, currentCenter.longitude) ||
                                !isNearlyEqual(newProps.center.y, currentCenter.latitude);
         const zoomChanged = newProps.zoom !== currentZoom;
@@ -476,7 +489,7 @@ class CesiumMap extends React.Component {
                 destination: Cesium.Cartesian3.fromDegrees(
                     newProps.viewerOptions?.cameraPosition?.longitude ?? newProps.center.x,
                     newProps.viewerOptions?.cameraPosition?.latitude ?? newProps.center.y,
-                    newProps.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(newProps.zoom)
+                    newProps.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(newProps.zoom ?? 0)
                 ),
                 orientation: newProps.viewerOptions?.orientation
             };
