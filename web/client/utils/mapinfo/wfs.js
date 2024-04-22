@@ -29,10 +29,11 @@ import assign from 'object-assign';
 const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems = 10 } = {}, infoFormat, viewer, featureInfo) => {
     if (point?.intersectedFeatures) {
         const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
+        const isHTMLOutput = infoFormat === 'text/html';
         return {
             request: {
                 features: [...features],
-                outputFormat: 'application/json'
+                outputFormat: isHTMLOutput ? 'text/html' : 'application/json'
             },
             metadata: {
                 title: isObject(layer.title)
@@ -43,7 +44,7 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
                 viewer,
                 featureInfo
             },
-            url: 'client'
+            url: isHTMLOutput ? layer.url : 'client'
         };
     }
     /* In order to create a valid feature info request
@@ -93,9 +94,21 @@ const getIdentifyGeometry = point => {
 
 export default {
     buildRequest,
-    getIdentifyFlow: (layer, baseURL, defaultParams) => {
-        const { point, features, ...baseParams} = defaultParams;
+    getIdentifyFlow: (layer = {}, baseURL, defaultParams) => {
+        const { point, features, ...baseParams } = defaultParams || {};
         if (features) {
+            if (baseURL && baseURL !== 'client') {
+                const filterIdsCQL = `IN (${features.map(feature => `'${feature.id}'`).join(',')})`;
+                const params = optionsToVendorParams({
+                    layerFilter: layer?.layerFilter,
+                    params: {
+                        ...layer.baseParams,
+                        ...layer.params,
+                        ...baseParams
+                    }
+                }, filterIdsCQL);
+                return Observable.defer(() => getFeature(baseURL, layer.name, params));
+            }
             return Observable.of({
                 data: {
                     features
