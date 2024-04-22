@@ -10,6 +10,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { isEmpty, isNumber } from 'lodash';
+import StyleBasedWMSJsonLegend from './StyleBasedWMSJsonLegend';
 import Legend from './Legend';
 /**
  * WMSLegend renders the wms legend image
@@ -37,13 +38,15 @@ class WMSLegend extends React.Component {
         scaleDependent: PropTypes.bool,
         language: PropTypes.string,
         legendWidth: PropTypes.number,
-        legendHeight: PropTypes.number
+        legendHeight: PropTypes.number,
+        onChange: PropTypes.func
     };
 
     static defaultProps = {
         legendContainerStyle: {},
         showOnlyIfVisible: false,
-        scaleDependent: true
+        scaleDependent: true,
+        onChange: () => {}
     };
 
     constructor(props) {
@@ -63,8 +66,9 @@ class WMSLegend extends React.Component {
     render() {
         let node = this.props.node || {};
         const showLegend = this.canShow(node) && node.type === "wms" && node.group !== "background";
+        const isJsonLegend = this.props.node?.enableInteractiveLegend;
         const useOptions = showLegend && this.useLegendOptions();
-        if (showLegend) {
+        if (showLegend && !isJsonLegend) {
             return (
                 <div style={!this.setOverflow() ? this.props.legendContainerStyle : this.state.legendContainerStyle} ref={this.containerRef}>
                     <Legend
@@ -89,6 +93,36 @@ class WMSLegend extends React.Component {
                         legendOptions={this.props.WMSLegendOptions}
                         scaleDependent={this.props.scaleDependent}
                         language={this.props.language}
+                    />
+                </div>
+            );
+        }
+        if (showLegend) {
+            return (
+                <div style={!this.setOverflow() ? this.props.legendContainerStyle : this.state.legendContainerStyle} ref={this.containerRef}>
+                    <StyleBasedWMSJsonLegend
+                        style={!this.setOverflow() ? this.props.legendStyle : {}}
+                        layer={node}
+                        currentZoomLvl={this.props.currentZoomLvl}
+                        scales={this.props.scales}
+                        legendHeight={
+                            useOptions &&
+                            this.props.node.legendOptions &&
+                            this.props.node.legendOptions.legendHeight ||
+                            this.props.legendHeight ||
+                            undefined
+                        }
+                        legendWidth={
+                            useOptions &&
+                            this.props.node.legendOptions &&
+                            this.props.node.legendOptions.legendWidth ||
+                            this.props.legendWidth ||
+                            undefined
+                        }
+                        legendOptions={this.props.WMSLegendOptions}
+                        scaleDependent={this.props.scaleDependent}
+                        language={this.props.language}
+                        onChange={this.props.onChange}
                     />
                 </div>
             );

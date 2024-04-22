@@ -45,9 +45,9 @@ describe('test Layer Properties Display module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<Display element={l} settings={settings} />, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
+        expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(5);
         ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].value).toBe('100');
@@ -71,10 +71,10 @@ describe('test Layer Properties Display module component', () => {
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
-        expect(inputs.length).toBe(13);
+        expect(inputs).toBeTruthy();
+        expect(inputs.length).toBe(14);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -109,7 +109,7 @@ describe('test Layer Properties Display module component', () => {
         };
 
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const formatRefresh = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "format-refresh" );
         ReactTestUtils.Simulate.click(formatRefresh[0]);
     });
@@ -165,7 +165,7 @@ describe('test Layer Properties Display module component', () => {
         };
         ReactDOM.render(<Display isLocalizedLayerStylesEnabled element={l} settings={settings}/>, document.getElementById("container"));
         const isLocalizedLayerStylesOption = document.querySelector('[data-qa="display-lacalized-layer-styles-option"]');
-        expect(isLocalizedLayerStylesOption).toExist();
+        expect(isLocalizedLayerStylesOption).toBeTruthy();
     });
 
     it('tests Display component for wms with force proxy option displayed', () => {
@@ -243,11 +243,11 @@ describe('test Layer Properties Display module component', () => {
             onChange() {}
         };
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[11];
-        const legendHeight = inputs[12];
+        const legendWidth = inputs[12];
+        const legendHeight = inputs[13];
         // Default legend values
         expect(legendWidth.value).toBe('12');
         expect(legendHeight.value).toBe('12');
@@ -269,7 +269,8 @@ describe('test Layer Properties Display module component', () => {
             legendOptions: {
                 legendWidth: 15,
                 legendHeight: 15
-            }
+            },
+            enableInteractiveLegend: false
         };
         const settings = {
             options: {
@@ -281,14 +282,15 @@ describe('test Layer Properties Display module component', () => {
         };
         let spy = expect.spyOn(handlers, "onChange");
         const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
-        expect(legendPreview).toExist();
-        expect(inputs).toExist();
-        expect(inputs.length).toBe(13);
-        let legendWidth = inputs[11];
-        let legendHeight = inputs[12];
+        expect(legendPreview).toBeTruthy();
+        expect(inputs).toBeTruthy();
+        expect(inputs.length).toBe(14);
+        let interactiveLegendConfig = inputs[11];
+        let legendWidth = inputs[12];
+        let legendHeight = inputs[13];
         const img = ReactTestUtils.scryRenderedDOMComponentsWithTag(comp, 'img');
 
         // Check value in img src
@@ -329,6 +331,14 @@ describe('test Layer Properties Display module component', () => {
         expect(params.get("width")).toBe('12');
         expect(params.get("height")).toBe('12');
 
+        // change enableInteractiveLegend to enable interactive legend
+        interactiveLegendConfig.checked = true;
+        ReactTestUtils.Simulate.change(interactiveLegendConfig);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[4].arguments[0]).toEqual("enableInteractiveLegend");
+        expect(spy.calls[4].arguments[1]).toEqual(true);
+
+
     });
 
     it("tests Layer Properties Legend component with values from layers", () => {
@@ -350,11 +360,11 @@ describe('test Layer Properties Display module component', () => {
             }
         };
         const comp = ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
-        expect(comp).toExist();
+        expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        expect(inputs).toExist();
-        expect(inputs.length).toBe(13);
-        expect(inputs[11].value).toBe("20");
-        expect(inputs[12].value).toBe("40");
+        expect(inputs).toBeTruthy();
+        expect(inputs.length).toBe(14);
+        expect(inputs[12].value).toBe("20");
+        expect(inputs[13].value).toBe("40");
     });
 });

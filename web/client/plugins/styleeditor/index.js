@@ -111,13 +111,15 @@ export const StyleList = compose(
         createSelector(
             [
                 statusStyleSelector,
-                getAllStyles
+                getAllStyles,
+                getSelectedLayer
             ],
-            (status, { defaultStyle, enabledStyle, availableStyles }) => ({
+            (status, { defaultStyle, enabledStyle, availableStyles }, layer) => ({
                 status,
                 defaultStyle,
                 enabledStyle,
-                availableStyles
+                availableStyles,
+                layer
             })
         ),
         {

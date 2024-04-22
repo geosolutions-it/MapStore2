@@ -1299,6 +1299,96 @@ export const mergeFiltersToOGC = (opts = {}, ...filters) =>  {
     return filterString;
 };
 
+export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
+    const defaultLayerFilter = {
+        groupFields: [
+            {
+                id: 1,
+                logic: 'OR',
+                index: 0
+            }
+        ],
+        filterFields: [],
+        attributePanelExpanded: true,
+        spatialPanelExpanded: true,
+        crossLayerExpanded: true,
+        crossLayerFilter: {
+            attribute: 'the_geom'
+        },
+        spatialField: {
+            method: null,
+            operation: 'INTERSECTS',
+            geometry: null,
+            attribute: 'the_geom'
+        }
+    };
+    let filterObj = {...defaultLayerFilter, ...layerFilterObj};
+    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+    if (!legendFilter) {
+        // clear legend filter with id = 'interactiveLegend'
+        if (isLegendFilterExist) {
+            filterObj = {
+                ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+            };
+        }
+        let newFilter = filterObj ? filterObj : undefined;
+        return newFilter;
+    }
+    let interactiveLegendFilters = isLegendFilterExist ? isLegendFilterExist.filters || [] : [];
+    let cqlStatement = legendFilter;
+    if (cqlStatement) {
+        // remove the unnecessaru brackets --> in some cases wms getLegendGraphic provides filter with brackets
+        // "[FIELD_01 >= '1' AND FIELD_01 < '0']" ---> to be "FIELD_01 >= '1' AND FIELD_01 < '0'"
+        cqlStatement = cqlStatement.includes("[") ? cqlStatement.slice(1, cqlStatement.length - 1) : cqlStatement;
+    }
+    const isSelectedFilterExist = interactiveLegendFilters.find(legFilter => legFilter.body === cqlStatement);
+    if (isSelectedFilterExist) {
+        interactiveLegendFilters = interactiveLegendFilters.filter(legFilter => legFilter.body !== cqlStatement);
+    } else {
+        interactiveLegendFilters = [...interactiveLegendFilters, {
+            "format": "cql",
+            "version": "1.0.0",
+            "body": cqlStatement,
+            "id": `[${cqlStatement}]`
+        }];
+    }
+    let newFilter = {
+        ...(filterObj || {}), filters: [
+            ...(filterObj?.filters?.filter(f => f.id !== 'interactiveLegend') || []), ...[
+                {
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [...interactiveLegendFilters]
+                }
+            ]
+        ]
+    };
+    return newFilter;
+};
+
+export function resetLayerLegendFilter(layer, reason, value) {
+    const isResetForStyle = reason === 'style';      // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
+    let needReset = false;
+    if (isResetForStyle) {
+        needReset = isResetForStyle && value !== layer.style;
+    }
+    // check if the layer has interactive legend or not, if not cancel the epic
+    const isLayerWithJSONLegend = layer?.enableInteractiveLegend;
+    let filterObj = layer.layerFilter ? layer.layerFilter : undefined;
+    if (!needReset || !isLayerWithJSONLegend || !filterObj) return false;
+    // reset thte filter if legendCQLFilter is empty
+    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+    if (isLegendFilterExist) {
+        filterObj = {
+            ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+        };
+        return filterObj;
+    }
+    return filterObj;
+}
+
 FilterUtils = {
     processOGCFilterGroup,
     processOGCFilterFields,
