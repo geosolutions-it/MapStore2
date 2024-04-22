@@ -142,7 +142,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
             const isFilterExistBefore = this.state.selectedFilters?.find(f => f === rule.filter);
             const isFilterDisabled = this.props?.layer?.layerFilter?.disabled;
             const activeFilter = rule.filter && isFilterExistBefore;
-            return (<div className={`wms-json-legend-rule ${isFilterDisabled || this.props.owner === 'legendPreview' ? "" : "filter-enabled "} ${activeFilter ? 'active' : ''}`} key={rule.filter} onClick={() => this.filterWMSLayerHandler(rule.filter)}>
+            return (<div className={`wms-json-legend-rule ${isFilterDisabled || this.props.owner === 'legendPreview' || !rule?.filter ? "" : "filter-enabled "} ${activeFilter ? 'active' : ''}`} key={rule.filter} onClick={() => this.filterWMSLayerHandler(rule.filter)}>
                 <WMSJsonLegendIcon rule={rule} />
                 <span>{rule.name || rule.title || ''}</span>
             </div>);

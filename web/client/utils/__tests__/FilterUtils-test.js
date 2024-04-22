@@ -29,7 +29,8 @@ import {
     mergeFiltersToOGC,
     convertFiltersToOGC,
     convertFiltersToCQL,
-    isFilterEmpty
+    isFilterEmpty,
+    updateLayerLegendFilter, resetLayerLegendFilter
 } from '../FilterUtils';
 
 
@@ -2316,5 +2317,165 @@ describe('FilterUtils', () => {
             filters: []
         })).toBe(false);
 
+    });
+    it('test updateLayerLegendFilter for wms, simple filter', () => {
+        const layerFilterObj = {};
+        const lgegendFilter = "[FIELD1 = 'Value' AND FIELD2 > '1256']";
+        const updatedFilterObj = updateLayerLegendFilter(layerFilterObj, lgegendFilter);
+        expect(updatedFilterObj).toBeTruthy();
+        expect(updatedFilterObj.filters.length).toEqual(1);
+        expect(updatedFilterObj.filters.filter(i => i.id === 'interactiveLegend')?.length).toEqual(1);
+        expect(updatedFilterObj.filters.find(i => i.id === 'interactiveLegend').filters.length).toEqual(1);
+    });
+    it('test updateLayerLegendFilter for wms, apply multi legend filter', () => {
+        const layerFilterObj = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                }
+            ],
+            "filterFields": [],
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "crossLayerFilter": {
+                "attribute": "the_geom"
+            },
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "filters": [
+                {
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "cql",
+                            "version": "1.0.0",
+                            "body": "FIELD_01 >= '2500' AND FIELD_01 < '7000'",
+                            "id": "[FIELD_01 >= '2500' AND FIELD_01 < '7000']"
+                        }
+                    ]
+                }
+            ]
+        };
+        const lgegendFilter = "[FIELD_01 >= '13000' AND FIELD_01 < '14500']";
+        const updatedFilterObj = updateLayerLegendFilter(layerFilterObj, lgegendFilter);
+        expect(updatedFilterObj).toBeTruthy();
+        expect(updatedFilterObj.filters.length).toEqual(1);
+        expect(updatedFilterObj.filters.filter(i => i.id === 'interactiveLegend')?.length).toEqual(1);
+        expect(updatedFilterObj.filters.find(i => i.id === 'interactiveLegend').filters.length).toEqual(2);
+    });
+    it('test reset legend filter using updateLayerLegendFilter', () => {
+        const layerFilterObj = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                }
+            ],
+            "filterFields": [],
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "crossLayerFilter": {
+                "attribute": "the_geom"
+            },
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "filters": [
+                {
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "cql",
+                            "version": "1.0.0",
+                            "body": "FIELD_01 >= '2500' AND FIELD_01 < '7000'",
+                            "id": "[FIELD_01 >= '2500' AND FIELD_01 < '7000']"
+                        },
+                        {
+                            "format": "cql",
+                            "version": "1.0.0",
+                            "body": "FIELD_01 >= '13000' AND FIELD_01 < '14500'",
+                            "id": "[FIELD_01 >= '13000' AND FIELD_01 < '14500']"
+                        }
+                    ]
+                }
+            ]
+        };
+        const updatedFilterObj = updateLayerLegendFilter(layerFilterObj);
+        expect(updatedFilterObj).toBeTruthy();
+        expect(updatedFilterObj.filters.length).toEqual(0);
+        expect(updatedFilterObj.filters.find(i => i.id === 'interactiveLegend')).toBeFalsy();
+    });
+    it('test resetLayerLegendFilter in case change wms style', () => {
+        const layerFilterObj = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                }
+            ],
+            "filterFields": [],
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "crossLayerFilter": {
+                "attribute": "the_geom"
+            },
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "filters": [
+                {
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "cql",
+                            "version": "1.0.0",
+                            "body": "FIELD_01 >= '2500' AND FIELD_01 < '7000'",
+                            "id": "[FIELD_01 >= '2500' AND FIELD_01 < '7000']"
+                        },
+                        {
+                            "format": "cql",
+                            "version": "1.0.0",
+                            "body": "FIELD_01 >= '13000' AND FIELD_01 < '14500'",
+                            "id": "[FIELD_01 >= '13000' AND FIELD_01 < '14500']"
+                        }
+                    ]
+                }
+            ]
+        };
+        const layer = {
+            enableInteractiveLegend: true,
+            layerFilter: layerFilterObj,
+            style: "style_01"
+        };
+        const updatedFilterObj = resetLayerLegendFilter(layer, 'style', 'style_02');
+        expect(updatedFilterObj).toBeTruthy();
+        expect(updatedFilterObj.filters.length).toEqual(0);
+        expect(updatedFilterObj.filters.find(i => i.id === 'interactiveLegend')).toBeFalsy();
     });
 });
