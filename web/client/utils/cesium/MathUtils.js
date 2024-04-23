@@ -194,7 +194,7 @@ export const randomFloat = function() {
  *
  * @todo check that min is <= max.
  */
-export const randomInt = function(max = 123456789, min = 0) {
+export const randomInt = function(max = Number.MAX_SAFE_INTEGER, min = 0) {
     const range = max - min;
     return Math.floor(randomFloat() * range + min);
 };
