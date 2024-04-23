@@ -17,6 +17,7 @@ import Slider from '../../../misc/Slider';
 import Message from '../../../I18N/Message';
 import { DEFAULT_SHAPE, DEFAULT_PATH, checkSymbolsError } from '../../../../utils/LegacyAnnotationsUtils';
 import { randomInt } from '../../../../utils/cesium/MathUtils';
+
 /**
  * Styler for the layout of the symbol
 */

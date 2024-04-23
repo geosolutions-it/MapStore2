@@ -38,7 +38,8 @@ import axios from 'axios';
 import isNil from 'lodash/isNil';
 import isObject from 'lodash/isObject';
 import MarkerUtils from '../MarkerUtils';
-import {randomInt} from '../../MathUtils';
+import {randomInt} from '../cesium/MathUtils';
+
 
 export const isGeoStylerBooleanFunction = (got) => [
     'between',
