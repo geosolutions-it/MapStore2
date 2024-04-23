@@ -27,6 +27,7 @@ import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
 import { arrayUpsert } from "../utils/ImmutableUtils";
+import { randomInt } from "../utils/MathUtils";
 
 
 export const FONT = {
@@ -281,7 +282,7 @@ export const generateNewTrace = (options) => {
     const color = options?.color
         ? options.color
         : options?.randomColor
-            ? `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
+            ? `rgb(${randomInt(255)}, ${randomInt(255)}, ${randomInt(255)})`
             : undefined;
     return {
         id: uuidv1(),
