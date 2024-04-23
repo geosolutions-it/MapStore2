@@ -385,7 +385,7 @@ export const LPresetLongitudinalToolOnDrawToolActiveEpic = (action$, store) => s
     () => {
         return Rx.Observable.of(toggleMode());
     },
-    () => dataSourceModeSelector(store.getState())
+    () => !!dataSourceModeSelector(store.getState()) && dataSourceModeSelector(store.getState()) !== "idle"
 );
 
 /**
