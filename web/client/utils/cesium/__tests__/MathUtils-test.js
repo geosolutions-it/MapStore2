@@ -13,7 +13,9 @@ import {
     computeNormal,
     computeAngles,
     computeTriangleMiddlePoint,
-    computeSlopes
+    computeSlopes,
+    randomFloat,
+    randomInt
 } from '../MathUtils';
 
 describe('Test MathUtils', () => {
@@ -67,5 +69,17 @@ describe('Test MathUtils', () => {
             new Cesium.Cartesian3(4687713.081782806, 1340971.716433566, 4098045.430648446)
         ], new Cesium.Cartesian3(6352463.924705475, 1070597.5587672037, 5895546.60193573));
         expect(Math.round(result)).toBe(1);
+    });
+    it('randomInt', () => {
+        const result = randomInt();
+        expect(result).toBeGreaterThan(0);
+        expect(result).toBeLessThan(123456789);
+        expect(typeof result).toBe("number");
+    });
+    it('randomFloat', () => {
+        const result = randomFloat();
+        expect(result).toBeGreaterThan(0);
+        expect(result).toBeLessThan(1);
+        expect(typeof result).toBe("number");
     });
 });
