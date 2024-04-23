@@ -16,7 +16,7 @@ import axios from 'axios';
 import Slider from '../../../misc/Slider';
 import Message from '../../../I18N/Message';
 import { DEFAULT_SHAPE, DEFAULT_PATH, checkSymbolsError } from '../../../../utils/LegacyAnnotationsUtils';
-
+import { randomInt } from '../../../../utils/cesium/MathUtils';
 /**
  * Styler for the layout of the symbol
 */
@@ -157,7 +157,7 @@ class SymbolLayout extends React.Component {
                         symbols.map(s => ({
                             label: s.label || s.name,
                             value: s.name,
-                            symbolUrl: this.props.symbolsPath + s.name + ".svg?_t=" + Math.random()
+                            symbolUrl: this.props.symbolsPath + s.name + ".svg?_t=" + randomInt()
                         })), true
                     );
                 } else {

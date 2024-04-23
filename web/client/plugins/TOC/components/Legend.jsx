@@ -19,6 +19,9 @@ import {
     clearNilValuesForParams
 } from '../../../utils/SecurityUtils';
 import Message from '../../../components/I18N/Message';
+import {
+    randomInt
+} from '../../../../utils/cesium/MathUtils';
 
 /**
  * Legend renders the wms legend image
@@ -74,7 +77,7 @@ class Legend extends React.Component {
     getUrl = (props, urlIdx) => {
         if (props.layer && props.layer.type === "wms" && props.layer.url) {
             const layer = props.layer;
-            const idx = !isNil(urlIdx) ? urlIdx : isArray(layer.url) && Math.floor(Math.random() * layer.url.length);
+            const idx = !isNil(urlIdx) ? urlIdx : isArray(layer.url) && Math.floor(randomInt(layer.url.length));
 
             const url = isArray(layer.url) ?
                 layer.url[idx] :
