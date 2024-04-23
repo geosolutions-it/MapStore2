@@ -26,8 +26,8 @@ import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REG
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
-import { arrayUpsert } from "../utils/ImmutableUtils";
-import { randomInt } from "../utils/MathUtils";
+import { arrayUpsert } from "./ImmutableUtils";
+import { randomInt } from "./MathUtils";
 
 
 export const FONT = {

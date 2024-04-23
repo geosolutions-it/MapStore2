@@ -21,7 +21,7 @@ import {
 import Message from '../../../components/I18N/Message';
 import {
     randomInt
-} from '../../../../utils/cesium/MathUtils';
+} from '../../../utils/cesium/MathUtils';
 
 /**
  * Legend renders the wms legend image
