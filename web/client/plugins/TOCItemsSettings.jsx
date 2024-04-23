@@ -30,7 +30,7 @@ import {
 import { createPlugin } from '../utils/PluginsUtils';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { isCesium } from '../selectors/maptype';
-import { showEditableFeatureCheckboxSelector, isMapOnlyOpenedSelector } from "../seleectors/map";
+import { showEditableFeatureCheckboxSelector, isMapOnlyOpenedSelector } from "../selectors/map";
 import { isAnnotationLayer } from './Annotations/utils/AnnotationsUtils';
 
 const tocItemsSettingsSelector = createSelector([
