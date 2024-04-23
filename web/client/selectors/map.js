@@ -156,3 +156,7 @@ export const identifyFloatingToolSelector = (state) => {
     return mouseMoveListenerSelector(state).includes('identifyFloatingTool') || state.mode === "embedded" || (state.mapPopups?.popups && detectIdentifyInMapPopUp(state));
 };
 
+export const isMapOnlyOpenedSelector = (state) => {
+    // state?.mapEditor?.onwer --> to exclude geostory
+    return projectionSelector(state) && !state?.mapEditor?.owner;
+};

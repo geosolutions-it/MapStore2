@@ -52,7 +52,7 @@ describe('test Layer Properties Display module component', () => {
         ReactTestUtils.Simulate.focus(inputs[0]);
         expect(inputs[0].value).toBe('100');
     });
-    it('tests Display component for wms', () => {
+    it('tests Display component for wms for map viewer', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -70,11 +70,39 @@ describe('test Layer Properties Display module component', () => {
         let spy = expect.spyOn(handlers, "onChange");
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} isMapOpen settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
         expect(inputs.length).toBe(14);
+        ReactTestUtils.Simulate.focus(inputs[2]);
+        expect(inputs[2].value).toBe('70');
+        inputs[8].click();
+        expect(spy.calls.length).toBe(1);
+    });
+    it('tests Display component for wms for dashboard or geostory', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: {opacity: 0.7}
+        };
+        const handlers = {
+            onChange() {}
+        };
+        let spy = expect.spyOn(handlers, "onChange");
+        // wrap in a stateful component, stateless components render return null
+        // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
+        const comp = ReactDOM.render(<Display element={l} isMapOpen={false} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
+        expect(inputs).toBeTruthy();
+        expect(inputs.length).toBe(13);
         ReactTestUtils.Simulate.focus(inputs[2]);
         expect(inputs[2].value).toBe('70');
         inputs[8].click();
@@ -227,7 +255,37 @@ describe('test Layer Properties Display module component', () => {
         expect(spyOn.calls[0].arguments).toEqual([ 'forceProxy', true ]);
     });
 
-    it('tests Layer Properties Legend component', () => {
+    it('tests Layer Properties Legend component for map viewer only', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const comp = ReactDOM.render(<Display element={l} isMapOpen settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
+        const legendWidth = inputs[12];
+        const legendHeight = inputs[13];
+        // Default legend values
+        expect(legendWidth.value).toBe('12');
+        expect(legendHeight.value).toBe('12');
+        expect(labels.length).toBe(8);
+        expect(labels[4].innerText).toBe("layerProperties.legendOptions.title");
+        expect(labels[5].innerText).toBe("layerProperties.legendOptions.legendWidth");
+        expect(labels[6].innerText).toBe("layerProperties.legendOptions.legendHeight");
+        expect(labels[7].innerText).toBe("layerProperties.legendOptions.legendPreview");
+    });
+    it('tests Layer Properties Legend component for dashboard or geostory', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -246,8 +304,8 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
-        const legendWidth = inputs[12];
-        const legendHeight = inputs[13];
+        const legendWidth = inputs[11];
+        const legendHeight = inputs[12];
         // Default legend values
         expect(legendWidth.value).toBe('12');
         expect(legendHeight.value).toBe('12');
@@ -257,7 +315,6 @@ describe('test Layer Properties Display module component', () => {
         expect(labels[6].innerText).toBe("layerProperties.legendOptions.legendHeight");
         expect(labels[7].innerText).toBe("layerProperties.legendOptions.legendPreview");
     });
-
     it('tests Layer Properties Legend component events', () => {
         const l = {
             name: 'layer00',
@@ -281,7 +338,7 @@ describe('test Layer Properties Display module component', () => {
             onChange() {}
         };
         let spy = expect.spyOn(handlers, "onChange");
-        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} settings={settings} isMapOpen onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
@@ -359,7 +416,7 @@ describe('test Layer Properties Display module component', () => {
                 opacity: 1
             }
         };
-        const comp = ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} isMapOpen settings={settings}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();

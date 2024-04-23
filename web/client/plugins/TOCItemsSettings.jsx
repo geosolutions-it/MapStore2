@@ -30,7 +30,7 @@ import {
 import { createPlugin } from '../utils/PluginsUtils';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { isCesium } from '../selectors/maptype';
-import { showEditableFeatureCheckboxSelector } from "../selectors/map";
+import { showEditableFeatureCheckboxSelector, isMapOnlyOpenedSelector } from "../seleectors/map";
 import { isAnnotationLayer } from './Annotations/utils/AnnotationsUtils';
 
 const tocItemsSettingsSelector = createSelector([
@@ -44,8 +44,9 @@ const tocItemsSettingsSelector = createSelector([
     elementSelector,
     isLocalizedLayerStylesEnabledSelector,
     isCesium,
-    showEditableFeatureCheckboxSelector
-], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive, showFeatureEditOption) => ({
+    showEditableFeatureCheckboxSelector,
+    isMapOnlyOpenedSelector
+], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive, showFeatureEditOption, isMapOpen) => ({
     settings,
     element,
     groups,
@@ -56,7 +57,8 @@ const tocItemsSettingsSelector = createSelector([
     activeTab,
     isLocalizedLayerStylesEnabled,
     isCesiumActive,
-    showFeatureEditOption
+    showFeatureEditOption,
+    isMapOpen
 }));
 
 const SettingsButton = connect(() => ({}), {
