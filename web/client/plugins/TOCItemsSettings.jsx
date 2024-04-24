@@ -30,7 +30,7 @@ import {
 import { createPlugin } from '../utils/PluginsUtils';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { isCesium } from '../selectors/maptype';
-import { showEditableFeatureCheckboxSelector, isMapOnlyOpenedSelector } from "../selectors/map";
+import { showEditableFeatureCheckboxSelector } from "../selectors/map";
 import { isAnnotationLayer } from './Annotations/utils/AnnotationsUtils';
 
 const tocItemsSettingsSelector = createSelector([
@@ -44,9 +44,8 @@ const tocItemsSettingsSelector = createSelector([
     elementSelector,
     isLocalizedLayerStylesEnabledSelector,
     isCesium,
-    showEditableFeatureCheckboxSelector,
-    isMapOnlyOpenedSelector
-], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive, showFeatureEditOption, isMapOpen) => ({
+    showEditableFeatureCheckboxSelector
+], (settings, groups, currentLocale, currentLocaleLanguage, dockStyle, isAdmin, activeTab, element, isLocalizedLayerStylesEnabled, isCesiumActive, showFeatureEditOption) => ({
     settings,
     element,
     groups,
@@ -57,8 +56,7 @@ const tocItemsSettingsSelector = createSelector([
     activeTab,
     isLocalizedLayerStylesEnabled,
     isCesiumActive,
-    showFeatureEditOption,
-    isMapOpen
+    showFeatureEditOption
 }));
 
 const SettingsButton = connect(() => ({}), {
@@ -123,6 +121,7 @@ const SettingsButton = connect(() => ({}), {
  * @prop cfg.hideTitleTranslations {bool} if true hide the title translations tool
  * @prop cfg.showTooltipOptions {bool} if true, it shows tooltip section
  * @prop cfg.initialActiveTab {string} tab that will be enabled initially when the settings are opened. Possible values:
+ * @prop cfg.hideInteractiveLegendOption {bool} if true, it hide the checkbox of enable interactive legend in display tab
  * 'general' (General tab), 'display' (Display tab), 'style' (Style tab), 'feature' (Feature info tab).
  * @example
  * {

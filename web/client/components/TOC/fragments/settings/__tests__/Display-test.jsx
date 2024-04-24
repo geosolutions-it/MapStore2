@@ -70,7 +70,7 @@ describe('test Layer Properties Display module component', () => {
         let spy = expect.spyOn(handlers, "onChange");
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<Display element={l} isMapOpen settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
@@ -98,7 +98,7 @@ describe('test Layer Properties Display module component', () => {
         let spy = expect.spyOn(handlers, "onChange");
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<Display element={l} isMapOpen={false} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} hideInteractiveLegendOption settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();
@@ -270,7 +270,7 @@ describe('test Layer Properties Display module component', () => {
         const handlers = {
             onChange() {}
         };
-        const comp = ReactDOM.render(<Display element={l} isMapOpen settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
@@ -300,7 +300,7 @@ describe('test Layer Properties Display module component', () => {
         const handlers = {
             onChange() {}
         };
-        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} hideInteractiveLegendOption settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
@@ -338,7 +338,7 @@ describe('test Layer Properties Display module component', () => {
             onChange() {}
         };
         let spy = expect.spyOn(handlers, "onChange");
-        const comp = ReactDOM.render(<Display element={l} settings={settings} isMapOpen onChange={handlers.onChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
@@ -416,7 +416,7 @@ describe('test Layer Properties Display module component', () => {
                 opacity: 1
             }
         };
-        const comp = ReactDOM.render(<Display element={l} isMapOpen settings={settings}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Display element={l} settings={settings}/>, document.getElementById("container"));
         expect(comp).toBeTruthy();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toBeTruthy();

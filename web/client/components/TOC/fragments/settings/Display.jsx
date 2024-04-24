@@ -39,13 +39,13 @@ export default class extends React.Component {
         projection: PropTypes.string,
         resolutions: PropTypes.array,
         zoom: PropTypes.number,
-        isMapOpen: PropTypes.bool
+        hideInteractiveLegendOption: PropTypes.bool
     };
 
     static defaultProps = {
         onChange: () => {},
         opacityText: <Message msgId="opacity"/>,
-        isMapOpen: false
+        hideInteractiveLegendOption: false
     };
 
     constructor(props) {
@@ -265,7 +265,7 @@ export default class extends React.Component {
                         <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
                         </Col>
-                        { this.props.element?.serverType !== ServerTypes.NO_VENDOR && this.props?.isMapOpen &&
+                        { this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
                             <Col xs={12} className="first-selectize">
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"
