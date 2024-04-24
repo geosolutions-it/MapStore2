@@ -13,7 +13,7 @@ import { updateAdditionalLayer, removeAdditionalLayer } from '../../../actions/a
 import {CLICK_ON_MAP, registerEventListener, unRegisterEventListener} from '../../../actions/map';
 
 
-import {hideMapinfoMarker, toggleMapInfoState} from '../../../actions/mapInfo';
+import {hideMapinfoMarker, changeMapInfoState} from '../../../actions/mapInfo';
 import { mapInfoEnabledSelector } from "../../../selectors/mapInfo";
 
 import { CONTROL_NAME, MARKER_LAYER_ID, STREET_VIEW_OWNER, STREET_VIEW_DATA_LAYER_ID } from "../constants";
@@ -62,11 +62,10 @@ export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =
         .filter(({control}) => control === CONTROL_NAME)
         // if the enable event happens when the mapInfo is active
         .filter(() => enabledSelector(getState()))
-        .filter(() => mapInfoEnabledSelector(getState()))
         .switchMap(() => {
             // deactivate feature info
             return Rx.Observable.of(hideMapinfoMarker(),
-                toggleMapInfoState()
+                changeMapInfoState(false) // always disable feature info
             ).merge(
                 // restore feature info on close
                 action$.ofType(TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SET_CONTROL_PROPERTIES)
@@ -74,7 +73,7 @@ export const disableGFIForStreetViewEpic = (action$, { getState = () => { } }) =
                     .take(1)
                     .filter(() => !enabledSelector(getState()))
                     .filter(() => !mapInfoEnabledSelector(getState()))
-                    .mapTo(toggleMapInfoState())
+                    .mapTo(changeMapInfoState(true))
                     .takeUntil(action$.ofType(RESET_CONTROLS))
             );
         });
