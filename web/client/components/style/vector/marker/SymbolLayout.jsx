@@ -16,7 +16,7 @@ import axios from 'axios';
 import Slider from '../../../misc/Slider';
 import Message from '../../../I18N/Message';
 import { DEFAULT_SHAPE, DEFAULT_PATH, checkSymbolsError } from '../../../../utils/AnnotationsUtils';
-import { randomInt} from '../../../../utils/cesium/MathUtils';
+import { randomInt} from '../../../../utils/MathUtils';
 /**
  * Styler for the layout of the symbol
 */

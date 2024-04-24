@@ -20,7 +20,7 @@ import {
 } from '../../../../utils/SecurityUtils';
 import {
     randomInt
-} from '../../../../utils/cesium/MathUtils';
+} from '../../../../utils/MathUtils';
 import Message from '../../../I18N/Message';
 
 class Legend extends React.Component {

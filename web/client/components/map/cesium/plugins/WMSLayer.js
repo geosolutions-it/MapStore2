@@ -17,7 +17,7 @@ import { optionsToVendorParams } from '../../../../utils/VendorParamsUtils';
 import { addAuthenticationToSLD, getAuthenticationHeaders } from '../../../../utils/SecurityUtils';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
-import {randomInt} from "../../../../utils/cesium/MathUtils";
+import {randomInt} from "../../../../utils/MathUtils";
 function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
