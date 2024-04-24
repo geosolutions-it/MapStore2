@@ -18,6 +18,10 @@ import { extractGeometryAttributeName } from '../WFSLayerUtils';
 import {addAuthenticationToSLD} from '../SecurityUtils';
 import assign from 'object-assign';
 
+// if the url uses following constant means the whole workflow is managed client side
+// and prevent request to a service
+const CLIENT_WORKFLOW = 'client';
+
 /**
  * Creates the request object and it's metadata for WFS GetFeature to simulate GetFeatureInfo.
  * @param {object} layer
@@ -29,11 +33,11 @@ import assign from 'object-assign';
 const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems = 10 } = {}, infoFormat, viewer, featureInfo) => {
     if (point?.intersectedFeatures) {
         const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
-        const isHTMLOutput = infoFormat === 'text/html';
+        const isRemote = infoFormat === 'text/html';
         return {
             request: {
                 features: [...features],
-                outputFormat: isHTMLOutput ? 'text/html' : 'application/json'
+                outputFormat: isRemote ? 'text/html' : 'application/json'
             },
             metadata: {
                 title: isObject(layer.title)
@@ -44,7 +48,7 @@ const buildRequest = (layer, { map = {}, point, currentLocale, params, maxItems 
                 viewer,
                 featureInfo
             },
-            url: isHTMLOutput ? layer.url : 'client'
+            url: isRemote ? layer.url : CLIENT_WORKFLOW
         };
     }
     /* In order to create a valid feature info request
@@ -97,7 +101,7 @@ export default {
     getIdentifyFlow: (layer = {}, baseURL, defaultParams) => {
         const { point, features, ...baseParams } = defaultParams || {};
         if (features) {
-            if (baseURL && baseURL !== 'client') {
+            if (baseURL && baseURL !== CLIENT_WORKFLOW) {
                 const filterIdsCQL = `IN (${features.map(feature => `'${feature.id}'`).join(',')})`;
                 const params = optionsToVendorParams({
                     layerFilter: layer?.layerFilter,
