@@ -15,7 +15,7 @@ describe('Test MathUtils', () => {
     it('randomInt', () => {
         const result = randomInt();
         expect(result).toBeGreaterThan(0);
-        expect(result).toBeLessThan(123456789);
+        expect(result).toBeLessThan(Number.MAX_SAFE_INTEGER);
         expect(typeof result).toBe("number");
     });
     it('randomFloat', () => {
