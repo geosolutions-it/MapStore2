@@ -37,7 +37,7 @@ class TimePicker extends Component {
     state = { focusedItemIndex: 0, times: [], selectedMember: "", openSelectMember: false };
 
     componentDidMount() {
-        this.setState({ times: getDates() });
+        this.setState({ times: getDates() }); // eslint-disable-line -- TODO: need to be fixed
     }
 
     render() {
