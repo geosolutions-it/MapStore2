@@ -64,9 +64,14 @@ function updateModelMatrix(tileSet, { heightOffset }) {
 }
 
 function clip3DTiles(tileSet, options, map) {
-    if (options.clippingPolygon) {
-        polygonToClippingPlanes(options.clippingPolygon, !!options.clippingPolygonUnion, options.clipOriginalGeometry)
-            .then((planes) => {
+
+    const request = () => options.clippingPolygon
+        ? polygonToClippingPlanes(options.clippingPolygon, !!options.clippingPolygonUnion, options.clipOriginalGeometry)
+        : Promise.resolve([]);
+
+    request()
+        .then((planes) => {
+            if (planes?.length && !tileSet.clippingPlanes) {
                 tileSet.clippingPlanes = new Cesium.ClippingPlaneCollection({
                     modelMatrix: Cesium.Matrix4.inverse(
                         Cesium.Matrix4.multiply(
@@ -76,16 +81,18 @@ function clip3DTiles(tileSet, options, map) {
                         ),
                         new Cesium.Matrix4()),
                     planes,
-                    edgeWidth: 1.0,
-                    edgeColor: Cesium.Color.WHITE,
                     unionClippingRegions: !!options.clippingPolygonUnion
                 });
+            }
+            if (tileSet.clippingPlanes) {
+                tileSet.clippingPlanes.removeAll();
+                tileSet.clippingPlanes.unionClippingRegions = !!options.clippingPolygonUnion;
+                planes.forEach((plane) => {
+                    tileSet.clippingPlanes.add(plane);
+                });
                 map.scene.requestRender();
-            });
-    } else {
-        tileSet.clippingPlanes = new Cesium.ClippingPlaneCollection({ planes: [] });
-        map.scene.requestRender();
-    }
+            }
+        });
 }
 
 function ensureReady(tileSet, callback) {
