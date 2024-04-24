@@ -121,6 +121,7 @@ const SettingsButton = connect(() => ({}), {
  * @prop cfg.hideTitleTranslations {bool} if true hide the title translations tool
  * @prop cfg.showTooltipOptions {bool} if true, it shows tooltip section
  * @prop cfg.initialActiveTab {string} tab that will be enabled initially when the settings are opened. Possible values:
+ * @prop cfg.hideInteractiveLegendOption {bool} if true, it hide the checkbox of enable interactive legend in display tab
  * 'general' (General tab), 'display' (Display tab), 'style' (Style tab), 'feature' (Feature info tab).
  * @example
  * {

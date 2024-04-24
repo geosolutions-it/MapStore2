@@ -38,12 +38,14 @@ export default class extends React.Component {
         isCesiumActive: PropTypes.bool,
         projection: PropTypes.string,
         resolutions: PropTypes.array,
-        zoom: PropTypes.number
+        zoom: PropTypes.number,
+        hideInteractiveLegendOption: PropTypes.bool
     };
 
     static defaultProps = {
         onChange: () => {},
-        opacityText: <Message msgId="opacity"/>
+        opacityText: <Message msgId="opacity"/>,
+        hideInteractiveLegendOption: false
     };
 
     constructor(props) {
@@ -263,7 +265,7 @@ export default class extends React.Component {
                         <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
                         </Col>
-                        { this.props.element?.serverType !== ServerTypes.NO_VENDOR &&
+                        { this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
                             <Col xs={12} className="first-selectize">
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"
