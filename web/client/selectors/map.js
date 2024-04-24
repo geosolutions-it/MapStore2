@@ -155,3 +155,4 @@ export const isMouseMoveIdentifyActiveSelector = (state) => {
 export const identifyFloatingToolSelector = (state) => {
     return mouseMoveListenerSelector(state).includes('identifyFloatingTool') || state.mode === "embedded" || (state.mapPopups?.popups && detectIdentifyInMapPopUp(state));
 };
+
