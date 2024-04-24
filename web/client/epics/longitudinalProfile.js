@@ -135,7 +135,7 @@ export const LPonDrawActivatedEpic = (action$, store) =>
                             );
                     })
                     .startWith(
-                        registerEventListener('click', CONTROL_NAME),
+                        unRegisterEventListener('click', CONTROL_NAME),
                         changeMapInfoState(false),
                         purgeMapInfoResults(),
                         hideMapinfoMarker(),
@@ -156,7 +156,7 @@ export const LPonDrawActivatedEpic = (action$, store) =>
                 return Rx.Observable.from([
                     purgeMapInfoResults(),
                     hideMapinfoMarker(),
-                    changeMapInfoState(mode !== undefined),
+                    toggleMapInfoState(),
                     ...(get(store.getState(), 'draw.drawOwner', '') === CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
                     unRegisterEventListener('click', CONTROL_NAME)
                 ]);
@@ -385,7 +385,7 @@ export const LPresetLongitudinalToolOnDrawToolActiveEpic = (action$, store) => s
     () => {
         return Rx.Observable.of(toggleMode());
     },
-    () => dataSourceModeSelector(store.getState()) === "draw"
+    () => dataSourceModeSelector(store.getState())
 );
 
 /**
