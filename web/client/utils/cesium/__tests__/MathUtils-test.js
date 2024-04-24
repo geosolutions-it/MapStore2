@@ -18,9 +18,7 @@ import {
     computeDistance,
     computeHeightSign,
     cartesianToCartographicArray,
-    computeGeodesicCoordinates,
-    randomFloat,
-    randomInt
+    computeGeodesicCoordinates
 } from '../MathUtils';
 
 describe('Test MathUtils', () => {
@@ -121,17 +119,5 @@ describe('Test MathUtils', () => {
                 () => 5
             ).map((cartesian) => cartesianToCartographicArray(cartesian).map(Math.round))
         ).toEqual([[9, 45, 5]]);
-    });
-    it('randomInt', () => {
-        const result = randomInt();
-        expect(result).toBeGreaterThan(0);
-        expect(result).toBeLessThan(123456789);
-        expect(typeof result).toBe("number");
-    });
-    it('randomFloat', () => {
-        const result = randomFloat();
-        expect(result).toBeGreaterThan(0);
-        expect(result).toBeLessThan(1);
-        expect(typeof result).toBe("number");
     });
 });

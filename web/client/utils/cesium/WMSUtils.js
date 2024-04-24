@@ -14,7 +14,7 @@ import ConfigUtils from "../ConfigUtils";
 import { creditsToAttribution, getAuthenticationParam, getURLs, getWMSVendorParams } from "../LayersUtils";
 import { isVectorFormat } from '../VectorTileUtils';
 import { optionsToVendorParams } from '../VendorParamsUtils';
-import { randomInt } from './MathUtils';
+import { randomInt } from '../MathUtils';
 
 function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
