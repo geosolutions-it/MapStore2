@@ -52,7 +52,8 @@ class CesiumMap extends React.Component {
         errorPanel: PropTypes.func,
         onReload: PropTypes.func,
         style: PropTypes.object,
-        interactive: PropTypes.bool
+        interactive: PropTypes.bool,
+        mapInitialConfig: PropTypes.object
     };
 
     static defaultProps = {
@@ -135,7 +136,7 @@ class CesiumMap extends React.Component {
         if (this.props.registerHooks) {
             this.registerHooks();
         }
-        if (this.props.mapOptions?.navigationTools !== false) {
+        if (this.props.mapOptions?.navigationTools !== false && !this.props.mapOptions?.hideCompass) {
             map.extend(viewerCesiumNavigationMixin, {
                 enableCompass: this.props.mapOptions?.navigationTools,
                 // the default zoom controls inside CesiumNavigation are not working
@@ -151,7 +152,23 @@ class CesiumMap extends React.Component {
         this.subscribeClickEvent(map);
 
         this.hand.setInputAction(throttle(this.onMouseMove.bind(this), 500), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-
+        if (this.props.mapOptions?.enableQuickResetTo3DView) {
+            if (this.props?.mapInitialConfig?.viewerOptions) {
+                const initDestination = [
+                    this.props?.mapInitialConfig?.viewerOptions?.cameraPosition?.longitude ?? this.props.center?.x,
+                    this.props?.mapInitialConfig?.viewerOptions?.cameraPosition?.latitude ?? this.props.center?.y,
+                    this.props?.mapInitialConfig?.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(this.props.zoom)
+                ];
+                // sometimes the center is undefined on browser history navigation
+                // we should not perform setView in these cases
+                if (initDestination[0] !== undefined && initDestination[1] !== undefined) {
+                    map.camera.setView({
+                        destination: Cesium.Cartesian3.fromDegrees(...initDestination),
+                        orientation: this.props?.mapInitialConfig?.viewerOptions?.orientation
+                    });
+                }
+            }
+        }
         const destination = [
             this.props.viewerOptions?.cameraPosition?.longitude ?? this.props.center?.x,
             this.props.viewerOptions?.cameraPosition?.latitude ?? this.props.center?.y,
@@ -159,7 +176,7 @@ class CesiumMap extends React.Component {
         ];
         // sometimes the center is undefined on browser history navigation
         // we should not perform setView in these cases
-        if (destination[0] !== undefined && destination[1] !== undefined) {
+        if (destination[0] !== undefined && destination[1] !== undefined && !this.props.mapOptions?.enableQuickResetTo3DView) {
             map.camera.setView({
                 destination: Cesium.Cartesian3.fromDegrees(...destination),
                 orientation: this.props.viewerOptions?.orientation
@@ -180,6 +197,39 @@ class CesiumMap extends React.Component {
 
         // this is needed to display correctly intersection between terrain and primitives
         scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? false;
+        // handle disable tilt or hide compass ui widget from map
+        if (this.props.mapOptions?.hideCompass || this.props.mapOptions?.disableTilt) {
+            // disable tilt effect if disableTilt into mapOptions = true
+            map.scene.screenSpaceCameraController.enableTilt = false;
+        }
+        // set zoom limits if found
+        if (this.props.mapOptions?.zoomLimits) {
+            const minZoomLevel = this.props.mapOptions?.zoomLimits.min;
+            const maxZoomLevel = this.props.mapOptions?.zoomLimits.max;
+            if (minZoomLevel) {
+                map.scene.screenSpaceCameraController.minimumZoomDistance = minZoomLevel;
+            }
+            if (maxZoomLevel) {
+                map.scene.screenSpaceCameraController.maximumZoomDistance = maxZoomLevel;
+            }
+        }
+        // set fixed orientation for the current map center
+        if (this.props.mapOptions?.enableFixedOrientation) {
+            const camera = map.camera;
+            const cameraCenter = camera.position;
+            const cartographicCenterPoint = Cesium.Cartographic.fromCartesian(cameraCenter);
+            const longitude = Cesium.Math.toDegrees(cartographicCenterPoint.longitude);
+            const latitude = Cesium.Math.toDegrees(cartographicCenterPoint.latitude);
+            const center = Cesium.Cartesian3.fromDegrees(longitude, latitude);
+            const transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
+
+            // View in east-north-up frame
+            camera.constrainedAxis = Cesium.Cartesian3.UNIT_Z;
+            camera.lookAtTransform(
+                transform,
+                cameraCenter
+            );
+        }
 
         this.forceUpdate();
         map.scene.requestRender();
@@ -648,7 +698,7 @@ class CesiumMap extends React.Component {
         this.map.scene.screenSpaceCameraController.enableZoom = !(interactionsOptions.mouseWheelZoom === false);
         this.map.scene.screenSpaceCameraController.enableRotate = !(interactionsOptions.dragPan === false);
         this.map.scene.screenSpaceCameraController.enableTranslate = !(interactionsOptions.dragPan === false);
-        this.map.scene.screenSpaceCameraController.enableTilt = !(interactionsOptions.dragPan === false);
+        this.map.scene.screenSpaceCameraController.enableTilt = !(interactionsOptions.dragPan === false);          // block zoom into background
     }
 }
 
