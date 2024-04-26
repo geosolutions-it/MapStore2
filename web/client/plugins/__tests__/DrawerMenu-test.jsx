@@ -28,9 +28,12 @@ const SAMPLE_ITEM = {
 
 const mouseMove = (x, y, node) => {
     const doc = node ? node.ownerDocument : document;
-    const evt = doc.createEvent('MouseEvents');
-    evt.initMouseEvent('mousemove', true, true, window,
-        0, 0, 0, x, y, false, false, false, false, 0, null);
+    const evt = new MouseEvent(
+        'mousemove',
+        {
+            canBubble: true, cancelable: true, view: window, detail: 0, screenX: 0, screenY: 0, clientX: x, clientY: y,
+            ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, button: 0, relatedTarget: null
+        });
     doc.dispatchEvent(evt);
     return evt;
 };
