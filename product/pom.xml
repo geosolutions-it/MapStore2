@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tomcat.version>8.5.69</tomcat.version>
-        <tomcat.port>8080</tomcat.port>
+        <tomcat.port>8082</tomcat.port>
         <datadir.location>${env.MAPSTORE_DATA_DIR}</datadir.location>
         <security.integration>default</security.integration>
         <!-- <backend.debug.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000</backend.debug.args> -->

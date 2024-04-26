@@ -23,7 +23,7 @@ const initGit = (outFolder) => {
     return new Promise((resolve, reject) => {
         git.init(() => {
             process.stdout.write('initializing git repo...\n');
-            git.submoduleAdd('https://github.com/geosolutions-it/MapStore2.git', 'MapStore2', (err) => {
+            git.submoduleAdd('https://github.com/ngsllc/MapStore2.git', 'MapStore2', (err) => {
                 if (err) {
                     reject(err);
                 } else {
