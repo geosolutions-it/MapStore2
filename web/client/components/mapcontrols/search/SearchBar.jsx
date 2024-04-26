@@ -115,7 +115,7 @@ export default ({
     }, [searchOptions?.services]);
 
     useEffect(() => {
-        // if user changes the map crs and the search was in  mapCRSCoordinatesSearch tab in search --> switch to default coordniateSearch
+        // Switch back to coordinate search when map CRS is EPSG:4326 and active tool is Map CRS coordinate search
         if (currentMapCRS === 'EPSG:4326' && activeTool === 'mapCRSCoordinatesSearch') {
             onChangeActiveSearchTool('coordinatesSearch');
         }

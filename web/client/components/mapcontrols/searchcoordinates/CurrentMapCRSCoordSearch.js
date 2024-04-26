@@ -15,7 +15,8 @@ import {FormGroup, InputGroup, Row} from "react-bootstrap";
 import Message from "../../I18N/Message";
 import CoordinateEntry from "../../misc/coordinateeditors/CoordinateEntry";
 import { zoomAndAddPoint, changeCoord } from '../../../actions/search';
-import {getExtentByCRSCode, reproject} from '../../../utils/CoordinatesUtils';
+import { reproject} from '../../../utils/CoordinatesUtils';
+import { getProjection } from '../../../utils/ProjectionUtils';
 import {CoordinateOptions} from './CoordinatesSearch';
 /**
  * CurrentMapCRSCoordinatesSearch component
@@ -51,7 +52,8 @@ const CurrentMapCRSCoordinatesSearch = ({
     }, []);
 
     const getConstraintsCoordEditor = (projection) =>{
-        const [minx, miny, maxx, maxy] = getExtentByCRSCode(projection);
+        const extent = getProjection(projection).extent;
+        const [minx, miny, maxx, maxy] = extent;
         return {
             decimal: {
                 yCoord: {
@@ -70,10 +72,10 @@ const CurrentMapCRSCoordinatesSearch = ({
         onChangeCoord(coord, numValue);
         if (coord === 'yCoord') {
             const latValue = numValue ? reproject([0, numValue], currentMapCRS, 'EPSG:4326', true)?.y : undefined;
-            onChangeCoord('lat', latValue ? Number((latValue).toFixed(4)) : latValue);
+            onChangeCoord('lat', latValue ? Number((latValue)) : latValue);
         } else {
             const lonValue = numValue ? reproject([numValue, 0], currentMapCRS, 'EPSG:4326', true)?.x : undefined;
-            onChangeCoord('lon', lonValue ? Number((lonValue).toFixed(4)) : lonValue);
+            onChangeCoord('lon', lonValue ? Number((lonValue)) : lonValue);
         }
         if (!areValidCoordinates()) {
             onClearCoordinatesSearch({owner: "search"});

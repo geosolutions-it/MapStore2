@@ -47,8 +47,20 @@ class DecimalCoordinateEditor extends React.Component {
         onKeyDown: () => {},
         disabled: false
     }
-
-
+    constructor(props, context) {
+        super(props, context);
+        this.state = {
+            value: this.props.value
+        };
+    }
+    componentDidUpdate(prevProps) {
+        const isClearInputs = (prevProps.value && !this.props.value);
+        // (!prevProps.value && this.props.value) in case intiate the component with a prev defined values
+        // like switch from default coordinate search to current map crs coordinate search
+        if (isClearInputs || (!prevProps.value && this.props.value)) {
+            this.setState({value: this.props.value});
+        }
+    }
     render() {
         const {coordinate, value, onChange, disabled} = this.props;
         const validateNameFunc = "validateDecimal" + capitalize(coordinate);
@@ -58,9 +70,10 @@ class DecimalCoordinateEditor extends React.Component {
                 <IntlNumberFormControl
                     disabled={disabled}
                     key={coordinate}
-                    value={value}
+                    value={this.state.value}
                     placeholder={coordinate}
                     onChange={val => {
+                        this.setState({ value: val });
                         // when inserting 4eee5 as number here it comes "" that makes the re-render fail
                         if (val === "") {
                             onChange("");
