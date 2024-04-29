@@ -11,7 +11,7 @@ import {
     randomInt
 } from '../RandomUtils';
 
-describe('Test MathUtils', () => {
+describe('Test RandomUtils', () => {
     it('randomInt', () => {
         const result = randomInt();
         expect(result).toBeGreaterThan(0);
