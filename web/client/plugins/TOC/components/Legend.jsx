@@ -19,7 +19,7 @@ import {
     clearNilValuesForParams
 } from '../../../utils/SecurityUtils';
 import Message from '../../../components/I18N/Message';
-import { randomInt } from '../../../utils/MathUtils';
+import { randomInt } from '../../../utils/RandomUtils';
 
 /**
  * Legend renders the wms legend image

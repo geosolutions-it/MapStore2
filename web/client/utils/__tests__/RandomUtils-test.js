@@ -9,7 +9,7 @@ import expect from 'expect';
 import {
     randomFloat,
     randomInt
-} from '../MathUtils';
+} from '../RandomUtils';
 
 describe('Test MathUtils', () => {
     it('randomInt', () => {

@@ -27,7 +27,7 @@ import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
 import { arrayUpsert } from "./ImmutableUtils";
-import { randomInt } from "./MathUtils";
+import { randomInt } from "./RandomUtils";
 
 
 export const FONT = {
