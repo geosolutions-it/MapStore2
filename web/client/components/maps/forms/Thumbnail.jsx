@@ -11,7 +11,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Message from '../../../components/I18N/Message';
 import { getResourceIdFromURL } from '../../../utils/ResourceUtils';
-import { randomInt } from '../../../utils/MathUtils';
+import { randomInt } from '../../../utils/RandomUtils';
 import Thumbnail from '../../misc/Thumbnail';
 
 const errorMessages = {

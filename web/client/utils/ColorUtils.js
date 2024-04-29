@@ -7,7 +7,7 @@
   */
 import tinycolor from 'tinycolor2';
 import { toNumber, includes } from 'lodash';
-import { randomInt } from './MathUtils';
+import { randomInt } from './RandomUtils';
 
 let ColorUtils;
 /**

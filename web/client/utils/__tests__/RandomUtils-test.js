@@ -9,9 +9,9 @@ import expect from 'expect';
 import {
     randomFloat,
     randomInt
-} from '../MathUtils';
+} from '../RandomUtils';
 
-describe('Test MathUtils', () => {
+describe('Test RandomUtils', () => {
     it('randomInt', () => {
         const result = randomInt();
         expect(result).toBeGreaterThan(0);
