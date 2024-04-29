@@ -47,6 +47,8 @@ class DecimalCoordinateEditor extends React.Component {
         onKeyDown: () => {},
         disabled: false
     }
+
+
     render() {
         const {coordinate, value, onChange, disabled} = this.props;
         const validateNameFunc = "validateDecimal" + capitalize(coordinate);
