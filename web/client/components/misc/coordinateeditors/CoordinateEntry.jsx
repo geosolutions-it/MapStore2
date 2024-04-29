@@ -10,6 +10,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import DecimalCoordinateEditor from './editors/DecimalCoordinateEditor';
+import DecimalCoordinateEditorSearch from './editors/DecimalCoordinateEditorSearch';
 import AeronauticalCoordinateEditor from './editors/AeronauticalCoordinateEditor';
 import { isNil } from 'lodash';
 import no90Lat from './enhancers/no90Lat';
@@ -26,7 +27,8 @@ class CoordinateEntry extends React.Component {
         aeronauticalOptions: PropTypes.object,
         coordinate: PropTypes.string,
         onChange: PropTypes.func,
-        onKeyDown: PropTypes.func
+        onKeyDown: PropTypes.func,
+        owner: PropTypes.string
     };
 
     static defaultProps = {
@@ -42,13 +44,14 @@ class CoordinateEntry extends React.Component {
                     max: 180
                 }
             }
-        }
+        },
+        owner: ''
     }
 
     render() {
-        const {format} = this.props;
+        const {format, owner} = this.props;
         return format === "decimal" || isNil(format) ?
-            <DecimalCoordinateEditor {...this.props} format={this.props.format || "decimal"}/> :
+            owner === 'search' ? <DecimalCoordinateEditorSearch {...this.props} format={this.props.format || "decimal"}/> : <DecimalCoordinateEditor {...this.props} format={this.props.format || "decimal"}/> :
             <AeronauticalCoordinateEditor {...this.props}/>;
     }
 }

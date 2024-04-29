@@ -172,6 +172,7 @@ const CoordinatesSearch = ({
                     <InputGroup >
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.latitude"/></InputGroup.Addon>
                         <CoordinateEntry
+                            owner="search"
                             format={format}
                             aeronauticalOptions={aeronauticalOptions}
                             coordinate="lat"
@@ -193,6 +194,7 @@ const CoordinatesSearch = ({
                     <InputGroup>
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.longitude"/></InputGroup.Addon>
                         <CoordinateEntry
+                            owner="search"
                             format={format}
                             aeronauticalOptions={aeronauticalOptions}
                             coordinate="lon"

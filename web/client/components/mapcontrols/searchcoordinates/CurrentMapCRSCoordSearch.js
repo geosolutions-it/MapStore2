@@ -93,6 +93,7 @@ const CurrentMapCRSCoordinatesSearch = ({
                     <InputGroup >
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.yCoord"/></InputGroup.Addon>
                         <CoordinateEntry
+                            owner="search"
                             format={format}
                             coordinate="Y"
                             idx={1}
@@ -113,6 +114,7 @@ const CurrentMapCRSCoordinatesSearch = ({
                     <InputGroup>
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.xCoord"/></InputGroup.Addon>
                         <CoordinateEntry
+                            owner="search"
                             format={format}
                             coordinate="X"
                             idx={2}
