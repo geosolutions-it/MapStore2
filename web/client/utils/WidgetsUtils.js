@@ -26,7 +26,8 @@ import { CHARTS_REGEX, TRACES_REGEX, MAPS_REGEX, WIDGETS_MAPS_REGEX, WIDGETS_REG
 import { findGroups } from './GraphUtils';
 import { sameToneRangeColors } from './ColorUtils';
 import uuidv1 from "uuid/v1";
-import { arrayUpsert } from "../utils/ImmutableUtils";
+import { arrayUpsert } from "./ImmutableUtils";
+import { randomInt } from "./RandomUtils";
 
 
 export const FONT = {
@@ -281,7 +282,7 @@ export const generateNewTrace = (options) => {
     const color = options?.color
         ? options.color
         : options?.randomColor
-            ? `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
+            ? `rgb(${randomInt(255)}, ${randomInt(255)}, ${randomInt(255)})`
             : undefined;
     return {
         id: uuidv1(),
