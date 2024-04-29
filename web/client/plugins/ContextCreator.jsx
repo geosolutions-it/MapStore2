@@ -116,7 +116,7 @@ export const contextCreatorSelector = createStructuredSelector({
  *      "ms-main-color": "#000000",
  *      "ms-main-bg": "#FFFFFF",
  *      "ms-primary-contrast": "#FFFFFF",
- *      "ms-primary": "#078aa3"
+ *      "ms-primary": "#078aa3",
  *      "ms-success-contrast": "#FFFFFF",
  *      "ms-success": "#398439"
  *    }
@@ -125,7 +125,7 @@ export const contextCreatorSelector = createStructuredSelector({
  *      "ms-main-color": "#000000",
  *      "ms-main-bg": "#FFFFFF",
  *      "ms-primary-contrast": "#FFFFFF",
- *      "ms-primary": "#078aa3"
+ *      "ms-primary": "#078aa3",
  *      "ms-success-contrast": "#FFFFFF",
  *      "ms-success": "#398439"
  *    }
