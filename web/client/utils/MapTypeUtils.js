@@ -26,7 +26,7 @@ const mapLibrariesConfiguration = {
 
 const DEFAULT_VISUALIZATION_MODES_CONFIG = {
     [VisualizationModes._2D]: {
-        mobile: MapLibraries.LEAFLET,
+        mobile: MapLibraries.OPENLAYERS,
         desktop: MapLibraries.OPENLAYERS
     },
     [VisualizationModes._3D]: {

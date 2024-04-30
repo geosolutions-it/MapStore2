@@ -17,20 +17,22 @@ export default class ScaleBar extends React.Component {
         className: PropTypes.string,
         minWidth: PropTypes.number,
         units: PropTypes.oneOf(['degrees', 'imperial', 'nautical', 'metric', 'us']),
-        container: PropTypes.string
+        container: PropTypes.string,
+        isMobile: PropTypes.bool
     };
 
     static defaultProps = {
         map: null,
         className: 'ol-scale-line',
         minWidth: 64,
-        units: 'metric'
+        units: 'metric',
+        isMobile: false
     };
 
     componentDidMount() {
         this.scalebar = new ScaleLine(assign({}, this.props, this.props.container ? {
             target: document.querySelector(this.props.container)
-        } : {}));
+        } : {}, { className: this.props.isMobile ? 'ol-mobile ol-scale-line' : this.props.className }));
         if (this.props.map) {
             this.props.map.addControl(this.scalebar);
         }
