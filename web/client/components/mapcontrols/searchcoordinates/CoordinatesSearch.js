@@ -27,9 +27,13 @@ export const CoordinateOptions = ({
     clearCoordinates: (onClearCoordinatesSearch, onChangeCoord) =>{
         onClearCoordinatesSearch({owner: "search"});
         const clearedFields = ["lat", "lon", "xCoord", "yCoord"];
-        clearedFields.forEach(field => onChangeCoord(field, ""));
+        const resetVal = '';
+        clearedFields.forEach(field => onChangeCoord(field, resetVal));
     },
-    areValidCoordinates: (coordinate) => isNumber(coordinate?.lon) && isNumber(coordinate?.lat),
+    areValidCoordinates: (coordinate) => {
+        if (!coordinate) return false;
+        return isNumber(coordinate?.lon) && isNumber(coordinate?.lat);
+    },
     zoomToPoint: (onZoomToPoint, coordinate, defaultZoomLevel = 12) => {
         onZoomToPoint({
             x: parseFloat(coordinate.lon),
@@ -63,7 +67,7 @@ export const CoordinateOptions = ({
         coordinate,
         onClearCoordinatesSearch,
         onChangeCoord) =>({
-        visible: (['coordinatesSearch', 'mapCRSCoordinatesSearch'].includes(activeTool)) && (isNumber(coordinate.lon) || isNumber(coordinate.lat)),
+        visible: (['coordinatesSearch', 'mapCRSCoordinatesSearch'].includes(activeTool)) && (isNumber(coordinate.lon) || isNumber(coordinate.lat) || isNumber(coordinate.xCoord) || isNumber(coordinate.yCoord)),
         onClick: () => CoordinateOptions.clearCoordinates(onClearCoordinatesSearch, onChangeCoord)
     }),
     searchIcon: (activeTool, coordinate, onZoomToPoint, defaultZoomLevel) => ({
@@ -153,9 +157,15 @@ const CoordinatesSearch = ({
     }}) => {
 
     const {zoomToPoint, areValidCoordinates} = CoordinateOptions;
+    React.useEffect(() => {
+        // clear previous coordinate marker
+        onClearCoordinatesSearch({owner: "search"});
+    }, []);
 
     const changeCoordinates = (coord, value) => {
-        onChangeCoord(coord, parseFloat(value));
+        const numValue = parseFloat(value);
+        const isValValidNumber = isNumber(numValue) && !isNaN(numValue);
+        onChangeCoord(coord, isValValidNumber ? parseFloat(value) : '');
         if (!areValidCoordinates()) {
             onClearCoordinatesSearch({owner: "search"});
         }

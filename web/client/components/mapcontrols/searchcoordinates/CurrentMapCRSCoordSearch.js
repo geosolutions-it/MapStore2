@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {FormGroup, InputGroup, Row} from "react-bootstrap";
+import { isNumber } from 'lodash';
 
 import Message from "../../I18N/Message";
 import CoordinateEntry from "../../misc/coordinateeditors/CoordinateEntry";
@@ -40,17 +41,6 @@ const CurrentMapCRSCoordinatesSearch = ({
     currentMapCRS
 }) => {
     const {zoomToPoint, areValidCoordinates} = CoordinateOptions;
-    React.useEffect(() => {
-        if (coordinate.lat) {
-            const latValue = coordinate.lat ? reproject([0, coordinate.lat], 'EPSG:4326', currentMapCRS, true)?.y : undefined;
-            onChangeCoord('yCoord', latValue);
-        }
-        if (coordinate.lon) {
-            const lonValue = coordinate.lon ? reproject([coordinate.lon, 0], 'EPSG:4326', currentMapCRS, true)?.x : undefined;
-            onChangeCoord('xCoord', lonValue);
-        }
-    }, []);
-
     const getConstraintsCoordEditor = (projection) =>{
         const extent = getProjection(projection).extent;
         const [minx, miny, maxx, maxy] = extent;
@@ -67,19 +57,67 @@ const CurrentMapCRSCoordinatesSearch = ({
             }
         };
     };
-    const changeCoordinates = (coord, value) => {
-        const numValue = parseFloat(value);
-        onChangeCoord(coord, numValue);
-        if (coord === 'yCoord') {
-            const latValue = numValue ? reproject([0, numValue], currentMapCRS, 'EPSG:4326', true)?.y : undefined;
-            onChangeCoord('lat', latValue ? Number((latValue)) : latValue);
-        } else {
-            const lonValue = numValue ? reproject([numValue, 0], currentMapCRS, 'EPSG:4326', true)?.x : undefined;
-            onChangeCoord('lon', lonValue ? Number((lonValue)) : lonValue);
+    // helper function to validate if the coordinate is within the crs extent or not
+    const isCoordWithinCrs = (value, coordType) => {
+        const min = getConstraintsCoordEditor(currentMapCRS)[format][coordType].min;
+        const max = getConstraintsCoordEditor(currentMapCRS)[format][coordType].max;
+        const coordValue = parseFloat(value);
+        if (isNaN(coordValue) || coordValue < min || coordValue > max ) {
+            return false;
         }
+        return true;
+    };
+    React.useEffect(() => {
+        if (!currentMapCRS) return;
+        // clear previous coordinate marker
+        onClearCoordinatesSearch({owner: "search"});
+        // if there are lat, lon values --> reproject the point and get xCoord and yCoord for map CRS
+        const isLatNumberVal = isNumber(coordinate.lat) && !isNaN(coordinate.lat);
+        const isLonNumberVal = isNumber(coordinate.lon) && !isNaN(coordinate.lon);
+        if (isLatNumberVal && isLonNumberVal) {
+            const reprojectedValue = reproject([coordinate.lon, coordinate.lat], 'EPSG:4326', currentMapCRS, true);
+            const parsedXCoord = parseFloat((reprojectedValue?.x));
+            const parsedYCoord = parseFloat((reprojectedValue?.y));
+            onChangeCoord('xCoord', isCoordWithinCrs(parsedXCoord, 'xCoord') ? parsedXCoord : '');
+            onChangeCoord('yCoord', isCoordWithinCrs(parsedYCoord, 'yCoord') ? parsedYCoord : '');
+            return;
+        }
+        coordinate.xCoord && onChangeCoord('xCoord', '');
+        coordinate.yCoord && onChangeCoord('yCoord', '');
+    }, []);
+
+    const changeCoordinates = (coord, value) => {
+        // clear coordinate marker
         if (!areValidCoordinates()) {
             onClearCoordinatesSearch({owner: "search"});
         }
+        // set change value
+        const numValue = value ? parseFloat(value) : '';
+        onChangeCoord(coord, numValue);
+        // reproject the new point and set lat/lon
+        if (coord === 'yCoord') {
+            const yCoordValidNum = isNumber(numValue) && !isNaN(numValue) && isCoordWithinCrs(numValue, 'yCoord');
+            const xCoordValidNum = isNumber(coordinate.xCoord) && !isNaN(coordinate.xCoord) && isCoordWithinCrs(coordinate.xCoord, 'xCoord');
+            if (yCoordValidNum && xCoordValidNum) {
+                const projectedPt = reproject([coordinate.xCoord, numValue], currentMapCRS, 'EPSG:4326', true);
+                onChangeCoord('lat', (projectedPt.y));
+                onChangeCoord('lon', (projectedPt.x));
+                return;
+            }
+        } else {
+            const xCoordValidNum = isNumber(numValue) && !isNaN(numValue) && isCoordWithinCrs(numValue, 'xCoord');
+            const yCoordValidNum = isNumber(coordinate.yCoord) && !isNaN(coordinate.yCoord)  && isCoordWithinCrs(coordinate.yCoord, 'yCoord');
+            if (yCoordValidNum && xCoordValidNum) {
+                const projectedPt = reproject([numValue, coordinate.yCoord], currentMapCRS, 'EPSG:4326', true);
+                onChangeCoord('lat', (projectedPt.y));
+                onChangeCoord('lon', (projectedPt.x));
+                return;
+            }
+        }
+        const resetValue = '';
+        onChangeCoord('lat', resetValue);
+        onChangeCoord('lon', resetValue);
+
     };
 
     const onZoom = () => {
@@ -91,15 +129,16 @@ const CurrentMapCRSCoordinatesSearch = ({
             <Row className={`entryRow ${format}`}>
                 <FormGroup>
                     <InputGroup >
-                        <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.yCoord"/></InputGroup.Addon>
+                        <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.xCoord"/></InputGroup.Addon>
                         <CoordinateEntry
                             owner="search"
                             format={format}
-                            coordinate="Y"
-                            idx={1}
-                            value={coordinate?.yCoord}
+                            coordinate="X"
+                            idx={2}
+                            value={coordinate?.xCoord}
+                            currentMapCRS={currentMapCRS}
                             constraints={getConstraintsCoordEditor(currentMapCRS)}
-                            onChange={(dd) => changeCoordinates("yCoord", dd)}
+                            onChange={(dd) => changeCoordinates("xCoord", dd)}
                             onKeyDown={() => {
                                 if (areValidCoordinates(coordinate)) {
                                     onZoom();
@@ -112,15 +151,16 @@ const CurrentMapCRSCoordinatesSearch = ({
             <Row className={`entryRow ${format}`}>
                 <FormGroup>
                     <InputGroup>
-                        <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.xCoord"/></InputGroup.Addon>
+                        <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.yCoord"/></InputGroup.Addon>
                         <CoordinateEntry
                             owner="search"
                             format={format}
-                            coordinate="X"
-                            idx={2}
-                            value={coordinate?.xCoord}
+                            coordinate="Y"
+                            idx={1}
+                            value={coordinate?.yCoord}
+                            currentMapCRS={currentMapCRS}
                             constraints={getConstraintsCoordEditor(currentMapCRS)}
-                            onChange={(dd) => changeCoordinates("xCoord", dd)}
+                            onChange={(dd) => changeCoordinates("yCoord", dd)}
                             onKeyDown={() => {
                                 if (areValidCoordinates(coordinate)) {
                                     onZoom();

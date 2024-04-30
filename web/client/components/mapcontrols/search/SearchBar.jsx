@@ -115,6 +115,8 @@ export default ({
     }, [searchOptions?.services]);
 
     useEffect(() => {
+        // clear coordinate marker in case of change map CRS
+        onClearCoordinatesSearch({owner: "search"});
         // Switch back to coordinate search when map CRS is EPSG:4326 and active tool is Map CRS coordinate search
         if (currentMapCRS === 'EPSG:4326' && activeTool === 'mapCRSCoordinatesSearch') {
             onChangeActiveSearchTool('coordinatesSearch');
