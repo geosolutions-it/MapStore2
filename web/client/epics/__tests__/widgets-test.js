@@ -36,7 +36,7 @@ import {
 
 import { savingMap, mapCreated } from '../../actions/maps';
 import { configureMap } from '../../actions/config';
-import { changeLayerProperties, layerLoad, layerError } from '../../actions/layers';
+import { changeLayerProperties, layerLoad, layerError, updateNode } from '../../actions/layers';
 import { onLocationChanged } from 'connected-react-router';
 import { ActionsObservable } from 'redux-observable';
 import Rx from 'rxjs';
@@ -437,6 +437,94 @@ describe('widgets Epics', () => {
         updateLayerOnLayerPropertiesChange(new ActionsObservable(Rx.Observable.of(action)), {getState: () => state})
             .toArray()
             .subscribe(checkActions);
+    });
+    it('updateNode triggers updateWidgetLayer on filterLayer change', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(UPDATE_LAYER);
+            expect(actions[0].layer).toEqual({
+                id: "1",
+                name: "layer"
+            });
+            done();
+        };
+        testEpic(updateLayerOnLayerPropertiesChange,
+            1,
+            [updateNode(
+                "1",
+                "layers",
+                {layerFilter: {rowId: 1567705038414}}
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        filterLayer: {rowId: 1567705038414}
+                    }, {
+                        id: "3",
+                        name: "layer3"
+                    }]
+                }
+            });
+    });
+    it('updateNode does not trigger updateWidgetLayer layer property change', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TEST_TIMEOUT);
+            done();
+        };
+        testEpic(addTimeoutEpic(updateLayerOnLayerPropertiesChange, 0),
+            1,
+            [updateNode(
+                "1",
+                "layers",
+                {filter: {rowId: 1567705038414}}
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        filterLayer: {rowId: 1567705038414}
+                    }]
+                }
+            });
+    });
+    it('updateNode does not trigger updateWidgetLayer group property change', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            expect(actions[0].type).toBe(TEST_TIMEOUT);
+            done();
+        };
+        testEpic(addTimeoutEpic(updateLayerOnLayerPropertiesChange, 0),
+            1,
+            [updateNode(
+                "1",
+                "groups",
+                {test: "some"}
+            )],
+            checkActions,
+            {
+                layers: {
+                    flat: [{
+                        id: "1",
+                        name: "layer"
+                    }, {
+                        id: "2",
+                        name: "layer2",
+                        filterLayer: {rowId: 1567705038414}
+                    }]
+                }
+            });
     });
     it('updateLayerOnLoadingErrorChange triggers updateWidgetLayer on LAYER_LOAD error', (done) => {
         const checkActions = actions => {

@@ -88,6 +88,12 @@
             .background-color-var(@theme-vars[selected-bg]);
             .outline-color-var(@theme-vars[focus-color]);
         }
+        .wms-json-legend-rule.filter-enabled:hover {
+            .background-color-var(@theme-vars[selected-hover-bg]);
+        }
+        .wms-json-legend-rule.filter-enabled.active {
+            .background-color-var(@theme-vars[selected-bg]);
+        }
     }
 }
 
@@ -388,6 +394,17 @@
     }
 }
 
+// style for wms json legend
+.wms-legend {
+    .wms-json-legend-rule {
+        display: flex;
+        margin-bottom: @padding-left-square-md;
+        .ms-rule-legend-icon {
+            margin-right: 8px;
+        }
+    }
+}
+
 // legend for vector wfs styles
 .ms-vector-legend {
     display: flex;
@@ -399,4 +416,7 @@
     .ms-rule-legend-icon {
         margin-right: 4px;
     }
+}
+.wms-json-legend-rule.filter-enabled:hover {
+    cursor: pointer;
 }

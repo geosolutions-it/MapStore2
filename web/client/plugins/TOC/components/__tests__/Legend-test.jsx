@@ -37,14 +37,14 @@ describe("test the Layer legend", () => {
             "visibility": true
         };
         const tb = ReactDOM.render(<Legend layer={layer}/>, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
     });
 
     it('create component without layer', () => {
 
         const tb = ReactDOM.render(<Legend />, document.getElementById("container"));
-        expect(tb).toExist();
+        expect(tb).toBeTruthy();
 
     });
     it('test legend content', () => {

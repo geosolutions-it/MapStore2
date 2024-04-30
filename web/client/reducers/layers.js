@@ -213,8 +213,8 @@ function layers(state = { flat: [] }, action) {
         if (action.nodeType === 'groups') {
             const newGroups = deepRemove(state.groups, action.node);
             const newLayers = state.flat.filter((layer) => !layer.group || layer.group !== action.node && layer.group.indexOf(action.node + '.') !== 0);
-
             return {
+                selected: getSelectedNodes(state?.selected || [], action?.node, true),
                 flat: newLayers,
                 groups: newGroups
             };
@@ -226,7 +226,8 @@ function layers(state = { flat: [] }, action) {
             const newLayers = state.flat.filter((layer) => layer.id !== action.node);
             return assign({}, state, {
                 flat: newLayers,
-                groups: newGroups
+                groups: newGroups,
+                selected: (state?.selected || []).filter((selectedId) => selectedId !== action.node)
             });
         }
         return state;

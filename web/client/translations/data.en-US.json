@@ -203,6 +203,11 @@
               "legendHeight": "Height",
               "legendPreview": "Preview"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Enable interactive legend",
+                "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Note: This parameter requires specific configurations on GeoServer",
+                "fetchError": "Failed to retrieve the legend info from the service"
+            },
             "enableLocalizedLayerStyles": {
                 "label": "Enable localized style",
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
@@ -1104,7 +1109,7 @@
             "title": "Advanced search",
             "query": "Search",
             "apply": "Apply",
-            "reset": "Reset",
+            "reset": "Reset: reset all filters including any other external filter",
             "save": "Save",
             "discard": "Undo",
             "query_request_exception": "Request error",

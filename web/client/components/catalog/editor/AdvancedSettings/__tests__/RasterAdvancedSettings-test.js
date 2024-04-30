@@ -33,10 +33,28 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
+        expect(fields.length).toBe(14);
+    });
+    it('test wms advanced options with no vendor serverType', () => {
+        ReactDOM.render(<RasterAdvancedSettings service={{type: "wms", autoload: false, layerOptions: {serverType: 'no-vendor'}}} isLocalizedLayerStylesEnabled/>, document.getElementById("container"));
+        const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingPanel).toBeTruthy();
+        const fields = document.querySelectorAll(".form-group");
         expect(fields.length).toBe(13);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
+        const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingPanel).toBeTruthy();
+        const fields = document.querySelectorAll(".form-group");
+        const cswFilters = document.getElementsByClassName("catalog-csw-filters");
+        const sortBy = document.getElementsByClassName("sort-by");
+        expect(fields.length).toBe(13);
+        expect(cswFilters).toBeTruthy();
+        expect(sortBy).toBeTruthy();
+    });
+    it('test csw advanced options with no vendor serverType', () => {
+        ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false, layerOptions: {serverType: 'no-vendor'}}}/>, document.getElementById("container"));
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");

@@ -107,6 +107,7 @@ const DefaultLayerNode = ({
                             scales={config?.scales}
                             language={config?.language}
                             {...config?.layerOptions?.legendOptions}
+                            onChange={onChange}
                         />
                     </li>
                 </>
