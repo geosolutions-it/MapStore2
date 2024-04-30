@@ -17,6 +17,7 @@ import * as backgrounds from './backgrounds';
 import * as threeDTiles from './ThreeDTiles';
 import * as cog from './COG';
 import * as model from './Model';           // todo: will change to model
+import * as arcgis from './ArcGIS';
 /**
  * APIs collection for catalog.
  * Each entry must implement:
@@ -52,5 +53,6 @@ export default {
     'backgrounds': backgrounds,
     '3dtiles': threeDTiles,
     'cog': cog,
-    'model': model
+    'model': model,
+    'arcgis': arcgis
 };
