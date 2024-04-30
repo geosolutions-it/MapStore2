@@ -9,7 +9,8 @@ export const defaultPlaceholder = (service) => {
         "tms": "e.g. https://mydomain.com/geoserver/gwc/service/tms/1.0.0",
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
-        "model": "e.g. https://mydomain.com/filename.ifc"
+        "model": "e.g. https://mydomain.com/filename.ifc",
+        "arcgis": "e.g. https://<host>/<context>/rest/services/<...asset>"
     };
     for ( const [key, value] of Object.entries(urlPlaceholder)) {
         if ( key === service.type) {
