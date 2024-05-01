@@ -1987,7 +1987,7 @@ describe('featuregrid Epics', () => {
             const epicResult = actions => {
                 expect(actions.length).toBe(2);
                 expect(actions[0].type).toBe(HIDE_MAPINFO_MARKER);
-                expect(actions[1].type).toBe(OPEN_FEATURE_GRID);
+                expect(actions[1].type).toBe(CLOSE_FEATURE_GRID);
                 done();
             };
 
