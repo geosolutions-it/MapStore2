@@ -60,8 +60,8 @@ class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
         if ((prevProps.value !== this.props.value && this.props.value !== this.state.value)) {
             this.setState({value: this.props.value});
         }
-        // in case change currentMapCRS ---> validate the coords and reset if not
-        if (prevProps.currentMapCRS !== this.props.currentMapCRS) {
+        // in case change currentMapCRS ---> validate the coords and reset if not [in case projected CRS]
+        if (prevProps.currentMapCRS !== this.props.currentMapCRS && this.props.currentMapCRS !== 'EPSG:4326') {
             const parsedVal = parseFloat(this.props.value);
             const valueIsNumber = isNumber(parsedVal) && !isNaN(parsedVal);
             if (valueIsNumber) {
@@ -92,9 +92,17 @@ class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
                     value={this.state.value}
                     placeholder={coordinate}
                     onChange={val => {
-                        const parsedVal = parseFloat(val);
-                        this.setState({ value: parsedVal });
-                        onChange(parsedVal);
+                        if (val === "") {
+                            onChange("");
+                            this.setState({ value: '' });
+                            onChange('');
+                        } else if (this[validateNameFunc](val) === null) {
+                            const parsedVal = parseFloat(val);
+                            onChange(parsedVal);
+                            this.setState({ value: parsedVal });
+                        } else {
+                            this.setState({value: this.props.value});
+                        }
                     }}
                     onKeyDown={this.verifyOnKeyDownEvent}
                     step={1}

@@ -92,7 +92,7 @@ const CurrentMapCRSCoordinatesSearch = ({
             onClearCoordinatesSearch({owner: "search"});
         }
         // set change value
-        const numValue = value ? parseFloat(value) : '';
+        const numValue = isNumber(value) && !isNaN(value) ? parseFloat(value) : '';
         onChangeCoord(coord, numValue);
         // reproject the new point and set lat/lon
         if (coord === 'yCoord') {

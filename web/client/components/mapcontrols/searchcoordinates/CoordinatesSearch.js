@@ -157,15 +157,11 @@ const CoordinatesSearch = ({
     }}) => {
 
     const {zoomToPoint, areValidCoordinates} = CoordinateOptions;
-    React.useEffect(() => {
-        // clear previous coordinate marker
-        onClearCoordinatesSearch({owner: "search"});
-    }, []);
 
     const changeCoordinates = (coord, value) => {
         const numValue = parseFloat(value);
         const isValValidNumber = isNumber(numValue) && !isNaN(numValue);
-        onChangeCoord(coord, isValValidNumber ? parseFloat(value) : '');
+        onChangeCoord(coord, isValValidNumber ? numValue : '');
         if (!areValidCoordinates()) {
             onClearCoordinatesSearch({owner: "search"});
         }
