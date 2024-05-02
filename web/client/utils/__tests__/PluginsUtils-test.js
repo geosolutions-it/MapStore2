@@ -118,7 +118,18 @@ describe('PluginsUtils', () => {
     it('handleExpression', () => {
         expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
     });
-
+    it('handleExpression in case there is a chaining within the expression that needs to access available state', () => {
+        const state = {groups: ["ADMIN", "NORMAL_USER"]};
+        const getState = (path) => state[path];
+        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{state('groups').filter(gr => ['ADMIN'].includes(gr)).length}")).toBe(1);
+        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{state('groups').filter(gr => ['NORMAL_USER'].includes(gr)).length}")).toBe(1);
+        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{state('groups').filter(gr => ['NOT_ADMIN'].includes(gr)).length}")).toBe(0);
+    });
+    it('handleExpression in case there is a chaining within the expression that needs to access unavailable state', () => {
+        const state = {groups: undefined};
+        const getState = (path) => state[path];
+        expect(PluginsUtils.handleExpression(getState, {context1: "test2"}, "{state('groups').filter(gr => ['ADMIN'].includes(gr))}")).toBe(undefined);
+    });
     it('getPluginItems', () => {
         const plugins = {
             Test1Plugin: {
