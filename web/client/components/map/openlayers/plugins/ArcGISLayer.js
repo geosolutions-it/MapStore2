@@ -31,6 +31,7 @@ registerType('arcgis', {
         const newCrs = newOptions.crs || newOptions.srs || 'EPSG:3857';
         if (newCrs !== oldCrs) {
             layer.getSource().forEachFeature((f) => {
+                // revise_me layer.getSource().forEachFeature leads to critical failure when wms service is added
                 f.getGeometry().transform(oldCrs, newCrs);
             });
         }
