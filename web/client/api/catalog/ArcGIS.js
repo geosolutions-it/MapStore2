@@ -36,7 +36,7 @@ const recordToLayer = (record) => {
 };
 
 const getRecords = (url, startPosition, maxRecords, text, info) => {
-    console.log(startPosition, maxRecords, text, info);
+    // console.log(startPosition, maxRecords, text, info);
     return getCapabilities(url);
 };
 
@@ -46,7 +46,7 @@ export const textSearch = (url, startPosition, maxRecords, text, info) => getRec
 export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
-            console.log(record)
+            // console.log(record)
             const { version, bbox, format, properties } = record;
             const identifier = `${record.id}:${record.name}`;
             return {

@@ -48,7 +48,7 @@ export default {
         };
     },
     getIdentifyFlow: (layer, baseURL, { features = [], point, bounds, map } = {}) => {
-        console.log(layer, point, bounds);
+        // console.log(layer, point, bounds);
         return Observable.defer(() => axios.post(`${layer.url}/${layer.name}/query`, null, {
             params: {
                 f: 'geojson',
@@ -56,7 +56,7 @@ export default {
                 inSR: map.projection
             }
         }).then((response) => {
-            console.log(response);
+            // console.log(response);
             return {
                 data: {
                     features: response?.data?.features || []
