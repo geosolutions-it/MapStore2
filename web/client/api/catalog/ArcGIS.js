@@ -13,10 +13,13 @@ import { preprocess as commonPreprocess } from './common';
 import { getCapabilities } from '../ArcGIS';
 
 function validateUrl(serviceUrl) {
-    /* if (isValidURLTemplate(serviceUrl)) {
-        return true;
-    }*/
-    return true;
+    if (isValidURLTemplate(serviceUrl)) {
+        // revise_me. Recheck if cast is necessary as well as
+        // make that string constant somewhere
+        // check if there is better way to confirm url structure, this is rudimentary.
+        return String(serviceUrl).includes('arcgis');
+    }
+    return false;
 }
 
 const recordToLayer = (record) => {
@@ -33,6 +36,7 @@ const recordToLayer = (record) => {
 };
 
 const getRecords = (url, startPosition, maxRecords, text, info) => {
+    console.log(startPosition, maxRecords, text, info);
     return getCapabilities(url);
 };
 
@@ -43,7 +47,7 @@ export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
             console.log(record)
-            // const { version, bbox, format, properties } = record;
+            const { version, bbox, format, properties } = record;
             const identifier = `${record.id}:${record.name}`;
             return {
                 serviceType: 'arcgis',
@@ -53,11 +57,12 @@ export const getCatalogRecords = (response) => {
                 identifier,
                 url: record.url,
                 thumbnail: null,
-                // ...(bbox && { bbox }),
-                // ...(format && { format }),
-                // ...(properties && { properties }),
+                ...(bbox && { bbox }),
+                ...(format && { format }),
+                ...(properties && { properties }),
                 references: [],
-                name: record.id
+                name: record.id,
+                version
             };
         })
         : null;
