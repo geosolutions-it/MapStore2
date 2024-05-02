@@ -112,12 +112,12 @@ class GeoJSONStyledFeatures {
             return {
                 polygon: {
                     ...entity.polygon,
-                    hierarchy: new Cesium.PolygonHierarchy(
+                    hierarchy: new Cesium.ConstantProperty(new Cesium.PolygonHierarchy(
                         geometry[0].map(cartesian => cartesian.clone()),
                         geometry
                             .filter((hole, idx) => idx > 0)
-                            .map(hole => hole.map((cartesian) => cartesian.clone()))
-                    )
+                            .map(hole => new Cesium.PolygonHierarchy(hole.map((cartesian) => cartesian.clone())))
+                    ))
                 }
             };
         }
@@ -248,7 +248,7 @@ class GeoJSONStyledFeatures {
                                 primitive.geometry[0].map(cartesian => cartesian.clone()),
                                 primitive.geometry
                                     .filter((hole, idx) => idx > 0)
-                                    .map(hole => hole.map((cartesian) => cartesian.clone()))
+                                    .map(hole => new Cesium.PolygonHierarchy(hole.map((cartesian) => cartesian.clone())))
                             ),
                             arcType: polygon.arcType,
                             perPositionHeight: polygon.height !== undefined ? false : polygon.perPositionHeight,
@@ -322,7 +322,7 @@ class GeoJSONStyledFeatures {
                                 primitive.geometry[0].map(cartesian => cartesian.clone()),
                                 primitive.geometry
                                     .filter((hole, idx) => idx > 0)
-                                    .map(hole => hole.map((cartesian) => cartesian.clone()))
+                                    .map(hole => new Cesium.PolygonHierarchy(hole.map((cartesian) => cartesian.clone())))
                             ),
                             arcType: polygon.arcType,
                             perPositionHeight: polygon.perPositionHeight

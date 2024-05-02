@@ -203,6 +203,11 @@
               "legendHeight": "Höhe",
               "legendPreview": "Vorschau"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Aktivieren Sie die interaktive Legende",
+                "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird. Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer",
+                "fetchError": "Die Legenden Informationen konnten nicht vom Dienst abgerufen werden"
+            },
             "enableLocalizedLayerStyles": {
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
@@ -1143,7 +1148,7 @@
             "title": "Erweiterte Suche",
             "query": "Suche",
             "apply": "Anwenden",
-            "reset": "Zurücksetzen",
+            "reset": "Zurücksetzen: Alle Filter zurücksetzen, einschließlich aller anderen externen Filter",
             "save": "Speichern",
             "discard": "Rückgängig machen",
             "query_request_exception": "Abfrage Fehler",

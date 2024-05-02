@@ -38,6 +38,8 @@ import axios from 'axios';
 import isNil from 'lodash/isNil';
 import isObject from 'lodash/isObject';
 import MarkerUtils from '../MarkerUtils';
+import {randomInt} from '../RandomUtils';
+
 
 export const isGeoStylerBooleanFunction = (got) => [
     'between',
@@ -171,7 +173,7 @@ export const expressionsUtils = {
             return Math.PI;
         }
         if (func.name === 'random') {
-            return Math.random();
+            return randomInt();
         }
         const args = func.args.map(arg => {
             if (isGeoStylerFunction(arg)) {

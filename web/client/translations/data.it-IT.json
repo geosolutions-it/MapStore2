@@ -203,6 +203,11 @@
               "legendHeight": "Altezza",
               "legendPreview": "Anteprima"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Abilita leggenda interattiva",
+                "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Nota: questo parametro richiede configurazioni specifiche su GeoServer",
+                "fetchError": "Impossibile ottenere le informazioni sulla leggenda dal servizio"
+            },
             "enableLocalizedLayerStyles": {
                 "label": "Abilita stile localizzato",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
@@ -1104,7 +1109,7 @@
             "title": "Ricerca Avanzata",
             "query": "Ricerca",
             "apply": "Applica",
-            "reset": "Reimposta",
+            "reset": "Reimposta: reimposta tutti i filtri, inclusi tutti gli altri filtri esterni",
             "save": "Salva",
             "discard": "Ripristina",
             "query_request_exception": "Errore nella richiesta",
