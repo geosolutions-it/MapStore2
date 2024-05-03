@@ -68,9 +68,7 @@ const CurrentMapCRSCoordinatesSearch = ({
         return true;
     };
     React.useEffect(() => {
-        if (!currentMapCRS) return;
-        // clear previous coordinate marker
-        onClearCoordinatesSearch({owner: "search"});
+        if (!currentMapCRS || currentMapCRS === 'EPSG:4326') return;
         // if there are lat, lon values --> reproject the point and get xCoord and yCoord for map CRS
         const isLatNumberVal = isNumber(coordinate.lat) && !isNaN(coordinate.lat);
         const isLonNumberVal = isNumber(coordinate.lon) && !isNaN(coordinate.lon);
@@ -78,13 +76,15 @@ const CurrentMapCRSCoordinatesSearch = ({
             const reprojectedValue = reproject([coordinate.lon, coordinate.lat], 'EPSG:4326', currentMapCRS, true);
             const parsedXCoord = parseFloat((reprojectedValue?.x));
             const parsedYCoord = parseFloat((reprojectedValue?.y));
-            onChangeCoord('xCoord', isCoordWithinCrs(parsedXCoord, 'xCoord') ? parsedXCoord : '');
-            onChangeCoord('yCoord', isCoordWithinCrs(parsedYCoord, 'yCoord') ? parsedYCoord : '');
+            onChangeCoord('xCoord', parsedXCoord);
+            onChangeCoord('yCoord', parsedYCoord);
+            // if coords are out of crs extent --> clear the marker
+            if (isCoordWithinCrs(parsedXCoord, 'xCoord') || isCoordWithinCrs(parsedYCoord, 'yCoord')) onClearCoordinatesSearch({owner: "search"});
             return;
         }
         coordinate.xCoord && onChangeCoord('xCoord', '');
         coordinate.yCoord && onChangeCoord('yCoord', '');
-    }, []);
+    }, [currentMapCRS]);
 
     const changeCoordinates = (coord, value) => {
         // clear coordinate marker

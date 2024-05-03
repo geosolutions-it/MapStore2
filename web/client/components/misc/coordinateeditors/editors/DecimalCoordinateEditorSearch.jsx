@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-import {capitalize, isNumber} from 'lodash';
+import {capitalize} from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {FormGroup} from 'react-bootstrap';
@@ -60,24 +60,6 @@ class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
         if ((prevProps.value !== this.props.value && this.props.value !== this.state.value)) {
             this.setState({value: this.props.value});
         }
-        // in case change currentMapCRS ---> validate the coords and reset if not [in case projected CRS]
-        if (prevProps.currentMapCRS !== this.props.currentMapCRS && this.props.currentMapCRS !== 'EPSG:4326') {
-            const parsedVal = parseFloat(this.props.value);
-            const valueIsNumber = isNumber(parsedVal) && !isNaN(parsedVal);
-            if (valueIsNumber) {
-                const isXNotValidVal = (this.props.coordinate === 'X' && this.validateDecimalX(this.props.value));
-                const isYNotValidVal = (this.props.coordinate === 'Y' && this.validateDecimalY(this.props.value));
-                const resetValue = '';
-                if (isXNotValidVal) {
-                    this.props.onChange(parseFloat(resetValue));
-                    this.setState({value: ''});
-                }
-                if (isYNotValidVal) {
-                    this.props.onChange(parseFloat(resetValue));
-                    this.setState({value: ''});
-                }
-            }
-        }
     }
 
     render() {
@@ -92,17 +74,9 @@ class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
                     value={this.state.value}
                     placeholder={coordinate}
                     onChange={val => {
-                        if (val === "") {
-                            onChange("");
-                            this.setState({ value: '' });
-                            onChange('');
-                        } else if (this[validateNameFunc](val) === null) {
-                            const parsedVal = parseFloat(val);
-                            onChange(parsedVal);
-                            this.setState({ value: parsedVal });
-                        } else {
-                            this.setState({value: this.props.value});
-                        }
+                        const parsedVal = parseFloat(val);
+                        this.setState({ value: parsedVal });
+                        onChange(parsedVal);
                     }}
                     onKeyDown={this.verifyOnKeyDownEvent}
                     step={1}
