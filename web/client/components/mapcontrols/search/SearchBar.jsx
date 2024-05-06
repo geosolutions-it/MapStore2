@@ -237,7 +237,7 @@ export default ({
                 {activeTool === "coordinatesSearch" && showCoordinatesSearchOption &&
                     <CoordinatesSearch currentMapCRS={currentMapCRS} format={format} defaultZoomLevel={defaultZoomLevel} onClearCoordinatesSearch={onClearCoordinatesSearch} />
                 }
-                {activeTool === "mapCRSCoordinatesSearch" && showCoordinatesSearchOption &&
+                {activeTool === "mapCRSCoordinatesSearch" && showCoordinatesSearchOption && currentMapCRS &&
                     <CurrentMapCRSCoordSearch currentMapCRS={currentMapCRS} format={format} defaultZoomLevel={defaultZoomLevel} onClearCoordinatesSearch={onClearCoordinatesSearch} />
                 }
                 {
