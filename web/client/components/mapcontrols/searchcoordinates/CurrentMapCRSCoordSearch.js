@@ -59,8 +59,8 @@ const CurrentMapCRSCoordinatesSearch = ({
     };
     // helper function to validate if the coordinate is within the crs extent or not
     const isCoordWithinCrs = (value, coordType) => {
-        const min = getConstraintsCoordEditor(currentMapCRS)[format][coordType].min;
-        const max = getConstraintsCoordEditor(currentMapCRS)[format][coordType].max;
+        const min = getConstraintsCoordEditor(currentMapCRS).decimal[coordType]?.min || 0;
+        const max = getConstraintsCoordEditor(currentMapCRS).decimal[coordType]?.max || 0;
         const coordValue = parseFloat(value);
         if (isNaN(coordValue) || coordValue < min || coordValue > max ) {
             return false;

@@ -170,6 +170,7 @@ export default ({
                 onChangeActiveSearchTool={onChangeActiveSearchTool}
                 onClearBookmarkSearch={onClearBookmarkSearch}
                 currentMapCRS={currentMapCRS}
+                onChangeFormat={onChangeFormat}
             />);
     }
 

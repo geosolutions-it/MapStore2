@@ -78,7 +78,7 @@ export const CoordinateOptions = ({
             }
         }
     }),
-    coordinatesMenuItem: ({activeTool, searchText, clearSearch, onChangeActiveSearchTool, onClearBookmarkSearch, currentMapCRS}) =>{
+    coordinatesMenuItem: ({activeTool, searchText, clearSearch, onChangeActiveSearchTool, onClearBookmarkSearch, currentMapCRS, onChangeFormat}) =>{
         if (currentMapCRS === 'EPSG:4326') {
             return (<MenuItem active={activeTool === "coordinatesSearch"} onClick={() => {
                 if (searchText !== undefined && searchText !== "") {
@@ -107,6 +107,7 @@ export const CoordinateOptions = ({
             }
             onClearBookmarkSearch("selected");
             onChangeActiveSearchTool("mapCRSCoordinatesSearch");
+            onChangeFormat("decimal");
             document.dispatchEvent(new MouseEvent('click'));
         }}>
             <span style={{marginLeft: 20}}>
