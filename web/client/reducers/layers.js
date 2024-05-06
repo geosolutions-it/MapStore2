@@ -265,7 +265,7 @@ function layers(state = { flat: [] }, action) {
             expanded: true,
             nodes: []
         };
-        // ensure neew added group are included in the default
+        // ensure new added group are included in the default
         const parent = action.parent ?? DEFAULT_GROUP_ID;
         const groups = (state.groups || []).find((group) => group.id === DEFAULT_GROUP_ID)
             ? state.groups
