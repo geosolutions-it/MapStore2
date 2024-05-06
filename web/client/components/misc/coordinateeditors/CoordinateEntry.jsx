@@ -49,9 +49,9 @@ class CoordinateEntry extends React.Component {
     }
 
     render() {
-        const {format, owner} = this.props;
+        const {format, owner, currentMapCRS} = this.props;
         return format === "decimal" || isNil(format) ?
-            owner === 'search' ? <DecimalCoordinateEditorSearch {...this.props} format={this.props.format || "decimal"}/> : <DecimalCoordinateEditor {...this.props} format={this.props.format || "decimal"}/> :
+            owner === 'search' && currentMapCRS ? <DecimalCoordinateEditorSearch {...this.props} format={this.props.format || "decimal"}/> : <DecimalCoordinateEditor {...this.props} format={this.props.format || "decimal"}/> :
             <AeronauticalCoordinateEditor {...this.props}/>;
     }
 }
