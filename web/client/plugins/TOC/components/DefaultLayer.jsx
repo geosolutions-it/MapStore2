@@ -23,6 +23,7 @@ import NodeHeader from './NodeHeader';
 import NodeTool from './NodeTool';
 import ExpandButton from './ExpandButton';
 import Message from '../../../components/I18N/Message';
+import FilterNodeTool from './FilterNodeTool';
 
 const getLayerVisibilityWarningMessageId = (node, config = {}) => {
     if (config.visualizationMode === VisualizationModes._2D && ['3dtiles', 'model'].includes(node.type)) {
@@ -160,7 +161,7 @@ const DefaultLayerNode = ({
                                 ? indicator.glyph && <NodeTool onClick={false} key={indicator.key} glyph={indicator.glyph} {...indicator.props} />
                                 : null)
                             : null}
-                        {nodeToolItems.filter(({ selector = () => true }) => selector(componentProps)).map(({ Component, name }) => {
+                        {[ { name: 'FilterLayer', Component: FilterNodeTool }, ...nodeToolItems ].filter(({ selector = () => true }) => selector(componentProps)).map(({ Component, name }) => {
                             return (<Component key={name} {...componentProps} />);
                         })}
                     </>
