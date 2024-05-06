@@ -9,7 +9,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createPlugin } from '../../utils/PluginsUtils';
 import { openQueryBuilder } from '../../actions/layerFilter';
-import FilterNodeTool from './components/FilterNodeTool';
+
 // dummy plugin
 const FilterLayer = () => null;
 
@@ -54,11 +54,6 @@ export default createPlugin('FilterLayer',
                 name: "FilterLayer",
                 target: 'toolbar',
                 Component: FilterLayerButton,
-                position: 6
-            }, {
-                name: "FilterLayer",
-                target: 'node-tool',
-                Component: FilterNodeTool,
                 position: 6
             }]
         }
