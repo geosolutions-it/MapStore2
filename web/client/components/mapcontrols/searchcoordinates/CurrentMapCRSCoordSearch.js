@@ -79,7 +79,7 @@ const CurrentMapCRSCoordinatesSearch = ({
             onChangeCoord('xCoord', parsedXCoord);
             onChangeCoord('yCoord', parsedYCoord);
             // if coords are out of crs extent --> clear the marker
-            if (isCoordWithinCrs(parsedXCoord, 'xCoord') || isCoordWithinCrs(parsedYCoord, 'yCoord')) onClearCoordinatesSearch({owner: "search"});
+            if (!isCoordWithinCrs(parsedXCoord, 'xCoord') || !isCoordWithinCrs(parsedYCoord, 'yCoord')) onClearCoordinatesSearch({owner: "search"});
             return;
         }
         coordinate.xCoord && onChangeCoord('xCoord', '');
