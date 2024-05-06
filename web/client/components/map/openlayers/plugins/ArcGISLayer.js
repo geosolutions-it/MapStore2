@@ -26,18 +26,7 @@ registerType('arcgis', {
             })
         });
     },
-    update: (layer, newOptions, oldOptions, map) => {
-        const oldCrs = oldOptions.crs || oldOptions.srs || 'EPSG:3857';
-        const newCrs = newOptions.crs || newOptions.srs || 'EPSG:3857';
-        if (newCrs !== oldCrs) {
-            layer.getSource().forEachFeature((f) => {
-                // revise_me layer.getSource().forEachFeature leads to critical failure when wms service is added
-                f.getGeometry().transform(oldCrs, newCrs);
-            });
-        }
-
-        // re-check and restore options
-
+    update: (layer, newOptions, oldOptions) => {
         if (oldOptions.minResolution !== newOptions.minResolution) {
             layer.setMinResolution(newOptions.minResolution === undefined ? 0 : newOptions.minResolution);
         }
