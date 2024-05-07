@@ -23,6 +23,7 @@ import NodeHeader from './NodeHeader';
 import NodeTool from './NodeTool';
 import ExpandButton from './ExpandButton';
 import Message from '../../../components/I18N/Message';
+import FilterNodeTool from './FilterNodeTool';
 
 const getLayerVisibilityWarningMessageId = (node, config = {}) => {
     if (config.visualizationMode === VisualizationModes._2D && ['3dtiles', 'model'].includes(node.type)) {
@@ -127,6 +128,10 @@ const DefaultLayerNode = ({
         itemComponent: NodeTool
     };
 
+    const filterNode = !config?.layerOptions?.hideFilter
+        ? [{ name: 'FilterLayer', Component: FilterNodeTool }]
+        : [];
+
     return (
         <>
             <NodeHeader
@@ -160,7 +165,7 @@ const DefaultLayerNode = ({
                                 ? indicator.glyph && <NodeTool onClick={false} key={indicator.key} glyph={indicator.glyph} {...indicator.props} />
                                 : null)
                             : null}
-                        {nodeToolItems.filter(({ selector = () => true }) => selector(componentProps)).map(({ Component, name }) => {
+                        {[ ...filterNode, ...nodeToolItems ].filter(({ selector = () => true }) => selector(componentProps)).map(({ Component, name }) => {
                             return (<Component key={name} {...componentProps} />);
                         })}
                     </>
@@ -216,6 +221,7 @@ const DefaultLayerNode = ({
  * @prop {object} config.layerOptions.tooltipOptions options for layer title tooltip
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
+ * @prop {boolean} config.layerOptions.hideFilter hide the filter button
  */
 const DefaultLayer = ({
     node: nodeProp,
