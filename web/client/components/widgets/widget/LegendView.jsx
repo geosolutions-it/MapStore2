@@ -35,7 +35,8 @@ export default ({
                 scales,
                 zoom: currentZoomLvl,
                 layerOptions: {
-                    legendOptions: legendProps
+                    legendOptions: legendProps,
+                    hideFilter: true
                 }
             }}
             onChangeMap={(newMap) => {
