@@ -10,7 +10,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import DecimalCoordinateEditor from './editors/DecimalCoordinateEditor';
-import DecimalCoordinateEditorSearch from './editors/DecimalCoordinateEditorSearch';
+import CRSCoordinateEditor from './editors/CRSCoordinateEditor';
 import AeronauticalCoordinateEditor from './editors/AeronauticalCoordinateEditor';
 import { isNil } from 'lodash';
 import no90Lat from './enhancers/no90Lat';
@@ -51,7 +51,7 @@ class CoordinateEntry extends React.Component {
     render() {
         const {format, owner, currentMapCRS} = this.props;
         return format === "decimal" || isNil(format) ?
-            owner === 'search' && currentMapCRS ? <DecimalCoordinateEditorSearch {...this.props} format={this.props.format || "decimal"}/> : <DecimalCoordinateEditor {...this.props} format={this.props.format || "decimal"}/> :
+            owner === 'search' && currentMapCRS ? <CRSCoordinateEditor  {...this.props} format={this.props.format || "decimal"}/> : <DecimalCoordinateEditor {...this.props} format={this.props.format || "decimal"}/> :
             <AeronauticalCoordinateEditor {...this.props}/>;
     }
 }

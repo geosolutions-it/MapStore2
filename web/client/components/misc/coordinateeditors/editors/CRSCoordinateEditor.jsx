@@ -10,13 +10,12 @@ import {capitalize} from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {FormGroup} from 'react-bootstrap';
-import DecimalCoordinateEditor from './DecimalCoordinateEditor';
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
 
 /**
  This component renders a custom coordiante inpout for decimal degrees for default coordinate CRS and current map CRS as well
 */
-class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
+class CRSCoordinateEditor extends React.Component {
 
     static propTypes = {
         idx: PropTypes.number,
@@ -52,32 +51,51 @@ class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            value: this.props.value
+            focusedInput: false
         };
     }
-    componentDidUpdate(prevProps) {
-        // in case clear the inputs by clicking on clear btn
-        if ((prevProps.value !== this.props.value && this.props.value !== this.state.value)) {
-            this.setState({value: this.props.value});
+    onBlur = (e) => {
+        this.setState({ focusedInput: false });
+        let val = e.target.value;
+        if (!isNaN(val) && val !== "NaN" && val !== '') {
+            const locale = "en-US";
+            const formatter = new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 20});
+            const formattedValue = formatter.format(val);
+            e.target.value = formattedValue;
+            return;
+        }
+        e.target.value = "";
+    };
+    onFocus = (e) => {
+        this.setState({ focusedInput: true });
+        let value = e.target.value;
+        let isFormattedVal = value && value.includes(",");
+        if (isFormattedVal) {
+            e.target.value = value.replaceAll(",", "");
+            return;
         }
     }
-
     render() {
-        const {coordinate, onChange, disabled} = this.props;
+        const {coordinate, onChange, disabled, value} = this.props;
         const validateNameFunc = "validateDecimal" + capitalize(coordinate);
         return (
             <FormGroup
-                validationState={this[validateNameFunc](this.state.value)}>
+                validationState={this[validateNameFunc](value)}>
                 <IntlNumberFormControl
                     disabled={disabled}
                     key={coordinate}
-                    value={this.state.value}
+                    value={value}
                     placeholder={coordinate}
                     onChange={val => {
-                        const parsedVal = parseFloat(val);
-                        this.setState({ value: parsedVal });
-                        onChange(parsedVal);
+                        if (val === "") {
+                            onChange("");
+                        } else {
+                            onChange(val);
+                        }
                     }}
+                    focusedInput={this.state.focusedInput}
+                    onFocus={this.onFocus}
+                    onBlur={this.onBlur}
                     onKeyDown={this.verifyOnKeyDownEvent}
                     step={1}
                     validateNameFunc={this[validateNameFunc]}
@@ -86,10 +104,25 @@ class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
             </FormGroup>
         );
     }
+    /**
+    * checking and blocking the keydown event to avoid
+    * the only letters matched by input type number 'e' or 'E'
+    * see https://github.com/geosolutions-it/MapStore2/issues/3523#issuecomment-502660391
+    * @param event keydown event
+    */
+    verifyOnKeyDownEvent = (event) => {
+        if (event.keyCode === 69) {
+            event.preventDefault();
+        }
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            event.stopPropagation();
+            this.props.onKeyDown(event);
+        }
+    };
 	validateDecimalX = (xCoordinate) => {
 	    const min = this.props.constraints[this.props.format].xCoord.min;
 	    const max = this.props.constraints[this.props.format].xCoord.max;
-
 	    const xCoord = parseFloat(xCoordinate);
 	    if (isNaN(xCoord) || xCoord < min || xCoord > max ) {
 	        return "error";
@@ -99,7 +132,7 @@ class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
     validateDecimalY = (yCoordinate) => {
         const min = this.props.constraints[this.props.format].yCoord.min;
         const max = this.props.constraints[this.props.format].yCoord.max;
-        const yCoord = parseFloat(yCoordinate);
+	    const yCoord = parseFloat(yCoordinate);
         if (isNaN(yCoord) || yCoord < min || yCoord > max ) {
             return "error";
         }
@@ -108,4 +141,4 @@ class DecimalCoordinateEditorSearch extends DecimalCoordinateEditor {
 
 }
 
-export default DecimalCoordinateEditorSearch;
+export default CRSCoordinateEditor;
