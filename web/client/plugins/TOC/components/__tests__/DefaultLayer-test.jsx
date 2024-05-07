@@ -394,4 +394,34 @@ describe('test DefaultLayer module component', () => {
         expect(layerNode).toBeFalsy();
         expect(errorTooltip).toBeFalsy();
     });
+
+    it('should display the layer filter button', () => {
+        const layer = {
+            id: 'layer00',
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            opacity: 0.5,
+            layerFilter: {}
+        };
+
+        ReactDOM.render(<Layer node={layer} />, document.getElementById("container"));
+        const filter = document.querySelector('.glyphicon-filter');
+        expect(filter).toBeTruthy();
+    });
+
+    it('should not display the layer filter button when hideFilter is true', () => {
+        const layer = {
+            id: 'layer00',
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            opacity: 0.5,
+            layerFilter: {}
+        };
+
+        ReactDOM.render(<Layer node={layer} config={{ layerOptions: { hideFilter: true } }} />, document.getElementById("container"));
+        const filter = document.querySelector('.glyphicon-filter');
+        expect(filter).toBeFalsy();
+    });
 });
