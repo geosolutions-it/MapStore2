@@ -51,38 +51,6 @@ class CRSCoordinateEditor extends React.Component {
         disabled: false,
         currentMapCRS: 'EPSG:4326'
     }
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            focusedInput: false
-        };
-    }
-    onBlur = (e) => {
-        this.setState({ focusedInput: false });
-        let val = e.target.value;
-        if (!isNaN(val) && val !== "NaN" && val !== '') {
-            const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
-            const formatter = new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 20});
-            const formattedValue = formatter.format(val);
-            e.target.value = formattedValue;
-            return;
-        }
-        e.target.value = "";
-    };
-    onFocus = (e) => {
-        this.setState({ focusedInput: true });
-        let value = e.target.value;
-        const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
-        const formatParts = new Intl.NumberFormat(locale).formatToParts(1000.1);
-        const decimalSeparator = formatParts?.find(part => part.type === 'decimal').value;
-        const groupSeparator = formatParts?.find(part => part.type === 'group').value;
-        let isFormattedVal = value && decimalSeparator && value.includes(decimalSeparator);
-        if (isFormattedVal) {
-            // unformatted value
-            e.target.value = value?.replaceAll(groupSeparator, "")?.replaceAll(decimalSeparator, ".");
-            return;
-        }
-    }
     render() {
         const {coordinate, onChange, disabled, value} = this.props;
         const validateNameFunc = "validateDecimal" + capitalize(coordinate);
@@ -101,9 +69,6 @@ class CRSCoordinateEditor extends React.Component {
                             onChange(val);
                         }
                     }}
-                    focusedInput={this.state.focusedInput}
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}
                     onKeyDown={this.verifyOnKeyDownEvent}
                     step={1}
                     validateNameFunc={this[validateNameFunc]}

@@ -30,9 +30,7 @@ class IntlNumberFormControl extends React.Component {
         step: PropTypes.number,
         locale: PropTypes.string,
         disabled: PropTypes.bool,
-        onBlur: PropTypes.func,
-        onFocus: PropTypes.func,
-        focusedInput: PropTypes.bool            // it is a flag used for prevent formatting the number during focus mode
+        onBlur: PropTypes.func
     }
 
     static contextTypes = {
@@ -40,7 +38,7 @@ class IntlNumberFormControl extends React.Component {
     };
 
     render() {
-        const {onChange, onBlur, disabled, type, step, value, defaultValue, onFocus,
+        const {onChange, onBlur, disabled, type, step, value, defaultValue,
             ...formProps} = this.props;
         return (
             <NumericInput
@@ -49,17 +47,14 @@ class IntlNumberFormControl extends React.Component {
                 {...formProps}
                 {...value !== undefined ? {value: this.format(value) } : {defaultValue: this.format(defaultValue)}}
                 format={this.format}
-                onChange={(val) => val === null ? this.props.onChange("") : this.props.onChange(val.toString())}
+                onChange={(val) => {
+                    val === null ? this.props.onChange("") : this.props.onChange(val.toString());
+                }}
                 onKeyUp={ev=>
                     !includes([37, 39], ev.keyCode)   // Allow navigation with left and right arrow key
                     && String(value).length !== ev.target.value.length
                     && ev.target.setSelectionRange(-1, -1)
                 }
-                onFocus={(e) => {
-                    if (onFocus) {
-                        onFocus(e);
-                    }
-                }}
                 onBlur={e=>{
                     if (onBlur) {
                         e.target.value = this.parse(e.target.value);
@@ -81,7 +76,7 @@ class IntlNumberFormControl extends React.Component {
     parse = value => {
         let formatValue = value;
         // eslint-disable-next-line use-isnan
-        if (formatValue !== NaN && formatValue !== "NaN" && formatValue !== '') {  // Allow locale string to parse
+        if (formatValue !== NaN && formatValue !== "NaN") {  // Allow locale string to parse
             const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
             const format = new Intl.NumberFormat(locale);
             const parts = format.formatToParts(12345.6);
@@ -108,8 +103,7 @@ class IntlNumberFormControl extends React.Component {
     };
 
     format = val => {
-        if (this.props.focusedInput) return val;
-        if (!isNaN(val) && val !== "NaN" && val !== '') {
+        if (!isNaN(val) && val !== "NaN") {
             const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
             const formatter = new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 20});
             return formatter.format(val);
