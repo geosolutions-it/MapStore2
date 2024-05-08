@@ -31,7 +31,8 @@ import {
     SELECT_NODE,
     FILTER_LAYERS,
     SHOW_LAYER_METADATA,
-    HIDE_LAYER_METADATA
+    HIDE_LAYER_METADATA,
+    UPDATE_LAYER
 } from '../actions/layers';
 
 import { TOGGLE_CONTROL } from '../actions/controls';
@@ -245,6 +246,24 @@ function layers(state = { flat: [] }, action) {
         let orderedNewLayers = sortLayers ? sortLayers(newGroups, newLayers) : newLayers;
         return assign({}, state, {
             flat: orderedNewLayers,
+            groups: newGroups
+        });
+    }
+    case UPDATE_LAYER: {
+        const newLayer = normalizeLayer(action.layer);
+        let newLayers = (state.flat || []).concat().map(layer => layer?.id === action.id ? newLayer : layer);
+        let newGroups = (state.groups || []).concat();
+        const groupId = newLayer.group || DEFAULT_GROUP_ID;
+        if (groupId !== "background") {
+            newGroups = moveNode(newGroups, newLayer.id, groupId, newLayers, action.foreground);
+        }
+        console.log(assign({}, state, {
+            flat: newLayers,
+            groups: newGroups
+        }));
+        return assign({}, state, {
+            // fix groups
+            flat: newLayers,
             groups: newGroups
         });
     }

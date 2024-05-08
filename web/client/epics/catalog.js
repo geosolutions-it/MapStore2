@@ -35,7 +35,7 @@ import {
     addLayer,
     setNewServiceStatus
 } from '../actions/catalog';
-import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
+import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer, updateLayer} from '../actions/layers';
 import { error, success, warning } from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
@@ -75,6 +75,7 @@ import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
 import { removeDuplicateLines } from '../utils/StringUtils';
 import { logError } from '../utils/DebugUtils';
+import { getLayerMetadata } from '../api/ArcGIS';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     logError({message: errObj});
@@ -345,6 +346,29 @@ export default (API) => ({
                             })]
                         );
                     }
+                }
+                if (layer.type === 'arcgis') {
+                    return Rx.Observable.defer(() => getLayerMetadata(layer.url, layer.name))
+                        .switchMap((properties) => {
+                            const newLayer = {
+                                ...layer,
+                                bbox: {
+                                    // reproject these
+                                    bounds: {
+                                        minx: properties.extent.xmin,
+                                        miny: properties.extent.ymin,
+                                        maxx: properties.extent.xmax,
+                                        maxy: properties.extent.ymax
+                                    },
+                                    crs: 'EPSG:4326'
+                                },
+                                // include metadata for future improvements
+                                properties
+                            };
+                            return Rx.Observable.from([updateLayer(id, newLayer)]);
+                        })
+                        .merge(Rx.Observable.from(actions))
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }
                 return Rx.Observable.from(actions);
             })
