@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {FormGroup} from 'react-bootstrap';
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
-import { getLocalizedDecimalAndDecimalSeparator } from '../../../../utils/LocaleUtils';
 
 /**
  This component renders a custom coordiante inpout for decimal degrees for default coordinate CRS and current map CRS as well
@@ -74,7 +73,9 @@ class CRSCoordinateEditor extends React.Component {
         this.setState({ focusedInput: true });
         let value = e.target.value;
         const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
-        const { decimalSeparator, groupSeparator } = getLocalizedDecimalAndDecimalSeparator(locale);
+        const formatParts = new Intl.NumberFormat(locale).formatToParts(1000.1);
+        const decimalSeparator = formatParts?.find(part => part.type === 'decimal').value;
+        const groupSeparator = formatParts?.find(part => part.type === 'group').value;
         let isFormattedVal = value && decimalSeparator && value.includes(decimalSeparator);
         if (isFormattedVal) {
             // unformatted value

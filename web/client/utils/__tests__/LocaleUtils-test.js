@@ -96,12 +96,4 @@ describe('LocaleUtils', () => {
         expect(Object.keys(LocaleUtils.DATE_FORMATS).length).toBe(9);
         expect(Object.keys(LocaleUtils.DATE_FORMATS)).toEqual(["default", "en-US", "it-IT", "nl-NL", "zh-ZH", "hr-HR", "pt-PT", "vi-VN", "fi-FI"]);
     });
-    it('test getting decimal separators by locale code', () => {
-        expect(LocaleUtils.getLocalizedDecimalAndDecimalSeparator("en-US").groupSeparator).toEqual(",");
-        expect(LocaleUtils.getLocalizedDecimalAndDecimalSeparator("en-US").decimalSeparator).toEqual(".");
-        expect(LocaleUtils.getLocalizedDecimalAndDecimalSeparator("de-DE").groupSeparator).toEqual(".");
-        expect(LocaleUtils.getLocalizedDecimalAndDecimalSeparator("de-DE").decimalSeparator).toEqual(",");
-        expect(LocaleUtils.getLocalizedDecimalAndDecimalSeparator("fi-FI").groupSeparator.trim()).toEqual("");
-        expect(LocaleUtils.getLocalizedDecimalAndDecimalSeparator("fi-FI").decimalSeparator).toEqual(",");
-    });
 });
