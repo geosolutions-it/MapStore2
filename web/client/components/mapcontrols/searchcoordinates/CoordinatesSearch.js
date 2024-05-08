@@ -26,10 +26,14 @@ import { zoomAndAddPoint, changeCoord } from '../../../actions/search';
 export const CoordinateOptions = ({
     clearCoordinates: (onClearCoordinatesSearch, onChangeCoord) =>{
         onClearCoordinatesSearch({owner: "search"});
-        onChangeCoord("lat", "");
-        onChangeCoord("lon", "");
+        const clearedFields = ["lat", "lon", "xCoord", "yCoord"];
+        const resetVal = '';
+        clearedFields.forEach(field => onChangeCoord(field, resetVal));
     },
-    areValidCoordinates: (coordinate) => isNumber(coordinate?.lon) && isNumber(coordinate?.lat),
+    areValidCoordinates: (coordinate) => {
+        if (!coordinate) return false;
+        return isNumber(coordinate?.lon) && isNumber(coordinate?.lat);
+    },
     zoomToPoint: (onZoomToPoint, coordinate, defaultZoomLevel = 12) => {
         onZoomToPoint({
             x: parseFloat(coordinate.lon),
@@ -63,19 +67,31 @@ export const CoordinateOptions = ({
         coordinate,
         onClearCoordinatesSearch,
         onChangeCoord) =>({
-        visible: activeTool === "coordinatesSearch" && (isNumber(coordinate.lon) || isNumber(coordinate.lat)),
+        visible: (['coordinatesSearch', 'mapCRSCoordinatesSearch'].includes(activeTool)) && (isNumber(coordinate.lon) || isNumber(coordinate.lat) || isNumber(coordinate.xCoord) || isNumber(coordinate.yCoord)),
         onClick: () => CoordinateOptions.clearCoordinates(onClearCoordinatesSearch, onChangeCoord)
     }),
     searchIcon: (activeTool, coordinate, onZoomToPoint, defaultZoomLevel) => ({
-        visible: activeTool === "coordinatesSearch",
+        visible: ["coordinatesSearch", "mapCRSCoordinatesSearch"].includes(activeTool),
         onClick: () => {
-            if (activeTool === "coordinatesSearch" && CoordinateOptions.areValidCoordinates(coordinate)) {
+            if ((['coordinatesSearch', 'mapCRSCoordinatesSearch'].includes(activeTool)) && CoordinateOptions.areValidCoordinates(coordinate)) {
                 CoordinateOptions.zoomToPoint(onZoomToPoint, coordinate, defaultZoomLevel);
             }
         }
     }),
-    coordinatesMenuItem: ({activeTool, searchText, clearSearch, onChangeActiveSearchTool, onClearBookmarkSearch}) =>(
-        <MenuItem active={activeTool === "coordinatesSearch"} onClick={() => {
+    coordinatesMenuItem: ({activeTool, searchText, clearSearch, onChangeActiveSearchTool, onClearBookmarkSearch, currentMapCRS, onChangeFormat}) =>{
+        if (currentMapCRS === 'EPSG:4326') {
+            return (<MenuItem active={activeTool === "coordinatesSearch"} onClick={() => {
+                if (searchText !== undefined && searchText !== "") {
+                    clearSearch();
+                }
+                onClearBookmarkSearch("selected");
+                onChangeActiveSearchTool("coordinatesSearch");
+                document.dispatchEvent(new MouseEvent('click'));
+            }}>
+                <Glyphicon glyph={"search-coords"}/> <Message msgId="search.coordinatesSearch"/>
+            </MenuItem>);
+        }
+        return (<><MenuItem active={activeTool === "coordinatesSearch"} onClick={() => {
             if (searchText !== undefined && searchText !== "") {
                 clearSearch();
             }
@@ -85,7 +101,21 @@ export const CoordinateOptions = ({
         }}>
             <Glyphicon glyph={"search-coords"}/> <Message msgId="search.coordinatesSearch"/>
         </MenuItem>
-    )
+        <MenuItem active={activeTool === "mapCRSCoordinatesSearch"} onClick={() => {
+            if (searchText !== undefined && searchText !== "") {
+                clearSearch();
+            }
+            onClearBookmarkSearch("selected");
+            onChangeActiveSearchTool("mapCRSCoordinatesSearch");
+            onChangeFormat("decimal");
+            document.dispatchEvent(new MouseEvent('click'));
+        }}>
+            <span style={{marginLeft: 20}}>
+                <Glyphicon glyph={"search-coords"}/> <Message msgId="search.currentMapCRS"/>
+            </span>
+        </MenuItem>
+        </>);
+    }
 });
 
 
@@ -147,6 +177,7 @@ const CoordinatesSearch = ({
                     <InputGroup >
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.latitude"/></InputGroup.Addon>
                         <CoordinateEntry
+                            owner="search"
                             format={format}
                             aeronauticalOptions={aeronauticalOptions}
                             coordinate="lat"
@@ -168,6 +199,7 @@ const CoordinatesSearch = ({
                     <InputGroup>
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.longitude"/></InputGroup.Addon>
                         <CoordinateEntry
+                            owner="search"
                             format={format}
                             aeronauticalOptions={aeronauticalOptions}
                             coordinate="lon"

@@ -296,6 +296,17 @@ describe("test the SearchBar", () => {
         expect(cog.length).toBe(1);
     });
 
+    it('test zoomToPoint, with search, with decimal, with reset if mapCRS different than default 4326', () => {
+        const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({search: {coordinate: {lat: 0.05, lon: 0.05, yCoord: 2, xCoord: 2}}})};
+        ReactDOM.render(<Provider store={store}><SearchBar format="decimal" coordinate={{"lat": 0.05, "lon": 0.05, "yCoord": 2, "xCoord": 2}} activeSearchTool="mapCRSCoordinatesSearch" showOptions searchText={"va"} currentMapCRS={"EPSG:900913"} delay={0} typeAhead={false} /></Provider>, document.getElementById("container"));
+        let reset = document.getElementsByClassName("glyphicon-1-close");
+        let search = document.getElementsByClassName("glyphicon-search");
+        let cog = document.getElementsByClassName("glyphicon-cog");
+        expect(reset.length).toBe(1);
+        expect(search.length).toBe(1);
+        expect(cog.length).toBe(0);
+    });
+
     it('test zoomToPoint, with search, with aeronautical, with reset', () => {
         const store = {dispatch: () => {}, subscribe: () => {}, getState: () => ({search: {coordinate: {lat: 2, lon: 2}}})};
         ReactDOM.render(<Provider store={store}><SearchBar format="aeronautical" activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} /></Provider>, document.getElementById("container"));
@@ -342,6 +353,41 @@ describe("test the SearchBar", () => {
             }
         });
     });
+    it('test calling zoomToPoint with onKeyDown event if mapCRS different than default 4326', (done) => {
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {yCoord: 15, xCoord: 15}}})
+        };
+        ReactDOM.render(
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="mapCRSCoordinatesSearch"
+                    showOptions
+                    onZoomToPoint={(point, zoom, crs) => {
+                        expect(point).toEqual({x: 15, y: 15});
+                        expect(zoom).toEqual(12);
+                        expect(crs).toEqual("EPSG:4326");
+                        done();
+                    }}
+                    coordinate={{yCoord: 15, xCoord: 15}}
+                    currentMapCRS={"EPSG:900913"}
+                    typeAhead={false} />
+            </Provider>
+            , document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        TestUtils.Simulate.keyDown(elements[0], {
+            keyCode: 13,
+            preventDefault: () => {
+                expect(true).toBe(true);
+                done();
+            }
+        });
+    });
+
     it('Test SearchBar with not allowed e char for keyDown event', (done) => {
         const store = {
             dispatch: () => {},
@@ -374,6 +420,40 @@ describe("test the SearchBar", () => {
             }
         });
     });
+    it('Test SearchBar with not allowed e char for keyDown event if mapCRS different than default 4326', (done) => {
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {yCoord: 150, xCoord: 150}}})
+        };
+        ReactDOM.render(
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="mapCRSCoordinatesSearch"
+                    showOptions
+                    onZoomToPoint={() => {
+                        expect(true).toBe(false);
+                    }}
+                    coordinate={{yCoord: 150, xCoord: 150}}
+                    currentMapCRS={"EPSG:900913"}
+                    typeAhead={false} />
+            </Provider>, document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(2);
+        expect(elements[0].value).toBe('150');
+
+        TestUtils.Simulate.keyDown(elements[0], {
+            keyCode: 69, // char e
+            preventDefault: () => {
+                expect(true).toBe(true);
+                done();
+            }
+        });
+    });
+
     it('Test SearchBar with valid onKeyDown event by pressing number 8', () => {
         const store = {
             dispatch: () => {},
@@ -390,6 +470,38 @@ describe("test the SearchBar", () => {
                         expect(true).toBe(false);
                     }}
                     coordinate={{lat: 1, lon: 1}}
+                    typeAhead={false} />
+            </Provider>, document.getElementById("container")
+        );
+        const container = document.getElementById('container');
+        const elements = container.querySelectorAll('input');
+        expect(elements.length).toBe(2);
+        expect(elements[0].value).toBe('1');
+
+        TestUtils.Simulate.keyDown(elements[0], {
+            keyCode: 56,
+            preventDefault: () => {
+                expect(true).toBe(false);
+            }
+        });
+    });
+    it('Test SearchBar with valid onKeyDown event by pressing number 8 if mapCRS different than default 4326', () => {
+        const store = {
+            dispatch: () => {},
+            subscribe: () => {},
+            getState: () => ({search: {coordinate: {yCoord: 1, xCoord: 1}}})
+        };
+        ReactDOM.render(
+            <Provider store={store}>
+                <SearchBar
+                    format="decimal"
+                    activeSearchTool="mapCRSCoordinatesSearch"
+                    showOptions
+                    onZoomToPoint={() => {
+                        expect(true).toBe(false);
+                    }}
+                    coordinate={{yCoord: 1, xCoord: 1}}
+                    currentMapCRS={"EPSG:900913"}
                     typeAhead={false} />
             </Provider>, document.getElementById("container")
         );
