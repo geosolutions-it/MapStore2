@@ -84,10 +84,10 @@ This steps have to be followed always when preparing a new release.
 ## Create and Publish MapStoreExtension release
 
 - [ ] [Create a draft release](https://github.com/geosolutions-it/MapStoreExtension/releases/new) for [MapstoreExtension](https://github.com/geosolutions-it/MapStoreExtension) with the same name and tag
-  - [ ] target of the release is **stable branch** aligned to latest commit in stable branch of main mapstore repo
-  - [ ] tag is **vYYYY.XX.mm**
-  - [ ] [run the build](https://github.com/geosolutions-it/MapStoreExtension#build-extension) locally and attach to the release the file `SampleExtension.zip` from the `/dist` folder (or download the latest artifact).
-  - [ ] Publish the release
+  - target of the release is **stable branch** aligned to latest commit in stable branch of main mapstore repo
+  - tag is **vYYYY.XX.mm**
+- [ ] [run the build](https://github.com/geosolutions-it/MapStoreExtension#build-extension) locally and attach to the release the file `SampleExtension.zip` from the `/dist` folder (or download the latest artifact).
+- [ ] Publish the MapStoreExtension release
 
 ## Create and Publish MapStore release
 
