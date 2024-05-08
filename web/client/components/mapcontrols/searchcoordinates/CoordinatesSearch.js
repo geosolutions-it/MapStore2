@@ -160,9 +160,7 @@ const CoordinatesSearch = ({
     const {zoomToPoint, areValidCoordinates} = CoordinateOptions;
 
     const changeCoordinates = (coord, value) => {
-        const numValue = parseFloat(value);
-        const isValValidNumber = isNumber(numValue) && !isNaN(numValue);
-        onChangeCoord(coord, isValValidNumber ? numValue : '');
+        onChangeCoord(coord, parseFloat(value));
         if (!areValidCoordinates()) {
             onClearCoordinatesSearch({owner: "search"});
         }
