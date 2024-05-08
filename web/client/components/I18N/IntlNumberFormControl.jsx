@@ -32,7 +32,7 @@ class IntlNumberFormControl extends React.Component {
         disabled: PropTypes.bool,
         onBlur: PropTypes.func,
         onFocus: PropTypes.func,
-        focusedInput: PropTypes.bool
+        focusedInput: PropTypes.bool            // it is a flag used for prevent formatting the number during focus mode
     }
 
     static contextTypes = {

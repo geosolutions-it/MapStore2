@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {FormGroup} from 'react-bootstrap';
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
+import { getLocalizedDecimalAndDecimalSeparator } from '../../../../utils/LocaleUtils';
 
 /**
  This component renders a custom coordiante inpout for decimal degrees for default coordinate CRS and current map CRS as well
@@ -28,6 +29,9 @@ class CRSCoordinateEditor extends React.Component {
         onSubmit: PropTypes.func,
         disabled: PropTypes.bool,
         currentMapCRS: PropTypes.string
+    };
+    static contextTypes = {
+        intl: PropTypes.object
     };
     static defaultProps = {
         format: "decimal",
@@ -58,7 +62,7 @@ class CRSCoordinateEditor extends React.Component {
         this.setState({ focusedInput: false });
         let val = e.target.value;
         if (!isNaN(val) && val !== "NaN" && val !== '') {
-            const locale = "en-US";
+            const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
             const formatter = new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 20});
             const formattedValue = formatter.format(val);
             e.target.value = formattedValue;
@@ -69,9 +73,12 @@ class CRSCoordinateEditor extends React.Component {
     onFocus = (e) => {
         this.setState({ focusedInput: true });
         let value = e.target.value;
-        let isFormattedVal = value && value.includes(",");
+        const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
+        const { decimalSeparator, groupSeparator } = getLocalizedDecimalAndDecimalSeparator(locale);
+        let isFormattedVal = value && decimalSeparator && value.includes(decimalSeparator);
         if (isFormattedVal) {
-            e.target.value = value.replaceAll(",", "");
+            // unformatted value
+            e.target.value = value?.replaceAll(groupSeparator, "")?.replaceAll(decimalSeparator, ".");
             return;
         }
     }

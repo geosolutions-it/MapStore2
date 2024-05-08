@@ -223,6 +223,23 @@ export const getErrorMessage = (e, service, section) => {
  */
 export const getLocalizedProp = (locale, prop) => isObject(prop) ? prop[locale] || prop.default : prop || '';
 
+/**
+ * Retrieve localized Decimal/Group separator
+ * @param {string} locale code of locale, eg. en-US
+ * @returns {object} {decimalSeparator, groupSeparator} localized decimal separator as string
+ */
+export const getLocalizedDecimalAndDecimalSeparator = (locale) => {
+    const numberWithGroupSeparator = 1000.1;
+    const formatParts = new Intl.NumberFormat(locale).formatToParts(numberWithGroupSeparator);
+    const decimalSeparator = formatParts.find(part => part.type === 'decimal').value;
+    const groupSeparator = formatParts.find(part => part.type === 'group').value;
+    return {
+        decimalSeparator,
+        groupSeparator
+    };
+};
+
+
 LocaleUtils = {
     getLocale,
     normalizeLocaleCode
