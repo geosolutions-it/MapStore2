@@ -35,7 +35,7 @@ import {
     addLayer,
     setNewServiceStatus
 } from '../actions/catalog';
-import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer, updateLayer} from '../actions/layers';
+import {showLayerMetadata, SELECT_NODE, changeLayerProperties, addLayer as addNewLayer} from '../actions/layers';
 import { error, success, warning } from '../actions/notifications';
 import {SET_CONTROL_PROPERTY, setControlProperties, setControlProperty, TOGGLE_CONTROL} from '../actions/controls';
 import { purgeMapInfoResults, hideMapinfoMarker } from '../actions/mapInfo';
@@ -266,9 +266,7 @@ export default (API) => ({
                 const actions = [];
                 const state = store.getState();
                 const id = getLayerId(layer);
-                if (layer.type !== 'arcgis') {
-                    actions.push(addNewLayer({...layer, id}));
-                }
+                actions.push(addNewLayer({...layer, id}));
                 if (zoomToLayer && layer.bbox) {
                     actions.push(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
                 }
@@ -371,7 +369,6 @@ export default (API) => ({
                             };
                             return Rx.Observable.from([addNewLayer({...newLayer, id})]);
                         })
-                        .merge(Rx.Observable.from(actions))
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }
                 return Rx.Observable.from(actions);
