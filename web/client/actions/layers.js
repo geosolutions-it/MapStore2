@@ -183,7 +183,6 @@ export function addLayer(layer, foreground = true) {
         foreground
     };
 }
-
 /**
  * Add a new group
  * @memberof actions.layers
