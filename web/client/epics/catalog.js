@@ -367,7 +367,7 @@ export default (API) => ({
                                 // include metadata for future improvements
                                 properties
                             };
-                            return Rx.Observable.from([addNewLayer({...newLayer, id})]);
+                            return Rx.Observable.from([addNewLayer({...newLayer, id}), zoomToExtent(newLayer.bbox.bounds, newLayer.bbox.crs)]);
                         })
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }
