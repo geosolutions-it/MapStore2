@@ -266,7 +266,9 @@ export default (API) => ({
                 const actions = [];
                 const state = store.getState();
                 const id = getLayerId(layer);
-                actions.push(addNewLayer({...layer, id}));
+                if (layer.type !== 'arcgis') {
+                    actions.push(addNewLayer({...layer, id}));
+                }
                 if (zoomToLayer && layer.bbox) {
                     actions.push(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
                 }
@@ -350,22 +352,24 @@ export default (API) => ({
                 if (layer.type === 'arcgis') {
                     return Rx.Observable.defer(() => getLayerMetadata(layer.url, layer.name))
                         .switchMap((properties) => {
+                            let esriProjectionId = properties?.extent?.spatialReference?.latestWkid || properties?.extent?.spatialReference?.wkid;
+                            let minP = CoordinatesUtils.reproject([properties.extent.xmin, properties.extent.ymin], `EPSG:${esriProjectionId}`, 'EPSG:4326');
+                            let maxP = CoordinatesUtils.reproject([properties.extent.xmax, properties.extent.ymax], `EPSG:${esriProjectionId}`, 'EPSG:4326');
                             const newLayer = {
                                 ...layer,
                                 bbox: {
-                                    // reproject these
                                     bounds: {
-                                        minx: properties.extent.xmin,
-                                        miny: properties.extent.ymin,
-                                        maxx: properties.extent.xmax,
-                                        maxy: properties.extent.ymax
+                                        minx: minP?.x,
+                                        miny: minP?.y,
+                                        maxx: maxP?.x,
+                                        maxy: maxP?.y
                                     },
                                     crs: 'EPSG:4326'
                                 },
                                 // include metadata for future improvements
                                 properties
                             };
-                            return Rx.Observable.from([updateLayer(id, newLayer)]);
+                            return Rx.Observable.from([addNewLayer({...newLayer, id})]);
                         })
                         .merge(Rx.Observable.from(actions))
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));

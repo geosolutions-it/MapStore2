@@ -19,7 +19,6 @@ export const LAYER_LOADING = 'LAYER_LOADING';
 export const LAYER_LOAD = 'LAYER_LOAD';
 export const LAYER_ERROR = 'LAYER_ERROR';
 export const ADD_LAYER = 'ADD_LAYER';
-export const UPDATE_LAYER = 'UPDATE_LAYER';
 export const ADD_GROUP = 'ADD_GROUP';
 export const REMOVE_LAYER = 'REMOVE_LAYER';
 export const SHOW_SETTINGS = 'SHOW_SETTINGS';
@@ -182,14 +181,6 @@ export function addLayer(layer, foreground = true) {
         type: ADD_LAYER,
         layer,
         foreground
-    };
-}
-
-export function updateLayer(layerId, layer) {
-    return {
-        type: UPDATE_LAYER,
-        id: layerId,
-        layer
     };
 }
 
