@@ -76,9 +76,12 @@ This steps have to be followed always when preparing a new release.
   - [ ] if so prepare a PR to be merged
   - [ ] merge the PR and move on with the steps otherwise stop here
 - [ ] Lunch [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-Stable-Build/)
-      - `branch` build on stable branch `YYYY.XX.xx`
-      - `version`: `YYYY.XX.xx-stable`
-- [ ] After "MapStore2-Stable-Build" finished, Launch [MapStore2-Stable-Deploy](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/) to install the latest stable version on official demo
+      - `branch`: `vYYYY.XX.mm` (the version tag name, e.g. v2024.01.01)
+      - `version`: `${branch}-stable` ( version to pass to the build )
+      - `TAG_NAME`: `${branch}-stable` (tag to assign to the docker hub image)
+- [ ] After "MapStore2-Stable-Build" finished, Launch [MapStore2-Stable-Deploy](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/) to install the latest stable version on official demo.
+      - `branch`: `vYYYY.XX.mm` (the version tag name, e.g. v2024.01.01)
+      - `TAG_NAME`: `${branch}-stable` (tag of the docker hub image, previously build)
 - [ ] Test the change has been applied, login on https://mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key).
 
 ## Create and Publish MapStoreExtension release
