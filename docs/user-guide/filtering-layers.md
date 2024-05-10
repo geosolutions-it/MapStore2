@@ -82,7 +82,7 @@ If the user wants to filter by an attribute, he can simply write the desired fil
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-1.jpg" class="ms-docimage"/>
 
-The user can also filter an attribute using the operation input box. From the dropdown menu it is possible to choose the operation to perform (for the *String* attribute can be `=`, `like`, `ilike` or `isNull`, for the *Integer*, *Data* or *Time* attribute, can be `=`, `>`, `<`, `>=`, `<=`, `<>`, `><` or `isNull`)
+The user can also filter an attribute using the input box. From the dropdown menu it is possible to choose the operator to use (for the *String* attribute it can be `=`, `like`, `ilike` or `isNull`, for the *Integer*, *Data* or *Time* attribute, it can be instead `=`, `>`, `<`, `>=`, `<=`, `<>`, `><` or `isNull`)
 
 <img src="../img/filtering-layers/operations_drop_down_menu.jpg" class="ms-docimage"/>
 
