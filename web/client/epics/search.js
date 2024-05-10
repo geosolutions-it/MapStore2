@@ -37,6 +37,7 @@ import {
     searchTextLoading,
     selectNestedService,
     serverError,
+    TEXT_SEARCH_ADD_MARKER,
     TEXT_SEARCH_ITEM_SELECTED,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_RESULTS_PURGE,
@@ -122,7 +123,7 @@ export const searchEpic = action$ =>
  * @return {Observable}
  */
 
-export const searchItemSelected = (action$, store) =>
+export const searchItemSelected = (action$) =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
         .switchMap(action => {
             // itemSelectionStream --> emits actions for zoom and marker add
@@ -145,46 +146,6 @@ export const searchItemSelected = (action$, store) =>
                         zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item.__SERVICE__ && item.__SERVICE__.options && item.__SERVICE__.options.maxZoomLevel || 21),
                         addMarker(item)
                     ];
-                    if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
-                        let coord = pointOnSurface(item).geometry.coordinates;
-                        const latlng = { lng: coord[0], lat: coord[1] };
-                        const typeName = item.__SERVICE__.options.typeName;
-                        if (coord) {
-                            const state = store.getState();
-                            const layerObj = typeName && getLayerFromName(state, typeName);
-                            let itemId = null;
-                            let filterNameList = [];
-                            let overrideParams = {};
-                            let forceVisibility = false;
-                            if (item.__SERVICE__.launchInfoPanel === "single_layer") {
-                                /* take info from the item selected and restrict feature info to this layer
-                                 * and filtering with `featureid` which might be ignored by other servers,
-                                 * but can be used by GeoServer to select the specific feature instead to showing all the results
-                                 * when info_format is other than application/json */
-                                forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
-                                filterNameList = [typeName];
-                                itemId = item.id;
-                                overrideParams = {
-                                    [item.__SERVICE__.options.typeName]: {
-                                        info_format: getInfoFormat(layerObj, state),
-                                        ...(itemId
-                                            ? {
-                                                featureid: itemId,
-                                                CQL_FILTER: undefined
-                                            }
-                                            : {}
-                                        )
-                                    }
-                                };
-                            }
-                            return [
-                                ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
-                                ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId)] : []),
-                                showMapinfoMarker(),
-                                ...actions
-                            ];
-                        }
-                    }
                     return actions;
                 });
 
@@ -213,6 +174,58 @@ export const searchItemSelected = (action$, store) =>
             return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream);
         });
 
+/**
+ * Gets every `TEXT_SEARCH_ADD_MARKER` event.
+ * It is the extentsion of `TEXT_SEARCH_ITEM_SELECTED` event
+ * it resposible for retrieving feature info of the selected search results that zoom to and added a merker for by `TEXT_SEARCH_ITEM_SELECTED` event
+ * @param {external:Observable} action$ manages [`FEATURE_INFO_CLICK` and `SHOW_MAPINFO_MARKER`] for showing identify feature info
+ * @memberof epics.search
+ * @return {external:Observable}
+ */
+export const getFeatureInfoOfSelectedItem = (action$, store) =>
+    action$.ofType(TEXT_SEARCH_ADD_MARKER).switchMap((action) => {
+        const item = action.markerPosition;
+        if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
+            let coord = pointOnSurface(item).geometry.coordinates;
+            const latlng = { lng: coord[0], lat: coord[1] };
+            const typeName = item.__SERVICE__.options.typeName;
+            if (coord) {
+                const state = store.getState();
+                const layerObj = typeName && getLayerFromName(state, typeName);
+                let itemId = null;
+                let filterNameList = [];
+                let overrideParams = {};
+                let forceVisibility = false;
+                if (item.__SERVICE__.launchInfoPanel === "single_layer") {
+                    /* take info from the item selected and restrict feature info to this layer
+                    * and filtering with `featureid` which might be ignored by other servers,
+                    * but can be used by GeoServer to select the specific feature instead to showing all the results
+                    * when info_format is other than application/json */
+                    forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
+                    filterNameList = [typeName];
+                    itemId = item.id;
+                    overrideParams = {
+                        [item.__SERVICE__.options.typeName]: {
+                            info_format: getInfoFormat(layerObj, state),
+                            ...(itemId
+                                ? {
+                                    featureid: itemId,
+                                    CQL_FILTER: undefined
+                                }
+                                : {}
+                            )
+                        }
+                    };
+                }
+                return [
+                    ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
+                    ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId)] : []),
+                    showMapinfoMarker()
+                ];
+            }
+        }
+        return [Rx.Observable.empty()];
+    }).delay(50);
 /**
  * Handles show GFI button click action.
  */
