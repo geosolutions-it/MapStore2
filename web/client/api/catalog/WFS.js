@@ -15,7 +15,7 @@ import {
     testService as commonTestService,
     preprocess as commonPreprocess
 } from './common';
-import { get, castArray } from 'lodash';
+import { get, castArray, isEmpty } from 'lodash';
 
 const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
 
@@ -123,7 +123,18 @@ export const getCatalogRecords = ({records} = {}) => {
     return null;
 };
 
+const getLayerData = (record, options) => {
+    const layer = recordToLayer(record, options);
+    return getRecords(record.url, 1, 1, record.name).then((result)=> {
+        const [newRecord] = result?.records ?? [];
+        return isEmpty(newRecord) ? layer : recordToLayer(newRecord, options);
+    }).catch(() => layer);
+};
+
 export const getLayerFromRecord = (record, options, asPromise) => {
+    if (options.fetchCapabilities && asPromise) {
+        return getLayerData(record, options);
+    }
     const layer = recordToLayer(record, options);
     return asPromise ? Promise.resolve(layer) : layer;
 };

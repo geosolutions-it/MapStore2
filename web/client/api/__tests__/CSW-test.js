@@ -440,6 +440,34 @@ describe("getLayerReferenceFromDc", () => {
         expect(layerRef.type).toBe('OGC:WMS');
         expect(layerRef.url).toBe('catalog_url/wmsurl?SERVICE=WMS&VERSION=1.3.0');
     });
+    it("test layer reference with dc.references of scheme OGC:WFS", () => {
+        const dc = {references: [{value: "http://wmsurl", scheme: 'OGC:WMS'}, {value: "http://wfsurl", scheme: 'OGC:WFS'}], alternative: "some_layer"};
+        const layerRef = getLayerReferenceFromDc(dc, {type: "wfs"});
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WFS');
+        expect(layerRef.url).toBe('http://wfsurl/');
+    });
+    it("test layer reference with dc.references of scheme OGC:WMS-http-get-capabilities", () => {
+        const dc = {references: [{value: "http://wmsurl", scheme: 'OGC:WMS-http-get-map'}, {value: "http://wfsurl", scheme: 'OGC:WFS-http-get-capabilities'}], alternative: "some_layer"};
+        const layerRef = getLayerReferenceFromDc(dc, {type: "wfs"});
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WFS-http-get-capabilities');
+        expect(layerRef.url).toBe('http://wfsurl/');
+    });
+    it("test layer reference with dc.references of scheme OGC:WMS-http-get-feature", () => {
+        const dc = {references: [{value: "http://wmsurl", scheme: 'OGC:WMS-http-get-map'}, {value: "http://wfsurl", scheme: 'OGC:WFS-http-get-feature'}], alternative: "some_layer"};
+        const layerRef = getLayerReferenceFromDc(dc, {type: "wfs"});
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WFS-http-get-feature');
+        expect(layerRef.url).toBe('http://wfsurl/');
+    });
+    it("test layer reference with dc.URI of scheme serviceType/ogc/wfs and options", () => {
+        const dc = {URI: [{value: "wfsurl?service=wfs&typename=some_layer&version=1.3.0", protocol: 'serviceType/ogc/wfs'}, {value: "wmsurl", protocol: 'OGC:WMS'}]};
+        const layerRef = getLayerReferenceFromDc(dc, {type: "wfs", catalogURL: "catalog_url"});
+        expect(layerRef.params.name).toBe('some_layer');
+        expect(layerRef.type).toBe('OGC:WFS');
+        expect(layerRef.url).toBe('catalog_url/wfsurl?service=WFS');
+    });
     it("test layer reference with multiple dc.URI of scheme OGC:WMS", () => {
         const dc = {URI: [{value: "http://wmsurl", protocol: 'OGC:WMS', name: 'some_layer'}, {value: "wfsurl", protocol: 'OGC:WFS'}]};
         const layerRef = getLayerReferenceFromDc(dc);
@@ -479,6 +507,15 @@ describe("getLayerReferenceFromDc", () => {
         const dc = {references: [{value: _url, scheme: 'OGC:WMS'}, {value: "wfsurl", scheme: 'OGC:WFS'}], alternative: "some_layer"};
 
         expect(getLayerReferenceFromDc(dc).url).toBe(_url[0]);
+    });
+    it('getLayerReferenceFromDc for service type WFS', () => {
+        const _url = [
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver1',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver2',
+            'http://gs-stable.geosolutionsgroup.com:443/geoserver3'
+        ];
+        const dc = {references: [{value: 'wmsurl', scheme: 'OGC:WMS'}, {value: _url, scheme: 'OGC:WFS'}], alternative: "some_layer"};
+        expect(getLayerReferenceFromDc(dc, {type: "wfs"}).url).toBe(_url[0]);
     });
 });
 
