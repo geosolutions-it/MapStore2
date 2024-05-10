@@ -18,8 +18,7 @@ class ScaleBar extends React.Component {
         metric: PropTypes.bool,
         imperial: PropTypes.bool,
         updateWhenIdle: PropTypes.bool,
-        container: PropTypes.string,
-        isMobile: PropTypes.bool
+        container: PropTypes.string
     };
 
     static defaultProps = {
@@ -28,8 +27,7 @@ class ScaleBar extends React.Component {
         maxWidth: 100,
         metric: true,
         imperial: false,
-        updateWhenIdle: false,
-        isMobile: false
+        updateWhenIdle: false
     };
 
     componentDidMount() {
@@ -42,14 +40,6 @@ class ScaleBar extends React.Component {
                 if (mainControl && mainControl.parentNode) {
                     mainControl.parentNode.removeChild(mainControl);
                 }
-            }
-            // as there is no direct way to set a custom class to scalebar in leaflet -->
-            // use DOM munipulating to get scalebar element and set the needed custom class that holds your style
-            // here the needed for mobile mode in case of widgetsTray widget is existing on map
-            const widgetsTrayBtnExistInMobileMode = this.props.isMobile && document.querySelector('.widgets-tray');
-            if (widgetsTrayBtnExistInMobileMode) {
-                const scaleBarElement  = document.querySelector('.leaflet-control-scale');
-                scaleBarElement .classList.add('mobile-map-with-widgets-tray');
             }
         }
     }

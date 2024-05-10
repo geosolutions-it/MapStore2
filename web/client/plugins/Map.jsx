@@ -371,8 +371,7 @@ class MapPlugin extends React.Component {
         return this.props.tools.map((tool) => {
             const Tool = this.getTool(tool);
             const options = this.props.toolsOptions[Tool.name] && this.props.toolsOptions[Tool.name][this.props.mapType] || this.props.toolsOptions[Tool.name] || {};
-            const isMobile = ConfigUtils.getBrowserProperties().mobile;
-            return <Tool.impl key={Tool.name} {...options} isMobile={isMobile} />;
+            return <Tool.impl key={Tool.name} {...options} />;
         }).concat(toolsFromItems);
     };
 
