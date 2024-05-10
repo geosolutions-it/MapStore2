@@ -40,7 +40,8 @@ import {
     zoomAndAddPointEpic,
     searchOnStartEpic,
     textSearchShowGFIEpic,
-    delayedSearchEpic
+    delayedSearchEpic,
+    getFeatureInfoOfSelectedItem
 } from '../search';
 const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic, searchOnStartEpic, textSearchShowGFIEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
@@ -181,7 +182,7 @@ describe('search Epics', () => {
     });
 
     it('produces the selectSearchItem epic and GFI for all layers', () => {
-        let action = selectSearchItem({
+        let selectSearchItemAction = selectSearchItem({
             "type": "Feature",
             "bbox": [125, 10, 126, 11],
             "geometry": {
@@ -205,21 +206,29 @@ describe('search Epics', () => {
             projection: "EPSG:4326"
         });
 
-        store.dispatch( action );
+        store.dispatch( selectSearchItemAction );
 
         let actions = store.getActions();
-        expect(actions.length).toBe(6);
+        expect(actions.length).toBe(4);
         expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
-        expect(actions[2].type).toBe(FEATURE_INFO_CLICK);
-        expect(actions[2].filterNameList).toEqual([]);
-        expect(actions[3].type).toBe(SHOW_MAPINFO_MARKER);
-        expect(actions[4].type).toBe(ZOOM_TO_EXTENT);
-        expect(actions[5].type).toBe(TEXT_SEARCH_ADD_MARKER);
+        expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+        let addMarkerAction = actions[3];
+        const NUM_ACTIONS = 2;
+        // epic 'getFeatureInfoOfSelectedItem' for getting feature info data
+        testEpic(addTimeoutEpic(getFeatureInfoOfSelectedItem, 50), NUM_ACTIONS, addMarkerAction, (getInfoActions) => {
+            expect(getInfoActions.length).toBe(2);
+            expect(getInfoActions[0].type).toBe(TEST_TIMEOUT);
+            expect(getInfoActions[1].type).toBe(FEATURE_INFO_CLICK);
+            expect(getInfoActions[1].filterNameList).toEqual([]);
+            expect(getInfoActions[1].layer).toEqual("gs:layername");
+        });
+
     });
 
 
     it('produces the selectSearchItem epic and GFI for single layer', (done) => {
-        let action = selectSearchItem({
+        let selectSearchItemAction = selectSearchItem({
             "id": "Feature_1",
             "type": "Feature",
             "bbox": [125, 10, 126, 11],
@@ -244,17 +253,24 @@ describe('search Epics', () => {
             projection: "EPSG:4326"
         });
 
-        const NUM_ACTIONS = 6;
-        testEpic(addTimeoutEpic(searchItemSelected, 0), NUM_ACTIONS, action, (actions) => {
-            expect(actions[0].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
-            expect(actions[1].type).toBe(FEATURE_INFO_CLICK);
-            expect(actions[1].itemId).toEqual("Feature_1");
-            expect(actions[1].filterNameList).toEqual(["gs:layername"]);
-            expect(actions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1", CQL_FILTER: undefined}}); // forces CQL FILTER to undefined (server do not support featureid + CQL_FILTER)
-            expect(actions[2].type).toBe(SHOW_MAPINFO_MARKER);
-            expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
-            expect(actions[4].type).toBe(TEXT_SEARCH_ADD_MARKER);
-            expect(actions[5].type).toBe(TEST_TIMEOUT);
+        store.dispatch( selectSearchItemAction );
+
+        let actions = store.getActions();
+        expect(actions.length).toBe(4);
+        expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+        let addMarkerAction = actions[3];
+        const NUM_ACTIONS = 2;
+        // epic 'getFeatureInfoOfSelectedItem' for getting feature info data
+        testEpic(addTimeoutEpic(getFeatureInfoOfSelectedItem, 50), NUM_ACTIONS, addMarkerAction, (getInfoActions) => {
+            expect(getInfoActions.length).toBe(2);
+            expect(getInfoActions[0].type).toBe(TEST_TIMEOUT);
+            expect(getInfoActions[1].type).toBe(FEATURE_INFO_CLICK);
+            expect(getInfoActions[1].itemId).toEqual("Feature_1");
+            expect(getInfoActions[1].filterNameList).toEqual(["gs:layername"]);
+            expect(getInfoActions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1", CQL_FILTER: undefined}}); // forces CQL FILTER to undefined (server do not support featureid + CQL_FILTER)
+            expect(getInfoActions[1].layer).toEqual("gs:layername");
             done();
         }, {layers: {flat: [{name: "gs:layername", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
     });
@@ -324,7 +340,7 @@ describe('search Epics', () => {
     });
 
     it('searchItemSelected epic with a service with openFeatureInfoButtonEnabled=false', (done) => {
-        let action = selectSearchItem({
+        let selectSearchItemAction = selectSearchItem({
             "id": "Feature_1",
             "type": "Feature",
             "bbox": [125, 10, 126, 11],
@@ -349,20 +365,30 @@ describe('search Epics', () => {
             },
             projection: "EPSG:4326"
         });
-        const NUM_ACTIONS = 6;
-        testEpic(addTimeoutEpic(searchItemSelected, 100), NUM_ACTIONS, action, (actions) => {
-            let expectedActions = [ZOOM_TO_EXTENT, TEXT_SEARCH_ADD_MARKER, SHOW_MAPINFO_MARKER, FEATURE_INFO_CLICK, TEST_TIMEOUT];
-            let actionsType = actions.map(a => a.type);
+        store.dispatch( selectSearchItemAction );
 
-            expectedActions.forEach((a) => {
-                expect(actionsType.indexOf(a)).toNotBe(-1);
-            });
+        let actions = store.getActions();
+        expect(actions.length).toBe(4);
+        expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+        let addMarkerAction = actions[3];
+        const NUM_ACTIONS = 2;
+        // epic 'getFeatureInfoOfSelectedItem' for getting feature info data
+        testEpic(addTimeoutEpic(getFeatureInfoOfSelectedItem, 50), NUM_ACTIONS, addMarkerAction, (getInfoActions) => {
+            expect(getInfoActions.length).toBe(2);
+            expect(getInfoActions[0].type).toBe(TEST_TIMEOUT);
+            expect(getInfoActions[1].type).toBe(FEATURE_INFO_CLICK);
+            expect(getInfoActions[1].itemId).toEqual("Feature_1");
+            expect(getInfoActions[1].filterNameList).toEqual(["gs:layername"]);
+            expect(getInfoActions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1", CQL_FILTER: undefined}}); // forces CQL FILTER to undefined (server do not support featureid + CQL_FILTER)
+            expect(getInfoActions[1].layer).toEqual("gs:layername");
             done();
         }, {layers: {flat: [{name: "gs:layername", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
     });
 
     it('searchItemSelected epic with a service with openFeatureInfoButtonEnabled=true', (done) => {
-        let action = selectSearchItem({
+        let selectSearchItemAction = selectSearchItem({
             "id": "Feature_1",
             "type": "Feature",
             "bbox": [125, 10, 126, 11],
@@ -387,18 +413,20 @@ describe('search Epics', () => {
             },
             projection: "EPSG:4326"
         });
-        const NUM_ACTIONS = 4;
-        testEpic(addTimeoutEpic(searchItemSelected, 100), NUM_ACTIONS, action, (actions) => {
-            let expectedActions = [ZOOM_TO_EXTENT, TEXT_SEARCH_ADD_MARKER, SHOW_MAPINFO_MARKER];
-            let actionsType = actions.map(a => a.type);
+        store.dispatch( selectSearchItemAction );
 
-            expectedActions.forEach((a) => {
-                expect(actionsType.indexOf(a)).toNotBe(-1);
-            });
-
-            let featureInfoClickAction = actions.filter(m => m.type === FEATURE_INFO_CLICK);
-            expect(featureInfoClickAction).toExist();
-            expect(featureInfoClickAction.length).toBe(0);
+        let actions = store.getActions();
+        expect(actions.length).toBe(4);
+        expect(actions[1].type).toBe(TEXT_SEARCH_RESULTS_PURGE);
+        expect(actions[2].type).toBe(ZOOM_TO_EXTENT);
+        expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
+        let addMarkerAction = actions[3];
+        const NUM_ACTIONS = 2;
+        // epic 'getFeatureInfoOfSelectedItem' for getting feature info data
+        testEpic(addTimeoutEpic(getFeatureInfoOfSelectedItem, 50), NUM_ACTIONS, addMarkerAction, (getInfoActions) => {
+            expect(getInfoActions.length).toBe(2);
+            expect(getInfoActions[0].type).toBe(TEST_TIMEOUT);
+            expect(getInfoActions[1].type).toBe(SHOW_MAPINFO_MARKER);
             done();
         }, {layers: {flat: [{name: "gs:layername", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
     });
