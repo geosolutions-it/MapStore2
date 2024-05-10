@@ -155,7 +155,7 @@ A condition can be set by selecting a value for each of the three input boxes:
 
 * In the second input box it is possible to choose the operation to perform (selecting a text field can be **=**, **like**, **ilike** or **isNull**, selecting a numerical field, can be **=**, **>**, **<**, **>=**, **<=**, **<>** or **><**)
 
-* The third input box (in case of fields of type String) provides a paginated list of available field values already present in the layer's dataset (a GeoServer WPS process is used for this). In case of numeric fields the user can simply type a value to use for the filter or used the **Date Picker** tool for the *Date*, *Time* and *DateTime* attributes as described above in the [Quick Filter by attributes](filtering-layers.md#quick-filter-by-attributes) section.
+* The third input box (in case of fields of type String) provides a paginated list of available field values already present in the layer's dataset (a GeoServer WPS process is used for this). In case of numeric fields, the user can simply type a value to use for the filter or use instead the **Date Picker** tool for the *Date*, *Time* and *DateTime* attributes as described above in the [Quick Filter by attributes](filtering-layers.md#quick-filter-by-attributes) section.
 
 !!! Note
     For the *Query Panel*, the *Date Picker* tool also allows the user to select **Quick Date Ranges**: `Now`, `Yesterday` for single *Date* or *DateTime* and `Tomorrow` or `Now`, `This week`, `This month`, `7 days from now`, `30 days from now` and `90 days from now` for intervals *Date* or *DateTime*. An example can be the following:
