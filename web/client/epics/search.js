@@ -175,9 +175,7 @@ export const searchItemSelected = (action$) =>
         });
 
 /**
- * Gets every `TEXT_SEARCH_ADD_MARKER` event.
- * It is the extentsion of `TEXT_SEARCH_ITEM_SELECTED` event
- * it resposible for retrieving feature info of the selected search results that zoom to and added a merker for by `TEXT_SEARCH_ITEM_SELECTED` event
+ * Handles performing a GFI on the selected search results after zooming in, and adds a marker
  * @param {external:Observable} action$ manages [`FEATURE_INFO_CLICK` and `SHOW_MAPINFO_MARKER`] for showing identify feature info
  * @memberof epics.search
  * @return {external:Observable}
