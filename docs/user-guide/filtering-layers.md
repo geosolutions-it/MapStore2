@@ -94,7 +94,7 @@ The user can also filter the records, of the *Date*, *Time* and *DateTime* attri
 
 <video class="ms-docimage" style="max-width:700px;" controls><source src="../img/filtering-layers/data_time_picker_example.mp4"/></video>
 
-In the *Date Picker* option, with the `><` operation enabled, the **Time Range** tool is supported. Here the user can select the *Start Date* and the *End Date* to filter the attribute, an example can be the following:
+In the *Date Picker* option, with the `><` operator selected, the **Time Range** picker is supported. Here the user can select the *Start Date* and the *End Date* to filter the attribute, an example can be the following:
 
 <video class="ms-docimage" style="max-width:700px;" controls><source src="../img/filtering-layers/time_range_picker_example.mp4"/></video>
 
