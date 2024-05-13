@@ -105,9 +105,7 @@ class NumericInput extends Component {
                     'The "mobile" prop must be true, false, "auto" or a function'
                 );
             }
-        },
-        decimalSeparator: PropTypes.string,
-        groupSeparator: PropTypes.string
+        }
     };
 
     /**
@@ -124,9 +122,7 @@ class NumericInput extends Component {
         mobile: 'auto',
         strict: false,
         componentClass: "input",
-        style: {},
-        decimalSeparator: ".",
-        groupSeparator: ","
+        style: {}
     };
 
 
@@ -852,7 +848,7 @@ class NumericInput extends Component {
                     if (this.refsInput.selectionStart === this.refsInput.selectionEnd &&
                         this.refsInput.selectionEnd > 0 &&
                         value.length &&
-                        [this.props.decimalSeparator, this.props.groupSeparator].includes(value.charAt(this.refsInput.selectionEnd - 1))) {
+                        value.charAt(this.refsInput.selectionEnd - 1) === ".") {
                         e.preventDefault();
                         this.refsInput.selectionStart = this.refsInput.selectionEnd = this.refsInput.selectionEnd - 1;
                     }
@@ -860,13 +856,10 @@ class NumericInput extends Component {
                     if (this.refsInput.selectionStart === this.refsInput.selectionEnd &&
                         this.refsInput.selectionEnd < length + 1 &&
                         value.length &&
-                        [this.props.decimalSeparator, this.props.groupSeparator].includes(value.charAt(this.refsInput.selectionEnd - 1))) {
+                        value.charAt(this.refsInput.selectionEnd) === ".") {
                         e.preventDefault();
                         this.refsInput.selectionStart = this.refsInput.selectionEnd = this.refsInput.selectionEnd + 1;
                     }
-                } else if (e.ctrlKey && e.key === 'a') {
-                    // Handle ctrl + a press
-                    this.refsInput.select(); // Select all text in the input
                 }
             }
         }

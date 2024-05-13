@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import './css/formControlIntl.css';
 import NumericInput from '../../libs/numeric-input/NumericInput';
+import { includes } from 'lodash';
 /**
  * Localized Numeric Input. It provides an numeric input value that uses
  * separators (eg. ",",".") as they are used in the current selected language from context.
@@ -38,50 +39,20 @@ class IntlNumberFormControl extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: undefined,
-            inputRef: null,
-            focusedInput: false             // it is a flag used for prevent formatting the number during focus mode
+            inputRef: null
         };
-    }
-    componentDidUpdate(prevProps, prevState) {
-        const currentValue = this.state?.value || "";
-        const prevValue = prevState?.value || "";
-        if (prevValue !== currentValue) {
-            const currentCursorPos = this.state.inputRef.selectionStart;
-            const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
-            const formatParts = new Intl.NumberFormat(locale).formatToParts(10000.1);
-            const decimalSeparator = formatParts?.find(part => part.type === 'decimal').value;
-            const groupSeparator = formatParts?.find(part => part.type === 'group').value;
-            let isFormattedVal = currentValue && decimalSeparator && groupSeparator && (currentValue.includes(decimalSeparator) || currentValue.includes(groupSeparator));
-            if (isFormattedVal) {
-                let prevValueLength = prevValue.length;
-                let currentValueLength = currentValue.length;
-                let numGrSeparatorInPrevValue = prevValue.length - prevValue.replaceAll(groupSeparator, "").length;
-                let numGrSeparatorInCurrentValue = currentValue.length - currentValue.replaceAll(groupSeparator, "").length;
-                if (currentValueLength - prevValueLength === 2 && numGrSeparatorInPrevValue < numGrSeparatorInCurrentValue) {
-                    this.state.inputRef.setSelectionRange(currentCursorPos + 1, currentCursorPos + 1 );
-                } else if (currentValueLength - prevValueLength === 1 && numGrSeparatorInPrevValue === numGrSeparatorInCurrentValue) {
-                    this.state.inputRef.setSelectionRange(currentCursorPos, currentCursorPos );
-                }
-            }
-
-        }
+        this.value = '';
     }
 
     render() {
         const {onChange, onBlur, disabled, type, step, value, defaultValue,
             ...formProps} = this.props;
-        const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
-        const formatParts = new Intl.NumberFormat(locale).formatToParts(10000.1);
-        const decimalSeparator = formatParts?.find(part => part.type === 'decimal').value;
-        const groupSeparator = formatParts?.find(part => part.type === 'group').value;
+
         return (
             <NumericInput
                 id={'intl-numeric'}
                 step={step}
                 {...formProps}
-                decimalSeparator={decimalSeparator}
-                groupSeparator={groupSeparator}
                 {...value !== undefined ? {value: this.format(value) } : {defaultValue: this.format(defaultValue)}}
                 format={this.format}
                 onChange={(val) => {
@@ -89,16 +60,45 @@ class IntlNumberFormControl extends React.Component {
                 }}
                 onKeyUp={ev=>{
                     let inputValue = ev.target.value;
-                    this.setState({ value: inputValue });
-                    let isDelete = ev.keyCode === 8 || ev.keyCode === 46;
+                    const currentValue = ev.target.value || "";
+                    const prevValue = this.value || "";
+                    // update cursor position in case adding/deleting numbers at the middle of the current input value
+                    if (prevValue !== currentValue) {
+                        this.value = currentValue;      // set value
+                        const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
+                        const formatParts = new Intl.NumberFormat(locale).formatToParts(10000.1);
+                        const groupSeparator = formatParts?.find(part => part.type === 'group').value;
+                        let isFormattedCurrentVal = currentValue && groupSeparator && (currentValue.includes(groupSeparator));
+                        let isFormattedPrevVal = prevValue && groupSeparator && (prevValue.includes(groupSeparator));
+                        if (isFormattedCurrentVal || isFormattedPrevVal) {
+                            const currentCursorPos = ev.target.selectionStart;
+                            let prevValueLength = prevValue.length;
+                            let currentValueLength = currentValue.length;
+                            let numGrSeparatorInPrevValue = prevValue.length - prevValue.replaceAll(groupSeparator, "").length;
+                            let numGrSeparatorInCurrentValue = currentValue.length - currentValue.replaceAll(groupSeparator, "").length;
+                            if (currentValueLength - prevValueLength === 2 && numGrSeparatorInPrevValue < numGrSeparatorInCurrentValue) {
+                                return ev.target.setSelectionRange(currentCursorPos + 1, currentCursorPos + 1 );
+                            } else if (currentValueLength - prevValueLength === 1 && numGrSeparatorInPrevValue === numGrSeparatorInCurrentValue) {
+                                return ev.target.setSelectionRange(currentCursorPos, currentCursorPos );
+                            } else if (prevValueLength - currentValueLength === 2 && numGrSeparatorInPrevValue > numGrSeparatorInCurrentValue) {
+                                return ev.target.setSelectionRange(currentCursorPos - 1, currentCursorPos - 1 );
+                            } else if (prevValueLength - currentValueLength === 1 && numGrSeparatorInPrevValue === numGrSeparatorInCurrentValue) {
+                                return ev.target.setSelectionRange(currentCursorPos, currentCursorPos );
+                            }
+                        }
+
+                    }
+                    let isDelete = ev.keyCode === 8 || ev.keyCode === 46;       // delete by delete key or backspace key
+                    // move the cursor of adding number at the end of input
                     if (![37, 39, 17].includes(ev.keyCode) && !isDelete && ev.target.selectionStart === ev.target.value.length - 1) {
                         return ev.target.setSelectionRange(-1, -1);
                     }
-                    return true;
+                    return !includes([37, 39], ev.keyCode)   // Allow navigation with left and right arrow key
+                    && String(value).length !== inputValue.length
+                    && ev.target.setSelectionRange(-1, -1);
                 }}
                 onBlur={e=>{
                     let val = e.target.value;
-                    this.setState({ focusedInput: false });
                     if (onBlur) {
                         e.target.value = this.parse(val);
                         onBlur(e);
@@ -156,7 +156,6 @@ class IntlNumberFormControl extends React.Component {
     };
 
     format = val => {
-        // if (this.state.focusedInput) return val;
         if (!isNaN(val) && val !== "NaN") {
             const locale = this.context && this.context.intl && this.context.intl.locale || "en-US";
             const formatter = new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 20});
