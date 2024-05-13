@@ -411,6 +411,10 @@ From the **Trace value formatting** section, the user is allowed to:
 !!! Note
     More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
 
+* Choose the *Color* of the Counter text using the color picker
+
+* Select the *Font family* (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) of the Counter text
+
 !!! warning
     In order to move forward to the next step, only the **Use** and the **Operation** are considered as mandatory fields.
 
