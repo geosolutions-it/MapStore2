@@ -47,7 +47,6 @@ class IntlNumberFormControl extends React.Component {
     render() {
         const {onChange, onBlur, disabled, type, step, value, defaultValue,
             ...formProps} = this.props;
-
         return (
             <NumericInput
                 id={'intl-numeric'}
@@ -121,11 +120,7 @@ class IntlNumberFormControl extends React.Component {
             />
         );
     }
-    calculateCursorPosition = (val, decimalSeparator, groupSeparator, initialPos) => {
-        const formattedValue = this.format(val);
-        const numCommas = formattedValue.length - (formattedValue.replace(/,/g, "")).length;
-        return numCommas + initialPos;
-    }
+
     parse = value => {
         let formatValue = value;
         // eslint-disable-next-line use-isnan
