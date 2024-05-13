@@ -27,7 +27,7 @@ import { reproject} from '../../../utils/CoordinatesUtils';
 export const CoordinateOptions = ({
     clearCoordinates: (onClearCoordinatesSearch, onChangeCoord) =>{
         onClearCoordinatesSearch({owner: "search"});
-        const clearedFields = ["lat", "lon", "xCoord", "yCoord"];
+        const clearedFields = ["lat", "lon", "xCoord", "yCoord", "currentMapXYCRS"];
         const resetVal = '';
         clearedFields.forEach(field => onChangeCoord(field, resetVal));
     },
@@ -163,6 +163,8 @@ const CoordinatesSearch = ({
 
     const changeCoordinates = (coord, value) => {
         onChangeCoord(coord, parseFloat(value));
+        // set current map crs to coordinate object
+        if (coordinate?.currentMapXYCRS !== currentMapCRS && currentMapCRS !== "EPSG:4326") onChangeCoord('currentMapXYCRS', currentMapCRS);
         if (!areValidCoordinates()) {
             onClearCoordinatesSearch({owner: "search"});
         }
@@ -179,6 +181,7 @@ const CoordinatesSearch = ({
                 const parsedYCoord = parseFloat((reprojectedValue?.y));
                 onChangeCoord('xCoord', parsedXCoord);
                 onChangeCoord('yCoord', parsedYCoord);
+
                 return;
             }
             coordinate.xCoord && onChangeCoord('xCoord', '');

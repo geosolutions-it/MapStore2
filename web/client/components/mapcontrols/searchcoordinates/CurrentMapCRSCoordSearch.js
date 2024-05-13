@@ -68,7 +68,33 @@ const CurrentMapCRSCoordinatesSearch = ({
         return true;
     };
     React.useEffect(() => {
-        if (!currentMapCRS || currentMapCRS === 'EPSG:4326') return;
+        // if currentMapCRS = 4326 or undefined --> nothing to do
+        let prevCRS = coordinate?.currentMapXYCRS;
+        let currentCRS = currentMapCRS;
+        // set currentCRS to ref
+        if (!currentCRS || currentCRS === 'EPSG:4326') return;
+        // set current map crs to coordinate object
+        if (prevCRS !== currentMapCRS) onChangeCoord('currentMapXYCRS', currentMapCRS);
+        // if the current map crs is changed from one to another --> get new coords
+        if (currentCRS && prevCRS && prevCRS !== currentCRS) {
+
+            // if there are lat, lon values --> reproject the point and get xCoord and yCoord for map CRS
+            const isLatNumberVal = isNumber(coordinate.lat) && !isNaN(coordinate.lat);
+            const isLonNumberVal = isNumber(coordinate.lon) && !isNaN(coordinate.lon);
+            if (isLatNumberVal && isLonNumberVal) {
+                const reprojectedValue = reproject([coordinate.lon, coordinate.lat], 'EPSG:4326', currentCRS, true);
+                const parsedXCoord = parseFloat((reprojectedValue?.x));
+                const parsedYCoord = parseFloat((reprojectedValue?.y));
+                onChangeCoord('xCoord', parsedXCoord);
+                onChangeCoord('yCoord', parsedYCoord);
+                // if coords are out of crs extent --> clear the marker
+                if (!isCoordWithinCrs(parsedXCoord, 'xCoord') || !isCoordWithinCrs(parsedYCoord, 'yCoord')) onClearCoordinatesSearch({owner: "search"});
+                return;
+            }
+            coordinate.xCoord && onChangeCoord('xCoord', '');
+            coordinate.yCoord && onChangeCoord('yCoord', '');
+        }
+        // else just check the crs bounds
         if (!isCoordWithinCrs(coordinate?.xCoord, 'xCoord') || !isCoordWithinCrs(coordinate?.yCoord, 'yCoord')) onClearCoordinatesSearch({owner: "search"});
 
     }, [currentMapCRS]);
