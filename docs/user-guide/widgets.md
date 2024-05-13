@@ -413,7 +413,7 @@ From the **Trace value formatting** section, the user is allowed to:
 
 * Choose the *Color* of the Counter text using the color picker
 
-* Select the *Font family* (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) for the counter texts
+* Select the *Font family* (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) of the Counter text
 
 !!! warning
     In order to move forward to the next step, only the **Use** and the **Operation** are considered as mandatory fields.
