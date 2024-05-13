@@ -82,7 +82,7 @@ If the user wants to filter by an attribute, he can simply write the desired fil
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-1.jpg" class="ms-docimage"/>
 
-The user can also filter an attribute using the operation input box. From the dropdown menu it is possible to choose the operation to perform (for the *String* attribute can be `=`, `like`, `ilike` or `isNull`, for the *Integer*, *Data* or *Time* attribute, can be `=`, `>`, `<`, `>=`, `<=`, `<>` or `isNull`)
+The user can also filter an attribute using the input box. From the dropdown menu it is possible to choose the operator to use (for the *String* attribute it can be `=`, `like`, `ilike` or `isNull`, for the *Integer*, *Data* or *Time* attribute, it can be insted `=`, `>`, `<`, `>=`, `<=`, `<>`, `><` or `isNull`)
 
 <img src="../img/filtering-layers/operations_drop_down_menu.jpg" class="ms-docimage"/>
 
@@ -90,9 +90,13 @@ In order to filter a numerical filed matching the records *greater than* or *equ
 
 <img src="../img/filtering-layers/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
 
-The user can also filter the records, of the *Date*, *Time* and *DateTime* attributes, through the *Date Picker* option by clicking on the <img src="../img/button/date_picker.jpg" class="ms-docbutton"/> button for *Date* attributes, the <img src="../img/button/time_picker.jpg" class="ms-docbutton"/> button for *Time* attributes and the <img src="../img/button/date_time_picker.jpg" class="ms-docbutton"/> button for *DateTime* attributes. To filter a *DateTime* attribute using the *Date Picker* option, an example can be the following:
+The user can also filter the records, of the *Date*, *Time* and *DateTime* attributes, through the *Date Picker* option by clicking on the <img src="../img/button/date_picker.jpg" class="ms-docbutton"/> button for *Date* attributes, the <img src="../img/button/time_picker.jpg" class="ms-docbutton"/> button for *Time* attributes and the <img src="../img/button/date_time_picker.jpg" class="ms-docbutton"/> button for *DateTime* attributes. To filter a *DateTime* attribute using the **Date Picker** option, an example can be the following:
 
 <video class="ms-docimage" style="max-width:700px;" controls><source src="../img/filtering-layers/data_time_picker_example.mp4"/></video>
+
+In the *Date Picker* option, with the `><` operator selected, the **Time Range** picker is supported. Here the user can select the *Start Date* and the *End Date* to filter the attribute, an example can be the following:
+
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/filtering-layers/time_range_picker_example.mp4"/></video>
 
 #### Quick Filter by map interaction
 
@@ -151,7 +155,11 @@ A condition can be set by selecting a value for each of the three input boxes:
 
 * In the second input box it is possible to choose the operation to perform (selecting a text field can be **=**, **like**, **ilike** or **isNull**, selecting a numerical field, can be **=**, **>**, **<**, **>=**, **<=**, **<>** or **><**)
 
-* The third input box (in case of fields of type String) provides a paginated list of available field values already present in the layer's dataset (a GeoServer WPS process is used for this). In case of numeric fields the user can simply type a value to use for the filter.
+* The third input box (in case of fields of type String) provides a paginated list of available field values already present in the layer's dataset (a GeoServer WPS process is used for this). In case of numeric fields, the user can simply type a value to use for the filter or use instead the **Date Picker** tool for the *Date*, *Time* and *DateTime* attributes as described above in the [Quick Filter by attributes](filtering-layers.md#quick-filter-by-attributes) section.
+
+!!! Note
+    For the *Query Panel*, the *Date Picker* tool also allows the user to perform select **Quick Date Selections** such as: `Now`, `Yesterday` for single *Date* or *DateTime* and `Tomorrow` or also quick date ranges like `Now`, `This week`, `This month`, `7 days from now`, `30 days from now` and `90 days from now` for *Date* or *DateTime* intervals depending on the operator selected. An example can be the following:
+    <video class="ms-docimage" style="max-width:500px;" controls><source src="../img/filtering-layers/quick_date_ranges.mp4"/></video>
 
 !!! Note
     the "paginated list of available field values" above is available only if the server provides the WPS process `gs:PagedUnique`
