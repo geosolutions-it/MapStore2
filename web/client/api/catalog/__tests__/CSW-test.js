@@ -288,7 +288,16 @@ describe('Test correctness of the CSW catalog APIs', () => {
                         SRS: [],
                         params: {name: 'layer2'}
                     },
-                    fetchCapabilities: true
+                    fetchCapabilities: true,
+                    boundingBox: {
+                        crs: 'EPSG:3003',
+                        bounds: {
+                            minx: 43.718,
+                            miny: 11.348,
+                            maxx: 43.84,
+                            maxy: 11.145
+                        }
+                    }
                 }
             }
         );

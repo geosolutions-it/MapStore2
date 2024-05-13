@@ -104,12 +104,17 @@ function getThumbnailFromDc(dc, options) {
     }
     return thumbURL;
 }
+function getBoundingBox(record) {
+    if (isEmpty(record.boundingBox?.crs) || isEmpty(record.boundingBox?.extent)) {
+        return null;
+    }
+    return {
+        crs: record.boundingBox?.crs,
+        bounds: transformExtentToObj(record.boundingBox?.extent)
+    };
+}
 function getCatalogRecord3DTiles(record, metadata) {
     const dc = record.dc;
-    let bbox = {
-        crs: record.boundingBox.crs,
-        bounds: transformExtentToObj(record.boundingBox.extent)
-    };
     return {
         serviceType: '3dtiles',
         isValid: true,
@@ -118,7 +123,7 @@ function getCatalogRecord3DTiles(record, metadata) {
         identifier: dc && isString(dc.identifier) && dc.identifier || '',
         url: dc?.URI?.value || "",
         thumbnail: null,
-        bbox,
+        bbox: getBoundingBox(record),
         format: dc && dc.format || "",
         references: [],
         catalogType: 'csw',
@@ -137,7 +142,7 @@ const recordToLayer = (record, options) => {
     }
 };
 const ADDITIONAL_OGC_SERVICES = ['wfs']; // Add services when support is provided
-const getAdditionalOGCService = (references, parsedReferences = {}) => {
+const getAdditionalOGCService = (record, references, parsedReferences = {}) => {
     const hasAdditionalService = ADDITIONAL_OGC_SERVICES.some(serviceType => !isEmpty(parsedReferences[serviceType]));
     if (hasAdditionalService) {
         return {
@@ -146,7 +151,10 @@ const getAdditionalOGCService = (references, parsedReferences = {}) => {
                     .map(serviceType => {
                         const ogcReferences = parsedReferences[serviceType] ?? {};
                         const {url, params: {name} = {}} = ogcReferences;
-                        return {[serviceType]: { url, name, references, ogcReferences, fetchCapabilities: true}};
+                        return {[serviceType]: {
+                            url, name, references, ogcReferences, fetchCapabilities: true,
+                            boundingBox: getBoundingBox(record)
+                        }};
                     })
                     .flat()
                     .reduce((a, c) => ({...c, ...a}), {})
@@ -275,7 +283,7 @@ export const getCatalogRecords = (records, options, locales) => {
                     metadata,
                     capabilities: record.capabilities,
                     ogcReferences,
-                    ...getAdditionalOGCService(references, parsedReferences)
+                    ...getAdditionalOGCService(record, references, parsedReferences)
                 };
             }
             return catRecord;
