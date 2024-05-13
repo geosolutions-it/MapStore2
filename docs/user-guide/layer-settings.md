@@ -469,7 +469,7 @@ The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Styl
 In 3D mode [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the style of the *Vector layer* through the [Visual Style Editor](layer-settings.md#visual-editor-style) using the same styling options available in 2D mode as described in the previous chapter.
 
   In addition the **3D model** rule type is also available.
-From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model symbolizer panel opens to allow adding a 3D model (based on [glTF](https://github.com/KhronosGroup/glTF), GLB is also allowed) as an external graphic by specifying its *URL* (see also the [Cesium documentation](https://cesium.com/learn/cesiumjs/ref-doc/ModelGraphics.html?classFilter=Model)). Furthermore, it is possible to customize the 3D model `Scale`, `X,Y,Z Rotation`, `Color` and `X,Y Translate`. Take a look at the following example.
+From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model symbolizer panel opens to allow adding a 3D model (based on [glTF](https://github.com/KhronosGroup/glTF), GLB is also allowed) as an external graphic by specifying its *URL* (see also the [Cesium documentation](https://cesium.com/learn/cesiumjs/ref-doc/ModelGraphics.html?classFilter=Model)). Furthermore, it is possible to customize the 3D model `Scale`, `X/Y/Z Rotation`, `Color` and `X/Y Translation` of the model's external graphic. Take a look at the following example.
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/3d-model-style-ex.mp4"></video>
 
