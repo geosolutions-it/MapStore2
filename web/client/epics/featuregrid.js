@@ -1222,7 +1222,7 @@ export const hideFeatureGridOnDrawerOpenMobile = (action$, { getState } = {}) =>
             && getState().browser.mobile
             && drawerEnabledControlSelector(getState())
         )
-        .switchMap(() => Rx.Observable.of(hideMapinfoMarker(), openFeatureGrid()));
+        .switchMap(() => Rx.Observable.of(hideMapinfoMarker(), closeFeatureGrid()));
 export const hideDrawerOnFeatureGridOpenMobile = (action$, { getState } = {}) =>
     action$
         .ofType(FEATURE_INFO_CLICK)
