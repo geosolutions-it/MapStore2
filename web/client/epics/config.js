@@ -220,7 +220,7 @@ export const storeDetailsInfoEpic = (action$, store) =>
                 detailsSettings = {};
             }
 
-            if (!details || details.value === EMPTY_RESOURCE_VALUE) {
+            if (!details || details === EMPTY_RESOURCE_VALUE) {
                 return Observable.empty();
             }
             return Observable.from([
