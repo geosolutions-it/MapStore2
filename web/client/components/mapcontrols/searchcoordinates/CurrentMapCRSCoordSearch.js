@@ -68,22 +68,35 @@ const CurrentMapCRSCoordinatesSearch = ({
         return true;
     };
     React.useEffect(() => {
-        if (!currentMapCRS || currentMapCRS === 'EPSG:4326') return;
-        // if there are lat, lon values --> reproject the point and get xCoord and yCoord for map CRS
-        const isLatNumberVal = isNumber(coordinate.lat) && !isNaN(coordinate.lat);
-        const isLonNumberVal = isNumber(coordinate.lon) && !isNaN(coordinate.lon);
-        if (isLatNumberVal && isLonNumberVal) {
-            const reprojectedValue = reproject([coordinate.lon, coordinate.lat], 'EPSG:4326', currentMapCRS, true);
-            const parsedXCoord = parseFloat((reprojectedValue?.x));
-            const parsedYCoord = parseFloat((reprojectedValue?.y));
-            onChangeCoord('xCoord', parsedXCoord);
-            onChangeCoord('yCoord', parsedYCoord);
-            // if coords are out of crs extent --> clear the marker
-            if (!isCoordWithinCrs(parsedXCoord, 'xCoord') || !isCoordWithinCrs(parsedYCoord, 'yCoord')) onClearCoordinatesSearch({owner: "search"});
-            return;
+        // if currentMapCRS = 4326 or undefined --> nothing to do
+        let prevCRS = coordinate?.currentMapXYCRS;
+        let currentCRS = currentMapCRS;
+        // set currentCRS to ref
+        if (!currentCRS || currentCRS === 'EPSG:4326') return;
+        // set current map crs to coordinate object
+        if (prevCRS !== currentMapCRS) onChangeCoord('currentMapXYCRS', currentMapCRS);
+        // if the current map crs is changed from one to another --> get new coords
+        if (currentCRS && prevCRS && prevCRS !== currentCRS) {
+
+            // if there are lat, lon values --> reproject the point and get xCoord and yCoord for map CRS
+            const isLatNumberVal = isNumber(coordinate.lat) && !isNaN(coordinate.lat);
+            const isLonNumberVal = isNumber(coordinate.lon) && !isNaN(coordinate.lon);
+            if (isLatNumberVal && isLonNumberVal) {
+                const reprojectedValue = reproject([coordinate.lon, coordinate.lat], 'EPSG:4326', currentCRS, true);
+                const parsedXCoord = parseFloat((reprojectedValue?.x));
+                const parsedYCoord = parseFloat((reprojectedValue?.y));
+                onChangeCoord('xCoord', parsedXCoord);
+                onChangeCoord('yCoord', parsedYCoord);
+                // if coords are out of crs extent --> clear the marker
+                if (!isCoordWithinCrs(parsedXCoord, 'xCoord') || !isCoordWithinCrs(parsedYCoord, 'yCoord')) onClearCoordinatesSearch({owner: "search"});
+                return;
+            }
+            coordinate.xCoord && onChangeCoord('xCoord', '');
+            coordinate.yCoord && onChangeCoord('yCoord', '');
         }
-        coordinate.xCoord && onChangeCoord('xCoord', '');
-        coordinate.yCoord && onChangeCoord('yCoord', '');
+        // else just check the crs bounds
+        if (!isCoordWithinCrs(coordinate?.xCoord, 'xCoord') || !isCoordWithinCrs(coordinate?.yCoord, 'yCoord')) onClearCoordinatesSearch({owner: "search"});
+
     }, [currentMapCRS]);
 
     const changeCoordinates = (coord, value) => {
@@ -95,24 +108,15 @@ const CurrentMapCRSCoordinatesSearch = ({
         const numValue = parseFloat(value);
         onChangeCoord(coord, numValue);
         // reproject the new point and set lat/lon
-        if (coord === 'yCoord') {
-            const yCoordValidNum = isNumber(numValue) && !isNaN(numValue) && isCoordWithinCrs(numValue, 'yCoord');
-            const xCoordValidNum = isNumber(coordinate.xCoord) && !isNaN(coordinate.xCoord) && isCoordWithinCrs(coordinate.xCoord, 'xCoord');
-            if (yCoordValidNum && xCoordValidNum) {
-                const projectedPt = reproject([coordinate.xCoord, numValue], currentMapCRS, 'EPSG:4326', true);
-                onChangeCoord('lat', (projectedPt.y));
-                onChangeCoord('lon', (projectedPt.x));
-                return;
-            }
-        } else {
-            const xCoordValidNum = isNumber(numValue) && !isNaN(numValue) && isCoordWithinCrs(numValue, 'xCoord');
-            const yCoordValidNum = isNumber(coordinate.yCoord) && !isNaN(coordinate.yCoord)  && isCoordWithinCrs(coordinate.yCoord, 'yCoord');
-            if (yCoordValidNum && xCoordValidNum) {
-                const projectedPt = reproject([numValue, coordinate.yCoord], currentMapCRS, 'EPSG:4326', true);
-                onChangeCoord('lat', (projectedPt.y));
-                onChangeCoord('lon', (projectedPt.x));
-                return;
-            }
+        const yCoodNumVal = coord === 'yCoord' ? numValue : coordinate.yCoord;
+        const xCoodNumVal = coord === 'xCoord' ? numValue : coordinate.xCoord;
+        const yCoordValidNum = isNumber(yCoodNumVal) && !isNaN(yCoodNumVal) && isCoordWithinCrs(yCoodNumVal, 'yCoord');
+        const xCoordValidNum = isNumber(xCoodNumVal) && !isNaN(xCoodNumVal) && isCoordWithinCrs(xCoodNumVal, 'xCoord');
+        if (yCoordValidNum && xCoordValidNum) {
+            const projectedPt = reproject([xCoodNumVal, yCoodNumVal], currentMapCRS, 'EPSG:4326', true);
+            onChangeCoord('lat', (projectedPt.y));
+            onChangeCoord('lon', (projectedPt.x));
+            return;
         }
         const resetValue = '';
         onChangeCoord('lat', resetValue);
