@@ -8,11 +8,8 @@
 
 import { Observable } from 'rxjs';
 import {getCurrentResolution} from '../MapUtils';
-import {reproject, getProjectedBBox, normalizeSRS} from '../CoordinatesUtils';
-import {getLayerUrl} from '../LayersUtils';
+import {reproject, getProjectedBBox} from '../CoordinatesUtils';
 import {isObject, isNil} from 'lodash';
-import { optionsToVendorParams } from '../VendorParamsUtils';
-import { generateEnvString } from '../LayerLocalizationUtils';
 import axios from '../../libs/ajax';
 
 export default {
@@ -48,9 +45,12 @@ export default {
         };
     },
     getIdentifyFlow: (layer, baseURL, { features = [], point, map } = {}) => {
+        // get layer properties, check format.
         return Observable.defer(() => axios.post(`${layer.url}/${layer.name}/query`, null, {
             params: {
                 f: 'geojson',
+                // geometry: `${bounds.minx},${bounds.miny},${bounds.maxx},${bounds.maxy}`,
+                // geometryType: 'esriGeometryEnvelope',
                 geometry: `${point.rawPos[0]},${point.rawPos[1]}`,
                 geometryType: 'esriGeometryPoint',
                 inSR: map.projection
