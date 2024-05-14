@@ -75,6 +75,7 @@ import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
 import { removeDuplicateLines } from '../utils/StringUtils';
 import { logError } from '../utils/DebugUtils';
+import { getLayerMetadata } from '../api/ArcGIS';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     logError({message: errObj});
@@ -345,6 +346,30 @@ export default (API) => ({
                             })]
                         );
                     }
+                }
+                if (layer.type === 'arcgis') {
+                    return Rx.Observable.defer(() => getLayerMetadata(layer.url, layer.name))
+                        .switchMap((properties) => {
+                            let esriProjectionId = properties?.extent?.spatialReference?.latestWkid || properties?.extent?.spatialReference?.wkid;
+                            let minP = CoordinatesUtils.reproject([properties.extent.xmin, properties.extent.ymin], `EPSG:${esriProjectionId}`, 'EPSG:4326');
+                            let maxP = CoordinatesUtils.reproject([properties.extent.xmax, properties.extent.ymax], `EPSG:${esriProjectionId}`, 'EPSG:4326');
+                            const newLayer = {
+                                ...layer,
+                                bbox: {
+                                    bounds: {
+                                        minx: minP?.x,
+                                        miny: minP?.y,
+                                        maxx: maxP?.x,
+                                        maxy: maxP?.y
+                                    },
+                                    crs: 'EPSG:4326'
+                                },
+                                // include metadata for future improvements
+                                properties
+                            };
+                            return Rx.Observable.from([addNewLayer({...newLayer, id}), zoomToExtent(newLayer.bbox.bounds, newLayer.bbox.crs)]);
+                        })
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }
                 return Rx.Observable.from(actions);
             })

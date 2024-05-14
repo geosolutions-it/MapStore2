@@ -13,14 +13,28 @@ import { reprojectBbox } from '../utils/CoordinatesUtils';
 
 // revise_me - Surely use a different approach to caching.
 let _cache = {};
+
+export const getLayerMetadata = (layerUrl, layerName) => {
+    return axios.get(`${layerUrl}/${layerName}`, { params: { f: 'json' }}).then(({data}) => data);
+};
+
+export const searchAndPaginate = (records, params) => {
+    const { startPosition, maxRecords, text } = params;
+    const filteredLayers = records?.filter(layer => !text || layer?.name.toLowerCase().indexOf(text.toLowerCase()) !== -1);
+    return {
+        numberOfRecordsMatched: filteredLayers.length,
+        numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
+        records: filteredLayers.filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
+    };
+};
+
 const getData = (url, params = {}) => {
     const request = _cache[url]
         ? () => Promise.resolve(_cache[url])
         : () => axios.get(url, {
             params: {
-                f: 'json',
+                f: 'json'
                 // add bounding box
-                ...params
             }
         }).then(({ data }) => {
             _cache[url] = data;
@@ -254,19 +268,11 @@ const getData = (url, params = {}) => {
                     }
                 };
             });
-            return {
-                // remove these properties on the return object
-                // getData should only return pure data
-                // separate search functionality from the fetch (hook into fetch)
-                // search functionality should return number of records
-                numberOfRecordsMatched: data?.layers?.length || 0,
-                numberOfRecordsReturned: data?.layers?.length,
-                records
-            };
+            return searchAndPaginate(records, params);
         });
 };
 
-export const getCapabilities = (url) => {
+export const getCapabilities = (url, startPosition, maxRecords, text, info) => {
     // Geoportale Nazionale ArcGIS open access server found at url:
     // http://www.pcn.minambiente.it/arcgis/rest/services
 
@@ -279,9 +285,9 @@ export const getCapabilities = (url) => {
     // use for testing, good service, sample layer url
     // http://www.pcn.minambiente.it/arcgis/rest/services/ADB/MapServer
     // https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/NFHL Availability
-    return getData(url)
+    return getData(url, { startPosition, maxRecords, text, info })
         .then(({ numberOfRecordsMatched, numberOfRecordsReturned, records }) => {
             // do Post Processing here. revise and slowly re-add the previous mess.
-            return { numberOfRecordsMatched, numberOfRecordsReturned, records};
+            return { numberOfRecordsMatched, numberOfRecordsReturned, records };
         });
 };

@@ -47,16 +47,15 @@ export default {
             url: 'client'
         };
     },
-    getIdentifyFlow: (layer, baseURL, { features = [], point, bounds, map } = {}) => {
-        console.log(layer, point, bounds);
+    getIdentifyFlow: (layer, baseURL, { features = [], point, map } = {}) => {
         return Observable.defer(() => axios.post(`${layer.url}/${layer.name}/query`, null, {
             params: {
                 f: 'geojson',
-                geometry: `${bounds.minx},${bounds.miny},${bounds.maxx},${bounds.maxy}`,
+                geometry: `${point.rawPos[0]},${point.rawPos[1]}`,
+                geometryType: 'esriGeometryPoint',
                 inSR: map.projection
             }
         }).then((response) => {
-            console.log(response);
             return {
                 data: {
                     features: response?.data?.features || []
