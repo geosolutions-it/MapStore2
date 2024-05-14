@@ -17,6 +17,7 @@ import Message from "../../I18N/Message";
 import CoordinateEntry from "../../misc/coordinateeditors/CoordinateEntry";
 import DropdownToolbarOptions from "../../misc/toolbar/DropdownToolbarOptions";
 import { zoomAndAddPoint, changeCoord } from '../../../actions/search';
+import { reproject} from '../../../utils/CoordinatesUtils';
 
 /**
  * CoordinateOptions for Search bar
@@ -26,7 +27,7 @@ import { zoomAndAddPoint, changeCoord } from '../../../actions/search';
 export const CoordinateOptions = ({
     clearCoordinates: (onClearCoordinatesSearch, onChangeCoord) =>{
         onClearCoordinatesSearch({owner: "search"});
-        const clearedFields = ["lat", "lon", "xCoord", "yCoord"];
+        const clearedFields = ["lat", "lon", "xCoord", "yCoord", "currentMapXYCRS"];
         const resetVal = '';
         clearedFields.forEach(field => onChangeCoord(field, resetVal));
     },
@@ -138,6 +139,7 @@ const CoordinatesSearch = ({
     onZoomToPoint,
     onChangeCoord,
     defaultZoomLevel,
+    currentMapCRS,
     aeronauticalOptions = {
         seconds: {
             decimals: 4,
@@ -161,8 +163,29 @@ const CoordinatesSearch = ({
 
     const changeCoordinates = (coord, value) => {
         onChangeCoord(coord, parseFloat(value));
+        // set current map crs to coordinate object
+        if (coordinate?.currentMapXYCRS !== currentMapCRS && currentMapCRS !== "EPSG:4326") onChangeCoord('currentMapXYCRS', currentMapCRS);
         if (!areValidCoordinates()) {
             onClearCoordinatesSearch({owner: "search"});
+        }
+        // if there is mapCRS available --> calculate X/Y values by reproject to display in case switch to MapCRS
+        if (currentMapCRS !== 'EPSG:4326') {
+            // if there are lat, lon values --> reproject the point and get xCoord and yCoord for map CRS
+            const latNumVal = coord === 'lat' ? parseFloat(value) : coordinate.lat;
+            const lonNumVal = coord === 'lon' ? parseFloat(value) : coordinate.lon;
+            const isLatNumberVal = isNumber(latNumVal) && !isNaN(latNumVal);
+            const isLonNumberVal = isNumber(lonNumVal) && !isNaN(lonNumVal);
+            if (isLatNumberVal && isLonNumberVal) {
+                const reprojectedValue = reproject([lonNumVal, latNumVal], 'EPSG:4326', currentMapCRS, true);
+                const parsedXCoord = parseFloat((reprojectedValue?.x));
+                const parsedYCoord = parseFloat((reprojectedValue?.y));
+                onChangeCoord('xCoord', parsedXCoord);
+                onChangeCoord('yCoord', parsedYCoord);
+
+                return;
+            }
+            coordinate.xCoord && onChangeCoord('xCoord', '');
+            coordinate.yCoord && onChangeCoord('yCoord', '');
         }
     };
 
@@ -226,7 +249,8 @@ CoordinatesSearch.propTypes = {
     onClearCoordinatesSearch: PropTypes.func,
     onZoomToPoint: PropTypes.func,
     onChangeCoord: PropTypes.func,
-    defaultZoomLevel: PropTypes.number
+    defaultZoomLevel: PropTypes.number,
+    currentMapCRS: PropTypes.string
 };
 
 export default connect((state)=>{
