@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import './css/formControlIntl.css';
 import NumericInput from '../../libs/numeric-input/NumericInput';
-import { includes } from 'lodash';
 /**
  * Localized Numeric Input. It provides an numeric input value that uses
  * separators (eg. ",",".") as they are used in the current selected language from context.
@@ -58,7 +57,6 @@ class IntlNumberFormControl extends React.Component {
                     val === null ? this.props.onChange("") : this.props.onChange(val.toString());
                 }}
                 onKeyUp={ev=>{
-                    let inputValue = ev.target.value;
                     const currentValue = ev.target.value || "";
                     const prevValue = this.value || "";
                     // update cursor position in case adding/deleting numbers at the middle of the current input value
@@ -92,9 +90,7 @@ class IntlNumberFormControl extends React.Component {
                     if (![37, 39, 17].includes(ev.keyCode) && !isDelete && ev.target.selectionStart === ev.target.value.length - 1) {
                         return ev.target.setSelectionRange(-1, -1);
                     }
-                    return !includes([37, 39], ev.keyCode)   // Allow navigation with left and right arrow key
-                    && String(value).length !== inputValue.length
-                    && ev.target.setSelectionRange(-1, -1);
+                    return true;
                 }}
                 onBlur={e=>{
                     let val = e.target.value;
@@ -104,11 +100,13 @@ class IntlNumberFormControl extends React.Component {
                     }
                 }}
                 disabled={disabled || false}
-                onKeyDown={(e) =>{
+                onFocus={(e) =>{
+                    // save input ref into state to enable getting/updating selection range [input cursor position]
                     if (!this.state.inputRef) {
                         this.setState({ inputRef: e.target });
                         return;
                     }
+                    return;
                 }}
                 parse={this.parse}
                 onKeyPress={e => {
