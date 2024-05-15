@@ -5,8 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-import axios from '../../libs/ajax';
 import { Observable } from 'rxjs';
 import { isValidURLTemplate } from '../../utils/URLUtils';
 import { preprocess as commonPreprocess } from './common';
@@ -45,7 +43,6 @@ export const textSearch = (url, startPosition, maxRecords, text, info) => getRec
 export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
-            // console.log(record)
             const { version, bbox, format, properties } = record;
             const identifier = `${record.id}:${record.name}`;
             return {
