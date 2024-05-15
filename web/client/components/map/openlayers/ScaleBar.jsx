@@ -32,7 +32,7 @@ export default class ScaleBar extends React.Component {
     componentDidMount() {
         this.scalebar = new ScaleLine(assign({}, this.props, this.props.container ? {
             target: document.querySelector(this.props.container)
-        } : {}, { className: this.props.isMobile ? 'ol-mobile ol-scale-line' : this.props.className }));
+        } : {}));
         if (this.props.map) {
             this.props.map.addControl(this.scalebar);
         }
