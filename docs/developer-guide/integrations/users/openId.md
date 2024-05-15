@@ -128,6 +128,9 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 # oidcOAuth2Config.rolesClaim=roles
 # Optional group claims, if a claim contains groups, you can map them to MapStore groups.
 # oidcOAuth2Config.groupsClaim=groups
+# Enables global logout from SSO, if properly confugred. false by default
+# oidcOAuth2Config.globalLogoutEnabled=true
+
 ```
 
 - `oidcOAuth2Config.clientId`: the client id. This is the client id that have to be present on the OpenID provider
@@ -140,6 +143,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 - `oidcOAuth2Config.principalKey`: (*optional*) the user name attribute. This is the attribute that will be used as the user name. The default is `email`.
 - `oidcOAuth2Config.rolesClaim`: (*optional*) the role claims. If a claim contains roles, you can map them to MapStore roles. The roles can be only `ADMIN` or `USER`. If the claim is not present, the default role will be `USER`.
 - `oidcOAuth2Config.groupsClaim`: (*optional*) the group claims. If a claim contains groups, you can map them to MapStore groups. If the claim is not present, no group will be assigned (except the default `everyone` group).
+- `oidcOAuth2Config.globalLogoutEnabled`: (*optional*): if true (and the server supports it) invokes global logout on MapStore logout
 
 !!! note
     The `rolesClaim` and `groupsClaim` are optional. If you don't need to map roles or groups, you can omit them. At the moment, there is no mapping for roles and groups for the generic OIDC provider. If you need to map roles and groups, you can use the `keycloak` provider.
