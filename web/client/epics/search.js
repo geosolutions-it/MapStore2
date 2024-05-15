@@ -52,7 +52,7 @@ import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
 import {getFeatureSimple} from '../api/WFS';
-import {getDefaultInfoFormatValueFromLayer} from '../utils/MapInfoUtils';
+import {defaultQueryableFilter, getDefaultInfoFormatValueFromLayer} from '../utils/MapInfoUtils';
 import {identifyOptionsSelector, isMapPopup} from '../selectors/mapInfo';
 import { addPopup } from '../actions/mapPopups';
 import { IDENTIFY_POPUP } from '../components/map/popups';
@@ -319,7 +319,7 @@ export const searchOnStartEpic = (action$, store) =>
             const layer = getLayerFromName(state, name);
             let queryableLayers = queryableLayersSelector(state);
             const queryableLayersIgnoreingVisiblimits = layer && queryableLayers.find(i => i.id === layer.id);
-            if (!queryableLayersIgnoreingVisiblimits && layer) {
+            if (!queryableLayersIgnoreingVisiblimits && layer && defaultQueryableFilter(layer)) {
                 queryableLayers = [...queryableLayers, layer];
             }
             const isLayerNotQueryableSelected = queryableLayers.filter(l => l.name === name ).length === 0;

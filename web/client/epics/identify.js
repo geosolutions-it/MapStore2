@@ -52,7 +52,7 @@ import { createControlEnabledSelector, measureSelector } from '../selectors/cont
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { mouseOutSelector } from '../selectors/mousePosition';
 import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
-import {buildIdentifyRequest, filterRequestParams} from '../utils/MapInfoUtils';
+import {buildIdentifyRequest, defaultQueryableFilter, filterRequestParams} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
@@ -84,9 +84,11 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             }
 
             const selectedLayers = selectedNodesSelector(getState());
-            const queryableSelectedLayerNotExist = queryableSelectedLayers.length === 0;
-            const queryableLayersHasignoreVisiblimitsLayer = layerWithIgnoreVisibilityLimits && queryableLayers.find(i => i.id === layerWithIgnoreVisibilityLimits.id);
-            if (!queryableLayersHasignoreVisiblimitsLayer && queryableSelectedLayerNotExist && layerWithIgnoreVisibilityLimits) {
+            const queryableSelectedLayerNotExist = queryableSelectedLayers.length === 0;        // no queryable selected layer
+            const queryableLayersHasIgnoreVisiblimitsLayer = layerWithIgnoreVisibilityLimits && (queryableLayers.find(i => i.id === layerWithIgnoreVisibilityLimits.id));       // is queryable layers includes the layer with ignore visiblity limits
+            const isLayerWithIgnoreVisibilityLimitsQueryable = layerWithIgnoreVisibilityLimits && defaultQueryableFilter(layerWithIgnoreVisibilityLimits);      // make sure the layer with ignore visiblity limits queryable
+            // just add thee layer with ignoring visibility limits in this condition
+            if (!queryableLayersHasIgnoreVisiblimitsLayer && queryableSelectedLayerNotExist && isLayerWithIgnoreVisibilityLimitsQueryable) {
                 queryableLayers = [...queryableLayers, layerWithIgnoreVisibilityLimits];
             }
             if (!layerWithIgnoreVisibilityLimits && (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0)) {
