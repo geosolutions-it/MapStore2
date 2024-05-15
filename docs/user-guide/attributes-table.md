@@ -13,13 +13,13 @@ Accessing this panel the user can perform the following main operations:
 
 * Filter records in Attribute Table in different ways as described in the [Set filter](#set-filters) section below
 
-* Open the [Advanced Search](filtering-layers.md#query-panel) tool through the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
+* Open the [Advanced Search](#advanced-search) tool through the <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> button
 
-* Activate the [filter by the current viewport](filtering-layers.md#quick-filter-by-viewport), through the <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button
+* Activate the [filter by the current viewport](#quick-filter-by-viewport), through the <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button
 
-* Activate the filtering capabilities by [clicking on map](filtering-layers.md#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button
+* Activate the filtering capabilities by [clicking on map](#quick-filter-by-map-interaction), through <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button
 
-* Using the [quick filter by attribute](filtering-layers.md#quick-filter-by-attributes)
+* Using the [quick filter by attribute](#quick-filter-by-attributes)
 
 * Download the grid data through the <img src="../img/button/export_data.jpg" class="ms-docbutton"/> button
 
@@ -57,7 +57,7 @@ Through the **Quit edit mode** button <img src="../img/button/quit-edit-mode-but
 
 Once the *Edit mode* is enabled it is possible to create a new feature by clicking on the **Add New Feature** button <img src="../img/button/add-new-feature-icon.jpg" class="ms-docbutton"/>. After clicking on it the user can fill out the fields and edit the geometry of the new feature:
 
-<img src="../img/attributes-table/add-new-feature-attributes.jpg" class="ms-docimage" style="max-width:500px;"/>
+<img src="../img/attributes-table/add-new-feature-attributes.jpg" class="ms-docimage"/>
 
 To edit attributes MapStore provides some input fields based on the attribute type, that forces the user to insert a valid value. If the attribute is of type `text`, MapStore will also show a dropdown menu with the list of the existing values for that attribute to allow a quick selection.
 
@@ -122,17 +122,86 @@ With a click on **Save changes** <img src="../img/button/save-changes.jpg" class
 
 ## Set filters
 
-In the Attribute table it is possible to apply filters in four ways (as explained in the [Filtering layers](filtering-layers.md#filtering-layers) section):
+In the Attribute Table it is possible to apply different types of filter, in particular are available the **Advanced search** tool and the **Quick filter** options
 
-* [Advanced search](filtering-layers.md#advanced-search)
+### Advanced Search
 
-* [Click on map](filtering-layers.md#quick-filter-by-map-interaction)
+This filter, applicable from **Advanced Search** button <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> in the *Attribute Table* toolbar, opens the [Query Panel](filtering-layers.md#query-panel) which, in the Attribute Table, behaves as follows:
 
-* [Quick filter](filtering-layers.md#quick-filter-by-attributes)
+* It can be used to apply a filter to a layer for search purposes: this filter is applied in `AND` to the *Layer Filter* if it is already been set on layer side.
 
-* [Filter by viewport](filtering-layers.md#quick-filter-by-viewport)
+<img src="../img/attributes-table/filtered_features_grid.jpg" class="ms-docimage"/>
 
-Those filters, once applied, can be visible on the map by enabling the <img src="../img/button/sync.jpg" class="ms-docbutton"/> button.
+* It is possible to sync this filter with the map through the <img src="../img/button/sync.jpg" class="ms-docbutton"/> icon:
+
+<video class="ms-docimage" controls><source src="../img/attributes-table/ar_sync.mp4"/></video>
+
+* It will be automatically removed/reapplied by closing/opening the *Attribute Table*
+
+### Quick Filter
+
+The user can perform three type of quick filters:
+
+* Filter by **attributes**
+
+* Filter by **clicked point in the map**
+
+* Filter by **viewport**
+
+#### Quick Filter by attributes
+
+This filter is available for each colum in the *Attribute Table* just below the field names and it can be also used in combination with other filter applied:
+
+<video class="ms-docimage" controls><source src="../img/attributes-table/filtered_quick_filter.mp4"/></video>
+
+The user has the possibility to apply simple filters by attributes typing the filter's value in the available input fields (Date or Time pickers are available according to the attributes data types). Filtering by one or more attributes, layer records in *Attribute Table* are automatically filtered accordingly.
+
+If the user wants to filter by an attribute, he can simply write the desired filter value inside the input box and the list of records in table will be automatically filtered by matching with the input text.
+
+<img src="../img/attributes-table/attribute-table-quick-filter-1.jpg" class="ms-docimage"/>
+
+The user can also filter an attribute using the input box. From the dropdown menu it is possible to choose the operator to use (for the *String* attribute it can be `=`, `like`, `ilike` or `isNull`, for the *Integer*, *Data* or *Time* attribute, it can be instead `=`, `>`, `<`, `>=`, `<=`, `<>`, `><` or `isNull`)
+
+<img src="../img/attributes-table/operations_drop_down_menu.jpg" class="ms-docimage"/>
+
+In order to filter a numerical filed matching the records *greater than* or *equal* to a certain threshold value, an example can be:
+
+<img src="../img/attributes-table/attribute-table-quick-filter-3.jpg" class="ms-docimage"/>
+
+The user can also filter the records, of the *Date*, *Time* and *DateTime* attributes, through the *Date Picker* option by clicking on the <img src="../img/button/date_picker.jpg" class="ms-docbutton"/> button for *Date* attributes, the <img src="../img/button/time_picker.jpg" class="ms-docbutton"/> button for *Time* attributes and the <img src="../img/button/date_time_picker.jpg" class="ms-docbutton"/> button for *DateTime* attributes. To filter a *DateTime* attribute using the **Date Picker** option, an example can be the following:
+
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/attributes-table/data_time_picker_example.mp4"/></video>
+
+In the *Date Picker* option, with the `><` operator selected, the **Time Range** picker is supported. Here the user can select the *Start Date* and the *End Date* to filter the attribute, an example can be the following:
+
+<video class="ms-docimage" style="max-width:700px;" controls><source src="../img/attributes-table/time_range_picker_example.mp4"/></video>
+
+#### Quick Filter by map interaction
+
+It is possible to filter records in the *Attribute Table* by clicking on the map or doing a selection directly in a map of multiple features. The user can activate the  **Filter on the map** <img src="../img/button/filter_geometry_button.jpg" class="ms-docbutton"/> button (once clicked the button turns blue) and then:
+
+* Click on the map over the features he wants to select
+
+* Add multiple features to the selection by pressing Ctrl and clicking again over other features in map
+
+<video class="ms-docimage" controls><source src="../img/attributes-table/filter_geometry.mp4"/></video>
+
+* Add multiple features to the selection by pressing Ctrl + Alt and drawing a selection box in map
+
+ <video class="ms-docimage" controls><source src="../img/attributes-table/filter_geometries.mp4"/></video>
+
+The list of records in the *Attribute Table* will be automatically filtered according to such user selection and then the user can disable the geometry filter through the **Remove filter** <img src="../img/button/remove_filter_geometry.jpg" class="ms-docbutton"/> button.
+
+#### Quick Filter by viewport
+
+From the *Attribute Table* the user can filter data by map viewport through the **Filter by viewport** <img src="../img/button/filter-by-viewport-button.jpg" class="ms-docbutton"/> button. Once clicked, the toggle button turns its state to green and the list of records in the *Attribute Table* is filtered by showing only records corresponding to layer features present in the current map viewport.
+
+<video class="ms-docimage" controls><source src="../img/attributes-table/filter_viewport.mp4"/></video>
+
+The list of records in the *Attribute Table* is automatically updated when the user pan/zoom the map view. It is possible to deactivate the **Filter by viewport** <img src="../img/button/filter-by-viewport-enable.jpg" class="ms-docbutton"/> by clicking again the same toggle button.
+
+!!! note
+    The *Quick Filter* remains active as long as the [Attribute Table](attributes-table.md#attribute-table) is open but, unlike the *Advanced Search*, closing the *Attribute Table* it will not reappear anymore if the *Attribute Table* is re-opened in a second time.
 
 ## Download the grid data
 
