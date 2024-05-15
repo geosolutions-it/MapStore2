@@ -17,16 +17,14 @@ export default class ScaleBar extends React.Component {
         className: PropTypes.string,
         minWidth: PropTypes.number,
         units: PropTypes.oneOf(['degrees', 'imperial', 'nautical', 'metric', 'us']),
-        container: PropTypes.string,
-        isMobile: PropTypes.bool
+        container: PropTypes.string
     };
 
     static defaultProps = {
         map: null,
         className: 'ol-scale-line',
         minWidth: 64,
-        units: 'metric',
-        isMobile: false
+        units: 'metric'
     };
 
     componentDidMount() {
