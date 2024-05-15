@@ -217,7 +217,8 @@ export const getFeatureInfoOfSelectedItem = (action$, store) =>
                 }
                 return [
                     ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
-                    ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId)] : []),
+                    ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId, layerObj)] : []),
+
                     showMapinfoMarker()
                 ];
             }
@@ -254,7 +255,7 @@ export const textSearchShowGFIEpic = (action$, store) =>
                                 }
                                 : {}
                             )
-                        } }, itemId),
+                        } }, itemId, layerObj),
                     showMapinfoMarker(),
                     addMarker(item)
                 ).merge(

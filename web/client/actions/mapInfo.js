@@ -194,15 +194,17 @@ export function updateCenterToMarker(status) {
  * @param {object[]} [filterNameList=[]] list of layers to perform the GFI request
  * @param {object} [overrideParams={}] a map based on name as key and objec as value for overriding request params
  * @param {string} [itemId=null] id of the item needed for filtering results
+ * @param {string} [layerWithIgnoreVisibilityLimits=null] layer object of the layer that needs to ignore its visibility limits restrictions to apply GFI
  */
-export function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}, itemId = null) {
+export function featureInfoClick(point, layer, filterNameList = [], overrideParams = {}, itemId = null, layerWithIgnoreVisibilityLimits = null) {
     return {
         type: FEATURE_INFO_CLICK,
         point,
         layer,
         filterNameList,
         overrideParams,
-        itemId
+        itemId,
+        layerWithIgnoreVisibilityLimits         // [in some cases needs to ignore the restrictions of visibility limits that prevent GFI]
     };
 }
 

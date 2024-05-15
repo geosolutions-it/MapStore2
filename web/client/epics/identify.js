@@ -74,7 +74,7 @@ import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
  */
 export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { } }) =>
     action$.ofType(FEATURE_INFO_CLICK)
-        .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
+        .switchMap(({ point, filterNameList = [], overrideParams = {}, layerWithIgnoreVisibilityLimits }) => {
             // Reverse - To query layer in same order as in TOC
             let queryableLayers = reverse(queryableLayersSelector(getState()));
             const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
@@ -84,8 +84,12 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
             }
 
             const selectedLayers = selectedNodesSelector(getState());
-
-            if (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0) {
+            const queryableSelectedLayerNotExist = queryableSelectedLayers.length === 0;
+            const queryableLayersHasignoreVisiblimitsLayer = layerWithIgnoreVisibilityLimits && queryableLayers.find(i => i.id === layerWithIgnoreVisibilityLimits.id);
+            if (!queryableLayersHasignoreVisiblimitsLayer && queryableSelectedLayerNotExist && layerWithIgnoreVisibilityLimits) {
+                queryableLayers = [...queryableLayers, layerWithIgnoreVisibilityLimits];
+            }
+            if (!layerWithIgnoreVisibilityLimits && (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0)) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
             }
 
