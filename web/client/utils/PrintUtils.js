@@ -34,6 +34,7 @@ import head from "lodash/head";
 import isNil from "lodash/isNil";
 import get from "lodash/get";
 import min from "lodash/min";
+import trimEnd from 'lodash/trimEnd';
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
 
@@ -876,6 +877,38 @@ export const specCreators = {
                 resolutions: layer.tileSets.map(({resolution}) => resolution)
                 // letters: ... to implement
 
+            };
+        }
+    },
+    arcgis: {
+        map: (layer, spec, state) => {
+            const layout = head(state?.print?.capabilities.layouts.filter((l) => l.name === getLayoutName(spec)));
+            const ratio = getResolutionMultiplier(layout?.map?.width, spec.size?.width ?? 370) ?? 1;
+            const resolutions = getResolutionsForProjection(spec.projection).map(r => r * ratio);
+            const resolution = resolutions[spec.scaleZoom];
+            const extent = calculateExtent(spec.center, resolution, spec.size, spec.projection);
+            const sr = spec.projection
+                .replace('EPSG:', '')
+                .replace('900913', '3857');
+            return {
+                type: 'Image',
+                opacity: layer.opacity ?? 1.0,
+                name: layer.name ?? -1,
+                baseURL: url.format({
+                    ...url.parse(`${trimEnd(layer.url, '/')}/export`),
+                    query: {
+                        F: 'image',
+                        ...(layer.name !== undefined  && { LAYERS: `show:${layer.name}` }),
+                        FORMAT: layer.format || 'PNG32',
+                        TRANSPARENT: true,
+                        SIZE: `${layout?.map?.width},${layout?.map?.height}`,
+                        bbox: extent.join(','),
+                        BBOXSR: sr,
+                        IMAGESR: sr,
+                        DPI: 90
+                    }
+                }),
+                extent
             };
         }
     }

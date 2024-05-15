@@ -6,16 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 import { Observable } from 'rxjs';
-import { isValidURLTemplate } from '../../utils/URLUtils';
+import { isValidURL } from '../../utils/URLUtils';
 import { preprocess as commonPreprocess } from './common';
 import { getCapabilities } from '../ArcGIS';
 
 function validateUrl(serviceUrl) {
-    if (isValidURLTemplate(serviceUrl)) {
-        // revise_me. Recheck if cast is necessary as well as
-        // make that string constant somewhere
-        // check if there is better way to confirm url structure, this is rudimentary.
-        return String(serviceUrl).includes('arcgis');
+    if (isValidURL(serviceUrl)) {
+        return String(serviceUrl).includes('MapServer');
     }
     return false;
 }
@@ -27,9 +24,21 @@ const recordToLayer = (record) => {
     return {
         type: 'arcgis',
         url: record.url,
-        name: record.name,
         title: record.title,
-        visibility: true
+        format: record.format,
+        queryable: record.queryable,
+        visibility: true,
+        ...(record.name !== undefined && {
+            name: record.name
+        }),
+        ...(record.bbox && {
+            bbox: record.bbox
+        }),
+        ...(record.layers && {
+            options: {
+                layers: record.layers
+            }
+        })
     };
 };
 
@@ -43,8 +52,7 @@ export const textSearch = (url, startPosition, maxRecords, text, info) => getRec
 export const getCatalogRecords = (response) => {
     return response?.records
         ? response.records.map(record => {
-            const { version, bbox, format, properties } = record;
-            const identifier = `${record.id}:${record.name}`;
+            const identifier = `${record.id !== undefined ? `Layer:${record.id}` : 'Group'}:${record.name}`;
             return {
                 serviceType: 'arcgis',
                 isValid: true,
@@ -52,13 +60,13 @@ export const getCatalogRecords = (response) => {
                 title: record.name,
                 identifier,
                 url: record.url,
-                thumbnail: null,
-                ...(bbox && { bbox }),
-                ...(format && { format }),
-                ...(properties && { properties }),
+                thumbnail: record.thumbnail ?? null,
                 references: [],
                 name: record.id,
-                version
+                format: record.format,
+                layers: record.layers,
+                queryable: record.queryable,
+                bbox: record.bbox
             };
         })
         : null;

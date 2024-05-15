@@ -7,67 +7,106 @@
  */
 
 import { Observable } from 'rxjs';
-import {getCurrentResolution} from '../MapUtils';
-import {reproject, getProjectedBBox} from '../CoordinatesUtils';
-import {isObject, isNil} from 'lodash';
+import { getCurrentResolution } from '../MapUtils';
+import { reproject, getProjectedBBox, reprojectBbox } from '../CoordinatesUtils';
+import { isObject, isNil, trimEnd } from 'lodash';
 import axios from '../../libs/ajax';
+
+const esriToGeoJSONGeometry = (geometry) => {
+    if (!geometry) {
+        return null;
+    }
+    if (geometry.x !== undefined && geometry.y !== undefined) {
+        return {
+            type: 'Point',
+            coordinates: [geometry.x, geometry.y, geometry.z || 0]
+        };
+    }
+    if (geometry.points) {
+        return {
+            type: 'MultiPoint',
+            coordinates: geometry.points.map(([x, y, z]) => [x, y, z || 0])
+        };
+    }
+    if (geometry.paths) {
+        return {
+            type: 'MultiLineString',
+            coordinates: geometry.paths.map(path => path.map(([x, y, z]) => [x, y, z || 0]))
+        };
+    }
+    if (geometry.rings) {
+        return {
+            type: 'Polygon',
+            coordinates: geometry.rings.map(ring => ring.map(([x, y, z]) => [x, y, z || 0]))
+        };
+    }
+    return null;
+};
+
+const esriToGeoJSONFeature = (feature) => {
+    return {
+        type: 'Feature',
+        properties: feature.attributes,
+        geometry: esriToGeoJSONGeometry(feature.geometry)
+    };
+};
 
 export default {
     buildRequest: (layer, { point, map, currentLocale } = {}) => {
-        const heightBBox = 101;
-        const widthBBox = 101;
+        const heightBBox = 16;
+        const widthBBox = 16;
         const size = [heightBBox, widthBBox];
         const rotation = 0;
         const resolution = isNil(map.resolution)
             ? getCurrentResolution(Math.ceil(map.zoom), 0, 21, 96)
             : map.resolution;
-        let wrongLng = point.latlng.lng;
+        const wrongLng = point.latlng.lng;
         // longitude restricted to the [-180°,+180°] range
-        let lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
-        const center = {x: lngCorrected, y: point.latlng.lat};
-        let centerProjected = reproject(center, 'EPSG:4326', map.projection);
-        let bounds = getProjectedBBox(centerProjected, resolution, rotation, size, null);
-        const { features = [] } = point?.intersectedFeatures?.find(({ id }) => id === layer.id) || {};
+        const lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
+        const center = { x: lngCorrected, y: point.latlng.lat };
+        const centerProjected = reproject(center, 'EPSG:4326', map.projection);
+        const bounds = getProjectedBBox(centerProjected, resolution, rotation, size, null);
+        const bounds4326 = reprojectBbox(bounds, map.projection, 'EPSG:4326');
         return {
             request: {
-                features: [...features],
                 outputFormat: 'application/json',
-                point,
-                bounds,
-                map
+                bounds: bounds4326
             },
             metadata: {
                 title: isObject(layer.title)
                     ? layer.title[currentLocale] || layer.title.default
                     : layer.title
             },
-            url: 'client'
+            url: trimEnd(layer.url, '/')
         };
     },
-    getIdentifyFlow: (layer, baseURL, { features = [], point, map } = {}) => {
-        // get layer properties, check format.
-        return Observable.defer(() => axios.post(`${layer.url}/${layer.name}/query`, null, {
-            params: {
-                f: 'geojson',
-                // geometry: `${bounds.minx},${bounds.miny},${bounds.maxx},${bounds.maxy}`,
-                // geometryType: 'esriGeometryEnvelope',
-                geometry: `${point.rawPos[0]},${point.rawPos[1]}`,
-                geometryType: 'esriGeometryPoint',
-                inSR: map.projection
-            }
-        }).then((response) => {
-            return {
-                data: {
-                    features: response?.data?.features || []
-                }
-            };
-        }).catch(() => {
-
-            return {
-                data: {
-                    features
-                }
-            };
-        }));
+    getIdentifyFlow: (layer, baseURL, { bounds } = {}) => {
+        const params = {
+            f: 'json',
+            geometry: bounds.join(','),
+            inSR: 4326,
+            outSR: 4326,
+            outFields: '*'
+        };
+        const layerIds = layer?.options?.layers
+            ? layer.options.layers.map(({ id }) => id)
+            : [layer.name];
+        return Observable.defer(() =>
+            Promise.all(
+                layerIds.map((layerId) =>
+                    axios.get(`${baseURL}/${layerId}/query`, { params })
+                        .then((response) => {
+                            return (response?.data?.features || []).map(esriToGeoJSONFeature);
+                        })
+                )
+            ).then((features) => {
+                return {
+                    data: {
+                        crs: 'EPSG:4326',
+                        features: features.flat()
+                    }
+                };
+            })
+        );
     }
 };

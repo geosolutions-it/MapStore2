@@ -7,8 +7,35 @@
  */
 
 import axios from '../libs/ajax';
+import { reprojectBbox } from '../utils/CoordinatesUtils';
+import trimEnd from 'lodash/trimEnd';
 
 let _cache = {};
+
+const extentToBoundingBox = (extent) => {
+    const wkid = extent?.spatialReference?.wkt
+        ? '4326'
+        : extent?.spatialReference?.latestWkid || extent?.spatialReference?.wkid;
+    const projectedExtent = extent?.spatialReference?.wkt
+        ? reprojectBbox([extent?.xmin, extent?.ymin, extent?.xmax, extent?.ymax], extent.spatialReference.wkt, 'EPSG:4326')
+        : extent
+            ? [extent?.xmin, extent?.ymin, extent?.xmax, extent?.ymax]
+            : null;
+
+    if (projectedExtent) {
+        return {
+            bounds: {
+                minx: projectedExtent[0],
+                miny: projectedExtent[1],
+                maxx: projectedExtent[2],
+                maxy: projectedExtent[3]
+            },
+            crs: `EPSG:${wkid}`
+        };
+    }
+    return null;
+};
+
 /**
  * Retrieve layer metadata.
  *
@@ -17,7 +44,14 @@ let _cache = {};
  * @returns layer metadata
  */
 export const getLayerMetadata = (layerUrl, layerName) => {
-    return axios.get(`${layerUrl}/${layerName}`, { params: { f: 'json' }}).then(({data}) => data);
+    return axios.get(`${trimEnd(layerUrl, '/')}/${layerName}`, { params: { f: 'json' }})
+        .then(({ data }) => {
+            const bbox = extentToBoundingBox(data?.extent);
+            return {
+                ...(bbox && { bbox }),
+                data
+            };
+        });
 };
 export const searchAndPaginate = (records, params) => {
     const { startPosition, maxRecords, text } = params;
@@ -41,14 +75,36 @@ const getData = (url, params = {}) => {
         });
     return request()
         .then((data) => {
-            // Modify the next line to allow raster sets where layers property is empty.
-            const records = (data?.layers || []).map((layer) => {
-                return {
-                    ...layer,
-                    url,
-                    version: data?.currentVersion
-                };
-            });
+            const { layers } = data || {};
+            // Map is similar to WMS GetMap capability
+            const mapExportSupported = (data?.capabilities || '').includes('Map');
+            const commonProperties = {
+                url,
+                version: data?.currentVersion,
+                format: (data.supportedImageFormatTypes || '')
+                    .split(',')
+                    .filter(format => /PNG|JPG|GIF/.test(format))[0] || 'PNG32'
+            };
+            const bbox = extentToBoundingBox(data?.fullExtent);
+            const records = [
+                ...((mapExportSupported) ? [
+                    {
+                        name: data?.documentInfo?.Title || data.name || params?.info?.options?.service?.title ||  data.mapName,
+                        description: data.description || data.serviceDescription,
+                        bbox,
+                        queryable: (data?.capabilities || '').includes('Data'),
+                        layers,
+                        ...commonProperties
+                    }
+                ] : []),
+                ...(mapExportSupported && layers ? layers : []).map((layer) => {
+                    return {
+                        ...layer,
+                        ...commonProperties,
+                        queryable: (data?.capabilities || '').includes('Data')
+                    };
+                })
+            ];
             return searchAndPaginate(records, params);
         });
 };

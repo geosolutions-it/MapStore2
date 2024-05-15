@@ -14,13 +14,13 @@ describe('Test ArcGIS API', () => {
     it('should extract capabilities from arcgis service data', (done) => {
         getCapabilities(_url, 1, 30, '').then((data) => {
             const { numberOfRecordsMatched, numberOfRecordsReturned, records } = data;
-            const { type, url, name, version, defaultVisibility } = records[0];
+            const { type, url, name, version, defaultVisibility } = records[1];
             try {
                 expect(numberOfRecordsMatched).toBeTruthy();
-                expect(numberOfRecordsMatched).toBe(24);
+                expect(numberOfRecordsMatched).toBe(25);
 
                 expect(numberOfRecordsReturned).toBeTruthy();
-                expect(numberOfRecordsReturned).toBe(24);
+                expect(numberOfRecordsReturned).toBe(25);
 
                 expect(type).toBeTruthy();
                 expect(type).toBe('Group Layer');
@@ -80,7 +80,7 @@ describe('Test ArcGIS API', () => {
     it('should retrieve arcgis layer metadata', (done) => {
         const layerPath = 'base/web/client/test-resources/arcgis';
         const layerName = 'arcgis-layer-test-data.json';
-        getLayerMetadata(layerPath, layerName).then((data) => {
+        getLayerMetadata(layerPath, layerName).then(({ data }) => {
             const { advancedQueryCapabilities, supportedQueryFormats, capabilities, extent, name, type } = data;
             try {
                 expect(advancedQueryCapabilities).toBeTruthy();

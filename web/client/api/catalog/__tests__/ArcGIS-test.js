@@ -15,19 +15,18 @@
 import { getCatalogRecords, getLayerFromRecord } from '../ArcGIS';
 import expect from 'expect';
 
-describe('Test ArcGIS API', () => {
+describe('Test ArcGIS Catalog API', () => {
     it('should get catalog records', (done) => {
         const testRecord = {
             id: 1,
             name: "Outreach",
             type: "Feature Layer",
             description: 'description',
-            url: "base/web/client/test-resources/arcgis/arcgis-test-data.json",
-            version: 10.81
+            url: "base/web/client/test-resources/arcgis/arcgis-test-data.json"
         };
         try {
             const records = getCatalogRecords({ records: [ testRecord ] });
-            const { serviceType, description, title, identifier, url, name, version } = records[0];
+            const { serviceType, description, title, identifier, url, name } = records[0];
 
             expect(serviceType).toBeTruthy();
             expect(serviceType).toBe('arcgis');
@@ -42,13 +41,10 @@ describe('Test ArcGIS API', () => {
             expect(url).toBe(testRecord.url);
 
             expect(identifier).toBeTruthy();
-            expect(identifier).toBe(`${testRecord.id}:${testRecord.name}`);
+            expect(identifier).toBe(`Layer:${testRecord.id}:${testRecord.name}`);
 
             expect(name).toBeTruthy();
             expect(name).toBe(testRecord.id);
-
-            expect(version).toBeTruthy();
-            expect(version).toBe(testRecord.version);
         } catch (e) {
             done(e);
         }

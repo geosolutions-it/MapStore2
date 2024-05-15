@@ -7,12 +7,12 @@
  */
 
 import { Observable } from 'rxjs';
-import { isValidURLTemplate } from '../../utils/URLUtils';
+import { isValidURL } from '../../utils/URLUtils';
 import { preprocess as commonPreprocess } from './common';
 import { getCapabilities } from '../ThreeDTiles';
 
 function validateUrl(serviceUrl) {
-    if (isValidURLTemplate(serviceUrl)) {
+    if (isValidURL(serviceUrl)) {
         const parts = serviceUrl.split(/\./g);
         // remove query params
         const ext = (parts[parts.length - 1] || '').split(/\?/g)[0];

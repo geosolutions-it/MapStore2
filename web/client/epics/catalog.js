@@ -347,27 +347,17 @@ export default (API) => ({
                         );
                     }
                 }
-                if (layer.type === 'arcgis') {
+                if (layer.type === 'arcgis' && layer.name !== undefined) {
                     return Rx.Observable.defer(() => getLayerMetadata(layer.url, layer.name))
-                        .switchMap((properties) => {
-                            let esriProjectionId = properties?.extent?.spatialReference?.latestWkid || properties?.extent?.spatialReference?.wkid;
-                            let minP = CoordinatesUtils.reproject([properties.extent.xmin, properties.extent.ymin], `EPSG:${esriProjectionId}`, 'EPSG:4326');
-                            let maxP = CoordinatesUtils.reproject([properties.extent.xmax, properties.extent.ymax], `EPSG:${esriProjectionId}`, 'EPSG:4326');
+                        .switchMap(({ data, ...layerOptions }) => {
                             const newLayer = {
                                 ...layer,
-                                bbox: {
-                                    bounds: {
-                                        minx: minP?.x,
-                                        miny: minP?.y,
-                                        maxx: maxP?.x,
-                                        maxy: maxP?.y
-                                    },
-                                    crs: 'EPSG:4326'
-                                },
-                                // include metadata for future improvements
-                                properties
+                                ...layerOptions
                             };
-                            return Rx.Observable.from([addNewLayer({...newLayer, id}), zoomToExtent(newLayer.bbox.bounds, newLayer.bbox.crs)]);
+                            return Rx.Observable.from([
+                                addNewLayer({...newLayer, id}),
+                                ...(newLayer.bbox ? [zoomToExtent(newLayer.bbox.bounds, newLayer.bbox.crs)] : [])
+                            ]);
                         })
                         .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }

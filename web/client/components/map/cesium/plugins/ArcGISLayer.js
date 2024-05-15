@@ -12,7 +12,7 @@ import * as Cesium from 'cesium';
 Layers.registerType('arcgis', (options) => {
     return new Cesium.ArcGisMapServerImageryProvider({
         url: options.url,
-        layers: `${options.name}`,
+        ...(options.name && { layers: `${options.name}` }),
         // we need to disable this when using layers ids
         // the usage of tiles will add an additional request to metadata
         // and render the map tiles representing all the layers available in the MapServer

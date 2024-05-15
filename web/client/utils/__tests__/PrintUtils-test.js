@@ -299,6 +299,15 @@ const mapFishVectorLayer = {
     }
 };
 
+const arcgisLayer = {
+    type: 'arcgis',
+    title: 'Title',
+    url: 'http://argis/MapServer',
+    name: 0,
+    format: 'PNG',
+    visibility: true
+};
+
 const testSpec = {
     "antiAliasing": true,
     "iconSize": 24,
@@ -635,7 +644,8 @@ describe('PrintUtils', () => {
                     "id": "mapnik__0",
                     "loading": false,
                     "loadingError": false
-                }
+                },
+                arcgis: arcgisLayer
             };
             it('check opacity for all layers to be 1 for undefined, therwise its value', () => {
                 Object.keys(specCreators).map( k => {
@@ -781,6 +791,33 @@ describe('PrintUtils', () => {
                 expect(layerSpec).toExist();
                 expect(layerSpec.resolutions.length).toEqual(testLayer.tileSets.length);
                 expect(layerSpec.format).toBe("png"); // format is mandatory
+            });
+        });
+        describe('ArcGIS', () => {
+            it('ArcGIS MapServer', () => {
+                const testLayer = arcgisLayer;
+                const layerSpec = specCreators.arcgis.map(
+                    testLayer,
+                    {
+                        projection: "EPSG:900913",
+                        sheet: 'A4',
+                        size: { width: 250, height: 250 },
+                        scaleZoom: 10,
+                        center: { x: 0, y: 0, crs: "EPSG:3857" }
+                    },
+                    {
+                        print: {
+                            capabilities: {
+                                layouts: [{ name: 'A4_no_legend', map: { width: 500, height: 500 }  }]
+                            }
+                        }
+                    });
+                expect(layerSpec.type).toEqual("Image");
+                expect(layerSpec.opacity).toBeTruthy();
+                expect(decodeURIComponent(layerSpec.baseURL))
+                    .toBe('http://argis/MapServer/export?F=image&LAYERS=show:0&FORMAT=PNG&TRANSPARENT=true&SIZE=500,500&bbox=-50958.01884969075,-50958.018849691456,50958.01884969075,50958.018849690045&BBOXSR=3857&IMAGESR=3857&DPI=90');
+                expect(layerSpec.name).toBe(0);
+                expect(layerSpec.extent).toEqual([ -50958.01884969075, -50958.018849691456, 50958.01884969075, 50958.018849690045 ]);
             });
         });
         describe('transformers', () => {

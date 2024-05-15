@@ -7,37 +7,36 @@
  */
 
 import expect from 'expect';
-import model from '../arcgis';
-import LazyResult from 'postcss/lib/lazy-result';
+import arcgis from '../arcgis';
+import axios from '../../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+
+let mockAxios;
 
 describe('mapinfo arcgis utils', () => {
-    const layer = {
-        id: "13__0021dd50-11ef-11ef-9676-f1a1d3dc7ab8",
-        loading: false,
-        loadingError: false,
-        name: 13,
-        previousLoadingError: false,
-        properties: {},
-        title: "Preliminary",
-        type: 'arcgis',
-        url: "https://test.url",
-        visibility: true,
-        bbox: {
-            crs: "EPSG:4326",
-            bounds: {
-                maxx: 146.15441293756888,
-                maxy: 68.30102587364424,
-                minx: -178.33324456151348,
-                miny: -14.601806015513269
-            }
-        }
-    };
-    const map = {
-        "projection": "EPSG:900913",
-        "zoom": 6,
-        "resolution": 2445.98490512564
-    };
+    beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach((done) => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+
     it('should create a request with empty features', () => {
+        const layer = {
+            title: "Title",
+            type: 'arcgis',
+            url: "https://test.url",
+            visibility: true,
+            name: 0
+        };
+        const map = {
+            "projection": "EPSG:900913",
+            "zoom": 6,
+            "resolution": 2445.98490512564
+        };
         const point = {
             "latlng": {
                 "lat": 34.81411782090338,
@@ -45,47 +44,114 @@ describe('mapinfo arcgis utils', () => {
             },
             "intersectedFeatures": []
         };
-        const request = model.buildRequest(layer, { point, map, currentLocale: 'en-US' });
+        const request = arcgis.buildRequest(layer, { point, map, currentLocale: 'en-US' });
         expect(request).toEqual({
             request: {
-                features: [],
                 outputFormat: 'application/json',
-                map,
-                bounds: {
-                    "minx": -8641046.302154357,
-                    "miny": 4015126.864845322,
-                    "maxx": -8394001.826736668,
-                    "maxy": 4262171.340263012
-                },
-                point: {
-                    latlng: {
-                        lat: 34.81411782090338,
-                        lng: -76.51422049947232 },
-                    intersectedFeatures: []
-                }
+                bounds: [
+                    -76.69000174947232,
+                    34.669673599384076,
+                    -76.33843924947232,
+                    34.95830926327919
+                ]
             },
             metadata: {
-                title: layer.title
+                title: 'Title'
             },
-            url: 'client'
+            url: 'https://test.url'
         });
     });
     it('should return the response object from getIdentifyFlow', (done) => {
-        const point = {
-            rawPos: [
-                -8926003.543601494,
-                4151490.5233060746
-            ]
+        const layer = {
+            title: "Title",
+            type: 'arcgis',
+            url: "https://test.url",
+            visibility: true,
+            name: 0
         };
-        model.getIdentifyFlow(LazyResult, undefined, { features: [], point, map })
+        const bounds = [
+            -76.69000174947232,
+            34.669673599384076,
+            -76.33843924947232,
+            34.95830926327919
+        ];
+        mockAxios.onGet().reply((req) => {
+            try {
+                const parts = req.url.split('?url=');
+                expect(decodeURIComponent(parts[parts.length - 1]))
+                    .toBe('https://test.url/0/query?f=json&geometry=-76.69000174947232%2C34.669673599384076%2C-76.33843924947232%2C34.95830926327919&inSR=4326&outSR=4326&outFields=*');
+            } catch (e) {
+                done(e);
+            }
+            return [200, { features: [{ attributes: { name: 'Feature01' }, geometry: { x: 0, y: 0 } }] }];
+        });
+        arcgis.getIdentifyFlow(layer, 'https://test.url', { bounds })
             .toPromise()
             .then((response) => {
                 expect(response).toEqual({
                     data: {
-                        features: []
+                        crs: 'EPSG:4326',
+                        features: [{
+                            type: 'Feature',
+                            properties: { name: 'Feature01' },
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [0, 0, 0]
+                            }
+                        }]
                     }
                 });
                 done();
-            });
+            }).catch(done);
+    });
+    it('should return the response object from getIdentifyFlow with layer group', (done) => {
+        const layer = {
+            title: "Title",
+            type: 'arcgis',
+            url: "https://test.url",
+            visibility: true,
+            options: {
+                layers: [
+                    { id: 0 },
+                    { id: 1 }
+                ]
+            }
+        };
+        const bounds = [
+            -76.69000174947232,
+            34.669673599384076,
+            -76.33843924947232,
+            34.95830926327919
+        ];
+        let count = 0;
+        mockAxios.onGet().reply(() => {
+            count++;
+            return [200, { features: [{ attributes: { name: `Feature0${count}` }, geometry: { x: count, y: 0 } }] }];
+        });
+        arcgis.getIdentifyFlow(layer, 'https://test.url', { bounds })
+            .toPromise()
+            .then((response) => {
+                expect(response).toEqual({
+                    data: {
+                        crs: 'EPSG:4326',
+                        features: [{
+                            type: 'Feature',
+                            properties: { name: 'Feature01' },
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [1, 0, 0]
+                            }
+                        }, {
+                            type: 'Feature',
+                            properties: { name: 'Feature02' },
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [2, 0, 0]
+                            }
+                        }]
+                    }
+                });
+                done();
+            }).catch(done);
     });
 });

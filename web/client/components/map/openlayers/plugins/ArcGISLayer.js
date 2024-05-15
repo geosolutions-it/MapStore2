@@ -21,7 +21,10 @@ registerType('arcgis', {
             minResolution: options.minResolution,
             maxResolution: options.maxResolution,
             source: new TileArcGISRest({
-                params: { LAYERS: `show:${parseInt(options.name || 0, 10)}` },
+                params: {
+                    ...(options.name !== undefined && { LAYERS: `show:${options.name}` }),
+                    ...(options.format && { format: options.format })
+                },
                 url: options.url
             })
         });
