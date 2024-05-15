@@ -316,11 +316,17 @@ export const searchOnStartEpic = (action$, store) =>
     action$.ofType(SEARCH_LAYER_WITH_FILTER)
         .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
             const state = store.getState();
+            const layer = getLayerFromName(state, name);
+            let queryableLayers = queryableLayersSelector(state);
+            const queryableLayersIgnoreingVisiblimits = layer && queryableLayers.find(i => i.id === layer.id);
+            if (!queryableLayersIgnoreingVisiblimits && layer) {
+                queryableLayers = [...queryableLayers, layer];
+            }
+            const isLayerNotQueryableSelected = queryableLayers.filter(l => l.name === name ).length === 0;
             // if layer is NOT queriable and visible then show error notification
-            if (queryableLayersSelector(state).filter(l => l.name === name ).length === 0) {
+            if (isLayerNotQueryableSelected) {
                 return Rx.Observable.of(nonQueriableLayerError());
             }
-            const layer = getLayerFromName(state, name);
             if (layer && cqlFilter) {
                 return Rx.Observable.defer(() =>
                 // take geoserver url from layer
@@ -366,7 +372,7 @@ export const searchOnStartEpic = (action$, store) =>
                                     { latlng },
                                     typeName,
                                     [typeName],
-                                    { [typeName]: { cql_filter: cqlFilter } }
+                                    { [typeName]: { cql_filter: cqlFilter } }, null, layer
                                 )
                             )
                                 .merge(mapActionObservable);
