@@ -67,7 +67,7 @@ describe('Test ArcGIS Catalog API', () => {
             expect(url).toBe(testRecord.url);
 
             expect(name).toBeTruthy();
-            expect(name).toBe(testRecord.name);
+            expect(name).toBe(`${testRecord.name}`);
 
             expect(title).toBeTruthy();
             expect(title).toBe(testRecord.title);

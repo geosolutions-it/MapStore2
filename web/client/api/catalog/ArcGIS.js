@@ -29,7 +29,7 @@ const recordToLayer = (record) => {
         queryable: record.queryable,
         visibility: true,
         ...(record.name !== undefined && {
-            name: record.name
+            name: `${record.name}`
         }),
         ...(record.bbox && {
             bbox: record.bbox
