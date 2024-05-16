@@ -85,7 +85,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 
 ```json
     {
-        "authenticationProviders" [
+        "authenticationProviders": [
                 {
                     "type": "openID",
                     "provider": "oidc",
