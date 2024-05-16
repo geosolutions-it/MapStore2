@@ -113,23 +113,28 @@
         }
     }
 }
-
-.ms-measure-toolbar {
+.measure-container {
     position: absolute;
     z-index: 100;
     right: 46px;
     margin: 0;
     top: 48px;
-    background-color: #ffffff;
-    display: flex;
-    align-items: center;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    .shadow();
-    .ms-measure-icon {
-        padding: 0 6px;
-        font-size: 15px;
+    &.bottom-offset {
+        top: 88px;
+    }
+    .ms-measure-toolbar {
+        position: relative;
+        background-color: #ffffff;
+        display: flex;
+        align-items: center;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        .shadow();
+        .ms-measure-icon {
+            padding: 0 6px;
+            font-size: 15px;
+        }
     }
 }
 
