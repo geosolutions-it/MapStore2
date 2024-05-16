@@ -175,7 +175,7 @@ const MeasurePlugin = connect(
     }))
 )(({coordsAeronauticalEnabled, ...props}) => {
     return (
-        <div className={`measure-container${coordsAeronauticalEnabled ? " bottom-offset" : ""}`}>
+        <div className="measure-container" style={{top: coordsAeronauticalEnabled ? 88 : 48}}>
             {
                 props.mapType === MapLibraries.CESIUM
                     ? <div id="measure-cesium-wrapper"/>

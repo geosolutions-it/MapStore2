@@ -42,6 +42,7 @@ const Button = tooltip(MSButton);
 function MeasurementSupport({
     map,
     active,
+    targetId = MEASURE_CESIUM_TARGET_ID,
     measureType,
     onChangeMeasureType,
     defaultMeasureType,
@@ -90,7 +91,7 @@ function MeasurementSupport({
     if (!active) {
         return null;
     }
-    const container = document.querySelector(`#${MEASURE_CESIUM_TARGET_ID}`);
+    const container = document.querySelector(`#${targetId}`);
 
     return container && createPortal((
         <>
