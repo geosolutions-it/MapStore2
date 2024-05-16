@@ -1576,6 +1576,10 @@
             "noRecordsMatched": "Ningún resultado encontrado",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "DE WFS",
+                "wms": "DE WMS"
+            },
             "share": "Compartir",
             "copyToClipboard": "Copiar en el portapapeles",
             "copied": "¡Copiado!",
