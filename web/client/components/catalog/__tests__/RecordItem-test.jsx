@@ -502,6 +502,84 @@ describe('This test for RecordItem', () => {
         expect(button).toBeTruthy();
         button.click();
     });
+    it('check additional OGC service', (done) => {
+        const record = {
+            serviceType: 'csw',
+            layerType: "wms",
+            isValid: true,
+            identifier: "test-identifier",
+            title: "sample title",
+            tags: ["subject1", "subject2"],
+            description: "sample abstract",
+            thumbnail: SAMPLE_IMAGE,
+            boundingBox: {
+                extent: [10.686,
+                    44.931,
+                    46.693,
+                    12.54],
+                crs: "EPSG:4326"
+            },
+            references: [{
+                type: "OGC:WMS",
+                url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&ms2-authkey=TEST&requiredParam=REQUIRED",
+                SRS: [],
+                params: { name: "workspace:layername1" }
+            }],
+            ogcReferences: {
+                type: "OGC:WMS",
+                url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&ms2-authkey=TEST&requiredParam=REQUIRED",
+                SRS: [],
+                params: { name: "workspace:layername2" }
+            },
+            additionalOGCServices: {
+                "wfs": {
+                    url: "http://wfs.sample.service:80/geoserver/wfs?SERVICE=WFS",
+                    name: "workspace:layername2",
+                    fetchCapabilities: true,
+                    references: [{
+                        type: "OGC:WMS",
+                        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&ms2-authkey=TEST&requiredParam=REQUIRED",
+                        SRS: [],
+                        params: { name: "workspace:layername1" }
+                    }, {
+                        type: "OGC:WFS",
+                        url: "http://wfs.sample.service:80/geoserver/wfs?SERVICE=WFS",
+                        SRS: [],
+                        params: { name: "workspace:layername2" }
+                    }]
+                }
+            }
+        };
+        let actions = {
+            onLayerAdd: (layer, options) => {
+                const url = "http://wfs.sample.service:80/geoserver/wfs?SERVICE=WFS";
+                expect(layer.type).toBe("wfs");
+                expect(layer.search).toBeTruthy();
+                expect(layer.search).toEqual({url, type: "wfs"});
+                expect(layer.url).toBe(url);
+                expect(layer.name).toBe("workspace:layername2");
+                expect(options.zoomToLayer).toBeTruthy();
+                done();
+            }
+        };
+        const item = ReactDOM.render(<RecordItem
+            authkeyParamNames={["ms2-authkey"]}
+            record={record}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="csw"
+        />, document.getElementById("container"));
+        expect(item).toBeTruthy();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toBeTruthy();
+        const splitButton = document.querySelector('#add-layer-button');
+        expect(splitButton).toBeTruthy();
+        TestUtils.Simulate.click(splitButton);
+        const menuWFS = document.querySelector('#ogc-wfs');
+        expect(menuWFS).toBeTruthy();
+        TestUtils.Simulate.click(menuWFS);
+    });
 
     it('check event handlers with layerBaseConfig and csw service', (done) => {
         let actions = {

@@ -1576,6 +1576,10 @@
             "noRecordsMatched": "Aucun enregistrement correspondant",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "DEPUIS WFS",
+                "wms": "DEPUIS WMS"
+            },
             "share": "Partager",
             "copyToClipboard": "Copier vers le presse-papier",
             "copied": "Copié !",

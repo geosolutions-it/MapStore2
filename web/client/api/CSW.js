@@ -110,12 +110,28 @@ const extractWMSParamsFromURL = wms => {
     return false;
 };
 
+// Extract the relevant information from the wfs URL for (RNDT / INSPIRE)
+const extractWFSParamsFromURL = wfs => {
+    const lowerCaseParams = new Map(Array.from(new URLSearchParams(wfs.value)).map(([key, value]) => [key.toLowerCase(), value]));
+    const layerName = lowerCaseParams.get('typename');
+    if (layerName) {
+        return {
+            ...wfs,
+            protocol: 'OGC:WFS',
+            name: layerName,
+            value: `${wfs.value.match(/[^\?]+[\?]+/g)}service=WFS`
+        };
+    }
+    return false;
+};
+
 const toReference = (layerType, data, options) => {
     if (!data.name) {
         return null;
     }
     switch (layerType) {
     case 'wms':
+    case 'wfs':
         const urlValue = !(data.value.indexOf("http") === 0)
             ? (options && options.catalogURL || "") + "/" + data.value
             : data.value;
@@ -142,38 +158,68 @@ const toReference = (layerType, data, options) => {
 };
 
 const REGEX_WMS_EXPLICIT = [/^OGC:WMS-(.*)-http-get-map/g, /^OGC:WMS/g];
+const REGEX_WFS_EXPLICIT = [/^OGC:WFS-(.*)-http-get-(capabilities|feature)/g, /^OGC:WFS/g];
 const REGEX_WMS_EXTRACT = /serviceType\/ogc\/wms/g;
+const REGEX_WFS_EXTRACT = /serviceType\/ogc\/wfs/g;
 const REGEX_WMS_ALL = REGEX_WMS_EXPLICIT.concat(REGEX_WMS_EXTRACT);
 
 export const getLayerReferenceFromDc = (dc, options, checkEsri = true) => {
     const URI = dc?.URI && castArray(dc.URI);
+    const isWMS = isNil(options?.type) || options?.type === "wms";
+    const isWFS = options?.type === "wfs";
     // look in URI objects for wms and thumbnail
     if (URI) {
-        const wms = head(URI.map(uri => {
-            if (uri.protocol) {
-                if (REGEX_WMS_EXPLICIT.some(regex => uri.protocol.match(regex))) {
+        if (isWMS) {
+            const wms = head(URI.map(uri => {
+                if (uri.protocol) {
+                    if (REGEX_WMS_EXPLICIT.some(regex => uri.protocol.match(regex))) {
                     /** wms protocol params are explicitly defined as attributes (INSPIRE)*/
-                    return uri;
-                }
-                if (uri.protocol.match(REGEX_WMS_EXTRACT)) {
+                        return uri;
+                    }
+                    if (uri.protocol.match(REGEX_WMS_EXTRACT)) {
                     /** wms protocol params must be extracted from the element text (RNDT / INSPIRE) */
-                    return extractWMSParamsFromURL(uri);
+                        return extractWMSParamsFromURL(uri);
+                    }
                 }
+                return false;
+            }).filter(item => item));
+            if (wms) {
+                return toReference('wms', wms, options);
             }
-            return false;
-        }).filter(item => item));
-        if (wms) {
-            return toReference('wms', wms, options);
+        }
+        if (isWFS) {
+            const wfs = head(URI.map(uri => {
+                if (uri.protocol) {
+                    if (REGEX_WFS_EXPLICIT.some(regex => uri.protocol.match(regex))) {
+                    /** wfs protocol params are explicitly defined as attributes (INSPIRE)*/
+                        return uri;
+                    }
+                    if (uri.protocol.match(REGEX_WFS_EXTRACT)) {
+                    /** wfs protocol params must be extracted from the element text (RNDT / INSPIRE) */
+                        return extractWFSParamsFromURL(uri);
+                    }
+                }
+                return false;
+            }).filter(item => item));
+            if (wfs) {
+                return toReference('wfs', wfs, options);
+            }
         }
     }
     // look in references objects
     if (dc?.references?.length) {
         const refs = castArray(dc.references);
         const wms = head(refs.filter((ref) => { return ref.scheme && REGEX_WMS_EXPLICIT.some(regex => ref.scheme.match(regex)); }));
-        if (wms) {
+        const wfs = head(refs.filter((ref) => { return ref.scheme && REGEX_WFS_EXPLICIT.some(regex => ref.scheme.match(regex)); }));
+        if (isWMS && wms) {
             let urlObj = urlUtil.parse(getDefaultUrl(wms.value), true);
             let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
             return toReference('wms', { ...wms, value: urlUtil.format(urlObj), name: layerName }, options);
+        }
+        if (isWFS && wfs) {
+            let urlObj = urlUtil.parse(getDefaultUrl(wfs.value), true);
+            let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
+            return toReference('wfs', { ...wfs, value: urlUtil.format(urlObj), name: layerName }, options);
         }
         if (checkEsri) {
             // checks for esri arcgis in geonode csw

@@ -7,9 +7,9 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import {isObject, head, isArray, trim } from 'lodash';
-import { Image } from 'react-bootstrap';
-
+import { isObject, head, isArray, trim, isEmpty } from 'lodash';
+import { Image, SplitButton as SplitButtonT, Glyphicon, MenuItem } from 'react-bootstrap';
+import tooltip from '../../components/misc/enhancers/tooltip';
 import {
     buildSRSMap,
     getRecordLinks
@@ -28,6 +28,8 @@ import defaultThumb from './img/default.jpg';
 import defaultBackgroundThumbs from '../../plugins/background/DefaultThumbs';
 import unknown from "../../plugins/background/assets/img/dafault.jpg";
 import { getResolutions } from "../../utils/MapUtils";
+import Loader from '../misc/Loader';
+const SplitButton = tooltip(SplitButtonT);
 
 class RecordItem extends React.Component {
     static propTypes = {
@@ -135,47 +137,77 @@ class RecordItem extends React.Component {
         return crs && !isSRSAllowed(crs);
     }
 
+    onAddToMap = (record, serviceType = record.serviceType) => {
+        if (this.isSRSNotAllowed(record)) {
+            return this.props.onError('catalog.srs_not_allowed');
+        }
+        this.setState({ loading: true });
+        return API[serviceType].getLayerFromRecord(record, {
+            fetchCapabilities: !!record.fetchCapabilities,
+            service: {
+                ...this.props.service,
+                format: this.props?.service?.format ?? this.props.defaultFormat
+            },
+            layerBaseConfig: this.props.layerBaseConfig,
+            removeParams: this.props.authkeyParamNames,
+            catalogURL: this.props.catalogType === "csw" && this.props.catalogURL
+                ? this.props.catalogURL +
+                "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
+                record.identifier
+                : null,
+            map: {
+                projection: this.props.crs,
+                resolutions: getResolutions()
+            }
+        }, true)
+            .then((layer) => {
+                if (layer) {
+                    this.addLayer(layer, record);
+                }
+            }).finally(()=> {
+                this.setState({ loading: false });
+            });
+    }
+
     getButtons = (record) => {
         const links = this.props.showGetCapLinks ? getRecordLinks(record) : [];
+        const showServices = !isEmpty(record.additionalOGCServices);
         return [
-            {
+            ...(showServices ? [{
+                Element: () => (
+                    <SplitButton
+                        id="add-layer-button"
+                        tooltipId="catalog.addToMap"
+                        className="square-button-md"
+                        bsStyle="primary"
+                        title={this.state.loading ? <Loader className={'ms-loader ms-loader-primary'}/> : <Glyphicon glyph="plus" />}
+                        onClick={() => this.onAddToMap(record)}
+                        pullRight="left"
+                        disabled={this.state.loading}
+                    >
+                        <MenuItem onClick={() => this.onAddToMap(record)}>
+                            <Message msgId="catalog.additionalOGCServices.wms"/>
+                        </MenuItem>
+                        {
+                            Object.keys(record.additionalOGCServices ?? {})
+                                .map(serviceType => (
+                                    <MenuItem id={`ogc-${serviceType}`}
+                                        onClick={() => this.onAddToMap(record.additionalOGCServices[serviceType], serviceType)}>
+                                        <Message msgId={`catalog.additionalOGCServices.${serviceType}`}/>
+                                    </MenuItem>)
+                                )
+                        }
+                    </SplitButton>
+                )
+            }] : [{
                 tooltipId: 'catalog.addToMap',
                 className: 'square-button-md',
                 bsStyle: 'primary',
                 disabled: this.state.loading,
                 loading: this.state.loading,
                 glyph: 'plus',
-                onClick: () => {
-                    if (this.isSRSNotAllowed(record)) {
-                        return this.props.onError('catalog.srs_not_allowed');
-                    }
-                    this.setState({ loading: true });
-                    return API[record.serviceType].getLayerFromRecord(record, {
-                        service: {
-                            ...this.props.service,
-                            format: this.props?.service?.format ?? this.props.defaultFormat
-                        },
-                        layerBaseConfig: this.props.layerBaseConfig,
-                        removeParams: this.props.authkeyParamNames,
-                        catalogURL: this.props.catalogType === "csw" && this.props.catalogURL
-                            ? this.props.catalogURL +
-                            "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" +
-                            record.identifier
-                            : null,
-                        map: {
-                            projection: this.props.crs,
-                            resolutions: getResolutions()
-                        }
-                    }, true)
-                        .then((layer) => {
-                            if (layer) {
-                                this.addLayer(layer, record);
-                            }
-                            this.setState({ loading: false });
-                        });
-
-                }
-            },
+                onClick: () => this.onAddToMap(record)
+            }]),
             ...(links.length > 0
                 ? [{
                     Element: () => (

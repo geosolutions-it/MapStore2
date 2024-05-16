@@ -17,7 +17,7 @@ import {
     testService as commonTestService,
     preprocess as commonPreprocess
 } from './common';
-import { get, castArray } from 'lodash';
+import { get, castArray, isEmpty } from 'lodash';
 
 const capabilitiesCache = {};
 
@@ -142,7 +142,25 @@ export const getCatalogRecords = ({records} = {}) => {
     return null;
 };
 
+/**
+ * Formulate WFS layer data from record
+ * and fetch capabilities if needed to add capibilities specific data
+ * @param {Object} record data obtained from catalog service
+ * @param {Object} options props specific to wfs
+ * @returns {Promise} promise that resolves to formulated layer data
+ */
+const getLayerData = (record, options) => {
+    const layer = recordToLayer(record, options);
+    return getRecords(record.url, 1, 1, record.name).then((result)=> {
+        const [newRecord] = result?.records ?? [];
+        return isEmpty(newRecord) ? layer : recordToLayer(newRecord, options);
+    }).catch(() => layer);
+};
+
 export const getLayerFromRecord = (record, options, asPromise) => {
+    if (options.fetchCapabilities && asPromise) {
+        return getLayerData(record, options);
+    }
     const layer = recordToLayer(record, options);
     return asPromise ? Promise.resolve(layer) : layer;
 };
