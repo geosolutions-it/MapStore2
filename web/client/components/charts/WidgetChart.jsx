@@ -20,7 +20,7 @@ import {
     enableBarChartStack,
     FONT
 } from '../../utils/WidgetsUtils';
-
+import withLegendScrollHandler from './withLegendScrollHandler';
 const Plot = React.lazy(() => import('./PlotlyChart'));
 
 const processDataProperties = (formula, key, data) => {
@@ -698,4 +698,4 @@ function WidgetChart({
     );
 }
 
-export default withClassifyGeoJSONSync(WidgetChart);
+export default withLegendScrollHandler(withClassifyGeoJSONSync(WidgetChart));
