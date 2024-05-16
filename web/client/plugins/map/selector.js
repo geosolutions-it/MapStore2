@@ -24,8 +24,7 @@ export default createShallowSelectorCreator(isEqual)(
     isLocalizedLayerStylesEnabledSelector,
     localizedLayerStylesNameSelector,
     currentLocaleLanguageSelector,
-    state => state.mapInitialConfig,
-    (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage, mapInitialConfig) => ({
+    (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, isLocalizedLayerStylesEnabled, localizedLayerStylesName, currentLocaleLanguage) => ({
         projectionDefs,
         map,
         mapType,
@@ -36,7 +35,6 @@ export default createShallowSelectorCreator(isEqual)(
         elevationEnabled,
         isLocalizedLayerStylesEnabled,
         localizedLayerStylesName,
-        currentLocaleLanguage,
-        mapInitialConfig
+        currentLocaleLanguage
     })
 );

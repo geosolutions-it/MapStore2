@@ -160,15 +160,8 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  * @prop {boolean} mapOptions.cesium.showGroundAtmosphere enable ground atmosphere of the globe (default false)
  * @prop {boolean} mapOptions.cesium.enableFog enable fog in the view (default false)
  * @prop {boolean} mapOptions.cesium.depthTestAgainstTerrain if true all primitive 3d features will be tested against the terrain while if false they will be drawn on top of the terrain even if hidden by it (default true)
- * @prop {boolean} mapOptions.cesium.disableTilt disable tilt effect in the view (default false)
- * @prop {boolean} mapOptions.cesium.hideCompass hide compass from UI and disable its functionality on map which is disabling tilt/rotate effect (default false)
- * @prop {boolean} mapOptions.cesium.enableQuickResetTo3DView enable quick reset in 3d mode to the camera scene that stored in map state (default false)
- * @prop {boolean} mapOptions.cesium.disableTilt disable tilt effect  to prevent the user from going underground (default false)
- * @prop {boolean} mapOptions.cesium.hideCompass hide the compass UI widget from cesium map and its operations [rotate, reset to North, tilt] (default false)
- * @prop {boolean} mapOptions.cesium.enableFixedOrientation enable fix the orientation around the current map center making it the origin of the camera scene (default false)
- * @prop {object} mapOptions.cesium.zoomLimits zoom limits for the camera map scene
- * @prop {number} mapOptions.cesium.zoomLimits.max max zoom limit to restrict the zoom out operation based on it
- * @prop {number} mapOptions.cesium.zoomLimits.min min zoom limit to restrict the zoom in operation based on it
+ * @prop {number} mapOptions.cesium.maximumZoomDistance max zoom limit (in meter unit) to restrict the zoom out operation based on it
+ * @prop {number} mapOptions.cesium.minimumZoomDistance  min zoom limit (in meter unit) to restrict the zoom in operation based on it
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
@@ -218,8 +211,7 @@ class MapPlugin extends React.Component {
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
         onMapTypeLoaded: PropTypes.func,
-        pluginsCreator: PropTypes.func,
-        mapInitialConfig: PropTypes.object
+        pluginsCreator: PropTypes.func
     };
 
     static defaultProps = {
@@ -257,8 +249,7 @@ class MapPlugin extends React.Component {
         items: [],
         onLoadingMapPlugins: () => {},
         onMapTypeLoaded: () => {},
-        pluginsCreator,
-        mapInitialConfig: {}
+        pluginsCreator
     };
     state = {
         canRender: true
@@ -399,7 +390,6 @@ class MapPlugin extends React.Component {
                     zoomControl={this.props.zoomControl}
                     onResolutionsChange={this.props.onResolutionsChange}
                     errorPanel={ErrorPanel}
-                    mapInitialConfig={this.props.mapInitialConfig}
                 >
                     {this.renderLayers()}
                     {this.renderSupportTools()}
