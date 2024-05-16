@@ -8,7 +8,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {FormGroup, Glyphicon, MenuItem} from 'react-bootstrap';
-import { isEmpty, isEqual, isUndefined, get } from 'lodash';
+import { isEmpty, isEqual, isUndefined, get, isNumber } from 'lodash';
 
 import Message from '../../I18N/Message';
 import SearchBarMenu from './SearchBarMenu';
@@ -113,7 +113,17 @@ export default ({
             setSearchServiceSelected(-1);
         }
     }, [searchOptions?.services]);
-
+    useEffect(()=>{
+        // clear coord search/ crs search marker
+        if (!['mapCRSCoordinatesSearch', 'coordinatesSearch'].includes(activeTool)) {
+            onClearCoordinatesSearch({owner: "search"});
+            if (isNumber(coordinate?.lon) && isNumber(coordinate?.lat)) {
+                const clearedFields = ["lat", "lon", "xCoord", "yCoord", "currentMapXYCRS"];
+                const resetVal = '';
+                clearedFields.forEach(field => onChangeCoord(field, resetVal));
+            }
+        }
+    }, [activeTool]);
     useEffect(() => {
         // Switch back to coordinate search when map CRS is EPSG:4326 and active tool is Map CRS coordinate search
         if (currentMapCRS === 'EPSG:4326' && activeTool === 'mapCRSCoordinatesSearch') {
