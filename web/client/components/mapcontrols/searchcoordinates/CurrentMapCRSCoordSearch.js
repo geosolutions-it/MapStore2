@@ -131,6 +131,8 @@ const CurrentMapCRSCoordinatesSearch = ({
                     <InputGroup >
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.xCoord"/></InputGroup.Addon>
                         <CoordinateEntry
+                            max={getConstraintsCoordEditor(currentMapCRS).decimal.xCoord.max}
+                            min={getConstraintsCoordEditor(currentMapCRS).decimal.xCoord.min}
                             owner="search"
                             format={format}
                             coordinate="X"
@@ -154,6 +156,8 @@ const CurrentMapCRSCoordinatesSearch = ({
                         <InputGroup.Addon style={{minWidth: 45}}><Message msgId="search.yCoord"/></InputGroup.Addon>
                         <CoordinateEntry
                             owner="search"
+                            max={getConstraintsCoordEditor(currentMapCRS).decimal.yCoord.max}
+                            min={getConstraintsCoordEditor(currentMapCRS).decimal.yCoord.min}
                             format={format}
                             coordinate="Y"
                             idx={1}
