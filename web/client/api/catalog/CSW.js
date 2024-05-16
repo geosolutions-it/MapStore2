@@ -104,6 +104,11 @@ function getThumbnailFromDc(dc, options) {
     }
     return thumbURL;
 }
+
+/**
+ * Extract bounding box object from the record
+ * @param {Object} record from OGC service
+ */
 function getBoundingBox(record) {
     if (isEmpty(record.boundingBox?.crs) || isEmpty(record.boundingBox?.extent)) {
         return null;

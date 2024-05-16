@@ -110,6 +110,7 @@ const extractWMSParamsFromURL = wms => {
     return false;
 };
 
+// Extract the relevant information from the wfs URL for (RNDT / INSPIRE)
 const extractWFSParamsFromURL = wfs => {
     const lowerCaseParams = new Map(Array.from(new URLSearchParams(wfs.value)).map(([key, value]) => [key.toLowerCase(), value]));
     const layerName = lowerCaseParams.get('typename');

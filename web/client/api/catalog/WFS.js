@@ -123,6 +123,13 @@ export const getCatalogRecords = ({records} = {}) => {
     return null;
 };
 
+/**
+ * Formulate WFS layer data from record
+ * and fetch capabilities if needed to add capibilities specific data
+ * @param {Object} record data obtained from catalog service
+ * @param {Object} options props specific to wfs
+ * @returns {Promise} promise that resolves to formulated layer data
+ */
 const getLayerData = (record, options) => {
     const layer = recordToLayer(record, options);
     return getRecords(record.url, 1, 1, record.name).then((result)=> {
