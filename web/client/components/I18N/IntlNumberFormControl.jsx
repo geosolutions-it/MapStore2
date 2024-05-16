@@ -47,9 +47,9 @@ class IntlNumberFormControl extends React.Component {
         this.currentInputCursor = null;
     }
 
-    onKeyUp = (ev) =>{
-        const currentValue = ev.target.value || "";
-        const prevValue = this.value || "";
+    componentDidUpdate(prevProps) {
+        const currentValue = this.format(this.props.value || "");
+        const prevValue = this.format(prevProps.value || "");
         const currentCursorPos = this.currentInputCursor;
         // update cursor position in case adding/deleting numbers at the middle of the current input value
         if (prevValue !== currentValue) {
@@ -66,16 +66,19 @@ class IntlNumberFormControl extends React.Component {
                 let groupSeparatorCurrentValue  = currentValueLength - currentValue.replaceAll(groupSeparator, "").length;
 
                 if (currentValueLength - prevValueLength === 2 && groupSeparatorPrevValue < groupSeparatorCurrentValue) {           // in adding numbers and a group separator will be appeared due to insertion
-                    return ev.target.setSelectionRange(currentCursorPos + 2, currentCursorPos + 2 );
+                    this.state.inputRef.setSelectionRange(currentCursorPos + 2, currentCursorPos + 2 );
                 } else if (currentValueLength - prevValueLength === 1 && groupSeparatorPrevValue === groupSeparatorCurrentValue) {  // in adding numbers and the group separators is the same after insertion
-                    return ev.target.setSelectionRange(currentCursorPos + 1, currentCursorPos + 1);
+                    this.state.inputRef.setSelectionRange(currentCursorPos + 1, currentCursorPos + 1);
                 } else if (prevValueLength - currentValueLength === 2 && groupSeparatorPrevValue > groupSeparatorCurrentValue) {    // in deleting numbers and a group separator will be reduced due to deletion
-                    return ev.target.setSelectionRange(currentCursorPos - 2 || 0, currentCursorPos - 2 || 0);
+                    this.state.inputRef.setSelectionRange(currentCursorPos - 2 || 0, currentCursorPos - 2 || 0);
                 } else if (prevValueLength - currentValueLength === 1 && groupSeparatorPrevValue === groupSeparatorCurrentValue) {  // in deleting numbers and the group separators is the same after deletion
-                    return ev.target.setSelectionRange(currentCursorPos - 1 || 0, currentCursorPos - 1 || 0);
+                    this.state.inputRef.setSelectionRange(currentCursorPos - 1 || 0, currentCursorPos - 1 || 0);
                 }
             }
         }
+    }
+    onKeyUp = (ev) =>{
+        const currentCursorPos = this.currentInputCursor;
         let isDelete = ev.keyCode === 8 || ev.keyCode === 46;       // delete by delete key or backspace key
         // move the cursor of adding number at the end of input
         if (![37, 39, 17].includes(ev.keyCode) && !isDelete && currentCursorPos === ev.target.value.length - 1) {
@@ -117,7 +120,7 @@ class IntlNumberFormControl extends React.Component {
                 onKeyDown={(e) => {
                     // store the current cursor before any update
                     this.currentInputCursor =  e.target.selectionStart;
-                    onKeyDown(e);
+                    onKeyDown && onKeyDown(e);
                 }
                 }
                 parse={this.parse}
