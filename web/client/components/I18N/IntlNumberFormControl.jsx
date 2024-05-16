@@ -29,12 +29,15 @@ class IntlNumberFormControl extends React.Component {
         step: PropTypes.number,
         locale: PropTypes.string,
         disabled: PropTypes.bool,
-        onBlur: PropTypes.func
+        onBlur: PropTypes.func,
+        onKeyDown: PropTypes.func
     }
-
     static contextTypes = {
         intl: PropTypes.object
     };
+    static defaultProps = {
+        onKeyDown: () => {}
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -82,7 +85,7 @@ class IntlNumberFormControl extends React.Component {
     }
 
     render() {
-        const {onChange, onBlur, disabled, type, step, value, defaultValue,
+        const {onChange, onBlur, disabled, type, step, value, defaultValue, onKeyDown,
             ...formProps} = this.props;
         return (
             <NumericInput
@@ -114,6 +117,7 @@ class IntlNumberFormControl extends React.Component {
                 onKeyDown={(e) => {
                     // store the current cursor before any update
                     this.currentInputCursor =  e.target.selectionStart;
+                    onKeyDown(e);
                 }
                 }
                 parse={this.parse}
