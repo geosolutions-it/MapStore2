@@ -720,7 +720,7 @@ describe('identify Epics', () => {
                 expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a1.reqId).toExist();
                 expect(a1.request).toExist();
-                expect(a1.request.id).toEqual(state.layers.flat[0].id);
+                expect(a1.request.id).toEqual(state.layers.flat[2].id);
                 expect(a1.request.cql_filter).toExist();
                 expect(a1.request.cql_filter).toBe("id>1");
                 expect(a2).toExist();
@@ -734,7 +734,7 @@ describe('identify Epics', () => {
                 expect(a3.type).toBe(NEW_MAPINFO_REQUEST);
                 expect(a3.reqId).toExist();
                 expect(a3.request).toExist();
-                expect(a3.request.id).toEqual(state.layers.flat[2].id);
+                expect(a3.request.id).toEqual(state.layers.flat[0].id);
                 expect(a3.request.cql_filter).toExist();
                 expect(a3.request.cql_filter).toBe("id>1");
                 done();

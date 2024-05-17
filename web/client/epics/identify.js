@@ -77,7 +77,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
         .switchMap(({ point, filterNameList = [], overrideParams = {}, ignoreVisibilityLimits }) => {
             // ignoreVisibilityLimits is for ignore limits of layers visibility
             // Reverse - To query layer in same order as in TOC
-            let queryableLayers = ignoreVisibilityLimits ? ([...layersSelector(getState())].filter(l=>defaultQueryableFilter(l))) :  reverse(queryableLayersSelector(getState()));
+            let queryableLayers = ignoreVisibilityLimits ? reverse([...layersSelector(getState())].filter(l=>defaultQueryableFilter(l))) :  reverse(queryableLayersSelector(getState()));
             const queryableSelectedLayers = ignoreVisibilityLimits ? [...getSelectedLayers(getState())].filter(l => defaultQueryableFilter(l)) : queryableSelectedLayersSelector(getState());
             const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(getState());
             if (enableInfoForSelectedLayers && queryableSelectedLayers.length) {
