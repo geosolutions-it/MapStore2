@@ -13,7 +13,7 @@ import assign from 'object-assign';
 import {isNil, sortBy} from 'lodash';
 import uuid from 'uuid';
 
-import {centerToMarkerSelector, getLayerFromName, queryableLayersSelector} from '../selectors/layers';
+import {centerToMarkerSelector, getLayerFromName, layersSelector} from '../selectors/layers';
 
 import {updateAdditionalLayer} from '../actions/additionallayers';
 import {
@@ -215,9 +215,10 @@ export const getFeatureInfoOfSelectedItem = (action$, store) =>
                         }
                     };
                 }
+                const ignoreVisibilityLimits = true;
                 return [
                     ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
-                    ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId, layerObj)] : []),
+                    ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId, ignoreVisibilityLimits)] : []),
 
                     showMapinfoMarker()
                 ];
@@ -239,6 +240,7 @@ export const textSearchShowGFIEpic = (action$, store) =>
             const coord = pointOnSurface(item).geometry.coordinates;
             const latlng = { lng: coord[0], lat: coord[1] };
             const itemId = item.id;
+            const ignoreVisibilityLimits = true;
             return !!coord &&
                 showGFIForService(item?.__SERVICE__) && layerIsVisibleForGFI(layerObj, item?.__SERVICE__) ?
                 Rx.Observable.of(
@@ -255,7 +257,7 @@ export const textSearchShowGFIEpic = (action$, store) =>
                                 }
                                 : {}
                             )
-                        } }, itemId, layerObj),
+                        } }, itemId, ignoreVisibilityLimits),
                     showMapinfoMarker(),
                     addMarker(item)
                 ).merge(
@@ -316,17 +318,13 @@ export const searchOnStartEpic = (action$, store) =>
     action$.ofType(SEARCH_LAYER_WITH_FILTER)
         .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
             const state = store.getState();
-            const layer = getLayerFromName(state, name);
-            let queryableLayers = queryableLayersSelector(state);
-            const queryableLayersIgnoreingVisiblimits = layer && queryableLayers.find(i => i.id === layer.id);
-            if (!queryableLayersIgnoreingVisiblimits && layer && defaultQueryableFilter(layer)) {
-                queryableLayers = [...queryableLayers, layer];
-            }
-            const isLayerNotQueryableSelected = queryableLayers.filter(l => l.name === name ).length === 0;
+            let queryableLayers = [...layersSelector(state)].filter(l=>defaultQueryableFilter(l));          // ignore visibility limits
+            const isLayerNotQueryableSelected = queryableLayers.filter(l => l.name === name).length === 0;
             // if layer is NOT queriable and visible then show error notification
             if (isLayerNotQueryableSelected) {
                 return Rx.Observable.of(nonQueriableLayerError());
             }
+            const layer = getLayerFromName(state, name);
             if (layer && cqlFilter) {
                 return Rx.Observable.defer(() =>
                 // take geoserver url from layer
@@ -365,14 +363,14 @@ export const searchOnStartEpic = (action$, store) =>
                                     showMapinfoMarker()
                                 );
                             }
-
+                            const ignoreVisibilityLimits = true;
                             // trigger get feature info
                             return Rx.Observable.of(
                                 featureInfoClick(
                                     { latlng },
                                     typeName,
                                     [typeName],
-                                    { [typeName]: { cql_filter: cqlFilter } }, null, layer
+                                    { [typeName]: { cql_filter: cqlFilter } }, null, ignoreVisibilityLimits
                                 )
                             )
                                 .merge(mapActionObservable);

@@ -41,7 +41,7 @@ import {
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
     currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector
 } from '../selectors/mapInfo';
-import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector, selectedNodesSelector } from '../selectors/layers';
+import { centerToMarkerSelector, getSelectedLayers, layersSelector, queryableLayersSelector, queryableSelectedLayersSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
@@ -74,24 +74,19 @@ import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
  */
 export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { } }) =>
     action$.ofType(FEATURE_INFO_CLICK)
-        .switchMap(({ point, filterNameList = [], overrideParams = {}, layerWithIgnoreVisibilityLimits }) => {
+        .switchMap(({ point, filterNameList = [], overrideParams = {}, ignoreVisibilityLimits }) => {
+            // ignoreVisibilityLimits is for ignore limits of layers visibility
             // Reverse - To query layer in same order as in TOC
-            let queryableLayers = reverse(queryableLayersSelector(getState()));
-            const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
+            let queryableLayers = ignoreVisibilityLimits ? ([...layersSelector(getState())].filter(l=>defaultQueryableFilter(l))) :  reverse(queryableLayersSelector(getState()));
+            const queryableSelectedLayers = ignoreVisibilityLimits ? [...getSelectedLayers(getState())].filter(l => defaultQueryableFilter(l)) : queryableSelectedLayersSelector(getState());
             const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(getState());
             if (enableInfoForSelectedLayers && queryableSelectedLayers.length) {
                 queryableLayers = queryableSelectedLayers;
             }
 
             const selectedLayers = selectedNodesSelector(getState());
-            const queryableSelectedLayerNotExist = queryableSelectedLayers.length === 0;        // no queryable selected layer
-            const queryableLayersHasIgnoreVisiblimitsLayer = layerWithIgnoreVisibilityLimits && (queryableLayers.find(i => i.id === layerWithIgnoreVisibilityLimits.id));       // is queryable layers includes the layer with ignore visiblity limits
-            const isLayerWithIgnoreVisibilityLimitsQueryable = layerWithIgnoreVisibilityLimits && defaultQueryableFilter(layerWithIgnoreVisibilityLimits);      // make sure the layer with ignore visiblity limits queryable
-            // just add thee layer with ignoring visibility limits in this condition
-            if (!queryableLayersHasIgnoreVisiblimitsLayer && queryableSelectedLayerNotExist && isLayerWithIgnoreVisibilityLimitsQueryable) {
-                queryableLayers = [...queryableLayers, layerWithIgnoreVisibilityLimits];
-            }
-            if (!layerWithIgnoreVisibilityLimits && (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0)) {
+
+            if (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
             }
 
