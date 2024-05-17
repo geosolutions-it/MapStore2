@@ -1070,7 +1070,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Increase zoom",
             "zoomOutTooltip": "Decrease zoom",
-            "zoomAllTooltip": "Zoom to intial ciew"
+            "zoomAllTooltip": "Zoom to initial view"
         },
         "fullscreen": {
             "tooltipActivate": "Switch to full screen",
