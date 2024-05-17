@@ -12,7 +12,7 @@ import { getCapabilities } from '../ArcGIS';
 
 function validateUrl(serviceUrl) {
     if (isValidURL(serviceUrl)) {
-        return String(serviceUrl).includes('MapServer');
+        return serviceUrl.includes('MapServer');
     }
     return false;
 }

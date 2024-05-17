@@ -76,7 +76,7 @@ const getData = (url, params = {}) => {
     return request()
         .then((data) => {
             const { layers } = data || {};
-            // Map is similar to WMS GetMap capability
+            // Map is similar to WMS GetMap capability for MapServer
             const mapExportSupported = (data?.capabilities || '').includes('Map');
             const commonProperties = {
                 url,

@@ -895,7 +895,7 @@ export const specCreators = {
                 opacity: layer.opacity ?? 1.0,
                 name: layer.name ?? -1,
                 baseURL: url.format({
-                    ...url.parse(`${trimEnd(layer.url, '/')}/export`),
+                    ...url.parse(`${trimEnd(layer.url, '/')}/${layer.url.includes('ImageServer') ? 'exportImage' : 'export'}`),
                     query: {
                         F: 'image',
                         ...(layer.name !== undefined  && { LAYERS: `show:${layer.name}` }),
