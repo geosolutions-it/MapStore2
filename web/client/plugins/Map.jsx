@@ -160,6 +160,8 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  * @prop {boolean} mapOptions.cesium.showGroundAtmosphere enable ground atmosphere of the globe (default false)
  * @prop {boolean} mapOptions.cesium.enableFog enable fog in the view (default false)
  * @prop {boolean} mapOptions.cesium.depthTestAgainstTerrain if true all primitive 3d features will be tested against the terrain while if false they will be drawn on top of the terrain even if hidden by it (default true)
+ * @prop {number} mapOptions.cesium.maximumZoomDistance max zoom limit (in meter unit) to restrict the zoom out operation based on it
+ * @prop {number} mapOptions.cesium.minimumZoomDistance  min zoom limit (in meter unit) to restrict the zoom in operation based on it
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)

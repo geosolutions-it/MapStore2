@@ -1078,7 +1078,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Zoomer vers l'avant",
             "zoomOutTooltip": "Zoomer vers l'arrière",
-            "zoomAllTooltip": "Agrandir à l'extension maximale"
+            "zoomAllTooltip": "Agrandir à la vue initiale"
         },
         "fullscreen": {
             "tooltipActivate": "Passer en plein écran",

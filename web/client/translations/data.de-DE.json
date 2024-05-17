@@ -1117,7 +1117,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Zoom vergrößern",
             "zoomOutTooltip": "Zoom verringern",
-            "zoomAllTooltip": "Zoom auf maximale Ausdehnung"
+            "zoomAllTooltip": "Zoom auf zur Anfangsansicht"
         },
         "fullscreen": {
             "tooltipActivate": "Umschalten auf Vollbild",
