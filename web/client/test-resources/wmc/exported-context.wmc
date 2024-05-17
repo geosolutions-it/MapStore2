@@ -67,7 +67,7 @@
         </Style>
       </StyleList>
       <Extension>
-        <ol:maxExtent minx="20036580.680365965" miny="0" maxx="-20036580.68036596" maxy="0"/>
+        <ol:maxExtent minx="20036580.680365965" miny="-20037508.34" maxx="-20036580.68036596" maxy="20037508.34"/>
         <ol:singleTile>false</ol:singleTile>
         <ol:transparent>true</ol:transparent>
         <ol:isBaseLayer>false</ol:isBaseLayer>
@@ -91,7 +91,7 @@
         </Style>
       </StyleList>
       <Extension>
-        <ol:maxExtent minx="0" miny="0" maxx="0" maxy="0"/>
+        <ol:maxExtent minx="-20037508.34" miny="-20037508.34" maxx="20037508.34" maxy="20037508.34"/>
         <ol:singleTile>true</ol:singleTile>
         <ol:transparent>true</ol:transparent>
         <ol:isBaseLayer>false</ol:isBaseLayer>
@@ -130,7 +130,7 @@
         <OnlineResource xlink:type="simple" xlink:href="https://gs-stable.geo-solutions.it/geoserver/wms"/>
       </Server>
       <Extension>
-        <ol:maxExtent minx="-20037508.342789244" miny="-20801248.80884599" maxx="0" maxy="0"/>
+        <ol:maxExtent minx="-20037508.342789244" miny="-20801248.80884599" maxx="20037508.34" maxy="20037508.34"/>
         <ol:singleTile>false</ol:singleTile>
         <ol:transparent>true</ol:transparent>
         <ol:isBaseLayer>false</ol:isBaseLayer>
@@ -149,7 +149,7 @@
         <Format current="1">image/png</Format>
       </FormatList>
       <Extension>
-        <ol:maxExtent minx="0" miny="0" maxx="0" maxy="0"/>
+        <ol:maxExtent minx="-20037508.34" miny="-20037508.34" maxx="20037508.34" maxy="20037508.34"/>
         <ol:singleTile>false</ol:singleTile>
         <ol:transparent>true</ol:transparent>
         <ol:isBaseLayer>false</ol:isBaseLayer>

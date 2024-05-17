@@ -8,7 +8,7 @@
 
 import { Observable } from 'rxjs';
 import { getCurrentResolution } from '../MapUtils';
-import { reproject, getProjectedBBox, reprojectBbox } from '../CoordinatesUtils';
+import { reproject, getProjectedBBox, reprojectBbox, fitBoundsToProjectionExtent } from '../CoordinatesUtils';
 import { isObject, isNil, trimEnd } from 'lodash';
 import axios from '../../libs/ajax';
 
@@ -65,7 +65,10 @@ export default {
         const lngCorrected = wrongLng - 360 * Math.floor(wrongLng / 360 + 0.5);
         const center = { x: lngCorrected, y: point.latlng.lat };
         const centerProjected = reproject(center, 'EPSG:4326', map.projection);
-        const bounds = getProjectedBBox(centerProjected, resolution, rotation, size, null);
+        const bounds = fitBoundsToProjectionExtent(
+            getProjectedBBox(centerProjected, resolution, rotation, size, null),
+            map.projection
+        );
         const bounds4326 = reprojectBbox(bounds, map.projection, 'EPSG:4326');
         return {
             request: {
