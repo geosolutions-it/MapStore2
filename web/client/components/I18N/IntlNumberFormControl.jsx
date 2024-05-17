@@ -30,13 +30,15 @@ class IntlNumberFormControl extends React.Component {
         locale: PropTypes.string,
         disabled: PropTypes.bool,
         onBlur: PropTypes.func,
-        onKeyDown: PropTypes.func
+        onKeyDown: PropTypes.func,
+        onKeyUp: PropTypes.func
     }
     static contextTypes = {
         intl: PropTypes.object
     };
     static defaultProps = {
-        onKeyDown: () => {}
+        onKeyDown: () => {},
+        onKeyUp: () => {}
     }
     constructor(props) {
         super(props);
@@ -78,6 +80,7 @@ class IntlNumberFormControl extends React.Component {
         }
     }
     onKeyUp = (ev) =>{
+        this.props.onKeyUp && this.props.onKeyUp();
         const currentCursorPos = this.currentInputCursor;
         let isDelete = ev.keyCode === 8 || ev.keyCode === 46;       // delete by delete key or backspace key
         // move the cursor of adding number at the end of input
