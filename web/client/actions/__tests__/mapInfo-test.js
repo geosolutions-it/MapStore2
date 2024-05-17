@@ -108,6 +108,24 @@ describe('Test correctness of the map actions', () => {
         expect(action.overrideParams).toBe(overrideParams);
         expect(action.itemId).toBe(itemId);
     });
+    it('test featureInfoClick with filterNameList, overrideParams and ignoreVisibilityLimits flag [search service case]', () => {
+        const point = {latlng: {lat: 1, lng: 3}};
+        const layer = {id: "layer.1"};
+        const filterNameList = [];
+        const itemId = "itemId";
+        const overrideParams = {cql_filter: "ID_ORIG=1234"};
+        const ignoreVisibilityLimits = true;
+
+        const action = featureInfoClick(point, layer, filterNameList, overrideParams, itemId, ignoreVisibilityLimits);
+        expect(action).toExist();
+        expect(action.type).toBe(FEATURE_INFO_CLICK);
+        expect(action.point).toBe(point);
+        expect(action.layer).toBe(layer);
+        expect(action.filterNameList).toBe(filterNameList);
+        expect(action.overrideParams).toBe(overrideParams);
+        expect(action.itemId).toBe(itemId);
+        expect(action.ignoreVisibilityLimits).toBe(ignoreVisibilityLimits);
+    });
     it('reset reverse geocode data', () => {
         const e = hideMapinfoRevGeocode();
         expect(e).toExist();

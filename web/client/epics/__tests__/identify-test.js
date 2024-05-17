@@ -600,6 +600,227 @@ describe('identify Epics', () => {
             }
         }, state);
     });
+    it('getFeatureInfoOnFeatureInfoClick WMS ignoring the layer that has visibility limits', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: {present: {...TEST_MAP_STATE.present, resolution: 100000}},
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST1",
+                    name: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    minResolution: 500,
+                    maxResolution: 50000
+                },
+                {
+                    id: "TEST_NEW",
+                    name: "TEST",
+                    "title": "TITLE New",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5")];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+            try {
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a1.request.cql_filter).toExist();
+                expect(a1.request.cql_filter).toBe("id>1");
+                expect(a2).toExist();
+                expect(a2.type).toBe(LOAD_FEATURE_INFO);
+                expect(a2.data).toExist();
+                expect(a2.requestParams).toExist();
+                expect(a2.reqId).toExist();
+                expect(a2.layerMetadata.title).toBe(state.layers.flat[1].title);        // layer that has no visibility limits
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, {...state, mapInfo: {
+            ...state.mapInfo,
+            itemId: "province_view.5"
+        }});
+    });
+    it('getFeatureInfoOnFeatureInfoClick WMS with ignoreVisibilityLimits flag with true and layers includes visibility limits [search service case]', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: {present: {...TEST_MAP_STATE.present, resolution: 100000}},
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST1",
+                    name: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    minResolution: 500,
+                    maxResolution: 50000
+                },
+                {
+                    id: "TEST NEW 2",
+                    name: "TEST",
+                    "title": "TITLE NEW 2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    minResolution: 500,
+                    maxResolution: 50000
+                },
+                {
+                    id: "TEST_NEW",
+                    name: "TEST",
+                    "title": "TITLE New",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }]
+            }
+        };
+        const ignoreVisibilityLimits = true;
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5", ignoreVisibilityLimits)];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 5, sentActions, ([a0, a1, a2, a3]) => {
+            try {
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a1.request.id).toEqual(state.layers.flat[2].id);
+                expect(a1.request.cql_filter).toExist();
+                expect(a1.request.cql_filter).toBe("id>1");
+                expect(a2).toExist();
+                expect(a2.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a2.reqId).toExist();
+                expect(a2.request).toExist();
+                expect(a2.request.id).toEqual(state.layers.flat[1].id);
+                expect(a2.request.cql_filter).toExist();
+                expect(a2.request.cql_filter).toBe("id>1");
+                expect(a3).toExist();
+                expect(a3.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a3.reqId).toExist();
+                expect(a3.request).toExist();
+                expect(a3.request.id).toEqual(state.layers.flat[0].id);
+                expect(a3.request.cql_filter).toExist();
+                expect(a3.request.cql_filter).toBe("id>1");
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, {...state, mapInfo: {
+            ...state.mapInfo,
+            itemId: "province_view.5"
+        }});
+    });
+    it('getFeatureInfoOnFeatureInfoClick WMS with ignoreVisibilityLimits flag with true and selected layers [search service case]', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: {present: {...TEST_MAP_STATE.present, resolution: 100000}},
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST1",
+                    name: "TEST",
+                    "title": "TITLE",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    minResolution: 500,
+                    maxResolution: 50000
+                },
+                {
+                    id: "TEST NEW 2",
+                    name: "TEST",
+                    "title": "TITLE NEW 2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    minResolution: 500,
+                    maxResolution: 50000
+                },
+                {
+                    id: "TEST_NEW",
+                    name: "TEST",
+                    "title": "TITLE New",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                },
+                {
+                    id: "TEST2",
+                    name: "TEST2",
+                    "title": "TITLE2",
+                    type: "wms",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json'
+                }],
+                selected: ['TEST1']
+            }
+        };
+        const ignoreVisibilityLimits = true;
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }, "TEST", ["TEST"], {"TEST": {cql_filter: "id>1"}}, "province_view.5", ignoreVisibilityLimits)];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 3, sentActions, ([a0, a1, a2]) => {
+            try {
+                expect(a0).toExist();
+                expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+                expect(a1).toExist();
+                expect(a1.type).toBe(NEW_MAPINFO_REQUEST);
+                expect(a1.reqId).toExist();
+                expect(a1.request).toExist();
+                expect(a1.request.id).toEqual(state.layers.flat[0].id);
+                expect(a1.request.cql_filter).toExist();
+                expect(a1.request.cql_filter).toBe("id>1");
+                expect(a2.type).toBe(LOAD_FEATURE_INFO);
+                expect(a2.data).toExist();
+                expect(a2.requestParams).toExist();
+                expect(a2.reqId).toExist();
+                expect(a2.layerMetadata.title).toBe(state.layers.flat[0].title);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        }, {...state, mapInfo: {
+            ...state.mapInfo,
+            itemId: "province_view.5"
+        }});
+    });
     it('handleMapInfoMarker show', done => {
         testEpic(handleMapInfoMarker, 1, featureInfoClick({}), ([ a ]) => {
             expect(a.type).toBe(SHOW_MAPINFO_MARKER);
