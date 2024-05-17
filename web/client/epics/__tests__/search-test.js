@@ -222,6 +222,7 @@ describe('search Epics', () => {
             expect(getInfoActions[1].type).toBe(FEATURE_INFO_CLICK);
             expect(getInfoActions[1].filterNameList).toEqual([]);
             expect(getInfoActions[1].layer).toEqual("gs:layername");
+            expect(getInfoActions[1].ignoreVisibilityLimits).toEqual(true);
         });
 
     });
@@ -271,6 +272,7 @@ describe('search Epics', () => {
             expect(getInfoActions[1].filterNameList).toEqual(["gs:layername"]);
             expect(getInfoActions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1", CQL_FILTER: undefined}}); // forces CQL FILTER to undefined (server do not support featureid + CQL_FILTER)
             expect(getInfoActions[1].layer).toEqual("gs:layername");
+            expect(getInfoActions[1].ignoreVisibilityLimits).toEqual(true);
             done();
         }, {layers: {flat: [{name: "gs:layername", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
     });
@@ -383,6 +385,7 @@ describe('search Epics', () => {
             expect(getInfoActions[1].filterNameList).toEqual(["gs:layername"]);
             expect(getInfoActions[1].overrideParams).toEqual({"gs:layername": {info_format: "text/html", featureid: "Feature_1", CQL_FILTER: undefined}}); // forces CQL FILTER to undefined (server do not support featureid + CQL_FILTER)
             expect(getInfoActions[1].layer).toEqual("gs:layername");
+            expect(getInfoActions[1].ignoreVisibilityLimits).toEqual(true);
             done();
         }, {layers: {flat: [{name: "gs:layername", url: "base/web/client/test-resources/wms/GetFeature.json", visibility: true, featureInfo: {format: "HTML"}, queryable: true, type: "wms"}]}});
     });
@@ -722,6 +725,7 @@ describe('search Epics', () => {
             expect(actions[0].type).toBe(FEATURE_INFO_CLICK);
             expect(actions[0].overrideParams.layerName.info_format).toBe("text/html");
             expect(actions[0].overrideParams.layerName.featureid).toBe("layer_01");
+            expect(actions[0].ignoreVisibilityLimits).toEqual(true);
             expect(actions[1].type).toBe(SHOW_MAPINFO_MARKER);
             expect(actions[2].type).toBe(TEXT_SEARCH_ADD_MARKER);
             expect(actions[3].type).toBe(ZOOM_TO_EXTENT);
@@ -757,6 +761,7 @@ describe('search Epics', () => {
             expect(actions[1].type).toBe(FEATURE_INFO_CLICK);
             expect(actions[1].overrideParams.layerName.info_format).toBe("text/html");
             expect(actions[1].overrideParams.layerName.featureid).toBe("layer_01");
+            expect(actions[1].ignoreVisibilityLimits).toEqual(true);
             expect(actions[2].type).toBe(SHOW_MAPINFO_MARKER);
             expect(actions[3].type).toBe(TEXT_SEARCH_ADD_MARKER);
             expect(actions[4].type).toBe(ZOOM_TO_EXTENT);
