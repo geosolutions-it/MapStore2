@@ -83,6 +83,9 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 <img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
+!!! note
+    If the *CSW service*, responds with records that can hold more than just one type of OGC service, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to choose from which service the layer should be added to the [TOC](toc.md#table-of-contents). An example can be the following: <video class="ms-docimage"  style="max-width:500px;" controls><source src="../img/catalog/csw_with_more_ogc_service.mp4"></video>
+
 #### Advanced Settings
 
 <img src="../img/catalog/advanced_settings_csw.jpg" class="ms-docimage"  style="max-width:600px;"/>
