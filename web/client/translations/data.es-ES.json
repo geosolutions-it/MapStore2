@@ -1073,7 +1073,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Acercar",
             "zoomOutTooltip": "Alejar",
-            "zoomAllTooltip": "Ajustar a la máxima extensión"
+            "zoomAllTooltip": "Ajustar a la vista inicial"
         },
         "fullscreen": {
             "tooltipActivate": "Cambiar a pantalla completa",

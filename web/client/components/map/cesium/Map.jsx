@@ -180,6 +180,17 @@ class CesiumMap extends React.Component {
 
         // this is needed to display correctly intersection between terrain and primitives
         scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? false;
+        // set zoom limits if found
+        if (this.props.mapOptions?.minimumZoomDistance || this.props.mapOptions?.maximumZoomDistance) {
+            const minZoomLevel = this.props.mapOptions?.minimumZoomDistance;
+            const maxZoomLevel = this.props.mapOptions?.maximumZoomDistance;
+            if (minZoomLevel) {
+                map.scene.screenSpaceCameraController.minimumZoomDistance = minZoomLevel;
+            }
+            if (maxZoomLevel) {
+                map.scene.screenSpaceCameraController.maximumZoomDistance = maxZoomLevel;
+            }
+        }
 
         this.forceUpdate();
         map.scene.requestRender();
