@@ -25,7 +25,7 @@ function mapTransformer(state, map) {
         return {
             ...map,
             zoom: zoom,
-            scaleZoom: zoom,
+            scaleZoom: map.scaleZoom,
             scale: scales[zoom],
             projection: srs
         };
