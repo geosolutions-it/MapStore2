@@ -57,6 +57,7 @@ describe('Cesium MeasurementSupport', () => {
                 >
                     <MeasurementSupport
                         active
+                        targetId="container"
                         unitsOfMeasure={defaultUnitOfMeasure}
                         defaultMeasureType={MeasureTypes.POLYLINE_DISTANCE_3D}
                         onChangeMeasureType={(measureType) => {

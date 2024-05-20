@@ -14,7 +14,8 @@ import {
     showAddAsAnnotationSelector,
     measurementSelector,
     getValidFeatureSelector,
-    isActiveSelector
+    isActiveSelector,
+    coordsAeronauticalEnabledSelector
 } from '../measurement';
 
 import {
@@ -90,5 +91,28 @@ describe('Test maptype', () => {
             }
         });
         expect(toolState).toBe(true);
+    });
+    it('test coordsAeronauticalEnabledSelector ', () => {
+        let flag = coordsAeronauticalEnabledSelector({
+            search: {
+                format: "aeronautical",
+                activeSearchTool: "coordinatesSearch"
+            }
+        });
+        expect(flag).toBe(true);
+        flag = coordsAeronauticalEnabledSelector({
+            search: {
+                format: "decimal",
+                activeSearchTool: "coordinatesSearch"
+            }
+        });
+        expect(flag).toBe(false);
+        flag = coordsAeronauticalEnabledSelector({
+            search: {
+                format: "aeronautical",
+                activeSearchTool: "address"
+            }
+        });
+        expect(flag).toBe(false);
     });
 });
