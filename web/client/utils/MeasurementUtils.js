@@ -27,6 +27,7 @@ import {
 } from './CoordinatesUtils';
 
 export const MEASURE_TYPE = 'Measure';
+export const MEASURE_CESIUM_TARGET_ID = 'measure-cesium-wrapper';
 
 const getFormattedValue = (uom, value) => ({
     [MeasureTypes.LENGTH]: round(convertUom(value, "m", uom.length.label) || 0, 2) + " " + uom.length.label,

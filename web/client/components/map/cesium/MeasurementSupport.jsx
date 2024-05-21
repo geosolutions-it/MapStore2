@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { camelCase } from 'lodash';
 import { Glyphicon, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
 import { DropdownList } from 'react-widgets';
+import { createPortal } from 'react-dom';
 
 import MSButton from '../../misc/Button';
 import DrawMeasureSupport from './DrawMeasureSupport';
@@ -19,7 +20,7 @@ import { MeasureTypes, defaultUnitOfMeasureOptions, measureIcons } from '../../.
 import tooltip from '../../misc/enhancers/tooltip';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import { download } from '../../../utils/FileUtils';
-import { convertMeasuresToGeoJSON } from '../../../utils/MeasurementUtils';
+import { convertMeasuresToGeoJSON, MEASURE_CESIUM_TARGET_ID } from '../../../utils/MeasurementUtils';
 
 const Button = tooltip(MSButton);
 
@@ -41,6 +42,7 @@ const Button = tooltip(MSButton);
 function MeasurementSupport({
     map,
     active,
+    targetId = MEASURE_CESIUM_TARGET_ID,
     measureType,
     onChangeMeasureType,
     defaultMeasureType,
@@ -89,8 +91,9 @@ function MeasurementSupport({
     if (!active) {
         return null;
     }
+    const container = document.querySelector(`#${targetId}`);
 
-    return (
+    return container && createPortal((
         <>
             <DrawMeasureSupport
                 map={map}
@@ -209,7 +212,7 @@ function MeasurementSupport({
                 </ButtonToolbar>
             </MeasureToolbar>
         </>
-    );
+    ), container);
 }
 
 MeasurementSupport.contextTypes = {
