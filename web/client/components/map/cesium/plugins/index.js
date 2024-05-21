@@ -21,5 +21,6 @@ import './WFSLayer';
 import './TerrainLayer';
 import './ModelLayer';
 import './ElevationLayer';
+import './ArcGISLayer';
 
 export default {};

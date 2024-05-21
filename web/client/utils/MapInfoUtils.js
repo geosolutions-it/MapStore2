@@ -20,6 +20,7 @@ import wmts from './mapinfo/wmts';
 import vector from './mapinfo/vector';
 import threeDTiles from './mapinfo/threeDTiles';
 import model from './mapinfo/model';
+import arcgis from './mapinfo/arcgis';
 let MapInfoUtils;
 /**
  * Map of info modes which are used to display feature info data (identify tools).
@@ -370,7 +371,8 @@ export const services = {
     'wmts': wmts,
     'vector': vector,
     '3dtiles': threeDTiles,
-    'model': model
+    'model': model,
+    'arcgis': arcgis
 };
 /**
  * To get the custom viewer with the given type
