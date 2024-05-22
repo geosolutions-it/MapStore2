@@ -333,7 +333,7 @@ export const onOpenFilterEditorEpic = (action$, store) =>
         .switchMap(() => {
             const state = store.getState();
             const layer = getWidgetLayer(state);
-            const zoom = defaultGetZoomForExtent(reprojectBbox(layer.bbox.bounds, "EPSG:4326", "EPSG:3857", true), DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
+            const zoom = defaultGetZoomForExtent(reprojectBbox(layer.bbox.bounds, "EPSG:4326", "EPSG:3857"), DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
             const map = {
                 ...DEFAULT_MAP_SETTINGS,
                 zoom,

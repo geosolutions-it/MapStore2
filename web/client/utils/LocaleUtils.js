@@ -1,3 +1,4 @@
+import { isString } from 'lodash';
 
 /*
  * Copyright 2018, GeoSolutions Sas.
@@ -188,7 +189,12 @@ export const getDateFormat = (locale) => {
     return DATE_FORMATS[locale] || DATE_FORMATS.default;
 };
 export const getMessageById = function(messages, msgId) {
-    var message = messages;
+    if (!isString(msgId)) {
+        console.warn('Expected String, but got ' + typeof msgId);
+        return '';
+    }
+
+    let message = messages;
     msgId.split('.').forEach(part => {
         message = message ? message[part] : null;
     });

@@ -87,9 +87,15 @@ export const getQueryParams = (url) => {
  * @param {string} url - url to validate
  * @param {RegExp} regexp - optional custom regexp
  */
-export const isValidURL = (url, regexp = /^(http(s{0,1}):\/\/)+?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/) => {
-    const regex = new RegExp(regexp);
-    return regex.test(url);
+export const isValidURL = (url, regexp) => {
+    if (regexp) {
+        const regex = new RegExp(regexp);
+        return regex.test(url);
+    }
+    return URL.canParse(url,
+        url.indexOf('/') === 0
+            ? window?.location?.href
+            : undefined);
 };
 
 /**

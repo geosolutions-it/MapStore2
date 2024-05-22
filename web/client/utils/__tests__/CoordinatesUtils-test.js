@@ -41,7 +41,8 @@ import {
     convertRadianToDegrees,
     convertDegreesToRadian,
     transformExtentToObj,
-    transformExtentToArray
+    transformExtentToArray,
+    fitBoundsToProjectionExtent
 } from '../CoordinatesUtils';
 
 import Proj4js from 'proj4';
@@ -101,6 +102,11 @@ describe('CoordinatesUtils', () => {
         for (let i = 0; i < 4; i++) {
             expect(projbbox[i]).toNotBe(bbox[i]);
         }
+    });
+    it('should convert with reprojectBbox using max extent as fallback value', () => {
+        const bbox = reprojectBbox([44, 60, 45, 90], 'EPSG:4326', 'EPSG:900913');
+        expect(bbox[2] > bbox[0]).toBe(true);
+        expect(bbox[3] > bbox[1]).toBe(true);
     });
     it('test getAvailableCRS', () => {
         const defs = Object.keys(Proj4js.defs);
@@ -960,5 +966,15 @@ describe('CoordinatesUtils', () => {
         const rad = convertDegreesToRadian('5729.6');
         const val = valueIsApproximatelyEqual(rad, 100);
         expect(val).toBe(true);
+    });
+    it('bounds should not exceed the maximum extent of the projection', ()=> {
+        expect(fitBoundsToProjectionExtent([-10, -10, 10, 10 ], 'EPSG:4326'))
+            .toEqual([-10, -10, 10, 10]);
+        expect(fitBoundsToProjectionExtent([-190, -91, 190, 91 ], 'EPSG:4326'))
+            .toEqual([-180, -90, 180, 90]);
+        expect(fitBoundsToProjectionExtent({ minx: -10, miny: -10, maxx: 10, maxy: 10 }, 'EPSG:4326'))
+            .toEqual({ minx: -10, miny: -10, maxx: 10, maxy: 10 });
+        expect(fitBoundsToProjectionExtent({ minx: -190, miny: -91, maxx: 190, maxy: 91 }, 'EPSG:4326'))
+            .toEqual({ minx: -180, miny: -90, maxx: 180, maxy: 90 });
     });
 });

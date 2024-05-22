@@ -1305,6 +1305,41 @@ i.e.
 }
 ```
 
+#### ArcGIS MapServer layer
+
+This layer type allows to render an ArcGIS MapServer layer.
+An ArcGIS MapServer source is a composition of different layers to create a map.
+
+We have two type of configuration, the first one allow to render only a single layer of the source using the `name` property. The `name` property must match a valid layer id of the ArcGIS MapServer service, e.g.:
+
+```javascript
+{
+    "type": "arcgis",
+    "name": "0",
+    "url": "https://arcgis-example/rest/services/MyService/MapServer"
+    "title": "Title",
+    "group": "",
+    "visibility": true,
+    "queriable": true,
+}
+```
+
+The second options is to render all the layers of the source service. In this case is important to add also the `options.layers` when the ``queryable` property is true because the id of the listed layer will be used for the query, e.g.:
+
+```javascript
+{
+    "type": "arcgis",
+    "url": "https://arcgis-example/rest/services/MyService/MapServer",
+    "options": {
+      "layers": [{ "id": 0 }, { "id": 1 }]
+    },
+    "title": "Title",
+    "group": "",
+    "visibility": true,
+    "queriable": true
+}
+```
+
 ## Layer groups
 
 Inside the map configuration, near the `layers` entry, you can find also the `groups` entry. This array contains information about the groups in the TOC.

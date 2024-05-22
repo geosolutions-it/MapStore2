@@ -27,6 +27,7 @@ import '../plugins/VectorLayer';
 import '../plugins/WFSLayer';
 import '../plugins/TerrainLayer';
 import '../plugins/ElevationLayer';
+import '../plugins/ArcGISLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
@@ -1621,5 +1622,19 @@ describe('Cesium layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.getElevation).toBeTruthy();
+    });
+    it('creates a arcgis layer', () => {
+        const options = {
+            type: 'arcgis',
+            url: 'http://arcgis/MapServer/',
+            name: '1',
+            visibility: true
+        };
+        ReactDOM.render(
+            <CesiumLayer type={options.type}
+                options={options} map={map}/>, document.getElementById("container"));
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('http://arcgis/MapServer/');
+        expect(map.imageryLayers._layers[0]._imageryProvider.layerName).toBe('1');
     });
 });

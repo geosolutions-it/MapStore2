@@ -78,6 +78,7 @@ import { removeDuplicateLines } from '../utils/StringUtils';
 import { logError } from '../utils/DebugUtils';
 import { isProjectionAvailable } from '../utils/ProjectionUtils';
 import {getLayerTileMatrixSetsInfo} from '../api/WMTS';
+import { getLayerMetadata } from '../api/ArcGIS';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
     logError({message: errObj});
@@ -370,6 +371,20 @@ export default (API) => ({
                             })]
                         );
                     }
+                }
+                if (layer.type === 'arcgis' && layer.name !== undefined) {
+                    return Rx.Observable.defer(() => getLayerMetadata(layer.url, layer.name))
+                        .switchMap(({ data, ...layerOptions }) => {
+                            const newLayer = {
+                                ...layer,
+                                ...layerOptions
+                            };
+                            return Rx.Observable.from([
+                                addNewLayer({...newLayer, id}),
+                                ...(newLayer.bbox ? [zoomToExtent(newLayer.bbox.bounds, newLayer.bbox.crs)] : [])
+                            ]);
+                        })
+                        .catch((e) => Rx.Observable.of(describeError(layer, e)));
                 }
                 return Rx.Observable.from(actions);
             })

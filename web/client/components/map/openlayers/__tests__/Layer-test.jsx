@@ -25,6 +25,7 @@ import '../plugins/TMSLayer';
 import '../plugins/WFSLayer';
 import '../plugins/WFS3Layer';
 import '../plugins/ElevationLayer';
+import '../plugins/ArcGISLayer';
 
 import {
     setStore,
@@ -3366,5 +3367,21 @@ describe('Openlayers layer', () => {
         expect(cmp).toBeTruthy();
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.get('getElevation')).toBeTruthy();
+    });
+    it('creates a arcgis layer', () => {
+        const options = {
+            type: 'arcgis',
+            url: 'http://arcgis/MapServer/',
+            name: '1',
+            visibility: true
+        };
+        ReactDOM.render(
+            <OpenlayersLayer type={options.type}
+                options={options} map={map}/>, document.getElementById("container"));
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().urls[0]).toBe('http://arcgis/MapServer/');
+        expect(map.getLayers().item(0).getSource().params_).toEqual({
+            LAYERS: 'show:1'
+        });
     });
 });
