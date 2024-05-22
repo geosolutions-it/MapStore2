@@ -212,6 +212,10 @@
                 "label": "Abilita stile localizzato",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
             },
+            "useCacheOptionInfo": {
+                "label": "Utilizza griglie di riquadri personalizzate remote",
+                "info": "Assicurati che WMTS sia abilitato per utilizzare griglie di riquadri personalizzate"
+            },
             "format": {
                 "title": "Formato",
                 "tile": "Tile",
