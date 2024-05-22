@@ -34,11 +34,9 @@ const recordToLayer = (record) => {
         ...(record.bbox && {
             bbox: record.bbox
         }),
-        ...(record.layers && {
-            options: {
-                layers: record.layers
-            }
-        })
+        options: {
+            layers: record.layers
+        }
     };
 };
 

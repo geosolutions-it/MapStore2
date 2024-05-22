@@ -1316,7 +1316,10 @@ We have two type of configuration, the first one allow to render only a single l
 {
     "type": "arcgis",
     "name": "0",
-    "url": "https://arcgis-example/rest/services/MyService/MapServer"
+    "url": "https://arcgis-example/rest/services/MyService/MapServer",
+    "options": {
+      "layers": [{ "id": 0 }, { "id": 1 }]
+    },
     "title": "Title",
     "group": "",
     "visibility": true,

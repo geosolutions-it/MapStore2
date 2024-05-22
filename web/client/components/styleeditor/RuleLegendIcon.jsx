@@ -149,7 +149,7 @@ function RuleLegendIcon({
 }) {
     const symbolizer = parseSymbolizerExpressions(rule?.symbolizers?.[0] || {}, { properties: {} });
     const Icon = icon[symbolizer.kind];
-    return Icon ? <div className="ms-rule-legend-icon"><Icon symbolizer={symbolizer}/></div> : null;
+    return Icon ? <div className="ms-legend-icon"><Icon symbolizer={symbolizer}/></div> : null;
 }
 
 export default RuleLegendIcon;
