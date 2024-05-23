@@ -207,6 +207,10 @@
                 "label": "Lokalisierten Stil aktivieren",
                 "tooltip": "Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer"
             },
+            "useCacheOptionInfo": {
+                "label": "Verwenden Sie entfernte benutzerdefinierte Kachelraster",
+                "info": "Stellen Sie sicher, dass WMTS aktiviert ist, um benutzerdefinierte Kachelraster verwenden zu können"
+            },
             "format": {
                 "title": "Format",
                 "tile": "Fliese",

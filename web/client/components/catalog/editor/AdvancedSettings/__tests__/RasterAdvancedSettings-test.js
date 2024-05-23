@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(13);
+        expect(fields.length).toBe(15);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
@@ -208,6 +208,25 @@ describe('Test Raster advanced settings', () => {
         TestUtils.Simulate.change(allowUnsecureLayers, { "target": { "checked": false }});
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[1].arguments).toEqual([ 'allowUnsecureLayers', false ]);
+    });
+    it('test component onChangeServiceProperty useCacheOption for remote tile grids', () => {
+        const action = {
+            onChangeServiceProperty: () => {}
+        };
+        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
+        ReactDOM.render(<RasterAdvancedSettings
+            onChangeServiceProperty={action.onChangeServiceProperty}
+            service={{ type: "wms" }}
+        />, document.getElementById("container"));
+        const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
+        expect(advancedSettingsPanel).toBeTruthy();
+        const formGroup = document.querySelectorAll('.form-group')[7];
+        expect(formGroup.textContent.trim()).toBe('layerProperties.useCacheOptionInfo.label');
+        const useCacheOption = formGroup.querySelector('input[type="checkbox"]');
+        expect(useCacheOption).toBeTruthy();
+        TestUtils.Simulate.change(useCacheOption, { "target": { "checked": true }});
+        expect(spyOn).toHaveBeenCalled();
+        expect(spyOn.calls[0].arguments).toEqual([ 'layerOptions', { remoteTileGrids: true } ]);
     });
     it('test component onChangeServiceProperty singleTile', () => {
         const action = {

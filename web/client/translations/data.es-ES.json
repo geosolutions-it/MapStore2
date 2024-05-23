@@ -207,6 +207,10 @@
                 "label": "Habilitar estilo localizado",
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
             },
+            "useCacheOptionInfo": {
+                "label": "Utilice cuadrículas de mosaicos personalizadas remotas",
+                "info": "Asegúrese de que WMTS esté habilitado para poder usar cuadrículas de mosaicos personalizadas"
+            },
             "format": {
                 "title": "Formato",
                 "tile": "Teja",
