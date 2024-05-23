@@ -8,6 +8,7 @@
 
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
+import { isImageServerUrl } from '../../../../utils/ArcGISUtils';
 
 // this override is needed to apply the selected format
 // and to detect an ImageServer and to apply the correct exportImage path
@@ -40,7 +41,7 @@ function buildImageResource(imageryProvider, x, y, level, request) {
         query.layers = `show:${imageryProvider.layers}`;
     }
     const resource = imageryProvider._resource.getDerivedResource({
-        url: imageryProvider._resource.url.includes('ImageServer') ? 'exportImage' : 'export',
+        url: isImageServerUrl(imageryProvider._resource.url) ? 'exportImage' : 'export',
         request: request,
         queryParameters: query
     });

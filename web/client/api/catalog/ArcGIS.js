@@ -9,10 +9,11 @@ import { Observable } from 'rxjs';
 import { isValidURL } from '../../utils/URLUtils';
 import { preprocess as commonPreprocess } from './common';
 import { getCapabilities } from '../ArcGIS';
+import { isImageServerUrl, isMapServerUrl } from '../../utils/ArcGISUtils';
 
 function validateUrl(serviceUrl) {
     if (isValidURL(serviceUrl)) {
-        return serviceUrl.includes('MapServer');
+        return isMapServerUrl(serviceUrl) || isImageServerUrl(serviceUrl);
     }
     return false;
 }

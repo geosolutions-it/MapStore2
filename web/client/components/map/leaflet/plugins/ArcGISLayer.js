@@ -8,9 +8,17 @@
 
 import { registerType } from '../../../../utils/leaflet/Layers';
 import * as LEsri from 'esri-leaflet';
+import { isImageServerUrl } from '../../../../utils/ArcGISUtils';
 
 registerType('arcgis', (options) => {
-    // dynamicMapLayer works as a single tile request
+    // dynamicMapLayer and imageMapLayer work as a single tile request
+    if (isImageServerUrl(options.url)) {
+        return LEsri.imageMapLayer({
+            url: options.url,
+            opacity: options.opacity || 1,
+            format: options.format
+        });
+    }
     return LEsri.dynamicMapLayer({
         url: options.url,
         opacity: options.opacity || 1,
