@@ -212,6 +212,10 @@
                 "label": "Activer le style localisé",
                 "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
             },
+            "useCacheOptionInfo": {
+                "label": "Utiliser des grilles de carreaux personnalisées à distance",
+                "info": "Assurez-vous que WMTS est activé afin d'utiliser des grilles de tuiles personnalisées"
+            },
             "format": {
                 "title": "Format",
                 "tile": "Tile",
