@@ -198,7 +198,10 @@ function WMSCacheOptions({
 }) {
 
     const [tileGridLoading, setTileGridLoading] = useState(false);
-    const [tileGridsResponseMsgId, setTileGridsResponseMsgId] = useState('');
+    const [tileGridsResponseMsgId, setTileGridsResponseMsgId] = useState(() => {
+        if (layer?.tileGridStrategy === 'custom' && layer?.tiled && layer?.tileGrids?.length === 0) return "layerProperties.noConfiguredGridSets";
+        return "";
+    });
     const [tileGridsResponseMsgStyle, setTileGridsResponseMsgStyle] = useState('');
     const [standardTileGridInfo, setStandardTileGridInfo] = useState({});
 
@@ -282,7 +285,7 @@ function WMSCacheOptions({
                         bsStyle={(!supportFormatCache || !selectedTileGridId)
                             ? 'danger'
                             : 'success'}
-                        title={<Message msgId="layerProperties.tileGridInfoChecksTitle" />}
+                        title={<Message msgId="layerProperties.notSupportedSelectedFormatCache" />}
                         popoverStyle={{ maxWidth: 'none' }}
                         text={<InfoText
                             layer={layer}
