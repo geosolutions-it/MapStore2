@@ -1045,5 +1045,30 @@ describe('WMSCacheOptions', () => {
             .catch(done);
 
     });
+    it('should display noConfiguredGridSets warning message if layer is configured from catalog to `Use Cache Options`, with no grid sets available', () => {
+        ReactDOM.render(<WMSCacheOptions layer={{
+            url: '/geoserver/wms',
+            name: 'topp:states',
+            tileGridStrategy: 'custom',
+            format: 'image/jpeg',
+            tileGridCacheSupport: {
+                formats: ['image/png']
+            },
+            tiled: true,
+            tileGrids: []
+        }} projection="EPSG:3857" />, document.getElementById('container'));
+        expect(document.querySelector('.ms-wms-cache-options')).toBeTruthy();
+        const inputs = document.querySelectorAll('input[type="checkbox"]');
+        expect(inputs.length).toBe(1);
+        const buttons = document.querySelectorAll('button');
+        expect(buttons.length).toBe(2);
+        expect([...buttons].map(button => button.querySelector('.glyphicon').getAttribute('class'))).toEqual([
+            'glyphicon glyphicon-refresh',
+            'glyphicon glyphicon-grid-custom'
+        ]);
+
+        const alert = document.querySelector('.alert');
+        expect(alert.innerText).toBe('layerProperties.noConfiguredGridSets');
+    });
 });
 
