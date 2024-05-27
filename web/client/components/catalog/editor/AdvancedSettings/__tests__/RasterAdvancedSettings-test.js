@@ -33,7 +33,7 @@ describe('Test Raster advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(15);
+        expect(fields.length).toBe(14);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
@@ -220,7 +220,7 @@ describe('Test Raster advanced settings', () => {
         />, document.getElementById("container"));
         const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingsPanel).toBeTruthy();
-        const formGroup = document.querySelectorAll('.form-group')[7];
+        const formGroup = document.querySelectorAll('.form-group')[6];
         expect(formGroup.textContent.trim()).toBe('layerProperties.useCacheOptionInfo.label');
         const useCacheOption = formGroup.querySelector('input[type="checkbox"]');
         expect(useCacheOption).toBeTruthy();
