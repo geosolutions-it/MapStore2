@@ -198,7 +198,10 @@ function WMSCacheOptions({
 }) {
 
     const [tileGridLoading, setTileGridLoading] = useState(false);
-    const [tileGridsResponseMsgId, setTileGridsResponseMsgId] = useState('');
+    const [tileGridsResponseMsgId, setTileGridsResponseMsgId] = useState(() => {
+        const noTileGrids = layer?.tileGridStrategy === 'custom' && layer?.tiled && layer?.tileGrids?.length === 0;
+        return noTileGrids ? "layerProperties.noConfiguredGridSets" : "";
+    });
     const [tileGridsResponseMsgStyle, setTileGridsResponseMsgStyle] = useState('');
     const [standardTileGridInfo, setStandardTileGridInfo] = useState({});
 

@@ -286,6 +286,7 @@ export default (API) => ({
                             if (tileGridData) {
                                 const filteredTileGrids = tileGridData.tileGrids.filter(({ crs }) => isProjectionAvailable(CoordinatesUtils.normalizeSRS(crs)));
                                 tileGridProperties = tileGridData !== undefined ? {
+                                    tiled: true,
                                     tileGrids: tileGridData.tileGrids,
                                     tileGridStrategy: 'custom',
                                     tileGridCacheSupport: filteredTileGrids?.length > 0 ?
