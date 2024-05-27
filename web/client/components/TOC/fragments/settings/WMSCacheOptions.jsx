@@ -285,7 +285,7 @@ function WMSCacheOptions({
                         bsStyle={(!supportFormatCache || !selectedTileGridId)
                             ? 'danger'
                             : 'success'}
-                        title={<Message msgId="layerProperties.notSupportedSelectedFormatCache" />}
+                        title={<Message msgId="layerProperties.tileGridInfoChecksTitle" />}
                         popoverStyle={{ maxWidth: 'none' }}
                         text={<InfoText
                             layer={layer}

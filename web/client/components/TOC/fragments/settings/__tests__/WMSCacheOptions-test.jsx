@@ -1045,7 +1045,7 @@ describe('WMSCacheOptions', () => {
             .catch(done);
 
     });
-    it('should display noConfiguredGridSets warning message if layer is confugred from catalog to `Use Cache Options` but with no fetched configured grid sets', () => {
+    it('should display noConfiguredGridSets warning message if layer is configured from catalog to `Use Cache Options`, with no grid sets available', () => {
         ReactDOM.render(<WMSCacheOptions layer={{
             url: '/geoserver/wms',
             name: 'topp:states',
