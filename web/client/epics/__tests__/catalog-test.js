@@ -680,6 +680,67 @@ describe('catalog Epics', () => {
                 }
             });
     });
+    it('addLayerAndDescribeEpic for wms layer with remoteTileGrids = true', (done) => {
+        const layer = {
+            type: 'wms',
+            url: 'base/web/client/test-resources/wms/DescribeLayers.xml',
+            visibility: true,
+            dimensions: [],
+            name: 'workspace:vector_layer',
+            title: 'workspace:vector_layer',
+            bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}},
+            links: [],
+            params: {
+                CQL_FILTER: 'NAME=\'Test\''
+            },
+            allowedSRS: {
+                'EPSG:3857': true,
+                'EPSG:4326': true
+            },
+            remoteTileGrids: true
+        };
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+            addLayerAndDescribe(layer),
+            (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ADD_LAYER:
+                        expect(action.layer.name).toBe("workspace:vector_layer");
+                        expect(action.layer.title).toBe("workspace:vector_layer");
+                        expect(action.layer.type).toBe("wms");
+                        expect(action.layer.params).toEqual(layer.params);
+                        break;
+                    case CHANGE_LAYER_PROPERTIES:
+                        expect(action.newProperties).toExist();
+                        expect(action.newProperties.search).toExist();
+                        expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
+                        expect(action.newProperties.search.type).toBe("wfs");
+                        expect(action.newProperties.tileGridStrategy).toEqual('custom');
+                        expect(action.newProperties.tileGrids).toExist();
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {
+                catalog: {
+                    delayAutoSearch: 50,
+                    selectedService: "wmsCatalog",
+                    services: {
+                        "wmsCatalog": {
+                            type: "wms",
+                            url: "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml"
+                        }
+                    },
+                    pageSize: 2
+                }
+            });
+    });
     it('addLayerAndDescribeEpic multiple urls', (done) => {
         const layer = {
             type: 'wms',
