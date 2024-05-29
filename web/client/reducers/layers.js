@@ -60,7 +60,7 @@ const insertNode = (nodes, node, parent, asFirst = false) => {
     }
     return nodes.map(n => isString(n) ? n : (n.id === parent ? {
         ...n,
-        nodes: [...n.nodes, node]
+        nodes: asFirst ? [node, ...n.nodes] : [...n.nodes, node]
     } : {
         ...n,
         nodes: insertNode(n.nodes, node, parent, asFirst)
