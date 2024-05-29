@@ -70,6 +70,7 @@ class SharePanel extends React.Component {
         shareUrlReplaceString: PropTypes.string,
         shareApiUrl: PropTypes.string,
         shareConfigUrl: PropTypes.string,
+        currSectionId: PropTypes.string,
         embedPanel: PropTypes.bool,
         embedOptions: PropTypes.object,
         showAPI: PropTypes.bool,
@@ -213,7 +214,7 @@ class SharePanel extends React.Component {
     getShareUrl = () => {
         const { settings, advancedSettings, mapType, viewerOptions } = this.props;
         const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
-        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId);
+        let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId, this.props.currSectionId);
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {

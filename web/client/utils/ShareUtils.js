@@ -103,7 +103,7 @@ export const removeQueryFromUrl = (url = '') => {
     const formatHash = Url.format({ ...parseHash, query: null, search: null });
     return Url.format({ ...parsedUrl, query: null, search: null, hash: formatHash ? `#${formatHash}` : null });
 };
-export const getSharedGeostoryUrl = (url = '', removeScroll = false) => {
+export const getSharedGeostoryUrl = (url = '', removeScroll = false, currSectionId) => {
     if (url.match(/\#\/(geostory)/)) {
         let geostoryUrl = url.match(/\/(geostory)\/((shared)|(newgeostory))/)
             ? url
@@ -113,6 +113,8 @@ export const getSharedGeostoryUrl = (url = '', removeScroll = false) => {
             const parsedUrl = geostoryUrl.split('#')[1]?.split('/');
             if (parsedUrl.length === 6 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/section/${parsedUrl[parsedUrl.length - 1]}`, '');
             if (parsedUrl.length === 8 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/section/${parsedUrl[parsedUrl.length - 3]}/column/${parsedUrl[parsedUrl.length - 1]}`, '');
+        } else if ( !removeScroll && !geostoryUrl.includes('section') ) {
+            geostoryUrl = geostoryUrl + '/section/' + currSectionId;
         }
 
         return geostoryUrl;
