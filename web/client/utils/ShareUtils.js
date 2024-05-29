@@ -113,7 +113,7 @@ export const getSharedGeostoryUrl = (url = '', removeScroll = false, currSection
             const parsedUrl = geostoryUrl.split('#')[1]?.split('/');
             if (parsedUrl.length === 6 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/section/${parsedUrl[parsedUrl.length - 1]}`, '');
             if (parsedUrl.length === 8 && parsedUrl.includes('shared')) geostoryUrl = replace(geostoryUrl, `/section/${parsedUrl[parsedUrl.length - 3]}/column/${parsedUrl[parsedUrl.length - 1]}`, '');
-        } else if ( !removeScroll && !geostoryUrl.includes('section') ) {
+        } else if ( currSectionId && !removeScroll && !geostoryUrl.includes('section') ) {
             geostoryUrl = geostoryUrl + '/section/' + currSectionId;
         }
 
