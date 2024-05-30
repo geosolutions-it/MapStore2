@@ -7,7 +7,7 @@
  */
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
-import { castArray, isNumber, isEqual, range } from 'lodash';
+import { castArray, isNumber, isEqual, range, isNaN } from 'lodash';
 import { needProxy, getProxyUrl } from '../ProxyUtils';
 import {
     resolveAttributeTemplate,
@@ -613,7 +613,7 @@ const symbolizerToPrimitives = {
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
         const side = width > height ? width : height;
         const scale = (parsedSymbolizer.radius * 2) / side;
-        return image ? [
+        return image && !isNaN(scale) ? [
             {
                 type: 'point',
                 geometryType: 'point',
@@ -652,7 +652,7 @@ const symbolizerToPrimitives = {
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
         const side = width > height ? width : height;
         const scale = parsedSymbolizer.size / side;
-        return image ? [{
+        return image && !isNaN(scale) ? [{
             type: 'point',
             geometryType: 'point',
             entity: {
