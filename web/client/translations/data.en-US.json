@@ -369,13 +369,12 @@
         "home":{
             "open": "Open",
             "shortDescription": "Modern webmapping with OpenLayers, Leaflet and ReactJS.<br/> <small>Visit the <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentation</a> page</small>",
-            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
+            "footerDescription": "<strong>NewmoyerGeospatial</strong> <a href=\"mailto:info@newmoyergeospatial.com\">info@newmoyergeospatial.com</a>"
         },
         "cookiesPolicyNotification": {
             "title": "This website uses cookies",

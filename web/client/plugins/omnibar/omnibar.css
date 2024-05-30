@@ -53,6 +53,7 @@
 
 /* Page Navbar */
 .navbar-home .dropdown {
+    height: 62px;
     float: right;
 }
 
@@ -61,4 +62,61 @@
     margin-left: 10px;
     margin-right: 10px;
     display: inline-block;
+}
+
+/* Custom styling for OmniBar */
+#mapstore-navbar-container {
+    display: flex;
+    flex-direction: row-reverse;
+    background-color: #249edd;
+    box-sizing: border-box;
+    height: 62px;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+#mapstore-navbar-container .nav.pull-left {
+    display: flex;
+    flex: 1;
+}
+
+#mapstore-navbar-container .nav.pull-left > li > a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    color: white;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+#mapstore-navbar-container .nav.pull-left > li > a:hover,
+#mapstore-navbar-container .nav.pull-left > li > a:active,
+#mapstore-navbar-container .nav.pull-left > li > a:focus,
+#mapstore-navbar-container .nav.pull-left > li > a:visited {
+    background-color: transparent;
+    /* Ensures no background color on hover, click, focus, or visited state */
+    box-shadow: none;
+    /* Removes any box-shadow on hover, click, focus, or visited state */
+}
+
+.navbar-title {
+    position: absolute;
+    top: 50%;
+    /* Position it absolutely to ensure it stays centered */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    /* Set text color to white */
+    z-index: 1001;
+    /* Ensure it is on top */
+    white-space: nowrap;
+    /* Prevent title text wrapping */
+}
+
+#mapstore-navbar-container .square-button {
+    height: 62px;
+    width: 62px;
 }
