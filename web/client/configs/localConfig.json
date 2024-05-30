@@ -15,7 +15,12 @@
           "https://gs-stable.geosolutionsgroup.com:443/geoserver",
           "http://gs-stable.geosolutionsgroup.com/geoserver",
           "http://gs-stable.geosolutionsgroup.com:443/geoserver",
-          "https://tile.googleapis.com"
+          "https://tile.googleapis.com",
+          "https://maps1.geosolutionsgroup.com/geoserver/",
+          "https://maps2.geosolutionsgroup.com/geoserver/",
+          "https://maps3.geosolutionsgroup.com/geoserver/",
+          "https://maps4.geosolutionsgroup.com/geoserver/",
+          "https://maps5.geosolutionsgroup.com/geoserver/"
         ]
     },
     "geoStoreUrl": "rest/geostore/",
