@@ -178,7 +178,7 @@ function withExtensions(AppComponent) {
                             return { plugin: pluginDef, translations: plugins[pluginName].translations || "" };
                         }).catch(e => {
                             // log the errors before re-throwing
-                            console.error(`Error loading MapStore extension "${pluginName}":`, e); // eslint-disable-line
+                            console.error(`Error loading CoreSpatial Portal extension "${pluginName}":`, e); // eslint-disable-line
                             return null;
                         });
                     })).then((loaded) => {
