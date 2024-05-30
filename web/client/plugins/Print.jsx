@@ -29,9 +29,9 @@ import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapSelector, scalesSelector } from '../selectors/map';
 import { mapTypeSelector } from '../selectors/maptype';
-import { normalizeSRS, reprojectBbox, convertDegreesToRadian } from '../utils/CoordinatesUtils';
+import { normalizeSRS, convertDegreesToRadian } from '../utils/CoordinatesUtils';
 import { getMessageById } from '../utils/LocaleUtils';
-import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI } from '../utils/MapUtils';
+import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI, getScales, reprojectZoom } from '../utils/MapUtils';
 import { isInsideResolutionsLimits } from '../utils/LayersUtils';
 import { has, includes } from 'lodash';
 import {additionalLayersSelector} from "../selectors/additionallayers";
@@ -289,7 +289,8 @@ export default {
                         overrideOptions: PropTypes.object,
                         items: PropTypes.array,
                         addPrintParameter: PropTypes.func,
-                        printingService: PropTypes.object
+                        printingService: PropTypes.object,
+                        printMap: PropTypes.object
                     };
 
                     static contextTypes = {
@@ -340,7 +341,8 @@ export default {
                         currentLocale: 'en-US',
                         overrideOptions: {},
                         items: [],
-                        printingService: getDefaultPrintingService()
+                        printingService: getDefaultPrintingService(),
+                        printMap: {}
                     };
 
                     state = {
@@ -569,34 +571,30 @@ export default {
                         const {
                             map: newMap,
                             capabilities,
-                            minZoom,
                             configurePrintMap: configurePrintMapProp,
                             useFixedScales,
-                            getZoomForExtent,
-                            maxZoom,
                             currentLocale,
-                            scales: scalesProp,
-                            layers
+                            layers,
+                            printMap,
+                            printSpec
                         } = props || this.props;
                         if (newMap && newMap.bbox && capabilities) {
-                            const bbox = reprojectBbox([
-                                newMap.bbox.bounds.minx,
-                                newMap.bbox.bounds.miny,
-                                newMap.bbox.bounds.maxx,
-                                newMap.bbox.bounds.maxy
-                            ], newMap.bbox.crs, newMap.projection);
-                            const mapSize = this.getMapSize();
+                            const selectedPrintProjection = (printSpec && printSpec?.params?.projection) || (printSpec && printSpec?.projection) || (printMap && printMap.projection) || 'EPSG:3857';
+                            const printSrs = normalizeSRS(selectedPrintProjection);
+                            const mapProjection = newMap.projection;
+                            const mapSrs = normalizeSRS(mapProjection);
+                            const zoom = reprojectZoom(newMap.zoom, mapSrs, printSrs);
+                            const scales = getPrintScales(capabilities);
+                            const printMapScales = getScales(printSrs);
+                            const scaleZoom = getNearestZoom(zoom, scales, printMapScales);
                             if (useFixedScales) {
-                                const mapZoom = getZoomForExtent(bbox, mapSize, minZoom, maxZoom);
-                                const scales = getPrintScales(capabilities);
-                                const scaleZoom = getNearestZoom(newMap.zoom, scales);
                                 const scale = scales[scaleZoom];
-                                configurePrintMapProp(newMap.center, mapZoom, scaleZoom, scale,
-                                    layers, newMap.projection, currentLocale);
+                                configurePrintMapProp(newMap.center, zoom, scaleZoom, scale,
+                                    layers, newMap.projection, currentLocale, useFixedScales);
                             } else {
-                                const scale = scalesProp[newMap.zoom];
-                                configurePrintMapProp(newMap.center, newMap.zoom, newMap.zoom, scale,
-                                    layers, newMap.projection, currentLocale);
+                                const scale = printMapScales[zoom];
+                                configurePrintMapProp(newMap.center, zoom, scaleZoom, scale,
+                                    layers, newMap.projection, currentLocale, useFixedScales);
                             }
                         }
                     };
@@ -629,8 +627,9 @@ export default {
                     scalesSelector,
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
                     currentLocaleSelector,
-                    mapTypeSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, additionalLayers, scales, usePreview, currentLocale, mapType) => ({
+                    mapTypeSelector,
+                    (state) => state.print.map
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, additionalLayers, scales, usePreview, currentLocale, mapType, printMap) => ({
                     open,
                     capabilities,
                     printSpec,
@@ -650,7 +649,8 @@ export default {
                     scales,
                     usePreview,
                     currentLocale,
-                    mapType
+                    mapType,
+                    printMap
                 }));
 
                 const PrintPlugin = connect(selector, {

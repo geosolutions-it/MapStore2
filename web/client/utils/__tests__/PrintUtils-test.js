@@ -34,7 +34,7 @@ import { KVP1, REST1 } from '../../test-resources/layers/wmts';
 import { poi as TMS110_1 } from '../../test-resources/layers/tms';
 import { BasemapAT, NASAGIBS, NLS_CUSTOM_URL, LINZ_CUSTOM_URL } from '../../test-resources/layers/tileprovider';
 import { setStore } from '../StateUtils';
-import { getGoogleMercatorScales } from '../MapUtils';
+import { getGoogleMercatorScales, getScales } from '../MapUtils';
 
 const layer = {
     url: "http://mygeoserver",
@@ -554,17 +554,50 @@ describe('PrintUtils', () => {
             ...testSpec,
             scaleZoom: 3,
             scales: [2000000, 1000000, 500000, 100000, 50000]
+        }, {
+            print: {
+                map: {
+                    useFixedScales: true
+                }
+            }
         });
         expect(printSpec).toExist();
         expect(printSpec.pages[0].scale).toBe(100000);
     });
-    it('getMapfishPrintSpecification with standard scales', () => {
+    it('getMapfishPrintSpecification with standard scales for print map with projection 3857 [google web mercator]', () => {
         const printSpec = getMapfishPrintSpecification({
             ...testSpec,
-            scaleZoom: 3
+            zoom: 3
         });
         expect(printSpec).toExist();
         expect(printSpec.pages[0].scale).toBe(getGoogleMercatorScales(0, 21)[3]);
+    });
+    it('getMapfishPrintSpecification with fixed scales for print map with projection 4326', () => {
+        const projection = 'EPSG:4326';
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            projection,
+            scaleZoom: 3,
+            scales: [2000000, 1000000, 500000, 100000, 50000]
+        }, {
+            print: {
+                map: {
+                    useFixedScales: true
+                }
+            }
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(100000);
+    });
+    it('getMapfishPrintSpecification with standard scales for print map with projection 4326', () => {
+        const projection = 'EPSG:4326';
+        const printSpec = getMapfishPrintSpecification({
+            ...testSpec,
+            zoom: 3,
+            projection
+        });
+        expect(printSpec).toExist();
+        expect(printSpec.pages[0].scale).toBe(getScales(projection)[3]);
     });
     it('from rgba to rgb', () => {
         const rgb = rgbaTorgb("rgba(255, 255, 255, 0.1)");

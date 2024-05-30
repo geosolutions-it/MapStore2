@@ -9,7 +9,7 @@
 import { reproject, getUnits, reprojectGeoJson, normalizeSRS } from './CoordinatesUtils';
 
 import {addAuthenticationParameter} from './SecurityUtils';
-import { calculateExtent, getGoogleMercatorScales, getResolutionsForProjection, getScales, reprojectZoom } from './MapUtils';
+import { calculateExtent, getGoogleMercatorScales, getResolutionsForProjection, getScales } from './MapUtils';
 import { optionsToVendorParams } from './VendorParamsUtils';
 import { colorToHexStr } from './ColorUtils';
 import { getLayerConfig } from './TileConfigProvider';
@@ -236,9 +236,10 @@ export const mapProjectionSelector = (state) => state?.print?.map?.projection ??
 export const getMapfishPrintSpecification = (rawSpec, state) => {
     const {params, ...baseSpec} = rawSpec;
     const spec = {...baseSpec, ...params};
-    const mapProjection = mapProjectionSelector(state);
+    const printMap = state?.print?.map;
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
-    const projectedZoom = Math.round(reprojectZoom(spec.scaleZoom, mapProjection, spec.projection));
+    // * use [spec.zoom] the actual zoom in case useFixedScale = false else use [spec.scaleZoom] the fixed zoom scale not actual
+    const projectedZoom = Math.round(printMap?.useFixedScales ? spec.scaleZoom : spec.zoom);
     const scales = spec.scales || getScales(spec.projection);
     const reprojectedScale = scales[projectedZoom] || defaultScales[projectedZoom];
 
