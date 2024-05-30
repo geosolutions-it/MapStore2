@@ -233,11 +233,7 @@ Enabling that option, all layers added to the map from this catalog source will 
 !!! note
     If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
 
-<<<<<<< HEAD
 * *Use remote custom tile grids*: if checked, allows to set by default the *custom tile grid caching strategy* when a layer is added to the map from this source as described in [Layer Settings](layer-settings.md#display).
-=======
-* *Use remote custom tile grids*: if checked, allows to set by default the _custom tile grid caching strategy_ when a layer is added to the map from this source as described in [Layer Settings](layer-settings.md#display).
->>>>>>> 95a9b838a359b97d9ee5cb827ffe74e9df1326e5
 
 * *Format*: to define the default *Tile* format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`) and to define the default *Information sheet* format for the layers added to the map (`text/plain`, `text/html`, `application/json` or `application/geo+json`). The list of available formats is automatically retrieved from the ones supported by the WMS server and can be also manually fetched through the **Fetch supported formats** <img src = "../img/button/update_button.jpg" Button = "ms-docbutton" /> button when necessary.
 
