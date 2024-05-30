@@ -14,9 +14,9 @@ function toc(state = {}, action) {
     case MAP_CONFIG_LOADED: {
         return {
             ...state,
+            mapLoadedCount: (state.mapLoadedCount || 0) + 1,
             config: {
-                ...action?.config?.toc,
-                init: true
+                ...action?.config?.toc
             }
         };
     }
