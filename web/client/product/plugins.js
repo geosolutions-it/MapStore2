@@ -22,6 +22,7 @@ import RulesManagerFooter from "../plugins/RulesManagerFooter";
 import UserSession from "../plugins/UserSession";
 import FeatureEditor from '../plugins/FeatureEditor';
 import MetadataInfo from '../plugins/MetadataInfo';
+import TOC from '../plugins/TOC';
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -47,6 +48,7 @@ export const plugins = {
     UserSessionPlugin: UserSession,
     FeatureEditorPlugin: FeatureEditor,
     MetadataInfoPlugin: MetadataInfo,
+    TOCPlugin: TOC,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -145,7 +147,6 @@ export const plugins = {
     StyleEditor: toModulePlugin('StyleEditor', () => import(/* webpackChunkName: 'plugins/styleEditor' */ '../plugins/StyleEditor')),
     SwipePlugin: toModulePlugin('Swipe', () => import(/* webpackChunkName: 'plugins/swipe' */ '../plugins/Swipe')),
     TOCItemsSettingsPlugin: toModulePlugin('TOCItemsSettings', () => import(/* webpackChunkName: 'plugins/TOCItemsSettings' */ '../plugins/TOCItemsSettings')),
-    TOCPlugin: toModulePlugin('TOC', () => import(/* webpackChunkName: 'plugins/TOC' */ '../plugins/TOC')),
     ThematicLayerPlugin: toModulePlugin('ThematicLayer', () => import(/* webpackChunkName: 'plugins/thematicLayer' */ '../plugins/ThematicLayer')),
     ThemeSwitcherPlugin: toModulePlugin('ThemeSwitcher', () => import(/* webpackChunkName: 'plugins/themeSwitcher' */ '../plugins/ThemeSwitcher')),
     TimelinePlugin: toModulePlugin('Timeline', () => import(/* webpackChunkName: 'plugins/timeline' */ '../plugins/Timeline')),
