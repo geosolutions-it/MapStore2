@@ -17,7 +17,7 @@ function validateUrl(serviceUrl) {
     return false;
 }
 
-const recordToLayer = (record) => {
+const recordToLayer = (record, { layerBaseConfig }) => {
     if (!record) {
         return null;
     }
@@ -38,7 +38,8 @@ const recordToLayer = (record) => {
             options: {
                 layers: record.layers
             }
-        })
+        }),
+        ...layerBaseConfig
     };
 };
 
