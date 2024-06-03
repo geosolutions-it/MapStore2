@@ -250,7 +250,7 @@ describe("StyleParserUtils ", () => {
             "msHeightReference": "none"
         };
         const {width, height} = drawWellKnownNameImageFromSymbolizer(symbolizer1);
-        expect(width).toBe(symbolizer1.size / 2);
-        expect(height).toBe(symbolizer1.size / 2);
+        expect(width).toBe(symbolizer1.size);
+        expect(height).toBe(symbolizer1.size);
     });
 });
