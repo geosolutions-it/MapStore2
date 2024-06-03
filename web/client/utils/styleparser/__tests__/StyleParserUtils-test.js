@@ -12,7 +12,8 @@ import {
     drawIcons,
     geoStylerStyleFilter,
     getWellKnownNameImageFromSymbolizer,
-    parseSymbolizerExpressions
+    parseSymbolizerExpressions,
+    drawWellKnownNameImageFromSymbolizer
 } from '../StyleParserUtils';
 
 describe("StyleParserUtils ", () => {
@@ -236,5 +237,20 @@ describe("StyleParserUtils ", () => {
                 outlineDasharray: [ 10, 10 ]
             });
     });
-
+    it('test drawWellKnownNameImageFromSymbolizer method for Icon symbolizer to return width, height = size /2 in case radius not included within symbolizer', () => {
+        const symbolizer1 = {
+            "symbolizerId": "1",
+            "kind": "Icon",
+            "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAqCAYAAACk2+",
+            "opacity": 1,
+            "size": 46,
+            "rotate": 0,
+            "msBringToFront": false,
+            "anchor": "bottom",
+            "msHeightReference": "none"
+        };
+        const {width, height} = drawWellKnownNameImageFromSymbolizer(symbolizer1);
+        expect(width).toBe(symbolizer1.size / 2);
+        expect(height).toBe(symbolizer1.size / 2);
+    });
 });
