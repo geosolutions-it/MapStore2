@@ -14,10 +14,13 @@
             <includes>
                 <include>**/*.xml</include>
                 <include>**/print-lib*.jar</include>
+                <include>**/aircompressor-*.jar</include>
+                <include>**/apiguardian-api-*.jar</include>
                 <include>**/avalon-*.jar</include>
                 <include>**/batik-*.jar</include>
                 <include>**/bcmail-*.jar</include>
                 <include>**/bcprov-*.jar</include>
+                <include>**/bigint-*.jar</include>
                 <include>**/commons-lang3-*.jar</include>
                 <include>**/commons-httpclient-*.jar</include>
                 <include>**/commons-io-*.jar</include>
@@ -32,26 +35,40 @@
                 <include>**/httpclient-*.jar</include>
                 <include>**/httpcore-*.jar</include>
                 <include>**/imageio-*.jar</include>
+                <include>**/indriya-*.jar</include>
                 <include>**/hsqldb-*.jar</include>
                 <include>**/itext-*.jar</include>
                 <include>**/itextpdf-*.jar</include>
                 <include>**/jai*.jar</include>
                 <include>**/jaxb-*.jar</include>
+                <include>**/jaxb-api-*.jar</include>
                 <include>**/jdom2-*.jar</include>
                 <include>**/jempbox-*.jar</include>
                 <include>**/jgridshift-*.jar</include>
-                <include>**/json-2018*.jar</include>
+                <include>**/json-20*.jar</include>
+                <include>**/jackson-dataformat-yaml-*.jar</include>
+                <include>**/javax.inject-*.jar</include>
                 <include>**/jts-core-*.jar</include>
                 <include>**/jt-*.jar</include>
                 <include>**/jyaml-*.jar</include>
                 <include>**/metrics-*.jar</include>
+                <include>**/net.opengis.ows-*.jar</include>
+                <include>**/org.eclipse.emf.common-*.jar</include>
+                <include>**/org.eclipse.emf.ecore-*.jar</include>
+                <include>**/org.eclipse.emf.ecore.xmi-*.jar</include>
+                <include>**/org.w3.xlink-*.jar</include>
+                <include>**/openpdf-*.jar</include>
                 <include>**/pdfbox-*.jar</include>
+                <include>**/profiler-*.jar</include>
+                <include>**/re2j-*.jar</include>
                 <include>**/si-*.jar</include>
                 <include>**/slf4j-api-*.jar</include>
+                <include>**/snakeyaml-*.jar</include>
                 <include>**/systems-common-*.jar</include>
                 <include>**/txw2-*.jar</include>
                 <include>**/unit-*.jar</include>
                 <include>**/uom-*.jar</include>
+                <include>xalan-*.jar</include>
                 <include>**/xml-apis-*.jar</include>
                 <include>**/xml-commons-resolver*.jar</include>
                 <include>**/xmlgraphics-commons-*.jar</include>
