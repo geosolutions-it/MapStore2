@@ -57,8 +57,8 @@ describe('Test ArcGIS Catalog API', () => {
             url: "base/web/client/test-resources/arcgis/arcgis-test-data.json"
         };
         try {
-            const layer = getLayerFromRecord( testRecord );
-            const { type, url, name, title, visibility } = layer;
+            const layer = getLayerFromRecord( testRecord, { layerBaseConfig: { group: undefined } } );
+            const { type, url, name, title, visibility, group } = layer;
 
             expect(type).toBeTruthy();
             expect(type).toBe('arcgis');
@@ -73,6 +73,39 @@ describe('Test ArcGIS Catalog API', () => {
             expect(title).toBe(testRecord.title);
 
             expect(visibility).toBeTruthy();
+
+            expect(group).toBe(undefined);
+        } catch (e) {
+            done(e);
+        }
+        done();
+    });
+    it('should get layer from record while a group is selected', (done) => {
+        const testRecord = {
+            name: 1,
+            title: "Outreach",
+            url: "base/web/client/test-resources/arcgis/arcgis-test-data.json"
+        };
+        const _selectedGroup = 'test_group';
+        try {
+            const layer = getLayerFromRecord( testRecord, { layerBaseConfig: { group: _selectedGroup } } );
+            const { type, url, name, title, visibility, group } = layer;
+
+            expect(type).toBeTruthy();
+            expect(type).toBe('arcgis');
+
+            expect(url).toBeTruthy();
+            expect(url).toBe(testRecord.url);
+
+            expect(name).toBeTruthy();
+            expect(name).toBe(`${testRecord.name}`);
+
+            expect(title).toBeTruthy();
+            expect(title).toBe(testRecord.title);
+
+            expect(visibility).toBeTruthy();
+
+            expect(group).toBe(_selectedGroup);
         } catch (e) {
             done(e);
         }

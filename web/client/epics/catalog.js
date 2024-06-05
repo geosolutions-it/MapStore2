@@ -62,6 +62,7 @@ import {
     updateServiceData
 } from '../utils/CatalogUtils';
 import { getCapabilities, describeLayers, flatLayers } from '../api/WMS';
+import {generateGeoServerWMTSUrl} from '../utils/WMTSUtils';
 import CoordinatesUtils from '../utils/CoordinatesUtils';
 import ConfigUtils from '../utils/ConfigUtils';
 import {getCapabilitiesUrl, getLayerId, getLayerUrl, removeWorkspace, DEFAULT_GROUP_ID} from '../utils/LayersUtils';
@@ -75,6 +76,8 @@ import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
 import { removeDuplicateLines } from '../utils/StringUtils';
 import { logError } from '../utils/DebugUtils';
+import { isProjectionAvailable } from '../utils/ProjectionUtils';
+import {getLayerTileMatrixSetsInfo} from '../api/WMTS';
 import { getLayerMetadata } from '../api/ArcGIS';
 
 const onErrorRecordSearch = (isNewService, errObj) => {
@@ -271,8 +274,28 @@ export default (API) => ({
                     actions.push(zoomToExtent(layer.bbox.bounds, layer.bbox.crs));
                 }
                 if (layer.type === 'wms') {
-                    return Rx.Observable.defer(() => describeLayers(getLayerUrl(layer), layer.name))
-                        .switchMap(results => {
+                    // * fetch the api of cashe option if layer has 'remoteTileGrids' property with true value
+                    return Rx.Observable.forkJoin(
+                        Rx.Observable.defer(() => describeLayers(getLayerUrl(layer), layer.name)),
+                        (!layer?.remoteTileGrids) ?
+                            Rx.Observable.of(null) :
+                            Rx.Observable.defer(() => getLayerTileMatrixSetsInfo(generateGeoServerWMTSUrl(layer), layer.name, layer))
+                                .catch(() => Rx.Observable.of(null))
+                    )
+                        .switchMap(([results, tileGridData]) => {
+                            let tileGridProperties = {};
+                            if (tileGridData) {
+                                const filteredTileGrids = tileGridData.tileGrids.filter(({ crs }) => isProjectionAvailable(CoordinatesUtils.normalizeSRS(crs)));
+                                tileGridProperties = tileGridData !== undefined ? {
+                                    tiled: true,
+                                    tileGrids: tileGridData.tileGrids,
+                                    tileGridStrategy: 'custom',
+                                    tileGridCacheSupport: filteredTileGrids?.length > 0 ?
+                                        tileGridData.formats ? {formats: tileGridData.formats} : {}
+                                        : undefined
+                                } : {};
+
+                            }
                             if (results) {
                                 let description = find(results, (desc) => desc.name === layer.name );
                                 if (description && description.owsType === 'WFS') {
@@ -281,9 +304,12 @@ export default (API) => ({
                                         search: {
                                             url: filteredUrl,
                                             type: 'wfs'
-                                        }
+                                        }, ...tileGridProperties
                                     }));
                                 }
+                                return Rx.Observable.of(changeLayerProperties(id, {
+                                    ...tileGridProperties
+                                }));
                             }
                             return Rx.Observable.empty();
                         })

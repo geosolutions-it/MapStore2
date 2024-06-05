@@ -86,7 +86,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
 
             const selectedLayers = selectedNodesSelector(getState());
 
-            if (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0) {
+            if (queryableLayers.length === 0 || enableInfoForSelectedLayers && queryableSelectedLayers.length === 0 && selectedLayers.length !== 0) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
             }
 

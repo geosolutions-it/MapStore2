@@ -174,6 +174,14 @@ export default ({
                 &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
             </Checkbox>
         </FormGroup>}
+        {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && service.type === "wms" &&  <FormGroup controlId="useCacheOption" key="useCacheOption">
+            <Checkbox data-qa="display-interactive-legend-option"
+                onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, remoteTileGrids: e.target.checked})}
+                checked={!isNil(service.layerOptions?.remoteTileGrids) ? service.layerOptions?.remoteTileGrids : false}>
+                <Message msgId="layerProperties.useCacheOptionInfo.label" />
+                &nbsp;<InfoPopover text={<Message msgId="layerProperties.useCacheOptionInfo.info" />} />
+            </Checkbox>
+        </FormGroup>}
         <hr style={{margin: "8px 0"}}/>
         <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
             <ControlLabel className="strong"><Message msgId="layerProperties.format.title" /></ControlLabel>

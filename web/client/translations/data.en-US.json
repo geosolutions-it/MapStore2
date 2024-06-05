@@ -212,6 +212,10 @@
                 "label": "Enable localized style",
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
             },
+            "useCacheOptionInfo": {
+                "label": "Use remote custom tile grids",
+                "info": "Make sure to have WMTS enabled in order to use custom tile grids"
+            },
             "format": {
                 "title": "Format",
                 "tile": "Tile",
