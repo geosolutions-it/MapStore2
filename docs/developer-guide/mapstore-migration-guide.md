@@ -26,7 +26,7 @@ This is a list of things to check if you want to update from a previous version 
 
 A generic OpenID Connect (OIDC) authentication support has been introduced in MapStore. This feature allows to authenticate users using an OIDC provider, like Keycloak, Okta, Google, Azure, etc.
 
-In order to have this feature working, you need to update in your project the `geostore-spring-security.xml` file in your project, if it has been customized and you are not using the default one.
+To provide this functionality, it is necessary to update the project's `geostore-spring-security.xml` file, if the default one is not used.
 If you are using the default one, you can skip this step.
 
 Here the changes to apply if needed:
@@ -47,6 +47,7 @@ Here the changes to apply if needed:
 +    <bean id="oidcSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/> <!-- add this bean to configure the integration -->
 
      <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
+```
 
 ## Migration from 2023.02.02 to 2024.01.00
 

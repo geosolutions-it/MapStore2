@@ -11,23 +11,23 @@ By default, the `authenticationProviders` field contains only `{"type": "basic",
 You can add additional providers to the list (e.g., `openid`), and they will be included as options in the login window. If you want to remove the login form and only use the added providers, you can remove the `geostore` entry from the `authenticationProviders` list.
 
 !!! info
-    If only one OpenID entry is present in `authenticationProviders` (and no `geostore` entry available), clicking on the login entry in the login menu will redirect directly to the OpenID provider login page configured, without showing the login window. If more than one entry is present in `authenticationProviders` list, the user will see the login window before to choose one of the services configured to be authenticated.
+    If only one OpenID entry is present in `authenticationProviders` (and no `geostore` entry available), clicking on the login entry in the login menu will redirect directly to the OpenID provider login page configured, without showing the login window. If more than one entry is present in the `authenticationProviders` list, the the login window will be provided in the MapStore UI to be able choose the desired one for the authentication.
 
 ## Supported OpenID services
 
-MapStore provides a generic OpenID connect provider (`oidc`) that can be used to configure any OpenID Connect service (Google, Microsoft, Keycloak, Facebook, Github ...). In addition, MapStore provides specific configurations for some services. This means that you can configure MapStore to use the following services out of the box:
+MapStore provides a generic OpenID connect provider (`oidc`) that can be used to configure any OpenID Connect service (Google, Microsoft, Keycloak, Facebook, Github, etc.). In addition, MapStore provides specific configurations for some services. This means that you can configure MapStore to use the following services out of the box:
 
 - OpenID connect
 - Google (specific)
 - Keycloak (specific)
 
-For each service you want to add you have to:
+For each service you want to include, you have to:
 
 - configure the service (e.g., create a new application on Google Console, create a new client on Keycloak, etc.)
 - properly configure the backend (in `mapstore-ovr.properties`)
-- modify `localConfig.json` adding a proper entry to the `authenticationProviders`.
+- modify the `localConfig.json` file by adding a proper entry to the `authenticationProviders`
 
-Morover the keycloak provider allows to configure advanced features like Single Sign On (SSO) with other applications and direct user database integration as well as for ldap.
+Moreover the keycloak provider allows to configure advanced features like the **Single Sign On (SSO)** with other applications and **direct user database integration** as for [LDAP](ldap.md#ldap-integration-with-mapstore).
 
 !!! note
     For the moment the generic `oidc` provider does not support multiple instances. This means that you can configure only **one** generic `oidc` provider. You can configure the specific providers (e.g., `google`, `keycloak`) in addition to the generic `oidc` provider, but not multiple instances of the generic `oidc` provider. So for instance you can configure a generic `oidc` provider (e.g. connected to Github) plus a `google` and a `keycloak` provider, but not two generic `oidc` providers.
@@ -36,20 +36,20 @@ Morover the keycloak provider allows to configure advanced features like Single 
 
 In order to configure the generic OpenID provider with a service of your choice you have to:
 
-- Configure OpenID provider client
-- onfigure MapStore back-end
-- Configure MapStore front-end
+- Configure the OpenID provider client
+- Configure MapStore back-end
+- Configure the MapStore front-end
 
 #### Configure OpenID provider client
 
-This step depends on the specific OpenID provider you are using. Please refer to the specific documentation of the OpenID provider you are using. You can find some examples about how to configure a generic OpenID provider with Microsoft Azure in the following sections. The same information are valid for other OpenID providers, like google, keycloak, etc.
+This step depends on the specific OpenID provider so, please, refer to the specific documentation of the OpenID provider you are using. You can find some examples about how to configure a generic OpenID provider with Microsoft Azure in the following sections. The same information are valid for other OpenID providers, like Google, Keycloak, etc.
 You have to get the following information:
 
-- **Client ID**: the client id. This is the client id that have to be present on the OpenID provider
+- **Client ID**: the client id. This is the client id that must be present on the OpenID provider
 - **Client Secret**: the client secret. This is the client secret for the client id on the OpenID provider
 - **Discovery URL**: the discovery URL. This is the URL that contains all the information for the specific service.
 
-#### Configure MapStore back-end
+#### Configure the MapStore back-end
 
 In order to configure the generic OpenID provider you have to:
 
@@ -81,14 +81,14 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 
 ```
 
-- `oidcOAuth2Config.clientId`: the client id. This is the client id that have to be present on the OpenID provider
+- `oidcOAuth2Config.clientId`: the client id. This is the client id that must be present on the OpenID provider
 - `oidcOAuth2Config.clientSecret`: the client secret. This is the client secret for the client id on the OpenID provider
 - `oidcOAuth2Config.discoveryUrl`: the discovery URL. This is the URL that contains all the information for the specific service.
 - `oidcOAuth2Config.sendClientSecret`: if `true`, the client secret will be sent to the OpenID provider. If `false`, the client secret will not be sent.
-- `oidcOAuth2Config.autoCreateUser`: if `true`, the user will be created if not present in the MapStore database. If `false`, the user will not be created ( useful if the user is managed by an external service like Keycloak or LDAP).
+- `oidcOAuth2Config.autoCreateUser`: if `true`, the user will be created, if not present, in the MapStore database. If `false`, the user will not be created (useful if the user is managed by an external service like Keycloak or LDAP).
 - `oidcOAuth2Config.redirectUri`: the redirect URI. This is the URI that the OpenID provider, and it must be the effective URI of the MapStore application, with the path `/rest/geostore/openid/oidc/callback`.
 - `oidcOAuth2Config.internalRedirectUri`: the internal redirect URI. This is the URI that the MapStore will redirect to after the login. It must be the effective URI of the MapStore application.
-- `oidcOAuth2Config.principalKey`: (*optional*) the user name attribute. This is the attribute that will be used as the user name. The default is `email`.
+- `oidcOAuth2Config.principalKey`: (*optional*) the user name attribute. This is the attribute that will be used as user name. The default is `email`.
 - `oidcOAuth2Config.rolesClaim`: (*optional*) the role claims. If a claim contains roles, you can map them to MapStore roles. The roles can be only `ADMIN` or `USER`. If the claim is not present, the default role will be `USER`.
 - `oidcOAuth2Config.groupsClaim`: (*optional*) the group claims. If a claim contains groups, you can map them to MapStore groups. If the claim is not present, no group will be assigned (except the default `everyone` group).
 - `oidcOAuth2Config.globalLogoutEnabled`: (*optional*): if true (and the server supports it) invokes global logout on MapStore logout
@@ -96,7 +96,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 !!! note
     The `rolesClaim` and `groupsClaim` are optional. If you don't need to map roles or groups, you can omit them. At the moment, there is no mapping for roles and groups for the generic OIDC provider. If you need to map roles and groups, you can use the `keycloak` provider.
 
-#### Configure MapStore front-end
+#### Configure the MapStore front-end
 
 - Add an entry for `oidc` in `authenticationProviders` inside `localConfig.json` file.
 
@@ -116,7 +116,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 }
 ```
 
-You can customize the `title` to show in the login form, add an `imageURL` or use only one `authenticationProviders`, removing the `geostore` entry, if you want to use only the OpenID provider. In this case the user will be redirected directly to the OpenID provider without showing the login form.
+You can customize the `title` to be displayed in the login form, add an `imageURL` or use only one `authenticationProviders`, removing the `geostore` entry, if you want to use only the OpenID provider. In this case the user will be redirected directly to the OpenID provider without showing the login form.
 
 #### Example with Microsoft Azure
 
@@ -126,19 +126,19 @@ Here a quick summary of the steps to configure Microsoft Azure as an OpenID prov
 
 1. Create a new application ![Create azure application](img/azure-1.jpg)
 2. Set the proper valid redirect URLs ![set redirect URL](img/azure-2.jpg) to: `https://<your-domain>/mapstore/rest/geostore/openid/oidc/callback`
-3. Create and copy client secret ![Create and copy client secret](img/azure-3.jpg)
+3. Create and copy the client secret ![Create and copy client secret](img/azure-3.jpg)
 4. Add optional claims if needed ![Add optional claims](img/azure-4.jpg)
 5. Copy endpoints and data to configure MapStore ![Copy endpoints](img/azure-5.jpg)
 
 These steps are based on the [Microsoft Azure documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app).
 Please refer the official documentation for any detail or additional configuration.
 
-Here also some sample configurations for MapStore (see the following sections for details):
+Here below are also some other sample configurations for MapStore:
 
 `mapstore-ovr.properties`:
 
 ```properties
-# enables the keycloak OpenID Connect filter
+# enables the OpenID Connect filter
 oidcOAuth2Config.enabled=true
 
 # note: this is the client id you have created in Keycloak
@@ -184,7 +184,7 @@ The Google OpenID Connect provider allows to use Google as an authentication pro
 
 In order to setup the openID connection you have to setup a project in Google API Console to obtain Oauth 2.0 credentials and configure them. Here a quick summary of the steps to configure Google as an OpenID provider. For more details, please refer to the [Google documentation](https://developers.google.com/identity/openid-connect/openid-connect).
 
-- Open Google developer console and, from credentials section, create a new credential of type **Oauth client ID**
+- Open the Google developer console and, from credentials section, create a new credential of type **Oauth client ID**
 
 <img src="../img/google-create-credentials.jpg" class="ms-docimage"  style="max-width:500px;"/>
 
@@ -200,7 +200,7 @@ Please follow the [Google documentation](https://developers.google.com/identity/
 
 After the setup, you will have to:
 
-- create/edit `mapstore-ovr.properties` file (in data-dir or class path) to configure the google OpenID integration by inserting in particular the `clientId` and `clientSecret` obtained from Google Console. You have also set the `autoCreateUser` to `true` to create the user if not present in the MapStore database:
+- create/edit the `mapstore-ovr.properties` file (in data-dir or class path) to configure the Google OpenID integration by inserting in particular the `clientId` and the `clientSecret` obtained from Google Console. You have also to set the `autoCreateUser` to `true` to create the user if not present in the MapStore database:
 
 Here an example of the configuration, documented inline:
 
