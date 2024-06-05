@@ -13,7 +13,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tomcat.version>8.5.69</tomcat.version>
+    <tomcat.version>9.0.89</tomcat.version>
     <tomcat.port>8080</tomcat.port>
     <mapstore-services.version>1.8-SNAPSHOT</mapstore-services.version>
     <geostore-webapp.version>2.1-SNAPSHOT</geostore-webapp.version>
@@ -401,9 +401,9 @@
             <artifactId>cargo-maven3-plugin</artifactId>
             <configuration>
                 <container>
-                    <containerId>tomcat8x</containerId>
+                    <containerId>tomcat9x</containerId>
                     <zipUrlInstaller>
-                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.69/tomcat-8.5.69.zip</url>
+                        <url>https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>
                     </zipUrlInstaller>
                 </container>
                 <configuration>

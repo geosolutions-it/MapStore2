@@ -83,7 +83,7 @@
 @ms-font-family-sans-serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 @ms-font-family-serif: Georgia, 'Times New Roman', Times, serif;
 @ms-font-family-monospace: Menlo, Monaco, Consolas, 'Courier New', monospace;
-@ms-font-family-base: 'Noto Sans', sans-serif;
+@ms-font-family-base: 'Roboto', sans-serif;
 
 // ******************************************
 // MapStore Theme Variables Ruleset
@@ -380,9 +380,7 @@
     // exclude nested rule sets, eg: @button-default
     @rules: {
         @theme-vars();
-    }
-
-    ;
+    };
 
     each(@rules, {
         @css-var-key: extract(@value, 1);
