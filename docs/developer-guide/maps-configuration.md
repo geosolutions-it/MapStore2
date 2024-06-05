@@ -1327,7 +1327,7 @@ We have two type of configuration, the first one allow to render only a single l
 }
 ```
 
-The second options is to render all the layers of the source service. In this case is important to add also the `options.layers` when the ``queryable` property is true because the id of the listed layer will be used for the query, e.g.:
+The second options is to render all the layers of the source service. In this case is important to add also the `options.layers` when the `queryable` property is true because the id of the listed layer will be used for the query, e.g.:
 
 ```javascript
 {
