@@ -39,7 +39,7 @@ class Footer extends React.Component {
             src,
             width: 140,
             height: 'auto',
-            href: 'https://www.newmoyergeospatial.com/',
+            href: 'https://newmoyergeospatial.com/',
             title: 'CoreSpatial Portal',
             alt: 'CoreSpatial Portal'
         }

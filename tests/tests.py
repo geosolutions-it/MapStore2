@@ -16,7 +16,7 @@ def endpointrequest(url,headers,payload):
   except:
     print("ENDPOINT ERROR: Can't access: " + url)
     exit(1)
-  
+
 
 # Get Access Token (for authenticated user tests)
 def getaccesstoken(url,user,pwd):
@@ -28,7 +28,7 @@ def getaccesstoken(url,user,pwd):
     base64login = user + ":" + pwd
     base64login_bytes = base64login.encode("ascii")
     encodebase64login = base64.b64encode(base64login_bytes)
-    
+
     headers = {
       'Connection': 'keep-alive',
       'Content-Length': '0',
@@ -44,16 +44,16 @@ def getaccesstoken(url,user,pwd):
       'Sec-Fetch-Dest': 'empty',
       'Referer': referer
     }
-    
+
     accesstokenresponse = requests.request("POST", loginurl, headers=headers, data={})
-    
+
     # Try block in case that the response can't be converted directly to json
     try:
       accesstoken = accesstokenresponse.json()
-      return accesstoken['access_token']  
+      return accesstoken['access_token']
     except:
       print("WARNING: ACCESS TOKEN directly response conversion don't work")
-      accesstoken = ast.literal_eval(accesstokenresponse.text) 
+      accesstoken = ast.literal_eval(accesstokenresponse.text)
       token = accesstoken['sessionToken']['access_token']
       return token
 
@@ -71,7 +71,7 @@ def getaccesstoken(url,user,pwd):
 
 # Anonymous User - Home Page Test (Multiple URL checks)
 def homepagetest(baseurl):
-  
+
   # Test result Dictionary - For TEST Prints
   testresults = {}
 
@@ -128,7 +128,7 @@ def homepagetest(baseurl):
 
 # Anonymous User - Individual Map Test
 def maptest(baseurl,map_id):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -147,7 +147,7 @@ def maptest(baseurl,map_id):
 
 # Anonymous User - Individual Dashboard Test
 def dashboardtest(baseurl,dashboard_id):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -166,7 +166,7 @@ def dashboardtest(baseurl,dashboard_id):
 
 # Anonymous User - Individual Geostory Test
 def geostorytest(baseurl,geostory_id):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -185,7 +185,7 @@ def geostorytest(baseurl,geostory_id):
 
 # Anonymous User - Thumbnail Test
 def thumbnailtest(baseurl,thumbnail_id,datauri):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -204,10 +204,10 @@ def thumbnailtest(baseurl,thumbnail_id,datauri):
 
 # Anonymous User - Datadir Externalization Test
 def datadirtest(baseurl):
-  
+
   # Test result Dictionary
   testresults = {}
-  
+
   dataextUrl = baseurl + "/mapstore/configs/localConfig.json"
   dataextResult = endpointrequest(dataextUrl,{},{})
   testresults["DATAEXT"] = dataextResult
@@ -230,7 +230,7 @@ def datadirtest(baseurl):
 
 # Authenticated User - Individual Private Map Test
 def prvmaptest(baseurl,map_id,accesstoken):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -253,7 +253,7 @@ def prvmaptest(baseurl,map_id,accesstoken):
 
 # Authenticated User (Admin) - Users Manager Test
 def usrmanagertest(baseurl,accesstoken):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -270,13 +270,13 @@ def usrmanagertest(baseurl,accesstoken):
     exit(1)
   else:
     print("Admin - Users Manager test test OK " + description)
-  
+
   return testresults
 ###
 
 # Authenticated User (Admin) - Groups Test
 def groupstest(baseurl,accesstoken):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -293,13 +293,13 @@ def groupstest(baseurl,accesstoken):
     exit(1)
   else:
     print("Admin - Groups test test OK " + description)
-  
+
   return testresults
 ###
 
 # Authenticated User (Admin) - Context Manager Test
 def contextmanagertest(baseurl,accesstoken):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -316,7 +316,7 @@ def contextmanagertest(baseurl,accesstoken):
     exit(1)
   else:
     print("Admin - Context Manager test OK " + description)
-  
+
   return testresults
 ###
 
@@ -347,7 +347,7 @@ def embmapstest(baseurl,map_id,accesstoken):
 
 # Authenticated User - Embedded html for dashboards Test
 def embdashtest(baseurl,dashboard_id,accesstoken):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -371,7 +371,7 @@ def embdashtest(baseurl,dashboard_id,accesstoken):
 
 # Authenticated User - Embedded html for geostory Test
 def embgeostorytest(baseurl,geostory_id,accesstoken):
-  
+
   # Test result Dictionary
   testresults = {}
 
@@ -430,37 +430,37 @@ try:
 
   # Main URL of the MapStore environment
   envurl = os.environ['ENV_URL']
-  
+
   # Anonymous - Map ID
   ann_map_id = os.environ['ANN_MAP_ID']
-  
+
   # Anonymous - Dashboard ID
   ann_dashboard_id = os.environ['ANN_DASHBOARD_ID']
-  
+
   # Anonymous - Geostory ID
   ann_geostory_id = os.environ['ANN_GEOSTORY_ID']
-  
+
   # Anonymous - Thumbnail ID
   ann_thumbnail_id = os.environ['ANN_THUMBNAIL_ID']
-  
+
   # Anonymous - Thumbnail Datauri
   ann_datauri = os.environ['ANN_DATAURI']
-  
+
   # Access Token - User
   at_usr = os.environ['AT_USR']
-  
+
   # Access Token - Password
   at_pwd = os.environ['AT_PWD']
-    
+
   #Authenticated User - Map ID
   prv_map_id = os.environ['PRV_MAP_ID']
-  
+
   #Authenticated User - Dashboard ID
   prv_dashboard_id = os.environ['PRV_DASHBOARD_ID']
-    
+
   #Authenticated User - Geostory ID
   prv_geostory_id = os.environ['PRV_GEOSTORY_ID']
-  
+
 except:
   print("Missing Parameters")
   exit(1)
@@ -471,7 +471,7 @@ except:
 ##########  Anonymous User  ############
 ########################################
 
-### Mapstore Homepage Tests
+### CoreSpatial Portal Tests
 homepageResults = homepagetest(envurl)
 ###
 

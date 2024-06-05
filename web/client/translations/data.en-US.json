@@ -36,18 +36,18 @@
             "message": "The layer failed to reload with a changed name"
         },
         "version": {
-          "title": "MapStore Version",
-          "label": "Version",
-          "message": "Message",
-          "commit": "Commit",
-          "date": "Date",
-          "githubUrl": "Open github tree in a new tab"
+            "title": "MapStore Version",
+            "label": "Version",
+            "message": "Message",
+            "commit": "Commit",
+            "date": "Date",
+            "githubUrl": "Open github tree in a new tab"
         },
         "errorPage": {
-            "title":"Oops, something has gone wrong...",
-            "subtitle":"Please click the icon below to reload MapStore",
-            "description":"If you want to report this error you can send an email our mailing list",
-            "descriptionAdmin":"Please contact the administrator"
+            "title": "Oops, something has gone wrong...",
+            "subtitle": "Please click the icon below to reload MapStore",
+            "description": "If you want to report this error you can send an email our mailing list",
+            "descriptionAdmin": "Please contact the administrator"
         },
         "autorefresh": {
             "of": "of",
@@ -80,9 +80,9 @@
             "styleListLoadError": "There was an error loading the styles list",
             "stylesRefreshList": "Refresh Styles List",
             "delete": "Delete",
-            "deleteLayer":"Delete Layer",
+            "deleteLayer": "Delete Layer",
             "deleteLayerMessage": "Do you really want to delete this layer?",
-            "deleteLayerGroup":"Delete Group",
+            "deleteLayerGroup": "Delete Group",
             "deleteLayerGroupMessage": "Do you really want to delete this group and all of its layers?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
@@ -198,10 +198,10 @@
                 "confirmLayerName": "Confirm layer name change"
             },
             "legendOptions": {
-              "title": "Legend",
-              "legendWidth": "Width",
-              "legendHeight": "Height",
-              "legendPreview": "Preview"
+                "title": "Legend",
+                "legendWidth": "Width",
+                "legendHeight": "Height",
+                "legendPreview": "Preview"
             },
             "enableInteractiveLegendInfo": {
                 "label": "Enable interactive legend",
@@ -226,22 +226,22 @@
             },
             "forceProxy": "Force proxy",
             "fields": {
-              "refresh": "Reload fields from the data source",
-              "title": "Fields",
-              "tooltip": "Fields",
-              "name": "Name",
-              "alias": "Alias",
-              "type": "Type",
-              "clearCustomization": "Clear customization",
-              "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
-              "error": "It was not possible to automatically load the fields"
+                "refresh": "Reload fields from the data source",
+                "title": "Fields",
+                "tooltip": "Fields",
+                "name": "Name",
+                "alias": "Alias",
+                "type": "Type",
+                "clearCustomization": "Clear customization",
+                "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
+                "error": "It was not possible to automatically load the fields"
             },
-          "disableFeaturesEditing": "Disable editing on Attribute table"
+            "disableFeaturesEditing": "Disable editing on Attribute table"
         },
         "localizedInput": {
-          "localize": "Localize this text...",
-          "title": "Localize text",
-          "default": "Default"
+            "localize": "Localize this text...",
+            "title": "Localize text",
+            "default": "Default"
         },
         "longitude": "Lon",
         "latitude": "Lat",
@@ -255,9 +255,9 @@
             "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on upgrade button in order to upgrade the map or simply dismiss this notification if you don't want to upgrade it.",
             "warningSaveUpdatedMap": "Some layers haven't been updated correctly.",
             "saveUpdatedMap": "All the layers have been successfully updated.",
-            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background. Switch to a compatible -or an empty- background, then select this projection.",
-            "incompatibleDataAndProjection":"The current layer(s) and map projection are not completely compatible. Parts or all of the data might not appear in the map.",
-            "errorLoadingGF":"Error loading GF Geom"
+            "incompatibleBackgroundAndProjection": "The Projection you selected is not compatible with background. Switch to a compatible -or an empty- background, then select this projection.",
+            "incompatibleDataAndProjection": "The current layer(s) and map projection are not completely compatible. Parts or all of the data might not appear in the map.",
+            "errorLoadingGF": "Error loading GF Geom"
         },
         "dock": {
             "row": "{rowsSelected} row selected",
@@ -267,7 +267,7 @@
             "tooltipDeactivate": "Exit 3D Mode",
             "tooltipActivate": "Enter 3D Mode"
         },
-        "cookie":{
+        "cookie": {
             "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
             "moreDetailsButton": "More Details",
             "leave": "Leave",
@@ -302,7 +302,7 @@
         "annotationsbutton": "Annotations",
         "noresultfound": "No Result found",
         "save": "Save",
-		"saveAs": "Save As...",
+        "saveAs": "Save As...",
         "opacity": "Opacity",
         "elevation": "Elevation",
         "close": "Close",
@@ -327,54 +327,54 @@
                 "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
                 "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
                 "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}",
-                "orrd":"OrRd",
-                "pubu":"PuBu",
-                "bupu":"BuPu",
-                "oranges":"Oranges",
-                "bugn":"BuGn",
-                "ylorbr":"YlOrBr",
-                "ylgn":"YlGn",
-                "reds":"Reds",
-                "rdpu":"RdPu",
-                "greens":"Greens",
-                "ylgnbu":"YlGnBu",
-                "purples":"Purples",
-                "gnbu":"GnBu",
-                "greys":"Greys",
-                "ylorrd":"YlOrRd",
-                "purd":"PuRd",
-                "blues":"Blues",
-                "pubugn":"PuBuGn",
-                "viridis":"Viridis",
-                "spectral":"Spectral",
-                "rdylgn":"RdYlGn",
-                "rdbu":"RdBu",
-                "piyg":"PiYg",
-                "prgn":"PrGn",
-                "rdylbu":"RdYlBu",
-                "brbg":"BrBg",
-                "rdgy":"RdGy",
-                "puor":"PuOr",
-                "set2":"Set 2",
-                "accent":"Accent",
-                "set1":"Set 1",
-                "set3":"Set 3",
-                "dark2":"Dark 2",
-                "paired":"Paired",
-                "pastel2":"Pastel 2",
-                "pastel1":"Pastel 1",
+                "orrd": "OrRd",
+                "pubu": "PuBu",
+                "bupu": "BuPu",
+                "oranges": "Oranges",
+                "bugn": "BuGn",
+                "ylorbr": "YlOrBr",
+                "ylgn": "YlGn",
+                "reds": "Reds",
+                "rdpu": "RdPu",
+                "greens": "Greens",
+                "ylgnbu": "YlGnBu",
+                "purples": "Purples",
+                "gnbu": "GnBu",
+                "greys": "Greys",
+                "ylorrd": "YlOrRd",
+                "purd": "PuRd",
+                "blues": "Blues",
+                "pubugn": "PuBuGn",
+                "viridis": "Viridis",
+                "spectral": "Spectral",
+                "rdylgn": "RdYlGn",
+                "rdbu": "RdBu",
+                "piyg": "PiYg",
+                "prgn": "PrGn",
+                "rdylbu": "RdYlBu",
+                "brbg": "BrBg",
+                "rdgy": "RdGy",
+                "puor": "PuOr",
+                "set2": "Set 2",
+                "accent": "Accent",
+                "set1": "Set 1",
+                "set3": "Set 3",
+                "dark2": "Dark 2",
+                "paired": "Paired",
+                "pastel2": "Pastel 2",
+                "pastel1": "Pastel 1",
                 "custom": "Custom"
             }
         },
-        "home":{
+        "home": {
             "open": "Open",
-            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and ReactJS.<br/> <small>Visit the <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentation</a> page</small>",
+            "shortDescription": "A modern GIS Portal with complete OGC support in both 2D and 3D.<br/> <small>Visit the <a href=\"https://docs.mapstore.geosolutionsgroup.com/\">documentation</a> page</small>",
             "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like OpenStreetMap, Google Maps or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on...<br/>Visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
-            "footerDescription": "<strong>NewmoyerGeospatial</strong> <a href=\"mailto:info@newmoyergeospatial.com\">info@newmoyergeospatial.com</a>"
+            "footerDescription": "<a href=\"mailto:support@newmoyergeospatial.com\"><b>support@newmoyergeospatial.com</b></a>"
         },
         "cookiesPolicyNotification": {
             "title": "This website uses cookies",
@@ -383,10 +383,10 @@
         },
         "manager": {
             "managerMenu": "Manager menu",
-            "openInANewTab":"Open map",
-            "deleteMap":"Delete Map",
+            "openInANewTab": "Open map",
+            "deleteMap": "Delete Map",
             "deleteMapMessage": "Do you really want to delete this map?",
-            "editMapMetadata":"Edit map properties",
+            "editMapMetadata": "Edit map properties",
             "mapTypes_combo": "Select map viewer: ",
             "theme_combo": "Select theme:",
             "maps_title": "Maps",
@@ -396,7 +396,7 @@
         "newMap": "New map",
         "newMapEmpty": "Empty map",
         "newMapContext": "Existing context",
-		"maps": {
+        "maps": {
             "title": "Maps",
             "addToFeaturedMaps": "Add to featured maps",
             "removeFromFeaturedMaps": "Remove from featured maps",
@@ -424,8 +424,8 @@
                 "errorSizeExceeded": "Please, reduce the size or the quality of the images",
                 "errorLoadingContexts": "An error occurred during contexts loading"
             },
-			"search": "search..."
-		},
+            "search": "search..."
+        },
         "resources": {
             "successSaved": "This resource has been saved correctly",
             "savingError": "There was an error saving the resource",
@@ -474,9 +474,9 @@
                 "errorLoadingGeostories": "There was an error loading GeoStories"
             },
             "contexts": {
-              "title": "Contexts ({count})",
-              "titleNoCount": "Contexts",
-              "noContextAvailable": "No context available"
+                "title": "Contexts ({count})",
+                "titleNoCount": "Contexts",
+                "noContextAvailable": "No context available"
             }
         },
         "map": {
@@ -504,11 +504,11 @@
             "renderingErrorMessage": "<p>The map rendering has stopped and this could be due for different reasons: </p><ul><li>The applied style contains some rules or variables not supported by the features</li><li>The layer is not properly configured</li></ul><p>You can apply changes to the layer style and then click on 'Reload map' button. <br/> See the message below for addition information:</p>",
             "reloadMap": "Reload map",
             "settings": {
-              "title": "Map settings",
-              "skyAtmosphere": "Show sky atmosphere",
-              "groundAtmosphere": "Show ground atmosphere",
-              "fog": "Show fog",
-              "depthTest": "Enable depth test against terrain"
+                "title": "Map settings",
+                "skyAtmosphere": "Show sky atmosphere",
+                "groundAtmosphere": "Show ground atmosphere",
+                "fog": "Show fog",
+                "depthTest": "Enable depth test against terrain"
             },
             "thumbnailError": {
                 "error403": "You are not allowed to update the thumbnail",
@@ -557,7 +557,7 @@
                     "notAccessible": "Map not accessible",
                     "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access the map</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul> <p>",
                     "projectionError": "The projection {projection} of the map is not configured",
-                    "title" : "Map cannot be viewed"
+                    "title": "Map cannot be viewed"
                 }
             }
         },
@@ -725,7 +725,7 @@
                 "defaultGroupOnTop": "The {groupTitle} group is set as default target group, therefore it must remain on top"
             }
         },
-        "print":{
+        "print": {
             "paneltitle": "Print",
             "layout": "Layout",
             "sheetsize": "Sheet size:",
@@ -765,10 +765,10 @@
             "graticule": "add grid with labels",
             "additionalLayers": "Include overlays"
         },
-        "backgroundSwitcher":{
+        "backgroundSwitcher": {
             "tooltip": "Select Background"
         },
-        "info":{
+        "info": {
             "tooltip": "Query objects on map"
         },
         "expandtoolbar": {
@@ -797,7 +797,7 @@
         },
         "noFeatureInfo": "There is no information available for this point",
         "noInfoForLayers": "There are no features for the following layers: ",
-        "history":{
+        "history": {
             "barLabel": "Map history",
             "undoBtnTooltip": "Go back",
             "redoBtnTooltip": "Go forward"
@@ -855,7 +855,7 @@
             "latitude": "Latitude",
             "longitude": "Longitude"
         },
-        "search":{
+        "search": {
             "layerMustBeVisible": "The target layer is inactive",
             "decimal": "Decimal",
             "aeronautical": "Aeronautical",
@@ -910,8 +910,8 @@
             "s_sort": "Sort by",
             "s_max_features": "Max features",
             "s_max_zoom": "Max zoom level",
-            "s_wfs_props_label" : "WFS service properties",
-            "s_wfs_opt_props_label" : "Optional properties",
+            "s_wfs_props_label": "WFS service properties",
+            "s_wfs_opt_props_label": "Optional properties",
             "s_result_props_label": "Result display properties",
             "s_priority_info": "Used to sort search results, lower values first. Nominatim results have priority = 5",
             "s_placeholder": "Search input placeholder",
@@ -1124,7 +1124,7 @@
                 "dataset_header": "Dataset"
             },
             "emptyfilter": "No filter set. Searching could timeout if pagination is not supported by the server.",
-            "attributefilter":{
+            "attributefilter": {
                 "add_condition": " Add Condition",
                 "delete": " Delete",
                 "deleteGroup": "Delete Group",
@@ -1192,7 +1192,7 @@
                     "buffer": "Buffer",
                     "circle": "Circle",
                     "poly": "Polygon",
-                    "cql":   "CQL"
+                    "cql": "CQL"
                 },
                 "operations": {
                     "intersects": "Intersects",
@@ -1316,7 +1316,7 @@
             "properties": "Properties",
             "deactivatedMapInteraction": "The annotation drawing interactions has been deactivated because the '{pluginName}' plugin has been activated. Please close the '{pluginName}' plugin to activate the annotations drawing interactions"
         },
-        "user":{
+        "user": {
             "login": "Login",
             "logout": "Logout",
             "info": " Account Info",
@@ -1334,13 +1334,13 @@
             "passwordInvalidChar": "The password must not contain these characters: {data}",
             "passwordChanged": "Password changed",
             "passwordError": "Error changing password",
-            "signIn":"Sign-in",
+            "signIn": "Sign-in",
             "signInWith": "Sign in with",
             "orSignInWith": "Or sign in with",
-            "loginFail":"Login Fail",
+            "loginFail": "Login Fail",
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Please insert username and password",
-                "usernamePwdIncorrect":"Username or password incorrect"
+                "usernamePwdIncorrect": "Username or password incorrect"
             },
             "detailsName": "Name",
             "detailsRole": "Role",
@@ -1379,33 +1379,33 @@
             "requiredFiedsMessage": "Fields marked with asterisk (*) are required"
         },
         "usergroups": {
-          "searchGroups": "Search Groups...",
-          "groups": "Groups",
-          "nameLimit": "The name is limited to 255 characters.",
-          "descLimit": "The description is limited to 255 characters.",
-          "editGroup": "Edit Group",
-          "deleteGroup": "Delete Group",
-          "removeUser": "Remove User",
-          "newGroup": "New Group",
-          "manageGroups": "Manage Groups",
-          "description": "Description:",
-          "noDescriptionAvailable": "(No description)",
-          "groupName": "Group Name",
-          "groupDescription": "Description",
-          "saveGroup": "Save",
-          "createGroup": "Create",
-          "creatingGroup": "Creating...",
-          "groupMembers": "Members:",
-          "addMember": "Add Member:",
-          "selectMemberPlaceholder": "Select Member...",
-          "noUsers": "No users for this group",
-          "errorSaving": "There was an error saving this group",
-          "errorDelete": "There was an error deleting this group",
-          "confirmDeleteGroup": "Are you sure you want to delete this group?",
-          "generalInformation": "General",
-          "members": "Members"
+            "searchGroups": "Search Groups...",
+            "groups": "Groups",
+            "nameLimit": "The name is limited to 255 characters.",
+            "descLimit": "The description is limited to 255 characters.",
+            "editGroup": "Edit Group",
+            "deleteGroup": "Delete Group",
+            "removeUser": "Remove User",
+            "newGroup": "New Group",
+            "manageGroups": "Manage Groups",
+            "description": "Description:",
+            "noDescriptionAvailable": "(No description)",
+            "groupName": "Group Name",
+            "groupDescription": "Description",
+            "saveGroup": "Save",
+            "createGroup": "Create",
+            "creatingGroup": "Creating...",
+            "groupMembers": "Members:",
+            "addMember": "Add Member:",
+            "selectMemberPlaceholder": "Select Member...",
+            "noUsers": "No users for this group",
+            "errorSaving": "There was an error saving this group",
+            "errorDelete": "There was an error deleting this group",
+            "confirmDeleteGroup": "Are you sure you want to delete this group?",
+            "generalInformation": "General",
+            "members": "Members"
         },
-        "share":{
+        "share": {
             "title": "Share",
             "tooltip": "Share",
             "titlePanel": "Share the map",
@@ -1594,20 +1594,20 @@
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
             "tms": {
-              "provider": "Provider",
-              "urlTemplate": "URL Template",
-              "urlTemplateHint": "<p>Template URL for your custom TMS service, with the possibility to insert variables (expressed using curly braces, e.g. <code>{var_name}</code>) that will be replaced by the application.<br/>. The <code>{x}</code>, <code>{y}</code> and <code>{z}</code> variables are reserved for tile grid coordinate values. You can also use variable <code>{s}</code> for subdomains. Any other variable specified in the URL must be specified also in options inside \"Custom TMS Configuration\" (Advanced Settings)</p>",
-              "customTMSConfiguration": "Custom TMS Configuration",
-              "customTMSConfigurationHint": "<p>Options can contain:<br/><ul><li><code>\"subdomains\": ['a', 'b']</code>: used for multiple domains, replacingthe <code>{s}</code> in URL template</li><li><code>\"maxNativeZoom\": 20</code>: max zoom from the server</li></ul></p>",
-              "forceDefaultTileGrid": "Force default tile grid",
-              "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resolutions."
+                "provider": "Provider",
+                "urlTemplate": "URL Template",
+                "urlTemplateHint": "<p>Template URL for your custom TMS service, with the possibility to insert variables (expressed using curly braces, e.g. <code>{var_name}</code>) that will be replaced by the application.<br/>. The <code>{x}</code>, <code>{y}</code> and <code>{z}</code> variables are reserved for tile grid coordinate values. You can also use variable <code>{s}</code> for subdomains. Any other variable specified in the URL must be specified also in options inside \"Custom TMS Configuration\" (Advanced Settings)</p>",
+                "customTMSConfiguration": "Custom TMS Configuration",
+                "customTMSConfigurationHint": "<p>Options can contain:<br/><ul><li><code>\"subdomains\": ['a', 'b']</code>: used for multiple domains, replacingthe <code>{s}</code> in URL template</li><li><code>\"maxNativeZoom\": 20</code>: max zoom from the server</li></ul></p>",
+                "forceDefaultTileGrid": "Force default tile grid",
+                "forceDefaultTileGridDescription": "Use the global projection's tile grid instead of the origin and resolutions provided by the server. This is useful for some TMS services that advertise wrong origin or resolutions."
             },
             "urls": "URL(s)",
             "cog": {
                 "urlTemplateHint": "Multiple urls can be added by comma separation. Each url will be treated as an individual layer"
             },
             "tileprovider": {
-              "tooltip": "x,y,z are tile position, s is the sub-domain (default)"
+                "tooltip": "x,y,z are tile position, s is the sub-domain (default)"
             },
             "missingReference": "Missing OGC reference metadata",
             "showDescription": "Show full description",
@@ -1649,28 +1649,28 @@
                 },
                 "error": "Invalid xml syntax"
             },
-           "autoSetVisibilityLimits": {
+            "autoSetVisibilityLimits": {
                 "label": "Set Visibility Limit",
                 "tooltip": "Automatically applies the visibility limits suggested by the server"
-           },
-           "singleTile": {
+            },
+            "singleTile": {
                 "tooltip": "The layer is rendered as a single tile image when added to the map with this option enabled"
             },
-           "allowUnsecureLayers": {
+            "allowUnsecureLayers": {
                 "label": "Allow not secure layers",
                 "tooltip": "Adding layer to map with this option enabled, forces the application to apply proxy"
-           },
-          "domainAliases": {
-            "title": "Domain aliases",
-            "helpTooltip": "This option is used to split content across multiple subdomains",
-            "addAliasTooltip": "Add alias",
-            "removeAliasTooltip": "Remove alias"
-          },
-          "sortBy": {
-            "label": "Sort By",
-            "tooltip": "Add namespace prefix to name property. i.e. ${namespace}:${name}",
-            "placeholder": "Enter a name"
-          }
+            },
+            "domainAliases": {
+                "title": "Domain aliases",
+                "helpTooltip": "This option is used to split content across multiple subdomains",
+                "addAliasTooltip": "Add alias",
+                "removeAliasTooltip": "Remove alias"
+            },
+            "sortBy": {
+                "label": "Sort By",
+                "tooltip": "Add namespace prefix to name property. i.e. ${namespace}:${name}",
+                "placeholder": "Enter a name"
+            }
         },
         "uploader": {
             "filename": "File Name",
@@ -1817,8 +1817,8 @@
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
             "pagination": {
                 "page": "Page",
-                "of":   "of",
-                "to":   "to",
+                "of": "of",
+                "to": "to",
                 "more": "more"
             },
             "noFeaturesAvailable": "No Features Available",
@@ -1911,11 +1911,11 @@
                 "disableSnapping": "Deactivate snapping",
                 "snapToLayer": "Snap to the layer",
                 "snappingSettings": {
-                  "header": "Settings",
-                  "vertex": "Vertex",
-                  "edge": "Edge",
-                  "pixelTolerance": "Tolerance (pixel)",
-                  "loadingStrategy": "Loading strategy"
+                    "header": "Settings",
+                    "vertex": "Vertex",
+                    "edge": "Edge",
+                    "pixelTolerance": "Tolerance (pixel)",
+                    "loadingStrategy": "Loading strategy"
                 },
                 "disableViewportFilter": "Do not filter data by the current viewport",
                 "enableViewportFilter": "Filter data by the current viewport"
@@ -1925,7 +1925,7 @@
             "title": "Export Data",
             "service": "Service",
             "format": "File Format",
-            "srs":  "Spatial Reference System",
+            "srs": "Spatial Reference System",
             "export": "Export",
             "downloadonlycurrentpage": "Download only current page",
             "cropDataSet": "Crop dataset to current viewport",
@@ -2015,7 +2015,6 @@
                 "genericError": "There was an error during data retrival",
                 "genericErrorWithMessage": "There was an error during data retrieval: \"{message}\"",
                 "layerNotAvailable": "The layer {layerName} is no longer available"
-
             },
             "builder": {
                 "header": {
@@ -2039,9 +2038,9 @@
                     "backToTableOptions": "Back to table options",
                     "configureTableOptions": "Configure table options",
                     "attributeEditorColumns": {
-                      "name": "Name",
-                      "title": "Title",
-                      "tooltip": "Tooltip"
+                        "name": "Name",
+                        "title": "Title",
+                        "tooltip": "Tooltip"
                     },
                     "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
@@ -2167,17 +2166,17 @@
             },
             "chartOptionsTitle": "Configure data",
             "widgetOptionsTitle": "Configure Widget Info",
-            "placeHolder":{
-                "default":"Select attribute"
+            "placeHolder": {
+                "default": "Select attribute"
             },
             "operations": {
-              "COUNT": "COUNT",
-              "SUM":"SUM",
-              "AVG":"AVG",
-              "STDDEV":"STDDEV",
-              "MIN":"MIN",
-              "MAX":"MAX",
-              "NONE": "No Operation"
+                "COUNT": "COUNT",
+                "SUM": "SUM",
+                "AVG": "AVG",
+                "STDDEV": "STDDEV",
+                "MIN": "MIN",
+                "MAX": "MAX",
+                "NONE": "No Operation"
             },
             "groupByAttributes": {
                 "line": "X Attribute",
@@ -2228,59 +2227,59 @@
                 "gauge": "Display labels"
             },
             "advanced": {
-              "font": "Font",
-              "displayCartesian": "Hide Grid",
-              "xAxis": "X axis",
-              "xAxisAngle": "Label rotation",
-              "hideLabels": "Hide labels",
-              "includeLegendPercent": "Include percentages in legend",
-              "format": "Format",
-              "prefix": "Prefix",
-              "suffix": "Suffix",
-              "examples": "Examples",
-              "formatExamples": "<div><ul><li><code>.0%</code>: rounded percentage, '12%'</li><li><code>.2s</code>:SI-prefix with two significant digits, '42M'</li><li><code>,.2r</code>: grouped thousands with two significant digits '4,200'</li></ul><em>More information about formatting syntax <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">here</a>.</em></div>",
-              "formula": "Formula",
-              "formulaExamples": "<div>Transform the value using a formula. Use the variable <code>value</code> in the expression:<h5>Examples</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em>More information about the syntax <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">here</a>.</em></div>",
-              "xAxisType": "Type",
-              "forceTicks": "Never skip labels",
-              "maxXAxisLabels": "The labels can not anyway be more than {max}",
-              "yAxis":  "Y axis",
-              "yAxisType": "Type",
-              "yAxisLabel": "Legend Label",
-              "title": "Advanced Options",
-              "legend": "Legend",
-              "barChartType": "Bar Chart Type",
-              "groupedBarChart": "Grouped",
-              "stackedBarChart": "Stacked",
-              "valueFormatting": "Trace value formatting",
-              "traceAxes": "Trace axes",
-              "traceData": "Trace data",
-              "traceLegendOptions": "Trace legend options",
-              "traces": "Traces",
-              "axes": "Axes",
-              "traceStyle": "Trace style",
-              "mode": "Mode",
-              "lineColor": "Line color",
-              "lineWidth": "Line width",
-              "markerColor": "Marker color",
-              "markerSize": "Marker size",
-              "layout": "Layout",
-              "left": "Left",
-              "right": "Right",
-              "free": "Free",
-              "top": "Top",
-              "bottom": "Bottom",
-              "side": "Side",
-              "anchor": "Anchor",
-              "sortBy": "Sort by",
-              "reverseRampColor": "Reverse ramp color",
-              "axisTypes": {
-                "auto": "Auto",
-                "linear": "Linear",
-                "category": "Category",
-                "log": "Log",
-                "date": "Date"
-              }
+                "font": "Font",
+                "displayCartesian": "Hide Grid",
+                "xAxis": "X axis",
+                "xAxisAngle": "Label rotation",
+                "hideLabels": "Hide labels",
+                "includeLegendPercent": "Include percentages in legend",
+                "format": "Format",
+                "prefix": "Prefix",
+                "suffix": "Suffix",
+                "examples": "Examples",
+                "formatExamples": "<div><ul><li><code>.0%</code>: rounded percentage, '12%'</li><li><code>.2s</code>:SI-prefix with two significant digits, '42M'</li><li><code>,.2r</code>: grouped thousands with two significant digits '4,200'</li></ul><em>More information about formatting syntax <a target=\"_blank\" href=\"https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/\">here</a>.</em></div>",
+                "formula": "Formula",
+                "formulaExamples": "<div>Transform the value using a formula. Use the variable <code>value</code> in the expression:<h5>Examples</h5><ul><li><code>value + 2</code></li><li><code>value / 100</code></li></ul><em>More information about the syntax <a target=\"_blank\" href=\"https://github.com/m93a/filtrex#expressions\">here</a>.</em></div>",
+                "xAxisType": "Type",
+                "forceTicks": "Never skip labels",
+                "maxXAxisLabels": "The labels can not anyway be more than {max}",
+                "yAxis": "Y axis",
+                "yAxisType": "Type",
+                "yAxisLabel": "Legend Label",
+                "title": "Advanced Options",
+                "legend": "Legend",
+                "barChartType": "Bar Chart Type",
+                "groupedBarChart": "Grouped",
+                "stackedBarChart": "Stacked",
+                "valueFormatting": "Trace value formatting",
+                "traceAxes": "Trace axes",
+                "traceData": "Trace data",
+                "traceLegendOptions": "Trace legend options",
+                "traces": "Traces",
+                "axes": "Axes",
+                "traceStyle": "Trace style",
+                "mode": "Mode",
+                "lineColor": "Line color",
+                "lineWidth": "Line width",
+                "markerColor": "Marker color",
+                "markerSize": "Marker size",
+                "layout": "Layout",
+                "left": "Left",
+                "right": "Right",
+                "free": "Free",
+                "top": "Top",
+                "bottom": "Bottom",
+                "side": "Side",
+                "anchor": "Anchor",
+                "sortBy": "Sort by",
+                "reverseRampColor": "Reverse ramp color",
+                "axisTypes": {
+                    "auto": "Auto",
+                    "linear": "Linear",
+                    "category": "Category",
+                    "log": "Log",
+                    "date": "Date"
+                }
             },
             "tray": {
                 "title": "Widgets",
@@ -2288,7 +2287,7 @@
                 "collapseTray": "Collapse widgets tray",
                 "expandAll": "Expand all widgets",
                 "collapseAll": "Collapse all widgets",
-                "notifications" : {
+                "notifications": {
                     "collapsed": {
                         "message": "Timeline and widgets can not stay at the same time. Use on the widget's tray to switch between timeline and widgets",
                         "timelineTitle": "Timeline has been collapsed",
@@ -2305,9 +2304,9 @@
                 "note": "The data in the imported file will replace the data in the current dashboard"
             },
             "exportDialog": {
-              "heading": "Export dashboard as a .json file"
+                "heading": "Export dashboard as a .json file"
             },
-            "errors":{
+            "errors": {
                 "loading": {
                     "title": "Error loading dashboard",
                     "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
@@ -2315,7 +2314,7 @@
                     "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
                     "unknownError": "There was an error loading the dashboard. Please contact the administrator",
                     "notFound": "Dashboard not found",
-	                "notAccessible": "Dashboard not accessible"
+                    "notAccessible": "Dashboard not accessible"
                 },
                 "resourceAlreadyExists": "A resource with this name already exists",
                 "forbidden": "An unexpected error occured (403 Forbidden). Please contact the Administrator",
@@ -2332,7 +2331,7 @@
         },
         "dashboardEmbedded": {
             "loadingSpinner": "Loading Dashboard",
-            "errors":{
+            "errors": {
                 "loading": {
                     "title": "Error loading dashboard",
                     "dashboardNotAccessible": "You don't have permission to access this dashboard",
@@ -2340,14 +2339,14 @@
                     "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
                     "unknownError": "There was an error loading the dashboard",
                     "notFound": "Dashboard not found",
-	                "notAccessible": "Dashboard not accessible"
+                    "notAccessible": "Dashboard not accessible"
                 }
             },
             "emptyTitle": "The dashboard is empty"
         },
         "context": {
             "loadingSpinner": "Loading Context",
-            "errors":{
+            "errors": {
                 "loading": {
                     "title": "Error loading context",
                     "pleaseLogin": "Some resource may not be public. Please try to login",
@@ -2359,7 +2358,7 @@
                     "pleaseLogin": "This context is not public. Please try to login",
                     "unknownError": "There was an error loading the context. Please contact the administrator",
                     "notFound": "The context you are trying to access doesn't exist",
-	                  "notAccessible": "You don't have the right permission to access to this context. Please contact the administrator to get access"
+                    "notAccessible": "You don't have the right permission to access to this context. Please contact the administrator to get access"
                 },
                 "template": {
                     "title": "Error loading template",
@@ -2372,11 +2371,11 @@
                     "pleaseLogin": "This map or the map is not public. Please try to login",
                     "unknownError": "There was an error loading the map. Please contact the administrator",
                     "notFound": "The map you are trying to access doesn't exist",
-	                  "notAccessible": "You don't have the right permission to access to this map. Please contact the administrator to get access"
+                    "notAccessible": "You don't have the right permission to access to this map. Please contact the administrator to get access"
                 },
                 "plugins": {
-                  "upload": "Error during plugin upload",
-                  "uninstall": "Error during plugin uninstall"
+                    "upload": "Error during plugin upload",
+                    "uninstall": "Error during plugin uninstall"
                 },
                 "resourceAlreadyExists": "A resource with this name already exists"
             }
@@ -2470,7 +2469,6 @@
             "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
             "setDefaultStyleErrorTitle": "Error on set default style",
             "setDefaultStyleErrorMessage": "It's not possible apply selected style as default",
-
             "enterLegendLabelPlaceholder": "Enter legend label",
             "addMarkSymbolizer": "Add mark symbolizer",
             "addMarkRule": "Add mark rule",
@@ -2528,11 +2526,9 @@
             "method": "Method",
             "intervals": "Intervals",
             "continuous": "Continuous colors",
-
             "lineCapButt": "Butt",
             "lineCapRound": "Round",
             "lineCapSquare": "Square",
-
             "lineJoinBevel": "Bevel",
             "lineJoinRound": "Round",
             "lineJoinMiter": "Miter",
@@ -2542,18 +2538,15 @@
             "fontWeightBold": "Bold",
             "boolTrue": "Active",
             "boolFalse": "Inactive",
-
             "colorMapType": {
                 "label": "Color map type",
                 "ramp": "Ramp",
                 "intervals": "Intervals",
                 "values": "Values"
             },
-
             "addRuleBefore": "Add new entry before",
             "addRuleAfter": "Add new entry after",
             "remove": "Remove",
-
             "circle": " Circle",
             "square": "Square",
             "triangle": "Triangle",
@@ -2581,13 +2574,11 @@
             "channelAuto": "Auto",
             "openFilterBuilder": "Open filter builder",
             "removeRule": "Remove rule",
-
             "openScaleDenominator": "Open scale denominator filter",
             "selectScale": "Select scale",
             "noResultScales": "No scale match your filter",
             "maxScaleDenominator": "Max scale",
             "minScaleDenominator": "Min scale",
-
             "simpleStyle": "Simple style",
             "classificationStyle": "Classification style",
             "patternMarkStyle": "Pattern mark style",
@@ -2595,10 +2586,8 @@
             "singleBand": "Single band",
             "rgbaBands": "RGB bands",
             "pseudoColor": "Pseudo color",
-
             "undoStyle": "Undo style",
             "redoStyle": "Redo style",
-
             "equalInterval": "Equal interval",
             "uniqueInterval": "Unique interval",
             "quantile": "Quantile",
@@ -2613,7 +2602,6 @@
             "closeCustomParamsEditor": "Yes, close the editor",
             "validationError": "Validation error",
             "incorrectPropertyInputError": "This is probably due to missing or invalid value in the property inputs of the style editor.",
-
             "emptyRuleEditorTitle": "Add new rules",
             "emptyRuleEditor": "There are not rules for this style. Add a new rule by clicking on the desidered symbolizer type in the toolbar",
             "classificationError": "Service unavailable. Currently it is not possible to create a classification",
@@ -2704,12 +2692,12 @@
             "settings": {
                 "tooltip": "Settings",
                 "tab": {
-                  "playback": "Playback",
-                  "layers": "Layers"
+                    "playback": "Playback",
+                    "layers": "Layers"
                 },
                 "layer": {
-                  "enabled": "Display or hide layer from the timeline",
-                  "disabled": "Guide layer cannot be hidden"
+                    "enabled": "Display or hide layer from the timeline",
+                    "disabled": "Guide layer cannot be hidden"
                 },
                 "frameDuration": "Frame Duration",
                 "range": {
@@ -2738,7 +2726,7 @@
                 }
             },
             "backwardStep": "Step backward",
-            "forwardStep" : "Step forward",
+            "forwardStep": "Step forward",
             "play": "Play",
             "pause": "Pause",
             "paused": "Play (paused)",
@@ -2759,20 +2747,20 @@
             "mapSyncOn": "Show all times, without filtering by viewport",
             "mapSyncOff": "Show only times available in the current viewport",
             "currentTime": "Go to current time",
-            "rangeStart":"Go to the current time range",
-            "rangeEnd" : "Go to the current time range",
-            "hideLayerName" : "Hide layers names",
-            "showLayerName" : "Show layers names",
+            "rangeStart": "Go to the current time range",
+            "rangeEnd": "Go to the current time range",
+            "hideLayerName": "Hide layers names",
+            "showLayerName": "Show layers names",
             "enableRange": "Enable time range",
             "disableRange": "Disable time range",
             "enablePlayBack": "Enable playback controls",
             "disablePlayBack": "Disable playback controls",
-            "expand" : "Expand time slider",
-            "collapse" : "Collapse time slider",
-            "reset" : {
-              "range": "Set range to include all data",
-              "singleNow": "Set time to now",
-              "singleNearest": "Set time to nearest value to now"
+            "expand": "Expand time slider",
+            "collapse": "Collapse time slider",
+            "reset": {
+                "range": "Set range to include all data",
+                "singleNow": "Set time to now",
+                "singleNearest": "Set time to nearest value to now"
             },
             "collapsed": {
                 "title": "Timeline has been collapsed",
@@ -2984,33 +2972,33 @@
                     "backConfirmNo": "No",
                     "backConfirmYes": "Yes",
                     "save": "Save settings",
-                    "storyTheme" : "Story theme",
-                    "storyHeader" : "Story Header",
-                    "title" : "Title",
-                    "titlePlaceholder" : "Enter Title",
-                    "logo" : "Logo",
+                    "storyTheme": "Story theme",
+                    "storyHeader": "Story Header",
+                    "title": "Title",
+                    "titlePlaceholder": "Enter Title",
+                    "logo": "Logo",
                     "logoPlaceholder": "Drop your logo image here or click to select an image file (supported formats are png and jpeg)",
-                    "autoplay" : "Autoplay",
-                    "enableAutoplay" : "Enable autoplay",
-                    "autoplayInterval" : "Autoplay interval (seconds)",
-                    "autoplayIntervalPlaceholder" : "Enable autoplay interval",
-                    "navbar" : "Navigation bar",
-                    "showNavbar" : "Show navbar",
+                    "autoplay": "Autoplay",
+                    "enableAutoplay": "Enable autoplay",
+                    "autoplayInterval": "Autoplay interval (seconds)",
+                    "autoplayIntervalPlaceholder": "Enable autoplay interval",
+                    "navbar": "Navigation bar",
+                    "showNavbar": "Show navbar",
                     "theme": "Default Theme",
                     "fontFamily": "Font Family",
                     "webFontLoadError": "Failed to load some fonts from local configuration",
                     "fontSize": "Font size",
                     "overlay": "Overlay",
-                    "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
+                    "templateTooltip": "This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
                 }
             },
             "importDialog": {
-              "selectFiles": "Select a file",
-              "heading": "Drop a previously exported geostory .json file",
-              "note": "The data in the imported file will replace the data in the current geostory"
+                "selectFiles": "Select a file",
+                "heading": "Drop a previously exported geostory .json file",
+                "note": "The data in the imported file will replace the data in the current geostory"
             },
             "exportDialog": {
-              "heading": "Export geostory as a .json file"
+                "heading": "Export geostory as a .json file"
             },
             "errors": {
                 "loading": {
@@ -3022,7 +3010,6 @@
                     "geostoryNotAccessible": "You don't have permission to access this story. Please contact the resource owner",
                     "geostoryDoesNotExist": "This story does not exist",
                     "video": "Sorry! An error has occurred, please try again later."
-
                 }
             },
             "mapEditor": {
@@ -3054,7 +3041,7 @@
                 "alternativeTextColorPopover": "<p>Warning: the selected text color could be not readable on this background.</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
             }
         },
-        "geostoryEmbedded" : {
+        "geostoryEmbedded": {
             "loadingSpinner": "Loading Story",
             "errors": {
                 "loading": {
@@ -3142,7 +3129,7 @@
                 "confirmMapSaveTitle": "Map Update",
                 "confirmMapSaveContent": "Updating this map will reset all dependent maps in the story previously customized through the inline editor, confirm?"
             },
-            "mediaList" : {
+            "mediaList": {
                 "removeResourceTitle": "Are you sure?",
                 "confirmRemoveResource": "Do you want to remove this media resource from the story?",
                 "confirmRemoveUsedResource": "This resource will also be removed from all the sections/contents where It's used leaving them empty. Do you want to remove It from the story?",
@@ -3194,211 +3181,211 @@
             "filterPlaceholder": "Search contexts..."
         },
         "plugins": {
-          "About": {
-            "description": "Tool that shows the About window",
-            "title": "About"
-          },
-          "AddGroup": {
-            "description": "Allows users to create new layer groups in the TOC",
-            "title": "Add Layer Group"
-          },
-          "Annotations": {
-            "description": "Tool to draw annotations on map",
-            "title": "Annotations"
-          },
-          "AutoMapUpdate": {
-            "description": "Allows the user to update the map (old mapstore version)",
-            "title": "Auto Map Update"
-          },
-          "BackgroundSelector": {
-            "description": "Allows to select map background",
-            "title": "Background Selector"
-          },
-          "BurgerMenu": {
-            "description": "Menu on top right of the map that contains other plug-ins",
-            "title": "Burger Menu"
-          },
-          "CRSSelector": {
-            "description": "Allows to switch map projection",
-            "title": "CRS Selector"
-          },
-          "DeleteMap": {
-              "description": "Allows to delete a map resource and all its associated resources",
-              "title": "Delete Map"
-          },
-          "Details": {
-            "description": "Allow to show detail card for a map, if any",
-            "title": "Map Details"
-          },
-          "Expander": {
-            "description": "Utility for Sidebar (navigation) that allows to hide some buttons",
-            "title": "Expander"
-          },
-          "FeatureEditor": {
-            "description": "Browse attributes in a table",
-            "title": "Attribute Table"
-          },
-          "FilterLayer": {
-            "description": "Allows to add a filter to a layer",
-            "title": "Filter Layer"
-          },
-          "GeoProcessing": {
-            "description": "Allows to geo process layers to generate a new one, using wps processes buffer and intersection",
-            "title": "GeoProcessing"
-          },
-          "HelpLink": {
-            "description": "A button to access to MapStore documentation",
-            "title": "Documentation Link"
-          },
-          "Home": {
-            "description": "Link to the home page",
-            "title": "Home"
-          },
-          "Identify": {
-            "description": "Query the objects on map",
-            "title": "Identify"
-          },
-          "Locate": {
-            "description": "Find and follow the position of the user on the map",
-            "title": "Location tool"
-          },
-          "Login": {
-            "description": "Login tool",
-            "title": "Login"
-          },
-          "LongitudinalProfileTool": {
-            "description": "Allows user to generate a longitudinal profile given a linestring and a layer with elevation attribute. Needs configuration",
-            "title": "Longitudinal Profile tool"
-          },
-          "MapCatalog": {
-            "description": "Allows browsing, editing, deleting and loading of maps that are available on the server",
-            "title": "Map Catalog"
-          },
-          "MapExport": {
-            "description": "Allows to export map in a file",
-            "title": "Map Export"
-          },
-          "MapImport": {
-            "description": "Allows to import data (SHP, KML/KMZ, GeoJSON, GPX) or reload exported maps.",
-            "title": "Import"
-          },
-          "MapLoading": {
-            "description": "A spinner in the sidebar that indicates if the map is loading",
-            "title": "Map Loading Indicator"
-          },
-          "Measure": {
-            "description": "Allows to measure distances and areas on the map",
-            "title": "Measure"
-          },
-          "MetadataExplorer": {
-            "description": "Browse services (WMS/WMTS/CSW) to add layers to the map",
-            "title": "Catalog"
-          },
-          "MousePosition": {
-            "description": "Shows the coordinates of the pointed by the mouse cursor",
-            "title": "Mouse Position"
-          },
-          "Print": {
-            "description": "Allows to print the current map with legend",
-            "title": "Print Tool"
-          },
-          "Save": {
-            "description": "Allows to save the changes to the map on the server",
-            "title": "Save"
-          },
-          "SaveAs": {
-            "description": "Allows to create or clone maps on the server",
-            "title": "Save As"
-          },
-          "ScaleBox": {
-            "description": "An indicator and a selector of the current scale of the map",
-            "title": "Scale Selector"
-          },
-          "Search": {
-            "description": "Textual search tool (GeoCoder)",
-            "title": "Search Bar"
-          },
-          "Settings": {
-            "description": "Allows to edit some settings for the map (language, default info format...)",
-            "title": "Settings"
-          },
-          "Share": {
-            "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
-            "title": "Share Tool"
-          },
-          "Permalink": {
-            "description": "Allows to create a permalink of the current resource in view",
-            "title": "Permalink"
-          },
-          "StreetView": {
-            "title": "Street View",
-            "description": "Street view tool for browsing Google street view images from the map"
-          },
-          "StyleEditor": {
-            "description": "Layer's style editor",
-            "title": "Style Editor"
-          },
-          "TOC": {
-            "description": "Provides a list of layers with an ability to sort them",
-            "title": "List of layers"
-          },
-          "TOCItemsSettings": {
-            "description": "Allow to edit layer's settings",
-            "title": "Layer Settings"
-          },
-          "Timeline": {
-            "description": "Allows time travel for data with time dimension",
-            "title": "Timeline"
-          },
-          "Tutorial": {
-            "description": "Adds a tutorial to explain the various functionalities",
-            "title": "Tutorial"
-          },
-          "UserExtensions": {
-            "description": "Allows the user to enable/disable user extensions",
-            "title": "User Extensions"
-          },
-          "UserSession": {
-            "title": "User Session",
-            "description": "Enables an automatically saved user session for every context"
-          },
-          "Version": {
-            "description": "Shows the version of MapStore in map settings tool",
-            "descriptionGeorchestra": "Shows the version of GeOrchestra in map settings tool",
-            "title": "Version"
-          },
-          "LayerDownload": {
-            "description": "Allows to download data from the Attribute Table",
-            "title": "Download Data"
-          },
-          "Widgets": {
-            "description": "Allows to add and show widgets on map",
-            "title": "Widgets"
-          },
-          "WidgetsTray": {
-            "description": "A tray to collapse and expand widgets on map. ",
-            "title": "Widgets Tray"
-          },
-          "Globe": {
-            "description": "Sidebar button to toggle 3D mode on/off",
-            "title": "3D"
-          },
-          "ZoomAll": {
-            "description": "Sidebar button to zoom to the map extent of the map",
-            "title": "Zoom To Max Extent"
-          },
-          "ZoomIn": {
-            "description": "Button that increase zoom level of the map",
-            "title": "Zoom In"
-          },
-          "ZoomOut": {
-            "description": "Button that decrease zoom level of the map",
-            "title": "Zoom Out"
-          },
-          "MapViews": {
-            "description": "This plugin allows to add a sequence of different views inside a map",
-            "title": "MapViews"
-          }
+            "About": {
+                "description": "Tool that shows the About window",
+                "title": "About"
+            },
+            "AddGroup": {
+                "description": "Allows users to create new layer groups in the TOC",
+                "title": "Add Layer Group"
+            },
+            "Annotations": {
+                "description": "Tool to draw annotations on map",
+                "title": "Annotations"
+            },
+            "AutoMapUpdate": {
+                "description": "Allows the user to update the map (old mapstore version)",
+                "title": "Auto Map Update"
+            },
+            "BackgroundSelector": {
+                "description": "Allows to select map background",
+                "title": "Background Selector"
+            },
+            "BurgerMenu": {
+                "description": "Menu on top right of the map that contains other plug-ins",
+                "title": "Burger Menu"
+            },
+            "CRSSelector": {
+                "description": "Allows to switch map projection",
+                "title": "CRS Selector"
+            },
+            "DeleteMap": {
+                "description": "Allows to delete a map resource and all its associated resources",
+                "title": "Delete Map"
+            },
+            "Details": {
+                "description": "Allow to show detail card for a map, if any",
+                "title": "Map Details"
+            },
+            "Expander": {
+                "description": "Utility for Sidebar (navigation) that allows to hide some buttons",
+                "title": "Expander"
+            },
+            "FeatureEditor": {
+                "description": "Browse attributes in a table",
+                "title": "Attribute Table"
+            },
+            "FilterLayer": {
+                "description": "Allows to add a filter to a layer",
+                "title": "Filter Layer"
+            },
+            "GeoProcessing": {
+                "description": "Allows to geo process layers to generate a new one, using wps processes buffer and intersection",
+                "title": "GeoProcessing"
+            },
+            "HelpLink": {
+                "description": "A button to access to MapStore documentation",
+                "title": "Documentation Link"
+            },
+            "Home": {
+                "description": "Link to the home page",
+                "title": "Home"
+            },
+            "Identify": {
+                "description": "Query the objects on map",
+                "title": "Identify"
+            },
+            "Locate": {
+                "description": "Find and follow the position of the user on the map",
+                "title": "Location tool"
+            },
+            "Login": {
+                "description": "Login tool",
+                "title": "Login"
+            },
+            "LongitudinalProfileTool": {
+                "description": "Allows user to generate a longitudinal profile given a linestring and a layer with elevation attribute. Needs configuration",
+                "title": "Longitudinal Profile tool"
+            },
+            "MapCatalog": {
+                "description": "Allows browsing, editing, deleting and loading of maps that are available on the server",
+                "title": "Map Catalog"
+            },
+            "MapExport": {
+                "description": "Allows to export map in a file",
+                "title": "Map Export"
+            },
+            "MapImport": {
+                "description": "Allows to import data (SHP, KML/KMZ, GeoJSON, GPX) or reload exported maps.",
+                "title": "Import"
+            },
+            "MapLoading": {
+                "description": "A spinner in the sidebar that indicates if the map is loading",
+                "title": "Map Loading Indicator"
+            },
+            "Measure": {
+                "description": "Allows to measure distances and areas on the map",
+                "title": "Measure"
+            },
+            "MetadataExplorer": {
+                "description": "Browse services (WMS/WMTS/CSW) to add layers to the map",
+                "title": "Catalog"
+            },
+            "MousePosition": {
+                "description": "Shows the coordinates of the pointed by the mouse cursor",
+                "title": "Mouse Position"
+            },
+            "Print": {
+                "description": "Allows to print the current map with legend",
+                "title": "Print Tool"
+            },
+            "Save": {
+                "description": "Allows to save the changes to the map on the server",
+                "title": "Save"
+            },
+            "SaveAs": {
+                "description": "Allows to create or clone maps on the server",
+                "title": "Save As"
+            },
+            "ScaleBox": {
+                "description": "An indicator and a selector of the current scale of the map",
+                "title": "Scale Selector"
+            },
+            "Search": {
+                "description": "Textual search tool (GeoCoder)",
+                "title": "Search Bar"
+            },
+            "Settings": {
+                "description": "Allows to edit some settings for the map (language, default info format...)",
+                "title": "Settings"
+            },
+            "Share": {
+                "description": "Allows to share the map in various ways (link, QR-Code, embed, social networks...)",
+                "title": "Share Tool"
+            },
+            "Permalink": {
+                "description": "Allows to create a permalink of the current resource in view",
+                "title": "Permalink"
+            },
+            "StreetView": {
+                "title": "Street View",
+                "description": "Street view tool for browsing Google street view images from the map"
+            },
+            "StyleEditor": {
+                "description": "Layer's style editor",
+                "title": "Style Editor"
+            },
+            "TOC": {
+                "description": "Provides a list of layers with an ability to sort them",
+                "title": "List of layers"
+            },
+            "TOCItemsSettings": {
+                "description": "Allow to edit layer's settings",
+                "title": "Layer Settings"
+            },
+            "Timeline": {
+                "description": "Allows time travel for data with time dimension",
+                "title": "Timeline"
+            },
+            "Tutorial": {
+                "description": "Adds a tutorial to explain the various functionalities",
+                "title": "Tutorial"
+            },
+            "UserExtensions": {
+                "description": "Allows the user to enable/disable user extensions",
+                "title": "User Extensions"
+            },
+            "UserSession": {
+                "title": "User Session",
+                "description": "Enables an automatically saved user session for every context"
+            },
+            "Version": {
+                "description": "Shows the version of MapStore in map settings tool",
+                "descriptionGeorchestra": "Shows the version of GeOrchestra in map settings tool",
+                "title": "Version"
+            },
+            "LayerDownload": {
+                "description": "Allows to download data from the Attribute Table",
+                "title": "Download Data"
+            },
+            "Widgets": {
+                "description": "Allows to add and show widgets on map",
+                "title": "Widgets"
+            },
+            "WidgetsTray": {
+                "description": "A tray to collapse and expand widgets on map. ",
+                "title": "Widgets Tray"
+            },
+            "Globe": {
+                "description": "Sidebar button to toggle 3D mode on/off",
+                "title": "3D"
+            },
+            "ZoomAll": {
+                "description": "Sidebar button to zoom to the map extent of the map",
+                "title": "Zoom To Max Extent"
+            },
+            "ZoomIn": {
+                "description": "Button that increase zoom level of the map",
+                "title": "Zoom In"
+            },
+            "ZoomOut": {
+                "description": "Button that decrease zoom level of the map",
+                "title": "Zoom Out"
+            },
+            "MapViews": {
+                "description": "This plugin allows to add a sequence of different views inside a map",
+                "title": "MapViews"
+            }
         },
         "contextCreator": {
             "generalSettings": {
@@ -3411,28 +3398,28 @@
                 "windowTitlePlaceholder": "Enter window title..."
             },
             "configureThemes": {
-              "title": "Configure Theme",
-              "label": "Theme",
-              "themes": "Choose a theme",
-              "noThemes": "No themes found",
-              "customVariables": "Custom Variables",
-              "main": "Main Text Color",
-              "background": "Main Background Color",
-              "primaryContrast": "Primary Text Color",
-              "primary": "Primary Color",
-              "successContrast": "Secondary Text Color",
-              "success": "Secondary Color",
-              "guidelines": "Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary)",
-              "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>An alternative color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
-              "tooltips": {
-                "main": "Text color used in panels or dialogs",
-                "background": "Background color used in panels or dialogs",
-                "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers, buttons",
-                "primary": "Background primary color: toolbars, headers, buttons",
-                "successContrast": "Text color applied when the secondary color is used as background",
-                "success": "Background color used to show when a button is 'active' or 'selected'",
-                "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
-              }
+                "title": "Configure Theme",
+                "label": "Theme",
+                "themes": "Choose a theme",
+                "noThemes": "No themes found",
+                "customVariables": "Custom Variables",
+                "main": "Main Text Color",
+                "background": "Main Background Color",
+                "primaryContrast": "Primary Text Color",
+                "primary": "Primary Color",
+                "successContrast": "Secondary Text Color",
+                "success": "Secondary Color",
+                "guidelines": "Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary)",
+                "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>An alternative color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+                "tooltips": {
+                    "main": "Text color used in panels or dialogs",
+                    "background": "Background color used in panels or dialogs",
+                    "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers, buttons",
+                    "primary": "Background primary color: toolbars, headers, buttons",
+                    "successContrast": "Text color applied when the secondary color is used as background",
+                    "success": "Background color used to show when a button is 'active' or 'selected'",
+                    "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
+                }
             },
             "configurePlugins": {
                 "label": "Configure Plugins",
@@ -3477,7 +3464,7 @@
                     "enabledTitle": "Enabled Plugin",
                     "enabledDescription": "This plugin is enabled"
                 },
-                "saveCfgErrorNotification":  {
+                "saveCfgErrorNotification": {
                     "title": "Syntax error in plugin configuration",
                     "message": "Plugin \"{pluginName}\" contains an error in configuration. Please fix before proceeding"
                 }
@@ -3530,7 +3517,7 @@
             },
             "undo": "Are you sure you want to abandon the context editing session?",
             "showTutorial": "Show Tutorial",
-            "errors":{
+            "errors": {
                 "loading": {
                     "title": "Error loading context",
                     "import": "Failed to import context",
@@ -3557,12 +3544,12 @@
             "editContextTooltip": "Edit context"
         },
         "userExtensions": {
-          "title": "User Extensions",
-          "emptyTitle": "No Result",
-          "emptyDescription": "Entered filter does not match name or description of any of extensions",
-          "filterPlaceholder": "Filter...",
-          "addExtension": "Add Extension",
-          "removeExtension": "Remove Extension"
+            "title": "User Extensions",
+            "emptyTitle": "No Result",
+            "emptyDescription": "Entered filter does not match name or description of any of extensions",
+            "filterPlaceholder": "Filter...",
+            "addExtension": "Add Extension",
+            "removeExtension": "Remove Extension"
         },
         "mapTemplates": {
             "title": "Map templates",
@@ -3765,7 +3752,6 @@
                 "leftClick": "Left click + drag",
                 "rightClick": "Right click + drag, or Mouse wheel scroll",
                 "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
-
             },
             "cesiumCompass": {
                 "title": "Compass",
@@ -3910,252 +3896,252 @@
                 }
             },
             "geostoryIntro": {
-              "title": "Story Tutorial",
-              "text": "<p>Overview of story functionalities</p><p> Explore the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'>here</a>"
+                "title": "Story Tutorial",
+                "text": "<p>Overview of story functionalities</p><p> Explore the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/exploring-stories/'>here</a>"
             },
             "geostoryViewHeader": {
-              "title": "Header",
-              "text": "Here you can find language selector, login, homepage link and options menu"
+                "title": "Header",
+                "text": "Here you can find language selector, login, homepage link and options menu"
             },
             "geostoryViewNavItems": {
-              "title": "Navigable items",
-              "text": "Here you can find items present in the story that you can use to navigate/jump to. It shows also the current position in the story"
+                "title": "Navigable items",
+                "text": "Here you can find items present in the story that you can use to navigate/jump to. It shows also the current position in the story"
             },
             "geostoryViewNavTitle": {
-              "title": "Story Title",
-              "text": "Here you can see the story title"
+                "title": "Story Title",
+                "text": "Here you can see the story title"
             },
             "geostoryViewNavLogo": {
-              "title": "Story Logo",
-              "text": "Here you can see the story logo"
+                "title": "Story Logo",
+                "text": "Here you can see the story logo"
             },
             "geostoryViewContent": {
-              "title": "Story Content",
-              "text": "This will be the content of the story"
+                "title": "Story Content",
+                "text": "This will be the content of the story"
             },
             "geostoryViewEditButton": {
-              "title": "Edit Story",
-              "text": "By clicking here you can edit the story content and settings"
+                "title": "Edit Story",
+                "text": "By clicking here you can edit the story content and settings"
             },
             "geostoryEditSidebar": {
-              "title": "Sidebar",
-              "text": "<p>In the Sidebar you can see an overview of the story where each item is identified by a different icon or with a preview in case of images or maps</p><p>Here you can:</p><ul><li>Change title to each section or content title</li><li>Reorder by with drag drop sections and its content</li><li>Zoom to a specific content with the hourglass button</li></ul>"
+                "title": "Sidebar",
+                "text": "<p>In the Sidebar you can see an overview of the story where each item is identified by a different icon or with a preview in case of images or maps</p><p>Here you can:</p><ul><li>Change title to each section or content title</li><li>Reorder by with drag drop sections and its content</li><li>Zoom to a specific content with the hourglass button</li></ul>"
             },
             "geostoryEditSidebarToolbar": {
-              "title": "Tools",
-              "text": "<p>From left to right:</p><ul><li>Delete a selected section</li><li>Go in view mode</li><li>Edit settings</li><li>Collapse/expand all</li></ul>"
+                "title": "Tools",
+                "text": "<p>From left to right:</p><ul><li>Delete a selected section</li><li>Go in view mode</li><li>Edit settings</li><li>Collapse/expand all</li></ul>"
             },
             "geostoryEditSidebarSettings": {
-              "title": "Story Settings",
-              "text": "<p>Here you can:</p><ul><li>Show/hide/edit the story title</li><li>Edit the theme of the story</li><li>Show/hide/edit the story logo</li><li>Customize the navigation bar in view mode</li></ul><p> For more info see the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'>here</a>"
+                "title": "Story Settings",
+                "text": "<p>Here you can:</p><ul><li>Show/hide/edit the story title</li><li>Edit the theme of the story</li><li>Show/hide/edit the story logo</li><li>Customize the navigation bar in view mode</li></ul><p> For more info see the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/story-setting/'>here</a>"
             },
             "geostoryEditContainer": {
-              "title": "Story Content",
-              "text": "<p>Here you can see the content of the story, edit it by adding or removing sections, paragraphs etc.</p><p>Each toolbar allows you to manipulate the story content, for example:</p><img src='data:image/png;base64,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'/><ul><li>change media source</li><li>make the section to adapt to content height or to fit the view vertically</li><li>make the background to cover or not the container space</li><li>change size</li><li>align the container (available if size is not full)</li><li>change theme</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>this icon will allow you to edit the related map</p><img src=''/><b>Tip: </b>Each tool has a tooltip, hover on it with the mouse to see more"
+                "title": "Story Content",
+                "text": "<p>Here you can see the content of the story, edit it by adding or removing sections, paragraphs etc.</p><p>Each toolbar allows you to manipulate the story content, for example:</p><img src='data:image/png;base64,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'/><ul><li>change media source</li><li>make the section to adapt to content height or to fit the view vertically</li><li>make the background to cover or not the container space</li><li>change size</li><li>align the container (available if size is not full)</li><li>change theme</li></ul><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAgCAYAAAB3j6rJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAIwSURBVFhHY/wPBAyDADBB6QEHow5BB1R3yIWX7xiOP30N5REPqJJY/wKN2HLnCYMwBztD+YGzYLF+F1OGV19/MHgqSzMwMzKCxfABqjjk4ccvDJ6r9jLc+/AZKgIBSgK8DNvDnBnk+XmgIrgBVaKGg4WZgYuVmYGfnZWh39mUYbanJYMQJzsDEzAgWJiIs4KgKlCwf/z5G8rDBM++fGOwWbKD4crrDwzOCpIMGYbqDLE6ygzO8hIMd95/ZnBYthOshhAg6JCXX78zmCzYwiA/bS1D3OYjDPsfvmD49vsPw4ZbjxjqDl1gYGdmZljgbc0gxs3BcPr5W4bzr94xXHvzgeHci3dgMZCcODcn1DTcgOioATlo1Y0HDPMu3Wa4ArQofcdxhp5TVxmmnrvBoC7ExyABtOzxp68MVou2MRjN38JwF5heQGIgOWISK0Vp5B8w2q69+cjAycrC4KMsw9BsZ8ggw8sFxiC2jYwYAwszldIIIbD59mOGiWeuM1Rb6zGUmmsDsQ5Dg40BmN0HTLgC7GxQlfgBxQ4BJeb5l+4w3H73CewgN0UpBmtgSIDYn37hTuTogGKHIANQAtacvQGMQWxSAFUdQgkYdQg6GDoOYQOWnLJ83DgLJS5gGWIkLgSsZ9iAtDDR2RUdEF37/vr7j+HG24/gElNfTJDhyONX4LpFioeLAd2NL4ClMKjuAWVjTmCFSAwYbTyjg1GHoINRh6CDUYegg1GHoINB4hAGBgDB977viofL1wAAAABJRU5ErkJggg=='/><p>this icon will allow you to edit the related map</p><img src=''/><b>Tip: </b>Each tool has a tooltip, hover on it with the mouse to see more"
             },
             "geostoryEditAddbar": {
-              "title": "Add New Content",
-              "text": "<p>Here you can add different kind of scetions:</p><p><img src='data:image/png;base64,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'/></p><ul><li>Title section</li><li>Paragraph section</li><li>Immersive Section</li><li>Media Section</li><li>Web Page Section</li></ul>"
+                "title": "Add New Content",
+                "text": "<p>Here you can add different kind of scetions:</p><p><img src='data:image/png;base64,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'/></p><ul><li>Title section</li><li>Paragraph section</li><li>Immersive Section</li><li>Media Section</li><li>Web Page Section</li></ul>"
             },
             "geostoryEditMediaEditor": {
-              "title": "Media Editor",
-              "text": "<p>Using the the Media Editor you can include in the story different kind of media contents like: <ul> <li>images</li><li>videos</li><li>maps</li></ul></p><p> For more info see the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'>here</a>"
+                "title": "Media Editor",
+                "text": "<p>Using the the Media Editor you can include in the story different kind of media contents like: <ul> <li>images</li><li>videos</li><li>maps</li></ul></p><p> For more info see the related user guide <a target='_blank' href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/'>here</a>"
             }
         },
         "userSession": {
-          "saveErrorNotification": {
-            "titleContext": "User session saving failed",
-            "categoryError": "Creating missing category \"{categoryName}\" failed",
-            "defaultMessage": "Unknown error"
-          },
-          "removeErrorNotification": {
-            "titleContext": "User session removing failed",
-            "defaultMessage": "Unknown error"
-          },
-          "tooltip": "Clear the current user session saved",
-          "successRemoved": "User session removed",
-          "remove": "Reset User Session",
-          "confirmRemove": "Are you sure you want to restore the default configuration?"
+            "saveErrorNotification": {
+                "titleContext": "User session saving failed",
+                "categoryError": "Creating missing category \"{categoryName}\" failed",
+                "defaultMessage": "Unknown error"
+            },
+            "removeErrorNotification": {
+                "titleContext": "User session removing failed",
+                "defaultMessage": "Unknown error"
+            },
+            "tooltip": "Clear the current user session saved",
+            "successRemoved": "User session removed",
+            "remove": "Reset User Session",
+            "confirmRemove": "Are you sure you want to restore the default configuration?"
         },
         "streetView": {
-          "title": "Street View",
-          "description": "Street view tool for browsing Google street view images from the map",
-          "tooltip": "Open street view tool",
-          "emptyTitle": "Street View",
-          "emptyDescription": "Click on the map to start browsing the images of street view",
-          "messages": {
-            "noDataForPosition": "no street-view data for this position",
-            "unknownError": "unknown error, see console",
-            "errorServiceUrl": "Service not available. Please, check the provided URL",
-            "errorRetriveingLayerData": "There was an error loading the layer data"
-          },
-          "loadingAPI": "Loading API...",
-          "cyclomedia": {
-            "initializing": "Initializing Street Smart API...",
-            "loadingAPI": "Loading Street Smart API...",
-            "changeCredentials": "Change Street Smart credentials",
-            "insertCredentials": "Insert your Street Smart credentials",
-            "emptyDescription": "Click on one of the blue points on the map to start browsing the images of street view",
-            "username": "Username",
-            "password": "Password",
-            "submit": "Submit",
-            "zoomIn": "Please zoom in the map to see the street view coverage",
-            "errorOccurred": "Error occurred: ",
-            "errors": {
-              "invalidCredentials": "Invalid credentials",
-              "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
+            "title": "Street View",
+            "description": "Street view tool for browsing Google street view images from the map",
+            "tooltip": "Open street view tool",
+            "emptyTitle": "Street View",
+            "emptyDescription": "Click on the map to start browsing the images of street view",
+            "messages": {
+                "noDataForPosition": "no street-view data for this position",
+                "unknownError": "unknown error, see console",
+                "errorServiceUrl": "Service not available. Please, check the provided URL",
+                "errorRetriveingLayerData": "There was an error loading the layer data"
             },
-            "reloadAPI": "Reload API"
-          }
+            "loadingAPI": "Loading API...",
+            "cyclomedia": {
+                "initializing": "Initializing Street Smart API...",
+                "loadingAPI": "Loading Street Smart API...",
+                "changeCredentials": "Change Street Smart credentials",
+                "insertCredentials": "Insert your Street Smart credentials",
+                "emptyDescription": "Click on one of the blue points on the map to start browsing the images of street view",
+                "username": "Username",
+                "password": "Password",
+                "submit": "Submit",
+                "zoomIn": "Please zoom in the map to see the street view coverage",
+                "errorOccurred": "Error occurred: ",
+                "errors": {
+                    "invalidCredentials": "Invalid credentials",
+                    "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
+                },
+                "reloadAPI": "Reload API"
+            }
         },
         "sidebarMenu": {
-          "showMoreItems": "Show more items"
+            "showMoreItems": "Show more items"
         },
         "longitudinalProfile": {
-          "open": "Open Longitudinal Profile",
-          "close": "Close Longitudinal Profile",
-          "title": "Longitudinal profile",
-          "draw": "Draw line",
-          "import": "Load file",
-          "select": "Selection to profile",
-          "parameters": "Parameters",
-          "elevation": "Elevation (m)",
-          "crsSelector": "Specify a projection for the DXF file",
-          "distance": "Distance (m)",
-          "chart": "Chart",
-          "infos": "Information",
-          "preferences": "Preferences",
-          "CRS": "CRS",
-          "uom": "Units",
-          "fileSelected": "File selected: ",
-          "uomMeters": "meters",
-          "source": "Source",
-          "export": "Export",
-          "downloadGeoJSON": "GeoJSON",
-          "downloadDXF": "DXF",
-          "downloadCSV": "CSV",
-          "downloadPNG": "PNG",
-          "downloadPDF": "PDF",
-          "info": {
-            "points": " points",
-            "totalPoints": "Number of points processed:",
-            "layer":"Layer:",
-            "line":"Distance:",
-            "up":"Cumulative elevation gain:",
-            "down":"Cumulative elevation loss:",
-            "noInfos": "No info available"
-          },
-          "help": {
-            "draw": "Click on the map to draw the line. Click one more time on end point to finish.",
-            "select": "Please select layer in TOC and click on the line feature to generate profile.<br/>Selected layer: {layerName}",
-            "noLayer": "No layer selected",
-            "notSupportedLayer": "not supported. Please select WMS, WFS or vector layer."
-          },
-          "warnings": {
-            "noLayerSelected": "Please select layer first.",
-            "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
-            "noFeatureInPoint": "Line feature was not found at selected point.",
-            "noLineFeatureFound": "Line feature was not found in imported file.",
-            "fallbackToProjection": "Projection of default referential \"{defaultReferential}\" is not supported. Falling back to referential \"{referential}\" with \"{projection}\" projection."
-          },
-          "errors": {
-            "outsideCoverage": "The provided line is outside the profile coverage",
-            "loadingError": "Error loading data for longitudinal profile",
-            "unableToSetupPlugin": "Unable to setup longitudinal profile extension",
-            "defaultReferentialNotFound": "Default referential is configured but cannot be found in referentials list. Please update extension configuration.",
-            "projectionNotSupported": "Referential with projection supported by map cannot be found. Please update extension configuration or add desired projection into app configuration.",
-            "cannotDownloadPDF": "It is not possible to print the current map as it contains references to external domain, please remove them save the map, refresh the page and try again.",
-            "cannotDownloadPNG": "Cannot download the chart as image."
-          },
-          "settings": {
-            "chartTitle": "Chart Title",
-            "referential": "Profile layer",
-            "distance": "Distance (m)"
-          },
-          "dropZone": {
-            "heading": "<p><h4>Drop your file here</h4><small>or</small></p>",
-            "selectFiles": "Select file...",
-            "infoSupported": "<p><small>Supported file types: GeoJSON, DXF, Shapefiles</small></p>",
-            "dxfGeometryNotSupported": "Only LWPOLYLINE  is supported"
-          }
+            "open": "Open Longitudinal Profile",
+            "close": "Close Longitudinal Profile",
+            "title": "Longitudinal profile",
+            "draw": "Draw line",
+            "import": "Load file",
+            "select": "Selection to profile",
+            "parameters": "Parameters",
+            "elevation": "Elevation (m)",
+            "crsSelector": "Specify a projection for the DXF file",
+            "distance": "Distance (m)",
+            "chart": "Chart",
+            "infos": "Information",
+            "preferences": "Preferences",
+            "CRS": "CRS",
+            "uom": "Units",
+            "fileSelected": "File selected: ",
+            "uomMeters": "meters",
+            "source": "Source",
+            "export": "Export",
+            "downloadGeoJSON": "GeoJSON",
+            "downloadDXF": "DXF",
+            "downloadCSV": "CSV",
+            "downloadPNG": "PNG",
+            "downloadPDF": "PDF",
+            "info": {
+                "points": " points",
+                "totalPoints": "Number of points processed:",
+                "layer": "Layer:",
+                "line": "Distance:",
+                "up": "Cumulative elevation gain:",
+                "down": "Cumulative elevation loss:",
+                "noInfos": "No info available"
+            },
+            "help": {
+                "draw": "Click on the map to draw the line. Click one more time on end point to finish.",
+                "select": "Please select layer in TOC and click on the line feature to generate profile.<br/>Selected layer: {layerName}",
+                "noLayer": "No layer selected",
+                "notSupportedLayer": "not supported. Please select WMS, WFS or vector layer."
+            },
+            "warnings": {
+                "noLayerSelected": "Please select layer first.",
+                "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
+                "noFeatureInPoint": "Line feature was not found at selected point.",
+                "noLineFeatureFound": "Line feature was not found in imported file.",
+                "fallbackToProjection": "Projection of default referential \"{defaultReferential}\" is not supported. Falling back to referential \"{referential}\" with \"{projection}\" projection."
+            },
+            "errors": {
+                "outsideCoverage": "The provided line is outside the profile coverage",
+                "loadingError": "Error loading data for longitudinal profile",
+                "unableToSetupPlugin": "Unable to setup longitudinal profile extension",
+                "defaultReferentialNotFound": "Default referential is configured but cannot be found in referentials list. Please update extension configuration.",
+                "projectionNotSupported": "Referential with projection supported by map cannot be found. Please update extension configuration or add desired projection into app configuration.",
+                "cannotDownloadPDF": "It is not possible to print the current map as it contains references to external domain, please remove them save the map, refresh the page and try again.",
+                "cannotDownloadPNG": "Cannot download the chart as image."
+            },
+            "settings": {
+                "chartTitle": "Chart Title",
+                "referential": "Profile layer",
+                "distance": "Distance (m)"
+            },
+            "dropZone": {
+                "heading": "<p><h4>Drop your file here</h4><small>or</small></p>",
+                "selectFiles": "Select file...",
+                "infoSupported": "<p><small>Supported file types: GeoJSON, DXF, Shapefiles</small></p>",
+                "dxfGeometryNotSupported": "Only LWPOLYLINE  is supported"
+            }
         },
         "GeoProcessing": {
-          "title": "GeoProcessing",
-          "emptyTitle": "These WPS processes must be installed in Geoserver in order to use this process:",
-          "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
-          "sourceLayer": "Source Layer",
-          "sourceFeature": "Source Feature",
-          "tool": "Select a process to use",
-          "highlight": "Highlight features",
-          "bufferTool": "Buffer",
-          "distance": "Distance",
-          "distanceUom": "Units of measure",
-          "km": "km",
-          "m": "m",
-          "run": "Run",
-          "intersectionTool": "Intersection",
-          "noMatchedLayer": "No layer matches the current filter",
-          "noMatchedFeature": "No feature matches the current filter",
-          "intersectionLayer": "Intersection Layer",
-          "intersectionFeature": "Intersection Feature",
-          "advancedSettings": "Advanced Settings",
-          "quadrantSegments": "Quadrant segments",
-          "quadrantSegmentsTooltip": "Number of segments",
-          "capStyle": "Cap style",
-          "capStyleTooltip": "Style for the buffer end caps",
-          "round": "Round",
-          "flat": "Flat",
-          "square": "Square",
-          "firstAttributeToRetain": "First attribute to retain",
-          "secondAttributeToRetain": "Second attribute to retain",
-          "intersectionMode": "Intersection mode",
-          "percentagesEnabled": "Percentages enabled",
-          "areasEnabled": "Areas enabled",
-          "firstAttributeToRetainTooltip": "First feature collection attribute to include",
-          "secondAttributeToRetainTooltip": "Second feature collection attribute to include",
-          "intersectionModeTooltip": "Specifies geometry computed for intersecting features",
-          "percentagesEnabledTooltip": "Indicates whether to output feature area percentages",
-          "areasEnabledTooltip": "Indicates whether to output feature areas",
-          "noMatchedMode": "No mode matches the current filter",
-          "INTERSECTION": "INTERSECTION",
-          "FIRST": "FIRST",
-          "SECOND": "SECOND",
-          "true": "true",
-          "false": "false",
-          "notifications": {
-            "errorMissingUrl": "A geoserver wps url must be provided to collect geometries for these layers {layerName}. You can configure wpsUrl property in GeoProcessing plugin",
-            "errorIntersectGFI": "There was an error intersecting the features. It was not possible to create the intersection layer.",
-            "errorGFI": "There was an error loading the feature",
-            "errorGetFeature": "There was an error loading the feature in order to obtain its geometry",
-            "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
-            "noFeatureInPoint": "No feature was found at selected point.",
-            "featureFound": "A feature was found at selected point.",
-            "noLayerSelected": "Please select layer first.",
-            "successfulIntersection": "The intersection operation was successful and a new layer has ben created and added to the TOC",
-            "successfulBuffer": "The Buffer operation was successful and a new layer has ben created and added to the TOC",
-            "errorBuffer": "The Buffer operation has failed",
-            "emptyIntersection": "There is no intersection between the given datasets.",
-            "errorGettingFC": "It was not possible to collect the geometry from the layer {layerName}",
-            "errorGettingFeaturesList": "It was not possible to fetch the list of features from the layer {layerName}"
-          },
-          "warningTitle": "Warning",
-          "warningBody": "You have not selected a feature and this may slow down performances in geoserver. Do you want to continue?",
-          "warningConfirmText": "Yes",
-          "warningCancel": "Cancel",
-          "tooltip": {
-            "clickToSelectFeature": "Click to select feature",
-            "invalidLayers": "One of the layers you have selected cannot be used within this process",
-            "fillRequiredDataIntersection": "Please select at least the source layer and the intersection layer",
-            "fillRequiredDataBuffer": "Please select at least the source layer",
-            "pointAndPolygon": "You can select a point layer only for the intersection layer",
-            "siderBarBtn": "GeoProcessing",
-            "selectFeature": "Please select a feature",
-            "validFeature": "This feature is valid",
-            "invalidFeature": "This feature is not valid",
-            "selectLayer": "Please select a layer",
-            "validLayer": "This layer is valid and can be used in this process",
-            "invalidLayer": "This layer does not support the needed wps processes \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\nor it is a Raster layer"
-          }
+            "title": "GeoProcessing",
+            "emptyTitle": "These WPS processes must be installed in Geoserver in order to use this process:",
+            "emptyDescription": "<ul><li>geo:buffer</li><li>gs:IntersectionFeatureCollection</li><li>gs:CollectGeometries</li></ul>",
+            "sourceLayer": "Source Layer",
+            "sourceFeature": "Source Feature",
+            "tool": "Select a process to use",
+            "highlight": "Highlight features",
+            "bufferTool": "Buffer",
+            "distance": "Distance",
+            "distanceUom": "Units of measure",
+            "km": "km",
+            "m": "m",
+            "run": "Run",
+            "intersectionTool": "Intersection",
+            "noMatchedLayer": "No layer matches the current filter",
+            "noMatchedFeature": "No feature matches the current filter",
+            "intersectionLayer": "Intersection Layer",
+            "intersectionFeature": "Intersection Feature",
+            "advancedSettings": "Advanced Settings",
+            "quadrantSegments": "Quadrant segments",
+            "quadrantSegmentsTooltip": "Number of segments",
+            "capStyle": "Cap style",
+            "capStyleTooltip": "Style for the buffer end caps",
+            "round": "Round",
+            "flat": "Flat",
+            "square": "Square",
+            "firstAttributeToRetain": "First attribute to retain",
+            "secondAttributeToRetain": "Second attribute to retain",
+            "intersectionMode": "Intersection mode",
+            "percentagesEnabled": "Percentages enabled",
+            "areasEnabled": "Areas enabled",
+            "firstAttributeToRetainTooltip": "First feature collection attribute to include",
+            "secondAttributeToRetainTooltip": "Second feature collection attribute to include",
+            "intersectionModeTooltip": "Specifies geometry computed for intersecting features",
+            "percentagesEnabledTooltip": "Indicates whether to output feature area percentages",
+            "areasEnabledTooltip": "Indicates whether to output feature areas",
+            "noMatchedMode": "No mode matches the current filter",
+            "INTERSECTION": "INTERSECTION",
+            "FIRST": "FIRST",
+            "SECOND": "SECOND",
+            "true": "true",
+            "false": "false",
+            "notifications": {
+                "errorMissingUrl": "A geoserver wps url must be provided to collect geometries for these layers {layerName}. You can configure wpsUrl property in GeoProcessing plugin",
+                "errorIntersectGFI": "There was an error intersecting the features. It was not possible to create the intersection layer.",
+                "errorGFI": "There was an error loading the feature",
+                "errorGetFeature": "There was an error loading the feature in order to obtain its geometry",
+                "layerNotSupported": "Selected layer is not supported. Please select WMS, WFS or vector layer.",
+                "noFeatureInPoint": "No feature was found at selected point.",
+                "featureFound": "A feature was found at selected point.",
+                "noLayerSelected": "Please select layer first.",
+                "successfulIntersection": "The intersection operation was successful and a new layer has ben created and added to the TOC",
+                "successfulBuffer": "The Buffer operation was successful and a new layer has ben created and added to the TOC",
+                "errorBuffer": "The Buffer operation has failed",
+                "emptyIntersection": "There is no intersection between the given datasets.",
+                "errorGettingFC": "It was not possible to collect the geometry from the layer {layerName}",
+                "errorGettingFeaturesList": "It was not possible to fetch the list of features from the layer {layerName}"
+            },
+            "warningTitle": "Warning",
+            "warningBody": "You have not selected a feature and this may slow down performances in geoserver. Do you want to continue?",
+            "warningConfirmText": "Yes",
+            "warningCancel": "Cancel",
+            "tooltip": {
+                "clickToSelectFeature": "Click to select feature",
+                "invalidLayers": "One of the layers you have selected cannot be used within this process",
+                "fillRequiredDataIntersection": "Please select at least the source layer and the intersection layer",
+                "fillRequiredDataBuffer": "Please select at least the source layer",
+                "pointAndPolygon": "You can select a point layer only for the intersection layer",
+                "siderBarBtn": "GeoProcessing",
+                "selectFeature": "Please select a feature",
+                "validFeature": "This feature is valid",
+                "invalidFeature": "This feature is not valid",
+                "selectLayer": "Please select a layer",
+                "validLayer": "This layer is valid and can be used in this process",
+                "invalidLayer": "This layer does not support the needed wps processes \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\nor it is a Raster layer"
+            }
         }
     }
 }

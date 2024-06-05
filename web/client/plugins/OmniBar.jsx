@@ -27,7 +27,7 @@ class OmniBar extends React.Component {
         style: {},
         containerWrapperStyle: {},
         id: "mapstore-navbar",
-        title: "CoreSpatial Portal"
+        title: "Portal"
     };
 
     getPanels = () => {

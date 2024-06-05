@@ -53,7 +53,7 @@
 
 /* Page Navbar */
 .navbar-home .dropdown {
-    height: 62px;
+    height: 64px;
     float: right;
 }
 
@@ -68,9 +68,9 @@
 #mapstore-navbar-container {
     display: flex;
     flex-direction: row-reverse;
-    background-color: #249edd;
+    background-color: #114C68;
     box-sizing: border-box;
-    height: 62px;
+    height: 64px;
     padding-left: 0;
     margin-left: 0;
 }
@@ -78,6 +78,7 @@
 #mapstore-navbar-container .nav.pull-left {
     display: flex;
     flex: 1;
+    height: 64px;
 }
 
 #mapstore-navbar-container .nav.pull-left > li > a {
@@ -117,6 +118,6 @@
 }
 
 #mapstore-navbar-container .square-button {
-    height: 62px;
-    width: 62px;
+    height: 64px;
+    width: 64px;
 }
