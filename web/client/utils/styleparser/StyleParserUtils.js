@@ -933,3 +933,7 @@ export const drawIcons = (geoStylerStyle, options) => {
             })
         );
 };
+export const getCachedImageById = (symbolizer) => {
+    const id = getImageIdFromSymbolizer(symbolizer);
+    return imagesCache[id] || {};
+};
