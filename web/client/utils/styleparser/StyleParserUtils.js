@@ -613,14 +613,14 @@ export const drawWellKnownNameImageFromSymbolizer = (symbolizer) => {
         && !(symbolizer.wellKnownName || '').includes('shape://');
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    const radius = (symbolizer.radius || symbolizer?.size / 2);
+    const radius = symbolizer.radius;
     const strokePadding = hasStroke ? symbolizer.strokeWidth / 2 : 4;
     const x = strokePadding;
     const y = strokePadding;
     const cx = radius + strokePadding;
     const cy = radius + strokePadding;
-    const width = radius * 2;
-    const height = radius * 2;
+    const width = symbolizer.radius * 2;
+    const height = symbolizer.radius * 2;
     canvas.setAttribute('width', width + strokePadding * 2);
     canvas.setAttribute('height', height + strokePadding * 2);
 
@@ -932,4 +932,8 @@ export const drawIcons = (geoStylerStyle, options) => {
                 }
             })
         );
+};
+export const getCachedImageById = (symbolizer) => {
+    const id = getImageIdFromSymbolizer(symbolizer);
+    return imagesCache[id] || {};
 };

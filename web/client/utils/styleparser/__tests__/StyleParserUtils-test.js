@@ -13,7 +13,7 @@ import {
     geoStylerStyleFilter,
     getWellKnownNameImageFromSymbolizer,
     parseSymbolizerExpressions,
-    drawWellKnownNameImageFromSymbolizer
+    getCachedImageById
 } from '../StyleParserUtils';
 
 describe("StyleParserUtils ", () => {
@@ -237,11 +237,20 @@ describe("StyleParserUtils ", () => {
                 outlineDasharray: [ 10, 10 ]
             });
     });
-    it('test drawWellKnownNameImageFromSymbolizer method for Icon symbolizer to return width, height = size /2 in case radius not included within symbolizer', () => {
-        const symbolizer1 = {
-            "symbolizerId": "1",
+    it('test getCachedImageById method for Icon annotationSymbolizer to return width, height = size in case of returning undefined from getCachedImageById', () => {
+        const annotationSymbolizer = {
+            "symbolizerId": "5ba7eae188a0",
             "kind": "Icon",
-            "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAqCAYAAACk2+",
+            "image": {
+                "name": "msMarkerIcon",
+                "args": [
+                    {
+                        "color": "blue",
+                        "shape": "circle",
+                        "glyph": "comment"
+                    }
+                ]
+            },
             "opacity": 1,
             "size": 46,
             "rotate": 0,
@@ -249,8 +258,8 @@ describe("StyleParserUtils ", () => {
             "anchor": "bottom",
             "msHeightReference": "none"
         };
-        const {width, height} = drawWellKnownNameImageFromSymbolizer(symbolizer1);
-        expect(width).toBe(symbolizer1.size);
-        expect(height).toBe(symbolizer1.size);
+        const { width = annotationSymbolizer.size, height = annotationSymbolizer.size } = getCachedImageById(annotationSymbolizer);
+        expect(width).toBe(annotationSymbolizer.size);
+        expect(height).toBe(annotationSymbolizer.size);
     });
 });
