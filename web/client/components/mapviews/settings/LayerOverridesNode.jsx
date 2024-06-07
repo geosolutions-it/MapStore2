@@ -16,6 +16,7 @@ import {
     Alert
 } from 'react-bootstrap';
 import Select from 'react-select';
+import {clamp} from 'lodash';
 import FormControl from '../../misc/DebouncedFormControl';
 import { formatClippingFeatures } from '../../../utils/MapViewsUtils';
 import Message from '../../I18N/Message';
@@ -104,7 +105,10 @@ function LayerOverridesNode({
                         className="opacity-field"
                         fallbackValue={1}
                         value={layer.opacity}
-                        onChange={(value) => onChange({ opacity: value })}
+                        onChange={(value) => {
+                            const opacity = value && clamp(parseFloat(value), 0, 1);
+                            onChange({ opacity: opacity || 0 });
+                        }}
                     />
                 </FormGroup>}
                 {isClippingSupported && <div className="ms-map-views-layer-clipping">
