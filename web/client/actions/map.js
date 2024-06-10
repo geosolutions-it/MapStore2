@@ -32,7 +32,6 @@ export const MAP_PLUGIN_LOAD = 'MAP:MAP_PLUGIN_LOAD';
 export const ORIENTATION = 'MAP:ORIENTATION';
 export const UPDATE_MAP_VIEW = 'MAP:UPDATE_MAP_VIEW';
 export const UPDATE_MAP_OPTIONS = 'MAP:UPDATE_MAP_OPTIONS';
-export const RESET_MAP_STATE = 'MAP:RESET_MAP_STATE';
 
 /**
  * Event triggered when loading a different map type plugins (code for the specific implementation)
@@ -260,9 +259,6 @@ export const updateMapOptions = (configUpdate) => ({
     configUpdate
 });
 
-export const clearMapState = () => ({
-    type: RESET_MAP_STATE
-});
 /**
  * Actions for map
  * @name actions.map

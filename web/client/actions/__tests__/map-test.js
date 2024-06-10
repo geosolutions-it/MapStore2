@@ -52,9 +52,7 @@ import {
     orientateMap,
     ORIENTATION,
     updateMapOptions,
-    UPDATE_MAP_OPTIONS,
-    clearMapState,
-    RESET_MAP_STATE
+    UPDATE_MAP_OPTIONS
 } from '../map';
 
 
@@ -259,10 +257,5 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toEqual(UPDATE_MAP_OPTIONS);
         expect(retval.configUpdate).toEqual(configUpdate);
-    });
-    it('test clear map state if LOCATION_CHANGE action fired', () => {
-        const retval = clearMapState();
-        expect(retval).toExist();
-        expect(retval.type).toBe(RESET_MAP_STATE);
     });
 });

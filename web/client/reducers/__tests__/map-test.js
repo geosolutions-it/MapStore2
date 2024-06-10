@@ -9,7 +9,7 @@ import expect from 'expect';
 
 import { round } from 'lodash';
 import mapConfig from '../map';
-import { updateMapOptions, changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS, clearMapState } from '../../actions/map';
+import { updateMapOptions, changeMapLimits, PAN_TO, SET_MAP_RESOLUTIONS } from '../../actions/map';
 
 describe('Test the map reducer', () => {
     it('returns original state on unrecognized action', () => {
@@ -285,15 +285,5 @@ describe('Test the map reducer', () => {
             }
         }, action);
         expect(state.mapOptions.skyAtmosphere).toBe(false);
-    });
-    it('Test clear map state in location change', () => {
-        const action = clearMapState();
-        let state = mapConfig({
-            mapInfo: {},
-            zoom: 2
-        }, action);
-        expect(state.mapInfo).toNotExist();
-        expect(state.zoom).toNotExist();
-        expect(state.eventListeners).toExist();
     });
 });

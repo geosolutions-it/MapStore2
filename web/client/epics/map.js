@@ -16,8 +16,7 @@ import {
     ZOOM_TO_EXTENT,
     CHANGE_MAP_CRS,
     changeMapView,
-    changeMapLimits,
-    clearMapState
+    changeMapLimits
 } from '../actions/map';
 
 import {
@@ -25,8 +24,7 @@ import {
     configuredRestrictedExtentSelector,
     configuredMinZoomSelector,
     mapSelector,
-    mapIdSelector,
-    mapInfoSelector
+    mapIdSelector
 } from '../selectors/map';
 
 import { loadMapInfo, MAP_CONFIG_LOADED } from '../actions/config';
@@ -42,7 +40,6 @@ import { warning } from '../actions/notifications';
 import { clearWarning as clearMapInfoWarning } from '../actions/mapInfo';
 import { removeAllAdditionalLayers } from '../actions/additionallayers';
 import { head, isArray, isObject, mapValues } from 'lodash';
-import { LOCATION_CHANGE } from 'connected-react-router';
 
 export const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -222,21 +219,6 @@ export const checkMapPermissions = (action$, {getState = () => {} }) =>
             const mapId = mapIdSelector(getState());
             return loadMapInfo(mapId);
         });
-/**
- * It clears the map state on LOCATION_CHANGE in case switch to page rather than mapviewer page
- * @memberof epics.map
- * @param {object} action$
- */
-export const resetMapState = (action$, {getState = () => {} }) =>
-    action$.ofType(LOCATION_CHANGE)
-        .filter((action) => {
-            const state = getState();
-            const mapInfo = mapInfoSelector(state);
-            const currentPathUrl = action.payload.location.pathname;
-            return mapInfo && !currentPathUrl.startsWith("/viewer/");
-        }).map(() => {
-            return clearMapState();
-        });
 
 export default {
     checkMapPermissions,
@@ -244,6 +226,5 @@ export default {
     handleCreationBackgroundError,
     resetMapOnInit,
     resetLimitsOnInit,
-    zoomToExtentEpic,
-    resetMapState
+    zoomToExtentEpic
 };

@@ -8,13 +8,12 @@
 
 import expect from 'expect';
 
-import { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions, resetMapState } from '../map';
-import { CHANGE_MAP_VIEW, zoomToExtent, CHANGE_MAP_LIMITS, changeMapCrs, RESET_MAP_STATE } from '../../actions/map';
+import { resetLimitsOnInit, zoomToExtentEpic, checkMapPermissions } from '../map';
+import { CHANGE_MAP_VIEW, zoomToExtent, CHANGE_MAP_LIMITS, changeMapCrs } from '../../actions/map';
 import { LOAD_MAP_INFO, configureMap } from '../../actions/config';
 import { testEpic, addTimeoutEpic, TEST_TIMEOUT } from './epicTestUtils';
 import MapUtils from '../../utils/MapUtils';
 import { LOGIN_SUCCESS } from '../../actions/security';
-import { LOCATION_CHANGE } from 'connected-react-router';
 
 const LAYOUT_STATE = {
     layout: {
@@ -235,56 +234,5 @@ describe('map epics', () => {
             expect(minZoom).toBe(2);
             done();
         }, state);
-    });
-    it('test resetMapState id location change from mapviewer page and going to another page like home page. ', (done) => {
-        const state = {
-            map: {
-                present: {
-                    projection: "EPSG:1234", // NOTE: this is fake, it should be changed by the reducer after the changeMapCrs action
-                    info: {
-                        canEdit: true
-                    },
-                    zoom: 3
-                }
-            }
-        };
-        const locationChangeAction = {
-            type: LOCATION_CHANGE,
-            payload: {
-                location: {
-                    pathname: '/'
-                }
-            }
-        };
-        testEpic(resetMapState, 1, locationChangeAction, ([action]) => {
-            const { type } = action;
-            expect(type).toBe(RESET_MAP_STATE);
-            done();
-        }, state, done);
-    });
-    it('test resetMapState if location change from mapviewer page due to change locale --> does not clear map state', (done) => {
-        const state = {
-            map: {
-                present: {
-                    projection: "EPSG:1234",
-                    info: {
-                        canEdit: true
-                    },
-                    zoom: 3
-                }
-            }
-        };
-        const locationChangeAction = {
-            type: LOCATION_CHANGE,
-            payload: {
-                location: {
-                    pathname: '/viewer/123'
-                }
-            }
-        };
-        testEpic(resetMapState, 0, locationChangeAction, ([action]) => {
-            expect(action).toNotExist();
-            done();
-        }, state, done);
     });
 });
