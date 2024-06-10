@@ -128,6 +128,30 @@ describe('Login Plugin', () => {
             // click on confirm button
             TestUtils.Simulate.click(buttons[1]);
         });
+        it('test hide change password in case LDAP user [not admin] ', () => {
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            ReactDOM.render(<Plugin isUsingLDAP />, document.getElementById("container"));
+            expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
+            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(2); // user.info, user.logout
+        });
+        it('test show change password in case LDAP user [admin] ', () => {
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'ADMIN' }}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            ReactDOM.render(<Plugin isUsingLDAP />, document.getElementById("container"));
+            expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
+            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
+        });
+        it('test show change password in case ms user ', () => {
+            const storeState = stateMocker(toggleControl('LoginForm', 'enabled'), loginSuccess({  User: { name: "Test", access_token: "some-token", role: 'USER' }}) );
+            const { Plugin } = getPluginForTest(Login, storeState);
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.querySelector('#mapstore-login-menu .glyphicon-user')).toBeTruthy();
+            const entries = document.querySelectorAll("#mapstore-login-menu ul li[role=\"presentation\"]");
+            expect(entries.length).toEqual(3); // user.info, user.changePwd ,user.logout
+        });
     });
     describe('OmniBar menu entries', () => {
         afterEach(() => {
