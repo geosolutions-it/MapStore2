@@ -33,6 +33,7 @@ export const ORIENTATION = 'MAP:ORIENTATION';
 export const UPDATE_MAP_VIEW = 'MAP:UPDATE_MAP_VIEW';
 export const UPDATE_MAP_OPTIONS = 'MAP:UPDATE_MAP_OPTIONS';
 
+
 /**
  * Event triggered when loading a different map type plugins (code for the specific implementation)
  * @prop {boolean} loading true when the loading is active. False when the loading is finished.

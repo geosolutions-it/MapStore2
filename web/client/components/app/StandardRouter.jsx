@@ -70,6 +70,10 @@ class StandardRouter extends React.Component {
                 <ThemeProvider {...this.props.themeCfg} version={this.props.version} onLoad={this.props.onThemeLoaded}>
                     {this.props.themeLoaded ? (<Localized reloadOnLocaleChage={false} messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                         <ConnectedRouter history={history}>
+                            {/** the key is moved from the above Localized to the next div after 'ConnectedRouter':
+                            *  to ensure the reload of children
+                            *  to avoid and prevent firing LOCATION_CHANGE action that caused reset map state in change locale
+                            */}
                             <div key={this.props.locale.current} className="error-container">
                                 <ErrorBoundary
                                     onError={e => {
@@ -96,6 +100,10 @@ class StandardRouter extends React.Component {
                 <Theme {...this.props.themeCfg} version={this.props.version}/>
                 <Localized reloadOnLocaleChage={false} messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
+                        {/** the key is moved from the above Localized to the next div after 'ConnectedRouter':
+                        *  to ensure the reload of children
+                        *  to avoid and prevent firing LOCATION_CHANGE action that caused reset map state in change locale
+                        */}
                         <div key={this.props.locale.current} className="error-container">
                             <ErrorBoundary
                                 onError={e => {

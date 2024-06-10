@@ -235,4 +235,5 @@ describe('map epics', () => {
             done();
         }, state);
     });
+
 });

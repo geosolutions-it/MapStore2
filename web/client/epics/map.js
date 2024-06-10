@@ -220,6 +220,7 @@ export const checkMapPermissions = (action$, {getState = () => {} }) =>
             return loadMapInfo(mapId);
         });
 
+
 export default {
     checkMapPermissions,
     handleCreationLayerError,
