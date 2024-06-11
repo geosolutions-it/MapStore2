@@ -7,10 +7,13 @@
  */
 import { getCapabilities, getLayerMetadata } from '../ArcGIS';
 import expect from 'expect';
+import axios from '../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+
+let mockAxios;
 
 describe('Test ArcGIS API', () => {
     const _url = 'base/web/client/test-resources/arcgis/arcgis-test-data.json';
-
     it('should extract capabilities from arcgis service data', (done) => {
         getCapabilities(_url, 1, 30, '').then((data) => {
             const { numberOfRecordsMatched, numberOfRecordsReturned, records } = data;
@@ -107,6 +110,80 @@ describe('Test ArcGIS API', () => {
                 done(e);
             }
             done();
+        });
+    });
+    it('should retrieve arcgis layer metadata from root path', (done) => {
+        getLayerMetadata(_url)
+            .then(({ data, ...properties }) => {
+                expect(properties.version).toBe(10.81);
+                expect(properties.queryable).toBe(true);
+                expect(properties.format).toBe('PNG32');
+                expect(properties.bbox).toEqual({
+                    bounds: {
+                        minx: -19851965.9761,
+                        miny: -1643352.0163999982,
+                        maxx: 16269834.825400002,
+                        maxy: 10537038.417599998
+                    },
+                    crs: 'EPSG:3857'
+                });
+                expect(properties.description).toBe('');
+                expect(properties.options.layers).toBeTruthy();
+                done();
+            })
+            .catch(done);
+    });
+    describe('getCapabilities', () => {
+        beforeEach(done => {
+            mockAxios = new MockAdapter(axios);
+            setTimeout(done);
+        });
+        afterEach(done => {
+            mockAxios.restore();
+            setTimeout(done);
+        });
+        it('should get capabilities from the arcgis/rest/services path', (done) => {
+            mockAxios.onGet().reply(() => [200, {
+                currentVersion: 10.91,
+                folders: ['Folder'],
+                services: [
+                    {
+                        name: 'Map',
+                        type: 'MapServer'
+                    },
+                    {
+                        name: 'GPS',
+                        type: 'GPServer'
+                    },
+                    {
+                        name: 'Image',
+                        type: 'ImageServer'
+                    }
+                ]
+            }]);
+            getCapabilities('/arcgis/rest/services/', 1, 30, '')
+                .then((data) => {
+                    expect(data).toEqual({
+                        numberOfRecordsMatched: 2,
+                        numberOfRecordsReturned: 2,
+                        records: [
+                            {
+                                url: '/arcgis/rest/services/Map/MapServer',
+                                version: 10.91,
+                                name: 'Map',
+                                description: 'MapServer'
+                            },
+                            {
+                                url: '/arcgis/rest/services/Image/ImageServer',
+                                version: 10.91,
+                                name: 'Image',
+                                description: 'ImageServer'
+                            }
+                        ]
+                    });
+                    done();
+                })
+                .catch(done);
         });
     });
 });

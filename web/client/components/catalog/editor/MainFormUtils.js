@@ -10,7 +10,7 @@ export const defaultPlaceholder = (service) => {
         "3dtiles": "e.g. https://mydomain.com/tileset.json",
         "cog": "e.g. https://mydomain.com/cog.tif",
         "model": "e.g. https://mydomain.com/filename.ifc",
-        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services/<name>/MapServer"
+        "arcgis": "e.g. https://mydomain.com/arcgis/rest/services"
     };
     for ( const [key, value] of Object.entries(urlPlaceholder)) {
         if ( key === service.type) {
