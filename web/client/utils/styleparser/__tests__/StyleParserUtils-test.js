@@ -12,7 +12,8 @@ import {
     drawIcons,
     geoStylerStyleFilter,
     getWellKnownNameImageFromSymbolizer,
-    parseSymbolizerExpressions
+    parseSymbolizerExpressions,
+    getCachedImageById
 } from '../StyleParserUtils';
 
 describe("StyleParserUtils ", () => {
@@ -236,5 +237,29 @@ describe("StyleParserUtils ", () => {
                 outlineDasharray: [ 10, 10 ]
             });
     });
-
+    it('test getCachedImageById method for Icon annotationSymbolizer to return width, height = size in case of returning undefined from getCachedImageById', () => {
+        const annotationSymbolizer = {
+            "symbolizerId": "5ba7eae188a0",
+            "kind": "Icon",
+            "image": {
+                "name": "msMarkerIcon",
+                "args": [
+                    {
+                        "color": "blue",
+                        "shape": "circle",
+                        "glyph": "comment"
+                    }
+                ]
+            },
+            "opacity": 1,
+            "size": 46,
+            "rotate": 0,
+            "msBringToFront": false,
+            "anchor": "bottom",
+            "msHeightReference": "none"
+        };
+        const { width = annotationSymbolizer.size, height = annotationSymbolizer.size } = getCachedImageById(annotationSymbolizer);
+        expect(width).toBe(annotationSymbolizer.size);
+        expect(height).toBe(annotationSymbolizer.size);
+    });
 });

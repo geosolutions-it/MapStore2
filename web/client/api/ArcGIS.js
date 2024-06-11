@@ -112,10 +112,11 @@ const getData = (url, params = {}) => {
                     }), params);
             }
             // Map is similar to WMS GetMap capability for MapServer
-            const mapExportSupported = (data?.capabilities || '').includes('Map');
+            const mapExportSupported = (data?.capabilities || '').includes('Map') || (data?.capabilities || '').includes('Image');
             const commonProperties = {
                 url,
-                ...getCommonProperties(data)
+                ...getCommonProperties(data),
+                layers
             };
             const bbox = extentToBoundingBox(data?.fullExtent);
             const records = [
@@ -124,7 +125,6 @@ const getData = (url, params = {}) => {
                         name: data?.documentInfo?.Title || data.name || params?.info?.options?.service?.title ||  data.mapName,
                         description: data.description || data.serviceDescription,
                         bbox,
-                        layers,
                         ...commonProperties
                     }
                 ] : []),
