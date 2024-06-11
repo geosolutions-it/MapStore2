@@ -14,7 +14,7 @@ registerType('arcgis', (options) => {
     return LEsri.dynamicMapLayer({
         url: options.url,
         opacity: options.opacity || 1,
-        ...(options.name && { layers: [`${options.name}`] }),
+        ...(options.name !== undefined && { layers: [`${options.name}`] }),
         format: options.format
     });
 });

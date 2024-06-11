@@ -11,45 +11,7 @@ import { getCurrentResolution } from '../MapUtils';
 import { reproject, getProjectedBBox, reprojectBbox, fitBoundsToProjectionExtent } from '../CoordinatesUtils';
 import { isObject, isNil, trimEnd } from 'lodash';
 import axios from '../../libs/ajax';
-
-const esriToGeoJSONGeometry = (geometry) => {
-    if (!geometry) {
-        return null;
-    }
-    if (geometry.x !== undefined && geometry.y !== undefined) {
-        return {
-            type: 'Point',
-            coordinates: [geometry.x, geometry.y, geometry.z || 0]
-        };
-    }
-    if (geometry.points) {
-        return {
-            type: 'MultiPoint',
-            coordinates: geometry.points.map(([x, y, z]) => [x, y, z || 0])
-        };
-    }
-    if (geometry.paths) {
-        return {
-            type: 'MultiLineString',
-            coordinates: geometry.paths.map(path => path.map(([x, y, z]) => [x, y, z || 0]))
-        };
-    }
-    if (geometry.rings) {
-        return {
-            type: 'Polygon',
-            coordinates: geometry.rings.map(ring => ring.map(([x, y, z]) => [x, y, z || 0]))
-        };
-    }
-    return null;
-};
-
-const esriToGeoJSONFeature = (feature) => {
-    return {
-        type: 'Feature',
-        properties: feature.attributes,
-        geometry: esriToGeoJSONGeometry(feature.geometry)
-    };
-};
+import { esriToGeoJSONFeature, getQueryLayerIds } from '../ArcGISUtils';
 
 export default {
     buildRequest: (layer, { point, map, currentLocale } = {}) => {
@@ -91,9 +53,9 @@ export default {
             outSR: 4326,
             outFields: '*'
         };
-        const layerIds = layer?.options?.layers
-            ? layer.options.layers.map(({ id }) => id)
-            : [layer.name];
+        const layerIds = layer.name !== undefined
+            ? getQueryLayerIds(layer.name, layer?.options?.layers || [])
+            : layer.options.layers.map(({ id }) => id);
         return Observable.defer(() =>
             Promise.all(
                 layerIds.map((layerId) =>
