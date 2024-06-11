@@ -42,13 +42,6 @@ export function loadVersionError(e) {
 export function loadVersion(config = 'version.txt') {
     return (dispatch) => {
         return axios.get(config, {
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            },
-            // #revise_me the time signature in itself is most likely sufficient and best way to invalidate caching,
-            // so the headers above are likely redundant
             params: {
                 t: new Date().getTime()
             }
