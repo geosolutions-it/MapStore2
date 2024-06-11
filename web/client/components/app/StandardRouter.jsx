@@ -68,7 +68,7 @@ class StandardRouter extends React.Component {
             <div className={this.props.className}>
 
                 <ThemeProvider {...this.props.themeCfg} version={this.props.version} onLoad={this.props.onThemeLoaded}>
-                    {this.props.themeLoaded ? (<Localized reloadOnLocaleChage={false} messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
+                    {this.props.themeLoaded ? (<Localized localeKey={false} messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                         <ConnectedRouter history={history}>
                             {/** the key is moved from the above Localized to the next div after 'ConnectedRouter':
                             *  to ensure the reload of children
@@ -98,7 +98,7 @@ class StandardRouter extends React.Component {
         return (
             <div className={this.props.className}>
                 <Theme {...this.props.themeCfg} version={this.props.version}/>
-                <Localized reloadOnLocaleChage={false} messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
+                <Localized localeKey={false} messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
                         {/** the key is moved from the above Localized to the next div after 'ConnectedRouter':
                         *  to ensure the reload of children

@@ -16,13 +16,13 @@ class Localized extends React.Component {
         locale: PropTypes.string,
         messages: PropTypes.object,
         loadingError: PropTypes.string,
-        reloadOnLocaleChage: PropTypes.bool
+        localeKey: PropTypes.bool
     };
 
     static childContextTypes = {
         locale: PropTypes.string,
         messages: PropTypes.object,
-        reloadOnLocaleChage: true
+        localeKey: true
     };
 
     getChildContext() {
@@ -40,7 +40,7 @@ class Localized extends React.Component {
                 children = children();
             }
 
-            return (<IntlProvider {...this.props.reloadOnLocaleChage && { key: this.props.locale }} locale={this.props.locale}
+            return (<IntlProvider {...this.props.localeKey && { key: this.props.locale }} locale={this.props.locale}
                 messages={this.flattenMessages(this.props.messages)}
             >
                 {children}
