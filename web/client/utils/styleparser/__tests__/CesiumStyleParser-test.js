@@ -1461,4 +1461,98 @@ describe('CesiumStyleParser', () => {
                 }).catch(done);
         });
     });
+    it('should not draw the marker when using radius property without argument', (done) => {
+        const style = {
+            name: '',
+            rules: [
+                {
+                    filter: undefined,
+                    name: '',
+                    symbolizers: [
+                        {
+                            kind: 'Mark',
+                            wellKnownName: 'Circle',
+                            color: '#ff0000',
+                            fillOpacity: 0.5,
+                            strokeColor: '#00ff00',
+                            strokeOpacity: 0.25,
+                            strokeWidth: 3,
+                            radius: {
+                                name: 'property',
+                                args: []
+                            },
+                            rotate: 90,
+                            msBringToFront: true,
+                            symbolizerId: 'symbolizer-01'
+                        }
+                    ]
+                }
+            ]
+        };
+        const feature = {
+            type: 'Feature',
+            id: 'feature-01',
+            properties: {
+                radius: 2
+            },
+            geometry: {
+                type: 'Point',
+                coordinates: [7, 41]
+            }
+        };
+        parser.writeStyle(style)
+            .then((styleFunc) => styleFunc({
+                features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+            }))
+            .then((styledFeatures) => {
+                expect(styledFeatures.length).toBe(0);
+                done();
+            }).catch(done);
+    });
+    it('should not draw the icon when using size property without argument', (done) => {
+        const style = {
+            name: '',
+            rules: [
+                {
+                    filter: undefined,
+                    name: '',
+                    symbolizers: [
+                        {
+                            kind: 'Icon',
+                            /* png 1px x 1px */
+                            image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=',
+                            opacity: 0.5,
+                            size: {
+                                name: 'property',
+                                args: []
+                            },
+                            rotate: 90,
+                            msBringToFront: true,
+                            anchor: 'bottom-left',
+                            symbolizerId: 'symbolizer-01'
+                        }
+                    ]
+                }
+            ]
+        };
+        const feature = {
+            type: 'Feature',
+            id: 'feature-01',
+            properties: {
+                radius: 2
+            },
+            geometry: {
+                type: 'Point',
+                coordinates: [7, 41]
+            }
+        };
+        parser.writeStyle(style)
+            .then((styleFunc) => styleFunc({
+                features: [{ ...feature, positions: GeoJSONStyledFeatures.featureToCartesianPositions(feature) }]
+            }))
+            .then((styledFeatures) => {
+                expect(styledFeatures.length).toBe(0);
+                done();
+            }).catch(done);
+    });
 });

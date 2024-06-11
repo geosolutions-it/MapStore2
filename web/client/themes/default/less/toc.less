@@ -255,7 +255,7 @@
     }
     .ms-node-layer {
         .shadow-soft();
-        ul {
+        ul:not(.ms-legend) {
             padding: 4px 8px;
         }
     }
@@ -399,22 +399,31 @@
     .wms-json-legend-rule {
         display: flex;
         margin-bottom: @padding-left-square-md;
-        .ms-rule-legend-icon {
+        .ms-legend-icon {
             margin-right: 8px;
         }
     }
 }
 
-// legend for vector wfs styles
-.ms-vector-legend {
+// legend style
+.ms-legend-title {
+    font-weight: bold;
+    margin: 8px 0;
+}
+.ms-legend {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    .ms-vector-legend-rule {
+    gap: 4px;
+    ul& {
+        border-left: none;
+        padding-left: 0;
+    }
+    .ms-legend-rule {
         display: flex;
     }
-    .ms-rule-legend-icon {
-        margin-right: 4px;
+    .ms-legend-icon {
+        margin-right: 8px;
+        align-items: normal;
     }
 }
 .wms-json-legend-rule.filter-enabled:hover {

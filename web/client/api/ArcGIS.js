@@ -81,6 +81,7 @@ const getData = (url, params = {}) => {
             const commonProperties = {
                 url,
                 version: data?.currentVersion,
+                layers,
                 format: (data.supportedImageFormatTypes || '')
                     .split(',')
                     .filter(format => /PNG|JPG|GIF/.test(format))[0] || 'PNG32'
@@ -93,7 +94,6 @@ const getData = (url, params = {}) => {
                         description: data.description || data.serviceDescription,
                         bbox,
                         queryable: (data?.capabilities || '').includes('Data'),
-                        layers,
                         ...commonProperties
                     }
                 ] : []),

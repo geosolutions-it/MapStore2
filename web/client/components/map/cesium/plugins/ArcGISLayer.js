@@ -69,7 +69,7 @@ class ArcGisMapAndImageServerImageryProvider extends Cesium.ArcGisMapServerImage
 Layers.registerType('arcgis', (options) => {
     return new ArcGisMapAndImageServerImageryProvider({
         url: options.url,
-        ...(options.name && { layers: `${options.name}` }),
+        ...(options.name !== undefined && { layers: `${options.name}` }),
         format: options.format,
         // we need to disable this when using layers ids
         // the usage of tiles will add an additional request to metadata

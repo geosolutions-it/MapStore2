@@ -1308,27 +1308,33 @@ i.e.
 #### ArcGIS MapServer layer
 
 This layer type allows to render an ArcGIS MapServer layer.
-An ArcGIS MapServer source is a composition of different layers to create a map.
 
-We have two type of configuration, the first one allow to render only a single layer of the source using the `name` property. The `name` property must match a valid layer id of the ArcGIS MapServer service, e.g.:
+An ArcGIS MapServer source is a composition of different layers to create a map. The layer is identified by the `arcgis` type, containing `url` and `options.layers` properties . e.g.
 
-```javascript
+```json
+{
+    "type": "arcgis",
+    "url": "https://arcgis-example/rest/services/MyService/MapServer",
+    "options": {
+      "layers": [{ "id": 0 }, { "id": 1 }]
+    },
+    "title": "Title",
+    "group": "",
+    "visibility": true
+}
+```
+
+Where:
+
+- `url` is the URL of the MapServer source.
+- `options.layers` is the list of object containing the ids of the layers. Required to support `queriable` option and legend support.
+- `name` (optional). When present, the MapStore layer will show only the layer with the id specified in the `name` attribute. e.g.
+
+```json
 {
     "type": "arcgis",
     "name": "0",
     "url": "https://arcgis-example/rest/services/MyService/MapServer"
-    "title": "Title",
-    "group": "",
-    "visibility": true,
-    "queriable": true,
-}
-```
-
-The second options is to render all the layers of the source service. In this case is important to add also the `options.layers` when the ``queryable` property is true because the id of the listed layer will be used for the query, e.g.:
-
-```javascript
-{
-    "type": "arcgis",
     "url": "https://arcgis-example/rest/services/MyService/MapServer",
     "options": {
       "layers": [{ "id": 0 }, { "id": 1 }]

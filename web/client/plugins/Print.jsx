@@ -531,7 +531,8 @@ export default {
                             "wfs",
                             "vector",
                             "graticule",
-                            "empty"
+                            "empty",
+                            "arcgis"
                         ], layer.type) || layer.type === "wmts" && has(layer.allowedSRS, projection);
                     };
                     isAllowed = (layer, projection) => {

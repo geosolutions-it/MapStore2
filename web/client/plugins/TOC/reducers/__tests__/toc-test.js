@@ -15,10 +15,10 @@ import toc from '../toc';
 describe('toc reducer', () => {
     it('should init with configureMap', () => {
         const state = toc({}, configureMap());
-        expect(state.config.init).toBe(true);
+        expect(state.mapLoadedCount).toBe(1);
     });
     it('should update config with updateTOCConfig', () => {
-        const state = toc({ config: { init: true }}, updateTOCConfig({ init: false }));
-        expect(state.config.init).toBe(false);
+        const state = toc({ config: { defaultOpen: true }}, updateTOCConfig({ defaultOpen: false }));
+        expect(state.config.defaultOpen).toBe(false);
     });
 });
