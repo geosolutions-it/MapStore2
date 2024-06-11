@@ -20,6 +20,35 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2024.01.00 to 2024.02.00
+
+### Integration with openID Connect
+
+A generic OpenID Connect (OIDC) authentication support has been introduced in MapStore. This feature allows to authenticate users using an OIDC provider, like Keycloak, Okta, Google, Azure, etc.
+
+To provide this functionality, it is necessary to update the project's `geostore-spring-security.xml` file, if the default one is not used.
+If you are using the default one, you can skip this step.
+
+Here the changes to apply if needed:
+
+```diff
+@@ -24,6 +24,7 @@
+         <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
+         <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
+         <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
++        <security:custom-filter ref="oidcOpenIdFilter" before="OPENID_FILTER"/> <!-- ADD a filter with this ref -->
+         <security:anonymous />
+     </security:http>
+
+@@ -52,6 +53,7 @@
+
+     <!-- OAuth2 beans -->
+     <context:annotation-config/>
++    <bean id="oidcSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/> <!-- add this bean to configure the integration -->
+
+     <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
+```
+
 ## Migration from 2023.02.02 to 2024.01.00
 
 ### TOC plugin refactor
@@ -33,7 +62,7 @@ The table of content (TOC) has been refactored with following changes:
   - `activateQueryTool` removed property, now the button will be directly added by `FilterLayer` plugin, when available
   - `activateDownloadTool` removed property, now the button will be added directly from `LayerDownload` when available
   - `activateMetedataTool` removed property, now the button will be added directly from `MetadataInfo` when availables
-  - `checkPlugins` remove property, now availability of tools rely on the related plugin so this check is not needed anymore  
+  - `checkPlugins` remove property, now availability of tools rely on the related plugin so this check is not needed anymore
   - `showFullTitleOnExpand`  removed property, the new style allows for seeing the full title inline without duplicating it
   - `metadataTemplate` this configuration has been moved to `MetadataInfo` plugin
   - `metadataOptions` this configuration has been moved to `MetadataInfo` plugin
