@@ -99,7 +99,7 @@ This steps have to be followed always when preparing a new release.
   - Version to release **YYYY.XX.mm** (the effective number of the release)
 - [ ] Launch [MapStore2-Stable-Releaser](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Releaser/) Jenkins job with
    - **YYYY.XX.mm** for the version
-   - **YYYY.XX.xx** for the branch to build
+   - **vYYYY.XX.mm** for the branch to build (the version tag name, e.g. v2024.01.01)
 - [ ] Wait the end of the 2 process
 
 When the processes are finished, the release is ready to be published on github in draft mode.
