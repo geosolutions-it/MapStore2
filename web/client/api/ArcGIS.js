@@ -77,7 +77,7 @@ const getData = (url, params = {}) => {
         .then((data) => {
             const { layers } = data || {};
             // Map is similar to WMS GetMap capability for MapServer
-            const mapExportSupported = (data?.capabilities || '').includes('Map');
+            const mapExportSupported = (data?.capabilities || '').includes('Map') || (data?.capabilities || '').includes('Image');
             const commonProperties = {
                 url,
                 version: data?.currentVersion,

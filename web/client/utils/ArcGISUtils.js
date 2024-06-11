@@ -7,6 +7,18 @@
  */
 
 /**
+ * Check if a service url is of type ImageServer
+ * @param {string} serviceUrl service url
+ * @return {boolean}
+ */
+export const isImageServerUrl = (serviceUrl = '') => serviceUrl.includes('ImageServer');
+/**
+ * Check if a service url is of type MapServer
+ * @param {string} serviceUrl service url
+ * @return {boolean}
+ */
+export const isMapServerUrl = (serviceUrl = '') => serviceUrl.includes('MapServer');
+/**
  * Return all the sub layers ids given a layer id and layers structure
  * @param {string|number} id identifier of the starting layer
  * @param {array} layers set the value of the cookie

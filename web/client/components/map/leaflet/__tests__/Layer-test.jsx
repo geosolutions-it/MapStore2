@@ -1779,7 +1779,7 @@ describe('Leaflet layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.getElevation).toBeTruthy();
     });
-    it('creates a arcgis layer', () => {
+    it('creates a arcgis layer (MapServer)', () => {
         const options = {
             type: 'arcgis',
             url: 'http://arcgis/MapServer/',
@@ -1793,5 +1793,20 @@ describe('Leaflet layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.options.url).toBe('http://arcgis/MapServer/');
         expect(cmp.layer.options.layers[0]).toBe('1');
+        expect(cmp.layer.getBandIds).toBeFalsy();
+    });
+    it('creates a arcgis layer (ImageServer)', () => {
+        const options = {
+            type: 'arcgis',
+            url: 'http://arcgis/ImageServer/',
+            visibility: true
+        };
+        const cmp = ReactDOM.render(
+            <LeafLetLayer type={options.type}
+                options={options} map={map}/>, document.getElementById("container"));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.options.url).toBe('http://arcgis/ImageServer/');
+        expect(cmp.layer.getBandIds).toBeTruthy();
     });
 });

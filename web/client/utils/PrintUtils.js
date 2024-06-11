@@ -37,6 +37,7 @@ import min from "lodash/min";
 import trimEnd from 'lodash/trimEnd';
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
+import { isImageServerUrl } from './ArcGISUtils';
 
 const defaultScales = getGoogleMercatorScales(0, 21);
 let PrintUtils;
@@ -895,7 +896,7 @@ export const specCreators = {
                 opacity: layer.opacity ?? 1.0,
                 name: layer.name ?? -1,
                 baseURL: url.format({
-                    ...url.parse(`${trimEnd(layer.url, '/')}/${layer.url.includes('ImageServer') ? 'exportImage' : 'export'}`),
+                    ...url.parse(`${trimEnd(layer.url, '/')}/${isImageServerUrl(layer.url) ? 'exportImage' : 'export'}`),
                     query: {
                         F: 'image',
                         ...(layer.name !== undefined  && { LAYERS: `show:${layer.name}` }),

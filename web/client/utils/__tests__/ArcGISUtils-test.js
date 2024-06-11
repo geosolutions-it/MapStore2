@@ -8,6 +8,8 @@
 import expect from 'expect';
 
 import {
+    isImageServerUrl,
+    isMapServerUrl,
     getLayerIds,
     getQueryLayerIds,
     esriToGeoJSONFeature
@@ -74,6 +76,16 @@ const layers = [
     }
 ];
 describe('ArcGISUtils', () => {
+    it('isImageServerUrl', () => {
+        expect(isImageServerUrl()).toBeFalsy();
+        expect(isImageServerUrl('https://localhost/arcgis/rest/services/Name/MapServer')).toBeFalsy();
+        expect(isImageServerUrl('https://localhost/arcgis/rest/services/Name/ImageServer')).toBeTruthy();
+    });
+    it('isMapServerUrl', () => {
+        expect(isMapServerUrl()).toBeFalsy();
+        expect(isMapServerUrl('https://localhost/arcgis/rest/services/Name/ImageServer')).toBeFalsy();
+        expect(isMapServerUrl('https://localhost/arcgis/rest/services/Name/MapServer')).toBeTruthy();
+    });
     it('getLayerIds', () => {
         expect(getLayerIds(1)).toEqual(['1']);
         expect(getLayerIds('1')).toEqual(['1']);
