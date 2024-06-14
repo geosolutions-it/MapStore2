@@ -3368,7 +3368,7 @@ describe('Openlayers layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.get('getElevation')).toBeTruthy();
     });
-    it('creates a arcgis layer', () => {
+    it('creates a arcgis layer (MapServer)', () => {
         const options = {
             type: 'arcgis',
             url: 'http://arcgis/MapServer/',

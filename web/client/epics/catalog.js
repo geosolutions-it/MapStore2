@@ -373,7 +373,7 @@ export default (API) => ({
                         );
                     }
                 }
-                if (layer.type === 'arcgis' && layer.name !== undefined) {
+                if (layer.type === 'arcgis' && (layer.name !== undefined || !layer?.options?.layers)) {
                     return Rx.Observable.defer(() => getLayerMetadata(layer.url, layer.name))
                         .switchMap(({ data, ...layerOptions }) => {
                             const newLayer = {

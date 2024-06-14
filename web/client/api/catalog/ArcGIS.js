@@ -12,7 +12,7 @@ import { getCapabilities } from '../ArcGIS';
 
 function validateUrl(serviceUrl) {
     if (isValidURL(serviceUrl)) {
-        return serviceUrl.includes('MapServer');
+        return serviceUrl.includes('rest/services');
     }
     return false;
 }
@@ -34,11 +34,9 @@ const recordToLayer = (record, { layerBaseConfig }) => {
         ...(record.bbox && {
             bbox: record.bbox
         }),
-        ...(record.layers && {
-            options: {
-                layers: record.layers
-            }
-        }),
+        options: {
+            layers: record.layers
+        },
         ...layerBaseConfig
     };
 };

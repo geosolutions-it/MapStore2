@@ -36,6 +36,15 @@ const extentToBoundingBox = (extent) => {
     return null;
 };
 
+const getCommonProperties = (data) => {
+    return {
+        version: data?.currentVersion,
+        queryable: (data?.capabilities || '').includes('Data'),
+        format: (data.supportedImageFormatTypes || '')
+            .split(',')
+            .filter(format => /PNG|JPG|GIF/.test(format))[0] || 'PNG32'
+    };
+};
 /**
  * Retrieve layer metadata.
  *
@@ -44,6 +53,21 @@ const extentToBoundingBox = (extent) => {
  * @returns layer metadata
  */
 export const getLayerMetadata = (layerUrl, layerName) => {
+    if (layerName === undefined) {
+        return axios.get(layerUrl, { params: { f: 'json' }})
+            .then(({ data }) => {
+                const bbox = extentToBoundingBox(data?.fullExtent);
+                return {
+                    ...getCommonProperties(data),
+                    ...(bbox && { bbox }),
+                    description: data.description || data.serviceDescription,
+                    options: {
+                        layers: data.layers
+                    },
+                    data
+                };
+            });
+    }
     return axios.get(`${trimEnd(layerUrl, '/')}/${layerName}`, { params: { f: 'json' }})
         .then(({ data }) => {
             const bbox = extentToBoundingBox(data?.extent);
@@ -75,15 +99,24 @@ const getData = (url, params = {}) => {
         });
     return request()
         .then((data) => {
-            const { layers } = data || {};
+            const { layers, services } = data || {};
+            if (services) {
+                return searchAndPaginate(
+                    services.filter(service => ['MapServer', 'ImageServer'].includes(service.type)).map((service) => {
+                        return {
+                            url: `${trimEnd(url, '/')}/${service.name}/${service.type}`,
+                            version: data.currentVersion,
+                            name: service.name,
+                            description: service.type
+                        };
+                    }), params);
+            }
             // Map is similar to WMS GetMap capability for MapServer
-            const mapExportSupported = (data?.capabilities || '').includes('Map');
+            const mapExportSupported = (data?.capabilities || '').includes('Map') || (data?.capabilities || '').includes('Image');
             const commonProperties = {
                 url,
-                version: data?.currentVersion,
-                format: (data.supportedImageFormatTypes || '')
-                    .split(',')
-                    .filter(format => /PNG|JPG|GIF/.test(format))[0] || 'PNG32'
+                ...getCommonProperties(data),
+                layers
             };
             const bbox = extentToBoundingBox(data?.fullExtent);
             const records = [
@@ -92,16 +125,13 @@ const getData = (url, params = {}) => {
                         name: data?.documentInfo?.Title || data.name || params?.info?.options?.service?.title ||  data.mapName,
                         description: data.description || data.serviceDescription,
                         bbox,
-                        queryable: (data?.capabilities || '').includes('Data'),
-                        layers,
                         ...commonProperties
                     }
                 ] : []),
                 ...(mapExportSupported && layers ? layers : []).map((layer) => {
                     return {
                         ...layer,
-                        ...commonProperties,
-                        queryable: (data?.capabilities || '').includes('Data')
+                        ...commonProperties
                     };
                 })
             ];
