@@ -54,7 +54,7 @@ class UserDetails extends React.Component {
             mainUserInfo.groups = groups => {
                 const gr = isArray(groups) && [...groups] || groups.group && isArray(groups.group) && [...groups.group] || groups.group && isObject(groups.group) && [{...groups.group}];
                 return gr && gr.map(group => {
-                    return group.groupName && <div key={group.groupName}><strong>{group.groupName}</strong></div> || null;
+                    return group.groupName && <div className="user-group-info" key={group.groupName}><strong>{group.groupName}</strong></div> || null;
                 }).filter(v => v) || null;
             };
         }

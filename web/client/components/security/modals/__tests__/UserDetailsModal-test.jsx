@@ -113,11 +113,11 @@ describe("Test user details modal", () => {
         const cmpNormal = ReactDOM.render(<UDModal options={{animation: false}} show displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
         expect(cmpNormal).toExist();
         const modalDOMNormal = document.getElementsByClassName('ms-resizable-modal')[0];
-        expect(modalDOMNormal.getElementsByClassName('row').length).toEqual(6);             // includes group info
+        expect(modalDOMNormal.querySelector('.user-group-info')).toExist();             // includes group info
 
         const cmpWithHide = ReactDOM.render(<UDModal hideGroupUserInfo options={{animation: false}} show displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
         expect(cmpWithHide).toExist();
         const modalDOM = document.getElementsByClassName('ms-resizable-modal')[0];
-        expect(modalDOM.getElementsByClassName('row').length).toEqual(5);                   // not include group info
+        expect(modalDOM.querySelector('.user-group-info')).toNotExist();                   // not include group info
     });
 });
