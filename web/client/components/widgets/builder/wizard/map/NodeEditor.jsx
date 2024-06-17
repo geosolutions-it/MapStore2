@@ -41,7 +41,6 @@ export default ({
             {tabs.filter(tab => tab.id && tab.id === activeTab).filter(tab => tab.Component).map(tab => (
                 <tab.Component
                     {...props}
-                    hideInteractiveLegendOption
                     key={'ms-tab-settings-body-' + tab.id}
                     containerWidth={width}
                     element={element}

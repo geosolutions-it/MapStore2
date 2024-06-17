@@ -58,7 +58,8 @@ export default compose(
                                 ...layer,
                                 visibility: updateLayer.visibility,
                                 opacity: updateLayer.opacity,
-                                expanded: updateLayer.expanded
+                                expanded: updateLayer.expanded,
+                                layerFilter: updateLayer.layerFilter
                             };
                         }
                         return layer;
