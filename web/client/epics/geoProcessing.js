@@ -684,6 +684,19 @@ export const runIntersectProcessGPTEpic = (action$, store) => action$
         const counter = getCounter(layers, GPT_INTERSECTION_GROUP_ID);
         let sourceFC$;
         let intersectionFC$;
+        let misconfiguredLayers = [];
+        if (!layerUrl) {
+            misconfiguredLayers.push(layer.name + " - " + layer.title);
+        }
+        if (misconfiguredLayers.length) {
+            return Rx.Observable.of(showErrorNotification({
+                title: "errorTitleDefault",
+                message: "GeoProcessing.notifications.errorMissingUrl",
+                autoDismiss: 6,
+                position: "tc",
+                values: {layerName: misconfiguredLayers.join(", ")}
+            }));
+        }
         if (isEmpty(sourceFeature)) {
             sourceFC$ = executeProcess(
                 layerUrl,
