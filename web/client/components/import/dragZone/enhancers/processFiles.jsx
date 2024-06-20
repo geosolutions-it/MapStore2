@@ -47,6 +47,7 @@ const checkFileType = (file) => {
             || type === 'application/vnd.google-earth.kml+xml'
             || type === 'application/vnd.google-earth.kmz'
             || type === 'application/gpx+xml'
+            || type === 'application/geo+json'
             || type === 'application/json'
             || type === 'application/vnd.wmc') {
             resolve(file);
