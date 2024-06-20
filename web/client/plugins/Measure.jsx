@@ -175,7 +175,7 @@ const MeasurePlugin = connect(
     }))
 )(({coordsAeronauticalEnabled, ...props}) => {
     return (
-        <div className={props.mapType !== MapLibraries.CESIUM && props?.defaultOptions?.showCoordinateEditor ? "measure-container measure-coords-editor-2d" : "measure-container"} style={{top: coordsAeronauticalEnabled ? 88 : 48}}>
+        <div className={props.mapType !== MapLibraries.CESIUM && props?.defaultOptions?.showCoordinateEditor ? "measure-container measure-coords-editor" : "measure-container"} style={{top: coordsAeronauticalEnabled ? 88 : 48}}>
             {
                 props.mapType === MapLibraries.CESIUM
                     ? <div id="measure-cesium-wrapper"/>
