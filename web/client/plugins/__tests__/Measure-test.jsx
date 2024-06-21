@@ -34,4 +34,12 @@ describe('Measure Plugin', () => {
         Simulate.click(closeNode.parentNode);
         expect(store.getState().controls.measure.enabled).toBe(false);
     });
+    it('test measure in case default options showCoordinateEditor = true', () => {
+        const { Plugin} = getPluginForTest(Measure, { controls: { measure: { enabled: true } } });
+        ReactDOM.render(<Plugin defaultOptions={{showCoordinateEditor: true}} />, document.getElementById("container"));
+        const measureCoordEditor2DNode = document.querySelector('.measure-container.measure-coords-editor');
+        expect(measureCoordEditor2DNode).toBeTruthy();
+        const measureToolbarNode = document.querySelector('.ms-measure-toolbar');
+        expect(measureToolbarNode).toBeTruthy();
+    });
 });
