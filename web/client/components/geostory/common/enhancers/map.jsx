@@ -37,9 +37,10 @@ export default compose(
             }))),
     withProps(
         ({ resources, resourceId, map = {}}) => {
-            const cleanedMap = {...map, layers: (map.layers || []).map(l => l ? l : undefined)};
             const resource = find(resources, { id: resourceId }) || {};
-            return { map: createMapObject(omit(resource.data, ['context']), cleanedMap)};
+            const baseMap = omit(resource.data, ['context']);
+            const cleanedMap = {...map, layers: (map.layers || baseMap?.layers || []).map(l => l ? l : undefined)};         // for better intiating cleanedMap layers in case 'map.layers = undefined' -> baseMap.layers check is added in fallBack
+            return { map: createMapObject(baseMap, cleanedMap)};
         }
     ));
 /**

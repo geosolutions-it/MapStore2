@@ -355,8 +355,11 @@ describe("GeoStory Utils", () => {
         };
         const res = createMapObject(DEFAULT_MAP_OPTIONS, {
             mapOptions: {
+                scrollWheelZoom: false,
                 interactions: {
-                    mouseClick: false
+                    mouseWheelZoom: false,
+                    mouseClick: false,
+                    dragPan: true
                 }
             }
         });
