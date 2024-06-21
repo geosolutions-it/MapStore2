@@ -180,18 +180,21 @@ MapStore supports several plugins for GeoServer. Installing them will expand the
 
 Here a list of the extensions that MapStore can use:
 
-- [WMTS Multidimensional](https://docs.geoserver.org/stable/en/user/community/wmts-multidimensional/index.html) despite the name, this service provides multidimensional discovery services for GeoServer in general, not only for WMTS, and it is **required** to use the timeline plugin of MapStore.
+- [WMTS Multidimensional](https://docs.geoserver.org/stable/en/user/extensions/wmts-multidimensional/index.html) despite the name, this service provides multidimensional discovery services for GeoServer in general, not only for WMTS, and it is **required** to use the timeline plugin of MapStore.
 
-- [SLD Rest Service](https://docs.geoserver.org/latest/en/user/extensions/sldservice/index.html): This extension can be used by the MapStore styler to classify Vector and Raster data. It can inspect the real layer data to apply classification based on values contained in it. It allows to select various classification types (quantile, equalInterval, standardDeviation…) and to customize the color scales based on parameters
+- [SLD Rest Service](https://docs.geoserver.org/latest/en/user/extensions/sldservice/index.html): this extension can be used by the MapStore styler to classify Vector and Raster data. It can inspect the real layer data to apply classification based on values contained in it. It allows to select various classification types (quantile, equalInterval, standardDeviation…) and to customize the color scales based on parameters
 
-- [CSS Extension](https://docs.geoserver.org/latest/en/user/styling/css/install.html): With this extension the MapStore styler allows to edit styles also in CSS format, in addition to the standard SLD format
+- [CSS Extension](https://docs.geoserver.org/stable/en/user/styling/css/install.html): with this extension the MapStore styler allows to edit styles also in CSS format, in addition to the standard SLD format
 
-- [WPS Extension](https://docs.geoserver.org/stable/en/user/services/wps/install.html): Provides several process that can be executed using the OGC WPS Standard. IT contains some default services very useful for MapStore:
-       - **gs:PagedUnique**: Provide a way to query layer attribute values with pagination and filtering by unique values. It enables autocomplete of attribute values for feature grid, attribute table, filter layer and other plugins.
-       - **gs:Aggregate**: Allows aggregation operation on vector layers. This can be used  by the charts (widgets, dashboards) to catch data
+- [WPS Extension](https://docs.geoserver.org/stable/en/user/services/wps/install.html): provides several process that can be executed using the OGC WPS Standard. IT contains some default services very useful for MapStore:
+       - **gs:PagedUnique**: provide a way to query layer attribute values with pagination and filtering by unique values. It enables autocomplete of attribute values for feature grid, attribute table, filter layer and other plugins.
+       - **gs:Aggregate**: allows aggregation operation on vector layers. This can be used  by the charts (widgets, dashboards) to catch data
        - **gs:Bounds**: allows to calculate bounds of a filtered layer, used to dynamically zoom in dashboards map, when filtering is active.
+       - **geo:buffer**: provide a way to create a new vector layer around the source layer. This can be used from the *GeoProcessing* plugin buffer option.
+       - **gs:IntersectionFeatureCollection**: allows to return the intersection between two feature collections adding the attributes from both of them. This can be used from the *GeoProcessing* plugin intersection option.
+       - **gs:CollectGeometries**: allows to collect all the default geometries in a feature collection and returns them as a single geometry collection. This can be used by the *GeoProcessing* plugin to create a new layer.
 
-- [WPS download community module](https://docs.geoserver.org/stable/en/user/community/wps-download/index.html): This additional module allows to improve the default download plugin, based on WFS, with more functionalities.
+- [WPS download community module](https://docs.geoserver.org/stable/en/user/extensions/wps-download/index.html): this additional module allows to improve the default download plugin, based on WFS, with more functionalities.
 The advanced Download, activated when GeoServer provides the WPS service above, allows to
        - Download also the raster data
        - Schedule download processes in a download list (and download them later, when post processing is finished).
@@ -203,8 +206,10 @@ The advanced Download, activated when GeoServer provides the WPS service above, 
            - Select Compression type and quality
            - Define width and height of internal tiles
 
-- [CSW Extension](https://docs.geoserver.org/latest/en/user/services/csw/installing.html): Activating this extension, MapStore can browse data of GeoServer using the CSW protocol. This is particularly useful when GeoServer contains hundreds or thousands of layers, so the WMS capabilities services can be too slow.
+- [CSW Extension](https://docs.geoserver.org/latest/en/user/services/csw/installing.html): activating this extension, MapStore can browse data of GeoServer using the CSW protocol. This is particularly useful when GeoServer contains hundreds or thousands of layers, so the WMS capabilities services can be too slow.
 
-- [Query Layer Plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module): This plugin allows the possibility to do cross-layer filtering. Cross layer filtering is the mechanism of Filtering a layer using geometries coming from another layer. The plugin allows this filtering to be performed on the server side in an efficient way.
+- [Query Layer Plugin](https://docs.geoserver.org/stable/en/user/extensions/querylayer/index.html#installing-the-querylayer-module): this plugin allows the possibility to do cross-layer filtering. Cross layer filtering is the mechanism of Filtering a layer using geometries coming from another layer. The plugin allows this filtering to be performed on the server side in an efficient way.
 
 - [DDS/BIL Plugin](https://docs.geoserver.org/stable/en/user/community/dds/index.html): this plugin add to geoserver the possibility to publish raster data in DDS/BIL format (World Wind). This particular plugin is useful if we want to use a raster data as elevation model for MapStore. This elevation model will be used in 3D mode or with the mouse coordinates plugin (displaying the elevation of a point on the map, together with the coordinates).
+
+- [WPS longitudinal profile process](https://docs.geoserver.org/stable/en/user/community/wps-longitudinal-profile/index.html): this plugin added to geoserver gives the possibility to calculate an altitude profile for the specified linestring and it is required to use the *Longitudinal Profile* plugin of MapStore.
