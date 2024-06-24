@@ -224,7 +224,7 @@ export const getFeatureInfoOfSelectedItem = (action$, store) =>
                 ];
             }
         }
-        return [Rx.Observable.empty()];
+        return Rx.Observable.empty();
     }).delay(50);
 /**
  * Handles show GFI button click action.
