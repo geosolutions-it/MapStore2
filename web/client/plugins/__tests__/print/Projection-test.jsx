@@ -120,19 +120,20 @@ describe('PrintProjection Plugin', () => {
     });
 
     it('map transformer with user chosen crs', (done) => {
-        getPrintProjectionPlugin().then(async({ Plugin, store }) => {
+        getPrintProjectionPlugin().then(({ Plugin, store }) => {
             try {
                 const comp = ReactDOM.render(<Plugin projections={[{"name": "Mercator", "value": "EPSG:3857"}, {"name": "WGS84", "value": "EPSG:4326"}]}/>, document.getElementById("container"));
-                await ReactTestUtils.act(async() => comp);
-                const combo = getByXPath("//select");
-                await ReactTestUtils.Simulate.change(combo, {
-                    target: {
-                        value: "EPSG:4326"
-                    }
-                });
-                callMapTransformer(store.getState(), (map) => {
-                    expect(map.projection).toBe('EPSG:4326');
-                    done();
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(() => {
+                    const combo = getByXPath("//select");
+                    ReactTestUtils.Simulate.change(combo, {
+                        target: {
+                            value: "EPSG:4326"
+                        }
+                    });
+                    callMapTransformer(store.getState(), (map) => {
+                        expect(map.projection).toBe('EPSG:4326');
+                        done();
+                    });
                 });
             } catch (ex) {
                 done(ex);
@@ -141,21 +142,22 @@ describe('PrintProjection Plugin', () => {
     });
 
     it('validator without allowPreview', (done) => {
-        getPrintProjectionPlugin().then(async({ Plugin, store }) => {
+        getPrintProjectionPlugin().then(({ Plugin, store }) => {
             try {
                 const comp = ReactDOM.render(<Plugin projections={[{"name": "Mercator", "value": "EPSG:3857"}, {"name": "WGS84", "value": "EPSG:4326"}]}/>, document.getElementById("container"));
-                await ReactTestUtils.act(async() => comp);
-                const combo = getByXPath("//select");
-                await ReactTestUtils.Simulate.change(combo, {
-                    target: {
-                        value: "EPSG:4326"
-                    }
-                });
-                callValidator(store.getState(), (validation) => {
-                    expect(validation).toExist();
-                    expect(validation.valid).toBe(false);
-                    expect(validation.errors.length).toBe(1);
-                    done();
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(() => {
+                    const combo = getByXPath("//select");
+                    ReactTestUtils.Simulate.change(combo, {
+                        target: {
+                            value: "EPSG:4326"
+                        }
+                    });
+                    callValidator(store.getState(), (validation) => {
+                        expect(validation).toExist();
+                        expect(validation.valid).toBe(false);
+                        expect(validation.errors.length).toBe(1);
+                        done();
+                    });
                 });
             } catch (ex) {
                 done(ex);

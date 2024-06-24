@@ -222,9 +222,9 @@ describe('Print Plugin', () => {
                     capabilities: {...initialState.print.capabilities,
                         scales: [1000000, 500000, 100000].map(value => ({name: value, value}))}
                 }}
-        }).then(async({ Plugin }) => {
+        }).then(({ Plugin }) => {
             try {
-                await ReactDOM.render(<Plugin
+                ReactDOM.render(<Plugin
                     projectionOptions={{
                         "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
@@ -233,11 +233,12 @@ describe('Print Plugin', () => {
                         enableScalebox: true
                     }}/>, document.getElementById("container"));
                 const comp = document.getElementById("container");
-                await ReactTestUtils.act(async() => comp);
-                expect(comp).toExist();
-                const scaleBoxComp = document.querySelector("#mappreview-scalebox select");
-                expect(scaleBoxComp).toExist();
-                done();
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(()=>{
+                    expect(comp).toExist();
+                    const scaleBoxComp = document.querySelector("#mappreview-scalebox select");
+                    expect(scaleBoxComp).toExist();
+                    done();
+                });
             } catch (ex) {
                 done(ex);
             }
@@ -263,9 +264,9 @@ describe('Print Plugin', () => {
                     capabilities: {...initialState.print.capabilities,
                         scales: [1000000, 500000, 100000].map(value => ({name: value, value}))}
                 }}
-        }).then(async({ Plugin }) => {
+        }).then(({ Plugin }) => {
             try {
-                await ReactDOM.render(<Plugin
+                ReactDOM.render(<Plugin
                     projectionOptions={{
                         "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
                     }}
@@ -274,11 +275,12 @@ describe('Print Plugin', () => {
                         enableScalebox: false
                     }}/>, document.getElementById("container"));
                 const comp = document.getElementById("container");
-                await ReactTestUtils.act(async() => comp);
-                expect(comp).toExist();
-                const scaleBoxComp = document.querySelector("#mappreview-scalebox select");
-                expect(scaleBoxComp).toNotExist();
-                done();
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(()=>{
+                    expect(comp).toExist();
+                    const scaleBoxComp = document.querySelector("#mappreview-scalebox select");
+                    expect(scaleBoxComp).toNotExist();
+                    done();
+                });
             } catch (ex) {
                 done(ex);
             }
