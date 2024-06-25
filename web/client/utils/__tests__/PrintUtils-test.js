@@ -395,7 +395,7 @@ describe('PrintUtils', () => {
         const specs = getMapfishLayersSpecification([layer], { projection: "EPSG:3857" }, {}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
-		expect(specs[0].classes.length).toBe(1);
+        expect(specs[0].classes.length).toBe(1);
         // legendURL is a GetLegendGraphic request
         expect(specs[0].classes[0].icons[0].indexOf('GetLegendGraphic') !== -1).toBe(true);
         // LANGUAGE, if not included, should not be a parameter of the legend URL
