@@ -582,7 +582,8 @@ export const specCreators = {
                                 ...getLegendIconsSize(spec, layer),
                                 LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || '') + ";fontName:" + spec.fontFamily + ";fontSize:" + spec.fontSize,
                                 format: "image/png",
-                                ...assign({}, layer.params)
+                                ...(spec.language ? {LANGUAGE: spec.language} : {}),
+                                ...layer?.params
                             })
                         })
                     ]
