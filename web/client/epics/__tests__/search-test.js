@@ -563,7 +563,8 @@ describe('search Epics', () => {
                     typeName: 'topp:states',
                     queriableAttributes: [STATE_NAME],
                     returnFullData: false
-                }
+                },
+                priority: 2
             },
             {
                 type: 'wfs',
@@ -572,7 +573,8 @@ describe('search Epics', () => {
                     typeName: 'topp:states',
                     queriableAttributes: [STATE_NAME],
                     returnFullData: false
-                }
+                },
+                priority: 1
             }],
             maxResults
         };
@@ -587,12 +589,12 @@ describe('search Epics', () => {
                 expect(actions[1].type).toBe(TEXT_SEARCH_LOADING);
                 expect(actions[2].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
                 expect(actions[2].results.length).toBe(maxResults);
-                expect(head(actions[2].results).id).toBe("states.1");
-                expect(last(actions[2].results).id).toBe("states.5");
+                expect(head(actions[2].results).id).toMatch(/^(states|states-ari).1$/);
+                expect(last(actions[2].results).id).toMatch(/^(states|states-ari).5$/);
                 expect(actions[3].type).toBe(TEXT_SEARCH_RESULTS_LOADED);
                 expect(actions[3].results.length).toBe(maxResults);
-                expect(head(actions[3].results).id).toBe("states.1");
-                expect(last(actions[3].results).id).toBe("states.5");
+                expect(head(actions[3].results).id).toBe("states-ari.1");
+                expect(last(actions[3].results).id).toBe("states-ari.5");
                 expect(actions[4].type).toBe(TEXT_SEARCH_LOADING);
                 done();
             }, {});
