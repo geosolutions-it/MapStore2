@@ -576,7 +576,6 @@ export const specCreators = {
                                 SERVICE: "WMS",
                                 REQUEST: "GetLegendGraphic",
                                 LAYER: layer.name,
-                                LANGUAGE: spec.language || '',
                                 STYLE: layer.style || '',
                                 SCALE: spec.scale,
                                 ...getLegendIconsSize(spec, layer),
