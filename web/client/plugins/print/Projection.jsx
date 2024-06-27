@@ -24,11 +24,11 @@ function mapTransformer(state, map) {
         return {
             ...map,
             scale: scales[map.zoom],
-            zoom: map.zoom >= 1 ? map.zoom - 1 : map.zoom,              // for print map preview
+            zoom: map.zoom,
             projection: srs
         };
     }
-    return {...map, scale: scales[map.zoom], zoom: map.zoom >= 1 ? map.zoom - 1 : map.zoom};
+    return {...map, scale: scales[map.zoom], zoom: map.zoom};
 }
 
 const validator = (allowPreview) => (state) => {

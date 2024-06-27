@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
-import { getMapZoom, getResolutionMultiplier } from '../../utils/PrintUtils';
+import { getResolutionMultiplier } from '../../utils/PrintUtils';
 import ScaleBox from '../mapcontrols/scale/ScaleBox';
 import Button from '../misc/Button';
 import isNil from 'lodash/isNil';
@@ -152,7 +152,7 @@ class MapPreview extends React.Component {
                 interactive={false}
                 onMapViewChanges={this.props.onMapViewChanges}
                 zoomControl={false}
-                zoom={this.props.useFixedScales && this.props.scales ? getMapZoom(this.props.map.scaleZoom, this.props.scales) : this.props.map.zoom}
+                zoom={this.props.map.zoom}              // zoom level for map preview [it is precalculated]
                 center={this.props.map.center}
                 id="print_preview"
                 registerHooks={false}
