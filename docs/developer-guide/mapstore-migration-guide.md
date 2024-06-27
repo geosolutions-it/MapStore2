@@ -20,7 +20,25 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2024.01.00 to 2024.02.00
+## Migration from 2024.01.00 to 2024.01.02
+
+### Option to hide the group info of logged in user from user details modal window
+
+Recently, we have added the option to hide the `user group info` from the user details modal.
+To enable this, you have to add a cfg in all `Login` plugin into `localConfig.json` like:
+
+```json
+{
+    "name": "Login",
+    "cfg": { "toolsCfg": [{"hideGroupUserInfo": true}] }
+}
+```
+
+where the first index of toolsCfg is for `userDetails` component that is responsible for displaying the user details including `user group info`
+
+!!! note important notes should be considered:
+
+- if you have customized the Login plugin and in particular the order of toolsCfg, make sure to override the correct one as the propagation of cfg for the tools is based on index value.
 
 ### Integration with openID Connect
 
