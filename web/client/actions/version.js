@@ -41,7 +41,11 @@ export function loadVersionError(e) {
  */
 export function loadVersion(config = 'version.txt') {
     return (dispatch) => {
-        return axios.get(config).then((response) => {
+        return axios.get(config, {
+            params: {
+                t: new Date().getTime()
+            }
+        }).then((response) => {
             dispatch(changeVersion(response.data));
         }).catch((e) => {
             dispatch(loadVersionError(e));
