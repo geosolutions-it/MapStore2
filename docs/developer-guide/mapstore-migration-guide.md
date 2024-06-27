@@ -20,6 +20,53 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2024.01.00 to 2024.01.02
+
+### Option to hide the group info of logged in user from user details modal window
+
+Recently, we have added the option to hide the `user group info` from the user details modal.
+To enable this, you have to add a cfg in all `Login` plugin into `localConfig.json` like:
+
+```json
+{
+    "name": "Login",
+    "cfg": { "toolsCfg": [{"hideGroupUserInfo": true}] }
+}
+```
+
+where the first index of toolsCfg is for `userDetails` component that is responsible for displaying the user details including `user group info`
+
+!!! note important notes should be considered:
+
+- if you have customized the Login plugin and in particular the order of toolsCfg, make sure to override the correct one as the propagation of cfg for the tools is based on index value.
+
+### Integration with openID Connect
+
+A generic OpenID Connect (OIDC) authentication support has been introduced in MapStore. This feature allows to authenticate users using an OIDC provider, like Keycloak, Okta, Google, Azure, etc.
+
+To provide this functionality, it is necessary to update the project's `geostore-spring-security.xml` file, if the default one is not used.
+If you are using the default one, you can skip this step.
+
+Here the changes to apply if needed:
+
+```diff
+@@ -24,6 +24,7 @@
+         <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
+         <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
+         <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
++        <security:custom-filter ref="oidcOpenIdFilter" before="OPENID_FILTER"/> <!-- ADD a filter with this ref -->
+         <security:anonymous />
+     </security:http>
+
+@@ -52,6 +53,7 @@
+
+     <!-- OAuth2 beans -->
+     <context:annotation-config/>
++    <bean id="oidcSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/> <!-- add this bean to configure the integration -->
+
+     <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
+```
+
 ## Migration from 2023.02.02 to 2024.01.00
 
 ### TOC plugin refactor
