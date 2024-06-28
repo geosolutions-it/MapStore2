@@ -40,33 +40,6 @@ where the first index of toolsCfg is for `userDetails` component that is respons
 
 - if you have customized the Login plugin and in particular the order of toolsCfg, make sure to override the correct one as the propagation of cfg for the tools is based on index value.
 
-### Integration with openID Connect
-
-A generic OpenID Connect (OIDC) authentication support has been introduced in MapStore. This feature allows to authenticate users using an OIDC provider, like Keycloak, Okta, Google, Azure, etc.
-
-To provide this functionality, it is necessary to update the project's `geostore-spring-security.xml` file, if the default one is not used.
-If you are using the default one, you can skip this step.
-
-Here the changes to apply if needed:
-
-```diff
-@@ -24,6 +24,7 @@
-         <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
-         <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
-         <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
-+        <security:custom-filter ref="oidcOpenIdFilter" before="OPENID_FILTER"/> <!-- ADD a filter with this ref -->
-         <security:anonymous />
-     </security:http>
-
-@@ -52,6 +53,7 @@
-
-     <!-- OAuth2 beans -->
-     <context:annotation-config/>
-+    <bean id="oidcSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/> <!-- add this bean to configure the integration -->
-
-     <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
-```
-
 ## Migration from 2023.02.02 to 2024.01.00
 
 ### TOC plugin refactor
