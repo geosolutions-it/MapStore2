@@ -8,7 +8,7 @@ import { setPrintParameter } from "../../actions/print";
 import printReducer from "../../reducers/print";
 import Choice from "../../components/print/Choice";
 import { getMessageById } from '../../utils/LocaleUtils';
-import {getScales, reprojectZoom} from "../../utils/MapUtils";
+import {getScales} from "../../utils/MapUtils";
 
 import { getAvailableCRS, normalizeSRS } from '../../utils/CoordinatesUtils';
 
@@ -16,21 +16,19 @@ export const projectionSelector = (state) => state?.print?.spec?.params?.project
 
 function mapTransformer(state, map) {
     const projection = projectionSelector(state);
-    const mapProjection = mapProjectionSelector(state);
     const srs = normalizeSRS(projection);
+    const scales = getScales(srs);
+    const mapProjection = mapProjectionSelector(state);
     const mapSrs = normalizeSRS(mapProjection);
     if (srs !== mapSrs) {
-        const zoom = reprojectZoom(map.scaleZoom, mapSrs, srs);
-        const scales = getScales(srs);
         return {
             ...map,
-            zoom: zoom,
-            scaleZoom: zoom,
-            scale: scales[zoom],
+            scale: scales[map.zoom],
+            zoom: map.zoom,
             projection: srs
         };
     }
-    return map;
+    return {...map, scale: scales[map.zoom], zoom: map.zoom};
 }
 
 const validator = (allowPreview) => (state) => {
@@ -67,15 +65,17 @@ export const Projection = ({
             addValidator("projection", "map-preview", validator(allowPreview));
         }
     }, [allowPreview]);
-    useEffect(() => {
-        if (enabled) {
-            addMapTransformer("projection", mapTransformer);
-        }
-    }, []);
     function changeProjection(crs) {
         onChangeParameter("params.projection", crs);
         onRefresh();
     }
+    useEffect(() => {
+        if (enabled) {
+            changeProjection(projection);
+            addMapTransformer("projection", mapTransformer);
+        }
+    }, []);
+
     return enabled ? (
         <>
             <Choice
