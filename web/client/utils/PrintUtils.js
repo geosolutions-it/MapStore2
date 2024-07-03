@@ -229,6 +229,45 @@ export const getMapSize = (layout, maxWidth) => {
 
 export const mapProjectionSelector = (state) => state?.print?.map?.projection ?? "EPSG:3857";
 
+export function parseCreditRemovingTagsOrSymbol(creditText = "") {
+    let parsedCredit = creditText;
+    do {
+        let tagStartIndex = parsedCredit.indexOf("<");
+        let tagEndIndex = parsedCredit.indexOf(">");
+        if (tagStartIndex !== -1 && tagEndIndex !== -1) {
+            parsedCredit = parsedCredit.replace(parsedCredit.substring(tagStartIndex, tagEndIndex + 1), "");
+        }
+    } while (parsedCredit.includes("<") || parsedCredit.includes(">"));
+    let hasOrSymbol = parsedCredit && parsedCredit.includes("|");
+    if (hasOrSymbol) {
+        parsedCredit = parsedCredit?.replaceAll("|", "")?.replaceAll("  ", " ");
+    }
+    return parsedCredit;
+}
+/**
+ * Gets the credits of layers in one text with '|' separated
+ * @param  {object} layers the map layers for print
+ * @returns {string}       the layers credits as a text '|' separated
+ * @memberof utils.PrintUtils
+ */
+export const getLayersCredits = (layers) => {
+    const credits = layers.reduce((cum, lay) => {
+        let cumCredit = cum;
+        let layerCredit = lay?.credits?.title;
+        if (layerCredit) {
+            // remove tag <> and symbols like: |
+            let hasOrSymbol = layerCredit.includes('|');
+            const hasHtmlTag = layerCredit.includes('<');
+            if (hasHtmlTag || hasOrSymbol) {
+                layerCredit = parseCreditRemovingTagsOrSymbol(layerCredit);
+            }
+            cumCredit = cumCredit ? cumCredit + " | " + layerCredit : layerCredit;
+        }
+        return cumCredit;
+    }, '');
+    return credits;
+};
+
 /**
  * Creates the mapfish print specification from the current configuration
  * @param  {object} spec the current configuration
@@ -271,6 +310,7 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
             }
         ],
         "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'legend'),
+        "credits": getLayersCredits(spec.layers),
         ...params
     };
 };
