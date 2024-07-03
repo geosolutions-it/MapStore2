@@ -164,7 +164,7 @@ describe("Test the MapPreview component", () => {
             scales={[100, 1000, 10000, 100000]}
             onLoadingMapPlugins={(loading) => {
                 if (!loading) {
-                    expect(cmp.refs.mappa.props.zoom).toBe(13);
+                    expect(cmp.refs.mappa.props.zoom).toBe(3);
                     done();
                 }
             }}

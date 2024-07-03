@@ -202,6 +202,90 @@ describe('Print Plugin', () => {
         });
     });
 
+    it('test configuration with useFixedScales and enableScalebox = true', (done) => {
+        const printingService = {
+            getMapConfiguration() {
+                return {
+                    layers: [],
+                    center: {
+                        x: 0,
+                        y: 0,
+                        crs: "EPSG:4326"
+                    }
+                };
+            },
+            validate() { return {};}
+        };
+        getPrintPlugin({
+            state: {...initialState,
+                print: {...initialState.print,
+                    capabilities: {...initialState.print.capabilities,
+                        scales: [1000000, 500000, 100000].map(value => ({name: value, value}))}
+                }}
+        }).then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin
+                    projectionOptions={{
+                        "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+                    }}
+                    printingService={printingService}
+                    useFixedScales mapPreviewOptions={{
+                        enableScalebox: true
+                    }}/>, document.getElementById("container"));
+                const comp = document.getElementById("container");
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(()=>{
+                    expect(comp).toExist();
+                    const scaleBoxComp = document.querySelector("#mappreview-scalebox select");
+                    expect(scaleBoxComp).toExist();
+                    done();
+                });
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+    it('test configuration with useFixedScales and enableScalebox = false', (done) => {
+        const printingService = {
+            getMapConfiguration() {
+                return {
+                    layers: [],
+                    center: {
+                        x: 0,
+                        y: 0,
+                        crs: "EPSG:4326"
+                    }
+                };
+            },
+            validate() { return {};}
+        };
+        getPrintPlugin({
+            state: {...initialState,
+                print: {...initialState.print,
+                    capabilities: {...initialState.print.capabilities,
+                        scales: [1000000, 500000, 100000].map(value => ({name: value, value}))}
+                }}
+        }).then(({ Plugin }) => {
+            try {
+                ReactDOM.render(<Plugin
+                    projectionOptions={{
+                        "projections": [{"name": "UTM32N", "value": "EPSG:23032"}, {"name": "EPSG:3857", "value": "EPSG:3857"}, {"name": "EPSG:4326", "value": "EPSG:4326"}]
+                    }}
+                    printingService={printingService}
+                    useFixedScales mapPreviewOptions={{
+                        enableScalebox: false
+                    }}/>, document.getElementById("container"));
+                const comp = document.getElementById("container");
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(()=>{
+                    expect(comp).toExist();
+                    const scaleBoxComp = document.querySelector("#mappreview-scalebox select");
+                    expect(scaleBoxComp).toNotExist();
+                    done();
+                });
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
     it('default configuration with not allowed layers', (done) => {
         getPrintPlugin({
             layers: [{visibility: true, type: "bing"}]
