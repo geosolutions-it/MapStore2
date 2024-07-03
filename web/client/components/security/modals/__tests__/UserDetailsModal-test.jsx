@@ -75,4 +75,49 @@ describe("Test user details modal", () => {
 
         expect(modalDOM.getElementsByClassName('row').length).toEqual(6);
     });
+    it('test hide group user info if hideGroupUserInfo = true', () => {
+        let testUser = {
+            "attribute": [
+                {
+                    "name": "company",
+                    "value": "Some Company"
+                },
+                {
+                    "name": "email",
+                    "value": "user@email.com"
+                },
+                {
+                    "name": "notes",
+                    "value": "some notes"
+                },
+                {
+                    "name": "UUID",
+                    "value": "260a670e-4dc0-4719-8bc9-85555d7dcbe1"
+                }
+            ],
+            "enabled": true,
+            "groups": {
+                "group": {
+                    "enabled": true,
+                    "groupName": "everyone",
+                    "id": 3
+                }
+            },
+            "id": 6,
+            "name": "admin",
+            "role": "ADMIN"
+        };
+        let displayAttributes = (attr) => {
+            return attr.name && attr.name === "email" || attr.name === "company";
+        };
+        const cmpNormal = ReactDOM.render(<UDModal options={{animation: false}} show displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
+        expect(cmpNormal).toExist();
+        const modalDOMNormal = document.getElementsByClassName('ms-resizable-modal')[0];
+        expect(modalDOMNormal.querySelector('.user-group-info')).toExist();             // includes group info
+
+        const cmpWithHide = ReactDOM.render(<UDModal hideGroupUserInfo options={{animation: false}} show displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
+        expect(cmpWithHide).toExist();
+        const modalDOM = document.getElementsByClassName('ms-resizable-modal')[0];
+        expect(modalDOM.querySelector('.user-group-info')).toNotExist();                   // not include group info
+    });
 });
