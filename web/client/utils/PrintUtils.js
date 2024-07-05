@@ -229,6 +229,12 @@ export const getMapSize = (layout, maxWidth) => {
 
 export const mapProjectionSelector = (state) => state?.print?.map?.projection ?? "EPSG:3857";
 
+/**
+ * Parse credit/attribution text by removing html tags within its text plus removing '|' symbol
+ * @param  {string} creditText the layer credit/attribution text
+ * @returns {string}       the parsed credit/attribution text after removing html tags plus '|' symbol within
+ * @memberof utils.PrintUtils
+ */
 export function parseCreditRemovingTagsOrSymbol(creditText = "") {
     let parsedCredit = creditText;
     do {
@@ -251,21 +257,16 @@ export function parseCreditRemovingTagsOrSymbol(creditText = "") {
  * @memberof utils.PrintUtils
  */
 export const getLayersCredits = (layers) => {
-    const credits = layers.reduce((cum, lay) => {
-        let cumCredit = cum;
-        let layerCredit = lay?.credits?.title;
-        if (layerCredit) {
-            // remove tag <> and symbols like: |
-            let hasOrSymbol = layerCredit.includes('|');
-            const hasHtmlTag = layerCredit.includes('<');
-            if (hasHtmlTag || hasOrSymbol) {
-                layerCredit = parseCreditRemovingTagsOrSymbol(layerCredit);
-            }
-            cumCredit = cumCredit ? cumCredit + " | " + layerCredit : layerCredit;
-        }
-        return cumCredit;
-    }, '');
-    return credits;
+    const layerCredits = layers.map((layer) => {
+        const layerCreditTitle = layer?.credits?.title || '';
+        const hasOrSymbol = layerCreditTitle.includes('|');
+        const hasHtmlTag = layerCreditTitle.includes('<');
+        const layerCredit = (hasHtmlTag || hasOrSymbol)
+            ? parseCreditRemovingTagsOrSymbol(layerCreditTitle)
+            : layerCreditTitle;
+        return layerCredit;
+    }).join(' | ');
+    return layerCredits;
 };
 
 /**

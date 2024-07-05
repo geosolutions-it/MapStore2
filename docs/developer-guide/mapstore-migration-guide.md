@@ -26,7 +26,7 @@ This is a list of things to check if you want to update from a previous version 
 
 Due to showing layers' credits/attributions of printed map which will be displayed at the bottom of the map section, the MapStore `config.yaml` file should be reviewed and updated. Below are reported the relevant changes that need to be applied also to `config.yaml` of MapStore donwstream projects where the printing engine is present.
 
-- Added a section for credits into config.yaml file at the end of the mainPage for each layout
+- Added a section for credits into config.yaml file at the end of the mainPage for each layout, for more details see [here](https://github.com/geosolutions-it/MapStore2/pull/10451/files#diff-3599ba7c628c7c764665046828bad74c0c8576aad03f5497cf426b59010a6d07R27)
 - In this added section, proper values for `absoluteX` and `absoluteY` should be applied to be consistent with overall layout
 - There are some edits to the value of `absoluteY` for the section located directly above credit/attribution section based on the layout
 
