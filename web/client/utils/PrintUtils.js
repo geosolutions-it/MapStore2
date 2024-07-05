@@ -257,7 +257,7 @@ export function parseCreditRemovingTagsOrSymbol(creditText = "") {
  * @memberof utils.PrintUtils
  */
 export const getLayersCredits = (layers) => {
-    const layerCredits = layers.map((layer) => {
+    const layerCredits = layers.filter(lay => lay?.credits?.title).map((layer) => {
         const layerCreditTitle = layer?.credits?.title || '';
         const hasOrSymbol = layerCreditTitle.includes('|');
         const hasHtmlTag = layerCreditTitle.includes('<');
