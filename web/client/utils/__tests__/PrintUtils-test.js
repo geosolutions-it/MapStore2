@@ -27,7 +27,9 @@ import {
     getPrintVendorParams,
     resetDefaultPrintingService,
     getDefaultPrintingService,
-    getLegendIconsSize
+    getLegendIconsSize,
+    parseCreditRemovingTagsOrSymbol,
+    getLayersCredits
 } from '../PrintUtils';
 import ConfigUtils from '../ConfigUtils';
 import { KVP1, REST1 } from '../../test-resources/layers/wmts';
@@ -961,6 +963,56 @@ describe('PrintUtils', () => {
                 expect(validation["map-preview"]).toExist();
                 expect(validation["map-preview"].valid).toBe(false);
                 expect(validation["map-preview"].errors).toEqual(["error1", "error2"]);
+            });
+        });
+        describe('getting credits text', () => {
+            beforeEach(() => {
+                resetDefaultPrintingService();
+            });
+            it("test parseCreditRemovingTagsOrSymbol", () => {
+                const layerObj = {
+                    center: [10, 20],
+                    name: "layer 01",
+                    credits: {
+                        title: 'OSM Simple Light | Rendering <a href="https://www.geo-solutions.it/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                    }
+                };
+                const parsedCreditTxt = parseCreditRemovingTagsOrSymbol(layerObj.credits.title);
+                expect(parsedCreditTxt).toEqual('OSM Simple Light Rendering GeoSolutions Data © OpenStreetMap contributors, ODbL');
+            });
+            it("test getLayersCredits", () => {
+                const layersArr = [{
+                    center: [10, 20],
+                    name: "layer 01",
+                    credits: {
+                        title: 'OSM Simple Light | Rendering <a href="https://www.geo-solutions.it/">GeoSolutions</a> | Data © <a href="http://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="http://www.openstreetmap.org/copyright">ODbL</a>'
+                    }
+                },
+                {
+                    center: [10, 30],
+                    name: "layer 02",
+                    credits: {
+                        title: 'Attribution layer 02'
+                    }
+                }, {
+                    center: [20, 30],
+                    name: "layer 03"
+                }, {
+                    center: [40, 45],
+                    name: "layer 04",
+                    credits: {
+                        title: ''
+                    }
+                },
+                {
+                    center: [22, 33],
+                    name: "layer 05",
+                    credits: {
+                        title: 'Attribution layer 03 @ | polygon layer'
+                    }
+                }];
+                const reqLayersCreditTxt = getLayersCredits(layersArr);
+                expect(reqLayersCreditTxt).toEqual('OSM Simple Light Rendering GeoSolutions Data © OpenStreetMap contributors, ODbL | Attribution layer 02 | Attribution layer 03 @ polygon layer');
             });
         });
     });
