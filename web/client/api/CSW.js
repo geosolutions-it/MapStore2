@@ -44,14 +44,28 @@ const defaultDynamicFilter = "<ogc:PropertyIsLike wildCard='%' singleChar='_' es
     "<ogc:PropertyName>csw:AnyText</ogc:PropertyName> " +
     "<ogc:Literal>%${searchText}%</ogc:Literal> " +
     "</ogc:PropertyIsLike> ";
-
+/**
+ * Create the SortProperty xml definition
+ * @param {options}
+ * @param {string} options.name property name to order
+ * @param {string} options.order order type
+ * @returns {string} sort by definition in xml format
+ */
 const sortByXml = ({ name, order }) => "<ogc:SortBy>" +
 "<ogc:SortProperty>" +
   `<ogc:PropertyName>${name}</ogc:PropertyName>` +
   `<ogc:SortOrder>${order}</ogc:SortOrder>` +
 "</ogc:SortProperty>" +
 "</ogc:SortBy>";
-
+/**
+ * Create the GetRecords xml body
+ * @param {options}
+ * @param {number} options.startPosition staring index of record in catalog
+ * @param {number} options.maxRecords maximum number of records returned
+ * @param {number} options.filterXml a filter definition in xml format
+ * @param {number} options.sortBy sort by definition in xml format
+ * @returns {string} get record xml body
+ */
 export const cswGetRecordsXml = (options) => '<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" ' +
     'xmlns:ogc="http://www.opengis.net/ogc" ' +
     'xmlns:gml="http://www.opengis.net/gml" ' +
@@ -71,7 +85,11 @@ export const cswGetRecordsXml = (options) => '<csw:GetRecords xmlns:csw="http://
     (options.sortBy || '') +
     '</csw:Query>' +
     '</csw:GetRecords>';
-
+/**
+ * Get crs information given a CSW record bounding box
+ * @param {object} boundingBox CSW bounding box in json format
+ * @returns {object} { crs, extractedCrs }
+ */
 const getCRSFromCSWBoundingBox = (boundingBox) => {
     const crsValue = boundingBox?.$?.crs ?? '';
     const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];
@@ -85,7 +103,11 @@ const getCRSFromCSWBoundingBox = (boundingBox) => {
     }
     return { crs: makeNumericEPSG(`EPSG:${extractedCrs}`), extractedCrs };
 };
-
+/**
+ * Get bounding box information given a CSW record
+ * @param {object} cswRecord CSW record in json format
+ * @returns {object} { crs, extent }
+ */
 const getBoundingBoxFromCSWRecord = (cswRecord) => {
     if (cswRecord?.['ows:BoundingBox']) {
         const boundingBox = castArray(cswRecord['ows:BoundingBox'])[0];
@@ -105,7 +127,11 @@ const getBoundingBoxFromCSWRecord = (cswRecord) => {
     }
     return null;
 };
-
+/**
+ * Get dc properties given a CSW record
+ * @param {object} cswRecord CSW record in json format
+ * @returns {object} dc
+ */
 const getDCFromCSWRecord = (cswRecord) => {
     // extract each dc or dct tag item in the XML
     const dc = Object.keys(cswRecord || {}).reduce((acc, key) => {
@@ -141,16 +167,24 @@ const getDCFromCSWRecord = (cswRecord) => {
     }, {});
     return isEmpty(dc) ? null : dc;
 };
-
-const getCSWError = (json) => {
-    const exceptionReport = json?.['ows:ExceptionReport'];
+/**
+ * Get error message given the parsed response from a CSW request
+ * @param {object} cswResponse CSW response in json format
+ * @returns {string} error message
+ */
+const getCSWError = (cswResponse) => {
+    const exceptionReport = cswResponse?.['ows:ExceptionReport'];
     if (exceptionReport) {
         const exceptionText = exceptionReport?.['ows:Exception']?.['ows:ExceptionText'];
         return exceptionText || 'GenericError';
     }
-    return null;
+    return '';
 };
-
+/**
+ * Parse a CSW axios response
+ * @param {object} response axios response
+ * @returns {object} it could return the parsed result, an error or null
+ */
 const parseCSWResponse = (response) => {
     if (!response) {
         return null;
@@ -193,7 +227,6 @@ const parseCSWResponse = (response) => {
     }
     return null;
 };
-
 /**
  * Construct XML body to get records from the CSW service
  * @param {object} [options] the options to pass to withIntersectionObserver enhancer.
