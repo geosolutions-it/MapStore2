@@ -22,6 +22,33 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.01.00 to 2024.01.02
 
+### Enable showing credits/attribution text in Print config
+
+Due to showing layers' credits/attributions of printed map which will be displayed at the bottom of the map section, the MapStore `config.yaml` file should be reviewed and updated. Below are reported the relevant changes that need to be applied also to `config.yaml` of MapStore downstream projects where the printing engine is present.
+
+- Added a section for credits into `config.yaml` file at the end of the mainPage for each layout, for more details see [here](https://github.com/geosolutions-it/MapStore2/pull/10451/files#diff-3599ba7c628c7c764665046828bad74c0c8576aad03f5497cf426b59010a6d07R27)
+- In this added section, proper values for `absoluteX` and `absoluteY` should be applied to be consistent with overall layout
+- There are some edits to the value of `absoluteY` for the section located directly above credit/attribution section based on the layout
+
+example:
+
+```yaml
+    mainPage:
+    ....
+    items:
+    ....
+    - !columns
+        absoluteX: 42
+        absoluteY: 35
+        width: 1111
+        items:
+        - !text
+            align: left
+            vertAlign: middle
+            fontSize: 6
+              text: '${credits}'
+```
+
 ### Option to hide the group info of logged in user from user details modal window
 
 Recently, we have added the option to hide the `user group info` from the user details modal.
