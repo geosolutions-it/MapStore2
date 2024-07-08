@@ -537,6 +537,7 @@ class OpenlayersMap extends React.Component {
     _updateMapPositionFromNewProps = (newProps) => {
         var view = this.map.getView();
         const currentCenter = this.props.center;
+
         const centerIsUpdated = newProps.center.y === currentCenter.y &&
             newProps.center.x === currentCenter.x;
 
@@ -545,7 +546,7 @@ class OpenlayersMap extends React.Component {
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
             view.setCenter([center.x, center.y]);
         }
-        if (Math.round(newProps.zoom) !== this.props.zoom) {
+        if (Math.round(newProps.zoom) !== Math.round(this.props.zoom)) {
             view.setZoom(Math.round(newProps.zoom));
         }
         if (newProps.bbox && newProps.bbox.rotation !== undefined || this.bbox && this.bbox.rotation !== undefined && newProps.bbox.rotation !== this.props.bbox.rotation) {

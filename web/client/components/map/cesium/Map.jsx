@@ -486,7 +486,7 @@ class CesiumMap extends React.Component {
                 return false;
             }
             // avoid errors like 44.40641479 !== 44.40641478999999
-            return a.toFixed(12) - b.toFixed(12) <= 0.000000000001;
+            return Math.abs(a.toFixed(12) - b.toFixed(12)) <= 0.000000000001;       // using Math.abs to include negative values
         };
 
         // there are some transition cases where the center is not defined
@@ -497,15 +497,15 @@ class CesiumMap extends React.Component {
 
         const centerIsUpdate = !isNearlyEqual(newProps.center.x, currentCenter.longitude) ||
                                !isNearlyEqual(newProps.center.y, currentCenter.latitude);
-        const zoomChanged = newProps.zoom !== currentZoom;
+        const zoomChanged = Math.round(newProps.zoom) !== Math.round(currentZoom);      // round both to ignore the small tolerance due to calc zoom from hight
 
         // Do the change at the same time, to avoid glitches
         if (centerIsUpdate || zoomChanged) {
             const position = {
                 destination: Cesium.Cartesian3.fromDegrees(
-                    newProps.viewerOptions?.cameraPosition?.longitude ?? newProps.center.x,
-                    newProps.viewerOptions?.cameraPosition?.latitude ?? newProps.center.y,
-                    newProps.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(newProps.zoom ?? 0)
+                    newProps.mapStateSource !== this.props.id ? newProps?.center?.x ?? newProps.viewerOptions?.cameraPosition?.longitude : newProps.viewerOptions?.cameraPosition?.longitude ?? newProps.center.x,
+                    newProps.mapStateSource !== this.props.id ? newProps?.center?.y ?? newProps.viewerOptions?.cameraPosition?.latitude : newProps.viewerOptions?.cameraPosition?.latitude ?? newProps.center.y,
+                    newProps.mapStateSource !== this.props.id ? this.getHeightFromZoom(newProps.zoom ?? 0) ?? newProps.viewerOptions?.cameraPosition?.height : newProps.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(newProps.zoom ?? 0)
                 ),
                 orientation: newProps.viewerOptions?.orientation
             };
