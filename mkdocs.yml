@@ -162,12 +162,12 @@ nav:
     - Database Setup: 'developer-guide/database-setup.md'
     - Integrations:
       - Users:
-        - GeoServer: 'developer-guide/integrations/users/geoserver.md'
         - LDAP: 'developer-guide/integrations/users/ldap.md'
         - OpenID Connect: 'developer-guide/integrations/users/openId.md'
         - Keycloak: 'developer-guide/integrations/users/keycloak.md'
         - Keycloak-SSO: 'developer-guide/integrations/users/keycloak-sso-impl.md'
       - General:
+        - GeoServer: 'developer-guide/integrations/geoserver.md'
         - Authentication: 'developer-guide/integrations/auth.md'
         - Infrastructure: 'developer-guide/integrations/infrastructure-setups.md'
     - Projects:
