@@ -537,7 +537,6 @@ class OpenlayersMap extends React.Component {
     _updateMapPositionFromNewProps = (newProps) => {
         var view = this.map.getView();
         const currentCenter = this.props.center;
-
         const centerIsUpdated = newProps.center.y === currentCenter.y &&
             newProps.center.x === currentCenter.x;
 
