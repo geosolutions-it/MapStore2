@@ -33,14 +33,14 @@ goto run
   echo The JAVA_HOME environment variable is not defined correctly.
 goto JavaFail
 
-:JavaFail
-  echo Java is needed to run MapStore2.
-  echo.
-  echo Install it from:
-  echo    http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html
-  echo.
-  set error=1
-goto end
+rem :JavaFail
+rem   echo Java is needed to run MapStore2.
+rem   echo.
+rem   echo Install it from:
+rem   echo    http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html
+rem   echo.
+rem   set error=1
+rem goto end
 
 
 :run
