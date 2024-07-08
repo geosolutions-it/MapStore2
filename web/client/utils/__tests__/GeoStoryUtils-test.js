@@ -357,13 +357,79 @@ describe("GeoStory Utils", () => {
             mapOptions: {
                 scrollWheelZoom: false,
                 interactions: {
-                    mouseWheelZoom: false,
-                    mouseClick: false,
-                    dragPan: true
+                    mouseClick: false
                 }
             }
         });
         expect(res).toEqual(merged);
+    });
+    it('test override layers in  createMapObject', () => {
+        // initial baseMap layer is empty array
+        const merged1 = {
+            zoomControl: true,
+            mapInfoControl: false,
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseWheelZoom: false,
+                    mouseClick: false,
+                    dragPan: true
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }]
+        };
+        const res1 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: []}, {
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseClick: false
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }]
+        });
+        expect(res1).toEqual(merged1);
+        // initial baseMap layer not empty array
+        const merged2 = {
+            zoomControl: true,
+            mapInfoControl: false,
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseWheelZoom: false,
+                    mouseClick: false,
+                    dragPan: true
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1.5, y: 1.5, crs: 'EPSG:4326'}, zoom: 1.5
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }]
+        };
+        const res2 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
+            name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+        }]}, {
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseClick: false
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1.5, y: 1.5, crs: 'EPSG:4326'}, zoom: 1.5
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }]
+        });
+        expect(res2).toEqual(merged2);
     });
     it('test testRegex', () => {
         const title = "title";

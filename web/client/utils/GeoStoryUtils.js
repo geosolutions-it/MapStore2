@@ -174,13 +174,7 @@ export const applyDefaults = (options = {}) => merge({}, DEFAULT_MAP_OPTIONS, op
  * @return {object} options merged with defaults
  */
 export const createMapObject = (baseMap = {}, overrides = {}) => {
-    const baseMapCloned = { ...baseMap };
-    // use override [replace] logic instead of merge to get the updated map
-    const updatedMap = Object.keys(overrides).reduce((cumulatedMap, key) => {
-        cumulatedMap[key] = overrides[key];
-        return cumulatedMap;
-    }, baseMapCloned);
-    return updatedMap;
+    return merge({}, baseMap, overrides);
 };
 /**
  * check if a string matches a regex
