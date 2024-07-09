@@ -92,6 +92,8 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 - `oidcOAuth2Config.rolesClaim`: (*optional*) the role claims. If a claim contains roles, you can map them to MapStore roles. The roles can be only `ADMIN` or `USER`. If the claim is not present, the default role will be `USER`.
 - `oidcOAuth2Config.groupsClaim`: (*optional*) the group claims. If a claim contains groups, you can map them to MapStore groups. If the claim is not present, no group will be assigned (except the default `everyone` group).
 - `oidcOAuth2Config.globalLogoutEnabled`: (*optional*): if true (and the server supports it) invokes global logout on MapStore logout
+- `keycloakOAuth2Config.roleMappings`: comma separated list of mappings with the following format ``keycloak_admin_role:ADMIN,keycloak_user_role:USER``. These mappings will be used to map Keycloak roles to MapStore roles. Allowed values `USER` or `ADMIN`.
+- `keycloakOAuth2Config.groupMappings`: comma separated list of mappings with the following format ``keycloak_role_name:mapstore_group_name,keycloak_role_name2:mapstore_group_name2``. These mappings will be used to map Keycloak roles to MapStore groups.
 
 !!! note
     The `rolesClaim` and `groupsClaim` are optional. If you don't need to map roles or groups, you can omit them. At the moment, there is no mapping for roles and groups for the generic OIDC provider. If you need to map roles and groups, you can use the `keycloak` provider.
@@ -174,6 +176,22 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
             ]
 
     }
+```
+
+With Microsoft Azure you can configure the `rolesClaim` and `groupsClaim` to map the roles and groups to MapStore roles and groups. For example, if you have a claim `wids` that contains the groups, you can map them to MapStore roles and groups.
+Here an example of the configuration:
+
+```properties
+# Optional role claims, if a claim contains roles, you can map them to MapStore roles. (roles can be only ADMIN or USER)
+oidcOAuth2Config.rolesClaim=wids
+# Optional group claims, if a claim contains groups, you can map them to MapStore groups.
+oidcOAuth2Config.groupsClaim=wids
+# group mappings (comma separated list of mappings with the following format `group_claim_value_1:mapstore_group_name,group_claim_value_2:mapstore_group_name2`)
+oidcOAuth2Config.groupMappings=00000002-0000-0000-c000-000000000000:MY_MAPSTORE_GROUP,00000003-0000-0000-c000-000000000000:MY_MAPSTORE_GROUP2
+# role mappings (comma separated list of mappings with the following format `role_claim_value_1:ADMIN,role_claim_value_2:USER`)
+oidcOAuth2Config.roleMappings=00000002-0000-0000-c000-000000000000:ADMIN
+# Default role, when no mapping has matched
+oidcOAuth2Config.dropUnmapped=true
 ```
 
 ### Google
