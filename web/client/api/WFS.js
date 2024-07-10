@@ -152,30 +152,6 @@ export const getCapabilities = function(url) {
             return json;
         });
 };
-/**
- * @deprecated
- */
-export const describeFeatureTypeOGCSchemas = function(url, typeName) {
-    const parsed = urlUtil.parse(getDefaultUrl(url), true);
-    const describeLayerUrl = urlUtil.format(assign({}, parsed, {
-        query: assign({
-            service: "WFS",
-            version: "1.1.0",
-            typeName: typeName,
-            request: "DescribeFeatureType"
-        }, parsed.query)
-    }));
-    return new Promise((resolve) => {
-        require.ensure(['../utils/ogc/WFS'], () => {
-            const {unmarshaller} = require('../utils/ogc/WFS');
-            resolve(axios.get(describeLayerUrl).then((response) => {
-                let json = unmarshaller.unmarshalString(response.data);
-                return json && json.value;
-
-            }));
-        });
-    });
-};
 
 export const describeFeatureType = function(url, typeName) {
     return axios.get(toDescribeURL(url, typeName)).then(({data}) => data);
