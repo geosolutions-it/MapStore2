@@ -20,6 +20,15 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2024.01.02 to 2024.02.00
+
+### NodeJS and NPM update
+
+From this version the **recommended version** to build MapStore or for development is **Node 20** (**minimum** version will be **Node 17**).
+Please update your Node version accordingly on your develop machine or CI/CD.
+
+See the [requirements](./requirements.md#debug-build) section of the documentation for the details.
+
 ## Migration from 2024.01.00 to 2024.01.02
 
 ### Option to hide the group info of logged in user from user details modal window
