@@ -67,7 +67,7 @@ This steps have to be followed always when preparing a new release.
     - a new commit will be added to the release branch tagged as `vYYYY.XX.mm`. This commit will contain the changelog and the updated version of the java modules.
     - a pull request will be created on master with the changelog updates
 - [ ] Merge the incoming PR created by the workflow for updating changelog on Master
-- [ ] Run [`Submodules Update`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/submodules_update.yml) on MapStoreExtension: 
+- [ ] Run [`Submodules Update`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/submodules_update.yml) on MapStoreExtension:
   - Branch `YYYY.XX.xx`
 
 ## MapStore Stable deploy
@@ -89,17 +89,22 @@ This steps have to be followed always when preparing a new release.
 - [ ] [Create a draft release](https://github.com/geosolutions-it/MapStoreExtension/releases/new) for [MapstoreExtension](https://github.com/geosolutions-it/MapStoreExtension) with the same name and tag
   - target of the release is **stable branch** aligned to latest commit in stable branch of main mapstore repo
   - tag is **vYYYY.XX.mm**
-- [ ] [run the build](https://github.com/geosolutions-it/MapStoreExtension#build-extension) locally and attach to the release the file `SampleExtension.zip` from the `/dist` folder (or download the latest artifact).
+- [ ] Upload the `SampleExtension.zip` to upload on release:
+  - [Open the page](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/checks.yml). You will see a process running for the stable branch, triggered by **"Update submodules"**. Wait for the end of this task.
+  - When the process is succesfully finished **click** on the **"Update submodules"** last successful task. The task page will open.
+  - At the bottom of the page **click** on "**Artifacts**" to download.
+  - **Extract**  from the `artifacts.zip` the `SampleExtension.zip` file
+  - Upload the `SampleExtension.zip` to the draft release created.
 - [ ] Publish the MapStoreExtension release
 
 ## Create and Publish MapStore release
 
 - [ ] Run [`Create Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/create_release.yml) workflow on github actions with the following parameters:
   - Use workflow from `branch` **YYYY.XX.xx** (the release branch)
-  - Version to release **YYYY.XX.mm** (the effective number of the release)
+  - Version to release **YYYY.XX.mm** (version **without** the `v` prefix)
 - [ ] Launch [MapStore2-Stable-Releaser](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Releaser/) Jenkins job with
-   - **YYYY.XX.mm** for the version
-   - **vYYYY.XX.mm** for the branch to build (the version tag name, e.g. v2024.01.01)
+  - **branch**: **vYYYY.XX.mm** (the version tag name, e.g. v2024.01.01)
+  - **ms2Version**: **YYYY.XX.mm** (version **without** the `v` prefix)
 - [ ] Wait the end of the 2 process
 
 When the processes are finished, the release is ready to be published on github in draft mode.
