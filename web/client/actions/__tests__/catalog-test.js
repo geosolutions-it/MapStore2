@@ -153,7 +153,7 @@ describe('Test correctness of the catalog actions', () => {
         expect(retval.service).toBe(service);
     });
     it('deleteService', () => {
-        var retval = deleteService(status);
+        var retval = deleteService();
 
         expect(retval).toExist();
         expect(retval.type).toBe(DELETE_SERVICE);
