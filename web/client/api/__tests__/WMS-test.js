@@ -108,6 +108,23 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.service).toBeTruthy();
                 expect(result.records[0].getMapFormats.length).toBe(20);
                 expect(result.numberOfRecordsMatched).toBe(5);
+                expect(result.records[0].SRS.length).toBe(3);
+                expect(result.layerOptions).toBeTruthy();
+                expect(result.layerOptions.version).toBe('1.3.0');
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+    it('GetRecords', (done) => {
+        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.0-minimal.xml', 0, 2, '').then((result) => {
+            try {
+                expect(result).toBeTruthy();
+                expect(result.service).toBeTruthy();
+                expect(result.records[0].getMapFormats.length).toBe(1);
+                expect(result.records[0].SRS.length).toBe(1);
+                expect(result.numberOfRecordsMatched).toBe(1);
                 expect(result.layerOptions).toBeTruthy();
                 expect(result.layerOptions.version).toBe('1.3.0');
                 done();
