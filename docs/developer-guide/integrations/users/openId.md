@@ -78,7 +78,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 # oidcOAuth2Config.groupsClaim=groups
 # Enables global logout from SSO, if properly confugred. false by default
 # oidcOAuth2Config.globalLogoutEnabled=true
-# Optiona scopes parameter, that allows to customize the scopes to reqeuest. If empty, MapStore will use the one present in the discovery document
+# Optional scopes parameter, that allows to customize the scopes to reqeuest. If empty, MapStore will use the one present in the discovery document
 # oidcOAuth2Config.scopes=email,profile
 
 ```
