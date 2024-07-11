@@ -44,6 +44,9 @@ export const needProxy = function(uri, config = {}) {
     }
     return needed;
 };
+export const isAutoDetectCORS = function() {
+    return ConfigUtils.getConfigProp('proxyUrl')?.autoDetectCORS;
+};
 
 export const getProxyUrl = function(config = {}) {
     let proxyUrl = ConfigUtils.getProxyUrl(config);

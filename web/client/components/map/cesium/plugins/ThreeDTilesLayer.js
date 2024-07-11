@@ -11,12 +11,34 @@ import * as Cesium from 'cesium';
 import isEqual from 'lodash/isEqual';
 import isNumber from 'lodash/isNumber';
 import isNaN from 'lodash/isNaN';
-import { getProxyUrl, needProxy } from "../../../../utils/ProxyUtils";
+import { getProxyUrl, isAutoDetectCORS, needProxy } from "../../../../utils/ProxyUtils";
 import { getStyleParser } from '../../../../utils/VectorStyleUtils';
 import { polygonToClippingPlanes } from '../../../../utils/cesium/PrimitivesUtils';
 import tinycolor from 'tinycolor2';
 import googleOnWhiteLogo from '../img/google_on_white_hdpi.png';
 import googleOnNonWhiteLogo from '../img/google_on_non_white_hdpi.png';
+
+function createRetryProxyOptions(options) {
+    let failed = false;
+    const RetryProxy = function(proxyUrl) {
+        this.proxy = proxyUrl;
+    };
+    RetryProxy.prototype.getURL = function(resource) {
+        if (!failed && isAutoDetectCORS()) {
+            return resource;
+        }
+        const prefix = this.proxy.indexOf("?") === -1 ? "?" : "";
+        return this.proxy + prefix + encodeURIComponent(resource);
+    };
+    return {
+        proxy: (needProxy(options.url)) ? new RetryProxy(getProxyUrl()) : undefined,
+        retryCallback: isAutoDetectCORS() ? () => {
+            failed = true;
+            return true;
+        } : undefined,
+        retryAttempts: isAutoDetectCORS() ? 1 : undefined
+    };
+}
 
 const cleanStyle = (style, options) => {
     if (style && options?.pointCloudShading?.attenuation) {
@@ -146,7 +168,7 @@ Layers.registerType('3dtiles', {
         let tileSet;
         const resource = new Cesium.Resource({
             url: options.url,
-            proxy: needProxy(options.url) ? new Cesium.DefaultProxy(getProxyUrl()) : undefined
+            ...createRetryProxyOptions(options)
             // TODO: axios supports also adding access tokens or credentials (e.g. authkey, Authentication header ...).
             // if we want to use internal cesium functionality to retrieve data
             // we need to create a utility to set a CesiumResource that applies also this part.
