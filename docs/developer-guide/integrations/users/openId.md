@@ -184,6 +184,8 @@ Here an example of the configuration:
 oidcOAuth2Config.rolesClaim=wids
 # Optional group claims, if a claim contains groups, you can map them to MapStore groups.
 oidcOAuth2Config.groupsClaim=wids
+# Optional "scopes". If not resent the scopes will be taken from the discovery doument
+# oidcOAuth2Config.scopes=email,profile,customScope
 ```
 
 ### Google
