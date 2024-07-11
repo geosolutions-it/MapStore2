@@ -20,9 +20,14 @@ This is the main structure:
   "printUrl": "/geoserver-test/pdf/info.json",
   // a string or an object for the proxy URL.
   "proxyUrl": {
+    // When autoDetectCORS is not present or false, the application will use the proxy for all the requests except the ones in the useCORS array.
+    // if autoDetectCORS=true, the application will try the CORS request first, than will try to use the proxy if the request fails.
+    // note: this parameter is actually not supported by Cesium, that will always use the proxy or the CORS request when in useCORS array.
+    "autoDetectCORS": false,
     // if it is an object, the url entry holds the url to the proxy
     "url": "/MapStore2/proxy/?url=",
-    // useCORS array contains a list of services that support CORS and so do not need a proxy
+    // useCORS array contains a list of services that support CORS and so do not need a proxy.
+    // if autoDetectCORS is true, this array will be ignored (except for Cesium)
     "useCORS": ["http://nominatim.openstreetmap.org", "https://nominatim.openstreetmap.org"]
   },
   // JSON file where uploaded extensions are configured
