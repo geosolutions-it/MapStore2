@@ -78,6 +78,8 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 # oidcOAuth2Config.groupsClaim=groups
 # Enables global logout from SSO, if properly confugred. false by default
 # oidcOAuth2Config.globalLogoutEnabled=true
+# Optiona scopes parameter, that allows to customize the scopes to reqeuest. If empty, MapStore will use the one present in the discovery document
+# oidcOAuth2Config.scopes=email,profile
 
 ```
 
@@ -174,18 +176,6 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
             ]
 
     }
-```
-
-With Microsoft Azure you can configure the `rolesClaim` and `groupsClaim` to map the roles and groups to MapStore roles and groups. For example, if you have a claim `wids` that contains the groups, you can map them to MapStore roles and groups.
-Here an example of the configuration:
-
-```properties
-# Optional role claims, if a claim contains roles, you can map them to MapStore roles. (roles can be only ADMIN or USER)
-oidcOAuth2Config.rolesClaim=wids
-# Optional group claims, if a claim contains groups, you can map them to MapStore groups.
-oidcOAuth2Config.groupsClaim=wids
-# Optional "scopes". If not resent the scopes will be taken from the discovery doument
-# oidcOAuth2Config.scopes=email,profile,customScope
 ```
 
 ### Google
