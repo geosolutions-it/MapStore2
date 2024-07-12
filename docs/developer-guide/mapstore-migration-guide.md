@@ -20,6 +20,12 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2024.00.01 to 2024.02.00
+
+### Java dependencies update
+
+Some libraries has been updated. if you have a MapStore project make sure to keep the versions aligned with the main product.
+
 ## Migration from 2023.02.02 to 2024.01.00
 
 ### Maven project update
