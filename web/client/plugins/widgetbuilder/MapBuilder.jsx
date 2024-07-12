@@ -25,6 +25,10 @@ import mapToolbar from './enhancers/mapToolbar';
 import MapLayerSelectorComp from './MapLayerSelector';
 import MapSelector from './MapSelector';
 import { catalogEditorEnhancer } from './enhancers/catalogEditorEnhancer';
+import { getLayerTileMatrixSetsInfo } from '../../api/WMTS';
+import { generateGeoServerWMTSUrl } from '../../utils/WMTSUtils';
+import { isProjectionAvailable } from '../../utils/ProjectionUtils';
+import { normalizeSRS } from '../../utils/CoordinatesUtils';
 
 
 const Toolbar = mapToolbar(ToolbarComp);
@@ -51,8 +55,23 @@ const chooseMapEnhancer = compose(
                 manageLayers,
                 withHandlers({
                     onLayerChoice: ({ toggleLayerSelector = () => { }, addLayer = () => { } }) => (layer) => {
-                        addLayer(layer);
-                        toggleLayerSelector(false);
+                        // fetching 'tileGridData' if layer has truthy flag 'remoteTileGrids' and adding the required props to layer object
+                        let tileGridPromise = layer.type === 'wms' && layer.remoteTileGrids ? getLayerTileMatrixSetsInfo(generateGeoServerWMTSUrl(layer), layer.name, layer) : new Promise((resolve) => resolve(null));
+                        tileGridPromise.then((tileGridData) => {
+                            let tileGridProperties = {};
+                            if (tileGridData) {
+                                const filteredTileGrids = tileGridData.tileGrids.filter(({ crs }) => isProjectionAvailable(normalizeSRS(crs)));
+                                tileGridProperties = tileGridData !== undefined ? {
+                                    tileGrids: tileGridData.tileGrids,
+                                    tileGridStrategy: 'custom',
+                                    tileGridCacheSupport: filteredTileGrids?.length > 0 ?
+                                        tileGridData.formats ? {formats: tileGridData.formats} : {}
+                                        : undefined
+                                } : {};
+                            }
+                            addLayer({...layer, ...tileGridProperties});
+                            toggleLayerSelector(false);
+                        });
                     }
                 }),
                 layerSelector

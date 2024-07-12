@@ -200,12 +200,21 @@
               "legendHeight": "Altura",
               "legendPreview": "Avance"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Habilitar una leyenda interactiva",
+                "info": "Si esta opción está habilitada, se puede aplicar el filtro por leyenda haciendo clic en los elementos de leyenda de esta capa desde el TOC. Nota: este parámetro requiere configuraciones específicas en GeoServer",
+                "fetchError": "No se pudo obtener la información de la leyenda del servicio"
+            },
             "templateFormatInfoAlertExample": "La identificación de la característica es <span style='white-space:nowrap'>${ properties.datos }</span> ora <span style='white-space:nowrap'>${ properties['datos-valor'] }</span>",
             "templateError": "Hubo un error al aplicar la plantilla a la información devuelta por el servidor, verifique la plantilla",
             "templatePreview": "Vista previa de la plantilla",
             "enableLocalizedLayerStyles": {
                 "label": "Habilitar estilo localizado",
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
+            },
+            "useCacheOptionInfo": {
+                "label": "Utilice cuadrículas de mosaicos personalizadas remotas",
+                "info": "Asegúrese de que WMTS esté habilitado para poder usar cuadrículas de mosaicos personalizadas"
             },
             "format": {
                 "title": "Formato",
@@ -557,11 +566,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Mostrar capas",
-            "showLegend": "Mostrar leyenda",
-            "hideLegend": "Ocultar leyenda"
-        },
         "addgroup": {
             "addbtn": "Añadir",
             "groupName": "Nombre del grupo"
@@ -588,6 +592,7 @@
             "layerFilterTooltip": "Filtrar capas",
             "toolDownloadTooltip": "Exportar datos de la capa",
             "noFilteredResults": "Ningún resultado",
+            "emptyLayerTree": "El árbol de capas está vacío. Agregue una nueva capa del catálogo",
             "filterPlaceholder": "Filtrar capas",
             "clearFilter": "Quitar filtro",
             "toolReloadLayerTooltip": "Fuerza la recarga de la capa seleccionada",
@@ -625,6 +630,22 @@
             "notVisibleZoomOut": "La capa no es visible porque está fuera de los límites de resolución. Alejar para mostrar la capa",
             "notVisibleSwitchTo3D": "Cambie al modo de mapa 3D para ver esta capa",
             "notVisibleSwitchTo2D": "Cambie al modo de mapa 2D para ver esta capa",
+            "toolGroupShowAllChildren": "Activar la visibilidad de todos los nodos secundarios",
+            "toolGroupHideAllChildren": "Desactivar la visibilidad de todos los nodos secundarios",
+            "activateToolGroupMutuallyExclusive": "Activar visibilidad mutuamente excluyente de nodos secundarios",
+            "deactivateToolGroupMutuallyExclusive": "Desactivar la visibilidad mutuamente excluyente de los nodos secundarios",
+            "toolGroupCollapseAllChildren": "Contraer todos los nodos secundarios",
+            "toolGroupExpandAllChildren": "Expandir todos los nodos secundarios",
+            "closeOnMapInitialization": "Mantener cerrado durante la inicialización del mapa",
+            "openOnMapInitialization": "Abrir al inicializar el mapa",
+            "defaultTheme": "Tema predeterminado",
+            "legendTheme": "Tema de leyenda",
+            "showFullTitle": "Mostrar título completo",
+            "hideFullTitle": "Título en una sola línea",
+            "showOpacitySlider": "Mostrar control deslizante de opacidad",
+            "hideOpacitySlider": "Ocultar control deslizante de opacidad",
+            "showOpacityTooltip": "Mostrar información sobre herramientas de opacidad",
+            "hideOpacityTooltip": "Ocultar información sobre herramientas de opacidad",
             "refreshOptions": {
                 "bbox": "Refrescar BBOX",
                 "search": "Refrescar las opciones de búsqueda",
@@ -819,6 +840,7 @@
             "saveMeasure": "Guarde las medidas en la anotación",
             "resetTooltip": "Medidas claras",
             "addAsLayer": "Agregar como capa",
+            "lengthMeasure": "Mida la distancia geodésica en el espacio 3D que se calcula en el elipsoide, pero se representa al hacer clic",
             "polylineDistance3DMeasure": "Medir distancia en el espacio 3D",
             "area3DMeasure": "Medir área en espacio 3D",
             "pointCoordinatesMeasure": "Medir las coordenadas del punto",
@@ -846,6 +868,7 @@
             "addressSearch": "Buscar por nombre de ubicación",
             "searchOnAllServices": "Busque en todos los servicios a continuación",
             "coordinatesSearch": "buscar por coordenadas",
+            "currentMapCRS": "Sistema de coordenadas del mapa actual",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un servicio de búsqueda",
             "serviceslistlabel": "Servicios disponibles",
@@ -867,6 +890,8 @@
             "b_newpaneltitle": "Agregar nuevo marcador",
             "latitude": "Lat",
             "longitude": "Lon",
+            "yCoord": "Y",
+            "xCoord": "X",
             "b_title": "Título",
             "b_layer_tooltip": "Alternar recarga de visibilidad de capa",
             "b_bbox": "Cuadro delimitador",
@@ -1057,7 +1082,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Acercar",
             "zoomOutTooltip": "Alejar",
-            "zoomAllTooltip": "Ajustar a la máxima extensión"
+            "zoomAllTooltip": "Ajustar a la vista inicial"
         },
         "fullscreen": {
             "tooltipActivate": "Cambiar a pantalla completa",
@@ -1091,7 +1116,7 @@
             "title": "Búsqueda avanzada",
             "query": "Búsqueda",
             "apply": "Aplicar",
-            "reset": "Eliminar",
+            "reset": "Eliminar: eliminar todos los filtros, incluido cualquier otro filtro externo",
             "save": "Guardar",
             "discard": "Desechar",
             "query_request_exception": "Error en la búsqueda",
@@ -1560,6 +1585,10 @@
             "noRecordsMatched": "Ningún resultado encontrado",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "DE WFS",
+                "wms": "DE WMS"
+            },
             "share": "Compartir",
             "copyToClipboard": "Copiar en el portapapeles",
             "copied": "¡Copiado!",
@@ -1649,7 +1678,12 @@
             "allowUnsecureLayers": {
               "label": "Permitir capas no seguras",
               "tooltip": "Agregar una capa al mapa con esta opción habilitada obliga a la aplicación a aplicar proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Ordenar por",
+                "tooltip": "Agregue el prefijo del espacio de nombres a la propiedad del nombre. es decir, ${namespace}:${name}",
+                "placeholder": "Ingresar nombre"
+              }
         },
         "uploader": {
             "filename": "Nombre del fichero",
@@ -2591,6 +2625,7 @@
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
+            "alphaChannel": "Alpha channel",
             "grayChannel": "Channel",
             "ruleClassification": "Clasificación",
             "ruleRaster": "Ráster",
@@ -2658,6 +2693,12 @@
             "msExtrusionColor": "Color de extrusión",
             "msExtrusionType": "Tipo de extrusión",
             "wall": "Muro",
+            "enableBanding": "Estilo de banda",
+            "selectChannel": "Selecciona una banda",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Valor mínimo de datos de origen",
+            "maxSourceValue": "Valor máximo de datos de origen",
             "customParams": "Parámetros personalizados",
             "wrongFormatMsg": "¡La configuración ingresada está en formato incorrecto!"
         },
@@ -3945,8 +3986,10 @@
           "emptyDescription": "Haga clic en el mapa para comenzar a navegar por las imágenes de Street View",
           "messages": {
             "noDataForPosition": "no hay datos de Street View para esta",
-            "unknownError": "error desconocido, ver consola"
-          },
+            "unknownError": "error desconocido, ver consola",
+            "errorServiceUrl": "Servicio no disponible. Por favor, compruebe la url proporcionada",
+            "errorRetriveingLayerData": "Hubo un error al cargar los datos de la capa"
+        },
           "loadingAPI": "Cargando API...",
           "cyclomedia": {
             "initializing": "Inicializando la API de Street Smart...",

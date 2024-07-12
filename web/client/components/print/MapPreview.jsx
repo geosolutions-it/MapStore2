@@ -11,12 +11,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Glyphicon } from 'react-bootstrap';
 
-import { getMapZoom, getResolutionMultiplier } from '../../utils/PrintUtils';
+import { getResolutionMultiplier } from '../../utils/PrintUtils';
 import ScaleBox from '../mapcontrols/scale/ScaleBox';
 import Button from '../misc/Button';
 import isNil from 'lodash/isNil';
 import isEmpty from 'lodash/isEmpty';
 import { MapLibraries } from '../../utils/MapTypeUtils';
+import { get } from 'ol/proj';
 
 let PMap;
 let Layer;
@@ -83,23 +84,28 @@ class MapPreview extends React.Component {
             }
         });
     }
-
     componentWillUnmount() {
         this._isMounted = false;
     }
 
     getRatio = () => {
-        if (this.props.width && this.props.layoutSize && this.props.resolutions) {
+        if (this.props.width && this.props.layoutSize ) {
             return getResolutionMultiplier(this.props.layoutSize.width, this.props.width, this.props.printRatio);
         }
         return 1;
     };
 
-    getResolutions = () => {
-        if (this.props.width && this.props.layoutSize && this.props.resolutions) {
-            return this.props.resolutions.map((resolution) => resolution * this.getRatio());
+    getResolutions = (srs) => {
+        // cache resolutions
+        const projection = get(srs);
+        const metersPerUnit = projection.getMetersPerUnit();
+        const scaleToResolution = s => s * 0.28E-3 / metersPerUnit;
+        const previewResolutions = this.props.useFixedScales && this.props.scales
+            ? this.props.scales.map(s => scaleToResolution(s)) : this.props.resolutions;
+        if (this.props.width && this.props.layoutSize && previewResolutions) {
+            return previewResolutions.map((resolution) => resolution * this.getRatio());
         }
-        return this.props.resolutions;
+        return previewResolutions;
     };
 
     renderLayerContent = (layer, projection) => {
@@ -134,14 +140,15 @@ class MapPreview extends React.Component {
             width: this.props.width + "px",
             height: this.props.height + "px"
         });
-        const resolutions = this.getResolutions();
+        const projection = this.props.map && this.props.map.projection || 'EPSG:3857';
+        const resolutions = this.getResolutions(projection);
         let mapOptions = !isEmpty(resolutions) || !isNil(this.props.rotation) ? {
             view: {
                 ...(!isEmpty(resolutions) && {resolutions}),
                 rotation: !isNil(this.props.rotation) ? Number(this.props.rotation) : 0
             }
         } : {};
-        const projection = this.props.map && this.props.map.projection || 'EPSG:3857';
+
         return this.props.map && this.props.map.center ?
 
             <div className="print-map-preview"><PMap
@@ -152,7 +159,7 @@ class MapPreview extends React.Component {
                 interactive={false}
                 onMapViewChanges={this.props.onMapViewChanges}
                 zoomControl={false}
-                zoom={this.props.useFixedScales && this.props.scales ? getMapZoom(this.props.map.scaleZoom, this.props.scales) : this.props.map.zoom}
+                zoom={this.props.useFixedScales ? this.props.map.scaleZoom : this.props.map.zoom}
                 center={this.props.map.center}
                 id="print_preview"
                 registerHooks={false}

@@ -53,6 +53,7 @@ export const FORMAT_OPTIONS_FETCH = 'CATALOG:FORMAT_OPTIONS_FETCH';
 export const FORMAT_OPTIONS_LOADING = 'CATALOG:FORMAT_OPTIONS_LOADING';
 export const SET_FORMAT_OPTIONS = 'CATALOG:SET_FORMAT_OPTIONS';
 export const NEW_SERVICE_STATUS = 'CATALOG:NEW_SERVICE_STATUS';
+export const INIT_PLUGIN = 'CATALOG:INIT_PLUGIN';
 
 /**
  * Adds a list of layers from the given catalogs to the map
@@ -301,5 +302,12 @@ export const setNewServiceStatus = (status) => {
     return {
         type: NEW_SERVICE_STATUS,
         status
+    };
+};
+
+export const initPlugin = (options) => {
+    return {
+        type: INIT_PLUGIN,
+        options
     };
 };

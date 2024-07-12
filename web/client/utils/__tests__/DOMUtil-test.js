@@ -24,6 +24,8 @@ describe('Test the DOMUtils', () => {
         expect(spy.calls.length).toEqual(1);
     });
     it('test getOffsetTop', function() {
+        const desiredOffset = 8;
+        document.body.style.cssText = `margin: ${desiredOffset} px;`;
         document.body.innerHTML = `
         <div id="container">
             <div id="content">
@@ -31,12 +33,13 @@ describe('Test the DOMUtils', () => {
             </div>
         </div>`;
         const offset = getOffsetTop(document.querySelector("#content"));
-        expect(offset).toEqual(8);
+        expect(offset).toEqual(desiredOffset);
     });
     it('test getOffsetBottom', function() {
+        document.body.style.cssText = `margin: 8 px;`;
         document.body.innerHTML = `
         <div id="container">
-            <div id="content">
+            <div id="content" style="height: 18px">
             test
             </div>
         </div>`;

@@ -21,6 +21,8 @@ import RulesEditor from "../plugins/RulesEditor";
 import RulesManagerFooter from "../plugins/RulesManagerFooter";
 import UserSession from "../plugins/UserSession";
 import FeatureEditor from '../plugins/FeatureEditor';
+import MetadataInfo from '../plugins/MetadataInfo';
+import TOC from '../plugins/TOC';
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -45,6 +47,8 @@ export const plugins = {
     RulesManagerFooter: RulesManagerFooter,
     UserSessionPlugin: UserSession,
     FeatureEditorPlugin: FeatureEditor,
+    MetadataInfoPlugin: MetadataInfo,
+    TOCPlugin: TOC,
 
     // ### DYNAMIC PLUGINS ### //
     // product plugins
@@ -82,7 +86,6 @@ export const plugins = {
     ExpanderPlugin: toModulePlugin('Expander', () => import(/* webpackChunkName: 'plugins/expander' */ '../plugins/Expander')),
     FeaturedMaps: toModulePlugin('FeaturedMaps', () => import(/* webpackChunkName: 'plugins/featuredMaps' */ '../plugins/FeaturedMaps')),
     FilterLayerPlugin: toModulePlugin('FilterLayer', () => import(/* webpackChunkName: 'plugins/filterLayer' */ '../plugins/FilterLayer')),
-    FloatingLegendPlugin: toModulePlugin('FloatingLegend', () => import(/* webpackChunkName: 'plugins/floatingLegend' */ '../plugins/FloatingLegend')),
     FullScreenPlugin: toModulePlugin('FullScreen', () => import(/* webpackChunkName: 'plugins/fullScreen' */ '../plugins/FullScreen')),
     GeoStoryEditorPlugin: toModulePlugin('GeoStoryEditor', () => import(/* webpackChunkName: 'plugins/geoStoryEditor' */ '../plugins/GeoStoryEditor')),
     GeoStorySavePlugin: toModulePlugin('GeoStorySave', () => import(/* webpackChunkName: 'plugins/geoStorySave' */ '../plugins/GeoStorySave'), { exportedName: 'GeoStorySave'}),
@@ -144,7 +147,6 @@ export const plugins = {
     StyleEditor: toModulePlugin('StyleEditor', () => import(/* webpackChunkName: 'plugins/styleEditor' */ '../plugins/StyleEditor')),
     SwipePlugin: toModulePlugin('Swipe', () => import(/* webpackChunkName: 'plugins/swipe' */ '../plugins/Swipe')),
     TOCItemsSettingsPlugin: toModulePlugin('TOCItemsSettings', () => import(/* webpackChunkName: 'plugins/TOCItemsSettings' */ '../plugins/TOCItemsSettings')),
-    TOCPlugin: toModulePlugin('TOC', () => import(/* webpackChunkName: 'plugins/TOC' */ '../plugins/TOC')),
     ThematicLayerPlugin: toModulePlugin('ThematicLayer', () => import(/* webpackChunkName: 'plugins/thematicLayer' */ '../plugins/ThematicLayer')),
     ThemeSwitcherPlugin: toModulePlugin('ThemeSwitcher', () => import(/* webpackChunkName: 'plugins/themeSwitcher' */ '../plugins/ThemeSwitcher')),
     TimelinePlugin: toModulePlugin('Timeline', () => import(/* webpackChunkName: 'plugins/timeline' */ '../plugins/Timeline')),

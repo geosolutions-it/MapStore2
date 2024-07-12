@@ -95,12 +95,13 @@ export const LoginNav = connect((state) => ({
     const {currentProvider, providers = []} = stateProps;
     const {type, showAccountInfo = false, showPasswordChange = false} = (providers ?? []).filter(({provider: provider}) => provider === currentProvider)?.[0] ?? {};
     const isOpenID = type === "openID";
+    const isNormalLDAPUser = ownProps.isUsingLDAP && !ownProps.isAdmin;
     return {
         ...ownProps,
         ...stateProps,
         ...dispatchProps,
         showAccountInfo: isOpenID ? showAccountInfo : ownProps.showAccountInfo,
-        showPasswordChange: isOpenID ? showPasswordChange : ownProps.showPasswordChange
+        showPasswordChange: isOpenID ? showPasswordChange : isNormalLDAPUser ? false : ownProps.showPasswordChange
     };
 })(UserMenuComp);
 

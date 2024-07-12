@@ -9,7 +9,8 @@
 import { optionsToVendorParams } from './VendorParamsUtils';
 import urlUtil from 'url';
 import {get, head} from 'lodash';
-
+import { getDefaultUrl } from './URLUtils';
+import { getCredentials } from './SecurityUtils';
 
 export const needsReload = (oldOptions, newOptions) => {
     const oldParams = { ...(optionsToVendorParams(oldOptions) || {}), _v_: oldOptions._v_ };
@@ -23,7 +24,7 @@ export const needsReload = (oldOptions, newOptions) => {
 };
 
 export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL } = {}) => {
-    const parsed = urlUtil.parse(describeFeatureTypeURL || search.url || url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(describeFeatureTypeURL || search.url || url), true);
     return urlUtil.format(
         {
             ...parsed,
@@ -59,4 +60,36 @@ export const extractGeometryAttributeName = describeFeatureType => {
         .filter(elem => elem.type.indexOf("gml:") === 0) // find fields of geometric type
         .map(elem => elem.name) // extract the geometry attribute name. E.g. from gml:Point extract the "Point" string
     );
+};
+
+export const needsCredentials = (options) => {
+    const security = options?.security || {};
+    const {type, sourceId} = security;
+    const {username, password} = getCredentials(sourceId) ?? {};
+    return type?.toLowerCase?.() === "basic" && (!username || !password);
+};
+
+export const getConfig = (options) => {
+    const security = options?.security || {};
+    const config = {};
+    const {type, sourceId} = security;
+    const credentials = getCredentials(sourceId);
+    if (credentials) {
+        const {username, password} = credentials;
+        switch (type?.toLowerCase?.()) {
+        case "basic":
+            config.headers = {
+                Authorization: `Basic ${btoa(`${username}:${password}`)}`
+            };
+            break;
+        case "bearer":
+            config.headers = {
+                Authorization: `Bearer ${credentials.token}`
+            };
+            break;
+        default:
+            break;
+        }
+    }
+    return config;
 };

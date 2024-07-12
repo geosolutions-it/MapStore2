@@ -21,5 +21,6 @@ export default {
     WMSLayer: require('./WMSLayer').default,
     WMTSLayer: require('./WMTSLayer').default,
     COGLayer: require('./COGLayer').default,
-    ElevationLayer: require('./ElevationLayer').default
+    ElevationLayer: require('./ElevationLayer').default,
+    ArcGISLayer: require('./ArcGISLayer').default
 };

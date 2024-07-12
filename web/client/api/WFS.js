@@ -8,11 +8,18 @@
 import axios from '../libs/ajax';
 import urlUtil from 'url';
 import assign from 'object-assign';
+import xml2js from 'xml2js';
+import ConfigUtils from '../utils/ConfigUtils';
 import requestBuilder from '../utils/ogc/WFS/RequestBuilder';
 import {toOGCFilterParts} from '../utils/FilterUtils';
+import { getDefaultUrl } from '../utils/URLUtils';
+import { castArray } from 'lodash';
+import { isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
+
+const capabilitiesCache = {};
 
 export const toDescribeURL = (url, typeName) => {
-    const parsed = urlUtil.parse(url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(
         {
             ...parsed,
@@ -45,26 +52,30 @@ export const getFeatureSimple = function(baseUrl, params) {
 };
 
 export const getCapabilitiesURL = (url, {version = "1.1.0"} = {}) => {
-    const parsed = urlUtil.parse(url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, {
+        search: undefined, // this allows to merge parameters correctly
         query: assign({
-            service: "WFS",
             version,
+            ...parsed.query,
+            service: "WFS",
             request: "GetCapabilities"
-        }, parsed.query)
+        })
     }));
 };
 
 export const getFeatureURL = (url, typeName, { version = "1.1.0", ...params } = {}) => {
-    const parsed = urlUtil.parse(url, true);
+    const parsed = urlUtil.parse(getDefaultUrl(url), true);
     return urlUtil.format(assign({}, parsed, {
+        search: undefined, // this allows to merge parameters correctly
         query: assign({
-            service: "WFS",
             typeName,
             version,
+            ...parsed.query,
+            service: "WFS",
             request: "GetFeature",
             ...params
-        }, parsed.query)
+        })
     }));
 };
 /**
@@ -124,34 +135,45 @@ export const getFeature = (url, typeName, params, config) => {
 };
 
 export const getCapabilities = function(url) {
-    return axios.get(getCapabilitiesURL(url));
-};
-/**
- * @deprecated
- */
-export const describeFeatureTypeOGCSchemas = function(url, typeName) {
-    const parsed = urlUtil.parse(url, true);
-    const describeLayerUrl = urlUtil.format(assign({}, parsed, {
-        query: assign({
-            service: "WFS",
-            version: "1.1.0",
-            typeName: typeName,
-            request: "DescribeFeatureType"
-        }, parsed.query)
-    }));
-    return new Promise((resolve) => {
-        require.ensure(['../utils/ogc/WFS'], () => {
-            const {unmarshaller} = require('../utils/ogc/WFS');
-            resolve(axios.get(describeLayerUrl).then((response) => {
-                let json = unmarshaller.unmarshalString(response.data);
-                return json && json.value;
-
-            }));
+    const cached = capabilitiesCache[url];
+    if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+        return Promise.resolve(cached.data);
+    }
+    return axios.get(getCapabilitiesURL(url))
+        .then((response) => {
+            let json;
+            xml2js.parseString(response.data, { explicitArray: false, stripPrefix: true }, (ignore, result) => {
+                json = { ...result, url };
+            });
+            capabilitiesCache[url] = {
+                timestamp: new Date().getTime(),
+                data: json
+            };
+            return json;
         });
-    });
 };
 
 export const describeFeatureType = function(url, typeName) {
     return axios.get(toDescribeURL(url, typeName)).then(({data}) => data);
+};
+
+/**
+ * Fetch the supported formats of the WFS service
+ * @param url
+ * @return {object} { infoFormats }
+ */
+export const getSupportedFormat = (url) => {
+    return getCapabilities(url)
+        .then((response) => {
+            const operations = castArray(response?.['wfs:WFS_Capabilities']?.['ows:OperationsMetadata']?.['ows:Operation'] || []);
+            const getFeatureOperation = operations.find(operation => operation?.$?.name === 'GetFeature');
+            const parameters = castArray(getFeatureOperation?.['ows:Parameter'] || []);
+            const outputFormats = parameters.find((parameter) => parameter?.$?.name === 'outputFormat')?.['ows:Value'] || [];
+            const infoFormats = outputFormats.filter(isValidGetFeatureInfoFormat);
+            return {
+                infoFormats: infoFormats?.length ? infoFormats : ['application/json']
+            };
+        })
+        .catch(() => ({ infoFormats: ['application/json'] }));
 };
 

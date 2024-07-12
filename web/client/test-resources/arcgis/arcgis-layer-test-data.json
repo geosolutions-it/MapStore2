@@ -1,0 +1,104 @@
+{
+    "currentVersion": 10.81,
+    "cimVersion": "2.6.0",
+    "id": 1,
+    "name": "Active Projects",
+    "type": "Group Layer",
+    "description": "",
+    "geometryType": null,
+    "copyrightText": "",
+    "parentLayer": null,
+    "subLayers": [
+     {
+      "id": 11,
+      "name": "Post-Prelim"
+     },
+     {
+      "id": 12,
+      "name": "Outreach"
+     },
+     {
+      "id": 13,
+      "name": "Preliminary"
+     },
+     {
+      "id": 14,
+      "name": "Data Development"
+     },
+     {
+      "id": 15,
+      "name": "Discovery"
+     }
+    ],
+    "minScale": 0,
+    "maxScale": 0,
+    "defaultVisibility": true,
+    "extent": {
+     "xmin": -1.98519659761E7,
+     "ymin": -1643352.0163999982,
+     "xmax": 1.6269834825400002E7,
+     "ymax": 1.0537038417599998E7,
+     "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857,
+      "xyTolerance": 0.001,
+      "zTolerance": 0.001,
+      "mTolerance": 0.001,
+      "falseX": -20037700,
+      "falseY": -30241100,
+      "xyUnits": 10000,
+      "falseZ": -100000,
+      "zUnits": 10000,
+      "falseM": -100000,
+      "mUnits": 10000
+     }
+    },
+    "hasAttachments": false,
+    "htmlPopupType": "esriServerHTMLPopupTypeNone",
+    "displayField": "",
+    "typeIdField": null,
+    "subtypeFieldName": null,
+    "subtypeField": null,
+    "defaultSubtypeCode": null,
+    "fields": null,
+    "geometryField": {},
+    "indexes": [],
+    "subtypes": [],
+    "relationships": [],
+    "canModifyLayer": false,
+    "canScaleSymbols": false,
+    "hasLabels": false,
+    "capabilities": "Map,Query",
+    "supportsStatistics": false,
+    "supportsExceedsLimitStatistics": false,
+    "supportsAdvancedQueries": false,
+    "supportedQueryFormats": "JSON, geoJSON, PBF",
+    "isDataVersioned": false,
+    "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+    "useStandardizedQueries": true,
+    "advancedQueryCapabilities": {
+     "useStandardizedQueries": true,
+     "supportsStatistics": false,
+     "supportsPercentileStatistics": false,
+     "supportsHavingClause": false,
+     "supportsOrderBy": false,
+     "supportsDistinct": false,
+     "supportsCountDistinct": false,
+     "supportsPagination": false,
+     "supportsTrueCurve": true,
+     "supportsQueryWithDatumTransformation": true,
+     "supportsReturningQueryExtent": true,
+     "supportsQueryWithDistance": true,
+     "supportsSqlExpression": false
+    },
+    "supportsDatumTransformation": true,
+    "dateFieldsTimeReference": null,
+    "hasMetadata": true,
+    "isDataArchived": false,
+    "archivingInfo": {
+     "supportsQueryWithHistoricMoment": false,
+     "startArchivingMoment": -1
+    },
+    "supportsCoordinatesQuantization": true,
+    "supportsDynamicLegends": false
+   }

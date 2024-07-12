@@ -48,9 +48,7 @@ In particular, from this window, it is possible to:
 
 * Toggle the **Zoom on the vector files**
 
-Once the settings are done, the files can be added with the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button and they will be immediately available in the [TOC](toc.md#table-of-contents) nested inside the *Imported layers* group. For example:
-
-<img src="../img/import/local-files-added.jpg" class="ms-docimage" style="max-width:300px;"/>
+Once the settings are complete, the vector files can be finally added to the map with the <img src="../img/button/add_group_confirm_button.jpg" class="ms-docbutton"/> button that makes them available as new vector layers in [TOC](toc.md#table-of-contents).
 
 !!! warning
     Currently is not possible to read the [Attribute Table](attributes-table.md) of the imported vector files and for this reason also the [Layer Filter](filtering-layers.md) and the creation of [Widgets](widgets.md) are not allowed for those layers.

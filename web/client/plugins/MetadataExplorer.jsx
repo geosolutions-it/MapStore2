@@ -39,9 +39,10 @@ import {
     toggleAdvancedSettings,
     toggleTemplate,
     toggleThumbnail,
-    setNewServiceStatus
+    setNewServiceStatus,
+    initPlugin
 } from '../actions/catalog';
-import { setControlProperty, toggleControl } from '../actions/controls';
+import { setControlProperty, toggleControl, setControlProperties } from '../actions/controls';
 import { changeLayerProperties } from '../actions/layers';
 import API from '../api/catalog';
 import CatalogComp from '../components/catalog/Catalog';
@@ -74,7 +75,8 @@ import {
     getSupportedFormatsSelector,
     getSupportedGFIFormatsSelector,
     getNewServiceStatusSelector,
-    showFormatErrorSelector
+    showFormatErrorSelector,
+    canEditServiceSelector
 } from '../selectors/catalog';
 import { layersSelector } from '../selectors/layers';
 import { currentLocaleSelector, currentMessagesSelector } from '../selectors/locale';
@@ -121,7 +123,8 @@ const metadataExplorerSelector = createStructuredSelector({
     formatsLoading: formatsLoadingSelector,
     formatOptions: getSupportedFormatsSelector,
     infoFormatOptions: getSupportedGFIFormatsSelector,
-    isNewServiceAdded: getNewServiceStatusSelector
+    isNewServiceAdded: getNewServiceStatusSelector,
+    canEdit: canEditServiceSelector
 });
 
 
@@ -174,12 +177,15 @@ class MetadataExplorerComponent extends React.Component {
         // side panel properties
         width: PropTypes.number,
         dockStyle: PropTypes.object,
-        group: PropTypes.string
+        group: PropTypes.string,
+        onInitPlugin: PropTypes.func,
+        editingAllowedRoles: PropTypes.array,
+        editingAllowedGroups: PropTypes.array
     };
 
     static defaultProps = {
         id: "mapstore-metadata-explorer",
-        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, {name: "model", label: "IFC Model"}],
+        serviceTypes: [{ name: "csw", label: "CSW" }, { name: "wms", label: "WMS" }, { name: "wmts", label: "WMTS" }, { name: "tms", label: "TMS", allowedProviders: DEFAULT_ALLOWED_PROVIDERS }, { name: "wfs", label: "WFS" }, { name: "3dtiles", label: "3D Tiles" }, {name: "model", label: "IFC Model"}, { name: "arcgis", label: "ArcGIS" }],
         active: false,
         wrap: false,
         modal: true,
@@ -191,6 +197,7 @@ class MetadataExplorerComponent extends React.Component {
         },
         panelClassName: "catalog-panel",
         closeCatalog: () => {},
+        onInitPlugin: () => {},
         closeGlyph: "1-close",
         zoomToLayer: true,
 
@@ -205,8 +212,16 @@ class MetadataExplorerComponent extends React.Component {
         dockStyle: {},
         group: null,
         services: {},
-        servicesWithBackgrounds: {}
+        servicesWithBackgrounds: {},
+        editingAllowedRoles: ["ALL"]
     };
+
+    componentDidMount() {
+        this.props.onInitPlugin({
+            editingAllowedRoles: this.props.editingAllowedRoles,
+            editingAllowedGroups: this.props.editingAllowedGroups
+        });
+    }
 
     componentWillUnmount() {
         this.props.closeCatalog();
@@ -275,8 +290,41 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
-    setNewServiceStatus
+    setNewServiceStatus,
+    onInitPlugin: initPlugin
 })(MetadataExplorerComponent);
+
+const AddLayerButton = connect(() => ({}), {
+    onClick: setControlProperties.bind(null, 'metadataexplorer', 'enabled', true, 'group')
+})(({
+    onClick,
+    selectedNodes,
+    status,
+    itemComponent,
+    statusTypes,
+    config,
+    ...props
+}) => {
+    const ItemComponent = itemComponent;
+
+    // deprecated TOC configuration
+    if (config.activateAddLayerButton === false) {
+        return null;
+    }
+
+    if ([statusTypes.DESELECT, statusTypes.GROUP].includes(status)) {
+        const group = selectedNodes?.[0]?.id;
+        return (
+            <ItemComponent
+                {...props}
+                glyph="add-layer"
+                tooltipId={status === statusTypes.GROUP ? 'toc.addLayerToGroup' : 'toc.addLayer'}
+                onClick={() => onClick(group)}
+            />
+        );
+    }
+    return null;
+});
 
 /**
  * MetadataExplorer (Catalog) plugin. Shows the catalogs results (CSW, WMS, WMTS, TMS, WFS and COG).
@@ -315,7 +363,10 @@ export default {
         TOC: {
             name: 'MetadataExplorer',
             doNotHide: true,
-            priority: 1
+            priority: 1,
+            target: 'toolbar',
+            Component: AddLayerButton,
+            position: 2
         },
         SidebarMenu: {
             name: 'metadataexplorer',

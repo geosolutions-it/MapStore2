@@ -8,6 +8,7 @@
 import { createSelector } from 'reselect';
 import {get} from 'lodash';
 import { pathnameSelector } from './router';
+import { isUserAllowedSelectorCreator } from './security';
 
 export const getDashboardId = state => state?.dashboard?.resource?.id;
 export const isDashboardAvailable = state => state && state.dashboard && state.dashboard.editor && state.dashboard.editor.available;
@@ -20,7 +21,9 @@ export const isDashboardLoading = state => state && state.dashboard && state.das
 export const getDashboardSaveErrors = state => state && state.dashboard && state.dashboard.saveErrors;
 export const isBrowserMobile = state => state && state.browser && state.browser.mobile;
 export const buttonCanEdit = createSelector(pathnameSelector, dashboardResource, isBrowserMobile,
-    (path, resource, isMobile) => isMobile ? !isMobile : (resource && resource.canEdit || isNaN(path.substr(-4))));
+    // can edit only on desktop, when the resource is saved and editable by the user or when we are editing a new dashboard
+    // in that case the `path` ends with a number. Like `dashboard/1` or `dashboard/1234`.
+    (path, resource, isMobile) => isMobile ? !isMobile : (resource && resource.canEdit || isNaN(path.substr(-1))));
 export const originalDataSelector = state => state?.dashboard?.originalData;
 
 export const dashboardServicesSelector =  state => state && state.dashboard && state.dashboard.services;
@@ -29,6 +32,16 @@ export const dashboardCatalogModeSelector = state => state && state.dashboard &&
 export const dashboardIsNewServiceSelector = state => state.dashboard?.isNew || false;
 export const dashboardSaveServiceSelector =  state => state.dashboard?.saveServiceLoading || false;
 export const dashboardResourceInfoSelector = state => get(state, "dashboard.resource");
-export const dashbaordInfoDetailsUriFromIdSelector = state => state?.dashboard?.resource?.attributes?.details;
+export const dashboardInfoDetailsUriFromIdSelector = state => state?.dashboard?.resource?.attributes?.details;
 export const dashboardInfoDetailsSettingsFromIdSelector = state => get(dashboardResource(state), "attributes.detailsSettings");
+export const editingAllowedRolesSelector = state => get(state, "dashboard.servicesPermission.editingAllowedRoles", []);
+export const editingAllowedGroupsSelector = state => get(state, "dashboard.servicesPermission.editingAllowedGroups", []);
+export const canEditServiceSelector = state => {
+    const allowedRoles = editingAllowedRolesSelector(state);
+    const allowedGroups = editingAllowedGroupsSelector(state);
+    return isUserAllowedSelectorCreator({
+        allowedRoles,
+        allowedGroups
+    })(state);
+};
 

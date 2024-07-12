@@ -7,7 +7,7 @@
  */
 import * as Cesium from 'cesium';
 import chroma from 'chroma-js';
-import { castArray, isNumber, isEqual, range } from 'lodash';
+import { castArray, isNumber, isEqual, range, isNaN } from 'lodash';
 import { needProxy, getProxyUrl } from '../ProxyUtils';
 import {
     resolveAttributeTemplate,
@@ -613,7 +613,7 @@ const symbolizerToPrimitives = {
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
         const side = width > height ? width : height;
         const scale = (parsedSymbolizer.radius * 2) / side;
-        return image ? [
+        return image && !isNaN(scale) ? [
             {
                 type: 'point',
                 geometryType: 'point',
@@ -652,7 +652,7 @@ const symbolizerToPrimitives = {
         const { image, width, height } = images.find(({ id }) => id === getImageIdFromSymbolizer(parsedSymbolizer, symbolizer)) || {};
         const side = width > height ? width : height;
         const scale = parsedSymbolizer.size / side;
-        return image ? [{
+        return image && !isNaN(scale) ? [{
             type: 'point',
             geometryType: 'point',
             entity: {
@@ -849,8 +849,10 @@ const symbolizerToPrimitives = {
             }] : [])
         ];
     },
-    Fill: ({ parsedSymbolizer, globalOpacity }) => {
+    Fill: ({ parsedSymbolizer, feature, globalOpacity }) => {
         const isExtruded = !parsedSymbolizer.msClampToGround && !!parsedSymbolizer.msExtrudedHeight;
+        const geometryFunction = getGeometryFunction(parsedSymbolizer);
+        const additionalOptions = geometryFunction ? geometryFunction(feature) : {};
         return [
             {
                 type: 'polygon',
@@ -870,7 +872,8 @@ const symbolizerToPrimitives = {
                                 Cesium.ClassificationType.BOTH} ),
                         arcType: parsedSymbolizer.msClampToGround
                             ? Cesium.ArcType.GEODESIC
-                            : undefined
+                            : undefined,
+                        ...additionalOptions
                     }
                 }
             },
@@ -902,7 +905,8 @@ const symbolizerToPrimitives = {
                                     Cesium.ClassificationType.BOTH} ),
                             arcType: parsedSymbolizer.msClampToGround
                                 ? Cesium.ArcType.GEODESIC
-                                : Cesium.ArcType.NONE
+                                : Cesium.ArcType.NONE,
+                            ...additionalOptions
                         }
                     }
                 }

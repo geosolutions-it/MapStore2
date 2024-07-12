@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { compose, defaultProps, getContext, withPropsOnChange } from 'recompose';
@@ -13,7 +14,7 @@ import {createSelector} from 'reselect';
 
 import {setControlProperty} from '../actions/controls';
 import {getLayerCapabilities} from '../actions/layerCapabilities';
-import {hideSettings, updateNode, updateSettings, updateSettingsParams} from '../actions/layers';
+import {hideSettings, updateNode, updateSettings, updateSettingsParams, showSettings} from '../actions/layers';
 import {toggleStyleEditor} from '../actions/styleeditor';
 import {updateSettingsLifecycle} from "../components/TOC/enhancers/tocItemsSettings";
 import TOCItemsSettings from '../components/TOC/TOCItemsSettings';
@@ -30,6 +31,7 @@ import { createPlugin } from '../utils/PluginsUtils';
 import defaultSettingsTabs from './tocitemssettings/defaultSettingsTabs';
 import { isCesium } from '../selectors/maptype';
 import { showEditableFeatureCheckboxSelector } from "../selectors/map";
+import { isAnnotationLayer } from './Annotations/utils/AnnotationsUtils';
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
@@ -57,6 +59,52 @@ const tocItemsSettingsSelector = createSelector([
     showFeatureEditOption
 }));
 
+const SettingsButton = connect(() => ({}), {
+    onSettings: showSettings,
+    onHideSettings: hideSettings
+})(({
+    selectedNodes,
+    status,
+    itemComponent,
+    statusTypes,
+    expanded,
+    onSettings = () => {},
+    onHideSettings = () => {},
+    ...props
+}) => {
+    const ItemComponent = itemComponent;
+
+    function handleShowSettings() {
+        if (!expanded) {
+            return status === statusTypes.LAYER
+                ? onSettings(selectedNodes[0].id, 'layers', {
+                    opacity: parseFloat(selectedNodes[0]?.node?.opacity !== undefined
+                        ? selectedNodes[0]?.node?.opacity
+                        : 1)
+                })
+                : onSettings(selectedNodes[0].id, 'groups', {});
+        }
+        return onHideSettings();
+    }
+
+    if ([statusTypes.LAYER, statusTypes.GROUP].includes(status)) {
+
+        if (statusTypes.LAYER === status && isAnnotationLayer(selectedNodes?.[0]?.node)) {
+            return null;
+        }
+
+        return (
+            <ItemComponent
+                {...props}
+                glyph="wrench"
+                tooltipId={status === statusTypes.GROUP ? 'toc.toolGroupSettingsTooltip' : 'toc.toolLayerSettingsTooltip'}
+                onClick={() => handleShowSettings()}
+            />
+        );
+    }
+    return null;
+});
+
 /**
  * TOCItemsSettings plugin. This plugin allows to edit settings of groups and layers.
  * Inherit props from ResizableModal (dock = false) and DockPanel (dock = true) in cfg
@@ -73,6 +121,7 @@ const tocItemsSettingsSelector = createSelector([
  * @prop cfg.hideTitleTranslations {bool} if true hide the title translations tool
  * @prop cfg.showTooltipOptions {bool} if true, it shows tooltip section
  * @prop cfg.initialActiveTab {string} tab that will be enabled initially when the settings are opened. Possible values:
+ * @prop cfg.hideInteractiveLegendOption {bool} if true, it hide the checkbox of enable interactive legend in display tab
  * 'general' (General tab), 'display' (Display tab), 'style' (Style tab), 'feature' (Feature info tab).
  * @example
  * {
@@ -111,7 +160,10 @@ export default createPlugin('TOCItemsSettings', {
     containers: {
         TOC: {
             doNotHide: true,
-            name: "TOCItemsSettings"
+            name: "TOCItemsSettings",
+            Component: SettingsButton,
+            target: 'toolbar',
+            position: 5
         }
     }
 });

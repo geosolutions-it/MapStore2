@@ -203,9 +203,18 @@
               "legendHeight": "Height",
               "legendPreview": "Preview"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Enable interactive legend",
+                "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Note: This parameter requires specific configurations on GeoServer",
+                "fetchError": "Failed to retrieve the legend info from the service"
+            },
             "enableLocalizedLayerStyles": {
                 "label": "Enable localized style",
                 "tooltip": "Note: This parameter requires specific configurations on GeoServer"
+            },
+            "useCacheOptionInfo": {
+                "label": "Use remote custom tile grids",
+                "info": "Make sure to have WMTS enabled in order to use custom tile grids"
             },
             "format": {
                 "title": "Format",
@@ -557,11 +566,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Show layers",
-            "showLegend": "Show legend",
-            "hideLegend": "Hide legend"
-        },
         "addgroup": {
             "addbtn": "Add",
             "groupName": "Group name"
@@ -588,6 +592,7 @@
             "layerFilterTooltip": "Filter layer",
             "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "No results",
+            "emptyLayerTree": "Layers tree is empty. Please add a new layer from the catalog",
             "filterPlaceholder": "Filter layers",
             "clearFilter": "Clear filter",
             "toolReloadLayerTooltip": "Force reload of selected layer",
@@ -625,6 +630,22 @@
             "notVisibleZoomOut": "The layer is not visible because it is outside the resolution limits. Zoom out to show the layer",
             "notVisibleSwitchTo3D": "Switch to 3D map mode in order to see this layer",
             "notVisibleSwitchTo2D": "Switch to 2D map mode in order to see this layer",
+            "toolGroupShowAllChildren": "Show all child nodes",
+            "toolGroupHideAllChildren": "Hide all child nodes",
+            "activateToolGroupMutuallyExclusive": "Activate mutually exclusive visibility of child nodes",
+            "deactivateToolGroupMutuallyExclusive": "Deactivate mutually exclusive visibility of children nodes",
+            "toolGroupCollapseAllChildren": "Collapse all child nodes",
+            "toolGroupExpandAllChildren": "Expand all child nodes",
+            "closeOnMapInitialization": "Keep closed on map initialization",
+            "openOnMapInitialization": "Open on map initialization",
+            "defaultTheme": "Default theme",
+            "legendTheme": "Legend theme",
+            "showFullTitle": "Show full title",
+            "hideFullTitle": "Title on a single line",
+            "showOpacitySlider": "Show opacity slider",
+            "hideOpacitySlider": "Hide opacity slider",
+            "showOpacityTooltip": "Show opacity tooltip",
+            "hideOpacityTooltip": "Hide opacity tooltip",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -819,6 +840,7 @@
             "exportToGeoJSON": "Export to GeoJSON",
             "resetTooltip": "Clear measures",
             "addAsLayer": "Add as layer",
+            "lengthMeasure": "Measure geodesic distance in 3D space which is calculated on the ellipsoid, but rendered where you click",
             "polylineDistance3DMeasure": "Measure distance in 3D space",
             "area3DMeasure": "Measure area in 3D space",
             "pointCoordinatesMeasure": "Measure point coordinates",
@@ -846,6 +868,7 @@
             "addressSearch": "Search by location name",
             "searchOnAllServices": "Search on all services below",
             "coordinatesSearch": "Search by coordinates",
+            "currentMapCRS": "Current Map CRS",
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search service",
             "serviceslistlabel": "Available services",
@@ -867,6 +890,8 @@
             "b_newpaneltitle": "Add new bookmark",
             "latitude": "Lat",
             "longitude": "Lon",
+            "yCoord": "Y",
+            "xCoord": "X",
             "b_title": "Title",
             "b_layer_tooltip": "Toggle layer visibility reload",
             "b_bbox": "Bounding Box",
@@ -1057,7 +1082,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Increase zoom",
             "zoomOutTooltip": "Decrease zoom",
-            "zoomAllTooltip": "Zoom to max extent"
+            "zoomAllTooltip": "Zoom to initial view"
         },
         "fullscreen": {
             "tooltipActivate": "Switch to full screen",
@@ -1091,7 +1116,7 @@
             "title": "Advanced search",
             "query": "Search",
             "apply": "Apply",
-            "reset": "Reset",
+            "reset": "Reset: reset all filters including any other external filter",
             "save": "Save",
             "discard": "Undo",
             "query_request_exception": "Request error",
@@ -1559,6 +1584,10 @@
             "noRecordsMatched": "No record matched",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "FROM WFS",
+                "wms": "FROM WMS"
+            },
             "share": "Share",
             "copyToClipboard": "Copy to clipboard",
             "copied": "Copied!",
@@ -1648,6 +1677,11 @@
             "helpTooltip": "This option is used to split content across multiple subdomains",
             "addAliasTooltip": "Add alias",
             "removeAliasTooltip": "Remove alias"
+          },
+          "sortBy": {
+            "label": "Sort By",
+            "tooltip": "Add namespace prefix to name property. i.e. ${namespace}:${name}",
+            "placeholder": "Enter a name"
           }
         },
         "uploader": {
@@ -2601,6 +2635,7 @@
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
+            "alphaChannel": "Alpha channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
@@ -2668,6 +2703,12 @@
             "msExtrusionColor": "Extrusion color",
             "msExtrusionType": "Extrusion type",
             "wall": "Wall",
+            "enableBanding": "Band styling",
+            "selectChannel": "Select a band",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Minimum source data value",
+            "maxSourceValue": "Maximum source data value",
             "customParams": "Custom Parameters",
             "wrongFormatMsg": "The entered configuration is in wrong format !!"
         },
@@ -3956,7 +3997,9 @@
           "emptyDescription": "Click on the map to start browsing the images of street view",
           "messages": {
             "noDataForPosition": "no street-view data for this position",
-            "unknownError": "unknown error, see console"
+            "unknownError": "unknown error, see console",
+            "errorServiceUrl": "Service not available. Please, check the provided URL",
+            "errorRetriveingLayerData": "There was an error loading the layer data"
           },
           "loadingAPI": "Loading API...",
           "cyclomedia": {

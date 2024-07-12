@@ -22,6 +22,7 @@ import WidgetsBar from './WidgetsBar';
 import BButton from '../../components/misc/Button';
 import {mapLayoutValuesSelector} from "../../selectors/maplayout";
 import {withContainerDimensions} from "./withContainerDimensions";
+import { is3DMode } from '../../selectors/maptype';
 
 const Button = tooltip(BButton);
 
@@ -81,7 +82,9 @@ class WidgetsTray extends React.Component {
         expanded: PropTypes.bool,
         setExpanded: PropTypes.func,
         layout: PropTypes.object,
-        isSingleWidgetLayout: PropTypes.bool
+        isSingleWidgetLayout: PropTypes.bool,
+        isMobileAgent: PropTypes.bool,
+        is3DMap: PropTypes.bool
     };
     static defaultProps = {
         enabled: true,
@@ -94,7 +97,7 @@ class WidgetsTray extends React.Component {
         return this.props.enabled
             ? (<div className="widgets-tray"
                 style={{
-                    marginBottom: 32,
+                    marginBottom: this.props.isMobileAgent && !this.props.is3DMap ? 60 : 32,
                     marginRight: (this.props.layout?.right ?? 0) + 65,
                     bottom: 0,
                     right: 0,
@@ -124,7 +127,8 @@ export default compose(
         trayWidgets,
         state => state.browser && state.browser.mobile,
         (state) => mapLayoutValuesSelector(state, { right: true }),
-        (widgets, isMobileAgent, layout = []) => ({ widgets, layout, isMobileAgent })
+        is3DMode,
+        (widgets, isMobileAgent, layout = [], is3DMap) => ({ widgets, layout, isMobileAgent, is3DMap })
     ), {
         toggleTray
     }),

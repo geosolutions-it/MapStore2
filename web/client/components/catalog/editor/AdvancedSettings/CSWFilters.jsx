@@ -7,7 +7,6 @@ import {
     HelpBlock
 } from "react-bootstrap";
 import CodeMirror from '../../../../libs/codemirror/react-codemirror-suspense';
-import template from "lodash/template";
 import isEqual from "lodash/isEqual";
 import { cswGetRecordsXml } from "../../../../api/CSW";
 import OverlayTrigger from "../../../misc/OverlayTrigger";
@@ -88,10 +87,11 @@ export default ({
 
     const cmProps = { code, setCode, error };
     const isValid = value => {
-        const _filter = template(cswGetRecordsXml)({
+        const _filter = cswGetRecordsXml({
             filterXml: value,
             startPosition: 1,
-            maxRecords: 4
+            maxRecords: 4,
+            sortBy: ''
         });
         return !new DOMParser()
             .parseFromString(_filter, "application/xml")

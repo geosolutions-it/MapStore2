@@ -27,6 +27,7 @@ export default compose(
     withMapConnect({
         viewport: "viewport",
         layers: "layers",
+        groups: "groups",
         filter: "filter",
         quickFilters: "quickFilters",
         layer: "layer",

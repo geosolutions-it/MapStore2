@@ -50,13 +50,13 @@ jobs:
           mvn versions:set-property -Dproperty=print-lib.version -DnewVersion=$MAPFISH_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
           mvn versions:set-property -Dproperty=geostore-webapp.version -DnewVersion=$GEOSTORE_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
           mvn versions:set-property -Dproperty=http_proxy.version -DnewVersion=$HTTP_PROXY_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-
+          git add pom.xml
           ## Update the versions of the dependencies in the project templates
           POM_FILES=$(git ls-files project/standard/templates/ | grep 'pom\.xml$')
           for POM_FILE in $POM_FILES; do
-              mvn versions:set-property -Dproperty=print-lib.version -DnewVersion=$MAPFISH_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-              mvn versions:set-property -Dproperty=geostore-webapp.version -DnewVersion=$GEOSTORE_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
-              mvn versions:set-property -Dproperty=http_proxy.version -DnewVersion=$HTTP_PROXY_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+              mvn versions:set-property -f $POM_FILE -Dproperty=print-lib.version -DnewVersion=$MAPFISH_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+              mvn versions:set-property -f $POM_FILE -Dproperty=geostore-webapp.version -DnewVersion=$GEOSTORE_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
+              mvn versions:set-property -f $POM_FILE -Dproperty=http_proxy.version -DnewVersion=$HTTP_PROXY_VERSION -DgenerateBackupPoms=false -DautoVersionSubmodules=true -Pprinting
           done
           pr_branch_name="up_versions-${RUN_ID}"
           echo "Creating a PR on branch: ${pr_branch_name} for ${{ github.ref_name }}"

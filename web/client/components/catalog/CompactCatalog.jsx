@@ -75,12 +75,9 @@ const PAGE_SIZE = 10;
  */
 const loadPage = ({text, catalog = {}}, page = 0) => {
     const type = catalog.type;
-    const _tempOption = {options: {service: catalog}};
     let options = {};
-    if (type === 'csw') {
-        options = {..._tempOption, filter: catalog.filter};
-    } else if (type === 'tms') {
-        options = _tempOption;
+    if (['csw', 'tms'].includes(type)) {
+        options = {options: {service: catalog}};
     }
     return Rx.Observable
         .fromPromise(API[type].textSearch(catalog.url, page * PAGE_SIZE + (type === "csw" ? 1 : 0), PAGE_SIZE, text, options))
@@ -130,7 +127,9 @@ export default compose(
     onChangeSelectedService = () => {},
     selectedService, onChangeCatalogMode = () => {},
     getItems = (_items) => getCatalogItems(_items, selected),
-    onItemClick = ({record} = {}) => onRecordSelected(record, catalog)}) => {
+    onItemClick = ({record} = {}) => onRecordSelected(record, catalog),
+    canEditService
+}) => {
     return (<BorderLayout
         className="compat-catalog"
         header={<CatalogForm onChangeCatalogMode={onChangeCatalogMode} onChangeSelectedService={onChangeSelectedService}
@@ -138,7 +137,8 @@ export default compose(
             selectedService={services[selectedService]} showCatalogSelector={showCatalogSelector}
             title={title}
             searchText={searchText}
-            onSearchTextChange={setSearchText}/>}
+            onSearchTextChange={setSearchText}
+            canEditService={canEditService}/>}
         footer={<div className="catalog-footer">
             {loading ? <LoadingSpinner /> : null}
             {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}

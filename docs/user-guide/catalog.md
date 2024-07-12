@@ -83,6 +83,9 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 <img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
+!!! note
+    If the *CSW service*, responds with metadata records that can hold more than just one type of OGC service (WMS and WFS are currently supported for this), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to choose from which service the layer should be added to the [TOC](toc.md#table-of-contents). An example can be the following: <video class="ms-docimage"  style="max-width:500px;" controls><source src="../img/catalog/csw_with_more_ogc_service.mp4"></video>
+
 #### Advanced Settings
 
 <img src="../img/catalog/advanced_settings_csw.jpg" class="ms-docimage"  style="max-width:600px;"/>
@@ -98,6 +101,8 @@ In **general settings of**  CSW service the user can specify the title to assign
     The *Tile* and the *Information sheet* configured through this option will be automatically used for all layers loaded from the involved catalog source (if not configured the default *Tile* used is `image/png` and the default *Information sheet* used is`text/plain`). For layers already loaded on the map, it is possible to change the format through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings) tool as usual.
 
 * *Tile size (WMS)*: it represents tile size (width and height) to be used for tiles of all layers added to the map from the catalog source (`256x256` or `512x512`). For layers already loaded on the map, it is possible to change the tile size through the [Layer Settings](https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#display) tool as usual.
+
+* *Sorty By*: to retrieve the catalog result in ascending or descending order, it is possible to enter the `propertyName` of the metadata attributes and select the desired sort type (`ASC` or `DESC`).
 
 * *Set Visibility Limit*: if checked and scale limits present in the WMS Capabilities (eg. MinScaleDenominator and/or MaxScaleDenominator), these will be automatically applied to the layer settings when a layer is added to the map from this source.
 
@@ -228,6 +233,8 @@ Enabling that option, all layers added to the map from this catalog source will 
 !!! note
     If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
 
+* *Use remote custom tile grids*: if checked, allows to set by default the *custom tile grid caching strategy* when a layer is added to the map from this source as described in [Layer Settings](layer-settings.md#display).
+
 * *Format*: to define the default *Tile* format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`) and to define the default *Information sheet* format for the layers added to the map (`text/plain`, `text/html`, `application/json` or `application/geo+json`). The list of available formats is automatically retrieved from the ones supported by the WMS server and can be also manually fetched through the **Fetch supported formats** <img src = "../img/button/update_button.jpg" Button = "ms-docbutton" /> button when necessary.
 
 !!! note
@@ -353,6 +360,13 @@ In **General Settings** of 3D Tiles service, the user can specify the title to a
     (some [FAQs](https://cloud.google.com/blog/products/maps-platform/commonly-asked-questions-about-our-recently-launched-photorealistic-3d-tiles) are also available online for this purpose) before providing Google Photorealistic 3D Tile in your MapStore maps in order to enable only allowed tools (e.g. *Measurement* and *Identify* tools should be probably disabled).
     For this purpose it is possible to appropriately set the [configuration of MapStore plugins](../../developer-guide/maps-configuration/#map-options)  to exclude tools that could conflict with Google policies. Alternatively, it is possible to use a dedicated [application context](application-context.md#configure-plugins) to show Photorealistic 3D Tiles by including only the permitted tools within it.
 
+!!! Note
+    The tool capabilities currently available for 3D Tiles layers are:
+
+    * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#3d-tiles-layer) options and [Style](layer-settings.md#styling-of-3d-tiles-layer)
+    * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+
 ### COG Catalog
 
 A **Cloud Optimized GeoTIFF** ([COG](https://www.cogeo.org)) is a regular GeoTIFF file, aimed at being hosted on a HTTP file server, with an internal organization that enables more efficient workflows on the cloud environment. It does this by leveraging the ability of clients issuing ​HTTP GET range requests to ask for just the parts of a file they need.
@@ -392,8 +406,26 @@ In addition to the standard options, only for COG catalog sources, through the *
 * *Download file metadata on search*: this option will fetch metadata to support the zoom to layer when the layer is added to the [TOC](toc.md#table-of-contents).
 
 !!! Note
-    The tool capabilities currently available for  COG layers are:
+    The tool capabilities currently available for COG layers are:
 
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
-    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and customize the *Opacity* value and the *Visibility limits* from the [Display](layer-settings.md#display) tab
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information), the [Display](layer-settings.md#cog-layer) options and the [Style](layer-settings.md#styling-for-cog-layer)
+    * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+
+### IFC Model Catalog
+
+An **Industry Foundation Classes** (or [IFC](https://www.buildingsmart.org/standards/bsi-standards/industry-foundation-classes/)) is a 3D model file created to provide a standardized, digital description of the built asset industry. MapStore allows to add IFC model through its *Catalog* tool where a specific source type can be configured as follows by specifying the URL of a reachable `.ifc` resource on the web.
+
+In **General Settings** of a IFC source type, it is possible to specify the service `Title` and its `URL`.
+
+<img src="../img/catalog/ifc_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+!!! Note
+    To properly display georeferenced IFC 3D model layers in MapStore, ensure to have its coordinate reference system definition defined in the MapStore [projectionDefs configuration](../../developer-guide/local-config/#projectiondefs-configuration). Non-georeferenced IFC models are added by default in the center of the map viewport.
+
+!!! Note
+    The tool capabilities currently available for IFC model layers are:
+
+    * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#ifc-layer) options
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>

@@ -7,16 +7,15 @@
  */
 
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
 import isNil from 'lodash/isNil';
 import { Observable } from 'rxjs';
-import { fromUrl as fromGeotiffUrl } from 'geotiff';
+
 
 import { isValidURL } from '../../utils/URLUtils';
 import ConfigUtils from '../../utils/ConfigUtils';
-import { isProjectionAvailable } from '../../utils/ProjectionUtils';
+import LayerUtils from '../../utils/cog/LayerUtils';
+import { COG_LAYER_TYPE } from '../../utils/CatalogUtils';
 
-export const COG_LAYER_TYPE = 'cog';
 const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
     const filteredLayers = layers
         .filter(({ title = "" } = {}) => !text
@@ -31,117 +30,63 @@ const searchAndPaginate = (layers, startPosition, maxRecords, text) => {
         records
     };
 };
-/**
- * Get projection code from geokeys
- * @param {Object} image
- * @returns {string} projection code
- */
-export const getProjectionFromGeoKeys = (image) => {
-    const geoKeys = image.geoKeys;
-    if (!geoKeys) {
-        return null;
-    }
 
-    if (
-        geoKeys.ProjectedCSTypeGeoKey &&
-        geoKeys.ProjectedCSTypeGeoKey !== 32767
-    ) {
-        return "EPSG:" + geoKeys.ProjectedCSTypeGeoKey;
-    }
-
-    if (
-        geoKeys.GeographicTypeGeoKey &&
-        geoKeys.GeographicTypeGeoKey !== 32767
-    ) {
-        return "EPSG:" + geoKeys.GeographicTypeGeoKey;
-    }
-
-    return null;
-};
-const abortError = (reject) => reject(new DOMException("Aborted", "AbortError"));
-/**
- * fromUrl with abort fetching of data and data slices
- * Note: The abort action will not cancel data fetch request but just the promise,
- * because of the issue in https://github.com/geotiffjs/geotiff.js/issues/408
- */
-const fromUrl = (url, signal) => {
-    if (signal?.aborted) {
-        return abortError(Promise.reject);
-    }
-    return new Promise((resolve, reject) => {
-        signal?.addEventListener("abort", () => abortError(reject));
-        return fromGeotiffUrl(url)
-            .then((image)=> image.getImage()) // Fetch and read first image to get medatadata of the tif
-            .then((image) => resolve(image))
-            .catch(()=> abortError(reject));
-    });
-};
 let capabilitiesCache = {};
 export const getRecords = (_url, startPosition, maxRecords, text, info = {}) => {
     const service = get(info, 'options.service');
+    const controller = get(info, 'options.controller');
     let layers = [];
     if (service.records) {
         // each record/url corresponds to a layer
         layers = service.records?.map((record) => {
             const url = record.url;
             let layer = {
-                ...service,
+                ...record,
                 title: record.title,
-                type: COG_LAYER_TYPE,
-                sources: [{url}],
-                options: service.options || {}
+                type: record.type ?? COG_LAYER_TYPE,
+                sources: record.sources ?? [{url}],
+                options: record.options ?? (service.options || {})
             };
-            const controller = get(info, 'options.controller');
             const isSave = get(info, 'options.save', false);
+            const cached = capabilitiesCache[url];
+            if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
+                return {...cached.data};
+            }
             // Fetch metadata only on saving the service (skip on search)
             if ((isNil(service.fetchMetadata) || service.fetchMetadata) && isSave) {
-                const cached = capabilitiesCache[url];
-                if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
-                    return {...cached.data};
-                }
-                return fromUrl(url, controller?.signal)
-                    .then(image => {
-                        const crs = getProjectionFromGeoKeys(image);
-                        const extent = image.getBoundingBox();
-                        const isProjectionDefined = isProjectionAvailable(crs);
-                        layer = {
-                            ...layer,
-                            sourceMetadata: {
-                                crs,
-                                extent: extent,
-                                width: image.getWidth(),
-                                height: image.getHeight(),
-                                tileWidth: image.getTileWidth(),
-                                tileHeight: image.getTileHeight(),
-                                origin: image.getOrigin(),
-                                resolution: image.getResolution()
-                            },
-                            // skip adding bbox when geokeys or extent is empty
-                            ...(!isEmpty(extent) && !isEmpty(crs) && {
-                                bbox: {
-                                    crs,
-                                    ...(isProjectionDefined && {
-                                        bounds: {
-                                            minx: extent[0],
-                                            miny: extent[1],
-                                            maxx: extent[2],
-                                            maxy: extent[3]
-                                        }}
-                                    )
-                                }
-                            })
-                        };
+                return LayerUtils.getLayerConfig({url, controller, layer})
+                    .then(updatedLayer => {
                         capabilitiesCache[url] = {
                             timestamp: new Date().getTime(),
-                            data: {...layer}
+                            data: {...updatedLayer}
                         };
-                        return layer;
-                    }).catch(() => ({...layer}));
+                        return updatedLayer;
+                    })
+                    .catch(() => ({...layer}));
             }
             return Promise.resolve(layer);
         });
     }
     return Promise.all([...layers]).then((_layers) => {
+        if (!_layers.length) {
+            let layer = {
+                ...service,
+                title: text,
+                identifier: _url,
+                type: COG_LAYER_TYPE,
+                sources: [{url: _url}],
+                options: service.options || {}
+            };
+            return LayerUtils.getLayerConfig({url: _url, layer, controller})
+                .then(lyr => {
+                    const records = [lyr];
+                    return {
+                        numberOfRecordsMatched: 1,
+                        numberOfRecordsReturned: 1,
+                        records
+                    };
+                }).catch(() => ({...layer}));
+        }
         return searchAndPaginate(_layers, startPosition, maxRecords, text);
     });
 };

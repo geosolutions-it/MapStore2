@@ -5,7 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import { getLayerFromRecord, getCatalogRecords, validate, COG_LAYER_TYPE, getProjectionFromGeoKeys} from '../COG';
+import { getLayerFromRecord, getCatalogRecords, validate } from '../COG';
+import { COG_LAYER_TYPE } from '../../../utils/CatalogUtils';
 import expect from 'expect';
 
 
@@ -60,11 +61,5 @@ describe('COG (Abstraction) API', () => {
     it('test validate with valid url', () => {
         const service = {title: "some", records: [{url: "https://some.tif"}]};
         expect(validate(service)).toBeTruthy();
-    });
-    it('test getProjectionFromGeoKeys', () => {
-        expect(getProjectionFromGeoKeys({geoKeys: {ProjectedCSTypeGeoKey: 4326}})).toBe('EPSG:4326');
-        expect(getProjectionFromGeoKeys({geoKeys: {GeographicTypeGeoKey: 3857}})).toBe('EPSG:3857');
-        expect(getProjectionFromGeoKeys({geoKeys: null})).toBe(null);
-        expect(getProjectionFromGeoKeys({geoKeys: {ProjectedCSTypeGeoKey: 32767}})).toBe(null);
     });
 });

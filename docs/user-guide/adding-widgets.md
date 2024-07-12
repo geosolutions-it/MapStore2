@@ -2,7 +2,7 @@
 
 ****************
 
-With a click on the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button in [Sidebar](exploring-dashboards.md#sidebar) the *Widget* panel opens, showing the list of the available widget types that can be added to the dashboard:
+With a click on the <img src="../img/button/++++.jpg" class="ms-docbutton"/> button in [Side Toolbar](exploring-dashboards.md#side-toolbar) the *Widget* panel opens, showing the list of the available widget types that can be added to the dashboard:
 
 <img src="../img/adding-widgets/widgets-panel.jpg" class="ms-docimage"  style="max-width:400px;"/>
 

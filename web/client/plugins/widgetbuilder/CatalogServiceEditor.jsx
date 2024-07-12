@@ -20,11 +20,16 @@ const emptyService = {
 export default ({service: defaultService, catalogServices,
     error = () => {}, onAddService = () => {}, isNew, dashboardServices, defaultServices, defaultSelectedService,
     dashboardSelectedService, ...props}) => {
-    const [service, setService] = useState(isNew ? emptyService :
-        isEmpty(dashboardSelectedService) ? {...defaultServices[defaultSelectedService],
-            old: defaultServices[defaultSelectedService], key: defaultSelectedService, excludeShowTemplate: true} :
-            {...dashboardServices[dashboardSelectedService], old: dashboardServices[dashboardSelectedService],
-                key: dashboardSelectedService, excludeShowTemplate: true} );
+    const [service, setService] = useState(() => {
+        // [dashboardHasEmptyServices] if true => show the default sevices, else show the dashobaord services with its stored configurations
+        // adding (!dashboardServices) in the condition shows the expceted behaviour
+        const dashboardHasEmptyServices = isEmpty(dashboardSelectedService) && !dashboardServices;
+        return isNew ? emptyService :
+            dashboardHasEmptyServices ?
+                {...defaultServices[defaultSelectedService], old: defaultServices[defaultSelectedService], key: defaultSelectedService, excludeShowTemplate: true} :
+                {...dashboardServices[dashboardSelectedService || defaultSelectedService], old: dashboardServices[dashboardSelectedService || defaultSelectedService],
+                    key: dashboardSelectedService || defaultSelectedService, excludeShowTemplate: true};
+    });
 
     const existingServices = isEmpty(dashboardServices) ? defaultServices : dashboardServices;
 

@@ -111,18 +111,47 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 !!!Warning
     The *Format* and *Layer tile size* options are available only for the layers added from CSW and WMS catalog sources.
 
-!!!Warning
-    On the *Display* tab, only the following options are available for a **3D Tile** layer:
+### Display tab for other layer types
 
-    <img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
+#### 3D Tiles layer
 
-    * The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+On the *Display* tab, only the following options are available for a **3D Tile** layer:
 
-    * The **Height Offset** above the ground.
+<img src="../img/layer-settings/display-3d-tiles.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-    * The **Format** choosing between `3D Model` and `Point Cloud`. The *Point Cloud* option allows the user to customize the `Maximum Attenuation` of the points based on the distance from the current viewpoint and customize the `Lighting strength` and the `Lighting radius` to improve visualization of the point cloud.
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
 
-    <img src="../img/layer-settings/display-point-cloud.jpg" class="ms-docimage"  style="max-width:450px;"/>
+* The **Height Offset** above the ground.
+
+* The **Format** choosing between `3D Model` and `Point Cloud`. The *Point Cloud* option allows the user to customize the `Maximum Attenuation` of the points based on the distance from the current viewpoint and customize the `Lighting strength` and the `Lighting radius` to improve visualization of the point cloud.
+
+<img src="../img/layer-settings/display-point-cloud.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+#### COG layer
+
+On the *Display* tab, only the following options are available for a **COG** layer:
+
+<img src="../img/layer-settings/display-cog.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* The **Opacity** to change the layer opacity.
+
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
+#### IFC layer
+
+On the *Display* tab, only the following options are available for a **IFC** layer:
+
+<img src="../img/layer-settings/display-ifc.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* The **Visibility limits** to display the layer only within certain scale limits, as reported above.
+
+* The **Center Longitude** to change the center longitude of the layer (`DD`).
+
+* The **Center Latitude** to change the center latitude of the layer (`DD`).
+
+* The **Height** to set the layer height from the ground (`m`).
+
+* The **Heading** to set the layer heading (`DD`).
 
 ## Fields
 
@@ -277,7 +306,7 @@ The line rule is used to style linear features of the layer: clicking on the <im
 
 The editor can change the `Stroke color`, the `Stroke width`, the `Line style` (*continuous*, *dashed*, etc), the `Line cap` (*Butt*, *Round*, *Square*) and the `Line join` (*Bevel*, *Round*, *Miter*). An example can be the following one:
 
-<video class="ms-docimage" controls><source src="../img/layer-settings/ex_line_style.mp4"></video>
+<img src="../img/layer-settings/ex_line_style.jpg" class="ms-docimage"  style="max-width:500px;">
 
 #### Fill
 
@@ -295,7 +324,7 @@ The editor is allowed to type the name of the layer attribute to use for the `La
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/ex_text_style.mp4"></video>
 
-### Style Methods
+### Style Methods for Vector layer
 
 Different styles methods can be used for each style rule. Clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel of each symbolizer, the editor can choose one of the following depending on the rule type:
 
@@ -321,6 +350,18 @@ It this case the editor is allowed to choose a `Color ramp` and the order (with 
 
 <img src="../img/layer-settings/classification_style_ex.jpg" class="ms-docimage">
 
+!!!note
+    The *Classification style* method is available for **WMS**,  **WFS** and **Vector** layers. In case of **WMS** layers the *Classification style* can work only against GeoServer where the [SLD Service module](https://docs.geoserver.org/main/en/user/extensions/sldservice/index.html) need to be installed. In case of **WFS** and **Vector** layers, the same classification capabilities are entirely managed client.
+
+!!!note
+
+    From the *Classification style* options, it is also possible to manage **Custom Parameter** thought the <img src="../img/button/configute_lite_button.jpg" class="ms-docbutton"/> button. That's really useful to style [SQL Views](https://docs.geoserver.org/latest/en/user/data/database/sqlview.html) defined in GeoServer by using one of the available _viewparams_
+    <img src="../img/layer-settings/configure_popup.jpg" class="ms-docimage" style="max-width:400px;">
+
+    Here the user can add custom parameters that will be visible in the *Visual Style Editor*, above the *Color Palette* option. The *Custom Parameters* requires an array of fields to be configured according to the available viewparams defined in the SQL View. 
+
+    <video class="ms-docimage" controls><source src="../img/layer-settings/thematic-layer.mp4"></video>
+
 #### Pattern mark style
 
 With the *Pattern mark style* it is possible to represent *Line* or *Fill*  style rules with a mark by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button and choosing the **Pattern mark style** options from the dropdown menu.
@@ -340,6 +381,58 @@ With the *Pattern icon style*  it is possible to represent *Line* or *Fill* styl
 The style editor can configure the *Icon* as explained [here](#icon) along with the usual options available for rules of type [line](#line) or [fill](#fill) depending on the selected symbolizer. Take a look at the following example of *Pattern icon style* for a *Fill* rule sample.
 
 <img src="../img/layer-settings/classify_icon_ex.jpg" class="ms-docimage">
+
+#### Style with property value
+
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows you to use a property of the layer feature as value for a symbolizer property. The *Property value* function is available for *Marker*, *Icon*, *Line*, *Fill*, *Text* and *3D model* by clicking on the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button of each symbolizer property supporting it.
+
+<img src="../img/layer-settings/properties_style.jpg" class="ms-docimage"  style="max-width:500px;">
+
+By default, **Constant value** is selected. If the user chooses **Property value**, a drop-down menu appears so that the desired layer attribute can be selected to use its values for the styling property.
+
+<video class="ms-docimage" controls><source src="../img/layer-settings/property-value-example.mp4"></video>
+
+!!!warning
+    As a *Property value* only attributes of type `string` or `number` are currently supported.
+
+!!!note
+    The *Style with property* method is available only for **WFS** and **Vector** layers.
+
+### Style Methods for Raster layer
+
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) also allows to edit the **Raster Layers** style using a *Visual editor*. Through the <img src="../img/button/options_button.jpg" class="ms-docbutton"/> button, available on top of the panel, the editor can choose one of the following styles methods:
+
+* Single band
+* RGB bands
+* Pseudo color
+
+#### Single band
+
+The **Single band** is the default one and here the user can  choose the **Channel** to customize selecting the **Contrast enhancement** choosing between `None`, `Normalize` and `Histogram` and the change the **Opacity**. Take a look at the following example.
+
+<img src="../img/layer-settings/single_band_style.jpg" class="ms-docimage">
+
+#### RGB bands
+
+With the **RGB bands** the user can customize the three **Channels** of the layer, if they are available, and for each one selecting the **Contrast enhancement** choosing between `None`, `Normalize` and `Histogram` and the change the **Opacity**. Take a look at the following example.
+
+<img src="../img/layer-settings/rgb_band_style.jpg" class="ms-docimage">
+
+#### Pseudo color
+
+With the **Pseudo color** the user has the possibility to customize the *Single band* with a *Color ramp*. In this case, in addition to choosing **Channels**, **Contrast enhancement** and **Opacity**, the user can select **Color ramp**, enable **Reverse order** and the **Continuous Colors**, choose the **Color map type** (`Ramp`, `Intervals` and `Values`), the **Method** (`Quantile`, `Natural breaks`, `Equal interval` and `Unique interval`) and modify the **Intervals**. Take a look at the following example.
+
+<img src="../img/layer-settings/pseudo_color_style.jpg" class="ms-docimage">
+
+#### Styling for COG layer
+
+With the *Visual Style Editor*, the editor has the ability to customize the style of **COG layers**:
+
+<img src="../img/layer-settings/cog-layer_style.jpg" class="ms-docimage">
+
+Enabling the *Band styling* section, here the editor can associate the **Channels** (`Red`, `Green`, `Blue` and `Alpha`) to the **Bands** of the COG layer and set the minimum (**Min**) and maximum (**Max**) source data value. Take a look at the following example.
+
+<video class="ms-docimage" controls><source src="../img/layer-settings/band_styling.mp4"></video>
 
 ### Styling on the 3D navigation
 
@@ -376,7 +469,7 @@ The [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) **Visual Styl
 In 3D mode [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the style of the *Vector layer* through the [Visual Style Editor](layer-settings.md#visual-editor-style) using the same styling options available in 2D mode as described in the previous chapter.
 
   In addition the **3D model** rule type is also available.
-From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model symbolizer panel opens to allow adding a 3D model (based on [glTF](https://github.com/KhronosGroup/glTF), GLB is also allowed) as an external graphic by specifying its *URL* (see also the [Cesium documentation](https://cesium.com/learn/cesiumjs/ref-doc/ModelGraphics.html?classFilter=Model)). Furthermore, it is possible to customize the 3D model `Scale`, `Rotation` and `Color`. Take a look at the following example.
+From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-button.jpg" class="ms-docbutton"/> button, the 3D model symbolizer panel opens to allow adding a 3D model (based on [glTF](https://github.com/KhronosGroup/glTF), GLB is also allowed) as an external graphic by specifying its *URL* (see also the [Cesium documentation](https://cesium.com/learn/cesiumjs/ref-doc/ModelGraphics.html?classFilter=Model)). Furthermore, it is possible to customize the 3D model `Scale`, `X/Y/Z Rotation`, `Color` and `X/Y Translation` of the model's external graphic. Take a look at the following example.
 
 <video class="ms-docimage" controls><source src="../img/layer-settings/3d-model-style-ex.mp4"></video>
 
@@ -389,7 +482,7 @@ From the *Visual Style Editor*, by clicking on <img src="../img/button/3D-model-
 
 Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) adds some additional styling options in the *Visual Style Editor* such as:
 
-* **Bring to front** (available for Icon, Mark and 3D model symbolizers) to bring in front and so to make visible (if set to *true*) all features covered by 3D Tile layers and the Terrain layer (for this last case when the *depth test against terrain* option is enabled in Global Settings).
+* **Bring to front** (available for Icon, Mark and 3D model symbolizers) to bring in front and so to make visible (if enabled) all features covered by 3D Tile layers and the Terrain layer (for this last case when the *depth test against terrain* option is enabled in Global Settings).
 
 <img src="../img/layer-settings/bring-to-front.jpg" class="ms-docimage">
 
@@ -408,6 +501,10 @@ Furthermore, for **WFS layers**, [MapStore](https://mapstore.geosolutionsgroup.c
 * **Clamp to ground reference** to choose whether the drape effect, should affect `3D Tiles`, `Terrain` or `Both`. This option is available for Fill symbolizers and it is only enabled when the *Clamp to ground* option is set to `True`
 
 <img src="../img/layer-settings/polygon-type.jpg" class="ms-docimage">
+
+* **Extrusion Height** (available for Line and Fill symbolizers) to configure the height value of the feature to be extruded. It is also possible to enable/disable the **Extrusion relative to geometry** (from the highest point of the feature geometry) and, only for the *Line* symbolizers, the user can customize the **Extrusion color** and the **Extrusion type**, choosing between `Wall`, `Circle` and `Square` options, for the extruded features.
+
+<img src="../img/layer-settings/extrusion.jpg" class="ms-docimage">
 
 ## Feature Info Form
 

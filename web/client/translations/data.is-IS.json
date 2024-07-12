@@ -528,11 +528,6 @@
         }
       }
     },
-    "floatinglegend": {
-      "showTOC": "Show layers",
-      "showLegend": "Show legend",
-      "hideLegend": "Hide legend"
-    },
     "addgroup": {
       "addbtn": "Add",
       "groupName": "Group name"
@@ -1020,7 +1015,7 @@
     "zoombuttons": {
       "zoomInTooltip": "Increase zoom",
       "zoomOutTooltip": "Decrease zoom",
-      "zoomAllTooltip": "Zoom to max extent"
+      "zoomAllTooltip": "Zoom to initial view"
     },
     "fullscreen": {
       "tooltipActivate": "Switch to full screen",

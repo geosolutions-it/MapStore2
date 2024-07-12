@@ -41,7 +41,7 @@ import {
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
     currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector
 } from '../selectors/mapInfo';
-import { centerToMarkerSelector, queryableLayersSelector, queryableSelectedLayersSelector, selectedNodesSelector } from '../selectors/layers';
+import { centerToMarkerSelector, getSelectedLayers, layersSelector, queryableLayersSelector, queryableSelectedLayersSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
@@ -52,7 +52,7 @@ import { createControlEnabledSelector, measureSelector } from '../selectors/cont
 import { localizedLayerStylesEnvSelector } from '../selectors/localizedLayerStyles';
 import { mouseOutSelector } from '../selectors/mousePosition';
 import {getBbox, getCurrentResolution, parseLayoutValue} from '../utils/MapUtils';
-import {buildIdentifyRequest, filterRequestParams} from '../utils/MapInfoUtils';
+import {buildIdentifyRequest, defaultQueryableFilter, filterRequestParams} from '../utils/MapInfoUtils';
 import { IDENTIFY_POPUP } from '../components/map/popups';
 
 const gridEditingSelector = state => modeSelector(state) === 'EDIT';
@@ -74,10 +74,11 @@ import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
  */
 export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { } }) =>
     action$.ofType(FEATURE_INFO_CLICK)
-        .switchMap(({ point, filterNameList = [], overrideParams = {} }) => {
+        .switchMap(({ point, filterNameList = [], overrideParams = {}, ignoreVisibilityLimits }) => {
+            // ignoreVisibilityLimits is for ignore limits of layers visibility
             // Reverse - To query layer in same order as in TOC
-            let queryableLayers = reverse(queryableLayersSelector(getState()));
-            const queryableSelectedLayers = queryableSelectedLayersSelector(getState());
+            let queryableLayers = ignoreVisibilityLimits ? reverse([...layersSelector(getState())].filter(l=>defaultQueryableFilter(l))) :  reverse(queryableLayersSelector(getState()));
+            const queryableSelectedLayers = ignoreVisibilityLimits ? [...getSelectedLayers(getState())].filter(l => defaultQueryableFilter(l)) : queryableSelectedLayersSelector(getState());
             const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(getState());
             if (enableInfoForSelectedLayers && queryableSelectedLayers.length) {
                 queryableLayers = queryableSelectedLayers;
@@ -85,7 +86,7 @@ export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { }
 
             const selectedLayers = selectedNodesSelector(getState());
 
-            if (queryableLayers.length === 0 || queryableSelectedLayers.length === 0 && selectedLayers.length !== 0) {
+            if (queryableLayers.length === 0 || enableInfoForSelectedLayers && queryableSelectedLayers.length === 0 && selectedLayers.length !== 0) {
                 return Rx.Observable.of(purgeMapInfoResults(), noQueryableLayers());
             }
 

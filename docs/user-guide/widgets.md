@@ -37,26 +37,54 @@ Selecting a *Layer* or *Layers*, the following *Chart* options is presented to u
 
 <img src="../img/widgets/chart-options.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-From the chart configuration page, the user can perform the following operation
+From the top toolbar of this panel the user is allowed to:
 
-* Edit chart name <img src="../img/button/edit_button.jpg" class="ms-docbutton"/>
-* Choose between *Bar Chart*, *Pie Chart* or *Line Chart*. By default, the bar chart is selected.
+* Going back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget type section.
 
-From the toolbar of this panel <img src="../img/widgets/widget-options.jpg" class="ms-docbutton"/> the user is allowed to:
+* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
 
-* Go back to the chart type selection with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
+* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
 
-* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the information displayed in the widget are automatically filtered with the map viewport. When a widget is not linked, it otherwise shows all the elements of that level regardless of the map viewport
+From the chart configuration page, the user can first perform the following operation:
 
-* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md#filtering-layers) section).
+* *Edit* the *Chart Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
 
-* Add new layers <img src="../img/button/+++.jpg" class="ms-docbutton"/> to existing chart configuration
+* *Add new chart* to the current widget through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
 
-* Delete the current layer <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> and it's related chart configuration from the wizard
+* *Delete* the selected chart and its configuration from the widget through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
 
-* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are completed. The button prohibits the user from proceeding further when some chart is invalid
+#### Traces
 
-Just below the chart's preview, the following configurations are available:
+For each chart [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to define multiple Traces. With a Trace it is possible to define an additional chart representation (for the same layer by default) to be displayed in the same chart view: all traces are displayed together in the same chart. Just below the chart's preview, there is the *Traces* tab, where the user can:
+
+<img src="../img/widgets/traces_tab.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+* Choose between **Bar Chart**, **Pie Chart** or **Line Chart**. By default, the *Bar Chart* is selected.
+
+* *Edit* the current *Trace Title* through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
+
+* *Add new trace* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+
+* *Delete* the current trace through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
+
+Once the chart type is chosen, it is possible to set up the trace with the following options:
+
+* **Trace data**
+* **Trace style**
+* **Trace axes**
+* **Trace value formatting**
+
+##### Trace Data
+
+The *Trace data* is displayed as follows:
+
+<img src="../img/widgets/trace_data.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+In this section the user can:
+
+* Change the trace layer through the <img src="../img/button/timeline-playback-settings-button.jpg" class="ms-docbutton"/> button (by default the layer is automatically the same of the first trace defined)
+
+* Open the [*Query Panel*](filtering-layers.md#query-panel) to configure a **Layer Filter** for the selected layer through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
 
 * Define the **X Attribute** of the chart (or **Group by** for *Pie Charts*) choosing between layer fields
 
@@ -67,27 +95,30 @@ Just below the chart's preview, the following configurations are available:
 !!! Note
     The *No operation* option is used when the aggregation method is not needed for the chart. If *No Operation* is selected, no aggregation will be carried out for the chart and the WFS service will be used to generate the chart without using the WPS process `gs:Aggregate` in GeoServer.
 
-* Enable the chart's legend by activating **Display Legend**
+##### Trace Style
 
-* Choose the **Color** (`Blue`, `Red`, `Green`, `Brown` or `Purple`) of the chart (or the **Color Ramp** for *Pie Charts*) or choose to **Customize the color**.
+The *Trace style* is displayed as follows:
 
-#### Color customization
+<img src="../img/widgets/trace_style.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-For *Bar Charts* and *Pie Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts bars and slices. From the **Color** option dropdown menu, the user can select the *Custom* option and open the **Custom Colors Settings** modal through the <img src="../img/button/change-media2.jpg" class="ms-docbutton"/> button.
+The user can customize the style with the following options choosing between `Simple style` or `Classification style`
 
-<img src="../img/widgets/custom_colors_settings.jpg" class="ms-docimage"/>
+With the **Simple style**, the editor is allowed to customize the `Fill color`, the `Outline color` and the `Outline width`
 
+<img src="../img/widgets/trace_simple_style.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+###### Classification style
+
+For *Bar Charts* and *Pie Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides the possibility to customize the colors of the charts bars and slices. It is possible to classify the style based on the attributes of the layer. In this case it is possible to select the `Attribute` to use for the classification along with the classification `Method` (*Quantile*, *Equal interval*, *Natural breaks* and *Unique interval*) and select whether to `Sort` the classification by *Attribute X* or *Attribute Y*. Choose a `Color ramp`, the number of classification `Intervals` and the order (with `Reverse order`) of the classification intervals colors. Finally customize the `Outline color` and the `Outline width`.
+
+<img src="../img/widgets/trace_classification_style.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+From the **Color Ramp** option, the user can select the *Custom colors* option and open the **Custom Colors Settings** modal through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button.
 Inside this modal, the user is allowed to:
 
 * Change the default **Color** of bars or slices (depending on the chart type) through the *Color Picker*. This color will be applied for all values for which a *Class Color* has not been configured.
 
 <video class="ms-docimage" controls><source src="../img/widgets/custom_colors.mp4"/></video>
-
-* Select an *Attribute* in the dropdown list as a **Classification attribute**.
-
-<video class="ms-docimage" controls><source src="../img/widgets/classification-attribute.mp4"/></video>
-
-Once the attribute is chosen, new options appear in the *Custom Color Settings* panel that allow the user to:
 
 * Enter a **Default Class Label** to be used in the legend for all values that will not be specifically classified in the following list.
 
@@ -98,51 +129,130 @@ Once the attribute is chosen, new options appear in the *Custom Color Settings* 
 
 * Classify *Classification Attribute* values to assign a specific color in the chart along with its *Class Label* to use for the chart legend. Only values of type **String** or **Number** are currently supported.
 
-#### Classification Attribute of type String
+###### Classification Attribute of type String
 
 When the values of a classification attribute are of type String, the user can:
 
 <img src="../img/widgets/alphanumeric.jpg" class="ms-docimage"/>
 
-* Choose the **Class Color** through the *Color Picker*.
+* Change the **Class Color** through the *Color Picker*.
 
-* Choose the value of the *Classification attribute* through the dropdown menu **Class Value**
+* Change the value of the *Classification attribute* through the dropdown menu **Class Value**
 
 * Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
 
 !!! Note
     For *Class Label*,  '${legendValue}' can be used as a placeholder for the Y Attribute (that can be further customized through the usual *Advanced Option*).
 
-An example of *Bar charts* corresponding to this type of classification can be the following:
-
-<video class="ms-docimage" controls><source src="../img/widgets/color-customization-alhanumeric-attribute.mp4"/></video>
-
 Through the <img src="../img/button/menu.jpg" class="ms-docbutton"/> button the user can add new values before through the <img src="../img/widgets/add-new-entry-before.jpg" class="ms-docimage"/> button or after through <img src="../img/widgets/add-new-entry-after.jpg" class="ms-docimage"/> button.
 
-#### Classification Attribute of type Number
+###### Classification Attribute of type Number
 
 When the values of a classification attribute are numbers, the user can configure a color ramp and so:
 
-<img src="../img/widgets/numeric.jpg" class="ms-docimage" style="max-width:450px;"/>
+<img src="../img/widgets/numeric.jpg" class="ms-docimage"/>
 
-* Choose the **Class Color** through the *Color Picker*
+* Change the **Class Color** through the *Color Picker*
 
-* Choose the **Min value** of the *Classification attribute*
+* Change the **Min value** of the *Classification attribute*
 
-* Choose the **Max value** of the *Classification attribute*
+* Change the **Max value** of the *Classification attribute*
 
 * Enter a **Class Label** to be used in the legend for the value entered in the *Class Value*
 
 !!! Note
     For *Class Label* two placeholders can be used in this case: ${minValue}, can be used as a placeholder for **Min Value** and  ${maxValue}, can be used as a placeholder for Max Value; the ${legendValue} can be used in the same way as specified above.
 
-An example of Bar chart corresponding to this type of classification can be the following:
+##### Trace axes
 
-<video class="ms-docimage" controls><source src="../img/widgets/color-customization-numeric-attribute.mp4"/></video>
+If *Axes* have been customized in the [Axes](#axes) tab, the user can choose which custom axes to use for the current trace.
 
-#### Bar Chart Type
+<img src="../img/widgets/trace_axes.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-If the *Classification attribute* is added to the *Bar Chart*, in the [Advanced Options](#advanced-options),  the **Bar Chart Type** option is displayed.
+##### Trace Value Formatting
+
+The user can customize trace value tooltips by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`). It is also possible to configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more)
+
+<img src="../img/widgets/trace_value_formatting.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+!!! Note
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
+
+An example of a custom trace value tooltip can be the following:
+
+<img src="../img/widgets/custom_trace_value_tooltip.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+##### Trace legend options
+
+For the *Pie Charts*, the *Trace legend options* is available and it is displayed as follows:
+
+<img src="../img/widgets/trace_legend_options.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+The user can:
+
+* Show/Hide the percentages in legend with the **Include percentages in legend** control. An example with the percentages in legend can be the following:
+
+<img src="../img/widgets/percentages_in_legend.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+#### Axes
+
+[MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows to customize the **Y axis** and the **X axis** for the *Bar Charts* and the *Line Charts* through the *Axes* tab.
+
+<img src="../img/widgets/axes_tab.jpg" class="ms-docimage"/>
+
+Through this section, for each axis, the user is allowed to:
+
+* *Edit* the current **Axis Title** through the <img src="../img/button/edit_button.jpg" class="ms-docbutton"/> button
+
+* If there is more than one [Trace](#traces), *Add new axis* through the <img src="../img/button/+++.jpg" class="ms-docbutton"/> button
+
+* If there is more than one [Trace](#traces), *Delete* the current axis through the <img src="../img/button/delete_button.jpg" class="ms-docbutton"/> button
+
+* Choose the **Type** (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at the data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting).
+
+* Change the **Color** through the color picker
+
+* Change the **Font size**
+
+* Select the **Font family** (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`)
+
+* Customize *Y axis* label by adding a **Prefix** (e.g. `~`), a custom **Format** (e.g. `0%: rounded percentage, '12%'` or more) or a **Suffix** (e.g. `Km`).
+
+!!! Note
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) in the online documentation.
+
+* Choose the **Side** of the chart on which to display the axis labels (between `Left` or `Right`)
+
+* Choose how to **Anchor** the axis labels (between `Axis` or `Free`)
+
+* Tune the rendering of tick labels by enabling the **Never skip labels** (it forces all ticks available in the chart to be rendered instead of simplifying the provided set based on chart size)
+
+!!! Warning
+    The *Never skip label* option is available only for the *X axis* and the tick labels available by enabling the option cannot be more than 200 in order to provide a clear chart and for performance reasons.
+
+* Enable **Label rotation** to better adapt axis tick labels on the charts depending on the needs.
+
+* Choose to completely hide labels through the **Hide labels** control.
+
+#### Layout
+
+Through the *Layout* tab, the user can also customize the **Layout** of the chart and the default **Font** for all the labels present in the chart.
+
+<img src="../img/widgets/layout.jpg" class="ms-docimage"  style="max-width:450px;"/>
+
+Here the user can:
+
+* Show/Hide the chart's grid in background with the **Hide Grid** control (only for the *Bar Charts* and the *Line Charts*)
+
+* Enable the chart's legend by activating **Display Legend**
+
+* Choose the **Color** for all chart texts through the color picker (only for the *Bar Charts* and the *Line Charts*)
+
+* Change the **Font size** for all chart texts
+
+* Select the **Font family** (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) for all chart texts
+
+If the *Classification attribute* is added to the *Bar Chart*, in the [Trace Style](#trace-style),  the **Bar Chart Type** option is displayed.
 
 <img src="../img/widgets/bar_type.jpg" class="ms-docimage"/>
 
@@ -159,40 +269,7 @@ The user can customize the bars by choosing between:
 !!! Note
     By default, the bar chart type is **Stacked**
 
-#### Advanced Options
-
-In addition, only for *Bar Charts* and *Line Charts*, [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) provides advanced setting capabilities through the *Advanced Options* section.
-
-<img src="../img/widgets/advanced_options.jpg" class="ms-docimage"/>
-
-Through this section, the user is allowed to:
-
-* Show/Hide the chart's grid in backgroung with the **Hide Grid** control
-
-* Customize **Y axis** tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). The user can also choose to completely hide labels through the *Hide labels* control or customize them by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`). It is also possible to configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more)
-
-<img src="../img/widgets/yaxis_options.jpg" class="ms-docimage"/>
-
-!!! Note
-    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
-
-* Customize **X axis**  tick values by choosing the *Type* (between `Auto`, `Linear`, `Category`, `Log` or `Date`): the axis type is auto-detected by looking at data (*Auto* option is automatically managed and selected by the tool and it is usually good as default setting). As per **Y axis**, the user can completely hide labels through the *Hide labels* control or tune the rendering of tick labels with options like *Never skip labels* (it forces all ticks available in the chart to be rendered instead of simplifying the provided set based on chart size) and *Label rotation* to better adapt X axis tick labels on the charts depending on the needs.
-
-<img src="../img/widgets/xaxis_options.jpg" class="ms-docimage"/>
-
-!!! Warning
-    The tick labels available for the X axis by enabling the option **Never skip label** cannot be more than 200 in order to provide a clear chart and for performance reasons.
-
-* Set the **Legend Label** name
-
-<img src="../img/widgets/legend_name.jpg" class="ms-docimage"/>
-
-!!! Note
-        The tooltips of the X and Y axis labels are available by hovering the mouse over the charts. This way the labels are available even if the **Hide labels** option for the X and Y axis is enabled.
-        <video class="ms-docimage" controls><source src="../img/widgets/label_tooltips.mp4" /></video>
-
-!!! Warning
-    In order to move forward to the next step, only **X Attribute**, **Y Attribute** and **Operation** are considered as mandatory fields.
+#### Configure Chart Info
 
 Once the settings are done, the next step of the chart widget creation/configuration is displayed as follows:
 
@@ -201,8 +278,6 @@ Once the settings are done, the next step of the chart widget creation/configura
 The user can:
 
 * Go back to the chart option with the <img src="../img/button/back.jpg" class="ms-docbutton"/> button
-
-* Configure a filter <img src="../img/button/filter-icon.jpg" class="ms-docbutton"/> for the widget data (more information on how to configure a filter can be found in [Filtering Layers](filtering-layers.md#filtering-layers) section)
 
 * Add the widget to the map with the <img src="../img/button/save-icon.jpg" class="ms-docbutton"/> button
 
@@ -275,7 +350,17 @@ Adding a table widget to the map, a panel like the following opens:
 
 <img src="../img/widgets/table-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-The toolbar on the top of this panel is similar to the one present in [Chart section](#chart). Here the user is allowed to:
+From the top toolbar of this panel the user is allowed to:
+
+* Going back <img src="../img/button/back.jpg" class="ms-docbutton"/> to the widget type section.
+
+* Connect <img src="../img/button/connect-widget.jpg" class="ms-docbutton"/> or disconnect <img src="../img/button/disconnect-widget.jpg" class="ms-docbutton"/> the widget to the map. When a widget is connected to the map, the widget is automatically spatially filtered with the map viewport. When a widget is not linked, it displays the entire dataset of that layer regardless of the map viewport.
+
+* Open the [*Query Panel*](filtering-layers.md#query-panel) to configure a **Layer Filter** for the selected layer through the <img src="../img/button/advanced-search.jpg" class="ms-docbutton"/> button.
+
+* Move forward <img src="../img/button/next.jpg" class="ms-docbutton"/> to the next step when the settings are complete. The button prevents the user from proceeding to the next step of the wizard if the setting of some fields in the chart form is invalid
+
+In the *Table Widget* the user can:
 
 * **Enable/Disable** the layer fields that will be displayed in the widget as columns.
 
@@ -310,16 +395,28 @@ Selecting the counter option, the following window opens:
 
 <img src="../img/widgets/counter-panel.jpg" class="ms-docimage"  style="max-width:450px;"/>
 
-Also in this case the toolbar is similar to the one present in [Chart section](#chart). The user is allowed to:
+The top toolbar of this panel is similar to the one present in [Table section](#table). <br>
+Here the user is allowed to:
 
 * Select the attribute to **Use**
 
 * Select the **Operation** to perform
 
-* Set the **Unit of measure** that will be displayed
+From the **Trace value formatting** section, the user is allowed to:
+
+* Customize the labels by adding a *Prefix* (e.g. `~`), a custom *Format* (e.g. `0%: rounded percentage, '12%'` or more) or a *Suffix* (e.g. `Km`).
+
+* Configure a *Formula* to transform tick values as needed (e.g. `value + 2` or `value / 100` or more).
+
+!!! Note
+    More information about the syntax options allowed for **Format** are available [here](https://d3-wiki.readthedocs.io/zh_CN/master/Formatting/) and the allowed expression to be used as **Formula** are available [here](https://github.com/m93a/filtrex#expressions) in the online documentation.
+
+* Choose the *Color* of the Counter text using the color picker
+
+* Select the *Font family* (`Inherit`, `Arial`, `Georgia`, `Impact`, `Tahoma`, `Times New Roman` or `Verdana`) of the Counter text
 
 !!! warning
-    In order to move forward to the next step, only the **Use** and the **Count** are considered as mandatory fields.
+    In order to move forward to the next step, only the **Use** and the **Operation** are considered as mandatory fields.
 
 Once the <img src="../img/button/next.jpg" class="ms-docbutton"/> button is clicked, the panel of the last step appears:
 

@@ -87,9 +87,15 @@ export const getQueryParams = (url) => {
  * @param {string} url - url to validate
  * @param {RegExp} regexp - optional custom regexp
  */
-export const isValidURL = (url, regexp = /^(http(s{0,1}):\/\/)+?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/) => {
-    const regex = new RegExp(regexp);
-    return regex.test(url);
+export const isValidURL = (url, regexp) => {
+    if (regexp) {
+        const regex = new RegExp(regexp);
+        return regex.test(url);
+    }
+    return URL.canParse(url,
+        url.indexOf('/') === 0
+            ? window?.location?.href
+            : undefined);
 };
 
 /**
@@ -110,4 +116,16 @@ export const isValidURLTemplate = (url, params, regexp = /^(http(s{0,1}):\/\/)+?
     }
     return false;
 
+};
+
+/**
+ * Helper for working with a single string url.
+ * Use when calling implementations that do not know about array of urls, such as the `urlUtil` library,
+ * while still supporting our implementation of domain aliases and domain sharding.
+ *
+ * @param {string || array} url - Either a string representing a valid url or an array of strings which are all valid urls.
+ * @returns {string} Returns the argument if the argument is string, otherwise if the argument is an array, returns the first element.
+ */
+export const getDefaultUrl = (url) => {
+    return isArray(url) ? url[0] : url;
 };

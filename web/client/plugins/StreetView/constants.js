@@ -9,7 +9,8 @@ export const MARKER_LAYER_ID = "street-view-marker";
 export const STREET_VIEW_DATA_LAYER_ID = "street-view-data";
 export const PROVIDERS = {
     GOOGLE: 'google',
-    CYCLOMEDIA: 'cyclomedia'
+    CYCLOMEDIA: 'cyclomedia',
+    MAPILLARY: "mapillary"
 };
 
 // ///////////////////////////////

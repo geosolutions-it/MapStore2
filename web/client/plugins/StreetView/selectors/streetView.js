@@ -66,6 +66,35 @@ export const currentProviderApiLoadedSelector = state => apiLoadedSelectorCreato
  * @returns {object} the configuration for the current provider
  */
 export const providerSettingsSelector = state => streetViewConfigurationSelector(state)?.providerSettings ?? {};
+
+const getVectorStyle = (overrides) => ({
+    format: "geostyler",
+    body: {
+        name: "My Style",
+        rules: [
+            {
+                name: "",
+                symbolizers: [
+                    {
+                        color: "#3165ef",
+                        fillOpacity: 0.6,
+                        strokeColor: "#3165ef",
+                        strokeOpacity: 0.8,
+                        strokeWidth: 2,
+                        radius: 6,
+                        wellKnownName: "Circle",
+                        msHeightReference: "none",
+                        msBringToFront: true,
+                        ...overrides,
+                        kind: "Mark",
+                        symbolizerId: "d2c4dab1-a0e7-11ee-a734-df08d0913056"
+                    }
+                ],
+                ruleId: "d2c4dab0-a0e7-11ee-a734-df08d0913056"
+            }
+        ]
+    }
+});
 const GOOGLE_DATA_LAYER_DEFAULTS = {
     provider: 'custom',
     type: "tileprovider",
@@ -82,34 +111,10 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
     maxResolution: CYCLOMEDIA_DEFAULT_MAX_RESOLUTION,
     serverType: ServerTypes.NO_VENDOR, // do not support CQL filters
     url: "https://atlasapi.cyclomedia.com/api/Recordings/wfs",
-    name: "atlas:Recording",
-    style: {
-        format: "geostyler",
-        body: {
-            name: "My Style",
-            rules: [
-                {
-                    name: "",
-                    symbolizers: [
-                        {
-                            kind: "Mark",
-                            color: "#0000ff",
-                            fillOpacity: 1,
-                            strokeColor: "#000000",
-                            strokeOpacity: 1,
-                            strokeWidth: 1,
-                            radius: 5,
-                            wellKnownName: "Circle",
-                            msHeightReference: "none",
-                            msBringToFront: true,
-                            symbolizerId: "d2c4dab1-a0e7-11ee-a734-df08d0913056"
-                        }
-                    ],
-                    ruleId: "d2c4dab0-a0e7-11ee-a734-df08d0913056"
-                }
-            ]
-        }
-    }
+    name: "atlas:Recording"
+};
+const MAPILLARY_DATA_LAYER_DEFAULTS = {
+    type: 'vector'
 };
 /**
  * Gets the default data layer configuration for the current provider.
@@ -119,12 +124,22 @@ const CYCLOMEDIA_DATA_LAYER_DEFAULTS = {
  */
 const providerDataLayerDefaultsSelector = createSelector(
     streetViewProviderSelector,
-    (provider) => {
+    streetViewConfigurationSelector,
+    (provider, configuration) => {
+        const msHeightReference = configuration?.clampToGround ? 'clamp' : 'none';
         switch (provider) {
         case PROVIDERS.GOOGLE:
             return GOOGLE_DATA_LAYER_DEFAULTS;
         case PROVIDERS.CYCLOMEDIA:
-            return CYCLOMEDIA_DATA_LAYER_DEFAULTS;
+            return { ...CYCLOMEDIA_DATA_LAYER_DEFAULTS, style: getVectorStyle({ msHeightReference }) };
+        case PROVIDERS.MAPILLARY:
+            // currently we are supporting only the custom type for mapillary
+            // so the layer type will be a vector layer
+            return {
+                ...MAPILLARY_DATA_LAYER_DEFAULTS,
+                style: getVectorStyle({ msHeightReference }),
+                url: configuration?.providerSettings?.ApiURL
+            };
         default:
             return {};
         }
@@ -163,6 +178,18 @@ export function cyclomediaAPIKeySelector(state) {
         ?? localConfigSelector(state)?.apiKeys?.cyclomediaAPIKey;
 }
 /**
+ * Selector for the mapillary API key
+ * @memberof selectors.streetview
+ * @param {object} state the state
+ * @returns the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.mapillaryAPIKey`.
+ */
+export function mapillaryAPIKeySelector(state) {
+    const mapillaryConfig = streetViewConfigurationSelector(state);
+    if (mapillaryConfig?.providerSettings?.ApiURL) return {};
+    return mapillaryConfig?.apiKey
+        ?? localConfigSelector(state)?.apiKeys?.mapillaryAPIKey;
+}
+/**
  * Selector for the API key for the current provider
  * @memberof selectors.streetview
  * @param {object} state the state
@@ -174,6 +201,8 @@ export function streetViewAPIKeySelector(state) {
         return googleAPIKeySelector(state);
     case PROVIDERS.CYCLOMEDIA:
         return cyclomediaAPIKeySelector(state);
+    case PROVIDERS.MAPILLARY:
+        return mapillaryAPIKeySelector(state);
     default:
         return null;
     }

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, {useEffect} from 'react';
-import {FormGroup, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon, InputGroup } from "react-bootstrap";
+import { FormGroup, ControlLabel, Checkbox, Button as ButtonRB, Glyphicon, InputGroup, Tooltip } from "react-bootstrap";
 import RS from 'react-select';
 import {isNil, camelCase} from "lodash";
 
@@ -19,6 +19,8 @@ import CSWFilters from "./CSWFilters";
 import Message from "../../../I18N/Message";
 import WMSDomainAliases from "./WMSDomainAliases";
 import tooltip from '../../../misc/enhancers/buttonTooltip';
+import OverlayTrigger from '../../../misc/OverlayTrigger';
+import FormControl from '../../../misc/DebouncedFormControl';
 
 const Button = tooltip(ButtonRB);
 const Select = localizedProps('noResultsText')(RS);
@@ -48,6 +50,7 @@ const getServerTypeOptions = () => {
  * - Filters (Option allows user to configure the ogcFilter with custom filtering conditions
  *   *staticFilter: filter to fetch all record applied always i.e even when no search text is present
  *   *dynamicFilter: filter when search text is present and is applied in conjunction with static filter
+ * - sortBy: Configure sort by operation using the propert name (with namespace prefixed) and the sort order. By default the sort order is 'ASC'
  *
  * **WMS|CSW**
  * - tileSize: Option allows to select and configure the default tile size of the layer to be requested with
@@ -157,9 +160,28 @@ export default ({
                 <Select
                     value={service.layerOptions?.serverType}
                     options={serverTypeOptions}
-                    onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value })} />
+                    onChange={event => {
+                        if (event?.value === ServerTypes.NO_VENDOR) onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: undefined});
+                        onChangeServiceProperty("layerOptions", { ...service.layerOptions, serverType: event?.value });
+                    }} />
             </InputGroup>
         </FormGroup>
+        {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
+            <Checkbox data-qa="display-interactive-legend-option"
+                onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: e.target.checked})}
+                checked={!isNil(service.layerOptions?.enableInteractiveLegend) ? service.layerOptions?.enableInteractiveLegend : false}>
+                <Message msgId="layerProperties.enableInteractiveLegendInfo.label" />
+                &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
+            </Checkbox>
+        </FormGroup>}
+        {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && service.type === "wms" &&  <FormGroup controlId="useCacheOption" key="useCacheOption">
+            <Checkbox data-qa="display-interactive-legend-option"
+                onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, remoteTileGrids: e.target.checked})}
+                checked={!isNil(service.layerOptions?.remoteTileGrids) ? service.layerOptions?.remoteTileGrids : false}>
+                <Message msgId="layerProperties.useCacheOptionInfo.label" />
+                &nbsp;<InfoPopover text={<Message msgId="layerProperties.useCacheOptionInfo.info" />} />
+            </Checkbox>
+        </FormGroup>}
         <hr style={{margin: "8px 0"}}/>
         <FormGroup style={advancedRasterSettingsStyles} className="form-group-flex">
             <ControlLabel className="strong"><Message msgId="layerProperties.format.title" /></ControlLabel>
@@ -218,9 +240,40 @@ export default ({
                     onChange={event => onChangeServiceProperty("layerOptions", { ...service.layerOptions, tileSize: event && event.value })} />
             </InputGroup>
         </FormGroup>
+
         {!isNil(service.type) && service.type === "csw" &&
-        <CSWFilters filter={service?.filter} onChangeServiceProperty={onChangeServiceProperty}/>
-        }
+        <>
+            <hr style={{margin: "8px 0"}}/>
+            <FormGroup className="form-group-flex sort-by">
+                <ControlLabel className="strong" style={{ display: 'flex', alignItems: "center" }}>
+                    <Message msgId="catalog.sortBy.label" />
+                    <OverlayTrigger placement={"bottom"} overlay={<Tooltip id={"sortby"}>
+                        <Message msgId={"catalog.sortBy.tooltip"} />
+                    </Tooltip>}>
+                        <Glyphicon
+                            style={{ marginLeft: 4 }}
+                            glyph={"info-sign"}
+                        />
+                    </OverlayTrigger>
+                </ControlLabel>
+                <InputGroup style={{display: "flex"}}>
+                    <FormControl
+                        type="text"
+                        placeholder={"catalog.sortBy.placeholder"}
+                        style={{ textOverflow: "ellipsis", flex: 1.5 }}
+                        value={service?.sortBy?.name}
+                        onChange={value => onChangeServiceProperty("sortBy", {...service?.sortBy, name: value})}
+                    />
+                    <Select
+                        clearable={false}
+                        wrapperStyle={{ flex: 1 }}
+                        value={service?.sortBy?.order ?? "ASC"}
+                        options={["ASC", "DESC"].map(value => ({value, label: value}))}
+                        onChange={event => onChangeServiceProperty("sortBy", {...service?.sortBy, order: event && event.value})} />
+                </InputGroup>
+            </FormGroup>
+            <CSWFilters filter={service?.filter} onChangeServiceProperty={onChangeServiceProperty}/>
+        </>}
         {!isNil(service.type) && service.type === "wms" && (<WMSDomainAliases service={service} onChangeServiceProperty={onChangeServiceProperty} />)}
     </CommonAdvancedSettings>);
 };

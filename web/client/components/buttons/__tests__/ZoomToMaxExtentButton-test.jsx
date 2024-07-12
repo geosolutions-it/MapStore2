@@ -204,7 +204,7 @@ describe('This test for ZoomToMaxExtentButton', () => {
             componentSpy.restore();
 
             expect(actionsSpy.calls.length).toBe(1);
-            expect(actionsSpy.calls[0].arguments.length).toBe(6);
+            expect(actionsSpy.calls[0].arguments.length).toBe(7);
             expect(actionsSpy.calls[0].arguments[0]).toExist();
             expect(actionsSpy.calls[0].arguments[1]).toExist();
             // the bbox is null since no hook was registered

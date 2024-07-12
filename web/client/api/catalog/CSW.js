@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { head, isString, includes, castArray, sortBy, uniq } from 'lodash';
+import { head, isString, includes, castArray, sortBy, uniq, isEmpty } from 'lodash';
 import { getLayerFromRecord as getLayerFromWMSRecord } from './WMS';
 import { getMessageById } from '../../utils/LocaleUtils';
 import { transformExtentToObj} from '../../utils/CoordinatesUtils';
@@ -104,12 +104,22 @@ function getThumbnailFromDc(dc, options) {
     }
     return thumbURL;
 }
+
+/**
+ * Extract bounding box object from the record
+ * @param {Object} record from OGC service
+ */
+function getBoundingBox(record) {
+    if (isEmpty(record.boundingBox?.crs) || isEmpty(record.boundingBox?.extent)) {
+        return null;
+    }
+    return {
+        crs: record.boundingBox?.crs,
+        bounds: transformExtentToObj(record.boundingBox?.extent)
+    };
+}
 function getCatalogRecord3DTiles(record, metadata) {
     const dc = record.dc;
-    let bbox = {
-        crs: record.boundingBox.crs,
-        bounds: transformExtentToObj(record.boundingBox.extent)
-    };
     return {
         serviceType: '3dtiles',
         isValid: true,
@@ -118,7 +128,7 @@ function getCatalogRecord3DTiles(record, metadata) {
         identifier: dc && isString(dc.identifier) && dc.identifier || '',
         url: dc?.URI?.value || "",
         thumbnail: null,
-        bbox,
+        bbox: getBoundingBox(record),
         format: dc && dc.format || "",
         references: [],
         catalogType: 'csw',
@@ -135,6 +145,28 @@ const recordToLayer = (record, options) => {
     default:
         return null;
     }
+};
+const ADDITIONAL_OGC_SERVICES = ['wfs']; // Add services when support is provided
+const getAdditionalOGCService = (record, references, parsedReferences = {}) => {
+    const hasAdditionalService = ADDITIONAL_OGC_SERVICES.some(serviceType => !isEmpty(parsedReferences[serviceType]));
+    if (hasAdditionalService) {
+        return {
+            additionalOGCServices: {
+                ...ADDITIONAL_OGC_SERVICES
+                    .map(serviceType => {
+                        const ogcReferences = parsedReferences[serviceType] ?? {};
+                        const {url, params: {name} = {}} = ogcReferences;
+                        return {[serviceType]: {
+                            url, name, references, ogcReferences, fetchCapabilities: true,
+                            boundingBox: getBoundingBox(record)
+                        }};
+                    })
+                    .flat()
+                    .reduce((a, c) => ({...c, ...a}), {})
+            }
+        };
+    }
+    return null;
 };
 
 export const preprocess = commonPreprocess;
@@ -168,9 +200,11 @@ export const getCatalogRecords = (records, options, locales) => {
                 });
             }
 
-            const layerReference = getLayerReferenceFromDc(dc, options);
-            if (layerReference) {
-                references.push(layerReference);
+            const layerReferences = ['wms', ...ADDITIONAL_OGC_SERVICES].map(serviceType => {
+                return getLayerReferenceFromDc(dc, {...options, type: serviceType});
+            }).filter(ref => ref);
+            if (!isEmpty(layerReferences)) {
+                references = references.concat(layerReferences);
             }
 
             // create the references array (now only wms is supported)
@@ -229,16 +263,16 @@ export const getCatalogRecords = (records, options, locales) => {
                 ...extractEsriReferences({ references })
             };
 
-            const layerType = Object.keys(parsedReferences).find(key => parsedReferences[key]);
-            const ogcReferences = layerType && layerType !== 'esri'
-                ? parsedReferences[layerType]
-                : undefined;
             let catRecord;
             if (dc && dc.format === THREE_D_TILES) {
                 catRecord = getCatalogRecord3DTiles(record, metadata);
             } else if (dc && dc.format === MODEL) {
                 // todo: handle get catalog record for ifc
             } else {
+                const layerType = Object.keys(parsedReferences).filter(key => !ADDITIONAL_OGC_SERVICES.includes(key)).find(key => parsedReferences[key]);
+                const ogcReferences = layerType && layerType !== 'esri'
+                    ? parsedReferences[layerType]
+                    : undefined;
                 catRecord = {
                     serviceType: 'csw',
                     layerType,
@@ -253,7 +287,8 @@ export const getCatalogRecords = (records, options, locales) => {
                     tags: dc && dc.tags || '',
                     metadata,
                     capabilities: record.capabilities,
-                    ogcReferences
+                    ogcReferences,
+                    ...getAdditionalOGCService(record, references, parsedReferences)
                 };
             }
             return catRecord;

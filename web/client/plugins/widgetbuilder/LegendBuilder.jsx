@@ -95,7 +95,7 @@ const builderEnhancer = compose(
     connect(wizardSelector),
     viewportBuilderConnectMask,
     legendBuilderConnect,
-    withMapConnect({ layers: "layers", "zoom": "zoom", "viewport": "viewport" }),
+    withMapConnect({ layers: "layers", "zoom": "zoom", "viewport": "viewport", "groups": "groups" }),
     // auto trigger connect if not in sync
     mapPropsStream(
         props$ => props$.merge(

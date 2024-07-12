@@ -247,6 +247,8 @@ Details:
 - `search`: an object to configure the search features service. It is used to link a WFS service, typically with this shape: `{url: 'http://some.wfs.service', type: 'wfs'}`.
 - `fields`: if the layer has a wfs service configured, this can contain the fields (attributes) of the features, with custom configuration (e.g. aliases, types, etc.). See [Fields](#fields) for details.
 - `credits`: includes the information to show in attribution.(`imageUrl`, `link`, `title`).
+- `singleTile`: By default, WMS is invoked using tiled requests. If you want to use a single tile request, you can set this property to `true`.
+- `tileSize`: defines the size of the tiles in pixels for tiled requests. It is a number and it can be `256` or `512`. Default is `256`.
 
 ##### Fields
 
@@ -1292,9 +1294,57 @@ i.e.
     "visibility": false,
     "name": "Name",
     "sources": [
-        { "url": "https://host-sample/cog1.tif" },
-        { "url": "https://host-sample/cog2.tif" }
-    ]
+        { "url": "https://host-sample/cog1.tif", min: 1, max: 100, nodata: 0},
+        { "url": "https://host-sample/cog2.tif", min: 1, max: 100, nodata: 255}
+    ],
+    "style": {
+        "body": { // cog style currently supports only RGB with alpha band or single/gray band
+            "color": ["array", ["band", 1], ["band", 2], ["band", 3], ["band", 4]] // RGB with alpha band
+            // "color": ["array", ["band", 1], ["band", 1], ["band", 1], ["band", 2]]  - single/gray band
+        },
+        "format": "openlayers",
+    }
+}
+```
+
+#### ArcGIS MapServer layer
+
+This layer type allows to render an ArcGIS MapServer layer.
+
+An ArcGIS MapServer source is a composition of different layers to create a map. The layer is identified by the `arcgis` type, containing `url` and `options.layers` properties . e.g.
+
+```json
+{
+    "type": "arcgis",
+    "url": "https://arcgis-example/rest/services/MyService/MapServer",
+    "options": {
+      "layers": [{ "id": 0 }, { "id": 1 }]
+    },
+    "title": "Title",
+    "group": "",
+    "visibility": true
+}
+```
+
+Where:
+
+- `url` is the URL of the MapServer source.
+- `options.layers` is the list of object containing the ids of the layers. Required to support `queriable` option and legend support.
+- `name` (optional). When present, the MapStore layer will show only the layer with the id specified in the `name` attribute. e.g.
+
+```json
+{
+    "type": "arcgis",
+    "name": "0",
+    "url": "https://arcgis-example/rest/services/MyService/MapServer"
+    "url": "https://arcgis-example/rest/services/MyService/MapServer",
+    "options": {
+      "layers": [{ "id": 0 }, { "id": 1 }]
+    },
+    "title": "Title",
+    "group": "",
+    "visibility": true,
+    "queriable": true
 }
 ```
 

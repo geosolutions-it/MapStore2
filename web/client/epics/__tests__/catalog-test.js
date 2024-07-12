@@ -19,6 +19,7 @@ const {
     updateGroupSelectedMetadataExplorerEpic,
     newCatalogServiceAdded
 } = catalog(API);
+import { ZOOM_TO_EXTENT } from '../../actions/map';
 import {SHOW_NOTIFICATION} from '../../actions/notifications';
 import {SET_CONTROL_PROPERTY, toggleControl} from '../../actions/controls';
 import {ADD_LAYER, CHANGE_LAYER_PROPERTIES, selectNode, SHOW_LAYER_METADATA} from '../../actions/layers';
@@ -165,7 +166,6 @@ describe('catalog Epics', () => {
             expect(actions.length).toBe(NUM_ACTIONS);
             expect(actions[0].type).toBe(TEXT_SEARCH);
             expect(actions[0].options).toEqual({
-                filter: "test",
                 service: {
                     type: "csw",
                     url: "url",
@@ -322,7 +322,7 @@ describe('catalog Epics', () => {
             newService: service
         } });
     });
-    it('recordSearchEpic with exception', (done) => {
+    it('recordSearchEpic with network error', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
             format: "csw",
@@ -339,8 +339,62 @@ describe('catalog Epics', () => {
                     expect(action.loading).toBe(true);
                     break;
                 case RECORD_LIST_LOAD_ERROR:
-                    expect(action.error.status).toBe(404);
-                    expect(action.error.statusText).toBe("Not Found");
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, { });
+    });
+    it('recordSearchEpic with exception', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
+            format: "csw",
+            url: "base/web/client/test-resources/csw/getRecordsResponseException.xml",
+            startPosition: 1,
+            maxRecords: 1,
+            text: "a",
+            options: {}
+        }), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case SET_LOADING:
+                    expect(action.loading).toBe(true);
+                    break;
+                case RECORD_LIST_LOAD_ERROR:
+                    expect(action.error).toContain('IllegalArgumentException');
+                    break;
+                case TEST_TIMEOUT:
+                    break;
+                default:
+                    expect(true).toBe(false);
+                }
+            });
+            done();
+        }, { });
+    });
+    it('recordSearchEpic with exception with new service', (done) => {
+        const NUM_ACTIONS = 2;
+        testEpic(addTimeoutEpic(recordSearchEpic), NUM_ACTIONS, textSearch({
+            format: "csw",
+            url: "base/web/client/test-resources/csw/getRecordsResponseEsxception.xml",
+            startPosition: 1,
+            maxRecords: 1,
+            text: "a",
+            options: {isNewService: true}
+        }), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            actions.map((action) => {
+                switch (action.type) {
+                case SAVING_SERVICE:
+                    expect(action.status).toBe(true);
+                    break;
+                case SHOW_NOTIFICATION:
+                    expect(action.message).toBe('catalog.notification.errorServiceUrl');
                     break;
                 case TEST_TIMEOUT:
                     break;
@@ -605,6 +659,67 @@ describe('catalog Epics', () => {
                         expect(action.newProperties.search).toExist();
                         expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
                         expect(action.newProperties.search.type).toBe("wfs");
+                        break;
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, {
+                catalog: {
+                    delayAutoSearch: 50,
+                    selectedService: "wmsCatalog",
+                    services: {
+                        "wmsCatalog": {
+                            type: "wms",
+                            url: "base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml"
+                        }
+                    },
+                    pageSize: 2
+                }
+            });
+    });
+    it('addLayerAndDescribeEpic for wms layer with remoteTileGrids = true', (done) => {
+        const layer = {
+            type: 'wms',
+            url: 'base/web/client/test-resources/wms/DescribeLayers.xml',
+            visibility: true,
+            dimensions: [],
+            name: 'workspace:vector_layer',
+            title: 'workspace:vector_layer',
+            bbox: {"crs": "EPSG:4326", "bounds": {"minx": "-103.87791475407893", "miny": "44.37246687108142", "maxx": "-103.62278893469492", "maxy": "44.50235105543566"}},
+            links: [],
+            params: {
+                CQL_FILTER: 'NAME=\'Test\''
+            },
+            allowedSRS: {
+                'EPSG:3857': true,
+                'EPSG:4326': true
+            },
+            remoteTileGrids: true
+        };
+        const NUM_ACTIONS = 3;
+        testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+            addLayerAndDescribe(layer),
+            (actions) => {
+                expect(actions.length).toBe(NUM_ACTIONS);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case ADD_LAYER:
+                        expect(action.layer.name).toBe("workspace:vector_layer");
+                        expect(action.layer.title).toBe("workspace:vector_layer");
+                        expect(action.layer.type).toBe("wms");
+                        expect(action.layer.params).toEqual(layer.params);
+                        break;
+                    case CHANGE_LAYER_PROPERTIES:
+                        expect(action.newProperties).toExist();
+                        expect(action.newProperties.search).toExist();
+                        expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
+                        expect(action.newProperties.search.type).toBe("wfs");
+                        expect(action.newProperties.tileGridStrategy).toEqual('custom');
+                        expect(action.newProperties.tileGrids).toExist();
                         break;
                     case TEST_TIMEOUT:
                         break;
@@ -910,7 +1025,7 @@ describe('catalog Epics', () => {
         });
     });
 
-    describe('addLayerAndDescribeEpic wfs layer', () => {
+    describe('addLayerAndDescribeEpic wfs and arcgis layers', () => {
 
         beforeEach(done => {
             mockAxios = new MockAdapter(axios);
@@ -1090,6 +1205,110 @@ describe('catalog Epics', () => {
                             expect(true).toBe(false);
                         }
                     });
+                    done();
+                }, {});
+        });
+
+        it('should send request with arcgis layer with name and options layers', (done) => {
+            const layer = {
+                type: 'arcgis',
+                url: '/arcgis/rest/services/Map/MapServer',
+                title: 'Map',
+                description: 'MapServer',
+                visibility: true,
+                name: '1'
+            };
+            mockAxios.onGet().reply(() => ([200, {
+                extent: {
+                    xmin: -119.97727829597589,
+                    ymin: 34.75019112370114,
+                    xmax: -119.10884666994308,
+                    ymax: 35.69641644201112,
+                    spatialReference: {
+                        wkid: 4326,
+                        latestWkid: 4326
+                    }
+                }
+            }]));
+            const NUM_ACTIONS = 2;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    try {
+                        expect(actions.map(action => action.type)).toEqual([
+                            ADD_LAYER,
+                            ZOOM_TO_EXTENT
+                        ]);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }, {});
+        });
+
+        it('should send request with arcgis layer without name and options layers', (done) => {
+            const layer = {
+                type: 'arcgis',
+                url: '/arcgis/rest/services/Map/MapServer',
+                title: 'Map',
+                description: 'MapServer',
+                visibility: true
+            };
+            mockAxios.onGet().reply(() => ([200, {
+                layers: [],
+                currentVersion: 10.91,
+                serviceDescription: 'Description',
+                capabilities: 'Map,Query,Data',
+                supportedImageFormatTypes: 'PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP',
+                fullExtent: {
+                    xmin: -119.97727829597589,
+                    ymin: 34.75019112370114,
+                    xmax: -119.10884666994308,
+                    ymax: 35.69641644201112,
+                    spatialReference: {
+                        wkid: 4326,
+                        latestWkid: 4326
+                    }
+                }
+            }]));
+            const NUM_ACTIONS = 2;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    try {
+                        expect(actions.map(action => action.type)).toEqual([
+                            ADD_LAYER,
+                            ZOOM_TO_EXTENT
+                        ]);
+                    } catch (e) {
+                        done(e);
+                    }
+                    done();
+                }, {});
+        });
+
+        it('should not send request with arcgis layer without name and options layers', (done) => {
+            const layer = {
+                type: 'arcgis',
+                url: '/arcgis/rest/services/Map/MapServer',
+                title: 'Map',
+                description: 'MapServer',
+                visibility: true,
+                options: {
+                    layers: [{ id: 1 }]
+                }
+            };
+            const NUM_ACTIONS = 1;
+            testEpic(addTimeoutEpic(addLayerAndDescribeEpic, 0), NUM_ACTIONS,
+                addLayerAndDescribe(layer),
+                (actions) => {
+                    try {
+                        expect(actions.map(action => action.type)).toEqual([
+                            ADD_LAYER
+                        ]);
+                    } catch (e) {
+                        done(e);
+                    }
                     done();
                 }, {});
         });

@@ -203,9 +203,18 @@
               "legendHeight": "Altezza",
               "legendPreview": "Anteprima"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Abilita leggenda interattiva",
+                "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Nota: questo parametro richiede configurazioni specifiche su GeoServer",
+                "fetchError": "Impossibile ottenere le informazioni sulla leggenda dal servizio"
+            },
             "enableLocalizedLayerStyles": {
                 "label": "Abilita stile localizzato",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
+            },
+            "useCacheOptionInfo": {
+                "label": "Utilizza griglie di riquadri personalizzate remote",
+                "info": "Assicurati che WMTS sia abilitato per utilizzare griglie di riquadri personalizzate"
             },
             "format": {
                 "title": "Formato",
@@ -557,11 +566,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Mostra layers",
-            "showLegend": "Mostra legenda",
-            "hideLegend": "Nascondi legenda"
-        },
         "addgroup": {
             "addbtn": "Aggiungi",
             "groupName": "Nome del gruppo"
@@ -588,6 +592,7 @@
             "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
+            "emptyLayerTree": "La lista dei layer è vuota. Aggiungi un nuovo layer dal catalogo",
             "filterPlaceholder": "Filtra layers",
             "clearFilter": "Pulisci filtro",
             "toolReloadLayerTooltip": "Forza caricamento del livello selezionato",
@@ -625,6 +630,22 @@
             "notVisibleZoomOut": "Il layer non è visibile perchè al di fuori dei limiti di risoluzione. Zoom out per mostrare il layer",
             "notVisibleSwitchTo3D": "Passa alla modalità mappa 3D per vedere questo layer",
             "notVisibleSwitchTo2D": "Passa alla modalità mappa 2D per vedere questo layer",
+            "toolGroupShowAllChildren": "Mostra di tutti i nodi secondari",
+            "toolGroupHideAllChildren": "Nascondi di tutti i nodi secondari",
+            "activateToolGroupMutuallyExclusive": "Attiva la visibilità mutuamente esclusiva dei nodi secondari",
+            "deactivateToolGroupMutuallyExclusive": "Disattiva la visibilità mutuamente esclusiva dei nodi secondari",
+            "toolGroupCollapseAllChildren": "Comprimi tutti i nodi secondari",
+            "toolGroupExpandAllChildren": "Espandi tutti i nodi secondari",
+            "closeOnMapInitialization": "Mantieni chiuso all'inizializzazione della mappa",
+            "openOnMapInitialization": "Apri all'inizializzazione della mappa",
+            "defaultTheme": "Tema predefinito",
+            "legendTheme": "Tema legenda",
+            "showFullTitle": "Mostra titolo completo",
+            "hideFullTitle": "Titolo su una sola riga",
+            "showOpacitySlider": "Mostra strumento opacità",
+            "hideOpacitySlider": "Nascondi strumento opacità",
+            "showOpacityTooltip": "Mostra valore dell'opacità",
+            "hideOpacityTooltip": "Nascondi valore dell'opacità",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -819,6 +840,7 @@
             "saveMeasure": "Salva le misure nell'annotazione",
             "resetTooltip": "Rimuovi Misurazioni",
             "addAsLayer": "Aggiungi come livello",
+            "lengthMeasure": "Misura la distanza geodesica nello spazio 3D calcolata sull'ellissoide, ma renderizzata nel punto in cui fai click",
             "polylineDistance3DMeasure": "Misurare la distanza nello spazio 3D",
             "area3DMeasure": "Misurare l'area nello spazio 3D",
             "pointCoordinatesMeasure": "Misurare le coordinate di un punto",
@@ -846,6 +868,7 @@
             "addressSearch": "Cerca un indirizzo",
             "searchOnAllServices": "Cerca su tutti i servizi di seguito",
             "coordinatesSearch": "Cerca per coordinate",
+            "currentMapCRS": "Sistema di coordinate della mappa corrente",
             "searchservicesbutton": "Configura servizi di ricerca",
             "configpaneltitle": "Aggiungi/modifica un servizio di ricerca",
             "serviceslistlabel": "Servizi disponibili",
@@ -867,6 +890,8 @@
             "b_newpaneltitle": "Aggiungi nuovo segnalibro",
             "latitude": "Lat",
             "longitude": "Lon",
+            "yCoord": "Y",
+            "xCoord": "X",
             "b_title": "Titolo",
             "b_layer_tooltip": "Interruttore ricarica visibilità livello",
             "b_bbox": "Rettangolo di selezione",
@@ -1057,7 +1082,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Aumenta Zoom",
             "zoomOutTooltip": "Diminuisci Zoom",
-            "zoomAllTooltip": "Zoom Alla Massima Estensione"
+            "zoomAllTooltip": "Zoom Alla vista iniziale"
         },
         "fullscreen": {
             "tooltipActivate":  "Passa a schermo intero",
@@ -1091,7 +1116,7 @@
             "title": "Ricerca Avanzata",
             "query": "Ricerca",
             "apply": "Applica",
-            "reset": "Reimposta",
+            "reset": "Reimposta: reimposta tutti i filtri, inclusi tutti gli altri filtri esterni",
             "save": "Salva",
             "discard": "Ripristina",
             "query_request_exception": "Errore nella richiesta",
@@ -1559,6 +1584,10 @@
             "noRecordsMatched": "Nessun risultato trovato",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "DA WFS",
+                "wms": "DA WMS"
+            },
             "share": "Condividi",
             "copyToClipboard": "Copia negli appunti",
             "copied": "Copiato!",
@@ -1648,7 +1677,12 @@
             "allowUnsecureLayers": {
               "label": "Consenti livelli non sicuri",
               "tooltip": "L'aggiunta di un livello da mappare con questa opzione abilitata, costringe l'applicazione ad applicare il proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Ordina per",
+                "tooltip": "Aggiungi il prefisso dello spazio dei nomi alla proprietà del nome. cioè ${namespace}:${name}",
+                "placeholder": "Inserisci un nome"
+              }
         },
         "uploader": {
             "filename": "File Name",
@@ -2592,6 +2626,7 @@
             "redChannel": "Canale rosso",
             "greenChannel": "Canale verde",
             "blueChannel": "Canale blue",
+            "alphaChannel": "Canale alfa",
             "grayChannel": "Canale",
             "ruleClassification": "Classificazione",
             "ruleRaster": "Raster",
@@ -2659,6 +2694,12 @@
             "msExtrusionColor": "Colore estrusione",
             "msExtrusionType": "Tipo estrusione",
             "wall": "Muro",
+            "enableBanding": "Stile a fascia",
+            "selectChannel": "Seleziona una banda",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Valore minimo dei dati di origine",
+            "maxSourceValue": "Valore massimo dei dati di origine",
             "customParams": "Parametri personalizzati",
             "wrongFormatMsg": "La configurazione immessa è in formato sbagliato !!"
         },
@@ -3945,8 +3986,10 @@
           "emptyDescription": "Clicca sulla mappa per cominciare a visualizzare le immagini di Street View",
           "messages": {
             "noDataForPosition": "Non ci sono dati Street View per questa posizione",
-            "unknownError": "Errore sconosciuto"
-          },
+            "unknownError": "Errore sconosciuto",
+            "errorServiceUrl": "Servizio non disponibile. Verifica l'url inserito.",
+            "errorRetriveingLayerData": "Si è verificato un errore durante il caricamento dei dati del layer"
+        },
             "loadingAPI": "Caricamento API...",
             "cyclomedia": {
               "initializing": "Inizializzazione Street Smart API...",

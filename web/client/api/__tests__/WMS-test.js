@@ -180,6 +180,82 @@ describe('Test correctness of the WMS APIs', () => {
         const capability = API.parseLayerCapabilities(capabilities, {name: 'mytest'});
         expect(capability).toBeTruthy();
     });
+    it('parseLayerCapabilities formats', () => {
+        const capabilities = {
+            Capability: {
+                Request: {
+                    GetMap: {
+                        Format: [
+                            "image/png",
+                            "application/atom+xml",
+                            "application/json;type=geojson",
+                            "application/json;type=topojson",
+                            "application/json;type=utfgrid",
+                            "application/pdf",
+                            "application/rss+xml",
+                            "application/vnd.google-earth.kml+xml",
+                            "application/vnd.google-earth.kml+xml;mode=networklink",
+                            "application/vnd.google-earth.kmz",
+                            "application/vnd.mapbox-vector-tile",
+                            "image/geotiff",
+                            "image/geotiff8",
+                            "image/gif",
+                            "image/jpeg",
+                            "image/png; mode=8bit",
+                            "image/svg+xml",
+                            "image/tiff",
+                            "image/tiff8",
+                            "image/vnd.jpeg-png",
+                            "image/vnd.jpeg-png8",
+                            "text/html; subtype=openlayers",
+                            "text/html; subtype=openlayers2",
+                            "text/html; subtype=openlayers3"
+                        ]
+                    },
+                    GetFeatureInfo: {
+                        Format: [
+                            "text/plain",
+                            "application/vnd.ogc.gml",
+                            "text/xml",
+                            "application/vnd.ogc.gml/3.1.1",
+                            "text/xml; subtype=gml/3.1.1",
+                            "text/html",
+                            "application/json"
+                        ]
+                    }
+                },
+                Layer: {
+                    Layer: {
+                        Layer: [
+                            {
+                                Name: "mytest"
+                            },
+                            {
+                                Name: "mytest2"
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        const capability = API.parseLayerCapabilities(capabilities, {name: 'mytest'});
+        expect(capability).toBeTruthy();
+        expect(capability.layerOptions).toBeTruthy();
+        expect(capability.layerOptions.imageFormats).toEqual([
+            'image/png',
+            'image/gif',
+            'image/jpeg',
+            'image/png; mode=8bit',
+            'image/vnd.jpeg-png',
+            'image/vnd.jpeg-png8'
+        ]);
+        expect(capability.layerOptions.infoFormats).toEqual([
+            'text/plain',
+            'text/html',
+            'application/json'
+        ]);
+    });
     it('should parse nested layers from capabilities', () => {
         expect(API.flatLayers({
             Layer: {
@@ -257,5 +333,72 @@ describe('Test correctness of the WMS APIs (mock axios)', () => {
         const layers = 'workspace:layer';
         const query = { token: 'value' };
         API.describeLayer(url, layers, { query });
+    });
+});
+
+describe('Test get json wms graphic legend (mock axios)', () => {
+    beforeEach(done => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach(done => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+
+    it('get json wms graphic legend', (done) => {
+        let url = "http://localhost:8080/geoserver/wms?service=WMS&request=GetLegendGraphic&format=application/json&layers=workspace:layer&style=pophade&version=1.3.0&SLD_VERSION=1.1.0";
+        mockAxios.onGet().reply(() => {
+            return [ 200, {
+                "Legend": [{
+                    "layerName": "layer",
+                    "title": "Layer",
+                    "rules": [
+                        {
+                            "name": ">= 159.05 and < 5062.5",
+                            "filter": "[field >= '159.05' AND field < '5062.5']",
+                            "symbolizers": [{"Polygon": {
+                                "uom": "in/72",
+                                "stroke": "#ffffff",
+                                "stroke-width": "1.0",
+                                "stroke-opacity": "0.35",
+                                "stroke-linecap": "butt",
+                                "stroke-linejoin": "miter",
+                                "fill": "#8DD3C7",
+                                "fill-opacity": "0.75"
+                            }}]
+                        },
+                        {
+                            "name": ">= 5062.5 and < 20300.35",
+                            "filter": "[field >= '5062.5' AND field < '20300.35']",
+                            "symbolizers": [{"Polygon": {
+                                "uom": "in/72",
+                                "stroke": "#ffffff",
+                                "stroke-width": "1.0",
+                                "stroke-opacity": "0.35",
+                                "stroke-linecap": "butt",
+                                "stroke-linejoin": "miter",
+                                "fill": "#ABD9C5",
+                                "fill-opacity": "0.75"
+                            }}]
+                        }]
+                }]
+            }];
+        });
+
+        API.getJsonWMSLegend(url).then(result => {
+            try {
+                expect(result.length).toEqual(1);
+                expect(result[0]).toBeTruthy();
+                expect(result[0].layerName).toBeTruthy();
+                expect(result[0].layerName).toEqual('layer');
+                expect(result[0].rules).toBeTruthy();
+                expect(result[0].rules.length).toEqual(2);
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
     });
 });

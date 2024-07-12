@@ -9,6 +9,7 @@ import expect from 'expect';
 
 import layers from '../layers';
 import { changeLayerParams, addLayer, addGroup, moveNode, ADD_GROUP } from '../../actions/layers';
+import { DEFAULT_GROUP_ID } from '../../utils/LayersUtils';
 
 
 describe('Test the layers reducer', () => {
@@ -87,11 +88,13 @@ describe('Test the layers reducer', () => {
             nodeType: 'groups'
         };
         let initialState = {
+            selected: ["sample2", "sample1"],
             groups: [{name: 'sample1', id: 'sample1'}, {name: 'sample2', id: 'sample2'}],
             flat: [{id: 'layer1', group: 'sample1'}, {id: 'layer2', group: 'sample2'}]
         };
         let state = layers(initialState, testAction);
         expect(state.groups.length).toBe(1);
+        expect(state.selected).toEqual(["sample2"]);
         expect(state.flat.length).toBe(1);
     });
 
@@ -102,6 +105,7 @@ describe('Test the layers reducer', () => {
             nodeType: 'layers'
         };
         let initialState = {
+            selected: ["layer1", "layer2"],
             groups: [
                 {name: 'sample1', nodes: ['layer1'], id: 'sample1'},
                 {name: 'sample2', nodes: ['layer2'], id: 'sample2'}
@@ -113,6 +117,7 @@ describe('Test the layers reducer', () => {
         };
         let state = layers(initialState, testAction);
         expect(state.groups.length).toBe(2);
+        expect(state.selected).toEqual(["layer2"]);
         expect(state.flat.length).toBe(1);
     });
     it('removeNode layer with remove empty groups flag', () => {
@@ -741,7 +746,7 @@ describe('Test the layers reducer', () => {
         const state = layers({flat: [{id: "layer"}], groups: [{id: "group", nodes: ["layer"]}]}, action);
         expect(state).toExist();
         expect(state.selected).toExist();
-        expect(state.selected).toEqual(['layer', 'group']);
+        expect(state.selected).toEqual(['group']);
     });
 
     it('select nested groups nodes', () => {
@@ -755,7 +760,7 @@ describe('Test the layers reducer', () => {
         const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}]}, action);
         expect(state).toExist();
         expect(state.selected).toExist();
-        expect(state.selected).toEqual(['layer', 'layer2', 'group001', 'group' ]);
+        expect(state.selected).toEqual(['group' ]);
     });
 
     it('select multiple layer nodes', () => {
@@ -783,7 +788,7 @@ describe('Test the layers reducer', () => {
         const state = layers({flat: [{id: "layer"}, {id: "layer2"}, {id: "layer3"}], groups: [{id: "group", nodes: ["layer", {id: 'group001', nodes: ["layer2"]}]}], selected: ['layer2', 'group2']}, action);
         expect(state).toExist();
         expect(state.selected).toExist();
-        expect(state.selected).toEqual(['layer2', 'group2', 'layer', 'layer2', 'group001', 'group']);
+        expect(state.selected).toEqual(['layer2', 'group2', 'group']);
     });
 
     it('select node with no id', () => {
@@ -827,10 +832,11 @@ describe('Test the layers reducer', () => {
             group: 'newgroup'
         };
 
-        const state = layers({groups: [{id: 'group1'}]}, action);
+        const state = layers({groups: [{id: 'group1', nodes: []}]}, action);
         expect(state).toExist();
         expect(state.groups.length).toBe(2);
-        expect(state.groups[1].title).toBe('newgroup');
+        expect(state.groups[0].id).toBe(DEFAULT_GROUP_ID);
+        expect(state.groups[0].nodes[0].title).toBe('newgroup');
     });
 
     it('add nested group', () => {
@@ -842,10 +848,10 @@ describe('Test the layers reducer', () => {
 
         const state = layers({ groups: [{ id: 'group1', nodes: [{ id: 'group1.group2', nodes: [{ id: 'group1.group2.group3', nodes: []}]}] }] }, action);
         expect(state).toExist();
-        expect(state.groups.length).toBe(1);
-        expect(state.groups[0].nodes.length).toBe(1);
-        expect(state.groups[0].nodes[0].nodes.length).toBe(2);
-        const newgroup = state.groups[0].nodes[0].nodes[1];
+        expect(state.groups.length).toBe(2);
+        expect(state.groups[1].nodes.length).toBe(1);
+        expect(state.groups[1].nodes[0].nodes.length).toBe(2);
+        const newgroup = state.groups[1].nodes[0].nodes[1];
         expect(newgroup.id).toBe('group1.group2.' + newgroup.name);
         expect(newgroup.title).toBe('newgroup');
         expect(newgroup.nodes.length).toBe(0);
@@ -865,11 +871,11 @@ describe('Test the layers reducer', () => {
             }
         );
         expect(state).toExist();
-        expect(state.groups.length).toBe(1);
-        expect(state.groups[0].nodes.length).toBe(1);
-        expect(state.groups[0].nodes[0].nodes.length).toBe(3);
-        const newgroup1 = state.groups[0].nodes[0].nodes[1];
-        const newgroup2 = state.groups[0].nodes[0].nodes[2];
+        expect(state.groups.length).toBe(2);
+        expect(state.groups[1].nodes.length).toBe(1);
+        expect(state.groups[1].nodes[0].nodes.length).toBe(3);
+        const newgroup1 = state.groups[1].nodes[0].nodes[1];
+        const newgroup2 = state.groups[1].nodes[0].nodes[2];
         expect(newgroup1.title).toBe('newgroup');
         expect(newgroup1.name).toExist();
         expect(newgroup1.name.length).toBe(36);
@@ -900,12 +906,20 @@ describe('Test the layers reducer', () => {
             addGroup(options.title, 'group1', options)
         );
         expect(state).toExist();
-        expect(state.groups.length).toBe(1);
-        expect(state.groups[0].nodes.length).toBe(1);
-        const newNode = state.groups[0].nodes[0];
+        expect(state.groups.length).toBe(2);
+        expect(state.groups[1].nodes.length).toBe(1);
+        const newNode = state.groups[1].nodes[0];
         expect(newNode.id).toBe(options.id);
         expect(newNode.title).toBe(options.title);
         expect(newNode.name).toBe(options.name);
+    });
+
+    it('should add group to default even if parent is not defined', () => {
+        const state = layers({groups: []}, addGroup('newgroup'));
+        expect(state).toBeTruthy();
+        expect(state.groups.length).toBe(1);
+        expect(state.groups[0].id).toBe(DEFAULT_GROUP_ID);
+        expect(state.groups[0].nodes[0].title).toBe('newgroup');
     });
 
     it('move groups when two are with the same title', () => {

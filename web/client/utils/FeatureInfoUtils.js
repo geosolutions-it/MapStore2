@@ -57,79 +57,27 @@ export function parseXMLResponse(res) {
     }
     return false;
 }
+const htmlResponseValid = (res) => !!parseHTMLResponse(res);
+const xmlResponseValid = (res) => !!parseXMLResponse(res);
+const textNotEmptyAndValid = (res) => !!(res.response !== "" && (typeof res.response === "string" && res.response.indexOf("no features were found") !== 0) && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
+const featuresPresent = (res) => !!(res.response?.features?.length);
+const truePredicate = () => true;
 
-export const Validator = {
-    HTML: {
-        /**
-         *Parse the HTML to get only the valid html responses
-         */
-        getValidResponses(responses) {
-            return responses.filter(parseHTMLResponse);
-        },
-        /**
-         * Parse the HTML to get only the NOT valid html responses
-         */
-        getNoValidResponses(responses) {
-            return responses.filter((res) => {return !parseHTMLResponse(res); });
-        }
-    },
-    TEXT: {
-        /**
-         *Parse the TEXT to get only the valid text responses
-         */
-        getValidResponses(responses) {
-            return responses.filter((res) => res.response !== "" && (typeof res.response === "string" && res.response.indexOf("no features were found") !== 0) && (typeof res.response === "string" && res.response.indexOf("<?xml") !== 0));
-        },
-        /**
-         * Parse the TEXT to get only the NOT valid text responses
-         */
-        getNoValidResponses(responses) {
-            return responses.filter((res) => res.response === "" || typeof res.response === "string" && res.response.indexOf("no features were found") === 0 || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
-        }
-    },
-    JSON: {
-        /**
-         *Parse the JSON to get only the valid json responses
-         */
-        getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
-        },
-        /**
-         * Parse the JSON to get only the NOT valid json responses
-         */
-        getNoValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
-        }
-    },
-    GEOJSON: {
-        /**
-         *Parse the GEOJSON to get only the valid json responses
-         */
-        getValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
-        },
-        /**
-         * Parse the GEOJSON to get only the NOT valid json responses
-         */
-        getNoValidResponses(responses) {
-            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
-        }
-    },
-    GML3: {
-        /**
-         *Parse the HTML to get only the valid html responses
-         */
-        getValidResponses(responses) {
-            return responses.filter(parseXMLResponse);
-        },
-        /**
-         * Parse the HTML to get only the NOT valid html responses
-         */
-        getNoValidResponses(responses) {
-            return responses.filter((res) => {return !parseXMLResponse(res); });
-        }
+const predicate = (format) => {
+    switch (format) {
+    case "HTML": return htmlResponseValid;
+    case "GML3": return xmlResponseValid;
+    case "TEXT": return textNotEmptyAndValid;
+    case "JSON": return featuresPresent;
+    case "GEOJSON": return featuresPresent;
+    default: return truePredicate;
     }
 };
+
+export const validator = (format) => {
+    return { isValidResponse: predicate(format) };
+};
+
 export const Parser = {
     HTML: {
         getBody(html) {

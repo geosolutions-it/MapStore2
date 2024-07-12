@@ -27,6 +27,7 @@ import {
 } from './CoordinatesUtils';
 
 export const MEASURE_TYPE = 'Measure';
+export const MEASURE_CESIUM_TARGET_ID = 'measure-cesium-wrapper';
 
 const getFormattedValue = (uom, value) => ({
     [MeasureTypes.LENGTH]: round(convertUom(value, "m", uom.length.label) || 0, 2) + " " + uom.length.label,
@@ -100,8 +101,7 @@ export const computeFeatureMeasurement = (feature, options = { formatNumber: n =
         ];
     }
     if (feature.properties.measureType === MeasureTypes.AREA) {
-        const coordinates = feature.geometry.coordinates[0]
-            .filter((coords, idx) => idx < (feature.geometry.coordinates[0].length - 1));
+        const coordinates = feature.geometry.coordinates[0];
         const length = calculateDistance(coordinates, options.lengthFormula);
         const convertedLengthValue = (feature.properties.lengthTargetUom
             ? convertUom(length, 'm', feature.properties.lengthTargetUom)
@@ -183,7 +183,7 @@ export const getGeomTypeSelected = (features = []) =>{
     }));
 };
 
-const getMeasureType = (feature) => {
+export const getMeasureType = (feature) => {
     if (feature?.properties?.measureType) {
         return feature.properties.measureType;
     }
@@ -257,7 +257,7 @@ const convertMeasureToFeatureCollection = (geometricFeatures, textLabels = [], u
                 properties: {
                     ...properties,
                     label: infoLabelText,
-                    geodesic: measureType === MeasureTypes.LENGTH,
+                    geodesic: measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA,
                     ...parseProperties(values, uom),
                     type: [MeasureTypes.POINT_COORDINATES].includes(measureType)
                         ? 'position'
@@ -324,6 +324,7 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
                 }
             };
             if (feature?.properties?.measureType === MeasureTypes.BEARING) {
+                // used only for bearing because the others rely on react-intl.formatNumber available from components (MeasurementSupport)
                 return [...acc, ...computeFeatureMeasurement(newFeature)];
             }
             return [...acc, newFeature];
@@ -422,6 +423,9 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
                         {
                             symbolizerId: uuidv1(),
                             kind: 'Fill',
+                            msGeometry: {
+                                name: 'lineToArc'
+                            },
                             color: '#ffffff',
                             fillOpacity: 0.5,
                             outlineColor: '#33A8FF',
@@ -536,6 +540,9 @@ export const convertMeasuresToAnnotation = (geometricFeatures, textLabels, uom, 
     };
 };
 
+
+const maintainOriginalGeom = (measureType) => measureType === MeasureTypes.LENGTH || measureType === MeasureTypes.AREA;
+
 export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom) => {
 
     const { features } = convertMeasureToFeatureCollection(geometricFeatures, textLabels, uom);
@@ -543,7 +550,32 @@ export const convertMeasuresToGeoJSON = (geometricFeatures, textLabels = [], uom
 
     return {
         type: 'FeatureCollection',
-        features,
+        msType: MEASURE_TYPE,
+        features: features.map(ft => {
+            const measureType = getMeasureType(ft);
+            let geom = ft.geometry;
+            if (measureType === MeasureTypes.LENGTH) {
+                geom = {
+                    ...ft.geometry,
+                    coordinates: transformLineToArcs(ft.geometry.coordinates)
+                        .map(c => [...c, ft.geometry.coordinates[ft.geometry.coordinates.length - 1][2] ?? 0]) // adding same height
+                };
+            }
+            if (measureType === MeasureTypes.AREA) {
+                geom = {
+                    ...ft.geometry,
+                    coordinates: ft.geometry.coordinates.map(coords => transformLineToArcs(coords))
+                };
+            }
+            return {
+                ...ft,
+                geometry: geom,
+                properties: {
+                    ...ft.properties,
+                    ...(maintainOriginalGeom(measureType) ? { originalGeom: ft.geometry} : {})
+                }
+            };
+        }),
         style: {
             metadata: { editorType: 'visual' },
             format: 'geostyler',

@@ -203,9 +203,18 @@
               "legendHeight": "Hauteur",
               "legendPreview": "Aperçu"
             },
+            "enableInteractiveLegendInfo": {
+                "label": "Activer la légende interactive",
+                "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer",
+                "fetchError": "Impossible d'obtenir les informations de légende du service"
+            },
             "enableLocalizedLayerStyles": {
                 "label": "Activer le style localisé",
                 "tooltip": "Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer"
+            },
+            "useCacheOptionInfo": {
+                "label": "Utiliser des grilles de carreaux personnalisées à distance",
+                "info": "Assurez-vous que WMTS est activé afin d'utiliser des grilles de tuiles personnalisées"
             },
             "format": {
                 "title": "Format",
@@ -557,11 +566,6 @@
                 }
             }
         },
-        "floatinglegend": {
-            "showTOC": "Afficher les couches",
-            "showLegend": "Afficher la légende",
-            "hideLegend": "Cacher la légende"
-        },
         "addgroup": {
             "addbtn": "Ajouter",
             "groupName": "Nom de groupe"
@@ -588,6 +592,7 @@
             "layerFilterTooltip": "Filtrer les couches",
             "toolDownloadTooltip": "Exporter les données de la couche",
             "noFilteredResults": "Aucun résultat",
+            "emptyLayerTree": "L'arborescence des calques est vide. Veuillez ajouter un nouveau calque du catalogue",
             "filterPlaceholder": "Filtrer les couches",
             "clearFilter": "Supprimer le filtre",
             "toolReloadLayerTooltip": "Forcer le rechargement de la couche sélectionnée",
@@ -625,6 +630,22 @@
             "notVisibleZoomOut": "Le calque n'est pas visible car il est en dehors des limites de résolution. Faites un zoom arrière pour afficher le calque",
             "notVisibleSwitchTo3D": "Passer en mode carte 3D pour voir cette couche",
             "notVisibleSwitchTo2D": "Passer en mode carte 2D pour voir cette couche",
+            "toolGroupShowAllChildren": "Activer la visibilité de tous les nœuds enfants",
+            "toolGroupHideAllChildren": "Désactiver la visibilité de tous les nœuds enfants",
+            "activateToolGroupMutuallyExclusive": "Activer la visibilité mutuellement exclusive des nœuds enfants",
+            "deactivateToolGroupMutuallyExclusive": "Désactiver la visibilité mutuellement exclusive des nœuds enfants",
+            "toolGroupCollapseAllChildren": "Réduire tous les nœuds enfants",
+            "toolGroupExpandAllChildren": "Développer tous les nœuds enfants",
+            "closeOnMapInitialization": "Garder fermé lors de l'initialisation de la carte",
+            "openOnMapInitialization": "Ouvrir sur l'initialisation de la carte",
+            "defaultTheme": "Thème par défaut",
+            "legendTheme": "Thème Légende",
+            "showFullTitle": "Afficher le titre complet",
+            "hideFullTitle": "Titre sur une seule ligne",
+            "showOpacitySlider": "Afficher le curseur d'opacité",
+            "hideOpacitySlider": "Masquer le curseur d'opacité",
+            "showOpacityTooltip": "Afficher l'info-bulle d'opacité",
+            "hideOpacityTooltip": "Masquer l'info-bulle d'opacité",
             "refreshOptions": {
                 "bbox": "Mettre à jour la BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -819,6 +840,7 @@
             "saveMeasure": "Enregistrer les mesures dans l'annotation",
             "resetTooltip": "Effacer les mesures",
             "addAsLayer": "Ajouter comme couche",
+            "lengthMeasure": "Mesurez la distance géodésique dans l'espace 3D qui est calculée sur l'ellipsoïde, mais rendue là où vous cliquez",
             "polylineDistance3DMeasure": "Mesurer la distance dans l'espace 3D",
             "area3DMeasure": "Mesurer la zone dans l'espace 3D",
             "pointCoordinatesMeasure": "Mesurer les coordonnées du point",
@@ -846,6 +868,7 @@
             "addressSearch": "Recherche par nom de lieu",
             "searchOnAllServices": "Recherchez tous les services ci-dessous",
             "coordinatesSearch": "Rechercher par coordonnées",
+            "currentMapCRS": "Système de coordonnées cartographiques actuel",
             "searchservicesbutton": "Configurer les services de recherche",
             "configpaneltitle": "Créer / modifier un service de recherche",
             "serviceslistlabel": "Services disponibles",
@@ -867,6 +890,8 @@
             "b_newpaneltitle": "Ajouter un nouveau signet",
             "latitude": "Lat",
             "longitude": "Lon",
+            "yCoord": "Y",
+            "xCoord": "X",
             "b_title": "Titre",
             "b_layer_tooltip": "Basculer le rechargement de la visibilité des calques",
             "b_bbox": "Boîte englobante",
@@ -1057,7 +1082,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Zoomer vers l'avant",
             "zoomOutTooltip": "Zoomer vers l'arrière",
-            "zoomAllTooltip": "Agrandir à l'extension maximale"
+            "zoomAllTooltip": "Agrandir à la vue initiale"
         },
         "fullscreen": {
             "tooltipActivate": "Passer en plein écran",
@@ -1091,7 +1116,7 @@
             "title": "Recherche avancée",
             "query": "Recherche",
             "apply": "Appliquer",
-            "reset": "Recommencer",
+            "reset": "Réinitialiser: réinitialiser tous les filtres, y compris tous les autres filtres externes",
             "save": "Enregistrer",
             "discard": "Annuler",
             "query_request_exception": "Erreur de requête",
@@ -1560,6 +1585,10 @@
             "noRecordsMatched": "Aucun enregistrement correspondant",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "DEPUIS WFS",
+                "wms": "DEPUIS WMS"
+            },
             "share": "Partager",
             "copyToClipboard": "Copier vers le presse-papier",
             "copied": "Copié !",
@@ -1649,7 +1678,12 @@
             "allowUnsecureLayers": {
               "label": "Autoriser les couches non sécurisées",
               "tooltip": "L'ajout d'une couche à la carte avec cette option activée force l'application à appliquer un proxy"
-            }
+            },
+            "sortBy": {
+                "label": "Trier par",
+                "tooltip": "Ajoutez un préfixe d’espace de noms à la propriété name. c'est-à-dire ${namespace}:${name}",
+                "placeholder": "Entrer un nom"
+              }
         },
         "uploader": {
             "filename": "Nom du fichier",
@@ -2591,6 +2625,7 @@
             "redChannel": "Red channel",
             "greenChannel": "Green channel",
             "blueChannel": "Blue channel",
+            "alphaChannel": "Alpha channel",
             "grayChannel": "Channel",
             "ruleClassification": "Classification",
             "ruleRaster": "Raster",
@@ -2658,6 +2693,12 @@
             "msExtrusionColor": "Couleur d'extrusion",
             "msExtrusionType": "Type d'extrusion",
             "wall": "Mur",
+            "enableBanding": "Style de bande",
+            "selectChannel": "Sélectionnez un groupe",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Valeur minimale des données sources",
+            "maxSourceValue": "Valeur maximale des données sources",
             "customParams": "Paramètres personnalisés",
             "wrongFormatMsg": "La configuration entrée est en mauvais format !!"
         },
@@ -3945,8 +3986,10 @@
           "emptyDescription": "Cliquez sur la carte pour commencer à parcourir les images de Street View",
           "messages": {
             "noDataForPosition": "pas de données Street View pour cette position",
-            "unknownError": "erreur inconnue, voir console"
-          },
+            "unknownError": "erreur inconnue, voir console",
+            "errorServiceUrl": "Service non disponible. Veuillez vérifier l'URL fournie",
+            "errorRetriveingLayerData": "Une erreur s'est produite lors du chargement des données de la couche"
+        },
           "loadingAPI": "Chargement de l'API...",
           "cyclomedia": {
             "initializing": "Initialisation de l'API Street Smart...",

@@ -135,4 +135,47 @@ describe('NodeEditor component', () => {
         const cacheOptionsNode = document.querySelector('.ms-wms-cache-options-toolbar');
         expect(cacheOptionsNode).toBeFalsy();
     });
+    it('interactive legend should be visible in Display tab with nodeEditor(NodeEditor)', () => {
+        const layer = {
+            id: 'layer-01',
+            type: 'wms',
+            name: 'workspace:layer',
+            group: 'group-01',
+            url: '/geoserver/wms',
+            tileGridStrategy: 'custom',
+            tileGrids: [
+                {
+                    id: 'EPSG:32122x2',
+                    crs: 'EPSG:32122',
+                    scales: [2557541.55271451, 1278770.776357255, 639385.3881786275],
+                    origins: [[403035.4105968763, 414783], [403035.4105968763, 414783], [403035.4105968763, 323121]],
+                    tileSize: [512, 512]
+                },
+                {
+                    id: 'EPSG:900913',
+                    crs: 'EPSG:900913',
+                    scales: [559082263.9508929, 279541131.97544646, 139770565.98772323],
+                    origin: [-20037508.34, 20037508],
+                    tileSize: [256, 256]
+                }
+            ]
+        };
+        ReactDOM.render(<EnhancedNodeEditor
+            activeTab="display"
+            map={{ projection: 'EPSG:3857', groups: [{ id: layer.group }], layers: [layer] }}
+            nodes={[{ id: layer.group, nodes: [layer]}]}
+            layers={[layer]}
+            editNode={layer.id}
+        />, document.getElementById("container"));
+
+        const tabs = document.querySelectorAll('.nav-tabs > li > a');
+        expect(tabs.length).toBe(3);
+
+        Simulate.click(tabs[1]);
+
+        const legendOptionInput = document.querySelector('.legend-options input');
+        const legendOptionInputLabel = document.querySelector('.legend-options span');
+        expect(legendOptionInput).toExist();
+        expect(legendOptionInputLabel.innerText).toEqual('layerProperties.legendOptions.title');
+    });
 });

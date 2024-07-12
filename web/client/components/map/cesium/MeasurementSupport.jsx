@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { camelCase } from 'lodash';
 import { Glyphicon, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
 import { DropdownList } from 'react-widgets';
+import { createPortal } from 'react-dom';
 
 import MSButton from '../../misc/Button';
 import DrawMeasureSupport from './DrawMeasureSupport';
@@ -19,7 +20,7 @@ import { MeasureTypes, defaultUnitOfMeasureOptions, measureIcons } from '../../.
 import tooltip from '../../misc/enhancers/tooltip';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import { download } from '../../../utils/FileUtils';
-import { convertMeasuresToGeoJSON } from '../../../utils/MeasurementUtils';
+import { convertMeasuresToGeoJSON, MEASURE_CESIUM_TARGET_ID } from '../../../utils/MeasurementUtils';
 
 const Button = tooltip(MSButton);
 
@@ -41,6 +42,7 @@ const Button = tooltip(MSButton);
 function MeasurementSupport({
     map,
     active,
+    targetId = MEASURE_CESIUM_TARGET_ID,
     measureType,
     onChangeMeasureType,
     defaultMeasureType,
@@ -51,6 +53,7 @@ function MeasurementSupport({
     onUpdateFeatures,
     onChangeUnitOfMeasure,
     tools = [
+        MeasureTypes.LENGTH,
         MeasureTypes.POLYLINE_DISTANCE_3D,
         MeasureTypes.AREA_3D,
         MeasureTypes.POINT_COORDINATES,
@@ -88,8 +91,9 @@ function MeasurementSupport({
     if (!active) {
         return null;
     }
+    const container = document.querySelector(`#${targetId}`);
 
-    return (
+    return container && createPortal((
         <>
             <DrawMeasureSupport
                 map={map}
@@ -101,6 +105,10 @@ function MeasurementSupport({
                 unitsOfMeasure={unitsOfMeasure}
                 onUpdateCollection={(collection) => onUpdateFeatures(collection?.features || [])}
                 tooltipLabels={{
+                    [MeasureTypes.LENGTH]: {
+                        start: getMessageById(messages, 'measureComponent.tooltipPolylineDistance3DStart'),
+                        end: getMessageById(messages, 'measureComponent.tooltipPolylineDistance3DEnd')
+                    },
                     [MeasureTypes.POLYLINE_DISTANCE_3D]: {
                         start: getMessageById(messages, 'measureComponent.tooltipPolylineDistance3DStart'),
                         end: getMessageById(messages, 'measureComponent.tooltipPolylineDistance3DEnd')
@@ -124,6 +132,7 @@ function MeasurementSupport({
                     }
                 }}
                 infoLabelsFormat={{
+                    [MeasureTypes.LENGTH]: value => value,
                     [MeasureTypes.POLYLINE_DISTANCE_3D]: value => value,
                     [MeasureTypes.AREA_3D]: value => value,
                     [MeasureTypes.POINT_COORDINATES]: (value, { latitude, longitude } = {}) =>
@@ -157,6 +166,7 @@ function MeasurementSupport({
                                     className="square-button-md"
                                     bsStyle={measureType === type ? 'success' : 'primary'}
                                     tooltipId={`measureComponent.${camelCase(type)}Measure`}
+                                    tooltipPosition="bottom"
                                     active={measureType === type}
                                     onClick={handleChangeGeometryType.bind(null, type)}
                                 >
@@ -202,7 +212,7 @@ function MeasurementSupport({
                 </ButtonToolbar>
             </MeasureToolbar>
         </>
-    );
+    ), container);
 }
 
 MeasurementSupport.contextTypes = {

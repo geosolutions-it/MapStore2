@@ -92,6 +92,13 @@ export const flatLayers = (root) => {
         : rootName && [root] || [];
 };
 
+const getFormats = (response) => {
+    const root = response.Capability;
+    const imageFormats = castArray(root?.Request?.GetMap?.Format || []).filter(isValidGetMapFormat);
+    const infoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetFeatureInfoFormat);
+    return { imageFormats, infoFormats };
+};
+
 export const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };
@@ -228,7 +235,7 @@ export const textSearch = (url, startPosition, maxRecords, text) => {
 export const parseLayerCapabilities = (json, layer) => {
     const root = json.Capability;
     const layersCapabilities = flatLayers(root);
-    return layersCapabilities.find((layerCapability) => {
+    const capabilities = layersCapabilities.find((layerCapability) => {
         const capabilityName = layerCapability.Name;
         if (layer.name.split(":").length === 2 && capabilityName && capabilityName.split(":").length === 2) {
             return layer.name === capabilityName && layerCapability;
@@ -241,6 +248,17 @@ export const parseLayerCapabilities = (json, layer) => {
         }
         return layer.name === capabilityName && layerCapability;
     });
+    if (capabilities) {
+        const { imageFormats, infoFormats } = getFormats(json);
+        return {
+            ...capabilities,
+            layerOptions: {
+                imageFormats,
+                infoFormats
+            }
+        };
+    }
+    return null;
 };
 export const getBBox = (record, bounds) => {
     let layer = record;
@@ -294,15 +312,29 @@ export const reset = () => {
 export const getSupportedFormat = (url, includeGFIFormats = false) => {
     return getCapabilities(url)
         .then((response) => {
-            const root = response.Capability;
-            const imageFormats = castArray(root?.Request?.GetMap?.Format || []).filter(isValidGetMapFormat);
+            const { imageFormats, infoFormats } = getFormats(response);
             if (includeGFIFormats) {
-                const infoFormats = castArray(root?.Request?.GetFeatureInfo?.Format || []).filter(isValidGetFeatureInfoFormat);
                 return { imageFormats, infoFormats };
             }
             return imageFormats;
         })
         .catch(() => includeGFIFormats ? { imageFormats: [], infoFormats: [] } : []);
+};
+
+let layerLegendJsonData = {};
+export const getJsonWMSLegend = (url) => {
+    const request = layerLegendJsonData[url]
+        ? () => Promise.resolve(layerLegendJsonData[url])
+        : () => axios.get(url).then((response) => {
+            if (typeof response?.data === 'string' && response.data.includes("Exception")) {
+                throw new Error("Faild to get json legend");
+            }
+            layerLegendJsonData[url] = response?.data?.Legend;
+            return response?.data?.Legend || [];
+        });
+    return request().then((data) => data).catch(err => {
+        throw err;
+    });
 };
 
 const Api = {

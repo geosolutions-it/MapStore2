@@ -116,7 +116,7 @@ export default createPlugin('Details', {
             action: openDetailsPanel,
             selector: (state) => {
                 const detailsUri = detailsUriSelector(state);
-                if (detailsUri) {
+                if (detailsUri && detailsUri !== 'NODATA') {
                     return {};
                 }
                 return { style: {display: "none"} };
@@ -149,7 +149,7 @@ export default createPlugin('Details', {
             action: openDetailsPanel,
             selector: (state) => {
                 const detailsUri = detailsUriSelector(state);
-                if (detailsUri) {
+                if (detailsUri && detailsUri !== 'NODATA') {
                     return {
                         bsStyle: state.controls.details && state.controls.details.enabled ? 'primary' : 'tray',
                         active: state.controls.details && state.controls.details.enabled || false

@@ -92,7 +92,7 @@ const formatCards = {
 };
 const FeatureInfo = defaultProps({
     formatCards,
-    defaultInfoFormat: Object.assign({ "HIDDEN": "text/html"}, getAvailableInfoFormat())
+    defaultInfoFormat: getAvailableInfoFormat()
 })(FeatureInfoCmp);
 
 export default FeatureInfo;

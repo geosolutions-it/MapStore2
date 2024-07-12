@@ -125,7 +125,7 @@ const icon = {
     Text: ({ symbolizer }) => {
         return (
             <svg viewBox="0 0 16 16">
-                <text x="8" y="8" text-anchor="middle" alignment-baseline="middle" style={{
+                <text x="8" y="8" textAnchor="middle" alignmentBaseline="middle" style={{
                     fontSize: symbolizer.size < 14 ? symbolizer.size : 14,
                     fill: symbolizer.color,
                     fontFamily: symbolizer?.font?.join(', '),
@@ -149,7 +149,7 @@ function RuleLegendIcon({
 }) {
     const symbolizer = parseSymbolizerExpressions(rule?.symbolizers?.[0] || {}, { properties: {} });
     const Icon = icon[symbolizer.kind];
-    return Icon ? <div className="ms-rule-legend-icon"><Icon symbolizer={symbolizer}/></div> : null;
+    return Icon ? <div className="ms-legend-icon"><Icon symbolizer={symbolizer}/></div> : null;
 }
 
 export default RuleLegendIcon;
