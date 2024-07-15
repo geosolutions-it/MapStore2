@@ -20,10 +20,11 @@ const store = mockStore({});
 const location = document.location;
 
 const renderMapViewerComp = (mapViewerPros) => {
-    return ReactDOM.render(
+    const container = document.getElementById("container");
+    ReactDOM.render(
         <Provider store={store}>
             <MapViewerCmp {...mapViewerPros}/>
-        </Provider>, document.getElementById("container"));
+        </Provider>, container);
 };
 
 describe("Test the MapViewerCmp component", () => {
@@ -37,58 +38,75 @@ describe("Test the MapViewerCmp component", () => {
         setTimeout(done);
     });
 
-    it('testing creation with defaults', () => {
-        const mapViewerPros = { wrappedContainer: MapViewerContainer };
-        const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
-        expect(cmpMapViewerCmp).toExist();
+    it('testing creation with defaults', (done) => {
+        const mapViewerPros = {
+            wrappedContainer: MapViewerContainer,
+            onLoaded: (res) => {
+                expect(res).toBe(true);
+                done();
+            }
+        };
+        renderMapViewerComp(mapViewerPros);
     });
 
-    it('testing creation with mapId = new', () => {
+    it('testing creation with mapId = new', (done) => {
         const match = {params: {mapId: "new"}};
         const mapViewerPros = { match, location, onInit: () => {},
             wrappedContainer: MapViewerContainer,
             loadMapConfig: (cfgUrl, mapId) => {
                 expect(cfgUrl).toBe("new.json");
                 expect(mapId).toBe(null);
+            },
+            onLoaded: (res) => {
+                expect(res).toBe(true);
+                done();
             }};
-        const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
-        expect(cmpMapViewerCmp).toExist();
+        renderMapViewerComp(mapViewerPros);
     });
 
-    it('testing creation with mapId = anyString', () => {
+    it('testing creation with mapId = anyString', (done) => {
         const match = {params: {mapId: "anyString"}};
         const mapViewerPros = { match, location, onInit: () => {},
             wrappedContainer: MapViewerContainer,
             loadMapConfig: (cfgUrl, mapId) => {
                 expect(cfgUrl).toBe("anyString.json");
                 expect(mapId).toBe(null);
+            },
+            onLoaded: (res) => {
+                expect(res).toBe(true);
+                done();
             }};
-        const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
-        expect(cmpMapViewerCmp).toExist();
+        renderMapViewerComp(mapViewerPros);
     });
 
-    it('testing creation with mapId = 0', () => {
+    it('testing creation with mapId = 0', (done) => {
         const match = {params: {mapId: 0}};
         const mapViewerPros = { match, location, onInit: () => {},
             wrappedContainer: MapViewerContainer,
             loadMapConfig: (cfgUrl, mapId) => {
                 expect(cfgUrl).toBe("config.json");
                 expect(mapId).toBe(null);
+            },
+            onLoaded: (res) => {
+                expect(res).toBe(true);
+                done();
             }};
-        const component = renderMapViewerComp(mapViewerPros);
-        expect(component).toExist();
+        renderMapViewerComp(mapViewerPros);
     });
 
-    it('testing creation with mapId = 1', () => {
+    it('testing creation with mapId = 1', (done) => {
         const match = {params: {mapId: 1}};
         const mapViewerPros = { match, location, onInit: () => {},
             wrappedContainer: MapViewerContainer,
             loadMapConfig: (cfgUrl, mapId) => {
                 expect(cfgUrl).toBe("/rest/geostore/data/1");
                 expect(mapId).toBe(1);
+            },
+            onLoaded: (res) => {
+                expect(res).toBe(true);
+                done();
             }};
-        const component = renderMapViewerComp(mapViewerPros);
-        expect(component).toExist();
+        renderMapViewerComp(mapViewerPros);
     });
     it('testing update of map on mapId change', (done) => {
         let count = 1;
@@ -112,8 +130,15 @@ describe("Test the MapViewerCmp component", () => {
         renderMapViewerComp({ ...mapViewerPros, location: { ...location }});
         // render second time
         setTimeout(() => {
-            const component = renderMapViewerComp({ ...mapViewerPros, match: match2, location: {...location}});
-            expect(component).toExist();
+            renderMapViewerComp({
+                ...mapViewerPros,
+                match: match2,
+                location: {...location},
+                onLoaded: (res) => {
+                    expect(res).toBe(true);
+                    done();
+                }
+            });
         }, 300);
     });
 

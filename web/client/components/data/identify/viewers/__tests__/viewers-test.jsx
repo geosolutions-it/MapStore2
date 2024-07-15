@@ -14,6 +14,12 @@ import HTMLViewer from '../HTMLViewer';
 import JSONViewer from '../JSONViewer';
 import TextViewer from '../TextViewer';
 
+import configureStore from 'redux-mock-store';
+import thunkMiddleware from 'redux-thunk';
+import {Provider} from "react-redux";
+const mockStore = configureStore([thunkMiddleware]);
+const store = mockStore({});
+
 const SimpleRowViewer = (props) => {
     return <div>{['name', 'description'].map((key) => <span key={key}>{key}:{props[key]}</span>)}</div>;
 };
@@ -51,7 +57,8 @@ describe('Identity Viewers', () => {
     });
 
     it('test JSONViewer', () => {
-        const cmp = ReactDOM.render(<JSONViewer response={{
+        const container = document.getElementById("container");
+        ReactDOM.render(<Provider store={store}><JSONViewer response={{
             features: [{
                 id: 1,
                 properties: {
@@ -59,10 +66,10 @@ describe('Identity Viewers', () => {
                     description: 'mydescription'
                 }
             }]
-        }} rowViewer={SimpleRowViewer}/>, document.getElementById("container"));
-        expect(cmp).toExist();
+        }} rowViewer={SimpleRowViewer}/></Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
 
         expect(cmpDom.innerHTML.indexOf('myname') !== -1).toBe(true);
@@ -73,7 +80,8 @@ describe('Identity Viewers', () => {
         const MyRowViewer = (props) => {
             return <span>This is my viewer: {props.feature.id}</span>;
         };
-        const cmp = ReactDOM.render(<JSONViewer rowViewer={MyRowViewer} response={{
+        const container = document.getElementById("container");
+        ReactDOM.render(<Provider store={store}><JSONViewer rowViewer={MyRowViewer} response={{
             features: [{
                 id: 1,
                 properties: {
@@ -81,16 +89,17 @@ describe('Identity Viewers', () => {
                     description: 'mydescription'
                 }
             }]
-        }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+        }} /></Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
         expect(cmpDom.innerText.indexOf('This is my viewer: 1') !== -1).toBe(true);
     });
 
     it('test JSONViewer with TEMPLATE', () => {
-        const cmp = ReactDOM.render(
+        const container = document.getElementById("container");
+        ReactDOM.render(<Provider store={store}>
             <JSONViewer
                 layer={{
                     featureInfo: {
@@ -106,10 +115,10 @@ describe('Identity Viewers', () => {
                             description: 'mydescription'
                         }
                     }]
-                }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+                }} /></Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
 
         const templateDOM = document.getElementById('my-template');
@@ -118,7 +127,8 @@ describe('Identity Viewers', () => {
     });
 
     it('test JSONViewer with TEMPLATE and missing properties', () => {
-        const cmp = ReactDOM.render(
+        const container = document.getElementById("container");
+        ReactDOM.render(<Provider store={store}>
             <JSONViewer
                 layer={{
                     featureInfo: {
@@ -134,10 +144,10 @@ describe('Identity Viewers', () => {
                             description: 'mydescription'
                         }
                     }]
-                }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+                }} /></Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
 
         const templateDOM = document.getElementById('my-template');
@@ -146,7 +156,7 @@ describe('Identity Viewers', () => {
     });
 
     it('test JSONViewer with TEMPLATE with tag inside variable', () => {
-        ReactDOM.render(
+        ReactDOM.render(<Provider store={store}>
             <JSONViewer
                 layer={{
                     featureInfo: {
@@ -162,12 +172,12 @@ describe('Identity Viewers', () => {
                             description: 'mydescription'
                         }
                     }]
-                }} />, document.getElementById("container"));
+                }} /></Provider>, document.getElementById("container"));
 
         let templateDOM = document.getElementById('my-template');
         expect(templateDOM.innerHTML).toBe('the property name is myname');
 
-        ReactDOM.render(
+        ReactDOM.render(<Provider store={store}>
             <JSONViewer
                 layer={{
                     featureInfo: {
@@ -183,14 +193,15 @@ describe('Identity Viewers', () => {
                             description: 'mydescription'
                         }
                     }]
-                }} />, document.getElementById("container"));
+                }} /></Provider>, document.getElementById("container"));
 
         templateDOM = document.getElementById('my-template');
         expect(templateDOM.innerHTML).toBe('the property description is mydescription');
     });
 
     it('test JSONViewer with TEMPLATE multiple features', () => {
-        const cmp = ReactDOM.render(
+        const container = document.getElementById("container");
+        ReactDOM.render(<Provider store={store}>
             <JSONViewer
                 layer={{
                     featureInfo: {
@@ -212,10 +223,10 @@ describe('Identity Viewers', () => {
                             description: 'newDescription'
                         }
                     }]
-                }} />, document.getElementById("container"));
-        expect(cmp).toExist();
+                }} /></Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
 
         const templateDOM = document.getElementsByClassName('my-template');
@@ -225,7 +236,7 @@ describe('Identity Viewers', () => {
 
     it('test JSONViewer with TEMPLATE but missing/empty template', () => {
         // when template is missing, undefined or equal to <p><br></p> response is displayed in PROPERTIES format
-        ReactDOM.render(
+        ReactDOM.render(<Provider store={store}>
             <JSONViewer
                 layer={{
                     featureInfo: {
@@ -240,12 +251,12 @@ describe('Identity Viewers', () => {
                             description: 'mydescription'
                         }
                     }]
-                }} />, document.getElementById("container"));
+                }} /></Provider>, document.getElementById("container"));
 
         let propertiesViewer = document.getElementsByClassName('mapstore-json-viewer');
         expect(propertiesViewer.length).toBe(1);
 
-        ReactDOM.render(
+        ReactDOM.render(<Provider store={store}>
             <JSONViewer
                 layer={{
                     featureInfo: {
@@ -261,13 +272,13 @@ describe('Identity Viewers', () => {
                             description: 'mydescription'
                         }
                     }]
-                }} />, document.getElementById("container"));
+                }} /></Provider>, document.getElementById("container"));
 
         propertiesViewer = document.getElementsByClassName('mapstore-json-viewer');
         expect(propertiesViewer.length).toBe(1);
 
         // <p><br></p> is the value of react-quill when empty
-        ReactDOM.render(
+        ReactDOM.render(<Provider store={store}>
             <JSONViewer
                 layer={{
                     featureInfo: {
@@ -283,7 +294,7 @@ describe('Identity Viewers', () => {
                             description: 'mydescription'
                         }
                     }]
-                }} />, document.getElementById("container"));
+                }} /></Provider>, document.getElementById("container"));
 
         propertiesViewer = document.getElementsByClassName('mapstore-json-viewer');
         expect(propertiesViewer.length).toBe(1);
