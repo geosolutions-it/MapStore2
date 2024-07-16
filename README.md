@@ -157,14 +157,13 @@ For more information check <a href="https://github.com/geosolutions-it/MapStore2
 Here below is a small list of organizations using MapStore either directly or through [GeoNode](https://geonode.org/). If you want us to add ( or remove 😟 ) your organization from this list, please, contact [simone.giannecchini@geosolutionsgroup.com](mailto:simone.giannecchini@geosolutionsgroup.com) .
 
 - [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
-- [https://sit.comune.bolzano.it/mapstore2/#/](City of Bozen - Italy)
-- City of Florence - Italy
+- [City of Bozen - Italy](https://sit.comune.bolzano.it/mapstore2/#/)
+- - City of Florence - Italy
 - City of Munich - Germany
 - Rennes Metropole - France
 - [CRAIG - France](https://ids.craig.fr/mapstore/#/)
 - Compagnie Nationale du Rhone - France
 - [Urban Brussles (BruGIS) - Belgium](https://gis.urban.brussels/brugis/#/)
-- [Unesco IHP Wins - France / UN](http://ihp-wins.unesco.org/#/), this is based on GeoNode
 - [Atlas Horizon 2020](http://www.atlas-horizon2020.eu/), this is based on GeoNode
 - [Whanganui District Council - New Zealand](https://data.whanganui.govt.nz/mapstore2-whanganuidc/#/)
 - [Otorohanga District Council - New Zealand](https://maps.otodc.govt.nz)
