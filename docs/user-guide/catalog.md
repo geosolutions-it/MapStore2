@@ -429,3 +429,18 @@ In **General Settings** of a IFC source type, it is possible to specify the serv
     * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
     * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#ifc-layer) options
     * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
+
+### ArcGIS Catalog
+
+An [**ArcGIS**](https://enterprise.arcgis.com/en/server/latest/publish-services/windows/services-in-arcgis-enterprise.htm) service organize spatial data into functional GIS resources to run on a web server. MapStore allows to add ArcGIS service through its *Catalog* tool where a specific source type can be configured.
+
+In **General Settings** of a ArcGIS source type, it is possible to specify the service `Title` and its `URL`.
+
+<img src="../img/catalog/ArcGIS_service.jpg" class="ms-docimage"  style="max-width:600px;"/>
+
+!!! Note
+    The tool capabilities currently available for layers come from ArcGIS service are:
+
+    * *Zoom to selected layer extent* <img src="../img/button/zoom-layer.jpg" class="ms-docbutton"/>: in order to zoom the map to the layer's extent
+    * Access the [Layer Settings](layer-settings.md#layer-settings) <img src="../img/button/properties.jpg" class="ms-docbutton"/> to view/edit the [General Information](layer-settings.md#general-information) and the [Display](layer-settings.md#ifc-layer) options
+    * *Remove* the layer <img src="../img/button/delete.jpg" class="ms-docbutton"/>
