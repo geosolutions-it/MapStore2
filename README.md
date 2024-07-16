@@ -158,7 +158,7 @@ Here below is a small list of organizations using MapStore either directly or th
 
 - [City of Genova - Italy](https://mappe.comune.genova.it/MapStore2/#/)
 - [City of Bozen - Italy](https://sit.comune.bolzano.it/mapstore2/#/)
-- - City of Florence - Italy
+- City of Florence - Italy
 - City of Munich - Germany
 - Rennes Metropole - France
 - [CRAIG - France](https://ids.craig.fr/mapstore/#/)
