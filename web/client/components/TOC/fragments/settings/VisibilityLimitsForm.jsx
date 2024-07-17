@@ -98,21 +98,20 @@ function VisibilityLimitsForm({
     zoom: zoomProp,
     projection,
     resolutions = getResolutions(),
-    defaultLimitsType,
     limitsTypesOptions,
+    defaultLimitsType = limitsTypesOptions[0].value,
     dpi,
     onChange
 }) {
 
     const zoom = Math.round(zoomProp || 0);
 
-    const [limitsType, setLimitsType] = useState(defaultLimitsType || limitsTypesOptions[0].value);
-
     const {
         maxResolution,
         minResolution,
         disableResolutionLimits
     } = layer;
+    const limitsType = layer.limitsType || defaultLimitsType;
 
     const dpu = dpi2dpu(dpi, projection);
 
@@ -391,7 +390,9 @@ function VisibilityLimitsForm({
                 }))}
                 disabled={disableResolutionLimits || loading}
                 onChange={({ value }) => {
-                    setLimitsType(value);
+                    onChange({
+                        limitsType: value
+                    });
                     clearMessages();
                 }}
             />
