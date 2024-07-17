@@ -80,12 +80,14 @@ const Share = connect(createSelector([
             ? [cameraPosition.longitude, cameraPosition.latitude]
             : map?.center;
         return center && ConfigUtils.getCenter(center);
-    }
-], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions, center) => ({
+    },
+    state => state.geostory?.currentPage?.sectionId
+], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions, center, currSectionId) => ({
     isVisible,
     shareUrl: location.href,
     shareApiUrl: getApiUrl(location.href),
     shareConfigUrl: getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
+    currSectionId,
     version,
     viewerOptions,
     mapType,
