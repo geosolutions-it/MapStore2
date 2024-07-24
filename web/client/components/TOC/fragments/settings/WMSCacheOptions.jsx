@@ -270,8 +270,8 @@ function WMSCacheOptions({
 
     const handleGetTileGridSettings = () => {
         const newTileGridStrategy = layer.tileGridStrategy !== 'custom'
-        ? 'custom'
-        : undefined;
+            ? 'custom'
+            : undefined;
         const promise = newTileGridStrategy === 'custom'
             && ((layer?.tileGrids?.length || 0) === 0 || !layer?.tileGridCacheSupport)
             ? onTileMatrixSetsFetch(layer)
@@ -289,7 +289,7 @@ function WMSCacheOptions({
             if (owner === 'background-dialog' && newTileGridStrategy === 'custom') {
                 tileChangedData = {
                     ...tileChangedData, tiled: true, tileGridStrategy: 'custom'
-                }
+                };
             }
             handleOnChange(tileChangedData);
         });
@@ -302,7 +302,7 @@ function WMSCacheOptions({
         if (layer.remoteTileGrids && owner === 'background-dialog') {
             handleGetTileGridSettings();
         }
-    }, [])
+    }, []);
     return (
         <div className="ms-wms-cache-options">
             <div className="ms-wms-cache-options-content">
