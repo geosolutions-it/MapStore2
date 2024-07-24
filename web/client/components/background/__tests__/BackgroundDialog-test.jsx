@@ -4,6 +4,10 @@ import * as TestUtils from 'react-dom/test-utils';
 import expect from 'expect';
 import BackgroundDialog from '../BackgroundDialog';
 
+import axios from '../../../libs/ajax';
+import MockAdapter from 'axios-mock-adapter';
+let mockAxios;
+
 describe('test BackgroundDialog', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -82,5 +86,37 @@ describe('test BackgroundDialog', () => {
         expect(wmsCacheOptionsContent).toBeTruthy();
         const wmsCacheOptionsToolbar = document.querySelector('.ms-wms-cache-options-toolbar');
         expect(wmsCacheOptionsToolbar).toBeTruthy();
+    });
+    it('should render with WMS cache options with remoteTileGrids = true', (done) => {
+        mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().reply(200, {
+            tileMatrixSets: [],
+            tileMatrixSetLinks: [],
+            tileGrids: [],
+            styles: [],
+            formats: []
+        });
+        ReactDOM.render(<BackgroundDialog
+            layer={{
+                type: 'wms',
+                url: '/geoserver/wms',
+                name: 'workspace:name',
+                remoteTileGrids: true
+            }}
+        />,
+        document.getElementById("container"));
+        setTimeout(() => {
+            const modalNode = document.querySelector('#ms-resizable-modal');
+            expect(modalNode).toBeTruthy();
+            const wmsCacheOptionsContent = document.querySelector('.ms-wms-cache-options-content');
+            expect(wmsCacheOptionsContent).toBeTruthy();
+            const wmsCacheOptionsToolbar = document.querySelector('.ms-wms-cache-options-toolbar');
+            expect(wmsCacheOptionsToolbar).toBeTruthy();
+            const wmsCacheCustomGridOption = document.querySelector('.ms-wms-cache-options-toolbar button.active span.glyphicon-grid-custom');
+            expect(wmsCacheCustomGridOption).toBeTruthy();
+            const wmsCacheRefreshOption = document.querySelector('.ms-wms-cache-options-toolbar .glyphicon-refresh');
+            expect(wmsCacheRefreshOption).toBeTruthy();
+            done();
+        }, 1000);
     });
 });
