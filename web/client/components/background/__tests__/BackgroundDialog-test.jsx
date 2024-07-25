@@ -6,17 +6,23 @@ import BackgroundDialog from '../BackgroundDialog';
 
 import axios from '../../../libs/ajax';
 import MockAdapter from 'axios-mock-adapter';
+import { waitFor } from '@testing-library/react';
 let mockAxios;
 
 describe('test BackgroundDialog', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        mockAxios = new MockAdapter(axios);
         setTimeout(done);
     });
 
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        if (mockAxios) {
+            mockAxios.restore();
+        }
+        mockAxios = null;
         setTimeout(done);
     });
 
@@ -88,8 +94,7 @@ describe('test BackgroundDialog', () => {
         expect(wmsCacheOptionsToolbar).toBeTruthy();
     });
     it('should render with WMS cache options with remoteTileGrids = true', (done) => {
-        mockAxios = new MockAdapter(axios);
-        mockAxios.onGet().reply(200, {
+        mockAxios.onGet().replyOnce(200, {
             tileMatrixSets: [],
             tileMatrixSetLinks: [],
             tileGrids: [],
@@ -105,18 +110,19 @@ describe('test BackgroundDialog', () => {
             }}
         />,
         document.getElementById("container"));
-        setTimeout(() => {
-            const modalNode = document.querySelector('#ms-resizable-modal');
-            expect(modalNode).toBeTruthy();
-            const wmsCacheOptionsContent = document.querySelector('.ms-wms-cache-options-content');
-            expect(wmsCacheOptionsContent).toBeTruthy();
-            const wmsCacheOptionsToolbar = document.querySelector('.ms-wms-cache-options-toolbar');
-            expect(wmsCacheOptionsToolbar).toBeTruthy();
-            const wmsCacheCustomGridOption = document.querySelector('.ms-wms-cache-options-toolbar button.active span.glyphicon-grid-custom');
-            expect(wmsCacheCustomGridOption).toBeTruthy();
-            const wmsCacheRefreshOption = document.querySelector('.ms-wms-cache-options-toolbar .glyphicon-refresh');
-            expect(wmsCacheRefreshOption).toBeTruthy();
-            done();
-        }, 1000);
+        const modalNode = document.querySelector('#ms-resizable-modal');
+        expect(modalNode).toBeTruthy();
+        const wmsCacheOptionsContent = document.querySelector('.ms-wms-cache-options-content');
+        expect(wmsCacheOptionsContent).toBeTruthy();
+        const wmsCacheOptionsToolbar = document.querySelector('.ms-wms-cache-options-toolbar');
+        expect(wmsCacheOptionsToolbar).toBeTruthy();
+        waitFor(()=>expect(document.querySelector('.ms-wms-cache-options-toolbar button.active span.glyphicon-grid-custom')).toBeTruthy())
+            .then(()=>{
+                const wmsCacheCustomGridOption = document.querySelector('.ms-wms-cache-options-toolbar button.active span.glyphicon-grid-custom');
+                expect(wmsCacheCustomGridOption).toBeTruthy();
+                const wmsCacheRefreshOption = document.querySelector('.ms-wms-cache-options-toolbar .glyphicon-refresh');
+                expect(wmsCacheRefreshOption).toBeTruthy();
+                done();
+            }).catch(done);
     });
 });
