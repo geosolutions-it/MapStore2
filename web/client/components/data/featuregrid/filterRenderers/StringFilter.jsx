@@ -5,7 +5,8 @@ import { trim } from 'lodash';
 export default compose(
     defaultProps({
         onValueChange: () => {},
-        placeholderMsgId: "featuregrid.filter.placeholders.string"
+        placeholderMsgId: "featuregrid.filter.placeholders.string",
+        operator: 'ilike'
     }),
     withHandlers({
         onChange: props => ({value, attribute, inputOperator} = {}) => {

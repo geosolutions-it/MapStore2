@@ -50,7 +50,7 @@ class AttributeFilter extends React.PureComponent {
             booleanOperators: ["="],
             defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "isNull"],
             timeDateOperators: ["=", ">", "<", ">=", "<=", "<>", "><", "isNull"],
-            operator: this.props.isWithinAttrTbl ? "=" : "",
+            operator: this.props.isWithinAttrTbl ? (this.props.operator || '=') : "",
             isInputValid: true
         };
     }
