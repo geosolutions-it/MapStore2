@@ -22,7 +22,8 @@ export const patterns = {
     COMPARISON: /^(=|<>|<=|<|>=|>|LIKE)/i,
     IS_NULL: /^IS NULL/i,
     COMMA: /^,/,
-    LOGICAL: /^(AND|OR)/i,
+    AND: /^(AND)/i,
+    OR: /^(OR)/i,
     VALUE: /^('([^']|'')*'|-?\d+(\.\d*)?|\.\d+|true|false)/i,
     LPAREN: /^\(/,
     RPAREN: /^\)/,
@@ -60,15 +61,16 @@ export const patterns = {
 const follows = {
     INCLUDE: ['END'],
     LPAREN: ['GEOMETRY', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'VALUE', 'LPAREN', 'RPAREN', 'NOT'],
-    RPAREN: ['NOT', 'LOGICAL', 'END', 'RPAREN', 'COMMA', 'COMPARISON', 'BETWEEN', 'IS_NULL'],
+    RPAREN: ['NOT', 'AND', 'OR', 'END', 'RPAREN', 'COMMA', 'COMPARISON', 'BETWEEN', 'IS_NULL'],
     PROPERTY: ['COMPARISON', 'BETWEEN', 'COMMA', 'IS_NULL', 'RPAREN'],
     BETWEEN: ['VALUE'],
     IS_NULL: ['END'],
     COMPARISON: ['VALUE', 'FUNCTION'],
     COMMA: ['GEOMETRY', 'FUNCTION', 'VALUE', 'PROPERTY'],
-    VALUE: ['LOGICAL', 'COMMA', 'RPAREN', 'END'],
+    VALUE: ['AND', 'OR', 'COMMA', 'RPAREN', 'END'],
     SPATIAL: ['LPAREN'],
-    LOGICAL: ['NOT', 'VALUE', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'LPAREN'],
+    AND: ['NOT', 'VALUE', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'LPAREN'],
+    OR: ['NOT', 'VALUE', 'SPATIAL', 'FUNCTION', 'PROPERTY', 'LPAREN'],
     NOT: ['PROPERTY', 'LPAREN'],
     GEOMETRY: ['COMMA', 'RPAREN'],
     FUNCTION: ['LPAREN', 'FUNCTION', 'VALUE', 'PROPERTY']
@@ -98,10 +100,12 @@ const cql = {
 };
 
 const precedence = {
-    'RPAREN': 3,
-    'LOGICAL': 2,
+    'RPAREN': 4,
+    'OR': 3,
+    'AND': 2,
     'COMPARISON': 1
 };
+
 const tryToken = (text, pattern) => {
     if (pattern instanceof RegExp) {
         return pattern.exec(text);
@@ -180,9 +184,9 @@ const buildAst = (tokens) => {
         case "BETWEEN":
         case "IS_NULL":
         case "INCLUDE":
-        case "LOGICAL":
+        case "AND":
+        case "OR":
             let p = precedence[tok.type];
-
             while (operatorStack.length > 0 &&
                     (precedence[operatorStack[operatorStack.length - 1].type] <= p)
             ) {
@@ -244,7 +248,8 @@ const buildAst = (tokens) => {
     function buildTree() {
         let tok = postfix.pop();
         switch (tok.type) {
-        case "LOGICAL":
+        case "AND":
+        case "OR":
             let rhs = buildTree();
             let lhs = buildTree();
             return ({
