@@ -24,7 +24,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ### NodeJS and NPM update
 
-From this version the **recommended version** to build MapStore or for development is **Node 20** (**minimum** version will be **Node 17**).
+From this version the **recommended version** to build MapStore or for development is **Node 20** (**minimum** version will be **Node 16**).
 Please update your Node version accordingly on your develop machine or CI/CD.
 
 See the [requirements](./requirements.md#debug-build) section of the documentation for the details.
