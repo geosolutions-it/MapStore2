@@ -28,6 +28,7 @@ From this version the **recommended version** to build MapStore or for developme
 Please update your Node version accordingly on your develop machine or CI/CD.
 
 See the [requirements](./requirements.md#debug-build) section of the documentation for the details.
+
 ### Java dependencies update
 
 Some libraries has been updated. if you have a MapStore project make sure to keep the versions aligned with the main product.
