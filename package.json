@@ -153,7 +153,7 @@
     "@turf/point-on-surface": "4.1.0",
     "@turf/polygon-to-linestring": "4.1.0",
     "@znemz/cesium-navigation": "4.0.0",
-    "ag-grid-community": "20.2.0",
+    "ag-grid-community": "32.0.1",
     "ag-grid-react": "20.2.0",
     "assert": "2.0.0",
     "axios": "0.28.1",
