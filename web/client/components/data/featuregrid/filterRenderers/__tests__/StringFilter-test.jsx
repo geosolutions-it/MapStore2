@@ -35,6 +35,15 @@ describe('Test for StringFilter component', () => {
         expect(el).toExist();
         expect(el.value).toBe("TEST");
     });
+    it('test the text field with the ilike default operator in attribute table', () => {
+        ReactDOM.render(<StringFilter value={"TEST"} type="string" isWithinAttrTbl />, document.getElementById("container"));
+        const el = document.getElementsByClassName("form-control input-sm")[0];
+        expect(el).toExist();
+        expect(el.value).toBe("TEST");
+        const operatorEl = document.querySelector('.rw-input');
+        expect(operatorEl).toExist();
+        expect(operatorEl.innerHTML).toEqual("ilike");
+    });
     it('Test StringFilter onChange', () => {
         const actions = {
             onChange: () => {}
