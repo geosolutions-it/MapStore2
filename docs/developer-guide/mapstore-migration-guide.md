@@ -22,6 +22,13 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.01.02 to 2024.02.00
 
+### NodeJS and NPM update
+
+From this version the **recommended version** to build MapStore or for development is **Node 20** (**minimum** version will be **Node 16**).
+Please update your Node version accordingly on your develop machine or CI/CD.
+
+See the [requirements](./requirements.md#debug-build) section of the documentation for the details.
+
 ### Java dependencies update
 
 Some libraries has been updated. if you have a MapStore project make sure to keep the versions aligned with the main product.
