@@ -208,7 +208,7 @@ describe('tests with mockedActions', () => {
                 expect(data.records).toExist();
                 expect(data.records.length).toBe(4);
                 done();
-            });
+            }).catch(done);
         });
     });
     describe("getRecords for 3D layers", () => {

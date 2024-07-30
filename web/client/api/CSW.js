@@ -10,7 +10,7 @@ import urlUtil from 'url';
 
 import { get, head, last, template, isNil, castArray, isEmpty } from 'lodash';
 import assign from 'object-assign';
-
+import xml2js from 'xml2js';
 import axios from '../libs/ajax';
 import { cleanDuplicatedQuestionMarks } from '../utils/ConfigUtils';
 import { extractCrsFromURN, makeBboxFromOWS, makeNumericEPSG, getExtentFromNormalized } from '../utils/CoordinatesUtils';
@@ -44,15 +44,29 @@ const defaultDynamicFilter = "<ogc:PropertyIsLike wildCard='%' singleChar='_' es
     "<ogc:PropertyName>csw:AnyText</ogc:PropertyName> " +
     "<ogc:Literal>%${searchText}%</ogc:Literal> " +
     "</ogc:PropertyIsLike> ";
-
-export const sortBy = "<ogc:SortBy>" +
+/**
+ * Create the SortProperty xml definition
+ * @param {options}
+ * @param {string} options.name property name to order
+ * @param {string} options.order order type
+ * @returns {string} sort by definition in xml format
+ */
+const sortByXml = ({ name, order }) => "<ogc:SortBy>" +
 "<ogc:SortProperty>" +
-  "<ogc:PropertyName>${name}</ogc:PropertyName>" +
-  "<ogc:SortOrder>${order}</ogc:SortOrder>" +
+  `<ogc:PropertyName>${name}</ogc:PropertyName>` +
+  `<ogc:SortOrder>${order}</ogc:SortOrder>` +
 "</ogc:SortProperty>" +
 "</ogc:SortBy>";
-
-export const cswGetRecordsXml = '<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" ' +
+/**
+ * Create the GetRecords xml body
+ * @param {options}
+ * @param {number} options.startPosition staring index of record in catalog
+ * @param {number} options.maxRecords maximum number of records returned
+ * @param {number} options.filterXml a filter definition in xml format
+ * @param {number} options.sortBy sort by definition in xml format
+ * @returns {string} get record xml body
+ */
+export const cswGetRecordsXml = (options) => '<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" ' +
     'xmlns:ogc="http://www.opengis.net/ogc" ' +
     'xmlns:gml="http://www.opengis.net/gml" ' +
     'xmlns:dc="http://purl.org/dc/elements/1.1/" ' +
@@ -60,18 +74,159 @@ export const cswGetRecordsXml = '<csw:GetRecords xmlns:csw="http://www.opengis.n
     'xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
     'xmlns:gco="http://www.isotc211.org/2005/gco" ' +
     'xmlns:gmi="http://www.isotc211.org/2005/gmi" ' +
-    'xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${startPosition}" maxRecords="${maxRecords}"> ' +
-    '<csw:Query typeNames="csw:Record"> ' +
-    '<csw:ElementSetName>full</csw:ElementSetName> ' +
-    '<csw:Constraint version="1.1.0"> ' +
-    '<ogc:Filter> ' +
-    '${filterXml} ' +
-    '</ogc:Filter> ' +
-    '</csw:Constraint> ' +
-    '${sortBy} ' +
-    '</csw:Query> ' +
+    `xmlns:ows="http://www.opengis.net/ows" service="CSW" version="2.0.2" resultType="results" startPosition="${options.startPosition}" maxRecords="${options.maxRecords}">` +
+    '<csw:Query typeNames="csw:Record">' +
+    '<csw:ElementSetName>full</csw:ElementSetName>' +
+    '<csw:Constraint version="1.1.0">' +
+    '<ogc:Filter>' +
+    (options.filterXml || '') +
+    '</ogc:Filter>' +
+    '</csw:Constraint>' +
+    (options.sortBy || '') +
+    '</csw:Query>' +
     '</csw:GetRecords>';
-
+/**
+ * Get crs information given a CSW record bounding box
+ * @param {object} boundingBox CSW bounding box in json format
+ * @returns {object} { crs, extractedCrs }
+ */
+const getCRSFromCSWBoundingBox = (boundingBox) => {
+    const crsValue = boundingBox?.$?.crs ?? '';
+    const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];
+    const epsg = makeNumericEPSG(crsValue.match(/EPSG:[0-9]+/)?.[0]);
+    const extractedCrs = epsg || (extractCrsFromURN(urn) || last(crsValue.split(':')));
+    if (!extractedCrs) {
+        return { crs: 'EPSG:4326', extractedCrs };
+    }
+    if (extractedCrs.slice(0, 5) === 'EPSG:') {
+        return { crs: makeNumericEPSG(extractedCrs), extractedCrs };
+    }
+    return { crs: makeNumericEPSG(`EPSG:${extractedCrs}`), extractedCrs };
+};
+/**
+ * Get bounding box information given a CSW record
+ * @param {object} cswRecord CSW record in json format
+ * @returns {object} { crs, extent }
+ */
+const getBoundingBoxFromCSWRecord = (cswRecord) => {
+    if (cswRecord?.['ows:BoundingBox']) {
+        const boundingBox = castArray(cswRecord['ows:BoundingBox'])[0];
+        const { crs, extractedCrs } = getCRSFromCSWBoundingBox(boundingBox);
+        let lc = (boundingBox?.['ows:LowerCorner'] || '-180 -90').split(' ').map(parseFloat);
+        let uc = (boundingBox?.['ows:UpperCorner'] || '180 90').split(' ').map(parseFloat);
+        // Usually switched, GeoServer sometimes doesn't.
+        // See https://docs.geoserver.org/latest/en/user/services/wfs/axis_order.html#axis-ordering
+        if (crs === 'EPSG:4326' && extractedCrs !== 'CRS84' && extractedCrs !== 'OGC:CRS84') {
+            lc = [lc[1], lc[0]];
+            uc = [uc[1], uc[0]];
+        }
+        return {
+            extent: makeBboxFromOWS(lc, uc),
+            crs: 'EPSG:4326'
+        };
+    }
+    return null;
+};
+/**
+ * Get dc properties given a CSW record
+ * @param {object} cswRecord CSW record in json format
+ * @returns {object} dc
+ */
+const getDCFromCSWRecord = (cswRecord) => {
+    // extract each dc or dct tag item in the XML
+    const dc = Object.keys(cswRecord || {}).reduce((acc, key) => {
+        const isDCElement = key.indexOf('dc:') === 0;
+        const isDCTElement = key.indexOf('dct:') === 0;
+        if (isDCElement || isDCTElement) {
+            const name = isDCElement ? key.replace('dc:', '') :  key.replace('dct:', '');
+            let value = cswRecord[key];
+            if (name === 'references') {
+                value = castArray(cswRecord[key]).map((reference) => {
+                    return {
+                        value: cleanDuplicatedQuestionMarks(reference?._),
+                        scheme: reference?.$?.scheme
+                    };
+                });
+            }
+            if (name === 'URI') {
+                value = castArray(cswRecord[key]).map((uri) => {
+                    return {
+                        description: uri?.$?.description,
+                        name: uri?.$?.name,
+                        protocol: uri?.$?.protocol,
+                        value: uri?._
+                    };
+                });
+            }
+            return {
+                ...acc,
+                [name]: value
+            };
+        }
+        return acc;
+    }, {});
+    return isEmpty(dc) ? null : dc;
+};
+/**
+ * Get error message given the parsed response from a CSW request
+ * @param {object} cswResponse CSW response in json format
+ * @returns {string} error message
+ */
+const getCSWError = (cswResponse) => {
+    const exceptionReport = cswResponse?.['ows:ExceptionReport'];
+    if (exceptionReport) {
+        const exceptionText = exceptionReport?.['ows:Exception']?.['ows:ExceptionText'];
+        return exceptionText || 'GenericError';
+    }
+    return '';
+};
+/**
+ * Parse a CSW axios response
+ * @param {object} response axios response
+ * @returns {object} it could return the parsed result, an error or null
+ */
+const parseCSWResponse = (response) => {
+    if (!response) {
+        return null;
+    }
+    let json;
+    xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => {
+        json = result;
+    });
+    const searchResults = json?.['csw:GetRecordsResponse']?.['csw:SearchResults'];
+    if (searchResults) {
+        const cswRecords = searchResults?.['csw:Record'] || searchResults?.['gmd:MD_Metadata'];
+        const records = !cswRecords ? null : castArray(cswRecords).map((cswRecord) => {
+            const boundingBox = getBoundingBoxFromCSWRecord(cswRecord);
+            const dc = getDCFromCSWRecord(cswRecord);
+            return {
+                dateStamp: cswRecord?.['gmd:dateStamp']?.['gco:Date'],
+                fileIdentifier: cswRecord?.['gmd:fileIdentifier']?.['gco:CharacterString'],
+                identificationInfo: cswRecord?.['gmd:identificationInfo']?.['gmd:AbstractMD_Identification'],
+                ...(boundingBox && { boundingBox }),
+                ...(dc && { dc })
+            };
+        });
+        const _dcRef = records ? records.map(({ dc = {} }) => {
+            const URIs = castArray(dc?.references?.length > 0 ? dc.references : dc.URI);
+            return URIs;
+        }).flat() : undefined;
+        return {
+            result: {
+                numberOfRecordsMatched: parseFloat(searchResults?.$?.numberOfRecordsMatched),
+                numberOfRecordsReturned: parseFloat(searchResults?.$?.numberOfRecordsReturned),
+                nextRecord: parseFloat(searchResults?.$?.nextRecord),
+                ...(records && { records })
+            },
+            _dcRef
+        };
+    }
+    const error = getCSWError(json);
+    if (error) {
+        return { error };
+    }
+    return null;
+};
 /**
  * Construct XML body to get records from the CSW service
  * @param {object} [options] the options to pass to withIntersectionObserver enhancer.
@@ -90,8 +245,8 @@ export const constructXMLBody = (startPosition, maxRecords, searchText, { option
         ${template(filter?.dynamicFilter || defaultDynamicFilter)({ searchText })}
         ${staticFilter}
     </ogc:And>`;
-    const sortExp = sortObj?.name ? template(sortBy)({ name: sortObj?.name, order: sortObj?.order ?? "ASC"}) : '';
-    return template(cswGetRecordsXml)({ filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords, sortBy: sortExp});
+    const sortExp = sortObj?.name ? sortByXml({ name: sortObj?.name, order: sortObj?.order ?? "ASC"}) : '';
+    return cswGetRecordsXml({ filterXml: !searchText ? staticFilter : dynamicFilter, startPosition, maxRecords, sortBy: sortExp});
 };
 
 // Extract the relevant information from the wms URL for (RNDT / INSPIRE)
@@ -335,193 +490,42 @@ const getBboxFor3DLayersToRecords = async(result)=> {
 const Api = {
     parseUrl,
     getRecordById: function(catalogURL) {
-        return new Promise((resolve) => {
-            require.ensure(['../utils/ogc/CSW'], () => {
-                resolve(axios.get(catalogURL)
-                    .then((response) => {
-                        if (response) {
-                            const { unmarshaller } = require('../utils/ogc/CSW');
-                            const json = unmarshaller.unmarshalString(response.data);
-                            if (json && json.name && json.name.localPart === "GetRecordByIdResponse" && json.value && json.value.abstractRecord) {
-                                let dcElement = json.value.abstractRecord[0].value.dcElement;
-                                if (dcElement) {
-                                    let dc = {
-                                        references: []
-                                    };
-                                    for (let j = 0; j < dcElement.length; j++) {
-                                        let dcel = dcElement[j];
-                                        let elName = dcel.name.localPart;
-                                        let finalEl = {};
-                                        /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
-                                        * Usually they publish the WMS URL at dct:"references" with scheme=OGC:WMS
-                                        * So we place references as they are.
-                                        */
-                                        if (elName === "references" && dcel.value) {
-                                            let urlString = dcel.value.content && cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
-                                            finalEl = {
-                                                value: urlString,
-                                                scheme: dcel.value.scheme
-                                            };
-                                        } else {
-                                            finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
-                                        }
-                                        if (dc[elName] && Array.isArray(dc[elName])) {
-                                            dc[elName].push(finalEl);
-                                        } else if (dc[elName]) {
-                                            dc[elName] = [dc[elName], finalEl];
-                                        } else {
-                                            dc[elName] = finalEl;
-                                        }
-                                    }
-                                    return { dc };
-                                }
-                            } else if (json && json.name && json.name.localPart === "ExceptionReport") {
-                                return {
-                                    error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'
-                                };
-                            }
-                            return null;
-                        }
-                        return null;
-                    }));
-            });
-        });
-    },
-    getRecords: function(url, startPosition, maxRecords, filter, options) {
-        return new Promise((resolve) => {
-            require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
-                const { CSW, marshaller, unmarshaller } = require('../utils/ogc/CSW');
-                let body = marshaller.marshalString({
-                    name: "csw:GetRecords",
-                    value: CSW.getRecords(startPosition, maxRecords, typeof filter !== "string" && filter)
-                });
-                if (!filter || typeof filter === "string") {
-                    body = constructXMLBody(startPosition, maxRecords, filter, options);
+        return axios.get(catalogURL)
+            .then((response) => {
+                if (response) {
+                    let json;
+                    xml2js.parseString(response.data, { explicitArray: false }, (ignore, result) => {
+                        json = result;
+                    });
+                    const record = json?.['csw:GetRecordByIdResponse']?.['csw:Record'];
+                    const dc = getDCFromCSWRecord(record);
+                    if (dc) {
+                        return { dc };
+                    }
+                    const error = getCSWError(json);
+                    if (error) {
+                        return { error };
+                    }
                 }
-                resolve(axios.post(parseUrl(url), body, {
-                    headers: {
-                        'Content-Type': 'application/xml'
-                    }
-                }).then((response) => {
-                    if (response) {
-                        let json = unmarshaller.unmarshalString(response.data);
-                        if (json && json.name && json.name.localPart === "GetRecordsResponse" && json.value && json.value.searchResults) {
-                            let rawResult = json.value;
-                            let rawRecords = rawResult.searchResults.abstractRecord || rawResult.searchResults.any;
-                            let result = {
-                                numberOfRecordsMatched: rawResult.searchResults.numberOfRecordsMatched,
-                                numberOfRecordsReturned: rawResult.searchResults.numberOfRecordsReturned,
-                                nextRecord: rawResult.searchResults.nextRecord
-                                // searchStatus: rawResult.searchStatus
-                            };
-                            let records = [];
-                            let _dcRef;
-                            if (rawRecords) {
-                                for (let i = 0; i < rawRecords.length; i++) {
-                                    let rawRec = rawRecords[i].value;
-                                    let obj = {
-                                        dateStamp: rawRec.dateStamp && rawRec.dateStamp.date,
-                                        fileIdentifier: rawRec.fileIdentifier && rawRec.fileIdentifier.characterString && rawRec.fileIdentifier.characterString.value,
-                                        identificationInfo: rawRec.abstractMDIdentification && rawRec.abstractMDIdentification.value
-                                    };
-                                    if (rawRec.boundingBox) {
-                                        let bbox;
-                                        let crs;
-                                        let el;
-                                        if (Array.isArray(rawRec.boundingBox)) {
-                                            el = head(rawRec.boundingBox);
-                                        } else {
-                                            el = rawRec.boundingBox;
-                                        }
-                                        if (el && el.value) {
-                                            const crsValue = el.value?.crs ?? '';
-                                            const urn = crsValue.match(/[\w-]*:[\w-]*:[\w-]*:[\w-]*:[\w-]*:[^:]*:(([\w-]+\s[\w-]+)|[\w-]*)/)?.[0];
-                                            const epsg = makeNumericEPSG(crsValue.match(/EPSG:[0-9]+/)?.[0]);
-
-                                            let lc = el.value.lowerCorner;
-                                            let uc = el.value.upperCorner;
-
-                                            const extractedCrs = epsg || (extractCrsFromURN(urn) || last(crsValue.split(':')));
-
-                                            if (!extractedCrs) {
-                                                crs = 'EPSG:4326';
-                                            } else if (extractedCrs.slice(0, 5) === 'EPSG:') {
-                                                crs = makeNumericEPSG(extractedCrs);
-                                            } else {
-                                                crs = makeNumericEPSG(`EPSG:${extractedCrs}`);
-                                            }
-
-                                            // Usually switched, GeoServer sometimes doesn't. See https://docs.geoserver.org/latest/en/user/services/wfs/axis_order.html#axis-ordering
-                                            if (crs === 'EPSG:4326' && extractedCrs !== 'CRS84' && extractedCrs !== 'OGC:CRS84') {
-                                                lc = [lc[1], lc[0]];
-                                                uc = [uc[1], uc[0]];
-                                            }
-                                            bbox = makeBboxFromOWS(lc, uc);
-                                        }
-                                        obj.boundingBox = {
-                                            extent: bbox,
-                                            crs: 'EPSG:4326'
-                                        };
-                                    }
-                                    // dcElement is an array of objects, each item is a dc tag in the XML
-                                    let dcElement = rawRec.dcElement;
-                                    if (dcElement) {
-                                        let dc = {
-                                            references: []
-                                        };
-                                        for (let j = 0; j < dcElement.length; j++) {
-                                            let dcel = dcElement[j];
-                                            // here the element name is taken (i.e. "URI", "title", "description", etc)
-                                            let elName = dcel.name.localPart;
-                                            let finalEl = {};
-                                            /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
-                                            * Usually they publish the WMS URL at dct:"references" with scheme=OGC:WMS
-                                            * So we place references as they are.
-                                            */
-                                            if (elName === "references" && dcel.value) {
-                                                let urlString = dcel.value.content && cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
-                                                finalEl = {
-                                                    value: urlString,
-                                                    scheme: dcel.value.scheme
-                                                };
-                                            } else {
-                                                finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
-                                            }
-                                            /**
-                                                grouping all tags with same property together (i.e <dc:subject>mobilità</dc:subject> <dc:subject>traffico</dc:subject>)
-                                                will become { subject: ["mobilità", "traffico"] }
-                                            **/
-                                            if (dc[elName] && Array.isArray(dc[elName])) {
-                                                dc[elName].push(finalEl);
-                                            } else if (dc[elName]) {
-                                                dc[elName] = [dc[elName], finalEl];
-                                            } else {
-                                                dc[elName] = finalEl;
-                                            }
-                                        }
-                                        const URIs = castArray(dc.references.length > 0 ? dc.references : dc.URI);
-                                        if (!_dcRef) {
-                                            _dcRef = URIs;
-                                        } else {
-                                            _dcRef = _dcRef.concat(URIs);
-                                        }
-                                        obj.dc = dc;
-                                    }
-                                    records.push(obj);
-                                }
-                            }
-                            result.records = records;
-                            return addCapabilitiesToRecords(_dcRef, result, options);
-                        } else if (json && json.name && json.name.localPart === "ExceptionReport") {
-                            return {
-                                error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'
-                            };
-                        }
-                    }
-                    return null;
-                }).then(results => getBboxFor3DLayersToRecords(results)));         // handle getting bbox from capabilities in case of 3D tile layer
+                return null;
             });
-        });
+    },
+    getRecords: function(url, startPosition, maxRecords, text, options) {
+        const body = constructXMLBody(startPosition, maxRecords, text, options);
+        return axios.post(parseUrl(url), body, {
+            headers: {
+                'Content-Type': 'application/xml'
+            }
+        }).then((response) => {
+            const { error, _dcRef, result } = parseCSWResponse(response) || {};
+            if (result) {
+                return addCapabilitiesToRecords(_dcRef, result, options);
+            }
+            if (error) {
+                return { error };
+            }
+            return null;
+        }).then(results => getBboxFor3DLayersToRecords(results)); // handle getting bbox from capabilities in case of 3D tile layer
     },
     textSearch: function(url, startPosition, maxRecords, text, options) {
         return new Promise((resolve) => {
@@ -529,15 +533,19 @@ const Api = {
         });
     },
     workspaceSearch: function(url, startPosition, maxRecords, text, workspace) {
-        return new Promise((resolve) => {
-            require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
-                const { Filter } = require('../utils/ogc/Filter');
-                const workspaceTerm = workspace || "%";
-                const layerNameTerm = text && "%" + text + "%" || "%";
-                const ops = Filter.propertyIsLike("dc:identifier", workspaceTerm + ":" + layerNameTerm);
-                const filter = Filter.filter(ops);
-                resolve(Api.getRecords(url, startPosition, maxRecords, filter));
-            });
+        const workspaceTerm = workspace || "%";
+        const layerNameTerm = text && "%" + text + "%" || "%";
+        return Api.getRecords(url, startPosition, maxRecords, '', {
+            options: {
+                service: {
+                    filter: {
+                        staticFilter: "<ogc:PropertyIsLike wildCard=\"%\" singleChar=\"_\" escapeChar=\"\\\\\">" +
+                            "<ogc:PropertyName>dc:identifier</ogc:PropertyName>" +
+                            `<ogc:Literal>${workspaceTerm + ":" + layerNameTerm}</ogc:Literal>` +
+                        "</ogc:PropertyIsLike>"
+                    }
+                }
+            }
         });
     },
     reset: () => { }
