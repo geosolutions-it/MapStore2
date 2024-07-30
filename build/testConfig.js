@@ -69,7 +69,12 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     webpack: {
         devtool: 'eval',
         mode: 'development',
-
+        optimization: {
+            nodeEnv: false
+        },
+        output: {
+            hashFunction: "xxhash64"
+        },
         module: {
             rules: [
                 {
