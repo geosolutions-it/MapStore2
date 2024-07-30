@@ -23,7 +23,7 @@ class AttributeFilter extends React.PureComponent {
         column: PropTypes.object,
         placeholderMsgId: PropTypes.string,
         tooltipMsgId: PropTypes.string,
-        operator: PropTypes.string,
+        defaultOperator: PropTypes.string,
         type: PropTypes.string,
         isWithinAttrTbl: PropTypes.bool
     };
@@ -38,7 +38,7 @@ class AttributeFilter extends React.PureComponent {
         onChange: () => {},
         column: {},
         placeholderMsgId: "featuregrid.filter.placeholders.default",
-        operator: "=",
+        defaultOperator: "=",
         isWithinAttrTbl: false
     };
     constructor(props) {
@@ -50,7 +50,7 @@ class AttributeFilter extends React.PureComponent {
             booleanOperators: ["="],
             defaultOperators: ["=", ">", "<", ">=", "<=", "<>", "isNull"],
             timeDateOperators: ["=", ">", "<", ">=", "<=", "<>", "><", "isNull"],
-            operator: this.props.isWithinAttrTbl ? (this.props.operator || '=') : "",
+            operator: this.props.isWithinAttrTbl ? (this.props.defaultOperator) : "",
             isInputValid: true
         };
     }

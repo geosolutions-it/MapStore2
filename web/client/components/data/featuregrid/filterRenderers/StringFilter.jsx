@@ -6,7 +6,7 @@ export default compose(
     defaultProps({
         onValueChange: () => {},
         placeholderMsgId: "featuregrid.filter.placeholders.string",
-        operator: 'ilike'
+        defaultOperator: 'ilike'
     }),
     withHandlers({
         onChange: props => ({value, attribute, inputOperator} = {}) => {
