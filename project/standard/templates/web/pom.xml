@@ -18,7 +18,7 @@
     <mapstore-services.version>1.8-SNAPSHOT</mapstore-services.version>
     <geostore-webapp.version>2.1-SNAPSHOT</geostore-webapp.version>
     <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
-    <print-lib.version>2.4-SNAPSHOT</print-lib.version>
+    <print-lib.version>2.3.1</print-lib.version>
     <httpclient.version>4.5.13</httpclient.version>
     <junit.version>4.13.1</junit.version>
     <mockito-core.version>4.0.0</mockito-core.version>
