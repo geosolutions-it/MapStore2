@@ -184,7 +184,6 @@ export default class BackgroundDialog extends React.Component {
                         projection={this.props.projection}
                         onChange={value => this.setState(value)}
                         disableTileGrids={this.props.disableTileGrids}
-                        owner={"background-dialog"}
                     />
                 </FormGroup>}
                 <Button>
