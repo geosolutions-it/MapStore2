@@ -189,14 +189,12 @@ const infoText = {
  * @prop {object} layer layer configuration
  * @prop {boolean} disableTileGrids disable tile grids toolbar
  * @prop {function} onChange callback triggered after changing the form
- * @prop {string} owner the owner component name like: 'background-dialog'
  */
 function WMSCacheOptions({
     layer = {},
     projection,
     onChange,
-    disableTileGrids,
-    owner = ""
+    disableTileGrids
 }) {
 
     const [tileGridLoading, setTileGridLoading] = useState(false);
@@ -268,41 +266,8 @@ function WMSCacheOptions({
             .finally(() => setTimeout(() => setTileGridLoading(false), 500));
     };
 
-    const handleGetTileGridSettings = () => {
-        const newTileGridStrategy = layer.tileGridStrategy !== 'custom'
-            ? 'custom'
-            : undefined;
-        const promise = newTileGridStrategy === 'custom'
-            && ((layer?.tileGrids?.length || 0) === 0 || !layer?.tileGridCacheSupport)
-            ? onTileMatrixSetsFetch(layer)
-            : Promise.resolve(undefined);
-        return promise.then(({ tileGrids, tileGridCacheSupport } = {}) => {
-            const hasTileGrids = (tileGrids?.length || 0) > 0;
-            const tileGridStrategy = hasTileGrids
-                ? newTileGridStrategy
-                : undefined;
-            let tileChangedData = {
-                tileGridCacheSupport,
-                tileGridStrategy,
-                tileGrids
-            };
-            if (owner === 'background-dialog' && newTileGridStrategy === 'custom') {
-                tileChangedData = {
-                    ...tileChangedData, tiled: true, tileGridStrategy: 'custom'
-                };
-            }
-            handleOnChange(tileChangedData);
-        });
-    };
-
     const InfoText = infoText[layer.tileGridStrategy] || infoText.standard;
 
-    // fetching grid data in case background layers
-    React.useEffect(() => {
-        if (layer.remoteTileGrids && owner === 'background-dialog') {
-            handleGetTileGridSettings();
-        }
-    }, []);
     return (
         <div className="ms-wms-cache-options">
             <div className="ms-wms-cache-options-content">
@@ -355,7 +320,26 @@ function WMSCacheOptions({
                         glyph={layer.tileGridStrategy === 'custom' ? 'grid-custom' : 'grid-regular'}
                         bsStyle={layer.tileGridStrategy === 'custom' ? 'success' : 'primary'}
                         className="square-button-md"
-                        onClick={handleGetTileGridSettings}
+                        onClick={() => {
+                            const newTileGridStrategy = layer.tileGridStrategy !== 'custom'
+                                ? 'custom'
+                                : undefined;
+                            const promise = newTileGridStrategy === 'custom'
+                                && ((layer?.tileGrids?.length || 0) === 0 || !layer?.tileGridCacheSupport)
+                                ? onTileMatrixSetsFetch(layer)
+                                : Promise.resolve(undefined);
+                            return promise.then(({ tileGrids, tileGridCacheSupport } = {}) => {
+                                const hasTileGrids = (tileGrids?.length || 0) > 0;
+                                const tileGridStrategy = hasTileGrids
+                                    ? newTileGridStrategy
+                                    : undefined;
+                                handleOnChange({
+                                    tileGridCacheSupport,
+                                    tileGridStrategy,
+                                    tileGrids
+                                });
+                            });
+                        }}
                     />
                 </div>}
             </div>
