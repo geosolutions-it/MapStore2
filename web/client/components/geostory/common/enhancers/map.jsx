@@ -39,8 +39,9 @@ export default compose(
         ({ resources, resourceId, map = {}}) => {
             const resource = find(resources, { id: resourceId }) || {};
             const baseMap = omit(resource.data, ['context']);
-            const cleanedMap = {...map, layers: (map.layers || baseMap?.layers || []).map(l => l ? l : undefined)};         // for better intiating cleanedMap layers in case 'map.layers = undefined' -> baseMap.layers check is added in fallBack
-            return { map: createMapObject(baseMap, cleanedMap)};
+            const isLegacyGeostory = (map?.layers || [])?.indexOf(null) !== -1 || (map?.groups || [])?.indexOf(null) !== -1;
+            const cleanedMap = {...map, layers: (map.layers || baseMap?.layers || []).map(lay => lay ? lay : undefined), groups: (map.groups || baseMap?.groups || []).map(gr => gr ? gr : undefined)};         // for better initiating cleanedMap layers in case 'map.layers = undefined' -> baseMap.layers check is added in fallBack
+            return { map: createMapObject(baseMap, cleanedMap, isLegacyGeostory)};
         }
     ));
 /**
