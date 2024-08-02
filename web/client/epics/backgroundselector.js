@@ -32,7 +32,9 @@ import { UPDATE_NODE, ADD_LAYER, changeLayerProperties, removeNode} from '../act
 import { getLayerFromId, currentBackgroundSelector } from '../selectors/layers';
 import { backgroundLayersSelector } from '../selectors/backgroundselector';
 import { getLayerCapabilities } from '../observables/wms';
-import { getLayerOptions } from '../utils/WMSUtils';
+import { getCustomTileGridProperties, getLayerOptions } from '../utils/WMSUtils';
+import { getLayerTileMatrixSetsInfo } from '../api/WMTS';
+import { generateGeoServerWMTSUrl } from '../utils/WMTSUtils';
 
 const accessMetadataExplorer = (action$) =>
     action$.ofType(ADD_BACKGROUND)
@@ -46,12 +48,20 @@ const addBackgroundPropertiesEpic = (action$) =>
     action$.ofType(ADD_BACKGROUND_PROPERTIES)
         .switchMap(({modalParams}) => {
             const defaultAction = Rx.Observable.of(setBackgroundModalParams({...modalParams, loading: false}));
+            const isTileGridNeeded = (!modalParams.editing && modalParams?.layer?.remoteTileGrids);
             return modalParams.layer && modalParams.layer.type === 'wms' ?
                 Rx.Observable.of(setBackgroundModalParams({...modalParams, loading: true}))
-                    .concat(getLayerCapabilities(modalParams.layer)
-                        .switchMap(capabilities => Rx.Observable.of(
-                            setBackgroundModalParams({...modalParams, loading: false, capabilities: getLayerOptions(capabilities)})
-                        ))
+                    .concat(Rx.Observable.forkJoin(getLayerCapabilities(modalParams.layer), (!isTileGridNeeded) ?
+                        Rx.Observable.of(null) :
+                        Rx.Observable.defer(() => getLayerTileMatrixSetsInfo(generateGeoServerWMTSUrl(modalParams.layer), modalParams.layer.name, modalParams.layer))
+                            .catch(() => Rx.Observable.of(null)))
+
+                        .switchMap(([capabilities, tileGridData]) => {
+                            const tileGridProperties = tileGridData ? getCustomTileGridProperties(tileGridData) : {};
+                            return Rx.Observable.of(
+                                setBackgroundModalParams({...modalParams, layer: {...modalParams.layer, ...tileGridProperties}, loading: false, capabilities: getLayerOptions(capabilities)})
+                            );
+                        })
                         .catch(() => defaultAction)
                     )
                 : defaultAction;
