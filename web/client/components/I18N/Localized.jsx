@@ -39,6 +39,7 @@ class Localized extends React.Component {
             if (typeof children === 'function') {
                 children = children();
             }
+            document.documentElement.setAttribute("lang", this.props.locale);
 
             return (<IntlProvider {...this.props.localeKey && { key: this.props.locale }} locale={this.props.locale}
                 messages={this.flattenMessages(this.props.messages)}

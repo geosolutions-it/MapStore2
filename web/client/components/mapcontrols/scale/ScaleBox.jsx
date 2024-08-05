@@ -73,8 +73,8 @@ class ScaleBox extends React.Component {
         } else {
             control =
                 (<Form inline><FormGroup bsSize="small">
-                    <ControlLabel>{this.props.label}</ControlLabel>
-                    <FormControl componentClass="select" onChange={this.onComboChange} value={currentZoomLvl || ""}>
+                    <ControlLabel htmlFor="scaleBox">{this.props.label}</ControlLabel>
+                    <FormControl id="scaleBox" componentClass="select" onChange={this.onComboChange} value={currentZoomLvl || ""}>
                         {this.getOptions()}
                     </FormControl>
                 </FormGroup></Form>)

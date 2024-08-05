@@ -65,7 +65,7 @@ class PaginationToolbar extends React.Component {
                         onSelect={this.onSelect} />
                 </Col>
                 <Col xs={12}>
-                    <h5>{this.props.loading ? <Message msgId="loading"/> : msg}</h5>
+                    <div>{this.props.loading ? <Message msgId="loading"/> : msg}</div>
                 </Col>
             </Row>
         );
