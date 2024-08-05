@@ -113,4 +113,31 @@ describe('Map Plugin', () => {
             })
             .catch(done);
     });
+    it('should not mount the map if the configuration is not valid', (done) => {
+        const { Plugin } = getPluginForTest(MapPlugin, { map: { eventListeners: {} } });
+        ReactDOM.render(<Plugin
+            onLoadingMapPlugins={(loading) => {
+                if (!loading) {
+                    expect(document.querySelector('.mapLoadingMessage')).toBeTruthy();
+                    done();
+                }
+            }}
+            pluginsCreator={() => Promise.resolve({
+                Map: ({ children }) => <div className="map">{children}</div>,
+                Layer: ({ options }) => <div id={options.id} className="layers">{options.type}</div>,
+                Feature: () => null,
+                tools: {
+                    overview: () => null,
+                    scalebar: () => null,
+                    draw: () => null,
+                    highlight: () => null,
+                    selection: () => null,
+                    popup: () => null,
+                    box: () => null
+                },
+                mapType: 'openlayers'
+            })}
+            on
+        />, document.getElementById("container"));
+    });
 });
