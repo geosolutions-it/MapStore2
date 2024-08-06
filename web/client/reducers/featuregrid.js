@@ -47,7 +47,8 @@ import {
     SET_TIME_SYNC,
     UPDATE_EDITORS_OPTIONS,
     SET_PAGINATION,
-    SET_VIEWPORT_FILTER
+    SET_VIEWPORT_FILTER,
+    SET_RESTRICTED_AREA,
 } from '../actions/featuregrid';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 
@@ -156,7 +157,9 @@ function featuregrid(state = emptyResultsState, action) {
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
             editingAllowedGroups: action.options.editingAllowedGroups || state.editingAllowedGroups || [],
             virtualScroll: !!action.options.virtualScroll,
-            maxStoredPages: action.options.maxStoredPages || 5
+            maxStoredPages: action.options.maxStoredPages || 5,
+            restrictedAreaUrl: action.options.restrictedAreaUrl || "",
+            restrictedArea: action.options.restrictedArea || {}
         });
     }
     case LOAD_MORE_FEATURES:
@@ -440,6 +443,9 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case MAP_CONFIG_LOADED: {
         return {...state, ...get(action, 'config.featureGrid', {})};
+        }
+    case SET_RESTRICTED_AREA: {
+        return { ...state, restrictedArea: { ...state.restrictedArea, geometry: action.area } };
     }
     default:
         return state;

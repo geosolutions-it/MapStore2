@@ -1,7 +1,7 @@
 import React from 'react';
 import './toolbar.css';
-import { sortBy } from 'lodash';
-import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col} from 'react-bootstrap';
+import { sortBy, isEmpty } from 'lodash';
+import {ButtonGroup, Checkbox, Glyphicon, FormControl, FormGroup, Col, Button} from 'react-bootstrap';
 
 import Message from '../../../I18N/Message';
 import withHint from '../enhancers/withHint';
@@ -35,7 +35,23 @@ const standardButtons = {
         disabled={disabled}
         visible={mode === "VIEW" && isEditingAllowed && areLayerFeaturesEditable(layer)}
         onClick={events.switchEditMode}
-        glyph="pencil"/>),
+        glyph="pencil" />),
+    isRestrictedByArea: ({ restrictedArea }) => {
+        return <Button
+            id="fg-isRestrictedByArea-button"
+            keyProp="fg-restrictedarea-button"
+            className="square-button-md"
+            bsStyle="warning"
+            tooltipId="featuregrid.toolbar.restrictedByArea"
+            disabled
+            style={isEmpty(restrictedArea) ? {
+                    width: 0,
+                    padding: 0,
+                    borderWidth: 0
+                } : {}}>
+                    <Glyphicon glyph="1-point-dashed" />
+                </Button>
+        },
     filter: ({isFilterActive = false, viewportFilter, disabled, isSearchAllowed, mode, showAdvancedFilterButton = true, events = {}}) => (<TButton
         id="search"
         keyProp="search"
@@ -273,6 +289,7 @@ const standardButtons = {
 
 // standard buttons with position set to index in this array. shape {name, Component, position} is aligned with attributes expected from tools injected.
 const buttons = [
+    {name: "isRestrictedByArea", Component: standardButtons.isRestrictedByArea}, // GRID - features load is restricted by area
     {name: "editMode", Component: standardButtons.editMode}, // EDITOR
     {name: "backToViewMode", Component: standardButtons.backToViewMode}, // EDITOR
     {name: "addFeature", Component: standardButtons.addFeature}, // EDITOR
