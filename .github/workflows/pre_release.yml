@@ -113,7 +113,7 @@ jobs:
       - name: "setting up npm"
         uses: actions/setup-node@v3
         with:
-            node-version: '16.x'
+            node-version: '20.x'
       - name: 'Update changelog on master'
         env:
             LAST_MS_VERSION: ${{ github.event.inputs.previous-ms-version }}

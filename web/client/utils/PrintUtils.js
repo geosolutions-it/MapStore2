@@ -9,7 +9,7 @@
 import { reproject, getUnits, reprojectGeoJson, normalizeSRS } from './CoordinatesUtils';
 
 import {addAuthenticationParameter} from './SecurityUtils';
-import { calculateExtent, getGoogleMercatorScales, getResolutionsForProjection, getScales, reprojectZoom } from './MapUtils';
+import { calculateExtent, getGoogleMercatorScales, getResolutionsForProjection, getScales } from './MapUtils';
 import { optionsToVendorParams } from './VendorParamsUtils';
 import { colorToHexStr } from './ColorUtils';
 import { getLayerConfig } from './TileConfigProvider';
@@ -230,6 +230,46 @@ export const getMapSize = (layout, maxWidth) => {
 export const mapProjectionSelector = (state) => state?.print?.map?.projection ?? "EPSG:3857";
 
 /**
+ * Parse credit/attribution text by removing html tags within its text plus removing '|' symbol
+ * @param  {string} creditText the layer credit/attribution text
+ * @returns {string}       the parsed credit/attribution text after removing html tags plus '|' symbol within
+ * @memberof utils.PrintUtils
+ */
+export function parseCreditRemovingTagsOrSymbol(creditText = "") {
+    let parsedCredit = creditText;
+    do {
+        let tagStartIndex = parsedCredit.indexOf("<");
+        let tagEndIndex = parsedCredit.indexOf(">");
+        if (tagStartIndex !== -1 && tagEndIndex !== -1) {
+            parsedCredit = parsedCredit.replace(parsedCredit.substring(tagStartIndex, tagEndIndex + 1), "");
+        }
+    } while (parsedCredit.includes("<") || parsedCredit.includes(">"));
+    let hasOrSymbol = parsedCredit && parsedCredit.includes("|");
+    if (hasOrSymbol) {
+        parsedCredit = parsedCredit?.replaceAll("|", "")?.replaceAll("  ", " ");
+    }
+    return parsedCredit;
+}
+/**
+ * Gets the credits of layers in one text with '|' separated
+ * @param  {object} layers the map layers for print
+ * @returns {string}       the layers credits as a text '|' separated
+ * @memberof utils.PrintUtils
+ */
+export const getLayersCredits = (layers) => {
+    const layerCredits = layers.filter(lay => lay?.credits?.title).map((layer) => {
+        const layerCreditTitle = layer?.credits?.title || '';
+        const hasOrSymbol = layerCreditTitle.includes('|');
+        const hasHtmlTag = layerCreditTitle.includes('<');
+        const layerCredit = (hasHtmlTag || hasOrSymbol)
+            ? parseCreditRemovingTagsOrSymbol(layerCreditTitle)
+            : layerCreditTitle;
+        return layerCredit;
+    }).join(' | ');
+    return layerCredits;
+};
+
+/**
  * Creates the mapfish print specification from the current configuration
  * @param  {object} spec the current configuration
  * @returns {object}      the mapfish print configuration to send to the server
@@ -238,9 +278,10 @@ export const mapProjectionSelector = (state) => state?.print?.map?.projection ??
 export const getMapfishPrintSpecification = (rawSpec, state) => {
     const {params, ...baseSpec} = rawSpec;
     const spec = {...baseSpec, ...params};
-    const mapProjection = mapProjectionSelector(state);
+    const printMap = state?.print?.map;
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
-    const projectedZoom = Math.round(reprojectZoom(spec.scaleZoom, mapProjection, spec.projection));
+    // * use [spec.zoom] the actual zoom in case useFixedScale = false else use [spec.scaleZoom] the fixed zoom scale not actual
+    const projectedZoom = Math.round(printMap?.useFixedScales ? spec.scaleZoom : spec.zoom);
     const scales = spec.scales || getScales(spec.projection);
     const reprojectedScale = scales[projectedZoom] || defaultScales[projectedZoom];
 
@@ -270,6 +311,7 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
             }
         ],
         "legends": PrintUtils.getMapfishLayersSpecification(spec.layers, projectedSpec, state, 'legend'),
+        "credits": getLayersCredits(spec.layers),
         ...params
     };
 };

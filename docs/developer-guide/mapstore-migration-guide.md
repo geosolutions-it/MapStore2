@@ -20,7 +20,65 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
-## Migration from 2024.01.00 to 2024.02.00
+## Migration from 2024.01.02 to 2024.02.00
+
+### NodeJS and NPM update
+
+From this version the **recommended version** to build MapStore or for development is **Node 20** (**minimum** version will be **Node 16**).
+Please update your Node version accordingly on your develop machine or CI/CD.
+
+See the [requirements](./requirements.md#debug-build) section of the documentation for the details.
+
+### Java dependencies update
+
+Some libraries has been updated. if you have a MapStore project make sure to keep the versions aligned with the main product.
+
+## Migration from 2024.01.00 to 2024.01.02
+
+### Enable showing credits/attribution text in Print config
+
+Due to showing layers' credits/attributions of printed map which will be displayed at the bottom of the map section, the MapStore `config.yaml` file should be reviewed and updated. Below are reported the relevant changes that need to be applied also to `config.yaml` of MapStore downstream projects where the printing engine is present.
+
+- Added a section for credits into `config.yaml` file at the end of the mainPage for each layout, for more details see [here](https://github.com/geosolutions-it/MapStore2/pull/10451/files#diff-3599ba7c628c7c764665046828bad74c0c8576aad03f5497cf426b59010a6d07R27)
+- In this added section, proper values for `absoluteX` and `absoluteY` should be applied to be consistent with overall layout
+- There are some edits to the value of `absoluteY` for the section located directly above credit/attribution section based on the layout
+
+example:
+
+```yaml
+    mainPage:
+    ....
+    items:
+    ....
+    - !columns
+        absoluteX: 42
+        absoluteY: 35
+        width: 1111
+        items:
+        - !text
+            align: left
+            vertAlign: middle
+            fontSize: 6
+              text: '${credits}'
+```
+
+### Option to hide the group info of logged in user from user details modal window
+
+Recently, we have added the option to hide the `user group info` from the user details modal.
+To enable this, you have to add a cfg in all `Login` plugin into `localConfig.json` like:
+
+```json
+{
+    "name": "Login",
+    "cfg": { "toolsCfg": [{"hideGroupUserInfo": true}] }
+}
+```
+
+where the first index of toolsCfg is for `userDetails` component that is responsible for displaying the user details including `user group info`
+
+!!! note important notes should be considered:
+
+- if you have customized the Login plugin and in particular the order of toolsCfg, make sure to override the correct one as the propagation of cfg for the tools is based on index value.
 
 ### Integration with openID Connect
 

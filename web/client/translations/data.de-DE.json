@@ -611,7 +611,7 @@
         "toc": {
             "toggleLayerVisibility": "Ebenensichtbarkeit umschalten",
             "toggleGroupVisibility": "Gruppensichtbarkeit umschalten",
-            "displayLegendAndTools": "Legende einblenden",
+            "displayLegendAndTools": "Legende und Werkzeuge einblenden",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "addAnnotations": "Anmerkungen hinzufügen",
             "editAnnotations": "Anmerkungen bearbeiten",

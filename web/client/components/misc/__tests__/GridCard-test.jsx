@@ -61,4 +61,13 @@ describe('This test for GridCard', () => {
         );
         expect(button).toExist();
     });
+
+    it('enter triggers onClick event', (done) => {
+        const container = document.getElementById('container');
+        const testName = "test";
+        const testDescription = "testDescription";
+        ReactDOM.render(
+            <GridCard header={testName} onClick={() => {done();}}>{testDescription}</GridCard>, container);
+        TestUtils.Simulate.keyDown(container.firstElementChild, {key: 'Enter'});
+    });
 });

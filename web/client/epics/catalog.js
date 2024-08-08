@@ -76,7 +76,7 @@ import { extractGeometryType } from '../utils/WFSLayerUtils';
 import { createDefaultStyle } from '../utils/StyleUtils';
 import { removeDuplicateLines } from '../utils/StringUtils';
 import { logError } from '../utils/DebugUtils';
-import { isProjectionAvailable } from '../utils/ProjectionUtils';
+import { getCustomTileGridProperties } from '../utils/WMSUtils';
 import {getLayerTileMatrixSetsInfo} from '../api/WMTS';
 import { getLayerMetadata } from '../api/ArcGIS';
 
@@ -283,19 +283,7 @@ export default (API) => ({
                                 .catch(() => Rx.Observable.of(null))
                     )
                         .switchMap(([results, tileGridData]) => {
-                            let tileGridProperties = {};
-                            if (tileGridData) {
-                                const filteredTileGrids = tileGridData.tileGrids.filter(({ crs }) => isProjectionAvailable(CoordinatesUtils.normalizeSRS(crs)));
-                                tileGridProperties = tileGridData !== undefined ? {
-                                    tiled: true,
-                                    tileGrids: tileGridData.tileGrids,
-                                    tileGridStrategy: 'custom',
-                                    tileGridCacheSupport: filteredTileGrids?.length > 0 ?
-                                        tileGridData.formats ? {formats: tileGridData.formats} : {}
-                                        : undefined
-                                } : {};
-
-                            }
+                            const tileGridProperties = tileGridData ? getCustomTileGridProperties(tileGridData) : {};
                             if (results) {
                                 let description = find(results, (desc) => desc.name === layer.name );
                                 if (description && description.owsType === 'WFS') {
