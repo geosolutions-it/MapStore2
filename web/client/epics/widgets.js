@@ -54,7 +54,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import { saveAs } from 'file-saver';
 import {downloadCanvasDataURL} from '../utils/FileUtils';
 import {reprojectBbox} from '../utils/CoordinatesUtils';
-import converter from 'json-2-csv';
+import { json2csv } from 'json-2-csv';
 import { defaultGetZoomForExtent } from '../utils/MapUtils';
 import { updateDependenciesMapOfMapList, DEFAULT_MAP_SETTINGS } from "../utils/WidgetsUtils";
 
@@ -132,10 +132,18 @@ const configureDependency = (active, dependency, options) =>
 
 export const exportWidgetData = action$ =>
     action$.ofType(EXPORT_CSV)
-        .do( ({data = [], title = "data"}) =>
-            converter.json2csv(data, (err, csv) => err ? null : saveAs(new Blob([
-                csv
-            ], {type: "text/csv"}), title + ".csv")))
+        .do( ({data = [], title = "data"}) => {
+            try {
+                const csv = json2csv(data);
+                saveAs(new Blob([
+                    csv
+                ], {type: "text/csv"}), title + ".csv");
+            } catch (e) {
+                console.error(e);
+            }
+
+        }
+        )
         .filter( () => false);
 /**
  * Intercepts changes to widgets to catch widgets that can share some dependencies.
