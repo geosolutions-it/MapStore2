@@ -16,7 +16,7 @@ import JSZip from 'jszip';
 import { Promise } from 'es6-promise';
 const parser = new DOMParser();
 import assign from 'object-assign';
-import { hint as geojsonhint } from '@mapbox/geojsonhint/lib/object';
+import { check as geojsonhint } from '@placemarkio/check-geojson';
 import { toMapConfig } from './ogc/WMC';
 
 const cleanStyleFromKml = (xml) => {
