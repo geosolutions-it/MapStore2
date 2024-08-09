@@ -14,7 +14,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    addAuthenticationParameter,
     addAuthenticationToSLD,
     clearNilValuesForParams,
     getAuthenticationMethod
