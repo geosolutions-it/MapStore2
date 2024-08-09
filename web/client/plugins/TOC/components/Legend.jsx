@@ -107,7 +107,6 @@ class Legend extends React.Component {
                 cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
                 scale !== null ? { SCALE: scale } : {}
             );
-            addAuthenticationParameter(url, query);
 
             return urlUtil.format({
                 host: urlObj.host,
