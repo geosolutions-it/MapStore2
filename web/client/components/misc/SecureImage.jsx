@@ -7,26 +7,12 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import axios from 'axios';
-import { createSelector } from 'reselect';
 
-import { securityTokenSelector } from '../../../selectors/security';
-import {
-    getAuthenticationMethod,
-    getAuthenticationHeaders
-} from '../../../utils/SecurityUtils';
+import { getAuthenticationMethod } from '../../utils/SecurityUtils';
 
 
-const SecureImage = connect(
-    createSelector(
-        securityTokenSelector,
-        (token) => {
-            return { token };
-        }
-    ),
-    {}
-)(({
+const SecureImage = ({
     alt,
     src,
     token,
@@ -48,8 +34,7 @@ const SecureImage = connect(
 
         if (authMethod === "bearer") {
             axios.get(src, {
-                responseType: 'blob',
-                headers: getAuthenticationHeaders(src, token)
+                responseType: 'blob'
             })
                 .then((response) => {
                     const imageUrl = URL.createObjectURL(response.data);
@@ -80,6 +65,6 @@ const SecureImage = connect(
             {...props}
         />
     );
-});
+};
 
 export default SecureImage;

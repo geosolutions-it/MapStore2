@@ -18,7 +18,8 @@ import {
     clearNilValuesForParams
 } from '../../../utils/SecurityUtils';
 import Message from '../../../components/I18N/Message';
-import SecureImage from './SecureImage';
+import SecureImage from '../../../components/misc/SecureImage';
+
 import { randomInt } from '../../../utils/RandomUtils';
 
 /**
