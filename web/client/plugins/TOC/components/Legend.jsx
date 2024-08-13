@@ -121,19 +121,12 @@ class Legend extends React.Component {
             const url = this.getUrl(this.props);
             const authMethod = getAuthenticationMethod(url);
             return (
-                authMethod === "bearer" ?
-                    <SecureImage
-                        onError={this.onImgError}
-                        onLoad={(e) => this.validateImg(e.target)}
-                        src={url}
-                        style={this.props.style}
-                    /> :
-                    <img
-                        onError={this.onImgError}
-                        onLoad={(e) => this.validateImg(e.target)}
-                        src={url}
-                        style={this.props.style}
-                    />
+                <SecureImage
+                    onError={this.onImgError}
+                    onLoad={(e) => this.validateImg(e.target)}
+                    src={url}
+                    style={this.props.style}
+                />
             );
         }
         return <Message msgId="layerProperties.legenderror" />;

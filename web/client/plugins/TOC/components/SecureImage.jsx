@@ -8,9 +8,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import { createSelector } from 'reselect';
 
 import { securityTokenSelector } from '../../../selectors/security';
+import {
+    getAuthenticationMethod,
+    getAuthenticationHeaders
+} from '../../../utils/SecurityUtils';
+
 
 const SecureImage = connect(
     createSelector(
@@ -28,27 +34,33 @@ const SecureImage = connect(
 }) => {
     const [imageSrc, setImageSrc] = useState('');
 
-    useEffect(() => {
-        const fetchImage = async() => {
-            try {
-                const response = await fetch(src, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const imageUrl = URL.createObjectURL(blob);
-                    setImageSrc(imageUrl);
-                } else {
-                    console.error('Failed to fetch image:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error fetching image:', error);
-            }
-        };
+    // Function to validate the image once it loads
+    const validateImg = (imgElement) => {
+        // Implement your validation logic here
+        // For example, check image dimensions, aspect ratio, etc.
+        if (imgElement.naturalWidth === 0 || imgElement.naturalHeight === 0) {
+            console.error('Image validation failed: Image is not valid.');
+        }
+    };
 
-        fetchImage();
+    useEffect(() => {
+        const authMethod = getAuthenticationMethod(src);
+
+        if (authMethod === "bearer") {
+            axios.get(src, {
+                responseType: 'blob',
+                headers: getAuthenticationHeaders(src, token)
+            })
+                .then((response) => {
+                    const imageUrl = URL.createObjectURL(response.data);
+                    setImageSrc(imageUrl);
+                })
+                .catch((error) => {
+                    console.error('Error fetching image:', error);
+                });
+        } else {
+            setImageSrc(src);
+        }
 
         // Clean up the URL object when the component unmounts
         return () => {
@@ -59,7 +71,14 @@ const SecureImage = connect(
     }, [src, token]);
 
     return (
-        <img src={imageSrc} alt={alt} {...props} />
+        <img
+            alt={alt}
+            onError={props.onImgError}
+            onLoad={(e) => validateImg(e.target)}
+            src={imageSrc}
+            style={props.style}
+            {...props}
+        />
     );
 });
 
