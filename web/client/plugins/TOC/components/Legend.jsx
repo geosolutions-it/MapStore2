@@ -15,8 +15,7 @@ import React from 'react';
 
 import {
     addAuthenticationToSLD,
-    clearNilValuesForParams,
-    getAuthenticationMethod
+    clearNilValuesForParams
 } from '../../../utils/SecurityUtils';
 import Message from '../../../components/I18N/Message';
 import SecureImage from './SecureImage';
@@ -119,7 +118,6 @@ class Legend extends React.Component {
     render() {
         if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
             const url = this.getUrl(this.props);
-            const authMethod = getAuthenticationMethod(url);
             return (
                 <SecureImage
                     onError={this.onImgError}
