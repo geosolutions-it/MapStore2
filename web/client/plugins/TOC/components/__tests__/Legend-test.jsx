@@ -15,7 +15,7 @@ import * as TestUtils from 'react-dom/test-utils';
 
 import Legend from '../Legend';
 
-describe.only("test the Layer legend", () => {
+describe("test the Layer legend", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
