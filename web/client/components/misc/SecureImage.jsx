@@ -15,7 +15,6 @@ import { getAuthenticationMethod } from '../../utils/SecurityUtils';
 const SecureImage = ({
     alt,
     src,
-    token,
     ...props
 }) => {
     const [imageSrc, setImageSrc] = useState('');
@@ -53,7 +52,7 @@ const SecureImage = ({
                 URL.revokeObjectURL(imageSrc);
             }
         };
-    }, [src, token]);
+    }, [src]);
 
     return (
         <img
