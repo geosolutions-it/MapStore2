@@ -170,7 +170,11 @@ export default class BackgroundDialog extends React.Component {
                         onChange={event => this.setState({ format: event && event.value })}
                         value={this.state.format || this.props.defaultFormat}
                         clearable
-                        options={this.props.formatOptions}
+                        isLoading={!this.props.capabilities}
+                        options={
+                            (this.props.capabilities?.capabilities?.layerOptions?.imageFormats || this.props.formatOptions || [])
+                                .map((format) => format?.value ? format : ({ value: format, label: format }))
+                        }
                     />
                 </FormGroup>
                 {this.renderStyleSelector()}

@@ -7,20 +7,15 @@
  */
 
 import { cleanAuthParamsFromURL } from '../../utils/SecurityUtils';
-import ConfigUtils from '../../utils/ConfigUtils';
 import { getRecordLinks, extractOGCServicesReferences } from '../../utils/CatalogUtils';
 
 import { getCapabilities, getCapabilitiesURL } from '../WFS';
-import xml2js from 'xml2js';
 import {
     validate as commonValidate,
     testService as commonTestService,
     preprocess as commonPreprocess
 } from './common';
-import { get, castArray } from 'lodash';
-
-const capabilitiesCache = {};
-
+import { get, castArray, isEmpty } from 'lodash';
 
 const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
 
@@ -95,22 +90,8 @@ const recordToLayer = (record) => {
 };
 
 export const getRecords = (url, startPosition, maxRecords, text, info) => {
-    const cached = capabilitiesCache[url];
-    if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
-        return new Promise((resolve) => {
-            resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, info));
-        });
-    }
-    return getCapabilities(url).then((response) => {
-        let json;
-        xml2js.parseString(response.data, { explicitArray: false, stripPrefix: true }, (ignore, result) => {
-            json = { ...result, url };
-        });
-        capabilitiesCache[url] = {
-            timestamp: new Date().getTime(),
-            data: json
-        };
-        return searchAndPaginate(json, startPosition, maxRecords, text, info);
+    return getCapabilities(url).then((data) => {
+        return searchAndPaginate(data, startPosition, maxRecords, text, info);
     });
 };
 
@@ -142,7 +123,25 @@ export const getCatalogRecords = ({records} = {}) => {
     return null;
 };
 
+/**
+ * Formulate WFS layer data from record
+ * and fetch capabilities if needed to add capibilities specific data
+ * @param {Object} record data obtained from catalog service
+ * @param {Object} options props specific to wfs
+ * @returns {Promise} promise that resolves to formulated layer data
+ */
+const getLayerData = (record, options) => {
+    const layer = recordToLayer(record, options);
+    return getRecords(record.url, 1, 1, record.name).then((result)=> {
+        const [newRecord] = result?.records ?? [];
+        return isEmpty(newRecord) ? layer : recordToLayer(newRecord, options);
+    }).catch(() => layer);
+};
+
 export const getLayerFromRecord = (record, options, asPromise) => {
+    if (options.fetchCapabilities && asPromise) {
+        return getLayerData(record, options);
+    }
     const layer = recordToLayer(record, options);
     return asPromise ? Promise.resolve(layer) : layer;
 };

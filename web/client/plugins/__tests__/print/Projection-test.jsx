@@ -24,7 +24,8 @@ const initialState = {
         map: {
             scale: 1784,
             scaleZoom: 2,
-            projection: "EPSG:3857"
+            projection: "EPSG:3857",
+            zoom: 3
         },
         capabilities: {
             createURL: "http://fakeservice",
@@ -121,16 +122,18 @@ describe('PrintProjection Plugin', () => {
     it('map transformer with user chosen crs', (done) => {
         getPrintProjectionPlugin().then(({ Plugin, store }) => {
             try {
-                ReactDOM.render(<Plugin projections={[{"name": "Mercator", "value": "EPSG:3857"}, {"name": "WGS84", "value": "EPSG:4326"}]}/>, document.getElementById("container"));
-                const combo = getByXPath("//select");
-                ReactTestUtils.Simulate.change(combo, {
-                    target: {
-                        value: "EPSG:4326"
-                    }
-                });
-                callMapTransformer(store.getState(), (map) => {
-                    expect(map.projection).toBe('EPSG:4326');
-                    done();
+                const comp = ReactDOM.render(<Plugin projections={[{"name": "Mercator", "value": "EPSG:3857"}, {"name": "WGS84", "value": "EPSG:4326"}]}/>, document.getElementById("container"));
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(() => {
+                    const combo = getByXPath("//select");
+                    ReactTestUtils.Simulate.change(combo, {
+                        target: {
+                            value: "EPSG:4326"
+                        }
+                    });
+                    callMapTransformer(store.getState(), (map) => {
+                        expect(map.projection).toBe('EPSG:4326');
+                        done();
+                    });
                 });
             } catch (ex) {
                 done(ex);
@@ -141,18 +144,20 @@ describe('PrintProjection Plugin', () => {
     it('validator without allowPreview', (done) => {
         getPrintProjectionPlugin().then(({ Plugin, store }) => {
             try {
-                ReactDOM.render(<Plugin projections={[{"name": "Mercator", "value": "EPSG:3857"}, {"name": "WGS84", "value": "EPSG:4326"}]}/>, document.getElementById("container"));
-                const combo = getByXPath("//select");
-                ReactTestUtils.Simulate.change(combo, {
-                    target: {
-                        value: "EPSG:4326"
-                    }
-                });
-                callValidator(store.getState(), (validation) => {
-                    expect(validation).toExist();
-                    expect(validation.valid).toBe(false);
-                    expect(validation.errors.length).toBe(1);
-                    done();
+                const comp = ReactDOM.render(<Plugin projections={[{"name": "Mercator", "value": "EPSG:3857"}, {"name": "WGS84", "value": "EPSG:4326"}]}/>, document.getElementById("container"));
+                ReactTestUtils.act(() => new Promise((resolve) => resolve(comp))).then(() => {
+                    const combo = getByXPath("//select");
+                    ReactTestUtils.Simulate.change(combo, {
+                        target: {
+                            value: "EPSG:4326"
+                        }
+                    });
+                    callValidator(store.getState(), (validation) => {
+                        expect(validation).toExist();
+                        expect(validation.valid).toBe(false);
+                        expect(validation.errors.length).toBe(1);
+                        done();
+                    });
                 });
             } catch (ex) {
                 done(ex);

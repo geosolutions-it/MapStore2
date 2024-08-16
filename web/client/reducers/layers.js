@@ -60,7 +60,7 @@ const insertNode = (nodes, node, parent, asFirst = false) => {
     }
     return nodes.map(n => isString(n) ? n : (n.id === parent ? {
         ...n,
-        nodes: [...n.nodes, node]
+        nodes: asFirst ? [node, ...n.nodes] : [...n.nodes, node]
     } : {
         ...n,
         nodes: insertNode(n.nodes, node, parent, asFirst)
@@ -258,17 +258,30 @@ function layers(state = { flat: [] }, action) {
     }
     case ADD_GROUP: {
         const id = uuidv1();
+        const defaultGroup = {
+            id: DEFAULT_GROUP_ID,
+            name: DEFAULT_GROUP_ID,
+            title: DEFAULT_GROUP_ID,
+            expanded: true,
+            nodes: []
+        };
+        // ensure new added group are included in the default
+        const parent = action.parent ?? DEFAULT_GROUP_ID;
+        const groups = (state.groups || []).find((group) => group.id === DEFAULT_GROUP_ID)
+            ? state.groups
+            : [defaultGroup, ...state.groups];
+
         const newGroups = insertNode(
-            state.groups,
+            groups,
             {
-                id: action.parent ? (action.parent + '.' + id) : id,
+                id: parent + '.' + id,
                 title: action.group,
                 name: id,
                 nodes: [],
                 expanded: true,
                 ...action.options
             },
-            action.parent,
+            parent,
             action.asFirst
         );
         return assign({}, state, {

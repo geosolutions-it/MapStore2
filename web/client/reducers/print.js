@@ -97,7 +97,8 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
                 scale: action.scale,
                 layers,
                 size: action.size ?? state.map?.size,
-                projection: action.projection
+                projection: action.projection,
+                useFixedScales: action.useFixedScales
             },
             error: null
         }
@@ -108,7 +109,7 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
         return assign({}, state, {
             map: assign({}, state.map, {
                 scaleZoom: action.zoom,
-                zoom: state.map.zoom + diff,
+                zoom: state.map.zoom + diff >= 0 ? state.map.zoom + diff : 0,
                 scale: action.scale
             })
         }

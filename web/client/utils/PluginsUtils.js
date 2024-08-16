@@ -164,7 +164,12 @@ const parseExpression = (state = {}, context = {}, value) => {
     };
     const request = url.parse(location.href, true);
     if (expression !== null) {
-        return eval(expression[1]);
+        let modifiedExpression = expression[1];
+        // adding optional operator to the expression
+        if (modifiedExpression.includes(").")) {
+            modifiedExpression = modifiedExpression.replaceAll(").", ")?.");
+        }
+        return eval(modifiedExpression);
     }
     return value;
 };

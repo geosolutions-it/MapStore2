@@ -97,6 +97,13 @@ describe('dashboard selectors', () => {
                 }
             }
         })).toBe(false);
+        expect(buttonCanEdit({
+            router: {
+                location: {
+                    pathname: '/dashboard/1'
+                }
+            }
+        })).toBe(false);
     });
 
     it("test dashboardServicesSelector", () => {

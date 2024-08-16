@@ -8,7 +8,6 @@
 
 import './login/login.css';
 
-import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -16,9 +15,10 @@ import epics from '../epics/login';
 import { comparePendingChanges } from '../epics/pendingChanges';
 import security from '../reducers/security';
 import { Login, LoginNav, PasswordReset, UserDetails, UserMenu } from './login/index';
-import {connect} from "../utils/PluginsUtils";
+import {connect, createPlugin} from "../utils/PluginsUtils";
 import {Glyphicon} from "react-bootstrap";
 import {burgerMenuSelector} from "../selectors/controls";
+import { isAdminUserSelector } from '../selectors/security';
 
 /**
   * Login Plugin. Allow to login/logout or show user info and reset password tools.
@@ -43,6 +43,7 @@ import {burgerMenuSelector} from "../selectors/controls";
   *
   * @prop {string} cfg.id identifier of the Plugin, by default `"mapstore-login-menu"`
   * @prop {object} cfg.menuStyle inline style for the menu, by default:
+  * @prop {object} cfg.isUsingLDAP flag refers to if the user with type LDAP or not to manage show/hide change psasword, by default: false
   * ```
   * menuStyle: {
   *      zIndex: 30
@@ -52,20 +53,24 @@ import {burgerMenuSelector} from "../selectors/controls";
 class LoginTool extends React.Component {
     static propTypes = {
         id: PropTypes.string,
-        menuStyle: PropTypes.object
+        menuStyle: PropTypes.object,
+        isAdmin: PropTypes.bool,
+        isUsingLDAP: PropTypes.bool
     };
 
     static defaultProps = {
         id: "mapstore-login-menu",
         menuStyle: {
             zIndex: 30
-        }
+        },
+        isAdmin: false,
+        isUsingLDAP: false
     };
 
     render() {
         return (<div id={this.props.id}>
             <div style={this.props.menuStyle}>
-                <UserMenu />
+                <UserMenu showPasswordChange={!(!this.props.isAdmin && this.props.isUsingLDAP)} />
             </div>
             <UserDetails />
             <PasswordReset />
@@ -74,14 +79,16 @@ class LoginTool extends React.Component {
     }
 }
 
-export default {
-    LoginPlugin: assign(LoginTool, {
+export default createPlugin('Login', {
+    component: connect((state) => ({isAdmin: isAdminUserSelector(state)}))(LoginTool),
+    containers: {
         OmniBar: {
             name: "login",
             position: 3,
-            tool: connect(() => ({
+            tool: connect((state) => ({
                 renderButtonContent: () => {return <Glyphicon glyph="user" />; },
-                bsStyle: 'primary'
+                bsStyle: 'primary',
+                isAdmin: isAdminUserSelector(state)
             }))(LoginNav),
             tools: [UserDetails, PasswordReset, Login],
             priority: 1
@@ -89,14 +96,15 @@ export default {
         SidebarMenu: {
             name: "login",
             position: 2,
-            tool: connect(() => ({
+            tool: connect((state) => ({
                 bsStyle: 'tray',
                 tooltipPosition: 'left',
                 renderButtonContent: (props) => [<Glyphicon glyph="user" />, props.renderButtonText ? props.user && <span>props.user[props.displayName]</span> || <span>"Guest"</span> : null],
                 renderButtonText: true,
                 menuProps: {
                     noCaret: true
-                }
+                },
+                isAdmin: isAdminUserSelector(state)
             }))(LoginNav),
             selector: (state) => ({
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
@@ -104,10 +112,10 @@ export default {
             tools: [UserDetails, PasswordReset, Login],
             priority: 2
         }
-    }),
+    },
     reducers: {security},
     epics: {
         ...epics,
         comparePendingChanges
     }
-};
+});

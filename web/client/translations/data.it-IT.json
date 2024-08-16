@@ -212,6 +212,10 @@
                 "label": "Abilita stile localizzato",
                 "tooltip": "Nota: questo parametro richiede configurazioni specifiche su GeoServer"
             },
+            "useCacheOptionInfo": {
+                "label": "Utilizza griglie di riquadri personalizzate remote",
+                "info": "Assicurati che WMTS sia abilitato per utilizzare griglie di riquadri personalizzate"
+            },
             "format": {
                 "title": "Formato",
                 "tile": "Tile",
@@ -864,6 +868,7 @@
             "addressSearch": "Cerca un indirizzo",
             "searchOnAllServices": "Cerca su tutti i servizi di seguito",
             "coordinatesSearch": "Cerca per coordinate",
+            "currentMapCRS": "Sistema di coordinate della mappa corrente",
             "searchservicesbutton": "Configura servizi di ricerca",
             "configpaneltitle": "Aggiungi/modifica un servizio di ricerca",
             "serviceslistlabel": "Servizi disponibili",
@@ -885,6 +890,8 @@
             "b_newpaneltitle": "Aggiungi nuovo segnalibro",
             "latitude": "Lat",
             "longitude": "Lon",
+            "yCoord": "Y",
+            "xCoord": "X",
             "b_title": "Titolo",
             "b_layer_tooltip": "Interruttore ricarica visibilità livello",
             "b_bbox": "Rettangolo di selezione",
@@ -1075,7 +1082,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Aumenta Zoom",
             "zoomOutTooltip": "Diminuisci Zoom",
-            "zoomAllTooltip": "Zoom Alla Massima Estensione"
+            "zoomAllTooltip": "Zoom Alla vista iniziale"
         },
         "fullscreen": {
             "tooltipActivate":  "Passa a schermo intero",
@@ -1577,6 +1584,10 @@
             "noRecordsMatched": "Nessun risultato trovato",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "DA WFS",
+                "wms": "DA WMS"
+            },
             "share": "Condividi",
             "copyToClipboard": "Copia negli appunti",
             "copied": "Copiato!",

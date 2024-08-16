@@ -26,7 +26,7 @@ jobs:
       - name: "setting up npm"
         uses: actions/setup-node@v3
         with:
-            node-version: '16.x'
+            node-version: '20.x'
 
       ############
       # CACHING
@@ -111,7 +111,7 @@ jobs:
       - name: "setting up npm"
         uses: actions/setup-node@v2
         with:
-            node-version: '16.x'
+            node-version: '20.x'
 
       ############
       # CACHING
@@ -159,7 +159,7 @@ jobs:
       - name: "setting up npm"
         uses: actions/setup-node@v2
         with:
-            node-version: '16.x'
+            node-version: '20.x'
       - name: "setting up Java"
         uses: actions/setup-java@v3
         with:

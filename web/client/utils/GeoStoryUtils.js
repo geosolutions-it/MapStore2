@@ -171,10 +171,18 @@ export const applyDefaults = (options = {}) => merge({}, DEFAULT_MAP_OPTIONS, op
  * create map object
  * @param {object} baseMap initial map object
  * @param {object} overrides object to override with
+ * @param {bool} isLegacyGeostory boolean that indicates if the geostory is legacy one or new
  * @return {object} options merged with defaults
  */
-export const createMapObject = (baseMap = {}, overrides = {}) => {
-    return merge({}, baseMap, overrides);
+export const createMapObject = (baseMap = {}, overrides = {}, isLegacyGeostory = false) => {
+    const mergedMap = merge({}, baseMap, overrides);
+    if (isLegacyGeostory) {
+        return mergedMap;
+    }
+    return {
+        ...mergedMap, layers: overrides?.layers || [], groups: overrides?.groups || []
+    };
+
 };
 /**
  * check if a string matches a regex

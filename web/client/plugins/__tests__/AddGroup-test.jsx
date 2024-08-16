@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import AddGroupPlugin from '../AddGroup';
 import { getPluginForTest } from './pluginsTestUtils';
 import ReactTestUtils from 'react-dom/test-utils';
+import { DEFAULT_GROUP_ID } from '../../utils/LayersUtils';
 
 describe('AddGroup Plugin', () => {
     beforeEach((done) => {
@@ -75,12 +76,12 @@ describe('AddGroup Plugin', () => {
         const btn = document.getElementsByTagName('button')[1];
         ReactTestUtils.Simulate.click(btn);
         expect(store.getState().layers.groups.length).toBe(2);
-        expect(store.getState().layers.groups[1].title).toBe('newgroup');
-        expect(store.getState().layers.groups[1].name).toExist();
-        expect(store.getState().layers.groups[1].name.length).toBe(36);
-        expect(store.getState().layers.groups[1].id).toExist();
-        expect(store.getState().layers.groups[1].id.length).toBe(36);
-        expect(store.getState().layers.groups[1].nodes.length).toBe(0);
+        expect(store.getState().layers.groups[0].nodes[0].title).toBe('newgroup');
+        expect(store.getState().layers.groups[0].nodes[0].name).toExist();
+        expect(store.getState().layers.groups[0].nodes[0].name.length).toBe(36);
+        expect(store.getState().layers.groups[0].nodes[0].id).toExist();
+        expect(store.getState().layers.groups[0].nodes[0].id.length).toBe(36 + DEFAULT_GROUP_ID.length + 1 /* 1 is the dot */);
+        expect(store.getState().layers.groups[0].nodes[0].nodes.length).toBe(0);
     });
 
     it('Add Nested Group on confirm', () => {
@@ -89,11 +90,11 @@ describe('AddGroup Plugin', () => {
             controls: {
                 addgroup: {
                     enabled: true,
-                    parent: 'group1.group2'
+                    parent: DEFAULT_GROUP_ID + '.group2'
                 }
             },
             layers: {
-                groups: [{ id: 'group1', nodes: [{id: 'group1.group2', nodes: []}] }]
+                groups: [{ id: DEFAULT_GROUP_ID, nodes: [{id: DEFAULT_GROUP_ID + '.group2', nodes: []}] }]
             }
         });
         ReactTestUtils.act(() => {
@@ -115,7 +116,7 @@ describe('AddGroup Plugin', () => {
         expect(newgroup.name).toExist();
         expect(newgroup.name.length).toBe(36);
         expect(newgroup.id).toExist();
-        expect(newgroup.id.length).toBe(6 + 6 + 36 + 2);
+        expect(newgroup.id.length).toBe(DEFAULT_GROUP_ID.length + 6 + 36 + 2);
         expect(newgroup.nodes.length).toBe(0);
     });
 });

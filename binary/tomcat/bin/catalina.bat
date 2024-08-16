@@ -31,7 +31,7 @@ rem   script will have no effect at all on Windows Services. As such, any
 rem   local customizations made in a CATALINA_BASE/bin/setenv.bat script
 rem   will also have no effect on Tomcat when launched as a Windows Service.
 rem   The configuration that controls Windows Services is stored in the Windows
-rem   Registry, and is most conveniently maintained using the "tomcat8w.exe"
+rem   Registry, and is most conveniently maintained using the "tomcat9w.exe"
 rem   maintenance utility.
 rem
 rem   CATALINA_HOME   May point at your Catalina "build" directory.
@@ -96,7 +96,7 @@ rem                   "-Djdk.tls.ephemeralDHKeySize=2048"
 rem
 rem   CATALINA_LOGGING_CONFIG (Optional) Override Tomcat's logging config file
 rem                   Example (all one line)
-rem                   set CATALINA_LOGGING_CONFIG="-Djava.util.logging.config.file=%CATALINA_BASE%\conf\logging.properties"
+rem                   set CATALINA_LOGGING_CONFIG=-Djava.util.logging.config.file="%CATALINA_BASE%\conf\logging.properties"
 rem
 rem   LOGGING_CONFIG  Deprecated
 rem                   Use CATALINA_LOGGING_CONFIG
@@ -105,7 +105,7 @@ rem                   and LOGGING_CONFIG starts with "-D..."
 rem
 rem   LOGGING_MANAGER (Optional) Override Tomcat's logging manager
 rem                   Example (all one line)
-rem                   set LOGGING_MANAGER="-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager"
+rem                   set LOGGING_MANAGER=-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
 rem
 rem   TITLE           (Optional) Specify the title of Tomcat window. The default
 rem                   TITLE is Tomcat if it's not specified.
@@ -270,7 +270,7 @@ echo Using JAVA_HOME:       "%JAVA_HOME%"
 echo Using CLASSPATH:       "%CLASSPATH%"
 echo Using CATALINA_OPTS:   "%CATALINA_OPTS%"
 
-set _EXECJAVA=%_RUNJAVA%
+set _EXECJAVA="%_RUNJAVA%"
 set MAINCLASS=org.apache.catalina.startup.Bootstrap
 set ACTION=start
 set SECURITY_POLICY_FILE=
@@ -317,7 +317,7 @@ goto end
 
 :doDebug
 shift
-set _EXECJAVA=%_RUNJDB%
+set _EXECJAVA="%_RUNJDB%"
 set DEBUG_OPTS=-sourcepath "%CATALINA_HOME%\..\..\java"
 if not ""%1"" == ""-security"" goto execCmd
 shift
@@ -336,7 +336,7 @@ goto execCmd
 :doStart
 shift
 if "%TITLE%" == "" set TITLE=Tomcat
-set _EXECJAVA=start "%TITLE%" %_RUNJAVA%
+set _EXECJAVA=start "%TITLE%" "%_RUNJAVA%"
 if not ""%1"" == ""-security"" goto execCmd
 shift
 echo Using Security Manager
@@ -356,7 +356,7 @@ set CATALINA_OPTS=
 goto execCmd
 
 :doVersion
-%_EXECJAVA% -classpath "%CATALINA_HOME%\lib\catalina.jar" org.apache.catalina.util.ServerInfo
+%_EXECJAVA% %JAVA_OPTS% -classpath "%CATALINA_HOME%\lib\catalina.jar" org.apache.catalina.util.ServerInfo
 goto end
 
 

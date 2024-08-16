@@ -55,6 +55,7 @@ import {
  * @prop {object} config.layerOptions.tooltipOptions options for layer title tooltip
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
+ * @prop {boolean} config.layerOptions.hideFilter hide the filter button in the layer nodes
  */
 export function ControlledTOC({
     tree,
@@ -133,6 +134,7 @@ export function ControlledTOC({
  * @prop {object} config.layerOptions.tooltipOptions options for layer title tooltip
  * @prop {boolean} config.layerOptions.hideLegend hide the legend of the layer
  * @prop {object} config.layerOptions.legendOptions additional options for WMS legend
+ * @prop {boolean} config.layerOptions.hideFilter hide the filter button in the layer nodes
  */
 function TOC({
     map = { layers: [], groups: [] },

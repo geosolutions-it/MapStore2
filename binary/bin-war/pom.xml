@@ -9,7 +9,7 @@
     <url>http://www.geo-solutions.it</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>8.5.69</tomcat.version>
+        <tomcat.version>9.0.90</tomcat.version>
         <binary.number>${mapstore2.version}</binary.number>
     </properties>
 
@@ -29,7 +29,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>3.4.0</version>
                 <configuration>
                     <overlays>
                         <overlay>

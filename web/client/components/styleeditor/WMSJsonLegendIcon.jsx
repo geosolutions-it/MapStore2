@@ -181,7 +181,7 @@ function WMSJsonLegendIcon({
             icons.push({Icon: icon[kind], symbolizer: symbolizer[kind]});
         });
     });
-    return icons.length ? <> {icons.map(({ Icon, symbolizer }, idx) => <div key={'icons-wms-json' + idx} className="ms-rule-legend-icon"><Icon symbolizer={symbolizer}/></div>)} </> : null;
+    return icons.length ? <> {icons.map(({ Icon, symbolizer }, idx) => <div key={'icons-wms-json' + idx} className="ms-legend-icon"><Icon symbolizer={symbolizer}/></div>)} </> : null;
 }
 
 export default WMSJsonLegendIcon;

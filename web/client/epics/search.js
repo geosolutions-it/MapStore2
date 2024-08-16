@@ -13,7 +13,7 @@ import assign from 'object-assign';
 import {isNil, sortBy} from 'lodash';
 import uuid from 'uuid';
 
-import {centerToMarkerSelector, getLayerFromName, queryableLayersSelector} from '../selectors/layers';
+import {centerToMarkerSelector, getLayerFromName, layersSelector} from '../selectors/layers';
 
 import {updateAdditionalLayer} from '../actions/additionallayers';
 import {
@@ -37,6 +37,7 @@ import {
     searchTextLoading,
     selectNestedService,
     serverError,
+    TEXT_SEARCH_ADD_MARKER,
     TEXT_SEARCH_ITEM_SELECTED,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_RESULTS_PURGE,
@@ -51,7 +52,7 @@ import {generateTemplateString} from '../utils/TemplateUtils';
 
 import {API} from '../api/searchText';
 import {getFeatureSimple} from '../api/WFS';
-import {getDefaultInfoFormatValueFromLayer} from '../utils/MapInfoUtils';
+import {defaultQueryableFilter, getDefaultInfoFormatValueFromLayer} from '../utils/MapInfoUtils';
 import {identifyOptionsSelector, isMapPopup} from '../selectors/mapInfo';
 import { addPopup } from '../actions/mapPopups';
 import { IDENTIFY_POPUP } from '../components/map/popups';
@@ -122,7 +123,7 @@ export const searchEpic = action$ =>
  * @return {Observable}
  */
 
-export const searchItemSelected = (action$, store) =>
+export const searchItemSelected = (action$) =>
     action$.ofType(TEXT_SEARCH_ITEM_SELECTED)
         .switchMap(action => {
             // itemSelectionStream --> emits actions for zoom and marker add
@@ -145,46 +146,6 @@ export const searchItemSelected = (action$, store) =>
                         zoomToExtent([bbox[0], bbox[1], bbox[2], bbox[3]], "EPSG:4326", item.__SERVICE__ && item.__SERVICE__.options && item.__SERVICE__.options.maxZoomLevel || 21),
                         addMarker(item)
                     ];
-                    if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
-                        let coord = pointOnSurface(item).geometry.coordinates;
-                        const latlng = { lng: coord[0], lat: coord[1] };
-                        const typeName = item.__SERVICE__.options.typeName;
-                        if (coord) {
-                            const state = store.getState();
-                            const layerObj = typeName && getLayerFromName(state, typeName);
-                            let itemId = null;
-                            let filterNameList = [];
-                            let overrideParams = {};
-                            let forceVisibility = false;
-                            if (item.__SERVICE__.launchInfoPanel === "single_layer") {
-                                /* take info from the item selected and restrict feature info to this layer
-                                 * and filtering with `featureid` which might be ignored by other servers,
-                                 * but can be used by GeoServer to select the specific feature instead to showing all the results
-                                 * when info_format is other than application/json */
-                                forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
-                                filterNameList = [typeName];
-                                itemId = item.id;
-                                overrideParams = {
-                                    [item.__SERVICE__.options.typeName]: {
-                                        info_format: getInfoFormat(layerObj, state),
-                                        ...(itemId
-                                            ? {
-                                                featureid: itemId,
-                                                CQL_FILTER: undefined
-                                            }
-                                            : {}
-                                        )
-                                    }
-                                };
-                            }
-                            return [
-                                ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
-                                ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId)] : []),
-                                showMapinfoMarker(),
-                                ...actions
-                            ];
-                        }
-                    }
                     return actions;
                 });
 
@@ -214,6 +175,58 @@ export const searchItemSelected = (action$, store) =>
         });
 
 /**
+ * Handles performing a GFI on the selected search results after zooming in, and adds a marker
+ * @param {external:Observable} action$ manages [`FEATURE_INFO_CLICK` and `SHOW_MAPINFO_MARKER`] for showing identify feature info
+ * @memberof epics.search
+ * @return {external:Observable}
+ */
+export const getFeatureInfoOfSelectedItem = (action$, store) =>
+    action$.ofType(TEXT_SEARCH_ADD_MARKER).switchMap((action) => {
+        const item = action.markerPosition;
+        if (item.__SERVICE__ && !isNil(item.__SERVICE__.launchInfoPanel) && item.__SERVICE__.options && item.__SERVICE__.options.typeName) {
+            let coord = pointOnSurface(item).geometry.coordinates;
+            const latlng = { lng: coord[0], lat: coord[1] };
+            const typeName = item.__SERVICE__.options.typeName;
+            if (coord) {
+                const state = store.getState();
+                const layerObj = typeName && getLayerFromName(state, typeName);
+                let itemId = null;
+                let filterNameList = [];
+                let overrideParams = {};
+                let forceVisibility = false;
+                if (item.__SERVICE__.launchInfoPanel === "single_layer") {
+                    /* take info from the item selected and restrict feature info to this layer
+                    * and filtering with `featureid` which might be ignored by other servers,
+                    * but can be used by GeoServer to select the specific feature instead to showing all the results
+                    * when info_format is other than application/json */
+                    forceVisibility = item.__SERVICE__.forceSearchLayerVisibility;
+                    filterNameList = [typeName];
+                    itemId = item.id;
+                    overrideParams = {
+                        [item.__SERVICE__.options.typeName]: {
+                            info_format: getInfoFormat(layerObj, state),
+                            ...(itemId
+                                ? {
+                                    featureid: itemId,
+                                    CQL_FILTER: undefined
+                                }
+                                : {}
+                            )
+                        }
+                    };
+                }
+                const ignoreVisibilityLimits = true;
+                return [
+                    ...(forceVisibility && layerObj ? [changeLayerProperties(layerObj.id, {visibility: true})] : []),
+                    ...(!item.__SERVICE__.openFeatureInfoButtonEnabled ? [featureInfoClick({ latlng }, typeName, filterNameList, overrideParams, itemId, ignoreVisibilityLimits)] : []),
+
+                    showMapinfoMarker()
+                ];
+            }
+        }
+        return Rx.Observable.empty();
+    }).delay(50);
+/**
  * Handles show GFI button click action.
  */
 export const textSearchShowGFIEpic = (action$, store) =>
@@ -227,6 +240,7 @@ export const textSearchShowGFIEpic = (action$, store) =>
             const coord = pointOnSurface(item).geometry.coordinates;
             const latlng = { lng: coord[0], lat: coord[1] };
             const itemId = item.id;
+            const ignoreVisibilityLimits = true;
             return !!coord &&
                 showGFIForService(item?.__SERVICE__) && layerIsVisibleForGFI(layerObj, item?.__SERVICE__) ?
                 Rx.Observable.of(
@@ -243,7 +257,7 @@ export const textSearchShowGFIEpic = (action$, store) =>
                                 }
                                 : {}
                             )
-                        } }, itemId),
+                        } }, itemId, ignoreVisibilityLimits),
                     showMapinfoMarker(),
                     addMarker(item)
                 ).merge(
@@ -304,8 +318,10 @@ export const searchOnStartEpic = (action$, store) =>
     action$.ofType(SEARCH_LAYER_WITH_FILTER)
         .switchMap(({layer: name, "cql_filter": cqlFilter}) => {
             const state = store.getState();
+            let queryableLayers = [...layersSelector(state)].filter(l=>defaultQueryableFilter(l));          // ignore visibility limits
+            const isLayerNotQueryableSelected = queryableLayers.filter(l => l.name === name).length === 0;
             // if layer is NOT queriable and visible then show error notification
-            if (queryableLayersSelector(state).filter(l => l.name === name ).length === 0) {
+            if (isLayerNotQueryableSelected) {
                 return Rx.Observable.of(nonQueriableLayerError());
             }
             const layer = getLayerFromName(state, name);
@@ -347,14 +363,14 @@ export const searchOnStartEpic = (action$, store) =>
                                     showMapinfoMarker()
                                 );
                             }
-
+                            const ignoreVisibilityLimits = true;
                             // trigger get feature info
                             return Rx.Observable.of(
                                 featureInfoClick(
                                     { latlng },
                                     typeName,
                                     [typeName],
-                                    { [typeName]: { cql_filter: cqlFilter } }
+                                    { [typeName]: { cql_filter: cqlFilter } }, null, ignoreVisibilityLimits
                                 )
                             )
                                 .merge(mapActionObservable);

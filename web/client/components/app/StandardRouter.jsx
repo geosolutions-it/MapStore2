@@ -68,9 +68,13 @@ class StandardRouter extends React.Component {
             <div className={this.props.className}>
 
                 <ThemeProvider {...this.props.themeCfg} version={this.props.version} onLoad={this.props.onThemeLoaded}>
-                    {this.props.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
+                    {this.props.themeLoaded ? (<Localized localeKey={false} messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                         <ConnectedRouter history={history}>
-                            <div className="error-container">
+                            {/** the key is moved from the above Localized to the next div after 'ConnectedRouter':
+                            *  to ensure the reload of children
+                            *  to avoid and prevent firing LOCATION_CHANGE action that caused reset map state in change locale
+                            */}
+                            <div key={this.props.locale.current} className="error-container">
                                 <ErrorBoundary
                                     onError={e => {
                                         /* eslint-disable no-console */
@@ -94,9 +98,13 @@ class StandardRouter extends React.Component {
         return (
             <div className={this.props.className}>
                 <Theme {...this.props.themeCfg} version={this.props.version}/>
-                <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
+                <Localized localeKey={false} messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
-                        <div className="error-container">
+                        {/** the key is moved from the above Localized to the next div after 'ConnectedRouter':
+                        *  to ensure the reload of children
+                        *  to avoid and prevent firing LOCATION_CHANGE action that caused reset map state in change locale
+                        */}
+                        <div key={this.props.locale.current} className="error-container">
                             <ErrorBoundary
                                 onError={e => {
                                     /* eslint-disable no-console */

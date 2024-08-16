@@ -43,12 +43,13 @@ import {
     searchOnStartEpic,
     textSearchShowGFIEpic,
     zoomAndAddPointEpic,
-    delayedSearchEpic
+    delayedSearchEpic,
+    getFeatureInfoOfSelectedItem
 } from '../epics/search';
 import mapInfoReducers from '../reducers/mapInfo';
 import searchReducers from '../reducers/search';
 import { layersSelector } from '../selectors/layers';
-import {mapSelector, mapSizeValuesSelector} from '../selectors/map';
+import {mapSelector, mapSizeValuesSelector, projectionSelector} from '../selectors/map';
 import ConfigUtils from '../utils/ConfigUtils';
 import { defaultIconStyle } from '../utils/SearchUtils';
 import ToggleButton from './searchbar/ToggleButton';
@@ -60,8 +61,9 @@ const searchSelector = createSelector([
     state => state.search || null,
     state => state.controls && state.controls.searchBookmarkConfig || null,
     state => state.mapConfigRawData || {},
-    state => state?.searchbookmarkconfig || ''
-], (searchState, searchBookmarkConfigControl, mapInitial, bookmarkConfig) => ({
+    state => state?.searchbookmarkconfig || '',
+    projectionSelector
+], (searchState, searchBookmarkConfigControl, mapInitial, bookmarkConfig, currentMapCRS) => ({
     enabledSearchBookmarkConfig: searchBookmarkConfigControl && searchBookmarkConfigControl.enabled || false,
     error: searchState && searchState.error,
     coordinate: searchState && searchState.coordinate || {},
@@ -71,7 +73,8 @@ const searchSelector = createSelector([
     format: get(searchState, "format") || ConfigUtils.getConfigProp("defaultCoordinateFormat"),
     selectedItems: searchState && searchState.selectedItems,
     mapInitial,
-    bookmarkConfig: bookmarkConfig || {}
+    bookmarkConfig: bookmarkConfig || {},
+    currentMapCRS
 }));
 
 const SearchBar = connect(searchSelector, {
@@ -420,7 +423,7 @@ export default {
                 priority: 1
             }
         }),
-    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic, delayedSearchEpic},
+    epics: {searchEpic, searchOnStartEpic, searchItemSelected, zoomAndAddPointEpic, textSearchShowGFIEpic, delayedSearchEpic, getFeatureInfoOfSelectedItem},
     reducers: {
         search: searchReducers,
         mapInfo: mapInfoReducers,

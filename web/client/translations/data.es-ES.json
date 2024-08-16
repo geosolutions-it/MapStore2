@@ -212,6 +212,10 @@
                 "label": "Habilitar estilo localizado",
                 "tooltip": "Nota: este parámetro requiere configuraciones específicas en GeoServer"
             },
+            "useCacheOptionInfo": {
+                "label": "Utilice cuadrículas de mosaicos personalizadas remotas",
+                "info": "Asegúrese de que WMTS esté habilitado para poder usar cuadrículas de mosaicos personalizadas"
+            },
             "format": {
                 "title": "Formato",
                 "tile": "Teja",
@@ -864,6 +868,7 @@
             "addressSearch": "Buscar por nombre de ubicación",
             "searchOnAllServices": "Busque en todos los servicios a continuación",
             "coordinatesSearch": "buscar por coordenadas",
+            "currentMapCRS": "Sistema de coordenadas del mapa actual",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un servicio de búsqueda",
             "serviceslistlabel": "Servicios disponibles",
@@ -885,6 +890,8 @@
             "b_newpaneltitle": "Agregar nuevo marcador",
             "latitude": "Lat",
             "longitude": "Lon",
+            "yCoord": "Y",
+            "xCoord": "X",
             "b_title": "Título",
             "b_layer_tooltip": "Alternar recarga de visibilidad de capa",
             "b_bbox": "Cuadro delimitador",
@@ -1075,7 +1082,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Acercar",
             "zoomOutTooltip": "Alejar",
-            "zoomAllTooltip": "Ajustar a la máxima extensión"
+            "zoomAllTooltip": "Ajustar a la vista inicial"
         },
         "fullscreen": {
             "tooltipActivate": "Cambiar a pantalla completa",
@@ -1578,6 +1585,10 @@
             "noRecordsMatched": "Ningún resultado encontrado",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "DE WFS",
+                "wms": "DE WMS"
+            },
             "share": "Compartir",
             "copyToClipboard": "Copiar en el portapapeles",
             "copied": "¡Copiado!",

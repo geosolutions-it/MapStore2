@@ -83,6 +83,9 @@ In **general settings of**  CSW service the user can specify the title to assign
 
 <img src="../img/catalog/general_settings.jpg" class="ms-docimage"  style="max-width:600px;"/>
 
+!!! note
+    If the *CSW service*, responds with metadata records that can hold more than just one type of OGC service (WMS and WFS are currently supported for this), [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) allows the user to choose from which service the layer should be added to the [TOC](toc.md#table-of-contents). An example can be the following: <video class="ms-docimage"  style="max-width:500px;" controls><source src="../img/catalog/csw_with_more_ogc_service.mp4"></video>
+
 #### Advanced Settings
 
 <img src="../img/catalog/advanced_settings_csw.jpg" class="ms-docimage"  style="max-width:600px;"/>
@@ -229,6 +232,8 @@ Enabling that option, all layers added to the map from this catalog source will 
 
 !!! note
     If the **No Vendor** is set, then [MapStore](https://mapstore.geosolutionsgroup.com/mapstore/#/) will not use any vendor option supported only by GeoServer in the OGC requests where this source is involved.
+
+* *Use remote custom tile grids*: if checked, allows to set by default the *custom tile grid caching strategy* when a layer is added to the map from this source as described in [Layer Settings](layer-settings.md#display).
 
 * *Format*: to define the default *Tile* format for the layers added to the map (`png`, `png8`, `jpeg`, `vnd.jpeg-png`, `vnd.jpeg-png8` or `gif`) and to define the default *Information sheet* format for the layers added to the map (`text/plain`, `text/html`, `application/json` or `application/geo+json`). The list of available formats is automatically retrieved from the ones supported by the WMS server and can be also manually fetched through the **Fetch supported formats** <img src = "../img/button/update_button.jpg" Button = "ms-docbutton" /> button when necessary.
 

@@ -7,6 +7,8 @@
   */
 import tinycolor from 'tinycolor2';
 import { toNumber, includes } from 'lodash';
+import { randomInt } from './RandomUtils';
+
 let ColorUtils;
 /**
  * Porting of various MapStore(1) utilities for random/color scale generations
@@ -195,12 +197,12 @@ export const colorToRgbaStr = (color, alpha, defaultColor) => {
 */
 export const generateRandomHexColor = (currentColors) => {
     const roundValue = Math.round;
-    const randomValue = Math.random;
+    const randomValue = randomInt;
     var maxValue = 255;
     const rgbRandomColor = [
-        roundValue(randomValue() * maxValue),
-        roundValue(randomValue() * maxValue),
-        roundValue(randomValue() * maxValue)
+        roundValue(randomValue(maxValue)),
+        roundValue(randomValue(maxValue)),
+        roundValue(randomValue(maxValue))
     ];
     const hexRandomColor = ColorUtils.rgbToHex(rgbRandomColor);
     if (currentColors) {

@@ -180,6 +180,17 @@ class CesiumMap extends React.Component {
 
         // this is needed to display correctly intersection between terrain and primitives
         scene.globe.depthTestAgainstTerrain = this.props.mapOptions?.depthTestAgainstTerrain ?? false;
+        // set zoom limits if found
+        if (this.props.mapOptions?.minimumZoomDistance || this.props.mapOptions?.maximumZoomDistance) {
+            const minZoomLevel = this.props.mapOptions?.minimumZoomDistance;
+            const maxZoomLevel = this.props.mapOptions?.maximumZoomDistance;
+            if (minZoomLevel) {
+                map.scene.screenSpaceCameraController.minimumZoomDistance = minZoomLevel;
+            }
+            if (maxZoomLevel) {
+                map.scene.screenSpaceCameraController.maximumZoomDistance = maxZoomLevel;
+            }
+        }
 
         this.forceUpdate();
         map.scene.requestRender();
@@ -386,6 +397,7 @@ class CesiumMap extends React.Component {
                 let msId;
                 let properties;
                 let geometry = null;
+                let id;
                 if (feature instanceof Cesium.Cesium3DTileFeature && feature?.tileset?.msId) {
                     msId = feature.tileset.msId;
                     // 3d tile feature does not contain a geometry in the Cesium3DTileFeature class
@@ -397,16 +409,18 @@ class CesiumMap extends React.Component {
                     const value = getFeatureById(feature.id);
                     properties = value.feature.properties;
                     geometry = value.feature.geometry;
+                    id = value.feature.id;
                     msId = value.msId;
                 }
                 if (!properties || !msId) {
                     return acc;
                 }
+                const newFeature = { type: 'Feature', properties, geometry, ...(id && { id }) };
                 return {
                     ...acc,
                     [msId]: acc[msId]
-                        ? [...acc[msId], { type: 'Feature', properties, geometry }]
-                        : [{ type: 'Feature', properties, geometry }]
+                        ? [...acc[msId], newFeature]
+                        : [newFeature]
                 };
             }, []);
             return Object.keys(groupIntersectedFeatures).map(id => ({ id, features: groupIntersectedFeatures[id] }));

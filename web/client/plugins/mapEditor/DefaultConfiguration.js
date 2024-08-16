@@ -64,12 +64,7 @@ export default {
             }
         },
         "AddGroup", "MapFooter",
-        {
-            "name": "TOCItemsSettings",
-            "cfg": {
-                "hideInteractiveLegendOption": true
-            }
-        },
+        "TOCItemsSettings",
         "MapImport",
         "MapExport",
         {

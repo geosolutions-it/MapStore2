@@ -69,7 +69,12 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
     webpack: {
         devtool: 'eval',
         mode: 'development',
-
+        optimization: {
+            nodeEnv: false
+        },
+        output: {
+            hashFunction: "xxhash64"
+        },
         module: {
             rules: [
                 {
@@ -140,7 +145,6 @@ module.exports = ({browsers = [ 'ChromeHeadless' ], files, path, testFile, singl
                 zlib: false
             },
             alias: assign({}, {
-                jsonix: '@boundlessgeo/jsonix',
                 // next libs are added because of this issue https://github.com/geosolutions-it/MapStore2/issues/4569
                 proj4: '@geosolutions/proj4',
                 "react-joyride": '@geosolutions/react-joyride'

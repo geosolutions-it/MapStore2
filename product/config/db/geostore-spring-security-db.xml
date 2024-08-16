@@ -24,6 +24,7 @@
         <security:custom-filter ref="sessionTokenProcessingFilter" after="FORM_LOGIN_FILTER"/>
         <security:custom-filter ref="keycloakFilter" before="BASIC_AUTH_FILTER"/>
         <security:custom-filter ref="googleOpenIdFilter" after="BASIC_AUTH_FILTER"/>
+        <security:custom-filter ref="oidcOpenIdFilter" before="OPENID_FILTER"/>
         <security:anonymous />
     </security:http>
 
@@ -50,9 +51,13 @@
     <bean id="preauthenticatedAuthenticationProvider" class="it.geosolutions.geostore.services.rest.security.PreAuthenticatedAuthenticationProvider">
     </bean>
 
-    <!-- OAuth2 beans -->
     <context:annotation-config/>
+    <!-- OAuth2 beans -->
 
+    <!-- Generic OIDC -->
+    <bean id="oidcSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.openid_connect.OpenIdConnectSecurityConfiguration"/>
+
+    <!-- Google -->
     <bean id="googleSecurityConfiguration" class="it.geosolutions.geostore.services.rest.security.oauth2.google.OAuthGoogleSecurityConfiguration"/>
 
     <!-- Keycloak -->

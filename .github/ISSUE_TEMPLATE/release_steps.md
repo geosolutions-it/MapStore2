@@ -12,7 +12,7 @@ This steps have to be followed always when preparing a new release.
 
 - [x] Create an issue with this checklist in the release milestone, named "Release YYYY.XX.mm".
 - [ ] Create the milestone if it doesn't exist. (Name YYYY.XX.mm).
-- [ ] Verify if it is needed to release a new version of `http_proxy`, `mapfish-print` or `geostore`, and do it if necessary accordingly with [release calendar 2022](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Releases-2022).
+- [ ] Verify if it is needed to release a new version of `http_proxy`, `mapfish-print` or `geostore`, and do it if necessary accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars).
   - [ ] for `geostore`, check if [here](https://maven.geo-solutions.it/it/geosolutions/geostore/geostore-webapp/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/geostore) file of the project.
   - [ ] for `http_proxy`, check if [here](https://maven.geo-solutions.it/proxy/http_proxy/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/http-proxy) file of the project.
   - [ ] for `mapfish-print` check if [here](https://maven.geo-solutions.it/proxy/http_proxy/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/mapfish-print) file of the project.
@@ -61,34 +61,50 @@ This steps have to be followed always when preparing a new release.
   - Use workflow from `branch` **YYYY.XX.xx** (the release branch)
   - Version to release **YYYY.XX.mm** (the effective number of the release)
   - MapStore version for changelog generation **YYYY.XX.mm** (the effective number of the previous release)
-  - version to fix for the java module, accordingly with release schedule (e.g. `1.7.0`)
+  - version to fix for the java module, accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) (e.g. `1.7.0`)
   - use the default value for the other parameters
 - [ ] Wait for the process to complete. At the end:
     - a new commit will be added to the release branch tagged as `vYYYY.XX.mm`. This commit will contain the changelog and the updated version of the java modules.
     - a pull request will be created on master with the changelog updates
 - [ ] Merge the incoming PR created by the workflow for updating changelog on Master
+- [ ] Run [`Submodules Update`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/submodules_update.yml) on MapStoreExtension:
+  - Branch `YYYY.XX.xx`
 
 ## MapStore Stable deploy
 
 - [ ] check if there are changes to be ported to STABLE branch of [mapstore-datadir](https://github.com/geosolutions-it/mapstore-datadir/tree/STABLE) repo
   - [ ] if so prepare a PR to be merged
   - [ ] merge the PR and move on with the steps otherwise stop here
-- [ ] Launch the [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Build/) and wait for the MapStore2-Stable-EndPointsTests to complete as well
-  - [ ] When previous two jobs are green you can:
-    - [ ] Lunch [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-Stable-Build/)
-      - [ ] `branch` build on stable branch `YYYY.XX.xx`
-      - [ ] `version`: `YYYY.XX.mm`
-    - [ ] After "MapStore2-Stable-Build" finished, Launch [MapStore2-Stable-Deploy](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/) to install the latest stable version on official demo
-    - [ ] test the change has been applied, login on https://mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key).
+- [ ] Lunch [MapStore2-Stable-Build](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20QA/job/MapStore2-Stable-Build/)
+      - `branch`: `vYYYY.XX.mm` (the version tag name, e.g. v2024.01.01)
+      - `version`: `${branch}-stable` ( version to pass to the build )
+      - `TAG_NAME`: `${branch}-stable` (tag to assign to the docker hub image)
+- [ ] After "MapStore2-Stable-Build" finished, Launch [MapStore2-Stable-Deploy](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Deploy/) to install the latest stable version on official demo.
+      - `branch`: `vYYYY.XX.mm` (the version tag name, e.g. v2024.01.01)
+      - `TAG_NAME`: `${branch}-stable` (tag of the docker hub image, previously build)
+- [ ] Test the change has been applied, login on https://mapstore.geosolutionsgroup.com and verify that the layers from `gs-stable` are visible without errors (typically authentication errors that was caused by the wrong auth-key).
 
-## Build and publishing release
+## Create and Publish MapStoreExtension release
+
+- [ ] [Create a draft release](https://github.com/geosolutions-it/MapStoreExtension/releases/new) for [MapstoreExtension](https://github.com/geosolutions-it/MapStoreExtension) with the same name and tag
+  - target of the release is **stable branch** aligned to latest commit in stable branch of main mapstore repo
+  - tag is **vYYYY.XX.mm**
+- [ ] Upload the `SampleExtension.zip` to upload on release:
+  - [Open the page](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/checks.yml). You will see a process running for the stable branch, triggered by **"Update submodules"**. Wait for the end of this task.
+  - When the process is succesfully finished **click** on the **"Update submodules"** last successful task. The task page will open.
+  - At the bottom of the page **click** on "**Artifacts**" to download.
+  - **Extract**  from the `artifacts.zip` the `SampleExtension.zip` file
+  - Upload the `SampleExtension.zip` to the draft release created.
+- [ ] Publish the MapStoreExtension release
+
+## Create and Publish MapStore release
 
 - [ ] Run [`Create Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/create_release.yml) workflow on github actions with the following parameters:
   - Use workflow from `branch` **YYYY.XX.xx** (the release branch)
-  - Version to release **YYYY.XX.mm** (the effective number of the release)
+  - Version to release **YYYY.XX.mm** (version **without** the `v` prefix)
 - [ ] Launch [MapStore2-Stable-Releaser](http://build.geosolutionsgroup.com/view/MapStore/job/MapStore/view/MapStore%20Stable/job/MapStore2-Stable-Releaser/) Jenkins job with
-   - **YYYY.XX.mm** for the version
-   - **YYYY.XX.xx** for the branch to build
+  - **branch**: **vYYYY.XX.mm** (the version tag name, e.g. v2024.01.01)
+  - **ms2Version**: **YYYY.XX.mm** (version **without** the `v` prefix)
 - [ ] Wait the end of the 2 process
 
 When the processes are finished, the release is ready to be published on github in draft mode.
@@ -97,26 +113,17 @@ When the processes are finished, the release is ready to be published on github 
 - [ ] Update the link to Docker in the release notes with the link to the latest stable release (search the new tag on [docker hub](https://hub.docker.com/r/geosolutionsit/mapstore2/tags) )
 - [ ] Update the description of the release details
 - [ ] Publish the release
+
+## Update ReadTheDocs
+
 - [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
 - [ ] Update `Default version` to point the release version in the `Advanced Settings` menu of the [ReadTheDocs](https://readthedocs.org/dashboard/mapstore/advanced/) admin panel
-
-## Build and publish MapStoreExtension release
-
-- [ ] [Create a draft release](https://github.com/geosolutions-it/MapStoreExtension/releases/new) for [MapstoreExtension](https://github.com/geosolutions-it/MapStoreExtension) with the same name and tag
-  - [ ] target of the release is **stable branch** aligned to latest commit in stable branch of main mapstore repo
-  - [ ] tag is **vYYYY.XX.mm**
-  - [ ] Update revision of mapstore to the release tag **vYYYY.XX.mm**
-  - [ ] [run the build](https://github.com/geosolutions-it/MapStoreExtension#build-extension) locally and attach to the release the file `SampleExtension.zip` from the `/dist` folder
-  - [ ] create a PR for the changes of the revision to the MapstoreExtension repo
-  - [ ] Merge the PR
-  - [ ] Publish the release
-  - [ ] Link the MapStore extension release in the MapStore release
 
 ## Finalize Release
 
 - [ ] Run the [`Post Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/post_release.yml) workflow on github with the following parameters:
     - Use workflow from branch `YYYY.XX.xx` (the release branch)
-    - Version of Java Packages to restore accordingly with release calendar with `-SNAPSHOT` E.g. `1.7-SNAPSHOT`
+    - Version of Java Packages to restore accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) with `-SNAPSHOT` E.g. `1.7-SNAPSHOT`
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Optional - prepare a PR for updating release procedure, if needed
 - [ ] Close this issue

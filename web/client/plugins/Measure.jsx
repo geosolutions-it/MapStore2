@@ -26,7 +26,8 @@ import { isOpenlayers, mapTypeSelector } from '../selectors/maptype';
 import {
     isCoordinateEditorEnabledSelector,
     isTrueBearingEnabledSelector,
-    showAddAsAnnotationSelector
+    showAddAsAnnotationSelector,
+    coordsAeronauticalEnabledSelector
 } from '../selectors/measurement';
 import ConfigUtils from '../utils/ConfigUtils';
 import Message from './locale/Message';
@@ -163,14 +164,24 @@ const Measure = connect(
 // the connect for mapType is needed in case the mapType is not provided by the hash pathname
 const MeasurePlugin = connect(
     createSelector([
-        mapTypeSelector
-    ], (mapType) => ({
-        mapType
+        mapTypeSelector,
+        coordsAeronauticalEnabledSelector
+    ], (
+        mapType,
+        coordsAeronauticalEnabled
+    ) => ({
+        mapType,
+        coordsAeronauticalEnabled
     }))
-)((props) => {
-    return props.mapType === MapLibraries.CESIUM
-        ? null
-        : <Measure {...props} />;
+)(({coordsAeronauticalEnabled, ...props}) => {
+    return (
+        <div className={props.mapType !== MapLibraries.CESIUM && props?.defaultOptions?.showCoordinateEditor ? "measure-container measure-coords-editor" : "measure-container"} style={{top: coordsAeronauticalEnabled ? 88 : 48}}>
+            {
+                props.mapType === MapLibraries.CESIUM
+                    ? <div id="measure-cesium-wrapper"/>
+                    : <Measure {...props} />
+            }
+        </div>);
 });
 
 export default createPlugin('Measure', {

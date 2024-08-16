@@ -2,3 +2,4 @@
 node_modules
 product
 web/client/dist
+**/target

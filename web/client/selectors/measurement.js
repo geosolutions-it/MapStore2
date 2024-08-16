@@ -67,3 +67,11 @@ export const measurementSelector = (state) => {
  * @return {boolean} geomType of the measurement
  */
 export const geomTypeSelector = (state) => state?.measurement?.geomType;
+
+/**
+ * Get if search tool is using coordinatesSearch and aeronautical format
+ * @memberof selectors.measurement
+ * @param  {object} state the state
+ * @return {boolean} the flag
+ */
+export const coordsAeronauticalEnabledSelector = state => state?.search?.activeSearchTool === "coordinatesSearch" && state?.search?.format === "aeronautical";

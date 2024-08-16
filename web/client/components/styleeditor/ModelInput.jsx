@@ -10,7 +10,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, Glyphicon as GlyphiconRB } from 'react-bootstrap';
 import tooltip from '../misc/enhancers/tooltip';
-import { isValidURLTemplate } from '../../utils/URLUtils';
+import { isValidURL } from '../../utils/URLUtils';
 import DebouncedFormControl from '../misc/DebouncedFormControl';
 
 const Glyphicon = tooltip(GlyphiconRB);
@@ -32,7 +32,7 @@ function ModelInput({
 }) {
 
     const [moduleUrl, setModuleUrl] = useState(value);
-    const isValid = isValidURLTemplate(moduleUrl);
+    const isValid = isValidURL(moduleUrl);
 
     useEffect(() => {
         onError(!isValid);
@@ -40,7 +40,7 @@ function ModelInput({
 
     const onModuleSourceChange = (newModelUrl) => {
         setModuleUrl(newModelUrl);
-        if (isValidURLTemplate(newModelUrl)) {
+        if (isValidURL(newModelUrl)) {
             onChange(newModelUrl);
         }
     };

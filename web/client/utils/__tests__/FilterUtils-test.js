@@ -2227,6 +2227,19 @@ describe('FilterUtils', () => {
             xmlnsToAdd: ['xmlns:ogc="http://www.opengis.net/ogc"', 'xmlns:gml="http://www.opengis.net/gml"']
         }, undefined, {...filterObj, ogcVersion});
         expect(filter).toEqual(expectedFilter);
+        const args = [{
+            "ogcVersion": "1.1.0"
+        }, "P1 = 'V1' AND P2 = 'V2' OR P1 = 'V3' AND P2 = 'V4'", undefined, {
+            "featureTypeName": "cgd:GEO_FEATURE",
+            "filterType": "OGC",
+            "ogcVersion": "1.1.0",
+            "pagination": {
+                "startIndex": 0,
+                "maxFeatures": 20
+            }
+        }];
+        expect(mergeFiltersToOGC(...args)).toEqual(`<ogc:Filter><ogc:And><ogc:Or><ogc:And><ogc:PropertyIsEqualTo><ogc:PropertyName>P1</ogc:PropertyName><ogc:Literal>V1</ogc:Literal></ogc:PropertyIsEqualTo><ogc:PropertyIsEqualTo><ogc:PropertyName>P2</ogc:PropertyName><ogc:Literal>V2</ogc:Literal></ogc:PropertyIsEqualTo></ogc:And><ogc:And><ogc:PropertyIsEqualTo><ogc:PropertyName>P1</ogc:PropertyName><ogc:Literal>V3</ogc:Literal></ogc:PropertyIsEqualTo><ogc:PropertyIsEqualTo><ogc:PropertyName>P2</ogc:PropertyName><ogc:Literal>V4</ogc:Literal></ogc:PropertyIsEqualTo></ogc:And></ogc:Or></ogc:And></ogc:Filter>`);
+
     });
     // sub function to convert filters from other formats
     describe('sub function to convert filters from other formats', () => {

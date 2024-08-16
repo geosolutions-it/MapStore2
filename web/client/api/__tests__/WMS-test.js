@@ -108,6 +108,23 @@ describe('Test correctness of the WMS APIs', () => {
                 expect(result.service).toBeTruthy();
                 expect(result.records[0].getMapFormats.length).toBe(20);
                 expect(result.numberOfRecordsMatched).toBe(5);
+                expect(result.records[0].SRS.length).toBe(3);
+                expect(result.layerOptions).toBeTruthy();
+                expect(result.layerOptions.version).toBe('1.3.0');
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+    it('GetRecords', (done) => {
+        API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.3.0-minimal.xml', 0, 2, '').then((result) => {
+            try {
+                expect(result).toBeTruthy();
+                expect(result.service).toBeTruthy();
+                expect(result.records[0].getMapFormats.length).toBe(1);
+                expect(result.records[0].SRS.length).toBe(1);
+                expect(result.numberOfRecordsMatched).toBe(1);
                 expect(result.layerOptions).toBeTruthy();
                 expect(result.layerOptions.version).toBe('1.3.0');
                 done();
@@ -179,6 +196,82 @@ describe('Test correctness of the WMS APIs', () => {
 
         const capability = API.parseLayerCapabilities(capabilities, {name: 'mytest'});
         expect(capability).toBeTruthy();
+    });
+    it('parseLayerCapabilities formats', () => {
+        const capabilities = {
+            Capability: {
+                Request: {
+                    GetMap: {
+                        Format: [
+                            "image/png",
+                            "application/atom+xml",
+                            "application/json;type=geojson",
+                            "application/json;type=topojson",
+                            "application/json;type=utfgrid",
+                            "application/pdf",
+                            "application/rss+xml",
+                            "application/vnd.google-earth.kml+xml",
+                            "application/vnd.google-earth.kml+xml;mode=networklink",
+                            "application/vnd.google-earth.kmz",
+                            "application/vnd.mapbox-vector-tile",
+                            "image/geotiff",
+                            "image/geotiff8",
+                            "image/gif",
+                            "image/jpeg",
+                            "image/png; mode=8bit",
+                            "image/svg+xml",
+                            "image/tiff",
+                            "image/tiff8",
+                            "image/vnd.jpeg-png",
+                            "image/vnd.jpeg-png8",
+                            "text/html; subtype=openlayers",
+                            "text/html; subtype=openlayers2",
+                            "text/html; subtype=openlayers3"
+                        ]
+                    },
+                    GetFeatureInfo: {
+                        Format: [
+                            "text/plain",
+                            "application/vnd.ogc.gml",
+                            "text/xml",
+                            "application/vnd.ogc.gml/3.1.1",
+                            "text/xml; subtype=gml/3.1.1",
+                            "text/html",
+                            "application/json"
+                        ]
+                    }
+                },
+                Layer: {
+                    Layer: {
+                        Layer: [
+                            {
+                                Name: "mytest"
+                            },
+                            {
+                                Name: "mytest2"
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        const capability = API.parseLayerCapabilities(capabilities, {name: 'mytest'});
+        expect(capability).toBeTruthy();
+        expect(capability.layerOptions).toBeTruthy();
+        expect(capability.layerOptions.imageFormats).toEqual([
+            'image/png',
+            'image/gif',
+            'image/jpeg',
+            'image/png; mode=8bit',
+            'image/vnd.jpeg-png',
+            'image/vnd.jpeg-png8'
+        ]);
+        expect(capability.layerOptions.infoFormats).toEqual([
+            'text/plain',
+            'text/html',
+            'application/json'
+        ]);
     });
     it('should parse nested layers from capabilities', () => {
         expect(API.flatLayers({

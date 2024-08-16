@@ -43,7 +43,7 @@ import {
     getFloatingWidgets,
     getWidgetLayer
 } from '../selectors/widgets';
-import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR } from '../actions/layers';
+import { CHANGE_LAYER_PROPERTIES, LAYER_LOAD, LAYER_ERROR, UPDATE_NODE } from '../actions/layers';
 
 import { getLayerFromId } from '../selectors/layers';
 import { pathnameSelector } from '../selectors/router';
@@ -261,11 +261,14 @@ export const exportWidgetImage = action$ =>
  * @return {external:Observable}
  */
 export const updateLayerOnLayerPropertiesChange = (action$, store) =>
-    action$.ofType(CHANGE_LAYER_PROPERTIES)
-        .switchMap(({layer, newProperties}) => {
+    action$.ofType(CHANGE_LAYER_PROPERTIES, UPDATE_NODE)
+        .filter(({layer, newProperties, nodeType, options}) => {
+            return (layer && newProperties) || (nodeType === "layers" && has(options, "layerFilter"));
+        })
+        .switchMap(({layer, newProperties, node, options}) => {
             const state = store.getState();
-            const flatLayer = getLayerFromId(state, layer);
-            const shouldUpdate = flatLayer && (has(newProperties, "layerFilter") || has(newProperties, "fields"));
+            const flatLayer = getLayerFromId(state, layer ?? node);
+            const shouldUpdate = flatLayer && (has(newProperties ?? options, "layerFilter") || has(newProperties, "fields"));
             if (shouldUpdate) {
                 return Rx.Observable.of(updateWidgetLayer(flatLayer));
             }
@@ -330,7 +333,7 @@ export const onOpenFilterEditorEpic = (action$, store) =>
         .switchMap(() => {
             const state = store.getState();
             const layer = getWidgetLayer(state);
-            const zoom = defaultGetZoomForExtent(reprojectBbox(layer.bbox.bounds, "EPSG:4326", "EPSG:3857", true), DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
+            const zoom = defaultGetZoomForExtent(reprojectBbox(layer.bbox.bounds, "EPSG:4326", "EPSG:3857"), DEFAULT_MAP_SETTINGS.size, 0, 21, 96, DEFAULT_MAP_SETTINGS.resolutions);
             const map = {
                 ...DEFAULT_MAP_SETTINGS,
                 zoom,

@@ -16,7 +16,7 @@ function VectorLegend({ style }) {
 
     const renderRules = (rules) => {
         return (rules || []).map((rule) => {
-            return (<div className="ms-vector-legend-rule" key={rule.ruleId}>
+            return (<div className="ms-legend-rule" key={rule.ruleId}>
                 <RuleLegendIcon rule={rule} />
                 <span>{rule.name || ''}</span>
             </div>);
@@ -25,7 +25,7 @@ function VectorLegend({ style }) {
 
     return <>
         {
-            style.format === 'geostyler' && <div className="ms-vector-legend">
+            style.format === 'geostyler' && <div className="ms-legend">
                 {renderRules(style.body.rules)}
             </div>
         }

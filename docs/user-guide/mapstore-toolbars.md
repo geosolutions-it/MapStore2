@@ -14,9 +14,11 @@ The search bar is a tool that allows the user to query the layers in order to fi
 
 * By **Location name**
 
+* By **Configuring a search service**
+
 * By **Coordinates**
 
-* By **Configuring a search service**
+* By **Current map CRS**
 
 * By **Bookmarks**
 
@@ -27,22 +29,6 @@ The search bar is a tool that allows the user to query the layers in order to fi
 The *Search by location name*, set by default when a new map is created, allows the user to search places asking the [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/). Typing the desired place, the Nominatim seach engine is queried; selecting then the desired record in the list of results, the map is automatically re-center/zoomed to the chosen area that is also highlighted:
 
 <img src="../img/menu-bar/rome.jpg" class="ms-docimage" />
-
-### Search by coordinates
-
-Performing a *Search by coordinates* the user can zoom to a specific point and place a marker in its position. That point can be specified typing the coordinates in two different formats:
-
-* **Decimal** (the default format)
-
-<img src="../img/menu-bar/decimal.jpg" class="ms-docimage" style="max-width:500px;"/>
-
-* **Aeronautical** (that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button)
-
-<img src="../img/menu-bar/aeronautical.jpg" class="ms-docimage" style="max-width:500px;"/>
-
-Once the coordinates are set, it is possible to perform the search with the <img src="../img/button/magnifying_glass_icon.jpg" class="ms-docbutton"/> button. The displayed result is similar to the following:
-
-<img src="../img/menu-bar/performed-search.jpg" class="ms-docimage"/>
 
 ### Configuring a search service
 
@@ -118,6 +104,32 @@ When there are multiple search services defined, by default [MapStore](https://m
 In the *Search Menu*, the user can choose one of the search services to use to carry out the search by clicking on one of them. An example could be the following:
 
 <video class="ms-docimage" style="max-width:600px;" controls><source src="../img/menu-bar/search-with-one-search-service.mp4"/></video>
+
+### Search by coordinates
+
+Performing a *Search by coordinates* the user can zoom to a specific point and place a marker in its position. That point can be specified typing the coordinates in two different formats:
+
+* **Decimal** (the default format)
+
+<img src="../img/menu-bar/decimal.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+* **Aeronautical** (that can be chosen through the <img src="../img/button/change-search-tool.jpg" class="ms-docbutton"/> button)
+
+<img src="../img/menu-bar/aeronautical.jpg" class="ms-docimage" style="max-width:500px;"/>
+
+Once the coordinates are set, it is possible to perform the search with the <img src="../img/button/magnifying_glass_icon.jpg" class="ms-docbutton"/> button. The displayed result is similar to the following:
+
+<img src="../img/menu-bar/performed-search.jpg" class="ms-docimage"/>
+
+### Search by current map CRS
+
+MapStore allows the user to *Search by current map CRS*, which can zoom to a specific point and place a marker in its position. That point can be specified typing the **X** and **Y** coordinates of the map.
+Once the coordinates are set, it is possible to perform the search with the <img src="../img/button/magnifying_glass_icon.jpg" class="ms-docbutton"/> button. The displayed result is similar to the following:
+
+<img src="../img/menu-bar/performed-search_by_crs.jpg" class="ms-docimage" style="max-width:600px;"/>
+
+!!! Warning
+    The *Search by current map CRS* is available only if the the current map CRS is not the one normally used by Decimal and Aeronautical coordinates, which means `EPSG:4326`.
 
 ### Search by bookmark
 
