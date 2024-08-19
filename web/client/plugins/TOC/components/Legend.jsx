@@ -14,11 +14,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    addAuthenticationParameter,
     addAuthenticationToSLD,
     clearNilValuesForParams
 } from '../../../utils/SecurityUtils';
 import Message from '../../../components/I18N/Message';
+import SecureImage from '../../../components/misc/SecureImage';
+
 import { randomInt } from '../../../utils/RandomUtils';
 
 /**
@@ -85,23 +86,26 @@ class Legend extends React.Component {
 
             const cleanParams = clearNilValuesForParams(layer.params);
             const scale = this.getScale(props);
-            let query = assign({}, {
-                service: "WMS",
-                request: "GetLegendGraphic",
-                format: "image/png",
-                height: props.legendHeight,
-                width: props.legendWidth,
-                layer: layer.name,
-                style: layer.style || null,
-                version: layer.version || "1.3.0",
-                SLD_VERSION: "1.1.0",
-                LEGEND_OPTIONS: props.legendOptions
-            }, layer.legendParams || {},
-            props.language && layer.localizedLayerStyles ? {LANGUAGE: props.language} : {},
-            addAuthenticationToSLD(cleanParams || {}, props.layer),
-            cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
-            scale !== null ? { SCALE: scale } : {});
-            addAuthenticationParameter(url, query);
+            let query = assign(
+                {},
+                {
+                    service: "WMS",
+                    request: "GetLegendGraphic",
+                    format: "image/png",
+                    height: props.legendHeight,
+                    width: props.legendWidth,
+                    layer: layer.name,
+                    style: layer.style || null,
+                    version: layer.version || "1.3.0",
+                    SLD_VERSION: "1.1.0",
+                    LEGEND_OPTIONS: props.legendOptions
+                },
+                layer.legendParams || {},
+                props.language && layer.localizedLayerStyles ? {LANGUAGE: props.language} : {},
+                addAuthenticationToSLD(cleanParams || {}, props.layer),
+                cleanParams && cleanParams.SLD_BODY ? {SLD_BODY: cleanParams.SLD_BODY} : {},
+                scale !== null ? { SCALE: scale } : {}
+            );
 
             return urlUtil.format({
                 host: urlObj.host,
@@ -114,7 +118,15 @@ class Legend extends React.Component {
     }
     render() {
         if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
-            return <img onError={this.onImgError} onLoad={(e) => this.validateImg(e.target)} src={this.getUrl(this.props)} style={this.props.style}/>;
+            const url = this.getUrl(this.props);
+            return (
+                <SecureImage
+                    onError={this.onImgError}
+                    onLoad={(e) => this.validateImg(e.target)}
+                    src={url}
+                    style={this.props.style}
+                />
+            );
         }
         return <Message msgId="layerProperties.legenderror" />;
     }
