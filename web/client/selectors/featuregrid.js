@@ -252,12 +252,12 @@ export const restrictedAreaFilter = createShallowSelectorCreator(isEqual)(
     projectionSelector,
     describeSelector,
     state => restrictedAreaOperatorSelector(state),
-    (restrictedArea, spatialField = [], viewportFilter, projection, describeLayer, operator) => {
+    (restrictedArea, spatialField = [], viewPortFilter, projection, describeLayer, operator) => {
         const attribute = findGeometryProperty(describeLayer)?.name;
         let existingFilter = [];
         // if activate, viewportFilter already get existing filter
-        if(isEmpty(viewportFilter) && !isEmpty(spatialField)) {
-            existingFilter = spatialField?.operation ? [spatialField] : spatialField
+        if (isEmpty(viewPortFilter) && !isEmpty(spatialField)) {
+            existingFilter = spatialField?.operation ? [spatialField] : spatialField;
         }
         return !isEmpty(restrictedArea) ? {
             spatialField: [
@@ -275,7 +275,7 @@ export const restrictedAreaFilter = createShallowSelectorCreator(isEqual)(
             ]
         } : {};
     }
-)
+);
 
 /**
  * Create spatialField filters array.
@@ -284,5 +284,5 @@ export const restrictedAreaFilter = createShallowSelectorCreator(isEqual)(
 export const additionnalGridFilters = (state) => {
     const restrictedArea = restrictedAreaFilter(state)?.spatialField || [];
     const viewport = viewportFilter(state)?.spatialField || [];
-    return {spatialField: [...restrictedArea, ...viewport]}
-}
+    return {spatialField: [...restrictedArea, ...viewport]};
+};
