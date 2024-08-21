@@ -40,8 +40,11 @@ export default compose(
             const resource = find(resources, { id: resourceId }) || {};
             const baseMap = omit(resource.data, ['context']);
             const isLegacyGeostory = (map?.layers || [])?.indexOf(null) !== -1 || (map?.groups || [])?.indexOf(null) !== -1;
+            // 'layersGroupsHasEmptyItems' is a flag that indicates if the geostory 'map' object in section includes empty layers/groups
+            // the layers/groups array may include empty items in case change layer properties e.g: opacity,title ...etc
+            const layersGroupsHasEmptyItems = (map?.layers || []).includes(undefined) || (map?.groups || []).includes(undefined);
             const cleanedMap = {...map, layers: (map.layers || baseMap?.layers || []).map(lay => lay ? lay : undefined), groups: (map.groups || baseMap?.groups || []).map(gr => gr ? gr : undefined)};         // for better initiating cleanedMap layers in case 'map.layers = undefined' -> baseMap.layers check is added in fallBack
-            return { map: createMapObject(baseMap, cleanedMap, isLegacyGeostory)};
+            return { map: createMapObject(baseMap, cleanedMap, isLegacyGeostory, layersGroupsHasEmptyItems)};
         }
     ));
 /**

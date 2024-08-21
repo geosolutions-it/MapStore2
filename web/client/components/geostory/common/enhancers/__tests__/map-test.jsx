@@ -62,6 +62,39 @@ describe("geostory media map component enhancers", () => {
         }));
         ReactDOM.render(<Provider store={store}><Sink resourceId={resourceId} map={{}}/></Provider>, document.getElementById("container"));
     });
+    it('withMapEnhancer generate correct props for geostory with layers array includes empty items', (done) => {
+        const resources = [{id: "1", type: "map", data: {id: "2", layers: [
+            {
+                name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }, {
+                name: "layer03", center: {x: 3, y: 3, crs: 'EPSG:4326'}, zoom: 3
+            }, { name: "layer04", center: {x: 4, y: 4, crs: 'EPSG:4326'}, zoom: 4, "visibility": true}], groups: [], context: "1"}}];
+        const store = {
+            subscribe: () => {}, getState: () => ({geostory: {currentStory: {resources}}})
+        };
+        const resourceId = "1";
+        const Sink = withMapEnhancer(createSink( props => {
+            expect(props).toBeTruthy();
+            expect(props.map).toBeTruthy();
+            expect(props.map).toEqual({id: "2", layers: [ {
+                name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }, {
+                name: "layer03", center: {x: 3, y: 3, crs: 'EPSG:4326'}, zoom: 3
+            }, { name: "layer04", center: {x: 4, y: 4, crs: 'EPSG:4326'}, zoom: 4, "visibility": false
+            }], groups: [], context: "1"});
+            done();
+        }));
+        let layersWithEmptyItems = [];
+        layersWithEmptyItems.length = 3;
+        layersWithEmptyItems.push({visibility: false});
+        ReactDOM.render(<Provider store={store}><Sink resourceId={resourceId} map={{
+            id: "2", layers: layersWithEmptyItems, groups: [], context: "1"
+        }}/></Provider>, document.getElementById("container"));
+    });
     it('withLocalMapState generate correct props', (done) => {
         const Sink = withLocalMapState(createSink( props => {
             expect(props).toExist();

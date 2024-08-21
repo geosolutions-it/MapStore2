@@ -172,11 +172,12 @@ export const applyDefaults = (options = {}) => merge({}, DEFAULT_MAP_OPTIONS, op
  * @param {object} baseMap initial map object
  * @param {object} overrides object to override with
  * @param {bool} isLegacyGeostory boolean that indicates if the geostory is legacy one or new
+ * @param {bool} layersGroupsHasEmptyItems boolean that indicates if the geostory map object in section includes empty layers/groups
  * @return {object} options merged with defaults
  */
-export const createMapObject = (baseMap = {}, overrides = {}, isLegacyGeostory = false) => {
+export const createMapObject = (baseMap = {}, overrides = {}, isLegacyGeostory = false, layersGroupsHasEmptyItems = false) => {
     const mergedMap = merge({}, baseMap, overrides);
-    if (isLegacyGeostory) {
+    if (isLegacyGeostory || layersGroupsHasEmptyItems) {
         return mergedMap;
     }
     return {

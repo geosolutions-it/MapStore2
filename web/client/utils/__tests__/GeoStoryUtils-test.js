@@ -364,7 +364,7 @@ describe("GeoStory Utils", () => {
         });
         expect(res).toEqual(merged);
     });
-    it('test override layers in  createMapObject', () => {
+    it('test override layers in  createMapObject with empty layers array', () => {
         // initial baseMap layer is empty array
         const merged1 = {
             zoomControl: true,
@@ -398,8 +398,9 @@ describe("GeoStory Utils", () => {
             }]
         });
         expect(res1).toEqual(merged1);
-        // initial baseMap layer not empty array
-        const merged2 = {
+    });
+    it('test override layers in  createMapObject with normal layers array', () => {
+        const merged = {
             zoomControl: true,
             mapInfoControl: false,
             mapOptions: {
@@ -417,7 +418,7 @@ describe("GeoStory Utils", () => {
             }],
             groups: []
         };
-        const res2 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
+        const res = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
             name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
         }]}, {
             mapOptions: {
@@ -432,9 +433,11 @@ describe("GeoStory Utils", () => {
                 name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
             }]
         });
-        expect(res2).toEqual(merged2);
+        expect(res).toEqual(merged);
+    });
+    it('test override layers in  createMapObject for legacy geostory', () => {
         // legacy geostory
-        const merged3 = {
+        const merged = {
             zoomControl: true,
             mapInfoControl: false,
             mapOptions: {
@@ -456,7 +459,7 @@ describe("GeoStory Utils", () => {
                 expanded: true
             }]
         };
-        const res3 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
+        const res = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
             "visibility": true
         },  {
             "visibility": false
@@ -482,7 +485,53 @@ describe("GeoStory Utils", () => {
                 expanded: true
             }]
         }, true);
-        expect(res3).toEqual(merged3);
+        expect(res).toEqual(merged);
+    });
+    it('test override layers in  createMapObject with layers array includes empty items ', () => {
+        let layersWithEmptyItems = [];
+        layersWithEmptyItems.length = 3;
+        layersWithEmptyItems.push({visibility: false});
+        const merged = {
+            zoomControl: true,
+            mapInfoControl: false,
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseWheelZoom: false,
+                    mouseClick: false,
+                    dragPan: true
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }, {
+                name: "layer03", center: {x: 3, y: 3, crs: 'EPSG:4326'}, zoom: 3
+            }, {
+                name: "layer04", center: {x: 4, y: 4, crs: 'EPSG:4326'}, zoom: 4, visibility: false
+            }],
+            groups: []
+        };
+        const res = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
+            name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+        }, {
+            name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+        }, {
+            name: "layer03", center: {x: 3, y: 3, crs: 'EPSG:4326'}, zoom: 3
+        }, {
+            name: "layer04", center: {x: 4, y: 4, crs: 'EPSG:4326'}, zoom: 4, visibility: true
+        }], groups: []}, {
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseClick: false
+                }
+            },
+            layers: layersWithEmptyItems,
+            groups: []
+        }, false, true);
+        expect(res).toEqual(merged);
     });
     it('test testRegex', () => {
         const title = "title";
