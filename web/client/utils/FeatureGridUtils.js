@@ -17,6 +17,8 @@ import {
     isValidValueForPropertyName as isValidValueForPropertyNameBase
 } from './ogc/WFS/base';
 
+import { WKT } from 'ol/format';
+
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
 
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
@@ -392,3 +394,38 @@ export const supportsFeatureEditing = (layer) => includes(supportedEditLayerType
  * @returns {boolean} flag
  */
 export const areLayerFeaturesEditable = (layer) =>  !layer?.disableFeaturesEditing && supportsFeatureEditing(layer);
+
+export const isWKT = (wktString) => {
+    let isWKTGeom = false;
+    try {
+        const reader = new WKT();
+        const feature = reader.readFeature(wktString);
+        if (feature) {
+            isWKTGeom = true;
+        }
+    } catch (e) {
+        isWKTGeom = false;
+    }
+    return isWKTGeom;
+};
+
+export const wktToGeoJson = (wktString) => {
+    const reader = new WKT();
+    const feature = reader.readFeature(wktString);
+    return {
+        type: feature.getGeometry().getType(),
+        coordinates: feature.getGeometry().getCoordinates()
+    };
+};
+
+/**
+ * Return GeoJSON geometry. Transform WKT to GeoJSON if necessary.
+ * @param {string} raw - geometry
+ * @returns geometry object
+ */
+export const rawAsGeoJson = (raw) => {
+    if (isWKT(raw)) {
+        return wktToGeoJson(raw);
+    }
+    return raw;
+};
