@@ -48,7 +48,7 @@ import {
     UPDATE_EDITORS_OPTIONS,
     SET_PAGINATION,
     SET_VIEWPORT_FILTER,
-    SET_RESTRICTED_AREA,
+    SET_RESTRICTED_AREA
 } from '../actions/featuregrid';
 import { MAP_CONFIG_LOADED } from '../actions/config';
 
@@ -443,7 +443,7 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case MAP_CONFIG_LOADED: {
         return {...state, ...get(action, 'config.featureGrid', {})};
-        }
+    }
     case SET_RESTRICTED_AREA: {
         return { ...state, restrictedArea: { ...state.restrictedArea, geometry: action.area } };
     }

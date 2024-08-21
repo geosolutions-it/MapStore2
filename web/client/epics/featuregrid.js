@@ -12,7 +12,7 @@ import { LOCATION_CHANGE } from 'connected-react-router';
 import axios from '../libs/ajax';
 import bbox from '@turf/bbox';
 import booleanIntersects from "@turf/boolean-intersects";
-import { createChangesTransaction, getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
+import { createChangesTransaction, getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages, rawAsGeoJson  } from '../utils/FeatureGridUtils';
 
 import assign from 'object-assign';
 import {
@@ -25,7 +25,7 @@ import {
 import requestBuilder from '../utils/ogc/WFST/RequestBuilder';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
 import { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER, closeIdentify, hideMapinfoMarker } from '../actions/mapInfo';
-import { LOGIN_SUCCESS, LOGOUT } from "../actions/security"
+import { LOGIN_SUCCESS, LOGOUT } from "../actions/security";
 
 import {
     query,
@@ -112,7 +112,7 @@ import {
     launchUpdateFilterFunc,
     LAUNCH_UPDATE_FILTER_FUNC, SET_LAYER,
     SET_VIEWPORT_FILTER, setViewportFilter,
-    setRestrictedArea,
+    setRestrictedArea
 } from '../actions/featuregrid';
 
 import {
@@ -212,14 +212,13 @@ const setupDrawSupport = (state, original) => {
 
     // Remove features with geometry null or id "empty_row"
     const cleanFeatures = features.filter(ft => {
-        console.log("clean features");
         const restrictedArea = restrictedAreaSelector(state);
         let isValidFeature = ft.geometry !== null || ft.id !== 'empty_row';
         if (isValidFeature && !isEmpty(restrictedArea)) {
             // allow only feature inside restricted area
             isValidFeature = booleanIntersects(restrictedArea, ft.geometry);
         }
-        return isValidFeature
+        return isValidFeature;
     });
 
     if (cleanFeatures.length > 0) {
@@ -493,7 +492,6 @@ export const enableGeometryFilterOnEditMode = (action$, store) =>
     action$.ofType(TOGGLE_MODE)
         .filter(() => modeSelector(store.getState()) === MODES.EDIT)
         .switchMap(() => {
-            console.log("enableGeometryFilterOnEditMode")
             const currentFilter = find(getAttributeFilters(store.getState()), f => f.type === 'geometry') || {};
             return currentFilter.value ? Rx.Observable.empty() : Rx.Observable.of(updateFilter({
                 attribute: findGeometryProperty(describeSelector(store.getState())).name,
@@ -1291,35 +1289,33 @@ export const resetViewportFilter = (action$, store) =>
             : Rx.Observable.empty();
     });
 
-    export const requestRestrictedArea = (action$, store) =>
+export const requestRestrictedArea = (action$, store) =>
     action$.ofType(OPEN_FEATURE_GRID, LOGIN_SUCCESS)
-        .filter(() =>
-        {
+        .filter(() => {
             return !isAdminUserSelector(store.getState())
-            && isLoggedIn(store.getState())
-            && !isEmpty(restrictedAreaSrcSelector(store.getState()))}
-        )
-        .switchMap((action) => {
+                && isLoggedIn(store.getState())
+                && !isEmpty(restrictedAreaSrcSelector(store.getState()));
+        })
+        .switchMap(() => {
             const src = restrictedAreaSrcSelector(store.getState());
             if (src.url) {
                 return Rx.Observable.defer(() => fetch(src?.url).then(r => r?.json?.()))
                     .switchMap(result => {
                         return Rx.Observable.of(
-                            setRestrictedArea(result),
+                            setRestrictedArea(rawAsGeoJson(result)),
                             changePage(0)
-                        )
-                    })
-            } else {
-                return Rx.Observable.of(
-                    setRestrictedArea(src?.raw || {}),
-                    changePage(0)
-                )
+                        );
+                    });
             }
-        })
+            return Rx.Observable.of(
+                setRestrictedArea(rawAsGeoJson(src.raw) || {}),
+                changePage(0)
+            );
+        });
 
 export const resetRestrictedArea = (action$, store) =>
     action$.ofType(LOGOUT, CLOSE_FEATURE_GRID)
-        .filter((a) => !isEmpty(restrictedAreaSrcSelector(store.getState())))
+        .filter(() => !isEmpty(restrictedAreaSrcSelector(store.getState())))
         .switchMap(() => Rx.Observable.of(
             setRestrictedArea({})
-        ))
+        ));

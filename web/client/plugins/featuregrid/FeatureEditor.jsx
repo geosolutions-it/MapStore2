@@ -97,6 +97,9 @@ const Dock = connect(createSelector(
   * @prop {object} cfg.dateFormats object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
   * @prop {boolean} cfg.useUTCOffset avoid using UTC dates in attribute table and datetime editor, should be kept consistent with dateFormats, default is true
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
+  * @prop {string} cfg.restrictedArea.url Geometry definition as WKT or GeoJSON loaded from URL or path.
+  * @prop {string} cfg.restrictedArea.raw Geometry definition as WKT or GeoJSON.
+  * @prop {string} cfg.restrictedArea.operator Spatial operation to performed between features and the given geometry.
   *
   * @classdesc
   * `FeatureEditor` Plugin, also called *FeatureGrid*, provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
@@ -125,6 +128,11 @@ const Dock = connect(createSelector(
   *     },
   *     "editingAllowedRoles": ["ADMIN"],
   *     "snapTool": true,
+  *     "restrictedArea": {
+  *       "url": "/wkt_or_geojson_geometry",
+  *       "raw": "POLYGON ((-64.8 32.3, -65.5 18.3, -80.3 25.2, -64.8 32.3))",
+  *       "operator": "WITHIN"
+  *     },
   *     "snapConfig": {
   *       "vertex": true,
   *       "edge": true,
