@@ -25,14 +25,14 @@ import Dialog from '../components/misc/Dialog';
 import printReducers from '../reducers/print';
 import printEpics from '../epics/print';
 import { printSpecificationSelector } from "../selectors/print";
-import { layersSelector } from '../selectors/layers';
+import { layersSelector, rawGroupsSelector } from '../selectors/layers';
 import { currentLocaleSelector } from '../selectors/locale';
 import { mapSelector, scalesSelector } from '../selectors/map';
 import { mapTypeSelector } from '../selectors/maptype';
 import { normalizeSRS, convertDegreesToRadian } from '../utils/CoordinatesUtils';
 import { getMessageById } from '../utils/LocaleUtils';
 import { defaultGetZoomForExtent, getResolutions, mapUpdated, dpi2dpu, DEFAULT_SCREEN_DPI, getScales, reprojectZoom } from '../utils/MapUtils';
-import { isInsideResolutionsLimits } from '../utils/LayersUtils';
+import { getDerivedLayersVisibility, isInsideResolutionsLimits } from '../utils/LayersUtils';
 import { has, includes } from 'lodash';
 import {additionalLayersSelector} from "../selectors/additionallayers";
 import { MapLibraries } from '../utils/MapTypeUtils';
@@ -628,8 +628,9 @@ export default {
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
                     currentLocaleSelector,
                     mapTypeSelector,
-                    (state) => state.print.map
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, additionalLayers, scales, usePreview, currentLocale, mapType, printMap) => ({
+                    (state) => state.print.map,
+                    rawGroupsSelector
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, additionalLayers, scales, usePreview, currentLocale, mapType, printMap, groups) => ({
                     open,
                     capabilities,
                     printSpec,
@@ -637,7 +638,7 @@ export default {
                     error,
                     map,
                     layers: [
-                        ...layers.filter(filterLayer),
+                        ...getDerivedLayersVisibility(layers, groups).filter(filterLayer),
                         ...(printSpec?.additionalLayers ? additionalLayers.map(l => l.options).filter(
                             l => {
                                 const isVector = l.type === 'vector';
