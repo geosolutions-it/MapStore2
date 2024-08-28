@@ -364,7 +364,7 @@ describe("GeoStory Utils", () => {
         });
         expect(res).toEqual(merged);
     });
-    it('test override layers in  createMapObject with empty layers array', () => {
+    it('test override layers in  createMapObject', () => {
         // initial baseMap layer is empty array
         const merged1 = {
             zoomControl: true,
@@ -398,9 +398,8 @@ describe("GeoStory Utils", () => {
             }]
         });
         expect(res1).toEqual(merged1);
-    });
-    it('test override layers in  createMapObject with normal layers array', () => {
-        const merged = {
+        // initial baseMap layer not empty array
+        const merged2 = {
             zoomControl: true,
             mapInfoControl: false,
             mapOptions: {
@@ -418,7 +417,7 @@ describe("GeoStory Utils", () => {
             }],
             groups: []
         };
-        const res = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
+        const res2 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
             name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
         }]}, {
             mapOptions: {
@@ -433,11 +432,9 @@ describe("GeoStory Utils", () => {
                 name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
             }]
         });
-        expect(res).toEqual(merged);
-    });
-    it('test override layers in  createMapObject for legacy geostory', () => {
+        expect(res2).toEqual(merged2);
         // legacy geostory
-        const merged = {
+        const merged3 = {
             zoomControl: true,
             mapInfoControl: false,
             mapOptions: {
@@ -459,7 +456,7 @@ describe("GeoStory Utils", () => {
                 expanded: true
             }]
         };
-        const res = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
+        const res3 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
             "visibility": true
         },  {
             "visibility": false
@@ -485,7 +482,7 @@ describe("GeoStory Utils", () => {
                 expanded: true
             }]
         }, true);
-        expect(res).toEqual(merged);
+        expect(res3).toEqual(merged3);
     });
     it('test testRegex', () => {
         const title = "title";
@@ -826,3 +823,4 @@ describe("GeoStory Utils", () => {
         });
     });
 });
+
