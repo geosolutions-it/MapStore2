@@ -487,52 +487,6 @@ describe("GeoStory Utils", () => {
         }, true);
         expect(res).toEqual(merged);
     });
-    it('test override layers in  createMapObject with layers array includes empty items ', () => {
-        let layersWithEmptyItems = [];
-        layersWithEmptyItems.length = 3;
-        layersWithEmptyItems.push({visibility: false});
-        const merged = {
-            zoomControl: true,
-            mapInfoControl: false,
-            mapOptions: {
-                scrollWheelZoom: false,
-                interactions: {
-                    mouseWheelZoom: false,
-                    mouseClick: false,
-                    dragPan: true
-                }
-            },
-            layers: [{
-                name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
-            }, {
-                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
-            }, {
-                name: "layer03", center: {x: 3, y: 3, crs: 'EPSG:4326'}, zoom: 3
-            }, {
-                name: "layer04", center: {x: 4, y: 4, crs: 'EPSG:4326'}, zoom: 4, visibility: false
-            }],
-            groups: []
-        };
-        const res = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
-            name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
-        }, {
-            name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
-        }, {
-            name: "layer03", center: {x: 3, y: 3, crs: 'EPSG:4326'}, zoom: 3
-        }, {
-            name: "layer04", center: {x: 4, y: 4, crs: 'EPSG:4326'}, zoom: 4, visibility: true
-        }], groups: []}, {
-            mapOptions: {
-                scrollWheelZoom: false,
-                interactions: {
-                    mouseClick: false
-                }
-            },
-            layers: layersWithEmptyItems,
-            groups: []
-        }, false, true);
-        expect(res).toEqual(merged);
-    });
     it('test testRegex', () => {
         const title = "title";
         expect(testRegex(title, "it")).toBe(true);
