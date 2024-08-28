@@ -34,7 +34,8 @@ export default class NumberEditor extends React.Component {
         minValue: PropTypes.number,
         maxValue: PropTypes.number,
         column: PropTypes.object,
-        onTemporaryChanges: PropTypes.func
+        onTemporaryChanges: PropTypes.func,
+        disabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -80,6 +81,7 @@ export default class NumberEditor extends React.Component {
     render() {
         return (<IntlNumberFormControl
             {...this.props.inputProps}
+            disabled={this.props?.disabled}
             style={!this.state.validated || this.state.isValid ? {} : {
                 borderColor: 'red'
             }}
