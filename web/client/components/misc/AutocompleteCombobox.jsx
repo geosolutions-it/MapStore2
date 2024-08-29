@@ -61,7 +61,6 @@ const addStateHandlers = compose(
     withStateHandlers((props) => ({
         delayDebounce: 0,
         performFetch: false,
-        disabled: false,
         open: false,
         openOnFocus: props.openOnFocus,
         disabled: props.disabled,

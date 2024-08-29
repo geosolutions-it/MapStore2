@@ -134,9 +134,6 @@ export const featureTypeToGridColumns = (
     getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map((desc) => {
         const option = options.find(o => o.name === desc.name);
         const field = fields.find(f => f.name === desc.name);
-        if(field && field.name === "id_emprise") {
-            field.editable = false;
-        }
         let columnProp = {
             sortable,
             key: desc.name,
@@ -147,7 +144,7 @@ export const featureTypeToGridColumns = (
             headerRenderer: getHeaderRenderer(),
             showTitleTooltip: !!option?.description,
             resizable,
-            editable: field.editable === false ? false : editable,
+            editable: field?.editable === false ? false : editable,
             filterable,
             editor: getEditor(desc, field),
             formatter: getFormatter(desc, field),
