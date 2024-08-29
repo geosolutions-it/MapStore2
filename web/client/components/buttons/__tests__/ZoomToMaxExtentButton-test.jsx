@@ -43,54 +43,57 @@ describe('This test for ZoomToMaxExtentButton', () => {
     });
 
     // test DEFAULTS
-    it('test default properties', () => {
-        const zmeBtn = ReactDOM.render(
+    it('test default properties', (done) => {
+        const container = document.getElementById("container");
+        ReactDOM.render(
             <Provider store={store}>
                 <ZoomToMaxExtentButton/>
             </Provider>,
-            document.getElementById("container"));
-        expect(zmeBtn).toExist();
-
-        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode.id).toBe("mapstore-zoomtomaxextent");
-
-        expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode.className.indexOf('default') >= 0).toBe(true);
-        expect(zmeBtnNode.innerHTML).toExist();
+            container,
+            () => {
+                expect(container.innerHTML).toExist();
+                const zmeBtnNode = document.getElementById("mapstore-zoomtomaxextent");
+                expect(zmeBtnNode).toExist();
+                expect(zmeBtnNode.className.indexOf('default') >= 0).toBe(true);
+                expect(zmeBtnNode.innerHTML).toExist();
+                done();
+            });
     });
 
-    it('test glyphicon property', () => {
-        const zmeBtn = ReactDOM.render(
+    it('test glyphicon property', (done) => {
+        const container = document.getElementById("container");
+        ReactDOM.render(
             <Provider store={store}>
                 <ZoomToMaxExtentButton/>
             </Provider>,
-            document.getElementById("container"));
-        expect(zmeBtn).toExist();
-
-        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode).toExist();
-        const icons = zmeBtnNode.getElementsByTagName('span');
-        expect(icons.length).toBe(1);
+            container,
+            () => {
+                expect(container.innerHTML).toExist();
+                const zmeBtnNode = document.getElementById("mapstore-zoomtomaxextent");
+                expect(zmeBtnNode).toExist();
+                const icons = zmeBtnNode.getElementsByTagName('span');
+                expect(icons.length).toBe(1);
+                done();
+            });
     });
 
-    it('test glyphicon property with text', () => {
-        const zmeBtn = ReactDOM.render(
+    it('test glyphicon property with text', (done) => {
+        const container = document.getElementById("container");
+        ReactDOM.render(
             <Provider store={store}>
                 <ZoomToMaxExtentButton glyphicon="info-sign" text="button"/>
             </Provider>,
-            document.getElementById("container"));
-        expect(zmeBtn).toExist();
+            container,
+            () => {
+                expect(container.innerHTML).toExist();
+                const zmeBtnNode = document.getElementById("mapstore-zoomtomaxextent");
+                expect(zmeBtnNode).toExist();
+                const btnItems = zmeBtnNode.getElementsByTagName('span');
+                expect(btnItems.length).toBe(1);
 
-        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
-        expect(zmeBtnNode).toExist();
-
-        const btnItems = zmeBtnNode.getElementsByTagName('span');
-        expect(btnItems.length).toBe(1);
-
-        expect(zmeBtnNode.innerText.indexOf("button") !== -1).toBe(true);
+                expect(zmeBtnNode.innerText.indexOf("button") !== -1).toBe(true);
+                done();
+            });
     });
 
     it('test if click on button launches the proper action', () => {
@@ -145,18 +148,20 @@ describe('This test for ZoomToMaxExtentButton', () => {
         genericTest("image");
     });
 
-    it('create glyphicon with custom css class', () => {
-        const zmeBtn = ReactDOM.render(
+    it('create glyphicon with custom css class', (done) => {
+        const container = document.getElementById("container");
+        ReactDOM.render(
             <Provider store={store}>
                 <ZoomToMaxExtentButton className="custom" glyphicon="info-sign" text="button"/>
             </Provider>,
-            document.getElementById("container"));
-        expect(zmeBtn).toExist();
-
-        const zmeBtnNode = ReactDOM.findDOMNode(zmeBtn);
-        expect(zmeBtnNode).toExist();
-
-        expect(zmeBtnNode.className.indexOf('custom') !== -1).toBe(true);
+            container,
+            () => {
+                expect(container.innerHTML).toExist();
+                const zmeBtnNode = document.getElementById("mapstore-zoomtomaxextent");
+                expect(zmeBtnNode).toExist();
+                expect(zmeBtnNode.className.indexOf('custom') !== -1).toBe(true);
+                done();
+            });
     });
 
     it('test zoom to initial extent', () => {

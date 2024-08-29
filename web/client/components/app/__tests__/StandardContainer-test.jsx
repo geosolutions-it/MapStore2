@@ -49,7 +49,7 @@ describe('StandardContainer', () => {
     });
 
 
-    it('creates a default app with component and plugins', () => {
+    it('creates a default app with component and plugins', (done) => {
         const plugins = {
             MyPlugin: {}
         };
@@ -63,11 +63,13 @@ describe('StandardContainer', () => {
         const componentConfig = {
             component: mycomponent
         };
-
-        const app = ReactDOM.render(<Provider store={store}><StandardContainer plugins={plugins} componentConfig={componentConfig}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
-        const dom = ReactDOM.findDOMNode(app);
-        expect(dom.getElementsByClassName('mycomponent').length).toBe(1);
-        expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardContainer plugins={plugins} componentConfig={componentConfig}/></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            expect(container.getElementsByClassName('mycomponent').length).toBe(1);
+            expect(container.getElementsByClassName('MyPlugin').length).toBe(1);
+            done();
+        });
     });
 });
