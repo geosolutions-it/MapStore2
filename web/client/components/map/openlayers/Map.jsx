@@ -534,11 +534,23 @@ class OpenlayersMap extends React.Component {
         return new View(viewOptions);
     };
 
+    isNearlyEqual = (a, b) => {
+        /**
+         * this implementation will update the map only if the movement
+         * between 8 decimals (coordinate precision in mm) in the reference system
+         * to avoid rounded value changes due to float mathematic operations or transformed value
+        */
+        if (a === undefined || b === undefined) {
+            return false;
+        }
+        return a.toFixed(8) - b.toFixed(8) <= 0.00000001;
+    };
+
     _updateMapPositionFromNewProps = (newProps) => {
         var view = this.map.getView();
         const currentCenter = this.props.center;
-        const centerIsUpdated = newProps.center.y === currentCenter.y &&
-            newProps.center.x === currentCenter.x;
+        const centerIsUpdated = this.isNearlyEqual(newProps.center.y, currentCenter.y) &&
+            this.isNearlyEqual(newProps.center.x, currentCenter.x);
 
         if (!centerIsUpdated) {
             // let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);

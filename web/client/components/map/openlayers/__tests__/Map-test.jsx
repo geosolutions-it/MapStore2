@@ -1489,4 +1489,40 @@ describe('OpenlayersMap', () => {
             expect(customHooRegister.getHook(MapUtils.ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
     });
+    it('update map position center based on nearly equal match when receiving new props', () => {
+        let map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9323233378, x: 10.3346776780}}
+                zoom={1}
+                projection="EPSG:4326"
+                measurement={{}}
+            />
+            , document.getElementById("map"));
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9323233388, x: 10.3346776790}}
+                zoom={1}
+                measurement={{}}
+                projection="EPSG:4326"
+                mapOptions={undefined}
+            />
+            , document.getElementById("map")
+        );
+        expect(map).toBeTruthy();
+        // center is not modified
+        expect(map.map.getView().getCenter()).toEqual([10.3346776780, 43.9323233378]);
+
+        map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9323234388, x: 10.3346773790}}
+                zoom={1}
+                measurement={{}}
+                projection="EPSG:4326"
+                mapOptions={undefined}
+            />
+            , document.getElementById("map")
+        );
+        // center is modified
+        expect(map.map.getView().getCenter()).toEqual([10.3346773790, 43.9323234388]);
+    });
 });
