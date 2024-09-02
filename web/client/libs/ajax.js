@@ -119,10 +119,10 @@ axios.interceptors.request.use(config => {
         let proxyUrl = ConfigUtils.getProxyUrl(config);
         if (proxyUrl) {
             let useCORS = [];
-            let autoDetectCORS = false;
+            let autoDetectCORS = true;
             if (isObject(proxyUrl)) {
                 useCORS = proxyUrl.useCORS || [];
-                autoDetectCORS = proxyUrl.autoDetectCORS || false;
+                autoDetectCORS = proxyUrl.autoDetectCORS || true;
                 proxyUrl = proxyUrl.url;
             }
             const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
@@ -151,7 +151,7 @@ axios.interceptors.response.use(response => response, (error) => {
     if (error.config && error.config.autoDetectCORS) {
         const urlParts = url.parse(error.config.url);
         const baseUrl = urlParts.protocol + "//" + urlParts.host + urlParts.pathname;
-        if (corsDisabled.indexOf(baseUrl) === -1) {
+        if (corsDisabled.indexOf(baseUrl) === -1 && typeof error.response === 'undefined') {
             corsDisabled.push(baseUrl);
             return new Promise((resolve, reject) => {
                 axios({ ...error.config, autoDetectCORS: false}).then(resolve).catch(reject);

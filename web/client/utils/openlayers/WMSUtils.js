@@ -19,6 +19,20 @@ import { getResolutionsForProjection } from '../MapUtils';
 import { generateEnvString } from '../LayerLocalizationUtils';
 import { getTileGridFromLayerOptions } from '../WMSUtils';
 
+
+function hasSameProtocol(givenUrl) {
+    try {
+        const currentProtocol = window.location.protocol;
+        const givenUrlObject = new URL(givenUrl);
+        const givenProtocol = givenUrlObject.protocol;
+
+        return currentProtocol === givenProtocol;
+    } catch (error) {
+        console.error('Invalid URL:', error);
+        return false;
+    }
+}
+
 /**
  * Check source and apply proxy
  * when `forceProxy` is set on layer options
@@ -27,8 +41,9 @@ import { getTileGridFromLayerOptions } from '../WMSUtils';
  * @returns {string}
  */
 export const proxySource = (forceProxy, src) => {
+    const _forceProxy = forceProxy || !hasSameProtocol(src);
     let newSrc = src;
-    if (forceProxy && needProxy(src)) {
+    if (_forceProxy && needProxy(src)) {
         let proxyUrl = getProxyUrl();
         newSrc = proxyUrl + encodeURIComponent(src);
     }
