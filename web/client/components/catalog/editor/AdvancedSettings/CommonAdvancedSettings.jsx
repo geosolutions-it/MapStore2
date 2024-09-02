@@ -39,14 +39,7 @@ export default ({
                 <Message msgId="catalog.showPreview" />
             </Checkbox>
         </FormGroup>
-        {!isNil(service.type) && service.type === "wfs" &&
-            <FormGroup controlId="allowUnsecureLayers" key="allowUnsecureLayers">
-                <Checkbox
-                    onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
-                    checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
-                    <Message msgId="catalog.allowUnsecureLayers.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.allowUnsecureLayers.tooltip" />} />
-                </Checkbox>
-            </FormGroup>}
+
         {!isNil(service.type) && service.type === "cog" &&
             <FormGroup controlId="fetchMetadata" key="fetchMetadata">
                 <Checkbox
