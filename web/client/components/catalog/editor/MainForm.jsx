@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { useState, useEffect } from 'react';
-import {get, find, isEmpty} from 'lodash';
+import {isArray, get, find, isEmpty} from 'lodash';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
 
@@ -157,7 +157,7 @@ export default ({
     function handleProtocolValidity(url) {
         onChangeUrl(url);
         if (url) {
-            const isInvalidProtocol = !isValidURL(url, null, service?.allowUnsecureLayers);
+            const isInvalidProtocol = !isValidURL(isArray(url) ? url[0] : url, null, service?.allowUnsecureLayers);
             setInvalidProtocol(isInvalidProtocol);
             setValid(!isInvalidProtocol);
         }
