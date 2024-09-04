@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React, { useState, useEffect } from 'react';
-import {isArray, get, find, isEmpty} from 'lodash';
+import {get, find, isEmpty} from 'lodash';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
 
@@ -16,7 +16,7 @@ import InfoPopover from '../../widgets/widget/InfoPopover';
 import { FormControl as FC, Form, Col, FormGroup, ControlLabel, Alert } from "react-bootstrap";
 
 import localizedProps from '../../misc/enhancers/localizedProps';
-import {defaultPlaceholder, isValidURL} from "./MainFormUtils";
+import {defaultPlaceholder, checkUrl} from "./MainFormUtils";
 
 const FormControl = localizedProps('placeholder')(FC);
 
@@ -153,13 +153,13 @@ export default ({
     onChangeType,
     setValid = () => {}
 }) => {
-    const [invalidProtocol, setInvalidProtocol] = useState(false);
+    const [error, setError] = useState(null);
     function handleProtocolValidity(url) {
         onChangeUrl(url);
         if (url) {
-            const isInvalidProtocol = !isValidURL(isArray(url) ? url[0] : url, null, service?.allowUnsecureLayers);
-            setInvalidProtocol(isInvalidProtocol);
-            setValid(!isInvalidProtocol);
+            const {valid, errorMsgId} = checkUrl(url, null, service?.allowUnsecureLayers);
+            setError(valid ? null : errorMsgId);
+            setValid(valid);
         }
     }
     useEffect(() => {
@@ -192,8 +192,8 @@ export default ({
             </FormGroup>
             <URLEditor key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={handleProtocolValidity} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
 
-            {invalidProtocol ? <Alert bsStyle="danger">
-                <Message msgId="catalog.invalidUrlHttpProtocol" />
+            {error ? <Alert bsStyle="danger">
+                <Message msgId={error} />
             </Alert> : null}
 
         </Form>);
