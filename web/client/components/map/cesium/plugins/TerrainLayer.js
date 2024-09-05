@@ -55,7 +55,7 @@ const createLayer = (config, map) => {
 const updateLayer = (layer, newOptions, oldOptions, map) => {
     if (newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.credits !== newOptions.credits
-    || oldOptions.provider !== newOptions.provider) {
+    || oldOptions.provider !== newOptions.provider || oldOptions.forceProxy !== newOptions.forceProxy) {
         return createLayer(newOptions, map);
     }
     return null;
