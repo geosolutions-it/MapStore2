@@ -361,7 +361,7 @@ export const mergeConfigs = function(baseConfig, mapConfig) {
     return baseConfig;
 };
 export const getProxyUrl = function(config) {
-    return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
+    return config?.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
 };
 
 export const getProxiedUrl = function(uri, config = {}) {
