@@ -1630,6 +1630,7 @@
             "advancedSettings": "Impostazioni avanzate",
             "templateMetadataAvailable": "Metadati disponibili del formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "invalidUrlHttpProtocol": "L'URL specificato non è sicuro poiché utilizza HTTP. È necessario fornire un URL che utilizzi il protocollo HTTPS. Utilizzando HTTP, le richieste verranno gestite automaticamente per prevenire problemi di sicurezza del browser passando attraverso il proxy",
+            "invalidArrayUsageForUrl": "Non è stato possibile leggere correttamente l'URL del catalogo",
             "notification": {
                 "errorTitle": "Errore",
                 "errorSearchingRecords": "Alcuni record non sono stati trovati: {records} . Controlla la lista dei parametri nella barra degli indirizzi",

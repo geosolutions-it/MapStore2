@@ -25,13 +25,18 @@ export const defaultPlaceholder = (service) => {
  * @param {string} catalogUrl The URL of the catalog
  * @param {string} currentLocation The current location, by default `window.location.href`
  * @param {boolean} allowUnsecureLayers flag to allow unsecure url
- * @returns {boolean} true if the URL is valid
+ * @returns {object} {valid: boolean, errorMsgId: string}
  */
-export const isValidURL = (catalogUrl = '', currentLocation) => {
-    const { protocol: mapStoreProtocol } = url.parse(currentLocation ?? window.location.href);
-    const { protocol: catalogProtocol } = url.parse(catalogUrl);
-    if (mapStoreProtocol === 'https:' && !!catalogProtocol) {
-        return (mapStoreProtocol === catalogProtocol );
+export const checkUrl = (catalogUrl = '', currentLocation) => {
+    try {
+        const { protocol: mapStoreProtocol } = url.parse(currentLocation ?? window.location.href);
+        const { protocol: catalogProtocol } = url.parse(catalogUrl);
+        if (mapStoreProtocol === 'https:' && !!catalogProtocol) {
+            const isProtocolValid = (mapStoreProtocol === catalogProtocol);
+            return isProtocolValid ? {valid: true} : {valid: false, errorMsgId: "catalog.invalidUrlHttpProtocol"};
+        }
+        return {valid: true};
+    } catch (e) {
+        return {valid: false, errorMsgId: "catalog.invalidArrayUsageForUrl"};
     }
-    return true;
 };

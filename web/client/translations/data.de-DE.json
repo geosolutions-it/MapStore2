@@ -1669,6 +1669,7 @@
             "advancedSettings": "Erweiterte Einstellungen",
             "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "invalidUrlHttpProtocol": "Die angegebene URL ist nicht sicher, da sie HTTP verwendet. Eine URL, die das HTTPS-Protokoll verwendet, sollte bereitgestellt werden. Bei der Verwendung von HTTP werden Anfragen automatisch verarbeitet, um Browser-Sicherheitsprobleme zu verhindern, indem sie über den Proxy geleitet werden",
+            "invalidArrayUsageForUrl": "Die Katalog-URL konnte nicht korrekt gelesen werden",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Einige Datensätze wurden nicht gefunden: {records} . Bitte überprüfen Sie die URL des Abfrageparameters",

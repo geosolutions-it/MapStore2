@@ -1630,6 +1630,7 @@
             "advancedSettings": "Advanced settings",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "invalidUrlHttpProtocol": "The specified URL is not secure as it uses HTTP. An URL using HTTPs protocol should be provided. Using HTTP, requests will be handled automatically to prevent browser security issues by passing through the proxy",
+            "invalidArrayUsageForUrl": "The catalog URL could not be parsed correctly",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",
