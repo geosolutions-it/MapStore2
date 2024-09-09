@@ -43,7 +43,10 @@ export const testCors = (uri) => {
         method: 'GET',
         mode: 'cors'
     })
-        .then(() => {
+        .then((response) => {
+            if (!response.ok) {
+                return false;
+            }
             return setProxyCacheByUrl(uri, false);
         })
         .catch(() => {
