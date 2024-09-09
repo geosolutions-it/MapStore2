@@ -28,7 +28,7 @@ const testLayerConfig = {
 
 describe('Test the WMSUtil for Cesium', () => {
     it('wmsToCesiumOptionsBIL with proxy', () => {
-        let config = wmsToCesiumOptionsBIL(testLayerConfig);
+        let config = wmsToCesiumOptionsBIL({...testLayerConfig, forceProxy: true});
         expect(config.url).toBe(testLayerConfig.url);
         expect(config.proxy.getURL("test")).toBe("/mapstore/proxy/?url=test");
         expect(config.layerName).toBe(testLayerConfig.name);

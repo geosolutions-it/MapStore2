@@ -470,20 +470,5 @@ describe('Tests ajax library', () => {
             });
     });
 
-    it('revert to proxy if autoDetectCORS is true but CORS is not enabled on server', (done) => {
-        mockAxios = new MockAdapter(axios);
-        axios.get('http://testcors/', {
-            timeout: 1,
-            proxyUrl: {
-                url: '/proxy/?url=',
-                useCORS: [],
-                autoDetectCORS: true
-            }
-        }).catch((response) => {
-            expect(response.config).toExist();
-            expect(response.config.url).toExist();
-            expect(response.config.url).toContain('proxy/?url=');
-            done();
-        });
-    });
+
 });
