@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect } from 'react';
-import {get, find, isEmpty} from 'lodash';
+import React, { useState } from 'react';
+import {get, find} from 'lodash';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
 
@@ -150,21 +150,16 @@ export default ({
     onChangeTitle,
     onChangeUrl,
     onChangeServiceProperty,
-    onChangeType,
-    setValid = () => {}
+    onChangeType
 }) => {
     const [invalidProtocol, setInvalidProtocol] = useState(false);
     function handleProtocolValidity(url) {
         onChangeUrl(url);
         if (url) {
-            const isInvalidProtocol = !isValidURL(url, null, service?.allowUnsecureLayers);
+            const isInvalidProtocol = !isValidURL(url, null);
             setInvalidProtocol(isInvalidProtocol);
-            setValid(!isInvalidProtocol);
         }
     }
-    useEffect(() => {
-        !isEmpty(service.url) && handleProtocolValidity(service.url);
-    }, [service?.allowUnsecureLayers]);
     const URLEditor = service.type === "tms" ? TmsURLEditor : service.type === "cog" ? COGEditor : DefaultURLEditor;
     return (
         <Form horizontal >
@@ -192,7 +187,7 @@ export default ({
             </FormGroup>
             <URLEditor key="url-row" serviceTypes={serviceTypes} service={service} onChangeUrl={handleProtocolValidity} onChangeTitle={onChangeTitle} onChangeServiceProperty={onChangeServiceProperty} />
 
-            {invalidProtocol ? <Alert bsStyle="danger">
+            {invalidProtocol ? <Alert bsStyle="warning">
                 <Message msgId="catalog.invalidUrlHttpProtocol" />
             </Alert> : null}
 

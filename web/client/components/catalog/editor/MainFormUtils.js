@@ -27,11 +27,11 @@ export const defaultPlaceholder = (service) => {
  * @param {boolean} allowUnsecureLayers flag to allow unsecure url
  * @returns {boolean} true if the URL is valid
  */
-export const isValidURL = (catalogUrl = '', currentLocation, allowUnsecureLayers) => {
+export const isValidURL = (catalogUrl = '', currentLocation) => {
     const { protocol: mapStoreProtocol } = url.parse(currentLocation ?? window.location.href);
     const { protocol: catalogProtocol } = url.parse(catalogUrl);
     if (mapStoreProtocol === 'https:' && !!catalogProtocol) {
-        return (mapStoreProtocol === catalogProtocol || allowUnsecureLayers);
+        return (mapStoreProtocol === catalogProtocol );
     }
     return true;
 };

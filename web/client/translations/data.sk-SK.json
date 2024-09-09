@@ -1435,7 +1435,7 @@
             "showPreview": "Zobraziť náhľad",
             "advancedSettings": "Pokročilé nastavenia",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
-            "invalidUrlHttpProtocol": "Tento katalóg nie je možné pridať k dostupným, pretože používa protokol HTTP. Zadajte katalógovú adresu URL, ktorá používa protokol https",
+            "invalidUrlHttpProtocol": "Špecifikovaná URL adresa nie je bezpečná, pretože používa HTTP. Mala by sa poskytnúť URL adresa používajúca HTTPS protokol. Pri použití HTTP sa požiadavky automaticky spracujú, aby sa predišlo problémom so zabezpečením prehliadača prechádzaním cez proxy",
             "notification": {
                 "errorTitle": "Chyba",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",
