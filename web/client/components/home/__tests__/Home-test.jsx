@@ -22,18 +22,20 @@ describe("Test Home component", () => {
     });
 
     it('creates component with defaults', () => {
-        const cmp = ReactDOM.render(<Provider store={store}><Home/></Provider>, document.getElementById("container"));
-        expect(cmp).toBeTruthy();
+        const container = document.getElementById("container");
+        ReactDOM.render(<Provider store={store}><Home/></Provider>, container);
+        expect(container.innerHTML).toExist();
         const icons = document.querySelectorAll(".glyphicon-home");
         expect(icons.length).toEqual(1);
         expect(icons[0]).toBeTruthy();
     });
     it('creates component with custom icon text', () => {
-        const cmp = ReactDOM.render(
+        const container = document.getElementById("container");
+        ReactDOM.render(
             <Provider store={store}><Home
                 icon="pencil"
-            /></Provider>, document.getElementById("container"));
-        expect(cmp).toBeTruthy();
+            /></Provider>, container);
+        expect(container.innerHTML).toExist();
         const buttons = document.querySelectorAll("button");
         expect(buttons.length).toEqual(1);
         expect(buttons[0]).toBeTruthy();

@@ -34,17 +34,21 @@ describe('StandardAppComponent', () => {
         setTimeout(done);
     });
 
-    it('creates a default app', () => {
+    it('creates a default app', (done) => {
         const store = {
             dispatch: () => {},
             subscribe: () => {},
             getState: () => ({})
         };
-        const app = ReactDOM.render(<Provider store={store}><StandardAppComponent/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardAppComponent/></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            done();
+        });
     });
 
-    it('creates a default app with plugins', () => {
+    it('creates a default app with plugins', (done) => {
         const plugins = {
             MyPlugin
         };
@@ -54,11 +58,12 @@ describe('StandardAppComponent', () => {
             subscribe: () => {},
             getState: () => ({})
         };
-        const app = ReactDOM.render(<Provider store={store}><StandardAppComponent plugins={plugins} pluginsConfig={{desktop: ['My']}} /></Provider>, document.getElementById("container"));
-        expect(app).toExist();
-
-        const dom = ReactDOM.findDOMNode(app);
-
-        expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardAppComponent plugins={plugins} pluginsConfig={{desktop: ['My']}} /></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            expect(container.getElementsByClassName('MyPlugin').length).toBe(1);
+            done();
+        });
     });
 });

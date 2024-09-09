@@ -159,7 +159,6 @@ export default ({
         onChangeUrl(url);
         if (url) {
             const {valid, errorMsgId} = checkUrl(url, null, service?.allowUnsecureLayers);
-
             if (errorMsgId === "catalog.invalidUrlHttpProtocol") {
                 setError(null);
                 setWarning(errorMsgId);

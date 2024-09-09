@@ -823,3 +823,4 @@ describe("GeoStory Utils", () => {
         });
     });
 });
+
