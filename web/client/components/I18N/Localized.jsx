@@ -30,6 +30,16 @@ class Localized extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this.updateDocumentLangAttribute();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.locale !== prevProps.locale) {
+            this.updateDocumentLangAttribute();
+        }
+    }
+
     render() {
         let { children } = this.props;
 
@@ -37,7 +47,6 @@ class Localized extends React.Component {
             if (typeof children === 'function') {
                 children = children();
             }
-            document.documentElement.setAttribute("lang", this.props.locale);
 
             return (<IntlProvider key={this.props.locale} locale={this.props.locale}
                 messages={this.flattenMessages(this.props.messages)}
@@ -62,6 +71,12 @@ class Localized extends React.Component {
             };
         }, {});
     };
+
+    updateDocumentLangAttribute() {
+        if (document?.documentElement) {
+            document.documentElement.setAttribute("lang", this.props.locale);
+        }
+    }
 }
 
 export default Localized;
