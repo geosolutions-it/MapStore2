@@ -121,6 +121,7 @@ class Legend extends React.Component {
             const url = this.getUrl(this.props);
             return (
                 <SecureImage
+                    onImgError={this.onImgError}
                     onLoad={(e) => this.validateImg(e.target)}
                     src={url}
                     style={this.props.style}
