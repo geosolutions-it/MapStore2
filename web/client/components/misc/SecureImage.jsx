@@ -57,7 +57,11 @@ const SecureImage = ({
     return (
         <img
             alt={alt}
-            onError={props.onImgError}
+            onError={(e) => {
+                if (imageSrc) {
+                    props.onImgError(e);
+                }
+            }}
             onLoad={(e) => validateImg(e.target)}
             src={imageSrc}
             style={props.style}
