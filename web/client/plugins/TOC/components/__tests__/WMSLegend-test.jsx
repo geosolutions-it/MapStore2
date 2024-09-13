@@ -14,6 +14,7 @@ import expect from 'expect';
 import TestUtils from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
+import { setConfigProp } from "../../../../utils/ConfigUtils";
 
 let mockAxios;
 
@@ -21,6 +22,7 @@ describe('test WMSLegend module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         mockAxios = new MockAdapter(axios);
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
 
@@ -28,6 +30,7 @@ describe('test WMSLegend module component', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         mockAxios.restore();
+        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
 

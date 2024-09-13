@@ -12,15 +12,18 @@ import expect from 'expect';
 import RasterAdvancedSettings from "../RasterAdvancedSettings";
 import TestUtils from "react-dom/test-utils";
 import { waitFor } from '@testing-library/react';
+import { setConfigProp } from "../../../../../utils/ConfigUtils";
 
 describe('Test Raster advanced settings', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
     it('creates the component with defaults', () => {
