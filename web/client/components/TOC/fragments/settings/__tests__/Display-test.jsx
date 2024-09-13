@@ -14,11 +14,13 @@ import GET_CAP_RESPONSE from 'raw-loader!../../../../../test-resources/wms/GetCa
 import Display from '../Display';
 import MockAdapter from "axios-mock-adapter";
 import axios from "../../../../../libs/ajax";
+import { setConfigProp } from "../../../../../utils/ConfigUtils";
 let mockAxios;
 describe('test Layer Properties Display module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         mockAxios = new MockAdapter(axios);
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
 
@@ -26,6 +28,7 @@ describe('test Layer Properties Display module component', () => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         mockAxios.restore();
+        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
 
