@@ -73,7 +73,9 @@ This is the main structure:
       // Use POST requests for each WMS length URL highter than this value.
       "maxURLLength": 5000,
       // Custom path to home page
-      "homePath": '/home'
+      "homePath": '/home',
+      // If true it enabled interactive legend for GeoServer WMS layers
+      "experimentalInteractiveLegend": true
   },
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {

@@ -21,6 +21,7 @@ import WMSDomainAliases from "./WMSDomainAliases";
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 import OverlayTrigger from '../../../misc/OverlayTrigger';
 import FormControl from '../../../misc/DebouncedFormControl';
+import { getMiscSetting } from '../../../../utils/ConfigUtils';
 
 const Button = tooltip(ButtonRB);
 const Select = localizedProps('noResultsText')(RS);
@@ -81,6 +82,8 @@ export default ({
         // Apply default configuration on new service
         service.isNew && onChangeServiceProperty("autoSetVisibilityLimits", props.autoSetVisibilityLimits);
     }, [props.autoSetVisibilityLimits]);
+
+    const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
 
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
     const serverTypeOptions = getServerTypeOptions();
@@ -166,7 +169,7 @@ export default ({
                     }} />
             </InputGroup>
         </FormGroup>
-        {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
+        {experimentalInteractiveLegend && ![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
             <Checkbox data-qa="display-interactive-legend-option"
                 onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: e.target.checked})}
                 checked={!isNil(service.layerOptions?.enableInteractiveLegend) ? service.layerOptions?.enableInteractiveLegend : false}>
