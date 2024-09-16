@@ -133,7 +133,7 @@ export default createPlugin('Details', {
             action: openDetailsPanel,
             selector: (state) => {
                 const detailsUri = detailsUriSelector(state);
-                if (detailsUri) {
+                if (detailsUri  && detailsUri !== 'NODATA') {
                     return {};
                 }
                 return { style: {display: "none"} };
