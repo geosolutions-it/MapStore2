@@ -11,7 +11,7 @@ export function template(str = "", data = {}) {
     return str.replace(/(\{(.*?)\})/g, function() {
         let st = arguments[0];
         let key = arguments[2] ? arguments[2] : arguments[1];
-        if (["x", "y", "-y", "z"].includes(key)) {
+        if (["x", "-x", "y", "-y", "z"].includes(key)) {
             return arguments[0];
         }
         let value = data[key];
