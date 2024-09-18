@@ -34,11 +34,13 @@ export default class PopupSupport extends React.Component {
     static propTypes = {
         map: PropTypes.object,
         popups: PropTypes.arrayOf(PropTypes.object),
+        identifyPopupHidden: PropTypes.bool,
         onPopupClose: PropTypes.func
     }
 
     static defaultProps = {
         popups: [],
+        identifyPopupHidden: false,
         onPopupClose: () => {}
     }
     UNSAFE_componentWillMount() {
@@ -47,8 +49,8 @@ export default class PopupSupport extends React.Component {
             this.props.map.getOverlayContainerStopEvent().addEventListener('pointermove', this.stopPropagationOnPointerMove);
         }
     }
-    shouldComponentUpdate({popups}) {
-        return popups !== this.props.popups;
+    shouldComponentUpdate({popups, identifyPopupHidden}) {
+        return popups !== this.props.popups || identifyPopupHidden !== this.props.identifyPopupHidden;
     }
     componentWillUnmount() {
         if (this.props.map) {
@@ -59,6 +61,14 @@ export default class PopupSupport extends React.Component {
         this.props.onPopupClose(id);
     }
     renderPopups = () => {
+        const {identifyPopupHidden, map} = this.props;
+        if (identifyPopupHidden) {
+            (this._popups || []).forEach(({popup, observer}) => {
+                !!observer && observer.disconnect();
+                !!popup && map.removeOverlay(popup);
+            });
+            return [];
+        }
         return this.preparePopups().map(({ popup, id, component, content, props, containerStyle}) => {
             const context = popup.getElement();
             const PopupContent = isString(component) && popupsComponents[component] || component;

@@ -38,6 +38,7 @@ import {
     checkIdentifyIsMounted,
     onInitPlugin
 } from '../actions/mapInfo';
+import { enableHideEmptyPopupOption } from '../actions/mapPopups';
 import DefaultViewerComp from '../components/data/identify/DefaultViewer';
 import { defaultViewerDefaultProps, defaultViewerHandlers } from '../components/data/identify/enhancers/defaultViewer';
 import { identifyLifecycle } from '../components/data/identify/enhancers/identify';
@@ -196,6 +197,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.dock {bool} true shows dock panel, false shows modal
  * @prop cfg.draggable {boolean} draggable info window, when modal
  * @prop cfg.showHighlightFeatureButton {boolean} show the highlight feature button if the interrogation returned valid features (openlayers only)
+ * @prop cfg.hidePopupIfNoResults {boolean} hide/show the identify popup in case of no results
  * @prop cfg.highlightEnabledFromTheStart {boolean} the highlight feature button will be activated by default if true
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the header of the viewer, expression from the context{expression}
@@ -265,7 +267,8 @@ const IdentifyPlugin = compose(
     identifyIndex,
     defaultViewerHandlers,
     connect(() => ({}), {
-        setShowInMapPopup
+        setShowInMapPopup,
+        enableHideEmptyPopupOption
     }),
     identifyLifecycle
 )(IdentifyContainer);

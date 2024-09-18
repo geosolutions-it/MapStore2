@@ -26,5 +26,9 @@ describe('test map popups action creators', () => {
         const action = POPUP.cleanPopups();
         expect(action.type).toEqual(POPUP.CLEAN_MAP_POPUPS);
     });
+    it('enable hide empty popup option', () => {
+        const action = POPUP.enableHideEmptyPopupOption();
+        expect(action.type).toEqual(POPUP.ENABLE_HIDE_EMPTY_POPUP);
+    });
 });
 

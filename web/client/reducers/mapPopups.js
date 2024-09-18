@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {ADD_MAP_POPUP, REMOVE_MAP_POPUP, CLEAN_MAP_POPUPS} from '../actions/mapPopups';
+import {ADD_MAP_POPUP, REMOVE_MAP_POPUP, CLEAN_MAP_POPUPS, ENABLE_HIDE_EMPTY_POPUP} from '../actions/mapPopups';
 import {arrayDelete} from '../utils/ImmutableUtils';
 
 const initialState = {popups: []};
@@ -22,6 +22,11 @@ export default function(state = initialState, action) {
     }
     case CLEAN_MAP_POPUPS: {
         return {...state, popups: []};
+    }
+    case ENABLE_HIDE_EMPTY_POPUP: {
+        return {
+            ...state, hideEmptyPopupOption: true
+        };
     }
     default:
         return state;

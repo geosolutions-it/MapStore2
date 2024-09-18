@@ -35,6 +35,8 @@ import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selecto
 import {
     snappingLayerSelector
 } from "../../selectors/draw";
+import { getDefaultInfoFormatValue, getValidator } from '../../utils/MapInfoUtils';
+import { mapInfoRequestsSelector, responsesSelector } from '../../selectors/mapInfo';
 
 const Empty = () => { return <span/>; };
 
@@ -105,9 +107,26 @@ const pluginsCreator = (mapType, actions) => {
         const PopupSupport = connect(
             createSelector(
                 (state) => state.mapPopups && state.mapPopups.popups || EMPTY_POPUPS,
-                (popups) => ({
-                    popups
-                })), {
+                (state) => state.mapPopups && state.mapPopups.hideEmptyPopupOption || false,
+                isMouseMoveActiveSelector,
+                mapInfoRequestsSelector,
+                responsesSelector,
+                (popups, hideEmptyPopupOption, isMouseMoveActive, mapInfoRequests, mapInfoResponses) => {
+                    // create a flag for hide the identify popup in case no results in hover mode
+                    let identifyPopupHidden = false;
+                    if (isMouseMoveActive && mapInfoRequests?.length && mapInfoResponses?.length && hideEmptyPopupOption) {
+                        const format = getDefaultInfoFormatValue();
+                        const invalidResponses = getValidator(format).getNoValidResponses(mapInfoResponses);
+                        const emptyResponses = mapInfoRequests?.length === invalidResponses?.length;
+                        const missingResponses = (mapInfoRequests || []).length - (mapInfoResponses || []).length;
+                        identifyPopupHidden = missingResponses === 0 && emptyResponses && isMouseMoveActive && hideEmptyPopupOption;
+                    }
+                    return {
+                        popups,
+                        identifyPopupHidden
+                    };
+                }
+            ), {
                 onPopupClose: removePopup
             }
         )(components.PopupSupport || Empty);
