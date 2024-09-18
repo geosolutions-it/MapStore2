@@ -17,6 +17,7 @@ import {createPlugin} from "../../utils/PluginsUtils";
  * Footer plugin, section of the homepage.
  * description of footer can be overridden by
  * `home.footerDescription` message id in the translations
+ * @prop {boolean} cfg.customFooter params that can be used to render a custom html to be used instead of the default one
  * @prop {object} cfg.logo logo data to change image and href, set to null to hide the logo
  * @prop {string} cfg.logo.src source of the logo
  * @prop {number|string} cfg.logo.width width of the logo image
@@ -31,10 +32,12 @@ import {createPlugin} from "../../utils/PluginsUtils";
 class Footer extends React.Component {
 
     static propTypes = {
+        customFooter: PropTypes.bool,
         logo: PropTypes.object
     };
 
     static defaultProps = {
+        customFooter: false,
         logo: {
             src,
             width: 140,
@@ -55,7 +58,7 @@ class Footer extends React.Component {
                 title={logo.title || ''}
                 alt={logo.alt || ''} />
         );
-        return (
+        return this.props.customFooter ? <HTML msgId="home.footerCustomHTML"/> : (
             <Grid>
                 {logo && logo.src && <Row>
                     <Col xs={12} className="text-center">
