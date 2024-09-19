@@ -379,7 +379,8 @@
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
+            "footerCustomHTML": "<div><p>Veuillez insérer du HTML personnalisé dans les traductions pour afficher un pied de page personnalisé</p></div>"
         },
         "cookiesPolicyNotification": {
             "title": "Ce site utilise des cookies",
