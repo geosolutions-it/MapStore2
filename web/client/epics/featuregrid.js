@@ -82,6 +82,8 @@ import {
     DESELECT_FEATURES,
     START_DRAWING_FEATURE,
     CREATE_NEW_FEATURE,
+    COPY_FEATURES,
+    PASTE_FEATURES,
     CLEAR_CHANGES_CONFIRMED,
     FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid,
@@ -872,6 +874,27 @@ export const onFeatureGridGeometryEditing = (action$, store) => action$.ofType(G
 
         return Rx.Observable.of(geometryChanged(changedFeatures)).concat(enableEdit);
     });
+
+/**
+ * copy feature action flow
+ * @memberof epics.featuregrid
+ */
+export const copyFeatures = (action$, store) => action$.ofType(COPY_FEATURES)
+    .switchMap( () => {
+        const state = store.getState();
+        // setter
+        localStorage.setItem('features', JSON.stringify(selectedFeaturesSelector(state)));
+        return Rx.Observable.empty();
+    });
+/**
+ * paste geometry action flow
+ * @memberof epics.featuregrid
+ */
+export const pasteFeature = (action$) => action$.ofType(PASTE_FEATURES)
+    .switchMap( () => {
+        return Rx.Observable.empty();
+    });
+
 /**
  * Manage delete geometry action flow
  * @memberof epics.featuregrid

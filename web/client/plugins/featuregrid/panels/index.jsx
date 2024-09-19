@@ -40,6 +40,7 @@ import {
     isSavingSelector,
     isSimpleGeomSelector,
     modeSelector,
+    copiedFeaturesCount,
     selectedFeaturesCount,
     selectedLayerNameSelector,
     showAgainSelector,
@@ -79,6 +80,7 @@ const Toolbar = connect(
         saved: isSavedSelector,
         mode: modeSelector,
         hasChanges: hasChangesSelector,
+        copiedCount: copiedFeaturesCount,
         hasNewFeatures: hasNewFeaturesSelector,
         hasGeometry: hasGeometrySelector,
         syncPopover: (state) => ({

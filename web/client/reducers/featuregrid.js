@@ -17,6 +17,7 @@ import {
     SET_FEATURES,
     FEATURES_MODIFIED,
     CREATE_NEW_FEATURE,
+    PASTE_FEATURES,
     SAVING,
     SAVE_SUCCESS,
     SAVE_ERROR,
@@ -282,6 +283,16 @@ function featuregrid(state = emptyResultsState, action) {
             select: action.features.map(f => ({...f, _new: true, id: f.id ? f.id : id, type: "Feature",
                 geometry: f.geometry ? f.geometry : null
             }))
+        });
+    }
+    case PASTE_FEATURES: {
+        let id = uuid.v1();
+        return assign({}, state, {
+            newFeatures: action.featuresJSON.map(f => ({...f, _new: true, id: f.id ? f.id : id, type: "Feature",
+                geometry: f.geometry,
+                properties: f.properties
+            })),
+            select: []
         });
     }
     case SAVE_ERROR: {

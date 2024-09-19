@@ -1898,6 +1898,8 @@
                 }
             },
             "toolbar": {
+                "copyFeatures": "Copy features",
+                "pasteFeatures": "Paste features",
                 "synchPopoverTitle": "Sync map with filter ",
                 "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
                 "notShowAgain": "  Don't show this message again",
