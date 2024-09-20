@@ -1899,6 +1899,8 @@
                 }
             },
             "toolbar": {
+                "copyFeatures": "Copiar entidades",
+                "pasteFeatures": "Pegar entidades",
                 "synchPopoverTitle": "Sincronizar mapa con filtro ",
                 "synchPopoverText": "Utilice esta herramienta para sincronizar el mapa con el filtro seleccionado",
                 "notShowAgain": "  No mostrar este mensaje de nuevo",
