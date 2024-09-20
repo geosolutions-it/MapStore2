@@ -56,7 +56,7 @@ export default {
                 position: 0,
                 label: props.label || 'GeoSolutions',
                 href: props.href || 'https://www.geosolutionsgroup.com/',
-                img: <img className="customer-logo" src={props.src || src} height={props.height || "30"} style={props.style || {}}/>,
+                img: <img className="customer-logo" alt={props.label} src={props.src || src} height={props.height || "30"} style={props.style || {}}/>,
                 logo: true
             })
         }
