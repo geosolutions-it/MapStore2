@@ -1477,6 +1477,17 @@
       "servicePlaceholder": "type a service",
       "url": "URL",
       "urlPlaceholder": "type a URL",
+      "urlPlaceHolders": {
+          "wfs": "f.eks. https://mydomain.com/geoserver/wfs",
+          "wmts": "f.eks. https://mydomain.com/geoserver/gwc/service/wmts",
+          "wms": "f.eks. https://mydomain.com/geoserver/wms",
+          "csw": "f.eks. https://mydomain.com/geoserver/csw",
+          "tms": "f.eks. https://mydomain.com/geoserver/gwc/service/tms/1.0.0",
+          "3dtiles": "f.eks. https://mydomain.com/tileset.json",
+          "cog": "f.eks. https://mydomain.com/cog.tif",
+          "model": "f.eks. https://mydomain.com/filename.ifc",
+          "arcgis": "f.eks. https://mydomain.com/arcgis/rest/services"
+      },
       "type": "Type",
       "serviceTitle": "Title",
       "serviceTitlePlaceholder": "type a title",
