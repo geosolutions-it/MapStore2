@@ -1610,6 +1610,7 @@
                 "wms": "p.ej. https://mydomain.com/geoserver/wms",
                 "csw": "p.ej. https://mydomain.com/geoserver/csw",
                 "tms": "p.ej. https://mydomain.com/geoserver/gwc/service/tms/1.0.0",
+                "custom": "p.ej. https://{s}.myUrl.com/{variant}/{z}/{x}/{y}",
                 "3dtiles": "p.ej. https://mydomain.com/tileset.json",
                 "cog": "p.ej. https://mydomain.com/cog.tif",
                 "model": "p.ej. https://mydomain.com/filename.ifc",
