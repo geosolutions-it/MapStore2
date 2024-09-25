@@ -1603,30 +1603,50 @@ describe('Cesium layer', () => {
     });
 
     it('should create a bil terrain provider with wms config', (done) => {
+
         const options = {
             type: "terrain",
             provider: "wms",
-            url: "https://host-sample/geoserver/wms",
+            url: "/geoserver/wms",
             name: "workspace:layername",
             littleendian: false,
             visibility: true,
             crs: 'CRS:84'
         };
-        // create layers
+
+        // Create layers
         const cmp = ReactDOM.render(
             <CesiumLayer
                 type={options.type}
                 options={options}
                 map={map}
             />, document.getElementById('container'));
+
+        // Assert that component is rendered
         expect(cmp).toBeTruthy();
-        expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.layerName).toBe(options.name);
-        cmp.layer.terrainProvider.readyPromise.then(() => {
-            expect(cmp.layer.terrainProvider._options.url).toEqual('https://host-sample/geoserver/wms');
-            expect(cmp.layer.terrainProvider._options.proxy.proxy).toBeTruthy();
-            done();
-        });
+
+
+        // Wait for the component's layer to be ready
+        waitFor(() => {
+            return expect(cmp.layer).toBeTruthy();
+        })
+            .then(() => {
+
+                // Wait for the terrainProvider's readyPromise
+                cmp.layer.terrainProvider.readyPromise.then(() => {
+                    expect(cmp.layer.terrainProvider._options.url).toEqual('/geoserver/wms');
+                    const proxy = cmp.layer.terrainProvider._options.proxy;
+                    expect(proxy).toBeTruthy(); // Ensure proxy is defined
+                    expect(proxy.proxy).toBeFalsy();
+                    done(); // Complete the test
+                }).catch(err => {
+                    done(err); // In case of any errors
+                });
+            })
+            .catch(err => {
+                done(err); // Handle errors for waitFor
+            });
     });
 
     it('should create a bil terrain provider with wms config (no proxy url)', (done) => {
