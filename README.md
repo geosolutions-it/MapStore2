@@ -5,7 +5,13 @@
 [![Master Documentation Status](https://readthedocs.org/projects/mapstore/badge/?version=latest)](https://docs.mapstore.geosolutionsgroup.com/en/latest/?badge=master)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
-MapStore is a framework to build *web mapping* applications using standard mapping libraries, such as <a href="http://openlayers.org/" target="_blank">OpenLayers</a> and <a href="http://leafletjs.com/" target="_blank">Leaflet</a>. For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
+MapStore is an open-source web mapping framework that enables users to create, share, and embed maps and dashboards with ease, drawing from a broad range of geospatial data sources. Designed for flexibility and scalability, MapStore integrates seamlessly with **OpenLayers**, **Leaflet**, and **Cesium** for both **2D** and **3D** visualization, allowing users to explore maps in a dynamic, real-time environment.
+
+With built-in support for **OGC** **standards** (such as **WMS**, **WMTS**, **WFS**, **3DTiles** and **CSW**), MapStore caters to the needs of professional GIS users while maintaining an intuitive interface for casual users. It supports rich feature configurations like layer styling, spatial analysis tools, and collaborative editing, making it a robust solution for diverse industries—from urban planning to environmental monitoring.
+
+MapStore's architecture is designed for modularity and extensibility, allowing developers to integrate custom plugins or adapt it for specific use cases. Whether you need to create interactive maps for publication or sophisticated geospatial applications, MapStore2 provides a solid foundation for building powerful web mapping solutions.
+
+For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
 
 ## Download
 
