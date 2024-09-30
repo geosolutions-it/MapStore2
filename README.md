@@ -13,6 +13,25 @@ MapStore's architecture is designed for modularity and extensibility, allowing d
 
 For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
 
+## Documentation
+
+You can find more documentation about how to build, install or develop with MapStore on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.
+
+## License
+
+MapStore is Free and Open Source software, it is based on OpenLayers, Leaflet and <a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>, and is licensed under the Simplified BSD License.
+
+## Demo Instances
+
+We have the following instances:
+
+1. a DEV instance, which can be accessed <a href="https://dev-mapstore.geosolutionsgroup.com/" target="_blank">here</a>, where all the changes are deployed once they are published on the Master branch of our repo
+2. a QA instance, which can be accessed  <a href="https://qa-mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
+3. a STABLE instance, which can be accessed <a href="https://mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that gets deployed on demand after each release.
+
+As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
+So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are parte of the developers team.
+
 ## Download
 
 You can download the WAR file from the latest release [MapStore documentation!](https://docs.mapstore.geosolutionsgroup.com/en/latest/)
@@ -84,24 +103,7 @@ Then you can access MapStore using the following URL (assuming the web container
 
 Use the default credentials (admin / admin) to login and start creating your maps!
 
-## Documentation
 
-You can find more documentation about how to build, install or develop with MapStore on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.
-
-## License
-
-MapStore is Free and Open Source software, it is based on OpenLayers, Leaflet and <a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>, and is licensed under the Simplified BSD License.
-
-## Demo Instances
-
-We have the following instances:
-
-1. a DEV instance, which can be accessed <a href="https://dev-mapstore.geosolutionsgroup.com/" target="_blank">here</a>, where all the changes are deployed once they are published on the Master branch of our repo
-2. a QA instance, which can be accessed  <a href="https://qa-mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
-3. a STABLE instance, which can be accessed <a href="https://mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that gets deployed on demand after each release.
-
-As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
-So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are parte of the developers team.
 
 ## Start developing your custom app
 
