@@ -442,7 +442,9 @@ In **General Settings** of a ArcGIS source type, it is possible to specify the s
     The `URL` could have one of the following structures:
 
     * `https://<catalog-url>/rest/services/`
+
     * `https://<catalog-url>/rest/services/<serviceName>/MapServer`
+    
     * `https://<catalog-url>/rest/services/<serviceName>/ImageServer`
 
 !!! Note
