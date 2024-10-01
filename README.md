@@ -19,7 +19,7 @@ You can find more documentation about how to build, install or develop with MapS
 
 ## License
 
-MapStore is Free and Open Source software, it is based on OpenLayers, Cseium, Leaflet and <a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>, and is licensed under the Simplified BSD License.
+MapStore is Free and Open Source software, it is based on OpenLayers, Cesium, Leaflet and <a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>, and is licensed under the Simplified BSD License.
 
 ## Demo Instances
 
@@ -102,8 +102,6 @@ Then you can access MapStore using the following URL (assuming the web container
 [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
 
 Use the default credentials (admin / admin) to login and start creating your maps!
-
-
 
 ## Start developing your custom app
 
