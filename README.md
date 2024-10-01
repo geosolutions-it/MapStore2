@@ -158,7 +158,7 @@ We welcome contributions in any form:
 - pull requests for documentation
 - funding for any combination of the above
 
-For more information check <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md" target="_blank">this</a> page.
+For more information check [this](https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore) page.
 
 ## Who uses MapStore
 
