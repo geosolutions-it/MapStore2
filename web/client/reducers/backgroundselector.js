@@ -15,7 +15,8 @@ import {
     REMOVE_BACKGROUND,
     CREATE_BACKGROUNDS_LIST,
     CLEAR_MODAL_PARAMETERS,
-    CONFIRM_DELETE_BACKGROUND_MODAL
+    CONFIRM_DELETE_BACKGROUND_MODAL,
+    ADD_BACKUP_BACKGROUND
 } from '../actions/backgroundselector';
 
 import { RESET_CATALOG } from '../actions/catalog';
@@ -102,6 +103,13 @@ function backgroundselector(state = null, action) {
     case ALLOW_BACKGROUNDS_DELETION: {
         return assign({}, state, {allowDeletion: action.allow || false});
     }
+    case ADD_BACKUP_BACKGROUND : {
+        return assign({}, state, {
+            backupBackground: action.background
+        });
+    }
+
+
     default:
         return state;
     }

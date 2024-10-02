@@ -592,13 +592,12 @@ export default (API) => ({
             .switchMap(() => {
                 const state = store.getState();
                 const metadataSource = metadataSourceSelector(state);
-                const services = servicesSelector(state);
                 return Rx.Observable.of(...([
                     setControlProperties('metadataexplorer', "enabled", false, "group", null),
                     changeCatalogMode("view"),
                     resetCatalog()
                 ].concat(metadataSource === 'backgroundSelector' ?
-                    [changeSelectedService(head(keys(services))), allowBackgroundsDeletion(true)] : [])));
+                    [changeSelectedService(state.backgroundSelector.backupBackground), allowBackgroundsDeletion(true)] : [])));
             }),
 
     /**

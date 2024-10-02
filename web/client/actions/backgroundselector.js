@@ -25,6 +25,7 @@ export const CLEAR_MODAL_PARAMETERS = 'BACKGROUND_SELECTOR:CLEAR_MODAL_PARAMETER
 export const CONFIRM_DELETE_BACKGROUND_MODAL = 'BACKGROUND_SELECTOR:CONFIRM_DELETE_BACKGROUND_MODAL';
 export const ALLOW_BACKGROUNDS_DELETION = 'BACKGROUND_SELECTOR:ALLOW_BACKGROUNDS_DELETION';
 export const SYNC_CURRENT_BACKGROUND_LAYER = 'BACKGROUND_SELECTOR:SYNC_CURRENT_BACKGROUND_LAYER';
+export const ADD_BACKUP_BACKGROUND = 'BACKGROUND_SELECTOR:ADD_BACKUP_BACKGROUND';
 
 export function createBackgroundsList(backgrounds) {
     return {
@@ -123,5 +124,12 @@ export function confirmDeleteBackgroundModal(show, layerTitle = null, layerId = 
         show,
         layerTitle,
         layerId
+    };
+}
+
+export function addBackupBackground(background) {
+    return {
+        type: ADD_BACKUP_BACKGROUND,
+        background
     };
 }
