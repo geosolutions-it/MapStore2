@@ -539,7 +539,7 @@ In particular, the user can choose between:
 
 !!!note
     From the Layer Settings panel, MapStore allows users to choose the *Information format* for `WMS` and `WFS` layer types.
-    The **Text** option is only available for `WMS` layers, while the **HTML** option for `WFS` layers is available only with GeoServer and if the [`wfs-freemarker`](https://docs.geoserver.org/main/en/user/community/wfs-freemarker/index.html) extension is installed on the GeoServer side. 
+    The **Text** option is only available for `WMS` layers, while the **HTML** option for `WFS` layers is available only with GeoServer and if the [`wfs-freemarker`](https://docs.geoserver.org/main/en/user/community/wfs-freemarker/index.html) extension is installed on the GeoServer side.
 
 ### Text
 
