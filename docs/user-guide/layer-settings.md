@@ -104,6 +104,16 @@ When the *Use cache options* is enabled, more controls are enabled so that it is
 !!!warning
     The Gridset compatibility check made by MapStore whose result is shown by the Info tooltip, is usually quite reliable but should be considered anyway only to provide general matching indicators aimed at highlighting possible compatibility issues between the current layer/map settings and the remote Tile Grid. Due to the cache tolerance considered on the server side by GWC, it might even happen in some cases that the settings available on the client side don't HIT the tile cache even if all the checks listed are successful. At the same time, when the standard gridset is used, gridsets check may fail even if all WMS request are effectively HITTING the cache (e.g. because the WMTS reports a list of origins).
 
+* Enable/disable the **Interactive legend**. If this option is enabled, legend entries with an associated valid filter are displayed as toggleable items inside the TOC, a user can click on these legend items to filter the content of the layer. An example can be the following one:
+
+<video class="ms-docimage"  style="max-width:700px;" controls><source src="../img/layer-settings/interactive-legend.mp4"></video>
+
+!!! Note
+    Any type of [Filter](filtering-layers.md#filter-types) applied to the layer remains active when the legend filter is activated on the same layer.
+
+!!!Warning
+    The *Interactive legend* is an experimental option and it is disabled by default. The flag `miscSettings.experimentalInteractiveLegend` inside [localConfig](../developer-guide/local-config.md) must be set to true to enable this functionality. The *Interactive legend* is available only for GeoServer WMS layers that support the json format for GetLegendGraphic requests.
+
 * Set the layer *Legend* with custom *Width* and *Height* options. Both of these field values if greater than the default legend's size of 12, then the custom values gets applied on the legend width and height display property
 
 * A preview of the legend is shown with the applied custom values from Legend fields above.
