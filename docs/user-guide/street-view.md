@@ -80,3 +80,30 @@ Through the navigation toolbar it is possible to:
 * **Download** the cyclorama image in `png` format through the <img src="../img/button/cyclomedia-download-button.jpg" class="ms-docbutton"/> button.
 
 * Open the **Image Info** pop-up, through the <img src="../img/button/image-info-button.jpg" class="ms-docbutton"/> button to access image metadata such as: general image information as well as geospatial references of the image itself.
+
+## Mapillary viewer for 360 Imagery
+
+If the [Mapillary viewer](https://mapillary.github.io/mapillary-js/) has been configured as a provider for the MS Street View tool, the user experience is the same: the tool can be activated through the same button <img src="../img/button/street-view-button.jpg" class="ms-docbutton"/> in [Side Toolbar](mapstore-toolbars.md#side-toolbar).
+
+<img src="../img/street-view/mapillary-popup.jpg" class="ms-docimage" width="500px"/>
+
+!!! note
+    The **[Mapillary viewer](https://mapillary.github.io/mapillary-js/)** provider can be configured on the *Street View* plugin as documented [here](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins#plugins.StreetView)
+
+After that a window opens and the street layer is visualized in form of dots to highlight streets on the map so that the user can select one of them with a simple click of the mouse.
+
+<video class="ms-docimage" controls><source src="../img/street-view/add-point-mapillary.mp4"/></video>
+
+By clicking on a highlighted point on the map, the tool window displays the *360 Imagery* and the user can navigate it as usual or interact with the *Navigation Toolbar*.
+
+<img src="../img/street-view/mapillary_navigation_bar.jpg" class="ms-docimage" width="500px"/>
+
+Through the navigation toolbar it is possible to:
+
+* Move forward or backward, through <img src="../img/button/left-black-button.jpg" class="ms-docbutton"/> and <img src="../img/button/right-black-button.jpg" class="ms-docbutton"/> buttons.
+
+* Start the animation of the street layer, through <img src="../img/button/play-black-button.jpg" class="ms-docbutton"/> button.
+
+* Customize the animation speed, through <img src="../img/button/turtle-button.jpg" class="ms-docbutton"/> button.
+
+* Set the animation start point, through <img src="../img/button/square-button.jpg" class="ms-docbutton"/> button.

@@ -537,6 +537,9 @@ In particular, the user can choose between:
 !!!note
     Without selecting any format here, the [Identify Tool](navigation-toolbar.md#identify-tool) will return the layers information with the format chosen in Map Settings ( in the [Side Toolbar](mapstore-toolbars.md#side-toolbar)). Once a user specifies the information format in layers settings, instead, that format will take precedence over the map settings only for that specific layer.
 
+!!!warning
+    MapStore allows users to choose the information format for WMS, CSW, and WFS services. The *Text* option is only available for WMS and CSW services.
+
 ### Text
 
 An example of layer information in text format can be:
