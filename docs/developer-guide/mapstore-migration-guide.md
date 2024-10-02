@@ -34,7 +34,7 @@ The same for projects of derived `MapStoreExtensions`. Make sure to:
 - Update `package.json` with the new versions of webpack and other dependencies.
 - Remove and regenerate your `package-lock.json` with `npm install` after updating the Node version.
 
-Here the diff used for MapStore Extensions to update the `package.json` file (tested with Node 16):
+Here the diff used for MapStore Extensions to update the `package.json` file:
 
 ```diff
 diff --git a/package.json b/package.json
