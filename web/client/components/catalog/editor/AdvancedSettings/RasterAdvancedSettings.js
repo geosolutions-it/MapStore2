@@ -196,7 +196,7 @@ export default ({
                     title={<Message msgId="errorTitleDefault"/>}
                     text={<Message msgId="layerProperties.formatError" />} /> : null}
                 <Button
-                    disabled={props.formatsLoading || service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                    disabled={props.formatsLoading}
                     tooltipId="catalog.format.refresh"
                     className="square-button-md no-border"
                     onClick={() => onFormatOptionsFetch(service.url, true)}
@@ -209,7 +209,6 @@ export default ({
             <ControlLabel><Message msgId="layerProperties.format.tile" /></ControlLabel>
             <InputGroup>
                 <Select
-                    disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
                     isLoading={props.formatsLoading}
                     onOpen={() => onFormatOptionsFetch(service.url)}
                     value={service && service.format}
@@ -224,7 +223,6 @@ export default ({
             <ControlLabel><Message msgId="layerProperties.format.information" /></ControlLabel>
             <InputGroup>
                 <Select
-                    disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
                     isLoading={props.formatsLoading}
                     onOpen={() => onFormatOptionsFetch(service.url)}
                     value={service && service.infoFormat}
