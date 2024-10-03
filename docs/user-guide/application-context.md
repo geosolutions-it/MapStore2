@@ -133,6 +133,26 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
 <img src="../img/application-context/plugin-config.jpg" class="ms-docimage" style="max-width:300px;"/>
 
 * The **Open plugin configuration documentation** button <img src="../img/button/docu-plugin.jpg" class="ms-docbutton"/> opens the [Plugins Documentation](https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins) in another page.
+  
+!!! warning
+    When adding the following plugins to the context:
+      
+      * Login
+      * Home
+  
+    Please ensure that the priority is set to **5** in the configuration. Here’s an example of how to structure it:
+    ``` JavaScript
+        {
+            "cfg": {},
+            "override": {
+                "OmniBar": {
+                "priority": 5
+                }
+            }
+        }
+    ```
+
+
 
 ### How to update extensions
 
