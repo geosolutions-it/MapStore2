@@ -136,8 +136,10 @@ In the *Enabled Plugins* list, the following buttons are displayed for each exte
   
 !!! warning
     When adding the following plugins to the context:
-    *Login
-    *Home
+
+    * Login
+  
+    * Home
   
     Please ensure that the priority is set to **5** in the configuration. Here’s an example of how to structure it:
     ``` JavaScript
