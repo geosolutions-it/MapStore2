@@ -31,13 +31,11 @@ export default class PopupSupport extends React.Component {
     static propTypes = {
         map: PropTypes.object,
         popups: PropTypes.arrayOf(PropTypes.object),
-        identifyPopupHidden: PropTypes.bool,
         onPopupClose: PropTypes.func
     }
 
     static defaultProps = {
         popups: [],
-        identifyPopupHidden: false,
         onPopupClose: () => {}
     }
     UNSAFE_componentWillMount() {
@@ -52,8 +50,8 @@ export default class PopupSupport extends React.Component {
             this.props.map.on('resize', this.updatePopup);
         }
     }
-    shouldComponentUpdate({popups, identifyPopupHidden}) {
-        return popups !== this.props.popups || identifyPopupHidden !== this.props.identifyPopupHidden;
+    shouldComponentUpdate({popups}) {
+        return popups !== this.props.popups;
     }
     componentWillUnmount() {
         // Clean old popups without throwing event
@@ -68,14 +66,6 @@ export default class PopupSupport extends React.Component {
         }
     }
     renderPopups() {
-        const {identifyPopupHidden} = this.props;
-        if (identifyPopupHidden) {
-            (this._popups || []).forEach(({popup}) => {
-                popup.off('remove', this.popupClose);
-                popup && this.props.map.removeLayer(popup);
-            });
-            return [];
-        }
         return this.preparePopups()
             .filter(({component}) => !!component)
             .map(({popup, props = {}, component, id}) => {

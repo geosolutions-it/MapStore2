@@ -35,8 +35,7 @@ import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selecto
 import {
     snappingLayerSelector
 } from "../../selectors/draw";
-import { getDefaultInfoFormatValue, getValidator } from '../../utils/MapInfoUtils';
-import { mapInfoRequestsSelector, responsesSelector } from '../../selectors/mapInfo';
+import { mapPopupsSelector } from '../../selectors/mapPopups';
 
 const Empty = () => { return <span/>; };
 
@@ -103,27 +102,12 @@ const pluginsCreator = (mapType, actions) => {
 
         const LLayer = connect(null, {onWarning: warning})( components.Layer || Empty);
 
-        const EMPTY_POPUPS = [];
         const PopupSupport = connect(
             createSelector(
-                (state) => state.mapPopups && state.mapPopups.popups || EMPTY_POPUPS,
-                (state) => state.mapPopups && state.mapPopups.hideEmptyPopupOption || false,
-                isMouseMoveActiveSelector,
-                mapInfoRequestsSelector,
-                responsesSelector,
-                (popups, hideEmptyPopupOption, isMouseMoveActive, mapInfoRequests, mapInfoResponses) => {
-                    // create a flag for hide the identify popup in case no results in hover mode
-                    let identifyPopupHidden = false;
-                    if (isMouseMoveActive && mapInfoRequests?.length && mapInfoResponses?.length && hideEmptyPopupOption) {
-                        const format = getDefaultInfoFormatValue();
-                        const invalidResponses = getValidator(format).getNoValidResponses(mapInfoResponses);
-                        const emptyResponses = mapInfoRequests?.length === invalidResponses?.length;
-                        const missingResponses = (mapInfoRequests || []).length - (mapInfoResponses || []).length;
-                        identifyPopupHidden = missingResponses === 0 && emptyResponses && isMouseMoveActive && hideEmptyPopupOption;
-                    }
+                mapPopupsSelector,
+                (popups) => {
                     return {
-                        popups,
-                        identifyPopupHidden
+                        popups
                     };
                 }
             ), {

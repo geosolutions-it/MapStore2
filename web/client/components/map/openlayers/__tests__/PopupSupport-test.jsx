@@ -148,22 +148,6 @@ describe('Openlayers PopupSupport', () => {
         expect(document.querySelector('#test-html-map-popup')).toExist();
         expect(document.querySelector('#test-component-map-popup')).toExist();
     });
-    it('test hiding popup if no identify results in hover mode', () => {
-        const popups = [
-            {
-                id: 'test',
-                component: () => (<div style={{width: 300, height: 100}} ></div>),
-                position: { coordinates: [0, 0]},
-                autoPan: false
-            }
 
-        ];
-        const component1 = renderPopups({ popups, identifyPopupHidden: true });
-        expect(component1).toExist();
-        expect(document.querySelector('.map-popup-ol')).toNotExist();
-        const component2 = renderPopups({ popups, identifyPopupHidden: false });
-        expect(component2).toExist();
-        expect(document.querySelector('.map-popup-ol')).toExist();
-    });
 });
 
