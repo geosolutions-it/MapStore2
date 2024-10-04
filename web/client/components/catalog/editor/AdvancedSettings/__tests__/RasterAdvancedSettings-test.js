@@ -14,7 +14,7 @@ import TestUtils from "react-dom/test-utils";
 import { waitFor } from '@testing-library/react';
 import { setConfigProp } from "../../../../../utils/ConfigUtils";
 
-describe.only('Test Raster advanced settings', () => {
+describe('Test Raster advanced settings', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
