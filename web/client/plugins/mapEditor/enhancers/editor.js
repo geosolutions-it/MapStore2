@@ -22,7 +22,6 @@ import {backgroundListSelector} from '../../../selectors/backgroundselector';
 import {mapOptionsToSaveSelector} from '../../../selectors/mapsave';
 import {textSearchConfigSelector, bookmarkSearchConfigSelector} from '../../../selectors/searchconfig';
 import MapUtils from '../../../utils/MapUtils';
-import { isNull } from 'util';
 
 
 const saveSelector = createSelector(
@@ -52,7 +51,7 @@ export default compose(
             const mapData = MapUtils.saveMapConfiguration(map, layers, groups,
                 backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 
-            return save({...mapData.map, layers: mapData.map.layers.map(l => pickBy(l, (p) => p !== undefined && !isNull(p)))}, owner);
+            return save({...mapData.map, layers: mapData.map.layers.map(l => pickBy(l, (p) => p !== undefined && !(p === null)))}, owner);
         }
     }),
     WithConfirm,

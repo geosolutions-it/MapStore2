@@ -6,19 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
-import PropTypes from 'prop-types';
-import src from '../assets/img/mapstorelogo.png';
 import assign from 'object-assign';
+import PropTypes from 'prop-types';
+
+import src from '../assets/img/mapstorelogo.png';
 
 class Attribution extends React.Component {
     static propTypes = {
         src: PropTypes.string,
+        href: PropTypes.string,
+        label: PropTypes.string,
+        height: PropTypes.number,
         style: PropTypes.object
     };
 
     static defaultProps = {
         src: src,
+        height: 30,
+        href: 'https://www.geosolutionsgroup.com/',
+        label: 'GeoSolutions',
         style: {
             position: "absolute",
             width: "124px",
@@ -40,6 +46,8 @@ class Attribution extends React.Component {
  * @prop {string} [label='CoreSpatial Portal | NGS'] the tooltip for the logo
  * @prop {string} [href='https://newmoyergeospatial.com/corespatial-solution-delivered/'] the URL to redirect on click
  * @prop {string} [src] URL of the logo image. By default the GeoSolutions logo.
+ * @prop {number} [height] the height of the img tag, default is 30
+ * @prop {object} [style] a style object to pass to the img
  */
 export default {
     AttributionPlugin: assign(Attribution, {
