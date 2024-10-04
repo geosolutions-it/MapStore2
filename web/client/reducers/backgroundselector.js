@@ -16,7 +16,7 @@ import {
     CREATE_BACKGROUNDS_LIST,
     CLEAR_MODAL_PARAMETERS,
     CONFIRM_DELETE_BACKGROUND_MODAL,
-    ADD_BACKUP_BACKGROUND
+    STASH_SELECTED_SERVICE
 } from '../actions/backgroundselector';
 
 import { RESET_CATALOG } from '../actions/catalog';
@@ -103,9 +103,9 @@ function backgroundselector(state = null, action) {
     case ALLOW_BACKGROUNDS_DELETION: {
         return assign({}, state, {allowDeletion: action.allow || false});
     }
-    case ADD_BACKUP_BACKGROUND : {
+    case STASH_SELECTED_SERVICE : {
         return assign({}, state, {
-            backupBackground: action.background
+            stashedService: action.service
         });
     }
 

@@ -52,7 +52,7 @@ import {
     catalogSearchInfoSelector,
     isActiveSelector, servicesSelectorWithBackgrounds
 } from '../selectors/catalog';
-import { metadataSourceSelector } from '../selectors/backgroundselector';
+import { metadataSourceSelector, stashedServiceSelector } from '../selectors/backgroundselector';
 import { currentMessagesSelector } from "../selectors/locale";
 import { getSelectedLayer, selectedNodesSelector } from '../selectors/layers';
 
@@ -592,12 +592,13 @@ export default (API) => ({
             .switchMap(() => {
                 const state = store.getState();
                 const metadataSource = metadataSourceSelector(state);
+                const stashedService = stashedServiceSelector(state);
                 return Rx.Observable.of(...([
                     setControlProperties('metadataexplorer', "enabled", false, "group", null),
                     changeCatalogMode("view"),
                     resetCatalog()
                 ].concat(metadataSource === 'backgroundSelector' ?
-                    [changeSelectedService(state.backgroundSelector.backupBackground), allowBackgroundsDeletion(true)] : [])));
+                    [changeSelectedService(stashedService), allowBackgroundsDeletion(true)] : [])));
             }),
 
     /**

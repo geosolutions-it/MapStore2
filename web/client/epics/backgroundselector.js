@@ -24,7 +24,7 @@ import {
     setCurrentBackgroundLayer,
     allowBackgroundsDeletion,
     backgroundAdded,
-    addBackupBackground
+    stashSelectedCatalogService
 } from '../actions/backgroundselector';
 
 import { setControlProperty } from '../actions/controls';
@@ -36,13 +36,14 @@ import { getLayerCapabilities } from '../observables/wms';
 import { getCustomTileGridProperties, getLayerOptions } from '../utils/WMSUtils';
 import { getLayerTileMatrixSetsInfo } from '../api/WMTS';
 import { generateGeoServerWMTSUrl } from '../utils/WMTSUtils';
+import { selectedServiceSelector } from '../selectors/catalog';
 
 const accessMetadataExplorer = (action$, store) =>
     action$.ofType(ADD_BACKGROUND)
         .switchMap(() => Rx.Observable.of(
             setControlProperty('metadataexplorer', 'enabled', true),
             allowBackgroundsDeletion(false),
-            addBackupBackground(store.getState().catalog.selectedService),
+            stashSelectedCatalogService(selectedServiceSelector(store.getState())),
             changeSelectedService('default_map_backgrounds')
         ));
 

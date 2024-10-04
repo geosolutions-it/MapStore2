@@ -23,3 +23,4 @@ export const backgroundLayersSelector = createSelector(layersSelector, mapTypeSe
     const  backgroundLayers = layers.filter((l) => l && l.group === "background");
     return loaded && loaded[maptype] ? backgroundLayers.map((l) => invalidateUnsupportedLayer(l, maptype)) || [] : backgroundLayers;
 });
+export const stashedServiceSelector = state => state?.backgroundSelector.stashedService;

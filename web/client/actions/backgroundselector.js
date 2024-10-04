@@ -25,7 +25,7 @@ export const CLEAR_MODAL_PARAMETERS = 'BACKGROUND_SELECTOR:CLEAR_MODAL_PARAMETER
 export const CONFIRM_DELETE_BACKGROUND_MODAL = 'BACKGROUND_SELECTOR:CONFIRM_DELETE_BACKGROUND_MODAL';
 export const ALLOW_BACKGROUNDS_DELETION = 'BACKGROUND_SELECTOR:ALLOW_BACKGROUNDS_DELETION';
 export const SYNC_CURRENT_BACKGROUND_LAYER = 'BACKGROUND_SELECTOR:SYNC_CURRENT_BACKGROUND_LAYER';
-export const ADD_BACKUP_BACKGROUND = 'BACKGROUND_SELECTOR:ADD_BACKUP_BACKGROUND';
+export const STASH_SELECTED_SERVICE = 'BACKGROUND_SELECTOR:STASH_SELECTED_SERVICE';
 
 export function createBackgroundsList(backgrounds) {
     return {
@@ -127,9 +127,19 @@ export function confirmDeleteBackgroundModal(show, layerTitle = null, layerId = 
     };
 }
 
-export function addBackupBackground(background) {
+/**
+ * Stashes the currently selected catalog service for later restoration.
+ * This is useful when closing the catalog and reopening it for background selection,
+ * allowing the user to easily return to their previous selection.
+ *
+ * @param {Object} service - The service object representing the currently selected catalog.
+ * @returns {Object} An action object with the type `STASH_SELECTED_SERVICE`
+ *                  and the selected service.
+ */
+
+export function stashSelectedCatalogService(service) {
     return {
-        type: ADD_BACKUP_BACKGROUND,
-        background
+        type: STASH_SELECTED_SERVICE,
+        service
     };
 }
