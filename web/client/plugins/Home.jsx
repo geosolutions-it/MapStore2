@@ -44,6 +44,20 @@ const HomeConnected = connect((state) => ({
  * It can be rendered in {@link #plugins.OmniBar|OmniBar}.
  * Supports as containers at lower priority {@link #plugins.Toolbar|Toolbar}.
  * You can configure the home target path globally by setting `miscSettings.homePath` in `localConfig.json`. By default it redirects to `"#/"`;
+ *
+ * If you want to show this plugin with BurgerMenu (so without Sidebar), apply the following configuration:
+ *
+ * ```javascript
+ * {
+ *     "cfg": {},
+ *     "override": {
+ *         "OmniBar": {
+ *             "priority": 5
+ *         }
+ *     }
+ * }
+ * ```
+ *
  * @name Home
  * @class
  * @memberof plugins
