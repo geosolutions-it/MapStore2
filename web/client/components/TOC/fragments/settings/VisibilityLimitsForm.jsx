@@ -392,6 +392,9 @@ function VisibilityLimitsForm({
                 disabled={disableResolutionLimits || loading}
                 onChange={({ value }) => {
                     setLimitsType(value);
+                    onChange({
+                        visibilityLimitType: value
+                    });
                     clearMessages();
                 }}
             />
