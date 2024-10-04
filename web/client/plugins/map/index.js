@@ -105,11 +105,7 @@ const pluginsCreator = (mapType, actions) => {
         const PopupSupport = connect(
             createSelector(
                 mapPopupsSelector,
-                (popups) => {
-                    return {
-                        popups
-                    };
-                }
+                (popups) => ({popups})
             ), {
                 onPopupClose: removePopup
             }

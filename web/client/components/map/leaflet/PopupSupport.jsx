@@ -66,7 +66,7 @@ export default class PopupSupport extends React.Component {
         }
     }
     renderPopups() {
-        return this.preparePopups()
+        return  this.preparePopups()
             .filter(({component}) => !!component)
             .map(({popup, props = {}, component, id}) => {
                 const context = popup.getContent();
