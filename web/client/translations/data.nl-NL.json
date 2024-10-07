@@ -28,7 +28,8 @@
         "showMore": "Laat meer zien...",
         "collapse": "Samenvouwen",
         "expand": "Uitvouwen",
-	"Links": "Links",
+	    "Links": "Links",
+        "height": "Hoogte",
         "Forbidden": "Verboden",
         "layerNameChangeError": {
             "title": "Fout bij naamswijziging",
@@ -57,8 +58,8 @@
             "404": "Vertaalbestand niet gevonden"
         },
         "details": {
-            "title": "Informatie over deze kaart",
-            "tooltip": "Informatie over deze kaart"
+            "title": "Informatie over deze visualisatie",
+            "tooltip": "Informatie over deze visualisatie"
         },
         "showEmptyMessageGFI": "Toon lege resultatenbericht in het paneel GetFeatureInfo",
         "remove": "Verwijder",
@@ -172,6 +173,16 @@
                     "eyeDomeLightingRadius": "Belichtingsradius"
                 }
             },
+            "modelLayer": {
+                "modelCenterLat": "Breedtegraad centrum (DD)",
+                "modelCenterLng": "Lengtegraad centrum (DD)",
+                "height": "Hoogte (m)",
+                "heading": "Azimut (DD)",
+                "warnings": {
+                    "projectedCrsNotSupported": "Het model is in het midden van het huidige kaartbeeld geplaatst omdat het CRS {modelProjection} van het model niet ondersteund is.",
+                    "projectedCrsNotProvided": "Het model is in het midden van het huidige kaartbeeld geplaatst omdat er geen CRS gespecifieerd is in het model."
+                }
+            },
             "tooltip": {
                 "label": "Tooltip",
                 "title": "Titel",
@@ -195,6 +206,10 @@
             "enableLocalizedLayerStyles": {
                 "label": "Schakel gelokaliseerde stijl in",
                 "tooltip": "Opmerking: deze parameter vereist specifieke configuraties op GeoServer"
+            },
+            "useCacheOptionInfo": {
+                "label": "Gebruik externe aangepaste tegelgrids",
+                "info": "Zorg ervoor dat WMTS is ingeschakeld om aangepaste tegelgrids te kunnen gebruiken"
             },
             "format": {
               "title": "Formaat",
@@ -240,7 +255,8 @@
             "warningSaveUpdatedMap": "Sommige lagen zijn niet correct bijgewerkt",
             "saveUpdatedMap": "Alle lagen zijn succesvol bijgewerkt",
             "incompatibleBackgroundAndProjection":"De door u geselecteerde projectie is niet compatibel met de achtergrond. Schakel over naar een compatibele of lege achtergrond en selecteer deze projectie!",
-            "incompatibleDataAndProjection":"De huidige laag en kaartprojectie zijn niet volledig compatibel. Het is mogelijk dat delen of alle gegevens niet op de kaart verschijnen."
+            "incompatibleDataAndProjection":"De huidige laag en kaartprojectie zijn niet volledig compatibel. Het is mogelijk dat delen of alle gegevens niet op de kaart verschijnen.",
+            "errorLoadingGF":"Fout bij laden van GF Geom"
         },
         "dock": {
             "row": "{rowsSelected} geselecteerde lijn",
@@ -571,6 +587,7 @@
 	          "layerFilterTooltip": "Filter laag",
             "toolDownloadTooltip": "Laaggegevens exporteren",
             "noFilteredResults": "Geen resultaten",
+            "emptyLayerTree": "Geen lagen ingeladen. Gelieve een nieuwe laag toe te voegen vanuit de catalogus",
             "filterPlaceholder": "Filter lagen",
             "clearFilter": "Filter wissen",
             "toolReloadLayerTooltip": "Forceer herladen van geselecteerde laag",
@@ -608,6 +625,22 @@
             "notVisibleZoomOut": "De laag is niet zichtbaar omdat deze buiten de resolutiegrenzen valt. Zoom uit om de laag weer te geven",
             "notVisibleSwitchTo3D": "Activeer de 3D-modus om deze laag te kunnen zien",
             "notVisibleSwitchTo2D": "Activeer de 2D-modus om deze laag te kunnen zien",
+            "toolGroupShowAllChildren": "Toon alle lagen in deze groep",
+            "toolGroupHideAllChildren": "Verberg alle lagen in deze groep",
+            "activateToolGroupMutuallyExclusive": "Activeer exclusieve zichtbaarheid van lagen/groepen binnen deze groep",
+            "deactivateToolGroupMutuallyExclusive": "Deactiveer exclusieve zichtbaarheid van lagen/groepen binnen deze groep",
+            "toolGroupCollapseAllChildren": "Alle lagen/groepen binnen deze groep samenvouwen",
+            "toolGroupExpandAllChildren": "Alle lagen/groepen binnen deze groep uitvouwen",
+            "closeOnMapInitialization": "Gesloten houden bij het laden van de kaart",
+            "openOnMapInitialization": "Openen bij het laden van de kaart",
+            "defaultTheme": "Standaard thema",
+            "legendTheme": "Legende thema",
+            "showFullTitle": "Toon volledige titel",
+            "hideFullTitle": "Titel op enkele lijn",
+            "showOpacitySlider": "Toon transparantieregelaar",
+            "hideOpacitySlider": "Verberg transparantieregelaar",
+            "showOpacityTooltip": "Toon percentage transparantieregelaar",
+            "hideOpacityTooltip": "Verberg percentage transparantieregelaar",
             "refreshOptions": {
                 "bbox": "BBOX bijwerken",
                 "search": "De zoekopties bijwerken",
@@ -713,9 +746,11 @@
             },
             "legend": {
                 "font": "Configureer labels:",
-                "forceLabels": "Forceer labels:",
-                "antiAliasing": "Anti-aliasing van de fonts:",
-                "iconsSize": "Pictogramgrootte:",
+                "forceLabels": "Forceer labels",
+                "antiAliasing": "Anti-aliasing van de fonts",
+                "forceIconsSize": "Overschrijf symboolgrootte",
+                "iconsWidth": "Symboolbreedte:",
+                "iconsHeight": "Symboolhoogte:",
                 "dpi": "dpi:"
             },
             "rotation": "Rotatie",
@@ -800,6 +835,7 @@
             "exportToGeoJSON": "Exporteer naar GeoJSON",
             "resetTooltip": "Verwijder metingen",
             "addAsLayer": "Voeg toe als laag",
+            "lengthMeasure": "Meet geodetische afstand in 3D ruimte. Deze wordt berekend op de ellipsoïde, maar wordt getoond waar u klikt",
             "polylineDistance3DMeasure": "Meet afstand in 3D",
             "area3DMeasure": "Meet oppervlakte in 3D",
             "pointCoordinatesMeasure": "Meet puntcoördinaten",
@@ -825,7 +861,9 @@
             "aeronautical": "Aeronautisch",
             "changeSearchInputField": "Wijzig de zoekfunctie",
             "addressSearch": "Zoek op locatienaam",
+            "searchOnAllServices": "Zoek in alle onderstaande services",
             "coordinatesSearch": "Zoek op coördinaten",
+            "currentMapCRS": "Huidige kaart CRS",
             "searchservicesbutton": "Configureer zoekservices",
             "configpaneltitle": "Maak / bewerk een zoekservice",
             "serviceslistlabel": "Beschikbare services",
@@ -847,6 +885,8 @@
             "b_newpaneltitle": "Voeg een nieuwe bladwijzer toe",
             "latitude": "Lat",
             "longitude": "Lon",
+            "yCoord": "Y",
+            "xCoord": "X",
             "b_title": "Titel",
             "b_layer_tooltip": "Wijzig herladen van laagzichtbaarheid",
             "b_bbox": "Bounding Box",
@@ -877,6 +917,8 @@
             "s_wfs_opt_props_label" : "Optionele eigenschappen",
             "s_result_props_label": "Eigenschappen voor resultaatweergave",
             "s_priority_info": "Wordt gebruikt om zoekresultaten te sorteren, lagere waarden eerst. Nominale resultaten hebben prioriteit = 5",
+            "s_placeholder": "Placeholder zoekinvoer",
+            "s_tooltip": "Knopinfo service menu",
             "serviceslistempty": "Geen aangepaste services gedefinieerd",
             "service_missing": "De {serviceType} -service is niet geconfigureerd",
             "generic_error": "Er is een fout opgetreden tijdens het zoeken. Foutdetails: {message}",
@@ -1035,7 +1077,7 @@
         "zoombuttons": {
             "zoomInTooltip": "Inzoomen",
             "zoomOutTooltip": "Uitzoomen",
-            "zoomAllTooltip": "Zoom tot reikwijdte van de kaart"
+            "zoomAllTooltip": "Zoom naar initiële reikwijdte van de kaart"
         },
         "fullscreen": {
             "tooltipActivate": "Overschakelen naar volledig scherm",
@@ -1069,7 +1111,7 @@
             "title": "Geavanceerd zoeken",
             "query": "Zoeken",
             "apply": "Toepassen",
-            "reset": "Reset",
+            "reset": "Reset: reset alle filters, inclusief elke andere externe filter",
             "save": "Opslaan",
             "discard": "Ongedaan maken",
             "query_request_exception": "Verzoekfout",
@@ -1108,7 +1150,18 @@
                     "wrong_range": "Ondergrens moet lager zijn dan bovengrens"
                 },
                 "datefield": {
-                    "wrong_date_range": "De startdatum moet eerder zijn dan de einddatum"
+                    "wrong_date_range": "De startdatum moet eerder zijn dan de einddatum",
+                    "placeholder": "Voer datum in",
+                    "tooltip": "Voer datum in volgens {format} formaat",
+                    "quickSelectors": {
+                        "today": "Vandaag",
+                        "now": "Nu",
+                        "tomorrow": "Morgen",
+                        "yesterday": "Gisteren",
+                        "thisWeek": "Deze week",
+                        "thisMonth": "Deze maand",
+                        "nDaysFrom": "{n} dagen vanaf {todayNow}"
+                    }
                 },
                 "autocomplete": {
                     "emptyList": "Geen resultaten",
@@ -1261,7 +1314,10 @@
               },
               "geometryError": "Geometrie is ongeldig",
               "annotationSaveGeometryError": "Opslaan faalt wegens ongeldige geometrie; gelieve deze aan te passen om de annotatie op te kunnen slaan",
-              "resolveAllErrors": "Gelieve alle foutmeldingen te behandelen alvorens andere geometrieën te bewerken"
+              "resolveAllErrors": "Gelieve alle foutmeldingen te behandelen alvorens andere geometrieën te bewerken",
+              "selectAnnotationFeature": "Selecteer een annotatie in het linker paneel om de coördinaten en stijl te bewerken",
+              "properties": "Eigenschappen",
+              "deactivatedMapInteraction": "Tekenfunctionaliteiten voor annotaties zijn gedeactiveerd omdat de plugin '{pluginName}' actief is. Gelieve de plugin '{pluginName}' te sluiten om de tekenfunctionaliteit voor annotaties te activeren"
         },
         "user":{
             "login": "Inloggen",
@@ -1509,7 +1565,7 @@
             "tooltip": "Blader door de catalogus en voeg lagen toe aan de kaart",
             "autoload": "Zoek op serviceselectie",
             "fetchMetadata": {
-                "label": "Download metadatabestand bij zoeken",
+                "label": "Download metadatabestand bij opslaan",
                 "tooltip": "Deze optie zal metadata opvragen om het inzoomen naar de laag te ondersteunen. Dit kan zoekoperaties vertragen als de afbeeldingen te groot of te veel zijn."
             },
             "clearValueText": "Selecties wissen",
@@ -1523,6 +1579,10 @@
             "noRecordsMatched": "Geen overeenkomend record",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
+            "additionalOGCServices": {
+                "wfs": "ALS WFS",
+                "wms": "ALS WMS"
+            },
             "share": "Delen",
             "copyToClipboard": "Kopieer naar klembord",
             "copied": "Gekopieerd!",
@@ -1612,6 +1672,11 @@
               "helpTooltip": "Deze optie wordt gebruikt om de inhoud te splitsen over meerdere subdomeinen",
               "addAliasTooltip": "Alias toevoegen",
               "removeAliasTooltip": "Alias verwijderen"
+            },
+            "sortBy": {
+              "label": "Sorteren op",
+              "tooltip": "Voeg namespace prefix toe aan de eigenschapsnaam. bv. ${namespace}:${name}",
+              "placeholder": "Geef een eigenschap"
             }
         },
         "uploader": {
@@ -1781,12 +1846,14 @@
                     "default": "Zoeken...",
                     "string": "Typ tekst om te filteren...",
                     "date": "Typ de datum om te filteren...",
+                    "time": "Typ tijd om te filteren...",
                     "number": "Typ een getal of expressie..."
                 },
                 "tooltips": {
                     "editMode": "Snel zoeken is niet beschikbaar in de editeermodus",
                     "default": "Zoeken...",
                     "string": "Typ tekst om te filteren...</br>Standaard wordt in de hele tekstwaarde gezocht</br>Gebruik <b>*</b> om een willekeurig aantal karakters aan te geven</br>Gebruik <b>.</b> om een enkel karakter aan te geven </br>Plaats <b>!</b> voor een speciaal teken (* of .) om het te behandelen als een normaal karakter</br>",
+                    "time": "Typ tijd om te filteren...",
                     "number": "Typ een getal of een expressie. Voorbeelden: 10,> 2, <10",
                     "date": "Typ een datum of een expressie. Gebruik {format} voor de datum.",
                     "geometry": {
@@ -1800,13 +1867,16 @@
                 "placeholders": {
                     "default": "Zoeken...",
                     "string": "Typ tekst om te filteren...",
+                    "time": "Typ tijd om te filteren...",
                     "date": "Typ de datum om te filteren...",
-                    "number": "Typ een getal..."
+                    "number": "Typ getal om te filteren...",
+                    "range": "Gelieve te selecteren ..."
                 },
                 "tooltips": {
                     "editMode": "Snel zoeken is niet beschikbaar in de editeermodus",
                     "default": "Zoeken...",
-                    "string": "Typ tekst om te filteren...</br>Standaard wordt in de hele tekstwaarde gezocht</br>Gebruik <b>*</b> om een willekeurig aantal karakters aan te geven</br>Gebruik <b>.</b> om een enkel karakter aan te geven </br>Plaats <b>!</b> voor een speciaal teken (* of .) om het te behandelen als een normaal karakter</br>",
+                    "string": "Typ tekst om te filteren...",
+                    "time": "Typ tijd om te filteren...",
                     "number": "Typ een getal ...",
                     "date": "Typ een datum . Gebruik {format} voor de datum.",
                     "geometry": {
@@ -1814,6 +1884,10 @@
                         "enabled": "Klik op de kaart om de resultaten te filteren / Alt + sleep muis om filtervenster te tekenen. Hou ctrl ingedrukt om meerdere afzonderlijke objecten te selecteren",
                         "applied": "Verwijder de filter met een muisklik"
                     }
+                },
+                "rangeTab": {
+                    "start": "Start",
+                    "end": "Einde"
                 }
             },
             "toolbar": {
@@ -1858,7 +1932,7 @@
             "title": "Exporteer Data",
             "service": "Service",
             "format": "Bestandsformaat",
-            "srs":  "Coördinaten ReferentieSysteem",
+            "srs":  "Coördinaten Referentie Systeem",
             "export": "Exporteer",
             "downloadonlycurrentpage": "Download alleen de huidige pagina",
 	          "cropDataSet": "Snijd de dataset bij naar het huidige kaartbereik",
@@ -2015,7 +2089,8 @@
                       "editCustomColors": "Bewerk Aangepaste Kleuren",
                       "maxValue": "Maximumwaarde",
                       "minValue": "Minimumwaarde",
-                      "title": "Instellingen Aangepaste Kleuren"
+                      "title": "Instellingen Aangepaste Kleuren",
+                      "removeCustomColors": "Verwijder aangepaste kleurenklassen"
                     }
                 },
                 "errors": {
@@ -2030,7 +2105,17 @@
                 },
                 "setupFilter": "Configureer een filter voor de widgetgegevens",
                 "addNewLayers": "Voeg nieuwe lagen toe",
-                "deleteChart": "Verwijder huidige grafiek"
+                "deleteChart": "Verwijder huidige grafiek",
+                "editTraceTitle": "Bewerk titel grafieklijn",
+                "addNewTrace": "Voeg nieuwe grafieklijn toe",
+                "deleteTrace": "Verwijder huidige grafieklijn",
+                "selectLayer": "Selecteer laag",
+                "filterLayer": "Filter huidige laag",
+                "editChartTitle": "Bewerk titel grafiek",
+                "addNewCharts": "Voeg nieuwe grafiek(en) toe",
+                "editAxisTitle": "Bewerk astitel",
+                "addNewAxis": "Voeg nieuwe as toe",
+                "removeAxis": "Verwijder huidige as"
             },
             "widget": {
                 "menu": {
@@ -2143,16 +2228,19 @@
             },
             "mapSync": "Live Filter op viewport",
             "displayLegend": {
+                "default": "Legende weergeven",
                 "line": "Legende weergeven",
                 "pie": "Legende weergeven",
                 "bar": "Legende weergeven",
                 "gauge": "Legende weergeven"
             },
             "advanced": {
+              "font": "Lettertype",
               "displayCartesian": "Verberg Grid",
               "xAxis": "X as",
               "xAxisAngle": "Label rotatie",
               "hideLabels": "Verberg labels",
+              "includeLegendPercent": "Percentages tonen in legende",
               "format": "Formaat",
               "prefix": "Prefix",
               "suffix": "Suffix",
@@ -2171,6 +2259,28 @@
               "barChartType": "Type Staafdiagram",
               "groupedBarChart": "Gegroepeerd",
               "stackedBarChart": "Gestapeld",
+              "valueFormatting": "Formattering waarden grafieklijn",
+              "traceAxes": "Assen grafieklijn",
+              "traceData": "Data grafieklijn",
+              "traceLegendOptions": "Opties legende grafieklijn",
+              "traces": "Grafieklijnen",
+              "axes": "Assen",
+              "traceStyle": "Stijl grafieklijn",
+              "mode": "Modus",
+              "lineColor": "Lijnkleur",
+              "lineWidth": "Lijndikte",
+              "markerColor": "Marker kleur",
+              "markerSize": "Marker grootte",
+              "layout": "Layout",
+              "left": "Links",
+              "right": "Rechts",
+              "free": "Vrij",
+              "top": "Boven",
+              "bottom": "Onder",
+              "side": "Zijde",
+              "anchor": "Verankering",
+              "sortBy": "Sorteer op",
+              "reverseRampColor": "Inverteer kleurverloop",
               "axisTypes": {
                 "auto": "Automatisch",
                 "linear": "Linear",
@@ -2248,7 +2358,7 @@
                 "loading": {
                     "title": "Fout bij het laden van context",
                     "pleaseLogin": "Sommige resources zijn mogelijk niet openbaar. Probeer in te loggen",
-                    "unknownError": "Er is een fout opgetreden bij het laden van de kaart of de context. Neem contact op met de beheerder",
+                    "unknownError": "<p><small>Een van de volgende redenen kunnen de oorzaak zijn:</small> <ul><li>u hebt niet de rechten om de context en/of kaart te bekijken</li> <li>de context en/of kaart die u probeert te bereiken bestaat niet</li> <li>de context en/of kaart zijn verwijderd</li> <li>het projectiesysteem van de kaart is niet ingesteld</li></ul> <p>",
                     "notFound": "Resource niet gevonden",
 	                "notAccessible": "Resource niet toegankelijk"
                 },
@@ -2415,8 +2525,8 @@
             "fontWeight": "Lettertype dikte",
             "haloColor": "Gloed kleur",
             "haloWidth": "Gloed dikte",
-            "offsetX": "Offset x",
-            "offsetY": "Offset y",
+            "offsetX": "Verschuiving x",
+            "offsetY": "Verschuiving y",
             "addRasterSymbolizer": "Rastersymbolizer toevoegen",
             "addRasterRule": "Rasterregel toevoegen",
             "colorRamp": "Kleurverloop",
@@ -2437,8 +2547,8 @@
             "fontStyleItalic": "Cursief",
             "fontWeightNormal": "Normaal",
             "fontWeightBold": "Vet",
-            "boolTrue": "Ja",
-            "boolFalse": "Nee",
+            "boolTrue": "Actief",
+            "boolFalse": "Inactief",
 
             "colorMapType": {
               "label": "Type kleurenkaart",
@@ -2506,6 +2616,8 @@
             "alertForceTranslate": "U verliest alle wijzigingen die in de tekstmodus zijn toegevoegd door over te schakelen naar de visuele editor. Weet u zeker dat u overschakelt naar de modus voor het bewerken van visuele stijlen?",
             "stayInTextareaEditor": "Nee, ga verder met de teksteditor",
             "useLatestValidStyle": "Ja, schakel over naar visuele editor",
+            "alertCustomParamsNotValid": "Alle wijzigingen gemaakt in de teksteditor zullen verloren gaan als u dit venster sluit. Bent u zeker?",
+            "closeCustomParamsEditor": "Ja, sluit het venster",
             "validationError": "Validatiefout",
             "incorrectPropertyInputError": "Dit komt waarschijnlijk door een ontbrekende of ongeldige waarde in de eigenschapsinvoer van de stijleditor.",
 
@@ -2518,6 +2630,7 @@
             "redChannel": "Rood kanaal",
             "greenChannel": "Groen kanaal",
             "blueChannel": "Blauw kanaal",
+            "alphaChannel": "Alfa kanaal",
             "grayChannel": "Kanaal",
             "ruleClassification": "Classificatie",
             "ruleRaster": "Raster",
@@ -2551,7 +2664,48 @@
             "endPoint": "Eindpunt",
             "line": "Lijn",
             "geodesicLine": "Geodetische lijn",
-            "pointCloudSizeInfo": "De puntenwolkradius wordt enkel toegepast wanneer de vervagingsopties zijn uitgeschakeld, aangezien die instelling voorrang heeft op deze parameter."
+            "geodesic": "Geodetisch",
+            "outlineStyle": "Omtrekstijl",
+            "strokeStyle": "Lijnstijl",
+            "anchor": "Ankerpunt",
+            "addCircleRule": "Voeg cirkelregel toe",
+            "left": "Links",
+            "right": "Rechts",
+            "topLeft": "Linksboven",
+            "top": "Boven",
+            "topRight": "Rechtsboven",
+            "bottomLeft": "Linksonder",
+            "bottom": "Onder",
+            "bottomRight": "Rechtsonder",
+            "glyph": "Glyph",
+            "marker": "Marker",
+            "filterByName": "Filter op naam...",
+            "fillOpacity": "Transparantie vulling",
+            "outlineColorOpacity": "Transparantie omtrek",
+            "strokeColorOpacity": "Transparantie lijn",
+            "selectProperty": "Selecteer eigenschap",
+            "leaderLineColorOpacity": "Transparantie verwijslijn",
+            "colorOpacity": "Transparantie",
+            "offset": "Verschuiving",
+            "propertyValue": "Attribuutwaarde",
+            "colorPropertyInfoMessage": "Het kleurenattribuut moet een hexadecimale tekstwaarde bevatten. Bijvoorbeeld: \"#ffffff\"",
+            "pointCloudSizeInfo": "De puntenwolkradius wordt enkel toegepast wanneer de vervagingsopties zijn uitgeschakeld, aangezien die instelling voorrang heeft op deze parameter.",
+            "msTranslateX": "Transleer x",
+            "msTranslateY": "Transleer y",
+            "geometryHeight": "Geometriehoogte",
+            "msExtrusionRelativeToGeometry": "Extrusie ten opzichte van geometriehoogte",
+            "msExtrudedHeight": "Extrusiehoogte",
+            "msExtrusionColor": "Extrusiekleur",
+            "msExtrusionType": "Extrusietype",
+            "wall": "Muur",
+            "enableBanding": "Bandstijl",
+            "selectChannel": "Selecteer een band",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "minSourceValue": "Minimumwaarde brondata",
+            "maxSourceValue": "Maximumwaarde brondata",
+            "customParams": "Aangepaste Parameters",
+            "wrongFormatMsg": "De ingevoerde configuratie heeft een ongeldig formaat !!"
         },
         "playback": {
             "settings": {
@@ -2938,7 +3092,9 @@
             "saveSuccessMessage": "Succesvol opgeslagen",
             "saveTooltip": "Opslaan",
             "saveAsTooltip": "Opslaan als",
-            "unadvertised": "Niet geadverteerd"
+            "unadvertised": "Niet geadverteerd",
+            "creator": "Gemaakt door",
+            "editor": "Laatst bewerkt door"
         },
         "mapEditor": {
             "modalTitle": "Kaarteditor",
@@ -3017,7 +3173,7 @@
             "title": "Titel",
             "titlePlaceholder": "Voer de weergavenaam naam in",
             "add": "Toevoegen",
-            "thumbnailMessage": "De grootte van de afbeeldingen moet een vierkant zijn van 98px x 98px of 128px x 128px, max. 500kb",
+            "thumbnailMessage": "De grootte van de afbeeldingen moet een vierkant zijn van 128px x 128px, max. 500kb",
             "imageUploadMessage": "Klik of sleep en drop om een ​​afbeelding toe te voegen",
             "additionalParameters": "Aanvullende parameters",
             "addAdditionalParameterTooltip": "Parameter toevoegen",
@@ -3837,6 +3993,24 @@
           "messages": {
             "noDataForPosition": "geen street-view beelden voor deze locatie",
             "unknownError": "onbekende fout, zie console"
+          },
+          "loadingAPI": "API laden...",
+          "cyclomedia": {
+            "initializing": "Street Smart API initialiseren...",
+            "loadingAPI": "Street Smart API laden...",
+            "changeCredentials": "Wijzig Street Smart inloggegevens",
+            "insertCredentials": "Voer uw Street Smart inloggegevens in",
+            "emptyDescription": "Klik op een van de blauwe punten op de kaart om de street view afbeeldingsverkenner te starten",
+            "username": "Gebruikersnaam",
+            "password": "Wachtwoord",
+            "submit": "Indienen",
+            "zoomIn": "Gelieve in te zoomen op de kaart om de street view dekking te zien",
+            "errorOccurred": "Foutmelding: ",
+            "errors": {
+              "invalidCredentials": "Ongeldige inloggegevens",
+              "projectionNotAvailable": "De geconfigureerde projectie {srs} is niet beschikbaar. Gelieve de administrator te contacteren."
+            },
+            "reloadAPI": "Herlaad API"
           }
         },
         "sidebarMenu": {
@@ -3861,6 +4035,9 @@
           "fileSelected": "Geselecteerd bestand: ",
           "uomMeters": "meters",
           "source": "Bron",
+          "export": "Exporteer",
+          "downloadGeoJSON": "GeoJSON",
+          "downloadDXF": "DXF",
           "downloadCSV": "CSV",
           "downloadPNG": "PNG",
           "downloadPDF": "PDF",
@@ -3951,6 +4128,7 @@
           "true": "ja",
           "false": "nee",
           "notifications": {
+            "errorMissingUrl": "Er moet een GeoServer WPS URL opgegeven worden om geometrieën te verzamelen voor de volgende lagen: {layerName}. Configureer de wpsUrl in de GeoProcessing plugin",
             "errorIntersectGFI": "Er is een fout opgetreden bij het uitvoeren van de intersectie waardoor er geen intersectielaag kon worden gemaakt.",
             "errorGFI": "Er is een fout opgetreden bij het laden van het object",
             "errorGetFeature": "Er is een fout opgetreden bij het ophalen van de geometrie van het object",

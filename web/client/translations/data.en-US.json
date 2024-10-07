@@ -379,7 +379,8 @@
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
+            "footerCustomHTML": "<div><p>Please insert custom HTML into the translations to render a custom footer</p></div>"
         },
         "cookiesPolicyNotification": {
             "title": "This website uses cookies",
@@ -1630,6 +1631,7 @@
             "advancedSettings": "Advanced settings",
             "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "invalidUrlHttpProtocol": "This catalog cannot be added to the available ones because it uses an http protocol. Please provide a catalog url that uses https protocol",
+            "invalidArrayUsageForUrl": "The catalog URL could not be parsed correctly",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",

@@ -49,7 +49,7 @@ describe('StandardRouter', () => {
         setTimeout(done);
     });
 
-    it('creates a default router app', () => {
+    it('creates a default router app', (done) => {
         const store = {
             dispatch: () => {},
             subscribe: () => {
@@ -58,11 +58,15 @@ describe('StandardRouter', () => {
             unsubscribe: () => {},
             getState: () => ({})
         };
-        const app = ReactDOM.render(<Provider store={store}><StandardRouter/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardRouter/></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            done();
+        });
     });
 
-    it('creates a default router app with pages', () => {
+    it('creates a default router app with pages', (done) => {
         const store = {
             dispatch: () => {},
             subscribe: () => {
@@ -75,14 +79,16 @@ describe('StandardRouter', () => {
             path: '/',
             component: mycomponent
         }];
-        const app = ReactDOM.render(<Provider store={store}><StandardRouter pages={pages}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
-        const dom = ReactDOM.findDOMNode(app);
-
-        expect(dom.getElementsByClassName('mycomponent').length).toBe(1);
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardRouter pages={pages}/></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            expect(container.getElementsByClassName('mycomponent').length).toBe(1);
+            done();
+        });
     });
 
-    it('creates a default router app with pages and plugins', () => {
+    it('creates a default router app with pages and plugins', (done) => {
         const plugins = {
             MyPlugin: {}
         };
@@ -99,15 +105,16 @@ describe('StandardRouter', () => {
             path: '/',
             component: mycomponent
         }];
-        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
-
-        const dom = ReactDOM.findDOMNode(app);
-
-        expect(dom.getElementsByClassName('MyPlugin').length).toBe(1);
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages}/></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            expect(container.getElementsByClassName('MyPlugin').length).toBe(1);
+            done();
+        });
     });
 
-    it('if we dont wait for theme no spinner is shown', () => {
+    it('if we dont wait for theme no spinner is shown', (done) => {
         const plugins = {
             MyPlugin: {}
         };
@@ -124,14 +131,15 @@ describe('StandardRouter', () => {
             path: '/',
             component: mycomponent
         }];
-        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages}  loadAfterTheme={false}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
-
-        const dom = ReactDOM.findDOMNode(app);
-
-        expect(dom.getElementsByClassName('_ms2_init_spinner').length).toBe(0);
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages}  loadAfterTheme={false}/></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            expect(container.getElementsByClassName('_ms2_init_spinner').length).toBe(0);
+            done();
+        });
     });
-    it('if we wait for theme no spinner is shown if the theme is already loaded', () => {
+    it('if we wait for theme no spinner is shown if the theme is already loaded', (done) => {
         const plugins = {
             MyPlugin: {}
         };
@@ -148,14 +156,15 @@ describe('StandardRouter', () => {
             path: '/',
             component: mycomponent
         }];
-        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} loadAfterTheme themeLoaded/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
-
-        const dom = ReactDOM.findDOMNode(app);
-
-        expect(dom.getElementsByClassName('_ms2_init_spinner').length).toBe(0);
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} loadAfterTheme themeLoaded/></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            expect(container.getElementsByClassName('_ms2_init_spinner').length).toBe(0);
+            done();
+        });
     });
-    it('if we wait for theme spinner is shown if the theme is not already loaded', () => {
+    it('if we wait for theme spinner is shown if the theme is not already loaded', (done) => {
         const plugins = {
             MyPlugin: {}
         };
@@ -172,12 +181,13 @@ describe('StandardRouter', () => {
             path: '/',
             component: mycomponent
         }];
-        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} loadAfterTheme themeLoaded={false} /></Provider>, document.getElementById("container"));
-        expect(app).toExist();
-
-        const dom = ReactDOM.findDOMNode(app);
-
-        expect(dom.getElementsByClassName('_ms2_init_spinner').length).toBe(1);
+        const container = document.getElementById("container");
+        expect(container.innerHTML).toNotExist();
+        ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} loadAfterTheme themeLoaded={false} /></Provider>, container, () => {
+            expect(container.innerHTML).toExist();
+            expect(container.getElementsByClassName('_ms2_init_spinner').length).toBe(1);
+            done();
+        });
     });
     it('if we wait for theme onThemeLoaded is called when theme is loaded', (done) => {
         const plugins = {
@@ -196,11 +206,10 @@ describe('StandardRouter', () => {
             path: '/',
             component: mycomponent
         }];
-        const app = ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} version="VERSION" themeCfg={{
+        ReactDOM.render(<Provider store={store}><StandardRouter plugins={plugins} pages={pages} version="VERSION" themeCfg={{
             theme: "default",
             path: "base/web/client/test-resources/themes"
         }} loadAfterTheme themeLoaded={false} onThemeLoaded={done}/></Provider>, document.getElementById("container"));
-        expect(app).toExist();
     });
 
     it('if we wait for theme onThemeLoaded is called when theme custom is loaded', (done) => {
@@ -220,7 +229,7 @@ describe('StandardRouter', () => {
             path: '/',
             component: mycomponent
         }];
-        const app = ReactDOM.render(
+        ReactDOM.render(
             <Provider store={store}>
                 <StandardRouter plugins={plugins} pages={pages} version="VERSION" themeCfg={{
                     theme: "custom",
@@ -230,6 +239,5 @@ describe('StandardRouter', () => {
                     done();
                 }} />
             </Provider>, document.getElementById("container"));
-        expect(app).toExist();
     });
 });

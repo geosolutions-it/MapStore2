@@ -7,7 +7,8 @@
  */
 import { uniq, isObject, castArray } from 'lodash';
 import { getAvailableInfoFormat } from "./MapInfoUtils";
-import { normalizeSRS } from "./CoordinatesUtils";
+import CoordinatesUtils, { normalizeSRS } from "./CoordinatesUtils";
+import { isProjectionAvailable } from './ProjectionUtils';
 
 // this list provides the supported GetMap formats
 // and it will be used to validate GetMap formats coming from capabilities
@@ -111,4 +112,22 @@ export const getTileGridFromLayerOptions = ({
         // so we could simplify the check by taking only the first tile width for WMS
         && !!((tileGrid.tileSizes?.[0]?.[0] || tileGrid.tileSize?.[0]) === tileSize)
     );
+};
+
+/**
+ * Return the tileGrids properties like tiled, tileGrids, tileGridCacheSupport and tileGridStrategy
+ * @param {object} tileGridData tile grid object that includes tileGrids array, formats, tileMatrixSets ..etc
+ * @return {object} the needed tile grid properties to appended to the layer object
+ */
+export const getCustomTileGridProperties = (tileGridData) => {
+    const filteredTileGrids = tileGridData.tileGrids.filter(({ crs }) => isProjectionAvailable(CoordinatesUtils.normalizeSRS(crs)));
+    const tileGridProperties = tileGridData !== undefined ? {
+        tiled: true,
+        tileGrids: tileGridData.tileGrids,
+        tileGridStrategy: 'custom',
+        tileGridCacheSupport: filteredTileGrids?.length > 0 ?
+            tileGridData.formats ? {formats: tileGridData.formats} : {}
+            : undefined
+    } : {};
+    return tileGridProperties;
 };

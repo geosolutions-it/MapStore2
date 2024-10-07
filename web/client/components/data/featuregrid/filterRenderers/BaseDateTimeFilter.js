@@ -104,7 +104,7 @@ export class DateFilter extends AttributeFilter {
         />);
     }
     handleChange = (value, stringValue) => {
-        this.props.onChange({ value, stringValue, attribute: this.props.column && this.props.column.name, inputOperator: this.state.operator || this.props.operator });
+        this.props.onChange({ value, stringValue, attribute: this.props.column && this.props.column.name, inputOperator: this.state.operator });
     }
     handleChangeRangeFilter = (value, stringValue, order = 'start') => {
         let reqVal = {};
@@ -119,7 +119,7 @@ export class DateFilter extends AttributeFilter {
                 endDate: this.props.value?.endDate
             };
         }
-        this.props.onChange({ value: reqVal, stringValue, attribute: this.props.column && this.props.column.name, inputOperator: this.state.operator || this.props.operator });
+        this.props.onChange({ value: reqVal, stringValue, attribute: this.props.column && this.props.column.name, inputOperator: this.state.operator });
     }
 }
 

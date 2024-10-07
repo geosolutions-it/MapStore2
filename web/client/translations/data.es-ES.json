@@ -379,7 +379,8 @@
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
             "scrollTop": "Volver al principio de la página",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>"
+            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
+            "footerCustomHTML": "<div><p>Inserte HTML personalizado en las traducciones para generar un pie de página personalizado.</p></div>"
         },
         "cookiesPolicyNotification": {
             "title": "Este sitio usa cookies",
@@ -1631,6 +1632,7 @@
             "advancedSettings": "Ajustes avanzados",
             "templateMetadataAvailable": "Metadatos disponibles en formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
             "invalidUrlHttpProtocol": "Este catálogo no se puede agregar a los disponibles porque usa un protocolo http. Proporcione una URL del catálogo que utilice el protocolo https",
+            "invalidArrayUsageForUrl": "La URL del catálogo no se pudo leer correctamente.",
             "notification": {
                 "errorTitle": "Error",
                 "errorSearchingRecords": "No se han encontrado algunos registros: {records} . Por favor revise la consulta param url",

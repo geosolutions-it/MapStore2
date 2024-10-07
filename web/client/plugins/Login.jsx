@@ -37,6 +37,20 @@ import { isAdminUserSelector } from '../selectors/security';
   * }
   * ```
   * By default, if not set, it will use classic `{"type": "basic", "provider": "geostore"}` setup for GeoStore.
+ *
+ * If you want to show this plugin with BurgerMenu (so without Sidebar), apply the following configuration:
+ *
+ * ```javascript
+ * {
+ *     "cfg": {},
+ *     "override": {
+ *         "OmniBar": {
+ *             "priority": 5
+ *         }
+ *     }
+ * }
+ * ```
+ *
   * @class Login
   * @memberof plugins
   * @static

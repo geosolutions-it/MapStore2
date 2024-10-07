@@ -116,14 +116,15 @@ describe('PluginsContainer', () => {
     });
 
     it('checks filterDisabledPlugins one disabled', () => {
-        const cmp = ReactDOM.render(
+        const container = document.getElementById("container");
+        ReactDOM.render(
             <Provider store={store}>
                 <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
                     plugins={plugins} pluginsConfig={pluginsCfg}/>
-            </Provider>, document.getElementById("container"));
-        expect(cmp).toExist();
+            </Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
 
         const rendered = cmpDom.getElementsByTagName("div");
@@ -131,14 +132,15 @@ describe('PluginsContainer', () => {
     });
 
     it('checks filterDisabledPlugins no disabled', () => {
-        const cmp = ReactDOM.render(
+        const container = document.getElementById("container");
+        ReactDOM.render(
             <Provider store={store}>
                 <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
                     plugins={plugins} pluginsConfig={pluginsCfg2} />
-            </Provider>, document.getElementById("container"));
-        expect(cmp).toExist();
+            </Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        const cmpDom = ReactDOM.findDOMNode(cmp);
+        const cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
 
         const rendered = cmpDom.getElementsByTagName("div");
@@ -146,41 +148,42 @@ describe('PluginsContainer', () => {
     });
     it('test noRoot option disable root rendering of plugins', () => {
         // Not rendered without container
-        let cmp = ReactDOM.render(
+        const container = document.getElementById("container");
+        ReactDOM.render(
             <Provider store={store}>
                 <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
                     plugins={plugins} pluginsConfig={pluginsCfg3} />
-            </Provider>, document.getElementById("container"));
-        expect(cmp).toExist();
+            </Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        let cmpDom = ReactDOM.findDOMNode(cmp);
+        let cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
 
         let rendered = cmpDom.getElementsByTagName("div");
 
         // rendered in container
         expect(rendered.length).toBe(1);
-        cmp = ReactDOM.render(
+        ReactDOM.render(
             <Provider store={store}>
                 <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
                     plugins={plugins} pluginsConfig={pluginsCfg4} />
-            </Provider>, document.getElementById("container"));
-        expect(cmp).toExist();
+            </Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        cmpDom = ReactDOM.findDOMNode(cmp);
+        cmpDom = container.firstElementChild;
         expect(cmpDom).toExist();
 
-        rendered = cmpDom.getElementsByTagName("div");
         expect(document.getElementById('no-impl-item-no-root-plugin')).toNotExist();
         expect(document.getElementById('no-root')).toExist();
     });
     it('checks plugin with forwardRef = true connect option', () => {
-        const app = ReactDOM.render(<Provider store={store}>
+        const container = document.getElementById("container");
+        ReactDOM.render(<Provider store={store}>
             <PluginsContainer mode="desktop" defaultMode="desktop" params={{}}
                 plugins={plugins} pluginsConfig={pluginsCfgRef}/>
-        </Provider>, document.getElementById("container"));
+        </Provider>, container);
 
-        expect(app).toExist();
+        expect(container.innerHTML).toExist();
         expect(window.WithGlobalRefPlugin.myFunc).toExist();
     });
 });

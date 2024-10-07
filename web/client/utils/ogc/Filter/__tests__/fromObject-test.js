@@ -173,6 +173,33 @@ const FUNCTIONS = [
 const REAL_WORLD = [
     // real world example
     {
+        cql: "P1 = 'V1' AND P2 = 'V3' OR P1 = 'V1' AND P2 = 'V3'",
+        expected:
+            '<ogc:Or>'
+                + '<ogc:And>'
+                    + '<ogc:PropertyIsEqualTo>'
+                        + '<ogc:PropertyName>P1</ogc:PropertyName>'
+                        + '<ogc:Literal>V1</ogc:Literal>'
+                    + '</ogc:PropertyIsEqualTo>'
+                    + '<ogc:PropertyIsEqualTo>'
+                        + '<ogc:PropertyName>P2</ogc:PropertyName>'
+                        + '<ogc:Literal>V3</ogc:Literal>'
+                    + '</ogc:PropertyIsEqualTo>'
+                + '</ogc:And>'
+                + '<ogc:And>'
+                    + '<ogc:PropertyIsEqualTo>'
+                        + '<ogc:PropertyName>P1</ogc:PropertyName>'
+                        + '<ogc:Literal>V1</ogc:Literal>'
+                    + '</ogc:PropertyIsEqualTo>'
+                    + '<ogc:PropertyIsEqualTo>'
+                        + '<ogc:PropertyName>P2</ogc:PropertyName>'
+                        + '<ogc:Literal>V3</ogc:Literal>'
+                    + '</ogc:PropertyIsEqualTo>'
+                + '</ogc:And>'
+            + '</ogc:Or>'
+
+    },
+    {
         cql: "( DTINCID <= '1789-07-13' AND DTINCID >= '1492-10-11' ) AND (DOW='1') AND (TPINCID='1')",
         expected:
             '<ogc:And>'
