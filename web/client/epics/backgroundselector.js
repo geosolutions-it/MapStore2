@@ -23,7 +23,8 @@ import {
     setBackgroundModalParams,
     setCurrentBackgroundLayer,
     allowBackgroundsDeletion,
-    backgroundAdded
+    backgroundAdded,
+    stashSelectedCatalogService
 } from '../actions/backgroundselector';
 
 import { setControlProperty } from '../actions/controls';
@@ -35,14 +36,17 @@ import { getLayerCapabilities } from '../observables/wms';
 import { getCustomTileGridProperties, getLayerOptions } from '../utils/WMSUtils';
 import { getLayerTileMatrixSetsInfo } from '../api/WMTS';
 import { generateGeoServerWMTSUrl } from '../utils/WMTSUtils';
+import { selectedServiceSelector } from '../selectors/catalog';
 
-const accessMetadataExplorer = (action$) =>
+const accessMetadataExplorer = (action$, store) =>
     action$.ofType(ADD_BACKGROUND)
         .switchMap(() => Rx.Observable.of(
             setControlProperty('metadataexplorer', 'enabled', true),
             allowBackgroundsDeletion(false),
+            stashSelectedCatalogService(selectedServiceSelector(store.getState())),
             changeSelectedService('default_map_backgrounds')
         ));
+
 
 const addBackgroundPropertiesEpic = (action$) =>
     action$.ofType(ADD_BACKGROUND_PROPERTIES)

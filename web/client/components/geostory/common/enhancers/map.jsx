@@ -60,8 +60,8 @@ export const withFocusedContentMap = compose(
  */
 export const handleMapUpdate = withHandlers({
     onChangeMap: ({update, focusedContent = {}}) =>
-        (path, value) => {
-            update(`${focusedContent.path}.map.${path}`, value, "merge");
+        (path, value, mode = "merge") => {
+            update(`${focusedContent.path}.map.${path}`, value, mode);
         },
     onChange: ({update, focusedContent = {}}) =>
         (path, value, mode = 'merge') => {

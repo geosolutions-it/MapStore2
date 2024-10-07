@@ -21,6 +21,7 @@ import WMSDomainAliases from "./WMSDomainAliases";
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 import OverlayTrigger from '../../../misc/OverlayTrigger';
 import FormControl from '../../../misc/DebouncedFormControl';
+import { getMiscSetting } from '../../../../utils/ConfigUtils';
 
 const Button = tooltip(ButtonRB);
 const Select = localizedProps('noResultsText')(RS);
@@ -82,8 +83,12 @@ export default ({
         service.isNew && onChangeServiceProperty("autoSetVisibilityLimits", props.autoSetVisibilityLimits);
     }, [props.autoSetVisibilityLimits]);
 
+    const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
+
     const tileSelectOptions = getTileSizeSelectOptions(tileSizeOptions);
     const serverTypeOptions = getServerTypeOptions();
+    // for CSW services with no vendor options, disable format and info format options
+    const canLoadInfo = !(['csw'].includes(service.type) && service.layerOptions?.serverType === ServerTypes.NO_VENDOR);
     return (<CommonAdvancedSettings {...props} onChangeServiceProperty={onChangeServiceProperty} service={service} >
         {(isLocalizedLayerStylesEnabled && !isNil(service.type) ? service.type === "wms" : false) && (<FormGroup controlId="localized-styles" key="localized-styles">
             <Checkbox data-qa="service-lacalized-layer-styles-option"
@@ -166,7 +171,7 @@ export default ({
                     }} />
             </InputGroup>
         </FormGroup>
-        {![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
+        {experimentalInteractiveLegend && ![ServerTypes.NO_VENDOR].includes(service.layerOptions?.serverType) && ['wms', 'csw'].includes(service.type) && <FormGroup controlId="enableInteractiveLegend" key="enableInteractiveLegend">
             <Checkbox data-qa="display-interactive-legend-option"
                 onChange={(e) => onChangeServiceProperty("layerOptions", { ...service.layerOptions, enableInteractiveLegend: e.target.checked})}
                 checked={!isNil(service.layerOptions?.enableInteractiveLegend) ? service.layerOptions?.enableInteractiveLegend : false}>
@@ -193,7 +198,8 @@ export default ({
                     title={<Message msgId="errorTitleDefault"/>}
                     text={<Message msgId="layerProperties.formatError" />} /> : null}
                 <Button
-                    disabled={props.formatsLoading || service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                    disabled={props.formatsLoading || !canLoadInfo
+                    }
                     tooltipId="catalog.format.refresh"
                     className="square-button-md no-border"
                     onClick={() => onFormatOptionsFetch(service.url, true)}
@@ -206,7 +212,7 @@ export default ({
             <ControlLabel><Message msgId="layerProperties.format.tile" /></ControlLabel>
             <InputGroup>
                 <Select
-                    disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                    disabled={!canLoadInfo}
                     isLoading={props.formatsLoading}
                     onOpen={() => onFormatOptionsFetch(service.url)}
                     value={service && service.format}
@@ -221,7 +227,7 @@ export default ({
             <ControlLabel><Message msgId="layerProperties.format.information" /></ControlLabel>
             <InputGroup>
                 <Select
-                    disabled={service.layerOptions?.serverType === ServerTypes.NO_VENDOR}
+                    disabled={!canLoadInfo}
                     isLoading={props.formatsLoading}
                     onOpen={() => onFormatOptionsFetch(service.url)}
                     value={service && service.infoFormat}
