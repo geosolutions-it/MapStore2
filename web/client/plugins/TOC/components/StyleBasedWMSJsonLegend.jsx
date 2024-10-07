@@ -129,9 +129,9 @@ class StyleBasedWMSJsonLegend extends React.Component {
         return '';
     }
     renderRules = (rules) => {
+        const isLegendFilterIncluded = this.props?.layer?.layerFilter?.filters?.find(f=>f.id === 'interactiveLegend');
+        const legendFilters = isLegendFilterIncluded ? isLegendFilterIncluded?.filters : [];
         return (rules || []).map((rule) => {
-            const isLegendFilterIncluded = this.props?.layer?.layerFilter?.filters?.find(f=>f.id === 'interactiveLegend');
-            const legendFilters = isLegendFilterIncluded ? isLegendFilterIncluded?.filters : [];
             const isFilterExistBefore = legendFilters?.find(f => f.id === rule.filter);
             const isFilterDisabled = this.props?.layer?.layerFilter?.disabled;
             const activeFilter = rule.filter && isFilterExistBefore;

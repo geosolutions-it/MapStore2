@@ -22,6 +22,58 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.01.02 to 2024.02.00
 
+### NodeJS and NPM update
+
+From this version the **recommended version** to build MapStore or for development is **Node 20** (**minimum** version will be **Node 16**).
+Please update your Node version accordingly on your develop machine or CI/CD.
+
+See the [requirements](./requirements.md#debug-build) section of the documentation for the details.
+
+The same for projects of derived `MapStoreExtensions`. Make sure to:
+
+- Update `package.json` with the new versions of webpack and other dependencies.
+- Remove and regenerate your `package-lock.json` with `npm install` after updating the Node version.
+
+Here the diff used for MapStore Extensions to update the `package.json` file:
+
+```diff
+diff --git a/package.json b/package.json
+index 62ddda0..62ce070 100644
+--- a/package.json
++++ b/package.json
+@@ -44,6 +44,7 @@
+     "@geosolutions/jsdoc": "3.4.4",
+     "@geosolutions/mocha": "6.2.1-3",
+     "@mapstore/eslint-config-mapstore": "1.0.5",
++    "@testing-library/react": "12.1.5",
+     "axios-mock-adapter": "1.16.0",
+     "babel-loader": "8.0.5",
+     "babel-plugin-add-module-exports": "0.1.4",
+@@ -66,8 +67,8 @@
+     "expect": "1.20.1",
+     "file-loader": "2.0.0",
+     "glob": "7.1.1",
+-        "html-loader": "0.5.1",
+-        "html-webpack-plugin": "4.5.0",
++    "html-loader": "2.0.0",
++    "html-webpack-plugin": "5.2.0",
+     "jsdoc-jsx": "0.1.0",
+     "karma": "6.4.0",
+     "karma-chrome-launcher": "3.1.1",
+@@ -104,9 +105,10 @@
+     "rimraf": "2.5.2",
+     "simple-git": "2.20.1",
+     "style-loader": "2.0.0",
++    "terser": "5.18.1",
+     "url-loader": "0.5.7",
+     "vusion-webfonts-generator": "0.4.1",
+-        "webpack": "5.9.0",
++    "webpack": "5.54.0",
+     "webpack-bundle-size-analyzer": "2.0.2",
+     "webpack-cli": "4.10.0",
+     "webpack-dev-server": "3.11.0",
+```
+
 ### Java dependencies update
 
 Some libraries has been updated. if you have a MapStore project make sure to keep the versions aligned with the main product.

@@ -503,9 +503,9 @@ class CesiumMap extends React.Component {
         if (centerIsUpdate || zoomChanged) {
             const position = {
                 destination: Cesium.Cartesian3.fromDegrees(
-                    newProps.viewerOptions?.cameraPosition?.longitude ?? newProps.center.x,
-                    newProps.viewerOptions?.cameraPosition?.latitude ?? newProps.center.y,
-                    newProps.viewerOptions?.cameraPosition?.height ?? this.getHeightFromZoom(newProps.zoom ?? 0)
+                    newProps.center.x,
+                    newProps.center.y,
+                    newProps.zoom !== undefined ? this.getHeightFromZoom(newProps.zoom) : cameraPosition.height
                 ),
                 orientation: newProps.viewerOptions?.orientation
             };

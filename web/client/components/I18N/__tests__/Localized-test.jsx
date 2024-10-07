@@ -40,6 +40,21 @@ describe('Test the localization support HOC', () => {
         expect(dom.innerHTML).toBe("my message");
     });
 
+    it('correctly sets the document language', () => {
+        ReactDOM.render(
+            <Localized locale="it-IT" messages={messages}>
+                {() => <Message msgId="testMsg"/> }
+            </Localized>
+            , document.getElementById("container"));
+        expect(document.documentElement.lang).toBe("it-IT");
+        ReactDOM.render(
+            <Localized locale="de-DE" messages={messages}>
+                {() => <Message msgId="testMsg"/> }
+            </Localized>
+            , document.getElementById("container"));
+        expect(document.documentElement.lang).toBe("de-DE");
+    });
+
     it('localizes wrapped HTML component', () => {
         var localized = ReactDOM.render(
             <Localized locale="it-IT" messages={messages}>

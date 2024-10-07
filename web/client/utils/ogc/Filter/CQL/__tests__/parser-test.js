@@ -133,6 +133,49 @@ const LOGICAL = [
             "filters[1].filters[1].type": "not",
             "filters[1].filters[1].filters[0].args[0].name": "PROP2"
         }
+    },
+    // operator precedence
+    {
+        cql: "P1 = 'P_VALUE_1' AND P2 = 'P2_VALUE_1' OR P1 = 'P_VALUE_2' AND P2 = 'P2_VALUE_2'",
+        expected: {
+            "type": "or",
+            "filters[0].type": "and",
+            "filters[0].filters[0].type": "=",
+            "filters[0].filters[0].args[0].name": "P1",
+            "filters[0].filters[0].args[1].value": "P_VALUE_1",
+            "filters[0].filters[1].type": "=",
+            "filters[0].filters[1].args[0].name": "P2",
+            "filters[0].filters[1].args[1].value": "P2_VALUE_1",
+            "filters[1].type": "and",
+            "filters[1].filters[0].type": "=",
+            "filters[1].filters[0].args[0].name": "P1",
+            "filters[1].filters[0].args[1].value": "P_VALUE_2",
+            "filters[1].filters[1].type": "=",
+            "filters[1].filters[1].args[0].name": "P2",
+            "filters[1].filters[1].args[1].value": "P2_VALUE_2"
+
+        }
+    },
+    // operator precedence with parenthesis
+    {
+        cql: "P1 = 'P_VALUE_1' OR P2 = 'P2_VALUE_1' AND P1 = 'P_VALUE_2' OR P2 = 'P2_VALUE_2'",
+        expected: { // transformed in ((P1 = P_VALUE_1) OR ((P2 = P2_VALUE_1) AND (P1 = P_VALUE_2))) OR (P2 = P2_VALUE_2)
+            "type": "or",
+            "filters[0].type": "or",
+            "filters[0].filters[0].type": "=",
+            "filters[0].filters[0].args[0].name": "P1",
+            "filters[0].filters[0].args[1].value": "P_VALUE_1",
+            "filters[0].filters[1].type": "and",
+            "filters[0].filters[1].filters[0].type": "=",
+            "filters[0].filters[1].filters[0].args[0].name": "P2",
+            "filters[0].filters[1].filters[0].args[1].value": "P2_VALUE_1",
+            "filters[0].filters[1].filters[1].type": "=",
+            "filters[0].filters[1].filters[1].args[0].name": "P1",
+            "filters[0].filters[1].filters[1].args[1].value": "P_VALUE_2",
+            "filters[1].type": "=",
+            "filters[1].args[0].name": "P2",
+            "filters[1].args[1].value": "P2_VALUE_2"
+        }
     }
 ];
 
@@ -631,10 +674,11 @@ const REAL_WORLD = [
 ];
 const testRules = rules => rules.map(({ cql, expected }) => {
     it(`testing ${cql}`, () => {
+        let res;
         try {
-            const res = read(cql);
+            res = read(cql);
             Object.keys(expected).map(k => {
-                expect(get(res, k)).toEqual(expected[k]);
+                expect(get(res, k)).toEqual(expected[k], ([a, b]) => `from "${cql}" filter: \n\texpected:\n\t\t${JSON.stringify(b)} \n\tat "${k}"\n\tbut got: \n\t\t${JSON.stringify(a)}. \n full object output:\n\t\t${JSON.stringify(res)}`);
             });
         } catch (e) {
             throw e;

@@ -351,16 +351,138 @@ describe("GeoStory Utils", () => {
                     mouseClick: false,
                     dragPan: true
                 }
-            }
+            },
+            layers: [], groups: []
         };
         const res = createMapObject(DEFAULT_MAP_OPTIONS, {
             mapOptions: {
+                scrollWheelZoom: false,
                 interactions: {
                     mouseClick: false
                 }
             }
         });
         expect(res).toEqual(merged);
+    });
+    it('test override layers in  createMapObject', () => {
+        // initial baseMap layer is empty array
+        const merged1 = {
+            zoomControl: true,
+            mapInfoControl: false,
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseWheelZoom: false,
+                    mouseClick: false,
+                    dragPan: true
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }],
+            groups: []
+        };
+        const res1 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: []}, {
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseClick: false
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }]
+        });
+        expect(res1).toEqual(merged1);
+        // initial baseMap layer not empty array
+        const merged2 = {
+            zoomControl: true,
+            mapInfoControl: false,
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseWheelZoom: false,
+                    mouseClick: false,
+                    dragPan: true
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1.5, y: 1.5, crs: 'EPSG:4326'}, zoom: 1.5
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }],
+            groups: []
+        };
+        const res2 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
+            name: "layer01", center: {x: 1, y: 1, crs: 'EPSG:4326'}, zoom: 1
+        }]}, {
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseClick: false
+                }
+            },
+            layers: [{
+                name: "layer01", center: {x: 1.5, y: 1.5, crs: 'EPSG:4326'}, zoom: 1.5
+            }, {
+                name: "layer02", center: {x: 2, y: 2, crs: 'EPSG:4326'}, zoom: 2
+            }]
+        });
+        expect(res2).toEqual(merged2);
+        // legacy geostory
+        const merged3 = {
+            zoomControl: true,
+            mapInfoControl: false,
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseWheelZoom: false,
+                    mouseClick: false,
+                    dragPan: true
+                }
+            },
+            layers: [{
+                "visibility": false
+            },  {
+                "visibility": true
+            }, undefined],
+            groups: [undefined, {
+                expanded: true
+            }, {
+                expanded: true
+            }]
+        };
+        const res3 = createMapObject({...DEFAULT_MAP_OPTIONS, layers: [{
+            "visibility": true
+        },  {
+            "visibility": false
+        }, undefined], groups: [undefined, {
+            expanded: false
+        }, {
+            expanded: true
+        }]}, {
+            mapOptions: {
+                scrollWheelZoom: false,
+                interactions: {
+                    mouseClick: false
+                }
+            },
+            layers: [{
+                "visibility": false
+            },  {
+                "visibility": true
+            }, undefined],
+            groups: [undefined, {
+                expanded: true
+            }, {
+                expanded: true
+            }]
+        }, true);
+        expect(res3).toEqual(merged3);
     });
     it('test testRegex', () => {
         const title = "title";
@@ -701,3 +823,4 @@ describe("GeoStory Utils", () => {
         });
     });
 });
+
