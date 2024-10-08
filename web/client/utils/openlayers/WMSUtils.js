@@ -20,17 +20,15 @@ import { generateEnvString } from '../LayerLocalizationUtils';
 import { getTileGridFromLayerOptions } from '../WMSUtils';
 
 
-function hasSameProtocol(givenUrl) {
-    try {
-        const currentProtocol = window.location.protocol;
+function hasHttpProtocol(givenUrl = '') {
+    if (givenUrl.indexOf('http') === 0) {
         const givenUrlObject = new URL(givenUrl);
-        const givenProtocol = givenUrlObject.protocol;
-
-        return currentProtocol === givenProtocol;
-    } catch (error) {
-        console.error('Invalid URL:', error);
+        return givenUrlObject.protocol === 'http:';
+    }
+    if (givenUrl.indexOf('/') === 0) {
         return false;
     }
+    return true;
 }
 
 /**
@@ -41,7 +39,7 @@ function hasSameProtocol(givenUrl) {
  * @returns {string}
  */
 export const proxySource = (forceProxy, src) => {
-    const _forceProxy = forceProxy || !hasSameProtocol(src);
+    const _forceProxy = forceProxy || hasHttpProtocol(src);
     let newSrc = src;
     if (_forceProxy && needProxy(src)) {
         let proxyUrl = getProxyUrl();

@@ -16,7 +16,12 @@ const getBaseUrl = (uri) => {
     const urlParts = url.parse(uri);
     return urlParts.protocol + "//" + urlParts.host + urlParts.pathname;
 };
-
+/**
+ * Set the proxy value for cached uri
+ * @param {string} uri - uri string to test
+ * @param {boolean} value - value to cache
+ * @returns the passed value
+ */
 export const setProxyCacheByUrl = (uri, value)=>{
     const baseUrl = getBaseUrl(uri);
     // const urlParts = url.parse(uri); // func make
@@ -24,12 +29,20 @@ export const setProxyCacheByUrl = (uri, value)=>{
     proxyCache[baseUrl] = value;
     return value;
 };
-
+/**
+ * Get the proxy value for cached uri
+ * @param {string} uri - uri string to test
+ * @returns true, false or undefined, if undefined means the value has not been stored
+ */
 export const getProxyCacheByUrl = (uri)=>{
     const baseUrl = getBaseUrl(uri);
     return proxyCache[baseUrl];
 };
-
+/**
+ * Perform a fetch request to test if a service support CORS
+ * @param {string} uri - uri string to test
+ * @returns true if the proxy is required
+ */
 export const testCors = (uri) => {
     const proxy = getProxyCacheByUrl(uri);
     if (needProxy(uri) === false) {

@@ -130,7 +130,7 @@ axios.interceptors.request.use(config => {
                 useCORS = proxyUrl.useCORS || [];
                 proxyUrl = proxyUrl.url;
             }
-            const isCORS = useCORS.reduce((found, current) => found || uri.indexOf(current) === 0, false);
+            const isCORS = useCORS.some((current) => uri.indexOf(current) === 0);
             const proxyNeeded = getProxyCacheByUrl(uri);
             if (!isCORS && proxyNeeded) {
                 const parsedUri = urlUtil.parse(uri, true, true);
@@ -157,7 +157,7 @@ axios.interceptors.response.use(response => response, (error) => {
     let proxyUrl = ConfigUtils.getProxyUrl();
     const sameOrigin = checkSameOrigin(error.config.url || '');
     if (error.config && !error.config.url.includes(proxyUrl.url) && !sameOrigin) {
-        if ((getProxyCacheByUrl(error.config.url) === undefined) && typeof error.response === 'undefined') {
+        if (getProxyCacheByUrl(error.config.url) === undefined && typeof error.response === 'undefined') {
             setProxyCacheByUrl(error.config.url, true);
             return new Promise((resolve, reject) => {
                 axios({ ...error.config }).then(resolve).catch(reject);
