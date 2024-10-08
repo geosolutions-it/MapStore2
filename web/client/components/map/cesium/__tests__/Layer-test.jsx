@@ -171,7 +171,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
             expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toBeFalsy();
             done();
-        }).catch(() => done());
+        }).catch(done);
 
     });
 
@@ -255,7 +255,7 @@ describe('Cesium layer', () => {
         }).then(() => {
             expect(map.imageryLayers._layers[0].imageryProvider.credit).toExist();
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
     it('creates a wms layer with caching for Cesium map', (done) => {
         var options = {
@@ -282,7 +282,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toBeFalsy();
             expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._resource._queryParameters.tiled).toBe(true);
             done();
-        }).catch(() => done());
+        }).catch(done);
 
     });
     it('check wms layer proxy skip for relative urls', (done) => {
@@ -308,7 +308,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
             expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toNotExist();
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
 
     it('creates a wmts layer for Cesium map', (done) => {
@@ -342,7 +342,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toExist();
             expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toBeFalsy();
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
     it('custom name tile set', (done) => {
         var options = {
@@ -377,7 +377,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider._tileMatrixLabels).toExist();
             expect(map.imageryLayers._layers[0]._imageryProvider._tileMatrixLabels[0]).toBe("0");
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
     it('check a wmts layer skips proxy config', (done) => {
         var options = {
@@ -409,7 +409,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toExist();
             expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toBeFalsy();
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
 
     it('creates a wmts layer with custom credits for Cesium map', (done) => {
@@ -446,7 +446,7 @@ describe('Cesium layer', () => {
         }).then(() => {
             expect(map.imageryLayers._layers[0].imageryProvider.credit).toExist();
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
 
     it('creates a wms layer with single tile for CesiumLayer map', (done) => {
@@ -472,7 +472,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe("http://demo.geo-solutions.it/geoserver/wms");
             expect(map.imageryLayers._layers[0]._imageryProvider._resource._queryParameters.service).toBe("WMS");
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
 
     it('creates a wms layer with multiple urls for CesiumLayer map', (done) => {
@@ -496,7 +496,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('{s}');
             expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(2);
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
 
     it('creates a bing layer for cesium map', () => {
@@ -561,7 +561,7 @@ describe('Cesium layer', () => {
                     options={assign({}, options, {opacity: 0.5})} position={0} map={map}/>, document.getElementById("container"));
             expect(layer.provider.alpha).toBe(0.5);
             done();
-        }).catch(() => done());
+        }).catch(done);
 
     });
 
@@ -616,7 +616,7 @@ describe('Cesium layer', () => {
             expect(map.imageryLayers.get(0)).toBe(layer2.provider);
             expect(map.imageryLayers.get(1)).toBe(layer1.provider);
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
 
     it('creates a graticule layer for cesium map', () => {
@@ -752,7 +752,7 @@ describe('Cesium layer', () => {
             const position = map.imageryLayers.get(0)._position;
             expect(position).toBe(10);
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
     it("test wms security token as bearer header", () => {
         const options = {
@@ -1252,6 +1252,7 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers.length).toBe(1);
 
     });
+
     it('Create a 3d tiles layer', (done) => {
         const options = {
             type: '3dtiles',
@@ -1277,12 +1278,13 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         waitFor(()=>{
-            return expect(cmp.layer).toBeTruthy();
+            return expect(cmp.layer.getResource()).toBeTruthy();
         }).then(()=>{
-            expect(cmp.layer.resource.request.url).toBe('/tileset.json');
+            expect(cmp.layer.getResource().request.url).toBe('/tileset.json');
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
+
     it('Use proxy when needed', (done) => {
         const options = {
             type: '3dtiles',
@@ -1309,12 +1311,13 @@ describe('Cesium layer', () => {
             />, document.getElementById('container'));
         expect(cmp).toBeTruthy();
         waitFor(()=>{
-            return expect(cmp.layer.resource).toBeTruthy();
+            return expect(cmp.layer.getResource()).toBeTruthy();
         }).then(()=>{
-            expect(cmp.layer.resource.request.url).toBe('/mapstore/proxy/?url=http%3A%2F%2Fservice.org%2Ftileset.json');
+            expect(cmp.layer.getResource().request.url).toBe('/mapstore/proxy/?url=http%3A%2F%2Fservice.org%2Ftileset.json');
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
+
     it('should create a 3d tiles layer with visibility set to false', () => {
         const options = {
             type: '3dtiles',
@@ -1572,7 +1575,7 @@ describe('Cesium layer', () => {
                 expect(cmp.layer._options.url).toEqual('/geoserver/wms');
                 expect(cmp.layer._options.proxy.proxy).toBeFalsy();
                 done();
-            }).catch(() => done());
+            }).catch(done);
         });
     });
 
@@ -1718,7 +1721,7 @@ describe('Cesium layer', () => {
     it('creates a arcgis layer', (done) => {
         const options = {
             type: 'arcgis',
-            url: 'http://arcgis/MapServer/',
+            url: '/arcgis/MapServer/',
             name: '1',
             visibility: true
         };
@@ -1729,9 +1732,13 @@ describe('Cesium layer', () => {
         waitFor(() => {
             return expect(map.imageryLayers.length).toBe(1);
         }).then(() => {
-            expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('http://arcgis/MapServer/');
-            expect(map.imageryLayers._layers[0]._imageryProvider.layerName).toBe('1');
+            try {
+                expect(map.imageryLayers._layers[0]._imageryProvider._resource._url).toBe('/arcgis/MapServer/');
+                expect(map.imageryLayers._layers[0]._imageryProvider.layers).toBe('1');
+            } catch (e) {
+                done(e);
+            }
             done();
-        }).catch(() => done());
+        }).catch(done);
     });
 });

@@ -138,7 +138,9 @@ const createLayer = (options, map) => {
     if (!options.visibility) {
         return {
             detached: true,
+            getResource: () => undefined,
             getTileSet: () => undefined,
+            add: () => {},
             remove: () => {}
         };
     }
@@ -153,7 +155,7 @@ const createLayer = (options, map) => {
     return {
         detached: true,
         getTileSet: () => tileSet,
-        resource,
+        getResource: () => resource,
         add: () => {
             resource = new Cesium.Resource({
                 url: options.url,

@@ -20,6 +20,7 @@ import '../plugins/OSMLayer';
 import '../plugins/WMSLayer';
 import '../plugins/VectorLayer';
 import '../plugins/ElevationLayer';
+import GeoServerBILTerrainProvider from '../../../../utils/cesium/GeoServerBILTerrainProvider';
 
 import '../../../../utils/cesium/Layers';
 import {
@@ -108,7 +109,7 @@ describe('CesiumMap', () => {
 
     it('check layers for elevation (deprecated)', (done) => {
         const options = {
-            "url": "http://fake",
+            "url": "/endpoint",
             "name": "mylayer",
             "visibility": true,
             "useForElevation": true
@@ -121,9 +122,13 @@ describe('CesiumMap', () => {
         });
         expect(ref).toBeTruthy();
         waitFor(() => expect(ref.map.terrainProvider).toBeTruthy()).then(() => {
-            expect(ref.map.terrainProvider.layerName).toBe('mylayer');
+            try {
+                expect(ref.map.terrainProvider instanceof GeoServerBILTerrainProvider).toBe(true);
+            } catch (e) {
+                done(e);
+            }
             done();
-        }).catch(()=>done());
+        }).catch(done);
     });
     it('check layers for elevation', () => {
         const options = {
@@ -554,42 +559,32 @@ describe('CesiumMap', () => {
         waitFor(() => expect(ref.map.imageryLayers._layers.length).toBe(3)).then(() => {
             expect(ref.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 3, 6]);
             expect(ref.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer02', 'layer03' ]);
-        });
-
-        act(() => {
-            ReactDOM.render(
-                <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
-                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
-                    <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
-                </CesiumMap>,
-                document.getElementById('container')
-            );
-        });
-
-        waitFor(() => expect(ref.map.imageryLayers._layers.length).toBe(3)).then(() => {
-
+            act(() => {
+                ReactDOM.render(
+                    <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                        <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
+                        <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
+                        <CesiumLayer type="wms" position={4} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
+                    </CesiumMap>,
+                    document.getElementById('container')
+                );
+            });
             expect(ref.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 3, 4]);
             expect(ref.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer02', 'layer03' ]);
-        });
-
-        act(() => {
-            ReactDOM.render(
-                <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
-                    <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
-                    <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
-                    <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
-                </CesiumMap>,
-                document.getElementById('container')
-            );
-        });
-
-        waitFor(() => expect(ref.map.imageryLayers._layers.length).toBe(3)).then(() => {
-
+            act(() => {
+                ReactDOM.render(
+                    <CesiumMap ref={value => { ref = value; } } id="mymap" center={{ y: 43.9, x: 10.3 }} zoom={11}>
+                        <CesiumLayer type="wms" position={1} options={{ url: '/wms', name: 'layer01', "visibility": true }} />
+                        <CesiumLayer type="wms" position={3} options={{ url: '/wms', name: 'layer02', "visibility": true }} />
+                        <CesiumLayer type="wms" position={2} options={{ url: '/wms', name: 'layer03', "visibility": true }} />
+                    </CesiumMap>,
+                    document.getElementById('container')
+                );
+            });
             expect(ref.map.imageryLayers._layers.map(({ _position }) => _position)).toEqual([1, 2, 3]);
             expect(ref.map.imageryLayers._layers.map(({ imageryProvider }) => imageryProvider.layers)).toEqual([ 'layer01', 'layer03', 'layer02' ]);
             done();
-        }).catch(()=>done());
+        }).catch(done);
     });
     it('should add navigation tools to the map', () => {
         let ref;
