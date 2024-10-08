@@ -60,13 +60,13 @@ describe("contexts PaginationToolbar component", () => {
             }
         });
 
-        const comp = ReactDOM.render(
+        const container = document.getElementById('container');
+        ReactDOM.render(
             <Provider store={store}>
                 <PaginationToolbar/>
-            </Provider>, document.getElementById("container"));
-        expect(comp).toExist();
+            </Provider>, container);
+        expect(container.innerHTML).toExist();
 
-        const container = document.getElementById('container');
         const pagination = container.getElementsByClassName('pagination');
         expect(pagination).toExist();
         expect(pagination.length).toBe(1);

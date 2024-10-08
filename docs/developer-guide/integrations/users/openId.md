@@ -32,7 +32,7 @@ Moreover the keycloak provider allows to configure advanced features like the **
 !!! note
     For the moment the generic `oidc` provider does not support multiple instances. This means that you can configure only **one** generic `oidc` provider. You can configure the specific providers (e.g., `google`, `keycloak`) in addition to the generic `oidc` provider, but not multiple instances of the generic `oidc` provider. So for instance you can configure a generic `oidc` provider (e.g. connected to Github) plus a `google` and a `keycloak` provider, but not two generic `oidc` providers.
 
-### OpenID connect (generic)
+### OpenID connect (experimental)
 
 In order to configure the generic OpenID provider with a service of your choice you have to:
 

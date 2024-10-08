@@ -48,8 +48,8 @@ describe('withMediaVisibilityContainer HOC', () => {
         ReactDOM.render(
             <div
                 id="scroll-container"
-                style={{ width: 512, height: 512, overflow: 'scroll' }}>
-                <div style={{ height: 1024 }}></div>
+                style={{ width: 10, height: 10, overflow: 'scroll' }}>
+                <div style={{ height: 20 }}></div>
                 <TestComponentWithVisibility
                     lazy
                     debounceTime={DEBOUNCE_TIME} />
@@ -64,11 +64,12 @@ describe('withMediaVisibilityContainer HOC', () => {
 
     it('scroll in view should render the actual component (lazy loading)', (done) => {
         const DEBOUNCE_TIME = 1;
+        // note: this test fails if the window is too small in height
         ReactDOM.render(
             <div
                 id="scroll-container"
-                style={{ width: 512, height: 512, overflow: 'scroll' }}>
-                <div style={{ height: 1024 }}></div>
+                style={{ width: 10, height: 10, overflow: 'scroll' }}>
+                <div style={{ height: 20 }}></div>
                 <Media mediaViewer={withMediaVisibilityContainer(() => <div className="test-component"></div>)} debounceTime={DEBOUNCE_TIME}/>
             </div>,
             document.getElementById("container"));
@@ -101,8 +102,8 @@ describe('withMediaVisibilityContainer HOC', () => {
         ReactDOM.render(
             <div
                 id="scroll-container"
-                style={{ width: 512, height: 512, overflow: 'scroll' }}>
-                <div style={{ height: 1024 }}></div>
+                style={{ width: 10, height: 10, overflow: 'scroll' }}>
+                <div style={{ height: 20 }}></div>
                 <TestComponentWithVisibility
                     lazy
                     debounceTime={DEBOUNCE_TIME} />

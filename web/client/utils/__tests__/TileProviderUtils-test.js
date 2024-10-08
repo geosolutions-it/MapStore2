@@ -57,8 +57,13 @@ describe('Test the TileProviderUtils', () => {
         expect(
             template("https://test.com/6510a8722129af6954196fbb26dfadc/1.0.0/topowebb/default/3857/{z}/{y}/{x}.png", optArray))
             .toEqual("https://test.com/6510a8722129af6954196fbb26dfadc/1.0.0/topowebb/default/3857/{z}/{y}/{x}.png");
-        // expect().toBe();
+        // test negative y (-y in template)
+        expect(
+            template("https://test.com/default/3857/{z}/{-y}/{x}.png", optArray))
+            .toEqual("https://test.com/default/3857/{z}/{-y}/{x}.png");
+        expect(
+            template("https://test.com/default/3857/{z}/{-y}/{-x}.png", optArray))
+            .toEqual("https://test.com/default/3857/{z}/{-y}/{-x}.png");
     });
-
 
 });
