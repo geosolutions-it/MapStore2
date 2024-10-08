@@ -213,6 +213,7 @@ describe('mapinfo wmts utils', () => {
             request: 'GetFeatureInfo',
             layer: 'gs:us_states',
             infoformat: 'text/plain',
+            format: 'image/png',
             style: '',
             tilecol: 3,
             tilerow: 5,
