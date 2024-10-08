@@ -21,14 +21,17 @@ import { getTileGridFromLayerOptions } from '../WMSUtils';
 
 
 function hasHttpProtocol(givenUrl = '') {
-    if (givenUrl.indexOf('http') === 0) {
-        const givenUrlObject = new URL(givenUrl);
-        return givenUrlObject.protocol === 'http:';
+    if (window?.location?.protocol === 'https:') {
+        if (givenUrl.indexOf('http') === 0) {
+            const givenUrlObject = new URL(givenUrl);
+            return givenUrlObject.protocol === 'http:';
+        }
+        if (givenUrl.indexOf('/') === 0) {
+            return false;
+        }
+        return true;
     }
-    if (givenUrl.indexOf('/') === 0) {
-        return false;
-    }
-    return true;
+    return false;
 }
 
 /**
