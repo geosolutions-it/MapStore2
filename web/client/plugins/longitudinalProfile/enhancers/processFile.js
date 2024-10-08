@@ -51,7 +51,7 @@ const readFile = (onWarnings) => (file) => {
     const projectionDefs = getConfigProp('projectionDefs') || [];
     const supportedProjections = (projectionDefs.length && projectionDefs.map(({code})  => code) || []).concat(["EPSG:4326", "EPSG:3857", "EPSG:900913"]);
     // [ ] change this to use filterCRSList
-    if (type === 'application/json') {
+    if (type === 'application/json' || type === 'application/geo+json') {
         return readJson(file).then(f => {
             const projection = get(f, 'map.projection') ?? parseURN(get(f, 'crs'));
             if (projection) {
