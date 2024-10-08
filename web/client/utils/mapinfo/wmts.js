@@ -95,6 +95,7 @@ export default {
                 request: 'GetFeatureInfo',
                 layer: layer.name,
                 infoformat: props.format,
+                format: layer.format,
                 style: layer.style || '',
                 ...assign({}, params),
                 tilecol: tileCol,
