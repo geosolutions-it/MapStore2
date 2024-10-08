@@ -708,7 +708,7 @@ export const saveLayer = (layer) => {
         tileSize: layer.tileSize,
         version: layer.version,
         expanded: layer.expanded || false,
-        ...(layer.visibilityLimitType ? { ...layer.visibilityLimitType, ...layer.visibilityLimitType } : {})
+        ...(layer.visibilityLimitType ? { visibilityLimitType: layer.visibilityLimitType } : undefined)
     },
     layer?.enableInteractiveLegend !== undefined ? { enableInteractiveLegend: layer?.enableInteractiveLegend } : {},
     layer.sources ? { sources: layer.sources } : {},
