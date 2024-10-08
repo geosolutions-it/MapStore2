@@ -55,6 +55,13 @@ export function template(str, data) {
         if (['x', 'y', 'z', 's'].includes(key)) {
             return textMatched;
         }
+        if (key === '-x') {
+            return "{reverseX}";
+        }
+        if (key === '-y') {
+            return "{reverseY}";
+        }
+
         let value = data[key];
 
         if (value === undefined) {

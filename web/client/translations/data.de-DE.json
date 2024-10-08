@@ -380,6 +380,7 @@
             "LinkedinGroup": "Mapstore Linkedin Gruppe",
             "scrollTop": "An den Anfang der Seite scrollen",
             "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
+            "footerCustomHTML": "<div><p>Bitte fügen Sie benutzerdefiniertes HTML in die Übersetzungen ein, um eine benutzerdefinierte Fußzeile darzustellen</p></div>",
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Einfacher Viewer</p>"

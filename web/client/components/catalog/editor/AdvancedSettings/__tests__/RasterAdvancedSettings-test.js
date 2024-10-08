@@ -12,15 +12,18 @@ import expect from 'expect';
 import RasterAdvancedSettings from "../RasterAdvancedSettings";
 import TestUtils from "react-dom/test-utils";
 import { waitFor } from '@testing-library/react';
+import { setConfigProp } from "../../../../../utils/ConfigUtils";
 
 describe('Test Raster advanced settings', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
     it('creates the component with defaults', () => {
@@ -34,6 +37,8 @@ describe('Test Raster advanced settings', () => {
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
         expect(fields.length).toBe(14);
+        // check disabled refresh button
+
     });
     it('test wms advanced options with no vendor serverType', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "wms", autoload: false, layerOptions: {serverType: 'no-vendor'}}} isLocalizedLayerStylesEnabled/>, document.getElementById("container"));
@@ -41,6 +46,9 @@ describe('Test Raster advanced settings', () => {
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
         expect(fields.length).toBe(12);
+        const refreshButton = document.querySelectorAll('button')[0];
+        expect(refreshButton).toBeTruthy();
+        expect(refreshButton.disabled).toBe(false);
     });
     it('test csw advanced options', () => {
         ReactDOM.render(<RasterAdvancedSettings service={{type: "csw", autoload: false}}/>, document.getElementById("container"));
@@ -63,6 +71,9 @@ describe('Test Raster advanced settings', () => {
         expect(fields.length).toBe(12);
         expect(cswFilters).toBeTruthy();
         expect(sortBy).toBeTruthy();
+        const refreshButton = document.querySelectorAll('button')[0];
+        expect(refreshButton).toBeTruthy();
+        expect(refreshButton.disabled).toBe(true);
     });
     it('test component onChangeServiceProperty autoload', () => {
         const action = {

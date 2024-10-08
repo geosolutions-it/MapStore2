@@ -90,7 +90,7 @@ export const withIdentifyRequest  = mapPropsStream(props$ => {
                                     }
                                 })
                         )
-                        .catch((e) => ({
+                        .catch((e) => Observable.of({
                             error: e.data || e.statusText || e.status,
                             reqId,
                             queryParams,

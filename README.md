@@ -5,7 +5,32 @@
 [![Master Documentation Status](https://readthedocs.org/projects/mapstore/badge/?version=latest)](https://docs.mapstore.geosolutionsgroup.com/en/latest/?badge=master)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
-MapStore is a framework to build *web mapping* applications using standard mapping libraries, such as <a href="http://openlayers.org/" target="_blank">OpenLayers</a> and <a href="http://leafletjs.com/" target="_blank">Leaflet</a>. For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
+MapStore is an open-source web mapping framework that enables users to create, share, and embed maps and dashboards with ease, drawing from a broad range of geospatial data sources. Designed for flexibility and scalability, MapStore integrates seamlessly with **OpenLayers**, **Leaflet**, and **Cesium** for both **2D** and **3D** visualization, allowing users to explore maps in a dynamic, real-time environment.
+
+With built-in support for **OGC** **standards** (such as **WMS**, **WMTS**, **WFS**, **3DTiles** and **CSW**), MapStore caters to the needs of professional GIS users while maintaining an intuitive interface for casual users. It supports rich feature configurations like layer styling, spatial analysis tools, and collaborative editing, making it a robust solution for diverse industries—from urban planning to environmental monitoring.
+
+MapStore's architecture is designed for modularity and extensibility, allowing developers to integrate custom plugins or adapt it for specific use cases. Whether you need to create interactive maps for publication or sophisticated geospatial applications, MapStore2 provides a solid foundation for building powerful web mapping solutions.
+
+For more information check the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">MapStore documentation!</a>
+
+## Documentation
+
+You can find more documentation about how to build, install or develop with MapStore on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.
+
+## License
+
+MapStore is Free and Open Source software, it is based on OpenLayers, Cesium, Leaflet and <a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>, and is licensed under the Simplified BSD License.
+
+## Demo Instances
+
+We have the following instances:
+
+1. a DEV instance, which can be accessed <a href="https://dev-mapstore.geosolutionsgroup.com/" target="_blank">here</a>, where all the changes are deployed once they are published on the Master branch of our repo
+2. a QA instance, which can be accessed  <a href="https://qa-mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
+3. a STABLE instance, which can be accessed <a href="https://mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that gets deployed on demand after each release.
+
+As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
+So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are parte of the developers team.
 
 ## Download
 
@@ -78,25 +103,6 @@ Then you can access MapStore using the following URL (assuming the web container
 
 Use the default credentials (admin / admin) to login and start creating your maps!
 
-## Documentation
-
-You can find more documentation about how to build, install or develop with MapStore on the <a href="https://docs.mapstore.geosolutionsgroup.com/en/latest/" target="_blank">documentation site</a>.
-
-## License
-
-MapStore is Free and Open Source software, it is based on OpenLayers, Leaflet and <a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>, and is licensed under the Simplified BSD License.
-
-## Demo Instances
-
-We have the following instances:
-
-1. a DEV instance, which can be accessed <a href="https://dev-mapstore.geosolutionsgroup.com/" target="_blank">here</a>, where all the changes are deployed once they are published on the Master branch of our repo
-2. a QA instance, which can be accessed  <a href="https://qa-mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that becomes active 1 week before any release, during the hardening phase, and deploys the release branch whenever a fix is pushed onto it.
-3. a STABLE instance, which can be accessed <a href="https://mapstore.geosolutionsgroup.com/" target="_blank">here</a>, that gets deployed on demand after each release.
-
-As a user you need to be aware of STABLE and DEV, QA is used internally before a release; for 1 Week it will diverge from STABLE as it is actually anticipating the next stable.
-So, if you want to test latest features use DEV, if you are not that brave use STABLE. You might forget that QA exists unless you are parte of the developers team.
-
 ## Start developing your custom app
 
 Clone the repository:
@@ -150,7 +156,7 @@ We welcome contributions in any form:
 - pull requests for documentation
 - funding for any combination of the above
 
-For more information check <a href="https://github.com/geosolutions-it/MapStore2/blob/master/CONTRIBUTING.md" target="_blank">this</a> page.
+For more information check [this](https://github.com/geosolutions-it/MapStore2/wiki/Contributing-to-MapStore) page.
 
 ## Who uses MapStore
 
