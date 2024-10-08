@@ -150,24 +150,27 @@ const createLayer = (options, map) => {
         return {
             detached: true,
             primitives: () => undefined,
-            remove: () => {}
+            remove: () => {},
+            add: () => {}
         };
     }
-    let primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
-    getIFCModel(options.url)
-        .then(({ifcModule, data}) => {
-            const { meshes } = ifcDataToJSON({ ifcModule, data });
-            const translucentPrimitive = createPrimitiveFromMeshes(meshes, options, 'translucentPrimitive');
-            const opaquePrimitive = createPrimitiveFromMeshes(meshes, options, 'opaquePrimitive');
-            primitives.add(translucentPrimitive);
-            primitives.add(opaquePrimitive);
-            updatePrimitivesMatrix(primitives, options?.features?.[0]);
-
-        });
-    map.scene.primitives.add(primitives);
+    let primitives;
     return {
         detached: true,
         primitives,
+        add: () => {
+            primitives = new Cesium.PrimitiveCollection({ destroyPrimitives: true });
+            getIFCModel(options.url)
+                .then(({ifcModule, data}) => {
+                    const { meshes } = ifcDataToJSON({ ifcModule, data });
+                    const translucentPrimitive = createPrimitiveFromMeshes(meshes, options, 'translucentPrimitive');
+                    const opaquePrimitive = createPrimitiveFromMeshes(meshes, options, 'opaquePrimitive');
+                    primitives.add(translucentPrimitive);
+                    primitives.add(opaquePrimitive);
+                    updatePrimitivesMatrix(primitives, options?.features?.[0]);
+                });
+            map.scene.primitives.add(primitives);
+        },
         remove: () => {
             if (primitives && map) {
                 map.scene.primitives.remove(primitives);

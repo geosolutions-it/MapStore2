@@ -24,8 +24,6 @@ const getBaseUrl = (uri) => {
  */
 export const setProxyCacheByUrl = (uri, value)=>{
     const baseUrl = getBaseUrl(uri);
-    // const urlParts = url.parse(uri); // func make
-    // const baseUrl = urlParts.protocol + "//" + urlParts.host + urlParts.pathname;
     proxyCache[baseUrl] = value;
     return value;
 };
