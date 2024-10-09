@@ -1504,7 +1504,7 @@
       "showPreview": "Show preview",
       "advancedSettings": "Advanced settings",
       "templateMetadataAvailable": "Metadata available from Dublin Core format: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
-      "invalidUrlHttpProtocol": "This catalog cannot be added to the available ones because it uses an http protocol. Please provide a catalog url that uses https protocol",
+      "invalidUrlHttpProtocol": "Tilgreindur vefslóð er ekki örugg þar sem hún notar HTTP. Vefslóð sem notar HTTPS-protokollinn ætti að vera veitt. Með því að nota HTTP verða beiðnir sjálfkrafa unnar til að koma í veg fyrir öryggisvandamál vafrans með því að fara í gegnum proxy",
       "notification": {
         "errorTitle": "Error",
         "errorSearchingRecords": "Some records have not been found: {records} Please check the query URL and its parameters.",

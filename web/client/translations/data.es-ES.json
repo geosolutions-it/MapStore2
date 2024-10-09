@@ -1631,7 +1631,7 @@
             "showPreview": "Mostrar vista previa",
             "advancedSettings": "Ajustes avanzados",
             "templateMetadataAvailable": "Metadatos disponibles en formato Dublin Core: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
-            "invalidUrlHttpProtocol": "Este catálogo no se puede agregar a los disponibles porque usa un protocolo http. Proporcione una URL del catálogo que utilice el protocolo https",
+            "invalidUrlHttpProtocol": "La URL especificada no es segura ya que utiliza HTTP. Se debe proporcionar una URL que utilice el protocolo HTTPS. Al utilizar HTTP, las solicitudes se manejarán automáticamente para prevenir problemas de seguridad del navegador al pasar a través del proxy",
             "invalidArrayUsageForUrl": "La URL del catálogo no se pudo leer correctamente.",
             "notification": {
                 "errorTitle": "Error",

@@ -77,9 +77,9 @@ describe('mapinfo arcgis utils', () => {
         ];
         mockAxios.onGet().reply((req) => {
             try {
-                const parts = req.url.split('?url=');
-                expect(decodeURIComponent(parts[parts.length - 1]))
-                    .toBe('https://test.url/0/query?f=json&geometry=-76.69000174947232%2C34.669673599384076%2C-76.33843924947232%2C34.95830926327919&inSR=4326&outSR=4326&outFields=*');
+                expect(req.url).toBe('https://test.url/0/query');
+                expect(req.params.geometry).toBe('-76.69000174947232,34.669673599384076,-76.33843924947232,34.95830926327919');
+
             } catch (e) {
                 done(e);
             }

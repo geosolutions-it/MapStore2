@@ -9,7 +9,7 @@
 import * as Cesium from 'cesium';
 import { isArray } from 'lodash';
 import { addAuthenticationToSLD, getAuthenticationHeaders } from "../SecurityUtils";
-import { getProxyUrl, needProxy } from "../ProxyUtils";
+import { getProxyUrl } from "../ProxyUtils";
 import ConfigUtils from "../ConfigUtils";
 import { creditsToAttribution, getAuthenticationParam, getURLs, getWMSVendorParams } from "../LayersUtils";
 import { isVectorFormat } from '../VectorTileUtils';
@@ -57,7 +57,7 @@ export const getProxy = (options) => {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        proxy = options.noCors || needProxy(options.url);
+        proxy = options.noCors || options.forceProxy;
     }
     return proxy ? new WMSProxy(proxyUrl) : new NoProxy();
 };

@@ -5,8 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import React, { useState, useEffect } from 'react';
-import {get, find, isEmpty} from 'lodash';
+import React, { useState } from 'react';
+import {get, find} from 'lodash';
 import Message from '../../I18N/Message';
 import HTML from '../../I18N/HTML';
 
@@ -154,17 +154,21 @@ export default ({
     setValid = () => {}
 }) => {
     const [error, setError] = useState(null);
+    const [warning, setWarning] = useState(null);
     function handleProtocolValidity(url) {
         onChangeUrl(url);
         if (url) {
             const {valid, errorMsgId} = checkUrl(url, null, service?.allowUnsecureLayers);
-            setError(valid ? null : errorMsgId);
-            setValid(valid);
+            if (errorMsgId === "catalog.invalidUrlHttpProtocol") {
+                setError(null);
+                setWarning(errorMsgId);
+            } else {
+                setWarning(null);
+                setError(valid ? null : errorMsgId);
+                setValid(valid);
+            }
         }
     }
-    useEffect(() => {
-        !isEmpty(service.url) && handleProtocolValidity(service.url);
-    }, [service?.allowUnsecureLayers]);
     const URLEditor = service.type === "tms" ? TmsURLEditor : service.type === "cog" ? COGEditor : DefaultURLEditor;
     return (
         <Form horizontal >
@@ -194,6 +198,9 @@ export default ({
 
             {error ? <Alert bsStyle="danger">
                 <Message msgId={error} />
+            </Alert> : null}
+            {warning ? <Alert bsStyle="warning">
+                <Message msgId={warning} />
             </Alert> : null}
 
         </Form>);

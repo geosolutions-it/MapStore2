@@ -169,7 +169,8 @@ describe('WPS execute tests', () => {
 
         mockAxios.onPost().reply(200, responseWithProcessAccepted, {'content-type': 'application/xml'});
         mockAxios.onGet().reply((config) => {
-            const expectedUrl = '/mapstore/proxy/?url=http%3A%2F%2Ftestserver%2F%3Fservice%3DWPS%26version%3D1.0.0%26REQUEST%3DGetExecutionStatus%26executionId%3D0c596a4d-7ddb-4a4e-bf35-4a64b47ee0d3';
+
+            const expectedUrl = 'http://testserver/?service=WPS&version=1.0.0&REQUEST=GetExecutionStatus&executionId=0c596a4d-7ddb-4a4e-bf35-4a64b47ee0d3';
             const responseData = statusResponses.shift();
 
             try {

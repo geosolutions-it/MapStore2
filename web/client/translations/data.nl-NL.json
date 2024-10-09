@@ -1624,7 +1624,7 @@
             "showPreview": "Voorbeeld weergeven",
             "advancedSettings": "Geavanceerde instellingen",
             "templateMetadataAvailable": "Metadata beschikbaar in Dublin Core-formaat: abstract, boundingBox, bijdrager, maker, beschrijving, formaat, identifier, referenties, rechten, bron, onderwerp, tijdelijk, titel, type, uri",
-            "invalidUrlHttpProtocol": "Catalogus kan niet toegevoegd worden omdat het HTTP protocol gebruikt wordt. Gelieve een URL op te geven die HTTPS gebruikt",
+            "invalidUrlHttpProtocol": "De opgegeven URL is niet veilig omdat deze HTTP gebruikt. Er moet een URL worden opgegeven die het HTTPS-protocol gebruikt. Bij gebruik van HTTP worden verzoeken automatisch verwerkt om browserbeveiligingsproblemen te voorkomen door via de proxy te gaan",
             "notification": {
                 "errorTitle": "Fout",
                 "errorSearchingRecords": "Sommige records zijn niet gevonden: {records} Controleer de query-URL en de bijbehorende parameters.",

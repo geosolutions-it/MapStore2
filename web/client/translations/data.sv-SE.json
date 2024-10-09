@@ -1414,7 +1414,7 @@
             "showPreview": "Visa förhandsgranskning",
             "advancedSettings": "Avancerade inställningar",
             "templateMetadataAvailable": "Metadata tillgänglig från Dublin Core -format: abstract, boundingBox, bidragsgivare, skapare, beskrivning, format, identifierare, referenser, rättigheter, källa, ämne, tidsmässig, titel, typ, uri",
-            "invalidUrlHttpProtocol": "Denna katalog kan inte läggas till i de tillgängliga eftersom den använder ett http -protokoll. Ange en katalogurl som använder https -protokoll",
+            "invalidUrlHttpProtocol": "Den angivna URL:en är inte säker eftersom den använder HTTP. En URL som använder HTTPS-protokol bör tillhandahållas. När HTTP används kommer förfrågningar automatiskt att hanteras för att förhindra säkerhetsproblem i webbläsaren genom att gå via proxy",
             "notification": {
                 "errorTitle": "Fel",
                 "errorSearchingRecords": "Vissa poster har inte hittats: {records} Kontrollera frågeadressen och dess parametrar.",

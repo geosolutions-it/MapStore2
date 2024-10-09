@@ -19,6 +19,21 @@ import { getResolutionsForProjection } from '../MapUtils';
 import { generateEnvString } from '../LayerLocalizationUtils';
 import { getTileGridFromLayerOptions } from '../WMSUtils';
 
+
+function hasHttpProtocol(givenUrl = '') {
+    if (window?.location?.protocol === 'https:') {
+        if (givenUrl.indexOf('http') === 0) {
+            const givenUrlObject = new URL(givenUrl);
+            return givenUrlObject.protocol === 'http:';
+        }
+        if (givenUrl.indexOf('/') === 0) {
+            return false;
+        }
+        return true;
+    }
+    return false;
+}
+
 /**
  * Check source and apply proxy
  * when `forceProxy` is set on layer options
@@ -27,8 +42,9 @@ import { getTileGridFromLayerOptions } from '../WMSUtils';
  * @returns {string}
  */
 export const proxySource = (forceProxy, src) => {
+    const _forceProxy = forceProxy || hasHttpProtocol(src);
     let newSrc = src;
-    if (forceProxy && needProxy(src)) {
+    if (_forceProxy && needProxy(src)) {
         let proxyUrl = getProxyUrl();
         newSrc = proxyUrl + encodeURIComponent(src);
     }
