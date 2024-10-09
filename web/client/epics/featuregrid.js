@@ -110,7 +110,9 @@ import {
     setPagination,
     launchUpdateFilterFunc,
     LAUNCH_UPDATE_FILTER_FUNC, SET_LAYER,
-    SET_VIEWPORT_FILTER, setViewportFilter
+    SET_VIEWPORT_FILTER, setViewportFilter,
+    GRID_ROW_UPDATE,
+    featureModified
 } from '../actions/featuregrid';
 
 import {
@@ -144,7 +146,8 @@ import {
     getAttributeFilters,
     selectedLayerSelector,
     multiSelect,
-    paginationSelector, isViewportFilterActive, viewportFilter
+    paginationSelector, isViewportFilterActive, viewportFilter,
+    getLayerById
 } from '../selectors/featuregrid';
 
 import { error, warning } from '../actions/notifications';
@@ -901,6 +904,16 @@ export const triggerDrawSupportOnSelectionChange = (action$, store) => action$.o
 export const onFeatureGridCreateNewFeature = (action$) => action$.ofType(CREATE_NEW_FEATURE)
     .switchMap( () => {
         return Rx.Observable.of(drawSupportReset());
+    });
+
+export const handleFeatureChanges = (action$, store) => action$.ofType(CREATE_NEW_FEATURE, GRID_ROW_UPDATE)
+    .flatMap(({features, updated}) => {
+        const layer = getLayerById(store.getState(), selectedLayerIdSelector(store.getState()));
+        // force value from fields
+        layer.fields.filter(f => f.value && f.source).forEach(f => {
+            updated[f.name] = f.value;
+        });
+        return Rx.Observable.of(featureModified(features, updated));
     });
 /**
  * control highlight support on view mode.
