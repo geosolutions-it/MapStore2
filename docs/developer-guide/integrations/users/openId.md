@@ -96,7 +96,7 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 - `oidcOAuth2Config.globalLogoutEnabled`: (*optional*): if true (and the server supports it) invokes global logout on MapStore logout
 
 !!! note
-    The `rolesClaim` and `groupsClaim` are optional. If you don't need to map roles or groups, you can omit them. At the moment, there is no mapping for roles and groups for the generic OIDC provider. If you need to map roles and groups, you can use the `keycloak` provider.
+    The only mandatory claim is the `email` or what you indicated in `oidcOAuth2Config.principalKey`. The `rolesClaim` and `groupsClaim` configurations are optional. If you don't need to map roles or groups, you can omit them. At the moment, there is no mapping for roles and groups for the generic OIDC provider. If you need to map roles and groups, you can use the `keycloak` provider.
 
 #### Configure the MapStore front-end
 
