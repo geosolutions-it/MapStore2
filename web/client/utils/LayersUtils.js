@@ -23,6 +23,9 @@ import { addAuthenticationParameter } from './SecurityUtils';
 import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { getLocale } from './LocaleUtils';
+import { isSingleDefaultGroup } from '../plugins/TOC/utils/TOCUtils';
+import uuid from 'uuid';
+
 
 let LayersUtils;
 
@@ -573,6 +576,52 @@ export const sortUsing = (sortFun, action) => {
         return action(node, reorder, sortFun);
     };
 };
+/**
+ * Converts an array of legacy groups to a new standardized format.
+ *
+ * @param {Array<Object>} legecyGroups - An array of legacy group objects.
+ *
+ * @returns {Array<Object>} - An array containing a single default group object with modified nodes.
+ *
+ * @example
+ * const legacyGroups = [
+ *     { id: '1', name: 'Group 1' },
+ *     { id: DEFAULT_GROUP_ID }
+ * ];
+ *
+ * const newFormat = convertLegecyGroupsToNewFormat(legacyGroups);
+ * // returns [
+ * //     {
+ * //         id: "Default",
+ * //         name: "Default",
+ * //         nodes: [
+ * //             { id: '1', name: 'Group 1' },
+ * //             { id: 'DEFAULT_GROUP_ID.<uuid>' } // Unique UUID generated
+ * //         ],
+ * //         expanded: true
+ * //     }
+ * // ]
+ */
+function convertLegecyGroupsToNewFormat(legecyGroups) {
+    const modifiedNodes = legecyGroups.map(node => {
+        const id = uuid();
+        if (node.id === DEFAULT_GROUP_ID) {
+            return {
+                ...node,
+                id: `${DEFAULT_GROUP_ID}.${id}`,
+                name: id
+            };
+        }
+        return node;
+    });
+
+    return [{
+        id: "Default",
+        name: "Default",
+        nodes: modifiedNodes,
+        expanded: true
+    }];
+}
 export const splitMapAndLayers = (mapState) => {
     if (mapState && isArray(mapState.layers)) {
         let groups = LayersUtils.getLayersByGroup(mapState.layers, mapState.groups);
@@ -598,6 +647,8 @@ export const splitMapAndLayers = (mapState) => {
                 return newGroups;
             }, [].concat(groups));
         }
+        // to convert old format to new format: UI wise invisible default group as parent of all groups
+        groups = !isSingleDefaultGroup(groups) ? convertLegecyGroupsToNewFormat(groups) : groups;
 
         let layers = extractDataFromSources(mapState);
 
