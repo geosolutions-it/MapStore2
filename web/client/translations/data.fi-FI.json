@@ -1397,6 +1397,8 @@
         }
       },
       "toolbar": {
+        "copyFeatures": "Copy features",
+        "pasteFeatures": "Paste features",
         "synchPopoverTitle": "Synkronoi kartta suodattimen kanssa ",
         "synchPopoverText": "Käytä tätä työkalua synkronoidaksesi kartta valitun suodattimen kanssa",
         "notShowAgain": "Älä näytä tätä viestiä uudelleen",

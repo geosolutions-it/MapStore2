@@ -427,6 +427,8 @@
             "resultInfoVirtual": "{total, plural, =0 {không mục nào} =1 {{total} Mục số {total}} other {{total} Mục}}",
             "selectall": "Chọn tất cả",
             "toolbar": {
+                "copyFeatures": "Copy features",
+                "pasteFeatures": "Paste features",
                 "addGeom": "Thêm một hình cho hình hiện có",
                 "addNewFeatures": "Thêm tính năng mới",
                 "advancedFilter": "Tìm kiếm nâng cao",

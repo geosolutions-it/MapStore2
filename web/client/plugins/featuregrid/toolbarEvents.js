@@ -7,6 +7,8 @@ import {
     setTimeSync,
     toggleShowAgain,
     createNewFeatures,
+    copyFeatures,
+    pasteFeatures,
     startEditingFeature,
     startDrawingFeature,
     deleteGeometry,
@@ -23,6 +25,8 @@ import {
 
 export default {
     createFeature: () => createNewFeatures([{}]),
+    copyFeatures: () => copyFeatures(),
+    pasteFeatures: () => pasteFeatures([{}]),
     saveChanges: () => saveChanges(),
     clearFeatureEditing: () => toggleTool("clearConfirm", true),
     deleteGeometry: () => deleteGeometry(),

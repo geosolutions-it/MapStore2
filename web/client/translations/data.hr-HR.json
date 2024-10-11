@@ -1354,6 +1354,8 @@
                 }
             },
             "toolbar": {
+                "copyFeatures": "Copy features",
+                "pasteFeatures": "Paste features",
                 "synchPopoverTitle": "Sinkroniziraj kartu sa filtrom ",
                 "synchPopoverText": "Koristi ovaj alat za sinkronizaciju karte sa odabranim filtrom",
                 "notShowAgain": "  Ne prikazuj više ovu poruku",

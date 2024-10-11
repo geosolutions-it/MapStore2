@@ -15,6 +15,8 @@ export const TOGGLE_MODE = 'FEATUREGRID:TOGGLE_MODE';
 export const TOGGLE_FEATURES_SELECTION = 'FEATUREGRID:TOGGLE_FEATURES_SELECTION';
 export const FEATURES_MODIFIED = 'FEATUREGRID:FEATURES_MODIFIED';
 export const CREATE_NEW_FEATURE = "FEATUREGRID:NEW_FEATURE";
+export const COPY_FEATURES = "FEATUREGRID:COPY_FEATURES"; // added to support copy features
+export const PASTE_FEATURES = "FEATUREGRID:PASTE_FEATURES"; // added to support paste features
 export const SAVE_CHANGES = 'FEATUREGRID:SAVE_CHANGES';
 export const SAVING = 'FEATUREGRID:SAVING';
 export const START_EDITING_FEATURE = 'FEATUREGRID:START_EDITING_FEATURE';
@@ -268,6 +270,30 @@ export function createNewFeatures(features) {
         features
     };
 }
+
+/**
+ * Copy features to clipboard
+ * @returns {object} action
+ */
+export function copyFeatures() {
+    return {
+        type: COPY_FEATURES
+    };
+}
+
+/**
+ * Paste features from clipboard
+ * @returns {object} action
+ */
+export function pasteFeatures() {
+    const stringifiedFeatures = localStorage.getItem('features');
+    const featuresJSON = JSON.parse(stringifiedFeatures);
+    return {
+        type: PASTE_FEATURES,
+        featuresJSON
+    };
+}
+
 export function saveChanges() {
     return {
         type: SAVE_CHANGES
