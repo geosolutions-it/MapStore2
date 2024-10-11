@@ -210,6 +210,7 @@ export default class extends React.Component {
                                 projection={this.props.projection}
                                 resolutions={this.props.resolutions}
                                 zoom={this.props.zoom}
+                                defaultLimitsType={this.props.element.visibilityLimitType}
                             />
                         </FormGroup>
                     </Col>

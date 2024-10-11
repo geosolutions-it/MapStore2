@@ -9,7 +9,7 @@
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
+import ReactTestUtils, { act } from 'react-dom/test-utils';
 import VisibilityLimitsForm from '../VisibilityLimitsForm';
 
 describe('VisibilityLimitsForm', () => {
@@ -96,4 +96,32 @@ describe('VisibilityLimitsForm', () => {
         const buttons = document.querySelectorAll('.square-button-md');
         expect(buttons.length).toBe(1);
     });
+
+    it("Should call onChange after visibilityLimitType change ", () => {
+        const layer = {
+            type: 'wms'
+        };
+        const handlers = {
+            onChange: () => {}
+        };
+        let spyUpdate = expect.spyOn(handlers, "onChange");
+
+        act(()=>ReactDOM.render(<VisibilityLimitsForm
+            layer={layer}
+            onChange={handlers.onChange}
+        />, document.getElementById('container')));
+
+        // Simpulate selection
+        const selectArrow = document.getElementById("container").querySelectorAll('.Select-arrow');
+        const selectControl = document.getElementById("container").querySelectorAll('.Select-control');
+        const inputs = document.getElementsByTagName("input");
+        ReactTestUtils.Simulate.mouseDown(selectArrow[2], { button: 0 });
+        ReactTestUtils.Simulate.keyDown(selectControl[2], { keyCode: 40, key: 'ArrowDown' });
+        ReactTestUtils.Simulate.keyDown(inputs[3], { keyCode: 13, key: 'Enter' });
+        expect(spyUpdate.calls.length).toBe(1);
+        expect(Object.keys(spyUpdate.calls[0].arguments[0])).toEqual(['visibilityLimitType']);
+
+    });
+
+
 });
