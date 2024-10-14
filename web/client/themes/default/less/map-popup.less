@@ -33,7 +33,9 @@
     .map-popup-ol:before {
         .border-top-color-var(@theme-vars[main-border-color]);
     }
-
+    .map-popup-ol:has(.hidePopupIfNoResults), .ms-leaflet-popup:has(.hidePopupIfNoResults) {
+        display: none;
+    }
     .ol-popup-closer {
         .ms-popup-close-button();
     }

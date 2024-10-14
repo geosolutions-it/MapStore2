@@ -10,6 +10,7 @@
 export const ADD_MAP_POPUP = 'MAP:ADD_POPUP';
 export const REMOVE_MAP_POPUP = 'MAP:REMOVE_POPUP';
 export const CLEAN_MAP_POPUPS = 'MAP:CLEAN_POPUPS';
+export const ENABLE_HIDE_EMPTY_POPUP = 'MAP:ENABLE_HIDE_EMPTY_POPUP';
 
 export const addPopup = (id, options, single = true) => ({
     type: ADD_MAP_POPUP,
@@ -25,4 +26,8 @@ export const removePopup = (id) => ({
 
 export const cleanPopups = () => ({
     type: CLEAN_MAP_POPUPS
+});
+
+export const enableHideEmptyPopupOption = () => ({
+    type: ENABLE_HIDE_EMPTY_POPUP
 });

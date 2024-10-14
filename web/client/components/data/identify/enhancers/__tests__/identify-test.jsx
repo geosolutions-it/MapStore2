@@ -187,6 +187,18 @@ describe("test identify enhancers", () => {
         );
         expect(spyIdentifyIsMounted.calls.length).toEqual(1);
     });
+    it("test identifyLifecycle component for call enableHideEmptyPopupOption if hidePopupIfNoResults prop = true", () => {
+        const Component = identifyLifecycle(() => <div id="test-component"></div>);
+        const testHandlers = {
+            enableHideEmptyPopupOption: () => {}
+        };
+        const spyEnableHideEmptyPopupOption = expect.spyOn(testHandlers, 'enableHideEmptyPopupOption');
+        ReactDOM.render(
+            <Component enabled responses={[{}]} hidePopupIfNoResults enableHideEmptyPopupOption={testHandlers.enableHideEmptyPopupOption}/>,
+            document.getElementById("container")
+        );
+        expect(spyEnableHideEmptyPopupOption.calls.length).toEqual(1);
+    });
     it("Identify should run when enabled prop is true and showInMapPopup prop is false", () => {
         let run = sampleComponentDidMount({enabled: true, showInMapPopup: false});
         expect(run.checkIdentifyIsMounted).toBe(true);
