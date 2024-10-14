@@ -57,21 +57,33 @@
 
 	<!-- GZip compression -->
 	<filter>
-		<filter-name>CompressionFilter</filter-name>
-		<filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>CompressionFilter</filter-name>
-		<url-pattern>*.css</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CompressionFilter</filter-name>
-		<url-pattern>*.html</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>CompressionFilter</filter-name>
-		<url-pattern>*.js</url-pattern>
-	</filter-mapping>
+        <filter-name>CompressionFil</filter-name>
+        <filter-class>com.github.ziplet.filter.compression.CompressingFilter</filter-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>false</param-value> <!-- Set to true for debugging -->
+        </init-param>
+        <init-param>
+            <param-name>compressionThreshold</param-name>
+            <param-value>1024</param-value> <!-- Compress responses larger than 1KB -->
+        </init-param>
+        <init-param>
+            <param-name>excludePathPatterns</param-name>
+            <param-value>.*\.jpg,.*\.jpeg,.*\.gif,.*\.png</param-value> <!-- Exclude images -->
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>GzipFilter</filter-name>
+        <url-pattern>*.css</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>GzipFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>GzipFilter</filter-name>
+        <url-pattern>*.js</url-pattern>
+    </filter-mapping>
 
     <!--  Backend Spring MVC controllers -->
     <!--  Backward compatibility -->
