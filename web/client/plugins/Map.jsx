@@ -251,9 +251,8 @@ class MapPlugin extends React.Component {
         onMapTypeLoaded: () => {},
         pluginsCreator
     };
-    state = {
-        canRender: true
-    };
+
+    state = {};
 
     UNSAFE_componentWillMount() {
         // moved the font load of FontAwesome only to styleParseUtils (#9653)
@@ -378,7 +377,7 @@ class MapPlugin extends React.Component {
     };
 
     render() {
-        if (this.props.map && this.state.canRender && this.state.plugins) {
+        if (this.isValidMapConfiguration(this.props.map) && this.state.plugins) {
             const {mapOptions = {}} = this.props.map;
 
             return (
@@ -440,6 +439,15 @@ class MapPlugin extends React.Component {
             }
         });
     };
+    isValidMapConfiguration = (map) => {
+        // when the center is included inside the map config
+        // we know that the configuration has been loaded
+        // we should prevent to mount the map component
+        // in case we have a configuration like this one: { eventListeners: {}, mousePointer: '' }
+        // if we allow invalid configuration default props will be used instead
+        // initializing the map in the wrong position
+        return !!map?.center;
+    }
 }
 
 export default createPlugin('Map', {
