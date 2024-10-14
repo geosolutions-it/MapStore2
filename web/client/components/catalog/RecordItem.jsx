@@ -100,7 +100,7 @@ class RecordItem extends React.Component {
     componentDidMount() {
         const notAvailable = getMessageById(this.context.messages, "catalog.notAvailable");
         const record = this.props.record;
-        this.setState({visibleExpand: !this.props.hideExpand &&
+        this.setState({visibleExpand: !this.props.hideExpand &&  // eslint-disable-line -- TODO: need to be fixed
             (
                 this.displayExpand() ||
                 // show expand if the template is not empty

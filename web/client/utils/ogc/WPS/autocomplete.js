@@ -1,10 +1,8 @@
-// const wfsRequestBuilder = require('../WFS/RequestBuilder');
-// const {getFeature, property, query} = wfsRequestBuilder({wfsVersion: "1.1.0"});
-const {isFilterValid, toOGCFilterParts} = require('../../FilterUtils');
-const filterBuilder = require('../Filter/FilterBuilder');
+import  {isFilterValid, toOGCFilterParts} from '../../FilterUtils';
+import  filterBuilder from '../Filter/FilterBuilder';
 const {and} = filterBuilder({});
 
-const getWpsPayload = ({layerName, layerFilter, attribute, maxFeatures, startIndex, value}) => {
+export const getWpsPayload = ({layerName, layerFilter, attribute, maxFeatures, startIndex, value}) => {
     const attributeFilterObj = value
         ? '<ogc:PropertyIsLike matchCase="false" wildCard="*" singleChar="." escapeChar="!">'
     + '   <ogc:PropertyName>' + attribute + '</ogc:PropertyName>'
@@ -76,6 +74,6 @@ const getWpsPayload = ({layerName, layerFilter, attribute, maxFeatures, startInd
     return requestBody;
 };
 
-module.exports = {
+export default {
     getWpsPayload
 };

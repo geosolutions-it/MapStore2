@@ -128,7 +128,7 @@ class CesiumMap extends React.Component {
         if (this.props.errorPanel) {
             // override the default error message overlay
             map.cesiumWidget.showErrorPanel = (title, message, error) => {
-                this.setState({ renderError: { title, message, error } });
+                this.setState({ renderError: { title, message, error } }); // eslint-disable-line -- TODO: need to be fixed
             };
         }
 

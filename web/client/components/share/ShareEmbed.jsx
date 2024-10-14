@@ -53,7 +53,7 @@ class ShareEmbed extends React.Component {
 
     componentDidMount() {
         if (this.props.sizeOptions && !isEqual(this.state.sizeOptions)) {
-            this.setState({sizeOptions: this.props.sizeOptions, selectedOption: this.props.selectedOption || 'Small'});
+            this.setState({sizeOptions: this.props.sizeOptions, selectedOption: this.props.selectedOption || 'Small'});  // eslint-disable-line -- TODO: need to be fixed
         }
     }
 
