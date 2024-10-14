@@ -35,6 +35,7 @@ import { projectionDefsSelector, isMouseMoveActiveSelector } from '../../selecto
 import {
     snappingLayerSelector
 } from "../../selectors/draw";
+import { mapPopupsSelector } from '../../selectors/mapPopups';
 
 const Empty = () => { return <span/>; };
 
@@ -101,13 +102,11 @@ const pluginsCreator = (mapType, actions) => {
 
         const LLayer = connect(null, {onWarning: warning})( components.Layer || Empty);
 
-        const EMPTY_POPUPS = [];
         const PopupSupport = connect(
             createSelector(
-                (state) => state.mapPopups && state.mapPopups.popups || EMPTY_POPUPS,
-                (popups) => ({
-                    popups
-                })), {
+                mapPopupsSelector,
+                (popups) => ({popups})
+            ), {
                 onPopupClose: removePopup
             }
         )(components.PopupSupport || Empty);

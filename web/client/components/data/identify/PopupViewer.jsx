@@ -17,6 +17,7 @@ import Viewer from './DefaultViewer';
 import {isArray, isUndefined} from 'lodash';
 import SwipeHeader from './SwipeHeader';
 import { identifyFloatingToolSelector } from '../../../selectors/map';
+import { hideEmptyPopupSelector } from '../../../selectors/mapPopups';
 
 /**
  * Container that render only the selected result
@@ -46,8 +47,8 @@ const selector = createSelector([
     generalInfoFormatSelector,
     showEmptyMessageGFISelector,
     identifyFloatingToolSelector,
-    isLoadedResponseSelector],
-(responses, validResponses, requests, format, showEmptyMessageGFI, renderValidOnly, loaded) => ({
+    isLoadedResponseSelector, hideEmptyPopupSelector],
+(responses, validResponses, requests, format, showEmptyMessageGFI, renderValidOnly, loaded, hidePopupIfNoResults ) => ({
     responses,
     validResponses,
     requests,
@@ -55,7 +56,8 @@ const selector = createSelector([
     showEmptyMessageGFI,
     missingResponses: (requests || []).length - (responses || []).length,
     renderValidOnly,
-    loaded
+    loaded,
+    hidePopupIfNoResults
 }));
 
 
