@@ -1642,6 +1642,18 @@
             "servicePlaceholder": "Geben Sie einen Service ein",
             "url": "Url",
             "urlPlaceholder": "Geben Sie eine URL ein",
+            "urlPlaceHolders": {
+                "wfs": "z.B. https://mydomain.com/geoserver/wfs",
+                "wmts": "z.B. https://mydomain.com/geoserver/gwc/service/wmts",
+                "wms": "z.B. https://mydomain.com/geoserver/wms",
+                "csw": "z.B. https://mydomain.com/geoserver/csw",
+                "tms": "z.B. https://mydomain.com/geoserver/gwc/service/tms/1.0.0",
+                "custom": "z.B. https://{s}.myUrl.com/{variant}/{z}/{x}/{y}",
+                "3dtiles": "z.B. https://mydomain.com/tileset.json",
+                "cog": "z.B. https://mydomain.com/cog.tif",
+                "model": "z.B. https://mydomain.com/filename.ifc",
+                "arcgis": "z.B. https://mydomain.com/arcgis/rest/services"
+            },
             "type": "Typ",
             "serviceTitle": "Titel",
             "serviceTitlePlaceholder": "Geben Sie einen Titel ein",
