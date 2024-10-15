@@ -11,15 +11,15 @@
         <mapstore2.version>DEV</mapstore2.version>
         <tomcat.version>8.5.69</tomcat.version>
         <tomcat.port>8082</tomcat.port>
-        <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
+        <geostore-webapp.version>2.2-SNAPSHOT</geostore-webapp.version>
         <print-lib.version>2.3.1</print-lib.version>
         <http_proxy.version>1.6-SNAPSHOT</http_proxy.version>
-        <spring.version>5.3.39</spring.version>
+        <spring.version>5.3.18</spring.version>
         <httpclient.version>4.5.13</httpclient.version>
         <junit.version>4.13.1</junit.version>
         <mockito-core.version>4.0.0</mockito-core.version>
         <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
-        <!-- <ehcache-web.version>2.0.4</ehcache-web.version> -->
+        <ehcache-web.version>2.0.4</ehcache-web.version>
         <commons-pool.version>1.5.4</commons-pool.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
         <spring.security.version>5.7.12</spring.security.version>
@@ -29,8 +29,11 @@
         <json-lib.version>2.4.2-geoserver</json-lib.version>
         <commons-io.version>2.14.0</commons-io.version>
         <mime-util.version>2.1.3</mime-util.version>
-        <cxf-core.version>3.5.9</cxf-core.version>
         <bcprov-jdk15on.version>1.78</bcprov-jdk15on.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-io.version>2.14.0</commons-io.version>
+        <cxf-core.version>3.5.9</cxf-core.version>
     </properties>
 
     <modules>
@@ -48,7 +51,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
-                <version>${spring.version}</version>
+                <version>5.3.39</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
@@ -86,10 +89,11 @@
                 <version>${junit.version}</version>
             </dependency>
 
+            <!-- gzip compression filter -->
             <dependency>
-                <groupId>com.github.ziplet</groupId>
-                <artifactId>ziplet</artifactId>
-                <version>2.4.1</version>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-web</artifactId>
+                <version>${ehcache-web.version}</version>
             </dependency>
             <!-- misc -->
             <dependency>
@@ -177,7 +181,7 @@
                 <artifactId>geostore-webapp</artifactId>
                 <version>${geostore-webapp.version}</version>
                 <type>war</type>
-                <scope>compile</scope>
+                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>proxy</groupId>
@@ -215,36 +219,40 @@
                 <version>${print-lib.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>3.2.2</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.9.4</version> 
+                <version>${commons-beanutils.version}</version> 
             </dependency>
             <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-core</artifactId>
                 <version>${cxf-core.version}</version>
-                <scope>compile</scope>
             </dependency>
-            <!-- <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-client</artifactId>
-                <version>3.14.0.Final</version>
-            </dependency> -->
-            <!-- <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
-                <version>${bcprov-jdk15on}</version>
-            </dependency> -->
-            <!-- <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-core</artifactId>
-                <version>2.6.11</version>
-            </dependency> -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>5.3.39</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>5.3.39</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>5.3.39</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>5.3.39</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -335,10 +343,10 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>10.0.4</version>
+                <version>9.0.9</version>
                 <configuration>
-                    <skip>false</skip>
-                    <nvdApiKey>f0110be7-67f7-4513-8bee-6bb4466d9e93</nvdApiKey>
+                    <skip>true</skip>
+                    <!-- <nvdApiKey>******-****-****-****-*********</nvdApiKey> -->
                 </configuration>
                 <executions>
                     <execution>
