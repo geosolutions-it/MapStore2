@@ -24,7 +24,8 @@ import {
     readWMC,
     readZip,
     recognizeExt,
-    shpToGeoJSON
+    shpToGeoJSON,
+    readGeoJson
 } from '../../../../utils/FileUtils';
 import { geoJSONToLayer } from '../../../../utils/LayersUtils';
 
@@ -48,7 +49,8 @@ const checkFileType = (file) => {
             || type === 'application/vnd.google-earth.kmz'
             || type === 'application/gpx+xml'
             || type === 'application/json'
-            || type === 'application/vnd.wmc') {
+            || type === 'application/vnd.wmc'
+            || type === 'application/geo+json') {
             resolve(file);
         } else {
             // Drag and drop of compressed folders doesn't correctly send the zip mime type (windows, also conflicts with installations of WinRar)
@@ -112,6 +114,18 @@ const readFile = (onWarnings) => (file) => {
                 throw new Error("PROJECTION_NOT_SUPPORTED");
             }
             return [{...f, "fileName": file.name}];
+        });
+    }
+    if (type === 'application/geo+json') {
+        return readGeoJson(file).then(f => {
+            const projection = get(f, 'geoJSON.map.projection');
+            if (projection) {
+                if (supportedProjections.includes(projection)) {
+                    return [{...f.geoJSON, "fileName": file.name}];
+                }
+                throw new Error("PROJECTION_NOT_SUPPORTED");
+            }
+            return [{...f.geoJSON, "fileName": file.name}];
         });
     }
     if (type === 'application/vnd.wmc') {
