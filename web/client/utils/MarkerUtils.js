@@ -27,7 +27,7 @@ const loadGlyphs = (font) => {
     return Object.keys(fontJSON).reduce((acc, key) => {
         return {
             ...acc,
-            [key]: eval("'\\u" + fontJSON[key] + "'") // eslint-disable-line
+            [key]: String.fromCharCode(parseInt(fontJSON[key], 16))
         };
     }, {});
 };
