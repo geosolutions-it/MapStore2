@@ -965,6 +965,54 @@ describe('identify Epics', () => {
 
         testEpic(zoomToVisibleAreaEpic,  3, sentActions, expectedAction, state);
     });
+    it('test zoomToVisibleAreaEpic remove shown marker of identify if no results + existing hideEmptyPopupOption flag = true', (done) => {
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+
+        const state = {
+            mapInfo: {
+                centerToMarker: true
+            },
+            mapPopups: {
+                hideEmptyPopupOption: true
+            },
+            map: {present: {...TEST_MAP_STATE.present, eventListeners: {mousemove: ["identifyFloatingTool"]}}},
+            maplayout: {
+                boundingMapRect: {
+                    left: 500,
+                    bottom: 250
+                }
+            }
+        };
+
+        const sentActions = [
+            featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } }),
+            loadFeatureInfo(1, "no features were found")
+        ];
+
+        const expectedAction = actions => {
+            try {
+                expect(actions.length).toBe(2);
+                actions.map((action) => {
+                    switch (action.type) {
+                    case HIDE_MAPINFO_MARKER:
+                        done();
+                        break;
+                    case UPDATE_CENTER_TO_MARKER:
+                        expect(action.status).toBe('disabled');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                    }
+                });
+            } catch (ex) {
+                done(ex);
+            }
+            done();
+        };
+
+        testEpic(zoomToVisibleAreaEpic,  2, sentActions, expectedAction, state);
+    });
 
     it('onMapClick triggers featureinfo when selected', done => {
         registerHook(GET_COORDINATES_FROM_PIXEL_HOOK, undefined);
