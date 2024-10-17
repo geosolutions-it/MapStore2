@@ -16,6 +16,7 @@ This steps have to be followed always when preparing a new release.
   - [ ] for `geostore`, check if [here](https://maven.geo-solutions.it/it/geosolutions/geostore/geostore-webapp/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/geostore) file of the project.
   - [ ] for `http_proxy`, check if [here](https://maven.geo-solutions.it/proxy/http_proxy/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/http-proxy) file of the project.
   - [ ] for `mapfish-print` check if [here](https://maven.geo-solutions.it/proxy/http_proxy/) is present the version specified. Release procedure is specified in the [Readme.md](https://github.com/geosolutions-it/mapfish-print) file of the project.
+- [ ] Check if dependencies of MapStore libraries and geostore libraries are the same (compare `src/pom.xml` in geostore e `pom.xml` in MapStore).
 
 ## New stable branch creation
 
@@ -42,7 +43,11 @@ This steps have to be followed always when preparing a new release.
 - [ ] Check `pom.xml` dependencies are all in fixed stable versions ( no `-SNAPSHOT` usage release). If not, You use the action  [`Update dependencies versions`](https://github.com/geosolutions-it/MapStore2/actions/workflows/update_dependencies_versions.yml) to fix them, setting:
     - [ ] the branch to `YYYY.XX.xx`
     - [ ] the of geostore, http_proxy and mapfish-print versions accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
-- [ ] Check that [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository is aligned and working
+- [ ] Check that [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository is aligned and working. 
+- [ ] Run the [Submodule Update](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/submodules_update.yml) of [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) to generate the `SampleExtension.zip` to use for testing.
+    - [ ] Use workflow from `YYYY.XX.xx` branch
+    - [ ] Wait for completition
+    - [ ] Download the `Artifacts.zip` that contains `SampleExtension.zip` from the execution of the `checks` action on the branch `YYYY.XX.xx`. This can be used for tests.
 - [ ] Test on QA [https://qa-mapstore.geosolutionsgroup.com/mapstore/](https://qa-mapstore.geosolutionsgroup.com/mapstore/)
   - [ ] Test **everything**, not only the new features
   - [ ] Test the creation of a standard project starting in from the stable branch and with the internal backend, so:

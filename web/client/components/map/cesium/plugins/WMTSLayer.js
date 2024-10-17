@@ -10,8 +10,7 @@ import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {
-    getProxyUrl,
-    needProxy
+    getProxyUrl
 } from '../../../../utils/ProxyUtils';
 import * as WMTSUtils from '../../../../utils/WMTSUtils';
 import { creditsToAttribution, getAuthenticationParam, getURLs } from '../../../../utils/LayersUtils';
@@ -110,7 +109,7 @@ function wmtsToCesiumOptions(_options) {
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
-        proxy = needProxy(options.url) && proxyUrl;
+        proxy = options.forceProxy;
     }
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSetID]);
     const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
@@ -161,7 +160,7 @@ const createLayer = options => {
 const updateLayer = (layer, newOptions, oldOptions) => {
     if (newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.format !== newOptions.format
-    || oldOptions.credits !== newOptions.credits) {
+    || oldOptions.credits !== newOptions.credits || newOptions.forceProxy !== oldOptions.forceProxy) {
         return createLayer(newOptions);
     }
     return null;

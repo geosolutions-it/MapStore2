@@ -79,7 +79,9 @@ export const identifyLifecycle = compose(
                 setShowInMapPopup = () => {},
                 checkIdentifyIsMounted = () => {},
                 onInitPlugin = () => {},
-                pluginCfg = {}
+                pluginCfg = {},
+                enableHideEmptyPopupOption = () => {},
+                hidePopupIfNoResults = false
             } = this.props;
 
             // Initialize plugin configuration
@@ -91,6 +93,9 @@ export const identifyLifecycle = compose(
                 showAllResponses,
                 highlight: pluginCfg?.highlightEnabledFromTheStart || false
             });
+            if (hidePopupIfNoResults) {
+                enableHideEmptyPopupOption(true);
+            }
             if (enabled || showInMapPopup) {
                 changeMousePointer('pointer');
                 checkIdentifyIsMounted(true);

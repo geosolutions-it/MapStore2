@@ -38,7 +38,7 @@ describe('Test common advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(3);
+        expect(fields.length).toBe(2);
     });
     it('test wms advanced options onChangeServiceProperty autoreload', () => {
         const action = {
@@ -52,7 +52,7 @@ describe('Test common advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(3);
+        expect(fields.length).toBe(2);
         const autoload = document.querySelectorAll('input[type="checkbox"]')[0];
         const formGroup = document.querySelectorAll('.form-group')[0];
         expect(formGroup.textContent.trim()).toBe('catalog.autoload');
@@ -60,30 +60,6 @@ describe('Test common advanced settings', () => {
         TestUtils.Simulate.change(autoload, { "target": { "checked": true }});
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[0].arguments).toEqual([ 'autoload', true ]);
-    });
-    it('test component onChangeServiceProperty allowUnsecureLayers', () => {
-        const action = {
-            onChangeServiceProperty: () => {}
-        };
-        const spyOn = expect.spyOn(action, 'onChangeServiceProperty');
-        ReactDOM.render(<CommonAdvancedSettings
-            onChangeServiceProperty={action.onChangeServiceProperty}
-            service={{type: "wfs", allowUnsecureLayers: false}}
-        />, document.getElementById("container"));
-        const advancedSettingsPanel = document.getElementsByClassName("mapstore-switch-panel");
-        expect(advancedSettingsPanel).toBeTruthy();
-        const allowUnsecureLayers = document.querySelectorAll('input[type="checkbox"]')[1];
-        const formGroup = document.querySelectorAll('.form-group')[2];
-        expect(formGroup.textContent.trim()).toBe('catalog.allowUnsecureLayers.label');
-        expect(allowUnsecureLayers).toExist();
-        TestUtils.Simulate.change(allowUnsecureLayers, { "target": { "checked": true }});
-        expect(spyOn).toHaveBeenCalled();
-        expect(spyOn.calls[0].arguments).toEqual([ 'allowUnsecureLayers', true ]);
-
-        // Unset allowUnsecureLayers
-        TestUtils.Simulate.change(allowUnsecureLayers, { "target": { "checked": false }});
-        expect(spyOn).toHaveBeenCalled();
-        expect(spyOn.calls[1].arguments).toEqual([ 'allowUnsecureLayers', false ]);
     });
     it('test component onChangeServiceProperty fetchMetadata', () => {
         const action = {

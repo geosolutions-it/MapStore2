@@ -1669,7 +1669,7 @@
             "showPreview": "Vorschau zeigen",
             "advancedSettings": "Erweiterte Einstellungen",
             "templateMetadataAvailable": "Metadaten im Dublin Core-Format verfügbar: abstract, boundingBox, contributor, creator, description, format, identifier, references, rights, source, subject, temporal, title, type, uri",
-            "invalidUrlHttpProtocol": "Dieser Katalog kann nicht zu den verfügbaren hinzugefügt werden, da er ein http-Protokoll verwendet. Bitte geben Sie eine Katalog-URL an, die das https-Protokoll verwendet.",
+            "invalidUrlHttpProtocol": "Die angegebene URL ist nicht sicher, da sie HTTP verwendet. Eine URL, die das HTTPS-Protokoll verwendet, sollte bereitgestellt werden. Bei der Verwendung von HTTP werden Anfragen automatisch verarbeitet, um Browser-Sicherheitsprobleme zu verhindern, indem sie über den Proxy geleitet werden",
             "invalidArrayUsageForUrl": "Die Katalog-URL konnte nicht korrekt gelesen werden",
             "notification": {
                 "errorTitle": "Error",

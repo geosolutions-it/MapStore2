@@ -37,5 +37,9 @@ describe('mapPopups reducer', () => {
         expect(state.popups).toExist();
         expect(state.popups.length).toBe(0);
     });
-
+    it('ENABLE_HIDE_EMPTY_POPUP ', () => {
+        const state = reducer(initialState, ACTIONS.enableHideEmptyPopupOption());
+        expect(state.popups).toExist();
+        expect(state.hideEmptyPopupOption).toEqual(true);
+    });
 });

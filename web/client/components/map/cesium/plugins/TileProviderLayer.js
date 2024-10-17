@@ -11,7 +11,7 @@ import * as Cesium from 'cesium';
 import TileProvider from '../../../../utils/TileConfigProvider';
 import ConfigUtils from '../../../../utils/ConfigUtils';
 import {creditsToAttribution} from '../../../../utils/LayersUtils';
-import {getProxyUrl, needProxy} from '../../../../utils/ProxyUtils';
+import {getProxyUrl} from '../../../../utils/ProxyUtils';
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -74,13 +74,9 @@ export function template(str, data) {
     });
 }
 
-Layers.registerType('tileprovider', (options) => {
+const create = (options) => {
     let [url, opt] = TileProvider.getLayerConfig(options.provider, options);
     let proxyUrl = ConfigUtils.getProxyUrl({});
-    let proxy;
-    if (proxyUrl) {
-        proxy = opt.noCors || needProxy(url);
-    }
     const cr = opt.credits;
 
     const credit = cr ? new Cesium.Credit(creditsToAttribution(cr)) : opt.attribution;
@@ -91,6 +87,18 @@ Layers.registerType('tileprovider', (options) => {
         maximumLevel: opt.maxZoom,
         minimumLevel: opt.minZoom,
         credit,
-        proxy: proxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
+        proxy: options?.forceProxy ? new TileProviderProxy(proxyUrl) : new NoProxy()
     });
+};
+
+const update = (layer, newOptions, oldOptions) => {
+    if (newOptions.forceProxy !== oldOptions.forceProxy) {
+        return create(newOptions);
+    }
+    return null;
+};
+
+Layers.registerType('tileprovider', {
+    create,
+    update: update
 });

@@ -9,6 +9,7 @@
 import Layers from '../../../../utils/cesium/Layers';
 import * as Cesium from 'cesium';
 import { isImageServerUrl } from '../../../../utils/ArcGISUtils';
+import { getProxiedUrl } from '../../../../utils/ConfigUtils';
 
 // this override is needed to apply the selected format
 // and to detect an ImageServer and to apply the correct exportImage path
@@ -66,9 +67,9 @@ class ArcGisMapAndImageServerImageryProvider extends Cesium.ArcGisMapServerImage
     }
 }
 
-Layers.registerType('arcgis', (options) => {
+const create = (options) => {
     return new ArcGisMapAndImageServerImageryProvider({
-        url: options.url,
+        url: options?.forceProxy ? getProxiedUrl() + encodeURIComponent(options.url) : options.url,
         ...(options.name !== undefined && { layers: `${options.name}` }),
         format: options.format,
         // we need to disable this when using layers ids
@@ -76,4 +77,16 @@ Layers.registerType('arcgis', (options) => {
         // and render the map tiles representing all the layers available in the MapServer
         usePreCachedTilesIfAvailable: false
     });
+};
+
+const update = (layer, newOptions, oldOptions) => {
+    if (newOptions.forceProxy !== oldOptions.forceProxy) {
+        return create(newOptions);
+    }
+    return null;
+};
+
+Layers.registerType('arcgis', {
+    create,
+    update: update
 });

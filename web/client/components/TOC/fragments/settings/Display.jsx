@@ -210,6 +210,7 @@ export default class extends React.Component {
                                 projection={this.props.projection}
                                 resolutions={this.props.resolutions}
                                 zoom={this.props.zoom}
+                                defaultLimitsType={this.props.element.visibilityLimitType}
                             />
                         </FormGroup>
                     </Col>
@@ -243,14 +244,6 @@ export default class extends React.Component {
                                     onChange={(e) => this.props.onChange("localizedLayerStyles", e.target.checked)}>
                                     <Message msgId="layerProperties.enableLocalizedLayerStyles.label" />&nbsp;<InfoPopover text={<Message msgId="layerProperties.enableLocalizedLayerStyles.tooltip" />} />
                                 </Checkbox>))}
-                            {!this.props.isCesiumActive && (<Checkbox
-                                data-qa="display-forceProxy-option"
-                                value="forceProxy"
-                                key="forceProxy"
-                                onChange={(e) => this.props.onChange("forceProxy", e.target.checked)}
-                                checked={this.props.element.forceProxy} >
-                                <Message msgId="layerProperties.forceProxy"/>
-                            </Checkbox>)}
                             {(this.props.element?.serverType !== ServerTypes.NO_VENDOR && (
                                 <>
                                     <hr/>

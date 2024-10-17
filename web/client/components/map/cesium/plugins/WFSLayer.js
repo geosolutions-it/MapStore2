@@ -70,64 +70,68 @@ const createLayer = (options, map) => {
         opacity: options.opacity,
         queryable: options.queryable === undefined || options.queryable
     });
-
-    const loader = createLoader(options);
+    let loader;
     let loadingBbox;
     let bboxTimeout;
-    if (options?.strategy === 'bbox') {
-        loadingBbox = () => {
-            if (bboxTimeout) {
-                clearTimeout(bboxTimeout);
-                bboxTimeout = undefined;
-            }
-            bboxTimeout = setTimeout(() => {
-                const viewRectangle = map.camera.computeViewRectangle();
-                const cameraPitch = Math.abs(Cesium.Math.toDegrees(map.camera.pitch));
-                if (viewRectangle && cameraPitch > 60) {
-                    loader([
-                        Cesium.Math.toDegrees(viewRectangle.west),
-                        Cesium.Math.toDegrees(viewRectangle.south),
-                        Cesium.Math.toDegrees(viewRectangle.east),
-                        Cesium.Math.toDegrees(viewRectangle.north)
-                    ])
-                        .then(({ data: collection }) => {
-                            styledFeatures.setFeatures(collection.features);
-                            layerToGeoStylerStyle(options)
-                                .then((style) => {
-                                    getStyle(applyDefaultStyleToVectorLayer({
-                                        ...options,
-                                        features: collection.features,
-                                        style
-                                    }), 'cesium')
-                                        .then((styleFunc) => {
-                                            styledFeatures.setStyleFunction(styleFunc);
-                                        });
+
+    const add = () => {
+        loader = createLoader(options);
+        if (options?.strategy === 'bbox') {
+            loadingBbox = () => {
+                if (bboxTimeout) {
+                    clearTimeout(bboxTimeout);
+                    bboxTimeout = undefined;
+                }
+                bboxTimeout = setTimeout(() => {
+                    const viewRectangle = map.camera.computeViewRectangle();
+                    const cameraPitch = Math.abs(Cesium.Math.toDegrees(map.camera.pitch));
+                    if (viewRectangle && cameraPitch > 60) {
+                        loader([
+                            Cesium.Math.toDegrees(viewRectangle.west),
+                            Cesium.Math.toDegrees(viewRectangle.south),
+                            Cesium.Math.toDegrees(viewRectangle.east),
+                            Cesium.Math.toDegrees(viewRectangle.north)
+                        ])
+                            .then(({ data: collection }) => {
+                                styledFeatures.setFeatures(collection.features);
+                                layerToGeoStylerStyle(options)
+                                    .then((style) => {
+                                        getStyle(applyDefaultStyleToVectorLayer({
+                                            ...options,
+                                            features: collection.features,
+                                            style
+                                        }), 'cesium')
+                                            .then((styleFunc) => {
+                                                styledFeatures.setStyleFunction(styleFunc);
+                                            });
+                                    });
+                            });
+                    }
+                }, 300);
+            };
+            map.camera.moveEnd.addEventListener(loadingBbox);
+        } else {
+            loader()
+                .then(({ data: collection }) => {
+                    styledFeatures.setFeatures(collection.features);
+                    layerToGeoStylerStyle(options)
+                        .then((style) => {
+                            getStyle(applyDefaultStyleToVectorLayer({
+                                ...options,
+                                features: collection.features,
+                                style
+                            }), 'cesium')
+                                .then((styleFunc) => {
+                                    styledFeatures.setStyleFunction(styleFunc);
                                 });
                         });
-                }
-            }, 300);
-        };
-        map.camera.moveEnd.addEventListener(loadingBbox);
-    } else {
-        loader()
-            .then(({ data: collection }) => {
-                styledFeatures.setFeatures(collection.features);
-                layerToGeoStylerStyle(options)
-                    .then((style) => {
-                        getStyle(applyDefaultStyleToVectorLayer({
-                            ...options,
-                            features: collection.features,
-                            style
-                        }), 'cesium')
-                            .then((styleFunc) => {
-                                styledFeatures.setStyleFunction(styleFunc);
-                            });
-                    });
-            });
-    }
+                });
+        }
+    };
     return {
         detached: true,
         styledFeatures,
+        add,
         remove: () => {
             if (styledFeatures) {
                 styledFeatures.destroy();
@@ -143,7 +147,7 @@ const createLayer = (options, map) => {
 Layers.registerType('wfs', {
     create: createLayer,
     update: (layer, newOptions, oldOptions, map) => {
-        if (needsReload(oldOptions, newOptions)) {
+        if (needsReload(oldOptions, newOptions) || oldOptions.forceProxy !== newOptions.forceProxy) {
             return createLayer(newOptions, map);
         }
         if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {

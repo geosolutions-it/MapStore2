@@ -111,13 +111,6 @@ export default ({
                 <Message msgId="layerProperties.singleTile" />&nbsp;<InfoPopover text={<Message msgId="catalog.singleTile.tooltip" />} />
             </Checkbox>
         </FormGroup>}
-        {!isNil(service.type) && service.type === "wms" && <FormGroup controlId="allowUnsecureLayers" key="allowUnsecureLayers">
-            <Checkbox
-                onChange={(e) => onChangeServiceProperty("allowUnsecureLayers", e.target.checked)}
-                checked={!isNil(service.allowUnsecureLayers) ? service.allowUnsecureLayers : false}>
-                <Message msgId="catalog.allowUnsecureLayers.label" />&nbsp;<InfoPopover text={<Message msgId="catalog.allowUnsecureLayers.tooltip" />} />
-            </Checkbox>
-        </FormGroup>}
         {(!isNil(service.type) ? (service.type === "csw" && !service.excludeShowTemplate) : false) && (<FormGroup controlId="metadata-template" key="metadata-template" className="metadata-template-editor">
             <Checkbox
                 onChange={() => onToggleTemplate()}
