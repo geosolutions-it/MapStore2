@@ -11,7 +11,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Glyphicon } from 'react-bootstrap';
-import { Document, Page } from 'react-pdf/dist/umd/entry.webpack';
+import { Document, Page } from 'react-pdf';
 import Button from '../misc/Button';
 
 
