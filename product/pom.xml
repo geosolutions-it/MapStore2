@@ -10,7 +10,7 @@
     <packaging>war</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>8.5.69</tomcat.version>
+        <tomcat.version>9.0.90</tomcat.version>
         <tomcat.port>8080</tomcat.port>
         <datadir.location>${env.MAPSTORE_DATA_DIR}</datadir.location>
         <security.integration>default</security.integration>
