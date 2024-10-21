@@ -16,7 +16,8 @@ export const getFile = (url, fileName = "file") =>
         responseType: 'arraybuffer'
     }))
         .map( res => {
-            return new File([new Blob([res.data], {type: res.headers['response-type']})], fileName);
+            const contentType = res.headers['content-type'] === 'null' ? undefined : res.headers['content-type'];
+            return new File([res.data], fileName, {type: contentType});
         });
 
 // PDF_FILE: new File(b64toBlob('UEsDBAoAAAAAACGPaktDvrfoAQAAAAEAAAAKAAAAc2FtcGxlLnR4dGFQSwECPwAKAAAAAAAhj2pLQ7636AEAAAABAAAACgAkAAAAAAAAACAAAAAAAAAAc2FtcGxlLnR4dAoAIAAAAAAAAQAYAGILh+1EWtMBy3f86URa0wHLd/zpRFrTAVBLBQYAAAAAAQABAFwAAAApAAAAAAA=', 'application/pdf'), "file.pdf"),
