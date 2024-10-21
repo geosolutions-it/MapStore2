@@ -79,6 +79,9 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   * @prop {array} cfg.showFilterByViewportTool Show button to toggle filter by viewport in toolbar.
   * @prop {object} cfg.dateFormats Allows to specify custom date formats ( in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601)  format) to use to display dates in the table. `date` `date-time` and `time` are the supported entries for the date format. Example:
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
+  * @prop {string} cfg.restrictedArea.url Geometry definition as WKT or GeoJSON loaded from URL or path.
+  * @prop {string} cfg.restrictedArea.raw Geometry definition as WKT or GeoJSON.
+  * @prop {string} cfg.restrictedArea.operator Spatial operation to performed between features and the given geometry.
   * ```
   * "dateFormats": {
   *    "date-time": "MM DD YYYY - HH:mm:ss",
@@ -114,6 +117,11 @@ import {isViewportFilterActive} from "../selectors/featuregrid";
   *     },
   *   "editingAllowedRoles": ["ADMIN"],
   *   "snapTool": true,
+  *   "restrictedArea": {
+  *     "url": "/wkt_or_geojson_geometry",
+  *     "raw": "POLYGON ((-64.8 32.3, -65.5 18.3, -80.3 25.2, -64.8 32.3))",
+  *     "operator": "WITHIN"
+  *   },
   *   "snapConfig": {
   *     "vertex": true,
   *     "edge": true,
@@ -175,7 +183,9 @@ const EditorPlugin = connect(
                 virtualScroll: this.props.virtualScroll ?? true,
                 editingAllowedRoles: this.props.editingAllowedRoles,
                 editingAllowedGroups: this.props.editingAllowedGroups,
-                maxStoredPages: this.props.maxStoredPages
+                maxStoredPages: this.props.maxStoredPages,
+                restrictedAreaUrl: this.props.restrictedAreaUrl,
+                restrictedArea: this.props.restrictedArea
             });
         },
         componentDidUpdate(prevProps) {
