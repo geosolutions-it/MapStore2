@@ -10,7 +10,7 @@
     <packaging>war</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>8.5.69</tomcat.version>
+        <tomcat.version>9.0.90</tomcat.version>
         <tomcat.port>8080</tomcat.port>
         <datadir.location>${env.MAPSTORE_DATA_DIR}</datadir.location>
         <security.integration>default</security.integration>
@@ -270,14 +270,14 @@
                 <version>1.10.2</version>
                 <configuration>
                     <container>
-                        <containerId>tomcat8x</containerId>
+                        <containerId>tomcat9x</containerId>
                         <systemProperties>
                             <datadir.location>${datadir.location}</datadir.location>
                             <security.integration>${security.integration}</security.integration>
                         </systemProperties>
                         <zipUrlInstaller>
                             <url>
-                                https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/8.5.69/tomcat-8.5.69.zip
+                                https://repo.maven.apache.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip
                             </url>
                         </zipUrlInstaller>
                     </container>
