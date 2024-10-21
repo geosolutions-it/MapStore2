@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 // Disable ESLint because some of the names to include are not in camel case
-const expect = require('expect');
-const FilterBuilder = require('../FilterBuilder');
-const {processOGCGeometry} = require("../../GML");
+import expect from 'expect';
+import FilterBuilder from '../FilterBuilder';
+import {processOGCGeometry} from "../../GML";
 describe('FilterBuilder', () => {
     it('comparison', () => {
         const b = new FilterBuilder();

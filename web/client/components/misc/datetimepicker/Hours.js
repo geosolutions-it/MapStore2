@@ -41,7 +41,7 @@ class Hours extends Component {
     state = { focusedItemIndex: -1, times: [] };
 
     componentDidMount() {
-        this.setState({ times: getDates() });
+        this.setState({ times: getDates() });  // eslint-disable-line -- TODO: need to be fixed
     }
 
     render() {
