@@ -36,7 +36,19 @@ export const FILTER_LAYERS = 'LAYERS:FILTER_LAYERS';
 export const SHOW_LAYER_METADATA = 'LAYERS:SHOW_LAYER_METADATA';
 export const HIDE_LAYER_METADATA = 'LAYERS:HIDE_LAYER_METADATA';
 export const UPDATE_SETTINGS_PARAMS = 'LAYERS:UPDATE_SETTINGS_PARAMS';
+export const UPDATE_ALL_LAYERS = 'LAYERS:UPDATE_ALL_LAYERS';
 
+/**
+ * full replacement of layers in layers state
+ * @param {object[]} layers the new layers to replace in the state
+ * @returns
+ */
+export function updateAllLayers(layers) {
+    return {
+        type: UPDATE_ALL_LAYERS,
+        layers
+    };
+}
 export function showSettings(node, nodeType, options) {
     return {
         type: SHOW_SETTINGS,
