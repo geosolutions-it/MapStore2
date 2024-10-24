@@ -262,7 +262,7 @@ describe('Test correctness of the catalog actions', () => {
 
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE_CATALOG_SERVICES);
-        expect(retval.service).toBe(services);
+        expect(retval.services).toEqual(services);
     });
     it('resetCatalog', () => {
         var retval = resetCatalog();
