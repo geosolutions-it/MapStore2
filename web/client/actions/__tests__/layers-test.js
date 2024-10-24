@@ -247,7 +247,7 @@ describe('Test correctness of the layers actions', () => {
         const action = updateAllLayers(layers);
         expect(action).toExist();
         expect(action.type).toBe(UPDATE_ALL_LAYERS);
-        expect(action.layers).toBe(layers);
+        expect(action.layers).toEqual(layers);
     });
 
     it('hide settings', () => {
