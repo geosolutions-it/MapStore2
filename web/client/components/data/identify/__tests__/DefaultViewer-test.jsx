@@ -269,4 +269,18 @@ describe('DefaultViewer', () => {
         expect(gfiViewer.childNodes[1].childNodes.length).toBe(1);
 
     });
+    it('test DefaultViewer component with hover identify if hidePopupIfNoResults = true', () => {
+        const responses = [];
+        ReactDOM.render(
+            <DefaultViewer hidePopupIfNoResults responses={responses} header={SwipeHeader}/>,
+            document.getElementById("container")
+        );
+
+        const container = document.getElementById('container');
+        let gfiViewer = container.querySelector('.mapstore-identify-viewer');
+        expect(gfiViewer).toBeTruthy();
+        expect(gfiViewer.childNodes.length).toBe(1);
+        expect(document.querySelector(".hidePopupIfNoResults")).toBeTruthy();
+        expect(document.querySelector(".hidePopupIfNoResults").innerHTML).toBeFalsy();
+    });
 });

@@ -40,7 +40,8 @@ class DefaultViewer extends React.Component {
         renderValidOnly: PropTypes.bool,
         loaded: PropTypes.bool,
         isMobile: PropTypes.bool,
-        disableInfoAlert: PropTypes.bool
+        disableInfoAlert: PropTypes.bool,
+        hidePopupIfNoResults: PropTypes.bool
     };
 
     static defaultProps = {
@@ -64,7 +65,8 @@ class DefaultViewer extends React.Component {
         onPrevious: () => {},
         setIndex: () => {},
         isMobile: false,
-        disableInfoAlert: false
+        disableInfoAlert: false,
+        hidePopupIfNoResults: false
     };
 
     shouldComponentUpdate(nextProps) {
@@ -147,6 +149,9 @@ class DefaultViewer extends React.Component {
     renderEmptyPages = () => {
         const {emptyResponses} = this.getResponseProperties();
         if (this.props.missingResponses === 0 && emptyResponses) {
+            if (this.props.hidePopupIfNoResults) {
+                return <span className="hidePopupIfNoResults"/>;
+            }
             return (
                 <Alert bsStyle={"danger"}>
                     <h4><HTML msgId="noFeatureInfo"/></h4>
