@@ -20,6 +20,8 @@ import {
     ADD_LAYER,
     REMOVE_LAYER,
     SHOW_SETTINGS,
+    replaceLayers,
+    REPLACE_LAYERS,
     HIDE_SETTINGS,
     UPDATE_SETTINGS,
     REFRESH_LAYERS,
@@ -238,6 +240,14 @@ describe('Test correctness of the layers actions', () => {
         expect(action.node).toBe("node1");
         expect(action.nodeType).toBe("layers");
         expect(action.options).toEqual({opacity: 0.5});
+    });
+
+    it('replaceLayers', () => {
+        const layers = [{}];
+        const action = replaceLayers(layers);
+        expect(action).toExist();
+        expect(action.type).toBe(REPLACE_LAYERS);
+        expect(action.layers).toEqual(layers);
     });
 
     it('hide settings', () => {

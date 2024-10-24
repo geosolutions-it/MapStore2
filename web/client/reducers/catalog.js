@@ -22,6 +22,7 @@ import {
     CHANGE_SERVICE_FORMAT,
     FOCUS_SERVICES_LIST,
     ADD_CATALOG_SERVICE,
+    UPDATE_CATALOG_SERVICES,
     DELETE_CATALOG_SERVICE,
     SAVING_SERVICE,
     CHANGE_METADATA_TEMPLATE,
@@ -170,6 +171,11 @@ function catalog(state = {
             }),
             layerError: null
         });
+    }
+    case UPDATE_CATALOG_SERVICES: {
+        return {...state,
+            services: action.services
+        };
     }
     case CHANGE_SELECTED_SERVICE: {
         if (action.service !== state.selectedService) {
