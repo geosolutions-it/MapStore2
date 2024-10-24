@@ -32,7 +32,7 @@ import {
     FILTER_LAYERS,
     SHOW_LAYER_METADATA,
     HIDE_LAYER_METADATA,
-    UPDATE_ALL_LAYERS
+    REPLACE_LAYERS
 } from '../actions/layers';
 
 import { TOGGLE_CONTROL } from '../actions/controls';
@@ -175,7 +175,7 @@ function layers(state = { flat: [] }, action) {
         }
         return state;
     }
-    case UPDATE_ALL_LAYERS: {
+    case REPLACE_LAYERS: {
         return {
             ...state,
             layers: action.layers

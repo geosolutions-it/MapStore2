@@ -36,16 +36,16 @@ export const FILTER_LAYERS = 'LAYERS:FILTER_LAYERS';
 export const SHOW_LAYER_METADATA = 'LAYERS:SHOW_LAYER_METADATA';
 export const HIDE_LAYER_METADATA = 'LAYERS:HIDE_LAYER_METADATA';
 export const UPDATE_SETTINGS_PARAMS = 'LAYERS:UPDATE_SETTINGS_PARAMS';
-export const UPDATE_ALL_LAYERS = 'LAYERS:UPDATE_ALL_LAYERS';
+export const REPLACE_LAYERS = 'LAYERS:REPLACE_LAYERS';
 
 /**
  * full replacement of layers in layers state
  * @param {object[]} layers the new layers to replace in the state
  * @returns
  */
-export function updateAllLayers(layers) {
+export function replaceLayers(layers) {
     return {
-        type: UPDATE_ALL_LAYERS,
+        type: REPLACE_LAYERS,
         layers
     };
 }
