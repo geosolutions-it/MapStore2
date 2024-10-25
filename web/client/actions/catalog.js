@@ -38,6 +38,7 @@ export const CHANGE_SERVICE_FORMAT = 'CATALOG:CHANGE_SERVICE_FORMAT';
 export const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
 export const CHANGE_URL = 'CATALOG:CHANGE_URL';
 export const ADD_CATALOG_SERVICE = 'CATALOG:ADD_CATALOG_SERVICE';
+export const UPDATE_CATALOG_SERVICES = 'CATALOG:UPDATE_CATALOG_SERVICES';
 export const DELETE_CATALOG_SERVICE = 'CATALOG:DELETE_CATALOG_SERVICE';
 export const ADD_SERVICE = 'CATALOG:ADD_SERVICE';
 export const DELETE_SERVICE = 'CATALOG:DELETE_SERVICE';
@@ -182,6 +183,17 @@ export function addCatalogService(service) {
     return {
         type: ADD_CATALOG_SERVICE,
         service
+    };
+}
+/**
+ *
+ * @param {object[]} services list of services to full replace catalog ones
+ * @returns
+ */
+export function updateCatalogServices(services) {
+    return {
+        type: UPDATE_CATALOG_SERVICES,
+        services
     };
 }
 export function deleteCatalogService(service) {
