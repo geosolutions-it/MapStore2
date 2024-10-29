@@ -628,7 +628,7 @@
             "toolTrashLayersTooltip": "Ausgewählte Ebenen entfernen",
             "toolTrashGroupTooltip": "Ausgewählte Gruppe entfernen",
             "toolFeaturesGridTooltip": "Attributtabelle öffnen",
-            "layerFilterTooltip": "Ausgewählte Ebene filtern",
+            "layerFilterTooltip": "Titel und Beschreibung der Ebenen aktualisieren",
             "toolDownloadTooltip": "Daten zur ausgewählten Ebene exportieren",
             "noFilteredResults": "Keine Ergebnisse",
             "emptyLayerTree": "Der Ebenenbaum ist leer. Bitte fügen Sie eine neue Ebene aus dem Katalog hinzu",
