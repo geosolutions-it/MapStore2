@@ -590,7 +590,7 @@
             "toolTrashLayersTooltip": "Remove selected layers",
             "toolTrashGroupTooltip": "Remove selected group",
             "toolFeaturesGridTooltip": "Open attribute table",
-            "layerFilterTooltip": "Update layers titles and description",
+            "layerFilterTooltip": "Filter layer",
             "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "No results",
             "emptyLayerTree": "Layers tree is empty. Please add a new layer from the catalog",
