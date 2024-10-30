@@ -590,7 +590,7 @@
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
             "toolTrashGroupTooltip": "Rimuovi gruppo selezionato",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
-            "layerFilterTooltip": "Aggiorna i titoli e la descrizione dei livelli",
+            "layerFilterTooltip": "Filtra il layer",
             "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
             "emptyLayerTree": "La lista dei layer è vuota. Aggiungi un nuovo layer dal catalogo",

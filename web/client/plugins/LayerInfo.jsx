@@ -107,7 +107,7 @@ const LayerInfoButton = connect((state) => ({
             <ItemComponent
                 {...props}
                 glyph="layer-info"
-                tooltipId={'toc.layerFilterTooltip'}
+                tooltipId={'toc.layerInfoTooltip'}
                 onClick={() => onClick()}
             />
         );
