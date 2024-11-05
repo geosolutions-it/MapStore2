@@ -18,6 +18,7 @@ import {
 } from './ogc/WFS/base';
 
 import { applyDefaultToLocalizedString } from '../components/I18N/LocalizedString';
+import { fidFilter } from './ogc/Filter/filter';
 
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
@@ -392,3 +393,17 @@ export const supportsFeatureEditing = (layer) => includes(supportedEditLayerType
  * @returns {boolean} flag
  */
 export const areLayerFeaturesEditable = (layer) =>  !layer?.disableFeaturesEditing && supportsFeatureEditing(layer);
+/**
+ * Create wfs-t xml payload for insert/edit/delete features in featuregrid
+ * @param {array} changes array of update/delete objects
+ * @param {array} newFeatures array of new inserted features
+ * @param {object} wfsutils object of wfs utils that includes insert/update/propertyChange/getPropertyName/transaction
+ * @returns {string} wfs-transaction xml payload
+ */
+export const createChangesTransaction = (changes, newFeatures, {insert, update, propertyChange, getPropertyName: getPropertyNameFunc, transaction})=>
+    transaction(
+        newFeatures.map(f => insert(f)),
+        Object.keys(changes).map( id =>{
+            return update(Object.keys(changes[id]).map(prop => propertyChange(getPropertyNameFunc(prop), changes[id][prop])), fidFilter("ogc", id));
+        })
+    );

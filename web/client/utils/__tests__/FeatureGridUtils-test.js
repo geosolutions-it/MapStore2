@@ -16,8 +16,10 @@ import {
     getAttributesNames,
     featureTypeToGridColumns,
     supportsFeatureEditing,
-    areLayerFeaturesEditable
+    areLayerFeaturesEditable,
+    createChangesTransaction
 } from '../FeatureGridUtils';
+import requestBuilder from "../ogc/WFST/RequestBuilder";
 
 
 describe('FeatureGridUtils', () => {
@@ -445,6 +447,59 @@ describe('FeatureGridUtils', () => {
         });
         it("test areLayerFeaturesEditable with invalid layer type", () => {
             expect(areLayerFeaturesEditable({type: "wmts"})).toBeFalsy();
+        });
+    });
+    describe('test featuregrid transactions utils', ()=>{
+        const describeFeatureType = {
+            "elementFormDefault": "qualified",
+            "targetNamespace": "http://localhost:8080/geoserver/mapstore",
+            "targetPrefix": "mapstore",
+            "featureTypes": [
+                {
+                    "typeName": "TEST_LAYER",
+                    "properties": [
+                        {
+                            "name": "Integer",
+                            "maxOccurs": 1,
+                            "minOccurs": 0,
+                            "nillable": true,
+                            "type": "xsd:int",
+                            "localType": "int"
+                        },
+                        {
+                            "name": "Long",
+                            "maxOccurs": 1,
+                            "minOccurs": 0,
+                            "nillable": true,
+                            "type": "xsd:int",
+                            "localType": "int"
+                        },
+                        {
+                            "name": "Point",
+                            "maxOccurs": 1,
+                            "minOccurs": 0,
+                            "nillable": true,
+                            "type": "gml:Point",
+                            "localType": "Point"
+                        }
+                    ]
+                }
+            ]
+
+        };
+        it('test createChangesTransaction for single edit', (done) => {
+            const singleChanges =  {"TEST_LAYER.13": { "Integer": 50}};
+            const transactionPayload = createChangesTransaction(singleChanges, [], requestBuilder(describeFeatureType));
+            const samplePayload = `<wfs:Transaction service="WFS" version="1.1.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs" xmlns:mapstore="http://localhost:8080/geoserver/mapstore"><wfs:Update typeName="mapstore:TEST_LAYER"><wfs:Property><wfs:Name>Integer</wfs:Name><wfs:Value>50</wfs:Value></wfs:Property><ogc:Filter><ogc:FeatureId fid="TEST_LAYER.13"/></ogc:Filter></wfs:Update></wfs:Transaction>`;
+            expect(transactionPayload).toEqual(samplePayload);
+            done();
+        });
+        it('test createChangesTransaction for multi-edit', (done) => {
+            const multiChanges =  {"TEST_LAYER.13": { "Integer": 50, "Long": 55 }};
+            const transactionPayload = createChangesTransaction(multiChanges, [], requestBuilder(describeFeatureType));
+            const multieditPayload = `<wfs:Transaction service="WFS" version="1.1.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs" xmlns:mapstore="http://localhost:8080/geoserver/mapstore"><wfs:Update typeName="mapstore:TEST_LAYER"><wfs:Property><wfs:Name>Integer</wfs:Name><wfs:Value>50</wfs:Value></wfs:Property>,<wfs:Property><wfs:Name>Long</wfs:Name><wfs:Value>55</wfs:Value></wfs:Property><ogc:Filter><ogc:FeatureId fid="TEST_LAYER.13"/></ogc:Filter></wfs:Update></wfs:Transaction>`;
+            expect(transactionPayload).toEqual(multieditPayload);
+            done();
         });
     });
 });
