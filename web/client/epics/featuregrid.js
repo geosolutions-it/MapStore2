@@ -11,8 +11,7 @@ import {get, head, isEmpty, find, castArray, includes, reduce} from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import axios from '../libs/ajax';
 import bbox from '@turf/bbox';
-import { fidFilter } from '../utils/ogc/Filter/filter';
-import { getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
+import { createChangesTransaction, getDefaultFeatureProjection, getPagesToLoad, gridUpdateToQueryUpdate, updatePages  } from '../utils/FeatureGridUtils';
 
 import assign from 'object-assign';
 import {
@@ -232,15 +231,6 @@ const addPagination = (filterObj, pagination) => ({
     pagination
 });
 
-const createChangesTransaction = (changes, newFeatures, {insert, update, propertyChange, getPropertyName, transaction})=>
-    transaction(
-        newFeatures.map(f => insert(f)),
-        Object.keys(changes).map( id =>
-            Object.keys(changes[id]).map(name =>
-                update([propertyChange(getPropertyName(name), changes[id][name]), fidFilter("ogc", id)])
-            )
-        )
-    );
 const createDeleteTransaction = (features, {transaction, deleteFeature}) => transaction(
     features.map(deleteFeature)
 );
