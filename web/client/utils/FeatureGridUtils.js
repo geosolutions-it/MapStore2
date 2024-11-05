@@ -394,9 +394,9 @@ export const supportsFeatureEditing = (layer) => includes(supportedEditLayerType
  */
 export const areLayerFeaturesEditable = (layer) =>  !layer?.disableFeaturesEditing && supportsFeatureEditing(layer);
 /**
- * Create wfs-t xml payload for insert/edit/delete features in featuregrid
- * @param {array} changes array of update/delete objects
- * @param {array} newFeatures array of new inserted features
+ * Create wfs-t xml payload for insert/edit features in featuregrid
+ * @param {object} changes object that contains updates e.g: {LAYER_NAME.id: {"FIELD1": 55, "FIELD2":"edit 02"}}
+ * @param {object[]} newFeatures array of new inserted features
  * @param {object} wfsutils object of wfs utils that includes insert/update/propertyChange/getPropertyName/transaction
  * @returns {string} wfs-transaction xml payload
  */
