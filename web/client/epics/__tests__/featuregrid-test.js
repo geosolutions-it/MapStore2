@@ -60,7 +60,10 @@ import {
     launchUpdateFilterFunc,
     LAUNCH_UPDATE_FILTER_FUNC,
     setLayer,
-    setViewportFilter, SET_VIEWPORT_FILTER
+    setViewportFilter, SET_VIEWPORT_FILTER,
+    SAVING,
+    saveChanges,
+    SAVE_SUCCESS
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
@@ -141,12 +144,16 @@ import {
     toggleSnappingOffOnFeatureGridViewMode,
     closeFeatureGridOnDrawingToolOpen,
     setViewportFilterEpic,
-    deactivateViewportFilterEpic, resetViewportFilter
+    deactivateViewportFilterEpic, resetViewportFilter,
+    savePendingFeatureGridChanges
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
 import { getDefaultFeatureProjection } from '../../utils/FeatureGridUtils';
 import { isEmpty, isNil } from 'lodash';
+import axios from "../../libs/ajax";
+import MockAdapter from "axios-mock-adapter";
+
 const filterObj = {
     featureTypeName: 'TEST',
     groupFields: [
@@ -1822,6 +1829,95 @@ describe('featuregrid Epics', () => {
         }));
     });
     describe('updateSelectedOnSaveOrCloseFeatureGrid', () => {
+        let mockAxios;
+        beforeEach(() => {
+            mockAxios = new MockAdapter(axios);
+        });
+        afterEach(() => {
+            mockAxios.restore();
+        });
+        it("test savePendingFeatureGridChanges", (done) => {
+            const stateFeaturegrid = {
+                query: {
+                    featureTypes: {
+                        "mapstore:TEST_LAYER": {
+                            "original": {
+                                "elementFormDefault": "qualified",
+                                "targetNamespace": "http://localhost:8080/geoserver/mapstore",
+                                "targetPrefix": "mapstore",
+                                "featureTypes": [
+                                    {
+                                        "typeName": "TEST_LAYER",
+                                        "properties": [
+                                            {
+                                                "name": "Integer",
+                                                "maxOccurs": 1,
+                                                "minOccurs": 0,
+                                                "nillable": true,
+                                                "type": "xsd:int",
+                                                "localType": "int"
+                                            },
+                                            {
+                                                "name": "Long",
+                                                "maxOccurs": 1,
+                                                "minOccurs": 0,
+                                                "nillable": true,
+                                                "type": "xsd:int",
+                                                "localType": "int"
+                                            },
+                                            {
+                                                "name": "Point",
+                                                "maxOccurs": 1,
+                                                "minOccurs": 0,
+                                                "nillable": true,
+                                                "type": "gml:Point",
+                                                "localType": "Point"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    filterObj: {
+                        featureTypeName: "mapstore:TEST_LAYER"
+                    },
+                    searchUrl: "https://localhost:8080/geoserver/wfs?authkey=29031b3b8afc"
+                },
+                featuregrid: {
+                    open: true,
+                    selectedLayer: "TEST_LAYER",
+                    mode: 'EDIT',
+                    select: [{id: 'TEST_LAYER', geometry_name: "Point"}],
+                    changes: [
+                        {
+                            "id": "TEST_LAYER.13",
+                            "updated": {
+                                "Integer": 50
+                            }
+                        },
+                        {
+                            "id": "TEST_LAYER.13",
+                            "updated": {
+                                "Long": 55
+                            }
+                        }
+                    ]
+                }
+            };
+            const payloadSample = `<wfs:Transaction service="WFS" version="1.1.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs" xmlns:mapstore="http://localhost:8080/geoserver/mapstore"><wfs:Update typeName="mapstore:TEST_LAYER"><wfs:Property><wfs:Name>Integer</wfs:Name><wfs:Value>50</wfs:Value></wfs:Property>,<wfs:Property><wfs:Name>Long</wfs:Name><wfs:Value>55</wfs:Value></wfs:Property><ogc:Filter><ogc:FeatureId fid="TEST_LAYER.13"/></ogc:Filter></wfs:Update></wfs:Transaction>`;
+            mockAxios.onPost(stateFeaturegrid.query.searchUrl, payloadSample).replyOnce(200);
+            testEpic(
+                savePendingFeatureGridChanges,
+                2,
+                saveChanges(),
+                ([a, b]) => {
+                    expect(a.type).toEqual(SAVING);
+                    expect(b.type).toEqual(SAVE_SUCCESS);
+                    done();
+                }, stateFeaturegrid
+            );
+        });
         it('on Save', (done) => {
             testEpic(
                 updateSelectedOnSaveOrCloseFeatureGrid,
