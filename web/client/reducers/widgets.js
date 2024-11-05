@@ -182,7 +182,7 @@ function widgetsReducer(state = emptyState, action) {
         const allWidgets = get(updatedState, path, []);
         return set(path, allWidgets.map(m => {
             if (m.dependenciesMap) {
-                const [, dependentWidgetId] = WIDGETS_REGEX.exec((Object.values(m.dependenciesMap) || [])[0]);
+                const [, dependentWidgetId] = WIDGETS_REGEX.exec((Object.values(m.dependenciesMap) || [])[0]) || [];
                 if (dependentWidgetId) {
                     if (action.widget.id === dependentWidgetId) {
                         return {...omit(m, "dependenciesMap"), mapSync: false};
