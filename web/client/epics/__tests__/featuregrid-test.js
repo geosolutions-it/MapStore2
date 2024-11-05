@@ -60,7 +60,9 @@ import {
     launchUpdateFilterFunc,
     LAUNCH_UPDATE_FILTER_FUNC,
     setLayer,
-    setViewportFilter, SET_VIEWPORT_FILTER
+    setViewportFilter, SET_VIEWPORT_FILTER,
+    SAVING,
+    saveChanges
 } from '../../actions/featuregrid';
 
 import { SET_HIGHLIGHT_FEATURES_PATH } from '../../actions/highlight';
@@ -141,7 +143,8 @@ import {
     toggleSnappingOffOnFeatureGridViewMode,
     closeFeatureGridOnDrawingToolOpen,
     setViewportFilterEpic,
-    deactivateViewportFilterEpic, resetViewportFilter
+    deactivateViewportFilterEpic, resetViewportFilter,
+    savePendingFeatureGridChanges
 } from '../featuregrid';
 import { onLocationChanged } from 'connected-react-router';
 import { TEST_TIMEOUT, testEpic, addTimeoutEpic } from './epicTestUtils';
@@ -1822,6 +1825,85 @@ describe('featuregrid Epics', () => {
         }));
     });
     describe('updateSelectedOnSaveOrCloseFeatureGrid', () => {
+        it("test savePendingFeatureGridChanges", (done) => {
+            const stateFeaturegrid = {
+                query: {
+                    featureTypes: {
+                        "mapstore:TEST_LAYER": {
+                            "original": {
+                                "elementFormDefault": "qualified",
+                                "targetNamespace": "http://localhost:8080/geoserver/mapstore",
+                                "targetPrefix": "mapstore",
+                                "featureTypes": [
+                                    {
+                                        "typeName": "TEST_LAYER",
+                                        "properties": [
+                                            {
+                                                "name": "Integer",
+                                                "maxOccurs": 1,
+                                                "minOccurs": 0,
+                                                "nillable": true,
+                                                "type": "xsd:int",
+                                                "localType": "int"
+                                            },
+                                            {
+                                                "name": "Long",
+                                                "maxOccurs": 1,
+                                                "minOccurs": 0,
+                                                "nillable": true,
+                                                "type": "xsd:int",
+                                                "localType": "int"
+                                            },
+                                            {
+                                                "name": "Point",
+                                                "maxOccurs": 1,
+                                                "minOccurs": 0,
+                                                "nillable": true,
+                                                "type": "gml:Point",
+                                                "localType": "Point"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    filterObj: {
+                        featureTypeName: "mapstore:TEST_LAYER"
+                    },
+                    searchUrl: "https://localhost:8080/geoserver/wfs?authkey=29031b3b8afc"
+                },
+                featuregrid: {
+                    open: true,
+                    selectedLayer: "TEST_LAYER",
+                    mode: 'EDIT',
+                    select: [{id: 'TEST_LAYER', geometry_name: "Point"}],
+                    changes: [
+                        {
+                            "id": "TEST_LAYER.13",
+                            "updated": {
+                                "Integer": 50
+                            }
+                        },
+                        {
+                            "id": "TEST_LAYER.13",
+                            "updated": {
+                                "Long": 55
+                            }
+                        }
+                    ]
+                }
+            };
+            testEpic(
+                savePendingFeatureGridChanges,
+                1,
+                saveChanges(),
+                ([a]) => {
+                    expect(a.type).toEqual(SAVING);
+                    done();
+                }, stateFeaturegrid
+            );
+        });
         it('on Save', (done) => {
             testEpic(
                 updateSelectedOnSaveOrCloseFeatureGrid,

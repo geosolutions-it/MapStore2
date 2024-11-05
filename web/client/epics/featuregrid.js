@@ -235,11 +235,9 @@ const addPagination = (filterObj, pagination) => ({
 const createChangesTransaction = (changes, newFeatures, {insert, update, propertyChange, getPropertyName, transaction})=>
     transaction(
         newFeatures.map(f => insert(f)),
-        Object.keys(changes).map( id =>
-            Object.keys(changes[id]).map(name =>
-                update([propertyChange(getPropertyName(name), changes[id][name]), fidFilter("ogc", id)])
-            )
-        )
+        Object.keys(changes).map( id =>{
+            return update(Object.keys(changes[id]).map(prop => propertyChange(getPropertyName(prop), changes[id][prop])), fidFilter("ogc", id));
+        })
     );
 const createDeleteTransaction = (features, {transaction, deleteFeature}) => transaction(
     features.map(deleteFeature)
