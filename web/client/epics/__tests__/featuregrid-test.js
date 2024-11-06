@@ -1830,11 +1830,13 @@ describe('featuregrid Epics', () => {
     });
     describe('updateSelectedOnSaveOrCloseFeatureGrid', () => {
         let mockAxios;
-        beforeEach(() => {
+        beforeEach((done) => {
             mockAxios = new MockAdapter(axios);
+            setTimeout(done);
         });
-        afterEach(() => {
+        afterEach((done) => {
             mockAxios.restore();
+            setTimeout(done);
         });
         it("test savePendingFeatureGridChanges", (done) => {
             const stateFeaturegrid = {
@@ -1882,7 +1884,7 @@ describe('featuregrid Epics', () => {
                     filterObj: {
                         featureTypeName: "mapstore:TEST_LAYER"
                     },
-                    searchUrl: "https://localhost:8080/geoserver/wfs?authkey=29031b3b8afc"
+                    searchUrl: "/geoserver/wfs?authkey=29031b3b8afc"
                 },
                 featuregrid: {
                     open: true,
@@ -1905,8 +1907,7 @@ describe('featuregrid Epics', () => {
                     ]
                 }
             };
-            const payloadSample = `<wfs:Transaction service="WFS" version="1.1.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs" xmlns:mapstore="http://localhost:8080/geoserver/mapstore"><wfs:Update typeName="mapstore:TEST_LAYER"><wfs:Property><wfs:Name>Integer</wfs:Name><wfs:Value>50</wfs:Value></wfs:Property>,<wfs:Property><wfs:Name>Long</wfs:Name><wfs:Value>55</wfs:Value></wfs:Property><ogc:Filter><ogc:FeatureId fid="TEST_LAYER.13"/></ogc:Filter></wfs:Update></wfs:Transaction>`;
-            mockAxios.onPost(stateFeaturegrid.query.searchUrl, payloadSample).replyOnce(200);
+            mockAxios.onPost().replyOnce(200);
             testEpic(
                 savePendingFeatureGridChanges,
                 2,
