@@ -218,6 +218,34 @@ describe('Test the widgets reducer', () => {
         expect(uWidgets[0].dependenciesMap).toBeFalsy();
         expect(uWidgets[0].id).toBe("2");
     });
+    it('test deleteWidget if the some other widgets [not deleted] has dependenciesMap = {}', () => {
+        const state = {
+            containers: {
+                [DEFAULT_TARGET]: {
+                    widgets: [{
+                        id: "1",
+                        maps: [{mapId: 1, layers: [1, 2]}]
+                    }, {
+                        id: "2",
+                        mapSync: true,
+                        dependenciesMap: {
+                            layers: "widgets[1].maps[1].layers"
+                        }
+                    }, {
+                        id: "3",
+                        mapSync: true,
+                        dependenciesMap: {}
+                    }]
+                }
+            }
+        };
+        const newState = widgets(state, deleteWidget({id: "1"}));
+        const uWidgets = newState.containers[DEFAULT_TARGET].widgets;
+        expect(uWidgets.length).toBe(2);
+        expect(uWidgets[0].mapSync).toBeFalsy();
+        expect(uWidgets[0].dependenciesMap).toBeFalsy();
+        expect(uWidgets[0].id).toBe("2");
+    });
     it('init', () => {
         const defaults = {initialSize: {
             w: 4,
