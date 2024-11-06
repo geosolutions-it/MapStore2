@@ -4,3 +4,4 @@ jinja2==3.1.4
 Markdown==3.4.4
 WeasyPrint==52.5
 mkdocs-with-pdf==0.9.3
+mkdocs-kroki-plugin==0.9.0

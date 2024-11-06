@@ -179,6 +179,10 @@ nav:
       - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
 plugins:
   - search
+  - kroki:
+      FencePrefix: ''
+      FileTypeOverrides:
+        mermaid: png
   - with-pdf:
       author: GeoSolutionsGroup
       copyright: 'MapStore©'
