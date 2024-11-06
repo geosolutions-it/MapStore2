@@ -178,7 +178,7 @@ function layers(state = { flat: [] }, action) {
     case REPLACE_LAYERS: {
         return {
             ...state,
-            layers: action.layers
+            flat: action.layers
         };
     }
     case UPDATE_NODE: {

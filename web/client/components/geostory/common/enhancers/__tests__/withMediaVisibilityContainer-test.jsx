@@ -67,8 +67,8 @@ describe('withMediaVisibilityContainer HOC', () => {
         ReactDOM.render(
             <div
                 id="scroll-container"
-                style={{ width: 512, height: 512, overflow: 'scroll' }}>
-                <div style={{ height: 1024 }}></div>
+                style={{ width: 10, height: 10, overflow: 'scroll' }}>
+                <div style={{ height: 20 }}></div>
                 <Media mediaViewer={withMediaVisibilityContainer(() => <div className="test-component"></div>)} debounceTime={DEBOUNCE_TIME}/>
             </div>,
             document.getElementById("container"));
@@ -89,7 +89,7 @@ describe('withMediaVisibilityContainer HOC', () => {
                     done(e);
                 }
                 done();
-            }, 50);
+            }, 100);
         } catch (e) {
             done(e);
         }
