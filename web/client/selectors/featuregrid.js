@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-import { head, get, isObject } from 'lodash';
+import { head, get, isObject, find } from 'lodash';
 
 import { getLayerFromId } from './layers';
 import { findGeometryProperty } from '../utils/ogc/WFS/base';
@@ -14,7 +14,7 @@ import { currentLocaleSelector } from './locale';
 import { isSimpleGeomType } from '../utils/MapUtils';
 import { toChangesMap } from '../utils/FeatureGridUtils';
 import { layerDimensionSelectorCreator } from './dimension';
-import { isUserAllowedSelectorCreator } from './security';
+import { isUserAllowedSelectorCreator, userGroupsEnabledSelector, userRoleSelector } from './security';
 import {isCesium, mapTypeSelector} from './maptype';
 import { attributesSelector, describeSelector } from './query';
 import { createShallowSelectorCreator } from "../utils/ReselectUtils";
@@ -202,6 +202,24 @@ export const isEditingAllowedSelector = (state) => {
     })(state);
     return (canEdit || isAllowed) && !isCesium(state);
 };
+// geometry can be editing according to geom field setting
+export const canEditGeometrySelector = (state) => {
+    const fields = selectedLayerFieldsSelector(state);
+    const geomField = find(fields, {isGeometry: true});
+    const canEdit = isEditingAllowedSelector(state);
+
+    const userRole = userRoleSelector(state);
+    const userGroups = userGroupsEnabledSelector(state);
+    const spreadList = [userRole, ...userGroups];
+
+    let geomEditors = geomField?.allowedEditorsRoles;
+    if (!geomEditors) {
+        return canEdit;
+    }
+    geomEditors = geomEditors.split(",");
+    return geomEditors.some(value => spreadList.includes(value));
+};
+
 export const paginationSelector = state => get(state, "featuregrid.pagination");
 export const useLayerFilterSelector = state => get(state, "featuregrid.useLayerFilter", true);
 

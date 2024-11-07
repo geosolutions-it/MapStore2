@@ -59,12 +59,13 @@ const LayerFields = ({ layer, updateFields = () => {}, ...props }) => {
         };
     }, []);
 
-    const onChange = (name, attribute, value) => {
+    const onChange = (name, attribute, value, isGeometryType = false) => {
         const newFields = fields.map((field) => {
             if (field.name === name) {
                 return {
                     ...field,
-                    [attribute]: value
+                    [attribute]: value,
+                    ...(isGeometryType ? {isGeometry: true} : {})
                 };
             }
             return field;
