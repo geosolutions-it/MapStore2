@@ -179,6 +179,7 @@ const mustCreateNewLayer = (oldOptions, newOptions) => {
         || oldOptions.localizedLayerStyles !== newOptions.localizedLayerStyles
         || oldOptions.tileSize !== newOptions.tileSize
         || oldOptions.forceProxy !== newOptions.forceProxy
+        || oldOptions.url !== newOptions.url
         || oldOptions.tileGridStrategy !== newOptions.tileGridStrategy
         || !isEqual(oldOptions.tileGrids, newOptions.tileGrids)
     );

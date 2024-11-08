@@ -165,6 +165,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     || oldOptions.srs !== newOptions.srs
     || oldOptions.format !== newOptions.format
     || oldOptions.style !== newOptions.style
+    || oldOptions.url !== newOptions.url
     || oldOptions.credits !== newOptions.credits) {
         return createLayer(newOptions);
     }

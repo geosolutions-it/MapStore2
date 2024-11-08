@@ -20,7 +20,7 @@ export const needsReload = (oldOptions, newOptions) => {
             return true;
         }
         return found;
-    }, false);
+    }, false) || oldOptions.url !== newOptions.url;
 };
 
 export const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL } = {}) => {
