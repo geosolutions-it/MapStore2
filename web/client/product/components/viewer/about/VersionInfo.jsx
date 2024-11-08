@@ -31,7 +31,7 @@ class VersionInfo extends React.Component {
     render() {
         return (
             <div key="body" role="body" className="version-panel">
-                <h1><Message msgId="version.title"/></h1>
+                <h1 className="title"><Message msgId="version.title"/></h1>
 
                 <div>
                     <div className="version-info">
