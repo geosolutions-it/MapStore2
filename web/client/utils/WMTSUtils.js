@@ -40,7 +40,7 @@ export const getTileMatrixSet = (tileMatrixSet, srs, allowedSRS, matrixIds = {},
     if (tileMatrixSet) {
         return getEquivalentSRS(srs, allowedSRS).reduce((previous, current) => {
             if (isArray(tileMatrixSet)) {
-                const matching = head(tileMatrixSet.filter((matrix) => ((matrix && (matrix["ows:Identifier"] === current || getEPSGCode(matrix["ows:SupportedCRS"]) === current) && matrixIds[matrix["ows:Identifier"]]))));
+                const matching = head(tileMatrixSet.filter((matrix) => ((matrix["ows:Identifier"] === current || getEPSGCode(matrix["ows:SupportedCRS"]) === current) && matrixIds[matrix["ows:Identifier"]])));
                 return matching && matching["ows:Identifier"] ? matching["ows:Identifier"] : previous;
             } else if (isObject(tileMatrixSet)) {
                 return tileMatrixSet[current] || previous;
@@ -175,11 +175,11 @@ export const getTileMatrix = (_options, srs) => {
     const tileMatrixSetName = getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     const ids = options.matrixIds && getMatrixIds(options.matrixIds, tileMatrixSetName || srs);
     const tileMatrixSet = sortTileMatrix(
-        head(options.tileMatrixSet.filter(tM => tM && tM['ows:Identifier'] === tileMatrixSetName)),
+        head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tileMatrixSetName)),
         ids);
     // identifiers are in the same order of scales and resolutions
 
-    const identifiers = tileMatrixSet?.TileMatrix.map?.(t => t && t["ows:Identifier"]);
+    const identifiers = tileMatrixSet?.TileMatrix.map?.(t => t["ows:Identifier"]);
     // use same order of matrixIds in TileMatrix, if present.
     const matrixIds = identifiers && ids
         ? ids.sort((a, b) => {

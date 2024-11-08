@@ -219,7 +219,7 @@ export const deepChange = (nodes, findValue, propName, propValue) => {
 };
 
 export const updateAvailableTileMatrixSetsOptions = ({ tileMatrixSet, matrixIds,  ...layer }) => {
-    if ( tileMatrixSet && matrixIds) {
+    if (!layer.availableTileMatrixSets && tileMatrixSet && matrixIds) {
         const matrixIdsKeys = isArray(matrixIds) ? matrixIds : Object.keys(matrixIds);
         const availableTileMatrixSets = matrixIdsKeys
             .reduce((acc, key) => {
@@ -265,7 +265,7 @@ export const extractTileMatrixFromSources = (sources, layer) => {
         const availableTileMatrixSets =  Object.keys(layer.availableTileMatrixSets)
             .reduce((acc, tileMatrixSetId) => {
                 const tileMatrixSetLink = getTileMatrixSetLink(layer, tileMatrixSetId);
-                const tileMatrixSet = get({ sources }, tileMatrixSetLink) || get({ sources }, tileMatrixSetLink.replace("http:", "https:"));
+                const tileMatrixSet = get({ sources }, tileMatrixSetLink);
                 if (tileMatrixSet) {
                     return {
                         ...acc,
