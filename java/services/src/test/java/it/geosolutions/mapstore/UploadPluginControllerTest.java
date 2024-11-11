@@ -26,13 +26,56 @@ import it.geosolutions.mapstore.controllers.rest.config.UploadPluginController;
 
 public class UploadPluginControllerTest {
     UploadPluginController controller;
-    
+
     @Before
     public void setUp() {
         controller = new UploadPluginController();
         controller.setPluginsConfigAsPatch(false);
     }
-    
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUninstallPluginWithInvalidNamePathTraversal() throws IOException {
+        controller.uninstallPlugin("../outside");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUninstallPluginWithBackslashInName() throws IOException {
+        controller.uninstallPlugin("some\\invalidplugin");
+    }
+
+    @Test
+    public void testUninstallPluginPathNormalization() throws IOException {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        controller.setContext(context);
+        File tempConfig = TestUtils.copyToTemp(ConfigControllerTest.class, "/pluginsConfigWithPlugin.json");
+        Mockito.when(context.getRealPath(Mockito.contains("pluginsConfig.json"))).thenReturn(tempConfig.getAbsolutePath());
+        File tempExtensions = TestUtils.copyToTemp(ConfigControllerTest.class, "/extensionsWithPlugin.json");
+        File tempDist = TestUtils.getDataDir();
+
+        // Mock a legitimate folder inside the base directory
+        Mockito.when(context.getRealPath(Mockito.contains("extensions.json"))).thenReturn(tempExtensions.getAbsolutePath());
+        Mockito.when(context.getRealPath(Mockito.contains("My"))).thenAnswer(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                String path = (String) invocation.getArguments()[0];
+                return tempDist.getAbsolutePath() + File.separator + path;
+            }
+        });
+
+        // Set up a plugin folder in a normalized path within the base directory
+        File pluginFolder = new File(tempDist.getAbsolutePath() + File.separator + "extensions" + File.separator + "My");
+        pluginFolder.mkdirs();
+        assertTrue(pluginFolder.exists());
+        TestUtils.copyTo(ConfigControllerTest.class.getResourceAsStream("/index.js"), pluginFolder, "index.js");
+
+        // Attempt to uninstall to check normalized paths remain within base
+        String result = controller.uninstallPlugin("My");
+        assertEquals("{\"bundle\":\"My/index.js\",\"translations\":\"My/translations\"}", result);
+        assertFalse(pluginFolder.exists());
+        tempConfig.delete();
+        tempExtensions.delete();
+    }
+
     @Test
     public void testUploadValidBundle() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
@@ -49,7 +92,7 @@ public class UploadPluginControllerTest {
                 String path = (String)invocation.getArguments()[0];
                 return tempDist.getAbsolutePath()  + File.separator + path;
             }
-            
+
         });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
@@ -59,7 +102,7 @@ public class UploadPluginControllerTest {
         tempConfig.delete();
         tempExtensions.delete();
     }
-    
+
     @Test
     public void testUploadValidBundleReplace() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
@@ -76,7 +119,7 @@ public class UploadPluginControllerTest {
                 String path = (String)invocation.getArguments()[0];
                 return tempDist.getAbsolutePath()  + File.separator + path;
             }
-            
+
         });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
@@ -86,7 +129,7 @@ public class UploadPluginControllerTest {
         tempConfig.delete();
         tempExtensions.delete();
     }
-    
+
     @Test
     public void testUploadValidBundleUsingPatch() throws IOException {
         controller.setPluginsConfigAsPatch(true);
@@ -107,7 +150,7 @@ public class UploadPluginControllerTest {
                 String path = (String)invocation.getArguments()[0];
                 return tempDist.getAbsolutePath()  + File.separator + path.substring("dist/extensions/".length());
             }
-            
+
         });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         String result = controller.uploadPlugin(zipStream);
@@ -117,7 +160,7 @@ public class UploadPluginControllerTest {
         tempConfig.delete();
         tempExtensions.delete();
     }
-    
+
     @Test
     public void testCustomBundlesPath() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
@@ -135,7 +178,7 @@ public class UploadPluginControllerTest {
                 String path = (String)invocation.getArguments()[0];
                 return tempDist.getAbsolutePath() + File.separator + path.substring("custom/".length());
             }
-            
+
         });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/plugin.zip");
         controller.uploadPlugin(zipStream);
@@ -143,7 +186,7 @@ public class UploadPluginControllerTest {
         tempConfig.delete();
         tempExtensions.delete();
     }
-    
+
     @Test
     public void testUploadInvalidBundle() throws IOException {
         ServletContext context = Mockito.mock(ServletContext.class);
@@ -160,7 +203,7 @@ public class UploadPluginControllerTest {
                 String path = (String)invocation.getArguments()[0];
                 return tempDist.getAbsolutePath()  + File.separator + path.substring("dist/extensions/".length());
             }
-            
+
         });
         InputStream zipStream = UploadPluginControllerTest.class.getResourceAsStream("/invalid.zip");
         try {
@@ -169,9 +212,9 @@ public class UploadPluginControllerTest {
         } catch(Throwable e) {
             assertNotNull(e);
         }
-        
+
     }
-    
+
     @Test
     public void testUploadValidBundleWithDataDir() throws IOException {
     	File dataDir = TestUtils.getDataDir();
@@ -225,7 +268,7 @@ public class UploadPluginControllerTest {
                 String path = (String)invocation.getArguments()[0];
                 return tempDist.getAbsolutePath()  + File.separator + path;
             }
-            
+
         });
         File pluginFolder = new File(tempDist.getAbsolutePath() + File.separator + "extensions" + File.separator + "My");
         pluginFolder.mkdirs();
@@ -241,7 +284,7 @@ public class UploadPluginControllerTest {
         tempConfig.delete();
         tempExtensions.delete();
     }
-    
+
     @Test
     public void testUninstallPluginWithPatch() throws IOException {
         controller.setPluginsConfigAsPatch(true);

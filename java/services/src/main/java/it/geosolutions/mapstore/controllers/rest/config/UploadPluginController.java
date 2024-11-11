@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -161,72 +162,114 @@ public class UploadPluginController extends BaseMapStoreController {
 	 *
 	 * @param pluginName name of the extension to be removed
 	 */
-	@Secured({ "ROLE_ADMIN" })
-	@RequestMapping(value = "/uninstallPlugin/{pluginName}", method = RequestMethod.DELETE)
-	public @ResponseBody String uninstallPlugin(@PathVariable String pluginName) throws IOException {
-		ObjectNode configObj = getExtensionConfig();
-		String key = pluginName;
-		if (configObj.has(key)) {
-			JsonNode pluginConfig = configObj.get(key);
-			String pluginBundle = pluginConfig.get("bundle").asText();
-			String pluginFolder = pluginBundle.substring(0, pluginBundle.lastIndexOf("/"));
-			removeFolder(Paths.get(getExtensionsFolder(), pluginFolder).toString());
-			configObj.remove(key);
-			storeJSONConfig(configObj, getExtensionsConfigPath());
-			ObjectNode pluginsConfigObj = null;
-			ArrayNode plugins;
-			if (shouldStorePluginsConfigAsPatch()) {
-				plugins = getPluginsConfigurationPatch();
-			} else {
-				pluginsConfigObj = getPluginsConfiguration();
-				plugins = (ArrayNode) pluginsConfigObj.get("plugins");
-			}
-			int toRemove = -1;
-			for (int i = 0; i < plugins.size(); i++) {
-				JsonNode plugin = plugins.get(i);
-				String name = plugin.has("name") ? plugin.get("name").asText()
-						: plugin.get("value").get("name").asText();
-				if (name.contentEquals(pluginName)) {
-					toRemove = i;
-				}
-			}
-			if (toRemove >= 0) {
-				plugins.remove(toRemove);
-			}
-			if (shouldStorePluginsConfigAsPatch()) {
-				storeJSONConfig(plugins, getPluginsConfigPatchFilePath());
-			} else {
-				storeJSONConfig(pluginsConfigObj, getPluginsConfig());
-			}
-			return pluginConfig.toString();
-		} else {
-			return "{}";
-		}
-	}
+    @Secured({ "ROLE_ADMIN" })
+    @RequestMapping(value = "/uninstallPlugin/{pluginName}", method = RequestMethod.DELETE)
+    public @ResponseBody String uninstallPlugin(@PathVariable String pluginName) throws IOException {
+        // Basic validation to avoid path traversal characters in pluginName
+        if (pluginName.contains("..") || pluginName.contains("\\")) {
+            throw new IllegalArgumentException("Invalid plugin name.");
+        }
 
-	private void removeFolder(String pluginFolder) throws IOException {
-		File folderPath = new File(ResourceUtils.getResourcePath(getWriteStorage(), context, pluginFolder));
-		if (folderPath.exists()) {
-			FileUtils.cleanDirectory(folderPath);
-			folderPath.delete();
-		}
-	}
+        ObjectNode configObj = getExtensionConfig();
+        if (configObj.has(pluginName)) {
+            JsonNode pluginConfig = configObj.get(pluginName);
+            String pluginBundle = pluginConfig.get("bundle").asText();
+            String pluginFolder = pluginBundle.substring(0, pluginBundle.lastIndexOf("/"));
 
-	private Optional<File> findResource(String resourceName) {
+            // Securely remove the folder by passing normalized path
+            Path pluginFolderPath = Paths.get(getExtensionsFolder(), pluginFolder).normalize();
+            removeFolderSecurely(pluginFolderPath);
+
+            // Update configurations after removing the folder
+            configObj.remove(pluginName);
+            storeJSONConfig(configObj, getExtensionsConfigPath());
+
+            ObjectNode pluginsConfigObj = null;
+            ArrayNode plugins;
+            if (shouldStorePluginsConfigAsPatch()) {
+                plugins = getPluginsConfigurationPatch();
+            } else {
+                pluginsConfigObj = getPluginsConfiguration();
+                plugins = (ArrayNode) pluginsConfigObj.get("plugins");
+            }
+
+            int toRemove = -1;
+            for (int i = 0; i < plugins.size(); i++) {
+                JsonNode plugin = plugins.get(i);
+                String name = plugin.has("name") ? plugin.get("name").asText()
+                    : plugin.get("value").get("name").asText();
+                if (name.contentEquals(pluginName)) {
+                    toRemove = i;
+                }
+            }
+
+            if (toRemove >= 0) {
+                plugins.remove(toRemove);
+            }
+
+            if (shouldStorePluginsConfigAsPatch()) {
+                storeJSONConfig(plugins, getPluginsConfigPatchFilePath());
+            } else {
+                storeJSONConfig(pluginsConfigObj, getPluginsConfig());
+            }
+
+            return pluginConfig.toString();
+        } else {
+            return "{}";
+        }
+    }
+
+    // Updated removeFolder method with path traversal prevention
+    private void removeFolderSecurely(Path pluginFolderPath) throws IOException {
+        if (pluginFolderPath == null) {
+            throw new IllegalArgumentException("Plugin folder path cannot be null.");
+        }
+
+        // Define base directory to ensure path remains within it
+        Path baseDirectory = Paths.get(getExtensionsFolder()).toAbsolutePath().normalize();
+        if (baseDirectory == null) {
+            throw new IllegalStateException("Extensions folder path is not set correctly.");
+        }
+
+        Path fullPath = pluginFolderPath.toAbsolutePath().normalize();
+
+        // Ensure the path is within the base directory
+        if (!fullPath.startsWith(baseDirectory)) {
+            throw new IOException("Unauthorized path traversal attempt detected.");
+        }
+
+        File folderPath = new File(ResourceUtils.getResourcePath(getWriteStorage(), context, pluginFolderPath.toString()));
+        if (folderPath.exists()) {
+            FileUtils.cleanDirectory(folderPath);
+            folderPath.delete();
+        } else {
+            throw new FileNotFoundException("The specified folder path does not exist: " + folderPath.getAbsolutePath());
+        }
+    }
+
+    private Optional<File> findResource(String resourceName) {
 		return ResourceUtils.findResource(getDataDir(), context, resourceName);
 	}
 
-	private void moveAsset(File tempAsset, String finalAsset) throws FileNotFoundException, IOException {
-		String assetPath = ResourceUtils.getResourcePath(getWriteStorage(), context, finalAsset);
-		new File(assetPath).getParentFile().mkdirs();
-		try (FileInputStream input = new FileInputStream(tempAsset);
-				FileOutputStream output = new FileOutputStream(assetPath)) {
-			IOUtils.copy(input, output);
-		}
-		tempAsset.delete();
-	}
+    private void moveAsset(File tempAsset, String finalAsset) throws FileNotFoundException, IOException {
+        String assetPath = ResourceUtils.getResourcePath(getWriteStorage(), context, finalAsset);
 
-	private String getWriteStorage() {
+        // Check if the resource path is null and handle it
+        if (assetPath == null) {
+            throw new FileNotFoundException("Resource path could not be resolved for: " + finalAsset);
+        }
+
+        // Ensure the parent directory exists
+        new File(assetPath).getParentFile().mkdirs();
+
+        try (FileInputStream input = new FileInputStream(tempAsset);
+             FileOutputStream output = new FileOutputStream(assetPath)) {
+            IOUtils.copy(input, output);
+        }
+        tempAsset.delete();
+    }
+
+    private String getWriteStorage() {
 		return getDataDir().isEmpty() ? "" : Stream.of(getDataDir().split(",")).filter(new Predicate<String>() {
 			@Override
 			public boolean test(String folder) {

@@ -27,15 +27,15 @@ public class ResourceUtils {
             public boolean test(String path) {
                 return path != null && new File(path).exists();
             }
-            
+
         })
         .findFirst();
     }
-	
+
 	/**
 	 * Finds a resource, recursively looking at a list of folders, and at last at
 	 * the web application context path.
-	 * 
+	 *
 	 * @param baseFolders  comma delimited list of folders, in order of search
 	 * @param context      web application context (last resource)
 	 * @param resourceName name of the resource to be found
@@ -53,7 +53,7 @@ public class ResourceUtils {
 						}
 						return true;
 					}
-					
+
 				})
 				.map(new Function<String, String>() {
 			@Override
@@ -73,15 +73,15 @@ public class ResourceUtils {
 		}
 		return Optional.empty();
 	}
-	
+
 	public static String getResourcePath(String baseFolder, ServletContext context, String path) {
         return getResourcePath(baseFolder, context, path, false);
     }
-	
+
 	public static String getResourcePath(String baseFolder, ServletContext context, String path, boolean write) {
 		return baseFolder.isEmpty() ? getContextPath(context, path, write) : baseFolder + "/" + path;
 	}
-	
+
 	private static String getContextPath(ServletContext context, String path, boolean write) {
 	    String candidate = context.getRealPath(path);
 	    if (candidate == null && write) {

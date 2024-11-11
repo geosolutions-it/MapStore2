@@ -63,7 +63,7 @@ public class ConfigControllerTest {
         controller.setContext(context);
         String resource1 = new String(controller.loadResource("localConfig.json", false), "UTF-8");
         assertEquals("{}", resource1.trim());
-        
+
         tempResource1.delete();
     }
 
@@ -113,6 +113,7 @@ public class ConfigControllerTest {
         tempResource.delete();
         tempPatch.delete();
     }
+
     @Test
     public void testPatchWithNoExtension() throws IOException {
         File dataDir = TestUtils.getDataDir();
@@ -127,5 +128,25 @@ public class ConfigControllerTest {
         assertEquals("{\"plugins\":[{\"name\":\"My\",\"dependencies\":[\"Toolbar\"],\"extension\":true}]}", resource.trim());
         tempResource.delete();
         tempPatch.delete();
+    }
+
+    @Test(expected = IOException.class)
+    public void testPathTraversalAttempt() throws IOException {
+        // Attempt to load a resource with path traversal characters
+        String maliciousResourceName = "../etc/passwd";
+        controller.loadResource(maliciousResourceName, false);
+    }
+
+    @Test
+    public void testValidResourceAccess() throws IOException {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        File tempResource = TestUtils.copyToTemp(ConfigControllerTest.class, "/localConfig.json");
+        Mockito.when(context.getRealPath(Mockito.anyString())).thenReturn(tempResource.getAbsolutePath());
+        controller.setContext(context);
+
+        String resource = new String(controller.loadResource("localConfig", false), "UTF-8");
+        assertEquals("{}", resource.trim());
+
+        tempResource.delete();
     }
 }
