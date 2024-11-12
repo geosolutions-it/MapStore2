@@ -120,7 +120,7 @@ describe('IntlNumberFormControl', () => {
         TestUtils.Simulate.change(element, {target: {value: '12.'}});
         expect(element.value).toBe("12");
         TestUtils.Simulate.change(element, {target: {value: '12.0'}});
-        expect(element.value).toBe("12");
+        expect(element.value).toBe("12.0");
         TestUtils.Simulate.change(element, {target: {value: '12.04'}});
         expect(element.value).toBe("12.04");
         TestUtils.Simulate.change(element, {target: {value: '12.402'}});
@@ -128,9 +128,9 @@ describe('IntlNumberFormControl', () => {
         TestUtils.Simulate.change(element, {target: {value: '-12.04'}});
         expect(element.value).toBe("-12.04");
         TestUtils.Simulate.change(element, {target: {value: '-12.40'}});
-        expect(element.value).toBe("-12.4");
+        expect(element.value).toBe("-12.40");
         TestUtils.Simulate.change(element, {target: {value: '-12.0'}});
-        expect(element.value).toBe("-12");
+        expect(element.value).toBe("-12.0");
     });
     it('check calling passed onkeydown, onkeyup events', () => {
         const intl = {locale: "en-US"};
