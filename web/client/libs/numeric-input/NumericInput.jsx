@@ -96,6 +96,7 @@ class NumericInput extends Component {
         defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         strict: PropTypes.bool,
         componentClass: PropTypes.string,
+        locale: PropTypes.string,
         // eslint-disable-next-line consistent-return
         mobile(props, propName) {
             let prop = props[propName];
@@ -406,11 +407,16 @@ class NumericInput extends Component {
         );
 
         let loose = !this._isStrict && (this._inputFocus || !this._isMounted);
+        const numFormat = new Intl.NumberFormat(this.props.locale || "en-US");
+        const parts = numFormat.formatToParts(12345.6);
+        const decimalSymbol = parts.find(d => d.type === "decimal").value;
+        const escapedDecimalSymbol = decimalSymbol.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const RE_TRAILING_DECIMAL_ZEROS = new RegExp(`\\d+${escapedDecimalSymbol}\\d*0+`);
 
         // incomplete number
         if (loose && RE_INCOMPLETE_NUMBER.test(stringValue)) {
             attrs.input.value = stringValue;
-        } else if (loose && stringValue && !RE_NUMBER.test(stringValue)) {// Not a number and not empty (loose mode only)
+        } else if ((loose && stringValue && !RE_NUMBER.test(stringValue)) || RE_TRAILING_DECIMAL_ZEROS.test(stringValue)) {// Not a number and not empty (loose mode only)
             attrs.input.value = stringValue;
         } else if (state.value || state.value === 0) { // number
             attrs.input.value = this._format(state.value);
