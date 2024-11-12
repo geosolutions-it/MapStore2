@@ -37,11 +37,22 @@ public class TestUtils {
     }
 
     public static File copyToTemp(Class<ConfigControllerTest> classObj, String path) throws IOException {
+        // Open the resource as an InputStream
+        InputStream inputStream = classObj.getResourceAsStream(path);
 
-        File temp = File.createTempFile("config", "." + Files.getFileExtension(path));
-        try (FileOutputStream outStream = new FileOutputStream(temp)) {
-            IOUtils.copy(classObj.getResourceAsStream(path), outStream);
+        // Check if the resource is null (not found)
+        if (inputStream == null) {
+            throw new IllegalArgumentException("Resource not found: " + path);
         }
+
+        // Create a temporary file with the correct extension
+        File temp = File.createTempFile("config", "." + Files.getFileExtension(path));
+
+        // Copy the content of the resource into the temporary file
+        try (FileOutputStream outStream = new FileOutputStream(temp)) {
+            IOUtils.copy(inputStream, outStream);
+        }
+
         return temp;
     }
 
