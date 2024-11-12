@@ -417,7 +417,7 @@ class NumericInput extends Component {
         // incomplete number or number contains decimal symbol [centesimal decimal numbers]
         if ((loose && RE_INCOMPLETE_NUMBER.test(stringValue)) || RE_TRAILING_DECIMAL_ZEROS.test(stringValue)) {
             attrs.input.value = stringValue;
-        } else if ((loose && stringValue && !RE_NUMBER.test(stringValue))) {// Not a number and not empty (loose mode only)
+        } else if (loose && stringValue && !RE_NUMBER.test(stringValue)) {// Not a number and not empty (loose mode only)
             attrs.input.value = stringValue;
         } else if (state.value || state.value === 0) { // number
             attrs.input.value = this._format(state.value);
