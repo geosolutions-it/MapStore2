@@ -407,6 +407,7 @@ class NumericInput extends Component {
         );
 
         let loose = !this._isStrict && (this._inputFocus || !this._isMounted);
+        // create regex for numbers that contains centesimal decimal numbers
         const numFormat = new Intl.NumberFormat(this.props.locale || "en-US");
         const parts = numFormat.formatToParts(12345.6);
         const decimalSymbol = parts.find(d => d.type === "decimal").value;
@@ -416,7 +417,7 @@ class NumericInput extends Component {
         // incomplete number
         if (loose && RE_INCOMPLETE_NUMBER.test(stringValue)) {
             attrs.input.value = stringValue;
-        } else if ((loose && stringValue && !RE_NUMBER.test(stringValue)) || RE_TRAILING_DECIMAL_ZEROS.test(stringValue)) {// Not a number and not empty (loose mode only)
+        } else if ((loose && stringValue && !RE_NUMBER.test(stringValue)) || RE_TRAILING_DECIMAL_ZEROS.test(stringValue)) {// Not a number and not empty (loose mode only) || if number contains decimal symbol [centesimal decimal numbers]
             attrs.input.value = stringValue;
         } else if (state.value || state.value === 0) { // number
             attrs.input.value = this._format(state.value);
