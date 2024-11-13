@@ -31,7 +31,7 @@ This steps have to be followed always when preparing a new release.
     - A Pull request will be created to the master
     - A new branch named `YYYY.XX.xx` with fixed versions
 - [ ] Merge the incoming PR created by the workflow
-- [ ] Create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
+- [ ] Create on [ReadTheDocs](https://app.readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] Run the [`Cut Release Branch`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/cut_release_branch.yml) workflow on MapStoreExtension project, indicating:
     - [ ] Use workflow from branch `master`
     - [ ] MapStore branch name to use: `YYYY.XX.xx`
@@ -43,6 +43,7 @@ This steps have to be followed always when preparing a new release.
 - [ ] Check `pom.xml` dependencies are all in fixed stable versions ( no `-SNAPSHOT` usage release). If not, You use the action  [`Update dependencies versions`](https://github.com/geosolutions-it/MapStore2/actions/workflows/update_dependencies_versions.yml) to fix them, setting:
     - [ ] the branch to `YYYY.XX.xx`
     - [ ] the of geostore, http_proxy and mapfish-print versions accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars)
+- [ ] Merge the PR created after the action avove has been finshed
 - [ ] Check that [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) repository is aligned and working. 
 - [ ] Run the [Submodule Update](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/submodules_update.yml) of [MapStoreExtension](https://github.com/geosolutions-it/MapStoreExtension) to generate the `SampleExtension.zip` to use for testing.
     - [ ] Use workflow from `YYYY.XX.xx` branch
@@ -121,14 +122,17 @@ When the processes are finished, the release is ready to be published on github 
 
 ## Update ReadTheDocs
 
-- [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
-- [ ] Update `Default version` to point the release version in the `Advanced Settings` menu of the [ReadTheDocs](https://readthedocs.org/dashboard/mapstore/advanced/) admin panel
+- [ ] create on [ReadTheDocs](https://app.readthedocs.org/dashboard/mapstore/version/create/) project the version build for `vYYYY.XX.mm` (search for the tag, check the `active` toggle and click on update verson )
+- [ ] Update `Default version` to point the new tag (`vYYYY.XX.mm`) in read the [ReadTheDocs Settings](https://app.readthedocs.org/dashboard/mapstore/edit/)  panel and click on save.
 
 ## Finalize Release
 
 - [ ] Run the [`Post Release`](https://github.com/geosolutions-it/MapStore2/actions/workflows/post_release.yml) workflow on github with the following parameters:
     - Use workflow from branch `YYYY.XX.xx` (the release branch)
     - Version of Java Packages to restore accordingly with [release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) with `-SNAPSHOT` E.g. `1.7-SNAPSHOT`
+- [ ] Use the action  [`Update dependencies versions`](https://github.com/geosolutions-it/MapStore2/actions/workflows/update_dependencies_versions.yml) to restore the `-SNAPSHOT` version of GeoStore, setting:
+    - [ ] the branch to `YYYY.XX.xx`
+    - [ ] the of geostore, http_proxy and mapfish-print versions accordingly with the [MapStore release calendar](https://github.com/geosolutions-it/MapStore2/wiki/MapStore-Release-Calendars) and use `-SNAPSHOT` version of geostore.
 - [ ] Write to the mailing list about the current release news and the next release major changes
 - [ ] Optional - prepare a PR for updating release procedure, if needed
 - [ ] Close this issue
