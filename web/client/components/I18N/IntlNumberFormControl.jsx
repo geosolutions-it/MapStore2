@@ -128,6 +128,7 @@ class IntlNumberFormControl extends React.Component {
                 }}
                 componentClass={"input"}
                 className="form-control intl-numeric"
+                locale={this.context && this.context.intl && this.context.intl.locale || "en-US"}
             />
         );
     }
