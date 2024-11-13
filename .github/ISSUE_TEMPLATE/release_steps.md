@@ -31,7 +31,7 @@ This steps have to be followed always when preparing a new release.
     - A Pull request will be created to the master
     - A new branch named `YYYY.XX.xx` with fixed versions
 - [ ] Merge the incoming PR created by the workflow
-- [ ] Create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
+- [ ] Create on [ReadTheDocs](https://app.readthedocs.org/projects/mapstore/) project the version build for `YYYY.XX.xx` (click on "Versions" and activate the version of the branch)
 - [ ] Run the [`Cut Release Branch`](https://github.com/geosolutions-it/MapStoreExtension/actions/workflows/cut_release_branch.yml) workflow on MapStoreExtension project, indicating:
     - [ ] Use workflow from branch `master`
     - [ ] MapStore branch name to use: `YYYY.XX.xx`
@@ -122,8 +122,8 @@ When the processes are finished, the release is ready to be published on github 
 
 ## Update ReadTheDocs
 
-- [ ] create on [ReadTheDocs](https://readthedocs.org/projects/mapstore/) project the version build for `vYYYY.XX.mm` (click on "Versions" and activate the version of the tag, created when release was published)
-- [ ] Update `Default version` to point the release version in the `Advanced Settings` menu of the [ReadTheDocs](https://readthedocs.org/dashboard/mapstore/advanced/) admin panel
+- [ ] create on [ReadTheDocs](https://app.readthedocs.org/dashboard/mapstore/version/create/) project the version build for `vYYYY.XX.mm` (search for the tag, check the `active` toggle and click on update verson )
+- [ ] Update `Default version` to point the new tag (`vYYYY.XX.mm`) in read the [ReadTheDocs Settings](https://app.readthedocs.org/dashboard/mapstore/edit/)  panel and click on save.
 
 ## Finalize Release
 
