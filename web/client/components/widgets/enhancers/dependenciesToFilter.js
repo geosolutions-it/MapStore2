@@ -34,7 +34,8 @@ const shouldMapOrKeys = ({ mapSync, geomProp, dependencies = {}, layer, quickFil
         || options !== nextProps.options
         || quickFilters !== nextProps.quickFilters
         || getCqlFilter(layer, dependencies) !== getCqlFilter(nextProps.layer, nextProps.dependencies)
-        || getLayerFilter(layer) !== getLayerFilter(nextProps.layer);
+        || getLayerFilter(layer) !== getLayerFilter(nextProps.layer)
+        || layer.catalogUrl !== nextProps.layer.catalogUrl;
 };
 
 const createFilterProps = ({ mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj, layer, quickFilters, options } = {}) => {
