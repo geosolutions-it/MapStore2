@@ -41,6 +41,8 @@ const About = connect((state) => ({
  * @class
  * @memberof plugins
  * @prop {string} cfg.githubUrl base url to the github tree project, default is "". It will generate a url like "https://github.com/GITHUB_USER/REPO_NAME/tree/COMMIT_SHA"
+ * @prop {boolean} cfg.showVersionInfo a flag that resposible for show/hide the version section in About plugin
+ * @prop {boolean} cfg.showAboutContent a flag that resposible for show/hide the content section of About plugin
  *
  * @example
  * {
