@@ -32,6 +32,7 @@ export const MAP_PLUGIN_LOAD = 'MAP:MAP_PLUGIN_LOAD';
 export const ORIENTATION = 'MAP:ORIENTATION';
 export const UPDATE_MAP_VIEW = 'MAP:UPDATE_MAP_VIEW';
 export const UPDATE_MAP_OPTIONS = 'MAP:UPDATE_MAP_OPTIONS';
+export const FORCE_RENDER = 'MAP:FORCE_RENDER';
 
 
 /**
@@ -257,6 +258,11 @@ export const updateMapView = (data) => ({
 
 export const updateMapOptions = (configUpdate) => ({
     type: UPDATE_MAP_OPTIONS,
+    configUpdate
+});
+
+export const forceReRender = (configUpdate) => ({
+    type: FORCE_RENDER,
     configUpdate
 });
 
