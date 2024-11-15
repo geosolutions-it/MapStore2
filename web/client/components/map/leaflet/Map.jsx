@@ -488,7 +488,7 @@ class LeafletMap extends React.Component {
             crs: "EPSG:4326",
             pixel: {
                 x: event.containerPoint.x,
-                y: event.containerPoint.x
+                y: event.containerPoint.y
             },
             latlng: {
                 lat: event.latlng.lat,
