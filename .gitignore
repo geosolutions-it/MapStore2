@@ -25,4 +25,8 @@ web/docs
 debug.log
 .vscode/settings.json
 site
+<<<<<<< HEAD
 .DS_Store
+=======
+venv
+>>>>>>> 4ee294afd (Minor fixes to mdocks file)
