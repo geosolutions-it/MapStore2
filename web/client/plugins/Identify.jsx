@@ -209,6 +209,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.showMoreInfo {boolean} if true shows the more info icon which allow user to show/hide Geocode viewer as popup (true by default)
  * @prop cfg.showEdit {boolean} if true, and when the FeatureEditor plugin is present, shows and edit button to edit the current feature(s) clicked in the grid.
  * @prop cfg.enableInfoForSelectedLayers {boolean} if true, if some layer is selected in the TOC, the feature info is performed only on the selected ones. if false, the info is queried for all the layers, independently from selection. (default is true).
+ * @prop cfg.disableCoordinatesRow {boolean} if true the coordinates row is disabled
  *
  * @example
  * {
