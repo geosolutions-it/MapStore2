@@ -201,4 +201,4 @@ plugins:
       debug_html: false # set to true to log the html content of the pdf on the console on build
       show_anchors: true
       verbose: false    # set to true to log the pdf generation steps in detail
-      custom_template_path: 'print_template' # includes custom styles.scss for pdf
+      custom_template_path: 'docs/print_template' # includes custom styles.scss for pdf
