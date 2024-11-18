@@ -144,7 +144,7 @@ compose(
             } : {};
             const widthOptions = width ? {width: viewWidth - 1} : {};
             const baseHeight = isSingleWidgetLayout
-                ? rowHeight || rowHeightRecalculated
+                ? rowHeightRecalculated
                 : Math.floor((height - 100) / (rowHeightRecalculated + 10)) * (rowHeightRecalculated + 10);
             return ({
                 rowHeight: isSingleWidgetLayout ? rowHeightRecalculated : rowHeight || rowHeightRecalculated,
