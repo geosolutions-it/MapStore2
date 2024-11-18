@@ -41,7 +41,7 @@ import {
     itemIdSelector, overrideParamsSelector, filterNameListSelector,
     currentEditFeatureQuerySelector, mapTriggerSelector, enableInfoForSelectedLayersSelector
 } from '../selectors/mapInfo';
-import { centerToMarkerSelector, getSelectedLayers, layersSelector, queryableLayersSelector, queryableSelectedLayersSelector, selectedNodesSelector } from '../selectors/layers';
+import { centerToMarkerSelector, getSelectedLayers, layersSelector, queryableLayersSelector, queryableSelectedLayersSelector, rawGroupsSelector, selectedNodesSelector } from '../selectors/layers';
 import { modeSelector, getAttributeFilters, isFeatureGridOpen } from '../selectors/featuregrid';
 import { spatialFieldSelector } from '../selectors/queryform';
 import { mapSelector, projectionDefsSelector, projectionSelector, isMouseMoveIdentifyActiveSelector } from '../selectors/map';
@@ -64,6 +64,7 @@ const stopFeatureInfo = state => stopGetFeatureInfoSelector(state) || isFeatureG
 import {getFeatureInfo} from '../api/identify';
 import { VISUALIZATION_MODE_CHANGED } from '../actions/maptype';
 import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
+import { getDerivedLayersVisibility } from '../utils/LayersUtils';
 
 /**
  * Epics for Identify and map info
@@ -76,14 +77,19 @@ import {updatePointWithGeometricFilter} from "../utils/IdentifyUtils";
 export const getFeatureInfoOnFeatureInfoClick = (action$, { getState = () => { } }) =>
     action$.ofType(FEATURE_INFO_CLICK)
         .switchMap(({ point, filterNameList = [], overrideParams = {}, ignoreVisibilityLimits }) => {
+            const groups = rawGroupsSelector(getState());
+
             // ignoreVisibilityLimits is for ignore limits of layers visibility
             // Reverse - To query layer in same order as in TOC
-            let queryableLayers = ignoreVisibilityLimits ? reverse([...layersSelector(getState())].filter(l=>defaultQueryableFilter(l))) :  reverse(queryableLayersSelector(getState()));
-            const queryableSelectedLayers = ignoreVisibilityLimits ? [...getSelectedLayers(getState())].filter(l => defaultQueryableFilter(l)) : queryableSelectedLayersSelector(getState());
+            let queryableLayers = ignoreVisibilityLimits ? reverse(getDerivedLayersVisibility([...layersSelector(getState())], groups).filter(l=>defaultQueryableFilter(l))) :  reverse(getDerivedLayersVisibility(queryableLayersSelector(getState()), groups));
+            const queryableSelectedLayers = ignoreVisibilityLimits ? getDerivedLayersVisibility([...getSelectedLayers(getState())].filter(l => defaultQueryableFilter(l)), groups) : getDerivedLayersVisibility(queryableSelectedLayersSelector(getState()), groups);
             const enableInfoForSelectedLayers = enableInfoForSelectedLayersSelector(getState());
             if (enableInfoForSelectedLayers && queryableSelectedLayers.length) {
                 queryableLayers = queryableSelectedLayers;
             }
+            // remove invisible layers, visible layer with invisible group already converted to invisible layer using getDerivedLayersVisibility
+            queryableLayers = queryableLayers.filter(l=>l.visibility);
+
 
             const selectedLayers = selectedNodesSelector(getState());
 
