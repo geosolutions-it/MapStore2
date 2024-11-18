@@ -14,7 +14,8 @@ import {
     escapeText,
     escapeAttributeValue,
     removeEmptyNodes,
-    writeXML
+    writeXML,
+    validXMLFilter
 } from '../XMLUtils';
 
 const namespaces = {
@@ -154,5 +155,12 @@ describe('XMLUtils tests', () => {
   <SimpleElement/>
 </Root>`;
         expect(writeXML(removeEmptyNodes(tree), values(namespaces))).toBe(xml);
+    });
+
+    it.only('Check valid XML filter', () => {
+        const xmlFilter = '<ogc:Filter><ogc:And>filters></ogc:And></ogc:Filter>';
+        expect(validXMLFilter(xmlFilter)).toBe(true);
+        const invalidXMLFilter = '<ogc:Filter><ogc:And>undefined</ogc:And></ogc:Filter>';
+        expect(validXMLFilter(invalidXMLFilter)).toBe(false);
     });
 });

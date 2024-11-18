@@ -21,6 +21,7 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.viewParams === o2.viewParams;
 import { getWpsUrl } from '../../../utils/LayersUtils';
+import { validXMLFilter } from '../../../utils/XMLUtils';
 
 /**
  * Stream of props -> props to retrieve data from WPS aggregate process on params changes.
@@ -30,7 +31,7 @@ import { getWpsUrl } from '../../../utils/LayersUtils';
  */
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options}) => layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute)
+        .filter(({layer = {}, options, filter}) => layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && validXMLFilter(filter))
         .distinctUntilChanged(
             ({layer = {}, options = {}, filter}, newProps) =>
                 (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
