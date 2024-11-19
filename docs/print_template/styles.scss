@@ -5,3 +5,9 @@ img {
     display: block;
     margin: 0 auto;
 }
+/* fix icons in admonitions */
+.md-typeset .admonition-title:before{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}

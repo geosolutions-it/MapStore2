@@ -183,6 +183,9 @@ plugins:
   # See https://kroki.io/.
   - kroki: # https://pypi.org/project/mkdocs-kroki-plugin/
       FencePrefix: ''
+      # HttpMethod set to POST pre-loads the images.
+      # USing GET the charts will be generated on the fly, so the rendering will be slower, but
+      # when not visualizing the charts, no request will be made to the kroki server.
       HttpMethod: 'POST'
       FileTypeOverrides:
         mermaid: png
