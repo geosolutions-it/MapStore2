@@ -9,7 +9,6 @@ sequenceDiagram
     autonumber
     actor Browser
     participant Backend
-    participant OpenIDProvider
     Browser ->>+ Backend: /session/login<br />(username, password)
     Note over Backend: create session
     Backend -->>- Browser: {access_token, refresh_token}
@@ -84,6 +83,11 @@ sequenceDiagram
     Note over Browser: LOGIN_SUCCESS
     loop Token refresh
         Browser --) Backend: /session/refresh
+
+        loop Refresh retry 3 times max
+            Backend --) OpenIDProvider: Refresh
+            OpenIDProvider --) Backend: {access_token, refresh_token (optional)}
+        end
         Backend --) Browser: {access_token: <token>, refresh_token: <r_token>}
         Note over Browser: REFRESH_SUCCESS
     end
