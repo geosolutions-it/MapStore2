@@ -168,31 +168,3 @@ export const objectToAttributes = (obj = {}, xmlns) => keys(obj).filter(key => o
 export const assignNamespace = (nodes, xmlns) => nodes.filter(node => !!node).map(node => ({...node, xmlns}));
 
 
-/**
- * Checks if any <ogc:And> element in the XML string contains the text "undefined".
- *
- * @param {string} xmlString - The XML string to check.
- * @returns {boolean} - Returns `false` if any <ogc:And> contains "undefined", otherwise `true`.
- *
- * @example
- * validFilter('<ogc:Filter><ogc:And>undefined</ogc:And></ogc:Filter>'); // false
- * validFilter('<ogc:Filter><ogc:And>valid</ogc:And></ogc:Filter>');    // true
- */
-export function validXMLFilter(xmlString) {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-
-    // Find all <ogc:And> elements (you can have multiple <ogc:And> elements)
-    const andElements = xmlDoc.getElementsByTagName("ogc:And");
-
-    // Iterate through the <ogc:And> elements and check for "undefined"
-    for (let i = 0; i < andElements.length; i++) {
-        const andElement = andElements[i];
-
-        // If we find an <ogc:And> element with text "undefined", return false
-        if (andElement.textContent === "undefined") {
-            return false;
-        }
-    }
-    return true;
-}

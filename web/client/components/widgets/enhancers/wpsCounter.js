@@ -31,7 +31,7 @@ import { validXMLFilter } from '../../../utils/XMLUtils';
  */
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options, filter}) => layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && validXMLFilter(filter))
+        .filter(({layer = {}, options, filter}) => layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && filter)
         .distinctUntilChanged(
             ({layer = {}, options = {}, filter}, newProps) =>
                 (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
