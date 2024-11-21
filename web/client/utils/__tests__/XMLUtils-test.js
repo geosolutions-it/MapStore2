@@ -14,8 +14,7 @@ import {
     escapeText,
     escapeAttributeValue,
     removeEmptyNodes,
-    writeXML,
-    validXMLFilter
+    writeXML
 } from '../XMLUtils';
 
 const namespaces = {

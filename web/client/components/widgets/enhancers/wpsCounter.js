@@ -21,7 +21,6 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.viewParams === o2.viewParams;
 import { getWpsUrl } from '../../../utils/LayersUtils';
-import { validXMLFilter } from '../../../utils/XMLUtils';
 
 /**
  * Stream of props -> props to retrieve data from WPS aggregate process on params changes.
