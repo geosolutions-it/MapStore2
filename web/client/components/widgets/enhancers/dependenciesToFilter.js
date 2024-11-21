@@ -83,10 +83,11 @@ const createFilterProps = ({ mapSync, geomProp = "the_geom", dependencies = {}, 
                 property(geomProp).intersects(geom)))
         };
     }
-
-    // this is the point viewport undefined, so to avoid api call, filter is undefined
+    // this will contain only an ogc filter based on current and other filters (cql excluded)
     return {
-        filter: undefined
+        filter: filter(and(
+            ...(layerFilter ? toOGCFilterParts(layerFilter, "1.1.0", "ogc") : []),
+            ...(newFilterObj ? toOGCFilterParts(newFilterObj, "1.1.0", "ogc") : [])))
     };
 };
 

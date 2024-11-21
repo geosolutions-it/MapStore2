@@ -166,5 +166,3 @@ export const objectToAttributes = (obj = {}, xmlns) => keys(obj).filter(key => o
 }));
 
 export const assignNamespace = (nodes, xmlns) => nodes.filter(node => !!node).map(node => ({...node, xmlns}));
-
-

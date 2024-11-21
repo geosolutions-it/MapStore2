@@ -155,5 +155,4 @@ describe('XMLUtils tests', () => {
 </Root>`;
         expect(writeXML(removeEmptyNodes(tree), values(namespaces))).toBe(xml);
     });
-
 });

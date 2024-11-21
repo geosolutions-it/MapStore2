@@ -30,7 +30,9 @@ import { getWpsUrl } from '../../../utils/LayersUtils';
  */
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options, filter}) => layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && filter)
+        .filter(({layer = {}, options, dependencies}) => {
+            return layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && dependencies.viewport;
+        })
         .distinctUntilChanged(
             ({layer = {}, options = {}, filter}, newProps) =>
                 (newProps.layer && layer.name === newProps.layer.name && layer.loadingError === newProps.layer.loadingError)
