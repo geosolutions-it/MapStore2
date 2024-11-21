@@ -146,6 +146,42 @@ describe('identify Epics', () => {
         }, state);
     });
 
+    it('getFeatureInfoOnFeatureInfoClick, no queryable if layer is visible but it"s group is invisible', (done)=>{
+        // remove previous hook
+        registerHook('RESOLUTION_HOOK', undefined);
+        const state = {
+            map: TEST_MAP_STATE,
+            mapInfo: {
+                clickPoint: { latlng: { lat: 36.95, lng: -79.84 } }
+            },
+            layers: {
+                flat: [{
+                    id: "TEST",
+                    name: "TEST",
+                    "title": "TITLE",
+                    type: "wfs",
+                    visibility: true,
+                    url: 'base/web/client/test-resources/featureInfo-response.json',
+                    group: "TEST_GROUP"
+                }],
+                groups: [
+                    {
+                        id: "TEST_GROUP",
+                        title: "TEST_GROUP",
+                        visibility: false
+                    }
+                ]
+            }
+        };
+        const sentActions = [featureInfoClick({ latlng: { lat: 36.95, lng: -79.84 } })];
+        testEpic(getFeatureInfoOnFeatureInfoClick, 2, sentActions, ([a0, a1]) => {
+            expect(a0.type).toBe(PURGE_MAPINFO_RESULTS);
+            expect(a1.type).toBe(NO_QUERYABLE_LAYERS);
+            done();
+        }, state);
+
+    });
+
     it('getFeatureInfoOnFeatureInfoClick WMS', (done) => {
         // remove previous hook
         registerHook('RESOLUTION_HOOK', undefined);
