@@ -94,6 +94,10 @@ oidcOAuth2Config.internalRedirectUri=http://localhost:8080/mapstore
 - `oidcOAuth2Config.rolesClaim`: (*optional*) the role claims. If a claim contains roles, you can map them to MapStore roles. The roles can be only `ADMIN` or `USER`. If the claim is not present, the default role will be `USER`.
 - `oidcOAuth2Config.groupsClaim`: (*optional*) the group claims. If a claim contains groups, you can map them to MapStore groups. If the claim is not present, no group will be assigned (except the default `everyone` group).
 - `oidcOAuth2Config.globalLogoutEnabled`: (*optional*): if true (and the server supports it) invokes global logout on MapStore logout
+- `oidcOAuth2Config.scopes`: (*optional*): allows to customize the scopes to request. If empty, MapStore will use the one present in the discovery document.
+- `oidcOAuth2Config.maxRetry`: (*optional*) the maximum number of retry attempts for the OpenID Connect authentication process. Default is `3`.
+- `oidcOAuth2Config.initialBackoffDelay`: (*optional*) the initial delay (in milliseconds) before retrying the OpenID Connect authentication process. Default is `1000` (1 second).
+- `oidcOAuth2Config.backoffMultiplier`: (*optional*) the multiplier to apply to the delay for each retry attempt. Default is `2.0`.
 
 !!! note
     The only mandatory claim is the `email` or what you indicated in `oidcOAuth2Config.principalKey`. The `rolesClaim` and `groupsClaim` configurations are optional. If you don't need to map roles or groups, you can omit them. At the moment, there is no mapping for roles and groups for the generic OIDC provider. If you need to map roles and groups, you can use the `keycloak` provider.

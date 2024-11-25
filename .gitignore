@@ -26,3 +26,5 @@ debug.log
 .vscode/settings.json
 site
 .DS_Store
+venv
+__pycache__
