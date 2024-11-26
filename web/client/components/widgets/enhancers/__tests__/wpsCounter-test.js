@@ -40,8 +40,7 @@ describe('wpsChart enhancer', () => {
             options: {
                 aggregateFunction: "Count",
                 aggregationAttribute: "test"
-            },
-            dependencies: { viewport: true}
+            }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
@@ -61,8 +60,7 @@ describe('wpsChart enhancer', () => {
             options: {
                 aggregateFunction: "Count",
                 aggregationAttribute: "test"
-            },
-            dependencies: { viewport: true}
+            }
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
