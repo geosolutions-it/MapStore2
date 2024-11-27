@@ -73,15 +73,9 @@ describe('OGC Operators', () => {
         )).toBe('<ogc:Not><ogc:PropertyIsEqualTo>TEST</ogc:PropertyIsEqualTo></ogc:Not>');
     });
     it('logical functions with empty content', () => {
-        expect(logical.and("ogc"
-
-        )).toBe('');
-        expect(logical.or("ogc"
-
-        )).toBe('');
-        expect(logical.not("ogc"
-
-        )).toBe('');
+        expect(logical.and("ogc")).toBe('');
+        expect(logical.or("ogc")).toBe('');
+        expect(logical.not("ogc")).toBe('');
     });
     it('spatial functions', () => {
         expect(spatial.intersects("ogc", propertyName("ogc", "GEOMETRY"), "TEST")).toBe("<ogc:Intersects><ogc:PropertyName>GEOMETRY</ogc:PropertyName>TEST</ogc:Intersects>");

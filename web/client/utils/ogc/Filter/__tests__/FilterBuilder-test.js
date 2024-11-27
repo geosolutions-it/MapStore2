@@ -80,18 +80,10 @@ describe('FilterBuilder', () => {
             + `</ogc:Or>`);
         // empty array returns empty filter instead of <And>undefined</And>
         // to check if is better to return an empty filter like <ogc:And></ogc:And> or <ogc:Or/>
-        expect(
-            b.and()
-        ).toBe("");
-        expect(
-            b.or()
-        ).toBe("");
-        expect(
-            b.not()
-        ).toBe("");
-        expect(
-            b.nor()
-        ).toBe("");
+        expect(b.and()).toBe("");
+        expect(b.or()).toBe("");
+        expect(b.not()).toBe("");
+        expect(b.nor()).toBe("");
     });
 
     it('valueReference 1.1.0', () => {
