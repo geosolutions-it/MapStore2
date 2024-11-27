@@ -44,7 +44,7 @@ const upper = (ns, value) => `<${ns}:UpperBoundary>${value}</${ns}:UpperBoundary
  * @param {string|Array} content content
  * @returns the operation result
  */
-const multiop = (ns, op, content) => op(ns, Array.isArray(content) ? content.join("") : content );
+const multiop = (ns, op, content) => op(ns, Array.isArray(content) ? content.join("") : content);
 const logical = {
     and: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.AND, [content, ...other]) : multiop(ns, ogcLogicalOperators.AND, content),
     or: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.OR, [content, ...other]) : multiop(ns, ogcLogicalOperators.OR, content),
