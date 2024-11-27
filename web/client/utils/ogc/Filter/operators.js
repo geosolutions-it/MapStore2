@@ -18,10 +18,10 @@ const ogcComparisonOperators = {
     "isNull": (ns, content) => `<${ns}:PropertyIsNull>${content}</${ns}:PropertyIsNull>`
 };
 const ogcLogicalOperators = {
-    "AND": (ns, content) => `<${ns}:And>${content}</${ns}:And>`,
-    "OR": (ns, content) => `<${ns}:Or>${content}</${ns}:Or>`,
-    "NOR": (ns, content) => `<${ns}:Not><${ns}:Or>${content}</${ns}:Or></${ns}:Not>`,
-    "NOT": (ns, content) => `<${ns}:Not>${content}</${ns}:Not>`
+    "AND": (ns, content) => content ? `<${ns}:And>${content}</${ns}:And>` : "",
+    "OR": (ns, content) => content ? `<${ns}:Or>${content}</${ns}:Or>` : "",
+    "NOR": (ns, content) => content ? `<${ns}:Not><${ns}:Or>${content}</${ns}:Or></${ns}:Not>` : "",
+    "NOT": (ns, content) => content ? `<${ns}:Not>${content}</${ns}:Not>` : ""
 };
 
 const ogcSpatialOperators = {
@@ -44,7 +44,7 @@ const upper = (ns, value) => `<${ns}:UpperBoundary>${value}</${ns}:UpperBoundary
  * @param {string|Array} content content
  * @returns the operation result
  */
-const multiop = (ns, op, content) => op(ns, Array.isArray(content) ? content.join("") : content);
+const multiop = (ns, op, content) => op(ns, Array.isArray(content) ? content.join("") : content );
 const logical = {
     and: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.AND, [content, ...other]) : multiop(ns, ogcLogicalOperators.AND, content),
     or: (ns, content, ...other) => other && other.length > 0 ? multiop(ns, ogcLogicalOperators.OR, [content, ...other]) : multiop(ns, ogcLogicalOperators.OR, content),
