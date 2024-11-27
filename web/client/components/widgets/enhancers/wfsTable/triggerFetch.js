@@ -22,7 +22,15 @@ const sameSortOptions = (o1 = {}, o2 = {}) =>
  * @return {Observable} Stream of props to trigger the data fetch
  */
 export default ($props) =>
-    $props.filter(({ layer = {} }) => layer.name )
+    $props.filter(({ layer = {}, mapSync, dependencies }) => {
+        // Check if mapSync is enabled (true) and dependencies.viewport is null or falsy
+        // If this condition is true, return false to filter out the event.
+        // This prevents an extra API call from being triggered when the viewport is not available.
+        if (mapSync && !dependencies?.viewport) {
+            return false;
+        }
+        return layer.name;
+    } )
         .distinctUntilChanged(
             ({ layer = {}, options = {}, filter, sortOptions }, newProps) =>
             /* getSearchUrl(layer) === getSearchUrl(layer) && */
