@@ -13,3 +13,7 @@ export const VECTOR_FORMATS = [
 ];
 
 export const isVectorFormat = (format) => VECTOR_FORMATS.indexOf(format) !== -1;
+
+export const isValidResponse = (response) => {
+    return response?.status === 200 && response?.data && response?.data?.type !== "text/xml";
+};

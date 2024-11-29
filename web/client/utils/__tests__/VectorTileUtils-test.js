@@ -7,7 +7,10 @@
  */
 
 import expect from 'expect';
-import { isVectorFormat } from '../VectorTileUtils';
+import {
+    isValidResponse,
+    isVectorFormat
+} from '../VectorTileUtils';
 
 describe('VectorTileUtils', () => {
     it('test isVectorFormat with vector formats', () => {
@@ -32,5 +35,13 @@ describe('VectorTileUtils', () => {
 
         const GIF = 'image/gif';
         expect(isVectorFormat(GIF)).toBe(false);
+    });
+    it('test isValidResponse', () => {
+        // invalid responses
+        expect(isValidResponse({data: {type: "text/xml"}})).toBeFalsy();
+        expect(isValidResponse({data: {type: "blob"}})).toBeFalsy();
+        expect(isValidResponse({data: {type: "blob"}, status: 401})).toBeFalsy();
+        // valid responses
+        expect(isValidResponse({data: {type: "blob"}, status: 200})).toBeTruthy();
     });
 });
