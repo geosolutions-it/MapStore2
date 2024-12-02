@@ -135,6 +135,7 @@ module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} =
         and: logical.and.bind(null, filterNS),
         or: logical.or.bind(null, filterNS),
         not: logical.not.bind(null, filterNS),
+        nor: logical.nor.bind(null, filterNS),
         func: func.bind(null, filterNS),
         literal: getValue,
         // note: use valueReference method for filters and SortBy conditions. PropertyName is used in WFS 2.0 only for listing required attributes, while the rest uses ValueReference.

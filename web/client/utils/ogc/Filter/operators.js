@@ -18,10 +18,10 @@ const ogcComparisonOperators = {
     "isNull": (ns, content) => `<${ns}:PropertyIsNull>${content}</${ns}:PropertyIsNull>`
 };
 const ogcLogicalOperators = {
-    "AND": (ns, content) => `<${ns}:And>${content}</${ns}:And>`,
-    "OR": (ns, content) => `<${ns}:Or>${content}</${ns}:Or>`,
-    "NOR": (ns, content) => `<${ns}:Not><${ns}:Or>${content}</${ns}:Or></${ns}:Not>`,
-    "NOT": (ns, content) => `<${ns}:Not>${content}</${ns}:Not>`
+    "AND": (ns, content) => content ? `<${ns}:And>${content}</${ns}:And>` : "",
+    "OR": (ns, content) => content ? `<${ns}:Or>${content}</${ns}:Or>` : "",
+    "NOR": (ns, content) => content ? `<${ns}:Not><${ns}:Or>${content}</${ns}:Or></${ns}:Not>` : "",
+    "NOT": (ns, content) => content ? `<${ns}:Not>${content}</${ns}:Not>` : ""
 };
 
 const ogcSpatialOperators = {
