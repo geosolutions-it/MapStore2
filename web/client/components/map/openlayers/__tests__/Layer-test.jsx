@@ -320,7 +320,7 @@ describe('Openlayers layer', () => {
         expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
     });
-    it.only('render wms singleTile layer with error', (done) => {
+    it('render wms singleTile layer with error', (done) => {
         mockAxios.onGet().reply(r => {
             expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
             return [200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
