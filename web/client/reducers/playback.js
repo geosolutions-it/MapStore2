@@ -16,6 +16,7 @@ import {
 
 import { RESET_CONTROLS } from '../actions/controls';
 import { set } from '../utils/ImmutableUtils';
+import { MAP_CONFIG_LOADED } from '../actions/config';
 
 const DEFAULT_SETTINGS = {
     timeStep: 1,
@@ -28,6 +29,10 @@ export default (state = { status: STATUS.STOP, currentFrame: -1, settings: DEFAU
     switch (action.type) {
     case INIT: {
         return {...state, ...action.payload};
+    }
+    case MAP_CONFIG_LOADED: {
+        const playbackConfig = action.config?.playback || {};
+        return {...playbackConfig};
     }
     case PLAY: {
         return set(`status`, STATUS.PLAY, state);

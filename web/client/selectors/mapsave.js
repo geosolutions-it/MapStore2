@@ -34,6 +34,9 @@ export const registerCustomSaveHandler = (section, handler) => {
         delete customSaveHandlers[section];
     }
 };
+export const getRegisterHandlers = () => {
+    return Object.keys(customSaveHandlers);
+};
 
 export const basicMapOptionsToSaveSelector = createStructuredSelector({
     catalogServices: createStructuredSelector({
