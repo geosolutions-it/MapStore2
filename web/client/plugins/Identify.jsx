@@ -199,6 +199,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.showHighlightFeatureButton {boolean} show the highlight feature button if the interrogation returned valid features (openlayers only)
  * @prop cfg.hidePopupIfNoResults {boolean} hide/show the identify popup in case of no results
  * @prop cfg.highlightEnabledFromTheStart {boolean} the highlight feature button will be activated by default if true
+ * @prop cfg.highlightSytle {object} custom highlight style will be merged to default if value exist
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the header of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action

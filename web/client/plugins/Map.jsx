@@ -155,6 +155,7 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
  * @prop {object} mapOptions map options grouped by map type
+ * @prop {object} highlightStyle custom highlight Style
  * @prop {boolean} mapOptions.cesium.navigationTools enable cesium navigation tool (default false)
  * @prop {boolean} mapOptions.cesium.showSkyAtmosphere enable sky atmosphere of the globe (default true)
  * @prop {boolean} mapOptions.cesium.showGroundAtmosphere enable ground atmosphere of the globe (default false)
@@ -211,7 +212,8 @@ class MapPlugin extends React.Component {
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
         onMapTypeLoaded: PropTypes.func,
-        pluginsCreator: PropTypes.func
+        pluginsCreator: PropTypes.func,
+        highlightStyle: PropTypes.object
     };
 
     static defaultProps = {
@@ -272,7 +274,7 @@ class MapPlugin extends React.Component {
 
     getHighlightLayer = (projection, index, env) => {
         const plugins = this.state.plugins;
-        const {features, ...options} = getHighlightLayerOptions({features: this.props.features});
+        const {features, ...options} = getHighlightLayerOptions({features: this.props.features}, this.props?.highlightStyle);
         return (<plugins.Layer type="vector"
             srs={projection}
             position={index}
