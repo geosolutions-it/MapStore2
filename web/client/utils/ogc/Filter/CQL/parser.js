@@ -19,7 +19,7 @@ export const functionOperator = "func";
 export const patterns = {
     INCLUDE: /^INCLUDE$/,
     PROPERTY: /^"?[_a-zA-Z"]\w*"?/,
-    COMPARISON: /^(=|<>|<=|<|>=|>|LIKE)/i,
+    COMPARISON: /^(=|<>|<=|<|>=|>|LIKE|ILIKE)/i,
     IS_NULL: /^IS NULL/i,
     COMMA: /^,/,
     AND: /^(AND)/i,
