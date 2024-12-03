@@ -29,7 +29,8 @@ import TileWMS from 'ol/source/TileWMS';
 import VectorTileSource from 'ol/source/VectorTile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 
-import { isVectorFormat, isValidResponse } from '../../../../utils/VectorTileUtils';
+import { isVectorFormat } from '../../../../utils/VectorTileUtils';
+import { isValidResponse } from '../../../../utils/WMSUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
