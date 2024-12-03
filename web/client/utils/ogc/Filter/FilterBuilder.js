@@ -5,10 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {logical, spatial, comparison, literal, propertyName, valueReference, distance, lower, upper, func} = require('./operators');
-const {filter, fidFilter} = require('./filter');
-const {processOGCGeometry} = require("../GML");
-const {castArray} = require('lodash');
+import {logical, spatial, comparison, literal, propertyName, valueReference, distance, lower, upper, func} from './operators';
+import {filter, fidFilter} from './filter';
+import {processOGCGeometry} from "../GML";
+import {castArray} from 'lodash';
 // const isValidXML = (value, {filterNS, gmlNS}) => value.indexOf(`<${filterNS}:` === 0) || value.indexOf(`<${gmlNS}:`) === 0;
 /**
  * Returns OGC Filter Builder. The FilterBuilder returns the method to compose the filter.
@@ -17,7 +17,7 @@ const {castArray} = require('lodash');
  * The property object have the methods listed as properies below.
  * The builder provides all the methods to compose the filter (filter, and, or, not, property) to compose the filter.
  * ```
- * const filterBuilder = require('.../FilterBuilder');
+ * import filterBuilder from '.../FilterBuilder';
  * const {filter, property, and, or, not} = filterBuilder({gmlVersion: "3.1.1"});
  *      filter(
  *          and(
@@ -105,7 +105,7 @@ const {castArray} = require('lodash');
  * @prop {function} property.dwithin `property("P1").dwithin(geoJSONGeometry, 10, "m")` 2nd and 3rd params are optional
  * @prop {function} property.contains `property("P1").contains(geoJSONGeometry)`
  */
-module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} = {}) {
+export default function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} = {}) {
     let gmlV = gmlVersion || "3.1.1";
 
     const getGeom = (geom) => processOGCGeometry(gmlV, geom);
@@ -165,4 +165,4 @@ module.exports = function({filterNS = "ogc", gmlVersion, wfsVersion = "1.1.0"} =
         }
     };
 
-};
+}
