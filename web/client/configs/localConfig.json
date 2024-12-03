@@ -52,7 +52,12 @@
     "authenticationRules": [{
         "urlPattern": ".*geostore.*",
         "method": "bearer"
-      }, {
+      },
+      {
+        "urlPattern": "http(s)?\\:\\/\\/gs-stable\\.(geo-solutions\\.it|geosolutionsgroup\\.com)(\\:443|\\:80)?\\/geoserver/.*",
+        "authkeyParamName": "authkey",
+        "method": "authkey"
+      },{
         "urlPattern": ".*rest/config.*",
         "method": "bearer"
       }],
