@@ -320,6 +320,37 @@ describe('Openlayers layer', () => {
         expect(layer).toBeTruthy();
         expect(map.getLayers().getLength()).toBe(1);
     });
+    it('render wms singleTile layer with error', (done) => {
+        mockAxios.onGet().reply(r => {
+            expect(r.url.indexOf('SAMPLE_URL') >= 0 ).toBeTruthy();
+            return [200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<ows:ExceptionReport xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+            "  <ows:Exception exceptionCode=\"InvalidParameterValue\" locator=\"srsname\">\n" +
+            "    <ows:ExceptionText>msWFSGetFeature(): WFS server error. Invalid GetFeature Request</ows:ExceptionText>\n" +
+            "  </ows:Exception>\n" +
+            "</ows:ExceptionReport>"];
+        });
+        const options = {
+            type: 'wms',
+            visibility: true,
+            singleTile: true,
+            url: 'SAMPLE_URL',
+            name: 'osm:vector_tile'
+        };
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{
+                ...options
+            }}
+            map={map} />, document.getElementById("container"));
+        expect(layer.layer.getSource()).toBeTruthy();
+        layer.layer.getSource().on('imageloaderror', (e)=> {
+            setTimeout(() => {
+                expect(e).toBeTruthy();
+                done();
+            }, 200);
+        });
+    });
     it('creates a tiled wms layer for openlayers map with long url', (done) => {
         let options = {
             "type": "wms",
