@@ -55,10 +55,23 @@ describe('triggerFetch stream', () => {
                 }
             );
     });
-    it('triggerFetch with mapSync and dependencies.viewport', (done) => {
+    it('triggerFetch with mapSync with mapWidget and dependencies.viewport', (done) => {
         const base = {
             layer: { name: "TEST" },
-            mapSync: true
+            mapSync: true,
+            dependenciesMap: {
+                mapSync: 'widgets[456].mapSync'
+            },
+            widgets: [
+                {
+                    id: "123",
+                    widgetType: 'table'
+                },
+                {
+                    id: "456",
+                    widgetType: 'map'
+                }
+            ]
         };
         const propsChanges = [
             base, // does not trigger fetch

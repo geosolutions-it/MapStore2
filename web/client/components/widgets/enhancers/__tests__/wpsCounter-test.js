@@ -64,7 +64,7 @@ describe('wpsChart enhancer', () => {
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
-    it('wpsCounter with mapSync and dependencies', (done) => {
+    it('wpsCounter with mapSync with mapWidget and dependencies', (done) => {
         const Sink = wpsCounter(createSink( ({data, loading} = {}) => {
             if (!loading) {
                 expect(data).toExist();
@@ -76,6 +76,19 @@ describe('wpsChart enhancer', () => {
             dependencies: {
                 viewport: "..."
             },
+            dependenciesMap: {
+                mapSync: 'widgets[456].mapSync'
+            },
+            widgets: [
+                {
+                    id: "123",
+                    widgetType: 'table'
+                },
+                {
+                    id: "456",
+                    widgetType: 'map'
+                }
+            ],
             layer: {
                 name: "test",
                 url: 'base/web/client/test-resources/widgetbuilder/aggregate',
