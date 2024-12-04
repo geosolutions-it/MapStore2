@@ -25,7 +25,8 @@ import {
     enableBarChartStack,
     getWidgetLayersNames,
     isChartCompatibleWithTableWidget,
-    canTableWidgetBeDependency
+    canTableWidgetBeDependency,
+    checkMapSyncWithWidgetOfMapType
 } from '../WidgetsUtils';
 import * as simpleStatistics from 'simple-statistics';
 import { createClassifyGeoJSONSync } from '../../api/GeoJSONClassification';
@@ -756,5 +757,44 @@ describe('Test WidgetsUtils', () => {
         expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}]}]}, dependencyTableWidget1)).toBeTruthy();
         expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_1"}}]}]}, dependencyTableWidget2)).toBeFalsy();
         expect(canTableWidgetBeDependency({widgetType: 'chart', charts: [{chartId: "1", traces: [{layer: {name: "layer_1"}}, {layer: {name: "layer_2"}}]}]}, dependencyTableWidget2)).toBeFalsy();
+    });
+
+    it("MapSync dependency to mapWidget", () => {
+        const parameters = {
+            dependenciesMap: {
+                mapSync: 'widgets[456].mapSync'
+            },
+            widgets: [
+                {
+                    id: "123",
+                    widgetType: 'table'
+                },
+                {
+                    id: "456",
+                    widgetType: 'map'
+                }
+            ]
+        };
+        const result = checkMapSyncWithWidgetOfMapType(parameters.widgets, parameters.dependenciesMap);
+        expect(result).toEqual(true);
+    });
+    it("MapSync dependency not in map widget", () => {
+        const parameters = {
+            dependenciesMap: {
+                mapSync: 'widgets[123].mapSync'
+            },
+            widgets: [
+                {
+                    id: "123",
+                    widgetType: 'table'
+                },
+                {
+                    id: "456",
+                    widgetType: 'map'
+                }
+            ]
+        };
+        const result = checkMapSyncWithWidgetOfMapType(parameters.widgets, parameters.dependenciesMap);
+        expect(result).toEqual(false);
     });
 });

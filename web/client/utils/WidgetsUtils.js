@@ -992,3 +992,49 @@ export const canTableWidgetBeDependency = (widget, dependencyTableWidget) => {
     const layerPresent = editingLayer.includes(get(dependencyTableWidget, 'layer.name'));
     return isChart ? layerPresent && isChartCompatibleWithTableWidget(widget, dependencyTableWidget) : layerPresent;
 };
+
+function findWidgetById(widgets, widgetId) {
+    return widgets?.find(widget => widget.id === widgetId);
+}
+
+/**
+ * Checks if a widget, referenced by `mapSync` in the `dependenciesMap`, has `widgetType` set to `'map'`.
+ * If the widget has a `dependenciesMap`, it will be checked recursively.
+ *
+ * @param {Array<Object>} widgets - List of widget objects, each containing an `id`, `widgetType`, and optionally `dependenciesMap`.
+ * @param {Object} dependenciesMap - An object containing a `mapSync` reference to another widget's `mapSync` (e.g., "widgets[widgetId].mapSync").
+ * @returns {boolean} - Returns boolean
+ *
+ * @example
+ * checkMapSyncWithWidgetOfMapType(widgets, { mapSync: 'widgets[40fdb720-b228-11ef-974d-8115935269b7].mapSync' });
+ */
+export function checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) {
+    const mapSyncDependencies = dependenciesMap?.mapSync;
+
+    if (!mapSyncDependencies) {
+        return false;
+    }
+    if (mapSyncDependencies.includes("map.mapSync")) {
+        return true;
+    }
+    // Extract widget ID
+    const widgetId = mapSyncDependencies.match?.(/\[([^\]]+)\]/)?.[1];
+    if (!widgetId) {
+        return false;
+    }
+    // Find the widget using the extracted widgetId
+    const widget = findWidgetById(widgets, widgetId);
+    if (!widget) {
+        return false;
+    }
+    // Check if the widget has widgetType 'map'
+    if (widget.widgetType === 'map') {
+        return true;
+    }
+    // If widget has its own dependenciesMap, recursively check that map
+    if (widget.dependenciesMap) {
+        return checkMapSyncWithWidgetOfMapType(widgets, widget.dependenciesMap);
+    }
+    // If no match found, return false
+    return false;
+}
