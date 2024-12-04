@@ -425,7 +425,7 @@ export class OlStyleParser {
      */
     geoStylerStyleToOlParserStyleFct(geoStylerStyle) {
         const rules = geoStylerStyle.rules;
-        const olStyle = ({ map, features } = {}) => drawIcons(geoStylerStyle, { features })
+        const olStyle = ({ map, features, loadFontAwesomeForIcons } = {}) => drawIcons({...geoStylerStyle, loadFontAwesomeForIcons}, { features })
             .then((images) => {
                 this._getImages = () => images;
                 this._getImageSrc = createGetImagesSrc();

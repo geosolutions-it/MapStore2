@@ -162,6 +162,7 @@ import {getHighlightLayerOptions} from "../utils/HighlightUtils";
  * @prop {boolean} mapOptions.cesium.depthTestAgainstTerrain if true all primitive 3d features will be tested against the terrain while if false they will be drawn on top of the terrain even if hidden by it (default true)
  * @prop {number} mapOptions.cesium.maximumZoomDistance max zoom limit (in meter unit) to restrict the zoom out operation based on it
  * @prop {number} mapOptions.cesium.minimumZoomDistance  min zoom limit (in meter unit) to restrict the zoom in operation based on it
+ * @prop {boolean} loadFontAwesomeForIcons flag for control loading fontAwesome for vector layer style
  * @static
  * @example
  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
@@ -211,7 +212,8 @@ class MapPlugin extends React.Component {
         items: PropTypes.array,
         onLoadingMapPlugins: PropTypes.func,
         onMapTypeLoaded: PropTypes.func,
-        pluginsCreator: PropTypes.func
+        pluginsCreator: PropTypes.func,
+        loadFontAwesomeForIcons: PropTypes.bool
     };
 
     static defaultProps = {
@@ -249,7 +251,8 @@ class MapPlugin extends React.Component {
         items: [],
         onLoadingMapPlugins: () => {},
         onMapTypeLoaded: () => {},
-        pluginsCreator
+        pluginsCreator,
+        loadFontAwesomeForIcons: true
     };
 
     state = {};
@@ -330,7 +333,7 @@ class MapPlugin extends React.Component {
                     srs={projection}
                     position={index}
                     key={layer.id || layer.name}
-                    options={layer}
+                    options={{...layer, loadFontAwesomeForIcons: this.props.loadFontAwesomeForIcons}}
                     securityToken={this.props.securityToken}
                     env={env}
                 >

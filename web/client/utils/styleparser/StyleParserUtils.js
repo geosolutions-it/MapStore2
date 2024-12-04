@@ -917,7 +917,8 @@ export const drawIcons = (geoStylerStyle, options) => {
     }, []);
     const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
     const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
-    return loadFontAwesome()
+    const shouldLoadFontAwesomeForIcons =  geoStylerStyle.loadFontAwesomeForIcons ? loadFontAwesome() : Promise.resolve();
+    return shouldLoadFontAwesomeForIcons
         .then(
             () => new Promise((resolve) => {
                 if (marks.length > 0 || icons.length > 0) {
