@@ -46,6 +46,19 @@ export const isValidGetMapFormat = (format) => {
 export const isValidGetFeatureInfoFormat = (format) => {
     return getDefaultSupportedGetFeatureInfoFormats().includes(format);
 };
+
+/**
+ * Validate GetMap response from WMS ImageWMS.
+ * "OGC protocol returns status = 200 with Exception in body,
+ * this function checks if the exception is contained in the response".
+ * https://docs.geoserver.org/main/en/user/services/wms/reference.html#exceptions
+ * @param {object} response
+ * @return {boolean}
+ */
+export const isValidResponse = (response) => {
+    return response?.status === 200 && response?.data && response?.data?.type !== "text/xml";
+};
+
 /**
  * Parses layer info from capabilities object
  * @param {object} capabilities capabilities section of the layer as an object from xml2js parsing of the WMS capabilities

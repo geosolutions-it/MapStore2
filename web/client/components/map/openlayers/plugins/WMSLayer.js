@@ -30,6 +30,7 @@ import VectorTileSource from 'ol/source/VectorTile';
 import VectorTileLayer from 'ol/layer/VectorTile';
 
 import { isVectorFormat } from '../../../../utils/VectorTileUtils';
+import { isValidResponse } from '../../../../utils/WMSUtils';
 import { OL_VECTOR_FORMATS, applyStyle } from '../../../../utils/openlayers/VectorTileUtils';
 
 import { proxySource, getWMSURLs, wmsToOpenlayersOptions, toOLAttributions, generateTileGrid } from '../../../../utils/openlayers/WMSUtils';
@@ -74,10 +75,14 @@ const loadFunction = (options, headers) => function(image, src) {
                 headers,
                 responseType: 'blob'
             }).then(response => {
-                if (response.status === 200 && response.data) {
+                if (isValidResponse(response)) {
                     image.getImage().src = URL.createObjectURL(response.data);
                 } else {
-                    console.error("Status code: " + response.status);
+                    // #10701 this is needed to trigger the imageloaderror event
+                    // in ol otherwise this event is not triggered if you assign
+                    // the xml content of the exception to the src attribute
+                    image.getImage().src = null;
+                    console.error("error: " + response.data);
                 }
             }).catch(e => {
                 console.error(e);
