@@ -125,7 +125,23 @@ describe('usersession Epics', () => {
             expect(actions[0].type).toBe(USER_SESSION_LOADING);
             expect(actions[1].type).toBe(USER_SESSION_REMOVED);
             expect(actions[1].newSession).toBeTruthy();
-        }, initialState, done);
+        }, {...initialState,
+            map: {
+                present: {
+                    center: {
+                        x: -71.88845339541245,
+                        y: 37.25911173702324,
+                        crs: 'EPSG:4326'
+                    },
+                    maxExtent: [
+                        -20037508.34,
+                        -20037508.34,
+                        20037508.34,
+                        20037508.34
+                    ]
+                }
+            }
+        }, done);
     });
 
     it("user Session Update on Partial Session Remove", (done) => {

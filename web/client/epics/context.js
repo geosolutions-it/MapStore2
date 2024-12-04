@@ -116,7 +116,7 @@ const createSessionFlow = (mapId, contextName, resourceCategory, action$, getSta
         (mapId ? Observable.of(null) : getResourceDataByName(resourceCategory, contextName))
     ).flatMap(([id, data]) => {
         const userName = userSelector(getState())?.name;
-        return Observable.of(loadUserSession(buildSessionName(id, mapId, userName))).delay(2000).merge(
+        return Observable.of(loadUserSession(buildSessionName(id, mapId, userName))).merge(
             action$.ofType(USER_SESSION_LOADED).take(1).switchMap(({session}) => {
                 const sessionData = {
                     ...session

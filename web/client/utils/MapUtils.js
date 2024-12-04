@@ -500,15 +500,15 @@ export const groupSaveFormatted = (node) => {
 export function saveMapConfiguration(currentMap, currentLayers, currentGroups, currentBackgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions) {
 
     const map = {
-        center: currentMap?.center,
-        maxExtent: currentMap?.maxExtent,
-        projection: currentMap?.projection,
-        units: currentMap?.units,
-        mapInfoControl: currentMap?.mapInfoControl,
-        zoom: currentMap?.zoom,
-        mapOptions: currentMap?.mapOptions || {},
-        ...(currentMap?.visualizationMode && { visualizationMode: currentMap?.visualizationMode }),
-        ...(currentMap?.viewerOptions && { viewerOptions: currentMap?.viewerOptions })
+        center: currentMap.center,
+        maxExtent: currentMap.maxExtent,
+        projection: currentMap.projection,
+        units: currentMap.units,
+        mapInfoControl: currentMap.mapInfoControl,
+        zoom: currentMap.zoom,
+        mapOptions: currentMap.mapOptions || {},
+        ...(currentMap.visualizationMode && { visualizationMode: currentMap.visualizationMode }),
+        ...(currentMap.viewerOptions && { viewerOptions: currentMap.viewerOptions })
     };
 
     const layers = currentLayers.map((layer) => {
