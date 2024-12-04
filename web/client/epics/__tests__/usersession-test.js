@@ -205,7 +205,21 @@ describe('usersession Epics', () => {
         testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
             expect(actions[2].type).toBe(CLOSE_FEATURE_GRID);
             expect(actions[3].type).toBe(TEXT_SEARCH_RESET);
-        }, initialState, done);
+        }, {...initialState, map: {
+            present: {
+                center: {
+                    x: -71.88845339541245,
+                    y: 37.25911173702324,
+                    crs: 'EPSG:4326'
+                },
+                maxExtent: [
+                    -20037508.34,
+                    -20037508.34,
+                    20037508.34,
+                    20037508.34
+                ]
+            }
+        }}, done);
     });
 
 });
