@@ -7,9 +7,7 @@
  */
 
 import expect from 'expect';
-import {
-    isVectorFormat
-} from '../VectorTileUtils';
+import { isVectorFormat } from '../VectorTileUtils';
 
 describe('VectorTileUtils', () => {
     it('test isVectorFormat with vector formats', () => {
