@@ -101,4 +101,31 @@ describe('wpsChart enhancer', () => {
         };
         ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
     });
+    it('wpsCounter with mapSync standard Map', (done) => {
+        const Sink = wpsCounter(createSink( ({data, loading} = {}) => {
+            if (!loading) {
+                expect(data).toExist();
+                done();
+            }
+        }));
+        const props = {
+            mapSync: true,
+            dependencies: {
+                viewport: "..."
+            },
+            dependenciesMap: {
+                mapSync: 'map.mapSync'
+            },
+            layer: {
+                name: "test",
+                url: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate'}},
+            options: {
+                aggregateFunction: "Count",
+                aggregationAttribute: "test"
+            }
+        };
+        ReactDOM.render(<Sink {...props} />, document.getElementById("container"));
+    });
 });

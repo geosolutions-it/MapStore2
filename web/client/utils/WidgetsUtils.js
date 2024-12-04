@@ -994,7 +994,7 @@ export const canTableWidgetBeDependency = (widget, dependencyTableWidget) => {
 };
 
 function findWidgetById(widgets, widgetId) {
-    return widgets.find(widget => widget.id === widgetId);
+    return widgets?.find(widget => widget.id === widgetId);
 }
 
 /**
@@ -1013,6 +1013,9 @@ export function checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) {
 
     if (!mapSyncDependencies) {
         return false;
+    }
+    if (mapSyncDependencies.includes("map.mapSync")) {
+        return true;
     }
     // Extract widget ID
     const widgetId = mapSyncDependencies.match?.(/\[([^\]]+)\]/)?.[1];
