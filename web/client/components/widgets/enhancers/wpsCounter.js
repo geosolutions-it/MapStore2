@@ -21,6 +21,8 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.viewParams === o2.viewParams;
 import { getWpsUrl } from '../../../utils/LayersUtils';
+import { checkMapSyncWithWidgetOfMapType } from '../../../utils/WidgetsUtils';
+
 
 /**
  * Stream of props -> props to retrieve data from WPS aggregate process on params changes.
@@ -30,11 +32,11 @@ import { getWpsUrl } from '../../../utils/LayersUtils';
  */
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({layer = {}, options, dependencies, mapSync}) => {
-            // Check if mapSync is enabled (true) and dependencies.viewport is null or falsy
+        .filter(({layer = {}, options, dependencies, mapSync, dependenciesMap, widgets}) => {
+            // Check if mapSync is enabled (true), dependencyMap has mapSync dependency to Map widget and dependencies.viewport is null or falsy
             // If this condition is true, return false to filter out the event.
             // This prevents an extra API call from being triggered when the viewport is not available.
-            if (mapSync && !dependencies?.viewport) {
+            if (mapSync && checkMapSyncWithWidgetOfMapType(widgets, dependenciesMap) && !dependencies?.viewport) {
                 return false;
             }
             return layer.name && getWpsUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute;
