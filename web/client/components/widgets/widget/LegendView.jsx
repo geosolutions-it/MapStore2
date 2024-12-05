@@ -35,7 +35,12 @@ export default ({
                 scales,
                 zoom: currentZoomLvl,
                 layerOptions: {
-                    legendOptions: legendProps,
+                    legendOptions: {
+                        ...legendProps,
+                        projection: map?.projection,
+                        mapSize: map?.size,
+                        mapBbox: map?.bbox
+                    },
                     hideFilter: true
                 }
             }}

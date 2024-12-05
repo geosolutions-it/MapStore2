@@ -240,7 +240,11 @@
               "clearCustomizationConfirm": "Voulez-vous vraiment supprimer les personnalisations ?",
               "error":  "Échec de la récupération des champs"
             },
-            "disableFeaturesEditing": "Désactiver la modification sur la table attributaire"
+            "disableFeaturesEditing": "Désactiver la modification sur la table attributaire",
+            "interactiveLegend": {
+                "incompatibleFilterWarning": "Les filtres de légende appliqués sont incompatibles avec le filtre de couche actif",
+                "resetLegendFilterTooltip": "Réinitialiser le filtre de légende à l'état initial"
+            }
         },
          "localizedInput": {
           "localize": "Localiser ce texte...",

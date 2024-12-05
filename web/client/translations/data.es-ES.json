@@ -240,7 +240,11 @@
               "clearCustomizationConfirm": "¿Está seguro de que desea borrar la personalización de los campos?",
               "error": "Error al recuperar los campos"
             },
-            "disableFeaturesEditing": "Deshabilitar la edición en la tabla de atributos"
+            "disableFeaturesEditing": "Deshabilitar la edición en la tabla de atributos",
+            "interactiveLegend": {
+                "incompatibleFilterWarning": "Los filtros de leyenda aplicados son incompatibles con el filtro de capa activo",
+                "resetLegendFilterTooltip": "Restablecer el filtro de leyenda al estado inicial"
+            } 
         },
         "localizedInput": {
           "localize": "Localizar cadena...",

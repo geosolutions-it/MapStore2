@@ -1,0 +1,81 @@
+/*
+ * Copyright 2024, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import { isEmpty } from "lodash";
+import { getExtentFromViewport } from "./CoordinatesUtils";
+import { ServerTypes } from "./LayersUtils";
+import { optionsToVendorParams } from "./VendorParamsUtils";
+
+export const INTERACTIVE_LEGEND_ID = "interactiveLegend";
+export const LEGEND_FORMAT = {
+    IMAGE: "image/png",
+    JSON: "application/json"
+};
+
+export const getLayerFilterByLegendFormat = (layer, format) => {
+    const layerFilter = layer?.layerFilter;
+    if (layer && layer.type === "wms" && layer.url) {
+        if (format === LEGEND_FORMAT.JSON && !isEmpty(layerFilter)) {
+            return {
+                ...layerFilter,
+                filters: (layerFilter?.filters ?? [])?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
+            };
+        }
+        return layerFilter;
+    }
+    return layerFilter;
+};
+
+export const getWMSLegendConfig = ({
+    format,
+    legendHeight,
+    legendWidth,
+    layer,
+    mapSize,
+    projection,
+    mapBbox,
+    legendOptions
+}) => {
+    const baseParams = {
+        service: "WMS",
+        request: "GetLegendGraphic",
+        format,
+        height: legendHeight,
+        width: legendWidth,
+        layer: layer.name,
+        style: layer.style || null,
+        version: layer.version || "1.3.0",
+        SLD_VERSION: "1.1.0",
+        LEGEND_OPTIONS: legendOptions
+    };
+
+    if (layer.serverType !== ServerTypes.NO_VENDOR) {
+        return {
+            ...baseParams,
+            LEGEND_OPTIONS: `hideEmptyRules:${layer.group !== "background"};${legendOptions}`,
+            SRCWIDTH: mapSize?.width ?? 512,
+            SRCHEIGHT: mapSize?.height ?? 512,
+            SRS: projection,
+            CRS: projection,
+            ...(mapBbox?.bounds && {BBOX: getExtentFromViewport(mapBbox, projection)?.join(',')}),
+            ...optionsToVendorParams({ ...layer, layerFilter: getLayerFilterByLegendFormat(layer, format) })
+        };
+    }
+
+    return {
+        ...baseParams,
+        ...layer.params
+    };
+};
+
+export default {
+    INTERACTIVE_LEGEND_ID,
+    getLayerFilterByLegendFormat,
+    getWMSLegendConfig
+};
+
