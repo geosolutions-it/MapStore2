@@ -3396,7 +3396,31 @@
           "tooltip": "Rensa den aktuella användarsessionen sparad",
           "successRemoved": "Användarsession borttagen",
           "remove": "Återställ användarsession",
-          "confirmRemove": "Är du säker på att du vill återställa standardkonfigurationen?"
+          "confirmRemove": "Är du säker på att du vill återställa standardkonfigurationen?",
+          "successUpdated": "User session Updated",
+          "sessionLabels":{
+            "everything": "Everything",
+            "map": "Map",
+            "map_pos": "Zoom and center",
+            "visualization_mode": "Visualization Mode (3D/2D)",
+            "layers": "Layers",
+            "annotations_layer": "Annotations Layer",
+            "measurements_layer": "Measurements Layer",
+            "background_layers": "Background Layers",
+            "other_layers": "Other Layers",
+            "catalog_services": "Catalog Services",
+            "widgets": "Widgets",
+            "search": "Search",
+            "text_search_services": "Text Search Services",
+            "bookmarks": "Bookmarks",
+            "feature_grid": "Feature Grid",
+            "other": "Other",
+            "toc": "Table of Contents Configuration",
+            "playback": "Playback Configuration",
+            "mapTemplates": "Map Templates",
+            "userPlugins": "User Plugins",
+            "mapViews": "Map Views"
+        }
         }
     }
 }
