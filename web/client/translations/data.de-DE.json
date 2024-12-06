@@ -240,7 +240,11 @@
               "clearCustomizationConfirm": "Möchten Sie wirklich alle Anpassungen entfernen?",
               "error": "Die Felder konnten nicht automatisch geladen werden"
             },
-            "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle"
+            "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle",
+            "interactiveLegend": {
+                "incompatibleFilterWarning": "Angewendete Legendenfilter sind mit dem aktiven Ebenenfilter nicht kompatibel",
+                "resetLegendFilterTooltip": "Setzen Sie den Legendenfilter auf den Anfangszustand zurück"
+            }
         },
         "localizedInput": {
           "localize": "Diesen Text lokalisieren...",
