@@ -57,6 +57,7 @@ export const getWMSLegendConfig = ({
     if (layer.serverType !== ServerTypes.NO_VENDOR) {
         return {
             ...baseParams,
+            // hideEmptyRules is applied for all layers except background layers
             LEGEND_OPTIONS: `hideEmptyRules:${layer.group !== "background"};${legendOptions}`,
             SRCWIDTH: mapSize?.width ?? 512,
             SRCHEIGHT: mapSize?.height ?? 512,
