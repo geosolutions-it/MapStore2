@@ -919,7 +919,6 @@ export const drawIcons = (geoStylerStyle, options) => {
     const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
     const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
     const loadFontAwesomeForIcons = getConfigProp("loadFontAwesomeForIcons");
-    console.log({loadFontAwesomeForIcons});
     // if undefined or true it will load it to preserve previous behaviour
     const loadingPromise =  (isNil(loadFontAwesomeForIcons) || loadFontAwesomeForIcons) && icons?.length ? loadFontAwesome() : Promise.resolve();
     return loadingPromise
