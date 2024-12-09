@@ -84,7 +84,6 @@ class GeoJSONStyledFeatures {
         this._dataSource.entities.collectionChanged.addEventListener(() => {
             setTimeout(() => this._map.scene.requestRender(), 300);
         });
-        this.loadFontAwesomeForIcons = options.loadFontAwesomeForIcons;
         // internal key to associate features with original features
         this._uuidKey = '__ms_uuid_key__' + uuid();
         // needs to be run after this._uuidKey
@@ -370,8 +369,7 @@ class GeoJSONStyledFeatures {
                     getPreviousStyledFeature: (styledFeature) => {
                         const editingStyleFeature = this._styledFeatures.find(({ id }) => id === styledFeature.id);
                         return editingStyleFeature;
-                    },
-                    loadFontAwesomeForIcons: this.loadFontAwesomeForIcons
+                    }
                 })
                     .then((styledFeatures) => {
                         this._updateEntities(styledFeatures, forceUpdate);

@@ -33,8 +33,7 @@ const createLayer = (options, map) => {
         id: options?.id,
         map: map,
         opacity: options.opacity,
-        queryable: options.queryable === undefined || options.queryable,
-        loadFontAwesomeForIcons: options?.loadFontAwesomeForIcons
+        queryable: options.queryable === undefined || options.queryable
     });
 
     layerToGeoStylerStyle(options)

@@ -1036,10 +1036,9 @@ function getStyleFuncFromRules({
         features,
         getPreviousStyledFeature = () => {},
         map,
-        sampleTerrain = Cesium.sampleTerrain,
-        loadFontAwesomeForIcons
+        sampleTerrain = Cesium.sampleTerrain
     }) => {
-        return drawIcons({ rules, loadFontAwesomeForIcons }, { features })
+        return drawIcons({ rules }, { features })
             .then((images) => {
                 const styledFeatures = getStyledFeatures({ rules, features, globalOpacity, images });
                 return Promise.all(styledFeatures.map((currentFeature) => {

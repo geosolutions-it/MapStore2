@@ -43,7 +43,7 @@ Layers.registerType('vector', {
             .then((style) => {
                 if (style) {
                     if (style.__geoStylerStyle) {
-                        style({ map, features: options.features, loadFontAwesomeForIcons: options.loadFontAwesomeForIcons })
+                        style({ map, features: options.features })
                             .then((olStyle) => {
                                 layer.setStyle(olStyle);
                             });

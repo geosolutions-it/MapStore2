@@ -60,7 +60,7 @@ const createLayer = (options) => {
 
     getStyle(applyDefaultStyleToVectorLayer(options), 'leaflet')
         .then((styleUtils) => {
-            styleUtils({ opacity: options.opacity, layer, features: options.features, loadFontAwesomeForIcons: options.loadFontAwesomeForIcons })
+            styleUtils({ opacity: options.opacity, layer, features: options.features })
                 .then(({
                     style: styleFunc,
                     pointToLayer = () => null,
