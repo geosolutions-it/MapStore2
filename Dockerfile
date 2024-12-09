@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk11-openjdk AS mother
+FROM tomcat:9-jdk11 AS mother
 LABEL maintainer="Alessandro Parma<alessandro.parma@geosolutionsgroup.com>"
 ARG MAPSTORE_WEBAPP_SRC="https://github.com/geosolutions-it/MapStore2/releases/latest/download/mapstore.war"
 ADD "${MAPSTORE_WEBAPP_SRC}" "/mapstore/"
@@ -6,7 +6,7 @@ ADD "${MAPSTORE_WEBAPP_SRC}" "/mapstore/"
 COPY ./docker/* /mapstore/docker/
 WORKDIR /mapstore
 
-FROM tomcat:9-jdk11-openjdk
+FROM tomcat:9-jdk11
 
 # Tomcat specific options
 ENV CATALINA_BASE "$CATALINA_HOME"
