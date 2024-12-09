@@ -129,6 +129,24 @@ const Theme = memo(({
         }
     }, [disabled]);
 
+    useEffect(() => {
+        const themeLinkId = 'ms-css-theme';
+        const existingLink = document.getElementById(themeLinkId);
+
+        if (existingLink)
+            existingLink.parentNode.removeChild(existingLink);
+
+        const newLink = document.createElement('link');
+        newLink.id = themeLinkId;
+        newLink.rel = 'stylesheet';
+        newLink.href = `dist/themes/${theme}.css`;
+        newLink.type = 'text/css';
+
+        document.head.appendChild(newLink); // Insert new link
+        console.log(`Applied new theme: ${theme}`); // TESTING LOG TO SHOW WHEN THEME CHANGES IN CONSOLE
+
+    }, [theme]);
+
     return children ? Children.only(children) : null;
 });
 
