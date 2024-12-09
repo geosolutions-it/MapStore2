@@ -22,9 +22,11 @@ class Localized extends React.Component {
     static childContextTypes = {
         locale: PropTypes.string,
         messages: PropTypes.object,
+        localeKey: PropTypes.bool
+    };
+    static defaultProps = {
         localeKey: true
     };
-
     getChildContext() {
         return {
             locale: this.props.locale,
