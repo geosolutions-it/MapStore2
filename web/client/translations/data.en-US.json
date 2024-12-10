@@ -240,7 +240,11 @@
               "clearCustomizationConfirm": "Are you sure you want to remove all customizations?",
               "error": "It was not possible to automatically load the fields"
             },
-          "disableFeaturesEditing": "Disable editing on Attribute table"
+          "disableFeaturesEditing": "Disable editing on Attribute table",
+          "interactiveLegend": {
+            "incompatibleFilterWarning": "Applied legend filters are incompatible with the active layer filter",
+            "resetLegendFilterTooltip": "Reset the legend filter to the initial state"
+          }
         },
         "localizedInput": {
           "localize": "Localize this text...",

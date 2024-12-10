@@ -30,6 +30,7 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
 };
 
 import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
+import { INTERACTIVE_LEGEND_ID } from './LegendUtils';
 let FilterUtils;
 
 const wrapValueWithWildcard = (value, condition) => {
@@ -1323,12 +1324,12 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
         }
     };
     let filterObj = {...defaultLayerFilter, ...layerFilterObj};
-    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (!legendFilter) {
         // clear legend filter with id = 'interactiveLegend'
         if (isLegendFilterExist) {
             filterObj = {
-                ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+                ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
             };
         }
         let newFilter = filterObj ? filterObj : undefined;
@@ -1354,9 +1355,9 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
     }
     let newFilter = {
         ...(filterObj || {}), filters: [
-            ...(filterObj?.filters?.filter(f => f.id !== 'interactiveLegend') || []), ...[
+            ...(filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID) || []), ...[
                 {
-                    "id": "interactiveLegend",
+                    "id": INTERACTIVE_LEGEND_ID,
                     "format": "logic",
                     "version": "1.0.0",
                     "logic": "OR",
@@ -1379,10 +1380,10 @@ export function resetLayerLegendFilter(layer, reason, value) {
     let filterObj = layer.layerFilter ? layer.layerFilter : undefined;
     if (!needReset || !isLayerWithJSONLegend || !filterObj) return false;
     // reset thte filter if legendCQLFilter is empty
-    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (isLegendFilterExist) {
         filterObj = {
-            ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+            ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
         };
         return filterObj;
     }
@@ -1414,5 +1415,6 @@ FilterUtils = {
     processOGCSpatialFilter,
     createFeatureFilter,
     mergeFiltersToOGC,
-    convertFiltersToOGC
+    convertFiltersToOGC,
+    INTERACTIVE_LEGEND_ID
 };
