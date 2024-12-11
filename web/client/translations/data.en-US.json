@@ -242,8 +242,8 @@
             },
           "disableFeaturesEditing": "Disable editing on Attribute table",
           "interactiveLegend": {
-            "incompatibleFilterWarning": "Applied legend filters are incompatible with the active layer filter",
-            "resetLegendFilterTooltip": "Reset the legend filter to the initial state"
+            "incompatibleFilterWarning": "Applied legend filters are incompatible with the active layer filter. Click on reset to remove legend filters",
+            "resetLegendFilter": "Reset"
           }
         },
         "localizedInput": {

@@ -40,6 +40,7 @@ export default compose(
         let layersUpdatedWithCql = {};
         let cqlFilter = undefined;
 
+        // update the layer filters to apply filtering to the legend
         if (mapSync && !isEmpty(layerInCommon) && (filterObj.featureTypeName ? filterObj.featureTypeName === targetLayerName : true)) {
             if (dependencies.quickFilters) {
                 filterObjCollection = {...filterObjCollection, ...composeFilterObject(filterObj, dependencies.quickFilters, dependencies.options)};

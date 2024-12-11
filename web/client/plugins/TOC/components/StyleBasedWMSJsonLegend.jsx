@@ -152,14 +152,13 @@ class StyleBasedWMSJsonLegend extends React.Component {
         const isPreviousFilterValid = this.checkPreviousFiltersAreValid(rules, legendFilters);
         return (
             <>
-                {!isPreviousFilterValid ? <Alert className="legend-filter-warning" bsStyle="warning">
+                {!isPreviousFilterValid ? <Alert bsStyle="warning">
                     <Message msgId={"layerProperties.interactiveLegend.incompatibleFilterWarning"} />
                     <ButtonWithTooltip
                         bsStyle="primary"
-                        className="square-button-md reset-legend-filter"
-                        tooltipId="layerProperties.interactiveLegend.resetLegendFilterTooltip"
+                        className="reset-legend-filter"
                         onClick={this.onResetLegendFilter}>
-                        <Glyphicon glyph="clear-filter" />
+                        <Message msgId={"layerProperties.interactiveLegend.resetLegendFilter"} />
                     </ButtonWithTooltip>
                 </Alert> : null}
                 {(rules || []).map((rule) => {
@@ -182,7 +181,10 @@ class StyleBasedWMSJsonLegend extends React.Component {
         if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
             return <>
                 <div className="wms-legend" style={this.props.style}>
-                    { this.state.loading ? <Loader size={12} style={{display: 'inline-block'}} /> : this.renderRules(this.state.jsonLegend?.rules || [])}
+                    { this.state.loading && !this.state?.jsonLegend?.rules?.length
+                        ? <Loader size={12} style={{display: 'inline-block'}} />
+                        : this.renderRules(this.state.jsonLegend?.rules || [])
+                    }
                 </div>
             </>;
         }

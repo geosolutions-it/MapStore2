@@ -242,8 +242,8 @@
             },
             "disableFeaturesEditing": "Désactiver la modification sur la table attributaire",
             "interactiveLegend": {
-                "incompatibleFilterWarning": "Les filtres de légende appliqués sont incompatibles avec le filtre de couche actif",
-                "resetLegendFilterTooltip": "Réinitialiser le filtre de légende à l'état initial"
+                "incompatibleFilterWarning": "Les filtres de légende appliqués sont incompatibles avec le filtre de couche actif. Cliquez sur réinitialiser pour supprimer les filtres de légende",
+                "resetLegendFilter": "Réinitialiser"
             }
         },
          "localizedInput": {
