@@ -214,6 +214,7 @@ class SharePanel extends React.Component {
         const { settings, advancedSettings, mapType, viewerOptions } = this.props;
         const shouldRemoveSectionId = !settings.showSectionId && advancedSettings && advancedSettings.sectionId;
         let shareUrl = getSharedGeostoryUrl(removeQueryFromUrl(this.props.shareUrl), shouldRemoveSectionId);
+        if (!shareUrl.endsWith('config')) shareUrl += `${!shareUrl.endsWith('/') ? '/' : ''}config`;
         if (settings.bboxEnabled && advancedSettings && advancedSettings.bbox && this.state.bbox) shareUrl = `${shareUrl}?bbox=${this.state.bbox}`;
         if (settings.showHome && advancedSettings && advancedSettings.homeButton) shareUrl = `${shareUrl}?showHome=true`;
         if (settings.centerAndZoomEnabled && advancedSettings && advancedSettings.centerAndZoom) {
