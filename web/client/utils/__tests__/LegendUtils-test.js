@@ -11,7 +11,8 @@ import {
     getWMSLegendConfig,
     getLayerFilterByLegendFormat,
     INTERACTIVE_LEGEND_ID,
-    LEGEND_FORMAT
+    LEGEND_FORMAT,
+    updateLayerWithLegendFilters
 } from '../LegendUtils';
 import { ServerTypes } from '../LayersUtils';
 
@@ -159,6 +160,121 @@ describe('LegendUtils', () => {
                 CRS: 'EPSG:4326',
                 BBOX: '-30,20,50,60'
             });
+        });
+    });
+    describe('updateLayerWithLegendFilters', () => {
+        const filter = {
+            "featureTypeName": "layer1",
+            "groupFields": [{"id": 1, "logic": "OR", "index": 0}],
+            "filterFields": [],
+            "spatialField": {
+                "method": "BBOX",
+                "attribute": "the_geom",
+                "operation": "INTERSECTS",
+                "geometry": {
+                    "id": "2",
+                    "type": "Polygon",
+                    "extent": [-12039795.482942028, 4384116.951814341, -9045909.959068244, 6702910.641873448],
+                    "center": [-10542852.721005136, 5543513.796843895],
+                    "coordinates": [[[-12039795.482942028, 6702910.641873448], [-12039795.482942028, 4384116.951814341], [-9045909.959068244, 4384116.951814341], [-9045909.959068244, 6702910.641873448], [-12039795.482942028, 6702910.641873448]]],
+                    "style": {},
+                    "projection": "EPSG:3857"
+                }
+            },
+            "pagination": null,
+            "filterType": "OGC",
+            "ogcVersion": "1.1.0",
+            "sortOptions": null,
+            "crossLayerFilter": null,
+            "hits": false,
+            "filters": []
+        };
+        const quickFilters = {
+            "STATE_NAME": {"rawValue": "mi", "value": "mi", "operator": "ilike", "type": "string", "attribute": "STATE_NAME"}
+        };
+        it('should return layers with updated CQL_FILTER when mapSync is true and filter matches', () => {
+            const layers = [
+                { name: 'layer1', params: {} },
+                { name: 'layer2', params: {} }
+            ];
+            const dependencies = {
+                layer: { name: 'layer1' },
+                filter,
+                mapSync: true,
+                quickFilters: {},
+                options: {}
+            };
+
+            const result = updateLayerWithLegendFilters(layers, dependencies);
+
+            expect(result).toBeTruthy();
+            expect(result.length).toBe(2);
+            const layer = {"name": "layer1", "params": {"CQL_FILTER": "(INTERSECTS(\"the_geom\",SRID=3857;Polygon((-12039795.482942028 6702910.641873448, -12039795.482942028 4384116.951814341, -9045909.959068244 4384116.951814341, -9045909.959068244 6702910.641873448, -12039795.482942028 6702910.641873448))))"}};
+            expect(result[0]).toEqual(layer);
+            expect(result[1].params).toEqual({});
+        });
+
+        it('should return layers with undefined CQL_FILTER when mapSync is false', () => {
+            const layers = [
+                { name: 'layer1', params: { CQL_FILTER: 'some_filter' } },
+                { name: 'layer2', params: { CQL_FILTER: 'some_filter' } }
+            ];
+            const dependencies = {
+                layer: { name: 'layer1' },
+                filter,
+                mapSync: false,
+                quickFilters,
+                options: {}
+            };
+
+            const result = updateLayerWithLegendFilters(layers, dependencies);
+            expect(result).toBeTruthy();
+            expect(result).toEqual([
+                { name: 'layer1', params: {CQL_FILTER: undefined} },
+                { name: 'layer2', params: {CQL_FILTER: undefined} }
+            ]);
+        });
+
+        it('should return layers with undefined CQL_FILTER when no matching layer is found', () => {
+            const layers = [
+                { name: 'layer1', params: { CQL_FILTER: 'some_filter' } },
+                { name: 'layer2', params: { CQL_FILTER: 'some_filter' } }
+            ];
+            const dependencies = {
+                layer: { name: 'layer3' },
+                filter: { featureTypeName: 'layer3' },
+                mapSync: true,
+                quickFilters: {},
+                options: {}
+            };
+
+            const result = updateLayerWithLegendFilters(layers, dependencies);
+            expect(result).toBeTruthy();
+            expect(result).toEqual([
+                { name: 'layer1', params: {CQL_FILTER: undefined} },
+                { name: 'layer2', params: {CQL_FILTER: undefined} }
+            ]);
+        });
+
+        it('should return layers with updated CQL_FILTER when quickFilters are provided', () => {
+            const layers = [
+                { name: 'layer1', params: {} },
+                { name: 'layer2', params: {} }
+            ];
+            const dependencies = {
+                layer: { name: 'layer1' },
+                filter,
+                mapSync: true,
+                quickFilters,
+                options: {propertyName: ['STATE_NAME']}
+            };
+
+            const result = updateLayerWithLegendFilters(layers, dependencies);
+            expect(result).toBeTruthy();
+            expect(result.length).toBe(2);
+            const CQL_FILTER = "((strToLowerCase(\"STATE_NAME\") LIKE '%mi%')) AND (INTERSECTS(\"the_geom\",SRID=3857;Polygon((-12039795.482942028 6702910.641873448, -12039795.482942028 4384116.951814341, -9045909.959068244 4384116.951814341, -9045909.959068244 6702910.641873448, -12039795.482942028 6702910.641873448))))";
+            expect(result[0].name).toBe("layer1");
+            expect(result[0].params.CQL_FILTER).toBe(CQL_FILTER);
         });
     });
 });

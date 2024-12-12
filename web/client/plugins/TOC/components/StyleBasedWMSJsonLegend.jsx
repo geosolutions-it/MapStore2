@@ -14,6 +14,7 @@ import isNil from 'lodash/isNil';
 import pick from 'lodash/pick';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
+import isEmpty from 'lodash/isEmpty';
 import { Alert, Tooltip, Glyphicon } from 'react-bootstrap';
 
 import { ButtonWithTooltip } from '../../../components/misc/Button';
@@ -153,10 +154,11 @@ class StyleBasedWMSJsonLegend extends React.Component {
         return (
             <>
                 {!isPreviousFilterValid ? <Alert bsStyle="warning">
-                    <Message msgId={"layerProperties.interactiveLegend.incompatibleFilterWarning"} />
+                    <div><Message msgId={"layerProperties.interactiveLegend.incompatibleFilterWarning"} /></div>
                     <ButtonWithTooltip
                         bsStyle="primary"
-                        className="reset-legend-filter"
+                        bsSize="xs"
+                        style={{ marginTop: 4 }}
                         onClick={this.onResetLegendFilter}>
                         <Message msgId={"layerProperties.interactiveLegend.resetLegendFilter"} />
                     </ButtonWithTooltip>
@@ -181,7 +183,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
             return <>
                 <div className="wms-legend" style={this.props.style}>
-                    { this.state.loading && !this.state?.jsonLegend?.rules?.length
+                    { this.state.loading && isEmpty(this.state?.jsonLegend?.rules)
                         ? <Loader size={12} style={{display: 'inline-block'}} />
                         : this.renderRules(this.state.jsonLegend?.rules || [])
                     }

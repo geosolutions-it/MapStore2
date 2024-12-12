@@ -7,23 +7,20 @@
  */
 import {compose, withHandlers, withProps} from 'recompose';
 
-import { castArray, get, isEmpty, find } from 'lodash';
+import { castArray, get } from 'lodash';
 import deleteWidget from './deleteWidget';
 import { editableWidget, defaultIcons, withHeaderTools } from './tools';
 import { getScales } from '../../../utils/MapUtils';
 import { WIDGETS_MAPS_REGEX } from "../../../actions/widgets";
 import { getInactiveNode, DEFAULT_GROUP_ID } from '../../../utils/LayersUtils';
-import { composeFilterObject } from './utils';
-import { toCQLFilter } from '../../../utils/FilterUtils';
-import { arrayUpdate } from '../../../utils/ImmutableUtils';
-import { optionsToVendorParams } from '../../../utils/VendorParamsUtils';
+import { updateLayerWithLegendFilters } from '../../../utils/LegendUtils';
 
 /**
  * map dependencies to layers, scales and current zoom level to show legend items for current zoom.
  * Add also base tools and menu to the widget
  */
 export default compose(
-    withProps(({ dependencies = {}, dependenciesMap = {}, mapSync }) => {
+    withProps(({ dependencies = {}, dependenciesMap = {} }) => {
         const allLayers = dependencies[dependenciesMap.layers] || dependencies.layers || [];
         const groups = castArray(dependencies[dependenciesMap.groups] || dependencies.groups || []);
         let layers = allLayers
@@ -33,30 +30,7 @@ export default compose(
                 layer.group !== 'background' && !getInactiveNode(layer?.group || DEFAULT_GROUP_ID, groups)
             )
             .map(({ group, ...layer }) => layer);
-        const targetLayerName = dependencies && dependencies.layer && dependencies.layer.name;
-        const filterObj = dependencies.filter || {};
-        const layerInCommon = find(layers, {name: targetLayerName}) || {};
-        let filterObjCollection = {};
-        let layersUpdatedWithCql = {};
-        let cqlFilter = undefined;
-
-        // update the layer filters to apply filtering to the legend
-        if (mapSync && !isEmpty(layerInCommon) && (filterObj.featureTypeName ? filterObj.featureTypeName === targetLayerName : true)) {
-            if (dependencies.quickFilters) {
-                filterObjCollection = {...filterObjCollection, ...composeFilterObject(filterObj, dependencies.quickFilters, dependencies.options)};
-            }
-            cqlFilter = toCQLFilter(filterObjCollection);
-            if (!isEmpty(filterObjCollection) && cqlFilter) {
-                layersUpdatedWithCql = arrayUpdate(false,
-                    {...layerInCommon, params: optionsToVendorParams({ params: {CQL_FILTER: cqlFilter}})},
-                    {name: targetLayerName},
-                    layers
-                );
-            }
-        } else {
-            layersUpdatedWithCql = layers.map(l => ({...l, params: {...l.params, CQL_FILTER: undefined}}));
-        }
-        layers = layersUpdatedWithCql;
+        layers = updateLayerWithLegendFilters(layers, dependencies);
         return {
             allLayers,
             map: {
