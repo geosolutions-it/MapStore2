@@ -243,8 +243,8 @@
             "disableFeaturesEditing": "Disabilita la modifica sulla tabella degli attributi",
             "interactiveLegend": {
                 "incompatibleFilterWarning": "I filtri della legenda applicati sono incompatibili con il filtro del livello attivo. Clicca su reset per rimuovere i filtri della legenda",
-                "resetLegendFilter": "Reset"
-            }
+                "resetLegendFilter": "Reset",
+                "noLegendData": "Nessun elemento della legenda da mostrare"    }
         },
         "localizedInput": {
           "localize": "Traduci questo testo...",

@@ -71,11 +71,11 @@ class StyleBasedWMSJsonLegend extends React.Component {
         const prevLayerStyle = prevProps?.layer?.style;
         const currentLayerStyle = this.props?.layer?.style;
 
-        const prevFilter = getLayerFilterByLegendFormat(prevProps?.layer, LEGEND_FORMAT.JSON);
-        const currFilter = getLayerFilterByLegendFormat(this.props?.layer, LEGEND_FORMAT.JSON);
+        const [prevFilter, currFilter] = [prevProps?.layer, this.props?.layer]
+            .map(_layer => getLayerFilterByLegendFormat(_layer, LEGEND_FORMAT.JSON));
 
         // get the new json legend and rerender in case of change in style or layer filter
-        if (currentLayerStyle !== prevLayerStyle
+        if (!isEqual(prevLayerStyle, currentLayerStyle)
             || !isEqual(prevFilter, currFilter)
             || !isEqual(prevProps.mapBbox, this.props.mapBbox)
         ) {
@@ -87,6 +87,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         const newLayerFilter = updateLayerLegendFilter(this.props?.layer?.layerFilter);
         this.props.onChange({ layerFilter: newLayerFilter });
     }
+
     getLegendData() {
         let jsonLegendUrl = this.getUrl(this.props);
         if (!jsonLegendUrl) {
@@ -109,6 +110,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         }
         return null;
     };
+
     getUrl = (props, urlIdx) => {
         if (props.layer && props.layer.type === "wms" && props.layer.url) {
             const layer = props.layer;
@@ -147,9 +149,10 @@ class StyleBasedWMSJsonLegend extends React.Component {
         }
         return '';
     }
+
     renderRules = (rules) => {
-        const isLegendFilterIncluded = get(this.props, 'layer.layerFilter.filters', []).find(f => f.id === INTERACTIVE_LEGEND_ID);
-        const legendFilters = isLegendFilterIncluded ? isLegendFilterIncluded?.filters : [];
+        const interactiveLegendFilters = get(this.props, 'layer.layerFilter.filters', []).find(f => f.id === INTERACTIVE_LEGEND_ID);
+        const legendFilters = get(interactiveLegendFilters, 'filters', []);
         const isPreviousFilterValid = this.checkPreviousFiltersAreValid(rules, legendFilters);
         return (
             <>
@@ -163,22 +166,26 @@ class StyleBasedWMSJsonLegend extends React.Component {
                         <Message msgId={"layerProperties.interactiveLegend.resetLegendFilter"} />
                     </ButtonWithTooltip>
                 </Alert> : null}
-                {(rules || []).map((rule) => {
-                    const activeFilter = legendFilters?.some(f => f.id === rule.filter);
-                    const isFilterDisabled = this.props?.layer?.layerFilter?.disabled;
-                    return (
-                        <div
-                            className={`wms-json-legend-rule ${isFilterDisabled || this.props.owner === 'legendPreview' || !rule?.filter ? "" : "filter-enabled "} ${activeFilter ? 'active' : ''}`}
-                            key={rule.filter}
-                            onClick={() => this.filterWMSLayerHandler(rule.filter)}>
-                            <WMSJsonLegendIcon rule={rule} />
-                            <span>{rule.name || rule.title || ''}</span>
-                        </div>
-                    );
-                })}
+                {isEmpty(rules)
+                    ? <Message msgId={"layerProperties.interactiveLegend.noLegendData"} />
+                    : rules.map((rule, idx) => {
+                        const activeFilter = legendFilters?.some(f => f.id === rule.filter);
+                        const isFilterDisabled = this.props?.layer?.layerFilter?.disabled;
+                        return (
+                            <div
+                                className={`wms-json-legend-rule ${isFilterDisabled || this.props.owner === 'legendPreview' || !rule?.filter ? "" : "filter-enabled "} ${activeFilter ? 'active' : ''}`}
+                                key={`${rule.filter}-${idx}`}
+                                onClick={() => this.filterWMSLayerHandler(rule.filter)}>
+                                <WMSJsonLegendIcon rule={rule} />
+                                <span>{rule.name || rule.title || ''}</span>
+                            </div>
+                        );
+                    })
+                }
             </>
         );
     };
+
     render() {
         if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
             return <>
@@ -202,12 +209,14 @@ class StyleBasedWMSJsonLegend extends React.Component {
             </OverlayTrigger>
         </div>);
     }
+
     filterWMSLayerHandler = (filter) => {
         const isFilterDisabled = this.props?.layer?.layerFilter?.disabled;
         if (!filter || isFilterDisabled) return;
         const newLayerFilter = updateLayerLegendFilter(this.props?.layer?.layerFilter, filter);
         this.props.onChange({ layerFilter: newLayerFilter });
     };
+
     checkPreviousFiltersAreValid = (rules, prevLegendFilters) => {
         const rulesFilters = rules.map(rule => rule.filter);
         return prevLegendFilters?.every(f => rulesFilters.includes(f.id));

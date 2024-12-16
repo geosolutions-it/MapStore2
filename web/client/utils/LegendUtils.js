@@ -20,7 +20,7 @@ export const LEGEND_FORMAT = {
     JSON: "application/json"
 };
 
-export const getLayerFilterByLegendFormat = (layer, format) => {
+export const getLayerFilterByLegendFormat = (layer, format = LEGEND_FORMAT.JSON) => {
     const layerFilter = layer?.layerFilter;
     if (layer && layer.type === "wms" && layer.url) {
         if (format === LEGEND_FORMAT.JSON && !isEmpty(layerFilter)) {
