@@ -13,7 +13,7 @@
     <url>http://www.geo-solutions.it</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <tomcat.version>9.0.90</tomcat.version>
+        <tomcat.version>9.0.98</tomcat.version>
         <binary.number>${mapstore2.version}</binary.number>
     </properties>
     <dependencies>
