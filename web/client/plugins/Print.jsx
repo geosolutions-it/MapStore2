@@ -605,7 +605,8 @@ export default {
                         this.props.onBeforePrint();
                         this.props.printingService.print({
                             layers: this.getMapConfiguration()?.layers,
-                            scales: this.props.useFixedScales ? getPrintScales(this.props.capabilities) : undefined
+                            scales: this.props.useFixedScales ? getPrintScales(this.props.capabilities) : undefined,
+                            bbox: this.props.map?.bbox
                         })
                             .then((spec) =>
                                 this.props.onPrint(this.props.capabilities.createURL, { ...spec, ...this.props.overrideOptions })

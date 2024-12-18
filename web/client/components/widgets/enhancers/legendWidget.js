@@ -13,6 +13,7 @@ import { editableWidget, defaultIcons, withHeaderTools } from './tools';
 import { getScales } from '../../../utils/MapUtils';
 import { WIDGETS_MAPS_REGEX } from "../../../actions/widgets";
 import { getInactiveNode, DEFAULT_GROUP_ID } from '../../../utils/LayersUtils';
+import { updateLayerWithLegendFilters } from '../../../utils/LegendUtils';
 
 /**
  * map dependencies to layers, scales and current zoom level to show legend items for current zoom.
@@ -22,19 +23,22 @@ export default compose(
     withProps(({ dependencies = {}, dependenciesMap = {} }) => {
         const allLayers = dependencies[dependenciesMap.layers] || dependencies.layers || [];
         const groups = castArray(dependencies[dependenciesMap.groups] || dependencies.groups || []);
-        const layers = allLayers
+        let layers = allLayers
             // filter backgrounds and inactive layer
             // the inactive layers are the one with a not visible parent group
             .filter((layer = {}) =>
                 layer.group !== 'background' && !getInactiveNode(layer?.group || DEFAULT_GROUP_ID, groups)
             )
             .map(({ group, ...layer }) => layer);
+        layers = updateLayerWithLegendFilters(layers, dependencies);
         return {
             allLayers,
             map: {
                 layers,
                 // use empty so it creates the default group that will be hidden in the layers tree
-                groups: []
+                groups: [],
+                projection: dependencies.projection,
+                bbox: dependencies.viewport
             },
             dependencyMapPath: dependenciesMap.layers || '',
             scales: getScales(

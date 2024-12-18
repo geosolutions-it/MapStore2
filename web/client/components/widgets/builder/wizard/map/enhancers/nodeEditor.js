@@ -80,6 +80,9 @@ export default compose(
                         : 1
             }
         },
+        projection: map.projection,
+        mapSize: map.size,
+        mapBbox: map.bbox,
         groups: get(splitMapAndLayers(map), 'layers.groups')
     })),
     // adapter for handlers

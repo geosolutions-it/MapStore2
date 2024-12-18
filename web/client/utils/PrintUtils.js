@@ -38,6 +38,7 @@ import trimEnd from 'lodash/trimEnd';
 
 import { getGridGeoJson } from "./grids/MapGridsUtils";
 import { isImageServerUrl } from './ArcGISUtils';
+import { getWMSLegendConfig, LEGEND_FORMAT } from './LegendUtils';
 
 const defaultScales = getGoogleMercatorScales(0, 21);
 let PrintUtils;
@@ -606,33 +607,30 @@ export const specCreators = {
                 })
             }
             ))}),
-        legend: (layer, spec) => ({
-            "name": layer.title || layer.name,
-            "classes": [
-                {
-                    "name": "",
-                    "icons": [
-                        PrintUtils.normalizeUrl(layer.url) + url.format({
-                            query: addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), {
-                                TRANSPARENT: true,
-                                EXCEPTIONS: "application/vnd.ogc.se_xml",
-                                VERSION: "1.1.1",
-                                SERVICE: "WMS",
-                                REQUEST: "GetLegendGraphic",
-                                LAYER: layer.name,
-                                STYLE: layer.style || '',
-                                SCALE: spec.scale,
-                                ...getLegendIconsSize(spec, layer),
-                                LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || '') + ";fontName:" + spec.fontFamily + ";fontSize:" + spec.fontSize,
-                                format: "image/png",
-                                ...(spec.language ? {LANGUAGE: spec.language} : {}),
-                                ...layer?.params
+        legend: (layer, spec) => {
+            const legendOptions = "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || '') + ";fontName:" + spec.fontFamily + ";fontSize:" + spec.fontSize;
+            return {
+                "name": layer.title || layer.name,
+                "classes": [
+                    {
+                        "name": "",
+                        "icons": [
+                            PrintUtils.normalizeUrl(layer.url) + url.format({
+                                query: addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), {
+                                    ...getWMSLegendConfig({layer, legendOptions, mapBbox: spec.bbox, mapSize: spec.size, projection: spec.projection, format: LEGEND_FORMAT.IMAGE}),
+                                    TRANSPARENT: true,
+                                    EXCEPTIONS: "application/vnd.ogc.se_xml",
+                                    VERSION: "1.1.1",
+                                    SCALE: spec.scale,
+                                    ...getLegendIconsSize(spec, layer),
+                                    ...(spec.language ? {LANGUAGE: spec.language} : {})
+                                })
                             })
-                        })
-                    ]
-                }
-            ]
-        })
+                        ]
+                    }
+                ]
+            };
+        }
     },
     vector: {
         map: (layer, spec) => ({

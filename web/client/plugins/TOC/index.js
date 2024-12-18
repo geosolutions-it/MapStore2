@@ -354,6 +354,9 @@ function TOC({
 
     groupOptions = {},
     layerOptions = {},
+    projection,
+    mapSize,
+    mapBbox,
     currentLocale,
     language,
     scales,
@@ -499,7 +502,13 @@ function TOC({
                     groupOptions,
                     layerOptions: {
                         ...layerOptions,
-                        hideLegend: !activateLegendTool
+                        hideLegend: !activateLegendTool,
+                        legendOptions: {
+                            ...layerOptions?.legendOptions,
+                            projection,
+                            mapSize,
+                            mapBbox
+                        }
                     }
                 }}
                 onContextMenu={({ event, node: currentNode, nodeType, parentId }) => {
@@ -599,7 +608,10 @@ const tocSelector = createShallowSelectorCreator(isEqual)(
             map && map.projection || 'EPSG:3857',
             map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
         ),
+        projection: map && map.projection || 'EPSG:3857',
         zoom: map?.zoom,
+        mapSize: map?.size,
+        mapBbox: map?.bbox,
         resolutions,
         resolution,
         visualizationMode,

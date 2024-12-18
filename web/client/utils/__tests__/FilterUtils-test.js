@@ -32,6 +32,7 @@ import {
     isFilterEmpty,
     updateLayerLegendFilter, resetLayerLegendFilter
 } from '../FilterUtils';
+import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 
 
 describe('FilterUtils', () => {
@@ -2337,8 +2338,8 @@ describe('FilterUtils', () => {
         const updatedFilterObj = updateLayerLegendFilter(layerFilterObj, lgegendFilter);
         expect(updatedFilterObj).toBeTruthy();
         expect(updatedFilterObj.filters.length).toEqual(1);
-        expect(updatedFilterObj.filters.filter(i => i.id === 'interactiveLegend')?.length).toEqual(1);
-        expect(updatedFilterObj.filters.find(i => i.id === 'interactiveLegend').filters.length).toEqual(1);
+        expect(updatedFilterObj.filters.filter(i => i.id === INTERACTIVE_LEGEND_ID)?.length).toEqual(1);
+        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID).filters.length).toEqual(1);
     });
     it('test updateLayerLegendFilter for wms, apply multi legend filter', () => {
         const layerFilterObj = {
@@ -2364,7 +2365,7 @@ describe('FilterUtils', () => {
             },
             "filters": [
                 {
-                    "id": "interactiveLegend",
+                    "id": INTERACTIVE_LEGEND_ID,
                     "format": "logic",
                     "version": "1.0.0",
                     "logic": "OR",
@@ -2383,8 +2384,8 @@ describe('FilterUtils', () => {
         const updatedFilterObj = updateLayerLegendFilter(layerFilterObj, lgegendFilter);
         expect(updatedFilterObj).toBeTruthy();
         expect(updatedFilterObj.filters.length).toEqual(1);
-        expect(updatedFilterObj.filters.filter(i => i.id === 'interactiveLegend')?.length).toEqual(1);
-        expect(updatedFilterObj.filters.find(i => i.id === 'interactiveLegend').filters.length).toEqual(2);
+        expect(updatedFilterObj.filters.filter(i => i.id === INTERACTIVE_LEGEND_ID)?.length).toEqual(1);
+        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID).filters.length).toEqual(2);
     });
     it('test reset legend filter using updateLayerLegendFilter', () => {
         const layerFilterObj = {
@@ -2410,7 +2411,7 @@ describe('FilterUtils', () => {
             },
             "filters": [
                 {
-                    "id": "interactiveLegend",
+                    "id": INTERACTIVE_LEGEND_ID,
                     "format": "logic",
                     "version": "1.0.0",
                     "logic": "OR",
@@ -2434,7 +2435,7 @@ describe('FilterUtils', () => {
         const updatedFilterObj = updateLayerLegendFilter(layerFilterObj);
         expect(updatedFilterObj).toBeTruthy();
         expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === 'interactiveLegend')).toBeFalsy();
+        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
     });
     it('test resetLayerLegendFilter in case change wms style', () => {
         const layerFilterObj = {
@@ -2460,7 +2461,7 @@ describe('FilterUtils', () => {
             },
             "filters": [
                 {
-                    "id": "interactiveLegend",
+                    "id": INTERACTIVE_LEGEND_ID,
                     "format": "logic",
                     "version": "1.0.0",
                     "logic": "OR",
@@ -2489,6 +2490,6 @@ describe('FilterUtils', () => {
         const updatedFilterObj = resetLayerLegendFilter(layer, 'style', 'style_02');
         expect(updatedFilterObj).toBeTruthy();
         expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === 'interactiveLegend')).toBeFalsy();
+        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
     });
 });
