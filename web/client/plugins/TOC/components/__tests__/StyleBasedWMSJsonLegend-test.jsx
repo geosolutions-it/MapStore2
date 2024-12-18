@@ -136,7 +136,8 @@ describe('test StyleBasedWMSJsonLegend module component', () => {
                     filters: [{
                         id: 'filter1'
                     }]
-                }]
+                }],
+                disabled: false
             }
         };
         mockAxios.onGet(/geoserver2/).reply(() => {
@@ -161,5 +162,43 @@ describe('test StyleBasedWMSJsonLegend module component', () => {
         expect(legendRuleElem.innerText).toContain('layerProperties.interactiveLegend.incompatibleFilterWarning');
         const resetLegendFilter = domNode.querySelector('.wms-legend .alert-warning button');
         expect(resetLegendFilter).toBeTruthy();
+    });
+    it('tests hide warning when layer filter is disabled', async() => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'http://localhost:8080/geoserver3/wms',
+            layerFilter: {
+                filters: [{
+                    id: INTERACTIVE_LEGEND_ID,
+                    filters: [{
+                        id: 'filter1'
+                    }]
+                }],
+                disabled: true
+            }
+        };
+        mockAxios.onGet(/geoserver3/).reply(() => {
+            return [200, {
+                "Legend": [{
+                    "layerName": "layer01",
+                    "title": "Layer1",
+                    rules
+                }]
+            }];
+        });
+        const comp = ReactDOM.render(<StyleBasedWMSJsonLegend legendHeight={50} legendWidth={50} layer={l} />, document.getElementById("container"));
+        await TestUtils.act(async() => comp);
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toBeTruthy();
+
+        const legendElem = document.querySelector('.wms-legend');
+        expect(legendElem).toBeTruthy();
+        const legendRuleElem = domNode.querySelector('.wms-legend .alert-warning');
+        expect(legendRuleElem).toBeFalsy();
     });
 });

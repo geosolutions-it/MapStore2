@@ -151,12 +151,13 @@ class StyleBasedWMSJsonLegend extends React.Component {
     }
 
     renderRules = (rules) => {
-        const interactiveLegendFilters = get(this.props, 'layer.layerFilter.filters', []).find(f => f.id === INTERACTIVE_LEGEND_ID);
+        const layerFilter = get(this.props, 'layer.layerFilter', {});
+        const interactiveLegendFilters = get(layerFilter, 'filters', []).find(f => f.id === INTERACTIVE_LEGEND_ID);
         const legendFilters = get(interactiveLegendFilters, 'filters', []);
-        const isPreviousFilterValid = this.checkPreviousFiltersAreValid(rules, legendFilters);
+        const showResetWarning = !this.checkPreviousFiltersAreValid(rules, legendFilters) && !layerFilter.disabled;
         return (
             <>
-                {!isPreviousFilterValid ? <Alert bsStyle="warning">
+                {showResetWarning ? <Alert bsStyle="warning">
                     <div><Message msgId={"layerProperties.interactiveLegend.incompatibleFilterWarning"} /></div>
                     <ButtonWithTooltip
                         bsStyle="primary"
