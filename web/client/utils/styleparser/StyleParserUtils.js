@@ -39,6 +39,7 @@ import isNil from 'lodash/isNil';
 import isObject from 'lodash/isObject';
 import MarkerUtils from '../MarkerUtils';
 import {randomInt} from '../RandomUtils';
+import { getConfigProp } from '../ConfigUtils';
 
 
 export const isGeoStylerBooleanFunction = (got) => [
@@ -917,7 +918,10 @@ export const drawIcons = (geoStylerStyle, options) => {
     }, []);
     const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
     const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
-    return loadFontAwesome()
+    const loadFontAwesomeForIcons = getConfigProp("loadFontAwesomeForIcons");
+    // if undefined or true it will load it to preserve previous behaviour
+    const loadingPromise =  (isNil(loadFontAwesomeForIcons) || loadFontAwesomeForIcons) && icons?.length ? loadFontAwesome() : Promise.resolve();
+    return loadingPromise
         .then(
             () => new Promise((resolve) => {
                 if (marks.length > 0 || icons.length > 0) {
