@@ -242,7 +242,7 @@
             },
           "disableFeaturesEditing": "Disable editing on Attribute table",
           "interactiveLegend": {
-            "incompatibleFilterWarning": "Applied legend filters are incompatible with the active layer filter. Click on reset to remove legend filters",
+            "incompatibleFilterWarning": "Legend filters are incompatible with the active layer filter, or no visible features are within the map view. Click reset to clear legend filters",
             "resetLegendFilter": "Reset",
             "noLegendData": "No legend items to show"
           }

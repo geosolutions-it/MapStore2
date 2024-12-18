@@ -242,7 +242,7 @@
             },
             "disableFeaturesEditing": "Désactiver la modification sur la table attributaire",
             "interactiveLegend": {
-                "incompatibleFilterWarning": "Les filtres de légende appliqués sont incompatibles avec le filtre de couche actif. Cliquez sur réinitialiser pour supprimer les filtres de légende",
+                "incompatibleFilterWarning": "Les filtres de légende sont incompatibles avec le filtre de couche actif, ou aucune fonctionnalité visible n'est dans la vue de la carte. Cliquez sur réinitialiser pour effacer les filtres de légende",
                 "resetLegendFilter": "Réinitialiser",
                 "noLegendData": "Aucun élément de légende à afficher"
             }

@@ -242,7 +242,7 @@
             },
             "disableFeaturesEditing": "Deshabilitar la edición en la tabla de atributos",
             "interactiveLegend": {
-                "incompatibleFilterWarning": "Los filtros de leyenda aplicados son incompatibles con el filtro de capa activo. Haga clic en restablecer para eliminar los filtros de leyenda",
+                "incompatibleFilterWarning": "Los filtros de leyenda son incompatibles con el filtro de capa activo, o no hay características visibles dentro de la vista del mapa. Haga clic en restablecer para borrar los filtros de leyenda",
                 "resetLegendFilter": "Restablecer",
                 "noLegendData": "No hay elementos de leyenda para mostrar"
             } 
