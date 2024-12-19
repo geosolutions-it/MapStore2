@@ -56,7 +56,8 @@ class BurgerMenu extends React.Component {
         onDetach: PropTypes.func,
         controls: PropTypes.object,
         panelStyle: PropTypes.object,
-        panelClassName: PropTypes.string
+        panelClassName: PropTypes.string,
+        className: PropTypes.string
     };
 
     static contextTypes = {
@@ -66,6 +67,7 @@ class BurgerMenu extends React.Component {
 
     static defaultProps = {
         id: "mapstore-burger-menu",
+        className: 'square-button',
         items: [],
         onItemClick: () => {},
         title: <MenuItem header><Message msgId="options"/></MenuItem>,
@@ -157,7 +159,7 @@ class BurgerMenu extends React.Component {
 
     render() {
         return (
-            <ToolsContainer id={this.props.id} className="square-button"
+            <ToolsContainer id={this.props.id} className={this.props.className}
                 container={Container}
                 toolStyle="primary"
                 activeStyle="default"
@@ -171,6 +173,14 @@ class BurgerMenu extends React.Component {
             />);
     }
 }
+
+const BurgerMenuPlugin = connect((state) =>({
+    controls: state.controls,
+    active: burgerMenuSelector(state)
+}), {
+    onInit: setControlProperty.bind(null, 'burgermenu', 'enabled', true),
+    onDetach: setControlProperty.bind(null, 'burgermenu', 'enabled', false)
+})(BurgerMenu);
 
 /**
  * Menu button that can contain other plugins entries.
@@ -195,19 +205,19 @@ class BurgerMenu extends React.Component {
 export default createPlugin(
     'BurgerMenu',
     {
-        component: connect((state) =>({
-            controls: state.controls,
-            active: burgerMenuSelector(state)
-        }), {
-            onInit: setControlProperty.bind(null, 'burgermenu', 'enabled', true),
-            onDetach: setControlProperty.bind(null, 'burgermenu', 'enabled', false)
-        })(BurgerMenu),
+        component: BurgerMenuPlugin,
         containers: {
             OmniBar: {
                 name: "burgermenu",
                 position: 2,
                 tool: true,
                 priority: 1
+            },
+            BrandNavbar: {
+                position: 4,
+                priority: 2,
+                target: 'right-menu',
+                Component: connect(() => ({ id: 'ms-burger-menu', className: 'square-button-md' }))(BurgerMenuPlugin)
             }
         }
     }

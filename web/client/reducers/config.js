@@ -35,6 +35,9 @@ function mapConfig(state = null, action) {
     let map;
     switch (action.type) {
     case LOCATION_CHANGE: {
+        if (action?.payload?.action === 'REPLACE') {
+            return state;
+        }
         return {
             ...state,
             mapInitialConfig: {}

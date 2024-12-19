@@ -43,6 +43,9 @@ function mapConfig(state = {eventListeners: {}}, action) {
             mousePointer: action.pointer
         });
     case LOCATION_CHANGE:
+        if (action?.payload?.action === 'REPLACE') {
+            return state;
+        }
         return assign({}, {eventListeners: {}});
     case CHANGE_ZOOM_LVL:
         return assign({}, state, {

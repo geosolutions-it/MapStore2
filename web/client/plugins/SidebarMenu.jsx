@@ -26,8 +26,39 @@ import './sidebarmenu/sidebarmenu.less';
 import {lastActiveToolSelector, sidebarIsActiveSelector, isSidebarWithFullHeight} from "../selectors/sidebarmenu";
 import {setLastActiveItem} from "../actions/sidebarmenu";
 import Message from "../components/I18N/Message";
+import { ButtonWithTooltip } from '../components/misc/Button';
 
 const TDropdownButton = tooltip(DropdownButton);
+
+function SidebarMenuItem({
+    active,
+    onClick,
+    menuItem,
+    glyph,
+    labelId
+}) {
+    return menuItem
+        ? (
+            <MenuItem
+                active={active}
+                onClick={() => onClick(!active)}
+            >
+                <Glyphicon glyph={glyph}/><Message msgId={labelId}/>
+            </MenuItem>
+        )
+        : (
+            <ButtonWithTooltip
+                className="square-button"
+                bsStyle={active ? 'primary' : 'tray'}
+                active={active}
+                onClick={() => onClick(!active)}
+                tooltipId={labelId}
+                tooltipPosition="left"
+            >
+                <Glyphicon glyph={glyph}/>
+            </ButtonWithTooltip>
+        );
+}
 
 class SidebarMenu extends React.Component {
     static propTypes = {
@@ -243,6 +274,7 @@ class SidebarMenu extends React.Component {
                             tool={SidebarElement}
                             tools={this.getTools('sidebar', height)}
                             panels={this.getPanels(this.props.items)}
+                            toolComponent={SidebarMenuItem}
                         /> }
                 </ContainerDimensions>
             </div>

@@ -33,17 +33,19 @@ describe('usePluginItems', () => {
     it('should reload the list of confiugred items if they change', () => {
         const plugin01 = {
             name: 'Plugin01',
-            Component: () => null
+            Component: () => null,
+            position: 1
         };
         const plugin02 = {
             name: 'Plugin02',
-            Component: () => null
+            Component: () => null,
+            position: 2
         };
         act(() => {
             ReactDOM.render(<Component items={[plugin01, plugin02]}/>, document.getElementById('container'));
         });
 
-        expect(document.querySelector('#component').innerText).toBe('Plugin02,Plugin01');
+        expect(document.querySelector('#component').innerText).toBe('Plugin01,Plugin02');
 
         act(() => {
             ReactDOM.render(<Component items={[plugin01]}/>, document.getElementById('container'));
