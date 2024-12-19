@@ -250,40 +250,44 @@ describe('Geostory Epics', () => {
             mockAxios.onGet().reply(200, TEST_STORY);
             testEpic(loadGeostoryEpic, NUM_ACTIONS, loadGeostory("sampleStory"), (actions) => {
                 expect(actions.length).toBe(NUM_ACTIONS);
-                actions.map((a, i) => {
-                    switch (a.type) {
-                    case LOADING_GEOSTORY:
-                        expect(a.name).toBe("loading");
-                        expect(a.value).toBe(i === 1);
-                        break;
-                    case SET_CURRENT_STORY:
-                        if (a.story.sections) {
-                            a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
-                            a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
-                            a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
-                            a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
-                            a.story.sections[4].id = get(TEST_STORY, 'sections[4].id');
-                            expect(a.story).toEqual(TEST_STORY);
-                        } else {
-                            expect(a.story).toEqual({});
+                try {
+                    actions.map((a, i) => {
+                        switch (a.type) {
+                        case LOADING_GEOSTORY:
+                            expect(a.name).toBe("loading");
+                            expect(a.value).toBe(i === 1);
+                            break;
+                        case SET_CURRENT_STORY:
+                            if (a.story.sections) {
+                                a.story.sections[0].id = get(TEST_STORY, 'sections[0].id');
+                                a.story.sections[1].id = get(TEST_STORY, 'sections[1].id');
+                                a.story.sections[2].id = get(TEST_STORY, 'sections[2].id');
+                                a.story.sections[3].id = get(TEST_STORY, 'sections[3].id');
+                                a.story.sections[4].id = get(TEST_STORY, 'sections[4].id');
+                                expect(a.story).toEqual(TEST_STORY);
+                            } else {
+                                expect(a.story).toEqual({});
+                            }
+                            break;
+                        case SET_RESOURCE: {
+                            expect(a.resource).toExist();
+                            break;
                         }
-                        break;
-                    case SET_RESOURCE: {
-                        expect(a.resource).toExist();
-                        break;
-                    }
-                    case CHANGE_MODE: {
-                        expect(a.mode).toBe(Modes.EDIT);
-                        break;
-                    }
-                    case GEOSTORY_LOADED: {
-                        expect(a.id).toExist();
-                        break;
-                    }
-                    default: expect(true).toBe(false);
-                        break;
-                    }
-                });
+                        case CHANGE_MODE: {
+                            expect(a.mode).toBe(Modes.EDIT);
+                            break;
+                        }
+                        case GEOSTORY_LOADED: {
+                            expect(a.id).toExist();
+                            break;
+                        }
+                        default: expect(true).toBe(false);
+                            break;
+                        }
+                    });
+                } catch (e) {
+                    done(e);
+                }
                 done();
             }, {
                 geostory: {},

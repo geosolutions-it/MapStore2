@@ -18,7 +18,7 @@ import {
     localConfigLoaded
 } from '../../actions/localConfig';
 import LOCAL_CONFIG from '../../configs/localConfig';
-import {find, includes} from 'lodash';
+import {find} from 'lodash';
 
 const stateMocker = createStateMocker({localConfig});
 const TEST_CONFIG = {
@@ -42,8 +42,8 @@ describe('localConfig selectors', () => {
 
     it('pluginSelectorCreator for dashboard', ()=>{
         const loadedConfig = (pluginsSelectorCreator('dashboard')(stateMocker(localConfigLoaded(LOCAL_CONFIG))));
-        expect(includes(loadedConfig, 'DashboardSave')).toBe(true);
-        expect(includes(loadedConfig, 'DashboardSaveAs')).toBe(true);
+        expect(!!find(loadedConfig, { "name": "Save" })).toBe(true);
+        expect(!!find(loadedConfig, { "name": "SaveAs" })).toBe(true);
         expect(find(loadedConfig, { "name": "Share"})).toContain({ "name": "Share"});
         expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "showAPI": false});
         expect(find(loadedConfig, { "name": "Share"}).cfg).toContain({ "advancedSettings": false});
