@@ -6,10 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { clamp, isNil, isNumber } from 'lodash';
-import PropTypes from 'prop-types';
 import React from 'react';
+import clamp from 'lodash/clamp';
+import isNil from 'lodash/isNil';
+import isNumber from 'lodash/isNumber';
+import pick from 'lodash/pick';
+import PropTypes from 'prop-types';
 import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB } from 'react-bootstrap';
+
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 const Button = tooltip(ButtonRB);
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
@@ -26,6 +30,7 @@ import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
 import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
 import { getMiscSetting } from '../../../../utils/ConfigUtils';
+
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -38,6 +43,8 @@ export default class extends React.Component {
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         isCesiumActive: PropTypes.bool,
         projection: PropTypes.string,
+        mapSize: PropTypes.object,
+        mapBbox: PropTypes.object,
         resolutions: PropTypes.array,
         zoom: PropTypes.number,
         hideInteractiveLegendOption: PropTypes.bool
@@ -122,6 +129,9 @@ export default class extends React.Component {
         }
         return null;
     };
+    getLegendProps = () => {
+        return pick(this.props, ['projection', 'mapSize', 'mapBbox']);
+    }
     render() {
         const formatValue = this.props.element && this.props.element.format || "image/png";
         const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
@@ -324,6 +334,7 @@ export default class extends React.Component {
                                             this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
                                         language={
                                             this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
+                                        {...this.getLegendProps()}
                                     /> :
                                     <Legend
                                         style={this.setOverFlow() && {} || undefined}
@@ -334,6 +345,7 @@ export default class extends React.Component {
                                             this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
                                         language={
                                             this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
+                                        {...this.getLegendProps()}
                                     />}
                             </div>
                         </Col>

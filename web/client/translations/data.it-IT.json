@@ -240,7 +240,10 @@
               "clearCustomizationConfirm": "Sei sicuro di voler rimuovere tutte le modifiche effettuate ai campi?",
               "error": "Non è stato possibile recuperare i campi dalla sorgente dati"
             },
-            "disableFeaturesEditing": "Disabilita la modifica sulla tabella degli attributi"
+            "disableFeaturesEditing": "Disabilita la modifica sulla tabella degli attributi",
+            "interactiveLegend": {
+                "incompatibleFilterWarning": "I filtri della legenda sono incompatibili con il filtro del layer attivo, oppure non ci sono feature visibili all'interno della vista della mappa. Clicca su reset per cancellare i filtri della legenda",    "resetLegendFilter": "Reset",
+                "noLegendData": "Nessun elemento della legenda da mostrare"    }
         },
         "localizedInput": {
           "localize": "Traduci questo testo...",

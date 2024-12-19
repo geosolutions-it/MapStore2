@@ -192,7 +192,18 @@ function TOC({
             onSelectNode={onSelectNode}
             onSort={handleOnSort}
             onChange={handleUpdateNode}
-            config={config}
+            config={{
+                ...config,
+                layerOptions: {
+                    ...config?.layerOptions,
+                    legendOptions: {
+                        ...config?.layerOptions?.legendOptions,
+                        mapSize: map?.size,
+                        mapBbox: map?.bbox,
+                        projection: map?.projection
+                    }
+                }
+            }}
             nodeItems={nodeItems}
             nodeToolItems={nodeToolItems}
             singleDefaultGroup={singleDefaultGroup}
