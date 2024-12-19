@@ -84,7 +84,7 @@ export const mapSaveSelector = state => {
     const textSearchConfig = textSearchConfigSelector(state);
     const bookmarkSearchConfig = bookmarkSearchConfigSelector(state);
     const additionalOptions = mapOptionsToSaveSelector(state);
-    return MapUtils.saveMapConfiguration(map, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
+    return MapUtils.saveMapConfiguration(map || {}, layers, groups, backgrounds, textSearchConfig, bookmarkSearchConfig, additionalOptions);
 };
 /**
  * Selector to identify pending changes.
@@ -97,6 +97,6 @@ export const mapHasPendingChangesSelector = state => {
     const currentMap = mapSelector(state) || {};
     const { canEdit } = currentMap.info || {};
     const { mapConfigRawData } = state;
-    return (canEdit || !currentMap.mapId) && !MapUtils.compareMapChanges(mapConfigRawData, updatedMap);
+    return mapConfigRawData && (canEdit || !currentMap.mapId) && !MapUtils.compareMapChanges(mapConfigRawData, updatedMap);
 };
 

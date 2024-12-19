@@ -105,7 +105,7 @@ const getValidLocationChange = action$ =>
     action$.ofType(SAVING_MAP, MAP_CREATED, MAP_ERROR)
         .startWith({type: MAP_CONFIG_LOADED}) // just dummy action to trigger the first switchMap
         .switchMap(action => action.type === SAVING_MAP ? Rx.Observable.never() : action$)
-        .filter(({type} = {}) => type === LOCATION_CHANGE);
+        .filter(({type, payload} = {}) => type === LOCATION_CHANGE && payload.action !== 'REPLACE'); // action REPLACE is used to manage pending changes
 /**
  * Action flow to add/Removes dependencies for a widgets.
  * Trigger `mapSync` property of a widget and sets `dependenciesMap` object to map `dependency` prop onto widget props.

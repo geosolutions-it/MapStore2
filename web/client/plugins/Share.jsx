@@ -80,12 +80,14 @@ const Share = connect(createSelector([
             ? [cameraPosition.longitude, cameraPosition.latitude]
             : map?.center;
         return center && ConfigUtils.getCenter(center);
-    }
-], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions, center) => ({
+    },
+    state => get(state, 'controls.share.resource.shareUrl') || location.href,
+    state => get(state, 'controls.share.resource.categoryName')
+], (isVisible, version, map, mapType, context, settings, formatCoords, point, isScrollPosition, viewerOptions, center, shareUrl, categoryName) => ({
     isVisible,
-    shareUrl: location.href,
-    shareApiUrl: getApiUrl(location.href),
-    shareConfigUrl: getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
+    shareUrl,
+    shareApiUrl: getApiUrl(shareUrl),
+    shareConfigUrl: getConfigUrl(shareUrl, ConfigUtils.getConfigProp('geoStoreUrl')),
     version,
     viewerOptions,
     mapType,
@@ -103,14 +105,51 @@ const Share = connect(createSelector([
     },
     formatCoords: formatCoords,
     point,
-    isScrollPosition})), {
+    isScrollPosition,
+    categoryName})), {
     onClose: toggleControl.bind(null, 'share', null),
     hideMarker,
     updateMapView,
     onUpdateSettings: setControlProperty.bind(null, 'share', 'settings'),
     onChangeFormat: changeFormat,
-    addMarker: addMarker
-})(SharePanel);
+    addMarker: addMarker,
+    onClearShareResource: setControlProperty.bind(null, 'share', 'resource', undefined)
+})(({ categoryName, ...props }) => {
+    const categoryCfg = props[categoryName];
+    return <SharePanel {...props} {...categoryCfg} />;
+});
+
+const ActionCardShareButton = connect(
+    () => ({}),
+    {
+        onToggle: toggleControl.bind(null, 'share', null),
+        setShareResource: setControlProperty.bind(null, 'share', 'resource')
+    }
+)(({
+    resource,
+    viewerUrl,
+    onToggle,
+    setShareResource,
+    component
+}) => {
+    const Component = component;
+    function handleToggle() {
+        const baseURL = location && (location.origin + location.pathname);
+        const shareUrl = baseURL + viewerUrl;
+        setShareResource({
+            shareUrl,
+            categoryName: (resource?.category?.name || '').toLowerCase()
+        });
+        onToggle();
+    }
+    return (<Component
+        iconType="glyphicon"
+        glyph="share-alt"
+        labelId="share.title"
+        // tooltipId=""
+        onClick={handleToggle}
+    />);
+});
 
 
 const SharePlugin = createPlugin('Share', {
@@ -149,6 +188,13 @@ const SharePlugin = createPlugin('Share', {
             tooltip: "share.title",
             icon: <Glyphicon glyph="share-alt"/>,
             action: toggleControl.bind(null, 'share', null)
+        },
+        ResourcesGrid: {
+            priority: 1,
+            target: 'card-options',
+            doNotHide: true,
+            Component: ActionCardShareButton,
+            position: 1
         }
     },
     epics: shareEpics,

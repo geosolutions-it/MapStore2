@@ -1,0 +1,148 @@
+/*
+ * Copyright 2024, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import React, { useState } from 'react';
+import { createPlugin } from "../../utils/PluginsUtils";
+import ConfirmDialog from './components/ConfirmDialog';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { userSelector } from '../../selectors/security';
+import Persistence from '../../api/persistence';
+import { searchResources } from './actions/resources';
+import { getPendingChanges } from './selectors/save';
+import { push } from 'connected-react-router';
+import useIsMounted from './hooks/useIsMounted';
+import { MenuItem, Glyphicon } from 'react-bootstrap';
+import Message from '../../components/I18N/Message';
+
+function DeleteResource({
+    user,
+    resource,
+    component,
+    onRefresh,
+    redirectTo,
+    onPush
+}) {
+    const Component = component;
+    const [showModal, setShowModal] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [errorId, setErrorId] = useState(false);
+    const isMounted = useIsMounted();
+
+    function handleCancel() {
+        setShowModal(false);
+    }
+    function handleDelete() {
+        if (!deleting) {
+            setDeleting(true);
+            setErrorId(false);
+            Persistence.getApi()
+                .deleteResource({ id: resource.id }, { deleteLinkedResources: true })
+                .toPromise()
+                .then((response) => response?.toPromise ? response.toPromise() : response)
+                .then(() => isMounted(() => {
+                    if (redirectTo) {
+                        onPush(redirectTo);
+                    } else {
+                        onRefresh();
+                        setShowModal(false);
+                    }
+                }))
+                .catch((error) => isMounted(() => {
+                    setErrorId(`resourcesCatalog.deleteError.error${error.status || 'default'}`);
+                }))
+                .finally(() => isMounted(() => {
+                    setDeleting(false);
+                }));
+        }
+    }
+    // TODO: use resource.canDelete instead of user
+    if (!user || resource?.id === undefined) {
+        return null;
+    }
+    return (
+        <>
+            {Component ? <Component
+                glyph="trash"
+                iconType="glyphicon"
+                labelId="resourcesCatalog.deleteResource"
+                square
+                active={!!showModal}
+                onClick={() => setShowModal(true)}
+            /> : null}
+            <ConfirmDialog
+                show={!!showModal}
+                onCancel={handleCancel}
+                onConfirm={handleDelete}
+                titleId="resourcesCatalog.deleteResourceTitle"
+                descriptionId="resourcesCatalog.deleteResourceDescription"
+                cancelId="resourcesCatalog.deleteResourceCancel"
+                confirmId="resourcesCatalog.deleteResourceConfirm"
+                variant="danger"
+                errorId={errorId}
+                loading={deleting}
+            />
+        </>
+    );
+}
+
+const deleteResourcesConnect = connect(
+    createStructuredSelector({
+        user: userSelector,
+        resource: (state, props) => {
+            if (props.resource) {
+                return props.resource;
+            }
+            const pendingChanges = getPendingChanges(state, { resourceType: 'MAP', ...props });
+            return pendingChanges?.resource;
+        }
+    }),
+    {
+        onRefresh: searchResources.bind(null, { refresh: true }),
+        onPush: push
+    }
+);
+
+const DeleteResourcePlugin = deleteResourcesConnect(DeleteResource);
+
+const BurgerMenuMenuItem = ({
+    active,
+    onClick,
+    glyph,
+    labelId
+}) => {
+    return (
+        <MenuItem
+            active={active}
+            onClick={() => onClick(!active)}
+        >
+            <Glyphicon glyph={glyph}/><Message msgId={labelId}/>
+        </MenuItem>
+    );
+};
+
+export default createPlugin('DeleteResource', {
+    component: DeleteResourcePlugin,
+    containers: {
+        ResourcesGrid: {
+            target: 'card-options',
+            position: 1,
+            priority: 2
+        },
+        SidebarMenu: {
+            position: 300,
+            tool: DeleteResourcePlugin,
+            priority: 2
+        },
+        BurgerMenu: {
+            position: 5,
+            tool: (props) => <DeleteResourcePlugin {...props} component={BurgerMenuMenuItem} />,
+            priority: 1
+        }
+    }
+});

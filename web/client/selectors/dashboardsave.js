@@ -6,26 +6,67 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEqual, every, find, omit } from 'lodash';
+import { isEqual, some, find, omit, isArray,  isObject} from 'lodash';
 import { createSelector } from 'reselect';
 
 import { getDashboardWidgets, getDashboardWidgetsLayout } from './widgets';
-import { dashboardResource, originalDataSelector } from './dashboard';
+import { originalDataSelector } from './dashboard';
 
-export const dashboardHasPendingChangesSelector = createSelector(dashboardResource, originalDataSelector, getDashboardWidgets, getDashboardWidgetsLayout, (resource, originalData, widgets, layout) => {
+const recursiveIsChanged = (a, b) => {
+    if (!isObject(a)) {
+        return !isEqual(a, b);
+    }
+    if (isArray(a)) {
+        return a.some((v, idx) => {
+            return recursiveIsChanged(a[idx], b?.[idx]);
+        });
+    }
+    return Object.keys(a).some((key) => {
+        return recursiveIsChanged(a[key], b?.[key]);
+    }, {});
+};
+
+export const dashboardHasPendingChangesSelector = createSelector(originalDataSelector, getDashboardWidgets, getDashboardWidgetsLayout, (originalData, widgets, layout) => {
     const originalWidgets = originalData?.widgets || [];
     const originalLayouts = originalData?.layouts || {};
+    if (recursiveIsChanged(originalLayouts, layout || {})) {
+        return true;
+    }
+    if (originalWidgets.length !== (widgets?.length || 0)) {
+        return true;
+    }
 
-    return !resource || resource.canEdit && (!isEqual(originalLayouts, layout) || originalWidgets.length !== widgets.length || !every(widgets, widget => {
+    return some(widgets || [], widget => {
         const originalWidget = find(originalWidgets, {id: widget.id});
-        const originalMap = originalWidget?.map;
-        const widgetMap = widget.map;
-        const originalCenter = originalMap?.center;
-        const widgetCenter = widgetMap?.center;
-        const CENTER_EPS = 1e-12;
-        return !!originalWidget && isEqual(omit(widget, 'dependenciesMap', 'map'), omit(originalWidget, 'dependenciesMap', 'map')) &&
-            (!widgetMap && !originalMap || isEqual(omit(widgetMap, 'center', 'bbox', 'size'), omit(originalMap, 'center', 'bbox', 'size'))) &&
-            (!widgetMap && !originalMap || !originalCenter && !widgetCenter || !!originalCenter && !!widgetCenter &&
-                originalCenter.crs === widgetCenter.crs && Math.abs(originalCenter.x - widgetCenter.x) < CENTER_EPS && Math.abs(originalCenter.y - widgetCenter.y) < CENTER_EPS);
-    }));
+        if (!originalWidget
+            || recursiveIsChanged(omit(widget, 'dependenciesMap', 'map', 'maps'), omit(originalWidget, 'dependenciesMap', 'map', 'maps'))
+        ) {
+            return true;
+        }
+        const originalMaps = originalWidget?.map ? [originalWidget.map] : originalWidget?.maps || [];
+        const widgetMaps = widget.map ? [widget.map] : widget.maps || [];
+        if (!widgetMaps?.length && !originalMaps?.length) {
+            return false;
+        }
+
+        return widgetMaps.some((widgetMap, idx) => {
+            const originalMap = originalMaps[idx] || {};
+            if (recursiveIsChanged(omit(widgetMap, 'center', 'bbox', 'size'), omit(originalMap, 'center', 'bbox', 'size'))) {
+                return true;
+            }
+            const originalCenter = originalMap?.center;
+            const widgetCenter = widgetMap?.center;
+            if (!originalCenter && !widgetCenter) {
+                return false;
+            }
+            const CENTER_EPS = 1e-12;
+            return !(
+                !!originalCenter
+                && !!widgetCenter
+                && originalCenter.crs === widgetCenter.crs
+                && Math.abs(originalCenter.x - widgetCenter.x) < CENTER_EPS
+                && Math.abs(originalCenter.y - widgetCenter.y) < CENTER_EPS
+            );
+        });
+    });
 });

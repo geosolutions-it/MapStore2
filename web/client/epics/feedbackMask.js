@@ -106,6 +106,7 @@ export const updateDashboardVisibility = action$ =>
             return Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                    .filter(action => !(action.type === LOCATION_CHANGE && action?.payload?.action === 'REPLACE')) // action REPLACE is used to manage pending changes
                     .switchMap(() => updateObservable)
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );
@@ -125,6 +126,7 @@ export const updateGeoStoryFeedbackMaskVisibility = action$ =>
             return Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                    .filter(action => !(action.type === LOCATION_CHANGE && action?.payload?.action === 'REPLACE')) // action REPLACE is used to manage pending changes
                     .switchMap(() => updateObservable)
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );
@@ -146,6 +148,7 @@ export const updateContextFeedbackMaskVisibility = action$ =>
             return Rx.Observable.merge(
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
+                    .filter(action => !(action.type === LOCATION_CHANGE && action?.payload?.action === 'REPLACE')) // action REPLACE is used to manage pending changes
                     .switchMap(() => updateObservable)
                     .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );

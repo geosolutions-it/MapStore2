@@ -38,7 +38,7 @@ const THEMATIC_LAYER_ITEM = {
 const SETTINGS_SELECTOR = '.ms-side-panel';
 const NAV_SELECTOR = 'ul.nav-tabs';
 const TAB_INDEX_SELECTOR = `${NAV_SELECTOR} > li`;
-const TAB_CONTENT_SELECTOR = 'main';
+const TAB_CONTENT_SELECTOR = '.ms2-border-layout-content';
 const TEST_LAYER = {
     id: "TEST_WMS",
     type: "wms",
