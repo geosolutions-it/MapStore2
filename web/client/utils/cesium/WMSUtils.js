@@ -120,6 +120,7 @@ export function wmsToCesiumOptions(options) {
             format: isVectorFormat(options.format) && 'image/png' || options.format || 'image/png',
             transparent: options.transparent !== undefined ? options.transparent : true,
             opacity: opacity,
+            version: options.version || "1.1.1",
             tiled: options.tiled !== undefined ? options.tiled : true,
             width: options.tileSize || 256,
             height: options.tileSize || 256,
