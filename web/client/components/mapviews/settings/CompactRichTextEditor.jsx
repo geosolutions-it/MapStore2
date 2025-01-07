@@ -57,7 +57,7 @@ function CompactRichTextEditor({
                 image: {
                     urlEnabled: true,
                     // upload controlled via props, disabled by default
-                    uploadEnabled: props.uploadEnabled || false,
+                    uploadEnabled: props.enableUploadImg || false,
                     alignmentEnabled: false,
                     uploadCallback: (file) => new Promise((resolve, reject) => {
                         const reader = new FileReader();
