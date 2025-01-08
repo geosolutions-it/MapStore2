@@ -60,7 +60,7 @@ const FilterGroup = ({
     }, [JSON.stringify(query)]);
 
     return (
-        <FlexBox column gap="sm">
+        <FlexBox classNames={['ms-filter-group']} column gap="sm">
             <Title
                 loading={loading}
             >

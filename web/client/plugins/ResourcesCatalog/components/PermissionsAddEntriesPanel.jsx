@@ -108,7 +108,7 @@ function PermissionsAddEntriesPanel({
         <FlexBox.Fill
             flexBox
             column
-            classNames={['_absolute', '_fill']}
+            classNames={['ms-permissions-add-entries-panel', '_absolute', '_fill']}
         >
             <FlexBox centerChildrenVertically gap="sm" classNames={['_padding-sm']}>
                 <InputControl

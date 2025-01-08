@@ -70,7 +70,7 @@ const itemsList = (items) => (items && items.map((item, idx) => {
 
 const MenuDropdownList = ({
     id,
-    items,
+    items = [],
     label,
     labelId,
     toggleStyle,

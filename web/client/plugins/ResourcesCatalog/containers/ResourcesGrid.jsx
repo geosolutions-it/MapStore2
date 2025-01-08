@@ -87,7 +87,6 @@ function ResourcesGrid({
     resources,
     isFirstRequest,
     requestResources,
-    registry,
     titleId,
     queryPage,
     page: pageProp,
@@ -96,7 +95,11 @@ function ResourcesGrid({
     getMainMessageId = defaultGetMainMessageId,
     search,
     onResetSearch,
-    hideWithNoResults
+    hideWithNoResults,
+    getResourceStatus,
+    formatHref,
+    getResourceTypesInfo,
+    getResourceId
 }) {
 
     const { query } = url.parse(location.search, true);
@@ -162,10 +165,6 @@ function ResourcesGrid({
 
     const metadata = isArray(metadataProp) ? metadataProp : metadataProp[cardLayoutStyle];
 
-    const {
-        getResourceId
-    } = registry;
-
     return (
         <TargetSelectorPortal targetSelector={targetSelector}>
             <div className={`ms-resources-grid${panel ? ' _panel' : ''}`} style={hideWithNoResults && !resources.length ? { display: 'none' } : { }}>
@@ -197,11 +196,14 @@ function ResourcesGrid({
                                 position: 'sticky',
                                 top: stickyTop
                             }}
-                            registry={registry}
                             query={query}
                             metadata={metadata}
                             columns={columns}
                             setColumns={setColumns}
+                            getResourceStatus={getResourceStatus}
+                            formatHref={formatHref}
+                            getResourceTypesInfo={getResourceTypesInfo}
+                            getResourceId={getResourceId}
                         />
                     }
                     footer={
@@ -232,7 +234,10 @@ function ResourcesGrid({
                     cardComponent={cardComponent}
                     isCardActive={res => getResourceId(res) === getResourceId(selectedResource)}
                     getMainMessageId={getMainMessageId}
-                    registry={registry}
+                    getResourceStatus={getResourceStatus}
+                    formatHref={formatHref}
+                    getResourceTypesInfo={getResourceTypesInfo}
+                    getResourceId={getResourceId}
                 />
             </div>
         </TargetSelectorPortal>

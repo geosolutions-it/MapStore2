@@ -184,12 +184,10 @@ function ResourcesGrid({
             requestResources={requestResources}
             configuredItems={configuredItems}
             metadata={metadata}
-            registry={{
-                getResourceStatus,
-                formatHref: handleFormatHref,
-                getResourceTypesInfo,
-                getResourceId
-            }}
+            getResourceStatus={getResourceStatus}
+            formatHref={handleFormatHref}
+            getResourceTypesInfo={getResourceTypesInfo}
+            getResourceId={getResourceId}
         />
     );
 }

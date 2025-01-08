@@ -42,7 +42,7 @@ const isValidBadgeValue = (badge) => !!badge || badge === 0;
 
 const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '', size, alignRight, variant, resourceName }) => {
 
-    const { formatHref, query } = menuItemsProps;
+    const { formatHref, query } = menuItemsProps || {};
     const {
         id,
         type,
@@ -63,7 +63,7 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
         square,
         tooltipId,
         src
-    } = item;
+    } = item || {};
     const btnClassName = `btn${variant && ` btn-${variant}` || ''}${size && ` btn-${size}` || ''}${className ? ` ${className}` : ''} _border-transparent`;
 
     const labelNode = labelId ? <Message msgId={labelId} msgParams={{ resourceName }} /> : label;

@@ -24,20 +24,19 @@ const ResourcesContainer = (props) => {
         footer,
         cardLayoutStyle,
         loading,
-        getMainMessageId,
-        registry,
+        getMainMessageId = () => '',
         onSelect,
         theme = 'main',
         cardButtons,
         cardComponent,
         query,
         columns,
-        metadata
-    } = props;
-    const {
+        metadata,
         getResourceStatus,
+        formatHref,
+        getResourceTypesInfo,
         getResourceId
-    } = registry;
+    } = props;
     const messageId = getMainMessageId(props);
     return (
         <div
@@ -78,7 +77,10 @@ const ResourcesContainer = (props) => {
                                     readOnly={isProcessing}
                                     downloading={isDownloading}
                                     statusItems={statusItems}
-                                    registry={registry}
+                                    getResourceStatus={getResourceStatus}
+                                    formatHref={formatHref}
+                                    getResourceTypesInfo={getResourceTypesInfo}
+                                    getResourceId={getResourceId}
                                     onClick={onSelect}
                                     query={query}
                                     columns={columns}

@@ -44,7 +44,7 @@ const AccordionTitle = ({
 };
 
 /**
- * Accordion component
+ * FilterAccordion component
  * @prop {string} title of the accordion
  * @prop {string} titleId translation path of the title on the accordion
  * @prop {string} noItemsMsgId default message when no items present
@@ -53,9 +53,7 @@ const AccordionTitle = ({
  * @prop {function} loadItems function to fetch accordion items
  * @prop {array} items accordion items available without the need to fetch
  * @prop {string} query string
- * @prop {boolean} defaultExpanded flag to expand the accordion on load by default
- * @prop {boolean} expanded flag to keep accordion stay expanded and disable toggle function on the accordion (Note: Not on accordion items)
- */
+*/
 const FilterAccordion = ({
     title,
     titleId,
@@ -96,7 +94,7 @@ const FilterAccordion = ({
     }, [isExpanded, JSON.stringify(query)]);
 
     return (
-        <FlexBox column gap="sm">
+        <FlexBox className="ms-filter-accordion" column gap="sm">
             <AccordionTitle
                 expanded={isExpanded}
                 onClick={onClick}

@@ -120,7 +120,7 @@ const ResourcesMenu = forwardRef(({
     setCardLayoutStyle,
     orderConfig,
     query,
-    registry,
+    formatHref,
     titleId,
     theme = 'main',
     menuItemsLeft = [],
@@ -135,10 +135,6 @@ const ResourcesMenu = forwardRef(({
         variant: orderVariant,
         align: orderAlign = 'right'
     } = orderConfig || {};
-
-    const {
-        formatHref
-    } = registry;
 
     const selectedSort = orderOptions.find(({ value }) => query?.sort === value);
     function handleToggleCardLayoutStyle() {

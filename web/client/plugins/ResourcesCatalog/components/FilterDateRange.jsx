@@ -16,8 +16,8 @@ import Message from '../../../components/I18N/Message';
 
 momentLocalizer(moment);
 
-function DateRangeFilter({
-    query,
+function FilterDateRange({
+    query = {},
     filterKey = 'date',
     labelId = 'resourcesCatalog.dateFilter',
     onChange
@@ -69,6 +69,6 @@ function DateRangeFilter({
     );
 }
 
-DateRangeFilter.defaultProps = {};
+FilterDateRange.defaultProps = {};
 
-export default DateRangeFilter;
+export default FilterDateRange;

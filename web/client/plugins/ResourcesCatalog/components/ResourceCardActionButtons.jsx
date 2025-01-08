@@ -32,11 +32,9 @@ function ResourceCardActionButtons({
     viewerUrl,
     resource,
     className,
-    registry,
+    getResourceId = () => '',
     ...props
 }) {
-
-    const { getResourceId } = registry;
 
     const containerNode = useRef();
     const dropdownClassName = 'ms-card-dropdown';

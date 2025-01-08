@@ -138,7 +138,7 @@ function Permissions({
     const hasFiltrablePermissions = !!permissionsEntires.filter((item) => item.permissions !== 'owner' && !item.is_superuser)?.length;
 
     return (
-        <div className="_relative _padding-tb-sm">
+        <div className="ms-permissions _relative _padding-tb-sm">
             {showGroupsPermissions ? <div className="ms-secondary-colors _padding-lr-sm">
                 <FlexBox component="ul" column gap="sm" classNames={['_padding-tb-sm']} >
                     {permissionsEntires

@@ -36,7 +36,7 @@ function DetailsHeader({
 
     return (
         <>
-            <div className="_sticky _corner-tl">
+            <div className="ms-details-header _sticky _corner-tl">
                 <FlexBox
                     centerChildrenVertically
                     gap="sm"
@@ -76,7 +76,7 @@ function DetailsHeader({
                 onChange={onChangeThumbnail}
             />
             <div ref={titleNodeRef}></div>
-            <FlexBox gap="sm" classNames={['_padding-md']}>
+            <FlexBox className="ms-details-header-info" gap="sm" classNames={['_padding-md']}>
                 <FlexBox.Fill>
                     <Text fontSize="lg">
                         {!loading ? <Icon {...icon} /> : <Spinner />}{' '}

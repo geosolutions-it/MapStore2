@@ -200,7 +200,7 @@ const ResourceCardGridBody = ({
     statusItems,
     options,
     thumbnailUrl,
-    registry
+    getResourceId
 }) => {
 
     const headerEntry = metadata.find(entry => entry.target === 'header');
@@ -283,7 +283,7 @@ const ResourceCardGridBody = ({
                         viewerUrl={viewerUrl}
                         options={options}
                         readOnly={readOnly}
-                        registry={registry}
+                        getResourceId={getResourceId}
                         className="_absolute _margin-sm _corner-tr"
                     />
                 )
@@ -305,7 +305,7 @@ const ResourceCardListBody = ({
     options: optionsProp,
     buttons,
     columns,
-    registry
+    getResourceId
 }) => {
     const options = [
         ...(buttons || []),
@@ -345,7 +345,7 @@ const ResourceCardListBody = ({
                             viewerUrl={viewerUrl}
                             options={options}
                             readOnly={readOnly}
-                            registry={registry}
+                            getResourceId={getResourceId}
                         />
                     )
                     : null}
@@ -369,18 +369,15 @@ const ResourceCard = forwardRef(({
     loading,
     downloading,
     statusItems,
-    registry,
     buttons = [],
     component,
     query,
     metadata = [],
-    columns = []
+    columns = [],
+    getResourceTypesInfo = () => ({}),
+    formatHref,
+    getResourceId
 }, ref) => {
-
-    const {
-        formatHref,
-        getResourceTypesInfo
-    } = registry;
 
     const resource = data;
     const {
@@ -416,7 +413,7 @@ const ResourceCard = forwardRef(({
                 options={options}
                 columns={columns}
                 thumbnailUrl={thumbnailUrl}
-                registry={registry}
+                getResourceId={getResourceId}
             /> : null}
         </CardComponent>
     );

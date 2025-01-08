@@ -40,7 +40,7 @@ function PermissionsRow({
         ) : (<Text>{valueOption?.labelId ? <Message msgId={valueOption?.labelId} /> : null}</Text>);
 
     return (
-        <FlexBox centerChildrenVertically gap="sm">
+        <FlexBox className="ms-permissions-row" centerChildrenVertically gap="sm">
             <FlexBox.Fill flexBox gap="sm">
                 {(!hideIcon && (type || avatar)) && <Text>
                     {avatar
