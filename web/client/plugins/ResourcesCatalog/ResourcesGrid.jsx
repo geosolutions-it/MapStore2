@@ -102,18 +102,8 @@ function ResourcesGrid({
             },
             {
                 path: 'description',
-                width: 20,
+                width: 50,
                 labelId: 'resourcesCatalog.columnDescription'
-            },
-            {
-                path: 'tags',
-                type: 'tag',
-                itemValue: 'value',
-                itemColor: 'color',
-                filter: 'filter{tag.in}',
-                width: 30,
-                labelId: 'resourcesCatalog.columnTags',
-                showFullContent: true
             },
             {
                 path: 'lastUpdate',
@@ -138,24 +128,10 @@ function ResourcesGrid({
                 target: 'header'
             },
             {
-                path: 'description',
-                width: 20,
-                labelId: 'resourcesCatalog.columnDescription'
-            },
-            {
-                path: 'tags',
-                type: 'tag',
-                itemValue: 'value',
-                itemColor: 'color',
-                filter: 'filter{tag.in}',
-                showFullContent: true
-            },
-            {
                 path: 'creator',
                 target: 'footer',
                 filter: 'filter{creator.in}',
                 icon: { glyph: 'user', type: 'glyphicon' },
-                width: 10,
                 labelId: 'resourcesCatalog.columnCreator'
             }
         ]
