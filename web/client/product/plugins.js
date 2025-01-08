@@ -20,7 +20,7 @@ import UserSession from "../plugins/UserSession";
 import FeatureEditor from '../plugins/FeatureEditor';
 import MetadataInfo from '../plugins/MetadataInfo';
 import TOC from '../plugins/TOC';
-import resourcesCatalogPlugins from '../plugins/ResourcesCatalog';
+import * as resourcesCatalogPlugins from '../plugins/ResourcesCatalog';
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 

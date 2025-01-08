@@ -6,26 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import ResourcesGridPlugin from './ResourcesGrid';
-import ResourcesFiltersFormPlugin from './ResourcesFiltersForm';
-import ResourceDetailsPlugin from './ResourceDetails';
-import EditContextPlugin from './EditContext';
-import DeleteResourcePlugin from './DeleteResource';
-import HomeDescriptionPlugin from './HomeDescription';
-import BrandNavbarPlugin from './BrandNavbar';
-import FooterPlugin from './Footer';
-import SavePlugin from './Save';
-import SaveAsPlugin from './SaveAs';
-
-export default {
-    DeleteResourcePlugin,
-    EditContextPlugin,
-    ResourcesGridPlugin,
-    ResourcesFiltersFormPlugin,
-    ResourceDetailsPlugin,
-    HomeDescriptionPlugin,
-    BrandNavbarPlugin,
-    FooterPlugin,
-    SavePlugin,
-    SaveAsPlugin
-};
+export { default as ResourcesGridPlugin } from './ResourcesGrid';
+export { default as ResourcesFiltersFormPlugin} from './ResourcesFiltersForm';
+export { default as ResourceDetailsPlugin } from './ResourceDetails';
+export { default as EditContextPlugin } from './EditContext';
+export { default as DeleteResourcePlugin } from './DeleteResource';
+export { default as HomeDescriptionPlugin } from './HomeDescription';
+export { default as BrandNavbarPlugin } from './BrandNavbar';
+export { default as FooterPlugin } from './Footer';
+export { default as SavePlugin } from './Save';
+export { default as SaveAsPlugin } from './SaveAs';
