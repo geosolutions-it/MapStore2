@@ -22,7 +22,7 @@
         <ehcache-web.version>2.0.4</ehcache-web.version>
         <commons-pool.version>1.5.4</commons-pool.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
-        <spring.security.version>5.7.13</spring.security.version>
+        <spring.security.version>5.7.14</spring.security.version>
         <log4j-version>2.19.0</log4j-version>
         <jackson-version>2.16.1</jackson-version>
         <json-patch.version>1.12</json-patch.version>
