@@ -10,7 +10,7 @@ import urlUtil from 'url';
 import { isArray, castArray, get } from 'lodash';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
-import ConfigUtils, { getConfigProp } from '../utils/ConfigUtils';
+import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
 const capabilitiesCache = {};
