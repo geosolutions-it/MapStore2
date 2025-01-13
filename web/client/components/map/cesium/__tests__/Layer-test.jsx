@@ -28,9 +28,13 @@ import '../plugins/WFSLayer';
 import '../plugins/TerrainLayer';
 import '../plugins/ElevationLayer';
 import '../plugins/ArcGISLayer';
+import '../plugins/ModelLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils from '../../../../utils/ConfigUtils';
+import MockAdapter from 'axios-mock-adapter';
+import axios from '../../../../libs/ajax';
+
 
 describe('Cesium layer', () => {
     let map;
@@ -1740,5 +1744,36 @@ describe('Cesium layer', () => {
             }
             done();
         }).catch(done);
+    });
+
+    it('ensure proxy usage in Model layer', (done) => {
+        const options = {
+            type: "model",
+            // url that fails
+            url: "https://test-CORS/FontaneMarosegeoreferenziato.ifc",
+            visibility: true,
+            format: 'ifc'
+        };
+
+        // Create a mock adapter for axios
+        const mockAxios = new MockAdapter(axios);
+
+        ReactDOM.render(
+            <CesiumLayer
+                type={options.type}
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+
+
+        setTimeout(() => {
+            // Check if the API call was made
+            expect(mockAxios.history.get.length).toBe(1);
+            // ensure calling from proxy URL (CORS test is performed on fetch before this call)
+            expect(mockAxios.history.get[0].url.includes('/proxy')).toBe(true); // Check the URL
+            expect(mockAxios.history.get[0].url.includes('?url=https%3A%2F%2Ftest-cors%2FFontaneMarosegeoreferenziato.ifc')).toBe(true);
+            mockAxios.restore(); // Restore the original axios instance
+            done();
+        }, 1000);
     });
 });
