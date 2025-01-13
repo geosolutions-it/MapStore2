@@ -32,6 +32,7 @@ function ExpandButton({
             className="ms-node-expand"
             onClick={(event) => {
                 event.stopPropagation();
+                event.preventDefault();
                 if (!disabled) {
                     onChange({ expanded: !expanded });
                 }

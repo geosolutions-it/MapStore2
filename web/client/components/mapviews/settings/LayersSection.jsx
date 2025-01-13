@@ -6,13 +6,52 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React from 'react';
-import { FormGroup, Checkbox } from 'react-bootstrap';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { FormControl as FormControlRB, FormGroup, InputGroup, Glyphicon, Checkbox, Button as ButtonRB, ButtonGroup } from 'react-bootstrap';
 import Section from './Section';
-import { getTitle } from '../../../utils/LayersUtils';
-import { mergeViewLayers } from '../../../utils/MapViewsUtils';
-import LayerOverridesNode from './LayerOverridesNode';
+import { mergeViewLayers, mergeViewGroups, pickViewLayerProperties, pickViewGroupProperties } from '../../../utils/MapViewsUtils';
+import LayerOverridesNodeContent from './LayerOverridesNodeContent';
 import Message from '../../I18N/Message';
+import TOC from '../../../plugins/TOC/components/TOC';
+import tooltip from '../../misc/enhancers/tooltip';
+import localizedProps from '../../misc/enhancers/localizedProps';
+import { NodeTypes } from '../../../utils/LayersUtils';
+import { getMessageById } from '../../../utils/LocaleUtils';
+
+const Button = tooltip(ButtonRB);
+const FormControl = localizedProps('placeholder')(FormControlRB);
+
+function ResetLayerOverrides({
+    itemComponent,
+    node,
+    config,
+    nodeType,
+    nodeTypes,
+    onChange
+}) {
+    const ItemComponent = itemComponent;
+    const { view } = config?.mapViews || {};
+    const changed = nodeType === nodeTypes.LAYER
+        ? !!view?.layers?.find(layer => layer.id === node.id)
+        : !!view?.groups?.find(group => group.id === node.id);
+    function handleClick() {
+        if (changed) {
+            onChange({ resetView: true });
+        } else {
+            onChange(nodeType === nodeTypes.LAYER
+                ? pickViewLayerProperties(node)
+                : pickViewGroupProperties(node));
+        }
+    }
+    return (
+        <ItemComponent
+            tooltipId={changed ? `mapViews.${nodeType}Unlinked` : `mapViews.${nodeType}Linked`}
+            glyph={changed ? 'unplug' : 'plug'}
+            onClick={handleClick}
+        />
+    );
+}
 
 function LayersSection({
     view,
@@ -20,38 +59,42 @@ function LayersSection({
     onExpandSection,
     onChange,
     resources,
-    layers,
+    layers = [],
+    groups = [],
     vectorLayers,
     updateLayerRequest,
     locale,
     onChangeLayer,
     onResetLayer,
+    onChangeGroup,
+    onResetGroup,
     showClipGeometries,
     onShowClipGeometries,
     isTerrainAvailable,
     isClippingAvailable
-}) {
+}, { messages }) {
 
-    const terrainClippingLayerResource = resources?.find(resource => resource.id === view?.terrain?.clippingLayerResourceId)?.data;
-    const terrainVectorLayer = vectorLayers?.find(layer => layer.id === terrainClippingLayerResource?.id);
-    const terrainClippingFeatures = terrainClippingLayerResource?.collection?.features || terrainVectorLayer?.features;
+    const [filterText, setFilterText] = useState('');
+    const [expandedNodes, setExpandedNodes] = useState([
+        ...groups.filter((group) => group.expanded).map(group => group.id),
+        ...layers.filter((layer) => layer.expanded).map(layer => layer.id)
+    ]);
     const mergedLayers = mergeViewLayers(layers, view);
-    const vectorLayersOptions = vectorLayers
-        ?.filter((layer) => {
-            if (layer.type === 'wfs') {
-                return true;
-            }
-            if (layer.type === 'vector') {
-                return !!layer?.features?.find(({ geometry }) => ['Polygon'].includes(geometry?.type));
-            }
-            return false;
-        })
-        .map((layer) => ({
-            label: getTitle(layer.title, locale) || layer.name || layer.id,
-            value: layer.id,
-            layer
-        }));
-
+    const mergedGroups = mergeViewGroups(groups, view);
+    const tocMapViewConfig = {
+        view,
+        updateLayerRequest,
+        vectorLayers,
+        resources,
+        locale
+    };
+    function applyExpandedProperty(nodes) {
+        return nodes.map(node => ({ ...node, expanded: expandedNodes.includes(node.id) }));
+    }
+    function areAllNodesUnlinked() {
+        return layers.every(layer => (view?.layers || []).some(vLayer => vLayer.id === layer.id))
+            && groups.every(group => (view?.groups || []).some(vGroup => vGroup.id === group.id));
+    }
     return (
         <Section
             title={<Message msgId="mapViews.layersOptions"/>}
@@ -69,55 +112,129 @@ function LayersSection({
                     </Checkbox>
                 </FormGroup>
             </div>}
-            <ul className="ms-map-views-layers-options-body">
-                {isTerrainAvailable && <LayerOverridesNode
-                    key="terrain"
-                    title={<Message msgId="mapViews.terrain"/>}
-                    layer={{
+            <FormGroup style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <InputGroup style={{ flex: 1 }}>
+                    <FormControl
+                        placeholder="toc.filterPlaceholder"
+                        value={filterText}
+                        onChange={(event) => setFilterText(event?.target?.value)}
+                    />
+                    {filterText
+                        ? <InputGroup.Button>
+                            <Button tooltipId="toc.clearFilter" onClick={() => setFilterText('')}><Glyphicon glyph="1-close"/></Button>
+                        </InputGroup.Button>
+                        : <InputGroup.Addon>
+                            <Glyphicon glyph="filter"/>
+                        </InputGroup.Addon>}
+                </InputGroup>
+                <ButtonGroup>
+                    <Button
+                        tooltipId="mapViews.linkAllNodes"
+                        disabled={!view?.layers?.length && !view?.groups?.length}
+                        className="square-button-md"
+                        bsStyle="primary"
+                        onClick={() => {
+                            onChange({
+                                groups: undefined,
+                                layers: undefined
+                            });
+                        }}
+                    >
+                        <Glyphicon glyph="plug"/>
+                    </Button>
+                    <Button
+                        tooltipId="mapViews.unlinkAllNodes"
+                        className="square-button-md"
+                        bsStyle="primary"
+                        disabled={areAllNodesUnlinked()}
+                        onClick={() => {
+                            onChange({
+                                groups: groups.map((group) => {
+                                    const viewGroup = (view?.groups || []).find(vGroup => vGroup.id === group.id);
+                                    return pickViewGroupProperties(viewGroup || group);
+                                }),
+                                layers: layers.map((layer) => {
+                                    const viewLayer = (view?.layers || []).find(vLayer => vLayer.id === layer.id);
+                                    return pickViewLayerProperties(viewLayer || layer);
+                                })
+                            });
+                        }}
+                    >
+                        <Glyphicon glyph="unplug" />
+                    </Button>
+                </ButtonGroup>
+            </FormGroup>
+            {isTerrainAvailable ? <TOC
+                map={{
+                    layers: [{
                         ...view?.terrain,
+                        id: 'terrain',
                         type: 'terrain',
-                        id: 'terrain'
-                    }}
-                    onChange={(newOptions) => onChange({  terrain: { ...view?.terrain, ...newOptions }})}
-                    updateLayerRequest={updateLayerRequest}
-                    vectorLayers={vectorLayersOptions}
-                    clippingFeatures={terrainClippingFeatures}
-                    clippingLayerResource={terrainClippingLayerResource
-                        ? {
-                            value: terrainClippingLayerResource?.id,
-                            label: getTitle(terrainVectorLayer?.title, locale) || terrainVectorLayer?.name || terrainVectorLayer?.id,
-                            resource: terrainClippingLayerResource
-                        }
-                        : undefined}
-                />}
-                {mergedLayers?.length === 0
-                    ? <Message msgId="mapViews.addNewLayerToTheMap"/>
-                    : [ ...mergedLayers ].reverse().map((layer) => {
-                        const clippingLayerResource = resources?.find(({ id }) => id === layer.clippingLayerResourceId)?.data;
-                        const vectorLayer = vectorLayers?.find(({ id }) => id === clippingLayerResource?.id);
-                        const clippingFeatures = clippingLayerResource?.collection?.features || vectorLayer?.features;
-                        return (
-                            <LayerOverridesNode
-                                key={`${view?.id}-${layer.id}`}
-                                layer={layer}
-                                title={getTitle(layer.title, locale) || layer.name || layer.id}
-                                onChange={(newOptions) => onChangeLayer(layer.id, newOptions)}
-                                onReset={() => onResetLayer(layer.id)}
-                                updateLayerRequest={updateLayerRequest}
-                                vectorLayers={vectorLayersOptions}
-                                clippingFeatures={clippingFeatures}
-                                clippingLayerResource={clippingLayerResource
-                                    ? {
-                                        value: clippingLayerResource?.id,
-                                        label: getTitle(vectorLayer?.title, locale) || vectorLayer?.name || vectorLayer?.id,
-                                        resource: clippingLayerResource
-                                    } : undefined}
-                            />
-                        );
-                    })}
-            </ul>
+                        title: getMessageById(messages, 'mapViews.terrain')
+                    }]
+                }}
+                nodeContentItems={[
+                    { name: 'LayerOverridesNodeContent', Component: LayerOverridesNodeContent }
+                ]}
+                config={{
+                    sortable: false,
+                    hideOpacitySlider: true,
+                    hideVisibilityButton: true,
+                    layerOptions: {
+                        hideFilter: true,
+                        hideLegend: true
+                    },
+                    mapViews: tocMapViewConfig
+                }}
+                onChangeNode={(nodeId, nodeType, options) => {
+                    if (nodeId === 'terrain' && nodeType === NodeTypes.LAYER) {
+                        onChange({ terrain: { ...view?.terrain, ...options }});
+                    }
+                }}
+            /> : null}
+            <TOC
+                map={{
+                    layers: applyExpandedProperty(mergedLayers),
+                    groups: applyExpandedProperty(mergedGroups)
+                }}
+                filterText={filterText}
+                config={{
+                    sortable: false,
+                    layerOptions: {
+                        hideFilter: true,
+                        hideLegend: true
+                    },
+                    mapViews: tocMapViewConfig
+                }}
+                nodeContentItems={[
+                    { name: 'LayerOverridesNodeContent', Component: LayerOverridesNodeContent }
+                ]}
+                nodeToolItems={[
+                    { name: 'ResetLayerOverrides', Component: ResetLayerOverrides }
+                ]}
+                onChangeNode={(nodeId, nodeType, options) => {
+                    if (options.expanded !== undefined) {
+                        return setExpandedNodes(
+                            options.expanded
+                                ? [...expandedNodes, nodeId]
+                                : expandedNodes.filter(expandedNodeId => expandedNodeId !== nodeId));
+                    }
+                    if (options.resetView) {
+                        return nodeType === NodeTypes.LAYER
+                            ? onResetLayer(nodeId)
+                            : onResetGroup(nodeId);
+                    }
+                    return nodeType === NodeTypes.LAYER
+                        ? onChangeLayer(nodeId, options)
+                        : onChangeGroup(nodeId, options);
+                }}
+            />
         </Section>
     );
 }
+
+LayersSection.contextTypes = {
+    messages: PropTypes.object
+};
 
 export default LayersSection;
