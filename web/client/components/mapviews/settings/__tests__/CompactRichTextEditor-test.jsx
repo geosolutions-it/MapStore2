@@ -36,8 +36,8 @@ describe('CompactRichTextEditor component', () => {
         const uploadImgInput = document.querySelector(".rdw-image-modal-upload-option");
         expect(uploadImgInput).toBeFalsy();
     });
-    it('test rendering TextEditor with enabling image upload [enableUploadImg]', () => {
-        ReactDOM.render(<CompactRichTextEditor enableUploadImg />, document.getElementById("container"));
+    it('test rendering TextEditor with enabling image upload [uploadEnabled]', () => {
+        ReactDOM.render(<CompactRichTextEditor uploadEnabled />, document.getElementById("container"));
         const textEditorContainer = document.querySelector(".ms-compact-text-editor.rdw-editor-wrapper");
         expect(textEditorContainer).toBeTruthy();
         const imageWidget = document.querySelector(".rdw-image-wrapper .rdw-option-wrapper");

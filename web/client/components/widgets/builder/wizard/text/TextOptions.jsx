@@ -48,7 +48,7 @@ function TextOptions({ data = {}, onChange = () => {} }) {
                 </Form>
             </Col>
             <DescriptorEditor
-                enableUploadImg
+                uploadEnabled
                 editorState={editorState}
                 onEditorStateChange={(newEditorState) => {
                     const previousHTML = draftJSEditorStateToHtml(editorState);
