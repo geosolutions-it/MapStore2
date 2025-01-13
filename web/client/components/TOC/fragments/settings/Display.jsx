@@ -30,6 +30,7 @@ import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
 import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
 import { getMiscSetting } from '../../../../utils/ConfigUtils';
+import VectorLegend from '../../../../plugins/TOC/components/VectorLegend';
 
 export default class extends React.Component {
     static propTypes = {
@@ -349,6 +350,42 @@ export default class extends React.Component {
                                     />}
                             </div>
                         </Col>
+                    </div>
+                </Row>}
+                {this.props.element.type === "wfs" && <Row>
+                    <div className={"legend-options"}>
+                        <Col xs={12} className={"legend-label"}>
+                            <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
+                        </Col>
+                        { experimentalInteractiveLegend && this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
+                            <Col xs={12} className="first-selectize">
+                                <Checkbox
+                                    data-qa="display-interactive-legend-option"
+                                    value="enableInteractiveLegend"
+                                    key="enableInteractiveLegend"
+                                    onChange={(e) => {
+                                        if (!e.target.checked) {
+                                            const newLayerFilter = updateLayerLegendFilter(this.props.element.layerFilter);
+                                            this.props.onChange("layerFilter", newLayerFilter );
+                                        }
+                                        this.props.onChange("enableInteractiveLegend", e.target.checked);
+                                    }}
+                                    checked={enableInteractiveLegend} >
+                                    <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
+                                    &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
+                                </Checkbox>
+                            </Col>
+                        }
+                        {enableInteractiveLegend && <Col xs={12} className="legend-preview">
+                            <ControlLabel><Message msgId="layerProperties.legendOptions.legendPreview" /></ControlLabel>
+                            <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
+                                <VectorLegend
+                                    owner="legendPreview"
+                                    layer={this.props.element}
+                                    style={this.props.element.style || {}}
+                                />
+                            </div>
+                        </Col>}
                     </div>
                 </Row>}
             </Grid>
