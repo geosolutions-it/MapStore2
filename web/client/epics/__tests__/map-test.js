@@ -209,7 +209,7 @@ describe('map epics', () => {
             done();
         }, state);
     });
-    it.only('test changeMapCrs causes limits change. ', (done) => {
+    it('test changeMapCrs causes limits change. ', (done) => {
         const state = {
             map: {
                 present: {
