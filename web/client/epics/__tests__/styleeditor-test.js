@@ -56,6 +56,7 @@ import { testEpic } from './epicTestUtils';
 
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../libs/ajax';
+import { INTERACTIVE_LEGEND_ID } from '../../utils/LegendUtils';
 
 let mockAxios;
 
@@ -474,7 +475,11 @@ describe('Test styleeditor epics', () => {
                         name: 'layerName',
                         url: 'base/web/client/test-resources/geoserver/',
                         describeFeatureType: {},
-                        style: 'test_style'
+                        style: 'test_style',
+                        layerFilter: {
+                            filters: [{id: INTERACTIVE_LEGEND_ID, "test": "test"}]
+                        },
+                        enableInteractiveLegend: true
                     }
                 ],
                 selected: [
@@ -503,6 +508,7 @@ describe('Test styleeditor epics', () => {
                     case UPDATE_SETTINGS_PARAMS:
                         const styleName = action.newParams.style.split('___');
                         expect(styleName[0]).toBe('style_title');
+                        expect(action.newParams.layerFilter).toBeTruthy();
                         expect(action.update).toBe(true);
                         break;
                     case UPDATE_STATUS:
@@ -568,6 +574,7 @@ describe('Test styleeditor epics', () => {
                     case UPDATE_SETTINGS_PARAMS:
                         const styleName = action.newParams.style.split('___');
                         expect(styleName[0]).toBe(`${workspace}:style_title`);
+                        expect(action.newParams.layerFilter).toBeFalsy();
                         expect(action.update).toBe(true);
                         break;
                     case UPDATE_STATUS:

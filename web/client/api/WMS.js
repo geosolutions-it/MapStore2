@@ -10,7 +10,7 @@ import urlUtil from 'url';
 import { isArray, castArray, get } from 'lodash';
 import xml2js from 'xml2js';
 import axios from '../libs/ajax';
-import ConfigUtils, { getConfigProp } from '../utils/ConfigUtils';
+import { getConfigProp } from '../utils/ConfigUtils';
 import { getWMSBoundingBox } from '../utils/CoordinatesUtils';
 import { isValidGetMapFormat, isValidGetFeatureInfoFormat } from '../utils/WMSUtils';
 const capabilitiesCache = {};
@@ -321,30 +321,14 @@ export const getSupportedFormat = (url, includeGFIFormats = false) => {
         .catch(() => includeGFIFormats ? { imageFormats: [], infoFormats: [] } : []);
 };
 
-let layerLegendJsonData = {};
 export const getJsonWMSLegend = (url) => {
-    let request;
-
-    // enables caching of the JSON legend for a specified duration,
-    // while providing the possibility of re-fetching the legend data in case of external modifications
-    const cached = layerLegendJsonData[url];
-    if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
-        request = () => Promise.resolve(cached.data);
-    } else {
-        request = () => axios.get(url).then((response) => {
+    return axios.get(url)
+        .then((response) => {
             if (typeof response?.data === 'string' && response.data.includes("Exception")) {
                 throw new Error("Faild to get json legend");
             }
-            layerLegendJsonData[url] = {
-                timestamp: new Date().getTime(),
-                data: response?.data?.Legend
-            };
             return response?.data?.Legend || [];
-        });
-    }
-    return request().then((data) => data).catch(err => {
-        throw err;
-    });
+        }).catch(err => { throw err; });
 };
 
 const Api = {

@@ -71,11 +71,15 @@ class StyleBasedWMSJsonLegend extends React.Component {
         const prevLayerStyle = prevProps?.layer?.style;
         const currentLayerStyle = this.props?.layer?.style;
 
+        const prevLayerStyleVersion = prevProps?.layer?.styleVersion;
+        const currLayerStyleVersion = this.props?.layer?.styleVersion;
+
         const [prevFilter, currFilter] = [prevProps?.layer, this.props?.layer]
             .map(_layer => getLayerFilterByLegendFormat(_layer, LEGEND_FORMAT.JSON));
 
         // get the new json legend and rerender in case of change in style or layer filter
         if (!isEqual(prevLayerStyle, currentLayerStyle)
+            || !isEqual(prevLayerStyleVersion, currLayerStyleVersion)
             || !isEqual(prevFilter, currFilter)
             || !isEqual(prevProps.mapBbox, this.props.mapBbox)
         ) {
