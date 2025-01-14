@@ -24,7 +24,6 @@ import { getEPSGCode } from './CoordinatesUtils';
 import { ANNOTATIONS, updateAnnotationsLayer, isAnnotationLayer } from '../plugins/Annotations/utils/AnnotationsUtils';
 import { getLocale } from './LocaleUtils';
 import { isSingleDefaultGroup } from '../plugins/TOC/utils/TOCUtils';
-import uuid from 'uuid';
 
 
 let LayersUtils;
