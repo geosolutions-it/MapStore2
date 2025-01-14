@@ -1538,7 +1538,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Déposez vos contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez des fichiers...",
-                "infoSupported": "<p><small>Fichiers de contextes pris en charge : format hérité MapStore, WMC<br />Fichiers vectoriels pris en charge : fichier de formes (doivent être contenus dans des archives zip), KML/KMZ, GeoJSON, Annotations ou GPX</small></p>",
+                "infoSupported": "<p><small>Fichiers de contextes pris en charge : format hérité MapStore, WMC<br />Fichiers vectoriels pris en charge : fichier de formes (doivent être contenus dans des archives zip), KML/KMZ, GeoJSON, Annotations ou GPX. (Le système de référence doit être EPSG : 4326 pour KML/KMZ, GPX)</small></p>",
                 "note": "<p><small><i><strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de contextes cartographiques</i></small></p>"
             },
             "errors": {
