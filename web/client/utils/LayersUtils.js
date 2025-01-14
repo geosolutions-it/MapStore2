@@ -589,7 +589,7 @@ export const sortUsing = (sortFun, action) => {
  *     { id: DEFAULT_GROUP_ID }
  * ];
  *
- * const newFormat = convertLegecyGroupsToNewFormat(legacyGroups);
+ * const newFormat = convertLegacyGroupsToNewFormat(legacyGroups);
  * // returns [
  * //     {
  * //         id: "Default",
@@ -602,8 +602,8 @@ export const sortUsing = (sortFun, action) => {
  * //     }
  * // ]
  */
-function convertLegecyGroupsToNewFormat(legecyGroups) {
-    const modifiedNodes = legecyGroups.map(node => {
+function convertLegacyGroupsToNewFormat(legacyGroups) {
+    const modifiedNodes = legacyGroups.map(node => {
         const id = uuid();
         if (node.id === DEFAULT_GROUP_ID) {
             return {
@@ -648,7 +648,7 @@ export const splitMapAndLayers = (mapState) => {
             }, [].concat(groups));
         }
         // to convert old format to new format: UI wise invisible default group as parent of all groups
-        groups = !isSingleDefaultGroup(groups) ? convertLegecyGroupsToNewFormat(groups) : groups;
+        groups = !isSingleDefaultGroup(groups) ? convertLegacyGroupsToNewFormat(groups) : groups;
 
         let layers = extractDataFromSources(mapState);
 
