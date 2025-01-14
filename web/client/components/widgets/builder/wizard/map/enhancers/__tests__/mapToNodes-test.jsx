@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import {createSink} from 'recompose';
 
 import mapToNodes from '../mapToNodes';
+import { DEFAULT_GROUP_ID } from '../../../../../../../utils/LayersUtils';
 
 describe('mapToNodes enhancer', () => {
     beforeEach((done) => {
@@ -27,7 +28,11 @@ describe('mapToNodes enhancer', () => {
             expect(props).toExist();
             expect(props.nodes).toExist();
             expect(props.nodes.length).toBe(1);
-            const gNode = props.nodes[0];
+            const defaultNode = props.nodes[0];
+            // check default node
+            expect(defaultNode.name).toBe(DEFAULT_GROUP_ID);
+            expect(defaultNode.id).toBe(DEFAULT_GROUP_ID);
+            const gNode = defaultNode.nodes[0];
             expect(gNode.name).toBe("GGG");
             expect(gNode.title).toBe("GGG");
             expect(gNode.id).toBe("GGG");

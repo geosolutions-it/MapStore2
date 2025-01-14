@@ -586,7 +586,8 @@ export const sortUsing = (sortFun, action) => {
  * @example
  * const legacyGroups = [
  *     { id: '1', name: 'Group 1' },
- *     { id: DEFAULT_GROUP_ID }
+ *     { id: "Default" , ...}
+ *     ...
  * ];
  *
  * const newFormat = convertLegacyGroupsToNewFormat(legacyGroups);
@@ -596,20 +597,20 @@ export const sortUsing = (sortFun, action) => {
  * //         name: "Default",
  * //         nodes: [
  * //             { id: '1', name: 'Group 1' },
- * //             { id: 'DEFAULT_GROUP_ID.<uuid>' } // Unique UUID generated
+ * //             { id: 'Default.Default', name: "Default", ... },
+ * //                ...
  * //         ],
  * //         expanded: true
  * //     }
  * // ]
  */
-function convertLegacyGroupsToNewFormat(legacyGroups) {
+export function convertLegacyGroupsToNewFormat(legacyGroups) {
     const modifiedNodes = legacyGroups.map(node => {
-        const id = uuid();
         if (node.id === DEFAULT_GROUP_ID) {
             return {
                 ...node,
-                id: `${DEFAULT_GROUP_ID}.${id}`,
-                name: id
+                id: `${DEFAULT_GROUP_ID}.${node.id}`,
+                name: node?.name
             };
         }
         return node;

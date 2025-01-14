@@ -58,7 +58,8 @@ describe('TOC', () => {
                 ]
             }}
             onChangeMap={(map) => {
-                expect(map.groups[0].visibility).toBe(false);
+                // skipping "Default" group in [0] which is invisible in UI
+                expect(map.groups[1].visibility).toBe(false);
                 done();
             }}
         />, document.getElementById("container"));
