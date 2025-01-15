@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, GeoSolutions Sas.
+ * Copyright 2025, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -17,7 +17,14 @@ import Select from 'react-select';
 import { formatClippingFeatures } from '../../../utils/MapViewsUtils';
 import Message from '../../I18N/Message';
 import { getTitle } from '../../../utils/LayersUtils';
+import PropTypes from 'prop-types';
 
+/**
+ * LayerOverridesNodeContent render additional content inside the layer node in toc for map views
+ * @prop {object} node layer object
+ * @prop {object} config optional configuration available for the nodes
+ * @prop {function} onChange return the changes of this node
+ */
 function LayerOverridesNodeContent({
     node = {},
     config,
@@ -131,5 +138,11 @@ function LayerOverridesNodeContent({
         </div>
     );
 }
+
+LayerOverridesNodeContent.propTypes = {
+    node: PropTypes.object,
+    config: PropTypes.object,
+    onChange: PropTypes.func
+};
 
 export default LayerOverridesNodeContent;

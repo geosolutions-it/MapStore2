@@ -22,6 +22,15 @@ import { getMessageById } from '../../../utils/LocaleUtils';
 const Button = tooltip(ButtonRB);
 const FormControl = localizedProps('placeholder')(FormControlRB);
 
+/**
+ * ResetLayerOverrides node tool to link and unlink groups and layers to TOC
+ * @prop {object} itemComponent default node tool component
+ * @prop {object} node layer object
+ * @prop {object} config optional configuration available for the nodes
+ * @prop {string} nodeType node type
+ * @prop {object} nodeTypes constant values for node types
+ * @prop {function} onChange return the changes of this node
+ */
 function ResetLayerOverrides({
     itemComponent,
     node,
@@ -53,6 +62,34 @@ function ResetLayerOverrides({
     );
 }
 
+ResetLayerOverrides.propTypes = {
+    itemComponent: PropTypes.any,
+    node: PropTypes.object,
+    config: PropTypes.object,
+    nodeType: PropTypes.string,
+    nodeTypes: PropTypes.object,
+    onChange: PropTypes.func
+};
+/**
+ * LayersSection table of content for layers and groups inside a map view
+ * @prop {object} view view configuration
+ * @prop {object} expandedSections state of the expended section
+ * @prop {function} onExpandSection returns the new expanded state
+ * @prop {function} onChange returns changes on the view
+ * @prop {array} resources list of resources available for the views
+ * @prop {array} layers list of supported layers
+ * @prop {array} groups list of supported groups
+ * @prop {array} vectorLayers list of vector layers
+ * @prop {string} locale current locale
+ * @prop {function} onChangeLayer returns changes on a view layer
+ * @prop {function} onResetLayer requests a reset on the selected view layer
+ * @prop {function} onChangeGroup returns changes on a view group
+ * @prop {function} onResetGroup requests a reset on the selected view group
+ * @prop {boolean} showClipGeometries visibility state of clipping features
+ * @prop {function} onShowClipGeometries return the clipping checkbox state
+ * @prop {function} isTerrainAvailable if true shows the terrain options
+ * @prop {function} isClippingAvailable if true shows enable clipping options
+ */
 function LayersSection({
     view,
     expandedSections = {},
@@ -232,6 +269,27 @@ function LayersSection({
         </Section>
     );
 }
+
+LayersSection.propTypes = {
+    view: PropTypes.object,
+    expandedSections: PropTypes.object,
+    onExpandSection: PropTypes.func,
+    onChange: PropTypes.func,
+    resources: PropTypes.array,
+    layers: PropTypes.array,
+    groups: PropTypes.array,
+    vectorLayers: PropTypes.array,
+    updateLayerRequest: PropTypes.func,
+    locale: PropTypes.string,
+    onChangeLayer: PropTypes.func,
+    onResetLayer: PropTypes.func,
+    onChangeGroup: PropTypes.func,
+    onResetGroup: PropTypes.func,
+    showClipGeometries: PropTypes.bool,
+    onShowClipGeometries: PropTypes.func,
+    isTerrainAvailable: PropTypes.bool,
+    isClippingAvailable: PropTypes.bool
+};
 
 LayersSection.contextTypes = {
     messages: PropTypes.object
