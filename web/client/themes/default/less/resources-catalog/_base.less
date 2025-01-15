@@ -1,0 +1,75 @@
+
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    .pagination.custom {
+        &> li > a,
+        &> li > span {
+            background-color: transparent;
+        }
+        &> .disabled > span,
+        &> .disabled > span:hover,
+        &> .disabled > span:focus,
+        &> .disabled > a,
+        &> .disabled > a:hover,
+        &> .disabled > a:focus {
+            background-color: transparent;
+        }
+        &> .active > a,
+        &> .active > span,
+        &> .active > a:hover,
+        &> .active > span:hover,
+        &> .active > span:focus {
+            .color-var(@theme-vars[primary-contrast]);
+            .background-color-var(@theme-vars[primary]);
+        }
+    }
+    .tabs-underline {
+        > .nav > li {
+            > a {
+                .color-var(@theme-vars[main-color], true);
+                .background-color-var(@theme-vars[main-bg], true);
+            }
+            > a:hover {
+                .border-bottom-color-var(@theme-vars[main-border-color]);
+            }
+            &.active {
+                > a {
+                    .border-bottom-color-var(@theme-vars[selected-color]);
+                }
+            }
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
+
+.pagination.custom {
+    &> li > a,
+    &> li > span {
+        height: 30px;
+        min-width: 30px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 0.25rem;
+        border: none;
+    }
+}
+
+.tabs-underline {
+    > .nav > li {
+        + li {
+            margin-left: 1rem;
+        }
+        > a {
+            padding: 0;
+            border-bottom: 0.2rem solid transparent;
+            border-radius: 0;
+        }
+    }
+}
