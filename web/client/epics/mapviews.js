@@ -40,14 +40,15 @@ import {
 } from '../selectors/mapviews';
 import { BROWSE_DATA } from '../actions/layers';
 import { CLOSE_FEATURE_GRID } from '../actions/featuregrid';
-import { layersSelector } from '../selectors/layers';
+import { layersSelector, rawGroupsSelector } from '../selectors/layers';
 import {
     isShallowEqualBy
 } from '../utils/ReselectUtils';
 import { getResourceFromLayer } from '../api/MapViews';
 
-import { MAP_VIEWS_LAYERS_OWNER, formatClippingFeatures } from '../utils/MapViewsUtils';
+import { MAP_VIEWS_LAYERS_OWNER, formatClippingFeatures, isViewLayerChanged, mergeViewGroups, mergeViewLayers } from '../utils/MapViewsUtils';
 import { isCesium } from '../selectors/maptype';
+import { getDerivedLayersVisibility } from '../utils/LayersUtils';
 
 const deepCompare = isShallowEqualBy();
 
@@ -117,22 +118,32 @@ export const updateMapViewsLayers = (action$, store) =>
             const state = store.getState();
             const previousView = getPreviousView(state);
             const currentView =  getSelectedMapView(state);
-            const { layers = [], mask = {}, id: viewId } = currentView || {};
+            const { layers = [], groups = [], mask = {}, id: viewId } = currentView || {};
             const shouldUpdate = !!(
                 action.type === VISUALIZATION_MODE_CHANGED
                 || !deepCompare(previousView?.layers || [], layers)
                 || !deepCompare(previousView?.mask || {}, mask)
+                || !deepCompare(previousView?.groups || [], groups)
             );
             if (!shouldUpdate) {
                 return Observable.of(
                     setPreviousView(currentView)
                 );
             }
+            const mapLayers = layersSelector(state);
+            const mergedGroups = mergeViewGroups(
+                rawGroupsSelector(state),
+                currentView, true);
+            const mergedLayers = mergeViewLayers(mapLayers, currentView);
+            const updatedLayers = getDerivedLayersVisibility(mergedLayers, mergedGroups);
+            const changedLayers = updatedLayers.filter((uLayer) => {
+                const currentLayer = (mapLayers || []).find(layer => layer.id === uLayer.id);
+                return isViewLayerChanged(uLayer, currentLayer);
+            });
             const resources = getMapViewsResources(state);
             return updateResourcesObservable(currentView, store)
                 .switchMap((allResources) => {
                     const checkedResources = allResources.filter(({ error }) => !error);
-                    const mapLayers = layersSelector(state);
                     const updatedResources = checkedResources.filter(resource => resource.updated);
                     const maskLayerResource = isString(mask.resourceId) && checkedResources.find((resource) => resource.id === mask.resourceId);
                     return Observable.of(
@@ -144,8 +155,7 @@ export const updateMapViewsLayers = (action$, store) =>
                         ] : []),
                         setPreviousView(currentView),
                         removeAdditionalLayer({ owner: MAP_VIEWS_LAYERS_OWNER }),
-                        ...layers
-                            .filter((layer) => !!mapLayers.find(mapLayer => mapLayer.id === layer.id))
+                        ...changedLayers
                             .map((layer) => {
                                 const clipPolygonLayerResource = isString(layer.clippingLayerResourceId) && checkedResources.find((resource) => resource.id === layer.clippingLayerResourceId);
                                 const clippingPolygon = isString(layer.clippingPolygonFeatureId)
@@ -156,7 +166,7 @@ export const updateMapViewsLayers = (action$, store) =>
                                     'override',
                                     {
                                         ...layer,
-                                        clippingPolygon
+                                        ...(clippingPolygon && { clippingPolygon })
                                     }
                                 );
                             }),

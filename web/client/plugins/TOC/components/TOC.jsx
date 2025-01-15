@@ -34,6 +34,7 @@ import {
  * @prop {string} filterText filter to apply to layers title
  * @prop {string} theme layers tree theme, one of undefined or `legend`
  * @prop {string} className additional class name for the layer tree
+ * @prop {array} nodeContentItems list of node content component to customize specific content available after expanding the node, expected structure [ { name, Component } ]
  * @prop {array} nodeItems list of node component to customize specific nodes, expected structure [ { name, Component, selector } ]
  * @prop {array} nodeToolItems list of node tool component to customize specific tool available on a node, expected structure [ { name, Component } ]
  * @prop {object} singleDefaultGroup if true it hides the default group nodes
@@ -74,6 +75,7 @@ export function ControlledTOC({
     className,
     nodeItems,
     nodeToolItems,
+    nodeContentItems,
     singleDefaultGroup,
     theme
 }) {
@@ -100,6 +102,7 @@ export function ControlledTOC({
             config={config}
             nodeItems={nodeItems}
             nodeToolItems={nodeToolItems}
+            nodeContentItems={nodeContentItems}
             singleDefaultGroup={singleDefaultGroup}
         />
     );
@@ -108,6 +111,7 @@ export function ControlledTOC({
 /**
  * TOC component that supports map configuration
  * @prop {object} map map configuration
+ * @prop {function} onChangeNode return the changed node configuration
  * @prop {function} onChangeMap return the changed map configuration
  * @prop {array} selectedNodes list of selected node identifiers
  * @prop {function} onSelectNode return the current selected node on click event
@@ -115,6 +119,7 @@ export function ControlledTOC({
  * @prop {string} className additional class name for the layer tree
  * @prop {array} nodeItems list of node component to customize specific nodes, expected structure [ { name, Component, selector } ]
  * @prop {array} nodeToolItems list of node tool component to customize specific tool available on a node, expected structure [ { name, Component } ]
+ * @prop {array} nodeContentItems list of node content component to customize specific content available after expanding the node, expected structure [ { name, Component } ]
  * @prop {object} singleDefaultGroup if true it hides the default group nodes
  * @prop {object} config optional configuration available for the nodes
  * @prop {number} config.resolution map resolution
@@ -138,15 +143,18 @@ export function ControlledTOC({
  */
 function TOC({
     map = { layers: [], groups: [] },
+    onChangeNode = () => {},
     onChangeMap = () => {},
     selectedNodes = [],
     onSelectNode = () => {},
     config,
     className,
     nodeToolItems,
+    nodeContentItems,
     singleDefaultGroup,
     nodeItems,
-    theme
+    theme,
+    filterText
 }) {
     const { layers } = splitMapAndLayers(map) || {};
     const tree = denormalizeGroups(layers.flat || [], layers.groups || []).groups;
@@ -173,6 +181,7 @@ function TOC({
         }
     }
     function handleUpdateNode(nodeId, nodeType, options) {
+        onChangeNode(nodeId, nodeType, options);
         const updatedNode = changeNodeConfiguration({
             groups: layers.groups,
             layers: layers.flat
@@ -188,6 +197,7 @@ function TOC({
             className={className}
             theme={theme}
             tree={tree}
+            filterText={filterText}
             selectedNodes={selectedNodesIdsToObject(selectedNodes, layers.flat, tree)}
             onSelectNode={onSelectNode}
             onSort={handleOnSort}
@@ -206,6 +216,7 @@ function TOC({
             }}
             nodeItems={nodeItems}
             nodeToolItems={nodeToolItems}
+            nodeContentItems={nodeContentItems}
             singleDefaultGroup={singleDefaultGroup}
         />
     );

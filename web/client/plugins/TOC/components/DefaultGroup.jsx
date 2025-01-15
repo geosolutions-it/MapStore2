@@ -49,6 +49,7 @@ const DefaultGroupNode = ({
         onChange,
         nodeType,
         nodeTypes,
+        config,
         itemComponent: NodeTool
     };
     return (

@@ -31,6 +31,7 @@ function ViewSettings({
     view,
     api,
     layers = [],
+    groups = [],
     onChange,
     onUpdateResource = () => { },
     onCaptureView,
@@ -77,6 +78,26 @@ function ViewSettings({
         });
     }
 
+    function handleChangeGroup(groupId, options) {
+        const viewGroup = view?.groups?.find(vGroup => vGroup.id === groupId);
+        const viewGroups = viewGroup
+            ? (view?.groups || [])
+                .map((vGroup) => vGroup.id === groupId ? ({ ...viewGroup, ...options }) : vGroup)
+            : [...(view?.groups || []), { id: groupId, ...options }];
+        onChange({
+            ...view,
+            groups: viewGroups
+        });
+    }
+
+    function handleResetGroup(groupId) {
+        const viewGroups = view?.groups?.filter(vGroup => vGroup.id !== groupId);
+        onChange({
+            ...view,
+            groups: viewGroups
+        });
+    }
+
     function updateLayerRequest({ layer, inverse = false, offset = 0 } = {}) {
         return getResourceFromLayer({
             layer,
@@ -108,11 +129,14 @@ function ViewSettings({
                             onChange={handleChange}
                             resources={resources}
                             layers={layers.filter(({ type }) => !(api?.options?.unsupportedLayers || []).includes(type))}
+                            groups={groups}
                             vectorLayers={availableVectorLayers}
                             updateLayerRequest={updateLayerRequest}
                             locale={locale}
                             onChangeLayer={handleChangeLayer}
                             onResetLayer={handleResetLayer}
+                            onChangeGroup={handleChangeGroup}
+                            onResetGroup={handleResetGroup}
                             showClipGeometries={showClipGeometries}
                             onShowClipGeometries={onShowClipGeometries}
                             onCaptureView={onCaptureView}

@@ -49,6 +49,7 @@ function NodeTool({
             tooltip={tooltipProp}
             onClick={(event) => {
                 event.stopPropagation();
+                event.preventDefault();
                 if (!disabled) {
                     onClick(event);
                 }

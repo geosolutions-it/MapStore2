@@ -1644,6 +1644,12 @@ Example:
             "clippingPolygonFeatureId": "feature.id.01",
             "clippingPolygonUnion": false
           }
+        ],
+        "groups": [
+          {
+            "id": "group_01",
+            "visibility": true
+          }
         ]
       }
     ],
@@ -1710,6 +1716,7 @@ View configuration object
 | globeTranslucency.nearDistance | number | when `fadeByDistance` is true it indicates the minimum distance to apply translucency |
 | globeTranslucency.farDistance | number |  when `fadeByDistance` is true it indicates the maximum distance to apply translucency |
 | layers | array | array of layer configuration overrides, default properties override `visibility` and `opacity` |
+| groups | array | array of group configuration overrides, default property overrides `visibility` |
 
 Resource object configuration
 

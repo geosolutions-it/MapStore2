@@ -12,7 +12,11 @@ import {
     formatClippingFeatures,
     getZoomFromHeight,
     getHeightFromZoom,
-    cleanMapViewSavedPayload
+    cleanMapViewSavedPayload,
+    isViewLayerChanged,
+    pickViewLayerProperties,
+    pickViewGroupProperties,
+    mergeViewGroups
 } from '../MapViewsUtils';
 
 describe('Test MapViewsUtils', () => {
@@ -389,5 +393,56 @@ describe('Test MapViewsUtils', () => {
                 }
             ]
         );
+    });
+    it('isViewLayerChanged', () => {
+        expect(isViewLayerChanged({ }, { })).toBe(false);
+        expect(isViewLayerChanged({ title: 'Old title' }, { title: 'New title' })).toBe(false);
+        expect(isViewLayerChanged({ visibility: false }, { visibility: true })).toBe(true);
+        expect(isViewLayerChanged({ opacity: 0 }, { opacity: 1 })).toBe(true);
+        expect(isViewLayerChanged({ clippingLayerResourceId: '01' }, { clippingLayerResourceId: '02' })).toBe(true);
+        expect(isViewLayerChanged({ clippingPolygonFeatureId: '01' }, { clippingPolygonFeatureId: '02' })).toBe(true);
+        expect(isViewLayerChanged({ clippingPolygonUnion: false }, { clippingPolygonUnion: true })).toBe(true);
+    });
+    it('pickViewLayerProperties', () => {
+        expect(pickViewLayerProperties({
+            id: '01',
+            title: 'Layer',
+            url: '/url/to/wms',
+            type: 'wms',
+            layer: 'layer',
+            visibility: true,
+            opacity: 1,
+            clippingLayerResourceId: '01',
+            clippingPolygonFeatureId: '01',
+            clippingPolygonUnion: false,
+            expanded: false
+        })).toEqual({
+            id: '01',
+            visibility: true,
+            opacity: 1,
+            clippingLayerResourceId: '01',
+            clippingPolygonFeatureId: '01',
+            clippingPolygonUnion: false
+        });
+    });
+    it('pickViewGroupProperties', () => {
+        expect(pickViewGroupProperties({
+            id: '01',
+            title: 'Group',
+            visibility: true,
+            expanded: false
+        })).toEqual({
+            id: '01',
+            visibility: true
+        });
+    });
+    it('mergeViewGroups', () => {
+        expect(mergeViewGroups([{ id: '01', visibility: false }])).toEqual([{ id: '01', visibility: false }]);
+        expect(mergeViewGroups([{ id: '01', visibility: false }, { id: '02', visibility: false }], { groups: [{ id: '01', visibility: true }] }))
+            .toEqual([{ id: '01', visibility: true, changed: true }, { id: '02', visibility: false }]);
+        expect(mergeViewGroups(
+            [{ id: '01', visibility: false, nodes: ['layer01', { id: '02', visibility: false }] }],
+            { groups: [{ id: '02', visibility: true }] }
+        ), true).toEqual([ { id: '01', visibility: false, nodes: [ 'layer01', { id: '02', visibility: false } ] } ]);
     });
 });

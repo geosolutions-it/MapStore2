@@ -19,7 +19,7 @@ import {
     hideViews
 } from '../../actions/mapviews';
 import mapviews from '../../reducers/mapviews';
-import { layersSelector } from '../../selectors/layers';
+import { layersSelector, rawGroupsSelector } from '../../selectors/layers';
 import { currentLocaleSelector } from '../../selectors/locale';
 import epics from '../../epics/mapviews';
 import {
@@ -33,6 +33,8 @@ import {
 } from '../../selectors/mapviews';
 import Loader from '../../components/misc/Loader';
 import { MAP_VIEWS_CONFIG_KEY } from '../../utils/MapViewsUtils';
+import { flattenArrayOfObjects } from '../../utils/LayersUtils';
+import { isObject } from 'lodash';
 
 const MapViewsSupport = lazy(() => import('../../components/mapviews/MapViewsSupport'));
 
@@ -92,8 +94,9 @@ const ConnectedMapViews = connect(
         isMapViewsActive,
         isMapViewsHidden,
         isMapViewsInitialized,
-        getMapViewsUpdateUUID
-    ], (selectedId, views, layers, locale, mapConfig, resources, active, hide, initialized, updateUUID) => ({
+        getMapViewsUpdateUUID,
+        rawGroupsSelector
+    ], (selectedId, views, layers, locale, mapConfig, resources, active, hide, initialized, updateUUID, groups) => ({
         selectedId,
         views,
         layers: layers.filter(({ group }) => group !== 'background'),
@@ -103,7 +106,8 @@ const ConnectedMapViews = connect(
         active,
         hide,
         initialized,
-        updateUUID
+        updateUUID,
+        groups: flattenArrayOfObjects(groups).filter(isObject)
     })),
     {
         onSelectView: selectView,

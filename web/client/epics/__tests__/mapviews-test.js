@@ -90,6 +90,8 @@ describe('mapviews epics', () => {
                     UPDATE_ADDITIONAL_LAYER
                 ]);
 
+                expect(actions[3].options.visibility).toBe(false);
+                expect(actions[4].options.visibility).toBe(true);
                 expect(actions[4].options.style).toBeTruthy();
                 expect(actions[4].options.style).toEqual({
                     format: 'geostyler',
@@ -114,9 +116,13 @@ describe('mapviews epics', () => {
             }
         }, {
             layers: {
+                groups: [
+                    { id: 'group_01', visibility: false },
+                    { id: 'group_02', visibility: false }
+                ],
                 flat: [
-                    { id: 'layer.01', type: '3dtiles', visibility: true },
-                    { id: 'layer.02', type: 'vector', visibility: true, features: [feature] }
+                    { id: 'layer.01', group: 'group_01', type: '3dtiles', visibility: true },
+                    { id: 'layer.02', group: 'group_02', type: 'vector', visibility: true, features: [feature] }
                 ]
             },
             maptype: {
@@ -159,6 +165,12 @@ describe('mapviews epics', () => {
                                 id: 'layer.01',
                                 clippingLayerResourceId: 'resource.01',
                                 clippingPolygonFeatureId: 'feature.01'
+                            }
+                        ],
+                        groups: [
+                            {
+                                id: 'group_02',
+                                visibility: true
                             }
                         ]
                     }

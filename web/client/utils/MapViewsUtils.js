@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import isNumber from 'lodash/isNumber';
+import { isUndefined, omitBy, isNumber, isObject } from 'lodash';
 
 const METERS_PER_DEGREES = 111194.87428468118;
 
@@ -97,6 +97,77 @@ export const mergeViewLayers = (layers, { layers: viewLayers = [] } = {}) => {
             return { ...layer, ...viewLayer, changed: true };
         }
         return layer;
+    });
+};
+/**
+ * detect if a view layer is different from the map layers
+ * @param {object} viewLayer layer object
+ * @param {object} mapLayer layer object
+ */
+export const isViewLayerChanged = (viewLayer, mapLayer) => {
+    return viewLayer.visibility !== mapLayer.visibility
+    || viewLayer.opacity !== mapLayer.opacity
+    || viewLayer.clippingLayerResourceId !== mapLayer.clippingLayerResourceId
+    || viewLayer.clippingPolygonFeatureId !== mapLayer.clippingPolygonFeatureId
+    || viewLayer.clippingPolygonUnion !== mapLayer.clippingPolygonUnion;
+};
+/**
+ * pick view layer properties
+ * @param {object} node layer object
+ */
+export const pickViewLayerProperties = (node) => {
+    return omitBy({
+        id: node.id,
+        visibility: node.visibility,
+        opacity: node.opacity,
+        clippingLayerResourceId: node.clippingLayerResourceId,
+        clippingPolygonFeatureId: node.clippingPolygonFeatureId,
+        clippingPolygonUnion: node.clippingPolygonUnion
+    }, isUndefined);
+};
+/**
+ * pick view group properties
+ * @param {object} node group object
+ */
+export const pickViewGroupProperties = (node) => {
+    return omitBy({
+        id: node.id,
+        visibility: node.visibility
+    }, isUndefined);
+};
+/**
+ * merge the configuration of view groups in the main groups array
+ * @param {array} rawGroups array of group object
+ * @param {object} view map view configuration
+ * @param {boolean} recursive apply recursive merge instead of flat one
+ */
+export const mergeViewGroups = (groups, { groups: viewGroups = [] } = {}, recursive) => {
+    if (viewGroups.length === 0) {
+        return groups || [];
+    }
+    if (recursive) {
+        const recursiveMerge = (nodes) => {
+            return nodes.map((node) => {
+                if (isObject(node)) {
+                    const viewGroup = viewGroups.find(vGroup => vGroup.id === node.id);
+                    return {
+                        ...node,
+                        ...viewGroup,
+                        ...(node.nodes && { nodes: recursiveMerge(node.nodes) }),
+                        changed: true
+                    };
+                }
+                return node;
+            });
+        };
+        return recursiveMerge(groups || []);
+    }
+    return (groups || []).map((group) => {
+        const viewGroup = viewGroups.find(vGroup => vGroup.id === group.id);
+        if (viewGroup) {
+            return { ...group, ...viewGroup, changed: true };
+        }
+        return group;
     });
 };
 /**
