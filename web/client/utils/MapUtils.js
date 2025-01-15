@@ -25,11 +25,15 @@ import {
     minBy,
     omit
 } from 'lodash';
+import { get as getProjectionOL, getPointResolution, transform } from 'ol/proj';
+import { get as getExtent } from 'ol/proj/projections';
 
 import uuidv1 from 'uuid/v1';
 
 import { getUnits, normalizeSRS, reproject } from './CoordinatesUtils';
+
 import { getProjection } from './ProjectionUtils';
+
 import { set } from './ImmutableUtils';
 import {
     saveLayer,
@@ -339,6 +343,64 @@ export function getScales(projection, dpi) {
     const dpu = dpi2dpu(dpi, projection);
     return getResolutions(projection).map((resolution) => resolution * dpu);
 }
+
+export function getScale(projection, dpi, resolution) {
+    const dpu = dpi2dpu(dpi, projection);
+    return resolution * dpu;
+}
+/**
+ * get random coordinates within CRS extent
+ * @param {string} crs the code of the projection for example EPSG:4346
+ * @returns {number[]} the point in [x,y] [lon,lat]
+ */
+export function getRandomPointInCRS(crs) {
+    const extent = getExtent(crs); // Get the projection's extent
+    if (!extent) {
+        throw new Error(`Extent not available for CRS: ${crs}`);
+    }
+    const [minX, minY, maxX, maxY] = extent.extent_;
+
+    // Check if the equator (latitude = 0) is within the CRS extent
+    const isEquatorWithinExtent = minY <= 0 && maxY >= 0;
+
+    // Generate a random X coordinate within the valid longitude range
+    const randomX = Math.random() * (maxX - minX) + minX;
+
+    // Set Y to 0 if the equator is within the extent, otherwise generate a random Y
+    const randomY = isEquatorWithinExtent ? 0 : Math.random() * (maxY - minY) + minY;
+
+    return [randomX, randomY];
+}
+
+/**
+ * convert resolution between CRSs
+ * @param {string} sourceCRS the code of a projection
+ * @param {string} targetCRS the code of a projection
+ * @param {number} sourceResolution the resolution to convert
+ * @returns the converted resolution
+ */
+export function convertResolution(sourceCRS, targetCRS, sourceResolution) {
+    const sourceProjection = getProjectionOL(sourceCRS);
+    const targetProjection = getProjectionOL(targetCRS);
+
+    if (!sourceProjection || !targetProjection) {
+        throw new Error(`Invalid CRS: ${sourceCRS} or ${targetCRS}`);
+    }
+
+    // Get a random point in the extent of the source CRS
+    const randomPoint = getRandomPointInCRS(sourceCRS);
+
+    // Transform the resolution
+    const transformedResolution = getPointResolution(
+        sourceProjection,
+        sourceResolution,
+        transform(randomPoint, sourceCRS, targetCRS),
+        targetProjection.getUnits()
+    );
+
+    return { randomPoint, transformedResolution };
+}
+
 /**
  * Convert a resolution to the nearest zoom
  * @param {number} targetResolution resolution to be converted in zoom
