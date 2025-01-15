@@ -16,10 +16,7 @@ import Select from 'react-select';
 import Message from '../../I18N/Message';
 import { findIndex } from 'lodash';
 import SecurityUtils from '../../../utils/SecurityUtils';
-
-// const ConfirmModal = require('./modals/ConfirmModal');
-// const GroupManager = require('./GroupManager');
-
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 class UserCard extends React.Component {
     static propTypes = {
         // props
@@ -55,7 +52,13 @@ class UserCard extends React.Component {
             clearableValue: group.groupName !== SecurityUtils.USER_GROUP_ALL
         }));
     };
-
+    customValueRenderer = (option) => {
+        return ( <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip id={`tooltip-${option.value}`}>{option.label}</Tooltip>}
+        ><div className="Select-value-label" data-tip={option.label}> {option.label}</div>
+        </OverlayTrigger>);
+    };
     renderGroupsSelector = () => {
         return (<Select key="groupSelector"
             clearable={false}
@@ -66,6 +69,8 @@ class UserCard extends React.Component {
             options={this.getOptions()}
             onChange={this.onChange}
             style={{marginTop: "10px"}}
+            // * NOTE: valueRenderer: is responsible for custom rendering for shwon selected values in react-select version 1.3.0
+            valueRenderer={this.customValueRenderer}
         />);
     };
 
