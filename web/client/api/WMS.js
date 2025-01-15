@@ -321,20 +321,14 @@ export const getSupportedFormat = (url, includeGFIFormats = false) => {
         .catch(() => includeGFIFormats ? { imageFormats: [], infoFormats: [] } : []);
 };
 
-let layerLegendJsonData = {};
 export const getJsonWMSLegend = (url) => {
-    const request = layerLegendJsonData[url]
-        ? () => Promise.resolve(layerLegendJsonData[url])
-        : () => axios.get(url).then((response) => {
+    return axios.get(url)
+        .then((response) => {
             if (typeof response?.data === 'string' && response.data.includes("Exception")) {
                 throw new Error("Faild to get json legend");
             }
-            layerLegendJsonData[url] = response?.data?.Legend;
             return response?.data?.Legend || [];
-        });
-    return request().then((data) => data).catch(err => {
-        throw err;
-    });
+        }).catch(err => { throw err; });
 };
 
 const Api = {
