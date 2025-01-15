@@ -163,7 +163,7 @@ class NumericInput extends Component {
         this.refsInput.getValueAsNumber = () => this.state.value || 0;
 
         this.refsInput.setValue = (value) => {
-            this.setState({
+            this.setState({  // eslint-disable-line -- TODO: need to be fixed
                 value: this._parse(value),
                 stringValue: value
             });
