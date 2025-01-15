@@ -124,16 +124,102 @@ describe('usersession Epics', () => {
         testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
             expect(actions[0].type).toBe(USER_SESSION_LOADING);
             expect(actions[1].type).toBe(USER_SESSION_REMOVED);
-            expect(actions[1].id).toBeFalsy();
-            expect(actions[1].session).toBeFalsy();
-        }, initialState, done);
+            expect(actions[1].newSession).toBeTruthy();
+        }, {...initialState,
+            map: {
+                present: {
+                    center: {
+                        x: -71.88845339541245,
+                        y: 37.25911173702324,
+                        crs: 'EPSG:4326'
+                    },
+                    maxExtent: [
+                        -20037508.34,
+                        -20037508.34,
+                        20037508.34,
+                        20037508.34
+                    ]
+                }
+            }
+        }, done);
+    });
+
+    it("user Session Update on Partial Session Remove", (done) => {
+        const states = {
+            ...initialState,
+            map: {
+                present: {
+                    center: {
+                        x: 118.91601562499996,
+                        y: 42.617791432823395,
+                        crs: 'EPSG:4326'
+                    },
+                    zoom: 16
+                }
+            },
+            layers: [{id: "layer1", group: 'background'}, {id: "layer2"}, {id: "layer3]"}],
+            toc: {test: false},
+            usersession: {
+                checkedSessionToClear: ['background_layers']
+            }
+        };
+
+        // remove background layers
+        testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
+            // only background layers are removed
+            expect(actions[1].newSession.map.zoom).toBe(16);
+            expect(actions[1].newSession.map.center).toEqual({
+                x: 118.91601562499996,
+                y: 42.617791432823395,
+                crs: 'EPSG:4326'
+            });
+            expect(actions[1].newSession.map.layers.some(l=> l.group === 'background')).toBe(false);
+        }, states, done);
+
+
+        // remove annotation layers
+        testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
+            expect(actions[1].newSession.map.layers.some(l=> l.id === 'annotations')).toBe(false);
+        }, {
+            ...states,
+            usersession: {
+                checkedSessionToClear: ['annotations_layer']
+            }
+        }, done);
+
+
+        // remove map positions
+        testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
+            expect(actions[1].newSession.map.zoom).toBeFalsy();
+            expect(actions[1].newSession.map.center).toBeFalsy();
+        }, {
+            ...states,
+            usersession: {
+                checkedSessionToClear: ['map_pos']
+            }
+        }, done);
+
     });
 
     it('CLOSE_FEATURE_GRID and TEXT_SEARCH_RESET actions are triggered', (done) => {
         testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
             expect(actions[2].type).toBe(CLOSE_FEATURE_GRID);
             expect(actions[3].type).toBe(TEXT_SEARCH_RESET);
-        }, initialState, done);
+        }, {...initialState, map: {
+            present: {
+                center: {
+                    x: -71.88845339541245,
+                    y: 37.25911173702324,
+                    crs: 'EPSG:4326'
+                },
+                maxExtent: [
+                    -20037508.34,
+                    -20037508.34,
+                    20037508.34,
+                    20037508.34
+                ]
+            }
+        }}, done);
     });
 
 });

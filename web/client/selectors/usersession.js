@@ -8,36 +8,31 @@
 
 import ConfigUtils from '../utils/ConfigUtils';
 import { createSelector } from "reselect";
-import { contextResourceSelector } from "./context";
+import { contextResourceSelector, userPluginsSelector } from "./context";
 import { userSelector } from "./security";
-import { mapSelector } from "./map";
-import { layersSelector, rawGroupsSelector } from "./layers";
+
 import { mapIdSelector } from "./mapInitialConfig";
-import { customAttributesSettingsSelector } from "./featuregrid";
+import {  mapSaveSelector } from './mapsave';
 
 export const userSessionIdSelector = (state) => state.usersession && state.usersession.id || null;
 export const userSessionSelector = (state) => state.usersession && state.usersession.session || null;
 
 export const userSessionToSaveSelector = createSelector(
     [
-        mapSelector,
-        layersSelector,
-        rawGroupsSelector,
-        customAttributesSettingsSelector
+
+        userPluginsSelector,
+        mapSaveSelector
     ],
-    (map, layers, groups, featureGridAttributes) => {
-        const {center, zoom} = map;
-        return {
-            map: {
-                center,
-                zoom,
-                layers,
-                groups
-            },
-            featureGrid: {
-                attributes: featureGridAttributes
+
+    (userPlugins, mapSave) => {
+        // Using mapSaveSelector to add all config like saving map
+        const newConfig = {
+            ...mapSave,
+            context: {
+                userPlugins
             }
         };
+        return newConfig;
     });
 
 const getMapName = (contextId, mapId) => {
@@ -64,4 +59,6 @@ export const userSessionNameSelector = createSelector([
     mapIdSelector,
     userSelector
 ], (context, mapId, user) => buildSessionName(context?.id, mapId, user?.name));
+
+export const checkedSessionToClear = (state) => state?.usersession?.checkedSessionToClear;
 

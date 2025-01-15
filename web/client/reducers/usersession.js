@@ -7,7 +7,27 @@
  */
 import {
     USER_SESSION_SAVED, USER_SESSION_LOADING, USER_SESSION_LOADED, USER_SESSION_REMOVED, ENABLE_AUTO_SAVE,
-    SAVE_MAP_CONFIG } from "../actions/usersession";
+    SAVE_MAP_CONFIG, SET_CHECKED_SESSION_TO_CLEAR } from "../actions/usersession";
+
+// move to utils
+function getCheckedIds(nodes) {
+    let ids = [];
+
+    // Iterate over each node in the list
+    nodes.forEach(node => {
+        // If the node is checked, add its ID to the result array
+        if (node.checked) {
+            ids.push(node.id);
+        }
+
+        // If the node has children, recursively check them
+        if (node.children) {
+            ids = ids.concat(getCheckedIds(node.children));
+        }
+    });
+
+    return ids;
+}
 
 /**
  * Handles state for userSession
@@ -23,7 +43,10 @@ import {
  * @name usersession
  * @memberof reducers
  */
-export default (state = {}, action) => {
+export default (state = {
+    autoSave: false,
+    checkedSessionToClear: []
+}, action) => {
     switch (action.type) {
     case ENABLE_AUTO_SAVE: {
         return {
@@ -54,13 +77,17 @@ export default (state = {}, action) => {
     case USER_SESSION_REMOVED:
         return {
             ...state,
-            id: undefined,
-            session: undefined
+            session: action.newSession
         };
     case SAVE_MAP_CONFIG:
         return {
             ...state,
             config: action.config
+        };
+    case SET_CHECKED_SESSION_TO_CLEAR:
+        return {
+            ...state,
+            checkedSessionToClear: getCheckedIds(action.checks)
         };
     default:
         return state;
