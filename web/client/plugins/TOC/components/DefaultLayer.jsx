@@ -93,6 +93,9 @@ const DefaultLayerNode = ({
                         <li>
                             <VectorLegend
                                 style={node?.style}
+                                layer={node}
+                                owner="toc"
+                                onChange={onChange}
                             />
                         </li>
                     </>

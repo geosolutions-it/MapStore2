@@ -115,7 +115,6 @@ export const updateLayerWithLegendFilters = (layers, dependencies) => {
 };
 
 export default {
-    INTERACTIVE_LEGEND_ID,
     getLayerFilterByLegendFormat,
     getWMSLegendConfig,
     updateLayerWithLegendFilters

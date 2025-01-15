@@ -260,7 +260,7 @@ describe('test Layer Properties Display module component', () => {
         expect(labels[6].innerText).toBe("layerProperties.legendOptions.legendHeight");
         expect(labels[7].innerText).toBe("layerProperties.legendOptions.legendPreview");
     });
-    it('tests Layer Properties Legend component events', () => {
+    it('tests wms Layer Properties Legend component events', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -369,4 +369,43 @@ describe('test Layer Properties Display module component', () => {
         expect(inputs[11].value).toBe("20");
         expect(inputs[12].value).toBe("40");
     });
+    it('tests wfs Layer Properties Legend component events', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wfs',
+            url: 'fakeurl',
+            legendOptions: {
+                legendWidth: 15,
+                legendHeight: 15
+            },
+            enableInteractiveLegend: false
+        };
+        const settings = {
+            options: {
+                opacity: 1
+            }
+        };
+        const handlers = {
+            onChange() {}
+        };
+        let spy = expect.spyOn(handlers, "onChange");
+        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
+        const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
+        expect(legendPreview).toBeTruthy();
+        expect(inputs).toBeTruthy();
+        expect(inputs.length).toBe(6);
+        let interactiveLegendConfig = document.querySelector(".legend-options input[data-qa='display-interactive-legend-option']");
+        // change enableInteractiveLegend to enable interactive legend
+        interactiveLegendConfig.checked = true;
+        ReactTestUtils.Simulate.change(interactiveLegendConfig);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0].arguments[0]).toEqual("enableInteractiveLegend");
+        expect(spy.calls[0].arguments[1]).toEqual(true);
+    });
+
 });

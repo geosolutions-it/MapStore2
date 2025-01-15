@@ -9,6 +9,7 @@
  * @prop {function} toOgc
  */
 import cql from './cql';
+import geostyler from './geostyler';
 const converters = {
 
 };
@@ -33,6 +34,7 @@ export const canConvert = (from, to) => {
 };
 
 converters.cql = cql;
+converters.geostyler = geostyler;
 
 converters.logic = {
     cql: (filter) => {
@@ -81,6 +83,26 @@ converters.logic = {
             const options = opts[0] ?? {filterNS: "ogc"};
             return  `<${options?.filterNS}:${logic}>${filter.filters.map(convertFilter).join("")}</${options?.filterNS}:${logic}>`;
 
+        }
+        return null;
+    },
+    geostyler: (filter) => {
+        if (filter.logic) {
+            const convertFilter = (f) => {
+                if (canConvert(f.format, 'geostyler')) {
+                    return getConverter(f.format, 'geostyler')(f);
+                }
+                return null;
+            };
+            if (!filter.filters || filter.filters.length === 0) {
+                return [];
+            } else if (filter.filters.length === 1) {
+                if (filter.logic.toUpperCase() === 'NOT') {
+                    return ['!', convertFilter(filter.filters[0])];
+                }
+                return convertFilter(filter.filters[0]);
+            }
+            return [ filter.logic.toUpperCase(), ...filter.filters.map(convertFilter) ];
         }
         return null;
     }

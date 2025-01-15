@@ -243,6 +243,7 @@
             "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle",
             "interactiveLegend": {
                 "incompatibleFilterWarning": "Legendenfilter sind mit dem aktiven Ebenenfilter nicht kompatibel oder es sind keine sichtbaren Features im Kartenansichtsfenster vorhanden. Klicken Sie auf Zurücksetzen, um die Legendenfilter zu löschen",
+                "incompatibleWFSFilterWarning": "Legendenfilter sind mit dem aktiven Ebenenfilter nicht kompatibel. Klicken Sie auf Zurücksetzen, um die Legendenfilter zu löschen",
                 "resetLegendFilter": "Zurücksetzen",
                 "noLegendData": "Keine Legenden Elemente zum Anzeigen"
             }
