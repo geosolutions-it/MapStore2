@@ -137,6 +137,7 @@ export const getCustomizedAttributes = state => {
 };
 export const modeSelector = state => state && state.featuregrid && state.featuregrid.mode;
 export const selectedFeaturesCount = state => (selectedFeaturesSelector(state) || []).length;
+export const copiedFeaturesCount = state => state && JSON.parse(localStorage.getItem('features'))?.length;
 export const changesMapSelector = state => toChangesMap(changesSelector(state));
 export const hasGeometrySelector = state => hasGeometrySelectedFeature(state);
 export const showAgainSelector = state => get(state, "featuregrid.showAgain", false);
