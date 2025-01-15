@@ -12,7 +12,8 @@ import {
     isValidGetFeatureInfoFormat,
     getLayerOptions,
     getTileGridFromLayerOptions,
-    getCustomTileGridProperties
+    getCustomTileGridProperties,
+    isValidResponse
 } from '../WMSUtils';
 
 describe('Test the WMSUtils', () => {
@@ -95,5 +96,13 @@ describe('Test the WMSUtils', () => {
                 formats: tileGridData.formats
             }
         });
+    });
+    it('test isValidResponse', () => {
+        // invalid responses
+        expect(isValidResponse({data: {type: "text/xml"}})).toBeFalsy();
+        expect(isValidResponse({data: {type: "blob"}})).toBeFalsy();
+        expect(isValidResponse({data: {type: "blob"}, status: 401})).toBeFalsy();
+        // valid responses
+        expect(isValidResponse({data: {type: "blob"}, status: 200})).toBeTruthy();
     });
 });
