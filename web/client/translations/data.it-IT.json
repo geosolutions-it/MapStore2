@@ -1535,7 +1535,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Rilascia qui i contesti di mappa o i file vettoriali </h4> <small> o </small> </p>",
                 "selectFiles": "Seleziona i file...",
-                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore, WMC<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX, GeoJSON o Annotazioni. (Il sistema di riferimento deve essere EPSG: 4326 per KML/KMZ, GPX) </small> </p>",
+                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore, WMC<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX, GeoJSON o Annotazioni. (Il sistema di riferimento deve essere EPSG:4326 per KML/KMZ, GPX) </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di nuovi contesti di mappa </i> </small> </p>"
             },
             "errors": {
