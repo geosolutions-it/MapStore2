@@ -69,6 +69,7 @@ class UserCard extends React.Component {
             options={this.getOptions()}
             onChange={this.onChange}
             style={{marginTop: "10px"}}
+            // * NOTE: valueRenderer: is responsible for custom rendering for shwon selected values in react-select version 1.3.0
             valueRenderer={this.customValueRenderer}
         />);
     };
