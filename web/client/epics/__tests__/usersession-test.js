@@ -144,7 +144,7 @@ describe('usersession Epics', () => {
         }, done);
     });
 
-    it("user Session Update on Partial Session Remove", (done) => {
+    it("user Session Update on Partial Session Remove - Background Layers", (done) => {
         const states = {
             ...initialState,
             map: {
@@ -160,7 +160,12 @@ describe('usersession Epics', () => {
             layers: [{id: "layer1", group: 'background'}, {id: "layer2"}, {id: "layer3]"}],
             toc: {test: false},
             usersession: {
-                checkedSessionToClear: ['background_layers']
+                checkedSessionToClear: ['background_layers'],
+                config: {
+                    map: {
+                        layers: []
+                    }
+                }
             }
         };
 
@@ -173,33 +178,112 @@ describe('usersession Epics', () => {
                 y: 42.617791432823395,
                 crs: 'EPSG:4326'
             });
-            expect(actions[1].newSession.map.layers.some(l=> l.group === 'background')).toBe(false);
+            expect(actions[1].newSession.map.layers.some(l => l.group === 'background')).toBe(false);
         }, states, done);
+    });
 
-
+    it("user Session Update on Partial Session Remove - Annotation Layers", (done) => {
+        const states = {
+            ...initialState,
+            map: {
+                present: {
+                    center: {
+                        x: 118.91601562499996,
+                        y: 42.617791432823395,
+                        crs: 'EPSG:4326'
+                    },
+                    zoom: 16
+                }
+            },
+            layers: [{id: "annotations-1", group: 'background'}, {id: "layer2"}, {id: "layer3]"}],
+            toc: {test: false},
+            usersession: {
+                checkedSessionToClear: ['annotations_layer'],
+                config: {
+                    map: {
+                        layers: [{
+                            id: "annotations-from-original"
+                        }]
+                    }
+                }
+            }
+        };
         // remove annotation layers
         testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
-            expect(actions[1].newSession.map.layers.some(l=> l.id === 'annotations')).toBe(false);
-        }, {
-            ...states,
+            // removed from session
+            expect(actions[1].newSession.map.layers.some(l => l.id === 'annotations-1')).toBe(false);
+            // retrieved from original Config
+            expect(actions[1].newSession.map.layers.some(l => l.id === 'annotations-from-original')).toBe(true);
+        }, states, done);
+    });
+
+    it("Check background layers after reset: find background layer of original config after reset", (done) => {
+        const states = {
+            ...initialState,
+            map: {
+            },
+            layers: [{id: "layer1", group: 'background'}, {id: "layer2"}, {id: "layer3]"}],
+            toc: {test: false},
             usersession: {
-                checkedSessionToClear: ['annotations_layer']
+                checkedSessionToClear: ['background_layers'],
+                config: {
+                    map: {
+                        layers: [{id: "background_from_original_config", group: 'background'}]
+                    }
+                }
             }
-        }, done);
+        };
+
+        // reset background layers
+        testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
+            expect(actions[1].newSession.map.layers.some(l => l.id === 'layer1')).toBe(false);
+            expect(actions[1].newSession.map.layers.some(l => l.id === 'background_from_original_config')).toBe(true);
+        }, states, done);
+    });
 
 
+    it("user Session Update on Partial Session Remove - Map Positions", (done) => {
+        const states = {
+            ...initialState,
+            map: {
+                present: {
+                    center: {
+                        x: 118.91601562499996,
+                        y: 42.617791432823395,
+                        crs: 'EPSG:4326'
+                    },
+                    zoom: 16
+                }
+            },
+            layers: [{id: "layer1", group: 'background'}, {id: "layer2"}, {id: "layer3"}],
+            toc: {test: false},
+            usersession: {
+                checkedSessionToClear: ['map_pos'],
+                config: {
+                    map: {
+                        layers: [],
+                        center: {
+                            "x": 11.26,
+                            "y": 43.77,
+                            "crs": "EPSG:4326"
+                        },
+                        zoom: 12
+                    }
+                }
+            }
+        };
         // remove map positions
         testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {
-            expect(actions[1].newSession.map.zoom).toBeFalsy();
-            expect(actions[1].newSession.map.center).toBeFalsy();
-        }, {
-            ...states,
-            usersession: {
-                checkedSessionToClear: ['map_pos']
-            }
-        }, done);
+            // console.log(actions[1].newSession, "newSessionTest");
+            expect(actions[1].newSession.map.center.x).toBe(11.26);
+            expect(actions[1].newSession.map.center.y).toBe(43.77);
+            expect(actions[1].newSession.map.zoom).toBe(12);
+            // check others session is same
+            expect(actions[1].newSession.map.layers.length).toEqual([3]);
 
+        }, states, done);
     });
+
 
     it('CLOSE_FEATURE_GRID and TEXT_SEARCH_RESET actions are triggered', (done) => {
         testEpic(removeUserSessionEpicCreator(idSelector), 6, removeUserSession(), (actions) => {

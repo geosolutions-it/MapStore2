@@ -67,23 +67,23 @@ describe('updateOverrideConfig', () => {
         };
     });
 
-    it('should clear everything when SESSION_IDS.EVERYTHING is in thingsToClear', () => {
+    it('should clear everything when everything is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.EVERYTHING], originalConfig);
         expect(result).toEqual({});
     });
 
-    it('should clear map zoom and center when SESSION_IDS.MAP_POS is in thingsToClear', () => {
+    it('should clear map zoom and center when "Zoom And Center" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.MAP_POS], originalConfig);
         expect(result.map.zoom).toBe(undefined);
         expect(result.map.center).toBe(undefined);
     });
 
-    it('should clear visualization mode when SESSION_IDS.VISUALIZATION_MODE is in thingsToClear', () => {
+    it('should clear visualization mode when "Visualization Mode" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.VISUALIZATION_MODE], originalConfig);
         expect(result.map.visualizationMode).toBe(undefined);
     });
 
-    it('should clear annotation layers when SESSION_IDS.ANNOTATIONS_LAYER is in thingsToClear', () => {
+    it('should clear annotation layers when "Annotations Layers" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.ANNOTATIONS_LAYER], originalConfig);
         expect(result.map.layers).toEqual([
             { id: 'background1', group: 'background' },
@@ -92,7 +92,7 @@ describe('updateOverrideConfig', () => {
         ]);
     });
 
-    it('should clear measurement layers when SESSION_IDS.MEASUREMENTS_LAYER is in thingsToClear', () => {
+    it('should clear measurement layers when "Measurements Layers" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.MEASUREMENTS_LAYER], originalConfig);
         expect(result.map.layers).toEqual([
             { id: 'background1', group: 'background' },
@@ -100,7 +100,7 @@ describe('updateOverrideConfig', () => {
             {id: 'annotations'}
         ]);
     });
-    it('should clear background layer and add background layers from OriginalConfig when SESSION_IDS.MEASUREMENTS_LAYER is in thingsToClear', () => {
+    it('should clear background layers and add background layers from OriginalConfig when "Background Layers" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.BACKGROUND_LAYERS], originalConfig);
         expect(result.map.layers).toEqual([
             { id: 'osm:osm_simple_light__0', group: 'background' },
@@ -111,12 +111,12 @@ describe('updateOverrideConfig', () => {
         ]);
     });
 
-    it('should clear catalogServices when SESSION_IDS.CATALOG_SERVICES is in thingsToClear', () => {
+    it('should clear catalogServices when "Catalog Services" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.CATALOG_SERVICES], originalConfig);
         expect(result.catalogServices).toBe(undefined);
     });
 
-    it('should clear widgetsConfig when SESSION_IDS.WIDGETS is in thingsToClear', () => {
+    it('should clear widgetsConfig when "Widgets" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.WIDGETS], originalConfig);
         expect(result.widgetsConfig).toBe(undefined);
     });
@@ -126,17 +126,17 @@ describe('updateOverrideConfig', () => {
         expect(result.map.text_search_config).toBe(undefined);
     });
 
-    it('should clear bookmark search config when SESSION_IDS.BOOKMARKS is in thingsToClear', () => {
+    it('should clear bookmark search config when "Bookmarks" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.BOOKMARKS], originalConfig);
         expect(result.map.bookmark_search_config).toBe(undefined);
     });
 
-    it('should clear feature grid when SESSION_IDS.FEATURE_GRID is in thingsToClear', () => {
+    it('should clear feature grid when "FeatureGrid" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.FEATURE_GRID], originalConfig);
         expect(result.featureGrid.attributes).toEqual({});
     });
 
-    it('should clear userPlugins when SESSION_IDS.USER_PLUGINS is in thingsToClear', () => {
+    it('should clear userPlugins when "User Plugin" is in thingsToClear', () => {
         const result = updateOverrideConfig(override, [SESSION_IDS.USER_PLUGINS], originalConfig);
         expect(result.context.userPlugins).toBe(undefined);
     });
@@ -145,7 +145,7 @@ describe('updateOverrideConfig', () => {
         const customHandlers = [
             "toc"
         ];
-        const customOverride = { ...override, toc: {
+        const customOverride = {...override, toc: {
             "theme": "legend"
         } };
 

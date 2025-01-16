@@ -539,24 +539,24 @@ export const updateOverrideConfig = (override = {}, thingsToClear = [], original
 
     // annotation layers
     if (thingsToClear?.includes(SESSION_IDS.ANNOTATIONS_LAYER)) {
-        overrideConfig.map.layers = [...overrideConfig.map.layers.filter((l)=>!l.id?.includes('annotations')), ...originalConfig.map.layers.filter((l)=>l.id?.includes('annotations'))];
+        overrideConfig.map.layers = [...overrideConfig.map?.layers?.filter((l)=>!l.id?.includes('annotations')), ...originalConfig?.map?.layers.filter((l)=>l.id?.includes('annotations'))];
     }
     // measurements layers
     if (thingsToClear?.includes(SESSION_IDS.MEASUREMENTS_LAYER)) {
-        overrideConfig.map.layers = [...overrideConfig.map.layers.filter((l)=>!l?.name?.includes('measurements')), ...originalConfig.map.layers.filter(l=> l?.name?.includes('measurements'))];
+        overrideConfig.map.layers = [...overrideConfig.map?.layers?.filter((l)=>!l?.name?.includes('measurements')), ...originalConfig?.map?.layers.filter(l=> l?.name?.includes('measurements'))];
     }
     // background layers
     if (thingsToClear?.includes(SESSION_IDS.BACKGROUND_LAYERS)) {
-        overrideConfig.map.layers = [...overrideConfig.map.layers.filter((l)=>!l?.group?.includes('background')), ...originalConfig.map.layers.filter(l=> l?.group?.includes('background'))];
+        overrideConfig.map.layers = [...overrideConfig.map?.layers?.filter((l)=>!l?.group?.includes('background')), ...originalConfig?.map?.layers.filter(l=> l?.group?.includes('background'))];
     }
     // other layers
     if (thingsToClear?.includes(SESSION_IDS.OTHER_LAYERS)) {
-        overrideConfig.map.layers = [...overrideConfig.map.layers.filter(l=> l?.id?.includes('annotations') || l?.name?.includes('measurements') || l.group?.includes("background")), ...originalConfig.map.layers.filter(l=> !l?.id?.includes('annotations') && !l?.name?.includes('measurements') && !l.group?.includes("background"))];
+        overrideConfig.map.layers = [...overrideConfig.map?.layers?.filter(l=> l?.id?.includes('annotations') || l?.name?.includes('measurements') || l.group?.includes("background")), ...originalConfig?.map?.layers?.filter(l=> !l?.id?.includes('annotations') && !l?.name?.includes('measurements') && !l.group?.includes("background"))];
     }
 
     // reorder layers based on existing order of layers: since layers are modified in different orders, so sorting is important
     overrideConfig.map.layers = overrideConfig.map.layers.sort((a, b) =>
-        override?.map?.layers.findIndex(item => item.id === a.id) - override?.map?.layers.findIndex(item => item.id === b.id)
+        override?.map?.layers.findIndex(item => item.id === a.id) - override?.map?.layers?.findIndex(item => item.id === b.id)
     );
     // catalog services
     if (thingsToClear?.includes(SESSION_IDS.CATALOG_SERVICES)) {
