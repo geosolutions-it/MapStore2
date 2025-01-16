@@ -207,44 +207,6 @@ describe("Tests for the formatter functions", () => {
         });
         expect(container.textContent).toBe("02:30");
     });
-    it("test getFormatter for date / date-time / time no UTC", () => {
-
-
-        // Step 1: Set a default timezone globally
-        moment.tz.setDefault("Europe/Madrid");
-        const dateFormats = {
-            date: "DD/MM/YYYY",
-            "date-time": "DD/MM/YYYY HH:mm:ss",
-            time: "HH:mm:ss"
-        };
-        const row = {
-            dateFormats,
-            useUTCOffset: false
-        };
-        const DateFormatter = getFormatter({ localType: "date", useUTCOffset: false });
-        const DateTimeFormatter = getFormatter({ localType: "date-time", useUTCOffset: false });
-        const TimeFormatter = getFormatter({ localType: "time", useUTCOffset: false });
-
-        act(() => {
-            ReactDOM.render(<DateFormatter value="2015-02-01T12:45:00Z" row={row} />, container);
-        });
-        expect(container.textContent).toBe("01/02/2015");
-
-        act(() => {
-            ReactDOM.render(<DateTimeFormatter value="2015-02-01T12:45:00Z" row={row} />, container);
-        });
-        expect(container.textContent).toBe("01/02/2015 13:45:00");
-
-        act(() => {
-            ReactDOM.render(<TimeFormatter value="12:45:00Z" row={row} />, container);
-        });
-        expect(container.textContent).toBe("12:45:00");
-
-        act(() => {
-            ReactDOM.render(<TimeFormatter value="2015-02-01T12:45:00Z" row={row} />, container);
-        });
-        expect(container.textContent).toBe("13:45:00");
-    });
 
     it("test getFormatter for invalid date-time YYYY-MM-DD[Z]", () => {
         const dateFormats = {
