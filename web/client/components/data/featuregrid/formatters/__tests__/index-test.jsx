@@ -9,7 +9,7 @@ import React from "react";
 import ReactDOM, {unmountComponentAtNode} from "react-dom";
 import expect from "expect";
 import { act } from "react-dom/test-utils";
-import moment from "moment-timezone";
+
 import {
     getFormatter,
     registerFormatter,
