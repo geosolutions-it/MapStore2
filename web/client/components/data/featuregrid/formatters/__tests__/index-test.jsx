@@ -207,7 +207,7 @@ describe("Tests for the formatter functions", () => {
         });
         expect(container.textContent).toBe("02:30");
     });
-    it.only("test getFormatter for date / date-time / time no UTC", () => {
+    it("test getFormatter for date / date-time / time no UTC", () => {
 
 
         // Step 1: Set a default timezone globally
