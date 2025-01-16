@@ -9,7 +9,7 @@ import React from "react";
 import ReactDOM, {unmountComponentAtNode} from "react-dom";
 import expect from "expect";
 import { act } from "react-dom/test-utils";
-
+import moment from "moment-timezone";
 import {
     getFormatter,
     registerFormatter,
@@ -207,7 +207,11 @@ describe("Tests for the formatter functions", () => {
         });
         expect(container.textContent).toBe("02:30");
     });
-    it("test getFormatter for date / date-time / time no UTC", () => {
+    it.only("test getFormatter for date / date-time / time no UTC", () => {
+
+
+        // Step 1: Set a default timezone globally
+        moment.tz.setDefault("Europe/Madrid");
         const dateFormats = {
             date: "DD/MM/YYYY",
             "date-time": "DD/MM/YYYY HH:mm:ss",
