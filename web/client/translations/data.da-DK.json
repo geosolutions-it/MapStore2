@@ -3725,6 +3725,7 @@
       },
       "tooltip": "Clear the current user session saved",
       "successRemoved": "User session removed",
+      "warningTitle": "Clear user session",
       "remove": "Reset User Session",
       "confirmRemove": "Are you sure you want to restore the default configuration?",
       "successUpdated": "User session Updated",

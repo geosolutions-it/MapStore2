@@ -3993,6 +3993,7 @@
           },
           "tooltip": "Reset de huidige gebruikerssessie",
           "successRemoved": "Gebruikerssessie verwijderd",
+          "warningTitle": "Clear user session",
           "remove": "Gebruikerssessie resetten",
           "confirmRemove": "Weet u zeker dat u de standaardconfiguratie wilt herstellen?",
           "successUpdated": "User session Updated",

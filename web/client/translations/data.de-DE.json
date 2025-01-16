@@ -4027,6 +4027,7 @@
           },
           "tooltip": "Aktuelle gespeicherte Benutzersitzung löschen user",
           "successRemoved": "Benutzersitzung entfernt",
+          "warningTitle": "Clear user session",
           "remove": "Benutzersitzung zurücksetzen",
           "confirmRemove": "Möchten Sie die Standardkonfiguration wirklich wiederherstellen?",
           "successUpdated": "User session Updated",

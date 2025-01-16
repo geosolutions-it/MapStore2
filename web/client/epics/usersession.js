@@ -29,7 +29,7 @@ import { REDUCERS_LOADED } from '../actions/storemanager';
 import { setSearchBookmarkConfig } from '../actions/searchbookmarkconfig';
 import { onInitPlayback } from '../actions/playback';
 import { setSearchConfigProp } from '../actions/searchconfig';
-import { updateOverrideConfigToClean } from '../utils/ConfigUtils';
+import { updateOverrideConfig } from '../utils/ConfigUtils';
 import { setTemplates } from '../actions/maptemplates';
 import { getRegisterHandlers } from '../selectors/mapsave';
 
@@ -151,7 +151,7 @@ export const removeUserSessionEpicCreator = (idSelector = userSessionIdSelector,
         const userName = userSelector(state)?.name;
         const mapConfig = originalConfigSelector(store.getState());
         // update new Session
-        const newSession = updateOverrideConfigToClean(userSessionToSaveSelector(state), checks, mapConfig, getRegisterHandlers());
+        const newSession = updateOverrideConfig(userSessionToSaveSelector(state), checks, mapConfig, getRegisterHandlers());
         // TODO: check whether to remove or update session on session serviceListOpenSelector(browser, server)
         return writeSession(id, name, userName, newSession).switchMap(() => Rx.Observable.of(userSessionRemoved(newSession), closeFeatureGrid(), resetSearch(), success({
             title: "success",

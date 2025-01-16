@@ -128,6 +128,7 @@ const ResetUserSession = connect((state) => ({
     onTreeUpdate: (tree) => setCheckedSessionToClear(tree)
 })(({ enabled = false, onClose, onConfirm, setAutoSave = () => {}, onTreeUpdate}) => {
     const [trees, setTrees] = useState(treeData);
+    const [othersRetrieved, setOthersRetrieved] = useState(false);
 
     const confirm = () => {
         onClose();
@@ -142,8 +143,7 @@ const ResetUserSession = connect((state) => ({
     }, []);
 
     useEffect(() =>{
-        if (!enabled) return;
-        // console.log(getRegisterHandlers(), 'Hello getRegisterHandlers');
+        if (!enabled || othersRetrieved) return;
         const tree = [...trees];
         // update the children of first element which is  `everything`
         // `getRegisterHandlers` may not give all handlers at the load time so updating after dialog open
@@ -166,9 +166,11 @@ const ResetUserSession = connect((state) => ({
             }
         });
         setTrees(tree);
+        setOthersRetrieved(true);
     }, [enabled]);
     return (<ConfirmModal onClose={onClose}
-        onConfirm={confirm} show={enabled} buttonSize="large">
+        title ={<Message msgId="userSession.warningTitle" />}
+        onConfirm={confirm} show={enabled} buttonSize="medium">
 
         <div style={{maxHeight: 400, overflowY: 'scroll'}}>
             <Message msgId="userSession.confirmRemove"/>
@@ -187,7 +189,7 @@ const loadUserSessionEpic = loadUserSessionEpicCreator();
 const removeUserSessionEpic = removeUserSessionEpicCreator();
 
 /**
- * `UserSession` plugin allows the user to automatically save the current map and restore it on the second access to the same map/context, without the necessity to save.
+ * `UserSession` plugin allows the user to automatically save the current configuration and restore it on the second access to the same map/context, without the necessity to save.
  *
  * User sessions persistence can be configured to use different storages. The default implementation is based on `localStorage`,
  * so the session is saved on the user's browser.
@@ -197,9 +199,30 @@ const removeUserSessionEpic = removeUserSessionEpicCreator();
  * The user session workflow works this way:
  *
  * * a session is identified by the combination of the current map and user identifiers (so that a session exists for each user / map combination)
- * * a session is loaded from the store and if it exists, it overrides the standard map configuration partially; by default current map centering and zoom are overridden
+ * * a session is loaded from the store and if it exists, it overrides the standard map configuration;
+ * Following config are saved in session and can be restored to default config individually
+ * Map
+ *  Zoom and center
+ *  Visualization Mode (3D/2D)
+ *  Layers
+ *       Annotations Layer
+ *       Measurements Layer
+ *       Background Layers
+ *       Other Layers
+ *  Catalog Services
+ *  Widgets
+ *  Search
+ *       Text Search Services
+ *       Bookmarks
+ *  Feature Grid
+ *  Other
+ *       Table of Contents Configuration
+ *       Playback Configuration
+ *       Map Templates
+ *       Map Views
+ *       User Plugins
  * * the session is automatically saved at a configurable interval
- * * an item in the `BurgerMenu` allows to restore the session to the default map configuration
+ * * an item with Brush icon in the `BurgerMenu` and `SidebarMenu` allows to open Session Tree which can be used what to restore individually
  *
  * Since user session handling works very low level, its basic features needs to be configured at the `localConfig.json`, globally, in the dedicated `userSession` object.
  * Then including or not including the plugin `UserSession` in your application context will determine the possibility to save (and so restore) the session.
@@ -223,6 +246,24 @@ const removeUserSessionEpic = removeUserSessionEpicCreator();
  *     writeSession: ...,
  *     removeSession: ...
  * }
+ * ```mermaid
+ * graph TD
+ *     S[Start] --> A
+ *     A[Load Context] --> C
+ *     C[LOAD Map Config]
+ *     D[User Session] ---> |Load Saved Session| E
+ *     A ---> D
+ *     E[Retrieved Session] --> C
+ *     C[Load Map Config] ---> |Merge Config, Give priority to override value than original config if both values are arrays| F
+ *     F[Updated all states from config]
+ *     D ----> |Save sessions on interval| D
+ *     D --> | Reset Session Individually| G
+ *     G[handle partially resetting items like layers. include layers of original config also] --> H
+ *     H[updated override config] --> C
+ *     H---> |Save Updated Config to Session|D
+ *     D ----> I
+ *     I[Session store] ---> |Handle states of Dynamic Reducers which are not loaded at the time of LOAD Map Config, Handle them at REDUCER_LOADED|J
+ *     J[Updated states of Dynamic Reducers]
  * ```
  * @memberof plugins
  * @name UserSession
@@ -235,7 +276,7 @@ export default createPlugin('UserSession', {
             name: 'UserSession',
             position: 1500,
             text: <Message msgId="userSession.remove" />,
-            icon: <Glyphicon glyph="trash" />,
+            icon: <Glyphicon glyph="clear-brush" />,
             action: toggleControl.bind(null, 'resetUserSession', null),
             tooltip: <Message msgId="userSession.tooltip" />,
             selector: (state) => {
@@ -247,7 +288,7 @@ export default createPlugin('UserSession', {
         SidebarMenu: {
             name: 'UserSession',
             position: 1500,
-            icon: <Glyphicon glyph="trash" />,
+            icon: <Glyphicon glyph="clear-brush" />,
             text: <Message msgId="userSession.remove" />,
             action: toggleControl.bind(null, 'resetUserSession', null),
             tooltip: "userSession.tooltip",

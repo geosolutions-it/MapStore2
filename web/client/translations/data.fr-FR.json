@@ -3990,6 +3990,7 @@
           "tooltip": "Effacer la session utilisateur actuelle enregistrée",
           "successRemoved": "Session utilisateur supprimée",
           "remove": "Réinitialiser la session utilisateur",
+          "warningTitle": "Clear user session",
           "confirmRemove": "Êtes-vous sûr de vouloir restaurer la configuration par défaut?",
           "successUpdated": "User session Updated",
           "sessionLabels":{

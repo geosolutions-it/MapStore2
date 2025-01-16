@@ -3395,6 +3395,7 @@
           },
           "tooltip": "Rensa den aktuella användarsessionen sparad",
           "successRemoved": "Användarsession borttagen",
+          "warningTitle": "Clear user session",
           "remove": "Återställ användarsession",
           "confirmRemove": "Är du säker på att du vill återställa standardkonfigurationen?",
           "successUpdated": "User session Updated",

@@ -9,7 +9,7 @@ import Proj4js from 'proj4';
 import PropTypes from 'prop-types';
 import url from 'url';
 import axios from 'axios';
-import { castArray, isArray, isObject, endsWith, isNil, get, merge } from 'lodash';
+import { castArray, isArray, isObject, endsWith, isNil, get, mergeWith } from 'lodash';
 import assign from 'object-assign';
 import { Promise } from 'es6-promise';
 import isMobile from 'ismobilejs';
@@ -516,8 +516,8 @@ export const SESSION_IDS = {
  * @param {object} customHandlers - session Saved By registerCustomSaveHandler
  * @returns {object} updated overrideConfig
 */
-export const updateOverrideConfigToClean = (override, thingsToClear = [], originalConfig = {}, customHandlers = {}) => {
-    let overrideConfig = override;
+export const updateOverrideConfig = (override = {}, thingsToClear = [], originalConfig = {}, customHandlers = []) => {
+    let overrideConfig = JSON.parse(JSON.stringify(override));
 
     if (thingsToClear?.includes(SESSION_IDS.EVERYTHING)) {
         overrideConfig = {};
@@ -533,31 +533,31 @@ export const updateOverrideConfigToClean = (override, thingsToClear = [], origin
     if (thingsToClear.includes(SESSION_IDS.VISUALIZATION_MODE)) {
         delete overrideConfig.map.visualizationMode;
     }
+
+    // layers is the only case that partially gets reset, and there is problem to merge arrays with different index(it merges properties from two array on same index)
+    // so merging original layers here. And while merging override config with original config: Override config is given priority. Check applyOverrides function below in this file.
+
     // annotation layers
     if (thingsToClear?.includes(SESSION_IDS.ANNOTATIONS_LAYER)) {
-        // merge(loadash) on array has problem with arrays with different object in same index
-        // so putting default layers here
-        overrideConfig.map.layers = overrideConfig.map.layers.filter((l)=>!l.id.includes('annotations'));
+        overrideConfig.map.layers = [...overrideConfig.map.layers.filter((l)=>!l.id?.includes('annotations')), ...originalConfig.map.layers.filter((l)=>l.id?.includes('annotations'))];
     }
     // measurements layers
     if (thingsToClear?.includes(SESSION_IDS.MEASUREMENTS_LAYER)) {
-        // merge(loadash) on array has problem with arrays with different object in same index
-        // so putting default layers here
-
-        overrideConfig.map.layers = overrideConfig.map.layers.filter((l)=>originalConfig?.map?.layers.some(layer=>layer.id === l.id) || !l?.name?.includes('measurements'));
+        overrideConfig.map.layers = [...overrideConfig.map.layers.filter((l)=>!l?.name?.includes('measurements')), ...originalConfig.map.layers.filter(l=> l?.name?.includes('measurements'))];
     }
     // background layers
     if (thingsToClear?.includes(SESSION_IDS.BACKGROUND_LAYERS)) {
-        overrideConfig.map.layers = overrideConfig.map.layers.filter((l)=>originalConfig?.map?.layers.some(layer=>layer.id === l.id) || !l?.group?.includes('background'));
+        overrideConfig.map.layers = [...overrideConfig.map.layers.filter((l)=>!l?.group?.includes('background')), ...originalConfig.map.layers.filter(l=> l?.group?.includes('background'))];
     }
     // other layers
     if (thingsToClear?.includes(SESSION_IDS.OTHER_LAYERS)) {
-        // merge(loadash) on array has problem with arrays with different object in same index
-        // so putting default layers here
-        overrideConfig.map.layers = overrideConfig.map.layers.filter((l)=>{
-            return  originalConfig?.map?.layers.some(layer=>layer.id === l.id) || l.group?.includes("background") || l?.name?.includes('measurements') || l?.id?.includes('annotations');
-        });
+        overrideConfig.map.layers = [...overrideConfig.map.layers.filter(l=> l?.id?.includes('annotations') || l?.name?.includes('measurements') || l.group?.includes("background")), ...originalConfig.map.layers.filter(l=> !l?.id?.includes('annotations') && !l?.name?.includes('measurements') && !l.group?.includes("background"))];
     }
+
+    // reorder layers based on existing order of layers: since layers are modified in different orders, so sorting is important
+    overrideConfig.map.layers = overrideConfig.map.layers.sort((a, b) =>
+        override?.map?.layers.findIndex(item => item.id === a.id) - override?.map?.layers.findIndex(item => item.id === b.id)
+    );
     // catalog services
     if (thingsToClear?.includes(SESSION_IDS.CATALOG_SERVICES)) {
         delete overrideConfig.catalogServices;
@@ -579,7 +579,10 @@ export const updateOverrideConfigToClean = (override, thingsToClear = [], origin
 
     // feature grid
     if (thingsToClear?.includes(SESSION_IDS.FEATURE_GRID)) {
-        delete overrideConfig.featureGrid;
+        // each properties are updated dynamically in featureGrid reducer(MAP_CONFIG_LOADED), so each attribute of featureGrid should be reset
+        Object.keys(overrideConfig?.featureGrid ?? {}).forEach((fg)=>{
+            overrideConfig.featureGrid[fg] = {}; // all properties's value are in object
+        });
     }
 
     if (thingsToClear?.includes(SESSION_IDS.USER_PLUGINS)) {
@@ -587,10 +590,12 @@ export const updateOverrideConfigToClean = (override, thingsToClear = [], origin
     }
 
     // handle config from registerCustomSaveConfig
-    // const customHandlers = thingsToClear?.filter(v => getRegisterHandlers().includes(v));
     customHandlers?.forEach((k) => {
-        delete overrideConfig[k]; // Assuming overrideConfig is an object and k is the key
+        if (thingsToClear?.includes(k)) {
+            delete overrideConfig[k];
+        }
     });
+
 
     return overrideConfig;
 
@@ -602,7 +607,15 @@ export const updateOverrideConfigToClean = (override, thingsToClear = [], origin
  * @returns {object}
  */
 export const applyOverrides = (config, override) => {
-    const merged = merge({}, config, override);
+    const merged = mergeWith({}, config, override, (objValue, srcValue) => {
+        // Till now layers is the only case that get partially reset, so merging with original config happens in updateOverrideConfig(above in the this file) while reset
+        if (Array.isArray(objValue) && Array.isArray(srcValue)) {
+            return [...srcValue];
+        }
+        // default merge rules for other cases
+        // eslint-disable-next-line consistent-return
+        return undefined;
+    });
     return merged;
 };
 const ConfigUtils = {

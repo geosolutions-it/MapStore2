@@ -4001,8 +4001,9 @@
           "tooltip": "Clear the current user session saved",
           "successRemoved": "User session removed",
           "successUpdated": "User session Updated",
+          "warningTitle": "Clear user session",
           "remove": "Reset User Session",
-          "confirmRemove": "Are you certain you want to revert to the default settings? Choose what you would like to reset:",
+          "confirmRemove": "Are you sure to remove the current user session? This will restore the original map/context configuration, removing your current changes. Please select what you want to remove and unselect what you want to preserve.",
           "sessionLabels":{
             "everything": "Everything",
             "map": "Map",

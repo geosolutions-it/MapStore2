@@ -3356,6 +3356,7 @@
             "defaultMessage": "Neznáma chyba"
           },
           "successRemoved": "Relácia používateľa bola odstránená",
+          "warningTitle": "Clear user session",
           "remove": "Obnoviť reláciu používateľa",
           "confirmRemove": "Naozaj chceš obnoviť predvolenú konfiguráciu?",
           "successUpdated": "User session Updated",

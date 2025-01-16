@@ -535,7 +535,7 @@ export const getDerivedLayersVisibility = (layers = [], groups = []) => {
 export const denormalizeGroups = (allLayers, groups) => {
     const flattenGroups = flattenArrayOfObjects(groups).filter(isObject);
     let getNormalizedGroup = (group, layers) => {
-        const nodes = group?.nodes?.map((node) => {
+        const nodes = group.nodes.map((node) => {
             if (isObject(node)) {
                 return getNormalizedGroup(node, layers);
             }

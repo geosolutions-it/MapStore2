@@ -113,7 +113,7 @@ const TreeNode = ({ node, onToggle, onCheck }) => {
     }, [node.indeterminate]);
 
     return (
-        <div style={{ marginLeft: 20 }}>
+        <div style={{ marginLeft: node?.children ? 5 : 20, borderTop: node?.children ? "0.5px solid #0000002b" : null, padding: node?.children ? '2px' : '0px' }}>
             <div id={`node-${node.id}`}>
                 {node.children && (
                     <Glyphicon

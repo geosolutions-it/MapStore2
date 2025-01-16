@@ -3989,6 +3989,7 @@
           },
           "tooltip": "Borrar la sesión de usuario actual guardada",
           "successRemoved": "Sesión de usuario eliminada",
+          "warningTitle": "Clear user session",
           "remove": "Restablecer sesión de usuario",
           "confirmRemove": "¿Está seguro de que desea restaurar la configuración predeterminada?",
           "successUpdated": "User session Updated",

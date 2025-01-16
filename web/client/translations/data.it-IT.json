@@ -3989,6 +3989,7 @@
           },
           "tooltip": "Cancella la sessione utente corrente salvata",
           "successRemoved": "Sessione utente cancellata",
+          "warningTitle": "Clear user session",
           "remove": "Reset Sessione Utente",
           "confirmRemove": "Sei sicuro di voler ripristinare la configurazione di default?",
           "successUpdated": "User session Updated",
