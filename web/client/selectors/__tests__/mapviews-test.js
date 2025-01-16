@@ -99,7 +99,48 @@ describe('mapviews selectors', () => {
                 ]
             }
         };
-        expect(getMapViews(state)).toBe(state.mapviews.views);
+        expect(getMapViews(state)).toEqual(state.mapviews.views);
+    });
+    it('getMapViews remove missing layers and groups', () => {
+        const state = {
+            layers: {
+                flat: [{ id: 'layer.01', group: 'group_01' }],
+                groups: [{ id: 'group_01' }]
+            },
+            mapviews: {
+                views: [
+                    {
+                        center: {
+                            longitude: 8.936900,
+                            latitude: 44.395224,
+                            height: 0
+                        },
+                        cameraPosition: {
+                            longitude: 8.939256,
+                            latitude: 44.386982,
+                            height: 655
+                        },
+                        id: 'view.1',
+                        title: 'Map view',
+                        description: '',
+                        duration: 10,
+                        flyTo: true,
+                        zoom: 16,
+                        bbox: [
+                            8.920925,
+                            44.390840,
+                            8.948118,
+                            44.405544
+                        ],
+                        layers: [{ id: 'layer.01' }, { id: 'layer.02' }],
+                        groups: [{ id: 'group_01' }, { id: 'group_02' }]
+                    }
+                ]
+            }
+        };
+        const newMapViews = getMapViews(state);
+        expect(newMapViews[0].layers).toEqual([{ id: 'layer.01' }]);
+        expect(newMapViews[0].groups).toEqual([{ id: 'group_01' }]);
     });
     it('getMapViewsResources', () => {
         const state = {
@@ -205,7 +246,7 @@ describe('mapviews selectors', () => {
                 active: true
             }
         };
-        expect(getSelectedMapView(state)).toBe(state.mapviews.views[0]);
+        expect(getSelectedMapView(state)).toEqual(state.mapviews.views[0]);
         state = {
             mapviews: {
                 ...state.mapviews,

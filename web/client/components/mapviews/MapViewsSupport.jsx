@@ -161,6 +161,7 @@ function MapViewsSupport({
     selectedId,
     defaultTitle = 'Map View',
     layers,
+    groups,
     locale,
     resources: resourcesProp = [],
     services,
@@ -597,6 +598,7 @@ function MapViewsSupport({
                                             onChange={handleUpdateView}
                                             onCaptureView={handleCaptureView}
                                             layers={layers}
+                                            groups={groups}
                                             locale={locale}
                                             services={services}
                                             selectedService={selectedService}
