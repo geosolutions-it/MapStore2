@@ -64,6 +64,9 @@ const NodeLegend = ({
                     <li>
                         {visible ? <VectorLegend
                             style={node?.style}
+                            layer={node}
+                            interactive
+                            onChange={onChange}
                         /> : null}
                     </li>
                 </>
@@ -81,6 +84,7 @@ const NodeLegend = ({
                         language={config?.language}
                         {...config?.layerOptions?.legendOptions}
                         onChange={onChange}
+                        interactive
                     /> : null}
                 </li>
             </>
