@@ -1,8 +1,10 @@
-// import { updateOverrideConfig } from './yourModule'; // Import the function
-// import { SESSION_IDS } from './yourConstants'; // Assuming SESSION_IDS is imported from another file
+
 import expect from 'expect';
 import { SESSION_IDS, updateOverrideConfig } from "../ConfigUtils";
 
+/*
+Test updateOverrideConfig, a function that updates the override config based on the selected settings to restore,
+*/
 describe('updateOverrideConfig', () => {
     let originalConfig;
     let override;

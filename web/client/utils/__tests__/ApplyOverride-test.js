@@ -1,5 +1,9 @@
 import expect from 'expect';
 import { applyOverrides } from '../ConfigUtils';
+
+/*
+Tests to check override logic for original Config and override config
+*/
 describe('applyOverrides', () => {
 
     it('should merge simple objects', () => {
