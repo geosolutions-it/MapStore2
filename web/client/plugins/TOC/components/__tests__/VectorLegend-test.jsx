@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import expect from 'expect';
 import VectorLegend from '../VectorLegend';
 import { INTERACTIVE_LEGEND_ID } from '../../../../utils/LegendUtils';
+import { setConfigProp } from '../../../../utils/ConfigUtils';
 
 const rules = [
     {
@@ -152,12 +153,14 @@ const rules = [
 describe('VectorLegend module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
 
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById('container'));
         document.body.innerHTML = '';
+        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
 
@@ -452,7 +455,7 @@ describe('VectorLegend module component', () => {
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('');
     });
-    it('tests legend with empty rules', async() => {
+    it('tests legend with empty rules', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -469,7 +472,7 @@ describe('VectorLegend module component', () => {
         expect(legendElem).toBeTruthy();
         expect(legendElem.innerText).toBe('layerProperties.interactiveLegend.noLegendData');
     });
-    it('tests legend with incompatible filter rules', async() => {
+    it('tests legend with incompatible filter rules', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -477,6 +480,7 @@ describe('VectorLegend module component', () => {
             storeIndex: 9,
             type: 'wfs',
             url: 'http://localhost:8080/geoserver2/wfs',
+            enableInteractiveLegend: true,
             layerFilter: {
                 filters: [{
                     id: INTERACTIVE_LEGEND_ID,
@@ -487,7 +491,7 @@ describe('VectorLegend module component', () => {
                 disabled: false
             }
         };
-        ReactDOM.render(<VectorLegend style={{format: 'geostyler', body: {rules: rules}}} layer={l} />, document.getElementById("container"));
+        ReactDOM.render(<VectorLegend interactive style={{format: 'geostyler', body: {rules: rules}}} layer={l} />, document.getElementById("container"));
         const legendElem = document.querySelector('.ms-legend');
         expect(legendElem).toBeTruthy();
         const legendRuleElem = document.querySelector('.ms-legend .alert-warning');
@@ -496,7 +500,7 @@ describe('VectorLegend module component', () => {
         const resetLegendFilter = document.querySelector('.ms-legend .alert-warning button');
         expect(resetLegendFilter).toBeTruthy();
     });
-    it('tests hide warning when layer filter is disabled', async() => {
+    it('tests hide warning when layer filter is disabled', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
