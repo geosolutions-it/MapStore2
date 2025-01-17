@@ -29,7 +29,7 @@ function Section({
                     onClick={handleExpand}
                     style={{ borderRadius: '50%', marginRight: 4 }}
                 >
-                    <Glyphicon glyph={expanded ? "chevron-down" : "chevron-right"} />
+                    <Glyphicon glyph={expanded ? "bottom" : "next"} />
                 </Button>
                 <div className="ms-map-views-section-title">
                     {title}

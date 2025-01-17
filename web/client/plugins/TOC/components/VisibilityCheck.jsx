@@ -40,6 +40,7 @@ const VisibilityCheck = ({
             className={`ms-visibility-check${value ? ' active' : ''}`}
             onClick={(event) => {
                 event.stopPropagation();
+                event.preventDefault();
                 onChange(!value);
             }}
             onContextMenu={(event) => {

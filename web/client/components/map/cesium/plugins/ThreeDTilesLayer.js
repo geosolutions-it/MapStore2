@@ -95,12 +95,19 @@ function clip3DTiles(tileSet, options, map) {
         });
 }
 
-function ensureReady(tileSet, callback) {
+let pendingCallbacks = {};
+
+function ensureReady(layer, callback, eventKey) {
+    const tileSet = layer.getTileSet();
+    if (!tileSet && eventKey) {
+        pendingCallbacks[eventKey] = callback;
+        return;
+    }
     if (tileSet.ready) {
-        callback();
+        callback(tileSet);
     } else {
         tileSet.readyPromise.then(() => {
-            callback();
+            callback(tileSet);
         });
     }
 }
@@ -152,10 +159,13 @@ const createLayer = (options, map) => {
         map.scene.primitives.remove(tileSet);
         tileSet = undefined;
     };
+    const layer = {
+        getTileSet: () => tileSet,
+        getResource: () => resource
+    };
     return {
         detached: true,
-        getTileSet: () => tileSet,
-        getResource: () => resource,
+        ...layer,
         add: () => {
             resource = new Cesium.Resource({
                 url: options.url,
@@ -175,7 +185,7 @@ const createLayer = (options, map) => {
                 map.scene.primitives.add(tileSet);
                 // assign the original mapstore id of the layer
                 tileSet.msId = options.id;
-                ensureReady(tileSet, () => {
+                ensureReady(layer, () => {
                     updateModelMatrix(tileSet, options);
                     clip3DTiles(tileSet, options, map);
                     updateShading(tileSet, options, map);
@@ -184,6 +194,10 @@ const createLayer = (options, map) => {
                             if (style) {
                                 tileSet.style = new Cesium.Cesium3DTileStyle(style);
                             }
+                            Object.keys(pendingCallbacks).forEach((eventKey) => {
+                                pendingCallbacks[eventKey](tileSet);
+                            });
+                            pendingCallbacks = {};
                         });
                 });
             });
@@ -209,21 +223,20 @@ Layers.registerType('3dtiles', {
         if (newOptions.forceProxy !== oldOptions.forceProxy) {
             return createLayer(newOptions, map);
         }
-        const tileSet = layer?.getTileSet();
         if (
             (!isEqual(newOptions.clippingPolygon, oldOptions.clippingPolygon)
             || newOptions.clippingPolygonUnion !== oldOptions.clippingPolygonUnion
             || newOptions.clipOriginalGeometry !== oldOptions.clipOriginalGeometry)
-         && tileSet) {
-            ensureReady(tileSet, () => {
+        ) {
+            ensureReady(layer, (tileSet) => {
                 clip3DTiles(tileSet, newOptions, map);
-            });
+            }, 'clip');
         }
         if ((
             !isEqual(newOptions.style, oldOptions.style)
             || newOptions?.pointCloudShading?.attenuation !== oldOptions?.pointCloudShading?.attenuation
-        ) && tileSet) {
-            ensureReady(tileSet, () => {
+        )) {
+            ensureReady(layer, (tileSet) => {
                 getStyle(newOptions)
                     .then((style) => {
                         if (style && tileSet) {
@@ -231,17 +244,17 @@ Layers.registerType('3dtiles', {
                             tileSet.style = new Cesium.Cesium3DTileStyle(style);
                         }
                     });
-            });
+            }, 'style');
         }
-        if (!isEqual(newOptions.pointCloudShading, oldOptions.pointCloudShading) && tileSet) {
-            ensureReady(tileSet, () => {
+        if (!isEqual(newOptions.pointCloudShading, oldOptions.pointCloudShading)) {
+            ensureReady(layer, (tileSet) => {
                 updateShading(tileSet, newOptions, map);
-            });
+            }, 'shading');
         }
-        if (tileSet && newOptions.heightOffset !== oldOptions.heightOffset) {
-            ensureReady(tileSet, () => {
+        if (newOptions.heightOffset !== oldOptions.heightOffset) {
+            ensureReady(layer, (tileSet) => {
                 updateModelMatrix(tileSet, newOptions);
-            });
+            }, 'matrix');
         }
         return null;
     }
