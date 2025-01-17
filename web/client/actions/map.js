@@ -108,7 +108,20 @@ export function changeMapCrs(crs) {
                 options.maxResolution = convertResolution(sourceCRS, crs, layer.maxResolution).transformedResolution;
                 const diffs = newResolutions.map((resolution, zoom) => ({ diff: Math.abs(resolution - options.maxResolution), zoom }));
                 const { zoom } = minBy(diffs, 'diff');
+                // check if min and max resolutions are not the same
                 options.maxResolution = newResolutions[zoom];
+                if (options.minResolution === options.maxResolution) {
+                    if ((zoom - 1) >= 0) {
+                        // increase max res if possible
+                        options.maxResolution = newResolutions[zoom - 1];
+                    } else if (zoom + 1 < newResolutions.length) {
+                        // decrease max res if possible
+                        options.minResolution = newResolutions[zoom + 1];
+                    } else {
+                        // keep only min res if none of the previous is happening
+                        options.maxResolution = undefined;
+                    }
+                }
             }
             // the minimum difference represents the nearest zoom to the target resolution
             dispatch(updateNode(layer.id, "layer", options));
