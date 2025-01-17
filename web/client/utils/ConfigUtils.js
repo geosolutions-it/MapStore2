@@ -510,6 +510,13 @@ export const SESSION_IDS = {
 
 /*
  * Function to update overrideConfig to clean specific settings
+ * After the introduction of individual reset of the session, override Config is updated here. Previously it was clearing all session.
+ * This function handles to update the overrideConfig(from session) to clean specific settings
+ *
+ * Layers are handled differently as they are partially updating properties(annotations, measurements, backgrounds, others) and merging function from loadash has problem in merging arrays of objects(it merges all properties of object from both arrays) which is used in `applyOverrides` function in this same file below
+ * So for layers merge of original Config and overrideConfig  happens here. And applyOverrides use the value of overrideConfig
+ * No Problem for arrays that gets entirely reset
+ *
  * @param {object} override - current overrideConfig
  * @param {Array} thingsToClear - IDs of settings to be cleared
  * @param {object} originalConfig - original config
@@ -601,16 +608,23 @@ export const updateOverrideConfig = (override = {}, thingsToClear = [], original
 
 };
 /**
-    Merge two configurations
+* Merge two configurations
+* While overriding, overrideConfig properties and original config has arrays then overrideConfig gets more priority
+* merge from loadash has problem while merging arrays of objects(it merges properties of objects from both), So merge logic has been changed
  * @param {object} config the configuration to override
  * @param {object} override the data to use for override
  * @returns {object}
  */
 export const applyOverrides = (config, override) => {
     const merged = mergeWith({}, config, override, (objValue, srcValue) => {
-        // Till now layers is the only case that get partially reset, so merging with original config happens in updateOverrideConfig(above in the this file) while reset
+        // Till now layers is the only case that get partially reset and has case where two array with objects tries to merge, so merging with original config happens in updateOverrideConfig(above in the this file) while reset
         if (Array.isArray(objValue) && Array.isArray(srcValue)) {
-            return [...srcValue];
+            // Give priority if there are some elements in override
+            if (srcValue.length > 0) {
+                return [...srcValue];
+            }
+            return [...objValue];
+
         }
         // default merge rules for other cases
         // eslint-disable-next-line consistent-return

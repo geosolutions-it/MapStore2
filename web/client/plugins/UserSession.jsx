@@ -194,50 +194,49 @@ const removeUserSessionEpic = removeUserSessionEpicCreator();
  * User sessions persistence can be configured to use different storages. The default implementation is based on `localStorage`,
  * so the session is saved on the user's browser.
  *
- * It is also possible to save the session on a database, so it can be shared on different browsers / devices.
+ * It is also possible to save the session on a database, so it can be shared on different browsers/devices.
  *
  * The user session workflow works this way:
  *
- * * a session is identified by the combination of the current map and user identifiers (so that a session exists for each user / map combination)
- * * a session is loaded from the store and if it exists, it overrides the standard map configuration;
- * Following config are saved in session and can be restored to default config individually
- * Map
- *  Zoom and center
- *  Visualization Mode (3D/2D)
- *  Layers
- *       Annotations Layer
- *       Measurements Layer
- *       Background Layers
- *       Other Layers
- *  Catalog Services
- *  Widgets
- *  Search
- *       Text Search Services
- *       Bookmarks
- *  Feature Grid
- *  Other
- *       Table of Contents Configuration
- *       Playback Configuration
- *       Map Templates
- *       Map Views
- *       User Plugins
- * * the session is automatically saved at a configurable interval
- * * an item with Brush icon in the `BurgerMenu` and `SidebarMenu` allows to open Session Tree which can be used what to restore individually
+ * - A session is identified by the combination of the current map and user identifiers (so that a session exists for each user/map combination).
+ * - A session is loaded from the store and, if it exists, it overrides the standard map configuration.
+ * - The session is automatically saved at a configurable interval:
+ *   - **Map**:
+ *       - Zoom and center
+ *       - Visualization Mode (3D/2D)
+ *   - **Layers**:
+ *       - Annotations Layer
+ *       - Measurements Layer
+ *       - Background Layers
+ *       - Other Layers
+ *   - **Catalog Services**
+ *   - **Widgets**
+ *   - **Search**:
+ *       - Text Search Services
+ *       - Bookmarks
+ *   - **Feature Grid**
+ *   - **Other**:
+ *       - Table of Contents Configuration
+ *       - Playback Configuration
+ *       - Map Templates
+ *       - Map Views
+ *       - User Plugins
+ * - An item with a Brush icon in the `BurgerMenu` and `SidebarMenu` allows opening the Session Tree, which can be used to restore parts of the session individually.
  *
- * Since user session handling works very low level, its basic features needs to be configured at the `localConfig.json`, globally, in the dedicated `userSession` object.
- * Then including or not including the plugin `UserSession` in your application context will determine the possibility to save (and so restore) the session.
+ * Since user session handling works at a very low level, its basic features need to be configured in the `localConfig.json` file, globally, in the dedicated `userSession` object.
+ * Including or excluding the `UserSession` plugin in your application context determines the possibility to save (and restore) the session.
  *
  * The `userSession` object in `localConfig.json` can be configured with the following properties:
  *
- * * `enabled`: 'false' / 'true'. Enables the functionality at global level.
- * * `saveFrequency`: interval (in milliseconds) between saves
- * * `provider`: the name of the storage provider to use. The options are:
- *     * `browser`: (default) localStorage based
- *     * `server`: database storage (based on MapStore backend services)
- *     * `serverbackup`: combination of browser and server, with a configurable backupFrequency interval, so that browser saving it's more frequent than server one
- * * `contextOnly`: true / false, when true each MapStore context will share only one session, if false each context sub-map will have its own session
+ * - `enabled`: `false` / `true`. Enables the functionality at the global level.
+ * - `saveFrequency`: Interval (in milliseconds) between saves.
+ * - `provider`: The name of the storage provider to use. The options are:
+ *   - `browser`: (default) localStorage based
+ *   - `server`: Database storage (based on MapStore backend services).
+ *   - `serverbackup`: Combination of browser and server, with a configurable `backupFrequency` interval, so that browser saving is more frequent than server saving.
+ * - `contextOnly`: `true` / `false`. When `true`, each MapStore context will share only one session; if `false`, each context sub-map will have its own session.
  *
- * You can also implement your own, by defining its API and registering it on the Providers object:
+ * You can also implement your own storage provider by defining its API and registering it on the Providers object:
  *
  * ```javascript
  * import {Providers} from "api/usersession"
@@ -246,25 +245,9 @@ const removeUserSessionEpic = removeUserSessionEpicCreator();
  *     writeSession: ...,
  *     removeSession: ...
  * }
- * ```mermaid
- * graph TD
- *     S[Start] --> A
- *     A[Load Context] --> C
- *     C[LOAD Map Config]
- *     D[User Session] ---> |Load Saved Session| E
- *     A ---> D
- *     E[Retrieved Session] --> C
- *     C[Load Map Config] ---> |Merge Config, Give priority to override value than original config if both values are arrays| F
- *     F[Updated all states from config]
- *     D ----> |Save sessions on interval| D
- *     D --> | Reset Session Individually| G
- *     G[handle partially resetting items like layers. include layers of original config also] --> H
- *     H[updated override config] --> C
- *     H---> |Save Updated Config to Session|D
- *     D ----> I
- *     I[Session store] ---> |Handle states of Dynamic Reducers which are not loaded at the time of LOAD Map Config, Handle them at REDUCER_LOADED|J
- *     J[Updated states of Dynamic Reducers]
  * ```
+ *
+ *
  * @memberof plugins
  * @name UserSession
  * @class
