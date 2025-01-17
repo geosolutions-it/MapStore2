@@ -26,6 +26,20 @@ function cesiumOptionsMapping(config) {
     };
 }
 
+function cesiumIonOptionsMapping(config) {
+    const options = config.options ?? {};
+    return {
+        ...(options.assetId && {
+            url: Cesium.IonResource.fromAssetId(options.assetId, {
+                accessToken: options.accessToken,
+                server: options.server
+            })
+        }),
+        credit: options.credit,
+        requestMetadata: options.requestMetadata
+    };
+}
+
 const createLayer = (config, map) => {
     map.terrainProvider = undefined;
     let terrainProvider;
@@ -40,6 +54,10 @@ const createLayer = (config, map) => {
     }
     case 'ellipsoid': {
         terrainProvider = new Cesium.EllipsoidTerrainProvider();
+        break;
+    }
+    case 'cesium-ion': {
+        terrainProvider = new Cesium.CesiumTerrainProvider(cesiumIonOptionsMapping(config));
         break;
     }
     default:
@@ -61,7 +79,8 @@ const createLayer = (config, map) => {
 const updateLayer = (layer, newOptions, oldOptions, map) => {
     if (newOptions.securityToken !== oldOptions.securityToken
     || oldOptions.credits !== newOptions.credits
-    || oldOptions.provider !== newOptions.provider || oldOptions.forceProxy !== newOptions.forceProxy) {
+    || oldOptions.provider !== newOptions.provider
+    || oldOptions.forceProxy !== newOptions.forceProxy) {
         return createLayer(newOptions, map);
     }
     return null;
