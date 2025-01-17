@@ -206,6 +206,7 @@
             "enableInteractiveLegendInfo": {
                 "label": "Enable interactive legend",
                 "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Note: This parameter requires specific configurations on GeoServer",
+                "infoWithoutGSNote": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC.",
                 "fetchError": "Failed to retrieve the legend info from the service"
             },
             "enableLocalizedLayerStyles": {

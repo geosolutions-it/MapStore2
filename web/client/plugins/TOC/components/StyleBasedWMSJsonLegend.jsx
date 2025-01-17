@@ -43,7 +43,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         scaleDependent: PropTypes.bool,
         language: PropTypes.string,
         onChange: PropTypes.func,
-        owner: PropTypes.string,
+        interactive: PropTypes.bool,        // the indicator flag that refers if this legend is interactive or not
         projection: PropTypes.string,
         mapSize: PropTypes.object,
         mapBbox: PropTypes.object
@@ -56,7 +56,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         style: {maxWidth: "100%"},
         scaleDependent: true,
         onChange: () => {},
-        owner: ''
+        interactive: false
     };
     state = {
         error: false,
@@ -155,6 +155,7 @@ class StyleBasedWMSJsonLegend extends React.Component {
         const interactiveLegendFilters = get(layerFilter, 'filters', []).find(f => f.id === INTERACTIVE_LEGEND_ID);
         const legendFilters = get(interactiveLegendFilters, 'filters', []);
         const showResetWarning = !this.checkPreviousFiltersAreValid(rules, legendFilters) && !layerFilter.disabled;
+        const isNotInteractiveLegend = !this.props.interactive;
         return (
             <>
                 {showResetWarning ? <Alert bsStyle="warning">
@@ -172,11 +173,15 @@ class StyleBasedWMSJsonLegend extends React.Component {
                     : rules.map((rule, idx) => {
                         const activeFilter = legendFilters?.some(f => f.id === rule.filter);
                         const isFilterDisabled = this.props?.layer?.layerFilter?.disabled;
+                        const isLegendFilterNotApplicable = isFilterDisabled || isNotInteractiveLegend || !rule?.filter;
                         return (
                             <div
-                                className={`wms-json-legend-rule ${isFilterDisabled || this.props.owner === 'legendPreview' || !rule?.filter ? "" : "filter-enabled "} ${activeFilter ? 'active' : ''}`}
+                                className={`wms-json-legend-rule ${isLegendFilterNotApplicable ? "" : "filter-enabled "} ${activeFilter ? 'active' : ''}`}
                                 key={`${rule.filter}-${idx}`}
-                                onClick={() => this.filterWMSLayerHandler(rule.filter)}>
+                                onClick={() => {
+                                    if (isLegendFilterNotApplicable) return;
+                                    this.filterWMSLayerHandler(rule.filter);
+                                }}>
                                 <WMSJsonLegendIcon rule={rule} />
                                 <span>{rule.name || rule.title || ''}</span>
                             </div>

@@ -326,7 +326,6 @@ export default class extends React.Component {
                             <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
                                 { enableInteractiveLegend ?
                                     <StyleBasedWMSJsonLegend
-                                        owner="legendPreview"
                                         style={this.setOverFlow() && {} || undefined}
                                         layer={this.props.element}
                                         legendHeight={
@@ -354,10 +353,10 @@ export default class extends React.Component {
                 </Row>}
                 {this.props.element.type === "wfs" && <Row>
                     <div className={"legend-options"}>
-                        <Col xs={12} className={"legend-label"}>
+                        {experimentalInteractiveLegend && <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
-                        </Col>
-                        { experimentalInteractiveLegend && this.props.element?.serverType !== ServerTypes.NO_VENDOR && !this.props?.hideInteractiveLegendOption &&
+                        </Col>}
+                        { experimentalInteractiveLegend && !this.props?.hideInteractiveLegendOption &&
                             <Col xs={12} className="first-selectize">
                                 <Checkbox
                                     data-qa="display-interactive-legend-option"
@@ -372,7 +371,7 @@ export default class extends React.Component {
                                     }}
                                     checked={enableInteractiveLegend} >
                                     <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
-                                    &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.info" />} />
+                                    &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.infoWithoutGSNote" />} />
                                 </Checkbox>
                             </Col>
                         }
@@ -380,7 +379,6 @@ export default class extends React.Component {
                             <ControlLabel><Message msgId="layerProperties.legendOptions.legendPreview" /></ControlLabel>
                             <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
                                 <VectorLegend
-                                    owner="legendPreview"
                                     layer={this.props.element}
                                     style={this.props.element.style || {}}
                                 />

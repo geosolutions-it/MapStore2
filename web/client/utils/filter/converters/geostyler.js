@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { isArray } from "lodash";
+
 const operatorMap = {
     '==': '=',
     '!=': '<>',
@@ -44,7 +46,7 @@ export const cql = (geostylerFilter) => {
         }
         return '';
     }
-    let geostylerRules = geostylerFilter.body;
+    const geostylerRules = isArray(geostylerFilter) ? geostylerFilter : geostylerFilter?.body;
     return parseCondition(geostylerRules);
 };
 

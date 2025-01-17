@@ -206,6 +206,7 @@
             "enableInteractiveLegendInfo": {
                 "label": "Aktivieren Sie die interaktive Legende",
                 "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird. Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer",
+                "infoWithoutGSNote": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird.",
                 "fetchError": "Die Legenden Informationen konnten nicht vom Dienst abgerufen werden"
             },
             "enableLocalizedLayerStyles": {

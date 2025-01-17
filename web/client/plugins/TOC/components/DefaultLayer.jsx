@@ -94,7 +94,7 @@ const DefaultLayerNode = ({
                             <VectorLegend
                                 style={node?.style}
                                 layer={node}
-                                owner="toc"
+                                interactive
                                 onChange={onChange}
                             />
                         </li>
@@ -113,6 +113,7 @@ const DefaultLayerNode = ({
                             language={config?.language}
                             {...config?.layerOptions?.legendOptions}
                             onChange={onChange}
+                            interactive
                         />
                     </li>
                 </>

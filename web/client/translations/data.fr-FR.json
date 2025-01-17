@@ -206,6 +206,7 @@
             "enableInteractiveLegendInfo": {
                 "label": "Activer la légende interactive",
                 "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer",
+                "infoWithoutGSNote": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières.",
                 "fetchError": "Impossible d'obtenir les informations de légende du service"
             },
             "enableLocalizedLayerStyles": {
