@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 
 import React from 'react';
 
-// const Message = require('../I18N/Message').default;
 import Select from 'react-select';
 
 import Message from '../../I18N/Message';
@@ -69,7 +68,7 @@ class UserCard extends React.Component {
             options={this.getOptions()}
             onChange={this.onChange}
             style={{marginTop: "10px"}}
-            // * NOTE: valueRenderer: is responsible for custom rendering for shwon selected values in react-select version 1.3.0
+            // * NOTE: valueRenderer: is responsible for custom rendering for shown selected values in react-select version 1.3.0
             valueRenderer={this.customValueRenderer}
         />);
     };
