@@ -1242,8 +1242,8 @@ The `terrain` layer of the `cesium-ion` type enables the use of Cesium Ion terra
   "provider": "cesium-ion",
   "visibility": true,
   "options": {
-    "assetId": "", // cesium ion asset id to be requested
-    "accessToken": "", // cesium access token to be used
+    "assetId": "", // cesium ion asset id to be requested (mandatory)
+    "accessToken": "", // cesium access token to be used (mandatory)
     "server": undefined, // resource from the Cesium ion API server. Defaults to https://api.cesium.com when unspecified
     "credit": "" // optional, additional credit to be displayed along side credit and attribution from ion resource
   }
