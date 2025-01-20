@@ -9,7 +9,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import { getAuthenticationMethod } from '../../utils/SecurityUtils';
+import { getAuthKeyParameter, getAuthenticationMethod, getToken } from '../../utils/SecurityUtils';
+
+// TODO: move to utils
+function appendParamToUrl(url, paramKey, paramValue) {
+    // Check if the URL already has query parameters
+    const delimiter = url.includes('?') ? '&' : '?';
+
+    // If there's already a query string, append the new parameter; otherwise, start a new query string
+    return `${url}${delimiter}${encodeURIComponent(paramKey)}=${encodeURIComponent(paramValue)}`;
+}
 
 
 const SecureImage = ({
@@ -42,6 +51,16 @@ const SecureImage = ({
                 .catch((error) => {
                     console.error('Error fetching image:', error);
                 });
+        } else if (authMethod === "authkey") {
+            const authParam = getAuthKeyParameter(src);
+            const token = getToken();
+            if (authParam && token) {
+                const newSrc = appendParamToUrl(src, authParam, token);
+                setImageSrc(newSrc);
+            } else {
+                setImageSrc(src);
+            }
+
         } else {
             setImageSrc(src);
         }
