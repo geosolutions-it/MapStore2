@@ -28,6 +28,7 @@ const selectedSelector = createSelector(
 const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${index}` }</span>;
 
 /**
+ * @deprecated
  * @name ContentTabs
  * @memberof plugins
  * @class

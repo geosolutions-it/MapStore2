@@ -162,6 +162,7 @@ const MapsPlugin = compose(
  * Plugin for maps resources browsing.
  * Can be rendered inside {@link #plugins.ContentTabs|ContentTabs} plugin
  * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
+ * @deprecated
  * @name Maps
  * @memberof plugins
  * @class

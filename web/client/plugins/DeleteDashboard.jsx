@@ -19,7 +19,10 @@ import { getDashboardId, dashboardResource } from '../selectors/dashboard';
 import { deleteDialogSelector } from '../selectors/dashboards';
 import { isLoggedIn } from '../selectors/security';
 import Message from '../components/I18N/Message';
-
+/**
+ * @deprecated
+ *
+ */
 class DeleteConfirmDialog extends React.Component {
 
     static propTypes = {

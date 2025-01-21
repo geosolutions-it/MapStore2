@@ -45,6 +45,7 @@ const SaveBaseDialog = compose(
 
 /**
  * Implements "save" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @deprecated
  * @class
  * @name DashboardSave
  * @memberof plugins

@@ -17,6 +17,7 @@ import {createPlugin} from "../../utils/PluginsUtils";
  * Footer plugin, section of the homepage.
  * description of footer can be overridden by
  * `home.footerDescription` message id in the translations
+ * @deprecated
  * @prop {boolean} cfg.customFooter params that can be used to render a custom html to be used instead of the default one
  * @prop {object} cfg.logo logo data to change image and href, set to null to hide the logo
  * @prop {string} cfg.logo.src source of the logo

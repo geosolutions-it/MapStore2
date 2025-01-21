@@ -19,7 +19,10 @@ import { toggleControl } from '../actions/controls';
 import { mapIdSelector } from '../selectors/mapInitialConfig';
 import { showConfirmDeleteMapModalSelector } from '../selectors/controls';
 import Message from '../components/I18N/Message';
-
+/**
+ * @deprecated
+ *
+ */
 class DeleteConfirmDialog extends React.Component {
 
     static propTypes = {
