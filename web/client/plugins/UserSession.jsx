@@ -11,7 +11,8 @@ import {createPlugin} from "../utils/PluginsUtils";
 import usersession from "../reducers/usersession";
 import {saveUserSessionEpicCreator, autoSaveSessionEpicCreator, loadUserSessionEpicCreator,
     removeUserSessionEpicCreator, stopSaveSessionEpic, reloadOriginalConfigEpic,
-    setSessionToDynamicReducers} from "../epics/usersession";
+    setSessionToDynamicReducers,
+    clearSessionIfPluginMissingEpic} from "../epics/usersession";
 import Message from "../components/I18N/Message";
 import {Glyphicon} from "react-bootstrap";
 import {toggleControl} from "../actions/controls";
@@ -286,6 +287,6 @@ export default createPlugin('UserSession', {
         usersession
     },
     epics: {
-        saveUserSessionEpic, autoSaveSessionEpic, stopSaveSessionEpic, loadUserSessionEpic, removeUserSessionEpic, reloadOriginalConfigEpic, setSessionToDynamicReducers
+        saveUserSessionEpic, autoSaveSessionEpic, stopSaveSessionEpic, loadUserSessionEpic, removeUserSessionEpic, reloadOriginalConfigEpic, setSessionToDynamicReducers, clearSessionIfPluginMissingEpic
     }
 });

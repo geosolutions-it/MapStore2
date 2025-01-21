@@ -11,7 +11,9 @@ import { error, success } from '../actions/notifications';
 import { SAVE_USER_SESSION, LOAD_USER_SESSION, REMOVE_USER_SESSION, USER_SESSION_REMOVED,
     USER_SESSION_START_SAVING, USER_SESSION_STOP_SAVING,
     userSessionSaved, userSessionLoaded, loading, saveUserSession, userSessionRemoved,
-    userSessionStartSaving, userSessionStopSaving
+    userSessionStartSaving, userSessionStopSaving,
+    clearSessionIfPluginMissing,
+    CLEAR_SESSION_IF_PLUGIN_MISSING
 } from "../actions/usersession";
 import { closeFeatureGrid } from '../actions/featuregrid';
 import { resetSearch } from '../actions/search';
@@ -33,7 +35,7 @@ import { applyOverrides, updateOverrideConfig } from '../utils/ConfigUtils';
 import { setTemplates } from '../actions/maptemplates';
 import { getRegisterHandlers } from '../selectors/mapsave';
 
-const {getSession, writeSession} = UserSession;
+const {getSession, writeSession, removeSession} = UserSession;
 
 const saveUserSessionErrorStatusToMessage = (status) => {
     switch (status) {
@@ -119,7 +121,8 @@ export const loadUserSessionEpicCreator = (nameSelector = userSessionNameSelecto
         const sessionName = name || nameSelector(state);
         return getSession(sessionName)
             .switchMap(([id, session]) => Rx.Observable.of(
-                userSessionLoaded(id, session)
+                userSessionLoaded(id, session),
+                clearSessionIfPluginMissing(id, session)
             ))
             .let(wrapStartStop(
                 loading(true, 'userSessionLoading'),
@@ -128,6 +131,34 @@ export const loadUserSessionEpicCreator = (nameSelector = userSessionNameSelecto
             ));
     });
 
+/**
+ * Epic to clear the session if the plugin is missing. Here checking of `userSession` plugin is done checking autoSave state. If 3 secs after loading session autoSave is false then, UserSession plugin is missing
+ *
+ * This function listens for the `CLEAR_SESSION_IF_PLUGIN_MISSING` action and introduces a delay
+ * should be cleared based on the `autoSave` state(UserSession plugin is active or not). If the session is exists and `autoSave` is false(ensures UserSession plugin is not active), it dispatches an action to remove
+ * the current session and loads the map configuration with default Config.
+ */
+export const clearSessionIfPluginMissingEpic = (action$, store) => {
+    return action$.ofType(CLEAR_SESSION_IF_PLUGIN_MISSING).switchMap(({id, currentSession}) => {
+
+        // Introduce a delay using Rx.Observable.timer
+        return Rx.Observable.timer(1800).switchMap(() => {
+            const autoSave = store.getState().usersession.autoSave;
+            // if !autoSave shows UserSession plugin is missing, currentSession shows in the past plugin was active and was saving session
+            // following check says userSession plugin may have been removed now, so time to remove session and fall back to default config
+            if (!autoSave && currentSession) {
+                return removeSession(id).switchMap(() =>{
+                    const mapConfig = originalConfigSelector(store.getState());
+                    const mapId = store.getState()?.mapInitialConfig?.mapId;
+                    return Rx.Observable.of(loadMapConfig(null, mapId, mapConfig, undefined, {}));
+                });
+            }
+            // else do nothing
+            return Rx.Observable.empty(); // No action, return empty observable
+
+        });
+    });
+};
 /**
  * Returns a user session remove epic.
  * The epic triggers on a REMOVE_USER_SESSION action.
