@@ -9,15 +9,12 @@
 import React, { useState } from 'react';
 import uuid from 'uuid/v1';
 import { createPlugin } from "../../utils/PluginsUtils";
-import Button from './components/Button';
-import Icon from './components/Icon';
 import PendingStatePrompt from './containers/PendingStatePrompt';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { isEmpty } from 'lodash';
 import { getPendingChanges } from './selectors/save';
 import Persistence from '../../api/persistence';
-import Spinner from './components/Spinner';
 import { setSelectedResource } from './actions/resources';
 import { mapSaveError, mapSaved, mapInfoLoaded, configureMap } from '../../actions/config';
 import { userSelector } from '../../selectors/security';
@@ -43,7 +40,9 @@ function Save({
     onSuccess,
     onError,
     user,
-    onNotification
+    onNotification,
+    component,
+    menuItem
 }) {
     const [loading, setLoading] = useState(false);
 
@@ -82,23 +81,16 @@ function Save({
     if (!(user && pendingChanges?.resource?.canEdit)) {
         return null;
     }
+    const Component = component;
     return (
         <>
-            <Button
-                square
-                className={changes ? 'ms-notification-circle warning' : ''}
+            <Component
+                className={changes && !loading ? 'ms-notification-circle warning' : ''}
                 onClick={handleSave}
-                borderTransparent
-            >
-                {loading ? <Spinner /> : <Icon glyph="floppy-disk" type="glyphicon" />}
-            </Button>
-            <PendingStatePrompt
-                pendingState={changes}
-                titleId="resourcesCatalog.detailsPendingChangesTitle"
-                descriptionId="resourcesCatalog.detailsPendingChangesDescription"
-                cancelId="resourcesCatalog.detailsPendingChangesCancel"
-                confirmId="resourcesCatalog.detailsPendingChangesConfirm"
-                variant="danger"
+                labelId="saveDialog.saveTooltip"
+                glyph="floppy-disk"
+                menuItem={menuItem}
+                loading={loading}
             />
         </>
     );
@@ -159,13 +151,51 @@ SavePlugin.defaultProps = {
     resourceType: 'MAP'
 };
 
+const ConnectedPendingStatePrompt = saveConnect(({
+    user,
+    pendingChanges
+}) => {
+    if (!(user && (pendingChanges?.resource?.canCopy || pendingChanges?.resource?.canEdit))) {
+        return null;
+    }
+    const changes = !isEmpty(pendingChanges.changes);
+    return (
+        <PendingStatePrompt
+            pendingState={changes}
+            titleId="resourcesCatalog.detailsPendingChangesTitle"
+            descriptionId="resourcesCatalog.detailsPendingChangesDescription"
+            cancelId="resourcesCatalog.detailsPendingChangesCancel"
+            confirmId="resourcesCatalog.detailsPendingChangesConfirm"
+            variant="danger"
+        />
+    );
+});
+
+ConnectedPendingStatePrompt.defaultProps = {
+    resourceType: 'MAP'
+};
+
 export default createPlugin('Save', {
-    component: SavePlugin,
+    component: ConnectedPendingStatePrompt,
     containers: {
         BrandNavbar: {
             target: 'right-menu',
             position: -2,
-            priority: 1
+            priority: 3,
+            Component: SavePlugin,
+            doNotHide: true
+        },
+        BurgerMenu: {
+            position: 30,
+            tool: SavePlugin,
+            priority: 2,
+            doNotHide: true
+        },
+        SidebarMenu: {
+            position: 30,
+            tool: SavePlugin,
+            priority: 1,
+            doNotHide: true
         }
     }
 });

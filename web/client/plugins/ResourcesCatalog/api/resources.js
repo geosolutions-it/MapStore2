@@ -29,6 +29,15 @@ const getFilter = ({
     const ctx = castArray(query['filter{ctx}'] || []);
     const categories = ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'];
     const categoriesFilters = categories.filter(category => f.includes(category.toLocaleLowerCase()));
+    const associatedContextFilters = ctx.map((ctxValue) => {
+        const { value } = splitFilterValue(ctxValue);
+        return {
+            name: ['context'],
+            operator: ['EQUAL_TO'],
+            type: ['STRING'],
+            value: [value]
+        };
+    });
     return {
         AND: {
             FIELD: [
@@ -48,28 +57,30 @@ const getFilter = ({
             ],
             OR: [
                 {
-                    CATEGORY: categories
+                    AND: categories
                         .map(name => {
-                            return (!categoriesFilters.length || categoriesFilters.includes(name))
+                            return (
+                                !categoriesFilters.length && !associatedContextFilters.length
+                                || categoriesFilters.includes(name)
+                                || associatedContextFilters.length && name === 'MAP'
+                            )
                                 ? {
-                                    operator: ['EQUAL_TO'],
-                                    name: [name]
+                                    CATEGORY: [
+                                        {
+                                            operator: ['EQUAL_TO'],
+                                            name: [name]
+                                        }
+                                    ],
+                                    ...(name === 'MAP' && associatedContextFilters.length && {
+                                        OR: [
+                                            {
+                                                ATTRIBUTE: associatedContextFilters
+                                            }
+                                        ]
+                                    })
                                 }
                                 : null;
                         }).filter(value => value)
-                },
-                {
-                    ATTRIBUTE: [
-                        ...(ctx.map((ctxValue) => {
-                            const { value } = splitFilterValue(ctxValue);
-                            return {
-                                name: ['context'],
-                                operator: ['EQUAL_TO'],
-                                type: ['STRING'],
-                                value: [value]
-                            };
-                        }))
-                    ]
                 }
             ]
         }

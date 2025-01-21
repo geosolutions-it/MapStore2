@@ -156,7 +156,9 @@ const ResourceCardMetadataEntry = ({
                 })
                 : value !== undefined
                     ? <ResourceCardMetadataValue value={value} entry={entry} formatHref={formatHref} readOnly={readOnly} query={query}/>
-                    : null}
+                    : entry?.noDataLabelId
+                        ? <Message msgId={entry.noDataLabelId} />
+                        : null}
         </Text>
     );
 };

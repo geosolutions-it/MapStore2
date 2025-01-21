@@ -30,18 +30,19 @@ const ResourceStatus = ({ statusItems = [] }) => {
             {statusItems.map((item, idx) => {
                 if (item.type === 'text') {
                     return (
-                        <Text key={idx} classNames={['_padding-lr-xs']} fontSize="sm" className={`ms-${item.variant}-colors`} >
+                        <Text key={idx} classNames={['_padding-lr-xs']} fontSize="sm" className={item.variant ? `ms-${item.variant}-colors` : ''} >
                             <Message msgId={item.labelId} />
                         </Text>
                     );
                 }
                 if (item.type === 'icon') {
                     return (
-                        <Text key={idx} fontSize="sm" className={`ms-${item.variant}-text`} >
+                        <Text key={idx} fontSize="sm" className={item.variant ? `ms-${item.variant}-text` : ''} >
                             <IconWithTooltip
                                 glyph={item.glyph}
                                 type={item.iconType}
                                 tooltip={item.tooltip}
+                                tooltipParams={item.tooltipParams}
                                 tooltipId={item.tooltipId}
                             />
                         </Text>

@@ -97,29 +97,31 @@ function ResourcesGrid({
             {
                 path: 'name',
                 target: 'header',
-                width: 30,
+                width: 20,
                 labelId: 'resourcesCatalog.columnName'
             },
             {
                 path: 'description',
-                width: 50,
+                width: 40,
                 labelId: 'resourcesCatalog.columnDescription'
             },
             {
                 path: 'lastUpdate',
                 type: 'date',
                 format: 'MMM Do YY, h:mm:ss a',
-                width: 10,
+                width: 20,
                 icon: { glyph: 'clock-o' },
-                labelId: 'resourcesCatalog.columnLastModified'
+                labelId: 'resourcesCatalog.columnLastModified',
+                noDataLabelId: 'resourcesCatalog.emptyNA'
             },
             {
                 path: 'creator',
                 target: 'footer',
-                filter: 'filter{creator.in}',
                 icon: { glyph: 'user', type: 'glyphicon' },
-                width: 10,
-                labelId: 'resourcesCatalog.columnCreatedBy'
+                width: 20,
+                labelId: 'resourcesCatalog.columnCreatedBy',
+                noDataLabelId: 'resourcesCatalog.emptyNA',
+                disableIf: '{!state("userrole")}'
             }
         ],
         grid: [
@@ -130,9 +132,10 @@ function ResourcesGrid({
             {
                 path: 'creator',
                 target: 'footer',
-                filter: 'filter{creator.in}',
                 icon: { glyph: 'user', type: 'glyphicon' },
-                labelId: 'resourcesCatalog.columnCreator'
+                labelId: 'resourcesCatalog.columnCreator',
+                noDataLabelId: 'resourcesCatalog.emptyNA',
+                disableIf: '{!state("userrole")}'
             }
         ]
     },

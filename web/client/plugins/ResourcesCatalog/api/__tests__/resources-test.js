@@ -33,17 +33,22 @@ describe('resources api', () => {
                 });
                 expect(json).toEqual({
                     "AND": {
-                        "OR": [
-                            {
-                                "CATEGORY": [
-                                    { "operator": "EQUAL_TO", "name": "MAP" },
-                                    { "operator": "EQUAL_TO", "name": "DASHBOARD" },
-                                    { "operator": "EQUAL_TO", "name": "GEOSTORY" },
-                                    { "operator": "EQUAL_TO", "name": "CONTEXT" }
-                                ]
-                            },
-                            ""
-                        ]
+                        "OR": {
+                            "AND": [
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" }
+                                },
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "DASHBOARD" }
+                                },
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "GEOSTORY" }
+                                },
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "CONTEXT" }
+                                }
+                            ]
+                        }
                     }
                 });
             } catch (e) {
@@ -80,14 +85,14 @@ describe('resources api', () => {
                     "AND": {
                         "FIELD": { "field": "NAME", "operator": "ILIKE", "value": "%A%" },
                         "ATTRIBUTE": { "name": "featured", "operator": "EQUAL_TO", "type": "STRING", "value": "true" },
-                        "OR": [
-                            {
-                                "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" }
-                            },
-                            {
-                                "ATTRIBUTE": { "name": "context", "operator": "EQUAL_TO", "type": "STRING", "value": "contextName" }
+                        "OR": {
+                            "AND": {
+                                "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" },
+                                "OR": {
+                                    "ATTRIBUTE": { "name": "context", "operator": "EQUAL_TO", "type": "STRING", "value": "contextName" }
+                                }
                             }
-                        ]
+                        }
                     }
                 });
             } catch (e) {

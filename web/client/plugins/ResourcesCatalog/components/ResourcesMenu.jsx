@@ -33,13 +33,18 @@ const ResourcesListHeader = ({
     };
     const init = useRef();
     init.current = () => {
-        if (!columns?.length && !matchPaths()) {
-            setColumns(metadata.map((entry, idx) => ({
-                path: entry.path,
-                width: entry.width,
-                right: metadata.filter((en, jdx) => jdx < idx).reduce((sum, en) => sum + en.width, 0),
-                left: metadata.filter((en, jdx) => jdx <= idx).reduce((sum, en) => sum + en.width, 0)
-            })));
+        if (!columns?.length || !matchPaths()) {
+            const total = metadata.reduce((sum, en) => sum + en.width, 0);
+            setColumns(metadata.map((entry, idx) => {
+                // compute the correct percentage in case the sum of metadata widths is not 100
+                const width = entry.width / total * 100;
+                return {
+                    path: entry.path,
+                    width: width,
+                    right: metadata.filter((en, jdx) => jdx < idx).reduce((sum, en) => sum + (en.width / total * 100), 0),
+                    left: metadata.filter((en, jdx) => jdx <= idx).reduce((sum, en) => sum + (en.width / total * 100), 0)
+                };
+            }));
         }
     };
 
@@ -64,7 +69,7 @@ const ResourcesListHeader = ({
                         const rect = containerNode.getBoundingClientRect();
                         const newLeft = Math.round(((event.clientX - rect.x) / rect.width) * 100);
                         if (newLeft > column.right && newLeft < nextColumn.left) {
-                            setColumns(prevColumns => prevColumns
+                            setColumns(columns
                                 .map((prevColumn, idx) =>
                                     idx === selected
                                         ? { ...prevColumn, width: newLeft - column.right }

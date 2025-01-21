@@ -45,6 +45,24 @@ const AnchorElement = ({children, href, target, onClick}) => (
     <a href={href} target={target} onClick={onClick}>{children}</a>
 );
 
+const BurgerMenuMenuItem = ({
+    active,
+    onClick,
+    glyph,
+    labelId,
+    className
+}) => {
+    return (
+        <MenuItem
+            active={active}
+            className={className}
+            onClick={() => onClick(!active)}
+        >
+            <Glyphicon glyph={glyph}/><Message msgId={labelId}/>
+        </MenuItem>
+    );
+};
+
 class BurgerMenu extends React.Component {
     static propTypes = {
         id: PropTypes.string,
@@ -170,6 +188,7 @@ class BurgerMenu extends React.Component {
                 panels={this.getPanels(this.props.items)}
                 panelStyle={this.props.panelStyle}
                 panelClassName={this.props.panelClassName}
+                toolComponent={BurgerMenuMenuItem}
             />);
     }
 }

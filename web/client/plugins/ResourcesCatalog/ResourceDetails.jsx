@@ -42,6 +42,9 @@ import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
 import Icon from './components/Icon';
 import Text from './components/Text';
 import FlexBox from './components/FlexBox';
+import tooltip from '../../components/misc/enhancers/tooltip';
+
+const ButtonWithTooltip = tooltip(Button);
 
 const tabComponents = {
     permissions: ResourcePermissions,
@@ -283,15 +286,17 @@ function BrandNavbarDetailsButton({
             name: resourceType
         }
     };
-    const { title } = getResourceTypesInfo(resource);
+    const { title } = getResourceTypesInfo(resource || selectedResource);
     return (
         <FlexBox centerChildrenVertically gap="xs">
             <Text ellipsis>
                 {title}
             </Text>
-            <Button
+            <ButtonWithTooltip
                 active={show}
                 square
+                tooltipId="resourcesCatalog.viewResourceProperties"
+                tooltipPosition="bottom"
                 onClick={() => {
                     if (resource) {
                         onSelect(resource);
@@ -301,7 +306,7 @@ function BrandNavbarDetailsButton({
                 borderTransparent
             >
                 <Icon glyph="file-code-o" />
-            </Button>
+            </ButtonWithTooltip>
         </FlexBox>
     );
 }

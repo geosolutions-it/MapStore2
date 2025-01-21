@@ -38,6 +38,7 @@ const Menu = forwardRef(({
     variant,
     resourceName,
     className,
+    menuItemComponent,
     ...props
 }, ref) => {
 
@@ -66,6 +67,7 @@ const Menu = forwardRef(({
                                 }}
                                 classItem={childrenClass}
                                 resourceName={resourceName}
+                                menuItemComponent={menuItemComponent}
                             />
                         </li>
                     );

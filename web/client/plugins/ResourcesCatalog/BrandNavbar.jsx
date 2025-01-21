@@ -11,6 +11,33 @@ import { createPlugin } from "../../utils/PluginsUtils";
 import FlexBox from './components/FlexBox';
 import Menu from './components/Menu';
 import usePluginItems from '../../hooks/usePluginItems';
+import Button from './components/Button';
+import tooltip from '../../components/misc/enhancers/tooltip';
+import Spinner from './components/Spinner';
+import Icon from './components/Icon';
+const ButtonWithTooltip = tooltip(Button);
+
+function BrandNavbarMenuItem({
+    className,
+    loading,
+    glyph,
+    glyphType = 'glyphicon',
+    labelId,
+    onClick
+}) {
+    return (
+        <ButtonWithTooltip
+            square
+            borderTransparent
+            tooltipId={labelId}
+            tooltipPosition="bottom"
+            onClick={onClick}
+            className={className}
+        >
+            {loading ? <Spinner /> : <Icon glyph={glyph} type={glyphType} />}
+        </ButtonWithTooltip>
+    );
+}
 
 function BrandNavbar({
     size,
@@ -56,6 +83,7 @@ function BrandNavbar({
                     variant={variant}
                     alignRight
                     size={size}
+                    menuItemComponent={BrandNavbarMenuItem}
                     items={[
                         ...rightMenuItems,
                         ...pluginRightMenuItems

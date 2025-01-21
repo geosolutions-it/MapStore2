@@ -137,13 +137,17 @@ const useQueryResourcesByLocation = ({
         }, 300);
     };
 
-    useEffect(() => {
-        const { query } = url.parse(location.search, true);
-        requestResources.current(query);
-    }, [pageSize, JSON.stringify(defaultQuery), user]);
-
     const _queryPage = useRef();
     _queryPage.current = queryPage;
+
+    useEffect(() => {
+        const [currentParams, currentPage] = getParams(location.search);
+        requestResources.current({
+            ...currentParams,
+            ...(_queryPage.current && { page: currentPage })
+        });
+    }, [pageSize, JSON.stringify(defaultQuery), user]);
+
     useEffect(() => {
         const prevLocation = _prevLocation.current;
         const [previousParams, previousPage] = getParams(prevLocation?.search);

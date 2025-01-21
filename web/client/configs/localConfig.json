@@ -751,6 +751,7 @@
               "id": "catalog",
               "titleId": "resources.contents.title",
               "queryPage": true,
+              "order": null,
               "menuItems": [
                 {
                     "labelId": "resourcesCatalog.addResource",

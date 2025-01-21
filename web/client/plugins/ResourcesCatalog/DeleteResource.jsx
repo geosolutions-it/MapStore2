@@ -17,8 +17,6 @@ import { searchResources } from './actions/resources';
 import { getPendingChanges } from './selectors/save';
 import { push } from 'connected-react-router';
 import useIsMounted from './hooks/useIsMounted';
-import { MenuItem, Glyphicon } from 'react-bootstrap';
-import Message from '../../components/I18N/Message';
 
 function DeleteResource({
     user,
@@ -110,29 +108,14 @@ const deleteResourcesConnect = connect(
 
 const DeleteResourcePlugin = deleteResourcesConnect(DeleteResource);
 
-const BurgerMenuMenuItem = ({
-    active,
-    onClick,
-    glyph,
-    labelId
-}) => {
-    return (
-        <MenuItem
-            active={active}
-            onClick={() => onClick(!active)}
-        >
-            <Glyphicon glyph={glyph}/><Message msgId={labelId}/>
-        </MenuItem>
-    );
-};
-
 export default createPlugin('DeleteResource', {
-    component: DeleteResourcePlugin,
+    component: () => null,
     containers: {
         ResourcesGrid: {
             target: 'card-options',
             position: 1,
-            priority: 2
+            priority: 2,
+            Component: DeleteResourcePlugin
         },
         SidebarMenu: {
             position: 300,
@@ -141,7 +124,7 @@ export default createPlugin('DeleteResource', {
         },
         BurgerMenu: {
             position: 5,
-            tool: (props) => <DeleteResourcePlugin {...props} component={BurgerMenuMenuItem} />,
+            tool: DeleteResourcePlugin,
             priority: 1
         }
     }

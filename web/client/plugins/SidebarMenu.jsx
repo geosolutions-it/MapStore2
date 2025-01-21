@@ -35,12 +35,14 @@ function SidebarMenuItem({
     onClick,
     menuItem,
     glyph,
-    labelId
+    labelId,
+    className
 }) {
     return menuItem
         ? (
             <MenuItem
                 active={active}
+                className={className}
                 onClick={() => onClick(!active)}
             >
                 <Glyphicon glyph={glyph}/><Message msgId={labelId}/>
@@ -48,7 +50,7 @@ function SidebarMenuItem({
         )
         : (
             <ButtonWithTooltip
-                className="square-button"
+                className={`square-button${className ? ` ${className}` : ''}`}
                 bsStyle={active ? 'primary' : 'tray'}
                 active={active}
                 onClick={() => onClick(!active)}
@@ -231,7 +233,7 @@ class SidebarMenu extends React.Component {
         const menuItems = items.map((item) => {
             if (item.tool) {
                 const CustomMenuItem = item.tool;
-                return <CustomMenuItem key={item.name} menuItem />;
+                return <CustomMenuItem key={item.name} menuItem component={SidebarMenuItem}/>;
             }
             const ConnectedItem = connect((item?.selector ?? dummySelector),
                 (dispatch, ownProps) => {

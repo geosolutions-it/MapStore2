@@ -8,14 +8,11 @@
 
 import React, { useState } from 'react';
 import { createPlugin } from "../../utils/PluginsUtils";
-import Button from './components/Button';
-import Icon from './components/Icon';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { isEmpty, omit } from 'lodash';
 import { getPendingChanges } from './selectors/save';
 import Persistence from '../../api/persistence';
-import Spinner from './components/Spinner';
 import { setSelectedResource } from './actions/resources';
 import { mapSaveError, mapSaved, mapInfoLoaded, configureMap } from '../../actions/config';
 import { userSelector } from '../../selectors/security';
@@ -49,7 +46,9 @@ function SaveAs({
     onError,
     user,
     onPush,
-    onNotification
+    onNotification,
+    component,
+    menuItem
 }) {
 
     const saveResource = pendingChanges.saveResource;
@@ -120,21 +119,23 @@ function SaveAs({
         return null;
     }
 
+    const hideIndicator = !!pendingChanges?.resource?.canEdit;
 
     const messagePrefix = pendingChanges?.initialResource?.id === undefined
         ? 'createNewResource'
         : 'copyResource';
 
+    const Component = component;
     return (
         <>
-            <Button
-                square
-                className={changes ? 'ms-notification-circle warning' : ''}
+            <Component
+                className={changes && !hideIndicator ? 'ms-notification-circle warning' : ''}
                 onClick={() => setShowModal(true)}
-                borderTransparent
-            >
-                {loading ? <Spinner /> : <Icon glyph="floppy-disk-clone" type="glyphicon" />}
-            </Button>
+                labelId="saveDialog.saveAsTooltip"
+                menuItem={menuItem}
+                glyph="floppy-open"
+                loading={loading}
+            />
             <ConfirmDialog
                 show={showModal}
                 loading={loading}
@@ -215,11 +216,22 @@ SaveAsPlugin.defaultProps = {
 };
 
 export default createPlugin('SaveAs', {
-    component: SaveAsPlugin,
+    component: () => null,
     containers: {
         BrandNavbar: {
             target: 'right-menu',
             position: -1,
+            priority: 3,
+            Component: SaveAsPlugin
+        },
+        BurgerMenu: {
+            position: 31,
+            tool: SaveAsPlugin,
+            priority: 2
+        },
+        SidebarMenu: {
+            position: 31,
+            tool: SaveAsPlugin,
             priority: 1
         }
     }

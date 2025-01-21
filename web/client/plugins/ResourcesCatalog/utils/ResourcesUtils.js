@@ -65,13 +65,15 @@ export const getResourceStatus = (resource = {}) => {
             ...(resource.advertised === false ? [{
                 type: 'icon',
                 tooltipId: 'resourcesCatalog.unadvertised',
-                variant: 'warning',
                 glyph: 'eye-slash'
             }] : []),
             ...(extras?.context?.name ? [{
                 type: 'icon',
                 glyph: 'cogs',
-                tooltip: extras.context.name
+                tooltipId: 'resourcesCatalog.mapUsesContext',
+                tooltipParams: {
+                    contextName: extras.context.name
+                }
             }] : [])
         ]
     };

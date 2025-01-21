@@ -40,7 +40,7 @@ const isValidBadgeValue = (badge) => !!badge || badge === 0;
  *
  */
 
-const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '', size, alignRight, variant, resourceName }) => {
+const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '', size, alignRight, variant, resourceName, menuItemComponent }) => {
 
     const { formatHref, query } = menuItemsProps || {};
     const {
@@ -90,7 +90,7 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
     }
 
     if ((type === 'custom' || type === 'plugin') && Component) {
-        return <Component variant={variant} size={size} className={className}/>;
+        return <Component variant={variant} size={size} className={className} component={menuItemComponent}/>;
     }
 
     if (type === 'link') {

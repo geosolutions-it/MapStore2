@@ -149,7 +149,8 @@ function ResourcesGrid({
 
     const parsedConfig =  useParsePluginConfigExpressions(monitoredState, {
         menuItems,
-        order
+        order,
+        metadata: metadataProp
     });
 
     const isValidItem = (target) => (item) => item.target === target && (!item?.cfg?.resourcesGridId || item?.cfg?.resourcesGridId === id);
@@ -161,9 +162,10 @@ function ResourcesGrid({
         onSearch(newParams);
     }
 
-    const [columns, setColumns] = useLocalStorage('metadataColumns', []);
-
-    const metadata = isArray(metadataProp) ? metadataProp : metadataProp[cardLayoutStyle];
+    const [metadataColumns, setMetadataColumns] = useLocalStorage('metadataColumns', {});
+    const columnsId = user?.name ? 'authenticated' : 'anonymous';
+    const columns = metadataColumns?.[columnsId] || [];
+    const metadata = isArray(parsedConfig.metadata) ? parsedConfig.metadata : parsedConfig.metadata[cardLayoutStyle];
 
     return (
         <TargetSelectorPortal targetSelector={targetSelector}>
@@ -181,6 +183,7 @@ function ResourcesGrid({
                     metadata={metadata}
                     header={
                         <ResourcesMenu
+                            key={columnsId}
                             theme={theme}
                             titleId={titleId}
                             resourcesGridId={id}
@@ -199,7 +202,12 @@ function ResourcesGrid({
                             query={query}
                             metadata={metadata}
                             columns={columns}
-                            setColumns={setColumns}
+                            setColumns={(newColumns) =>
+                                setMetadataColumns({
+                                    ...metadataColumns,
+                                    [columnsId]: newColumns
+                                })
+                            }
                             getResourceStatus={getResourceStatus}
                             formatHref={formatHref}
                             getResourceTypesInfo={getResourceTypesInfo}

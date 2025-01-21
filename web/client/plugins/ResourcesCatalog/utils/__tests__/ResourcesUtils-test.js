@@ -93,14 +93,14 @@ describe('ResourcesUtils', () => {
         expect(getResourceStatus()).toEqual({ items: [] });
         expect(getResourceStatus({
             advertised: false
-        })).toEqual({ items: [{ type: 'icon', tooltipId: 'resourcesCatalog.unadvertised', variant: 'warning', glyph: 'eye-slash' }] });
+        })).toEqual({ items: [{ type: 'icon', tooltipId: 'resourcesCatalog.unadvertised', glyph: 'eye-slash' }] });
         expect(getResourceStatus({
             '@extras': {
                 context: {
                     name: 'Context'
                 }
             }
-        })).toEqual({ items: [{ type: 'icon', glyph: 'cogs', tooltip: 'Context' }] });
+        })).toEqual({ items: [{ type: 'icon', glyph: 'cogs', tooltipId: 'resourcesCatalog.mapUsesContext', tooltipParams: { contextName: 'Context' } }] });
     });
     it('getResourceId', () => {
         expect(getResourceId()).toBe(undefined);
