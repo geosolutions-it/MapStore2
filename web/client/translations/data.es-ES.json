@@ -240,7 +240,12 @@
               "clearCustomizationConfirm": "¿Está seguro de que desea borrar la personalización de los campos?",
               "error": "Error al recuperar los campos"
             },
-            "disableFeaturesEditing": "Deshabilitar la edición en la tabla de atributos"
+            "disableFeaturesEditing": "Deshabilitar la edición en la tabla de atributos",
+            "interactiveLegend": {
+                "incompatibleFilterWarning": "Los filtros de leyenda son incompatibles con el filtro de capa activo, o no hay características visibles dentro de la vista del mapa. Haga clic en restablecer para borrar los filtros de leyenda",
+                "resetLegendFilter": "Restablecer",
+                "noLegendData": "No hay elementos de leyenda para mostrar"
+            } 
         },
         "localizedInput": {
           "localize": "Localizar cadena...",
@@ -3672,7 +3677,12 @@
             "showViewsGeometries": "Mostrar posiciones de vistas",
             "addInitialView": "Haga clic en el botón más para agregar una nueva vista",
             "removeView": "Eliminar vista",
-            "resetLayerOverrides": "Restablecer cambios para alinear la capa al valor predeterminado",
+            "linkAllNodes": "Las propiedades de visibilidad y opacidad de las capas y los grupos se conectarán con la tabla de contenido principal",
+            "unlinkAllNodes": "Las propiedades de visibilidad y opacidad de las capas y los grupos se desconectarán de la tabla de contenido principal",
+            "layersLinked": "Las propiedades de visibilidad y opacidad están conectadas a la tabla de contenido principal",
+            "layersUnlinked": "Las propiedades de visibilidad y opacidad están desconectadas de la tabla de contenido principal",
+            "groupsLinked": "La propiedad de visibilidad está conectada a la tabla de contenido principal",
+            "groupsUnlinked": "La propiedad de visibilidad está desconectada de la tabla de contenido principal",
             "hideLayer": "Ocultar capa",
             "showLayer": "Mostrar capa",
             "undoChanges": "Deshacer cambios",

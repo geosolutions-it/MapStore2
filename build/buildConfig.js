@@ -166,10 +166,13 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
         }),
         new DefinePlugin({ '__MAPSTORE_PROJECT_CONFIG__': JSON.stringify(projectConfig) }),
         VERSION_INFO_DEFINE_PLUGIN,
-        new DefinePlugin({
-            // Define relative base path in cesium for loading assets
-            'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
-        }),
+        ...(cesiumBaseUrl !== false
+            ? [
+                new DefinePlugin({
+                    // Define relative base path in cesium for loading assets
+                    'CESIUM_BASE_URL': JSON.stringify(cesiumBaseUrl ? cesiumBaseUrl : path.join('dist', 'cesium'))
+                })
+            ] : []),
         new CopyWebpackPlugin([
             { from: path.join(getCesiumPath({ paths, prod }), 'Workers'), to: path.join(paths.dist, 'cesium', 'Workers') },
             { from: path.join(getCesiumPath({ paths, prod }), 'Assets'), to: path.join(paths.dist, 'cesium', 'Assets') },

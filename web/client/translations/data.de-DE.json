@@ -240,7 +240,12 @@
               "clearCustomizationConfirm": "Möchten Sie wirklich alle Anpassungen entfernen?",
               "error": "Die Felder konnten nicht automatisch geladen werden"
             },
-            "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle"
+            "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle",
+            "interactiveLegend": {
+                "incompatibleFilterWarning": "Legendenfilter sind mit dem aktiven Ebenenfilter nicht kompatibel oder es sind keine sichtbaren Features im Kartenansichtsfenster vorhanden. Klicken Sie auf Zurücksetzen, um die Legendenfilter zu löschen",
+                "resetLegendFilter": "Zurücksetzen",
+                "noLegendData": "Keine Legenden Elemente zum Anzeigen"
+            }
         },
         "localizedInput": {
           "localize": "Diesen Text lokalisieren...",
@@ -3710,7 +3715,12 @@
             "showViewsGeometries": "Views-Positionen anzeigen",
             "addInitialView": "Klicken Sie auf die Plus-Schaltfläche, um eine neue Ansicht hinzuzufügen",
             "removeView": "Ansicht entfernen",
-            "resetLayerOverrides": "Änderungen zurücksetzen, um die Ebene auf den Standardwert auszurichten",
+            "linkAllNodes": "Sichtbarkeits- und Opazitätseigenschaften von Ebenen und Gruppen werden mit dem Hauptinhaltsverzeichnis verknüpft",
+            "unlinkAllNodes": "Sichtbarkeits- und Opazitätseigenschaften von Ebenen und Gruppen werden vom Hauptinhaltsverzeichnis getrennt",
+            "layersLinked": "Sichtbarkeits- und Opazitätseigenschaften sind mit dem Hauptinhaltsverzeichnis verknüpft",
+            "layersUnlinked": "Sichtbarkeits- und Opazitätseigenschaften sind vom Hauptinhaltsverzeichnis getrennt",
+            "groupsLinked": "Sichtbarkeitseigenschaft ist mit dem Hauptinhaltsverzeichnis verknüpft",
+            "groupsUnlinked": "Sichtbarkeitseigenschaft ist vom Hauptinhaltsverzeichnis getrennt",
             "hideLayer": "Ebene ausblenden",
             "showLayer": "Ebene anzeigen",
             "undoChanges": "Änderungen rückgängig machen",

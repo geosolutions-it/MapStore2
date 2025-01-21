@@ -240,7 +240,12 @@
               "clearCustomizationConfirm": "Voulez-vous vraiment supprimer les personnalisations ?",
               "error":  "Échec de la récupération des champs"
             },
-            "disableFeaturesEditing": "Désactiver la modification sur la table attributaire"
+            "disableFeaturesEditing": "Désactiver la modification sur la table attributaire",
+            "interactiveLegend": {
+                "incompatibleFilterWarning": "Les filtres de légende sont incompatibles avec le filtre de couche actif, ou aucune fonctionnalité visible n'est dans la vue de la carte. Cliquez sur réinitialiser pour effacer les filtres de légende",
+                "resetLegendFilter": "Réinitialiser",
+                "noLegendData": "Aucun élément de légende à afficher"
+            }
         },
          "localizedInput": {
           "localize": "Localiser ce texte...",
@@ -3673,7 +3678,12 @@
             "showViewsGeometries": "Afficher les positions des vues",
             "addInitialView": "Cliquez sur le bouton plus pour ajouter une nouvelle vue",
             "removeView": "Supprimer la vue",
-            "resetLayerOverrides": "Réinitialise les modifications pour aligner le calque sur la valeur par défaut",
+            "linkAllNodes": "Les propriétés de visibilité et d'opacité des calques et des groupes seront connectées à la table des matières principale",
+            "unlinkAllNodes": "Les propriétés de visibilité et d'opacité des calques et des groupes seront déconnectées de la table des matières principale",
+            "layersLinked": "Les propriétés de visibilité et d'opacité sont connectées à la table des matières principale",
+            "layersUnlinked": "Les propriétés de visibilité et d'opacité sont déconnectées de la table des matières principale",
+            "groupsLinked": "La propriété de visibilité est connectée à la table des matières principale",
+            "groupsUnlinked": "La propriété de visibilité est déconnectée de la table des matières principale",
             "hideLayer": "Masquer le calque",
             "showLayer": "Afficher le calque",
             "undoChanges": "Annuler les modifications",

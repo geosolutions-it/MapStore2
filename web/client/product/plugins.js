@@ -21,6 +21,7 @@ import FeatureEditor from '../plugins/FeatureEditor';
 import MetadataInfo from '../plugins/MetadataInfo';
 import TOC from '../plugins/TOC';
 import * as resourcesCatalogPlugins from '../plugins/ResourcesCatalog';
+import SearchServicesConfig from "../plugins/SearchServicesConfig";
 
 import {toModulePlugin} from "../utils/ModulePluginsUtils";
 
@@ -45,6 +46,7 @@ export const plugins = {
     UserSessionPlugin: UserSession,
     FeatureEditorPlugin: FeatureEditor,
     MetadataInfoPlugin: MetadataInfo,
+    SearchServicesConfigPlugin: SearchServicesConfig,
     TOCPlugin: TOC,
 
     // ### DYNAMIC PLUGINS ### //
@@ -114,7 +116,6 @@ export const plugins = {
     ScaleBoxPlugin: toModulePlugin('ScaleBox', () => import(/* webpackChunkName: 'plugins/scaleBox' */ '../plugins/ScaleBox')),
     ScrollTopPlugin: toModulePlugin('ScrollTop', () => import(/* webpackChunkName: 'plugins/scrollTop' */ '../plugins/ScrollTop')),
     SearchPlugin: toModulePlugin('Search', () => import(/* webpackChunkName: 'plugins/search' */ '../plugins/Search')),
-    SearchServicesConfigPlugin: toModulePlugin('SearchServicesConfig', () => import(/* webpackChunkName: 'plugins/searchServicesConfig' */ '../plugins/SearchServicesConfig')),
     SearchByBookmarkPlugin: toModulePlugin('SearchByBookmark', () => import(/* webpackChunkName: 'plugins/searchByBookmark' */ '../plugins/SearchByBookmark')),
     SettingsPlugin: toModulePlugin('Settings', () => import(/* webpackChunkName: 'plugins/settings' */ '../plugins/Settings')),
     SidebarMenuPlugin: toModulePlugin('SidebarMenu', () => import(/* webpackChunkName: 'plugins/sidebarMenu' */ '../plugins/SidebarMenu')),

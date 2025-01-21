@@ -100,9 +100,27 @@ describe('test DefaultLayer module component', () => {
         }}/>, document.getElementById("container"));
         const expand = document.querySelector('.ms-node-expand');
         expect(expand).toBeTruthy();
-        expect(document.querySelector('.ms-node-layer ul')).toBeFalsy();
+        expect(document.querySelector('.ms-node-layer ul').style.display).toBe('none');
         TestUtils.Simulate.click(expand);
-        expect(document.querySelector('.ms-node-layer ul')).toBeTruthy();
+    });
+
+    it('should include custom content with nodeContentItems prop when expanding layer node', () => {
+        const l = {
+            id: 'layer00',
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            type: 'wms',
+            expanded: true
+        };
+        function CustomContent() {
+            return <div id="custom-content"></div>;
+        }
+        ReactDOM.render(<Layer node={l} nodeContentItems={[{ name: 'CustomContent', Component: CustomContent }]}/>, document.getElementById("container"));
+        const expand = document.querySelector('.ms-node-expand');
+        expect(expand).toBeTruthy();
+        expect(document.querySelector('.ms-node-layer ul').style.display).toBe('');
+        expect(document.querySelector('.ms-node-layer #custom-content')).toBeTruthy();
     });
 
     it('tests opacity tool', () => {
