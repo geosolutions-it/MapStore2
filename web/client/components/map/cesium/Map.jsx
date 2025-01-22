@@ -192,6 +192,9 @@ class CesiumMap extends React.Component {
             }
         }
 
+        // Allow camera to clip through surface for viewing underground objects.
+        map.scene.screenSpaceCameraController.enableCollisionDetection = this.props.mapOptions?.enableCollisionDetection ?? true;
+
         this.forceUpdate();
         map.scene.requestRender();
     }
