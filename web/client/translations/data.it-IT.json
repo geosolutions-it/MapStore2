@@ -1913,6 +1913,8 @@
                 }
             },
             "toolbar": {
+                "copyFeatures": "Copia entità",
+                "pasteFeatures": "Incolla entità",
                 "synchPopoverTitle": "Sincronizza la mappa con il filtro ",
                 "synchPopoverText": "Usa questa icona per sincronizzare la mappa con il filtro selezionato",
                 "notShowAgain": "  Non mostrare più",

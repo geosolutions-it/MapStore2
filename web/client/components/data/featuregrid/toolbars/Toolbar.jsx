@@ -45,6 +45,14 @@ const standardButtons = {
         visible={mode === "VIEW" && showAdvancedFilterButton}
         onClick={events.showQueryPanel}
         glyph="filter"/>),
+    copyFeaturesViewMode: ({disabled, mode, hasGeometry, selectedCount, hasSupportedGeometry = true, events = {}}) => (<TButton
+        id="copy-features"
+        keyProp="copy-features"
+        tooltipId="featuregrid.toolbar.copyFeatures"
+        disabled={disabled}
+        visible={mode === "VIEW" && hasGeometry && hasSupportedGeometry && selectedCount > 0}
+        onClick={events.copyFeatures}
+        glyph="duplicate"/>),
     zoomAll: ({disabled, disableZoomAll = false, mode, events = {}}) => (<TButton
         id="zoom-all"
         keyProp="zoom-all"
@@ -61,6 +69,22 @@ const standardButtons = {
         visible={mode === "EDIT" && !hasChanges && !hasNewFeatures}
         onClick={events.switchViewMode}
         glyph="arrow-left"/>),
+    copyFeaturesEditMode: ({disabled, mode, hasGeometry, hasNewFeatures, hasChanges, selectedCount, hasSupportedGeometry = true, events = {}}) => (<TButton
+        id="copy-features"
+        keyProp="copy-features"
+        tooltipId="featuregrid.toolbar.copyFeatures"
+        disabled={disabled}
+        visible={mode === "EDIT" && hasGeometry && !hasNewFeatures && !hasChanges && hasSupportedGeometry && selectedCount > 0}
+        onClick={events.copyFeatures}
+        glyph="duplicate"/>),
+    pasteFeatures: ({disabled, mode, copiedCount, hasNewFeatures, hasChanges, hasSupportedGeometry = true, events = {}}) => (<TButton
+        id="paste-features"
+        keyProp="paste-features"
+        tooltipId="featuregrid.toolbar.pasteFeatures"
+        disabled={disabled}
+        visible={mode === "EDIT" && !hasNewFeatures && !hasChanges && hasSupportedGeometry && copiedCount > 0}
+        onClick={events.pasteFeatures}
+        glyph="paste"/>),
     addFeature: ({disabled, mode, hasNewFeatures, hasChanges, hasSupportedGeometry = true, events = {}}) => (<TButton
         id="add-feature"
         keyProp="add-feature"
@@ -276,11 +300,14 @@ const buttons = [
     {name: "editMode", Component: standardButtons.editMode}, // EDITOR
     {name: "backToViewMode", Component: standardButtons.backToViewMode}, // EDITOR
     {name: "addFeature", Component: standardButtons.addFeature}, // EDITOR
+    {name: "copyFeaturesEditMode", Component: standardButtons.copyFeaturesEditMode}, // GRID
+    {name: "pasteFeatures", Component: standardButtons.pasteFeatures}, // EDITOR
     {name: "drawFeature", Component: standardButtons.drawFeature}, // EDITOR
     {name: "removeFeature", Component: standardButtons.removeFeature}, // EDITOR
     {name: "saveFeature", Component: standardButtons.saveFeature}, // EDITOR
     {name: "cancelEditing", Component: standardButtons.cancelEditing}, // EDITOR
     {name: "deleteGeometry", Component: standardButtons.deleteGeometry}, // EDITOR
+    {name: "copyFeaturesViewMode", Component: standardButtons.copyFeaturesViewMode}, // GRID
     {name: "filter", Component: standardButtons.filter}, // GRID (needs query panel plugin)
     {name: "viewportFilter", Component: standardButtons.viewportFilter},
     {name: "zoomAll", Component: standardButtons.zoomAll}, // GRID (should remove or hide? Is always disabled and not to much useful)

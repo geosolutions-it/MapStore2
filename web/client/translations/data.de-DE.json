@@ -1954,6 +1954,8 @@
                 }
             },
             "toolbar": {
+                "copyFeatures": "Funktionen kopieren",
+                "pasteFeatures": "Funktionen einfügen",
                 "synchPopoverTitle": "Karte mit Filter synchronisieren ",
                 "synchPopoverText": "Verwenden Sie dieses Werkzeug, um die Karte mit dem ausgewählten Filter zu synchronisieren",
                 "notShowAgain": "Diese Nachricht nicht erneut anzeigen",

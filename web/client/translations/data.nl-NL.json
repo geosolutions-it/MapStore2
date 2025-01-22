@@ -1903,6 +1903,8 @@
                 }
             },
             "toolbar": {
+                "copyFeatures": "Functies kopiëren",
+                "pasteFeatures": "Functies plakken",
                 "synchPopoverTitle": "Synchroniseer kaart met filter ",
                 "synchPopoverText": "Gebruik deze tool om de kaart te synchroniseren met de geselecteerde filter",
                 "notShowAgain": "  Laat dit bericht niet meer zien",

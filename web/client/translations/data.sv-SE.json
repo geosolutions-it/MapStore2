@@ -1629,6 +1629,8 @@
                 }
             },
             "toolbar": {
+                "copyFeatures": "Copy features",
+                "pasteFeatures": "Paste features",
                 "synchPopoverTitle": "Synkronisera karta med filter",
                 "synchPopoverText": "Använd det här verktyget för att synkronisera kartan med det valda filtret",
                 "notShowAgain": "Visa inte detta meddelande igen",

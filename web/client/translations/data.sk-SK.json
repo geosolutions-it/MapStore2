@@ -1649,6 +1649,8 @@
                 }
             },
             "toolbar": {
+                "copyFeatures": "Copy features",
+                "pasteFeatures": "Paste features",
                 "synchPopoverTitle": "Synchronizovať mapu s filtrom ",
                 "synchPopoverText": "Použi tento nástroj pre synchronizáciu mapy s vybraným filtrom",
                 "notShowAgain": " Túto správu už nezobrazovať",
