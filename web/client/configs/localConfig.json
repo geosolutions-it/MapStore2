@@ -751,7 +751,6 @@
               "id": "catalog",
               "titleId": "resources.contents.title",
               "queryPage": true,
-              "order": null,
               "menuItems": [
                 {
                     "labelId": "resourcesCatalog.addResource",
@@ -780,7 +779,8 @@
                         {
                             "labelId": "resourcesCatalog.createContext",
                             "type": "link",
-                            "href": "#/context-creator/new"
+                            "href": "#/context-creator/new",
+                            "disableIf": "{state('userrole') !== 'ADMIN'}"
                         }
                     ]
                 }

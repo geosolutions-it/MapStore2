@@ -13,13 +13,11 @@ import { createStructuredSelector } from 'reselect';
 import { userSelector } from '../../selectors/security';
 
 function EditContext({
-    user,
     resource,
     component
 }) {
     const Component = component;
-    // TODO: use resource.canEdit instead of user
-    if (user && resource?.category?.name === 'CONTEXT') {
+    if (resource?.canEdit && resource?.category?.name === 'CONTEXT') {
         return (
             <>
                 <Component

@@ -85,12 +85,13 @@ const ResourceCardWrapper = ({
     );
 };
 
-const ResourceCardMetadataValue = ({
+const ResourceCardMetadataValue = tooltip(({
     value,
     entry,
     readOnly,
     formatHref,
-    query
+    query,
+    ...props
 }) => {
 
     const getFilterActiveClassName = (filter, val) => {
@@ -114,6 +115,7 @@ const ResourceCardMetadataValue = ({
 
     return (
         <ALink
+            {...props}
             className={`ms-${entry.type || 'string'}${getFilterActiveClassName(entry.filter, properties.value)}`}
             style={{
                 '--tag-color': properties.color
@@ -130,7 +132,7 @@ const ResourceCardMetadataValue = ({
                 : properties.value}
         </ALink>
     );
-};
+});
 
 const ResourceCardMetadataEntry = ({
     entry,
@@ -152,10 +154,10 @@ const ResourceCardMetadataEntry = ({
             {entry.icon ? <><Icon {...entry.icon}/>{' '}</> : null}
             {Array.isArray(value)
                 ? value.map((val, idx) => {
-                    return (<ResourceCardMetadataValue key={idx} value={val} entry={entry} formatHref={formatHref} readOnly={readOnly} query={query}/>);
+                    return (<ResourceCardMetadataValue key={idx} value={val} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>);
                 })
                 : value !== undefined
-                    ? <ResourceCardMetadataValue value={value} entry={entry} formatHref={formatHref} readOnly={readOnly} query={query}/>
+                    ? <ResourceCardMetadataValue value={value} entry={entry} tooltipId={entry.tooltipId} formatHref={formatHref} readOnly={readOnly} query={query}/>
                     : entry?.noDataLabelId
                         ? <Message msgId={entry.noDataLabelId} />
                         : null}

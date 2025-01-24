@@ -4229,6 +4229,7 @@
             "columnFeatured": "Destacado",
             "contactDetails": "Contacto detalles",
             "emptyNA": "N/A",
+            "emptyUnknown": "N/A",
             "info": "Información",
             "filterByNameOrPermissions": "Filtrar por nombre o permisos",
             "permissionsName": "Nombre",
@@ -4290,6 +4291,11 @@
                 "error404": "Se produjo un error al eliminar el recurso en el servidor",
                 "error500": "Error interno del servidor",
                 "errorDefault": "Error de red"
+            },
+            "myResources": "Mis recursos",
+            "creationFilter": {
+                "from": "Fecha de creación desde",
+                "to": "Fecha de creación hasta"
             }
         }
     }

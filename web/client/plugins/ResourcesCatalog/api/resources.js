@@ -22,12 +22,13 @@ const splitFilterValue = (value) => {
 
 const getFilter = ({
     q,
-    // user,
+    user,
     query
 }) => {
     const f = castArray(query.f || []);
-    const ctx = castArray(query['filter{ctx}'] || []);
+    const ctx = castArray(query['filter{ctx.in}'] || []);
     const categories = ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'];
+    const creators = castArray(query['filter{creator.in}'] || []);
     const categoriesFilters = categories.filter(category => f.includes(category.toLocaleLowerCase()));
     const associatedContextFilters = ctx.map((ctxValue) => {
         const { value } = splitFilterValue(ctxValue);
@@ -45,6 +46,26 @@ const getFilter = ({
                     field: ['NAME'],
                     operator: ['ILIKE'],
                     value: ['%' + q + '%']
+                }] : []),
+                ...(query['filter{creation.gte}'] ? [{
+                    field: ['CREATION'],
+                    operator: ['GREATER_THAN_OR_EQUAL_TO'],
+                    value: [query['filter{creation.gte}']]
+                }] : []),
+                ...(query['filter{creation.lte}'] ? [{
+                    field: ['CREATION'],
+                    operator: ['LESS_THAN_OR_EQUAL_TO'],
+                    value: [query['filter{creation.lte}']]
+                }] : []),
+                ...(query['filter{lastUpdate.gte}'] ? [{
+                    field: ['LASTUPDATE'],
+                    operator: ['GREATER_THAN_OR_EQUAL_TO'],
+                    value: [query['filter{lastUpdate.gte}']]
+                }] : []),
+                ...(query['filter{lastUpdate.lte}'] ? [{
+                    field: ['LASTUPDATE'],
+                    operator: ['LESS_THAN_OR_EQUAL_TO'],
+                    value: [query['filter{lastUpdate.lte}']]
                 }] : [])
             ],
             ATTRIBUTE: [
@@ -58,6 +79,7 @@ const getFilter = ({
             OR: [
                 {
                     AND: categories
+                        .filter(name => name !== 'CONTEXT' || name === 'CONTEXT' && user?.role === 'ADMIN')
                         .map(name => {
                             return (
                                 !categoriesFilters.length && !associatedContextFilters.length
@@ -81,7 +103,23 @@ const getFilter = ({
                                 }
                                 : null;
                         }).filter(value => value)
-                }
+                },
+                ...((user && f.includes('my-resources')) || creators.length ? [{
+                    FIELD: [
+                        ...(user && f.includes('my-resources') ? [{
+                            field: ['CREATOR'],
+                            operator: ['EQUAL_TO'],
+                            value: [user.name]
+                        }] : []),
+                        ...(creators.map((value) => {
+                            return {
+                                field: ['CREATOR'],
+                                operator: ['EQUAL_TO'],
+                                value: [value]
+                            };
+                        }))
+                    ]
+                }] : [])
             ]
         }
     };
@@ -94,11 +132,13 @@ export const requestResources = ({
     const {
         page = 1,
         pageSize = 12,
-        sort,
+        sort = 'name',
         customFilters,
         q,
         ...query
     } = params || {};
+    const sortBy = sort.replace('-', '');
+    const sortOrder = sort.includes('-') ? 'desc' : 'asc';
     return searchListByAttributes(getFilter({
         q,
         user,
@@ -108,7 +148,9 @@ export const requestResources = ({
         params: {
             includeAttributes: true,
             start: parseFloat(page - 1) * pageSize,
-            limit: pageSize
+            limit: pageSize,
+            sortBy,
+            sortOrder
         }
     })
         .toPromise()
@@ -188,7 +230,7 @@ export const facets = [
         id: 'context',
         type: 'select',
         labelId: 'resourcesCatalog.filterMapsByContext',
-        key: 'filter{ctx}',
+        key: 'filter{ctx.in}',
         getLabelValue: (item) => {
             const { label } = splitFilterValue(item.value);
             return label;

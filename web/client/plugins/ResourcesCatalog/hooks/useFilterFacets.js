@@ -18,7 +18,7 @@ const useFilterFacets = ({
     fields,
     request,
     customFilters = []
-}) => {
+}, dependencies = []) => {
 
     const [updated, setUpdated] = useState(fields);
     const requestFacets = useRef();
@@ -40,8 +40,7 @@ const useFilterFacets = ({
 
     useEffect(() => {
         requestFacets.current();
-    }, [containsFacets]);
-
+    }, [containsFacets, ...dependencies]);
     return {
         fields: containsFacets ? updated : fields
     };

@@ -4267,6 +4267,7 @@
             "columnFeatured": "Ausgewählt",
             "contactDetails": "Kontaktdaten",
             "emptyNA": "N/A",
+            "emptyUnknown": "Unbekannt",
             "info": "Info",
             "filterByNameOrPermissions": "Nach Name oder Berechtigungen filtern",
             "permissionsName": "Name",
@@ -4328,6 +4329,11 @@
                 "error404": "Beim Löschen der Ressource auf dem Server ist ein Fehler aufgetreten",
                 "error500": "Interner Server Fehler",
                 "errorDefault": "Netzwerkfehler"
+            },
+            "myResources": "Meine Ressourcen",
+            "creationFilter": {
+                "from": "Erstellungsdatum von",
+                "to": "Erstellungsdatum bis"
             }
         }
     }

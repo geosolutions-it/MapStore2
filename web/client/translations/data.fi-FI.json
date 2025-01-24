@@ -2691,6 +2691,7 @@
       "columnFeatured": "Featured",
       "contactDetails": "Contact details",
       "emptyNA": "N/A",
+      "emptyUnknown": "Unknown",
       "info": "Info",
       "filterByNameOrPermissions": "Filter by name or permissions",
       "permissionsName": "Name",
@@ -2752,6 +2753,11 @@
           "error404": "An error occurred while deleting the resource on the server",
           "error500": "Internal Server Error",
           "errorDefault": "Network error"
+      },
+      "myResources": "My resources",
+      "creationFilter": {
+          "from": "Creation date from",
+          "to": "Creation date to"
       }
     }
   }

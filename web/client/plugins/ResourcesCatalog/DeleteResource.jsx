@@ -11,7 +11,6 @@ import { createPlugin } from "../../utils/PluginsUtils";
 import ConfirmDialog from './components/ConfirmDialog';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { userSelector } from '../../selectors/security';
 import Persistence from '../../api/persistence';
 import { searchResources } from './actions/resources';
 import { getPendingChanges } from './selectors/save';
@@ -19,7 +18,6 @@ import { push } from 'connected-react-router';
 import useIsMounted from './hooks/useIsMounted';
 
 function DeleteResource({
-    user,
     resource,
     component,
     onRefresh,
@@ -59,8 +57,7 @@ function DeleteResource({
                 }));
         }
     }
-    // TODO: use resource.canDelete instead of user
-    if (!user || resource?.id === undefined) {
+    if (!(resource?.id && resource?.canDelete)) {
         return null;
     }
     return (
@@ -91,7 +88,6 @@ function DeleteResource({
 
 const deleteResourcesConnect = connect(
     createStructuredSelector({
-        user: userSelector,
         resource: (state, props) => {
             if (props.resource) {
                 return props.resource;

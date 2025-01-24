@@ -73,22 +73,22 @@ function ResourcesGrid({
             {
                 label: 'Most recent',
                 labelId: 'resourcesCatalog.mostRecent',
-                value: '-date'
+                value: '-creation'
             },
             {
                 label: 'Less recent',
                 labelId: 'resourcesCatalog.lessRecent',
-                value: 'date'
+                value: 'creation'
             },
             {
                 label: 'A Z',
                 labelId: 'resourcesCatalog.aZ',
-                value: 'title'
+                value: 'name'
             },
             {
                 label: 'Z A',
                 labelId: 'resourcesCatalog.zA',
-                value: '-title'
+                value: '-name'
             }
         ]
     },
@@ -117,10 +117,11 @@ function ResourcesGrid({
             {
                 path: 'creator',
                 target: 'footer',
+                filter: 'filter{creator.in}',
                 icon: { glyph: 'user', type: 'glyphicon' },
                 width: 20,
                 labelId: 'resourcesCatalog.columnCreatedBy',
-                noDataLabelId: 'resourcesCatalog.emptyNA',
+                noDataLabelId: 'resourcesCatalog.emptyUnknown',
                 disableIf: '{!state("userrole")}'
             }
         ],
@@ -132,10 +133,11 @@ function ResourcesGrid({
             {
                 path: 'creator',
                 target: 'footer',
+                filter: 'filter{creator.in}',
                 icon: { glyph: 'user', type: 'glyphicon' },
-                labelId: 'resourcesCatalog.columnCreator',
-                noDataLabelId: 'resourcesCatalog.emptyNA',
-                disableIf: '{!state("userrole")}'
+                noDataLabelId: 'resourcesCatalog.emptyUnknown',
+                disableIf: '{!state("userrole")}',
+                tooltipId: 'resourcesCatalog.columnCreatedBy'
             }
         ]
     },

@@ -26,7 +26,7 @@ describe('resources api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, start: 0, limit: 12 });
+                expect(config.params).toEqual({ includeAttributes: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -43,9 +43,6 @@ describe('resources api', () => {
                                 },
                                 {
                                     "CATEGORY": { "operator": "EQUAL_TO", "name": "GEOSTORY" }
-                                },
-                                {
-                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "CONTEXT" }
                                 }
                             ]
                         }
@@ -76,7 +73,7 @@ describe('resources api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, start: 24, limit: 24 });
+                expect(config.params).toEqual({ includeAttributes: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc' });
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -111,7 +108,7 @@ describe('resources api', () => {
                 pageSize: 24,
                 f: ['map', 'featured'],
                 q: 'A',
-                'filter{ctx}': ['contextName']
+                'filter{ctx.in}': ['contextName']
             }
         })
             .then((response) => {
@@ -129,7 +126,7 @@ describe('resources api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, start: 0, limit: 12 });
+                expect(config.params).toEqual({ includeAttributes: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
             } catch (e) {
                 done(e);
             }

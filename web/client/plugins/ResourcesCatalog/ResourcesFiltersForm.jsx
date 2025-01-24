@@ -23,6 +23,7 @@ import ResourcesPanelWrapper from './components/ResourcesPanelWrapper';
 import TargetSelectorPortal from './components/TargetSelectorPortal';
 import useResourcePanelWrapper from './hooks/useResourcePanelWrapper';
 import { withResizeDetector } from 'react-resize-detector';
+import { userSelector } from '../../selectors/security';
 
 function ResourcesFiltersForm({
     id = 'ms-filter-form',
@@ -57,6 +58,12 @@ function ResourcesFiltersForm({
             labelId: 'resourcesCatalog.customFiltersTitle',
             items: [
                 {
+                    id: 'my-resources',
+                    labelId: 'resourcesCatalog.myResources',
+                    type: 'filter',
+                    disableIf: '{!state("userrole")}'
+                },
+                {
                     id: 'map',
                     labelId: 'resourcesCatalog.mapsFilter',
                     type: 'filter'
@@ -74,7 +81,8 @@ function ResourcesFiltersForm({
                 {
                     id: 'context',
                     labelId: 'resourcesCatalog.contextsFilter',
-                    type: 'filter'
+                    type: 'filter',
+                    disableIf: '{state("userrole") !== "ADMIN"}'
                 }
             ]
         },
@@ -84,6 +92,11 @@ function ResourcesFiltersForm({
         {
             type: 'select',
             facet: "context"
+        },
+        {
+            type: 'date-range',
+            filterKey: 'creation',
+            labelId: 'resourcesCatalog.creationFilter'
         }
     ],
     monitoredState,
@@ -95,7 +108,8 @@ function ResourcesFiltersForm({
     navbarNodeSelector = '',
     footerNodeSelector = '',
     width,
-    height
+    height,
+    user
 }) {
 
     const { query } = url.parse(location.search, true);
@@ -124,7 +138,7 @@ function ResourcesFiltersForm({
         fields: parsedConfig.fields,
         request: facetsRequest,
         customFilters
-    });
+    }, [user]);
 
     return (
         <TargetSelectorPortal targetSelector={targetSelector}>
@@ -151,6 +165,7 @@ function ResourcesFiltersForm({
 
 const ResourcesGridPlugin = connect(
     createStructuredSelector({
+        user: userSelector,
         location: getRouterLocation,
         monitoredState: getMonitoredStateSelector,
         show: getShowFiltersForm

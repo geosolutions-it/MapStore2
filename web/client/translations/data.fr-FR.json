@@ -4229,6 +4229,7 @@
             "columnFeatured": "En vedette",
             "contactDetails": "Coordonnées",
             "emptyNA": "N/A",
+            "emptyUnknown": "Inconnu",
             "info": "Info",
             "filterByNameOrPermissions": "Filtrer par nom ou autorisations",
             "permissionsName": "Nom",
@@ -4290,6 +4291,11 @@
                 "error404": "Une erreur s'est produite lors de la suppression de la ressource sur le serveur",
                 "error500": "Erreur interne du serveur",
                 "errorDefault": "Erreur réseau"
+            },
+            "myResources": "My resources",
+            "creationFilter": {
+                "from": "Creation date from",
+                "to": "Creation date to"
             }
         }
     }
