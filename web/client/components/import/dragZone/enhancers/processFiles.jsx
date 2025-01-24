@@ -12,7 +12,7 @@ import { compose, createEventHandler, mapPropsStream } from 'recompose';
 import Rx from 'rxjs';
 
 import { isAnnotation, importJSONToAnnotations } from '../../../../plugins/Annotations/utils/AnnotationsUtils';
-import ConfigUtils from '../../../../utils/ConfigUtils';
+import ConfigUtils, { getConfigProp } from '../../../../utils/ConfigUtils';
 import {
     MIME_LOOKUPS,
     checkShapePrj,
@@ -25,7 +25,8 @@ import {
     readZip,
     recognizeExt,
     shpToGeoJSON,
-    readGeoJson
+    readGeoJson,
+    isFileSizeExceedMaxLimit
 } from '../../../../utils/FileUtils';
 import { geoJSONToLayer } from '../../../../utils/LayersUtils';
 
@@ -66,6 +67,17 @@ const checkFileType = (file) => {
 const readFile = (onWarnings) => (file) => {
     const ext = recognizeExt(file.name);
     const type = file.type || MIME_LOOKUPS[ext];
+    // Check the file size first before file conversion process to avoid this useless effort
+    const isVectorFileSizeConfigurable = getConfigProp('importedVectorFileSizeInMB');
+    const isVectorFile = type !== 'application/json';       // skip json as json is for map file
+    if (isVectorFileSizeConfigurable && isVectorFile) {
+        const fileSizeLimitInMB = getConfigProp('importedVectorFileSizeInMB');
+        if (isFileSizeExceedMaxLimit(file, fileSizeLimitInMB)) {
+            // add 'exceedFileMaxSize' and fileSizeLimitInMB into layer object to be used in useFiles
+            return [[{ "type": "FeatureCollection", features: [], "fileName": file.name, exceedFileMaxSize: true, fileSizeLimitInMB }]];
+        }
+    }
+
     const projectionDefs = ConfigUtils.getConfigProp('projectionDefs') || [];
     const supportedProjections = (projectionDefs.length && projectionDefs.map(({code})  => code) || []).concat(["EPSG:4326", "EPSG:3857", "EPSG:900913"]);
     if (type === 'application/vnd.google-earth.kml+xml') {
@@ -193,5 +205,6 @@ export default compose(
                 })
             );
         }
+
     )
 );
