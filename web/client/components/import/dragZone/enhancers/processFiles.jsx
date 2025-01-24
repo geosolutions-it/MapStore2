@@ -68,13 +68,12 @@ const readFile = (onWarnings) => (file) => {
     const ext = recognizeExt(file.name);
     const type = file.type || MIME_LOOKUPS[ext];
     // Check the file size first before file conversion process to avoid this useless effort
-    const isVectorFileSizeConfigurable = getConfigProp('importedVectorFileSizeInMB');
+    const configurableFileSizeLimitInMB = getConfigProp('importedVectorFileSizeInMB');
     const isVectorFile = type !== 'application/json';       // skip json as json is for map file
-    if (isVectorFileSizeConfigurable && isVectorFile) {
-        const fileSizeLimitInMB = getConfigProp('importedVectorFileSizeInMB');
-        if (isFileSizeExceedMaxLimit(file, fileSizeLimitInMB)) {
+    if (configurableFileSizeLimitInMB && isVectorFile) {
+        if (isFileSizeExceedMaxLimit(file, configurableFileSizeLimitInMB)) {
             // add 'exceedFileMaxSize' and fileSizeLimitInMB into layer object to be used in useFiles
-            return [[{ "type": "FeatureCollection", features: [], "fileName": file.name, exceedFileMaxSize: true, fileSizeLimitInMB }]];
+            return [[{ "type": "FeatureCollection", features: [{}], "fileName": file.name, name: file.name, exceedFileMaxSize: true, fileSizeLimitInMB: configurableFileSizeLimitInMB }]];
         }
     }
 
@@ -170,11 +169,19 @@ export default compose(
                             layers: (result.layers || [])
                                 .concat(
                                     jsonObjects.filter(json => isGeoJSON(json))
-                                        .map(json => (isAnnotation(json) ?
-                                            // annotation GeoJSON to layers
-                                            { name: "Annotations", features: importJSONToAnnotations(json), filename: json.filename} :
+                                        .map(json => {
+                                            const isLayerExceedsMaxFileSize = json?.exceedFileMaxSize || false;
+                                            const isAnnotationLayer = isAnnotation(json);
+                                            if (isAnnotationLayer) {
+                                                // annotation GeoJSON to layers
+                                                return { name: "Annotations", features: importJSONToAnnotations(json), filename: json.filename};
+                                            } else if (isLayerExceedsMaxFileSize) {
+                                            // layers with size exceeds the max size limit
+                                                return { ...json, filename: json.filename};
+                                            }
                                             // other GeoJSON to layers
-                                            {...geoJSONToLayer(json), filename: json.filename}))
+                                            return {...geoJSONToLayer(json), filename: json.filename};
+                                        })
                                 ),
                             maps: (result.maps || [])
                                 .concat(

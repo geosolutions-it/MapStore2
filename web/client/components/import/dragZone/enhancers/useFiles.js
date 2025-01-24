@@ -41,7 +41,7 @@ export default compose(
                         layers.forEach((layer) => {
                             const isFileSizeNotValid = !!layer?.exceedFileMaxSize;     // this check is for file size limit for vector layer
                             const valid = layer.type === "vector" ? (checkIfLayerFitsExtentForProjection(layer) && !isFileSizeNotValid) : true;
-                            if (valid) {
+                            if (valid && !isFileSizeNotValid) {
                                 validLayers.push(layer);
                             } else if (isFileSizeNotValid) {
                                 warning({
