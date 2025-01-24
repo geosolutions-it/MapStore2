@@ -68,7 +68,7 @@ const readFile = (onWarnings) => (file) => {
     const ext = recognizeExt(file.name);
     const type = file.type || MIME_LOOKUPS[ext];
     // Check the file size first before file conversion process to avoid this useless effort
-    const configurableFileSizeLimitInMB = getConfigProp('importedVectorFileSizeInMB');
+    const configurableFileSizeLimitInMB = getConfigProp('importedVectorFileMaxSizeInMB');
     const isVectorFile = type !== 'application/json';       // skip json as json is for map file
     if (configurableFileSizeLimitInMB && isVectorFile) {
         if (isFileSizeExceedMaxLimit(file, configurableFileSizeLimitInMB)) {
