@@ -127,7 +127,7 @@ function ResourceDetails({
                     "type": "boolean",
                     "labelId": "resourcesCatalog.columnFeatured",
                     "path": "attributes.featured",
-                    "disableIf": "{!state('resourceCanEdit')}",
+                    "disableIf": "{state('userrole') !== 'ADMIN'}",
                     "editable": true
                 }
             ]

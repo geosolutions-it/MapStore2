@@ -9,6 +9,7 @@
 import { searchListByAttributes, getResource } from '../../../observables/geostore';
 import { castArray } from 'lodash';
 import isString from 'lodash/isString';
+import GeoStoreDAO from '../../../api/GeoStoreDAO';
 
 const splitFilterValue = (value) => {
     const parts = value.split(':');
@@ -29,6 +30,7 @@ const getFilter = ({
     const ctx = castArray(query['filter{ctx.in}'] || []);
     const categories = ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'];
     const creators = castArray(query['filter{creator.in}'] || []);
+    const groups = castArray(query['filter{group.in}'] || []);
     const categoriesFilters = categories.filter(category => f.includes(category.toLocaleLowerCase()));
     const associatedContextFilters = ctx.map((ctxValue) => {
         const { value } = splitFilterValue(ctxValue);
@@ -76,10 +78,17 @@ const getFilter = ({
                     value: [true]
                 }] : [])
             ],
+            ...(groups.length && {
+                GROUP: [
+                    {
+                        operator: ['IN'],
+                        names: groups
+                    }
+                ]
+            }),
             OR: [
                 {
                     AND: categories
-                        .filter(name => name !== 'CONTEXT' || name === 'CONTEXT' && user?.role === 'ADMIN')
                         .map(name => {
                             return (
                                 !categoriesFilters.length && !associatedContextFilters.length
@@ -276,6 +285,44 @@ export const facets = [
                             };
                         }),
                         isNextPageAvailable: (page + 1) < (response?.totalCount / pageSize)
+                    };
+                });
+        }
+    },
+    {
+        id: 'group',
+        type: 'select',
+        labelId: 'resourcesCatalog.groups',
+        key: 'filter{group.in}',
+        getLabelValue: (item) => {
+            return item.value;
+        },
+        getFilterByField: (field, value) => {
+            return { label: value, value };
+        },
+        loadItems: ({ params, config }) => {
+            const { page, pageSize, q } = params;
+            return GeoStoreDAO.getGroups(q ? `*${q}*` : '*', {
+                ...config,
+                params: {
+                    start: parseFloat(page) * pageSize,
+                    limit: pageSize,
+                    all: true
+                }
+            })
+                .then((response) => {
+                    const groups = castArray(response?.ExtGroupList?.Group).map((item) => {
+                        return {
+                            ...item,
+                            filterValue: item.groupName,
+                            value: item.groupName,
+                            label: `${item.groupName}`
+                        };
+                    });
+                    const totalCount = response?.ExtGroupList?.GroupCount;
+                    return {
+                        items: groups,
+                        isNextPageAvailable: (page + 1) < (totalCount / pageSize)
                     };
                 });
         }

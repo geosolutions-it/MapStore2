@@ -43,6 +43,9 @@ describe('resources api', () => {
                                 },
                                 {
                                     "CATEGORY": { "operator": "EQUAL_TO", "name": "GEOSTORY" }
+                                },
+                                {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "CONTEXT" }
                                 }
                             ]
                         }
@@ -80,16 +83,62 @@ describe('resources api', () => {
                 });
                 expect(json).toEqual({
                     "AND": {
-                        "FIELD": { "field": "NAME", "operator": "ILIKE", "value": "%A%" },
-                        "ATTRIBUTE": { "name": "featured", "operator": "EQUAL_TO", "type": "STRING", "value": "true" },
-                        "OR": {
-                            "AND": {
-                                "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" },
-                                "OR": {
-                                    "ATTRIBUTE": { "name": "context", "operator": "EQUAL_TO", "type": "STRING", "value": "contextName" }
-                                }
+                        "FIELD": [
+                            {
+                                "field": "NAME",
+                                "operator": "ILIKE",
+                                "value": "%A%"
+                            },
+                            {
+                                "field": "CREATION",
+                                "operator": "GREATER_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-22T00:00:00"
+                            },
+                            {
+                                "field": "CREATION",
+                                "operator": "LESS_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-24T23:59:59"
+                            },
+                            {
+                                "field": "LASTUPDATE",
+                                "operator": "GREATER_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-22T00:00:00"
+                            },
+                            {
+                                "field": "LASTUPDATE",
+                                "operator": "LESS_THAN_OR_EQUAL_TO",
+                                "value": "2025-01-24T23:59:59"
                             }
-                        }
+                        ],
+                        "ATTRIBUTE": { "name": "featured", "operator": "EQUAL_TO", "type": "STRING", "value": "true" },
+                        "GROUP": {
+                            "operator": 'IN',
+                            "names": "group01"
+                        },
+                        "OR": [
+                            {
+                                "AND": {
+                                    "CATEGORY": { "operator": "EQUAL_TO", "name": "MAP" },
+                                    "OR": {
+                                        "ATTRIBUTE": { "name": "context", "operator": "EQUAL_TO", "type": "STRING", "value": "contextName" }
+                                    }
+                                }
+                            },
+                            {
+                                "FIELD": [
+                                    {
+                                        "field": "CREATOR",
+                                        "operator": "EQUAL_TO",
+                                        "value": "admin"
+                                    },
+                                    {
+                                        "field": "CREATOR",
+                                        "operator": "EQUAL_TO",
+                                        "value": "creator"
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 });
             } catch (e) {
@@ -104,13 +153,19 @@ describe('resources api', () => {
         });
         requestResources({
             params: {
-                page: 2,
-                pageSize: 24,
-                f: ['map', 'featured'],
-                q: 'A',
-                'filter{ctx.in}': ['contextName']
+                'page': 2,
+                'pageSize': 24,
+                'f': ['map', 'featured', 'my-resources'],
+                'q': 'A',
+                'filter{ctx.in}': ['contextName'],
+                'filter{group.in}': ['group01'],
+                'filter{creator.in}': ['creator'],
+                'filter{creation.gte}': '2025-01-22T00:00:00',
+                'filter{creation.lte}': '2025-01-24T23:59:59',
+                'filter{lastUpdate.gte}': '2025-01-22T00:00:00',
+                'filter{lastUpdate.lte}': '2025-01-24T23:59:59'
             }
-        })
+        }, { user: { name: 'admin' } })
             .then((response) => {
                 expect(response).toEqual({
                     total: 0,

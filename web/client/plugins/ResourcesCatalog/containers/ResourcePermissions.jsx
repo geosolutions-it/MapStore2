@@ -18,25 +18,17 @@ import Icon from '../components/Icon';
 import Message from '../../../components/I18N/Message';
 import useIsMounted from '../hooks/useIsMounted';
 import Spinner from '../components/Spinner';
+import { castArray } from 'lodash';
 
 function ResourcePermissions({
     editing,
-    user,
     resource,
     onChange
 }) {
 
-    const [availableGroups, setGroups] = useState([]);
     const [loading, setLoading] = useState(false);
     const init = useRef(false);
     const isMounted = useIsMounted();
-
-    useEffect(() => {
-        GeoStoreDAO.getAvailableGroups(user)
-            .then((response) => isMounted(() => {
-                setGroups(response);
-            }));
-    }, [user]);
 
     useEffect(() => {
         if (resource?.permissions === undefined && !init.current) {
@@ -128,11 +120,33 @@ function ResourcePermissions({
                 {
                     id: 'group',
                     labelId: 'resourcesCatalog.groups',
-                    request: ({ q }) => {
-                        return Promise.resolve(availableGroups.filter(group => (group?.groupName || '').toLowerCase().includes(q.toLowerCase())));
+                    request: ({ q, page: pageParam, pageSize }) => {
+                        const page = pageParam - 1;
+                        return GeoStoreDAO.getGroups(q ? `*${q}*` : '*', {
+                            params: {
+                                start: parseFloat(page) * pageSize,
+                                limit: pageSize,
+                                all: true
+                            }
+                        })
+                            .then((response) => {
+                                const groups = castArray(response?.ExtGroupList?.Group).map((item) => {
+                                    return {
+                                        ...item,
+                                        filterValue: item.groupName,
+                                        value: item.groupName,
+                                        label: `${item.groupName}`
+                                    };
+                                });
+                                const totalCount = response?.ExtGroupList?.GroupCount;
+                                return {
+                                    groups,
+                                    isNextPageAvailable: (page + 1) < (totalCount / pageSize)
+                                };
+                            });
                     },
                     responseToEntries: ({ response, entries }) => {
-                        return response.map((group) => {
+                        return response.groups.map((group) => {
                             const permissions = (entries || []).find(entry => entry.id === group.id)?.permissions;
                             return {
                                 type: 'group',

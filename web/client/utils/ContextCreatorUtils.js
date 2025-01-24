@@ -30,18 +30,20 @@ export const migrateContextConfiguration = (context) => {
     };
     return {
         ...context,
-        plugins: Object.fromEntries(Object.keys(context.plugins)
-            .map((key) => {
-                const plugins = context.plugins[key];
-                return [key, plugins.map((plugin) => {
-                    if (changedPluginsNames[plugin.name]) {
-                        return {
-                            ...plugin,
-                            name: changedPluginsNames[plugin.name]
-                        };
-                    }
-                    return plugin;
-                })];
-            }))
+        ...(context?.plugins && {
+            plugins: Object.fromEntries(Object.keys(context.plugins)
+                .map((key) => {
+                    const plugins = context.plugins[key];
+                    return [key, plugins.map((plugin) => {
+                        if (changedPluginsNames[plugin.name]) {
+                            return {
+                                ...plugin,
+                                name: changedPluginsNames[plugin.name]
+                            };
+                        }
+                        return plugin;
+                    })];
+                }))
+        })
     };
 };

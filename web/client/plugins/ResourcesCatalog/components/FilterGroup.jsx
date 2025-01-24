@@ -31,7 +31,7 @@ const Title = ({
 };
 
 const FilterGroup = ({
-    items,
+    items: itemsProp,
     loadItems,
     title,
     titleId,
@@ -43,11 +43,13 @@ const FilterGroup = ({
 }) => {
     const isMounted = useIsMounted();
 
-    const [groupItems, setGroupItems] = useState(items);
+    const [groupItems, setGroupItems] = useState(itemsProp);
     const [loading, setLoading] = useState(false);
 
+    const shouldRequestItems = loadItems && typeof loadItems === 'function';
+
     useEffect(() => {
-        if (loadItems && typeof loadItems === 'function') {
+        if (shouldRequestItems) {
             if (!loading) {
                 setLoading(true);
                 loadItems({ page_size: 999999 })
@@ -57,7 +59,10 @@ const FilterGroup = ({
                     .finally(()=> isMounted(() => setLoading(false)));
             }
         }
-    }, [JSON.stringify(query)]);
+    }, [JSON.stringify(query), shouldRequestItems]);
+
+    // avoid to use groupItems when not async to get the latest updated items
+    const items = shouldRequestItems ? groupItems : itemsProp;
 
     return (
         <FlexBox classNames={['ms-filter-group']} column gap="sm">
@@ -69,7 +74,7 @@ const FilterGroup = ({
             <FlexBox column gap="sm" classNames={root ? ['_padding-l-sm'] : []}>
                 {loading ?
                     <Message msgId={loadingItemsMsgId}/>
-                    : !isEmpty(groupItems) ? content(groupItems)
+                    : !isEmpty(items) ? content(items)
                         : !loading ? <Message msgId={noItemsMsgId}/> : null
                 }
             </FlexBox>

@@ -81,13 +81,17 @@ function ResourcesFiltersForm({
                 {
                     id: 'context',
                     labelId: 'resourcesCatalog.contextsFilter',
-                    type: 'filter',
-                    disableIf: '{state("userrole") !== "ADMIN"}'
+                    type: 'filter'
                 }
             ]
         },
         {
             type: 'divider'
+        },
+        {
+            type: 'select',
+            facet: "group",
+            disableIf: '{!state("userrole")}'
         },
         {
             type: 'select',
