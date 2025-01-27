@@ -10,15 +10,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { getAuthKeyParameter, getAuthenticationMethod, getToken } from '../../utils/SecurityUtils';
-
-// TODO: move to utils
-function appendParamToUrl(url, paramKey, paramValue) {
-    // Check if the URL already has query parameters
-    const delimiter = url.includes('?') ? '&' : '?';
-
-    // If there's already a query string, append the new parameter; otherwise, start a new query string
-    return `${url}${delimiter}${encodeURIComponent(paramKey)}=${encodeURIComponent(paramValue)}`;
-}
+import { updateUrlParams } from '../../utils/URLUtils';
 
 
 const SecureImage = ({
@@ -55,7 +47,7 @@ const SecureImage = ({
             const authParam = getAuthKeyParameter(src);
             const token = getToken();
             if (authParam && token) {
-                const newSrc = appendParamToUrl(src, authParam, token);
+                const newSrc = updateUrlParams(src, {[authParam]: token});
                 setImageSrc(newSrc);
             } else {
                 setImageSrc(src);
