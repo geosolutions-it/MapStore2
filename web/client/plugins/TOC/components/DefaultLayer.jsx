@@ -75,7 +75,9 @@ const DefaultLayerNode = ({
     visibilityCheck,
     nodeIcon
 }) => {
-
+    const forceExpanded = config?.expanded !== undefined;
+    const expanded = forceExpanded ? config?.expanded : node?.expanded;
+    const visible = expanded;
     const getContent = () => {
 
         // currently the only content of the layer is the legend
@@ -91,9 +93,12 @@ const DefaultLayerNode = ({
                 ? (
                     <>
                         <li>
-                            <VectorLegend
+                            {visible ? <VectorLegend
                                 style={node?.style}
-                            />
+                                layer={node}
+                                interactive
+                                onChange={onChange}
+                            /> : null}
                         </li>
                     </>
                 )
@@ -110,6 +115,7 @@ const DefaultLayerNode = ({
                             language={config?.language}
                             {...config?.layerOptions?.legendOptions}
                             onChange={onChange}
+                            interactive
                         />
                     </li>
                 </>
@@ -129,8 +135,6 @@ const DefaultLayerNode = ({
         return null;
     };
 
-    const forceExpanded = config?.expanded !== undefined;
-    const expanded = forceExpanded ? config?.expanded : node?.expanded;
     const content = getContent(error);
 
     const componentProps = {

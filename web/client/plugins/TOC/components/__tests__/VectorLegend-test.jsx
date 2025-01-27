@@ -10,16 +10,157 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import expect from 'expect';
 import VectorLegend from '../VectorLegend';
+import { INTERACTIVE_LEGEND_ID } from '../../../../utils/LegendUtils';
+import { setConfigProp } from '../../../../utils/ConfigUtils';
 
+const rules = [
+    {
+        "name": ">= 0 and < 0.6",
+        "filter": [
+            "&&",
+            [
+                ">=",
+                "priority",
+                0
+            ],
+            [
+                "<",
+                "priority",
+                0.6
+            ]
+        ],
+        "symbolizers": [
+            {
+                "kind": "Fill",
+                "color": "#fff7ec",
+                "fillOpacity": 1,
+                "outlineColor": "#777777",
+                "outlineWidth": 1,
+                "msClassificationType": "both",
+                "msClampToGround": true
+            }
+        ]
+    },
+    {
+        "name": ">= 0.6 and < 1.2",
+        "filter": [
+            "&&",
+            [
+                ">=",
+                "priority",
+                0.6
+            ],
+            [
+                "<",
+                "priority",
+                1.2
+            ]
+        ],
+        "symbolizers": [
+            {
+                "kind": "Fill",
+                "color": "#fdd49e",
+                "fillOpacity": 1,
+                "outlineColor": "#777777",
+                "outlineWidth": 1,
+                "msClassificationType": "both",
+                "msClampToGround": true
+            }
+        ]
+    },
+    {
+        "name": ">= 1.2 and < 1.7999999999999998",
+        "filter": [
+            "&&",
+            [
+                ">=",
+                "priority",
+                1.2
+            ],
+            [
+                "<",
+                "priority",
+                1.7999999999999998
+            ]
+        ],
+        "symbolizers": [
+            {
+                "kind": "Fill",
+                "color": "#fc8d59",
+                "fillOpacity": 1,
+                "outlineColor": "#777777",
+                "outlineWidth": 1,
+                "msClassificationType": "both",
+                "msClampToGround": true
+            }
+        ]
+    },
+    {
+        "name": ">= 1.7999999999999998 and < 2.4",
+        "filter": [
+            "&&",
+            [
+                ">=",
+                "priority",
+                1.7999999999999998
+            ],
+            [
+                "<",
+                "priority",
+                2.4
+            ]
+        ],
+        "symbolizers": [
+            {
+                "kind": "Fill",
+                "color": "#d7301f",
+                "fillOpacity": 1,
+                "outlineColor": "#777777",
+                "outlineWidth": 1,
+                "msClassificationType": "both",
+                "msClampToGround": true
+            }
+        ]
+    },
+    {
+        "name": ">= 2.4 and <= 3",
+        "filter": [
+            "&&",
+            [
+                ">=",
+                "priority",
+                2.4
+            ],
+            [
+                "<=",
+                "priority",
+                3
+            ]
+        ],
+        "symbolizers": [
+            {
+                "kind": "Fill",
+                "color": "#7f0000",
+                "fillOpacity": 1,
+                "outlineColor": "#777777",
+                "outlineWidth": 1,
+                "msClassificationType": "both",
+                "msClampToGround": true
+            }
+        ]
+    }
+];
 describe('VectorLegend module component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
 
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById('container'));
         document.body.innerHTML = '';
+        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
 
@@ -313,5 +454,75 @@ describe('VectorLegend module component', () => {
         const ruleElements = document.querySelectorAll('.ms-legend-rule');
         const textElement = ruleElements[0].getElementsByTagName('span');
         expect(textElement[0].innerHTML).toBe('');
+    });
+    it('tests legend with empty rules', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wfs',
+            url: 'http://localhost:8080/geoserver1/wfs',
+            style: {format: 'geostyler', body: {rules: []}}
+        };
+
+        ReactDOM.render(<VectorLegend style={{format: 'geostyler',
+            body: {rules: []}}} layer={l} />, document.getElementById("container"));
+        const legendElem = document.querySelector('.ms-legend');
+        expect(legendElem).toBeTruthy();
+        expect(legendElem.innerText).toBe('layerProperties.interactiveLegend.noLegendData');
+    });
+    it('tests legend with incompatible filter rules', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wfs',
+            url: 'http://localhost:8080/geoserver2/wfs',
+            enableInteractiveLegend: true,
+            layerFilter: {
+                filters: [{
+                    id: INTERACTIVE_LEGEND_ID,
+                    filters: [{
+                        id: 'filter1'
+                    }]
+                }],
+                disabled: false
+            }
+        };
+        ReactDOM.render(<VectorLegend interactive style={{format: 'geostyler', body: {rules: rules}}} layer={l} />, document.getElementById("container"));
+        const legendElem = document.querySelector('.ms-legend');
+        expect(legendElem).toBeTruthy();
+        const legendRuleElem = document.querySelector('.ms-legend .alert-warning');
+        expect(legendRuleElem).toBeTruthy();
+        expect(legendRuleElem.innerText).toContain('layerProperties.interactiveLegend.incompatibleWFSFilterWarning');
+        const resetLegendFilter = document.querySelector('.ms-legend .alert-warning button');
+        expect(resetLegendFilter).toBeTruthy();
+    });
+    it('tests hide warning when layer filter is disabled', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wfs',
+            url: 'http://localhost:8080/geoserver3/wfs',
+            layerFilter: {
+                filters: [{
+                    id: INTERACTIVE_LEGEND_ID,
+                    filters: [{
+                        id: 'filter1'
+                    }]
+                }],
+                disabled: true
+            }
+        };
+
+        ReactDOM.render(<VectorLegend style={{format: 'geostyler', body: {rules: rules}}} layer={l} />, document.getElementById("container"));
+        const legendElem = document.querySelector('.ms-legend');
+        expect(legendElem).toBeTruthy();
+        const legendRuleElem = document.querySelector('.ms-legend .alert-warning');
+        expect(legendRuleElem).toBeFalsy();
     });
 });

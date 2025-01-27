@@ -1369,6 +1369,76 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
     return newFilter;
 };
 
+/**
+ * Merges legend geostyler filter, with mapstore filter objects to filters
+ * @param {object} layerFilterObj previous layer filter object includes all filters
+ * @param {array} legendGeostylerFilter geostyler filter
+ * @return {object} layerFilterObj updated the layer filter object
+ */
+export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostylerFilter) => {
+    const defaultLayerFilter = {
+        groupFields: [
+            {
+                id: 1,
+                logic: 'OR',
+                index: 0
+            }
+        ],
+        filterFields: [],
+        attributePanelExpanded: true,
+        spatialPanelExpanded: true,
+        crossLayerExpanded: true,
+        crossLayerFilter: {
+            attribute: 'the_geom'
+        },
+        spatialField: {
+            method: null,
+            operation: 'INTERSECTS',
+            geometry: null,
+            attribute: 'the_geom'
+        }
+    };
+    let filterObj = {...defaultLayerFilter, ...layerFilterObj};
+    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
+    if (!legendGeostylerFilter) {
+        // clear legend filter with id = 'interactiveLegend'
+        if (isLegendFilterExist) {
+            filterObj = {
+                ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
+            };
+        }
+        let newFilter = filterObj ? filterObj : undefined;
+        return newFilter;
+    }
+    let interactiveLegendFilters = isLegendFilterExist ? isLegendFilterExist.filters || [] : [];
+
+    const isSelectedFilterExist = interactiveLegendFilters.find(legFilter => legFilter.body?.toString() === legendGeostylerFilter?.toString());
+    if (isSelectedFilterExist) {
+        interactiveLegendFilters = interactiveLegendFilters.filter(legFilter => legFilter.body?.toString() !== legendGeostylerFilter?.toString());
+    } else {
+        interactiveLegendFilters = [...interactiveLegendFilters, {
+            "format": "geostyler",
+            "version": "1.0.0",
+            "body": legendGeostylerFilter,
+            "id": `${legendGeostylerFilter?.toString()}`
+        }];
+    }
+    let newFilter = {
+        ...(filterObj || {}), filters: [
+            ...(filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID) || []), ...[
+                {
+                    "id": INTERACTIVE_LEGEND_ID,
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [...interactiveLegendFilters]
+                }
+            ]
+        ]
+    };
+    return newFilter;
+};
+
 export function resetLayerLegendFilter(layer, reason, value) {
     const isResetForStyle = reason === 'style';      // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
     let needReset = false;
@@ -1415,6 +1485,5 @@ FilterUtils = {
     processOGCSpatialFilter,
     createFeatureFilter,
     mergeFiltersToOGC,
-    convertFiltersToOGC,
-    INTERACTIVE_LEGEND_ID
+    convertFiltersToOGC
 };
