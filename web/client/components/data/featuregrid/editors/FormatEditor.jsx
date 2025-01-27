@@ -23,7 +23,8 @@ export default class FormatEditor extends React.Component {
         dataType: PropTypes.string,
         column: PropTypes.object,
         formatRegex: PropTypes.string,
-        onTemporaryChanges: PropTypes.func
+        onTemporaryChanges: PropTypes.func,
+        disabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -61,6 +62,7 @@ export default class FormatEditor extends React.Component {
     render() {
         return (<input
             {...this.props.inputProps}
+            disabled={this.props?.disabled}
             style={!this.state.validated || this.state.isValid ? {} : {
                 borderColor: 'red'
             }}

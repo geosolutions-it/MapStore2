@@ -13,7 +13,7 @@ import PagedCombobox from './PagedCombobox';
 // state enhancer for local props
 import addState from './addState';
 
-const ControlledCombobox = addState(({ toggle, select, focus, change, value, busy, data, loading = false, filter, open }) => {
+const ControlledCombobox = addState(({ toggle, select, focus, change, value, busy, data, loading = false, filter, open, disabled }) => {
     return (<PagedCombobox
         pagination={{paginated: false}}
         onFocus={focus}
@@ -27,6 +27,7 @@ const ControlledCombobox = addState(({ toggle, select, focus, change, value, bus
         open={open}
         loading={loading}
         filter={filter}
+        disabled={disabled}
     />);
 });
 
