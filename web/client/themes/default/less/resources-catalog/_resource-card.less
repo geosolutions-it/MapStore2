@@ -1,0 +1,85 @@
+
+// **************
+// Theme
+// **************
+
+#ms-components-theme(@theme-vars) {
+    .ms-resources-list-header-divider {
+        .background-color-var(@theme-vars[main-border-color]);
+        &:hover,
+        &.selected {
+            .background-color-var(@theme-vars[main-color]);
+        }
+    }
+}
+
+// **************
+// Layout
+// **************
+
+.ms-resource-card {
+    > div a {
+        position: relative;
+    }
+    .fa, .glyphicon {
+        cursor: default;
+    }
+    button {
+        .fa, .glyphicon {
+            cursor: pointer;
+        }
+    }
+}
+
+.ms-resource-card-type-grid {
+    &:hover {
+        .ms-resource-card-action-buttons {
+            .dropdown:not(.open) {
+                opacity: 1;
+            }
+        }
+    }
+    .ms-resource-card-action-buttons {
+        .dropdown {
+            transition: all .2s ease-in-out;
+            border-radius: 0.25rem;
+            &:not(.open) {
+                opacity: 0;
+            }
+            &.open {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.ms-resource-card-img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+}
+
+.ms-resource-card-limit {
+    width: 1.5rem;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ms-resources-list-header {
+    &:has(.selected) {
+        cursor: ew-resize;
+    }
+}
+
+.ms-resources-list-header-divider {
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    &.selected,
+    &:hover {
+        width: 2px;
+        cursor: ew-resize;
+    }
+}

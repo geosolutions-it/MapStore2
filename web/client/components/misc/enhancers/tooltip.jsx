@@ -23,6 +23,7 @@ import { omit } from 'lodash';
  * @prop {string} [tooltipId] if present will show a localized tooltip using the tooltipId as msgId
  * @prop {string} [tooltipPosition="top"]
  * @prop {string} tooltipTrigger see react overlay trigger
+ * @prop {object} tooltipParams parameter to pass to the tooltip message id
  * @example
  * render() {
  *   const Cmp = tooltip((props) =><El {...props}></El>); // or simply tooltip(El);
@@ -32,12 +33,12 @@ import { omit } from 'lodash';
  */
 export default branch(
     ({tooltip, tooltipId} = {}) => tooltip || tooltipId,
-    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, args, ...props} = {}) => (<OverlayTrigger
+    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, idDropDown, tooltipParams, args, ...props} = {}) => (<OverlayTrigger
         trigger={tooltipTrigger}
         id={idDropDown}
         key={keyProp}
         placement={tooltipPosition}
-        overlay={<Tooltip id={"tooltip-" + keyProp}>{tooltipId ? <Message msgId={tooltipId} msgParams={{data: args}} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),
+        overlay={<Tooltip id={"tooltip-" + keyProp}>{tooltipId ? <Message msgId={tooltipId} msgParams={{data: args, ...tooltipParams}} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>),
     // avoid to pass non needed props
-    (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip", "tooltipPosition"]))}>{props.children}</Wrapped>
+    (Wrapped) => (props) => <Wrapped {...(omit(props, ["tooltipId", "tooltip", "tooltipPosition", "tooltipParams"]))}>{props.children}</Wrapped>
 );

@@ -9,7 +9,8 @@ import expect from 'expect';
 
 import {
     makePlugins,
-    flattenPluginTree
+    flattenPluginTree,
+    migrateContextConfiguration
 } from '../ContextCreatorUtils';
 
 describe('Test the ContextCreatorUtils', () => {
@@ -20,5 +21,17 @@ describe('Test the ContextCreatorUtils', () => {
     it('flattenPluginTree', () => {
         const plugins = flattenPluginTree([{ name: 'Map', enabled: true, children: [ { name: 'MapSupport' } ] }]);
         expect(plugins).toEqual([ { name: 'Map', enabled: true }, { name: 'MapSupport' } ]);
+    });
+    it('migrateContextConfiguration', () => {
+        const newContext = migrateContextConfiguration({
+            plugins: {
+                desktop: [{ name: 'Map' }, { name: 'DeleteMap' }]
+            }
+        });
+        expect(newContext).toEqual({
+            plugins: {
+                desktop: [{ name: 'Map' }, { name: 'DeleteResource' }]
+            }
+        });
     });
 });

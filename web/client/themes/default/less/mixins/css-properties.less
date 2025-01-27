@@ -108,3 +108,10 @@
     font-family: @fallback if(@important, ~'!important', );
     font-family: var(@value, @fallback) if(@important, ~'!important', );
 }
+
+.text-decoration-color-var(@var; @important: false;) {
+    @value: extract(@var, 1);
+    @fallback: extract(@var, 2);
+    text-decoration-color: @fallback if(@important, ~'!important', );
+    text-decoration-color: var(@value, @fallback) if(@important, ~'!important', );
+}

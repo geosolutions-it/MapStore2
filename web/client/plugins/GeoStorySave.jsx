@@ -65,6 +65,7 @@ const SaveBaseDialog = compose(
 
 /**
  * Implements "save" button for geostories, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @deprecated
  * @class
  * @name GeoStorySave
  * @memberof plugins

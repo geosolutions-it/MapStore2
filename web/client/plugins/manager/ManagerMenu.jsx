@@ -43,8 +43,7 @@ class ManagerMenu extends React.Component {
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         enableRulesManager: PropTypes.bool,
-        enableImporter: PropTypes.bool,
-        enableContextManager: PropTypes.bool
+        enableImporter: PropTypes.bool
     };
 
     static contextTypes = {
@@ -58,11 +57,6 @@ class ManagerMenu extends React.Component {
             "msgId": "users.title",
             "glyph": "1-group-mod",
             "path": "/manager/usermanager"
-        },
-        {
-            "msgId": "contextManager.title",
-            "glyph": "wrench",
-            "path": "/context-manager"
         },
         {
             "msgId": "rulesmanager.menutitle",
@@ -86,8 +80,7 @@ class ManagerMenu extends React.Component {
             position: "absolute",
             overflow: "auto"
         },
-        panelClassName: "toolbar-panel",
-        enableContextManager: false
+        panelClassName: "toolbar-panel"
     };
 
     getTools = () => {
@@ -96,7 +89,6 @@ class ManagerMenu extends React.Component {
         ...this.props.entries
             .filter(e => this.props.enableRulesManager || e.path !== "/rules-manager")
             .filter(e => this.props.enableImporter || e.path !== "/importer")
-            .filter(e => this.props.enableContextManager || e.path !== "/context-manager")
             .sort((a, b) => a.position - b.position).map((entry) => {
                 return {
                     action: (context) => {
@@ -121,7 +113,7 @@ class ManagerMenu extends React.Component {
     render() {
         if (this.props.role === "ADMIN") {
             return (
-                <ToolsContainer id={this.props.id} className="square-button"
+                <ToolsContainer id={this.props.id} className="square-button-md"
                     container={Container}
                     toolStyle="primary"
                     activeStyle="default"
@@ -145,7 +137,6 @@ const RULE_MANAGER_ID = 'rulesmanager';
  * @memberof plugins
  * @name ManagerMenu
  * @class
- * @prop {boolean} cfg.enableContextManager: enable context manager menu entry, default `true`
  */
 export default {
     ManagerMenuPlugin: assign(connect((state) => ({
@@ -161,6 +152,11 @@ export default {
             position: 1,
             tool: true,
             priority: 1
+        },
+        BrandNavbar: {
+            target: 'right-menu',
+            position: 3,
+            priority: 3
         }
     }),
     reducers: {}

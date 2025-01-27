@@ -20,3 +20,30 @@ export const makePlugins = (plugins = []) =>
  */
 export const flattenPluginTree = (plugins = []) =>
     flatten(plugins.map(plugin => [omit(plugin, 'children')].concat(plugin.enabled ? flattenPluginTree(plugin.children) : [])));
+/**
+ * @param {object} context context configuration
+ * @returns update context configuration based on plugins updates or changes (eg. rename of plugins)
+ */
+export const migrateContextConfiguration = (context) => {
+    const changedPluginsNames = {
+        'DeleteMap': 'DeleteResource'
+    };
+    return {
+        ...context,
+        ...(context?.plugins && {
+            plugins: Object.fromEntries(Object.keys(context.plugins)
+                .map((key) => {
+                    const plugins = context.plugins[key];
+                    return [key, plugins.map((plugin) => {
+                        if (changedPluginsNames[plugin.name]) {
+                            return {
+                                ...plugin,
+                                name: changedPluginsNames[plugin.name]
+                            };
+                        }
+                        return plugin;
+                    })];
+                }))
+        })
+    };
+};

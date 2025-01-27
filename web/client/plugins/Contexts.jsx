@@ -186,6 +186,7 @@ const ContextsPlugin = compose(
 /**
  * Plugin for context resources browsing.
  * Can be rendered inside {@link #plugins.ContentTabs|ContentTabs} plugin
+ * @deprecated
  * @name Contexts
  * @memberof plugins
  * @class

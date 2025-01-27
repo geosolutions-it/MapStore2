@@ -17,6 +17,7 @@ import {INIT, SET_CREATION_STEP, SET_WAS_TUTORIAL_SHOWN, SET_TUTORIAL_STEP, MAP_
     REMOVE_PLUGIN_TO_UPLOAD, PLUGIN_UPLOADED, UNINSTALLING_PLUGIN, UNINSTALL_PLUGIN_ERROR, PLUGIN_UNINSTALLED,
     BACK_TO_PAGE_SHOW_CONFIRMATION, SET_SELECTED_THEME, ON_TOGGLE_CUSTOM_VARIABLES, LOAD_CONTEXT} from "../actions/contextcreator";
 import {set} from '../utils/ImmutableUtils';
+import { migrateContextConfiguration } from '../utils/ContextCreatorUtils';
 
 
 const defaultPlugins = [
@@ -205,7 +206,10 @@ export default (state = {}, action) => {
     }
     case SET_RESOURCE: {
         const {data = {plugins: {desktop: []}}, ...resource} = action.resource || {};
-        const {plugins = {desktop: []}, userPlugins = [], templates = [], theme, customVariablesEnabled, ...otherData} = data;
+
+        const migratedData = migrateContextConfiguration(data);
+
+        const {plugins = {desktop: []}, userPlugins = [], templates = [], theme, customVariablesEnabled, ...otherData} = migratedData;
         const contextPlugins = get(plugins, 'desktop', []);
 
         const allPlugins = makePluginTree(get(action.pluginsConfig, 'plugins'), ConfigUtils.getConfigProp('plugins'));

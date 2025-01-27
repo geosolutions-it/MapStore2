@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 
 /**
  * Fork Ribbon that links to MapStore GitHub repository
+ * @deprecated
  * @memberof plugins
  * @prop {string} src image source
  * @class

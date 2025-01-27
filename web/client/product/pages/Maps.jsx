@@ -17,8 +17,6 @@ import {loadMaps} from '../../actions/maps';
 import Page from '../../containers/Page';
 import ConfigUtils from '../../utils/ConfigUtils';
 
-import("../assets/css/maps.css");
-
 const urlQuery = url.parse(window.location.href, true).query;
 
 /**

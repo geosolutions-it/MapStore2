@@ -44,7 +44,7 @@ import { scrollIntoViewId } from '../../utils/DOMUtil';
  *           }
  * }
  * ```
- *
+ * @deprecated
  * @memberof plugins
  * @name NavMenu
  * @class

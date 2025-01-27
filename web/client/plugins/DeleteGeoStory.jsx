@@ -19,7 +19,10 @@ import { deleteGeostory } from '../actions/geostories';
 import { geostoryIdSelector, deleteDialogSelector, resourceSelector } from '../selectors/geostory';
 import { isLoggedIn } from '../selectors/security';
 import Message from '../components/I18N/Message';
-
+/**
+ * @deprecated
+ *
+ */
 class DeleteConfirmDialog extends React.Component {
 
     static propTypes = {

@@ -41,6 +41,7 @@ class Attribution extends React.Component {
 /**
  * Renders the logo of GeoSolutions in the {@link #plugins.NavMenu|NavMenu}
  * @name Attribution
+ * @deprecated
  * @class
  * @memberof plugins
  * @prop {string} [label='GeoSolutions'] the tooltip for the logo

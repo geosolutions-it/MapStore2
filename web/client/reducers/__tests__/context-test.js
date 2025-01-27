@@ -28,7 +28,7 @@ describe('context reducer', () => {
     it('loadContext', () => {
         const CONTEXT = {};
         const state = stateMocker(setContext(CONTEXT));
-        expect(currentContextSelector(state)).toBe(CONTEXT);
+        expect(currentContextSelector(state)).toEqual(CONTEXT);
     });
     it('setResource', () => {
         const RESOURCE = {};

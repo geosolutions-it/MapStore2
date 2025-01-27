@@ -17,6 +17,7 @@ import ConfigUtils from '../utils/ConfigUtils';
 import { getMonitoredState } from '../utils/PluginsUtils';
 import ModulePluginsContainer from "../product/pages/containers/ModulePluginsContainer";
 import { createShallowSelectorCreator } from '../utils/ReselectUtils';
+import BorderLayout from '../components/layout/BorderLayout';
 
 const PluginsContainer = connect(
     createShallowSelectorCreator(isEqual)(
@@ -43,7 +44,8 @@ class MapViewer extends React.Component {
         loadMapConfig: PropTypes.func,
         plugins: PropTypes.object,
         loaderComponent: PropTypes.func,
-        onLoaded: PropTypes.func
+        onLoaded: PropTypes.func,
+        component: PropTypes.any
     };
 
     static defaultProps = {
@@ -64,6 +66,7 @@ class MapViewer extends React.Component {
             params={this.props.params}
             loaderComponent={this.props.loaderComponent}
             onLoaded={this.props.onLoaded}
+            component={this.props.component || BorderLayout}
         />);
     }
 }

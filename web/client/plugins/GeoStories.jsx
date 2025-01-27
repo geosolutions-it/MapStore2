@@ -34,6 +34,7 @@ const geostoriesCountSelector = createSelector(
 /**
  * Plugin for browsing GeoStory resources. Can render in {@link #plugins.ContentTabs|ContentTabs}
  * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
+ * @deprecated
  * @name Geostories
  * @class
  * @memberof plugins

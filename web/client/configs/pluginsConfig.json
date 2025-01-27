@@ -514,7 +514,7 @@
       ]
     },
     {
-      "name": "DeleteMap",
+      "name": "DeleteResource",
       "glyph": "trash",
       "title": "plugins.DeleteMap.title",
       "hidden": false,

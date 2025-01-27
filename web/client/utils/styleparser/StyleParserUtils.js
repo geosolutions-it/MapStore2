@@ -40,7 +40,7 @@ import isObject from 'lodash/isObject';
 import MarkerUtils from '../MarkerUtils';
 import {randomInt} from '../RandomUtils';
 import { getConfigProp } from '../ConfigUtils';
-
+import { loadFontAwesome } from '../FontUtils';
 
 export const isGeoStylerBooleanFunction = (got) => [
     'between',
@@ -858,23 +858,6 @@ export const parseSymbolizerExpressions = (symbolizer, feature) => {
             ? expressionsUtils.evaluateFunction(symbolizer[key], feature)
             : symbolizer[key]
     }), {});
-};
-
-let fontAwesomeLoaded = false;
-const loadFontAwesome = () => {
-    if (fontAwesomeLoaded) {
-        return Promise.resolve();
-    }
-    // async load of font awesome
-    return import('font-awesome/css/font-awesome.min.css')
-        .then(() => {
-            // ensure the font is loaded
-            return document.fonts.load('1rem FontAwesome')
-                .then(() => {
-                    fontAwesomeLoaded = true;
-                    return fontAwesomeLoaded;
-                });
-        });
 };
 
 /**
