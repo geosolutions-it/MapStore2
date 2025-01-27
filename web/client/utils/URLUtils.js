@@ -129,3 +129,17 @@ export const isValidURLTemplate = (url, params, regexp = /^(http(s{0,1}):\/\/)+?
 export const getDefaultUrl = (url) => {
     return isArray(url) ? url[0] : url;
 };
+
+/**
+ * Updates the given URL by adding or updating query parameters.
+ *
+ * @param {string} url - The source URL.
+ * @param {Object} params - The parameters to add or update.
+ * @returns {string} - The updated URL with new query parameters.
+ */
+export function updateUrlParams(url, params) {
+    const parsedUrl = queryString.parseUrl(url);
+    const updatedQuery = { ...parsedUrl?.query, ...params };
+    // TODO: use stringifyUrl instead after updating `query-string`, not supported in current version
+    return parsedUrl?.url + '?' + queryString.stringify(updatedQuery);
+}
