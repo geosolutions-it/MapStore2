@@ -1425,7 +1425,8 @@
         "fileNotSupported": "File not supported",
         "unknownError": "there was an unknown error during import",
         "projectionNotSupported": "The projection of the file(s) you're trying to import is not supported",
-        "fileBeyondBoundaries": "The file  {filename} cannot be imported because it does not fit the map boundaries"
+        "fileBeyondBoundaries": "The file  {filename} cannot be imported because it does not fit the map boundaries",
+        "exceedFileSizeLimit": "The file {filename} you're trying to import is exceeded the max file size limit {maxfilesize} MB"
       }
     },
     "mapExport": {

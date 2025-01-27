@@ -180,3 +180,15 @@ export const checkShapePrj = function(buffer) {
         });
     });
 };
+
+/**
+ * Checks if the file size exceeds the size limit or not. Returns true if exceeding the limit and false if not.
+ */
+export const isFileSizeExceedMaxLimit = (file, fileSizeLimitInMb) => {
+    const fileSizeLimitInByte = fileSizeLimitInMb * 1024 * 1024;
+    const fileSizeInBype = file.size;
+    if (fileSizeInBype <= fileSizeLimitInByte) {
+        return false;
+    }
+    return true;
+};

@@ -1547,7 +1547,8 @@
                 "fileNotSupported": "Fichier non pris en charge",
                 "unknownError": "il y a eu une erreur inconnue lors de l'import",
                 "projectionNotSupported": "La projection du/des fichier(s) que vous essayez d'importer n'est pas prise en charge",
-                "fileBeyondBoundaries": "Le fichier {filename} ne peut pas être importé car il ne correspond pas aux limites de la carte"
+                "fileBeyondBoundaries": "Le fichier {filename} ne peut pas être importé car il ne correspond pas aux limites de la carte",
+                "exceedFileSizeLimit": "Le fichier {filename} que vous essayez d'importer dépasse la limite de taille de fichier maximale {maxfilesize} Mo"
             }
         },
         "mapExport": {

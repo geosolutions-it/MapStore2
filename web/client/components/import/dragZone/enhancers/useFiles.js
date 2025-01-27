@@ -39,9 +39,18 @@ export default compose(
                     } else {
                         let validLayers = [];
                         layers.forEach((layer) => {
-                            const valid = layer.type === "vector" ? checkIfLayerFitsExtentForProjection(layer) : true;
-                            if (valid) {
+                            const isFileSizeNotValid = !!layer?.exceedFileMaxSize;     // this check is for file size limit for vector layer
+                            const valid = layer.type === "vector" ? (checkIfLayerFitsExtentForProjection(layer) && !isFileSizeNotValid) : true;
+                            if (valid && !isFileSizeNotValid) {
                                 validLayers.push(layer);
+                            } else if (isFileSizeNotValid) {
+                                warning({
+                                    title: "notification.warning",
+                                    message: "mapImport.errors.exceedFileSizeLimit",
+                                    autoDismiss: 6,
+                                    position: "tc",
+                                    values: {filename: layer.name ?? " ", maxfilesize: layer?.fileSizeLimitInMB ?? 10}
+                                });
                             } else {
                                 warning({
                                     title: "notification.warning",

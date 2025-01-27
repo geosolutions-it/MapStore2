@@ -185,6 +185,56 @@ describe('useFiles enhancer', () => {
             setLayers={actions.setLayers} warning={handlers.warning} onClose={handlers.onClose} />, document.getElementById("container"));
 
     });
+    it('useFiles rendering with layer having size exceed the max limit should call warnig()', (done) => {
+        const handlers = {
+            warning: () => {},
+            onClose: () => {},
+            loadAnnotations: () => {},
+            loadMap: () => {}
+        };
+        const warningSpy = expect.spyOn(handlers, 'warning');
+
+        const actions = {
+            setLayers: (layers) => {
+                expect(layers).toExist();
+                // length is 1 since just one layer is valid and the another is invalid for its size
+                expect(layers.length).toBe(1);
+                expect(warningSpy).toHaveBeenCalled();
+                done();
+            }
+        };
+
+        const sink = createSink( props => {
+            expect(props).toExist();
+            expect(props.layers).toExist();
+            expect(props.useFiles).toExist();
+            props.useFiles({layers: props.layers});
+
+        });
+        const EnhancedSink = useFiles(sink);
+
+        const layers = [{
+            type: 'vector', name: "FileName", hideLoading: true,
+            bbox: {crs: "EPSG:4326"},
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-20, 30]
+                },
+                "properties": {
+                    "prop0": "value0"
+                }
+            }]
+        }, {
+            type: 'vector', name: "FileName01", hideLoading: true,
+            exceedFileMaxSize: true,
+            "features": []
+        }];
+        ReactDOM.render(<EnhancedSink layers={layers}
+            setLayers={actions.setLayers} warning={handlers.warning} onClose={handlers.onClose} />, document.getElementById("container"));
+
+    });
     it('useFiles rendering with new annotation layer', (done) => {
 
         const actions = {
