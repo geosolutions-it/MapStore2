@@ -61,12 +61,12 @@ const fullUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) =>getUp
                 .catch((e) => {
                     const {priority: p, id: omit, ...oldRule} = origRule;
                     oldRule.position = {value: p, position: "fixedPriority"};
-                    // We have to restore original rule and to throw the exception!!
-                    return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).concat(Rx.Observable.of({type: RULE_SAVED}).do(() => { throw (e); }));
+                    // We have to restore original rule and throw the exception if failed!!
+                    return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).catch(() => { throw (e); });
                 });
         })
         .switchMap(({data: id}) => {
-            return Rx.Observable.defer(() => GeoFence.moveRules(rule.priority, [{id}]));
+            return Rx.Observable.defer(() => GeoFence.moveRules(rule.priority, [{id}])).concat(Rx.Observable.of({type: RULE_SAVED}));
         }
         ));
 const grantUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => getUpdateType(oR, r) === 'grant')

@@ -206,6 +206,7 @@
             "enableInteractiveLegendInfo": {
                 "label": "Aktivieren Sie die interaktive Legende",
                 "info": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird. Hinweis: Diese Einstellung benötigt spezifische Konfigurationen im GeoServer",
+                "infoWithoutGSNote": "Wenn diese Option aktiviert ist, kann der Filter nach Legende angewendet werden, indem im Inhaltsverzeichnis auf Legendenelemente dieser Ebene geklickt wird.",
                 "fetchError": "Die Legenden Informationen konnten nicht vom Dienst abgerufen werden"
             },
             "enableLocalizedLayerStyles": {
@@ -243,6 +244,7 @@
             "disableFeaturesEditing": "Deaktivieren Sie die Bearbeitung der Attributtabelle",
             "interactiveLegend": {
                 "incompatibleFilterWarning": "Legendenfilter sind mit dem aktiven Ebenenfilter nicht kompatibel oder es sind keine sichtbaren Features im Kartenansichtsfenster vorhanden. Klicken Sie auf Zurücksetzen, um die Legendenfilter zu löschen",
+                "incompatibleWFSFilterWarning": "Legendenfilter sind mit dem aktiven Ebenenfilter nicht kompatibel. Klicken Sie auf Zurücksetzen, um die Legendenfilter zu löschen",
                 "resetLegendFilter": "Zurücksetzen",
                 "noLegendData": "Keine Legenden Elemente zum Anzeigen"
             }
@@ -1576,7 +1578,7 @@
                 "dropZone": {
                     "heading": "<p> <h4> Legen Sie hier Ihre Kartenkonfigurations- oder Vektordateien ab </h4> <small> oder nutzen Sie </small> </p>",
                     "selectFiles": "Dateien auswählen...",
-                    "infoSupported": "<p> <small> Unterstützte Dateien zur Kartenkonfiguration: MapStore Legacy-Format, WMC.<br />Unterstützte Vektor-Layer-Dateien: Shapefiles (müssen in einem Zip-Archiv enthalten sein), KML / KMZ, GPX, GeoJSON oder Anmerkungen </small> </p>",
+                    "infoSupported": "<p> <small> Unterstützte Dateien zur Kartenkonfiguration: MapStore Legacy-Format, WMC.<br />Unterstützte Vektor-Layer-Dateien: Shapefiles (müssen in einem Zip-Archiv enthalten sein), KML / KMZ, GPX, GeoJSON oder Anmerkungen. (Referenzsystem muss EPSG:4326 für KML/KMZ, GPX sein) </small> </p>",
                     "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Karte wird bei der Verwendung von Kartenkonfigurationsdateien überschrieben </i> </small> </p>"
                 },
                 "errors": {

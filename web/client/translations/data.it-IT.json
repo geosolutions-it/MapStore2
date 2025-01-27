@@ -206,6 +206,7 @@
             "enableInteractiveLegendInfo": {
                 "label": "Abilita leggenda interattiva",
                 "info": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario. Nota: questo parametro richiede configurazioni specifiche su GeoServer",
+                "infoWithoutGSNote": "Se questa opzione è abilitata, è possibile applicare il filtro per legenda facendo clic sugli elementi della legenda di questo layer dal sommario.",
                 "fetchError": "Impossibile ottenere le informazioni sulla leggenda dal servizio"
             },
             "enableLocalizedLayerStyles": {
@@ -243,6 +244,7 @@
             "disableFeaturesEditing": "Disabilita la modifica sulla tabella degli attributi",
             "interactiveLegend": {
                 "incompatibleFilterWarning": "I filtri della legenda sono incompatibili con il filtro del layer attivo, oppure non ci sono feature visibili all'interno della vista della mappa. Clicca su reset per cancellare i filtri della legenda",    "resetLegendFilter": "Reset",
+                "incompatibleWFSFilterWarning": "I filtri della legenda sono incompatibili con il filtro del layer attivo. Clicca su reset per cancellare i filtri della legenda",    "resetLegendFilter": "Reset",
                 "noLegendData": "Nessun elemento della legenda da mostrare"    }
         },
         "localizedInput": {
@@ -1535,7 +1537,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Rilascia qui i contesti di mappa o i file vettoriali </h4> <small> o </small> </p>",
                 "selectFiles": "Seleziona i file...",
-                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore, WMC<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX, GeoJSON o Annotazioni </small> </p>",
+                "infoSupported": "<p> <small> File di contesti di mappa supportati: formato legacy di MapStore, WMC<br /> File di livello vettoriale supportati: shapefile (devono essere contenuti in archivi zip), KML / KMZ, GPX, GeoJSON o Annotazioni. (Il sistema di riferimento deve essere EPSG:4326 per KML/KMZ, GPX) </small> </p>",
                 "note": "<p> <small> <i> <strong> nota </strong>: la mappa corrente verrà sovrascritta in caso di nuovi contesti di mappa </i> </small> </p>"
             },
             "errors": {

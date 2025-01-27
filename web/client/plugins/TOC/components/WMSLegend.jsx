@@ -126,6 +126,7 @@ class WMSLegend extends React.Component {
                         legendOptions={this.props.WMSLegendOptions}
                         onChange={this.props.onChange}
                         {...this.getLegendProps()}
+                        interactive
                     />
                 </div>
             );

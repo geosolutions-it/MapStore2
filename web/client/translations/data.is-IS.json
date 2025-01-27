@@ -1418,7 +1418,7 @@
       "dropZone": {
         "heading": "<p><h4>Drop your map context or vector files here</h4><small>or</small></p>",
         "selectFiles": "Select files...",
-        "infoSupported": "<p><small>Supported map context files: MapStore legacy format, WMC<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON, Annotations or GPX</small></p>",
+        "infoSupported": "<p><small>Supported map context files: MapStore legacy format, WMC<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON, Annotations or GPX. (Reference System must be EPSG:4326 for KML/KMZ, GPX)</small></p>",
         "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of map context files</i></small></p>"
       },
       "errors": {

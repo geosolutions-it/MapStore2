@@ -206,6 +206,7 @@
             "enableInteractiveLegendInfo": {
                 "label": "Activer la légende interactive",
                 "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer",
+                "infoWithoutGSNote": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières.",
                 "fetchError": "Impossible d'obtenir les informations de légende du service"
             },
             "enableLocalizedLayerStyles": {
@@ -243,6 +244,7 @@
             "disableFeaturesEditing": "Désactiver la modification sur la table attributaire",
             "interactiveLegend": {
                 "incompatibleFilterWarning": "Les filtres de légende sont incompatibles avec le filtre de couche actif, ou aucune fonctionnalité visible n'est dans la vue de la carte. Cliquez sur réinitialiser pour effacer les filtres de légende",
+                "incompatibleWFSFilterWarning": "Les filtres de légende sont incompatibles avec le filtre de couche actif. Cliquez sur réinitialiser pour effacer les filtres de légende",
                 "resetLegendFilter": "Réinitialiser",
                 "noLegendData": "Aucun élément de légende à afficher"
             }
@@ -1538,7 +1540,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Déposez vos contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez des fichiers...",
-                "infoSupported": "<p><small>Fichiers de contextes pris en charge : format hérité MapStore, WMC<br />Fichiers vectoriels pris en charge : fichier de formes (doivent être contenus dans des archives zip), KML/KMZ, GeoJSON, Annotations ou GPX</small></p>",
+                "infoSupported": "<p><small>Fichiers de contextes pris en charge : format hérité MapStore, WMC<br />Fichiers vectoriels pris en charge : fichier de formes (doivent être contenus dans des archives zip), KML/KMZ, GeoJSON, Annotations ou GPX. (Le système de référence doit être EPSG:4326 pour KML/KMZ, GPX)</small></p>",
                 "note": "<p><small><i><strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de contextes cartographiques</i></small></p>"
             },
             "errors": {

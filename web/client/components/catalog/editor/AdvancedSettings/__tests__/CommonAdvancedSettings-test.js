@@ -10,15 +10,18 @@ import ReactDOM from "react-dom";
 import CommonAdvancedSettings from "../CommonAdvancedSettings";
 import expect from "expect";
 import TestUtils from "react-dom/test-utils";
+import { setConfigProp } from '../../../../../utils/ConfigUtils';
 
 describe('Test common advanced settings', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
     afterEach((done) => {
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
+        setConfigProp('miscSettings', { });
         setTimeout(done);
     });
     it('creates the component with defaults', () => {
@@ -38,7 +41,7 @@ describe('Test common advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(2);
+        expect(fields.length).toBe(3);
     });
     it('test wms advanced options onChangeServiceProperty autoreload', () => {
         const action = {
@@ -52,7 +55,7 @@ describe('Test common advanced settings', () => {
         const advancedSettingPanel = document.getElementsByClassName("mapstore-switch-panel");
         expect(advancedSettingPanel).toBeTruthy();
         const fields = document.querySelectorAll(".form-group");
-        expect(fields.length).toBe(2);
+        expect(fields.length).toBe(3);
         const autoload = document.querySelectorAll('input[type="checkbox"]')[0];
         const formGroup = document.querySelectorAll('.form-group')[0];
         expect(formGroup.textContent.trim()).toBe('catalog.autoload');
@@ -84,5 +87,15 @@ describe('Test common advanced settings', () => {
         TestUtils.Simulate.change(fetchMetadata, { "target": { "checked": false }});
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[1].arguments).toEqual([ 'fetchMetadata', false ]);
+    });
+    it('test showing/hiding interactive legend checkbox', () => {
+        ReactDOM.render(<CommonAdvancedSettings
+            service={{type: "wfs"}}
+        />, document.getElementById("container"));
+        const interactiveLegendCheckboxInput = document.querySelector(".wfs-interactive-legend .checkbox input[data-qa='display-interactive-legend-option']");
+        expect(interactiveLegendCheckboxInput).toBeTruthy();
+        const interactiveLegendLabel = document.querySelector(".wfs-interactive-legend .checkbox span");
+        expect(interactiveLegendLabel).toBeTruthy();
+        expect(interactiveLegendLabel.innerHTML).toEqual('layerProperties.enableInteractiveLegendInfo.label');
     });
 });

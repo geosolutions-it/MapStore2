@@ -15,6 +15,7 @@ export const LONGITUDINAL_VECTOR_LAYER_ID_POINT = 'longitudinal_profile_tool_poi
 export const LONGITUDINAL_OWNER = 'LongitudinalTool';
 export const FILE_TYPE_ALLOWED = [
     "application/json",
+    "application/geo+json",
     "image/x-dxf",
     "image/vnd.dxf",
     "application/x-zip-compressed",
