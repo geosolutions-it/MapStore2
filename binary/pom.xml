@@ -130,11 +130,11 @@
                         <phase>package</phase>
                         <configuration>
                             <!-- remove some unwanted dependencies that get pulled over -->
-                            <tasks>
+                            <target>
                                 <delete>
                                     <fileset dir="${project.build.directory}/dependency" includes="servlet-api-*.jar,core*.jar" />
                                 </delete>
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
