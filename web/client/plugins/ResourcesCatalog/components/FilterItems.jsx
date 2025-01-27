@@ -9,6 +9,7 @@
 import React from 'react';
 import castArray from 'lodash/castArray';
 import isNil from 'lodash/isNil';
+import omit from 'lodash/omit';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 import { FormGroup, Checkbox } from 'react-bootstrap';
@@ -104,6 +105,9 @@ function FilterItem({
     root
 }, { messages }) {
 
+    // remove global search parameters
+    // to avoid conflict with filed search
+    const additionalParams = omit(values, ['q', 'page', 'pageSize']);
 
     if (field.type === 'search') {
         return (
@@ -175,7 +179,7 @@ function FilterItem({
                         config,
                         params: {
                             ...params,
-                            ...values, // filter queries
+                            ...additionalParams, // filter queries
                             ...(q && { q }),
                             page: params.page - 1
                         }
@@ -241,7 +245,7 @@ function FilterItem({
             {...field.loadItems && {loadItems: (params) => field.loadItems({
                 params: {
                     ...params,
-                    ...values
+                    ...additionalParams
                 }
             })}}
             items={field.items}
@@ -344,7 +348,7 @@ function FilterItem({
             {...field.loadItems && { loadItems: (params) => field.loadItems({
                 params: {
                     ...params,
-                    ...values
+                    ...additionalParams
                 }
             })}}
             root={root}
