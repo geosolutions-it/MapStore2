@@ -206,6 +206,7 @@
             "enableInteractiveLegendInfo": {
                 "label": "Enable interactive legend",
                 "info": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC. Note: This parameter requires specific configurations on GeoServer",
+                "infoWithoutGSNote": "If this option is enabled, filter by legend can be applied by clicking on legend items of this layer from the TOC.",
                 "fetchError": "Failed to retrieve the legend info from the service"
             },
             "enableLocalizedLayerStyles": {
@@ -243,6 +244,7 @@
           "disableFeaturesEditing": "Disable editing on Attribute table",
           "interactiveLegend": {
             "incompatibleFilterWarning": "Legend filters are incompatible with the active layer filter, or no visible features are within the map view. Click reset to clear legend filters",
+            "incompatibleWFSFilterWarning": "Legend filters are incompatible with the active layer filter. Click reset to clear legend filters",
             "resetLegendFilter": "Reset",
             "noLegendData": "No legend items to show"
           }
