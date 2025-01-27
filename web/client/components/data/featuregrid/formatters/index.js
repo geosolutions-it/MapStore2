@@ -23,10 +23,10 @@ export const StringFormatter = ({value} = {}) => !isNil(value) ? reactStringRepl
 export const NumberFormatter = ({value} = {}) => !isNil(value) ? <NumberFormat value={value} numberParams={{maximumFractionDigits: 17}}/> : null;
 const DEFAULT_DATE_PART = "1970-01-01";
 const DATE_INPUT_FORMAT = "YYYY-MM-DD[Z]";
-export const DateTimeFormatter = ({value, format, type}) => {
+export const DateTimeFormatter = ({value, format, type, useUTCOffset = true}) => {
     return !isNil(value)
         ? moment.utc(value).isValid() // geoserver sometimes returns UTC for time.
-            ? moment.utc(value).format(format)
+            ? useUTCOffset ? moment.utc(value).format(format) : moment(value).format(format)
             : type === 'time'
                 ? moment(`${DEFAULT_DATE_PART}T${value}`).utc().format(format) // time format append default date part
                 : type === "date" && value?.toLowerCase()?.endsWith("z")        // in case: date format and value ends with z
@@ -39,13 +39,14 @@ const EnhancedStringFormatter = handleLongTextEnhancer(StringFormatter);
 const EnhancedNumberFormatter = handleLongTextEnhancer(NumberFormatter);
 const enhancedDateTimeFormatter = handleLongTextEnhancer(DateTimeFormatter);
 
-const getDateTimeFormat = (dateFormats, localType) => get(dateFormats, localType) ?? defaultDateFormats[localType];
+export const getDateTimeFormat = (dateFormats, localType) => get(dateFormats, localType) ?? defaultDateFormats[localType];
 
 const createEnhancedDateTimeFormatterComponent = (type) => (props) => {
-    const { dateFormats } = props?.row || {};
+    const { dateFormats, useUTCOffset } = props?.row || {};
     const format = getDateTimeFormat(dateFormats, type);
     return enhancedDateTimeFormatter({
         ...props,
+        useUTCOffset,
         format,
         type
     });
@@ -98,7 +99,7 @@ export const getFormatter = (desc, {featureGridFormatter} = {}) => {
             return Formatter;
         }
         return (props) => {
-            return <Formatter {...props} config={usedFormatter} />;
+            return <Formatter {...props}  config={usedFormatter} />;
         };
     }
     // we should avoid to create component in formatters

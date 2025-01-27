@@ -3,7 +3,8 @@ import AttributeEditor from "./AttributeEditor";
 import React from "react";
 import DateTimePicker from "../../../misc/datetimepicker";
 import utcDateWrapper from "../../../misc/enhancers/utcDateWrapper";
-import {dateFormats} from "../../../../utils/FeatureGridUtils";
+
+import {getDateTimeFormat} from "../formatters";
 
 /**
  * Date time picker enhanced with UTC and timezone offset
@@ -27,6 +28,7 @@ class DateTimeEditor extends AttributeEditor {
     static propTypes = {
         value: PropTypes.string,
         inputProps: PropTypes.object,
+        rowData: PropTypes.object,
         dataType: PropTypes.string,
         minValue: PropTypes.number,
         maxValue: PropTypes.number,
@@ -75,13 +77,13 @@ class DateTimeEditor extends AttributeEditor {
     };
 
     render() {
-        const {dataType, calendar, time} = this.props;
-        const { value } = this.props;
+        const {dataType, calendar, time, value, rowData} = this.props;
         return (<UTCDateTimePicker
             {...this.props}
             type={dataType}
             defaultValue={value}
             value={value}
+            useUTCOffset={rowData?.useUTCOffset}
             onChange={this.onChange}
             calendar={calendar}
             time={time}
@@ -94,7 +96,7 @@ class DateTimeEditor extends AttributeEditor {
             options={{
                 shouldCalendarSetHours: false
             }}
-            format={dateFormats[dataType]}
+            format={getDateTimeFormat(rowData?.dateFormats, dataType)}
         />);
     }
     // when we are using the popover we are using a portal

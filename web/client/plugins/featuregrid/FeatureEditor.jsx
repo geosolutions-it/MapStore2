@@ -95,6 +95,7 @@ const Dock = connect(createSelector(
   * @prop {number} cfg.snapConfig.maxFeatures defines features limit for request that loads vector data of WMS layer.
   * @prop {array} cfg.snapConfig.additionalLayers Array of additional layers to include into snapping layers list. Provides a way to include layers from "state.additionallayers"
   * @prop {object} cfg.dateFormats object containing custom formats for one of the date/time attribute types. Following keys are supported: "date-time", "date", "time"
+  * @prop {boolean} cfg.useUTCOffset avoid using UTC dates in attribute table and datetime editor, should be kept consistent with dateFormats, default is true
   * @prop {boolean} cfg.showPopoverSync default false. Hide the popup of map sync if false, shows the popup of map sync if true
   *
   * @classdesc
@@ -138,7 +139,8 @@ const Dock = connect(createSelector(
   *       "date-time": "YYYY-MM-DDTHH:mm:ss[Z]",
   *       "date": "YYYY-MM-DD[Z]",
   *       "time": "HH:mm:ss[Z]"
-  *     }
+  *     },
+  *     "useUTCOffset": true
   *   }
   * }
   * ```
@@ -245,6 +247,7 @@ const FeatureDock = (props = {
                                     size={props.size}
                                     actionOpts={{maxZoom}}
                                     dateFormats={props.dateFormats}
+                                    useUTCOffset={props.useUTCOffset}
                                 />
                             </BorderLayout> }
 
