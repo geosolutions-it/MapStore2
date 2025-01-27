@@ -9,7 +9,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import { getAuthenticationMethod } from '../../utils/SecurityUtils';
+import { getAuthKeyParameter, getAuthenticationMethod, getToken } from '../../utils/SecurityUtils';
+import { updateUrlParams } from '../../utils/URLUtils';
 
 
 const SecureImage = ({
@@ -42,6 +43,16 @@ const SecureImage = ({
                 .catch((error) => {
                     console.error('Error fetching image:', error);
                 });
+        } else if (authMethod === "authkey") {
+            const authParam = getAuthKeyParameter(src);
+            const token = getToken();
+            if (authParam && token) {
+                const newSrc = updateUrlParams(src, {[authParam]: token});
+                setImageSrc(newSrc);
+            } else {
+                setImageSrc(src);
+            }
+
         } else {
             setImageSrc(src);
         }
