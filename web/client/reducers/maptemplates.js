@@ -10,11 +10,15 @@ import { CLEAR_MAP_TEMPLATES, SET_TEMPLATES, TOGGLE_FAVOURITE_TEMPLATE, SET_TEMP
     SET_MAP_TEMPLATES_LOADED, SET_ALLOWED_TEMPLATES } from "../actions/maptemplates";
 import { get } from 'lodash';
 import { set } from '../utils/ImmutableUtils';
+import { MAP_CONFIG_LOADED } from "../actions/config";
 
 export default (state = {}, action) => {
     switch (action.type) {
     case CLEAR_MAP_TEMPLATES: {
         return {};
+    }
+    case MAP_CONFIG_LOADED: {
+        return set('templates', action.config?.mapTemplates, state) ?? [];
     }
     case SET_TEMPLATES: {
         return set('templates', action.templates, state);

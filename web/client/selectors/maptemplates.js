@@ -8,6 +8,7 @@
 import { createSelector } from 'reselect';
 import { templatesSelector as contextTemplatesSelector } from './context';
 import {get} from "lodash";
+import { registerCustomSaveHandler } from './mapsave';
 
 export const isActiveSelector = (state) => get(state, "controls.mapTemplates.enabled");
 export const mapTemplatesLoadedSelector = state => state.maptemplates && state.maptemplates.mapTemplatesLoaded;
@@ -15,6 +16,8 @@ export const mapTemplatesLoadErrorSelector = state => state.maptemplates && stat
 export const templatesSelector = state => state.maptemplates && state.maptemplates.templates;
 
 export const allowedTemplatesSelector = state => state.maptemplates && state.maptemplates.allowedTemplates;
+
+registerCustomSaveHandler('mapTemplates', templatesSelector);
 
 // This selector checks state for localConfigTemplates that were loaded into state from localConfig
 // when MapTemplates plugin was mounting. At the moment, for retro-compatibility it also checks context for plugins
