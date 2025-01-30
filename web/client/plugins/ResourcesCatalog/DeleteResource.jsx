@@ -110,18 +110,24 @@ export default createPlugin('DeleteResource', {
         ResourcesGrid: {
             target: 'card-options',
             position: 1,
-            priority: 2,
+            priority: 4,
+            Component: DeleteResourcePlugin
+        },
+        BrandNavbar: {
+            target: 'right-menu',
+            position: 4,
+            priority: 3,
             Component: DeleteResourcePlugin
         },
         SidebarMenu: {
             position: 300,
             tool: DeleteResourcePlugin,
-            priority: 2
+            priority: 1
         },
         BurgerMenu: {
             position: 5,
             tool: DeleteResourcePlugin,
-            priority: 1
+            priority: 2
         }
     }
 });

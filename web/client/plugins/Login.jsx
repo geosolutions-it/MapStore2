@@ -111,7 +111,7 @@ export default createPlugin('Login', {
         },
         BrandNavbar: {
             target: 'right-menu',
-            position: 2,
+            position: 9,
             priority: 3,
             Component: (props) => {
                 return (

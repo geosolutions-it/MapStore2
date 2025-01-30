@@ -70,7 +70,7 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
 
     const badgeValue = badge;
     if (type === 'dropdown') {
-        return (<DropdownList
+        return (<li><DropdownList
             id={id}
             items={items}
             label={label}
@@ -86,7 +86,7 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
             variant={variant}
             responsive={responsive}
             noCaret={noCaret}
-        />);
+        /></li>);
     }
 
     if ((type === 'custom' || type === 'plugin') && Component) {
@@ -94,28 +94,28 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
     }
 
     if (type === 'link') {
-        return (
+        return (<li>
             <MenuNavLink href={href} target={target} className={btnClassName}>
                 {glyph ? <Icon glyph={glyph} type={iconType}/> : null}
                 {glyph && labelNode ? ' ' : null}
                 {labelNode}
             </MenuNavLink>
-        );
+        </li>);
 
     }
 
     if (type === 'logo') {
         const imageNode = <img src={src} style={{ width: 'auto', height: '2rem', objectFit: 'contain', ...style }} />;
-        return href ? (
+        return (<li>{href ? (
             <MenuNavLink href={href} target={target}>
                 {imageNode}
             </MenuNavLink>
-        ) : imageNode;
+        ) : imageNode}</li>);
 
     }
 
     if (type === 'button') {
-        return (
+        return (<li>
             <Button
                 square={square}
                 tooltipId={tooltipId}
@@ -129,20 +129,20 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
                 {glyph && labelNode ? ' ' : null}
                 {labelNode}
             </Button>
-        );
+        </li>);
     }
 
     if (type === 'divider') {
-        return <div className="ms-menu-divider" style={style}></div>;
+        return <li><div className="ms-menu-divider" style={style}></div></li>;
     }
 
     if (type === 'placeholder') {
-        return <span />;
+        return <li><span /></li>;
     }
 
     if (type === 'filter') {
         const active = castArray(query.f || []).find(value => value === item.id);
-        return (
+        return (<li>
             <MenuNavLink
                 target={target}
                 style={style}
@@ -157,7 +157,7 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
                 {labelNode}
                 {isValidBadgeValue(badgeValue) && <Badge>{badgeValue}</Badge>}
             </MenuNavLink>
-        );
+        </li>);
     }
     return null;
 };

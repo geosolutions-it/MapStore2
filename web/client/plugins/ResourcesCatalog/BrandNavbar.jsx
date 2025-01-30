@@ -26,16 +26,18 @@ function BrandNavbarMenuItem({
     onClick
 }) {
     return (
-        <ButtonWithTooltip
-            square
-            borderTransparent
-            tooltipId={labelId}
-            tooltipPosition="bottom"
-            onClick={onClick}
-            className={className}
-        >
-            {loading ? <Spinner /> : <Icon glyph={glyph} type={glyphType} />}
-        </ButtonWithTooltip>
+        <li>
+            <ButtonWithTooltip
+                square
+                borderTransparent
+                tooltipId={labelId}
+                tooltipPosition="bottom"
+                onClick={onClick}
+                className={className}
+            >
+                {loading ? <Spinner /> : <Icon glyph={glyph} type={glyphType} />}
+            </ButtonWithTooltip>
+        </li>
     );
 }
 

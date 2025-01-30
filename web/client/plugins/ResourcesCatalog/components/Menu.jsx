@@ -55,21 +55,20 @@ const Menu = forwardRef(({
             {items
                 .map((item, idx) => {
                     return (
-                        <li key={idx}>
-                            <MenuItem
-                                variant={item.variant || variant}
-                                item={{ ...item, id: item.id || idx }}
-                                size={item.size || size}
-                                alignRight={alignRight}
-                                menuItemsProps={{
-                                    query,
-                                    formatHref
-                                }}
-                                classItem={childrenClass}
-                                resourceName={resourceName}
-                                menuItemComponent={menuItemComponent}
-                            />
-                        </li>
+                        <MenuItem
+                            key={idx}
+                            variant={item.variant || variant}
+                            item={{ ...item, id: item.id || idx }}
+                            size={item.size || size}
+                            alignRight={alignRight}
+                            menuItemsProps={{
+                                query,
+                                formatHref
+                            }}
+                            classItem={childrenClass}
+                            resourceName={resourceName}
+                            menuItemComponent={menuItemComponent}
+                        />
                     );
                 })}
         </FlexBox>

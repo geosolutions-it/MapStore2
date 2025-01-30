@@ -35,7 +35,7 @@ export default {
         },
         BrandNavbar: {
             target: 'right-menu',
-            position: 0,
+            position: 5,
             priority: 2
         }
     }),

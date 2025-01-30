@@ -233,7 +233,7 @@ export default createPlugin(
                 priority: 1
             },
             BrandNavbar: {
-                position: 4,
+                position: 8,
                 priority: 2,
                 target: 'right-menu',
                 Component: connect(() => ({ id: 'ms-burger-menu', className: 'square-button-md' }))(BurgerMenuPlugin)

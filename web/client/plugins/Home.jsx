@@ -83,7 +83,7 @@ export default {
         },
         BrandNavbar: {
             target: 'right-menu',
-            position: 1,
+            position: 6,
             priority: 5
         }
     }),

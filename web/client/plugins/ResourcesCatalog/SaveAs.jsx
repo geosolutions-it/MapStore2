@@ -220,7 +220,7 @@ export default createPlugin('SaveAs', {
     containers: {
         BrandNavbar: {
             target: 'right-menu',
-            position: -1,
+            position: 3,
             priority: 3,
             Component: SaveAsPlugin
         },

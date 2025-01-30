@@ -180,7 +180,7 @@ export default createPlugin('Save', {
     containers: {
         BrandNavbar: {
             target: 'right-menu',
-            position: -2,
+            position: 2,
             priority: 3,
             Component: SavePlugin,
             doNotHide: true

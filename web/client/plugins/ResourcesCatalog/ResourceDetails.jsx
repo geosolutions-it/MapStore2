@@ -319,7 +319,7 @@ export default createPlugin('ResourceDetails', {
             target: 'right-menu',
             Component: resourceDetailsConnect(BrandNavbarDetailsButton),
             doNotHide: true,
-            position: -3
+            position: 1
         },
         ResourcesGrid: {
             priority: 2,

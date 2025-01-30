@@ -155,7 +155,7 @@ export default {
         },
         BrandNavbar: {
             target: 'right-menu',
-            position: 3,
+            position: 7,
             priority: 3
         }
     }),
