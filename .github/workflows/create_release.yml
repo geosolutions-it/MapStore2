@@ -93,7 +93,7 @@ jobs:
         working-directory: artifacts
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "name=date::$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
       - name: create_release
         id: create_release
         uses: actions/create-release@v1
