@@ -30,6 +30,7 @@ const ResourceCardButton = ({
     square,
     variant,
     borderTransparent,
+    loading,
     ...props
 }) => {
     function handleOnClick(event) {
@@ -47,9 +48,10 @@ const ResourceCardButton = ({
             tooltipId={square && labelId ? labelId : null}
             onClick={handleOnClick}
         >
-            {glyph ? <><Icon type={iconType} glyph={glyph}/></> : null}
-            {glyph && labelId ? ' ' : null}
-            {labelId && !square ? <Message msgId={labelId} /> : null}
+            {!loading && glyph ? <><Icon type={iconType} glyph={glyph}/></> : null}
+            {!loading && glyph && labelId ? ' ' : null}
+            {!loading && labelId && !square ? <Message msgId={labelId} /> : null}
+            {loading ? <Spinner /> : null}
         </ButtonWithTooltip>
     );
 };

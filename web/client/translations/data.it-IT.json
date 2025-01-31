@@ -4296,7 +4296,10 @@
             "creationFilter": {
                 "from": "Dalla data di creazione",
                 "to": "Alla data di creazione"
-            }
+            },
+            "removeFromFavorites": "Rimuovi dai preferiti",
+            "addToFavorites": "Aggiungi ai preferiti",
+            "favorites": "Preferiti"
         }
     }
 }

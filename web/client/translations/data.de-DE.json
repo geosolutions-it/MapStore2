@@ -4336,7 +4336,10 @@
             "creationFilter": {
                 "from": "Erstellungsdatum von",
                 "to": "Erstellungsdatum bis"
-            }
+            },
+            "removeFromFavorites": "Aus Favoriten entfernen",
+            "addToFavorites": "Zu Favoriten hinzufügen",
+            "favorites": "Favoriten"
         }
     }
 }
