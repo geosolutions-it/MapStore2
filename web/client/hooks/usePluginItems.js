@@ -35,7 +35,7 @@ const usePluginItems = ({
 }, dependencies = []) => {
     function configurePluginItems(props) {
         return [...props.items]
-            .sort((a, b) => a.position > b.position ? 1 : -1)
+            .sort((a, b) => a.position - b.position)
             .map(plg => ({
                 ...plg,
                 Component: plg.Component

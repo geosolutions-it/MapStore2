@@ -93,19 +93,36 @@ class LoginTool extends React.Component {
     }
 }
 
+const LoginNavComponent = connect((state) => ({
+    renderButtonContent: () => {return <Glyphicon glyph="user" />; },
+    bsStyle: 'primary',
+    isAdmin: isAdminUserSelector(state)
+}))(LoginNav);
+
 export default createPlugin('Login', {
     component: connect((state) => ({isAdmin: isAdminUserSelector(state)}))(LoginTool),
     containers: {
         OmniBar: {
             name: "login",
             position: 3,
-            tool: connect((state) => ({
-                renderButtonContent: () => {return <Glyphicon glyph="user" />; },
-                bsStyle: 'primary',
-                isAdmin: isAdminUserSelector(state)
-            }))(LoginNav),
+            tool: LoginNavComponent,
             tools: [UserDetails, PasswordReset, Login],
             priority: 1
+        },
+        BrandNavbar: {
+            target: 'right-menu',
+            position: 9,
+            priority: 3,
+            Component: (props) => {
+                return (
+                    <>
+                        <LoginNavComponent {...props} className="square-button-md"/>
+                        <UserDetails />
+                        <PasswordReset />
+                        <Login />
+                    </>
+                );
+            }
         },
         SidebarMenu: {
             name: "login",

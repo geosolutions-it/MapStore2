@@ -15,6 +15,7 @@ import HTML from '../../components/I18N/HTML';
  * Description of MapStore rendered in the home page.
  * Renders the HTML in localization files identified by
  * the path `home.shortDescription`.
+ * @deprecated
  * @name HomeDescription
  * @class
  * @memberof plugins

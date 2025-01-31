@@ -167,8 +167,8 @@ export const getResource = (id, { includeAttributes = true, withData = true, wit
             // when includeAttributes is false we should return an empty array
             // to keep the order of response in the .map argument
             : new Promise(resolve => resolve([]))),
-        ...(withData ? [Observable.defer(() =>API.getData(id, { baseURL }))] : []),
-        ...(withPermissions ? [Observable.defer( () => API.getResourcePermissions(id, {}, true))] : [])
+        ...(withData ? [Observable.defer(() =>API.getData(id, { baseURL }))] : [Promise.resolve(undefined)]),
+        ...(withPermissions ? [Observable.defer( () => API.getResourcePermissions(id, {}, true))] : [Promise.resolve(undefined)])
     ]).map(([resource, attributes, data, permissions]) => ({
         ...resource,
         attributes: (attributes || []).reduce((acc, curr) => ({

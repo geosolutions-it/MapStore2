@@ -8,7 +8,7 @@
 
 import React from 'react';
 import assign from 'object-assign';
-import {endsWith, get, head, isArray, isFunction, isObject, isString, memoize, omit, size} from 'lodash';
+import {endsWith, get, head, isArray, isFunction, isObject, isString, memoize, omit, size, maxBy } from 'lodash';
 import {connect as originalConnect} from 'react-redux';
 import url from 'url';
 import curry from 'lodash/curry';
@@ -269,15 +269,24 @@ export const getMorePrioritizedContainer = (plugin, override = {}, plugins, prio
     const pluginImpl = plugin.impl;
     return plugins.reduce((previous, current) => {
         const containerName = current.name || current;
-        const pluginPriority = getPriority(plugin, override, containerName);
-        return pluginPriority > previous.priority ? {
+        const currentPlugin = !isArray(pluginImpl[containerName])
+            ? { priority: getPriority(plugin, override, containerName), impl: pluginImpl[containerName] }
+            : maxBy(pluginImpl[containerName]
+                .map((containerConfig) => {
+                    return {
+                        priority: getPriority({ impl: { [containerName]: containerConfig } }, override, containerName),
+                        impl: containerConfig
+                    };
+                }), 'priority')
+            ;
+        return currentPlugin.priority > previous.priority ? {
             plugin: {
                 name: containerName,
                 impl: {
-                    ...(isFunction(pluginImpl[containerName]) ? pluginImpl[containerName](plugin.config) : pluginImpl[containerName]),
+                    ...(isFunction(currentPlugin.impl) ? currentPlugin.impl(plugin.config) : currentPlugin.impl),
                     ...(override[containerName] ?? {})}
             },
-            priority: pluginPriority} : previous;
+            priority: currentPlugin.priority} : previous;
     }, {plugin: null, priority: priority});
 };
 

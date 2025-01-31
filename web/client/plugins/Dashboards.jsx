@@ -35,6 +35,7 @@ const dashboardsCountSelector = createSelector(
  * Plugin for Dashboards resources browsing.
  * Can be rendered inside {@link #plugins.ContentTabs|ContentTabs} plugin
  * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
+ * @deprecated
  * @name Dashboards
  * @memberof plugins
  * @class

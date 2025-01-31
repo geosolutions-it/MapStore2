@@ -70,7 +70,7 @@ export const Login = connect((state) => ({
     onError: loginFail
 })(LoginModalComp);
 
-export const LoginNav = connect((state) => ({
+export const LoginNav = connect((state, props) => ({
     currentProvider: authProviderSelector(state),
     user: userSelector(state),
     nav: false,
@@ -78,7 +78,7 @@ export const LoginNav = connect((state) => ({
     renderButtonText: false,
     renderButtonContent: () => {return <Glyphicon glyph="user" />; },
 
-    className: "square-button",
+    className: props.className || "square-button",
     renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
     displayUnsavedDialog: unsavedMapSelector(state)
         && unsavedMapSourceSelector(state) === 'logout'
