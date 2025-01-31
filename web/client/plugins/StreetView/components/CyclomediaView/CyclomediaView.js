@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
+import {isEmpty} from 'lodash';
 import Message from '../../../../components/I18N/Message';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { reproject } from '../../../../utils/CoordinatesUtils';
@@ -110,8 +111,10 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
     const [reload, setReload] = useState(1);
     const [error, setError] = useState(null);
 
-    // gets the credentials from the storage
-    const initialCredentials = getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE);
+    // gets the credentials from the storage or from configuration.
+    const initialCredentials =
+        isEmpty(getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE)) ?
+            providerSettings?.credentials ?? {} : getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE);
     const [credentials, setCredentials] = useState(initialCredentials);
     const [showCredentialsForm, setShowCredentialsForm] = useState(!credentials?.username || !credentials?.password); // determines to show the credentials form
     const {username, password} = credentials ?? {};
@@ -217,7 +220,8 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setLocation({
                 latLng: {
                     lat,
-                    lng
+                    lng,
+                    h: recording?.xyz?.[2] || 0
                 },
                 properties: {
                     ...recording,
