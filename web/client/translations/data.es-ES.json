@@ -4298,7 +4298,31 @@
             "creationFilter": {
                 "from": "Fecha de creación desde",
                 "to": "Fecha de creación hasta"
-            }
+            },
+            "deleteTagTitle": "¿Está seguro de que desea eliminar esta etiqueta?",
+            "deleteTagDescription": "Esta etiqueta se eliminará, incluida la asociación con los recursos existentes",
+            "deleteTagConfirm": "Eliminar",
+            "deleteTagCancel": "Conservarla",
+            "closeTagsTitle": "¿Está seguro de salir sin aplicar los cambios?",
+            "closeTagsDescription": "Si sale, perderá los cambios pendientes",
+            "closeTagsConfirm": "Salir",
+            "closeTagsCancel": "Volver a la edición",
+            "newTag": "Nueva etiqueta",
+            "editTag": "Editar etiqueta",
+            "deleteTag": "Eliminar etiqueta",
+            "update": "Actualizar",
+            "cancel": "Cancelar",
+            "create": "Crear",
+            "filterTags": "Filtrar etiquetas por nombre...",
+            "noTagsAvailable": "No hay etiquetas disponibles",
+            "noTagsAvailableDescription": "Cree una nueva etiqueta haciendo clic en el botón 'Nueva etiqueta'",
+            "noFilteredTagsAvailable": "Ninguna etiqueta coincide con el filtro seleccionado",
+            "noFilteredTagsAvailableDescription": "Borre el filtro de texto de entrada o busque un nombre de etiqueta diferente",
+            "tagPreview": "Vista previa de la etiqueta",
+            "tagName": "Nombre",
+            "tagDescription": "Descripción",
+            "tagColor": "Color",
+            "manageTags": "Administrar etiquetas"
         }
     }
 }

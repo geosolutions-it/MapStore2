@@ -60,6 +60,7 @@ function ResourceDetails({
     height,
     show,
     onShow,
+    enableFilters,
     tabs = [
         {
             "type": "tab",
@@ -114,7 +115,9 @@ function ResourceDetails({
                     "facet": "tag",
                     "itemColor": "color",
                     "disableIf": "{!state('userrole')}",
-                    "filter": "filter{tag.in}"
+                    "filter": "filter{tag.in}",
+                    "itemValue": "name",
+                    "itemLabel": "name"
                 },
                 {
                     "type": "boolean",
@@ -233,6 +236,7 @@ function ResourceDetails({
                     updateRequest={updateResource}
                     facets={facets}
                     tabs={tabs}
+                    enableFilters={enableFilters}
                 />
             </ResourcesPanelWrapper>
             {props.resourceType === undefined ? <PendingStatePrompt

@@ -102,8 +102,18 @@ function ResourcesGrid({
             },
             {
                 path: 'description',
-                width: 40,
+                width: 20,
                 labelId: 'resourcesCatalog.columnDescription'
+            },
+            {
+                path: 'tags',
+                filter: 'filter{tag.in}',
+                itemValue: 'name',
+                itemColor: 'color',
+                width: 30,
+                type: 'tag',
+                noDataLabelId: 'resourcesCatalog.emptyNA',
+                labelId: 'resourcesCatalog.columnTags'
             },
             {
                 path: 'lastUpdate',
@@ -119,7 +129,7 @@ function ResourcesGrid({
                 target: 'footer',
                 filter: 'filter{creator.in}',
                 icon: { glyph: 'user', type: 'glyphicon' },
-                width: 20,
+                width: 10,
                 labelId: 'resourcesCatalog.columnCreatedBy',
                 noDataLabelId: 'resourcesCatalog.emptyUnknown',
                 disableIf: '{!state("userrole")}'
@@ -129,6 +139,14 @@ function ResourcesGrid({
             {
                 path: 'name',
                 target: 'header'
+            },
+            {
+                path: 'tags',
+                filter: 'filter{tag.in}',
+                itemValue: 'name',
+                itemColor: 'color',
+                type: 'tag',
+                showFullContent: true
             },
             {
                 path: 'creator',

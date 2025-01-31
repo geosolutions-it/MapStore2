@@ -76,3 +76,13 @@ export function clearQueryParams(location) {
                 : acc, { extent: undefined });
     return newParams;
 }
+
+export const splitFilterValue = (value) => {
+    const parts = value.split(':');
+    return {
+        value: parts[0],
+        label: parts.length <= 2
+            ? parts[1]
+            : parts.filter((p, idx) => idx > 0).join(':')
+    };
+};

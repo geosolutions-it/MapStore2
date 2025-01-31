@@ -156,7 +156,7 @@ function ResourcesGrid({
     const isValidItem = (target) => (item) => item.target === target && (!item?.cfg?.resourcesGridId || item?.cfg?.resourcesGridId === id);
     const cardOptions = configuredItems.filter(isValidItem('card-options'));
     const cardButtons = configuredItems.filter(isValidItem('card-buttons'));
-    const menuItemsLeft = configuredItems.filter(isValidItem('menu-items-left'));
+    const menuItemsLeft = configuredItems.filter(isValidItem('left-menu'));
     const { Component: cardComponent } = configuredItems.find(isValidItem('card')) || {};
     function handleUpdate(newParams) {
         onSearch(newParams);

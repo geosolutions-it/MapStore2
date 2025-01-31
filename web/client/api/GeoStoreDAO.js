@@ -572,7 +572,49 @@ const Api = {
             return postUser;
         }
     },
-    errorParser
+    errorParser,
+    getTags: (textSearch, options = {}) => {
+        const url = `/resources/tag`;
+        return axios.get(url, Api.addBaseUrl(parseOptions({
+            ...options,
+            params: {
+                ...options?.params,
+                ...(textSearch && { nameLike: `%${textSearch}%` })
+            }
+        }))).then((response) => response.data);
+    },
+    updateTag: (tag = {}, options = {}) => {
+        const url = `/resources/tag${tag.id ? `/${tag.id}` : ''}`;
+        return axios[tag.id ? 'put' : 'post'](
+            url,
+            [
+                '<Tag>',
+                `<name><![CDATA[${tag.name}]]></name>`,
+                `<description><![CDATA[${tag.description}]]></description>`,
+                `<color>${tag.color}</color>`,
+                '</Tag>'
+            ].join(''),
+            Api.addBaseUrl(
+                parseOptions({
+                    ...options,
+                    headers: {
+                        'Content-Type': "application/xml"
+                    }
+                })
+            )).then((response) => response.data);
+    },
+    deleteTag: (tag, options = {}) => {
+        const url = `/resources/tag/${tag.id}`;
+        return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    linkTagToResource: (tagId, resourceId, options) => {
+        const url = `/resources/tag/${tagId}/resource/${resourceId}`;
+        return axios.post(url, undefined, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    unlinkTagFromResource: (tagId, resourceId, options) => {
+        const url = `/resources/tag/${tagId}/resource/${resourceId}`;
+        return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    }
 };
 
 export default Api;

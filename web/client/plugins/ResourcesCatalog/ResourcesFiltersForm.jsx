@@ -95,6 +95,10 @@ function ResourcesFiltersForm({
         },
         {
             type: 'select',
+            facet: "tag"
+        },
+        {
+            type: 'select',
             facet: "context"
         },
         {
@@ -184,7 +188,7 @@ export default createPlugin('ResourcesFiltersForm', {
     component: ResourcesGridPlugin,
     containers: {
         ResourcesGrid: {
-            target: 'menu-items-left',
+            target: 'left-menu',
             Component: ResourcesFiltersFormButton
         }
     },

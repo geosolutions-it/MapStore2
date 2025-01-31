@@ -68,7 +68,8 @@ function ResourceDetails({
     setRequest,
     updateRequest,
     facets,
-    resourceType
+    resourceType,
+    enableFilters
 }) {
 
     const parsedConfig = useParsePluginConfigExpressions(monitoredState, { tabs });
@@ -163,6 +164,7 @@ function ResourceDetails({
                 resourcesGridId={resourcesGridId}
                 onChange={handleOnChange}
                 resource={resource || {}}
+                enableFilters={enableFilters}
             /> : null}
             {(updating || loading) ? <FlexBox centerChildren classNames={['_absolute', '_fill', '_overlay', '_corner-tl']}>
                 <Text fontSize="xxl">

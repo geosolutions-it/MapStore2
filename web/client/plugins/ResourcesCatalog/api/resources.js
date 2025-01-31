@@ -10,16 +10,9 @@ import { searchListByAttributes, getResource } from '../../../observables/geosto
 import { castArray } from 'lodash';
 import isString from 'lodash/isString';
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
+import { splitFilterValue } from '../utils/ResourcesFiltersUtils';
 
-const splitFilterValue = (value) => {
-    const parts = value.split(':');
-    return {
-        value: parts[0],
-        label: parts.length <= 2
-            ? parts[1]
-            : parts.filter((p, idx) => idx > 0).join(':')
-    };
-};
+const applyDoubleQuote = value => `"${value}"`;
 
 const getFilter = ({
     q,
@@ -31,6 +24,10 @@ const getFilter = ({
     const categories = ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'];
     const creators = castArray(query['filter{creator.in}'] || []);
     const groups = castArray(query['filter{group.in}'] || []);
+    const tags = castArray(query['filter{tag.in}'] || []).map(tag => {
+        const { value } = splitFilterValue(tag);
+        return value;
+    });
     const categoriesFilters = categories.filter(category => f.includes(category.toLocaleLowerCase()));
     const associatedContextFilters = ctx.map((ctxValue) => {
         const { value } = splitFilterValue(ctxValue);
@@ -82,7 +79,15 @@ const getFilter = ({
                 GROUP: [
                     {
                         operator: ['IN'],
-                        names: groups
+                        names: groups.map(applyDoubleQuote).join(',')
+                    }
+                ]
+            }),
+            ...(tags.length && {
+                TAG: [
+                    {
+                        operator: ['IN'],
+                        names: tags.map(applyDoubleQuote).join(',')
                     }
                 ]
             }),
@@ -156,6 +161,7 @@ export const requestResources = ({
     {
         params: {
             includeAttributes: true,
+            includeTags: true,
             start: parseFloat(page - 1) * pageSize,
             limit: pageSize,
             sortBy,
@@ -189,18 +195,25 @@ export const requestResources = ({
                     return {
                         total: response.totalCount,
                         isNextPageAvailable: page < (response?.totalCount / pageSize),
-                        resources: resources.map((resource) => {
-                            const context = contexts.find(ctx => ctx.id === resource?.attributes?.context);
-                            if (context) {
+                        resources: resources
+                            .map(({ tags, ...resource }) => {
                                 return {
                                     ...resource,
-                                    '@extras': {
-                                        context
-                                    }
+                                    ...(tags && { tags: castArray(tags) })
                                 };
-                            }
-                            return resource;
-                        })
+                            })
+                            .map((resource) => {
+                                const context = contexts.find(ctx => ctx.id === resource?.attributes?.context);
+                                if (context) {
+                                    return {
+                                        ...resource,
+                                        '@extras': {
+                                            context
+                                        }
+                                    };
+                                }
+                                return resource;
+                            })
                     };
                 });
         });
@@ -322,6 +335,44 @@ export const facets = [
                     const totalCount = response?.ExtGroupList?.GroupCount;
                     return {
                         items: groups,
+                        isNextPageAvailable: (page + 1) < (totalCount / pageSize)
+                    };
+                });
+        }
+    },
+    {
+        id: 'tag',
+        type: 'select',
+        labelId: 'resourcesCatalog.tags',
+        key: 'filter{tag.in}',
+        getLabelValue: (item) => {
+            return item.value;
+        },
+        getFilterByField: (field, value) => {
+            return { label: value, value };
+        },
+        loadItems: ({ params, config }) => {
+            const { page, pageSize, q } = params;
+            return GeoStoreDAO.getTags(q, {
+                ...config,
+                params: {
+                    page: page,
+                    entries: pageSize
+                }
+            })
+                .then((response) => {
+                    const tags = castArray(response?.TagList?.Tag || []).map((item) => {
+                        const value = `${item.name}`;
+                        return {
+                            ...item,
+                            filterValue: value,
+                            value: value,
+                            label: `${item.name}`
+                        };
+                    });
+                    const totalCount = response?.TagList?.Count;
+                    return {
+                        items: tags,
                         isNextPageAvailable: (page + 1) < (totalCount / pageSize)
                     };
                 });

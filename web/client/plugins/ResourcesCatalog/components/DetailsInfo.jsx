@@ -159,7 +159,7 @@ function DetailsInfoFieldEditing({ field, onChange }) {
     return null;
 }
 
-function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {} }) {
+function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, enableFilters }) {
     return (<FlexBox
         gap="xs"
         column
@@ -190,7 +190,7 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {} }
                 return (
                     <DetailsInfoField key={filedIndex} field={field}>
                         {(values) => values.map((value, idx) => (
-                            <a key={idx} href={formatHref({
+                            <ALink key={idx} href={enableFilters ? formatHref({
                                 query: field.queryTemplate
                                     ? Object.keys(field.queryTemplate)
                                         .reduce((acc, key) => ({
@@ -199,7 +199,7 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {} }
                                         }), {})
                                     : field.query,
                                 pathname: field.pathname
-                            })}>{field.valueKey ? value[field.valueKey] : value}</a>
+                            }) : undefined}>{field.valueKey ? value[field.valueKey] : value}</ALink>
                         ))}
                     </DetailsInfoField>
                 );
@@ -237,9 +237,10 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {} }
                         {(values) => values.map((value, idx) => (
                             <ALink
                                 key={idx}
+                                fallbackComponent="span"
                                 className={`ms-tag${castArray(query[field.filter] || []).includes(value[field.itemValue || 'value']) ? ' active' : ''}`}
                                 style={{ '--tag-color': value[field.itemColor] }}
-                                href={field.filter ? formatHref({
+                                href={enableFilters && field.filter ? formatHref({
                                     query: {
                                         [field.filter]: value[field.itemValue || 'value']
                                     }

@@ -8,7 +8,7 @@
 
 import { Observable } from 'rxjs';
 import uuid from 'uuid/v1';
-import { includes, isNil, omit, isArray, isObject, get, find } from 'lodash';
+import { includes, isNil, omit, isArray, isObject, get, find, castArray } from 'lodash';
 import GeoStoreDAO from '../api/GeoStoreDAO';
 
 const createLinkedResourceURL = (id, tail = "") => `rest/geostore/data/${id}${tail}`;
@@ -156,12 +156,13 @@ const updateOtherLinkedResourcesPermissions = (id, linkedResources, permission, 
  * @param {boolean} params.includeAttributes if true, resource will contain resource attributes
  * @param {boolean} params.withData if true, resource will contain resource data
  * @param {boolean} params.withPermissions if true, resource will contain resource permission
+ * @param {boolean} params.includeTags if true, resource will contain resource tags (default true)
  * @param {object} API the API to use, default GeoStoreDAO
  * @return an observable that emits the resource
  */
-export const getResource = (id, { includeAttributes = true, withData = true, withPermissions = false, baseURL } = {}, API = GeoStoreDAO) =>
+export const getResource = (id, { includeAttributes = true, includeTags = true, withData = true, withPermissions = false, baseURL } = {}, API = GeoStoreDAO) =>
     Observable.forkJoin([
-        Observable.defer(() => API.getShortResource(id)).pluck("ShortResource"),
+        Observable.defer(() => API.getShortResource(id, includeTags ? { params: { includeTags } } : undefined)).pluck("ShortResource"),
         Observable.defer(() => includeAttributes
             ? API.getResourceAttributes(id)
             // when includeAttributes is false we should return an empty array
@@ -169,8 +170,9 @@ export const getResource = (id, { includeAttributes = true, withData = true, wit
             : new Promise(resolve => resolve([]))),
         ...(withData ? [Observable.defer(() =>API.getData(id, { baseURL }))] : [Promise.resolve(undefined)]),
         ...(withPermissions ? [Observable.defer( () => API.getResourcePermissions(id, {}, true))] : [Promise.resolve(undefined)])
-    ]).map(([resource, attributes, data, permissions]) => ({
+    ]).map(([{ tagList, ...resource }, attributes, data, permissions]) => ({
         ...resource,
+        ...(tagList && { tags: castArray(tagList?.Tag || []) }),
         attributes: (attributes || []).reduce((acc, curr) => ({
             ...acc,
             [curr.name]: curr.value
@@ -297,12 +299,12 @@ export const createCategory = (category, API = GeoStoreDAO) =>
  * @return an observable that emits the id of the updated resource
  */
 
-export const updateResource = ({ id, data, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) => {
+export const updateResource = ({ id, data, permission, metadata, linkedResources = {}, tags } = {}, API = GeoStoreDAO) => {
     const linkedResourcesKeys = Object.keys(linkedResources);
 
     // update metadata
     return Observable.forkJoin([
-        // update data and permissions after data updated
+        // update data and and permissions after data updated
         Observable.defer(
             () => API.putResourceMetadataAndAttributes(id, metadata)
         ).switchMap(res =>
@@ -321,7 +323,18 @@ export const updateResource = ({ id, data, permission, metadata, linkedResources
         ) : Observable.of([]))
             .switchMap(() => permission ?
                 Observable.defer(() => updateOtherLinkedResourcesPermissions(id, linkedResources, permission, API)) :
-                Observable.of(-1))
+                Observable.of(-1)),
+
+        // update tags
+        Observable
+            .defer(() => Promise.all(
+                (tags || [])
+                    .map(({ tag, action }) => action === 'link'
+                        ? API.linkTagToResource(tag.id, id)
+                        : API.unlinkTagFromResource(tag.id, id)
+                    )
+            ))
+            .switchMap(() => Observable.of(-1))
     ]).map(() => id);
 };
 
