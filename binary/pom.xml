@@ -115,7 +115,7 @@
                         <id>get-untar-jre-copy-db</id>
                         <phase>package</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <echo message="Downloading JRE..."/>
                                 <get src="https://www.dropbox.com/scl/fi/1joi5d3ol2zeex5cle2tg/jdk_11_0_23.tar.gz?rlkey=4vsmejq23xkpctsw6qifs6of6&amp;st=k4xtzt68&amp;dl=1"
                                      dest="${project.build.directory}/jre.tar.gz"/>
@@ -123,7 +123,7 @@
                                 <gunzip src="${project.build.directory}/jre.tar.gz"
                                         dest="${project.build.directory}/jre.tar"/>
                                 <untar src="${project.build.directory}/jre.tar" dest="${project.build.directory}/jre"/>
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -133,12 +133,12 @@
                         <phase>package</phase>
                         <configuration>
                             <!-- remove some unwanted dependencies that get pulled over -->
-                            <tasks>
+                            <target>
                                 <delete>
                                     <fileset dir="${project.build.directory}/dependency"
                                              includes="servlet-api-*.jar,core*.jar"/>
                                 </delete>
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
