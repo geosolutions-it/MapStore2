@@ -170,7 +170,7 @@ export const getResource = (id, { includeAttributes = true, includeTags = true, 
             : new Promise(resolve => resolve([]))),
         ...(withData ? [Observable.defer(() =>API.getData(id, { baseURL }))] : [Promise.resolve(undefined)]),
         ...(withPermissions ? [Observable.defer( () => API.getResourcePermissions(id, {}, true))] : [Promise.resolve(undefined)])
-    ]).map(([{ tagList, ...resource }, attributes, data, permissions]) => ({
+    ]).map(([{ tagList, ...resource } = {}, attributes, data, permissions]) => ({
         ...resource,
         ...(tagList && { tags: castArray(tagList?.Tag || []) }),
         attributes: (attributes || []).reduce((acc, curr) => ({
