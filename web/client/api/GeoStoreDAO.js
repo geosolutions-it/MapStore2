@@ -574,7 +574,7 @@ const Api = {
     },
     errorParser,
     getTags: (textSearch, options = {}) => {
-        const url = `/resources/tag`;
+        const url = '/resources/tag';
         return axios.get(url, Api.addBaseUrl(parseOptions({
             ...options,
             params: {

@@ -115,6 +115,10 @@ describe('resources api', () => {
                             "operator": 'IN',
                             "names": "\"group01\""
                         },
+                        "TAG": {
+                            "operator": 'IN',
+                            "names": "\"tag\",\"ta,g\""
+                        },
                         "OR": [
                             {
                                 "AND": {
@@ -159,6 +163,7 @@ describe('resources api', () => {
                 'q': 'A',
                 'filter{ctx.in}': ['contextName'],
                 'filter{group.in}': ['group01'],
+                'filter{tag.in}': ['tag', 'ta,g'],
                 'filter{creator.in}': ['creator'],
                 'filter{creation.gte}': '2025-01-22T00:00:00',
                 'filter{creation.lte}': '2025-01-24T23:59:59',

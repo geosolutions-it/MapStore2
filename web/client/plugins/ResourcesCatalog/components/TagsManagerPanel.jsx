@@ -17,6 +17,7 @@ import PaginationCustom from './PaginationCustom';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import Spinner from './Spinner';
 import TagsManagerEntry from './TagsManagerEntry';
+import PropTypes from 'prop-types';
 
 const Button = tooltip(ButtonComponent);
 
@@ -177,5 +178,41 @@ function TagsManagerPanel({
         </FlexBox>
     );
 }
+
+
+TagsManagerPanel.propTypes = {
+    pageSize: PropTypes.number,
+    filterText: PropTypes.string,
+    setFilterText: PropTypes.func,
+    page: PropTypes.number,
+    setPage: PropTypes.func,
+    newTag: PropTypes.object,
+    setNewTag: PropTypes.func,
+    loading: PropTypes.bool,
+    onCloseDialog: PropTypes.func,
+    onUpdate: PropTypes.func,
+    changes: PropTypes.object,
+    setChanges: PropTypes.func,
+    totalCount: PropTypes.number,
+    editing: PropTypes.bool,
+    tags: PropTypes.array,
+    onEndEditing: PropTypes.func,
+    onStartEditing: PropTypes.func,
+    setShowDeleteModal: PropTypes.func
+};
+
+TagsManagerPanel.defaultProps = {
+    changes: {},
+    editing: [],
+    setFilterText: () => {},
+    setPage: () => {},
+    setNewTag: () => {},
+    onCloseDialog: () => {},
+    onUpdate: () => {},
+    setChanges: () => {},
+    onEndEditing: () => {},
+    onStartEditing: () => {},
+    setShowDeleteModal: () => {}
+};
 
 export default TagsManagerPanel;

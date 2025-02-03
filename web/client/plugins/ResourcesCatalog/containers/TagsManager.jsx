@@ -14,10 +14,11 @@ import useIsMounted from '../hooks/useIsMounted';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { searchResources } from '../actions/resources';
 import TagsManagerPanel from '../components/TagsManagerPanel';
+import PropTypes from 'prop-types';
 
 function TagsManager({
-    pageSize = 20,
-    onShow = () => {},
+    pageSize,
+    onShow,
     onSearch
 }) {
     const [filterText, setFilterText] = useState('');
@@ -29,7 +30,7 @@ function TagsManager({
     const [changes, setChanges] = useState({});
     const [changed, setChanged] = useState(false);
     const [editing, setEditing] = useState([]);
-    const [totalCount, setTotalCount] = useState([]);
+    const [totalCount, setTotalCount] = useState();
     const [newTag, setNewTag] = useState(null);
     const [forceUpdate, setForceUpdate] = useState(0);
 
@@ -162,5 +163,17 @@ function TagsManager({
         </>
     );
 }
+
+TagsManagerPanel.propTypes = {
+    pageSize: PropTypes.number,
+    onShow: PropTypes.func,
+    onSearch: PropTypes.func
+};
+
+TagsManagerPanel.defaultProps = {
+    pageSize: 20,
+    onShow: () => {},
+    onSearch: () => {}
+};
 
 export default connect(() => ({}), { onSearch: searchResources })(TagsManager);

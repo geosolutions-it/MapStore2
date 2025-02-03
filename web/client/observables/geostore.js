@@ -294,7 +294,8 @@ export const createCategory = (category, API = GeoStoreDAO) =>
 
 /**
  * Updates a resource setting up permission and linked resources
- * @param {resource} param0 the resource to update (must contain the id)
+ * @param {object} resource the resource to update (must contain the id)
+ * @param {object[]} tags array of tag actions, action can be 'link' or 'unlink', expected structure [{ tag: { id }, action },]
  * @param {object} API the API to use
  * @return an observable that emits the id of the updated resource
  */

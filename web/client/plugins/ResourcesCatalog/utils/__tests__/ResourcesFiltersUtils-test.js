@@ -8,7 +8,8 @@
 
 import {
     hashLocationToHref,
-    clearQueryParams
+    clearQueryParams,
+    splitFilterValue
 } from '../ResourcesFiltersUtils';
 import expect from 'expect';
 
@@ -67,5 +68,11 @@ describe('ResourcesFiltersUtils', () => {
         expect(clearQueryParams({
             search: '?q=value'
         })).toEqual({ extent: undefined, 'q': [] });
+    });
+    it('splitFilterValue', () => {
+        expect(splitFilterValue()).toEqual({ value: '', label: '' });
+        expect(splitFilterValue('value')).toEqual({ value: 'value', label: '' });
+        expect(splitFilterValue('value:label')).toEqual({ value: 'value', label: 'label' });
+        expect(splitFilterValue('value:label_with:')).toEqual({ value: 'value', label: 'label_with:' });
     });
 });

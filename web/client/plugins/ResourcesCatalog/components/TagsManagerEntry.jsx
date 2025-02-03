@@ -12,6 +12,7 @@ import Message from '../../../components/I18N/Message';
 import Text from './Text';
 import ColorSelector from '../../../components/style/ColorSelector';
 import { ControlLabel, FormGroup } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 function TagsManagerEntry({
     name,
@@ -20,7 +21,8 @@ function TagsManagerEntry({
     children,
     editing,
     onChange,
-    classNames = []
+    classNames,
+    debounceTime
 }) {
 
     if (editing) {
@@ -37,7 +39,7 @@ function TagsManagerEntry({
                         <ControlLabel><Message msgId="resourcesCatalog.tagName" /></ControlLabel>
                         <InputControl
                             value={name}
-                            debounceTime={300}
+                            debounceTime={debounceTime}
                             onChange={(value) => onChange({ name: value })}
                         />
                     </FormGroup>
@@ -45,7 +47,7 @@ function TagsManagerEntry({
                         <ControlLabel><Message msgId="resourcesCatalog.tagDescription" /></ControlLabel>
                         <InputControl
                             value={description}
-                            debounceTime={300}
+                            debounceTime={debounceTime}
                             onChange={(value) => onChange({ description: value })}
                         />
                     </FormGroup>
@@ -77,5 +79,21 @@ function TagsManagerEntry({
         </FlexBox>
     );
 }
+
+TagsManagerEntry.propTypes = {
+    name: PropTypes.string,
+    description: PropTypes.string,
+    color: PropTypes.string,
+    editing: PropTypes.bool,
+    onChange: PropTypes.func,
+    classNames: PropTypes.array,
+    debounceTime: PropTypes.number
+};
+
+TagsManagerEntry.defaultProps = {
+    onChange: () => {},
+    classNames: [],
+    debounceTime: 300
+};
 
 export default TagsManagerEntry;

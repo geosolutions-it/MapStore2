@@ -77,12 +77,12 @@ export function clearQueryParams(location) {
     return newParams;
 }
 
-export const splitFilterValue = (value) => {
+export const splitFilterValue = (value = '') => {
     const parts = value.split(':');
     return {
         value: parts[0],
-        label: parts.length <= 2
+        label: (parts.length <= 2
             ? parts[1]
-            : parts.filter((p, idx) => idx > 0).join(':')
+            : parts.filter((p, idx) => idx > 0).join(':')) || ''
     };
 };
