@@ -27,7 +27,7 @@ import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
 import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
-import { createFeatureFilter } from '../utils/FilterUtils';
+import { createFeatureFilter, filterVectorLayerFeatures } from '../utils/FilterUtils';
 import ErrorPanel from '../components/map/ErrorPanel';
 import catalog from "../epics/catalog";
 import backgroundSelector from "../epics/backgroundselector";
@@ -343,7 +343,15 @@ class MapPlugin extends React.Component {
     renderLayerContent = (layer, projection) => {
         const plugins = this.state.plugins;
         if (layer.features) {
-            return layer.features.filter(createFeatureFilter(layer.filterObj)).map( (feature) => {
+            let renderedFeatures = layer.features;
+            // For openlayers, rendering features of vector layer will be handled by 'plugins.Feature' here
+            // so filter the vector featuers should be handled here as well
+            // for leaflet/cesium --> rendering the vector layer is implemented within the VectorLayer not Feature
+            const isOLVectorLayer = layer.type === 'vector' && plugins.mapType === MapLibraries.OPENLAYERS;
+            if (isOLVectorLayer) {
+                renderedFeatures = renderedFeatures.filter(filterVectorLayerFeatures(layer));
+            }
+            return renderedFeatures.filter(createFeatureFilter(layer.filterObj)).map( (feature) => {
                 return (
                     <plugins.Feature
                         key={feature.id}

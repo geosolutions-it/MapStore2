@@ -407,5 +407,43 @@ describe('test Layer Properties Display module component', () => {
         expect(spy.calls[0].arguments[0]).toEqual("enableInteractiveLegend");
         expect(spy.calls[0].arguments[1]).toEqual(true);
     });
+    it('tests vector Layer Properties Legend component events', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'vector',
+            url: 'fakeurl',
+            legendOptions: {
+                legendWidth: 15,
+                legendHeight: 15
+            },
+            enableInteractiveLegend: false
+        };
+        const settings = {
+            options: {
+                opacity: 1
+            }
+        };
+        const handlers = {
+            onChange() {}
+        };
+        let spy = expect.spyOn(handlers, "onChange");
+        const comp = ReactDOM.render(<Display element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        expect(comp).toBeTruthy();
+        const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
+        const legendPreview = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "legend-preview" );
+        expect(legendPreview).toBeTruthy();
+        expect(inputs).toBeTruthy();
+        expect(inputs.length).toBe(6);
+        let interactiveLegendConfig = document.querySelector(".legend-options input[data-qa='display-interactive-legend-option']");
+        // change enableInteractiveLegend to enable interactive legend
+        interactiveLegendConfig.checked = true;
+        ReactTestUtils.Simulate.change(interactiveLegendConfig);
+        expect(spy).toHaveBeenCalled();
+        expect(spy.calls[0].arguments[0]).toEqual("enableInteractiveLegend");
+        expect(spy.calls[0].arguments[1]).toEqual(true);
+    });
 
 });

@@ -31,6 +31,8 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
 
 import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
 import { INTERACTIVE_LEGEND_ID } from './LegendUtils';
+import { geoStylerStyleFilter } from './styleparser/StyleParserUtils';
+import { getMiscSetting } from './ConfigUtils';
 let FilterUtils;
 
 const wrapValueWithWildcard = (value, condition) => {
@@ -1459,7 +1461,34 @@ export function resetLayerLegendFilter(layer, reason, value) {
     }
     return filterObj;
 }
+/**
+ * filter vector layer features base on filter actions like interactive legend filters
+ * @param {object} layerFilter layer filter object includes all filters
+ * @param {object} feature geojson feature object of the vector layer to render
+ * @return {bool} bool value for filter
+ */
+export const filterVectorLayerFeatures = (options) => feature => {
+    // Check for interactive egend filter
+    // TODO: we can add other filters here as well
+    const isLayerHasInteractiveLegend = options?.enableInteractiveLegend;
+    const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
 
+    if ((isLayerHasInteractiveLegend && experimentalInteractiveLegend)) {
+        const isLegendFilterExist = options?.layerFilter?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
+        const isInteractiveLegendFiltersExist = isLegendFilterExist?.filters?.length;
+        const isLayerFilterDisabled = options?.layerFilter?.disabled;
+
+        if (!isInteractiveLegendFiltersExist || isLayerFilterDisabled) return true;
+
+        let legendFilters = isLegendFilterExist;
+        if (legendFilters?.logic === 'OR') {
+            return legendFilters.filters.some(filterRule => geoStylerStyleFilter(feature, filterRule.body));
+        } else if (legendFilters?.logic === 'OR') {
+            return legendFilters.filters.every(filterRule => geoStylerStyleFilter(feature, filterRule.body));
+        }
+    }
+    return true;
+};
 FilterUtils = {
     processOGCFilterGroup,
     processOGCFilterFields,

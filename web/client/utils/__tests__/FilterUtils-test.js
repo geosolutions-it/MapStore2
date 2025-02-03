@@ -32,12 +32,22 @@ import {
     isFilterEmpty,
     updateLayerLegendFilter,
     resetLayerLegendFilter,
-    updateLayerWFSVectorLegendFilter
+    updateLayerWFSVectorLegendFilter,
+    filterVectorLayerFeatures
 } from '../FilterUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
+import { setConfigProp } from '../ConfigUtils';
 
 
 describe('FilterUtils', () => {
+    beforeEach((done) => {
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
+        setTimeout(done);
+    });
+    afterEach((done) => {
+        setConfigProp('miscSettings', { });
+        setTimeout(done);
+    });
     it('Calculate OGC filter', () => {
         let filterObj = {
             filterFields: [{
@@ -2599,5 +2609,63 @@ describe('FilterUtils', () => {
         expect(updatedFilterObj).toBeTruthy();
         expect(updatedFilterObj.filters.length).toEqual(0);
         expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+    });
+    it('test filterVectorLayerFeatures for vector layers', () => {
+        const layerFilterObj = {
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                }
+            ],
+            "filterFields": [],
+            "attributePanelExpanded": true,
+            "spatialPanelExpanded": true,
+            "crossLayerExpanded": true,
+            "crossLayerFilter": {
+                "attribute": "the_geom"
+            },
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "filters": [
+                {
+                    "id": INTERACTIVE_LEGEND_ID,
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "geostyler",
+                            "version": "1.0.0",
+                            "body": ["&&", ['>=', 'FIELD_01', '2500'], ['<', 'FIELD_01', '7000']],
+                            "id": "&&,>=,FIELD_01,2500,<,FIELD_01,7000"
+                        }
+                    ]
+                }
+            ]
+        };
+        const layerOptions = {
+            enableInteractiveLegend: true,
+            layerFilter: layerFilterObj,
+            style: "style_01"
+        };
+        const filterFunction = filterVectorLayerFeatures(layerOptions);
+        const isFiltered1 = filterFunction({
+            properties: {
+                "FIELD_01": 2550        // matched with the filter rule
+            }, geometry: {}
+        });
+        const isFiltered2 = filterFunction({
+            properties: {
+                "FIELD_01": 1500        // not matched the filter rule
+            }, geometry: {}
+        });
+        expect(isFiltered1).toBeTruthy();
+        expect(isFiltered2).toBeFalsy();
     });
 });

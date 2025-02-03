@@ -30,7 +30,7 @@ import {
     setStore,
     setCredentials
 } from '../../../../utils/SecurityUtils';
-import ConfigUtils from '../../../../utils/ConfigUtils';
+import ConfigUtils, { setConfigProp } from '../../../../utils/ConfigUtils';
 import { ServerTypes } from '../../../../utils/LayersUtils';
 
 
@@ -169,6 +169,7 @@ describe('Openlayers layer', () => {
     let map;
 
     beforeEach(() => {
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map" style="width:200px;height:200px;"></div><div id="container"></div>';
         map = new Map({
@@ -188,6 +189,7 @@ describe('Openlayers layer', () => {
     });
 
     afterEach(() => {
+        setConfigProp('miscSettings', { });
         mockAxios.restore();
         map.setTarget(null);
         document.body.innerHTML = '';
@@ -1502,7 +1504,65 @@ describe('Openlayers layer', () => {
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
     });
+    it('creates a vector layer for openlayers map with interactive legend filter', () => {
+        const options = {
+            type: 'vector',
+            features: [
+                { type: 'Feature', properties: { "prop1": 0 }, geometry: { type: 'Point', coordinates: [0, 0] } },
+                { type: 'Feature', properties: { "prop1": 2 }, geometry: { type: 'Point', coordinates: [1, 0] } },
+                { type: 'Feature', properties: { "prop1": 5 }, geometry: { type: 'Point', coordinates: [2, 0] } }
+            ],
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            },
+            enableInteractiveLegend: true,
+            layerFilter: {
+                filters: [{
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "geostyler",
+                            "version": "1.0.0",
+                            "body": [
+                                "&&",
+                                [
+                                    ">",
+                                    "prop1",
+                                    "0"
+                                ], [
+                                    "<",
+                                    "prop1",
+                                    "3"
+                                ]
+                            ],
+                            "id": "&&,>,prop1,0,<,prop1,3"
+                        }
+                    ]
+                }]
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="vector"
+                options={options} map={map}/>, document.getElementById("container"));
 
+        expect(layer).toBeTruthy();
+        // count layers
+        const renderedFeatsNum = map.getLayers().getLength();
+        const filteredFeatsNum = 1;
+        expect(renderedFeatsNum).toEqual(filteredFeatsNum);
+    });
     it('change layer visibility for Google Layer', () => {
         var google = {
             maps: {
