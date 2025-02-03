@@ -31,6 +31,7 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
 
 import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
 import { INTERACTIVE_LEGEND_ID } from './LegendUtils';
+import { getMiscSetting } from './ConfigUtils';
 let FilterUtils;
 
 const wrapValueWithWildcard = (value, condition) => {
@@ -1440,15 +1441,16 @@ export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostyler
 };
 
 export function resetLayerLegendFilter(layer, reason, value) {
+    const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
     const isResetForStyle = reason === 'style';      // here the reason for reset is change 'style' or change the enable/disable interactive legend config 'disableEnableInteractiveLegend'
     let needReset = false;
     if (isResetForStyle) {
         needReset = isResetForStyle && value !== layer.style;
     }
     // check if the layer has interactive legend or not, if not cancel the epic
-    const isLayerWithJSONLegend = layer?.enableInteractiveLegend;
+    const isLayerHasInterActiveLegend = experimentalInteractiveLegend && layer?.enableInteractiveLegend;
     let filterObj = !isFilterEmpty(layer.layerFilter) ? layer.layerFilter : undefined;
-    if (!needReset || !isLayerWithJSONLegend || !filterObj) return false;
+    if (!needReset || !isLayerHasInterActiveLegend || !filterObj) return false;
     // reset thte filter if legendCQLFilter is empty
     const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (isLegendFilterExist) {
