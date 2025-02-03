@@ -1332,7 +1332,7 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
                 ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
             };
         }
-        let newFilter = filterObj ? filterObj : undefined;
+        let newFilter = !isFilterEmpty(filterObj) ? filterObj : undefined;
         return newFilter;
     }
     let interactiveLegendFilters = isLegendFilterExist ? isLegendFilterExist.filters || [] : [];
@@ -1355,7 +1355,7 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
     }
     let newFilter = {
         ...(filterObj || {}), filters: [
-            ...(filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID) || []), ...[
+            ...(filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID) || []), ...(interactiveLegendFilters?.length ? [
                 {
                     "id": INTERACTIVE_LEGEND_ID,
                     "format": "logic",
@@ -1363,10 +1363,10 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
                     "logic": "OR",
                     "filters": [...interactiveLegendFilters]
                 }
-            ]
+            ] : [])
         ]
     };
-    return newFilter;
+    return !isFilterEmpty(newFilter) ? newFilter : undefined;
 };
 
 /**
@@ -1407,7 +1407,7 @@ export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostyler
                 ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
             };
         }
-        let newFilter = filterObj ? filterObj : undefined;
+        let newFilter = !isFilterEmpty(filterObj) ? filterObj : undefined;
         return newFilter;
     }
     let interactiveLegendFilters = isLegendFilterExist ? isLegendFilterExist.filters || [] : [];
@@ -1425,7 +1425,7 @@ export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostyler
     }
     let newFilter = {
         ...(filterObj || {}), filters: [
-            ...(filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID) || []), ...[
+            ...(filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID) || []), ...(interactiveLegendFilters?.length ? [
                 {
                     "id": INTERACTIVE_LEGEND_ID,
                     "format": "logic",
@@ -1433,10 +1433,10 @@ export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostyler
                     "logic": "OR",
                     "filters": [...interactiveLegendFilters]
                 }
-            ]
+            ] : [])
         ]
     };
-    return newFilter;
+    return !isFilterEmpty(newFilter) ? newFilter : undefined;
 };
 
 export function resetLayerLegendFilter(layer, reason, value) {
@@ -1447,7 +1447,7 @@ export function resetLayerLegendFilter(layer, reason, value) {
     }
     // check if the layer has interactive legend or not, if not cancel the epic
     const isLayerWithJSONLegend = layer?.enableInteractiveLegend;
-    let filterObj = layer.layerFilter ? layer.layerFilter : undefined;
+    let filterObj = !isFilterEmpty(layer.layerFilter) ? layer.layerFilter : undefined;
     if (!needReset || !isLayerWithJSONLegend || !filterObj) return false;
     // reset thte filter if legendCQLFilter is empty
     const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
@@ -1455,9 +1455,9 @@ export function resetLayerLegendFilter(layer, reason, value) {
         filterObj = {
             ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
         };
-        return filterObj;
+        return !isFilterEmpty(filterObj) ? filterObj : undefined;
     }
-    return filterObj;
+    return !isFilterEmpty(filterObj) ? filterObj : undefined;
 }
 
 FilterUtils = {
