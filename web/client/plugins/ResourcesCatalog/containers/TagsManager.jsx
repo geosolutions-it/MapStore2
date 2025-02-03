@@ -80,6 +80,7 @@ function TagsManager({
         setLoading(true);
         GeoStoreDAO.deleteTag(tag)
             .then(() => isMounted(() => {
+                handleEndEditing(tag);
                 setForceUpdate(prevValue => prevValue + 1);
             })).finally(() => isMounted(() => {
                 setLoading(false);
