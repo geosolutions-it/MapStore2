@@ -7,7 +7,11 @@
  */
 
 export const SHOW_TAGS_PANEL = 'TAGS:SHOW_TAGS_PANEL';
-
+/**
+ * show/hide the tags manager panel
+ * @param {boolean} show if true will show the tags panel
+ * @return {action} type `TAGS:SHOW_TAGS_PANEL`
+ */
 export const showTagsPanel = (show) => ({
     type: SHOW_TAGS_PANEL,
     show

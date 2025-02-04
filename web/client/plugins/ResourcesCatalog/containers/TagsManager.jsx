@@ -16,6 +16,12 @@ import { searchResources } from '../actions/resources';
 import TagsManagerPanel from '../components/TagsManagerPanel';
 import PropTypes from 'prop-types';
 
+/**
+ * TagsManager panel where to add/update/remove tags
+ * @prop {string} pageSize size of the requested page
+ * @prop {func} onShow callback to show/hide panel
+ * @prop {func} onSearch callback used to refresh the searched resources and apply the correct tags
+ */
 function TagsManager({
     pageSize,
     onShow,
@@ -79,7 +85,7 @@ function TagsManager({
 
     function handleDelete(tag) {
         setLoading(true);
-        GeoStoreDAO.deleteTag(tag)
+        GeoStoreDAO.deleteTag(tag.id)
             .then(() => isMounted(() => {
                 handleEndEditing(tag);
                 setForceUpdate(prevValue => prevValue + 1);

@@ -14,6 +14,16 @@ import ColorSelector from '../../../components/style/ColorSelector';
 import { ControlLabel, FormGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
+/**
+ * TagsManagerEntry represents the tag entry UI available in read or edit mode
+ * @prop {string} name tag name
+ * @prop {string} description tag description
+ * @prop {string} color tag color in hex
+ * @prop {bool} editing enabled the edit mode
+ * @prop {func} onChange callback to update tag properties
+ * @prop {string[]} classNames additional class names
+ * @prop {number} debounceTime debounce time for input fields
+ */
 function TagsManagerEntry({
     name,
     description,

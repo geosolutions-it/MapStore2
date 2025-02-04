@@ -21,6 +21,27 @@ import PropTypes from 'prop-types';
 
 const Button = tooltip(ButtonComponent);
 
+/**
+ * TagsManagerPanel panel
+ * @prop {string} pageSize size of the requested page
+ * @prop {string} filterText applied text filter
+ * @prop {func} setFilterText callback to update the filterText
+ * @prop {number} page current requested page
+ * @prop {func} setPage callback to update the page
+ * @prop {object} newTag new tag object { name, description, color }
+ * @prop {func} setNewTag callback to update the new tag
+ * @prop {bool} loading loading state
+ * @prop {func} onCloseDialog callback to trigger close action
+ * @prop {func} onUpdate callback to trigger update action
+ * @prop {object} changes object storing tags changes { [tagId]: { ...changes }, }
+ * @prop {func} setChanges callback to update the changes object
+ * @prop {number} totalCount total tags count
+ * @prop {string[]} editing list of tag ids in edit mode
+ * @prop {object[]} tags list of tags [{ id, name, description, color },]
+ * @prop {func} onEndEditing callback to end editing
+ * @prop {func} onStartEditing callback to start editing
+ * @prop {func} setShowDeleteModal callback to initialize the delete process
+ */
 function TagsManagerPanel({
     pageSize,
     filterText,

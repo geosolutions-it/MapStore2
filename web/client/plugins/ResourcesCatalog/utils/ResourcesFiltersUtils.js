@@ -77,6 +77,11 @@ export function clearQueryParams(location) {
     return newParams;
 }
 
+/**
+ * extract value and label from a filter
+ * @param {string} value value of a filter
+ * @return {object} { value, label }
+ */
 export const splitFilterValue = (value = '') => {
     const parts = value.split(':');
     return {

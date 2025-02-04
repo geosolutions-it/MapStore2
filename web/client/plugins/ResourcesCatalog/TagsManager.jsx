@@ -48,7 +48,11 @@ const tagsConnect = connect(
 
 const ConnectedTagsManager = tagsConnect(TagsManagerWrapper);
 const ConnectedTagsManagerMenuItem = tagsConnect(TagsManagerMenuItem);
-
+/**
+ * This plugin provides a new menu item inside administration tools to manage tags
+ * @memberof plugins
+ * @name TagsManager
+ */
 export default createPlugin('TagsManager', {
     component: ConnectedTagsManager,
     containers: {

@@ -476,7 +476,7 @@ describe('Test correctness of the GeoStore APIs', () => {
             done();
             return [200];
         });
-        API.deleteTag({ id: '1', name: 'Name', description: 'Description', color: '#ff0000' });
+        API.deleteTag('1');
     });
     it('linkTagToResource', (done) => {
         mockAxios.onPost().reply((data) => {
