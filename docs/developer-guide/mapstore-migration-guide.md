@@ -20,6 +20,25 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2024.02.00 to 2025.01.00
+
+### Add Favorite plugin to localConfig.json
+
+The new Favorite plugin should be added inside the plugins `maps` section of the localConfig.json to visualize the button on the resource cards
+
+```diff
+{
+    "plugins": {
+        ...,
+        "maps": [
+            ...,
++           { "name": "Favorites" }
+        ],
+        ...
+    }
+}
+```
+
 ## Migration from 2024.01.02 to 2024.02.00
 
 ### NodeJS and NPM update
@@ -77,25 +96,6 @@ index 62ddda0..62ce070 100644
 ### Java dependencies update
 
 Some libraries has been updated. if you have a MapStore project make sure to keep the versions aligned with the main product.
-
-## Migration from 2024.02.02 to 2025.01.00
-
-### Add Favorite plugin to localConfig.json
-
-The new Favorite plugin should be added inside the plugins `maps` section of the localConfig.json to visualize the button on the resource cards
-
-```diff
-{
-    "plugins": {
-        ...,
-        "maps": [
-            ...,
-+           { "name": "Favorites" }
-        ],
-        ...
-    }
-}
-```
 
 ## Migration from 2024.01.00 to 2024.01.02
 
