@@ -21,6 +21,7 @@ import { castArray } from 'lodash';
  * @prop {object} location router location
  * @prop {function} onSearch trigger a refresh request after changing the favorite association
  * @prop {number} delayTime delay time to complete the request
+ * @prop {string} renderType define the component type (eg. menuItem)
  */
 function Favorites({
     user,
@@ -28,7 +29,8 @@ function Favorites({
     resource,
     location,
     onSearch,
-    delayTime
+    delayTime,
+    renderType
 }) {
     const { query } = url.parse(location?.search || '', true);
     const f = castArray(query.f || []);
@@ -64,7 +66,7 @@ function Favorites({
             <Component
                 glyph={isFavorite ? 'heart' : 'heart-o'}
                 iconType="glyphicon"
-                labelId={!loading ? `resourcesCatalog.${isFavorite ? 'removeFromFavorites' : 'addToFavorites'}` : undefined}
+                labelId={!loading || renderType === 'menuItem' ? `resourcesCatalog.${isFavorite ? 'removeFromFavorites' : 'addToFavorites'}` : undefined}
                 square
                 onClick={handleOnClick}
                 loading={loading}
