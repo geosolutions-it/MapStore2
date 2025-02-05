@@ -150,7 +150,7 @@ Example:
 }
 ```
 
-`options` depends on the specific output format, but it can be used to pass additional parameters to the converter. For instance the `cql` and instance `geostyler` converts have no options, but the `ogc` converter has an `options` object that can contain the `nsFilter` field, that is the srs of the geometry to be used in the filter. See the JSDoc of the `ogc` converter for more details.
+`options` depends on the specific output format, but it can be used to pass additional parameters to the converter. For instance the `cql` and `geostyler` converters have no options, but the `ogc` converter has an `options` object that can contain the `nsFilter` field, that is the srs of the geometry to be used in the filter. See the JSDoc of the `ogc` converter for more details.
 
 These methods will translate the JSON objects received as input (or in same cases the effective body of the filter) in the format specified in the method name.
 Future converters (maybe with a more generic method) will be added to support other formats, if needed.
