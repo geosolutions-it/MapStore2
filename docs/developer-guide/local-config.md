@@ -74,7 +74,7 @@ This is the main structure:
       "maxURLLength": 5000,
       // Custom path to home page
       "homePath": '/home',
-      // If true it enables interactive legend for GeoServer WMS layers
+      // If true it enables interactive legend for GeoServer WMS, WFS layers
       "experimentalInteractiveLegend": true
   },
   // optional state initializer (it will override the one defined in appConfig.js)
