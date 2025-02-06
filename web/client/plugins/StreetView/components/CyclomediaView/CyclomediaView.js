@@ -171,13 +171,18 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         setInitializing(true);
         StreetSmartApi.init({
             targetElement,
-            username,
-            password,
+
             apiKey,
             loginOauth: false,
             srs: srs,
             locale: 'en-us',
-            ...initOptions
+            ...initOptions,
+            ...(initOptions?.loginOauth
+                ? { }
+                : {
+                    username,
+                    password
+                } )
         }).then(function() {
             setInitializing(false);
             setInitialized(true);
