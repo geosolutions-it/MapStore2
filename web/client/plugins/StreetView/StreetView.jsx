@@ -59,6 +59,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  * - `cyclomedia` provider: The API key is mandatory and can be configured only in the plugin configuration. It is not possible to configure it globally in `localConfig.json`, in `apiKeys.cyclomediaAPIKey`.
  * @property {string} providerSettings The settings specific for the provider. Depending on the `provider` property, the following settings are available:
  * - `cyclomedia` provider. The `cyclomedia` (StreetSmart) provider allows a set of possible setup. The minimal one allows can include the `apiKey`. In this case the credentials will be asked to the user when the plugin is activated.
+ *   Here an example of the full plugin configuration:
  *    ```json
  *      {
  *        "provider": "cyclomedia",
@@ -67,13 +68,14 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *          "srs": "EPSG:7791"
  *        }
  *    ```
- *    A more complex configuration allows to setup the `loginOauth` to use the Oauth login (and also pre-configure `credentials`, **see Important security note about this**).
- *    In this case the `clientId`, `loginRedirectUri` and `logoutRedirectUri` must be specified in the plugin configuration file. Moreover:
+ *    A more complex configuration allows to use the Oauth login (and also pre-configure `credentials`, **see Important security note about this**).
+ *    In this case the `providerSettings` must include `initOptions` with `loginOauth=true`, `clientId`, `loginRedirectUri` and `logoutRedirectUri`. Moreover:
  *    - the `clientId` must be registered in the Cyclomedia API.
- *    - the pages indicated as `loginRedirectUri` and `logoutRedirectUri` must be accessible and configured in the Cyclomedia API for the instance,
- *      and filled as indicated in
- *    - For more information about the Oauth login, see the Cyclomedia API documentation:
- *    https://docs.cyclomedia.com/StreetSmart/documentation/#oauth
+ *    - the pages indicated as `loginRedirectUri` and `logoutRedirectUri` must be
+ *      - accessible by the user
+ *      - configured in the Cyclomedia API for the instance deployed
+ *      - the content of the pages have to contain the JS code to handle the login callback from the API, as indicated in [StreetSmart API documentation](https://docs.cyclomedia.com/StreetSmart/documentation/#oauth).
+ *    For more information about the Oauth login, see the [StreetSmart API documentation](https://docs.cyclomedia.com/StreetSmart/documentation/)
  *    Here an example, and below the details for every property:
  *    ```json
  *       {
@@ -88,8 +90,8 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *           "initOptions": {
  *             "clientId": "<your-client-id>",
  *             "loginOauth": true,
- *             "loginRedirectUri": "https://mapstore2-test.comune.fi.it/mapstore2/cm-login.html",
- *             "logoutRedirectUri": "https://mapstore2-test.comune.fi.it/mapstore2/cm-logout.html"
+ *             "loginRedirectUri": "<url-to-cm-login.html>",
+ *             "logoutRedirectUri": "<url-to-cm-logout.html>"
  *         }
  *        }
  *    ```
@@ -97,7 +99,7 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *      - `providerSettings.StreetSmartApiURL` (optional). The URL of the StreetSmart API. Default: `https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js`.
  *      - `providerSettings.srs` (optional). Coordinate reference system code to use for the API. Default: `EPSG:4326`. Note that the SRS used here must be supported by the StreetSmart API **and** defined in `localConfig.json` file, in `projectionDefs`.
  *      - `providerSettings.credentials` (optional). The credentials to store for the Cyclomedia API. It is an object with `username` and `password` properties.
- *        **Important Note**: The plugin provides the possibility to configure the credentials in the plugin configuration, but in this case you have to be aware
+ *        - **Important Note**: The plugin provides the possibility to configure the credentials in the plugin configuration, but in this case you have to be aware
  *        that this will make these credentials potentially accessible to all the user that can access the context, or if set in `localConfig.json`, to all the users of the application.
  *        This settings should be used only in case the context or the application are shared within a restricted group of users, and this doesn't represent a security issue.
  *        It is up to you to evaluate the security implications of this choice.
