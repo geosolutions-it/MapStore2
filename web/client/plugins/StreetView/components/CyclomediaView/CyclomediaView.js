@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {isEmpty} from 'lodash';
+import {has, isEmpty} from 'lodash';
 import Message from '../../../../components/I18N/Message';
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { reproject } from '../../../../utils/CoordinatesUtils';
@@ -15,6 +15,21 @@ const PROJECTION_NOT_AVAILABLE = "Projection not available";
 const isInvalidCredentials = (error) => {
     return error?.message?.indexOf?.("code 401");
 };
+function checkPopupBlocked(err = "") {
+    const popupErr = "Popup blocked. Please allow popups for this site and refresh the page.";
+    if(err?.message?.indexOf?.("not logged in") >= 0) {
+        const win = window.open('', '_blank', 'width=1,height=1');
+        if (win && win.closed) {
+            return new Error(popupErr);
+        } else if (win) {
+            win.close();
+            return false;
+        } else {
+            return new Error(popupErr);
+        }
+    }
+    return false;
+}
 /**
  * Parses the error message to show to the user in the alert an user friendly message
  * @private
@@ -110,8 +125,10 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
     const [initialized, setInitialized] = useState(false);
     const [reload, setReload] = useState(1);
     const [error, setError] = useState(null);
-
+    const [reloadAllowed, setReloadAllowed] = useState(false);
     // gets the credentials from the storage or from configuration.
+    const hasConfiguredCredentials = providerSettings?.credentials;
+    const isConfiguredOauth = initOptions?.loginOauth;
     const initialCredentials =
         isEmpty(getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE)) ?
             providerSettings?.credentials ?? {} : getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE);
@@ -177,7 +194,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             srs: srs,
             locale: 'en-us',
             ...initOptions,
-            ...(initOptions?.loginOauth
+            ...(isConfiguredOauth
                 ? { }
                 : {
                     username,
@@ -189,8 +206,24 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setError(null);
         }).catch(function(err) {
             setInitializing(false);
+            if(isConfiguredOauth) {
+                // check if the error is related to the oauth login, in particular to popup blocked.
+                // check if popup is blocked and show a message to the user, because the street smart api error do not provide a clear message
+                const blockedPopup = checkPopupBlocked(err);
+                if ( blockedPopup ) {
+                    console.error('Cyclomedia API: init: error: ' + blockedPopup);
+                    setError(blockedPopup);
+                    setReloadAllowed(true);
+                    return;
+                }
+
+            }
             setError(err);
-            if (err) {console.error('Cyclomedia API: init: error: ' + err);}
+            if (err) {
+                console.error('Cyclomedia API: init: error: ' + err);
+            }
+
+
         });
         return () => {
             try {
@@ -294,7 +327,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             </body>
         </html>`;
     return (<>
-        {<CyclomediaCredentials
+        {!hasConfiguredCredentials && <CyclomediaCredentials
             key="credentials"
             showCredentialsForm={showCredentialsForm}
             setShowCredentialsForm={setShowCredentialsForm}
@@ -312,9 +345,10 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         <Alert bsStyle="danger" style={{...style, textAlign: 'center', alignContent: 'center', display: showError ? 'block' : 'none'}} key="error">
             <Message msgId="streetView.cyclomedia.errorOccurred" />
             {getErrorMessage(error, {srs})}
-            {initialized ? <div><Button
+            {initialized || reloadAllowed ? <div><Button
                 onClick={() => {
                     setError(null);
+                    setReloadAllowed(false);
                     try {
                         setReload(reload + 1);
                     } catch (e) {
