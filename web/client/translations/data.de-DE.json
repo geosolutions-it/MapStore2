@@ -3458,6 +3458,14 @@
           "MapViews": {
             "description": "Dieses Plugin ermöglicht das Hinzufügen einer Sequenz verschiedener Ansichten innerhalb einer Karte",
             "title": "Kartenansichten"
+          },
+          "BrandNavbar": {
+            "description": "Hauptnavigationsmenü",
+            "title": "Brand Navbar"
+          },
+          "ResourceDetails": {
+            "description": "Dieses Plugin ermöglicht die Verwaltung von Ressourcendetails der Karte",
+            "title": "Ressourcendetails"
           }
         },
         "contextCreator": {

@@ -15,13 +15,14 @@ import Button from './components/Button';
 import tooltip from '../../components/misc/enhancers/tooltip';
 import Spinner from './components/Spinner';
 import Icon from './components/Icon';
+import PropTypes from 'prop-types';
 const ButtonWithTooltip = tooltip(Button);
 
 function BrandNavbarMenuItem({
     className,
     loading,
     glyph,
-    glyphType = 'glyphicon',
+    iconType,
     labelId,
     onClick
 }) {
@@ -35,17 +36,118 @@ function BrandNavbarMenuItem({
                 onClick={onClick}
                 className={className}
             >
-                {loading ? <Spinner /> : <Icon glyph={glyph} type={glyphType} />}
+                {loading ? <Spinner /> : <Icon glyph={glyph} type={iconType} />}
             </ButtonWithTooltip>
         </li>
     );
 }
 
+BrandNavbarMenuItem.propTypes = {
+    className: PropTypes.string,
+    loading: PropTypes.bool,
+    glyph: PropTypes.string,
+    iconType: PropTypes.string,
+    labelId: PropTypes.string,
+    onClick: PropTypes.func
+};
+
+BrandNavbarMenuItem.defaultProps = {
+    iconType: 'glyphicon',
+    onClick: () => {}
+};
+
+/**
+ * This plugin provides a special Manager dropdown menu, that contains various administration tools
+ * @memberof plugins
+ * @class
+ * @name BrandNavbar
+ * @prop {object[]} cfg.leftMenuItems menu items configuration for left side
+ * @prop {object[]} cfg.rightMenuItems menu items configuration for right side
+ * @prop {object[]} items this property contains the items injected from the other plugins,
+ * using the `containers` option in the plugin that want to inject new menu items.
+ * ```javascript
+ * const MyMenuButtonComponent = connect(selector, { onActivateTool })(({
+ *  component, // default component that provides a consistent UI (see BrandNavbarMenuItem in BrandNavbar plugin for props)
+ *  variant, // one of style variant (primary, success, danger or warning)
+ *  size, // button size
+ *  className, // custom class name provided by configuration
+ *  onActivateTool, // example of a custom connected action
+ * }) => {
+ *  const ItemComponent = component;
+ *  return (
+ *      <ItemComponent
+ *          className="my-class-name"
+ *          loading={false}
+ *          glyph="heart"
+ *          iconType="glyphicon"
+ *          labelId="myMessageId"
+ *          onClick={() => onActivateTool()}
+ *      />
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          BrandNavbar: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              Component: MyMenuButtonComponent
+ *          },
+ * // ...
+ * ```
+ * @example
+ * {
+ *  "name": "BrandNavbar",
+ *  "cfg": {
+ *      "containerPosition": "header",
+ *      "leftMenuItems": [
+ *          {
+ *              "type": "link",
+ *              "href": "/my-link",
+ *              "target": "blank",
+ *              "glyph": "heart",
+ *              "labelId": "myMessageId",
+ *              "variant": "default"
+ *          },
+ *          {
+ *              "type": "logo",
+ *              "href": "/my-link",
+ *              "target": "blank",
+ *              "src": "/my-image.jpg",
+ *              "style": {}
+ *          },
+ *          {
+ *              "type": "button",
+ *              "href": "/my-link",
+ *              "target": "blank",
+ *              "glyph": "heart",
+ *              "iconType": "glyphicon",
+ *              "tooltipId": "myMessageId",
+ *              "variant": "default",
+ *              "square": true
+ *          },
+ *          {
+ *              "type": "divider"
+ *          }
+ *      ],
+*      "rightMenuItems": [
+*          {
+*              "type": "button",
+*              "href": "/my-link",
+*              "target": "blank",
+*              "glyph": "heart",
+*              "labelId": "myMessageId",
+*              "variant": "default"
+*          }
+*      ]
+ *  }
+ * }
+ */
 function BrandNavbar({
     size,
     variant,
-    leftMenuItems = [],
-    rightMenuItems = [],
+    leftMenuItems,
+    rightMenuItems,
     items
 }, context) {
     const { loadedPlugins } = context;
@@ -74,6 +176,7 @@ function BrandNavbar({
                     gap="xs"
                     size={size}
                     variant={variant}
+                    menuItemComponent={BrandNavbarMenuItem}
                     items={[
                         ...leftMenuItems,
                         ...pluginLeftMenuItems
@@ -96,6 +199,22 @@ function BrandNavbar({
     );
 }
 
+BrandNavbar.propTypes = {
+    size: PropTypes.string,
+    variant: PropTypes.string,
+    leftMenuItems: PropTypes.array,
+    rightMenuItems: PropTypes.array,
+    items: PropTypes.array
+};
+
+BrandNavbar.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
+BrandNavbar.defaultProps = {
+    leftMenuItems: [],
+    rightMenuItems: []
+};
 
 export default createPlugin('BrandNavbar', {
     component: BrandNavbar

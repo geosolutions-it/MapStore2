@@ -3421,6 +3421,14 @@
           "MapViews": {
             "description": "Ce plugin permet d'ajouter une séquence de différentes vues à l'intérieur d'une carte",
             "title": "MapViews"
+          },
+          "BrandNavbar": {
+            "description": "Menu de navigation principal",
+            "title": "Barre de navigation de la marque"
+          },
+          "ResourceDetails": {
+            "description": "Ce plugin permet de gérer les détails des ressources de la carte",
+            "title": "Détails des ressources"
           }
         },
         "contextCreator": {
