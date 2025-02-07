@@ -24,7 +24,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ### Add TagsManager plugin to localConfig.json
 
-The new TagsManager plugin should be added inside the plugins `maps` section of the localConfig.json to visualize a new menu item in the admin menu
+The new TagsManager plugin should be added inside the plugins `maps` section of the `localConfig.json` to visualize a new menu item in the admin menu
 
 ```diff
 {
