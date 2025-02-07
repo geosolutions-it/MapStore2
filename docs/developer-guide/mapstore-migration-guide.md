@@ -24,7 +24,7 @@ This is a list of things to check if you want to update from a previous version 
 
 ### Add Favorite plugin to localConfig.json
 
-The new Favorite plugin should be added inside the plugins `maps` section of the localConfig.json to visualize the button on the resource cards
+The new Favorite plugin should be added inside the plugins `maps` section of the `localConfig.json` to visualize the button on the resource cards
 
 ```diff
 {
@@ -37,8 +37,6 @@ The new Favorite plugin should be added inside the plugins `maps` section of the
         ...
     }
 }
-```
-
 ## Migration from 2024.01.02 to 2024.02.00
 
 ### NodeJS and NPM update
