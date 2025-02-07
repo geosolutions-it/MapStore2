@@ -189,9 +189,12 @@ const createLayer = (options, map) => {
 
 Layers.registerType('model', {
     create: createLayer,
-    update: (layer, newOptions, oldOptions) => {
+    update: (layer, newOptions, oldOptions, map) => {
         if (layer?.primitives && !isEqual(newOptions?.features?.[0], oldOptions?.features?.[0])) {
             updatePrimitivesMatrix(layer?.primitives, newOptions?.features?.[0]);
+        }
+        if (newOptions?.forceProxy !== oldOptions?.forceProxy) {
+            return createLayer(newOptions, map);
         }
         return null;
     }

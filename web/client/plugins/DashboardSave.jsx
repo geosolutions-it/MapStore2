@@ -45,6 +45,7 @@ const SaveBaseDialog = compose(
 
 /**
  * Implements "save" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
+ * @deprecated
  * @class
  * @name DashboardSave
  * @memberof plugins
@@ -67,7 +68,7 @@ export const DashboardSave = createPlugin('DashboardSave', {
             name: 'dashboardSave',
             position: 30,
             text: <Message msgId="save"/>,
-            icon: <Glyphicon glyph="floppy-open"/>,
+            icon: <Glyphicon glyph="floppy-disk"/>,
             action: triggerSave.bind(null, true),
             tooltip: "saveDialog.saveTooltip",
             // display the BurgerMenu button only if the map can be edited
@@ -83,7 +84,7 @@ export const DashboardSave = createPlugin('DashboardSave', {
             name: 'dashboardSave',
             position: 30,
             text: <Message msgId="save"/>,
-            icon: <Glyphicon glyph="floppy-open"/>,
+            icon: <Glyphicon glyph="floppy-disk"/>,
             action: triggerSave.bind(null, true),
             tooltip: "saveDialog.saveTooltip",
             // display the BurgerMenu button only if the map can be edited

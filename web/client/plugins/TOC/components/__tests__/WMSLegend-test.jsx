@@ -88,7 +88,7 @@ describe('test WMSLegend module component', () => {
         const params = new URLSearchParams(image[0].src);
         expect(params.get("width")).toBe('12');
         expect(params.get("height")).toBe('12');
-        expect(params.get("LEGEND_OPTIONS")).toBe('forceLabels:on');
+        expect(params.get("LEGEND_OPTIONS")).toBe('hideEmptyRules:true;forceLabels:on');
     });
 
     it('tests WMSLegend component legendOptions with one or all values missing', () => {
@@ -112,7 +112,7 @@ describe('test WMSLegend module component', () => {
         const params = new URLSearchParams(image[0].src);
         expect(params.get("width")).toBe('12');
         expect(params.get("height")).toBe('12');
-        expect(params.get("LEGEND_OPTIONS")).toBe('forceLabels:on');
+        expect(params.get("LEGEND_OPTIONS")).toBe('hideEmptyRules:true;forceLabels:on');
     });
 
     it('tests WMSLegend component legendOptions with values', () => {
@@ -136,7 +136,7 @@ describe('test WMSLegend module component', () => {
         const params = new URLSearchParams(image[0].src);
         expect(params.get("width")).toBe('20');
         expect(params.get("height")).toBe('40');
-        expect(params.get("LEGEND_OPTIONS")).toBe('forceLabels:on');
+        expect(params.get("LEGEND_OPTIONS")).toBe('hideEmptyRules:true;forceLabels:on');
     });
 
     it('tests WMSLegend component legendOptions from cfg', () => {
@@ -159,7 +159,7 @@ describe('test WMSLegend module component', () => {
         const params = new URLSearchParams(image[0].src);
         expect(params.get("width")).toBe('20');
         expect(params.get("height")).toBe('40');
-        expect(params.get("LEGEND_OPTIONS")).toBe('forceLabels:on');
+        expect(params.get("LEGEND_OPTIONS")).toBe('hideEmptyRules:true;forceLabels:on');
     });
 
     it('tests WMSLegend component language property with value', () => {

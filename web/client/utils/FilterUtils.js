@@ -30,6 +30,7 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
 };
 
 import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
+import { INTERACTIVE_LEGEND_ID } from './LegendUtils';
 let FilterUtils;
 
 const wrapValueWithWildcard = (value, condition) => {
@@ -1323,12 +1324,12 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
         }
     };
     let filterObj = {...defaultLayerFilter, ...layerFilterObj};
-    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (!legendFilter) {
         // clear legend filter with id = 'interactiveLegend'
         if (isLegendFilterExist) {
             filterObj = {
-                ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+                ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
             };
         }
         let newFilter = filterObj ? filterObj : undefined;
@@ -1354,9 +1355,79 @@ export const updateLayerLegendFilter = (layerFilterObj, legendFilter) => {
     }
     let newFilter = {
         ...(filterObj || {}), filters: [
-            ...(filterObj?.filters?.filter(f => f.id !== 'interactiveLegend') || []), ...[
+            ...(filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID) || []), ...[
                 {
-                    "id": "interactiveLegend",
+                    "id": INTERACTIVE_LEGEND_ID,
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [...interactiveLegendFilters]
+                }
+            ]
+        ]
+    };
+    return newFilter;
+};
+
+/**
+ * Merges legend geostyler filter, with mapstore filter objects to filters
+ * @param {object} layerFilterObj previous layer filter object includes all filters
+ * @param {array} legendGeostylerFilter geostyler filter
+ * @return {object} layerFilterObj updated the layer filter object
+ */
+export const updateLayerWFSVectorLegendFilter = (layerFilterObj, legendGeostylerFilter) => {
+    const defaultLayerFilter = {
+        groupFields: [
+            {
+                id: 1,
+                logic: 'OR',
+                index: 0
+            }
+        ],
+        filterFields: [],
+        attributePanelExpanded: true,
+        spatialPanelExpanded: true,
+        crossLayerExpanded: true,
+        crossLayerFilter: {
+            attribute: 'the_geom'
+        },
+        spatialField: {
+            method: null,
+            operation: 'INTERSECTS',
+            geometry: null,
+            attribute: 'the_geom'
+        }
+    };
+    let filterObj = {...defaultLayerFilter, ...layerFilterObj};
+    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
+    if (!legendGeostylerFilter) {
+        // clear legend filter with id = 'interactiveLegend'
+        if (isLegendFilterExist) {
+            filterObj = {
+                ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
+            };
+        }
+        let newFilter = filterObj ? filterObj : undefined;
+        return newFilter;
+    }
+    let interactiveLegendFilters = isLegendFilterExist ? isLegendFilterExist.filters || [] : [];
+
+    const isSelectedFilterExist = interactiveLegendFilters.find(legFilter => legFilter.body?.toString() === legendGeostylerFilter?.toString());
+    if (isSelectedFilterExist) {
+        interactiveLegendFilters = interactiveLegendFilters.filter(legFilter => legFilter.body?.toString() !== legendGeostylerFilter?.toString());
+    } else {
+        interactiveLegendFilters = [...interactiveLegendFilters, {
+            "format": "geostyler",
+            "version": "1.0.0",
+            "body": legendGeostylerFilter,
+            "id": `${legendGeostylerFilter?.toString()}`
+        }];
+    }
+    let newFilter = {
+        ...(filterObj || {}), filters: [
+            ...(filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID) || []), ...[
+                {
+                    "id": INTERACTIVE_LEGEND_ID,
                     "format": "logic",
                     "version": "1.0.0",
                     "logic": "OR",
@@ -1379,10 +1450,10 @@ export function resetLayerLegendFilter(layer, reason, value) {
     let filterObj = layer.layerFilter ? layer.layerFilter : undefined;
     if (!needReset || !isLayerWithJSONLegend || !filterObj) return false;
     // reset thte filter if legendCQLFilter is empty
-    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === 'interactiveLegend');
+    const isLegendFilterExist = filterObj?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
     if (isLegendFilterExist) {
         filterObj = {
-            ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== 'interactiveLegend')
+            ...filterObj, filters: filterObj?.filters?.filter(f => f.id !== INTERACTIVE_LEGEND_ID)
         };
         return filterObj;
     }

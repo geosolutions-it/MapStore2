@@ -6,10 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { clamp, isNil, isNumber } from 'lodash';
-import PropTypes from 'prop-types';
 import React from 'react';
+import clamp from 'lodash/clamp';
+import isNil from 'lodash/isNil';
+import isNumber from 'lodash/isNumber';
+import pick from 'lodash/pick';
+import PropTypes from 'prop-types';
 import {Checkbox, Col, ControlLabel, FormGroup, Glyphicon, Grid, Row, Button as ButtonRB } from 'react-bootstrap';
+
 import tooltip from '../../../misc/enhancers/buttonTooltip';
 const Button = tooltip(ButtonRB);
 import IntlNumberFormControl from '../../../I18N/IntlNumberFormControl';
@@ -26,6 +30,8 @@ import ThreeDTilesSettings from './ThreeDTilesSettings';
 import ModelTransformation from './ModelTransformation';
 import StyleBasedWMSJsonLegend from '../../../../plugins/TOC/components/StyleBasedWMSJsonLegend';
 import { getMiscSetting } from '../../../../utils/ConfigUtils';
+import VectorLegend from '../../../../plugins/TOC/components/VectorLegend';
+
 export default class extends React.Component {
     static propTypes = {
         opacityText: PropTypes.node,
@@ -38,6 +44,8 @@ export default class extends React.Component {
         isLocalizedLayerStylesEnabled: PropTypes.bool,
         isCesiumActive: PropTypes.bool,
         projection: PropTypes.string,
+        mapSize: PropTypes.object,
+        mapBbox: PropTypes.object,
         resolutions: PropTypes.array,
         zoom: PropTypes.number,
         hideInteractiveLegendOption: PropTypes.bool
@@ -122,6 +130,9 @@ export default class extends React.Component {
         }
         return null;
     };
+    getLegendProps = () => {
+        return pick(this.props, ['projection', 'mapSize', 'mapBbox']);
+    }
     render() {
         const formatValue = this.props.element && this.props.element.format || "image/png";
         const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
@@ -315,7 +326,6 @@ export default class extends React.Component {
                             <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
                                 { enableInteractiveLegend ?
                                     <StyleBasedWMSJsonLegend
-                                        owner="legendPreview"
                                         style={this.setOverFlow() && {} || undefined}
                                         layer={this.props.element}
                                         legendHeight={
@@ -324,6 +334,7 @@ export default class extends React.Component {
                                             this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
                                         language={
                                             this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
+                                        {...this.getLegendProps()}
                                     /> :
                                     <Legend
                                         style={this.setOverFlow() && {} || undefined}
@@ -334,9 +345,45 @@ export default class extends React.Component {
                                             this.useLegendOptions() && this.state.legendOptions.legendWidth || undefined}
                                         language={
                                             this.props.isLocalizedLayerStylesEnabled ? this.props.currentLocaleLanguage : undefined}
+                                        {...this.getLegendProps()}
                                     />}
                             </div>
                         </Col>
+                    </div>
+                </Row>}
+                {this.props.element.type === "wfs" && <Row>
+                    <div className={"legend-options"}>
+                        {experimentalInteractiveLegend && <Col xs={12} className={"legend-label"}>
+                            <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>
+                        </Col>}
+                        { experimentalInteractiveLegend && !this.props?.hideInteractiveLegendOption &&
+                            <Col xs={12} className="first-selectize">
+                                <Checkbox
+                                    data-qa="display-interactive-legend-option"
+                                    value="enableInteractiveLegend"
+                                    key="enableInteractiveLegend"
+                                    onChange={(e) => {
+                                        if (!e.target.checked) {
+                                            const newLayerFilter = updateLayerLegendFilter(this.props.element.layerFilter);
+                                            this.props.onChange("layerFilter", newLayerFilter );
+                                        }
+                                        this.props.onChange("enableInteractiveLegend", e.target.checked);
+                                    }}
+                                    checked={enableInteractiveLegend} >
+                                    <Message msgId="layerProperties.enableInteractiveLegendInfo.label"/>
+                                    &nbsp;<InfoPopover text={<Message msgId="layerProperties.enableInteractiveLegendInfo.infoWithoutGSNote" />} />
+                                </Checkbox>
+                            </Col>
+                        }
+                        {enableInteractiveLegend && <Col xs={12} className="legend-preview">
+                            <ControlLabel><Message msgId="layerProperties.legendOptions.legendPreview" /></ControlLabel>
+                            <div style={this.setOverFlow() && this.state.containerStyle || {}} ref={this.containerRef} >
+                                <VectorLegend
+                                    layer={this.props.element}
+                                    style={this.props.element.style || {}}
+                                />
+                            </div>
+                        </Col>}
                     </div>
                 </Row>}
             </Grid>

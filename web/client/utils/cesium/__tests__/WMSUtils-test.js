@@ -56,6 +56,7 @@ describe('Test the WMSUtil for Cesium', () => {
         expect(cesiumOptions.layers).toBe('workspace:layer');
         expect(cesiumOptions.parameters).toEqual({
             styles: '',
+            version: '1.1.1',
             format: 'image/png',
             transparent: true,
             opacity: 1,
@@ -63,6 +64,16 @@ describe('Test the WMSUtil for Cesium', () => {
             width: 256,
             height: 256
         });
+    });
+    it('wmsToCesiumOptions with version', () => {
+        const options = {
+            type: 'wms',
+            version: '1.3.0',
+            url: '/geoserver/wms',
+            name: 'workspace:layer'
+        };
+        const cesiumOptions = wmsToCesiumOptions(options);
+        expect(cesiumOptions.parameters.version).toBe('1.3.0');
     });
     it('wmsToCesiumOptionsSingleTile', () => {
         const options = {

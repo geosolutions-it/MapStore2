@@ -39,7 +39,8 @@ import isNil from 'lodash/isNil';
 import isObject from 'lodash/isObject';
 import MarkerUtils from '../MarkerUtils';
 import {randomInt} from '../RandomUtils';
-
+import { getConfigProp } from '../ConfigUtils';
+import { loadFontAwesome } from '../FontUtils';
 
 export const isGeoStylerBooleanFunction = (got) => [
     'between',
@@ -859,23 +860,6 @@ export const parseSymbolizerExpressions = (symbolizer, feature) => {
     }), {});
 };
 
-let fontAwesomeLoaded = false;
-const loadFontAwesome = () => {
-    if (fontAwesomeLoaded) {
-        return Promise.resolve();
-    }
-    // async load of font awesome
-    return import('font-awesome/css/font-awesome.min.css')
-        .then(() => {
-            // ensure the font is loaded
-            return document.fonts.load('1rem FontAwesome')
-                .then(() => {
-                    fontAwesomeLoaded = true;
-                    return fontAwesomeLoaded;
-                });
-        });
-};
-
 /**
  * prefetch all image or mark symbol in a geostyler style
  * @param {object} geoStylerStyle geostyler style
@@ -917,7 +901,10 @@ export const drawIcons = (geoStylerStyle, options) => {
     }, []);
     const marks = symbolizers.filter(({ kind }) => kind === 'Mark');
     const icons = symbolizers.filter(({ kind }) => kind === 'Icon');
-    return loadFontAwesome()
+    const loadFontAwesomeForIcons = getConfigProp("loadFontAwesomeForIcons");
+    // if undefined or true it will load it to preserve previous behaviour
+    const loadingPromise =  (isNil(loadFontAwesomeForIcons) || loadFontAwesomeForIcons) && icons?.length ? loadFontAwesome() : Promise.resolve();
+    return loadingPromise
         .then(
             () => new Promise((resolve) => {
                 if (marks.length > 0 || icons.length > 0) {

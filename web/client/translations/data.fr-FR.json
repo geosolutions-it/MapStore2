@@ -206,6 +206,7 @@
             "enableInteractiveLegendInfo": {
                 "label": "Activer la légende interactive",
                 "info": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières. Remarque: ce paramètre nécessite des configurations spécifiques sur GeoServer",
+                "infoWithoutGSNote": "Si cette option est activée, le filtre par légende peut être appliqué en cliquant sur les éléments de légende de cette couche depuis la table des matières.",
                 "fetchError": "Impossible d'obtenir les informations de légende du service"
             },
             "enableLocalizedLayerStyles": {
@@ -240,7 +241,13 @@
               "clearCustomizationConfirm": "Voulez-vous vraiment supprimer les personnalisations ?",
               "error":  "Échec de la récupération des champs"
             },
-            "disableFeaturesEditing": "Désactiver la modification sur la table attributaire"
+            "disableFeaturesEditing": "Désactiver la modification sur la table attributaire",
+            "interactiveLegend": {
+                "incompatibleFilterWarning": "Les filtres de légende sont incompatibles avec le filtre de couche actif, ou aucune fonctionnalité visible n'est dans la vue de la carte. Cliquez sur réinitialiser pour effacer les filtres de légende",
+                "incompatibleWFSFilterWarning": "Les filtres de légende sont incompatibles avec le filtre de couche actif. Cliquez sur réinitialiser pour effacer les filtres de légende",
+                "resetLegendFilter": "Réinitialiser",
+                "noLegendData": "Aucun élément de légende à afficher"
+            }
         },
          "localizedInput": {
           "localize": "Localiser ce texte...",
@@ -372,7 +379,7 @@
         },
         "home": {
             "open": "Ouvrir",
-            "shortDescription": "Application cartographique en ligne moderne Modern propulsée par OpenLayers, Leaflet et ReactJS.<br/> <small>Consultez la page de <a href=\"https://docs.mapstore.geosolutionsgroup.com/\"> documentation </a></ small>",
+            "shortDescription": "<h1>Bienvenue sur MapStore</h1><p>Cartographie Web moderne avec OpenLayers, Cesium, Leaflet et ReactJS.</p>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore a été développé pour créer, sauvegarder et partager de façon simple et intuitive des cartes simple ou élaboréess créés à partir de services comme OpenStreetMap, Google Maps ou tout autres services fournis par des organisations utilisant des protocoles ouverts comme OGC WMS, WFS, WMTS ou TMS et bien d'autres...<br/>Visitez notre <a href=\"https://mapstore.readthedocs.io/en/latest/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
@@ -1533,7 +1540,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Déposez vos contextes cartographiques ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez des fichiers...",
-                "infoSupported": "<p><small>Fichiers de contextes pris en charge : format hérité MapStore, WMC<br />Fichiers vectoriels pris en charge : fichier de formes (doivent être contenus dans des archives zip), KML/KMZ, GeoJSON, Annotations ou GPX</small></p>",
+                "infoSupported": "<p><small>Fichiers de contextes pris en charge : format hérité MapStore, WMC<br />Fichiers vectoriels pris en charge : fichier de formes (doivent être contenus dans des archives zip), KML/KMZ, GeoJSON, Annotations ou GPX. (Le système de référence doit être EPSG:4326 pour KML/KMZ, GPX)</small></p>",
                 "note": "<p><small><i><strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de contextes cartographiques</i></small></p>"
             },
             "errors": {
@@ -3673,7 +3680,12 @@
             "showViewsGeometries": "Afficher les positions des vues",
             "addInitialView": "Cliquez sur le bouton plus pour ajouter une nouvelle vue",
             "removeView": "Supprimer la vue",
-            "resetLayerOverrides": "Réinitialise les modifications pour aligner le calque sur la valeur par défaut",
+            "linkAllNodes": "Les propriétés de visibilité et d'opacité des calques et des groupes seront connectées à la table des matières principale",
+            "unlinkAllNodes": "Les propriétés de visibilité et d'opacité des calques et des groupes seront déconnectées de la table des matières principale",
+            "layersLinked": "Les propriétés de visibilité et d'opacité sont connectées à la table des matières principale",
+            "layersUnlinked": "Les propriétés de visibilité et d'opacité sont déconnectées de la table des matières principale",
+            "groupsLinked": "La propriété de visibilité est connectée à la table des matières principale",
+            "groupsUnlinked": "La propriété de visibilité est déconnectée de la table des matières principale",
             "hideLayer": "Masquer le calque",
             "showLayer": "Afficher le calque",
             "undoChanges": "Annuler les modifications",
@@ -4196,6 +4208,122 @@
             "validLayer": "Cette couche est valide et peut être utilisée dans ce processus",
             "invalidLayer": "Cette couche ne prend pas en charge les processus wps nécessaires \ngeo:buffer\ngs:IntersectionFeatureCollection\ngs:CollectGeometries\n\nou est une couche raster"
           }
+        },
+        "resourcesCatalog": {
+            "filter": "Filtrer",
+            "filters": "Filtres",
+            "view": "Afficher",
+            "resourcesFound": "{count, plural, =0 {0 Ressources trouvées} =1 {1 Ressource trouvée} other {# Ressources trouvées}}",
+            "unadvertised": "La ressource n'est pas annoncée. Elle est masquée du catalogue et des résultats de recherche",
+            "mapUsesContext": "Cette carte utilise le contexte: {contextName}",
+            "orderBy": "Trier par",
+            "mostRecent": "Le plus récent",
+            "lessRecent": "Moins récent",
+            "aZ": "A Z",
+            "zA": "Z A",
+            "mostPopular": "Le plus populaire",
+            "clearFilters": "Effacer les filtres",
+            "search": "Rechercher...",
+            "customFiltersTitle": "Ressources",
+            "noResultsWithFilterTitle": "Aucun résultat",
+            "noResultsWithFilterContent": "Aucun résultat n'est disponible pour les filtres sélectionnés. <br/> Effacez tous les filtres et réessayez avec une nouvelle demande.",
+            "errorResourcePageTitle": "Erreur de chargement de la page",
+            "errorResourcePageContent": "La page des ressources sélectionnées n'est pas disponible",
+            "catalogSection": {
+                "noContentYetTitle": "Catalogue de ressources",
+                "noContentYetContent": "Ce catalogue n'a pas encore de contenu publié. <br/> Nous travaillons à le remplir avec de bonnes ressources. <br/><br/>Restez à l'écoute!",
+                "noPublicContentTitle": "Catalogue de ressources",
+                "noPublicContentContent": "Ce catalogue n'a pas de ressources publiques. <br/> Veuillez vous connecter pour parcourir le contenu."
+            },
+            "featuredSection": {
+                "noContentYetTitle": "Ressources en vedette",
+                "noContentYetContent": "Ce catalogue n'a pas encore de contenu en vedette publié. <br/> Nous travaillons à le remplir avec de bonnes ressources. <br/><br/>Restez à l'écoute!",
+                "noPublicContentTitle": "Ressources en vedette",
+                "noPublicContentContent": "Ce catalogue n'a pas de ressources en vedette."
+            },
+            "mapsFilter": "Cartes",
+            "dashboardsFilter": "Tableaux de bord",
+            "geostoriesFilter": "Géostories",
+            "contextsFilter": "Contextes",
+            "columnName": "Nom",
+            "columnDescription": "Description",
+            "columnTags": "Tags",
+            "columnLastModifiedBy": "Modifié par",
+            "columnLastModified": "Modifié",
+            "columnCreatedBy": "Créé par",
+            "columnCreated": "Créé",
+            "columnAdvertised": "Annoncé",
+            "columnFeatured": "En vedette",
+            "contactDetails": "Coordonnées",
+            "emptyNA": "N/A",
+            "emptyUnknown": "Inconnu",
+            "info": "Info",
+            "filterByNameOrPermissions": "Filtrer par nom ou autorisations",
+            "permissionsName": "Nom",
+            "permissions": "Autorisations",
+            "permissionsEntriesNoResults": "Aucun résultat...",
+            "addPermissionsEntry": "Ajouter une autorisation",
+            "viewPermission": "Afficher",
+            "editPermission": "Modifier",
+            "ownerPermission": "Propriétaire",
+            "groups": "Groupes",
+            "filterBy": "Filtrer...",
+            "about": "À propos",
+            "readMore": "Lire la suite",
+            "readLess": "Lire moins",
+            "noPermissionsAvailable": "Aucune autorisation disponible",
+            "noAbout": "Aucune information supplémentaire sur la ressource",
+            "addResource": "Ajouter une ressource",
+            "createMap": "Créer une carte",
+            "createDashboard": "Créer un tableau de bord",
+            "createGeoStory": "Créer un géo-histoire",
+            "createContext": "Créer un contexte",
+            "createMapFromContext": "Créer une carte à partir de ce contexte",
+            "viewResourceProperties": "Ouvrir les propriétés",
+            "editResourceProperties": "Modifier les propriétés",
+            "uploadImage": "Télécharger une image",
+            "removeThumbnail": "Supprimer la miniature",
+            "apply": "Appliquer",
+            "detailsPendingChangesTitle": "Êtes-vous sûr de vouloir quitter sans appliquer vos modifications?",
+            "detailsPendingChangesDescription": "Si vous quittez, vous perdrez vos modifications en attente",
+            "detailsPendingChangesConfirm": "Quitter",
+            "detailsPendingChangesCancel": "Retour à l'édition",
+            "filterMapsByContext": "Cartes par contexte",
+            "tags": "Tags",
+            "deleteResource": "Supprimer",
+            "deleteResourceTitle": "Êtes-vous sûr de vouloir supprimer cette ressource?",
+            "deleteResourceDescription": "Cette ressource et toutes les ressources liées seront supprimées",
+            "deleteResourceConfirm": "Supprimer",
+            "deleteResourceCancel": "Conserver",
+
+            "copyResourceTitle": "Créer une copie de la ressource actuelle",
+            "copyResourceDescription": "Entrez un nom valide pour la nouvelle ressource. Le nom doit être unique.",
+            "copyResourceCancel": "Retour à l'édition",
+            "copyResourceConfirm": "Créer",
+
+            "createNewResourceTitle": "Créer une nouvelle ressource",
+            "createNewResourceDescription": "Entrez un nom valide pour la nouvelle ressource. Le nom doit être unique.",
+            "createNewResourceCancel": "Retour à l'édition",
+            "createNewResourceConfirm": "Créer",
+            "resourceError": {
+                "errorTitle": "Impossible d'enregistrer la ressource actuelle",
+                "error403": "Vous n'êtes pas autorisé à mettre à jour la ressource",
+                "error404": "Une erreur s'est produite lors de la création de la ressource sur le serveur",
+                "error409": "Une ressource portant ce nom existe déjà",
+                "error500": "Erreur interne du serveur. Vérifiez si la taille du fichier de configuration de la ressource dépasse la limite fixée",
+                "errorDefault": "Erreur réseau"
+            },
+            "deleteError": {
+                "error403": "Vous n'êtes pas autorisé à supprimer la ressource",
+                "error404": "Une erreur s'est produite lors de la suppression de la ressource sur le serveur",
+                "error500": "Erreur interne du serveur",
+                "errorDefault": "Erreur réseau"
+            },
+            "myResources": "My resources",
+            "creationFilter": {
+                "from": "Creation date from",
+                "to": "Creation date to"
+            }
         }
     }
 }

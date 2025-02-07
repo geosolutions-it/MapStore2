@@ -9,6 +9,7 @@ import { SET_CURRENT_CONTEXT, LOADING, SET_RESOURCE, CLEAR_CONTEXT, UPDATE_USER_
 import { find, get } from 'lodash';
 import {set, arrayUpdate} from '../utils/ImmutableUtils';
 import { MAP_CONFIG_LOADED } from "../actions/config";
+import { migrateContextConfiguration } from '../utils/ContextCreatorUtils';
 
 /**
  * Reducers for context page and configs.
@@ -39,7 +40,7 @@ export default (state = {}, action) => {
             , state);
     }
     case SET_CURRENT_CONTEXT: {
-        return set('currentContext', action.context, state);
+        return set('currentContext', migrateContextConfiguration(action.context), state);
     }
     case SET_RESOURCE: {
         return set('resource', action.resource, state);

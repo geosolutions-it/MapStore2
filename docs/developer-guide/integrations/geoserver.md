@@ -7,7 +7,20 @@ MapStore can share users, groups an roles with GeoServer. This type of integrati
 This guide explains how to share users, groups and roles between MapStore and GeoServer.
 Applying this configurations will allow users logged in MapStore to be recognized by GeoServer. So security rules about restrictions on services, layers and so on can be correctly applied to MapStore users (also using [GeoFence](https://docs.geoserver.org/latest/en/user/extensions/geofence-server/index.html)).
 
-<img src="../img/mapstore-geoserver-users-integration.png" class="ms-docimage"/>
+```mermaid
+sequenceDiagram
+    actor User
+    participant GeoServer
+    participant MapStore
+    participant UserGroup Service/Role Service
+    User ->>+ GeoServer:  OGC Request <br />(w/authkey)
+    GeoServer ->>+ MapStore: authkey
+    MapStore ->>- GeoServer: username
+    GeoServer ->>+ UserGroup Service/Role Service: username
+    UserGroup Service/Role Service ->>- GeoServer: User(groups, roles)
+    Note over GeoServer: Filter/Allow/Deny data access <br /> by Resource Access Manager
+    GeoServer ->>- User: data
+```
 
 !!! note
     **UserGroup Service/Role Service** can be *MapStore database* or *LDAP* depending on the setup you prefer.

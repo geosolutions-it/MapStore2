@@ -31,9 +31,20 @@ Install [**Python 3**](https://www.python.org/downloads/) and **pip** following 
 
 ### 2. Libraries installation
 
-Install **all** the libraries/plugins in `docs/requirements.txt` using **_pip_** while matching the exact version present.
+Usage of a virtual environment is recommended to avoid conflicts with other python projects.
+With the following commands you can create a virtual environment and install the required libraries, and so execute the documentation build and development without affecting the global python environment.
 
-`pip install -r docs/requirements.txt`
+```sh
+python -m venv venv
+source venv/bin/activate
+pip install -r docs/requirements.txt
+```
+
+On next sessions, you can activate the virtual environment with the command `source venv/bin/activate`.
+
+If you want to deactivate the virtual environment, you can use the command `deactivate`.
+
+If you want to install the libraries globally, you can use the command `pip install -r docs/requirements.txt` with the virtual environment deactivated.
 
 ### 3. Build the documentation
 

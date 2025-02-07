@@ -98,7 +98,8 @@ class SharePanel extends React.Component {
         addMarker: PropTypes.func,
         viewerOptions: PropTypes.object,
         mapType: PropTypes.string,
-        updateMapView: PropTypes.func
+        updateMapView: PropTypes.func,
+        onClearShareResource: PropTypes.func
     };
 
     static defaultProps = {
@@ -118,7 +119,8 @@ class SharePanel extends React.Component {
         isScrollPosition: false,
         hideMarker: () => {},
         addMarker: () => {},
-        updateMapView: () => {}
+        updateMapView: () => {},
+        onClearShareResource: () => {}
     };
 
     static contextTypes = {
@@ -181,6 +183,9 @@ class SharePanel extends React.Component {
                 markerEnabled: !this.props.settings.markerEnabled
             });
         }
+    }
+    componentWillUnmount() {
+        this.props.onClearShareResource();
     }
 
     initializeDefaults = (props) => {

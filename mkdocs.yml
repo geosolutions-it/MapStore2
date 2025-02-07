@@ -89,7 +89,7 @@ nav:
       - Printing a Map: 'user-guide/print.md'
       - Importing and Exporting Files: 'user-guide/import.md'
       - Catalog Services: 'user-guide/catalog.md'
-      - Performing Measurments: 'user-guide/measure.md'
+      - Performing Measurements: 'user-guide/measure.md'
       - Annotations: 'user-guide/annotations.md'
       - Map Views: 'user-guide/map-views.md'
       - Street View: 'user-guide/street-view.md'
@@ -119,7 +119,7 @@ nav:
       - Map Toolbar: 'user-guide/content-map-toolbar.md'
       - Web Page Toolbar: 'user-guide/content-web-toolbar.md'
       - Media Editor: 'user-guide/media-editor-window.md'
-      - Configue the map: 'user-guide/configure-map.md'
+      - Configure the map: 'user-guide/configure-map.md'
 
   - Developer Guide:
     - Requirements: 'developer-guide/requirements.md'
@@ -176,10 +176,20 @@ nav:
       - Advanced Project Customization: 'developer-guide/advanced-project-customization.md'
     - Communicating with MapStore:
       - API usage: 'developer-guide/API-usage.md'
-      - MapViewer query paramaters: 'developer-guide/map-query-parameters.md'
+      - MapViewer query parameters: 'developer-guide/map-query-parameters.md'
 plugins:
   - search
-  - with-pdf:
+  # kroki is used to support mermaid charts in also in pdf.
+  # See https://kroki.io/.
+  - kroki: # https://pypi.org/project/mkdocs-kroki-plugin/
+      FencePrefix: ''
+      # HttpMethod set to POST pre-loads the images.
+      # USing GET the charts will be generated on the fly, so the rendering will be slower, but
+      # when not visualizing the charts, no request will be made to the kroki server.
+      HttpMethod: 'POST'
+      FileTypeOverrides:
+        mermaid: png
+  - with-pdf: # https://pypi.org/project/mkdocs-with-pdf/
       author: GeoSolutionsGroup
       copyright: 'MapStore©'
       #
@@ -191,6 +201,7 @@ plugins:
       toc_level: 3
       output_path: pdf/mapstore_documentation.pdf
       enabled_if_env: ENABLE_PDF_EXPORT
-      debug_html: true
+      debug_html: false # set to true to log the html content of the pdf on the console on build
       show_anchors: true
-      verbose: true
+      verbose: false    # set to true to log the pdf generation steps in detail
+      custom_template_path: 'docs/print_template' # includes custom styles.scss for pdf

@@ -60,6 +60,12 @@ const COMPARISON_TESTS = [
             args: [{type: "property", name: "PROP"}, {type: "literal", value: 'a'}],
             type: "like"
         }
+    }, {
+        cql: "PROP ilike 'a'",
+        expected: {
+            args: [{type: "property", name: "PROP"}, {type: "literal", value: 'a'}],
+            type: "ilike"
+        }
     },
     {
         cql: "INCLUDE",

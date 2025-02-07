@@ -55,5 +55,69 @@ describe('triggerFetch stream', () => {
                 }
             );
     });
+    it('triggerFetch with mapSync with mapWidget and dependencies.viewport', (done) => {
+        const base = {
+            layer: { name: "TEST" },
+            mapSync: true,
+            dependenciesMap: {
+                mapSync: 'widgets[456].mapSync'
+            },
+            widgets: [
+                {
+                    id: "123",
+                    widgetType: 'table'
+                },
+                {
+                    id: "456",
+                    widgetType: 'map'
+                }
+            ]
+        };
+        const propsChanges = [
+            base, // does not trigger fetch
+            {...base, dependencies: { viewport: true }}, // triggers fetch (p1)
+            {...base, dependencies: { viewport: false }}, // does not trigger fetch
+            {...base, mapSync: false, filter: "changed"} // triggers fetch (p2) (the filter changes due to the viewport)
+        ];
+        triggerFetch(Rx.Observable.from(propsChanges))
+            .bufferCount(4)
+            .subscribe(
+                ([p1, p2, p3, p4]) => {
+                    expect(p1?.dependencies?.viewport).toBe(true);
+                    expect(p2).toExist();
+                    expect(p3).toNotExist();
+                    expect(p4).toNotExist();
+                    done();
+                }
+            );
+    });
+    it('triggerFetch with mapSync with Standard Map and dependencies.viewport', (done) => {
+        const base = {
+            layer: { name: "TEST" },
+            mapSync: true,
+            widgets: [
+            ],
+            dependenciesMap: {
+                mapSync: 'map.mapSync'
+            }
+        };
+        const propsChanges = [
+            base, // does not trigger fetch
+            {...base, dependencies: { viewport: true }}, // triggers fetch (p1)
+            {...base, dependencies: { viewport: false }}, // does not trigger fetch
+            {...base, mapSync: false, filter: "changed"} // triggers fetch (p2) (the filter changes due to the viewport)
+        ];
+        triggerFetch(Rx.Observable.from(propsChanges))
+            .bufferCount(4)
+            .subscribe(
+                ([p1, p2, p3, p4]) => {
+                    expect(p1?.dependencies?.viewport).toBe(true);
+                    expect(p2).toExist();
+                    expect(p3).toNotExist();
+                    expect(p4).toNotExist();
+                    done();
+                }
+            );
+    });
 
 });

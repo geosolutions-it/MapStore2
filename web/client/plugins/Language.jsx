@@ -32,6 +32,11 @@ export default {
             position: 5,
             tool: true,
             priority: 1
+        },
+        BrandNavbar: {
+            target: 'right-menu',
+            position: 5,
+            priority: 2
         }
     }),
     reducers: {}

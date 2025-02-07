@@ -62,7 +62,9 @@
       {"name": "geostorymode", "path": "geostory.mode"},
       {"name": "featuregridmode", "path": "featuregrid.mode"},
       {"name": "userrole", "path": "security.user.role"},
-      {"name": "printEnabled", "path": "print.capabilities"}
+      {"name": "printEnabled", "path": "print.capabilities"},
+      {"name": "resourceCanEdit", "path": "resources.initialSelectedResource.canEdit"},
+      {"name": "resourceDetails", "path": "resources.initialSelectedResource.attributes.details"}
     ],
     "userSessions": {
       "enabled": true
@@ -374,6 +376,12 @@
         ],
         "desktop": ["Details",
           {
+            "name": "BrandNavbar",
+            "cfg": {
+              "containerPosition": "header"
+            }
+          },
+          {
             "name": "Map",
             "cfg": {
               "mapOptions": {
@@ -562,7 +570,12 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", {
+            "OmniBar", "Login",
+            { "name": "ResourceDetails", "cfg": { "resourceType": "MAP" }},
+            { "name": "Save", "cfg": { "resourceType": "MAP" }},
+            { "name": "SaveAs", "cfg": { "resourceType": "MAP" }},
+            { "name": "DeleteResource", "cfg": { "resourceType": "MAP", "redirectTo": "/" }},
+            "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "SearchByBookmark", "WidgetsBuilder", {
               "name": "Widgets"
             },
             "WidgetsTray",
@@ -575,7 +588,6 @@
             "Playback",
             "FeedbackMask",
             "StyleEditor",
-            "DeleteMap",
             "SidebarMenu",
             { "name": "MapViews" }
         ],
@@ -696,48 +708,139 @@
             "FeedbackMask"
         ],
         "common": [{
-            "name": "OmniBar",
-            "cfg": {
-                "className": "navbar shadow navbar-home"
-            }
-        }, {
-            "name": "ManagerMenu",
-            "cfg": {
-                "enableContextManager": true
-            }
-        }, "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps", "ContentTabs",
-
+          "name": "BrandNavbar",
+          "cfg": {
+            "rightMenuItems": [{
+              "type": "link",
+              "href": "https://docs.mapstore.geosolutionsgroup.com/",
+              "target": "blank",
+              "glyph": "book",
+              "labelId": "Documentation",
+              "variant": "default"
+            }, {
+              "type": "link",
+              "href": "https://github.com/geosolutions-it/MapStore2",
+              "target": "blank",
+              "label": "GitHub",
+              "glyph": "github",
+              "variant": "default"
+            }]
+          }
+        },
+        { "name": "ManagerMenu" },
+        "Login","Language", "ScrollTop", "Notifications"],
+        "maps": [
+          { "name": "HomeDescription"},
           {
-            "name": "Maps",
+            "name": "ResourcesGrid",
             "cfg": {
-              "mapsOptions": {
-                "start": 0,
-                "limit": 12
-              },
-              "fluid": true
-            }
-          }, {
-            "name": "Dashboards",
-            "cfg": {
-              "mapsOptions": {
-                "start": 0,
-                "limit": 12
-              },
-              "fluid": true
+              "id": "featured",
+              "titleId": "manager.featuredMaps",
+              "pageSize": 4,
+              "cardLayoutStyle": "grid",
+              "order": null,
+              "hideWithNoResults": true,
+              "defaultQuery": {
+                "f": "featured"
+              }
             }
           },
           {
-            "name": "GeoStories",
+            "name": "ResourcesGrid",
             "cfg": {
-              "mapsOptions": {
-                "start": 0,
-                "limit": 12
-              },
-              "fluid": true
+              "id": "catalog",
+              "titleId": "resources.contents.title",
+              "queryPage": true,
+              "menuItems": [
+                {
+                    "labelId": "resourcesCatalog.addResource",
+                    "disableIf": "{!state('userrole')}",
+                    "type": "dropdown",
+                    "variant": "primary",
+                    "size": "sm",
+                    "responsive": true,
+                    "noCaret": true,
+                    "items": [
+                        {
+                            "labelId": "resourcesCatalog.createMap",
+                            "type": "link",
+                            "href": "#/viewer/new"
+                        },
+                        {
+                            "labelId": "resourcesCatalog.createDashboard",
+                            "type": "link",
+                            "href": "#/dashboard/"
+                        },
+                        {
+                            "labelId": "resourcesCatalog.createGeoStory",
+                            "type": "link",
+                            "href": "#/geostory/newgeostory/"
+                        },
+                        {
+                            "labelId": "resourcesCatalog.createContext",
+                            "type": "link",
+                            "href": "#/context-creator/new",
+                            "disableIf": "{state('userrole') !== 'ADMIN'}"
+                        }
+                    ]
+                }
+            ]
             }
-          }
-          , "Footer", {
+          },
+          {
+            "name": "ResourcesFiltersForm",
+            "cfg": {
+              "resourcesGridId": "catalog"
+            }
+          },
+          {
+            "name": "EditContext"
+          },
+          {
+            "name": "DeleteResource"
+          },
+          {
+            "name": "ResourceDetails"
+          },
+          {
+            "name": "Share",
+            "cfg": {
+              "draggable": false,
+              "advancedSettings": false,
+              "showAPI": false,
+              "embedOptions": {
+                  "showTOCToggle": false
+              },
+              "map": {
+                "embedOptions": {
+                  "showTOCToggle": true
+                }
+              },
+                "geostory": {
+                  "embedOptions": {
+                  "showTOCToggle": false,
+                  "allowFullScreen":false
+                },
+                "shareUrlRegex": "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+                "shareUrlReplaceString": "$1geostory-embedded.html#/$3",
+                "advancedSettings": {
+                  "hideInTab": "embed",
+                  "homeButton": true,
+                  "sectionId": true
+                }
+              },
+              "dashboard": {
+                "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+                "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
+                "embedOptions": {
+                  "showTOCToggle": false,
+                  "showConnectionsParamToggle": true
+                }
+              }
+            }
+          },
+          { "name": "Footer"},
+          {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",
@@ -749,6 +852,9 @@
           "FeedbackMask"
         ],
         "dashboard": [
+          { "name": "ResourceDetails", "cfg": { "resourceType": "DASHBOARD" } },
+          { "name": "Save", "cfg": { "resourceType": "DASHBOARD" }},
+          { "name": "SaveAs", "cfg": { "resourceType": "DASHBOARD" }},
           "Details",
           "AddWidgetDashboard",
           "MapConnectionDashboard",
@@ -769,10 +875,6 @@
               }
           },
           "Language",
-          "NavMenu",
-          "DashboardSave",
-          "DashboardSaveAs",
-          "Attribution",
           {
             "name": "Home",
             "override": {
@@ -789,13 +891,13 @@
               }
             }
           },
-          { "name": "DeleteDashboard" },
+          { "name": "DeleteResource", "cfg": { "resourceType": "DASHBOARD", "redirectTo": "/" }},
           { "name": "DashboardExport" },
           { "name": "DashboardImport" },
-          { "name": "OmniBar",
+          {
+            "name": "BrandNavbar",
             "cfg": {
-                "containerPosition": "header",
-                "className": "navbar shadow navbar-home"
+              "containerPosition": "header"
             }
           },
           { "name": "Share",
@@ -900,11 +1002,13 @@
           { "name": "FeedbackMask" }
         ],
         "geostory": [
+          { "name": "ResourceDetails", "cfg": { "resourceType": "GEOSTORY" } },
+          { "name": "Save", "cfg": { "resourceType": "GEOSTORY" }},
+          { "name": "SaveAs", "cfg": { "resourceType": "GEOSTORY" }},
           {
-            "name": "OmniBar",
+            "name": "BrandNavbar",
             "cfg": {
-              "containerPosition": "header",
-              "className": "navbar shadow navbar-home"
+              "containerPosition": "header"
             }
           },
           {
@@ -924,17 +1028,13 @@
               }
           },
           "Language",
-          "NavMenu",
-          "Attribution",
           "Home",
           {
             "name": "GeoStory"
           },
-          { "name": "DeleteGeoStory" },
+          { "name": "DeleteResource", "cfg": { "resourceType": "GEOSTORY", "redirectTo": "/" }},
           { "name": "GeoStoryExport" },
           { "name": "GeoStoryImport" },
-          "GeoStorySave",
-          "GeoStorySaveAs",
           "MapEditor",
           "MediaEditor",
           {
@@ -979,23 +1079,20 @@
         ],
         "context-creator": [
           {
-            "name": "OmniBar",
+            "name": "BrandNavbar",
             "cfg": {
-              "containerPosition": "header",
-              "className": "navbar shadow navbar-home"
+              "containerPosition": "header"
             }
           },
           "Redirect",
           "Login",
           "Language",
-          "NavMenu",
-          "Attribution",
           "Tutorial",
           {
               "name": "ContextCreator",
               "cfg": {
                   "documentationBaseURL": "https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins",
-                  "backToPageDestRoute": "/context-manager",
+                  "backToPageDestRoute": "/",
                   "backToPageConfirmationMessage": "contextCreator.undo"
               }
           },

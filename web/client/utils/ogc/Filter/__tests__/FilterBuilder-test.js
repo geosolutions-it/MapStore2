@@ -66,7 +66,6 @@ describe('FilterBuilder', () => {
         expect(
             b.or([b.property("GEOMETRY").intersects(testGeom1), b.property("GEOMETRY").intersects(testGeom2)])
         ).toBe(`<ogc:Or>${intersectsElem1}${intersectsElem2}</ogc:Or>`);
-
         // not
         expect(
             b.not(b.property("GEOMETRY").intersects(testGeom1))
@@ -79,6 +78,12 @@ describe('FilterBuilder', () => {
         )).toBe(`<ogc:Or><ogc:And>${intersectsElem1}<ogc:Not>${intersectsElem2}</ogc:Not></ogc:And>`
             + `<ogc:And>${intersectsElem2}<ogc:Not>${intersectsElem1}</ogc:Not></ogc:And>`
             + `</ogc:Or>`);
+        // empty array returns empty filter instead of <And>undefined</And>
+        // to check if is better to return an empty filter like <ogc:And></ogc:And> or <ogc:Or/>
+        expect(b.and()).toBe("");
+        expect(b.or()).toBe("");
+        expect(b.not()).toBe("");
+        expect(b.nor()).toBe("");
     });
 
     it('valueReference 1.1.0', () => {
