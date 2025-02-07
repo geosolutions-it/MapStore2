@@ -170,13 +170,13 @@ function TagsManager({
     );
 }
 
-TagsManagerPanel.propTypes = {
+TagsManager.propTypes = {
     pageSize: PropTypes.number,
     onShow: PropTypes.func,
     onSearch: PropTypes.func
 };
 
-TagsManagerPanel.defaultProps = {
+TagsManager.defaultProps = {
     pageSize: 20,
     onShow: () => {},
     onSearch: () => {}
