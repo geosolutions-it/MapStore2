@@ -1,6 +1,7 @@
 
 import { compose, mapPropsStream, withHandlers } from 'recompose';
 import { checkIfLayerFitsExtentForProjection } from '../../../../utils/CoordinatesUtils';
+import { DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB } from '../../../../utils/FileUtils';
 
 /**
  * Enhancer for processing map configuration and layers object
@@ -49,7 +50,7 @@ export default compose(
                                     message: "mapImport.errors.exceedFileSizeLimit",
                                     autoDismiss: 6,
                                     position: "tc",
-                                    values: {filename: layer.name ?? " ", maxfilesize: layer?.fileSizeLimitInMB ?? 10}
+                                    values: {filename: layer.name ?? " ", maxfilesize: layer?.fileSizeLimitInMB ?? DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB}
                                 });
                             } else {
                                 warning({
