@@ -192,3 +192,7 @@ export const isFileSizeExceedMaxLimit = (file, fileSizeLimitInMb) => {
     }
     return true;
 };
+/**
+ * the max file size limit for import vector files
+ */
+export const DEFAULT_VECTOR_FILE_MAX_SIZE_IN_MB = 2;

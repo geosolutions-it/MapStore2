@@ -26,7 +26,9 @@ export default compose(
         ...props
     }) => <DragZone
         onClose={onClose}
-        onDrop={onDrop}
+        onDrop={(files) => {
+            return onDrop({ files, options: { importedVectorFileMaxSizeInMB: props.importedVectorFileMaxSizeInMB} });
+        }}
         onRef={onRef}
     >
         <Content {...props} />

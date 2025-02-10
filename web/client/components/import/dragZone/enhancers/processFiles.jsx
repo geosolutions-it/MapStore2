@@ -12,7 +12,7 @@ import { compose, createEventHandler, mapPropsStream } from 'recompose';
 import Rx from 'rxjs';
 
 import { isAnnotation, importJSONToAnnotations } from '../../../../plugins/Annotations/utils/AnnotationsUtils';
-import ConfigUtils, { getConfigProp } from '../../../../utils/ConfigUtils';
+import ConfigUtils from '../../../../utils/ConfigUtils';
 import {
     MIME_LOOKUPS,
     checkShapePrj,
@@ -64,11 +64,11 @@ const checkFileType = (file) => {
  * Create a function that return a Promise for reading file. The Promise resolves with an array of (json)
  * @param {function} onWarnings callback in case of warnings to report
  */
-const readFile = (onWarnings) => (file) => {
+const readFile = ({onWarnings, options}) => (file) => {
     const ext = recognizeExt(file.name);
     const type = file.type || MIME_LOOKUPS[ext];
     // Check the file size first before file conversion process to avoid this useless effort
-    const configurableFileSizeLimitInMB = getConfigProp('importedVectorFileMaxSizeInMB');
+    const configurableFileSizeLimitInMB = options.importedVectorFileMaxSizeInMB;
     const isVectorFile = type !== 'application/json';       // skip json as json is for map file
     if (configurableFileSizeLimitInMB && isVectorFile) {
         if (isFileSizeExceedMaxLimit(file, configurableFileSizeLimitInMB)) {
@@ -162,9 +162,9 @@ export default compose(
             const { handler: onWarnings, stream: warnings$} = createEventHandler();
             return props$.combineLatest(
                 drop$.switchMap(
-                    files => Rx.Observable.from(files)
+                    ({files, options}) => Rx.Observable.from(files)
                         .flatMap(checkFileType) // check file types are allowed
-                        .flatMap(readFile(onWarnings)) // read files to convert to json
+                        .flatMap(readFile({onWarnings, options})) // read files to convert to json
                         .reduce((result, jsonObjects) => ({ // divide files by type
                             layers: (result.layers || [])
                                 .concat(
