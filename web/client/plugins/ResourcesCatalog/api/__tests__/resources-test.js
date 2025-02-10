@@ -76,7 +76,7 @@ describe('resources api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc' });
+                expect(config.params).toEqual({ includeAttributes: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -155,7 +155,7 @@ describe('resources api', () => {
             params: {
                 'page': 2,
                 'pageSize': 24,
-                'f': ['map', 'featured', 'my-resources'],
+                'f': ['map', 'featured', 'my-resources', 'favorite'],
                 'q': 'A',
                 'filter{ctx.in}': ['contextName'],
                 'filter{group.in}': ['group01'],

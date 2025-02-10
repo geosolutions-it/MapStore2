@@ -2156,7 +2156,10 @@
             "creationFilter": {
                 "from": "Creation date from",
                 "to": "Creation date to"
-            }
+            },
+            "removeFromFavorites": "Remove from favorites",
+            "addToFavorites": "Add to favorites",
+            "favorites": "Favorites"
         }
     }
 }

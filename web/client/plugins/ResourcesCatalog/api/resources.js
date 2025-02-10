@@ -148,6 +148,7 @@ export const requestResources = ({
     } = params || {};
     const sortBy = sort.replace('-', '');
     const sortOrder = sort.includes('-') ? 'desc' : 'asc';
+    const f = castArray(query.f || []);
     return searchListByAttributes(getFilter({
         q,
         user,
@@ -159,7 +160,8 @@ export const requestResources = ({
             start: parseFloat(page - 1) * pageSize,
             limit: pageSize,
             sortBy,
-            sortOrder
+            sortOrder,
+            ...(f.includes('favorite') ? { favoritesOnly: true } : {})
         }
     })
         .toPromise()
