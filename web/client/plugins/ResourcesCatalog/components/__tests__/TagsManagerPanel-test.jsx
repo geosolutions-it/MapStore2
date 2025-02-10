@@ -133,9 +133,9 @@ describe('TagsManagerPanel component', () => {
         expect(buttons.length).toBe(5);
         const tagEntries = document.querySelectorAll('.ms-tags-manager-entry');
         expect(tagEntries.length).toBe(1);
-        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
-        expect(buttons[3].children[0].getAttribute('class')).toBe('glyphicon glyphicon-edit');
-        expect(buttons[4].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
+        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
+        expect(buttons[3].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
+        expect(buttons[4].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
     });
     it('should show tags that triggers setChanges', (done) => {
         act(() => {
@@ -170,10 +170,10 @@ describe('TagsManagerPanel component', () => {
         const tagEntries = document.querySelectorAll('.ms-tags-manager-entry');
         expect(tagEntries.length).toBe(1);
         const buttons = tagEntries[0].querySelectorAll('button');
-        expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
-        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-edit');
-        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
-        Simulate.click(buttons[0]);
+        expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
+        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
+        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
+        Simulate.click(buttons[1]);
     });
     it('should show tags that triggers end editing', (done) => {
         ReactDOM.render(<TagsManagerPanel tags={[{ id: '01', name: '', description: '', color: '#ff0000' }]} editing={['01']} onEndEditing={(tag) => {
@@ -185,10 +185,10 @@ describe('TagsManagerPanel component', () => {
         const tagEntries = document.querySelectorAll('.ms-tags-manager-entry');
         expect(tagEntries.length).toBe(1);
         const buttons = tagEntries[0].querySelectorAll('button');
-        expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
-        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-edit');
-        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
-        Simulate.click(buttons[1]);
+        expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-trash');
+        expect(buttons[1].children[0].getAttribute('class')).toBe('glyphicon glyphicon-floppy-disk');
+        expect(buttons[2].children[0].getAttribute('class')).toBe('glyphicon glyphicon-1-close');
+        Simulate.click(buttons[2]);
     });
     it('should show tags that triggers delete', (done) => {
         ReactDOM.render(<TagsManagerPanel tags={[{ id: '01', name: '', description: '', color: '#ff0000' }]} setShowDeleteModal={(tag) => {

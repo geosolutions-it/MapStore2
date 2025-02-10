@@ -25,7 +25,7 @@ import Tabs from "./Tabs";
 import SelectInfiniteScroll from './SelectInfiniteScroll';
 import FilterGroup from './FilterGroup';
 
-import { getFilterByField as defaultGetFilterByField } from '../utils/ResourcesFiltersUtils';
+import { getFilterByField as defaultGetFilterByField, getTagColorVariables } from '../utils/ResourcesFiltersUtils';
 import InputControl from './InputControl';
 import FlexBox from './FlexBox';
 import Text from './Text';
@@ -163,7 +163,11 @@ function FilterItem({
                         const selectedFilter = getFilterByField(field, value);
                         return {
                             value,
-                            label: selectedFilter ? getLabelValue(selectedFilter) : value
+                            label: selectedFilter ? getLabelValue(selectedFilter) : value,
+                            ...(selectedFilter?.color && {
+                                className: 'ms-tag',
+                                style: getTagColorVariables(selectedFilter.color)
+                            })
                         };
                     })}
                     multi
@@ -191,7 +195,11 @@ function FilterItem({
                                     ...item,
                                     selectOption: {
                                         value: item.filterValue,
-                                        label: getLabelValue(item)
+                                        label: getLabelValue(item),
+                                        ...(item?.color && {
+                                            className: 'ms-tag',
+                                            style: getTagColorVariables(item.color)
+                                        })
                                     }
                                 }))
                             };

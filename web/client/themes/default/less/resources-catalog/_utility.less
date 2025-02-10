@@ -79,17 +79,6 @@
             .background-color-var(@theme-vars[success]);
         }
     }
-    .ms-tag {
-        .color-var(@theme-vars[main-color]);
-        &.Select-option,
-        &.Select-value {
-            .color-var(@theme-vars[main-color], true);
-        }
-        &:focus,
-        &:hover {
-            .color-var(@theme-vars[main-color]);
-        }
-    }
 }
 
 // **************
@@ -179,27 +168,38 @@
 }
 
 .ms-tag {
+    --tag-accessible-color: calc(((((var(--tag-color-r) * 299) + (var(--tag-color-g) * 587) + (var(--tag-color-b) * 114)) / 1000) - 128) * -1000);
+    --tag-color-text: rgb(var(--tag-accessible-color), var(--tag-accessible-color), var(--tag-accessible-color));
+    --tag-color: rgb(var(--tag-color-r), var(--tag-color-g), var(--tag-color-b));
+    color: var(--tag-color-text);
     border: 1px solid var(--tag-color);
     border-radius: 10rem;
     padding: 0 0.4rem;
     display: inline-block;
     position: relative;
-    background-color: rgb(from var(--tag-color) r g b / 1%);
+    background-color: var(--tag-color);
     &:hover:has(a),
     &:hover:is(a) {
-        background-color: rgb(from var(--tag-color) r g b / 20%);
+        background-color: rgb(from var(--tag-color) r g b / 80%);
     }
     &.active {
-        background-color: rgb(from var(--tag-color) r g b / 30%);
+        background-color: var(--tag-color);
+    }
+    &.Select-option,
+    &.Select-value {
+        color: var(--tag-color-text) !important;
+    }
+    &:focus,
+    &:hover {
+        color: var(--tag-color-text);
     }
     &.Select-value {
-        border: 1px solid var(--tag-color) !important;
         margin-right: 0.25rem;
         border-radius: 10rem;
         padding: 0;
         display: inline-block;
         position: relative;
-        background-color: rgb(from var(--tag-color) r g b / 30%) !important;
+        background-color: var(--tag-color) !important;
         .Select-value-icon {
             border-top-left-radius: 10rem;
             border-bottom-left-radius: 10rem;
@@ -213,7 +213,7 @@
         }
     }
     &.Select-option {
-        background-color: rgb(from var(--tag-color) r g b / 1%);
+        background-color: var(--tag-color) !important;
         display: inline-block;
         width: fit-content;
         margin: 0.25rem 0 0 0.25rem;
@@ -222,7 +222,13 @@
             margin-bottom: 0.25rem;
         }
         &.is-selected {
-            background-color: rgb(from var(--tag-color) r g b / 30%) !important;
+            background-color: var(--tag-color) !important;
+            opacity: 0.2;
+            -webkit-filter: grayscale(85%);
+            -moz-filter: grayscale(85%);
+            -ms-filter: grayscale(85%);
+            -o-filter: grayscale(85%);
+            filter: grayscale(85%);
         }
     }
     img {

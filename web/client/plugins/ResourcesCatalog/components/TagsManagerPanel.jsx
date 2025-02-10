@@ -106,24 +106,27 @@ function TagsManagerPanel({
                     description={newTag.description}
                     editing
                     onChange={(newProperties) => setNewTag({ ...newTag, ...newProperties })}
-                >
-                    <Button
-                        square
-                        onClick={() => onUpdate(newTag)}
-                        disabled={!newTag?.name}
-                        className={!newTag?.name ? undefined : 'ms-notification-circle warning'}
-                        tooltipId="resourcesCatalog.create"
-                    >
-                        <Icon glyph="floppy-disk" type="glyphicon" />
-                    </Button>
-                    <Button
-                        square
-                        onClick={() => setNewTag(null)}
-                        tooltipId="resourcesCatalog.cancel"
-                    >
-                        <Icon glyph="1-close" type="glyphicon" />
-                    </Button>
-                </TagsManagerEntry>
+                    editingTools={
+                        <>
+                            <Button
+                                square
+                                onClick={() => onUpdate(newTag)}
+                                disabled={!newTag?.name}
+                                className={!newTag?.name ? undefined : 'ms-notification-circle warning'}
+                                tooltipId="resourcesCatalog.create"
+                            >
+                                <Icon glyph="floppy-disk" type="glyphicon" />
+                            </Button>
+                            <Button
+                                square
+                                onClick={() => setNewTag(null)}
+                                tooltipId="resourcesCatalog.cancel"
+                            >
+                                <Icon glyph="1-close" type="glyphicon" />
+                            </Button>
+                        </>
+                    }
+                />
             ) : null}
             {!tags?.length
                 ? <FlexBox.Fill flexBox centerChildren classNames={['_padding-tb-lg']}>
@@ -157,24 +160,34 @@ function TagsManagerPanel({
                                             ...newProperties
                                         }
                                     })}
+                                    editingTools={
+                                        <>
+                                            <Button
+                                                square
+                                                disabled={!changes[tag.id] || !tag?.name}
+                                                onClick={() => onUpdate(tag)}
+                                                className={(!changes[tag.id] || !tag?.name) ? undefined : 'ms-notification-circle warning'}
+                                                tooltipId="resourcesCatalog.update"
+                                            >
+                                                <Icon glyph="floppy-disk" type="glyphicon" />
+                                            </Button>
+                                            <Button
+                                                square
+                                                onClick={() => onEndEditing(tag)}
+                                                tooltipId="resourcesCatalog.cancel"
+                                            >
+                                                <Icon glyph="1-close" type="glyphicon" />
+                                            </Button>
+                                        </>
+                                    }
                                 >
-                                    {isEditing ? <Button
+                                    {!isEditing ? <Button
                                         square
-                                        disabled={!changes[tag.id] || !tag?.name}
-                                        onClick={() => onUpdate(tag)}
-                                        className={(!changes[tag.id] || !tag?.name) ? undefined : 'ms-notification-circle warning'}
-                                        tooltipId="resourcesCatalog.update"
-                                    >
-                                        <Icon glyph="floppy-disk" type="glyphicon" />
-                                    </Button> : null}
-                                    <Button
-                                        square
-                                        variant={isEditing ? 'success' : undefined}
-                                        onClick={() => isEditing ? onEndEditing(tag) : onStartEditing(tag)}
-                                        tooltipId={isEditing ? 'resourcesCatalog.cancel' : 'resourcesCatalog.editTag'}
+                                        onClick={() => onStartEditing(tag)}
+                                        tooltipId={'resourcesCatalog.editTag'}
                                     >
                                         <Icon glyph="edit" type="glyphicon" />
-                                    </Button>
+                                    </Button> : null}
                                     <Button
                                         square
                                         onClick={() => setShowDeleteModal(tag)}

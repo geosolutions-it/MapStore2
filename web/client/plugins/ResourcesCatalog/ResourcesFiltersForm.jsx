@@ -145,7 +145,8 @@ function ResourcesFiltersForm({
         query,
         fields: parsedConfig.fields,
         request: facetsRequest,
-        customFilters
+        customFilters,
+        visible: !!show
     }, [user]);
 
     return (

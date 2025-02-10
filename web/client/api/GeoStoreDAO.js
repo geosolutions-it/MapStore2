@@ -584,7 +584,7 @@ const Api = {
             ...options,
             params: {
                 ...options?.params,
-                ...(textSearch && { nameLike: `%${textSearch}%` })
+                ...(textSearch && { nameLike: textSearch })
             }
         }))).then((response) => response.data);
     },

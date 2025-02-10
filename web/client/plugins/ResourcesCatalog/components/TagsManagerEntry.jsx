@@ -13,6 +13,7 @@ import Text from './Text';
 import ColorSelector from '../../../components/style/ColorSelector';
 import { ControlLabel, FormGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { getTagColorVariables } from '../utils/ResourcesFiltersUtils';
 
 /**
  * TagsManagerEntry represents the tag entry UI available in read or edit mode
@@ -32,7 +33,8 @@ function TagsManagerEntry({
     editing,
     onChange,
     classNames,
-    debounceTime
+    debounceTime,
+    editingTools
 }) {
 
     if (editing) {
@@ -40,11 +42,11 @@ function TagsManagerEntry({
             <FlexBox classNames={['ms-tags-manager-entry', '_row', '_padding-tb-xs', ...classNames]} gap="sm" column>
                 <FlexBox gap="sm" centerChildrenVertically>
                     <FlexBox.Fill flexBox gap="sm" centerChildrenVertically>
-                        <Text ellipsis classNames={['ms-tag', 'active']} style={{ '--tag-color': color }}>{name || <Message msgId="resourcesCatalog.tagPreview" />}</Text>
+                        <Text ellipsis classNames={['ms-tag']} style={getTagColorVariables(color)}>{name || <Message msgId="resourcesCatalog.tagPreview" />}</Text>
                     </FlexBox.Fill>
                     {children}
                 </FlexBox>
-                <FlexBox gap="sm" centerChildrenVertically>
+                <FlexBox gap="sm">
                     <FormGroup>
                         <ControlLabel><Message msgId="resourcesCatalog.tagName" /></ControlLabel>
                         <InputControl
@@ -75,6 +77,9 @@ function TagsManagerEntry({
                             />
                         </div>
                     </FormGroup>
+                    <FlexBox gap="sm" classNames={['ms-tags-manager-entry-tools']}>
+                        {editingTools}
+                    </FlexBox>
                 </FlexBox>
             </FlexBox>
         );
@@ -82,7 +87,7 @@ function TagsManagerEntry({
     return (
         <FlexBox classNames={['ms-tags-manager-entry', '_row', '_padding-tb-xs', ...classNames]} gap="sm">
             <FlexBox.Fill flexBox gap="sm" centerChildrenVertically>
-                <Text ellipsis classNames={['ms-tag', 'active']} style={{ '--tag-color': color }}>{name}</Text>
+                <Text ellipsis classNames={['ms-tag']} style={getTagColorVariables(color)}>{name}</Text>
                 <Text ellipsis>{description}</Text>
             </FlexBox.Fill>
             {children}

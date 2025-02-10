@@ -10,7 +10,7 @@ import { searchListByAttributes, getResource } from '../../../observables/geosto
 import { castArray } from 'lodash';
 import isString from 'lodash/isString';
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
-import { splitFilterValue } from '../utils/ResourcesFiltersUtils';
+import { addFilters, getFilterByField, splitFilterValue } from '../utils/ResourcesFiltersUtils';
 
 const applyDoubleQuote = value => `"${value}"`;
 
@@ -345,15 +345,35 @@ export const facets = [
         type: 'select',
         labelId: 'resourcesCatalog.tags',
         key: 'filter{tag.in}',
-        getLabelValue: (item) => {
-            return item.value;
-        },
-        getFilterByField: (field, value) => {
-            return { label: value, value };
+        update: ({ facet, query }) => {
+            const filters = castArray(query['filter{tag.in}'] || []).filter(filter => !getFilterByField({ key: 'filter{tag.in}' }, filter));
+            return filters.length === 0
+                ? Promise.resolve(facet)
+                : Promise.all(
+                    filters.map(filter =>
+                        GeoStoreDAO.getTags(filter, {
+                            params: {
+                                page: 0,
+                                entries: 1
+                            }
+                        }).then((response) => {
+                            const tags = castArray(response?.TagList?.Tag || []).map((item) => {
+                                const value = `${item.name}`;
+                                return {
+                                    ...item,
+                                    filterValue: value,
+                                    value: value,
+                                    label: `${item.name}`
+                                };
+                            });
+                            addFilters({ key: 'filter{tag.in}' }, tags);
+                        })
+                    )
+                ).then(() => ({ ...facet, updated: (facet.updated || 0) + 1 }));
         },
         loadItems: ({ params, config }) => {
             const { page, pageSize, q } = params;
-            return GeoStoreDAO.getTags(q, {
+            return GeoStoreDAO.getTags(q ? `%${q}%` : undefined, {
                 ...config,
                 params: {
                     page: page,
@@ -367,9 +387,11 @@ export const facets = [
                             ...item,
                             filterValue: value,
                             value: value,
-                            label: `${item.name}`
+                            label: `${item.name}`,
+                            color: item.color
                         };
                     });
+                    addFilters({ key: 'filter{tag.in}' }, tags);
                     const totalCount = response?.TagList?.Count;
                     return {
                         items: tags,
@@ -382,18 +404,40 @@ export const facets = [
 
 
 export const facetsRequest = ({
-    fields
+    fields,
+    query,
+    customFilters
 }) => {
-    return Promise.resolve({
-        fields: fields.map((field) => {
-            if (field.facet) {
-                const facet = facets.find(f => f.id === field.facet);
-                return {
-                    ...facet,
-                    ...field
-                };
-            }
-            return field;
+    const newFields = fields.map((field) => {
+        if (field.facet) {
+            const facet = facets.find(f => f.id === field.facet);
+            return facet ? {
+                ...facet,
+                ...field
+            } : null;
+        }
+        return field;
+    }).filter(value => value !== null);
+    const facetsToUpdate = newFields.filter(field => field.facet && field.update);
+    return facetsToUpdate.length === 0
+        ? Promise.resolve({
+            fields: newFields
         })
-    });
+        : Promise.all(
+            facetsToUpdate.map(facet =>
+                facet.update({
+                    facet,
+                    fields,
+                    query,
+                    customFilters
+                })
+            )
+        ).then((updatedFacets) => {
+            return {
+                fields: newFields.map((field) => {
+                    const updatedFacet = updatedFacets.find((facet) => facet.id === field.id);
+                    return updatedFacet ? updatedFacet : field;
+                })
+            };
+        });
 };

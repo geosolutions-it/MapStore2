@@ -12,9 +12,11 @@ import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { castArray, isEmpty, omit, uniq } from 'lodash';
 import useIsMounted from '../hooks/useIsMounted';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { searchResources } from '../actions/resources';
+import { searchResources, setSelectedResource } from '../actions/resources';
 import TagsManagerPanel from '../components/TagsManagerPanel';
 import PropTypes from 'prop-types';
+import { createStructuredSelector } from 'reselect';
+import { getSelectedResource } from '../selectors/resources';
 
 /**
  * TagsManager panel where to add/update/remove tags
@@ -25,7 +27,9 @@ import PropTypes from 'prop-types';
 function TagsManager({
     pageSize,
     onShow,
-    onSearch
+    onSearch,
+    selectedResource,
+    onSelectResource
 }) {
     const [filterText, setFilterText] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(null);
@@ -44,7 +48,7 @@ function TagsManager({
 
     useEffect(() => {
         setLoading(true);
-        GeoStoreDAO.getTags(filterText, {
+        GeoStoreDAO.getTags(filterText ? `%${filterText}%` : undefined, {
             params: {
                 page,
                 entries: pageSize
@@ -66,6 +70,27 @@ function TagsManager({
         setChanges(omit(changes, tag.id));
     }
 
+    function updateSelectedResource(tag, action) {
+        const resourceTags = selectedResource.tags || [];
+        const shouldUpdate = !!resourceTags.find(resourceTag => resourceTag.id === tag.id);
+        if (!shouldUpdate) {
+            return null;
+        }
+        if (action === 'update') {
+            return onSelectResource({
+                ...selectedResource,
+                tags: resourceTags.map((resourceTag) => resourceTag.id === tag.id ? { ...resourceTag, ...tag } : resourceTag)
+            });
+        }
+        if (action === 'delete') {
+            return onSelectResource({
+                ...selectedResource,
+                tags: resourceTags.filter((resourceTag) => resourceTag.id !== tag.id)
+            });
+        }
+        return null;
+    }
+
     function handleUpdate(tag) {
         setLoading(true);
         GeoStoreDAO.updateTag(tag)
@@ -73,6 +98,7 @@ function TagsManager({
                 setForceUpdate(prevValue => prevValue + 1);
                 if (tag.id) {
                     handleEndEditing(tag);
+                    updateSelectedResource(tag, 'update');
                 } else {
                     setNewTag(null);
                 }
@@ -88,6 +114,7 @@ function TagsManager({
         GeoStoreDAO.deleteTag(tag.id)
             .then(() => isMounted(() => {
                 handleEndEditing(tag);
+                updateSelectedResource(tag, 'delete');
                 setForceUpdate(prevValue => prevValue + 1);
             })).finally(() => isMounted(() => {
                 setLoading(false);
@@ -122,7 +149,7 @@ function TagsManager({
 
     return (
         <>
-            <FlexBox centerChildren classNames={['ms-tags-manager', '_absolute', '_corner-tl', '_fill']}>
+            <FlexBox centerChildren classNames={['ms-tags-manager', '_fixed', '_corner-tl', '_fill']}>
                 <TagsManagerPanel
                     pageSize={pageSize}
                     filterText={filterText}
@@ -182,4 +209,14 @@ TagsManager.defaultProps = {
     onSearch: () => {}
 };
 
-export default connect(() => ({}), { onSearch: searchResources })(TagsManager);
+const ConnectedTagsManager = connect(
+    createStructuredSelector({
+        selectedResource: getSelectedResource
+    }),
+    {
+        onSearch: searchResources,
+        onSelectResource: setSelectedResource
+    }
+)(TagsManager);
+
+export default ConnectedTagsManager;

@@ -33,7 +33,10 @@ describe('TagsManagerEntry component', () => {
         expect(tagEntry).toBeTruthy();
         const texts = tagEntry.querySelectorAll('.ms-text');
         expect(texts.length).toBe(2);
-        expect(getComputedStyle(texts[0]).getPropertyValue('--tag-color')).toBe('#ff0000');
+        const computedStyle = getComputedStyle(texts[0]);
+        expect(computedStyle.getPropertyValue('--tag-color-r')).toBe('255');
+        expect(computedStyle.getPropertyValue('--tag-color-g')).toBe('0');
+        expect(computedStyle.getPropertyValue('--tag-color-b')).toBe('0');
         expect(texts[0].innerHTML).toBe('Tag');
         expect(texts[1].innerHTML).toBe('The tag');
     });
