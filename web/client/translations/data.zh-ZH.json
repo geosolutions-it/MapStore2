@@ -2113,7 +2113,10 @@
             "tagName": "Name",
             "tagDescription": "Description",
             "tagColor": "Color",
-            "manageTags": "Manage tags"
+            "manageTags": "Manage tags",
+            "removeFromFavorites": "Remove from favorites",
+            "addToFavorites": "Add to favorites",
+            "favorites": "Favorites"
         }
     }
 }

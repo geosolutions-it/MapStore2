@@ -22,9 +22,9 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
-### Add TagsManager plugin to localConfig.json
+### Add TagsManager and Favorite plugins to localConfig.json
 
-The new TagsManager plugin should be added inside the plugins `maps` section of the `localConfig.json` to visualize a new menu item in the admin menu
+The new TagsManager and Favorite plugin should be added inside the plugins `maps` section of the `localConfig.json` to visualize a new menu item in the admin menu and to to visualize the button on the resource cards
 
 ```diff
 {
@@ -32,7 +32,8 @@ The new TagsManager plugin should be added inside the plugins `maps` section of 
         ...,
         "maps": [
             ...,
-+           { "name": "TagsManager" }
++           { "name": "TagsManager" },
++           { "name": "Favorites" }
         ],
         ...
     }

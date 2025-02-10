@@ -504,4 +504,29 @@ describe('Test correctness of the GeoStore APIs', () => {
         });
         API.unlinkTagFromResource('1', '2');
     });
+
+    it('addFavoriteResource', (done) => {
+        mockAxios.onPost().reply((data) => {
+            try {
+                expect(data.url).toEqual('/users/user/10/favorite/15');
+                done();
+            } catch (e) {
+                done(e);
+            }
+            return [200];
+        });
+        API.addFavoriteResource("10", "15");
+    });
+    it('removeFavoriteResource', (done) => {
+        mockAxios.onDelete().reply((data) => {
+            try {
+                expect(data.url).toEqual('/users/user/10/favorite/15');
+                done();
+            } catch (e) {
+                done(e);
+            }
+            return [200];
+        });
+        API.removeFavoriteResource("10", "15");
+    });
 });

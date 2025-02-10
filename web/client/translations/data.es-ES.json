@@ -4322,7 +4322,10 @@
             "tagName": "Nombre",
             "tagDescription": "Descripción",
             "tagColor": "Color",
-            "manageTags": "Administrar etiquetas"
+            "manageTags": "Administrar etiquetas",
+            "removeFromFavorites": "Eliminar de favoritos",
+            "addToFavorites": "Añadir a favoritos",
+            "favorites": "Favoritos"
         }
     }
 }

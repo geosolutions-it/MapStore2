@@ -4360,7 +4360,10 @@
             "tagName": "Name",
             "tagDescription": "Beschreibung",
             "tagColor": "Farbe",
-            "manageTags": "Tags verwalten"
+            "manageTags": "Tags verwalten",
+            "removeFromFavorites": "Aus Favoriten entfernen",
+            "addToFavorites": "Zu Favoriten hinzufügen",
+            "favorites": "Favoriten"
         }
     }
 }

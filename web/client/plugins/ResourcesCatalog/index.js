@@ -10,6 +10,7 @@ export { default as ResourcesGridPlugin } from './ResourcesGrid';
 export { default as ResourcesFiltersFormPlugin} from './ResourcesFiltersForm';
 export { default as ResourceDetailsPlugin } from './ResourceDetails';
 export { default as EditContextPlugin } from './EditContext';
+export { default as FavoritesPlugin } from './Favorites';
 export { default as DeleteResourcePlugin } from './DeleteResource';
 export { default as HomeDescriptionPlugin } from './HomeDescription';
 export { default as BrandNavbarPlugin } from './BrandNavbar';

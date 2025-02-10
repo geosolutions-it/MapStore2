@@ -64,6 +64,12 @@ function ResourcesFiltersForm({
                     disableIf: '{!state("userrole")}'
                 },
                 {
+                    id: 'favorite',
+                    labelId: 'resourcesCatalog.favorites',
+                    type: 'filter',
+                    disableIf: '{!state("userrole")}'
+                },
+                {
                     id: 'map',
                     labelId: 'resourcesCatalog.mapsFilter',
                     type: 'filter'

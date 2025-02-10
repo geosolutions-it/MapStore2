@@ -4320,7 +4320,10 @@
             "tagName": "Nome",
             "tagDescription": "Descrizione",
             "tagColor": "Colore",
-            "manageTags": "Gestisci tag"
+            "manageTags": "Gestisci tag",
+            "removeFromFavorites": "Rimuovi dai preferiti",
+            "addToFavorites": "Aggiungi ai preferiti",
+            "favorites": "Preferiti"
         }
     }
 }
