@@ -435,7 +435,7 @@ describe('Test correctness of the GeoStore APIs', () => {
             done();
             return [200];
         });
-        API.getTags('Search');
+        API.getTags('%Search%');
     });
     it('updateTag', (done) => {
         mockAxios.onPut().reply((data) => {
