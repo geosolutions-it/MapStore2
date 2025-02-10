@@ -71,7 +71,7 @@ function TagsManager({
     }
 
     function updateSelectedResource(tag, action) {
-        const resourceTags = selectedResource.tags || [];
+        const resourceTags = selectedResource?.tags || [];
         const shouldUpdate = !!resourceTags.find(resourceTag => resourceTag.id === tag.id);
         if (!shouldUpdate) {
             return null;
