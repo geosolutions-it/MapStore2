@@ -559,7 +559,15 @@
               "skyAtmosphere": "Himmelsatmosphäre zeigen",
               "groundAtmosphere": "Atmosphäre auf dem Gelände anzeigen",
               "fog": "Nebel anzeigen",
-              "depthTest": "Tiefentest gegen Gelände aktivieren"
+              "depthTest": "Tiefentest gegen Gelände aktivieren",
+              "lighting3DOptions": {
+                    "title": "3D-Beleuchtungsoptionen",
+                    "placeholder": "Wähle die 3D-Beleuchtungsoption aus",
+                    "flashlightOption": "Taschenlampe",
+                    "sunlightOption": "Sonnenlicht",
+                    "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",
+                    "dateTimePlaceholder": "Wählen Sie Datum und Uhrzeit"
+                }
             },
             "thumbnailError": {
                 "error403": "Sie haben keine Berechtigung um Miniaturansichten hochzuladen",

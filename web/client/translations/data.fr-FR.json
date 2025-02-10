@@ -521,7 +521,15 @@
               "skyAtmosphere": "Afficher l'atmosphère du ciel",
               "groundAtmosphere": "Montrer l'atmosphère du terrain",
               "fog": "Afficher le brouillard",
-              "depthTest": "Activer le depthTest sur le terrain"
+              "depthTest": "Activer le depthTest sur le terrain",
+              "lighting3DOptions": {
+                "title": "Options d'éclairage 3D",
+                "placeholder": "Sélectionnez l'option d'éclairage 3D",
+                "flashlightOption": "Lampe de poche",
+                "sunlightOption": "Lumière du soleil",
+                "dateTimeOption": "Date-heure UTC spécifique",
+                "dateTimePlaceholder": "Sélectionnez la date et l'heure"
+                }
             },
             "thumbnailError": {
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",

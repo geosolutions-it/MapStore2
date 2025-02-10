@@ -521,7 +521,15 @@
               "skyAtmosphere": "Mostrar la atmósfera del cielo",
               "groundAtmosphere": "Mostrar la atmósfera de la superficie",
               "fog": "Mostrar niebla",
-              "depthTest": "Activar depthTest contra el terreno"
+              "depthTest": "Activar depthTest contra el terreno",
+              "lighting3DOptions": {
+                    "title": "Opciones de Iluminación 3D",
+                    "placeholder": "Selecciona la opción de iluminación 3D",
+                    "flashlightOption": "Linterna",
+                    "sunlightOption": "Luz solar",
+                    "dateTimeOption": "Fecha-Hora UTC específica",
+                    "dateTimePlaceholder": "Seleccione la fecha y hora"
+                }
             },
             "thumbnailError": {
                 "error403": "Error al modificar la miniatura",

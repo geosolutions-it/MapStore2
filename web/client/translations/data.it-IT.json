@@ -519,7 +519,15 @@
               "skyAtmosphere": "Mostra l'atmosfera del cielo",
               "groundAtmosphere": "Mostra l'atmosfera del terreno",
               "fog": "Mostra nebbia",
-              "depthTest": "Abilita il depthTest sul terreno"
+              "depthTest": "Abilita il depthTest sul terreno",
+              "lighting3DOptions": {
+                "title": "Opzioni di Illuminazione 3D",
+                "placeholder": "Seleziona l'opzione di illuminazione 3D",
+                "flashlightOption": "Torcia elettrica",
+                "sunlightOption": "Luce solare",
+                "dateTimeOption": "Data-Ora UTC specifica",
+                "dateTimePlaceholder": "Seleziona la data e l'ora"
+            }
             },
             "thumbnailError": {
                 "error403": "Non disponi dei permessi per aggiornare la thumbnail",

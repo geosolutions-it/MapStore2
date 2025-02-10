@@ -191,7 +191,27 @@ class CesiumMap extends React.Component {
                 map.scene.screenSpaceCameraController.maximumZoomDistance = maxZoomLevel;
             }
         }
-
+        if (this.props?.mapOptions?.lighting3DOption) {
+            if (this.props?.mapOptions?.lighting3DOption?.value === 'flashlight') {
+                const flashlight = new Cesium.DirectionalLight({
+                    direction: map.scene.camera.directionWC, // Updated every frame
+                    intensity: 3.0
+                });
+                map.scene.light = flashlight;
+                map.scene.preRender.addEventListener(this.updateFlashlightEffect);
+            } else if (this.props?.mapOptions?.lighting3DOption?.value === 'sunlight') {
+                this.resetMapLighting(this.map);
+                const currentTime = Cesium.JulianDate.now();
+                map.clock.currentTime = currentTime;
+                map.clock.shouldAnimate = true; // Enable animation for dynamic lighting
+            } else {
+                let settedDate = this.props?.mapOptions?.lighting3DOption?.dateTime || (new Date()).toISOString();
+                this.resetMapLighting(this.map);
+                const currentTime = Cesium.JulianDate.fromDate(new Date(settedDate));
+                map.clock.shouldAnimate = false;
+                map.clock.currentTime = currentTime;
+            }
+        }
         this.forceUpdate();
         map.scene.requestRender();
     }
@@ -240,6 +260,40 @@ class CesiumMap extends React.Component {
         if (prevProps?.interactive !== this.props.interactive
         || !isEqual(prevProps?.mapOptions?.interactions, this.props?.mapOptions?.interactions)) {
             this.updateInteractions(this.props);
+        }
+        // for lighting theme
+        if (prevProps && !isEqual(prevProps?.mapOptions?.lighting3DOption, this.props?.mapOptions?.lighting3DOption)) {
+            if (this.props?.mapOptions?.lighting3DOption?.value === 'flashlight') {
+                this.resetMapLighting(this.map);
+                const flashlight = new Cesium.DirectionalLight({
+                    direction: this.map.scene.camera.directionWC, // Updated every frame
+                    intensity: 3.0
+                });
+                this.map.scene.light = flashlight;
+                this.map.scene.preRender.addEventListener(this.updateFlashlightEffect);
+            } else if (this.props?.mapOptions?.lighting3DOption?.value === 'sunlight') {
+                // clear event of preRedner listener of flashlight if the prev. is flashlight
+                let prevLightingOp = prevProps?.mapOptions?.lighting3DOption?.value;
+                if (prevLightingOp === 'flashlight') {
+                    this.map.scene.preRender.removeEventListener(this.updateFlashlightEffect);
+                }
+                this.resetMapLighting(this.map);
+                const currentTime = Cesium.JulianDate.now();
+                this.map.clock.currentTime = currentTime;
+                // Enable animation for dynamic lighting
+                this.map.clock.shouldAnimate = true;
+            } else {
+                // clear event of preRedner listener of flashlight if the prev. is flashlight
+                let prevLightingOp = prevProps?.mapOptions?.lighting3DOption?.value;
+                if (prevLightingOp === 'flashlight') {
+                    this.map.scene.preRender.removeEventListener(this.updateFlashlightEffect);
+                }
+                let settedDate = this.props?.mapOptions?.lighting3DOption?.dateTime || (new Date()).toISOString();
+                this.resetMapLighting(this.map);
+                const currentTime = Cesium.JulianDate.fromDate(new Date(settedDate));
+                this.map.clock.shouldAnimate = false;
+                this.map.clock.currentTime = currentTime;
+            }
         }
     }
 
@@ -664,6 +718,16 @@ class CesiumMap extends React.Component {
         this.map.scene.screenSpaceCameraController.enableTranslate = !(interactionsOptions.dragPan === false);
         this.map.scene.screenSpaceCameraController.enableTilt = !(interactionsOptions.dragPan === false);
     }
+    resetMapLighting = (map) => {
+        const sunLight = new Cesium.SunLight();
+        map.scene.light = sunLight;
+    }
+    updateFlashlightEffect = (scene) => {
+        scene.light.direction = Cesium.Cartesian3.clone(
+            scene.camera.directionWC,
+            scene.light.direction
+        );
+    };
 }
 
 const ReloadCesiumMap = forwardRef((props, ref) => {
