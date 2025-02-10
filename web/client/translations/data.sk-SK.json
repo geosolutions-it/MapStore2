@@ -3498,6 +3498,9 @@
             "tagDescription": "Description",
             "tagColor": "Color",
             "manageTags": "Manage tags",
+            "errorLoadingTags": "It is not possible to load tags",
+            "errorUpdatingTag": "It is not possible to update the tag",
+            "errorDeletingTag": "It is not possible to delete the tag",
             "removeFromFavorites": "Remove from favorites",
             "addToFavorites": "Add to favorites",
             "favorites": "Favorites"

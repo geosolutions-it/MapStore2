@@ -43,11 +43,13 @@ function TagsManager({
     const [totalCount, setTotalCount] = useState();
     const [newTag, setNewTag] = useState(null);
     const [forceUpdate, setForceUpdate] = useState(0);
+    const [errorId, setErrorId] = useState('');
 
     const isMounted = useIsMounted();
 
     useEffect(() => {
         setLoading(true);
+        setErrorId('');
         GeoStoreDAO.getTags(filterText ? `%${filterText}%` : undefined, {
             params: {
                 page,
@@ -56,6 +58,8 @@ function TagsManager({
         }).then((response) => isMounted(() => {
             setTags(castArray(response?.TagList?.Tag || []));
             setTotalCount(response?.TagList?.Count);
+        })).catch(() => isMounted(() => {
+            setErrorId('resourcesCatalog.errorLoadingTags');
         })).finally(() => isMounted(() => {
             setLoading(false);
         }));
@@ -93,6 +97,7 @@ function TagsManager({
 
     function handleUpdate(tag) {
         setLoading(true);
+        setErrorId('');
         GeoStoreDAO.updateTag(tag)
             .then(() => isMounted(() => {
                 setForceUpdate(prevValue => prevValue + 1);
@@ -103,6 +108,9 @@ function TagsManager({
                     setNewTag(null);
                 }
             }))
+            .catch(() => isMounted(() => {
+                setErrorId('resourcesCatalog.errorUpdatingTag');
+            }))
             .finally(() => isMounted(() => {
                 setLoading(false);
                 setChanged(true);
@@ -111,12 +119,17 @@ function TagsManager({
 
     function handleDelete(tag) {
         setLoading(true);
+        setErrorId('');
         GeoStoreDAO.deleteTag(tag.id)
             .then(() => isMounted(() => {
                 handleEndEditing(tag);
                 updateSelectedResource(tag, 'delete');
                 setForceUpdate(prevValue => prevValue + 1);
-            })).finally(() => isMounted(() => {
+            }))
+            .catch(() => isMounted(() => {
+                setErrorId('resourcesCatalog.errorDeletingTag');
+            }))
+            .finally(() => isMounted(() => {
                 setLoading(false);
                 setChanged(true);
             }));
@@ -151,6 +164,7 @@ function TagsManager({
         <>
             <FlexBox centerChildren classNames={['ms-tags-manager', '_fixed', '_corner-tl', '_fill']}>
                 <TagsManagerPanel
+                    errorId={errorId}
                     pageSize={pageSize}
                     filterText={filterText}
                     setFilterText={setFilterText}

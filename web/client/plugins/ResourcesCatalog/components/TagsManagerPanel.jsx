@@ -18,6 +18,7 @@ import tooltip from '../../../components/misc/enhancers/tooltip';
 import Spinner from './Spinner';
 import TagsManagerEntry from './TagsManagerEntry';
 import PropTypes from 'prop-types';
+import { Alert } from 'react-bootstrap';
 
 const Button = tooltip(ButtonComponent);
 
@@ -41,8 +42,10 @@ const Button = tooltip(ButtonComponent);
  * @prop {func} onEndEditing callback to end editing
  * @prop {func} onStartEditing callback to start editing
  * @prop {func} setShowDeleteModal callback to initialize the delete process
+ * @prop {string} errorId error message id
  */
 function TagsManagerPanel({
+    errorId,
     pageSize,
     filterText,
     setFilterText,
@@ -200,6 +203,11 @@ function TagsManagerPanel({
                         );
                     })}
                 </FlexBox.Fill>}
+            {errorId ? (
+                <FlexBox component={Alert} bsStyle="danger" classNames={['_padding-sm']} centerChildren>
+                    <Message msgId={errorId} />
+                </FlexBox>
+            ) : null}
             <FlexBox classNames={['_padding-sm']} centerChildren>
                 {!!totalCount ? <PaginationCustom
                     items={Math.ceil(totalCount / pageSize)}
@@ -215,6 +223,7 @@ function TagsManagerPanel({
 
 
 TagsManagerPanel.propTypes = {
+    errorId: PropTypes.string,
     pageSize: PropTypes.number,
     filterText: PropTypes.string,
     setFilterText: PropTypes.func,

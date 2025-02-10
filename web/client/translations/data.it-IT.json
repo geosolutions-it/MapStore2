@@ -4321,6 +4321,9 @@
             "tagDescription": "Descrizione",
             "tagColor": "Colore",
             "manageTags": "Gestisci tag",
+            "errorLoadingTags": "Impossibile caricare i tag",
+            "errorUpdatingTag": "Impossibile aggiornare il tag",
+            "errorDeletingTag": "Impossibile eliminare il tag",
             "removeFromFavorites": "Rimuovi dai preferiti",
             "addToFavorites": "Aggiungi ai preferiti",
             "favorites": "Preferiti"

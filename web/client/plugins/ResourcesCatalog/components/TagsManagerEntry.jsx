@@ -53,6 +53,7 @@ function TagsManagerEntry({
                             value={name}
                             debounceTime={debounceTime}
                             onChange={(value) => onChange({ name: value })}
+                            maxLength={255}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -61,6 +62,7 @@ function TagsManagerEntry({
                             value={description}
                             debounceTime={debounceTime}
                             onChange={(value) => onChange({ description: value })}
+                            maxLength={255}
                         />
                     </FormGroup>
                     <FormGroup>
