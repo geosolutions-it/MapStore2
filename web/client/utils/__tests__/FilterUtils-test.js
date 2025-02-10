@@ -2436,9 +2436,8 @@ describe('FilterUtils', () => {
             ]
         };
         const updatedFilterObj = updateLayerLegendFilter(layerFilterObj);
-        expect(updatedFilterObj).toBeTruthy();
-        expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
     });
     it('test resetLayerLegendFilter in case change wms style', () => {
         const layerFilterObj = {
@@ -2491,9 +2490,8 @@ describe('FilterUtils', () => {
             style: "style_01"
         };
         const updatedFilterObj = resetLayerLegendFilter(layer, 'style', 'style_02');
-        expect(updatedFilterObj).toBeTruthy();
-        expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
     });
     // for WFS
     it('test updateLayerWFSVectorLegendFilter for wfs, simple filter', () => {
@@ -2596,8 +2594,7 @@ describe('FilterUtils', () => {
             ]
         };
         const updatedFilterObj = updateLayerWFSVectorLegendFilter(layerFilterObj);
-        expect(updatedFilterObj).toBeTruthy();
-        expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
     });
 });
