@@ -56,6 +56,32 @@
     }
 }
 
+.ms-resource-detail:has(.ms-tag.active),
+.ms-resources-grid:has(.ms-tag.active) {
+    .ms-tag:not(.active) {
+        opacity: 0.2;
+        -webkit-filter: grayscale(85%);
+        -moz-filter: grayscale(85%);
+        -ms-filter: grayscale(85%);
+        -o-filter: grayscale(85%);
+        filter: grayscale(85%);
+        &.Select-value,
+        &.Select-option {
+            opacity: 1.0;
+            -webkit-filter: grayscale(0%);
+            -moz-filter: grayscale(0%);
+            -ms-filter: grayscale(0%);
+            -o-filter: grayscale(0%);
+            filter: grayscale(0%);
+        }
+        &.Select-option {
+            &.is-selected {
+                opacity: 0.2;
+            }
+        }
+    }
+}
+
 @media (max-width: 1440px) {
     :root {
         --ms-resources-filter-width: 300px;

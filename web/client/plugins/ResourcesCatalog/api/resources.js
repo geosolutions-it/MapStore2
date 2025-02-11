@@ -10,16 +10,9 @@ import { searchListByAttributes, getResource } from '../../../observables/geosto
 import { castArray } from 'lodash';
 import isString from 'lodash/isString';
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
+import { addFilters, getFilterByField, splitFilterValue } from '../utils/ResourcesFiltersUtils';
 
-const splitFilterValue = (value) => {
-    const parts = value.split(':');
-    return {
-        value: parts[0],
-        label: parts.length <= 2
-            ? parts[1]
-            : parts.filter((p, idx) => idx > 0).join(':')
-    };
-};
+const applyDoubleQuote = value => `"${value}"`;
 
 const getFilter = ({
     q,
@@ -31,6 +24,10 @@ const getFilter = ({
     const categories = ['MAP', 'DASHBOARD', 'GEOSTORY', 'CONTEXT'];
     const creators = castArray(query['filter{creator.in}'] || []);
     const groups = castArray(query['filter{group.in}'] || []);
+    const tags = castArray(query['filter{tag.in}'] || []).map(tag => {
+        const { value } = splitFilterValue(tag);
+        return value;
+    });
     const categoriesFilters = categories.filter(category => f.includes(category.toLocaleLowerCase()));
     const associatedContextFilters = ctx.map((ctxValue) => {
         const { value } = splitFilterValue(ctxValue);
@@ -82,7 +79,15 @@ const getFilter = ({
                 GROUP: [
                     {
                         operator: ['IN'],
-                        names: groups
+                        names: groups.map(applyDoubleQuote).join(',')
+                    }
+                ]
+            }),
+            ...(tags.length && {
+                TAG: [
+                    {
+                        operator: ['IN'],
+                        names: tags.map(applyDoubleQuote).join(',')
                     }
                 ]
             }),
@@ -157,6 +162,7 @@ export const requestResources = ({
     {
         params: {
             includeAttributes: true,
+            includeTags: true,
             start: parseFloat(page - 1) * pageSize,
             limit: pageSize,
             sortBy,
@@ -191,18 +197,25 @@ export const requestResources = ({
                     return {
                         total: response.totalCount,
                         isNextPageAvailable: page < (response?.totalCount / pageSize),
-                        resources: resources.map((resource) => {
-                            const context = contexts.find(ctx => ctx.id === resource?.attributes?.context);
-                            if (context) {
+                        resources: resources
+                            .map(({ tags, ...resource }) => {
                                 return {
                                     ...resource,
-                                    '@extras': {
-                                        context
-                                    }
+                                    ...(tags && { tags: castArray(tags) })
                                 };
-                            }
-                            return resource;
-                        })
+                            })
+                            .map((resource) => {
+                                const context = contexts.find(ctx => ctx.id === resource?.attributes?.context);
+                                if (context) {
+                                    return {
+                                        ...resource,
+                                        '@extras': {
+                                            context
+                                        }
+                                    };
+                                }
+                                return resource;
+                            })
                     };
                 });
         });
@@ -328,23 +341,105 @@ export const facets = [
                     };
                 });
         }
+    },
+    {
+        id: 'tag',
+        type: 'select',
+        labelId: 'resourcesCatalog.tags',
+        key: 'filter{tag.in}',
+        update: ({ facet, query }) => {
+            const filters = castArray(query['filter{tag.in}'] || []).filter(filter => !getFilterByField({ key: 'filter{tag.in}' }, filter));
+            return filters.length === 0
+                ? Promise.resolve(facet)
+                : Promise.all(
+                    filters.map(filter =>
+                        GeoStoreDAO.getTags(filter, {
+                            params: {
+                                page: 0,
+                                entries: 1
+                            }
+                        }).then((response) => {
+                            const tags = castArray(response?.TagList?.Tag || []).map((item) => {
+                                const value = `${item.name}`;
+                                return {
+                                    ...item,
+                                    filterValue: value,
+                                    value: value,
+                                    label: `${item.name}`
+                                };
+                            });
+                            addFilters({ key: 'filter{tag.in}' }, tags);
+                        })
+                    )
+                ).then(() => ({ ...facet, updated: (facet.updated || 0) + 1 }));
+        },
+        loadItems: ({ params, config }) => {
+            const { page, pageSize, q } = params;
+            return GeoStoreDAO.getTags(q ? `%${q}%` : undefined, {
+                ...config,
+                params: {
+                    page: page,
+                    entries: pageSize
+                }
+            })
+                .then((response) => {
+                    const tags = castArray(response?.TagList?.Tag || []).map((item) => {
+                        const value = `${item.name}`;
+                        return {
+                            ...item,
+                            filterValue: value,
+                            value: value,
+                            label: `${item.name}`,
+                            color: item.color
+                        };
+                    });
+                    addFilters({ key: 'filter{tag.in}' }, tags);
+                    const totalCount = response?.TagList?.Count;
+                    return {
+                        items: tags,
+                        isNextPageAvailable: (page + 1) < (totalCount / pageSize)
+                    };
+                });
+        }
     }
 ];
 
 
 export const facetsRequest = ({
-    fields
+    fields,
+    query,
+    customFilters
 }) => {
-    return Promise.resolve({
-        fields: fields.map((field) => {
-            if (field.facet) {
-                const facet = facets.find(f => f.id === field.facet);
-                return {
-                    ...facet,
-                    ...field
-                };
-            }
-            return field;
+    const newFields = fields.map((field) => {
+        if (field.facet) {
+            const facet = facets.find(f => f.id === field.facet);
+            return facet ? {
+                ...facet,
+                ...field
+            } : null;
+        }
+        return field;
+    }).filter(value => value !== null);
+    const facetsToUpdate = newFields.filter(field => field.facet && field.update);
+    return facetsToUpdate.length === 0
+        ? Promise.resolve({
+            fields: newFields
         })
-    });
+        : Promise.all(
+            facetsToUpdate.map(facet =>
+                facet.update({
+                    facet,
+                    fields,
+                    query,
+                    customFilters
+                })
+            )
+        ).then((updatedFacets) => {
+            return {
+                fields: newFields.map((field) => {
+                    const updatedFacet = updatedFacets.find((facet) => facet.id === field.id);
+                    return updatedFacet ? updatedFacet : field;
+                })
+            };
+        });
 };

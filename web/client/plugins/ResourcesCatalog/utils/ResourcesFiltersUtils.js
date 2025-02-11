@@ -9,23 +9,64 @@
 import url from 'url';
 import castArray from 'lodash/castArray';
 import omit from 'lodash/omit';
+import tinycolor from 'tinycolor2';
 
 let filters = {};
-
+/**
+ * return a identifier for stored filters
+ * @param {object} field a filter field
+ * @param {string} field.key key identifier of a filter
+ * @param {string} value filter value
+ * @return {string} stored filter identifier
+ */
+export const getFilterId = (field, value) => {
+    return `${field?.key}:${value}`;
+};
+/**
+ * return a stored filter object
+ * @param {object} field a filter field
+ * @param {string} field.key key identifier of a filter
+ * @param {string} value filter value
+ * @return {object} stored filter
+ */
 export const getFilterByField = (field, value) => {
-    const filterValue = filters?.[field.key + value];
+    const filterValue = filters?.[getFilterId(field, value)];
     if (field.style === 'facet' && filterValue?.facetName) {
         return field.name === filterValue.facetName ? filterValue : null;
     }
     return filterValue;
 };
-
+/**
+ * return all stored filters
+ * @return {object} stored filter
+ */
 export const getFilters = () => filters;
-
-export const addFilters = (newFilters) => {
+/**
+ * add filters to the global cache object
+ * @param {object} field a filter field
+ * @param {string} field.key key identifier of a filter
+ * @param {object[]} newFilters list of filters
+ */
+export const addFilters = (field, newFilters) => {
     filters = {
         ...filters,
-        ...newFilters
+        ...Object.fromEntries(newFilters.map((filter) => [getFilterId(field, filter.value), filter]))
+    };
+};
+/**
+ * return tag r, g, b variables from a color
+ * @param {string} color css valid color string
+ * @return {object} { --tag-color-r, --tag-color-g, --tag-color-b }
+ */
+export const getTagColorVariables = (color = '') => {
+    if (!color) {
+        return {};
+    }
+    const { r, g, b } = tinycolor(color).toRgb();
+    return {
+        '--tag-color-r': r,
+        '--tag-color-g': g,
+        '--tag-color-b': b
     };
 };
 
@@ -76,3 +117,18 @@ export function clearQueryParams(location) {
                 : acc, { extent: undefined });
     return newParams;
 }
+
+/**
+ * extract value and label from a filter
+ * @param {string} value value of a filter
+ * @return {object} { value, label }
+ */
+export const splitFilterValue = (value = '') => {
+    const parts = value.split(':');
+    return {
+        value: parts[0],
+        label: (parts.length <= 2
+            ? parts[1]
+            : parts.filter((p, idx) => idx > 0).join(':')) || ''
+    };
+};

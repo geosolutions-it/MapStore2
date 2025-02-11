@@ -787,6 +787,7 @@
             ]
             }
           },
+          { "name": "TagsManager"},
           { "name": "Favorites" },
           {
             "name": "ResourcesFiltersForm",
@@ -801,7 +802,10 @@
             "name": "DeleteResource"
           },
           {
-            "name": "ResourceDetails"
+            "name": "ResourceDetails",
+            "cfg": {
+              "enableFilters": true
+            }
           },
           {
             "name": "Share",

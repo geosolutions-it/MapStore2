@@ -17,3 +17,4 @@ export { default as BrandNavbarPlugin } from './BrandNavbar';
 export { default as FooterPlugin } from './Footer';
 export { default as SavePlugin } from './Save';
 export { default as SaveAsPlugin } from './SaveAs';
+export { default as TagsManager } from './TagsManager';

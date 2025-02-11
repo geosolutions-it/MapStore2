@@ -184,4 +184,15 @@ describe('ResourcesUtils', () => {
             }
         );
     });
+    it('computePendingChanges with tags', () => {
+        const computed = computePendingChanges(
+            { id: 1, name: 'Title', category: { name: 'MAP' }, tags: [{ id: '01' }, { id: '02' }] },
+            { id: 1, name: 'Title', category: { name: 'MAP' }, tags: [{ id: '02' }, { id: '03' }] }
+        );
+        expect(computed.saveResource.tags).toEqual(computed.changes.tags);
+        expect(computed.saveResource.tags).toEqual([
+            { tag: { id: '01' }, action: 'unlink' },
+            { tag: { id: '03' }, action: 'link' }
+        ]);
+    });
 });

@@ -20,6 +20,7 @@ import { isObject, get } from 'lodash';
 import FlexBox from './FlexBox';
 import Text from './Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
+import { getTagColorVariables } from '../utils/ResourcesFiltersUtils';
 const ButtonWithTooltip = tooltip(Button);
 
 const ResourceCardButton = ({
@@ -119,9 +120,7 @@ const ResourceCardMetadataValue = tooltip(({
         <ALink
             {...props}
             className={`ms-${entry.type || 'string'}${getFilterActiveClassName(entry.filter, properties.value)}`}
-            style={{
-                '--tag-color': properties.color
-            }}
+            style={getTagColorVariables(properties.color)}
             readOnly={readOnly}
             href={entry.filter ? formatHref({
                 query: {

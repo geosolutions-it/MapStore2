@@ -26,7 +26,7 @@ describe('resources api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -76,7 +76,7 @@ describe('resources api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
+                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 24, limit: 24, sortBy: 'name', sortOrder: 'asc', favoritesOnly: true });
                 let json;
                 xml2js.parseString(config.data, { explicitArray: false }, (ignore, result) => {
                     json = result;
@@ -113,7 +113,11 @@ describe('resources api', () => {
                         "ATTRIBUTE": { "name": "featured", "operator": "EQUAL_TO", "type": "STRING", "value": "true" },
                         "GROUP": {
                             "operator": 'IN',
-                            "names": "group01"
+                            "names": "\"group01\""
+                        },
+                        "TAG": {
+                            "operator": 'IN',
+                            "names": "\"tag\",\"ta,g\""
                         },
                         "OR": [
                             {
@@ -159,6 +163,7 @@ describe('resources api', () => {
                 'q': 'A',
                 'filter{ctx.in}': ['contextName'],
                 'filter{group.in}': ['group01'],
+                'filter{tag.in}': ['tag', 'ta,g'],
                 'filter{creator.in}': ['creator'],
                 'filter{creation.gte}': '2025-01-22T00:00:00',
                 'filter{creation.lte}': '2025-01-24T23:59:59',
@@ -181,7 +186,7 @@ describe('resources api', () => {
         mockAxios.onPost().replyOnce((config) => {
             try {
                 expect(config.url).toBe('/extjs/search/list');
-                expect(config.params).toEqual({ includeAttributes: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
+                expect(config.params).toEqual({ includeAttributes: true, includeTags: true, start: 0, limit: 12, sortBy: 'name', sortOrder: 'asc' });
             } catch (e) {
                 done(e);
             }

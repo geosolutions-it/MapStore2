@@ -101,6 +101,10 @@ function ResourcesFiltersForm({
         },
         {
             type: 'select',
+            facet: "tag"
+        },
+        {
+            type: 'select',
             facet: "context"
         },
         {
@@ -147,7 +151,8 @@ function ResourcesFiltersForm({
         query,
         fields: parsedConfig.fields,
         request: facetsRequest,
-        customFilters
+        customFilters,
+        visible: !!show
     }, [user]);
 
     return (
@@ -190,7 +195,7 @@ export default createPlugin('ResourcesFiltersForm', {
     component: ResourcesGridPlugin,
     containers: {
         ResourcesGrid: {
-            target: 'menu-items-left',
+            target: 'left-menu',
             Component: ResourcesFiltersFormButton
         }
     },

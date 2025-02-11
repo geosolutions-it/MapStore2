@@ -43,6 +43,7 @@ describe('useFilterFacets', () => {
         act(() => {
             ReactDOM.render(<Component
                 query={{}}
+                visible
                 fields={[{ facet: 'test' }]}
                 request={() => Promise.resolve({ fields: [{ label: 'test', facet: 'test' }] })}
             />, document.getElementById("container"));
