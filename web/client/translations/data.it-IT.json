@@ -3419,6 +3419,14 @@
           "MapViews": {
             "description": "Questo plugin permette di aggiungere una sequenza di viste differenti all'interno di una mappa",
             "title": "MapViews"
+          },
+          "BrandNavbar": {
+            "description": "Menu di navigazione principale",
+            "title": "Brand Navbar"
+          },
+          "ResourceDetails": {
+            "description": "Questo plugin consente di gestire i dettagli delle risorsa mappa",
+            "title": "Dettagli delle risorse"
           }
         },
         "contextCreator": {

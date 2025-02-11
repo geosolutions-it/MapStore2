@@ -3420,6 +3420,14 @@
           "MapViews": {
             "description": "Este complemento permite agregar una secuencia de diferentes vistas dentro de un mapa",
             "title": "Vistas del mapa"
+          },
+          "BrandNavbar": {
+            "description": "Menú de navegación principal",
+            "title": "Barra de navegación de marca"
+          },
+          "ResourceDetails": {
+            "description": "Este complemento permite administrar los detalles de los recursos del mapa",
+            "title": "Detalles de los recursos"
           }
         },
         "contextCreator": {

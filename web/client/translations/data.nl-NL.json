@@ -3417,6 +3417,14 @@
           "MapViews": {
             "description": "Met deze plugin kun je een reeks van verschillende overzichten toevoegen aan een kaart",
             "title": "Kaartoverzichten"
+          },
+          "BrandNavbar": {
+            "description": "Main navigation menu",
+            "title": "Brand Navbar"
+          },
+          "ResourceDetails": {
+            "description": "This plugin allows to manage resource details of the map",
+            "title": "Resource Details"
           }
         },
         "contextCreator": {
