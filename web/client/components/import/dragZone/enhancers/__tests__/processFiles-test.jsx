@@ -46,7 +46,7 @@ describe('processFiles enhancer', () => {
     it('processFiles read error', (done) => {
         const Sink = compose(
             processFiles,
-            mapPropsStream(props$ => props$.merge(props$.take(1).do(({ onDrop = () => { } }) => onDrop(["ABC"])).ignoreElements()))
+            mapPropsStream(props$ => props$.merge(props$.take(1).do(({ onDrop = () => { } }) =>onDrop({ files: ["ABC"], options: {} })).ignoreElements()))
         )(createSink( props => {
             expect(props).toBeTruthy();
             if (props.error) {
@@ -61,7 +61,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getShapeFile().map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getShapeFile().map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             expect(props).toBeTruthy();
             if (props.files) {
@@ -77,7 +77,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getKmzFile().map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getKmzFile().map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             expect(props).toBeTruthy();
             if (props.files) {
@@ -93,7 +93,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getGpxFile().map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getGpxFile().map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             expect(props).toBeTruthy();
             if (props.files) {
@@ -109,7 +109,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getKmlFile().map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getKmlFile().map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             expect(props).toBeTruthy();
             if (props.files) {
@@ -125,7 +125,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getGeoJsonFile().map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getGeoJsonFile().map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             expect(props).toBeTruthy();
             if (props.files) {
@@ -141,7 +141,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getAnnotationGeoJsonFile().map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getAnnotationGeoJsonFile().map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             try {
                 expect(props).toBeTruthy();
@@ -163,7 +163,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getGeoJsonFile("file.geojson").map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getGeoJsonFile("file.geojson").map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             expect(props).toBeTruthy();
             if (props.files) {
@@ -179,7 +179,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getMapFile().map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getMapFile().map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             expect(props).toBeTruthy();
             if (props.files) {
@@ -196,7 +196,7 @@ describe('processFiles enhancer', () => {
             mapPropsStream(props$ => props$.merge(
                 props$
                     .take(1)
-                    .switchMap(({ onDrop = () => { } }) => getUnsupportedMapFile().map((file) => onDrop([file]))).ignoreElements()))
+                    .switchMap(({ onDrop = () => { } }) => getUnsupportedMapFile().map((file) => onDrop({ files: [file], options: {} }))).ignoreElements()))
         )(createSink(props => {
             expect(props).toBeTruthy();
             if (props.error) {

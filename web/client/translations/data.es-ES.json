@@ -1547,7 +1547,8 @@
                 "fileNotSupported": "Archivo no compatible",
                 "unknownError": "hubo un error desconocido durante la importación",
                 "projectionNotSupported": "La proyección del archivo que está intentando importar no es compatible",
-                "fileBeyondBoundaries": "El archivo {filename} no se pudo importar porque no encaja dentro de los límites del mapa"
+                "fileBeyondBoundaries": "El archivo {filename} no se pudo importar porque no encaja dentro de los límites del mapa",
+                "exceedFileSizeLimit": "El archivo {filename} que estás intentando importar ha superado el límite máximo de tamaño de archivo {maxfilesize} MB"
             }
         },
         "mapExport": {
