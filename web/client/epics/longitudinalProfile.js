@@ -350,7 +350,9 @@ export const LPonDockClosedEpic = (action$, store) =>
                 changeGeometry(false),
                 removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID, owner: LONGITUDINAL_OWNER}),
                 removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID_POINT, owner: LONGITUDINAL_OWNER}),
-                ...(isMaximizedSelector(store.getState()) ? [toggleMaximize()] : [])
+                ...(isMaximizedSelector(store.getState()) ? [toggleMaximize()] : []),
+                ...(get(store.getState(), 'draw.drawOwner', '') === CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
+                unRegisterEventListener('click', CONTROL_NAME)
             ]);
         });
 
