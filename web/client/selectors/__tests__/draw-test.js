@@ -13,7 +13,7 @@ import {
     drawSupportActiveSelector,
     isSnappingActive,
     isSnappingLoading,
-    snappingConfig, snappingLayerSelector
+    snappingConfig, snappingLayerSelector, drawerOwnerSelector
 } from "../draw";
 
 
@@ -70,6 +70,14 @@ describe('draw changedGeometriesSelector', () => {
         });
         expect(value.a).toBe(true);
         expect(value.b).toBe(false);
+    });
+    it('test drawerOwnerSelector selector', () => {
+        const value = drawerOwnerSelector({
+            draw: {
+                drawOwner: "owner1"
+            }
+        });
+        expect(value).toBe('owner1');
     });
     describe('test availableSnappingLayers selector', () => {
         it('additional layers', () => {

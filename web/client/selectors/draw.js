@@ -25,6 +25,8 @@ export const isSnappingActive = state => get(state, 'draw.snapping', false);
 
 export const isSnappingLoading = state => get(state, 'draw.snappingIsLoading', false);
 export const snappingConfig = state => get(state, 'draw.snapConfig', false);
+export const drawerOwnerSelector = state => get(state, 'draw.drawOwner', '');
+
 export const availableSnappingLayers = createShallowSelectorCreator(
     (a, b) => {
         return a === b
