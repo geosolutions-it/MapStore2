@@ -5,7 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import Rx from 'rxjs';
 
@@ -89,6 +88,7 @@ import {reprojectGeoJson, reproject} from "../utils/CoordinatesUtils";
 import {selectLineFeature} from "../utils/LongitudinalProfileUtils";
 import {buildIdentifyRequest} from "../utils/MapInfoUtils";
 import {getFeatureInfo} from "../api/identify";
+import { drawerOwnerSelector } from "../selectors/draw";
 
 const OFFSET = 550;
 
@@ -124,6 +124,7 @@ export const LPonDrawActivatedEpic = (action$, store) =>
         .switchMap(()=> {
             const state = store.getState();
             const mode = dataSourceModeSelector(state);
+            const drawerOwner = drawerOwnerSelector(state);
             switch (mode) {
             case "draw":
                 const startDrawingAction = changeDrawingStatus('start', "LineString", CONTROL_NAME, [], { stopAfterDrawing: true });
@@ -148,7 +149,7 @@ export const LPonDrawActivatedEpic = (action$, store) =>
             case "select":
                 return Rx.Observable.from([
                     purgeMapInfoResults(), hideMapinfoMarker(),
-                    ...(get(store.getState(), 'draw.drawOwner', '') === CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
+                    ...(drawerOwner === CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
                     registerEventListener('click', CONTROL_NAME),
                     ...(mapInfoEnabledSelector(state) ? [toggleMapInfoState()] : [])
                 ]);
@@ -157,7 +158,7 @@ export const LPonDrawActivatedEpic = (action$, store) =>
                     purgeMapInfoResults(),
                     hideMapinfoMarker(),
                     changeMapInfoState(mode !== undefined),
-                    ...(get(store.getState(), 'draw.drawOwner', '') === CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
+                    ...(drawerOwner === CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
                     unRegisterEventListener('click', CONTROL_NAME)
                 ]);
             }
@@ -346,11 +347,15 @@ export const LPonDockClosedEpic = (action$, store) =>
     action$.ofType(SET_CONTROL_PROPERTY)
         .filter(({control, property, value}) => control === CONTROL_DOCK_NAME && property === 'enabled' && value === false)
         .switchMap(() => {
+            const state = store.getState();
+            const drawerOwner = drawerOwnerSelector(state);
             return Rx.Observable.from([
                 changeGeometry(false),
                 removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID, owner: LONGITUDINAL_OWNER}),
                 removeAdditionalLayer({id: LONGITUDINAL_VECTOR_LAYER_ID_POINT, owner: LONGITUDINAL_OWNER}),
-                ...(isMaximizedSelector(store.getState()) ? [toggleMaximize()] : [])
+                ...(isMaximizedSelector(store.getState()) ? [toggleMaximize()] : []),
+                ...(drawerOwner === CONTROL_NAME ? DEACTIVATE_ACTIONS : []),
+                unRegisterEventListener('click', CONTROL_NAME)
             ]);
         });
 
