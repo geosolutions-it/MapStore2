@@ -103,11 +103,13 @@ const StreetViewPluginContainer = connect(() => ({}), {
  *        that this will make these credentials potentially accessible to all the user that can access the context, or if set in `localConfig.json`, to all the users of the application.
  *        This settings should be used only in case the context or the application are shared within a restricted group of users, and this doesn't represent a security issue.
  *        It is up to you to evaluate the security implications of this choice.
+ *      - `providerSettings.showLogout` (optional). If true, the plugin will show a login button (only if `initOptions.loginOauth` is set to true). Default: `true`.
  *      - `initOptions` (optional). The options to pass to the StreetSmart API. Default: `{}`. It can contain in particular the options to enable login Oauth:
  *          - `initOptions.loginOauth` (optional). If true, instead of username and password provided by the user or configured in the plugin, the application will use the Oauth login. In this case also the `clientId`, `loginRedirectUri` and `logoutRedirectUri` must be specified in the `localConfig.json` file.
  *          - `initOptions.clientId` (optional). The client ID for the Oauth login. It is mandatory if `loginOauth` is true.
  *          - `initOptions.loginRedirectUri` (optional). The redirect URI after login. It is mandatory if `loginOauth` is true. The page must be accessible and configured in StreetSmart API for the instance.
  *          - `initOptions.logoutRedirectUri` (optional). The redirect URI after logout. It is mandatory if `loginOauth` is true. The page must be configured to handle the login callback StreetSmart API for the instance.
+ *          - `initOptions.doOAuthLogoutOnDestroy` (optional). If true, the plugin will logout from the StreetSmart API when the plugin is destroyed. Default: `false`.
  *    Generally speaking, you should prefer general settings in `localConfig.json` over the plugin configuration, in order to reuse the same configuration for default viewer and all the contexts, automatically. This way you will not need to configure the `apiKey` in every context.
  *    <br>**Important**: You can use only **one** API-key for a MapStore instance. The api-key can be configured replicated in every plugin configuration or using one of the unique global settings (suggested) in `localConfig.json`). @see {@link https://github.com/googlemaps/js-api-loader/issues/5|here} and @see {@link https://github.com/googlemaps/js-api-loader/issues/100|here}
  * @property {boolean} [cfg.useDataLayer=true] If true, adds to the map a layer for street view data availability when the plugin is turned on.

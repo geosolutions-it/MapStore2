@@ -3998,6 +3998,8 @@
           "cyclomedia": {
             "initializing": "Initializing Street Smart API...",
             "loadingAPI": "Loading Street Smart API...",
+            "logout": "Logout",
+            "confirmLogout": "Are you sure you want to logout from Cyclomedia?",
             "changeCredentials": "Change Street Smart credentials",
             "insertCredentials": "Insert your Street Smart credentials",
             "emptyDescription": "Click on one of the blue points on the map to start browsing the images of street view",

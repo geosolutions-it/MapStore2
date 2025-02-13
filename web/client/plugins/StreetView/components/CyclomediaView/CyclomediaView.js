@@ -1,14 +1,17 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {has, isEmpty} from 'lodash';
 import Message from '../../../../components/I18N/Message';
+
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { reproject } from '../../../../utils/CoordinatesUtils';
 
 
 import { getCredentials as getStoredCredentials, setCredentials as setStoredCredentials } from '../../../../utils/SecurityUtils';
 import { CYCLOMEDIA_CREDENTIALS_REFERENCE } from '../../constants';
-import { Alert, Button } from 'react-bootstrap';
-
+import { Alert, Button, Glyphicon } from 'react-bootstrap';
+import withConfirm from '../../../../components/misc/withConfirm';
+import withTooltip from '../../../../components/misc/enhancers/tooltip';
+const CTButton = withConfirm(withTooltip(Button));
 import CyclomediaCredentials from './Credentials';
 import EmptyStreetView from '../EmptyStreetView';
 const PROJECTION_NOT_AVAILABLE = "Projection not available";
@@ -129,6 +132,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
     // gets the credentials from the storage or from configuration.
     const hasConfiguredCredentials = providerSettings?.credentials;
     const isConfiguredOauth = initOptions?.loginOauth;
+    const showLogout = providerSettings?.showLogout ?? true;
     const initialCredentials =
         isEmpty(getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE)) ?
             providerSettings?.credentials ?? {} : getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE);
@@ -335,6 +339,19 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setCredentials={(newCredentials) => {
                 setCredentials(newCredentials);
             }}/>}
+        {showLogout
+            && initialized
+            && isConfiguredOauth
+            && (<div style={{textAlign: "right"}}>
+                <CTButton
+            key="logout"
+            confirmContent={<Message msgId="streetView.cyclomedia.logoutConfirm" />}
+            tooltipId="streetView.cyclomedia.logout"
+            onClick={() => {
+                StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
+            }}>
+                <Glyphicon glyph="log-out" />&nbsp;
+                </CTButton></div>)}
         {showEmptyView ? <EmptyView key="empty-view" StreetSmartApi={StreetSmartApi} style={style} initializing={initializing} initialized={initialized}  mapPointVisible={mapPointVisible}/> : null}
         <iframe key="iframe" ref={viewer} onLoad={() => {
             setTargetElement(viewer.current?.contentDocument.querySelector('#ms-street-smart-viewer-container'));
