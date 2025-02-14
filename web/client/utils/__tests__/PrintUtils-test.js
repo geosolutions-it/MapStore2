@@ -560,6 +560,66 @@ describe('PrintUtils', () => {
         expect(printSpec).toExist();
         expect(printSpec.custom).toBe("customvalue");
     });
+    it("getMapfishPrintSpecification, valid spec with legend, and excluded layer from legeng", () => {
+        const spec = {
+            projection: "EPSG:4326",
+            sheet: "A4",
+            landscape: true,
+            resolution: "96",
+            name: "Test print",
+            user: "user1",
+            scale: 500000,
+            printCrs: "World WGS 84 (EPSG:4326)",
+            description: "Test description",
+            includeLegend: true,
+            includeNotes: true,
+            layers: [
+                {
+                    external: true,
+                    url: "/wms",
+                    singleTile: false,
+                    opacity: 0.8,
+                    name: "layer-test",
+                    title: "layer-test",
+                    format: "png",
+                    style: "style1",
+                    cql_filter: "x=1",
+                    visibility: true,
+                    type: "wms"
+                },
+                {
+                    external: true,
+                    url: "/wms",
+                    singleTile: false,
+                    opacity: 0.8,
+                    name: "layer-test-exclude",
+                    title: "layer-test",
+                    format: "png",
+                    style: "style1",
+                    cql_filter: "x=1",
+                    visibility: true,
+                    type: "wms"
+                }
+            ],
+            geoserverUrls: [
+                "/rest/geoserver",
+                "/rest/geoserver1",
+                "/rest/geoserver2"
+            ],
+            center: {x: 0, y: 0, crs: "EPSG:4326"},
+            type: "WMS"
+        };
+        let mapFishSpec = getMapfishPrintSpecification({
+            ...spec,
+            forceLabels: true,
+            antiAliasing: true,
+            legendDpi: 96,
+            bold: true,
+            excludeLayersFromLegend: ["layer-test-exclude"]
+        });
+        expect(mapFishSpec.legends.length).toBe(1);
+
+    });
     it('getMapfishPrintSpecification with fixed scales', () => {
         const printSpec = getMapfishPrintSpecification({
             ...testSpec,
