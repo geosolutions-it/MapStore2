@@ -3988,6 +3988,7 @@
             "initializing": "Initialisation de l'API Street Smart...",
             "loadingAPI": "Chargement de l'API Street Smart...",
             "logout": "Déconnexion",
+            "tryForceLogout": "Essayez de vous déconnecter",
             "confirmLogout": "Voulez-vous vraiment vous déconnecter de Street Smart?",
             "changeCredentials": "Modifier les identifiants Street Smart",
             "insertCredentials": "Insérer vos identifiants Street Smart",

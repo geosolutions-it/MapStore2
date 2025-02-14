@@ -223,6 +223,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
 
             }
             setError(err);
+            setReloadAllowed(true);
             if (err) {
                 console.error('Cyclomedia API: init: error: ' + err);
             }
@@ -345,7 +346,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             && (<div style={{textAlign: "right"}}>
                 <CTButton
             key="logout"
-            confirmContent={<Message msgId="streetView.cyclomedia.logoutConfirm" />}
+            confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
             tooltipId="streetView.cyclomedia.logout"
             onClick={() => {
                 StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
@@ -374,6 +375,20 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
                 }}>
                 <Message msgId="streetView.cyclomedia.reloadAPI"/>
             </Button></div> : null}
+            {
+            isConfiguredOauth
+                && !showCredentialsForm
+                && !initialized
+                && (<CTButton
+                        key="logout"
+                        confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
+                        tooltipId="streetView.cyclomedia.tryForceLogout"
+                        onClick={() => {
+                            StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
+                    }}>
+                        <Glyphicon glyph="log-out" />&nbsp;<Message msgId="streetView.cyclomedia.logout" />
+                    </CTButton>)
+            }
         </Alert>
     </>);
 };

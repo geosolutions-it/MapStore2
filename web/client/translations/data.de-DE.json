@@ -4026,6 +4026,7 @@
             "initializing": "Initialisiere Street Smart API...",
             "loadingAPI": "Lade Street Smart API...",
             "logout": "Abmelden",
+            "tryForceLogout": "Abmeldung erzwingen",
             "confirmLogout": "Möchten Sie sich wirklich von Street Smart abmelden?",
             "changeCredentials": "Street Smart-Anmeldeinformationen ändern",
             "insertCredentials": "Geben Sie Ihre Street Smart-Anmeldeinformationen ein",

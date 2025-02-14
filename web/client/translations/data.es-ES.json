@@ -3988,6 +3988,7 @@
             "initializing": "Inicializando la API de Street Smart...",
             "loadingAPI": "Cargando la API de Street Smart...",
             "logout": "Cerrar sesión",
+            "tryForceLogout": "Intentar forzar el cierre de sesión",
             "confirmLogout": "¿Está seguro de que desea cerrar la sesión de Street Smart?",
             "changeCredentials": "Cambiar credenciales de Street Smart",
             "insertCredentials": "Inserte sus credenciales de Street Smart",
