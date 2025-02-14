@@ -12,9 +12,13 @@ import HTML from '../../components/I18N/HTML';
 import Text from './components/Text';
 import { Jumbotron } from 'react-bootstrap';
 
-function HomeDescription({
-
-}) {
+/**
+ * This plugin shows a main description in the homepage
+ * @memberof plugins
+ * @class
+ * @name HomeDescription
+ */
+function HomeDescription() {
     return (
         <Jumbotron className="ms-secondary-colors _padding-lg">
             <Text textAlign="center">

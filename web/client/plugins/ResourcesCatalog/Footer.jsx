@@ -11,9 +11,13 @@ import { createPlugin } from "../../utils/PluginsUtils";
 import HTML from '../../components/I18N/HTML';
 import Text from './components/Text';
 
-function Footer({
-
-}) {
+/**
+ * This plugin shows the footer in the catalog page
+ * @memberof plugins
+ * @class
+ * @name Footer
+ */
+function Footer() {
 
     return (
         <div className="ms-footer _padding-tb-lg _padding-lr-md">

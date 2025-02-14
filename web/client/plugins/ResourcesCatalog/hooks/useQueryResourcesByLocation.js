@@ -56,6 +56,23 @@ const mergeParams = (params, defaultQuery) => {
     };
 };
 
+/**
+ * contains all the logic to update the resource grids content based on the router location
+ * @param {string} props.id resources section identifier
+ * @param {func} props.setLoading set the loading state
+ * @param {func} props.setResources set the resource items returned by the request
+ * @param {func} props.setResourcesMetadata set the resource metadata returned by the request
+ * @param {func} props.request function returning the resources request
+ * @param {object} props.defaultQuery default query object always applied to the requests
+ * @param {number} props.pageSize page size for the request
+ * @param {object} props.location current router location
+ * @param {func} props.onPush push a new location to the router
+ * @param {object} props.user user properties
+ * @param {bool} props.queryPage if true adds the page to the location query
+ * @param {object} props.search search object action, { id, params }, { id, clear } or { id, refresh }
+ * @param {func} props.onReset callback to reset the search action
+ * @return {object} { search, clear } search and clear functions
+ */
 const useQueryResourcesByLocation = ({
     id,
     setLoading = () => {},

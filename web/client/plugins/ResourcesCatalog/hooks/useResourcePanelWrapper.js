@@ -7,7 +7,16 @@
  */
 
 import { useEffect, useState } from 'react';
-
+/**
+ * compute the position of top and bottom value for the panel wrappers
+ * @param {string} props.headerNodeSelector optional valid query selector for the header in the page, used to set the position of the panel
+ * @param {string} props.navbarNodeSelector optional valid query selector for the navbar under the header, used to set the position of the panel
+ * @param {string} props.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
+ * @param {number} props.width container width in pixel
+ * @param {number} props.height container height in pixel
+ * @param {bool} props.active if true it computes the sticky top and bottom
+ * @return {object} { stickyTop, stickyBottom }
+ */
 const useResourcePanelWrapper = ({
     headerNodeSelector,
     navbarNodeSelector,

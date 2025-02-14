@@ -32,7 +32,7 @@ export const UPDATE_TIME_LAYERS_SETTINGS = "TIMELINE:UPDATE_LAYERS_SETTINGS";
  * @param {string} group the group of the selected time (typically the layer name)
  * @param {string} [what] clicked element. Can be 'timeline' or others
  * @param {object} [item] the effective clicked item, if any
- * @return object of type `TIMELINE:SELECT_TIME` with `time` group` `what` `item`
+ * @return {object} object of type `TIMELINE:SELECT_TIME` with `time` group` `what` `item`
  */
 export const selectTime = (time, group, what, item) => ({ type: SELECT_TIME, time, group, what, item});
 
@@ -40,7 +40,7 @@ export const selectTime = (time, group, what, item) => ({ type: SELECT_TIME, tim
  * Action creator for time range change event
  * @memberof actions.timeline
  * @param {object} param0 start/end object
- * @return action of type `RANGE_CHANGED` with start and end.
+ * @return {object} action of type `RANGE_CHANGED` with start and end.
  */
 export const onRangeChanged = ({start, end} = {}) => ({type: RANGE_CHANGED, start, end});
 

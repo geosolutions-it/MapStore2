@@ -69,7 +69,22 @@ export const getTagColorVariables = (color = '') => {
         '--tag-color-b': b
     };
 };
-
+/**
+ * return a new href by adding/removing the query parameters passed as property.
+ * If the query is already in the current location it will removed and vice-versa
+ * @param {object} options.location router location
+ * @param {string} options.pathname an optional pathname
+ * @param {object} options.query a query filter object
+ * @param {bool} options.replaceQuery if true it the query is always replaced
+ * @param {string[]} options.excludeQueryKeys a list of query keys to exclude in the new href
+ * @return {string} hash href
+ * @example
+ * const newHref = hashLocationToHref({ location: { search: '' }, query: { f: 'map' }});
+ * // newHref is '#?f=map'
+ * @example
+ * const newHref = hashLocationToHref({ location: { search: '?f=map' }, query: { f: 'map' }});
+ * // newHref is '#'
+ */
 export const hashLocationToHref = ({
     location,
     pathname,
@@ -102,7 +117,11 @@ export const hashLocationToHref = ({
                 : { ...acc,  [newQueryKey]: newQuery[newQueryKey]}, {}), excludeQueryKeys)
     })}`;
 };
-
+/**
+ * given the router location remove all the filter query parameters and it returns parsed params
+ * @param {object} location router location
+ * @return {object} new parameters
+ */
 export function clearQueryParams(location) {
     const { query } = url.parse(location.search, true);
     const newParams = Object.keys(query)

@@ -82,7 +82,7 @@ export const distributedColorsHEX = (total) => {
  * @param {number} base  from 0 to 360 the hsv to start (e.g. 0 red)
  * @param {number} range from 0 to 360 how much have to change the color
  * @param {number} total the number of classes to generate
- * @param options: some options for color generations
+ * @param {object} options: some options for color generations
  * h: if present, keep hue fixed.
  * s: if present, keep saturation fixed.
  * v: if present, keep value fixed.

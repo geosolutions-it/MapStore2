@@ -10,7 +10,11 @@ import { isEmpty, isEqual, omit, isArray, isObject } from 'lodash';
 import merge from 'lodash/fp/merge';
 
 const NODATA = 'NODATA';
-
+/**
+ * returns and empty string when the value is `NODATA`
+ * @param {string} value resource attribute value
+ * @return {string} the value or empty string when value is `NODATA`
+ */
 export const parseNODATA = (value) => value === NODATA ? '' : value;
 
 export const resourceTypes = {
@@ -43,7 +47,11 @@ export const resourceTypes = {
         }
     }
 };
-
+/**
+ * returns and empty string when the value is `NODATA`
+ * @param {object} resource resource properties
+ * @return {object} resource parsed information { title, icon, thumbnailUrl, viewerPath, viewerUrl }
+ */
 export const getResourceTypesInfo = (resource) => {
     const thumbnailUrl = parseNODATA(resource?.attributes?.thumbnail);
     const title = resource?.name || '';
@@ -57,7 +65,11 @@ export const getResourceTypesInfo = (resource) => {
         viewerUrl: `#${viewerPath}`
     };
 };
-
+/**
+ * returns resource status items
+ * @param {object} resource resource properties
+ * @return {object} resource status items
+ */
 export const getResourceStatus = (resource = {}) => {
     const extras = resource['@extras'];
     return {
@@ -78,7 +90,11 @@ export const getResourceStatus = (resource = {}) => {
         ]
     };
 };
-
+/**
+ * returns resource identifier
+ * @param {object} resource resource properties
+ * @return {string} resource id
+ */
 export const getResourceId = (resource) => {
     return resource?.id;
 };
@@ -94,8 +110,13 @@ const recursivePendingChanges = (a, b) => {
             : acc;
     }, {});
 };
-
-
+/**
+ * compare initial and current resource and it returns pending changes
+ * @param {object} initialResource initial resource properties
+ * @param {object} resource resource properties including changes applied in the viewer
+ * @param {object} data optional data configuration of the resource
+ * @return {object} pending changes object { initialResource, resource, saveResource, changes } where `saveResource` is the resource ready to be saved and `changes` contains the changed properties
+ */
 export const computePendingChanges = (initialResource, resource, resourceData) => {
     const { attributes: pendingAttributes = {}, tags, ...pendingChanges } = recursivePendingChanges(resource, initialResource);
     const attributesKeys = [
