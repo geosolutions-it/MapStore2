@@ -207,9 +207,9 @@ describe('Test correctness of the GeoStore APIs', () => {
         metadata = API.createAttributeList(metadata);
         expect(metadata).toEqual(
             "<Attributes>" +
-                "<attribute><name>nina</name><value>nina</value><type>STRING</type></attribute>" +
-                "<attribute><name>eating</name><value>eating</value><type>STRING</type></attribute>" +
-                "<attribute><name>plastic</name><value>plastic</value><type>STRING</type></attribute>" +
+                "<attribute><name>nina</name><value><![CDATA[nina]]></value><type>STRING</type></attribute>" +
+                "<attribute><name>eating</name><value><![CDATA[eating]]></value><type>STRING</type></attribute>" +
+                "<attribute><name>plastic</name><value><![CDATA[plastic]]></value><type>STRING</type></attribute>" +
             "</Attributes>"
         );
     });
