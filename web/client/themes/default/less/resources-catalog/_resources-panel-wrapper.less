@@ -1,0 +1,97 @@
+/*
+ * Copyright 2020, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// **************
+// Theme
+// **************
+
+
+// **************
+// Layout
+// **************
+
+:root {
+    --ms-resources-filter-width: 400px;
+    --ms-resource-detail-width: 640px;
+}
+
+#ms-brand-navbar {
+    z-index: 3000;
+}
+.ms-resources-panel-wrapper {
+    z-index: 2000;
+}
+
+.ms-resources-filter {
+    max-width: var(--ms-resources-filter-width);
+    width: 100%;
+}
+
+.ms-resource-detail {
+    max-width: var(--ms-resource-detail-width);
+    width: 100%;
+    margin-right: 0;
+    margin-left: auto;
+}
+
+:has(.ms-resources-filter._visible) {
+    .ms-resources-grid:not(._panel) {
+        margin-left: var(--ms-resources-filter-width);
+    }
+}
+
+:has(.ms-resource-detail._visible) {
+    .ms-resources-grid:not(._panel) {
+        width: calc(100% - var(--ms-resource-detail-width));
+    }
+    &:has(.ms-resources-filter._visible) {
+        .ms-resources-grid:not(._panel) {
+            width: calc(100% - var(--ms-resource-detail-width) - var(--ms-resources-filter-width));
+        }
+    }
+}
+
+.ms-resource-detail:has(.ms-tag.active),
+.ms-resources-grid:has(.ms-tag.active) {
+    .ms-tag:not(.active) {
+        opacity: 0.2;
+        -webkit-filter: grayscale(85%);
+        -moz-filter: grayscale(85%);
+        -ms-filter: grayscale(85%);
+        -o-filter: grayscale(85%);
+        filter: grayscale(85%);
+        &.Select-value,
+        &.Select-option {
+            opacity: 1.0;
+            -webkit-filter: grayscale(0%);
+            -moz-filter: grayscale(0%);
+            -ms-filter: grayscale(0%);
+            -o-filter: grayscale(0%);
+            filter: grayscale(0%);
+        }
+        &.Select-option {
+            &.is-selected {
+                opacity: 0.2;
+            }
+        }
+    }
+}
+
+@media (max-width: 1440px) {
+    :root {
+        --ms-resources-filter-width: 300px;
+        --ms-resource-detail-width: 500px;
+    }
+}
+
+@media (max-width: 968px) {
+    :root {
+        --ms-resources-filter-width: 100%;
+        --ms-resource-detail-width: 100%;
+    }
+}

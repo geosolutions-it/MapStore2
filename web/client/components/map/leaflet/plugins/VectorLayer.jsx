@@ -13,7 +13,7 @@ import {
     getStyle
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
-import { filterVectorLayerFeatures } from '../../../../utils/FilterUtils';
+import { createVectorFeatureFilter } from '../../../../utils/FilterUtils';
 
 const setOpacity = (layer, opacity) => {
     if (layer.eachLayer) {
@@ -55,7 +55,8 @@ const createLayerLegacy = (options) => {
 
 const createLayer = (options) => {
     const { hideLoading } = options;
-    const featuresToRender = options.features.filter(filterVectorLayerFeatures(options));        // make filter for features if filter is existing
+    const vectorFeatureFilter = createVectorFeatureFilter(options);
+    const featuresToRender = options.features.filter(vectorFeatureFilter);        // make filter for features if filter is existing
 
     const layer = L.geoJson(featuresToRender, {
         hideLoading: hideLoading

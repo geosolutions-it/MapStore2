@@ -514,7 +514,7 @@
       ]
     },
     {
-      "name": "DeleteMap",
+      "name": "DeleteResource",
       "glyph": "trash",
       "title": "plugins.DeleteMap.title",
       "hidden": false,
@@ -664,6 +664,25 @@
       "description": "plugins.GeoProcessing.description",
       "dependencies": [
         "SidebarMenu"
+      ]
+    },
+    {
+      "name": "BrandNavbar",
+      "title": "plugins.BrandNavbar.title",
+      "description": "plugins.BrandNavbar.description",
+      "defaultConfig": {
+        "containerPosition": "header"
+      }
+    },
+    {
+      "name": "ResourceDetails",
+      "title": "plugins.ResourceDetails.title",
+      "description": "plugins.ResourceDetails.description",
+      "defaultConfig": {
+        "resourceType": "MAP"
+      },
+      "dependencies": [
+        "BrandNavbar"
       ]
     }
   ]

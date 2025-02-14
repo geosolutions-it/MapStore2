@@ -26,7 +26,7 @@ export default ({
     disableClick
     ref={onRef}
     id="DRAGDROP_IMPORT_ZONE"
-    style={{ position: "relative", height: '100%', ...style }}
+    style={{ position: "absolute", top: 0, left: 0, height: '100%', ...style }}
     accept={accept}
     onDrop={onDrop}
     onDragEnter={onDragEnter}
@@ -40,7 +40,7 @@ export default ({
             left: 0,
             background: 'rgba(0,0,0,0.75)',
             color: '#fff',
-            zIndex: 2000,
+            zIndex: 4000,
             display: 'flex',
             textAlign: 'center'
         }}>

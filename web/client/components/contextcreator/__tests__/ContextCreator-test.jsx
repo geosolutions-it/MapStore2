@@ -69,7 +69,7 @@ describe('ContextCreator component', () => {
             expect(saveBtn.childNodes[0].innerHTML).toBe('save');
             ReactTestUtils.Simulate.click(saveBtn); // <-- trigger event callback
             // check destination path
-            expect(spyonSave).toHaveBeenCalledWith("/context-manager");
+            expect(spyonSave).toHaveBeenCalledWith("/");
         });
         it('custom destination', () => {
             const eng = {

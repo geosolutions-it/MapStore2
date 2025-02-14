@@ -274,6 +274,8 @@
                 "web/client/plugins/QueryPanel.jsx",
                 "web/client/plugins/Redirect.jsx",
                 "web/client/plugins/History.jsx",
+                "web/client/plugins/ResourcesCatalog/BrandNavbar.jsx",
+                "web/client/plugins/ResourcesCatalog/ResourceDetails.jsx",
                 "web/client/plugins/RulesEditor.jsx",
                 "web/client/plugins/RulesDataGrid.jsx",
                 "web/client/plugins/RulesManagerFooter.jsx",

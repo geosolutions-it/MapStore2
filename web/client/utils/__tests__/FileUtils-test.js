@@ -7,7 +7,7 @@
 */
 import expect from 'expect';
 
-import {readJson, readZip, checkShapePrj} from '../FileUtils';
+import {readJson, readZip, checkShapePrj, isFileSizeExceedMaxLimit} from '../FileUtils';
 import axios from '../../libs/ajax';
 
 describe('FilterUtils', () => {
@@ -30,5 +30,17 @@ describe('FilterUtils', () => {
                 });
             });
         });
+    });
+    it('isFileSizeExceedMaxLimit with large size exceed the max', () => {
+        const maxLimitInMega = 1;
+        const fileWithSizeExceedMaxLimit = 2 * 1024 * 1024;
+        let isFileSizeValid = isFileSizeExceedMaxLimit({size: fileWithSizeExceedMaxLimit}, maxLimitInMega);
+        expect(isFileSizeValid).toEqual(true);
+    });
+    it('isFileSizeExceedMaxLimit with small file size less than max', () => {
+        const maxLimitInMega = 1;
+        const fileWithSizeNotExceedMaxLimit = 0.5 * 1024 * 1024;
+        let isFileSizeValid = isFileSizeExceedMaxLimit({size: fileWithSizeNotExceedMaxLimit}, maxLimitInMega);
+        expect(isFileSizeValid).toEqual(false);
     });
 });

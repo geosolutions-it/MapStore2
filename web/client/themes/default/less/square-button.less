@@ -55,7 +55,7 @@
         padding: 0;
         outline: 0;
     }
-
+    .fa,
     .glyphicon {
         margin: auto;
         font-size: @icon-size-md;
@@ -69,6 +69,12 @@
             .mapstore-circle-loader-with-css-variables(@icon-size-md/10, @icon-size-md);
         }
     }
+
+    // TODO: check and remove all the above rules
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: @icon-size-md;
 }
 
 .square-button-sm {
@@ -78,6 +84,7 @@
         padding: 0;
         outline: 0 ;
      }
+    .fa,
     .glyphicon {
         margin: auto;
         font-size: @icon-size-sm;

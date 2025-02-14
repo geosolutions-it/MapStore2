@@ -572,7 +572,96 @@ const Api = {
             return postUser;
         }
     },
-    errorParser
+    errorParser,
+    /**
+     * get the available tags
+     * @param {string} textSearch search text query
+     * @param {object} options additional axios options
+     */
+    getTags: (textSearch, options = {}) => {
+        const url = '/resources/tag';
+        return axios.get(url, Api.addBaseUrl(parseOptions({
+            ...options,
+            params: {
+                ...options?.params,
+                ...(textSearch && { nameLike: textSearch })
+            }
+        }))).then((response) => response.data);
+    },
+    /**
+     * update/create a tag
+     * @param {object} tag a tag object { id, name, description, color } (it will create a new tag if id is undefined)
+     * @param {object} options additional axios options
+     */
+    updateTag: (tag = {}, options = {}) => {
+        const url = `/resources/tag${tag.id ? `/${tag.id}` : ''}`;
+        return axios[tag.id ? 'put' : 'post'](
+            url,
+            [
+                '<Tag>',
+                `<name><![CDATA[${tag.name}]]></name>`,
+                `<description><![CDATA[${tag.description}]]></description>`,
+                `<color>${tag.color}</color>`,
+                '</Tag>'
+            ].join(''),
+            Api.addBaseUrl(
+                parseOptions({
+                    ...options,
+                    headers: {
+                        'Content-Type': "application/xml"
+                    }
+                })
+            )).then((response) => response.data);
+    },
+    /**
+     * get the available tags
+     * @param {string} tagId tag identifier
+     * @param {object} options additional axios options
+     */
+    deleteTag: (tagId, options = {}) => {
+        const url = `/resources/tag/${tagId}`;
+        return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    /**
+     * link a tag to a resource
+     * @param {string} tagId tag identifier
+     * @param {string} resourceId resource identifier
+     * @param {object} options additional axios options
+     */
+    linkTagToResource: (tagId, resourceId, options) => {
+        const url = `/resources/tag/${tagId}/resource/${resourceId}`;
+        return axios.post(url, undefined, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    /**
+     * unlink a tag from a resource
+     * @param {string} tagId tag identifier
+     * @param {string} resourceId resource identifier
+     * @param {object} options additional axios options
+     */
+    unlinkTagFromResource: (tagId, resourceId, options) => {
+        const url = `/resources/tag/${tagId}/resource/${resourceId}`;
+        return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    /**
+     * add a resource to user favorites
+     * @param  {string} userId user identifier
+     * @param  {string} resourceId resource identifier
+     * @param  {object} options additional axios options
+     */
+    addFavoriteResource: (userId, resourceId, options) => {
+        const url = `/users/user/${userId}/favorite/${resourceId}`;
+        return axios.post(url, undefined, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    },
+    /**
+     * remove a resource from user favorites
+     * @param  {string} userId user identifier
+     * @param  {string} resourceId resource identifier
+     * @param  {object} options additional axios options
+     */
+    removeFavoriteResource: (userId, resourceId, options) => {
+        const url = `/users/user/${userId}/favorite/${resourceId}`;
+        return axios.delete(url, Api.addBaseUrl(parseOptions(options))).then((response) => response.data);
+    }
 };
 
 export default Api;

@@ -15,29 +15,7 @@ import Message from './locale/Message';
 import { Glyphicon } from 'react-bootstrap';
 import Home from '../components/home/Home';
 import { connect } from 'react-redux';
-import { checkPendingChanges } from '../actions/pendingChanges';
-import { setControlProperty } from '../actions/controls';
-import {burgerMenuSelector, unsavedMapSelector, unsavedMapSourceSelector} from '../selectors/controls';
-import { feedbackMaskSelector } from '../selectors/feedbackmask';
-import ConfigUtils from '../utils/ConfigUtils';
-
-const checkUnsavedMapChanges = (action) => {
-    return dispatch => {
-        dispatch(checkPendingChanges(action, 'gohome'));
-    };
-};
-
-const HomeConnected = connect((state) => ({
-    renderUnsavedMapChangesDialog: ConfigUtils.getConfigProp('unsavedMapChangesDialog'),
-    displayUnsavedDialog: unsavedMapSelector(state)
-        && unsavedMapSourceSelector(state) === 'gohome'
-        && (feedbackMaskSelector(state).currentPage === 'viewer'
-        || feedbackMaskSelector(state).currentPage === 'geostory'
-        || feedbackMaskSelector(state).currentPage === 'dashboard')
-}), {
-    onCheckMapChanges: checkUnsavedMapChanges,
-    onCloseUnsavedDialog: setControlProperty.bind(null, 'unsavedMap', 'enabled', false)
-})(Home);
+import {burgerMenuSelector} from '../selectors/controls';
 
 /**
  * Renders a button that redirects to the home page.
@@ -63,7 +41,7 @@ const HomeConnected = connect((state) => ({
  * @memberof plugins
  */
 export default {
-    HomePlugin: assign(HomeConnected, {
+    HomePlugin: assign(Home, {
         Toolbar: {
             name: 'home',
             position: 1,
@@ -87,7 +65,7 @@ export default {
             tool: connect(() => ({
                 bsStyle: 'primary',
                 tooltipPosition: 'bottom'
-            }))(HomeConnected),
+            }))(Home),
             priority: 3
         },
         SidebarMenu: {
@@ -97,11 +75,16 @@ export default {
                 bsStyle: 'tray',
                 tooltipPosition: 'left',
                 text: <Message msgId="gohome"/>
-            }))(HomeConnected),
+            }))(Home),
             selector: (state) => ({
                 style: { display: burgerMenuSelector(state) ? 'none' : null }
             }),
             priority: 4
+        },
+        BrandNavbar: {
+            target: 'right-menu',
+            position: 6,
+            priority: 5
         }
     }),
     reducers: {},

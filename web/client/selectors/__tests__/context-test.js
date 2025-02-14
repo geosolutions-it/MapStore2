@@ -29,7 +29,7 @@ import CONTEXT_SHORT_RESOURCE from '../../test-resources/geostore/resources/reso
 const stateMocker = createStateMocker({context});
 describe('context selectors', () => {
     it('currentContextSelector', () => {
-        expect(currentContextSelector(stateMocker(setContext(CONTEXT_DATA)))).toBe(CONTEXT_DATA);
+        expect(currentContextSelector(stateMocker(setContext(CONTEXT_DATA)))).toEqual(CONTEXT_DATA);
     });
     it('contextMonitoredStateSelector', () => {
         expect(contextMonitoredStateSelector(stateMocker())).toBe('{}');

@@ -58,7 +58,8 @@
         "FeatureEditor",
         "FilterLayer",
         "AddGroup",
-        "Swipe"
+        "Swipe",
+        "MetadataInfo"
       ],
       "autoEnableChildren": [
         "TOCItemsSettings",
@@ -177,7 +178,7 @@
       "title": "plugins.Annotations.title",
       "description": "plugins.Annotations.description",
       "dependencies": [
-        "SidebarMenu"
+        "TOC"
       ]
     },
     {
@@ -397,6 +398,9 @@
       "name": "Swipe"
     },
     {
+      "name": "MetadataInfo"
+    },
+    {
       "name": "SearchByBookmark"
     },
     {
@@ -511,7 +515,7 @@
       ]
     },
     {
-      "name": "DeleteMap",
+      "name": "DeleteResource",
       "glyph": "trash",
       "title": "plugins.DeleteMap.title",
       "hidden": false,
@@ -635,6 +639,52 @@
     {
       "name": "SidebarMenu",
       "hidden": true
+    },
+    {
+      "name": "MapViews",
+      "glyph": "map-view",
+      "title": "plugins.MapViews.title",
+      "description": "plugins.MapViews.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+    },
+    {
+      "name": "LongitudinalProfileTool",
+      "glyph": "1-line",
+      "title": "plugins.LongitudinalProfileTool.title",
+      "description": "plugins.LongitudinalProfileTool.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+    },
+    {
+      "name": "GeoProcessing",
+      "glyph": "globe-settings",
+      "title": "plugins.GeoProcessing.title",
+      "description": "plugins.GeoProcessing.description",
+      "dependencies": [
+        "SidebarMenu"
+      ]
+    },
+    {
+      "name": "BrandNavbar",
+      "title": "plugins.BrandNavbar.title",
+      "description": "plugins.BrandNavbar.description",
+      "defaultConfig": {
+        "containerPosition": "header"
+      }
+    },
+    {
+      "name": "ResourceDetails",
+      "title": "plugins.ResourceDetails.title",
+      "description": "plugins.ResourceDetails.description",
+      "defaultConfig": {
+        "resourceType": "MAP"
+      },
+      "dependencies": [
+        "BrandNavbar"
+      ]
     }
   ]
 }

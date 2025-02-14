@@ -15,7 +15,7 @@ import {
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
-import { filterVectorLayerFeatures } from '../../../../utils/FilterUtils';
+import { createVectorFeatureFilter } from '../../../../utils/FilterUtils';
 
 const createLayer = (options, map) => {
 
@@ -28,7 +28,9 @@ const createLayer = (options, map) => {
     }
 
     const features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
-    const featuresToRender = features.filter(filterVectorLayerFeatures(options));        // make filter for features if filter is existing
+    const vectorFeatureFilter = createVectorFeatureFilter(options);
+
+    const featuresToRender = features.filter(vectorFeatureFilter);        // make filter for features if filter is existing
     let styledFeatures = new GeoJSONStyledFeatures({
         features: featuresToRender,
         id: options?.id,

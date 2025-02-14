@@ -6,162 +6,198 @@
  * LICENSE file in the root directory of this source tree.
  */
 import React from 'react';
-
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import assign from 'object-assign';
+import { createPlugin } from '../../utils/PluginsUtils';
+import usePluginItems from '../../hooks/usePluginItems';
+import { itemSelected } from '../../actions/manager';
 import { isPageConfigured } from '../../selectors/plugins';
 import tooltip from '../../components/misc/enhancers/tooltip';
-
 import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
-
+import Message from '../../components/I18N/Message';
 const TDropdownButton = tooltip(DropdownButton);
-const Container = connect(() => ({
-    noCaret: true,
-    pullRight: true,
-    bsStyle: "primary",
-    title: <Glyphicon glyph="1-menu-manage"/>,
-    tooltipId: "manager.managerMenu",
-    tooltipPosition: "bottom"
-}), {})(TDropdownButton);
-
-import ToolsContainer from '../containers/ToolsContainer';
-import Message from '../locale/Message';
-import { itemSelected } from '../../actions/manager';
-import '../burgermenu/burgermenu.css';
-
-class ManagerMenu extends React.Component {
-    static propTypes = {
-        id: PropTypes.string,
-        dispatch: PropTypes.func,
-        role: PropTypes.string,
-        entries: PropTypes.array,
-        title: PropTypes.node,
-        onItemClick: PropTypes.func,
-        itemSelected: PropTypes.func,
-        controls: PropTypes.object,
-        panelStyle: PropTypes.object,
-        panelClassName: PropTypes.string,
-        enableRulesManager: PropTypes.bool,
-        enableImporter: PropTypes.bool,
-        enableContextManager: PropTypes.bool
-    };
-
-    static contextTypes = {
-        messages: PropTypes.object,
-        router: PropTypes.object
-    };
-
-    static defaultProps = {
-        id: "mapstore-manager-menu",
-        entries: [{
-            "msgId": "users.title",
-            "glyph": "1-group-mod",
-            "path": "/manager/usermanager"
-        },
-        {
-            "msgId": "contextManager.title",
-            "glyph": "wrench",
-            "path": "/context-manager"
-        },
-        {
-            "msgId": "rulesmanager.menutitle",
-            "glyph": "admin-geofence",
-            "path": "/rules-manager"
-        },
-        {
-            "msgId": "importer.title",
-            "glyph": "upload",
-            "path": "/importer"
-        }],
-        role: "",
-        onItemClick: () => {},
-        itemSelected: () => {},
-        title: <MenuItem header>Manager</MenuItem>,
-        controls: [],
-        panelStyle: {
-            minWidth: "300px",
-            right: "52px",
-            zIndex: 100,
-            position: "absolute",
-            overflow: "auto"
-        },
-        panelClassName: "toolbar-panel",
-        enableContextManager: false
-    };
-
-    getTools = () => {
-        return [{element:
-            <span key="burger-menu-title">{this.props.title}</span>},
-        ...this.props.entries
-            .filter(e => this.props.enableRulesManager || e.path !== "/rules-manager")
-            .filter(e => this.props.enableImporter || e.path !== "/importer")
-            .filter(e => this.props.enableContextManager || e.path !== "/context-manager")
-            .sort((a, b) => a.position - b.position).map((entry) => {
-                return {
-                    action: (context) => {
-                        context.router.history.push(entry.path);
-                        this.props.itemSelected(entry.id);
-                        return {
-                            type: "@@router/LOCATION_CHANGE",
-                            payload: {
-                                action: context.router.history.action,
-                                isFirstRendering: false,
-                                location: context.router.history.location
-                            }
-                        };
-                    },
-                    text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
-                    cfg: {...entry}
-                };
-            })
-        ];
-    };
-
-    render() {
-        if (this.props.role === "ADMIN") {
-            return (
-                <ToolsContainer id={this.props.id} className="square-button"
-                    container={Container}
-                    toolStyle="primary"
-                    activeStyle="default"
-                    stateSelector="burgermenu"
-                    eventSelector="onSelect"
-                    tool={MenuItem}
-                    tools={this.getTools()}
-                    panelStyle={this.props.panelStyle}
-                    panelClassName={this.props.panelClassName}
-                />);
-        }
-        return null;
-    }
-}
 
 const IMPORTER_ID = 'importer';
 const RULE_MANAGER_ID = 'rulesmanager';
+
+function ManagerMenuItem({
+    href,
+    onClick,
+    glyph,
+    msgId,
+    text
+}) {
+    return (
+        <MenuItem href={href} onClick={onClick}>
+            <Glyphicon glyph={glyph} />{msgId ? <Message msgId={msgId} /> : text}
+        </MenuItem>
+    );
+}
+
+ManagerMenuItem.propTypes = {
+    href: PropTypes.string,
+    glyph: PropTypes.string,
+    msgId: PropTypes.string,
+    text: PropTypes.string,
+    onClick: PropTypes.func
+};
+
+ManagerMenuItem.defaultProps = {
+    onClick: () => {}
+};
+
+function ManagerMenu({
+    id,
+    role,
+    entries,
+    enableRulesManager,
+    enableImporter,
+    title,
+    onItemSelected,
+    items
+}, context) {
+
+    const { loadedPlugins } = context;
+    const configuredItems = usePluginItems({ items, loadedPlugins });
+
+    if (role !== 'ADMIN') {
+        return null;
+    }
+
+    const defaultItems = [
+        ...entries
+            .filter(e => enableRulesManager || e.path !== '/rules-manager')
+            .filter(e => enableImporter || e.path !== '/importer'),
+        ...configuredItems
+    ]
+        .sort((a, b) => a.position - b.position);
+
+    return (
+        <TDropdownButton
+            id={id}
+            noCaret
+            pullRight
+            bsStyle="primary"
+            title={<Glyphicon glyph="1-menu-manage"/>}
+            tooltipId="manager.managerMenu"
+            tooltipPosition="bottom"
+            className="square-button-md"
+        >
+            {title}
+            {defaultItems.map((entry, key) => {
+                if (entry.Component) {
+                    return (
+                        <entry.Component
+                            key={entry.name || key}
+                            onItemSelected={onItemSelected}
+                            itemComponent={ManagerMenuItem}
+                        />
+                    );
+                }
+                const href = `#${entry.path}`;
+                return (
+                    <ManagerMenuItem
+                        key={`${href}:${key}`}
+                        href={href}
+                        onClick={() => onItemSelected(entry.id)}
+                        glyph={entry.glyph}
+                        msgId={entry.msgId}
+                        text={entry.text}
+                    />
+                );
+            })}
+        </TDropdownButton>
+    );
+}
+
+ManagerMenu.propTypes = {
+    id: PropTypes.string,
+    role: PropTypes.string,
+    entries: PropTypes.array,
+    title: PropTypes.node,
+    onItemSelected: PropTypes.func,
+    enableRulesManager: PropTypes.bool,
+    enableImporter: PropTypes.bool
+};
+
+ManagerMenu.contextTypes = {
+    loadedPlugins: PropTypes.object
+};
+
+ManagerMenu.defaultProps = {
+    id: 'mapstore-manager-menu',
+    entries: [
+        {
+            msgId: 'users.title',
+            glyph: '1-group-mod',
+            path: '/manager/usermanager',
+            position: 1
+        },
+        {
+            msgId: 'rulesmanager.menutitle',
+            glyph: 'admin-geofence',
+            path: '/rules-manager',
+            position: 2
+        },
+        {
+            msgId: 'importer.title',
+            glyph: 'upload',
+            path: '/importer',
+            position: 3
+        }
+    ],
+    role: '',
+    onItemSelected: () => {},
+    title: <MenuItem header>Manager</MenuItem>
+};
+
+const ConnectedManagerMenu = connect((state) => ({
+    enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
+    enableImporter: isPageConfigured(IMPORTER_ID)(state),
+    role: state.security && state.security.user && state.security.user.role
+}), {
+    onItemSelected: itemSelected
+})(ManagerMenu);
 
 /**
  * This plugin provides a special Manager dropdown menu, that contains various administration tools
  * @memberof plugins
  * @name ManagerMenu
- * @class
- * @prop {boolean} cfg.enableContextManager: enable context manager menu entry, default `true`
+ * @prop {object[]} items this property contains the items injected from the other plugins,
+ * using the `containers` option in the plugin that want to inject the new menu items.
+ * ```javascript
+ * const MyMenuItemComponent = connect(selector, { onActivateTool })(({
+ *  itemComponent, // default component that provides a consistent UI (see ManagerMenuItem in ManagerMenu plugin for props)
+ *  onItemSelected, // callback to trigger the menu manager action on click, an id should be passed as argument
+ *  onActivateTool, // example of a custom connected action
+ * }) => {
+ *  const ItemComponent = itemComponent;
+ *  return (
+ *      <ItemComponent
+ *          glyph="heart"
+ *          msgId="myMessageId"
+ *          href="myMessageId"
+ *          onClick={() => onActivateTool()}
+ *      />
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          ManagerMenu: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              Component: MyMenuItemComponent
+ *          },
+ * // ...
  */
-export default {
-    ManagerMenuPlugin: assign(connect((state) => ({
-        enableRulesManager: isPageConfigured(RULE_MANAGER_ID)(state),
-        enableImporter: isPageConfigured(IMPORTER_ID)(state),
-        controls: state.controls,
-        role: state.security && state.security.user && state.security.user.role
-    }), {
-        itemSelected
-    })(ManagerMenu), {
-        OmniBar: {
-            name: "managermenu",
-            position: 1,
-            tool: true,
-            priority: 1
+export default createPlugin('ManagerMenu', {
+    component: ConnectedManagerMenu,
+    containers: {
+        BrandNavbar: {
+            target: 'right-menu',
+            position: 7,
+            priority: 3
         }
-    }),
-    reducers: {}
-};
+    }
+});

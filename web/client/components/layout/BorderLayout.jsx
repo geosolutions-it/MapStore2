@@ -34,9 +34,9 @@ export default ({id, children, header, footer, columns, height, style = {}, clas
             flex: 1,
             overflowY: "auto"
         }}>
-            <main className="ms2-border-layout-content" style={{flex: 1, overflowX: 'hidden'}}>
+            <div className="ms2-border-layout-content" style={{flex: 1, overflowX: 'hidden'}}>
                 {height ? <div style={{height}}>{children}</div> : children}
-            </main>
+            </div>
             {height ? <div style={{height}}>{columns}</div> : columns}
         </div>
         {footer}

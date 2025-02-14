@@ -33,7 +33,7 @@ import {
     updateLayerLegendFilter,
     resetLayerLegendFilter,
     updateLayerWFSVectorLegendFilter,
-    filterVectorLayerFeatures
+    createVectorFeatureFilter
 } from '../FilterUtils';
 import { INTERACTIVE_LEGEND_ID } from '../LegendUtils';
 import { setConfigProp } from '../ConfigUtils';
@@ -2446,9 +2446,8 @@ describe('FilterUtils', () => {
             ]
         };
         const updatedFilterObj = updateLayerLegendFilter(layerFilterObj);
-        expect(updatedFilterObj).toBeTruthy();
-        expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
     });
     it('test resetLayerLegendFilter in case change wms style', () => {
         const layerFilterObj = {
@@ -2501,9 +2500,8 @@ describe('FilterUtils', () => {
             style: "style_01"
         };
         const updatedFilterObj = resetLayerLegendFilter(layer, 'style', 'style_02');
-        expect(updatedFilterObj).toBeTruthy();
-        expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
     });
     // for WFS
     it('test updateLayerWFSVectorLegendFilter for wfs, simple filter', () => {
@@ -2606,11 +2604,10 @@ describe('FilterUtils', () => {
             ]
         };
         const updatedFilterObj = updateLayerWFSVectorLegendFilter(layerFilterObj);
-        expect(updatedFilterObj).toBeTruthy();
-        expect(updatedFilterObj.filters.length).toEqual(0);
-        expect(updatedFilterObj.filters.find(i => i.id === INTERACTIVE_LEGEND_ID)).toBeFalsy();
+        // check if there is no any filters --> updatedFilterObj will be undefined
+        expect(updatedFilterObj).toBeFalsy();
     });
-    it('test filterVectorLayerFeatures for vector layers', () => {
+    it('test createVectorFeatureFilter for vector layers', () => {
         const layerFilterObj = {
             "groupFields": [
                 {
@@ -2654,7 +2651,7 @@ describe('FilterUtils', () => {
             layerFilter: layerFilterObj,
             style: "style_01"
         };
-        const filterFunction = filterVectorLayerFeatures(layerOptions);
+        const filterFunction = createVectorFeatureFilter(layerOptions);
         const isFiltered1 = filterFunction({
             properties: {
                 "FIELD_01": 2550        // matched with the filter rule

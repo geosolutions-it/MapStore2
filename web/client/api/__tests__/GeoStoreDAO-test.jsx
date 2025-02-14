@@ -423,4 +423,110 @@ describe('Test correctness of the GeoStore APIs', () => {
             done(e);
         });
     });
+    it('getTags', (done) => {
+        mockAxios.onGet().reply((data) => {
+            try {
+                expect(data.baseURL).toBe('/rest/geostore/');
+                expect(data.url).toBe('/resources/tag');
+                expect(data.params).toEqual({ nameLike: '%Search%' });
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [200];
+        });
+        API.getTags('%Search%');
+    });
+    it('updateTag', (done) => {
+        mockAxios.onPut().reply((data) => {
+            try {
+                expect(data.baseURL).toBe('/rest/geostore/');
+                expect(data.url).toBe('/resources/tag/1');
+                expect(data.data).toBe('<Tag><name><![CDATA[Name]]></name><description><![CDATA[Description]]></description><color>#ff0000</color></Tag>');
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [200];
+        });
+        API.updateTag({ id: '1', name: 'Name', description: 'Description', color: '#ff0000' });
+    });
+    it('updateTag (create)', (done) => {
+        mockAxios.onPost().reply((data) => {
+            try {
+                expect(data.baseURL).toBe('/rest/geostore/');
+                expect(data.url).toBe('/resources/tag');
+                expect(data.data).toBe('<Tag><name><![CDATA[Name]]></name><description><![CDATA[Description]]></description><color>#ff0000</color></Tag>');
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [200];
+        });
+        API.updateTag({ name: 'Name', description: 'Description', color: '#ff0000' });
+    });
+    it('deleteTag', (done) => {
+        mockAxios.onDelete().reply((data) => {
+            try {
+                expect(data.baseURL).toBe('/rest/geostore/');
+                expect(data.url).toBe('/resources/tag/1');
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [200];
+        });
+        API.deleteTag('1');
+    });
+    it('linkTagToResource', (done) => {
+        mockAxios.onPost().reply((data) => {
+            try {
+                expect(data.baseURL).toBe('/rest/geostore/');
+                expect(data.url).toBe('/resources/tag/1/resource/2');
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [200];
+        });
+        API.linkTagToResource('1', '2');
+    });
+    it('unlinkTagFromResource', (done) => {
+        mockAxios.onDelete().reply((data) => {
+            try {
+                expect(data.baseURL).toBe('/rest/geostore/');
+                expect(data.url).toBe('/resources/tag/1/resource/2');
+            } catch (e) {
+                done(e);
+            }
+            done();
+            return [200];
+        });
+        API.unlinkTagFromResource('1', '2');
+    });
+
+    it('addFavoriteResource', (done) => {
+        mockAxios.onPost().reply((data) => {
+            try {
+                expect(data.url).toEqual('/users/user/10/favorite/15');
+                done();
+            } catch (e) {
+                done(e);
+            }
+            return [200];
+        });
+        API.addFavoriteResource("10", "15");
+    });
+    it('removeFavoriteResource', (done) => {
+        mockAxios.onDelete().reply((data) => {
+            try {
+                expect(data.url).toEqual('/users/user/10/favorite/15');
+                done();
+            } catch (e) {
+                done(e);
+            }
+            return [200];
+        });
+        API.removeFavoriteResource("10", "15");
+    });
 });

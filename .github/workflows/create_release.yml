@@ -43,7 +43,7 @@ jobs:
       # CACHING
       ##########
       - name: "cache node modules"
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -54,7 +54,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - name: "cache maven dependencies"
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: mapstore-${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -64,19 +64,19 @@ jobs:
         id: "build"
         run: "./build.sh ${{ github.event.inputs.version }} binary,printingbundle"
       - name: "Upload war"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: war
+          name: release-war
           path: product/target/mapstore.war
       - name: "Upload binary"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: binary
+          name: release-binary
           path: "binary/target/mapstore2-${{ github.event.inputs.version }}-bin.zip"
       - name: "Upload printing"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: printing
+          name: release-printing
           path: "java/printing/target/mapstore-printing.zip"
   release:
     runs-on: ubuntu-latest
@@ -86,12 +86,14 @@ jobs:
         uses: actions/download-artifact@v4.1.7
         with:
           path: artifacts/
+          pattern: release-*
+          merge-multiple: true
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: artifacts
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "name=date::$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
       - name: create_release
         id: create_release
         uses: actions/create-release@v1
@@ -127,7 +129,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: artifacts/war/mapstore.war
+          asset_path: artifacts/mapstore.war
           asset_name: mapstore.war
           asset_content_type: application/zip
       - name: Upload Release binary
@@ -137,7 +139,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: "artifacts/binary/mapstore2-${{github.event.inputs.version}}-bin.zip"
+          asset_path: "artifacts/mapstore2-${{github.event.inputs.version}}-bin.zip"
           asset_name: "mapstore2-${{github.event.inputs.version}}-bin.zip"
           asset_content_type: application/zip
       - name: Upload Release printing
@@ -147,6 +149,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: artifacts/printing/mapstore-printing.zip
+          asset_path: artifacts/mapstore-printing.zip
           asset_name: mapstore-printing.zip
           asset_content_type: application/zip
