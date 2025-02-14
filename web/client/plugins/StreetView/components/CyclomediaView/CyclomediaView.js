@@ -350,6 +350,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             tooltipId="streetView.cyclomedia.logout"
             onClick={() => {
                 StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
+                setInitialized(false);
             }}>
                 <Glyphicon glyph="log-out" />&nbsp;
                 </CTButton></div>)}
