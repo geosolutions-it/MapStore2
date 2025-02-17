@@ -522,9 +522,9 @@
               "groundAtmosphere": "Show ground atmosphere",
               "fog": "Show fog",
               "depthTest": "Enable depth test against terrain",
-              "lighting3DOptions": {
-                "title": "3D Lighting Options",
-                "placeholder": "Select the 3d lighting option",
+              "lightings": {
+                "title": "Lighting Options",
+                "placeholder": "Select the lighting option",
                 "flashlightOption": "Flashlight",
                 "sunlightOption": "Sunlight",
                 "dateTimeOption": "Specific UTC Date-Time",

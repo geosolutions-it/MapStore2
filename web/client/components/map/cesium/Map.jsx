@@ -191,27 +191,7 @@ class CesiumMap extends React.Component {
                 map.scene.screenSpaceCameraController.maximumZoomDistance = maxZoomLevel;
             }
         }
-        if (this.props?.mapOptions?.lighting3DOption) {
-            if (this.props?.mapOptions?.lighting3DOption?.value === 'flashlight') {
-                const flashlight = new Cesium.DirectionalLight({
-                    direction: map.scene.camera.directionWC, // Updated every frame
-                    intensity: 3.0
-                });
-                map.scene.light = flashlight;
-                map.scene.preRender.addEventListener(this.updateFlashlightEffect);
-            } else if (this.props?.mapOptions?.lighting3DOption?.value === 'sunlight') {
-                this.resetMapLighting(this.map);
-                const currentTime = Cesium.JulianDate.now();
-                map.clock.currentTime = currentTime;
-                map.clock.shouldAnimate = true; // Enable animation for dynamic lighting
-            } else {
-                let settedDate = this.props?.mapOptions?.lighting3DOption?.dateTime || (new Date()).toISOString();
-                this.resetMapLighting(this.map);
-                const currentTime = Cesium.JulianDate.fromDate(new Date(settedDate));
-                map.clock.shouldAnimate = false;
-                map.clock.currentTime = currentTime;
-            }
-        }
+        this.updateLighting({}, this.props);
         this.forceUpdate();
         map.scene.requestRender();
     }
@@ -262,39 +242,7 @@ class CesiumMap extends React.Component {
             this.updateInteractions(this.props);
         }
         // for lighting theme
-        if (prevProps && !isEqual(prevProps?.mapOptions?.lighting3DOption, this.props?.mapOptions?.lighting3DOption)) {
-            if (this.props?.mapOptions?.lighting3DOption?.value === 'flashlight') {
-                this.resetMapLighting(this.map);
-                const flashlight = new Cesium.DirectionalLight({
-                    direction: this.map.scene.camera.directionWC, // Updated every frame
-                    intensity: 3.0
-                });
-                this.map.scene.light = flashlight;
-                this.map.scene.preRender.addEventListener(this.updateFlashlightEffect);
-            } else if (this.props?.mapOptions?.lighting3DOption?.value === 'sunlight') {
-                // clear event of preRedner listener of flashlight if the prev. is flashlight
-                let prevLightingOp = prevProps?.mapOptions?.lighting3DOption?.value;
-                if (prevLightingOp === 'flashlight') {
-                    this.map.scene.preRender.removeEventListener(this.updateFlashlightEffect);
-                }
-                this.resetMapLighting(this.map);
-                const currentTime = Cesium.JulianDate.now();
-                this.map.clock.currentTime = currentTime;
-                // Enable animation for dynamic lighting
-                this.map.clock.shouldAnimate = true;
-            } else {
-                // clear event of preRedner listener of flashlight if the prev. is flashlight
-                let prevLightingOp = prevProps?.mapOptions?.lighting3DOption?.value;
-                if (prevLightingOp === 'flashlight') {
-                    this.map.scene.preRender.removeEventListener(this.updateFlashlightEffect);
-                }
-                let settedDate = this.props?.mapOptions?.lighting3DOption?.dateTime || (new Date()).toISOString();
-                this.resetMapLighting(this.map);
-                const currentTime = Cesium.JulianDate.fromDate(new Date(settedDate));
-                this.map.clock.shouldAnimate = false;
-                this.map.clock.currentTime = currentTime;
-            }
-        }
+        this.updateLighting(prevProps, this.props);
     }
 
     componentWillUnmount() {
@@ -722,12 +670,44 @@ class CesiumMap extends React.Component {
         const sunLight = new Cesium.SunLight();
         map.scene.light = sunLight;
     }
-    updateFlashlightEffect = (scene) => {
-        scene.light.direction = Cesium.Cartesian3.clone(
-            scene.camera.directionWC,
-            scene.light.direction
-        );
-    };
+    updateLighting = (prevProps, props) => {
+        const prevLighting = prevProps?.mapOptions?.lighting;
+        const lighting = props?.mapOptions?.lighting;
+        if (prevProps && !isEqual(prevLighting, lighting)) {
+            // clear event of preRender listener of flashlight if the prev. is flashlight
+            this.resetMapLighting(this.map);
+            if (this._flashLightListener) {
+                this.map.scene.preRender.removeEventListener(this._flashLightListener);
+                this._flashLightListener = undefined;
+            }
+            const lightingValue = lighting?.value;
+            if (lightingValue === 'flashlight') {
+                const flashlight = new Cesium.DirectionalLight({
+                    direction: this.map.scene.camera.directionWC, // Updated every frame
+                    intensity: 3.0
+                });
+                this.map.scene.light = flashlight;
+                this._flashLightListener = (scene) => {
+                    scene.light.direction = Cesium.Cartesian3.clone(
+                        scene.camera.directionWC,
+                        scene.light.direction
+                    );
+                };
+                this.map.scene.preRender.addEventListener(this._flashLightListener);
+            } else if (lightingValue === 'dateTime') {
+                const selectedDate = lighting?.dateTime || (new Date()).toISOString();
+                const currentTime = Cesium.JulianDate.fromDate(new Date(selectedDate));
+                this.map.clock.shouldAnimate = false;
+                this.map.clock.currentTime = currentTime;
+            } else {
+                //  'sunlight' is the default one
+                const currentTime = Cesium.JulianDate.now();
+                this.map.clock.currentTime = currentTime;
+                // Enable animation for dynamic lighting
+                this.map.clock.shouldAnimate = true;
+            }
+        }
+    }
 }
 
 const ReloadCesiumMap = forwardRef((props, ref) => {

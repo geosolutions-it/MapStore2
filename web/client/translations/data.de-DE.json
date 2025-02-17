@@ -560,9 +560,9 @@
               "groundAtmosphere": "Atmosphäre auf dem Gelände anzeigen",
               "fog": "Nebel anzeigen",
               "depthTest": "Tiefentest gegen Gelände aktivieren",
-              "lighting3DOptions": {
-                    "title": "3D-Beleuchtungsoptionen",
-                    "placeholder": "Wähle die 3D-Beleuchtungsoption aus",
+              "lightings": {
+                    "title": "Beleuchtungsoptionen",
+                    "placeholder": "Wähle die Beleuchtungsoption aus",
                     "flashlightOption": "Taschenlampe",
                     "sunlightOption": "Sonnenlicht",
                     "dateTimeOption": "Spezifisches UTC-Datum-Uhrzeit",

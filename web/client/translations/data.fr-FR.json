@@ -522,9 +522,9 @@
               "groundAtmosphere": "Montrer l'atmosphère du terrain",
               "fog": "Afficher le brouillard",
               "depthTest": "Activer le depthTest sur le terrain",
-              "lighting3DOptions": {
-                "title": "Options d'éclairage 3D",
-                "placeholder": "Sélectionnez l'option d'éclairage 3D",
+              "lightings": {
+                "title": "Options d'éclairage",
+                "placeholder": "Sélectionnez l'option d'éclairage",
                 "flashlightOption": "Lampe de poche",
                 "sunlightOption": "Lumière du soleil",
                 "dateTimeOption": "Date-heure UTC spécifique",

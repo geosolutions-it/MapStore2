@@ -660,7 +660,7 @@ describe('CesiumMap', () => {
                     center={{y: 10, x: 44}}
                     zoom={5}
                     mapOptions={{
-                        lighting3DOption: {
+                        lighting: {
                             value: 'flashlight'
                         }
                     }}
@@ -680,7 +680,7 @@ describe('CesiumMap', () => {
                     center={{y: 10, x: 44}}
                     zoom={5}
                     mapOptions={{
-                        lighting3DOption: {
+                        lighting: {
                             value: 'sunlight'
                         }
                     }}
@@ -706,7 +706,7 @@ describe('CesiumMap', () => {
                     center={{y: 10, x: 44}}
                     zoom={5}
                     mapOptions={{
-                        lighting3DOption: {
+                        lighting: {
                             value: 'dateTime',
                             dateTime: (new Date()).toISOString()
                         }

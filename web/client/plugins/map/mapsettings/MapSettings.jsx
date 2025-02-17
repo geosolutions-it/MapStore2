@@ -19,7 +19,6 @@ import { mapSelector } from '../../../selectors/map';
 import { mapTypeSelector, isCesium as isCesiumSelector } from '../../../selectors/maptype';
 import localizedProps from '../../../components/misc/enhancers/localizedProps';
 import utcDateWrapper from '../../../components/misc/enhancers/utcDateWrapper';
-import { DATE_TYPE } from '../../../utils/FeatureGridUtils';
 import { getMessageById } from '../../../utils/LocaleUtils';
 import PropTypes from 'prop-types';
 import DateTimePicker from '../../../components/misc/datetimepicker';
@@ -49,23 +48,6 @@ const Component = ({
     mapOptions: defaultMapOptions
 }, { messages }) => {
     const SelectLocalized = localizedProps(["placeholder", "options"])(Select);
-    const DEFAULT_QUICK_TIME_SELECTORS = [
-        {
-            "type": DATE_TYPE.DATE_TIME,
-            "value": "{now}+P0D",
-            "labelId": "queryform.attributefilter.datefield.quickSelectors.now"
-        },
-        {
-            "type": DATE_TYPE.DATE_TIME,
-            "value": "{now}-P1D",
-            "labelId": "queryform.attributefilter.datefield.quickSelectors.yesterday"
-        },
-        {
-            "type": DATE_TYPE.DATE_TIME,
-            "value": "{now}+P1D",
-            "labelId": "queryform.attributefilter.datefield.quickSelectors.tomorrow"
-        }
-    ];
 
     const mapOptions = {
         ...(defaultMapOptions && defaultMapOptions[mapType]
@@ -108,40 +90,42 @@ const Component = ({
             >
                 <Message msgId="map.settings.depthTest" />
             </Checkbox>
-            <>
-                <label className="control-label"><Message msgId="map.settings.lighting3DOptions.title"/></label>
+            <FormGroup>
+                <ControlLabel><Message msgId="map.settings.lightings.title"/></ControlLabel>
                 <SelectLocalized
                     options={[
-                        {label: "map.settings.lighting3DOptions.flashlightOption", value: "flashlight"},
-                        {label: "map.settings.lighting3DOptions.sunlightOption", value: "sunlight"},
-                        {label: "map.settings.lighting3DOptions.dateTimeOption", value: "dateTime"}
+                        {label: "map.settings.lightings.sunlightOption", value: "sunlight"},
+                        {label: "map.settings.lightings.flashlightOption", value: "flashlight"},
+                        {label: "map.settings.lightings.dateTimeOption", value: "dateTime"}
                     ]}
                     wrapperStyle = {{ marginTop: "10px"}}
-                    value={mapOptions && mapOptions.lighting3DOption?.value || ""}
+                    value={mapOptions && mapOptions.lighting?.value || "sunlight"}
                     clearable={false}
                     onChange={(val) => {
                         if (val !== 'dateTime') {
-                            updateConfigAction({"lighting3DOption": {value: val.value}});
+                            updateConfigAction({"lighting": {value: val.value}});
                         } else {
-                            updateConfigAction({"lighting3DOption": {value: val.value, dateTime: new Date().toISOString()}});
+                            updateConfigAction({"lighting": {value: val.value, dateTime: new Date().toISOString()}});
                         }
                     }}
-                    placeholder="map.settings.lighting3DOptions.placeholder"
+                    placeholder="map.settings.lightings.placeholder"
                 />
-                {mapOptions?.lighting3DOption?.value === 'dateTime' ?
-                    <UTCDateTimePicker
-                        value={mapOptions.lighting3DOption?.dateTime ? new Date(mapOptions.lighting3DOption?.dateTime) : new Date()}
-                        quickDateTimeSelectors={DEFAULT_QUICK_TIME_SELECTORS}
-                        hideOperator
-                        time
-                        calendar
-                        type={'date-time'}
-                        onChange={(date) => {
-                            updateConfigAction({"lighting3DOption": {...mapOptions.lighting3DOption, dateTime: date}});
-                        }}
-                        placeholder={getMessageById(messages, "map.settings.lighting3DOptions.dateTimePlaceholder")} /> :
+                {mapOptions?.lighting?.value === 'dateTime' ?
+                    <div className="lighting-dateTime-picker">
+                        <UTCDateTimePicker
+                            value={mapOptions.lighting?.dateTime ? new Date(mapOptions.lighting?.dateTime) : new Date()}
+                            hideOperator
+                            time
+                            popupPosition={"top"}
+                            calendar
+                            type={'date-time'}
+                            onChange={(date) => {
+                                updateConfigAction({"lighting": {...mapOptions.lighting, dateTime: date}});
+                            }}
+                            placeholder={getMessageById(messages, "map.settings.lightings.dateTimePlaceholder")} />
+                    </div> :
                     null}
-            </>
+            </FormGroup>
         </form>
     ) : null;
 };
