@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {has, isEmpty} from 'lodash';
+import {isEmpty} from 'lodash';
 import Message from '../../../../components/I18N/Message';
 
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
@@ -20,16 +20,16 @@ const isInvalidCredentials = (error) => {
 };
 function checkPopupBlocked(err = "") {
     const popupErr = "Popup blocked. Please allow popups for this site and refresh the page.";
-    if(err?.message?.indexOf?.("not logged in") >= 0) {
+    if (err?.message?.indexOf?.("not logged in") >= 0) {
         const win = window.open('', '_blank', 'width=1,height=1');
         if (win && win.closed) {
             return new Error(popupErr);
         } else if (win) {
             win.close();
             return false;
-        } else {
-            return new Error(popupErr);
         }
+        return new Error(popupErr);
+
     }
     return false;
 }
@@ -84,13 +84,13 @@ const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible, 
             <EmptyStreetView loading description={<Message msgId="streetView.cyclomedia.loadingAPI" />} />
         );
     }
-    if(loggingOut) {
+    if (loggingOut) {
         return (<EmptyStreetView description={<>
             <div><Message msgId="streetView.cyclomedia.loggingOut" /></div>
             <Button onClick={() => {
                 onClose();
             }}>Close</Button>
-            </>} />)
+        </>} />);
     }
     return null;
 };
@@ -221,7 +221,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setError(null);
         }).catch(function(err) {
             setInitializing(false);
-            if(isConfiguredOauth) {
+            if (isConfiguredOauth) {
                 // check if the error is related to the oauth login, in particular to popup blocked.
                 // check if popup is blocked and show a message to the user, because the street smart api error do not provide a clear message
                 const blockedPopup = checkPopupBlocked(err);
@@ -357,15 +357,15 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             && !error
             && (<div style={{textAlign: "right"}}>
                 <CTButton
-            key="logout"
-            confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
-            tooltipId="streetView.cyclomedia.logout"
-            onClick={() => {
-                StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
-                setInitialized(false);
-                setLoggingOut(true);
-            }}>
-                <Glyphicon glyph="log-out" />&nbsp;
+                    key="logout"
+                    confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
+                    tooltipId="streetView.cyclomedia.logout"
+                    onClick={() => {
+                        StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
+                        setInitialized(false);
+                        setLoggingOut(true);
+                    }}>
+                    <Glyphicon glyph="log-out" />&nbsp;
                 </CTButton></div>)}
         {showEmptyView
             ? <EmptyView key="empty-view"
@@ -399,18 +399,18 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
                 <Message msgId="streetView.cyclomedia.reloadAPI"/>
             </Button></div> : null}
             {
-            isConfiguredOauth
+                isConfiguredOauth
                 && !showCredentialsForm
                 && !initialized
                 && (<CTButton
-                        key="logout"
-                        confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
-                        tooltipId="streetView.cyclomedia.tryForceLogout"
-                        onClick={() => {
-                            StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
+                    key="logout"
+                    confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
+                    tooltipId="streetView.cyclomedia.tryForceLogout"
+                    onClick={() => {
+                        StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
                     }}>
-                        <Glyphicon glyph="log-out" />&nbsp;<Message msgId="streetView.cyclomedia.logout" />
-                    </CTButton>)
+                    <Glyphicon glyph="log-out" />&nbsp;<Message msgId="streetView.cyclomedia.logout" />
+                </CTButton>)
             }
         </Alert>
     </>);
