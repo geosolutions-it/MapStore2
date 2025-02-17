@@ -73,6 +73,7 @@ function Panel({enabled, onClose = () => {}, provider, panelSize, providerSettin
                     {StreetViewPanel
                         ? <StreetViewPanel
                             resetStViewData={resetStViewData}
+                            onClose={onClose}
                             providerSettings={providerSettings}
                             apiKey={apiKey}
                             enabled={enabled}
