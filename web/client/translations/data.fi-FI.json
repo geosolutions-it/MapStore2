@@ -2048,6 +2048,7 @@
                 "genericError": "Tiedon uudelleentoiston aikana tapahtui virhe",
                 "genericErrorWithMessage": "There was an error during data retrieval: \"{message}\"",
                 "layerNotAvailable": "The layer {layerName} is no longer available"
+
             },
             "builder": {
                 "header": {
@@ -2502,6 +2503,7 @@
             "setDefaultStyleSuccessMessage": "Oletustyyli on otettu käyttöön",
             "setDefaultStyleErrorTitle": "Virhe oletustyylin asettamisessa",
             "setDefaultStyleErrorMessage": "Ei ole mahdollista käyttää valittua tyyliä oletusasetuksena",
+
             "enterLegendLabelPlaceholder": "Syötä selitteen nimiö",
             "addMarkSymbolizer": "Add mark symbolizer",
             "addMarkRule": "Add mark rule",
@@ -3030,27 +3032,30 @@
                     "theme": "Oletusteema",
                     "fontFamily": "Kirjasinperhe",
                     "webFontLoadError": "Joidenkin kirjasinten lataus epäonnistui paikallisesta kokoonpanosta",
-                    "fontSize": "Fonttikoko""overlay": "Overlay",
+                    "fontSize": "Fonttikoko",
+                    "overlay": "Overlay",
                     "templateTooltip":"This setting allows you to enable the Identify function on the map by defining a generic format for all the layers. It is possible to configure a different format for each single layer using the advanced map editor (pencil icon). For more information, see the <a href='https://mapstore.readthedocs.io/en/latest/user-guide/layer-settings/#templates' target='_blank'> user guide </a>. If a layer has defined its own Identify format, it will be used instead of the generic one set at the map level."
                 }
-                },
-                "importDialog": {
-                    "selectFiles": "Select a file",
-                    "heading": "Drop a previously exported geostory .json file",
-                    "note": "The data in the imported file will replace the data in the current geostory"
-                },
-                "exportDialog": {
-                    "heading": "Export geostory as a .json file"
-                },
+            },
+            "importDialog": {
+                "selectFiles": "Select a file",
+                "heading": "Drop a previously exported geostory .json file",
+                "note": "The data in the imported file will replace the data in the current geostory"
+            },
+            "exportDialog": {
+                "heading": "Export geostory as a .json file"
             },
             "errors": {
                 "loading": {
+                    "notFound": "Geostory not found",
                     "title": "Virhe",
                     "unknownError": "Tuntematon virhe",
                     "pleaseLogin": "Ole hyvä ja kirjaudu sisään",
                     "notAccessible": "Tätä tarinaa ei voida näyttää",
                     "geostoryNotAccessible": "Sinulla ei ole käyttöoikeutta tähän tarinaan. Ota yhteyttä resurssin omistajaan",
-                    "geostoryDoesNotExist": "Tätä tarinaa ei ole"
+                    "geostoryDoesNotExist": "Tätä tarinaa ei ole",
+                    "video": "Sorry! An error has occurred, please try again later."
+
                 }
             },
             "mapEditor": {
@@ -3063,7 +3068,8 @@
                 "topLeft": "Vasen yläkulma",
                 "topRight": "Oikea yläkulma",
                 "bottomLeft": "Vasen alakulma",
-                "bottomRight": "Oikea alakulma"
+                "bottomRight": "Oikea alakulma",
+                "identify": "Identify"
             },
             "webPageCreator": {
                 "title": "Verkkosivu",
@@ -3072,22 +3078,49 @@
                 "url": {
                     "label": "URL"
                 }
+            },
+            "customizeTheme": {
+                "backgroundColorLabel": "Background",
+                "textColorLabel": "Text",
+                "shadowLabel": "Shadow",
+                "useAlternativeTextColor": "Use alternative text color",
+                "alternativeTextColorPopover": "<p>Warning: the selected text color could be not readable on this background.</p><p>An alternative text color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>"
+            }
+        },
+        "geostoryEmbedded" : {
+            "loadingSpinner": "Loading Story",
+            "errors": {
+                "loading": {
+                    "notFound": "Geostory not found",
+                    "title": "Error",
+                    "unknownError": "Unknown error",
+                    "notAccessible": "This story is not accessible",
+                    "pleaseLogin": "Resource is not public",
+                    "geostoryNotAccessible": "You don't have permission to access this story",
+                    "geostoryDoesNotExist": "This story does not exist"
+                }
             }
         },
         "saveDialog": {
             "title": "Muokkaa ominaisuuksia",
             "name": "Nimi",
+            "titleInput": "Otsikko",
             "description": "Kuvaus",
             "createdAt": "Luotu",
             "modifiedAt": "Muokattu",
             "namePlaceholder": "Anna nimi...",
             "descriptionPlaceholder": "Anna kuvaus...",
+            "titlePlaceholder": "Type a title...",
             "confirmCloseText": "Sinulla on tallentamattomia muutoksia. Oletko varma, että haluat sulkea tallentamatta?",
             "close": "Sulje",
             "cancel": "Peruuta",
             "saveSuccessTitle": "Tallennus onnistui",
             "saveSuccessMessage": "Tallennettu onnistuneesti",
-            "unadvertised": "Mainostamaton"
+            "saveTooltip": "Save",
+            "saveAsTooltip": "Save As",
+            "unadvertised": "Mainostamaton",
+            "creator": "Created by",
+            "editor": "Last modified by"
         },
         "mapEditor": {
             "modalTitle": "Karttaeditori",
@@ -3108,308 +3141,387 @@
                 "clean": "Tyhjennä tulokset",
                 "noResults": "Ei tuloksia",
                 "selectService": "Valitse palvelu",
-        "add": "Lisää",
-        "back": "Takaisin",
-        "save": "Tallenna",
-        "edit": "Muokkaa",
-        "sourcePlaceholder": "Anna lähde",
-        "source": "Lähde",
-        "titlePlaceholder": "Anna otsikko",
-        "title": "Otsikko",
-        "altTextPlaceholder": "Anna vaihtoehtoinen teksti",
-        "altText": "Vaihtoehtoinen teksti",
-        "descriptionPlaceholder": "Anna kuvaus",
-        "description": "Kuvaus",
-        "creditsPlaceholder": "Anna tekijät",
-        "credits": "Tekijät",
-        "mapFilter": "Suodata karttoja",
-        "videoFilter": "Suodata videoita",
-        "imageFilter": "Suodata kuvia",
-        "import": "Tuo resurssi",
-        "trash": "Poista resurssi"
-      },
-      "mediaform": {
-        "confirmExitTitle": "Sulje media",
-        "confirmExitContent": "Hylätäänkö tallentamattomat muutokset?"
-      },
-      "mapForm": {
-        "thumbnailMessage": "Kuvien koon tulee olla neliö, jonka koko on 98px x 98px, enintään 100 kt",
-        "confirmMapSaveTitle": "Päivitä kartta",
-        "confirmMapSaveContent": "Kartan päivittäminen nollaa tarinan muut kartat jotka riippuvat tästä kartasta ja joita on aiemmin muokattu editorin kautta, vahvistatko?"
-      },
-      "mediaList": {
-        "removeResourceTitle": "Oletko varma?",
-        "confirmRemoveResource": "Haluatko poistaa tämän mediaresurssin tarinasta?",
-        "confirmRemoveUsedResource": "Tämä resurssi poistetaan myös kaikista osioista ja sisällöistä joissa sitä käytetään jättäen ne tyhjiksi. Haluatko poistaa sen tarinasta?"
-      },
-      "mapList": {
-        "emptyList": "Napsauta plus-painiketta luodaksesi kartan tai valitaksesi toisen karttapalvelun."
-      }
-    },
-    "backgroundDialog": {
-      "addTitle": "Lisää uusi tausta",
-      "editTitle": "Muokkaa nykyistä taustaa",
-      "title": "Otsikko",
-      "titlePlaceholder": "Anna otsikko",
-      "add": "Lisää",
-      "thumbnailMessage": "Kuvien koon tulee olla neliö, jonka koko on 98 x 98px tai 128px x 128px, enintään 500 kt",
-      "additionalParameters": "Lisäparametrit",
-      "addAdditionalParameterTooltip": "Lisää parametri",
-      "removeAdditionalParameterTooltip": "Poista parametri",
-      "parameter": "Parametri",
-      "value": "Arvo",
-      "string": "Merkkijono",
-      "number": "Numero",
-      "boolean": "Totuusarvo"
-    },
-    "defaultMapBackgroundsServiceTitle": "Oletustaustakarttapalvelu",
-    "backgroundSelector": {
-      "addTooltip": "Lisää uusi taustakartta",
-      "confirmDelete": "Oletko varma että haluat poistaa taustakartan \"{title}\"?"
-    },
-    "stepper": {
-      "back": "Takaisin",
-      "next": "Seuraava"
-    },
-    "plugins": {
-      "About": {
-        "description": "Työkalu, joka näyttää Tietoja-ikkunan",
-        "title": "Tietoja"
-      },
-      "AddGroup": {
-        "description": "Antaa käyttäjien luoda uusia tasoryhmiä",
-        "title": "Lisää tasoryhmä"
-      },
-      "Annotations": {
-        "description": "Työkalu merkintöjen piirtämiseen kartalle",
-        "title": "Merkinnät"
-      },
-      "AutoMapUpdate": {
-        "description": "Antaa käyttäjän päivittää kartan (vanha mapstore-versio)",
-        "title": "Automaattinen karttapäivitys"
-      },
-      "BackgroundSelector": {
-        "description": "Mahdollistaa taustakartan valitsemisen",
-        "title": "Taustavalitsin"
-      },
-      "BurgerMenu": {
-        "description": "Kartan oikeassa yläkulmassa oleva valikko, joka sisältää muita laajennuksia",
-        "title": "Valikko"
-      },
-      "CRSSelector": {
-        "description": "Mahdollistaa karttaprojektion vaihtamisen",
-        "title": "Koordinaattijärjestelmävalitsin"
-      },
-      "Details": {
-        "description": "Anna käyttäjän avata kartan tietokortti, jos sellainen on",
-        "title": "Karttatiedot"
-      },
-      "Expander": {
-        "description": "Sivupalkin apuohjelma, joka mahdollistaa joidenkin painikkeiden piilottamisen",
-        "title": "Laajennin"
-      },
-      "FeatureEditor": {
-        "description": "Selaa ominaisuustietoja taulukossa",
-        "title": "Attribuuttitaulukko"
-      },
-      "FilterLayer": {
-        "description": "Mahdollistaa tason suodattamisen",
-        "title": "Suodatin"
-      },
-      "HelpLink": {
-        "description": "Painike, jolla pääset MapStore-ohjeisiin",
-        "title": "Dokumentaatiolinkki"
-      },
-      "Home": {
-        "description": "Linkki kotisivulle",
-        "title": "Kotisivu"
-      },
-      "Identify": {
-        "description": "Näytä kartalla olevan kohteen tiedot",
-        "title": "Tunnista"
-      },
-      "Locate": {
-        "description": "Etsi ja seuraa käyttäjän sijaintia kartalla",
-        "title": "Paikannustyökalu"
-      },
-      "Login": {
-        "description": "Sisäänkirjautumistyökalu",
-        "title": "Kirjaudu"
-      },
-      "MapCatalog": {
-        "description": "Mahdollistaa palvelimella olevien karttojen selaamisen, muokkaamisen, poistamisen ja lataamisen",
-        "title": "Karttakatalogi"
-      },
-      "MapExport": {
-        "description": "Mahdollistaa kartan viemisen tiedostoon",
-        "title": "Vie kartta"
-      },
-      "MapImport": {
-        "description": "Mahdollistaa tiedostojen tuomisen (SHP, KML/KMZ, GeoJSON, GPX) tai vietyjen karttojen uudelleen lataamisen.",
-        "title": "Tuo kartta"
-      },
-      "MapLoading": {
-        "description": "Sivupalkissa karttaa ladatessa näytettävä animaatio",
-        "title": "Kartan latausosoitin"
-      },
-      "Measure": {
-        "description": "Mahdollistaa etäisyyksien ja alueiden mittaamisen kartalla",
-        "title": "Mitta"
-      },
-      "MetadataExplorer": {
-        "description": "Selaa palveluita (WMS / WMTS / CSW) lisätäksesi tasoja karttaan",
-        "title": "Katalogi"
-      },
-      "MousePosition": {
-        "description": "Näyttää koordinaatit kursorin osoittamassa kohdassa",
-        "title": "Kursorin koordinaatit"
-      },
-      "Print": {
-        "description": "Mahdollistaa nykyisen kartan ja selitteen tulostamisen",
-        "title": "Tulostustyökalu"
-      },
-      "Save": {
-        "description": "Antaa käyttäjän tallentaa karttaan tehdyt muutokset palvelimelle",
-        "title": "Tallenna"
-      },
-      "SaveAs": {
-        "description": "Antaa käyttäjän luoda tai kloonata karttoja palvelimelle",
-        "title": "Tallenna nimellä"
-      },
-      "ScaleBox": {
-        "description": "Kartan nykyisen mittakaavan osoitin ja valitsin",
-        "title": "Mittakaavan valitsin"
-      },
-      "Search": {
-        "description": "Hakutyökalu (GeoCoder)",
-        "title": "Hakupalkki"
-      },
-      "Settings": {
-        "description": "Mahdollistaa joidenkin kartan asetusten muokkaamisen (kieli, oletustietomuoto...)",
-        "title": "Asetukset"
-      },
-      "Share": {
-        "description": "Mahdollistaa kartan jakamisen erilaisilla tavoilla (linkki, QR-koodi, upotus, sosiaalinen media...)",
-        "title": "Jaa-työkalu"
-      },
-      "StyleEditor": {
-        "description": "Tason tyylieditori",
-        "title": "Tyylieditori"
-      },
-      "TOC": {
-        "description": "Tarjoaa lajiteltavan luettelon tasoista",
-        "title": "Tasoluettelo"
-      },
-      "TOCItemsSettings": {
-        "description": "Anna käyttäjän muokata tason asetuksia",
-        "title": "Tasoan asetukset"
-      },
-      "Timeline": {
-        "description": "Mahdollistaa eri ajanhetkien tarkastelun aikaulotteiselle datalle",
-        "title": "Aikajana"
-      },
-      "Tutorial": {
-        "description": "Lisää oppaan selittämään erilaisia toimintoja",
-        "title": "Opas"
-      },
-      "UserExtensions": {
-        "description": "Antaa käyttäjän ottaa käyttöön tai poistaa käytöstä laajennuksia",
-        "title": "Käyttäjälaajennukset"
-      },
-      "Version": {
-        "description": "Näyttää MapStoren version kartta-asetukset -työkalussa",
-        "descriptionGeorchestra": "Näyttää GeOrchestra-version kartta-asetukset -työkalussa",
-        "title": "Versio"
-      },
-      "LayerDownload": {
-        "description": "Mahdollistaa tietojen lataamisen attribuuttitaulusta",
-        "title": "Lataa tiedot"
-      },
-      "Widgets": {
-        "description": "Mahdollistaa vimpaimien lisäämisen ja näyttämisen kartalla",
-        "title": "Vimpaimet"
-      },
-      "WidgetsTray": {
-        "description": "Valikko vimpaimien pienentämiseen ja laajentamiseen. ",
-        "title": "Vimpainvalikko"
-      },
-      "ZoomAll": {
-        "description": "Sivupalkin painike zoomataksesi koko kartan laajuuteen",
-        "title": "Näytä koko kartta"
-      },
-      "ZoomIn": {
-        "description": "Painike, joka lisää kartan zoomaustasoa",
-        "title": "Lähennä"
-      },
-      "ZoomOut": {
-        "description": "Painike, joka vähentää kartan zoomaustasoa",
-        "title": "Loitonna"
-      }
-    },
-    "contextCreator": {
-      "generalSettings": {
-        "label": "Yleiset asetukset",
-        "title": "Luo uusi sovellusympäristö",
-        "name": "Nimi",
-        "namePlaceholder": "Anna sovellusympäristön nimi...",
-        "windowTitle": "Ikkunan otsikko",
-        "windowTitlePlaceholder": "Anna ikkunan otsikko..."
-      },
-      "configurePlugins": {
-        "label": "Konfiguroi laajennuksia",
-        "pluginsFilterPlaceholder": "Suodata laajennukset nimen mukaan...",
-        "availablePlugins": "Käytettävissä olevat laajennukset",
-        "enabledPlugins": "Käytössä olevat laajennukset",
-        "availablePluginsEmpty": "Ota kaikki käytettävissä olevat laajennukset käyttöön",
-        "enabledPluginsEmpty": "Lisää laajennuksia konfiguraatioon käytettävissä olevien laajennusten luettelosta",
-        "searchResultsEmpty": "Hakukriteerit täyttäviä laajennuksia ei löytynyt",
-        "cfgParsingError": {
-          "title": "Konfiguraatiovirhe",
-          "body": "Konfiguraatiotiedoston parsiminen epäonnistui.\nKohdattiin seuraava virhe:\n\"{error}\""
+                "add": "Lisää",
+                "back": "Takaisin",
+                "save": "Tallenna",
+                "edit": "Muokkaa",
+                "sourcePlaceholder": "Anna lähde",
+                "source": "Lähde",
+                "titlePlaceholder": "Anna otsikko",
+                "title": "Otsikko",
+                "altTextPlaceholder": "Anna vaihtoehtoinen teksti",
+                "altText": "Vaihtoehtoinen teksti",
+                "descriptionPlaceholder": "Anna kuvaus",
+                "description": "Kuvaus",
+                "creditsPlaceholder": "Anna tekijät",
+                "credits": "Tekijät",
+                "mapFilter": "Suodata karttoja",
+                "videoFilter": "Suodata videoita",
+                "imageFilter": "Suodata kuvia",
+                "import": "Tuo resurssi",
+                "trash": "Poista resurssi",
+                "videoUrl": "Video URL",
+                "videoUrlPlaceholder": "Enter a video url",
+                "thumbnail": "Add thumbnail (maximum size 500kb)",
+                "createVideoThumbnail": "Create a thumbnail from video source",
+                "thumbnailCreateError": "It's not possible to create a thumbnail from the current video source. Click or drop an image in the thumbnail input to upload it manually"
+            },
+            "mediaform": {
+                "confirmExitTitle": "Sulje media",
+                "confirmExitContent": "Hylätäänkö tallentamattomat muutokset?"
+            },
+            "mapForm": {
+                "thumbnailMessage": "Kuvien koon tulee olla neliö, jonka koko on 98px x 98px, enintään 100 kt",
+                "confirmMapSaveTitle": "Päivitä kartta",
+                "confirmMapSaveContent": "Kartan päivittäminen nollaa tarinan muut kartat jotka riippuvat tästä kartasta ja joita on aiemmin muokattu editorin kautta, vahvistatko?"
+            },
+            "mediaList": {
+                "removeResourceTitle": "Oletko varma?",
+                "confirmRemoveResource": "Haluatko poistaa tämän mediaresurssin tarinasta?",
+                "confirmRemoveUsedResource": "Tämä resurssi poistetaan myös kaikista osioista ja sisällöistä joissa sitä käytetään jättäen ne tyhjiksi. Haluatko poistaa sen tarinasta?",
+                "resultsCount": "{count} of {total} {total, plural, one {Result} other {Results}}"
+            },
+            "imageList": {
+                "emptyList": "Click on the plus button to add a new image. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#images' target='_blank'/>here</a>"
+            },
+            "mapList": {
+                "emptyList": "Napsauta plus-painiketta luodaksesi kartan tai valitaksesi toisen karttapalvelun."
+            },
+            "videoList": {
+                "emptyList": "Click on the plus button to add a new video. See the user guide <a href='https://mapstore.readthedocs.io/en/latest/user-guide/media-editor-window/#videos' target='_blank'/>here</a>"
+            } 
         },
-        "uploadLabel": "Vedä laajennuspaketti tähän tai napsauta valitaksesi laajennuspaketti",
-        "uploadTitle": "Asenna MapStore-laajennus",
-        "tooltips": {
-          "enableUserPlugin": "Anna käyttäjän ottaa nykyinen laajennus käyttöön",
-          "disableUserPlugin": "Poista käyttäjältä mahdollisuus ottaa nykyinen nykyisen laajennus käyttöön",
-          "activatePlugin": "Ota laajennus käyttöön käynnistyksen yhteydessä",
-          "deactivatePlugin": "Älä ota laajennusta käyttöön käynnistyksen yhteydessä",
-          "editConfiguration": "Muokkaa laajennuksen konfiguraatiota",
-          "pluginDocumentation": "Avaa laajennuksen asetusten dokumentaatio",
-          "uploadPlugin": "Lisää MapStore-laajennus",
-          "mapTemplatesConfig": "Määritä asetusmalleja"
+        "backgroundDialog": {
+            "addTitle": "Lisää uusi tausta",
+            "editTitle": "Muokkaa nykyistä taustaa",
+            "editAttribution": "Attribution",
+            "editAttributionPlaceholder": "Enter Attribution Text",
+            "title": "Otsikko",
+            "titlePlaceholder": "Anna otsikko",
+            "add": "Lisää",
+            "thumbnailMessage": "Kuvien koon tulee olla neliö, jonka koko on 98 x 98px tai 128px x 128px, enintään 500 kt",
+            "imageUploadMessage": "Click, or drag and drop to add an image",
+            "additionalParameters": "Lisäparametrit",
+            "addAdditionalParameterTooltip": "Lisää parametri",
+            "removeAdditionalParameterTooltip": "Poista parametri",
+            "parameter": "Parametri",
+            "value": "Arvo",
+            "string": "Merkkijono",
+            "number": "Numero",
+            "boolean": "Totuusarvo"
         },
-        "saveCfgErrorNotification": {
-          "title": "Syntaksivirhe laajennuksen konfiguraatiossa",
-          "message": "Laajennuksen \"{pluginName}\" konfiguraatiossa on virhe. Korjaa virhe ja yritä uudelleen"
-        }
-      },
-      "configureTemplates": {
-        "title": "Määritä asetusmalleja",
-        "availableTemplates": "Käytettävissä olevat mallit",
-        "enabledTemplates": "Käytössä olevat mallit",
-        "templatesFilterPlaceholder": "Suodata malleja...",
-        "availableTemplatesEmpty": "Ota kaikki saatavilla olevat mallit käyttöön",
-        "enabledTemplatesEmpty": "Lisää malleja konfiguraatioon käytettävissä olevien mallien luettelosta",
-        "searchResultsEmpty": "Hakukriteerit täyttäviä malleja ei löytynyt",
-        "fileDrop": {
-          "label": "Malli",
-          "clear": "Pudota tai napsauta valitaksesi karttamallitiedosto (tukee vietyjä JSON MapStore-karttoja ja WMC-tiedostoja)"
+        "defaultMapBackgroundsServiceTitle": "Oletustaustakarttapalvelu",
+        "backgroundSelector": {
+            "addTooltip": "Lisää uusi taustakartta",
+            "editTooltip": "Edit background",
+            "deleteTooltip": "Delete background",
+            "confirmDelete": "Oletko varma että haluat poistaa taustakartan \"{title}\"?"
         },
-        "uploadDialog": {
-          "title": "Lisää karttamalli",
-          "save": "Lisää",
-          "jsonParsingError": "JSON-parsiminen epäonnistui: \"{error}\"",
-          "fileReadError": "Odottamaton virhe lukiessa tiedostoa"
+        "stepper": {
+            "back": "Takaisin",
+            "next": "Seuraava"
         },
-        "tooltips": {
-          "uploadTool": "Lisää uusi malli",
-          "editTemplate": "Muokkaa mallin ominaisuuksia",
-          "deleteTemplate": "Poista malli"
+        "newMapDialog": {
+            "title": "Select a context",
+            "noContexts": "No contexts found",
+            "filterPlaceholder": "Search contexts..."
         },
-        "deleteError": "Mallia ei voitu poistaa, tapahtui virhe",
-        "deleteConfirm": "Oletko varma että haluat poistaa mallin \"{templateName}\"?"
-      },
+        "plugins": {
+            "About": {
+                "description": "Työkalu, joka näyttää Tietoja-ikkunan",
+                "title": "Tietoja"
+            },
+            "AddGroup": {
+                "description": "Antaa käyttäjien luoda uusia tasoryhmiä",
+                "title": "Lisää tasoryhmä"
+            },   
+            "Annotations": {
+                "description": "Työkalu merkintöjen piirtämiseen kartalle",
+                "title": "Merkinnät"
+            },
+            "AutoMapUpdate": {
+                "description": "Antaa käyttäjän päivittää kartan (vanha mapstore-versio)",
+                "title": "Automaattinen karttapäivitys"
+            },
+            "BackgroundSelector": {
+                "description": "Mahdollistaa taustakartan valitsemisen",
+                "title": "Taustavalitsin"
+            },
+            "BurgerMenu": {
+                "description": "Kartan oikeassa yläkulmassa oleva valikko, joka sisältää muita laajennuksia",
+                "title": "Valikko"
+            },
+            "CRSSelector": {
+                "description": "Mahdollistaa karttaprojektion vaihtamisen",
+                "title": "Koordinaattijärjestelmävalitsin"
+            },
+            "DeleteMap": {
+                "description": "Allows to delete a map resource and all its associated resources",
+                "title": "Delete Map"
+            },
+            "Details": {
+                "description": "Anna käyttäjän avata kartan tietokortti, jos sellainen on",
+                "title": "Karttatiedot"
+            },
+            "Expander": {
+                "description": "Sivupalkin apuohjelma, joka mahdollistaa joidenkin painikkeiden piilottamisen",
+                "title": "Laajennin"
+            },
+            "FeatureEditor": {
+                "description": "Selaa ominaisuustietoja taulukossa",
+                "title": "Attribuuttitaulukko"
+            },
+            "FilterLayer": {
+                "description": "Mahdollistaa tason suodattamisen",
+                "title": "Suodatin"
+            },
+            "GeoProcessing": {
+                "description": "Allows to geo process layers to generate a new one, using wps processes buffer and intersection",
+                "title": "GeoProcessing"
+            },
+            "HelpLink": {
+                "description": "Painike, jolla pääset MapStore-ohjeisiin",
+                "title": "Dokumentaatiolinkki"
+            },
+            "Home": {
+                "description": "Linkki kotisivulle",
+                "title": "Kotisivu"
+            },
+            "Identify": {
+                "description": "Näytä kartalla olevan kohteen tiedot",
+                "title": "Tunnista"
+            },
+            "Locate": {
+                "description": "Etsi ja seuraa käyttäjän sijaintia kartalla",
+                "title": "Paikannustyökalu"
+            },
+            "Login": {
+                "description": "Sisäänkirjautumistyökalu",
+                "title": "Kirjaudu"
+            },
+            "LongitudinalProfileTool": {
+                "description": "Allows user to generate a longitudinal profile given a linestring and a layer with elevation attribute. Needs configuration",
+                "title": "Longitudinal Profile tool"
+            },
+            "MapCatalog": {
+                "description": "Mahdollistaa palvelimella olevien karttojen selaamisen, muokkaamisen, poistamisen ja lataamisen",
+                "title": "Karttakatalogi"
+            },
+            "MapExport": {
+                "description": "Mahdollistaa kartan viemisen tiedostoon",
+                "title": "Vie kartta"
+            },
+            "MapImport": {
+                "description": "Mahdollistaa tiedostojen tuomisen (SHP, KML/KMZ, GeoJSON, GPX) tai vietyjen karttojen uudelleen lataamisen.",
+                "title": "Tuo kartta"
+            },
+            "MapLoading": {
+                "description": "Sivupalkissa karttaa ladatessa näytettävä animaatio",
+                "title": "Kartan latausosoitin"
+            },
+            "Measure": {
+                "description": "Mahdollistaa etäisyyksien ja alueiden mittaamisen kartalla",
+                "title": "Mitta"
+            },
+            "MetadataExplorer": {
+                "description": "Selaa palveluita (WMS / WMTS / CSW) lisätäksesi tasoja karttaan",
+                "title": "Katalogi"
+            },
+            "MousePosition": {
+                "description": "Näyttää koordinaatit kursorin osoittamassa kohdassa",
+                "title": "Kursorin koordinaatit"
+            },
+            "Print": {
+                "description": "Mahdollistaa nykyisen kartan ja selitteen tulostamisen",
+                "title": "Tulostustyökalu"
+            },
+            "Save": {
+                "description": "Antaa käyttäjän tallentaa karttaan tehdyt muutokset palvelimelle",
+                "title": "Tallenna"
+            },
+            "SaveAs": {
+                "description": "Antaa käyttäjän luoda tai kloonata karttoja palvelimelle",
+                "title": "Tallenna nimellä"
+            },
+            "ScaleBox": {
+                "description": "Kartan nykyisen mittakaavan osoitin ja valitsin",
+                "title": "Mittakaavan valitsin"
+            },
+            "Search": {
+                "description": "Hakutyökalu (GeoCoder)",
+                "title": "Hakupalkki"
+            },
+            "Settings": {
+                "description": "Mahdollistaa joidenkin kartan asetusten muokkaamisen (kieli, oletustietomuoto...)",
+                "title": "Asetukset"
+            },
+            "Share": {
+                "description": "Mahdollistaa kartan jakamisen erilaisilla tavoilla (linkki, QR-koodi, upotus, sosiaalinen media...)",
+                "title": "Jaa-työkalu"
+            },
+            "Permalink": {
+                "description": "Allows to create a permalink of the current resource in view",
+                "title": "Permalink"
+            },
+            "StreetView": {
+                "title": "Street View",
+                "description": "Street view tool for browsing Google street view images from the map"
+            },
+            "StyleEditor": {
+                "description": "Tason tyylieditori",
+                "title": "Tyylieditori"
+            },
+            "TOC": {
+                "description": "Tarjoaa lajiteltavan luettelon tasoista",
+                "title": "Tasoluettelo"
+            },
+            "TOCItemsSettings": {
+                "description": "Anna käyttäjän muokata tason asetuksia",
+                "title": "Tasoan asetukset"
+            },
+            "Timeline": {
+                "description": "Mahdollistaa eri ajanhetkien tarkastelun aikaulotteiselle datalle",
+                "title": "Aikajana"
+            },
+            "Tutorial": {
+                "description": "Lisää oppaan selittämään erilaisia toimintoja",
+                "title": "Opas"
+            },
+            "UserExtensions": {
+                "description": "Antaa käyttäjän ottaa käyttöön tai poistaa käytöstä laajennuksia",
+                "title": "Käyttäjälaajennukset"
+            },
+            "UserSession": {
+                "title": "User Session",
+                "description": "Enables an automatically saved user session for every context"
+            },
+            "Version": {
+                "description": "Näyttää MapStoren version kartta-asetukset -työkalussa",
+                "descriptionGeorchestra": "Näyttää GeOrchestra-version kartta-asetukset -työkalussa",
+                "title": "Versio"
+            },
+            "LayerDownload": {
+                "description": "Mahdollistaa tietojen lataamisen attribuuttitaulusta",
+                "title": "Lataa tiedot"
+            },
+            "Widgets": {
+                "description": "Mahdollistaa pienohjelmien lisäämisen ja näyttämisen kartalla",
+                "title": "Pienohjelmat"
+            },
+            "WidgetsTray": {
+                "description": "Valikko pienohjemien tiivistämiseen ja laajentamiseen. ",
+                "title": "Pienohjelmavalikko"
+            },
+            "Globe": {
+                "description": "Sidebar button to toggle 3D mode on/off",
+                "title": "3D"
+            },
+            "ZoomAll": {
+                "description": "Sivupalkin painike zoomataksesi koko kartan laajuuteen",
+                "title": "Näytä koko kartta"
+            },
+            "ZoomIn": {
+                "description": "Painike, joka lisää kartan zoomaustasoa",
+                "title": "Lähennä"
+            },
+            "ZoomOut": {
+                "description": "Painike, joka vähentää kartan zoomaustasoa",
+                "title": "Loitonna"
+            },
+            "MapViews": {
+                "description": "This plugin allows to add a sequence of different views inside a map",
+                "title": "MapViews"
+            }
+        },
+        "contextCreator": {
+            "generalSettings": {
+                "label": "Yleiset asetukset",
+                "title": "Luo uusi malli",
+                "edit": "Luo uusi malli",
+                "name": "Nimi",
+                "namePlaceholder": "Anna mallin nimi...",
+                "windowTitle": "Ikkunan otsikko",
+                "windowTitlePlaceholder": "Anna ikkunan otsikko..."
+            },
+            "configureThemes": {
+                "title": "Räätälöi teema",
+                "label": "Teema",
+                "themes": "Valitse teema",
+                "noThemes": "Teemaa ei löytynyt",
+                "customVariables": "Räätälöitävät muuttujat",
+                "main": "Tekstin väri",
+                "background": "Taustaväri",
+                "primaryContrast": "Primary Text Color",
+                "primary": "Primary Color",
+                "successContrast": "Secondary Text Color",
+                "success": "Secondary Color",
+                "guidelines": "Make sure to not use a secondary color too similar with the primary one and obviously the primary text color with its counterpart (the same applies for the other couples of colors: main, secondary)",
+                "alternativeTextPrimarySecondary": "<p>Warning: the secondary color could be not readable compared to the primary one</p><p>An alternative color is {color} &nbsp;<span class=\"ms-custom-theme-picker-alternative-text\" style=\"background-color:{color}\"></span></p>",
+                "tooltips": {
+                    "main": "Text color used in panels or dialogs",
+                    "background": "Background color used in panels or dialogs",
+                    "primaryContrast": "Text color opposed to the primary and success bacgrkound color: icons inside toolbars, headers, buttons",
+                    "primary": "Background primary color: toolbars, headers, buttons",
+                    "successContrast": "Text color applied when the secondary color is used as background",
+                    "success": "Background color used to show when a button is 'active' or 'selected'",
+                    "customColorsDescription": "You may change one of these colors in addition (or not) to a preconfigured theme chosen above"
+                }
+            },
+            "configurePlugins": {
+                "label": "Konfiguroi laajennuksia",
+                "pluginsFilterPlaceholder": "Suodata laajennukset nimen mukaan...",
+                "availablePlugins": "Käytettävissä olevat laajennukset",
+                "enabledPlugins": "Käytössä olevat laajennukset",
+                "availablePluginsEmpty": "Ota kaikki käytettävissä olevat laajennukset käyttöön",
+                "enabledPluginsEmpty": "Lisää laajennuksia konfiguraatioon käytettävissä olevien laajennusten luettelosta",
+                "searchResultsEmpty": "Hakukriteerit täyttäviä laajennuksia ei löytynyt",
+                "cfgParsingError": {
+                    "title": "Konfiguraatiovirhe",
+                    "body": "Konfiguraatiotiedoston parsiminen epäonnistui.\nKohdattiin seuraava virhe:\n\"{error}\""
+                },
+                "uploadLabel": "Vedä laajennuspaketti tähän tai napsauta valitaksesi laajennuspaketti",
+                "uploadTitle": "Asenna MapStore-laajennus",
+                "tooltips": {
+                    "enableUserPlugin": "Anna käyttäjän ottaa nykyinen laajennus käyttöön",
+                    "disableUserPlugin": "Poista käyttäjältä mahdollisuus ottaa nykyinen nykyisen laajennus käyttöön",
+                    "activatePlugin": "Ota laajennus käyttöön käynnistyksen yhteydessä",
+                    "deactivatePlugin": "Älä ota laajennusta käyttöön käynnistyksen yhteydessä",
+                    "editConfiguration": "Muokkaa laajennuksen konfiguraatiota",
+                    "pluginDocumentation": "Avaa laajennuksen asetusten dokumentaatio",
+                    "uploadPlugin": "Lisää MapStore-laajennus",
+                    "mapTemplatesConfig": "Määritä asetusmalleja"
+                },
+                "saveCfgErrorNotification": {
+                    "title": "Syntaksivirhe laajennuksen konfiguraatiossa",
+                    "message": "Laajennuksen \"{pluginName}\" konfiguraatiossa on virhe. Korjaa virhe ja yritä uudelleen"
+                }
+            },
+            "configureTemplates": {
+                "title": "Määritä asetusmalleja",
+                "availableTemplates": "Käytettävissä olevat mallit",
+                "enabledTemplates": "Käytössä olevat mallit",
+                "templatesFilterPlaceholder": "Suodata malleja...",
+                "availableTemplatesEmpty": "Ota kaikki saatavilla olevat mallit käyttöön",
+                "enabledTemplatesEmpty": "Lisää malleja konfiguraatioon käytettävissä olevien mallien luettelosta",
+                "searchResultsEmpty": "Hakukriteerit täyttäviä malleja ei löytynyt",
+                "fileDrop": {
+                    "label": "Malli",
+                    "clear": "Pudota tai napsauta valitaksesi karttamallitiedosto (tukee vietyjä JSON MapStore-karttoja ja WMC-tiedostoja)"
+                },
+                "uploadDialog": {
+                    "title": "Lisää karttamalli",
+                    "save": "Lisää",
+                    "jsonParsingError": "JSON-parsiminen epäonnistui: \"{error}\"",
+                    "fileReadError": "Odottamaton virhe lukiessa tiedostoa"
+                },
+                "tooltips": {
+                    "uploadTool": "Lisää uusi malli",
+                    "editTemplate": "Muokkaa mallin ominaisuuksia",
+                    "deleteTemplate": "Poista malli"
+                },
+                "deleteError": "Mallia ei voitu poistaa, tapahtui virhe",
+                "deleteConfirm": "Oletko varma että haluat poistaa mallin \"{templateName}\"?"
+        },
       "configureMap": {
         "label": "Määritä kartta",
         "reload": "Lataa kartta uudelleen",
