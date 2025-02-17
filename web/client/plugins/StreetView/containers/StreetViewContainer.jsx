@@ -71,6 +71,7 @@ function Panel({enabled, onClose = () => {}, provider, panelSize, providerSettin
                 }}>
                     {StreetViewPanel
                         ? <StreetViewPanel
+                            onClose={onClose}
                             providerSettings={providerSettings}
                             enabled={enabled}
                             size={size}

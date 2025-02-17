@@ -3987,6 +3987,10 @@
           "cyclomedia": {
             "initializing": "Inicializando la API de Street Smart...",
             "loadingAPI": "Cargando la API de Street Smart...",
+            "logout": "Cerrar sesión",
+            "tryForceLogout": "Intentar forzar el cierre de sesión",
+            "confirmLogout": "¿Está seguro de que desea cerrar la sesión de Street Smart?",
+            "loggingOut": "Cerrando sesión... Por favor, cierre esta ventana después de que se complete el cierre de sesión.",
             "changeCredentials": "Cambiar credenciales de Street Smart",
             "insertCredentials": "Inserte sus credenciales de Street Smart",
             "emptyDescription": "Haga clic en uno de los puntos azules en el mapa para comenzar a navegar por las imágenes de vista de calle",

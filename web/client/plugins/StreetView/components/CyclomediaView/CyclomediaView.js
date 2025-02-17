@@ -1,19 +1,38 @@
 import React, {useState, useEffect, useRef} from 'react';
+import {isEmpty} from 'lodash';
 import Message from '../../../../components/I18N/Message';
+
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { reproject } from '../../../../utils/CoordinatesUtils';
 
 
 import { getCredentials as getStoredCredentials, setCredentials as setStoredCredentials } from '../../../../utils/SecurityUtils';
 import { CYCLOMEDIA_CREDENTIALS_REFERENCE } from '../../constants';
-import { Alert, Button } from 'react-bootstrap';
-
+import { Alert, Button, Glyphicon } from 'react-bootstrap';
+import withConfirm from '../../../../components/misc/withConfirm';
+import withTooltip from '../../../../components/misc/enhancers/tooltip';
+const CTButton = withConfirm(withTooltip(Button));
 import CyclomediaCredentials from './Credentials';
 import EmptyStreetView from '../EmptyStreetView';
 const PROJECTION_NOT_AVAILABLE = "Projection not available";
 const isInvalidCredentials = (error) => {
     return error?.message?.indexOf?.("code 401");
 };
+function checkPopupBlocked(err = "") {
+    const popupErr = "Popup blocked. Please allow popups for this site and refresh the page.";
+    if (err?.message?.indexOf?.("not logged in") >= 0) {
+        const win = window.open('', '_blank', 'width=1,height=1');
+        if (win && win.closed) {
+            return new Error(popupErr);
+        } else if (win) {
+            win.close();
+            return false;
+        }
+        return new Error(popupErr);
+
+    }
+    return false;
+}
 /**
  * Parses the error message to show to the user in the alert an user friendly message
  * @private
@@ -39,9 +58,11 @@ const getErrorMessage = (error, msgParams = {}) => {
  * @param {boolean} props.initialized true if the API is initialized
  * @param {object} props.StreetSmartApi the StreetSmartApi object
  * @param {boolean} props.mapPointVisible true if the map point are visible at the current level of zoom.
+ * @param {boolean} props.loggingOut true if the user is logging out
+ * @param {function} props.onClose the function to call when the user closes the component
  * @returns {JSX.Element} the component rendering
  */
-const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible}) => {
+const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible, loggingOut, onClose}) => {
     if (initialized && !mapPointVisible) {
         return (
             <EmptyStreetView description={<Message msgId="streetView.cyclomedia.zoomIn" />} />
@@ -62,6 +83,14 @@ const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible})
         return (
             <EmptyStreetView loading description={<Message msgId="streetView.cyclomedia.loadingAPI" />} />
         );
+    }
+    if (loggingOut) {
+        return (<EmptyStreetView description={<>
+            <div><Message msgId="streetView.cyclomedia.loggingOut" /></div>
+            <Button onClick={() => {
+                onClose();
+            }}>Close</Button>
+        </>} />);
     }
     return null;
 };
@@ -85,7 +114,7 @@ const EmptyView = ({initializing, initialized, StreetSmartApi, mapPointVisible})
  * @returns {JSX.Element} the component rendering
  */
 
-const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLocation = () => {}, mapPointVisible, providerSettings = {}, refreshLayer = () => {}}) => {
+const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLocation = () => {}, mapPointVisible, providerSettings = {}, refreshLayer = () => {}, onClose = () => {}}) => {
     const StreetSmartApiURL = providerSettings?.StreetSmartApiURL ?? "https://streetsmart.cyclomedia.com/api/v23.7/StreetSmartApi.js";
     const scripts = providerSettings?.scripts ?? `
     <script type="text/javascript" src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
@@ -109,9 +138,15 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
     const [initialized, setInitialized] = useState(false);
     const [reload, setReload] = useState(1);
     const [error, setError] = useState(null);
-
-    // gets the credentials from the storage
-    const initialCredentials = getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE);
+    const [reloadAllowed, setReloadAllowed] = useState(false);
+    const [loggingOut, setLoggingOut] = useState(false);
+    // gets the credentials from the storage or from configuration.
+    const hasConfiguredCredentials = providerSettings?.credentials;
+    const isConfiguredOauth = initOptions?.loginOauth;
+    const showLogout = providerSettings?.showLogout ?? true;
+    const initialCredentials =
+        isEmpty(getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE)) ?
+            providerSettings?.credentials ?? {} : getStoredCredentials(CYCLOMEDIA_CREDENTIALS_REFERENCE);
     const [credentials, setCredentials] = useState(initialCredentials);
     const [showCredentialsForm, setShowCredentialsForm] = useState(!credentials?.username || !credentials?.password); // determines to show the credentials form
     const {username, password} = credentials ?? {};
@@ -168,21 +203,43 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         setInitializing(true);
         StreetSmartApi.init({
             targetElement,
-            username,
-            password,
+
             apiKey,
             loginOauth: false,
             srs: srs,
             locale: 'en-us',
-            ...initOptions
+            ...initOptions,
+            ...(isConfiguredOauth
+                ? { }
+                : {
+                    username,
+                    password
+                } )
         }).then(function() {
             setInitializing(false);
             setInitialized(true);
             setError(null);
         }).catch(function(err) {
             setInitializing(false);
+            if (isConfiguredOauth) {
+                // check if the error is related to the oauth login, in particular to popup blocked.
+                // check if popup is blocked and show a message to the user, because the street smart api error do not provide a clear message
+                const blockedPopup = checkPopupBlocked(err);
+                if ( blockedPopup ) {
+                    console.error('Cyclomedia API: init: error: ' + blockedPopup);
+                    setError(blockedPopup);
+                    setReloadAllowed(true);
+                    return;
+                }
+
+            }
             setError(err);
-            if (err) {console.error('Cyclomedia API: init: error: ' + err);}
+            setReloadAllowed(true);
+            if (err) {
+                console.error('Cyclomedia API: init: error: ' + err);
+            }
+
+
         });
         return () => {
             try {
@@ -217,7 +274,8 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setLocation({
                 latLng: {
                     lat,
-                    lng
+                    lng,
+                    h: recording?.xyz?.[2] || 0
                 },
                 properties: {
                     ...recording,
@@ -285,7 +343,7 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             </body>
         </html>`;
     return (<>
-        {<CyclomediaCredentials
+        {!hasConfiguredCredentials && <CyclomediaCredentials
             key="credentials"
             showCredentialsForm={showCredentialsForm}
             setShowCredentialsForm={setShowCredentialsForm}
@@ -293,7 +351,32 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setCredentials={(newCredentials) => {
                 setCredentials(newCredentials);
             }}/>}
-        {showEmptyView ? <EmptyView key="empty-view" StreetSmartApi={StreetSmartApi} style={style} initializing={initializing} initialized={initialized}  mapPointVisible={mapPointVisible}/> : null}
+        {showLogout
+            && initialized
+            && isConfiguredOauth
+            && !error
+            && (<div style={{textAlign: "right"}}>
+                <CTButton
+                    key="logout"
+                    confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
+                    tooltipId="streetView.cyclomedia.logout"
+                    onClick={() => {
+                        StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
+                        setInitialized(false);
+                        setLoggingOut(true);
+                    }}>
+                    <Glyphicon glyph="log-out" />&nbsp;
+                </CTButton></div>)}
+        {showEmptyView
+            ? <EmptyView key="empty-view"
+                StreetSmartApi={StreetSmartApi}
+                style={style}
+                initializing={initializing}
+                initialized={initialized}
+                loggingOut={loggingOut}
+                onClose={onClose}
+                mapPointVisible={mapPointVisible}/>
+            : null}
         <iframe key="iframe" ref={viewer} onLoad={() => {
             setTargetElement(viewer.current?.contentDocument.querySelector('#ms-street-smart-viewer-container'));
             setStreetSmartApi(viewer.current?.contentWindow.StreetSmartApi);
@@ -303,9 +386,10 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         <Alert bsStyle="danger" style={{...style, textAlign: 'center', alignContent: 'center', display: showError ? 'block' : 'none'}} key="error">
             <Message msgId="streetView.cyclomedia.errorOccurred" />
             {getErrorMessage(error, {srs})}
-            {initialized ? <div><Button
+            {initialized || reloadAllowed ? <div><Button
                 onClick={() => {
                     setError(null);
+                    setReloadAllowed(false);
                     try {
                         setReload(reload + 1);
                     } catch (e) {
@@ -314,6 +398,20 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
                 }}>
                 <Message msgId="streetView.cyclomedia.reloadAPI"/>
             </Button></div> : null}
+            {
+                isConfiguredOauth
+                && !showCredentialsForm
+                && !initialized
+                && (<CTButton
+                    key="logout"
+                    confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
+                    tooltipId="streetView.cyclomedia.tryForceLogout"
+                    onClick={() => {
+                        StreetSmartApi?.destroy?.({targetElement, loginOauth: true});
+                    }}>
+                    <Glyphicon glyph="log-out" />&nbsp;<Message msgId="streetView.cyclomedia.logout" />
+                </CTButton>)
+            }
         </Alert>
     </>);
 };

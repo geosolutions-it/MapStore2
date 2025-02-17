@@ -3987,6 +3987,10 @@
           "cyclomedia": {
             "initializing": "Initialisation de l'API Street Smart...",
             "loadingAPI": "Chargement de l'API Street Smart...",
+            "logout": "Déconnexion",
+            "tryForceLogout": "Essayez de vous déconnecter",
+            "confirmLogout": "Voulez-vous vraiment vous déconnecter de Street Smart?",
+            "loggingOut": "Déconnexion... Veuillez fermer cette fenêtre une fois la déconnexion terminée.",
             "changeCredentials": "Modifier les identifiants Street Smart",
             "insertCredentials": "Insérer vos identifiants Street Smart",
             "emptyDescription": "Cliquez sur l'un des points bleus sur la carte pour commencer à parcourir les images de Street View",
