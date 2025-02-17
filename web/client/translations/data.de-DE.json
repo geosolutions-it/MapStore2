@@ -4028,6 +4028,7 @@
             "logout": "Abmelden",
             "tryForceLogout": "Abmeldung erzwingen",
             "confirmLogout": "Möchten Sie sich wirklich von Street Smart abmelden?",
+            "loggingOut": "Abmelden... Bitte schließen Sie dieses Fenster, nachdem die Abmeldung abgeschlossen ist.",
             "changeCredentials": "Street Smart-Anmeldeinformationen ändern",
             "insertCredentials": "Geben Sie Ihre Street Smart-Anmeldeinformationen ein",
             "emptyDescription": "Klicken Sie auf einen der blauen Punkte auf der Karte, um mit der Durchsuchung der Street-View-Bilder zu beginnen",

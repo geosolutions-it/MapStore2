@@ -3990,6 +3990,7 @@
               "logout": "Logout",
               "tryForceLogout": "Forza il logout",
               "confirmLogout": "Sei sicuro di voler effettuare il logout da Street Smart?",
+              "loggingOut": "Disconnessione in corso... Chiudi questa finestra dopo che la disconnessione è completata.",
               "changeCredentials": "Cambia credenziali Street Smart",
               "insertCredentials": "Inserisci le tue credenziali Street Smart",
               "emptyDescription": "Clicca su uno dei punti blu sulla mappa per visualizzare le immagini",
