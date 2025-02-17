@@ -252,7 +252,10 @@ describe('resources api', () => {
                         "category": { "id": 5, "name": "MAP" },
                         "id": 1,
                         "name": "Map",
-                        "attributes": { "context": 2 },
+                        "attributes": {
+                            "context": 2,
+                            "detailsSettings": {}
+                        },
                         "@extras": {
                             "context": {
                                 "category": { "id": 3, "name": "CONTEXT" },
