@@ -14,7 +14,7 @@ import { branch, compose, lifecycle, toClass } from 'recompose';
 import { createSelector } from 'reselect';
 
 import { updateSettingsParams } from '../actions/layers';
-import { initStyleService, setEditPermissionStyleEditor, toggleStyleEditor } from '../actions/styleeditor';
+import { initStyleService, toggleStyleEditor } from '../actions/styleeditor';
 import HTML from '../components/I18N/HTML';
 import BorderLayout from '../components/layout/BorderLayout';
 import emptyState from '../components/misc/enhancers/emptyState';
@@ -43,8 +43,7 @@ const StyleEditorPanel = ({
     editingAllowedGroups,
     enableSetDefaultStyle,
     canEdit,
-    editorConfig,
-    onSetPermission
+    editorConfig
 }) => {
 
     useEffect(() => {
@@ -56,10 +55,6 @@ const StyleEditorPanel = ({
             }
         );
     }, []);
-
-    useEffect(() => {
-        onSetPermission(canEdit);
-    }, [canEdit]);
 
     return (
         <BorderLayout
@@ -168,8 +163,7 @@ const StyleEditorPlugin = compose(
         ),
         {
             onInit: initStyleService,
-            onUpdateParams: updateSettingsParams,
-            onSetPermission: setEditPermissionStyleEditor
+            onUpdateParams: updateSettingsParams
         },
         (stateProps, dispatchProps, ownProps) => {
             // detect if the static service has been updated with new information in the global state

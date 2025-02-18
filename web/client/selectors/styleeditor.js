@@ -129,6 +129,13 @@ export const editingAllowedRolesSelector = (state) => get(state, 'styleeditor.ed
  */
 export const editingAllowedGroupsSelector = (state) => get(state, 'styleeditor.editingAllowedGroups', []);
 /**
+ * Selects canEdit configuration value if any
+ * @memberof selectors.styleeditor
+ * @param  {object} state the state
+ * @returns {object}
+ */
+export const canEditSelector = (state) => get(state, 'styleeditor.canEdit', false);
+/**
  * selects canEdit status of styleeditor service from state
  * @memberof selectors.styleeditor
  * @param  {object} state the state
@@ -137,12 +144,13 @@ export const editingAllowedGroupsSelector = (state) => get(state, 'styleeditor.e
 export const canEditStyleSelector = (state) => {
     const allowedRoles = editingAllowedRolesSelector(state);
     const allowedGroups = editingAllowedGroupsSelector(state);
+    const canEdit = canEditSelector(state);
     const _isSameOrigin = isSameOrigin(getUpdatedLayer(state), styleServiceSelector(state));
     const isAllowed = isUserAllowedSelectorCreator({
         allowedRoles,
         allowedGroups
     })(state);
-    return isAllowed && _isSameOrigin;
+    return canEdit || (isAllowed && _isSameOrigin);
 };
 /**
  * selects geometry type of selected layer from state
