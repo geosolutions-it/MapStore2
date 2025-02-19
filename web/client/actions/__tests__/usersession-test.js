@@ -11,7 +11,9 @@ import {SAVE_USER_SESSION, USER_SESSION_SAVED, LOAD_USER_SESSION, USER_SESSION_L
     REMOVE_USER_SESSION, USER_SESSION_REMOVED, SAVE_MAP_CONFIG, USER_SESSION_START_SAVING, USER_SESSION_STOP_SAVING,
     SET_USER_SESSION,
     saveUserSession, userSessionSaved, loadUserSession, userSessionLoaded, loading, setUserSession,
-    removeUserSession, userSessionRemoved, saveMapConfig, userSessionStartSaving, userSessionStopSaving} from "../usersession";
+    removeUserSession, userSessionRemoved, saveMapConfig, userSessionStartSaving, userSessionStopSaving,
+    setCheckedSessionToClear,
+    SET_CHECKED_SESSION_TO_CLEAR} from "../usersession";
 
 describe('Test correctness of the usersession actions', () => {
 
@@ -51,8 +53,9 @@ describe('Test correctness of the usersession actions', () => {
         expect(action.type).toBe(REMOVE_USER_SESSION);
     });
     it('user session removed', () => {
-        const action = userSessionRemoved();
+        const action = userSessionRemoved({map: { zoom: 20}});
         expect(action.type).toBe(USER_SESSION_REMOVED);
+        expect(action.newSession).toExist();
     });
     it('user session start saving', () => {
         const action = userSessionStartSaving();
@@ -74,5 +77,11 @@ describe('Test correctness of the usersession actions', () => {
         const action = saveMapConfig({});
         expect(action.type).toBe(SAVE_MAP_CONFIG);
         expect(action.config).toExist();
+    });
+    it("set Checked session to remove", () => {
+        const action =  setCheckedSessionToClear(["map_pos"]);
+        expect(action.type).toBe(SET_CHECKED_SESSION_TO_CLEAR);
+        expect(action.checks).toExist();
+        expect(action.checks.length).toBe(1);
     });
 });
