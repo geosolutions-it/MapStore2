@@ -33,26 +33,26 @@ It is possible to replicate the old footer structure for existing project that w
 
 1. configure the new Footer plugin in localConfig.json as follow:
 
-```js
-{
-    "name": "Footer",
-    "cfg": {
-        "hideMenuItems": true,
-        "customFooter": true,
-        "customFooterMessageId": "home.footerDescription" // by default is using home.footerCustomHTML
+    ```js
+    {
+        "name": "Footer",
+        "cfg": {
+            "hideMenuItems": true,
+            "customFooter": true,
+            "customFooterMessageId": "home.footerDescription" // by default is using home.footerCustomHTML
+        }
     }
-}
-```
+    ```
 
 2. update the `home.footerDescription` translation by adding the desired html structure, eg:
 
-```js
-{
-    "home": {
-        "footerDescription": "<footer class=\"ms-flex-box _flex _flex-center-h _padding-md\"><div> ...my previous message </div></footer>"
+    ```js
+    {
+        "home": {
+            "footerDescription": "<footer class=\"ms-flex-box _flex _flex-center-h _padding-md\"><div> ...my previous message </div></footer>"
+        }
     }
-}
-```
+    ```
 
 ### Add TagsManager and Favorite plugins to localConfig.json
 
