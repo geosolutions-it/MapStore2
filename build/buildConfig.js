@@ -312,7 +312,7 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
                     urlFilter: (attribute, value) => {
                         // Disables attributes processing for favicon.ico
                         // while using the HtmlWebpackPlugin
-                        if (/favicon$/.test(value)) {
+                        if (/favicon.(ico|png|svg)$/.test(value)) {
                             return false;
                         }
                         return true;
