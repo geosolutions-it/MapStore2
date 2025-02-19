@@ -48,6 +48,10 @@ const devServer = {
         '/docs': {
             target: "http://localhost:8081",
             pathRewrite: {'/docs': '/mapstore/docs'}
+        },
+        '/assets': {
+            target: "http://localhost:8081",
+            pathRewrite: {'/assets': '/product/assets'} // mapping the assets similarly to a downstream project
         }
     }
 };

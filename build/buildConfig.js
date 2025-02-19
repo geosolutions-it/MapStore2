@@ -306,7 +306,19 @@ module.exports = (...args) => mapArgumentsToObject(args, ({
             }
         ].concat(prod ? [{
             test: /\.html$/,
-            loader: 'html-loader'
+            loader: 'html-loader',
+            options: {
+                sources: {
+                    urlFilter: (attribute, value) => {
+                        // Disables attributes processing for favicon.ico
+                        // while using the HtmlWebpackPlugin
+                        if (/favicon$/.test(value)) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+            }
         }] : [])
     },
     devServer: devServer || {

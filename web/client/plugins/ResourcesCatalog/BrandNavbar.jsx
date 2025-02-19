@@ -212,7 +212,13 @@ BrandNavbar.contextTypes = {
 };
 
 BrandNavbar.defaultProps = {
-    leftMenuItems: [],
+    leftMenuItems: [
+        {
+            type: 'logo',
+            src: 'assets/img/logo.png',
+            href: '#/'
+        }
+    ],
     rightMenuItems: []
 };
 

@@ -22,6 +22,14 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### HomeDescription plugin configuration changes
+
+The HomeDescription plugin has been refactored and a property has been removed:
+
+- `cfg.name` removed in favor of the translation message `home.shortDescription`
+
+For downstream projects review the `.less` or `.css` files for possible conflicting style related to the `.ms-home-description` class selector
+
 ### Add TagsManager and Favorite plugins to localConfig.json
 
 The new TagsManager and Favorite plugin should be added inside the plugins `maps` section of the `localConfig.json` to visualize a new menu item in the admin menu and to to visualize the button on the resource cards
