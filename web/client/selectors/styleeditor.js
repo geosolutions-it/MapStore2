@@ -142,15 +142,16 @@ export const canEditSelector = (state) => get(state, 'styleeditor.canEdit', fals
  * @return {bool}
  */
 export const canEditStyleSelector = (state) => {
+    const canEdit = canEditSelector(state);
+    if (canEdit) return canEdit;
     const allowedRoles = editingAllowedRolesSelector(state);
     const allowedGroups = editingAllowedGroupsSelector(state);
-    const canEdit = canEditSelector(state);
     const _isSameOrigin = isSameOrigin(getUpdatedLayer(state), styleServiceSelector(state));
     const isAllowed = isUserAllowedSelectorCreator({
         allowedRoles,
         allowedGroups
     })(state);
-    return canEdit || (isAllowed && _isSameOrigin);
+    return isAllowed && _isSameOrigin;
 };
 /**
  * selects geometry type of selected layer from state
