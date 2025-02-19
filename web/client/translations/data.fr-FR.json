@@ -1547,7 +1547,8 @@
                 "fileNotSupported": "Fichier non pris en charge",
                 "unknownError": "il y a eu une erreur inconnue lors de l'import",
                 "projectionNotSupported": "La projection du/des fichier(s) que vous essayez d'importer n'est pas prise en charge",
-                "fileBeyondBoundaries": "Le fichier {filename} ne peut pas être importé car il ne correspond pas aux limites de la carte"
+                "fileBeyondBoundaries": "Le fichier {filename} ne peut pas être importé car il ne correspond pas aux limites de la carte",
+                "exceedFileSizeLimit": "Le fichier {filename} que vous essayez d'importer dépasse la limite de taille de fichier maximale {maxfilesize} Mo"
             }
         },
         "mapExport": {
@@ -3421,6 +3422,14 @@
           "MapViews": {
             "description": "Ce plugin permet d'ajouter une séquence de différentes vues à l'intérieur d'une carte",
             "title": "MapViews"
+          },
+          "BrandNavbar": {
+            "description": "Menu de navigation principal",
+            "title": "Barre de navigation de la marque"
+          },
+          "ResourceDetails": {
+            "description": "Ce plugin permet de gérer les détails des ressources de la carte",
+            "title": "Détails des ressources"
           }
         },
         "contextCreator": {
@@ -4323,7 +4332,37 @@
             "creationFilter": {
                 "from": "Creation date from",
                 "to": "Creation date to"
-            }
+            },
+            "deleteTagTitle": "Êtes-vous sûr de vouloir supprimer cette balise ?",
+            "deleteTagDescription": "Cette balise sera supprimée, y compris l'association avec les ressources existantes",
+            "deleteTagConfirm": "Supprimer",
+            "deleteTagCancel": "Conserver",
+            "closeTagsTitle": "Êtes-vous sûr de vouloir quitter sans appliquer vos modifications ?",
+            "closeTagsDescription": "Si vous quittez, vous perdrez vos modifications en attente",
+            "closeTagsConfirm": "Quitter",
+            "closeTagsCancel": "Retour à l'édition",
+            "newTag": "Nouvelle balise",
+            "editTag": "Modifier la balise",
+            "deleteTag": "Supprimer la balise",
+            "update": "Mettre à jour",
+            "cancel": "Annuler",
+            "create": "Créer",
+            "filterTags": "Filtrer les balises par nom...",
+            "noTagsAvailable": "Aucune balise disponible",
+            "noTagsAvailableDescription": "Veuillez créer un nouveau tag en cliquant sur le bouton « Nouveau tag »",
+            "noFilteredTagsAvailable": "Aucun tag ne correspond au filtre sélectionné",
+            "noFilteredTagsAvailableDescription": "Veuillez effacer le filtre de texte de saisie ou rechercher un autre nom de tag",
+            "tagPreview": "Aperçu du tag",
+            "tagName": "Nom",
+            "tagDescription": "Description",
+            "tagColor": "Couleur",
+            "manageTags": "Gérer les tags",
+            "errorLoadingTags": "Il n'est pas possible de charger des balises",
+            "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
+            "errorDeletingTag": "Il n'est pas possible de supprimer la balise",
+            "removeFromFavorites": "Supprimer des favoris",
+            "addToFavorites": "Ajouter aux favoris",
+            "favorites": "Favoris"
         }
     }
 }

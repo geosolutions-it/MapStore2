@@ -17,7 +17,8 @@ const useFilterFacets = ({
     query,
     fields,
     request,
-    customFilters = []
+    customFilters = [],
+    visible
 }, dependencies = []) => {
 
     const [updated, setUpdated] = useState(fields);
@@ -26,7 +27,7 @@ const useFilterFacets = ({
     const isMounted = useIsMounted();
 
     requestFacets.current = () => {
-        if (containsFacets) {
+        if (visible && containsFacets) {
             request({
                 query,
                 fields,
@@ -40,7 +41,7 @@ const useFilterFacets = ({
 
     useEffect(() => {
         requestFacets.current();
-    }, [containsFacets, ...dependencies]);
+    }, [visible, JSON.stringify(query), containsFacets, ...dependencies]);
     return {
         fields: containsFacets ? updated : fields
     };

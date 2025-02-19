@@ -326,4 +326,93 @@ describe('geostore observables for resources management', () => {
                 e => expect(true).toBe(false, e)
             );
     });
+    it('getResource with includeTags set to false', done => {
+
+        const ID = 7;
+
+        const DummyAPI = {
+            getShortResource: testAndResolve(
+                id => expect(id).toBe(ID),
+                {
+                    ShortResource: {
+                        tagList: {
+                            Tag: {
+                                id: '1',
+                                name: 'Tag',
+                                description: 'description',
+                                color: '#ff0000'
+                            }
+                        }
+                    }
+                }
+            ),
+            getResourceAttributes: testAndResolve(
+                id => expect(id).toBe(ID),
+                []
+            ),
+            getData: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            )
+        };
+        getResource(ID, { includeTags: true }, DummyAPI)
+            .subscribe(
+                (res) => {
+                    try {
+                        expect(res).toEqual(
+                            {
+                                attributes: {},
+                                data: {},
+                                permissions: undefined,
+                                tags: [{
+                                    id: '1',
+                                    name: 'Tag',
+                                    description: 'description',
+                                    color: '#ff0000'
+                                }]
+                            }
+                        );
+                        done();
+                    } catch (e) {
+                        done(e);
+                    }
+                },
+                e => expect(true).toBe(false, e)
+            );
+    });
+    it('updateResource with tags', done => {
+        const ID = 10;
+        const testResource = {
+            id: ID,
+            tags: [{ tag: { id: '1' }, action: 'link'}, { tag: { id: '2' }, action: 'unlink'}]
+        };
+        const DummyAPI = {
+            putResourceMetadataAndAttributes: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                },
+                {}
+            ),
+            linkTagToResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('1');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            ),
+            unlinkTagFromResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('2');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            )
+        };
+        updateResource(testResource, DummyAPI).subscribe(
+            () => done(),
+            e => done(e)
+        );
+    });
 });

@@ -1544,7 +1544,8 @@
                 "fileNotSupported": "File non supportato",
                 "unknownError": "si è verificato un errore sconosciuto durante l'importazione",
                 "projectionNotSupported": "La proiezione del file che stai tentando di importare non è supportata",
-                "fileBeyondBoundaries": "Il file {nomefile} non può essere importato perché non si adatta ai confini della mappa"
+                "fileBeyondBoundaries": "Il file {nomefile} non può essere importato perché non si adatta ai confini della mappa",
+                "exceedFileSizeLimit": "Il file {filename} che stai tentando di importare ha superato il limite massimo di dimensione file {maxfilesize} MB"
             }
         },
         "mapExport": {
@@ -3419,6 +3420,14 @@
           "MapViews": {
             "description": "Questo plugin permette di aggiungere una sequenza di viste differenti all'interno di una mappa",
             "title": "MapViews"
+          },
+          "BrandNavbar": {
+            "description": "Menu di navigazione principale",
+            "title": "Brand Navbar"
+          },
+          "ResourceDetails": {
+            "description": "Questo plugin consente di gestire i dettagli delle risorsa mappa",
+            "title": "Dettagli delle risorse"
           }
         },
         "contextCreator": {
@@ -4321,7 +4330,37 @@
             "creationFilter": {
                 "from": "Dalla data di creazione",
                 "to": "Alla data di creazione"
-            }
+            },
+            "deleteTagTitle": "Sei sicuro di voler eliminare questo tag?",
+            "deleteTagDescription": "Questo tag verrà eliminato, inclusa l'associazione con le risorse esistenti",
+            "deleteTagConfirm": "Elimina",
+            "deleteTagCancel": "Conservalo",
+            "closeTagsTitle": "Sei sicuro di voler uscire senza applicare le modifiche?",
+            "closeTagsDescription": "Se esci, perderai le modifiche in sospeso",
+            "closeTagsConfirm": "Esci",
+            "closeTagsCancel": "Torna alla modifica",
+            "newTag": "Nuovo tag",
+            "editTag": "Modifica tag",
+            "deleteTag": "Elimina tag",
+            "update": "Aggiorna",
+            "cancel": "Annulla",
+            "create": "Crea",
+            "filterTags": "Filtra i tag per nome...",
+            "noTagsAvailable": "Nessun tag disponibile",
+            "noTagsAvailableDescription": "Per favore, crea un nuovo tag cliccando sul pulsante 'Nuovo tag'",
+            "noFilteredTagsAvailable": "Nessun tag corrisponde al filtro selezionato",
+            "noFilteredTagsAvailableDescription": "Cancella o cambia il filtro nell'input di ricerca",
+            "tagPreview": "Anteprima tag",
+            "tagName": "Nome",
+            "tagDescription": "Descrizione",
+            "tagColor": "Colore",
+            "manageTags": "Gestisci tag",
+            "errorLoadingTags": "Impossibile caricare i tag",
+            "errorUpdatingTag": "Impossibile aggiornare il tag",
+            "errorDeletingTag": "Impossibile eliminare il tag",
+            "removeFromFavorites": "Rimuovi dai preferiti",
+            "addToFavorites": "Aggiungi ai preferiti",
+            "favorites": "Preferiti"
         }
     }
 }

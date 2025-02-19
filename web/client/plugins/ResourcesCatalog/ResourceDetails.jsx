@@ -51,6 +51,62 @@ const tabComponents = {
     about: ResourceAbout
 };
 
+/**
+ * This plugin shows details of a resource
+ * @memberof plugins
+ * @class
+ * @name ResourceDetails
+ * @prop {object[]} cfg.tabs configuration for the available tabs
+ * @prop {string} cfg.resourceType one of `MAP`, `DASHBOARD` or `GEOSTORY` when used in a viewer, if undefined can be used in the homepage
+ * @prop {string} cfg.headerNodeSelector optional valid query selector for the header in the page, used to set the position of the panel
+ * @prop {string} cfg.navbarNodeSelector optional valid query selector for the navbar under the header, used to set the position of the panel
+ * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
+ * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
+ * @example
+ * {
+ *  "name": "ResourceDetails",
+ *  "cfg": {
+ *      "resourceType": "MAP",
+ *      "tabs": [
+ *          {
+ *              "type": "text",
+ *              "labelId": "myMassageIdForName",
+ *              "editable": true,
+ *              "path": "name"
+ *          },
+ *          {
+ *              "type": "text",
+ *              "labelId": "myMassageIdForMyAttribute",
+ *              "disableIf": "{!state('userrole')}",
+ *              "path": "attributes.myAttribute"
+ *          },
+ *          {
+ *              "type": "date",
+ *              "labelId": "myMassageIdForCreation",
+ *              "path": "creation",
+ *              "format": "MMMM Do YYYY"
+ *          },
+ *          {
+ *              "type": "tag",
+ *              "labelId": "myMassageIdForTags",
+ *              "path": "tags",
+ *              "editable": true,
+ *              "facet": "tag",
+ *              "itemColor": "color",
+ *              "disableIf": "{!state('userrole')}",
+ *              "filter": "filter{tag.in}"
+ *          },
+ *          {
+ *              "type": "boolean",
+ *              "labelId": "myMassageIdForAdvertised",
+ *              "path": "advertised",
+ *              "disableIf": "{!state('resourceCanEdit')}",
+ *              "editable": true
+ *          }
+ *      ]
+ *  }
+ * }
+ */
 function ResourceDetails({
     targetSelector,
     headerNodeSelector = '#ms-brand-navbar',
@@ -60,6 +116,7 @@ function ResourceDetails({
     height,
     show,
     onShow,
+    enableFilters,
     tabs = [
         {
             "type": "tab",
@@ -114,7 +171,9 @@ function ResourceDetails({
                     "facet": "tag",
                     "itemColor": "color",
                     "disableIf": "{!state('userrole')}",
-                    "filter": "filter{tag.in}"
+                    "filter": "filter{tag.in}",
+                    "itemValue": "name",
+                    "itemLabel": "name"
                 },
                 {
                     "type": "boolean",
@@ -233,6 +292,7 @@ function ResourceDetails({
                     updateRequest={updateResource}
                     facets={facets}
                     tabs={tabs}
+                    enableFilters={enableFilters}
                 />
             </ResourcesPanelWrapper>
             {props.resourceType === undefined ? <PendingStatePrompt

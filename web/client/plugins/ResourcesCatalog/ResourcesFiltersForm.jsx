@@ -64,6 +64,12 @@ function ResourcesFiltersForm({
                     disableIf: '{!state("userrole")}'
                 },
                 {
+                    id: 'favorite',
+                    labelId: 'resourcesCatalog.favorites',
+                    type: 'filter',
+                    disableIf: '{!state("userrole")}'
+                },
+                {
                     id: 'map',
                     labelId: 'resourcesCatalog.mapsFilter',
                     type: 'filter'
@@ -92,6 +98,10 @@ function ResourcesFiltersForm({
             type: 'select',
             facet: "group",
             disableIf: '{!state("userrole")}'
+        },
+        {
+            type: 'select',
+            facet: "tag"
         },
         {
             type: 'select',
@@ -141,7 +151,8 @@ function ResourcesFiltersForm({
         query,
         fields: parsedConfig.fields,
         request: facetsRequest,
-        customFilters
+        customFilters,
+        visible: !!show
     }, [user]);
 
     return (
@@ -184,7 +195,7 @@ export default createPlugin('ResourcesFiltersForm', {
     component: ResourcesGridPlugin,
     containers: {
         ResourcesGrid: {
-            target: 'menu-items-left',
+            target: 'left-menu',
             Component: ResourcesFiltersFormButton
         }
     },

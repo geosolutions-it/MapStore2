@@ -1585,7 +1585,8 @@
                     "fileNotSupported": "Datei wird nicht unterstützt",
                     "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten",
                     "projectionNotSupported": "Die Projektion der Datei, die Sie importieren möchten, wird nicht unterstützt",
-                    "fileBeyondBoundaries": "Die Datei {Dateiname} kann nicht importiert werden, da sie nicht zu den Kartengrenzen passt"
+                    "fileBeyondBoundaries": "Die Datei {Dateiname} kann nicht importiert werden, da sie nicht zu den Kartengrenzen passt",
+                    "exceedFileSizeLimit": "Die Datei {filename}, die Sie importieren möchten, überschreitet die maximale Dateigröße von {maxfilesize} MB"
                 }
             },
         "mapExport": {
@@ -3458,6 +3459,14 @@
           "MapViews": {
             "description": "Dieses Plugin ermöglicht das Hinzufügen einer Sequenz verschiedener Ansichten innerhalb einer Karte",
             "title": "Kartenansichten"
+          },
+          "BrandNavbar": {
+            "description": "Hauptnavigationsmenü",
+            "title": "Brand Navbar"
+          },
+          "ResourceDetails": {
+            "description": "Dieses Plugin ermöglicht die Verwaltung von Ressourcendetails der Karte",
+            "title": "Ressourcendetails"
           }
         },
         "contextCreator": {
@@ -4361,7 +4370,37 @@
             "creationFilter": {
                 "from": "Erstellungsdatum von",
                 "to": "Erstellungsdatum bis"
-            }
+            },
+            "deleteTagTitle": "Möchten Sie dieses Tag wirklich löschen?",
+            "deleteTagDescription": "Dieses Tag wird gelöscht, einschließlich der Verknüpfung mit vorhandenen Ressourcen",
+            "deleteTagConfirm": "Löschen",
+            "deleteTagCancel": "Behalten",
+            "closeTagsTitle": "Möchten Sie die Seite wirklich verlassen, ohne Ihre Änderungen anzuwenden?",
+            "closeTagsDescription": "Wenn Sie die Seite verlassen, gehen Ihre ausstehenden Änderungen verloren",
+            "closeTagsConfirm": "Verlassen",
+            "closeTagsCancel": "Zurück zur Bearbeitung",
+            "newTag": "Neues Tag",
+            "editTag": "Tag bearbeiten",
+            "deleteTag": "Tag löschen",
+            "update": "Aktualisieren",
+            "cancel": "Abbrechen",
+            "create": "Erstellen",
+            "filterTags": "Tags nach Namen filtern...",
+            "noTagsAvailable": "Keine Tags verfügbar",
+            "noTagsAvailableDescription": "Bitte erstellen Sie ein neues Tag, indem Sie auf die Schaltfläche ‚Neues Tag‘ klicken",
+            "noFilteredTagsAvailable": "Keine Tags entsprechen dem ausgewählten Filter",
+            "noFilteredTagsAvailableDescription": "Bitte löschen Sie den Eingabetextfilter oder suchen Sie nach einem anderen Tag-Namen",
+            "tagPreview": "Tag-Vorschau",
+            "tagName": "Name",
+            "tagDescription": "Beschreibung",
+            "tagColor": "Farbe",
+            "manageTags": "Tags verwalten",
+            "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
+            "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
+            "errorDeletingTag": "Es ist nicht möglich, das Tag zu löschen",
+            "removeFromFavorites": "Aus Favoriten entfernen",
+            "addToFavorites": "Zu Favoriten hinzufügen",
+            "favorites": "Favoriten"
         }
     }
 }

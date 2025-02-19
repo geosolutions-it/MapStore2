@@ -20,6 +20,7 @@ import ALink from './ALink';
 import FlexBox from './FlexBox';
 import Text from './Text';
 import InputControl from './InputControl';
+import { getTagColorVariables } from '../utils/ResourcesFiltersUtils';
 
 const replaceTemplateString = (properties, str) => {
     return Object.keys(properties).reduce((updatedStr, key) => {
@@ -120,7 +121,7 @@ function DetailsInfoFieldEditing({ field, onChange }) {
                         return {
                             item: value,
                             className: 'ms-tag',
-                            style: { '--tag-color': value[field.itemColor] },
+                            style: getTagColorVariables(value[field.itemColor]),
                             value: value[field.itemValue || 'value'],
                             label: value[field.itemLabel || 'value']
                         };
@@ -145,7 +146,7 @@ function DetailsInfoFieldEditing({ field, onChange }) {
                                     selectOption: {
                                         item,
                                         className: 'ms-tag',
-                                        style: { '--tag-color': item[field.itemColor] },
+                                        style: getTagColorVariables(item[field.itemColor]),
                                         value: item[field.itemValue || 'value'],
                                         label: item[field.itemLabel || 'value']
                                     }
@@ -159,7 +160,7 @@ function DetailsInfoFieldEditing({ field, onChange }) {
     return null;
 }
 
-function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {} }) {
+function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {}, enableFilters }) {
     return (<FlexBox
         gap="xs"
         column
@@ -190,7 +191,7 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {} }
                 return (
                     <DetailsInfoField key={filedIndex} field={field}>
                         {(values) => values.map((value, idx) => (
-                            <a key={idx} href={formatHref({
+                            <ALink key={idx} href={enableFilters ? formatHref({
                                 query: field.queryTemplate
                                     ? Object.keys(field.queryTemplate)
                                         .reduce((acc, key) => ({
@@ -199,7 +200,7 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {} }
                                         }), {})
                                     : field.query,
                                 pathname: field.pathname
-                            })}>{field.valueKey ? value[field.valueKey] : value}</a>
+                            }) : undefined}>{field.valueKey ? value[field.valueKey] : value}</ALink>
                         ))}
                     </DetailsInfoField>
                 );
@@ -237,9 +238,10 @@ function DetailsInfoFields({ fields, formatHref, editing, onChange, query = {} }
                         {(values) => values.map((value, idx) => (
                             <ALink
                                 key={idx}
+                                fallbackComponent="span"
                                 className={`ms-tag${castArray(query[field.filter] || []).includes(value[field.itemValue || 'value']) ? ' active' : ''}`}
-                                style={{ '--tag-color': value[field.itemColor] }}
-                                href={field.filter ? formatHref({
+                                style={getTagColorVariables(value[field.itemColor])}
+                                href={enableFilters && field.filter ? formatHref({
                                     query: {
                                         [field.filter]: value[field.itemValue || 'value']
                                     }

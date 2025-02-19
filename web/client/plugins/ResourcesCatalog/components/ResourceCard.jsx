@@ -20,6 +20,7 @@ import { isObject, get } from 'lodash';
 import FlexBox from './FlexBox';
 import Text from './Text';
 import tooltip from '../../../components/misc/enhancers/tooltip';
+import { getTagColorVariables } from '../utils/ResourcesFiltersUtils';
 const ButtonWithTooltip = tooltip(Button);
 
 const ResourceCardButton = ({
@@ -30,6 +31,7 @@ const ResourceCardButton = ({
     square,
     variant,
     borderTransparent,
+    loading,
     ...props
 }) => {
     function handleOnClick(event) {
@@ -47,9 +49,10 @@ const ResourceCardButton = ({
             tooltipId={square && labelId ? labelId : null}
             onClick={handleOnClick}
         >
-            {glyph ? <><Icon type={iconType} glyph={glyph}/></> : null}
-            {glyph && labelId ? ' ' : null}
-            {labelId && !square ? <Message msgId={labelId} /> : null}
+            {!loading && glyph ? <><Icon type={iconType} glyph={glyph}/></> : null}
+            {!loading && glyph && labelId ? ' ' : null}
+            {!loading && labelId && !square ? <Message msgId={labelId} /> : null}
+            {loading ? <Spinner /> : null}
         </ButtonWithTooltip>
     );
 };
@@ -117,9 +120,7 @@ const ResourceCardMetadataValue = tooltip(({
         <ALink
             {...props}
             className={`ms-${entry.type || 'string'}${getFilterActiveClassName(entry.filter, properties.value)}`}
-            style={{
-                '--tag-color': properties.color
-            }}
+            style={getTagColorVariables(properties.color)}
             readOnly={readOnly}
             href={entry.filter ? formatHref({
                 query: {

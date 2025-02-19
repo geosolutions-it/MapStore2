@@ -1547,7 +1547,8 @@
                 "fileNotSupported": "Archivo no compatible",
                 "unknownError": "hubo un error desconocido durante la importación",
                 "projectionNotSupported": "La proyección del archivo que está intentando importar no es compatible",
-                "fileBeyondBoundaries": "El archivo {filename} no se pudo importar porque no encaja dentro de los límites del mapa"
+                "fileBeyondBoundaries": "El archivo {filename} no se pudo importar porque no encaja dentro de los límites del mapa",
+                "exceedFileSizeLimit": "El archivo {filename} que estás intentando importar ha superado el límite máximo de tamaño de archivo {maxfilesize} MB"
             }
         },
         "mapExport": {
@@ -3420,6 +3421,14 @@
           "MapViews": {
             "description": "Este complemento permite agregar una secuencia de diferentes vistas dentro de un mapa",
             "title": "Vistas del mapa"
+          },
+          "BrandNavbar": {
+            "description": "Menú de navegación principal",
+            "title": "Barra de navegación de marca"
+          },
+          "ResourceDetails": {
+            "description": "Este complemento permite administrar los detalles de los recursos del mapa",
+            "title": "Detalles de los recursos"
           }
         },
         "contextCreator": {
@@ -4323,7 +4332,37 @@
             "creationFilter": {
                 "from": "Fecha de creación desde",
                 "to": "Fecha de creación hasta"
-            }
+            },
+            "deleteTagTitle": "¿Está seguro de que desea eliminar esta etiqueta?",
+            "deleteTagDescription": "Esta etiqueta se eliminará, incluida la asociación con los recursos existentes",
+            "deleteTagConfirm": "Eliminar",
+            "deleteTagCancel": "Conservarla",
+            "closeTagsTitle": "¿Está seguro de salir sin aplicar los cambios?",
+            "closeTagsDescription": "Si sale, perderá los cambios pendientes",
+            "closeTagsConfirm": "Salir",
+            "closeTagsCancel": "Volver a la edición",
+            "newTag": "Nueva etiqueta",
+            "editTag": "Editar etiqueta",
+            "deleteTag": "Eliminar etiqueta",
+            "update": "Actualizar",
+            "cancel": "Cancelar",
+            "create": "Crear",
+            "filterTags": "Filtrar etiquetas por nombre...",
+            "noTagsAvailable": "No hay etiquetas disponibles",
+            "noTagsAvailableDescription": "Cree una nueva etiqueta haciendo clic en el botón 'Nueva etiqueta'",
+            "noFilteredTagsAvailable": "Ninguna etiqueta coincide con el filtro seleccionado",
+            "noFilteredTagsAvailableDescription": "Borre el filtro de texto de entrada o busque un nombre de etiqueta diferente",
+            "tagPreview": "Vista previa de la etiqueta",
+            "tagName": "Nombre",
+            "tagDescription": "Descripción",
+            "tagColor": "Color",
+            "manageTags": "Administrar etiquetas",
+            "errorLoadingTags": "No es posible cargar etiquetas",
+            "errorUpdatingTag": "No es posible actualizar la etiqueta",
+            "errorDeletingTag": "No es posible eliminar la etiqueta",
+            "removeFromFavorites": "Eliminar de favoritos",
+            "addToFavorites": "Añadir a favoritos",
+            "favorites": "Favoritos"
         }
     }
 }

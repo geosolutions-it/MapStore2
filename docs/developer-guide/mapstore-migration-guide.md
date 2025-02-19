@@ -20,6 +20,26 @@ This is a list of things to check if you want to update from a previous version 
 - Optionally check also accessory files like `.eslinrc`, if you want to keep aligned with lint standards.
 - Follow the instructions below, in order, from your version to the one you want to update to.
 
+## Migration from 2024.02.00 to 2025.01.00
+
+### Add TagsManager and Favorite plugins to localConfig.json
+
+The new TagsManager and Favorite plugin should be added inside the plugins `maps` section of the `localConfig.json` to visualize a new menu item in the admin menu and to to visualize the button on the resource cards
+
+```diff
+{
+    "plugins": {
+        ...,
+        "maps": [
+            ...,
++           { "name": "TagsManager" },
++           { "name": "Favorites" }
+        ],
+        ...
+    }
+}
+```
+
 ## Migration from 2024.01.02 to 2024.02.00
 
 ### NodeJS and NPM update

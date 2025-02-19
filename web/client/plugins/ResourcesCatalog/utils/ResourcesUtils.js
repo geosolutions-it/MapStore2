@@ -97,7 +97,7 @@ const recursivePendingChanges = (a, b) => {
 
 
 export const computePendingChanges = (initialResource, resource, resourceData) => {
-    const { attributes: pendingAttributes = {}, ...pendingChanges } = recursivePendingChanges(resource, initialResource);
+    const { attributes: pendingAttributes = {}, tags, ...pendingChanges } = recursivePendingChanges(resource, initialResource);
     const attributesKeys = [
         'thumbnail',
         'details'
@@ -127,10 +127,13 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
         return acc;
     }, {});
     const attributes = omit(pendingAttributes, attributesKeys);
-    const excludedMetadata = ['permissions', 'attributes', 'data', 'category'];
+    const excludedMetadata = ['permissions', 'attributes', 'data', 'category', 'tags'];
     const metadata = merge(omit(initialResource, excludedMetadata), omit(pendingChanges, excludedMetadata));
     const mergedAttributes = merge(initialResource.attributes, attributes) || {};
-
+    // check only the changed tags
+    const unlinkTags = (initialResource?.tags || []).filter(tag => !(resource?.tags || []).find(t => t.id === tag.id)).map(tag => ({ tag, action: 'unlink' }));
+    const linkTags = (resource?.tags || []).filter(tag => !(initialResource?.tags || []).find(t => t.id === tag.id)).map(tag => ({ tag, action: 'link' }));
+    const mergedTags = [...unlinkTags, ...linkTags];
     return {
         initialResource,
         resource,
@@ -139,6 +142,7 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
             ...(resourceData?.payload && { data: resourceData.payload }),
             permission: pendingChanges.permissions ?? initialResource.permissions,
             category: initialResource?.category?.name,
+            ...(mergedTags?.length && { tags: mergedTags }),
             metadata: {
                 ...metadata,
                 attributes: Object.fromEntries(Object.keys(mergedAttributes || {}).map((key) => {
@@ -151,6 +155,7 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
         },
         changes: {
             ...pendingChanges,
+            ...(mergedTags?.length && { tags: mergedTags }),
             ...(!isEmpty(attributes) && { attributes }),
             ...(!isEmpty(linkedResources) && { linkedResources }),
             ...(resourceData?.pending && { data: true })

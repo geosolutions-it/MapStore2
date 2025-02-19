@@ -8,7 +8,9 @@
 
 import {
     hashLocationToHref,
-    clearQueryParams
+    clearQueryParams,
+    splitFilterValue,
+    getTagColorVariables
 } from '../ResourcesFiltersUtils';
 import expect from 'expect';
 
@@ -67,5 +69,29 @@ describe('ResourcesFiltersUtils', () => {
         expect(clearQueryParams({
             search: '?q=value'
         })).toEqual({ extent: undefined, 'q': [] });
+    });
+    it('splitFilterValue', () => {
+        expect(splitFilterValue()).toEqual({ value: '', label: '' });
+        expect(splitFilterValue('value')).toEqual({ value: 'value', label: '' });
+        expect(splitFilterValue('value:label')).toEqual({ value: 'value', label: 'label' });
+        expect(splitFilterValue('value:label_with:')).toEqual({ value: 'value', label: 'label_with:' });
+    });
+    it('getTagColorVariables', () => {
+        expect(getTagColorVariables()).toEqual({});
+        expect(getTagColorVariables('#ff0000')).toEqual({
+            '--tag-color-r': 255,
+            '--tag-color-g': 0,
+            '--tag-color-b': 0
+        });
+        expect(getTagColorVariables('#00ff00')).toEqual({
+            '--tag-color-r': 0,
+            '--tag-color-g': 255,
+            '--tag-color-b': 0
+        });
+        expect(getTagColorVariables('#0000ff')).toEqual({
+            '--tag-color-r': 0,
+            '--tag-color-g': 0,
+            '--tag-color-b': 255
+        });
     });
 });
