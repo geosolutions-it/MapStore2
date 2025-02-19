@@ -386,7 +386,6 @@
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "Scroll to the top of the page",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "footerCustomHTML": "<div><p>Please insert custom HTML into the translations to render a custom footer</p></div>"
         },
         "cookiesPolicyNotification": {
@@ -4348,7 +4347,8 @@
             "errorDeletingTag": "It is not possible to delete the tag",
             "removeFromFavorites": "Remove from favorites",
             "addToFavorites": "Add to favorites",
-            "favorites": "Favorites"
+            "favorites": "Favorites",
+            "documentation": "Documentation"
         }
     }
 }

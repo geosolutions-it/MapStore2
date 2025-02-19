@@ -386,7 +386,6 @@
             "Examples": "Beispiele",
             "LinkedinGroup": "Mapstore Linkedin Gruppe",
             "scrollTop": "An den Anfang der Seite scrollen",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "footerCustomHTML": "<div><p>Bitte fügen Sie benutzerdefiniertes HTML in die Übersetzungen ein, um eine benutzerdefinierte Fußzeile darzustellen</p></div>",
             "examples":{
                 "viewer":{
@@ -4375,7 +4374,8 @@
             "errorDeletingTag": "Es ist nicht möglich, das Tag zu löschen",
             "removeFromFavorites": "Aus Favoriten entfernen",
             "addToFavorites": "Zu Favoriten hinzufügen",
-            "favorites": "Favoriten"
+            "favorites": "Favoriten",
+            "documentation": "Dokumentation"
         }
     }
 }
