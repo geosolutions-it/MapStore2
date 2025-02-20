@@ -651,5 +651,72 @@ describe('CesiumMap', () => {
             expect(customHooRegister.getHook(ZOOM_TO_EXTENT_HOOK)).toBeTruthy();
         });
     });
-
+    it('should flashlight effect on map', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    mapOptions={{
+                        lighting: {
+                            value: 'flashlight'
+                        }
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map).toBeTruthy();
+        expect(ref.map.scene.light).toBeTruthy();
+        expect(ref.map.scene.light.intensity).toEqual(3);
+    });
+    it('should sunlight effect on map', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    mapOptions={{
+                        lighting: {
+                            value: 'sunlight'
+                        }
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        // for sunlight: default intentsity = 2, color [The light's color] is white and shouldAnimate with true
+        expect(ref.map).toBeTruthy();
+        expect(ref.map.scene.light).toBeTruthy();
+        expect(ref.map.scene.light.intensity).toEqual(2);
+        expect(ref.map.scene.light.color.red).toEqual(1);
+        expect(ref.map.scene.light.color.green).toEqual(1);
+        expect(ref.map.scene.light.color.blue).toEqual(1);
+        expect(ref.map.scene.light.color.alpha).toEqual(1);
+        expect(ref.map.clock.shouldAnimate).toBeTruthy();
+    });
+    it('should lighting effect with specific date-time on map', () => {
+        let ref;
+        act(() => {
+            ReactDOM.render(
+                <CesiumMap
+                    ref={value => { ref = value; } }
+                    center={{y: 10, x: 44}}
+                    zoom={5}
+                    mapOptions={{
+                        lighting: {
+                            value: 'dateTime',
+                            dateTime: (new Date()).toISOString()
+                        }
+                    }}
+                />
+                , document.getElementById("container"));
+        });
+        expect(ref.map).toBeTruthy();
+        expect(ref.map.scene.light).toBeTruthy();
+        expect(ref.map.clock.shouldAnimate).toBeFalsy();
+        expect(ref.map.clock.currentTime).toBeTruthy();
+    });
 });
