@@ -179,7 +179,7 @@ export default createPlugin('Save', {
     component: ConnectedPendingStatePrompt,
     containers: {
         BrandNavbar: {
-            target: 'right-menu',
+            target: 'left-menu',
             position: 2,
             priority: 3,
             Component: SavePlugin,
