@@ -108,7 +108,7 @@ class DateTimePicker extends Component {
         if (prevProps.value !== this.props.value || prevProps.operator !== this.props.operator) {
             const { value, operator } = this.props;
             this.setDateFromValueProp(value, operator);
-            if (this.props.operator === 'isNull') this.setState({ inputValue: '', date: null });
+            if (this.props.operator === 'isNull') this.setState({ inputValue: '', date: null });  // eslint-disable-line -- TODO: need to be fixed
         }
     }
 

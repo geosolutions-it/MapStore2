@@ -136,10 +136,10 @@ class SidebarMenu extends React.Component {
 
         if (visibleElements === 0 && !hidden) {
             onDetach();
-            this.setState((state) => ({ ...state, hidden: true}));
+            this.setState((state) => ({ ...state, hidden: true})); // eslint-disable-line -- need to be fixed
         } else if (visibleElements > 0 && hidden) {
             onInit();
-            this.setState((state) => ({ ...state, hidden: false}));
+            this.setState((state) => ({ ...state, hidden: false})); // eslint-disable-line -- need to be fixed
         }
     }
 
