@@ -327,8 +327,8 @@
     "analyze": "npm run fe:clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
     "generate:icons": "node ./build/generateIcons.js",
     "generate:changelog": "node ./build/generateChangelog.js",
-    "json:check": "prettier --ignore-path .prettierignore --check ./**/*.json",
-    "json:write": "prettier --ignore-path .prettierignore --write ./**/*.json"
+    "json:check": "prettier --ignore-path .prettierignore --check \"./**/*.json\"",
+    "json:write": "prettier --ignore-path .prettierignore --write \"./**/*.json\""
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
