@@ -114,7 +114,8 @@ const featuresToGrid = compose(
                         get: key => {
                             return (key === "geometry" || key === "_new") ? result[key] : result.properties && result.properties[key];
                         },
-                        dateFormats: props.dateFormats
+                        dateFormats: props.dateFormats,
+                        useUTCOffset: props.useUTCOffset
                     }))
         })
     ),
