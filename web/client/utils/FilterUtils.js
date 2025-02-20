@@ -1469,10 +1469,10 @@ export function resetLayerLegendFilter(layer, reason, value) {
  */
 export const createVectorFeatureFilter = (layer) => {
     return (feature) => {
-        let isLayerHasFilterObj = layer.layerFilter;
+        let isLayerHasFilterObj = layer.filterObj;
         // filter introduced as support for the feature grid editor
         if (isLayerHasFilterObj) {
-            let isFeatureMatchFilter = createFeatureFilter(layer.layerFilter)(feature);
+            let isFeatureMatchFilter = createFeatureFilter(layer.filterObj)(feature);
             if (!isFeatureMatchFilter) return false;
         }
         // Check for interactive egend filter
