@@ -112,13 +112,23 @@ describe('Test common advanced settings', () => {
         expect(spyOn).toHaveBeenCalled();
         expect(spyOn.calls[1].arguments).toEqual([ 'fetchMetadata', false ]);
     });
-    it('test showing/hiding interactive legend checkbox', () => {
+    it('test showing/hiding interactive legend checkbox for WFS', () => {
         ReactDOM.render(<CommonAdvancedSettings
             service={{type: "wfs"}}
         />, document.getElementById("container"));
-        const interactiveLegendCheckboxInput = document.querySelector(".wfs-interactive-legend .checkbox input[data-qa='display-interactive-legend-option']");
+        const interactiveLegendCheckboxInput = document.querySelector(".wfs-vector-interactive-legend .checkbox input[data-qa='display-interactive-legend-option']");
         expect(interactiveLegendCheckboxInput).toBeTruthy();
-        const interactiveLegendLabel = document.querySelector(".wfs-interactive-legend .checkbox span");
+        const interactiveLegendLabel = document.querySelector(".wfs-vector-interactive-legend .checkbox span");
+        expect(interactiveLegendLabel).toBeTruthy();
+        expect(interactiveLegendLabel.innerHTML).toEqual('layerProperties.enableInteractiveLegendInfo.label');
+    });
+    it('test showing/hiding interactive legend checkbox for vector', () => {
+        ReactDOM.render(<CommonAdvancedSettings
+            service={{type: "vector"}}
+        />, document.getElementById("container"));
+        const interactiveLegendCheckboxInput = document.querySelector(".wfs-vector-interactive-legend .checkbox input[data-qa='display-interactive-legend-option']");
+        expect(interactiveLegendCheckboxInput).toBeTruthy();
+        const interactiveLegendLabel = document.querySelector(".wfs-vector-interactive-legend .checkbox span");
         expect(interactiveLegendLabel).toBeTruthy();
         expect(interactiveLegendLabel.innerHTML).toEqual('layerProperties.enableInteractiveLegendInfo.label');
     });

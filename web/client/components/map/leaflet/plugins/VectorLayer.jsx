@@ -13,6 +13,7 @@ import {
     getStyle
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
+import { createVectorFeatureFilter } from '../../../../utils/FilterUtils';
 
 const setOpacity = (layer, opacity) => {
     if (layer.eachLayer) {
@@ -54,13 +55,16 @@ const createLayerLegacy = (options) => {
 
 const createLayer = (options) => {
     const { hideLoading } = options;
-    const layer = L.geoJson(options.features, {
+    const vectorFeatureFilter = createVectorFeatureFilter(options);
+    const featuresToRender = options.features.filter(vectorFeatureFilter);        // make filter for features if filter is existing
+
+    const layer = L.geoJson(featuresToRender, {
         hideLoading: hideLoading
     });
 
     getStyle(applyDefaultStyleToVectorLayer(options), 'leaflet')
         .then((styleUtils) => {
-            styleUtils({ opacity: options.opacity, layer, features: options.features })
+            styleUtils({ opacity: options.opacity, layer, features: featuresToRender })
                 .then(({
                     style: styleFunc,
                     pointToLayer = () => null,
@@ -69,7 +73,7 @@ const createLayer = (options) => {
                     layer.clearLayers();
                     layer.options.pointToLayer = pointToLayer;
                     layer.options.filter = filterFunc;
-                    layer.addData(options.features);
+                    layer.addData(featuresToRender);
                     layer.setStyle(styleFunc);
                 });
         });
@@ -89,6 +93,10 @@ const updateLayerLegacy = (layer, newOptions, oldOptions) => {
 };
 
 const updateLayer = (layer, newOptions, oldOptions) => {
+    if (!isEqual(oldOptions.layerFilter, newOptions.layerFilter)) {
+        layer.remove();
+        return createLayer(newOptions);
+    }
     if (!isEqual(oldOptions.style, newOptions.style)
     || newOptions.opacity !== oldOptions.opacity) {
         getStyle(applyDefaultStyleToVectorLayer(newOptions), 'leaflet')
@@ -111,9 +119,11 @@ const updateLayer = (layer, newOptions, oldOptions) => {
 };
 
 Layers.registerType('vector', {
-    create: (options) => !isNewStyle(options)
-        ? createLayerLegacy(options)
-        : createLayer(options),
+    create: (options) => {
+        return !isNewStyle(options)
+            ? createLayerLegacy(options)
+            : createLayer(options);
+    },
     update: (layer, newOptions, oldOptions) => layer._msLegacyGeoJSON
         ? updateLayerLegacy(layer, newOptions, oldOptions)
         : updateLayer(layer, newOptions, oldOptions),
