@@ -1552,7 +1552,7 @@ describe('Cesium layer', () => {
         expect(cmp.layer).toBeTruthy();
         expect(cmp.layer.styledFeatures).toBeTruthy();
         expect(cmp.layer.detached).toBe(true);
-        const renderedFeatsNum = cmp.layer.styledFeatures._features.length;
+        const renderedFeatsNum = cmp.layer.styledFeatures._features.filter(cmp.layer.styledFeatures._featureFilter).length;
         const filteredFeatsNum = 1;
         expect(renderedFeatsNum).toEqual(filteredFeatsNum);
     });
