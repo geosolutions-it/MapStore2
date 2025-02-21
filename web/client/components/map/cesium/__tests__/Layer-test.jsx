@@ -31,7 +31,7 @@ import '../plugins/ArcGISLayer';
 import '../plugins/ModelLayer';
 
 import {setStore} from '../../../../utils/SecurityUtils';
-import ConfigUtils from '../../../../utils/ConfigUtils';
+import ConfigUtils, { setConfigProp } from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
 
@@ -43,6 +43,7 @@ describe('Cesium layer', () => {
         document.body.innerHTML = '<div id="map"></div><div id="container"></div><div id="container2"></div>';
         map = new Cesium.Viewer("map");
         map.imageryLayers.removeAll();
+        setConfigProp('miscSettings', { experimentalInteractiveLegend: true });
         setTimeout(done);
     });
 
@@ -55,6 +56,7 @@ describe('Cesium layer', () => {
         } catch(e) {}
         /* eslint-enable */
         document.body.innerHTML = '';
+        setConfigProp('miscSettings', {  });
         setTimeout(done);
     });
     it('missing layer', () => {
@@ -1490,6 +1492,69 @@ describe('Cesium layer', () => {
         expect(cmp.layer.detached).toBe(true);
         expect(cmp.layer.styledFeatures._queryable).toBe(false);
         expect(cmp.layer.styledFeatures._features.length).toBe(1);
+    });
+    it('should create a vector layer with interactive legend filter', () => {
+        const options = {
+            type: 'vector',
+            features: [
+                { type: 'Feature', properties: { "prop1": 0 }, geometry: { type: 'Point', coordinates: [0, 0] } },
+                { type: 'Feature', properties: { "prop1": 2 }, geometry: { type: 'Point', coordinates: [1, 0] } },
+                { type: 'Feature', properties: { "prop1": 5 }, geometry: { type: 'Point', coordinates: [2, 0] } }
+            ],
+            title: 'Title',
+            visibility: true,
+            bbox: {
+                crs: 'EPSG:4326',
+                bounds: {
+                    minx: -180,
+                    miny: -90,
+                    maxx: 180,
+                    maxy: 90
+                }
+            },
+            enableInteractiveLegend: true,
+            layerFilter: {
+                filters: [{
+                    "id": "interactiveLegend",
+                    "format": "logic",
+                    "version": "1.0.0",
+                    "logic": "OR",
+                    "filters": [
+                        {
+                            "format": "geostyler",
+                            "version": "1.0.0",
+                            "body": [
+                                "&&",
+                                [
+                                    ">",
+                                    "prop1",
+                                    "0"
+                                ], [
+                                    "<",
+                                    "prop1",
+                                    "3"
+                                ]
+                            ],
+                            "id": "&&,>,prop1,0,<,prop1,3"
+                        }
+                    ]
+                }]
+            }
+        };
+        // create layers
+        const cmp = ReactDOM.render(
+            <CesiumLayer
+                type="vector"
+                options={options}
+                map={map}
+            />, document.getElementById('container'));
+        expect(cmp).toBeTruthy();
+        expect(cmp.layer).toBeTruthy();
+        expect(cmp.layer.styledFeatures).toBeTruthy();
+        expect(cmp.layer.detached).toBe(true);
+        const renderedFeatsNum = cmp.layer.styledFeatures._features.filter(cmp.layer.styledFeatures._featureFilter).length;
+        const filteredFeatsNum = 1;
+        expect(renderedFeatsNum).toEqual(filteredFeatsNum);
     });
     it('should create a wfs layer', () => {
         const options = {

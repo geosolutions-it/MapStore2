@@ -351,7 +351,7 @@ export default class extends React.Component {
                         </Col>
                     </div>
                 </Row>}
-                {this.props.element.type === "wfs" && <Row>
+                {['wfs', 'vector'].includes(this.props.element.type) && <Row>
                     <div className={"legend-options"}>
                         {experimentalInteractiveLegend && <Col xs={12} className={"legend-label"}>
                             <label key="legend-options-title" className="control-label"><Message msgId="layerProperties.legendOptions.title" /></label>

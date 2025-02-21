@@ -31,6 +31,7 @@ export const cqlToOgc = (cqlFilter, fOpts) => {
 
 import { get, isNil, isArray, find, findIndex, isString, flatten } from 'lodash';
 import { INTERACTIVE_LEGEND_ID } from './LegendUtils';
+import { geoStylerStyleFilter } from './styleparser/StyleParserUtils';
 import { getMiscSetting } from './ConfigUtils';
 let FilterUtils;
 
@@ -1461,7 +1462,43 @@ export function resetLayerLegendFilter(layer, reason, value) {
     }
     return !isFilterEmpty(filterObj) ? filterObj : undefined;
 }
+/**
+ * filter vector layer features base on filter actions like interactive legend filters
+ * @param {object} layer layer object configuration
+ * @return {func} a filter function that accepts a GeoJSON feature as argument
+ */
+export const createVectorFeatureFilter = (layer) => {
+    return (feature) => {
+        let isLayerHasFilterObj = layer.filterObj;
+        // filter introduced as support for the feature grid editor
+        if (isLayerHasFilterObj) {
+            let isFeatureMatchFilter = createFeatureFilter(layer.filterObj)(feature);
+            if (!isFeatureMatchFilter) return false;
+        }
+        // Check for interactive egend filter
+        // TODO: we can add other filters here as well
+        const isLayerHasInteractiveLegend = layer?.enableInteractiveLegend;
+        const experimentalInteractiveLegend = getMiscSetting('experimentalInteractiveLegend', false);
 
+        if ((isLayerHasInteractiveLegend && experimentalInteractiveLegend)) {
+            const isLegendFilterExist = layer?.layerFilter?.filters?.find(f => f.id === INTERACTIVE_LEGEND_ID);
+            const isInteractiveLegendFiltersExist = isLegendFilterExist?.filters?.length;
+            const isLayerFilterDisabled = layer?.layerFilter?.disabled;
+
+            if (!isInteractiveLegendFiltersExist || isLayerFilterDisabled) {
+                return true;
+            }
+            let legendFilters = isLegendFilterExist;
+            if (legendFilters?.logic === 'OR') {
+                return legendFilters.filters.some(filterRule => geoStylerStyleFilter(feature, filterRule.body));
+            } else if (legendFilters?.logic === 'AND') {
+                return legendFilters.filters.every(filterRule => geoStylerStyleFilter(feature, filterRule.body));
+            }
+        }
+
+        return true;
+    };
+};
 FilterUtils = {
     processOGCFilterGroup,
     processOGCFilterFields,
