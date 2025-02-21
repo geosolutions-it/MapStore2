@@ -140,7 +140,8 @@ const getFilter = ({
 };
 
 export const requestResources = ({
-    params
+    params,
+    config
 } = {}, { user } = {}) => {
 
     const {
@@ -160,6 +161,7 @@ export const requestResources = ({
         query
     }),
     {
+        ...config,
         params: {
             includeAttributes: true,
             includeTags: true,

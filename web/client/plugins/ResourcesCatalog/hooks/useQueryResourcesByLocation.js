@@ -89,11 +89,15 @@ const useQueryResourcesByLocation = ({
         source.current = cancelToken.source();
     };
 
-    requestResources.current = (params) => {
+    const clearRequestTimeout = () => {
         if (requestTimeout.current) {
             clearTimeout(requestTimeout.current);
             requestTimeout.current = undefined;
         }
+    };
+
+    requestResources.current = (params) => {
+        clearRequestTimeout();
         createToken();
         setLoading(true, id);
         requestTimeout.current = setTimeout(() => {
@@ -211,6 +215,7 @@ const useQueryResourcesByLocation = ({
                 source.current.cancel();
                 source.current = undefined;
             }
+            clearRequestTimeout();
         };
     }, []);
 
