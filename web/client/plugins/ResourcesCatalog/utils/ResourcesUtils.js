@@ -105,6 +105,7 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
     ];
     const categoryOptions = {
         'thumbnail': {
+            // this forces the reload the thumbnail image when updated
             tail: `/raw?decode=datauri&v=${uuid()}`,
             category: 'THUMBNAIL'
         },
