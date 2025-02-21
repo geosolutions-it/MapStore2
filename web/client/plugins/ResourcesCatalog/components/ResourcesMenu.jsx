@@ -217,7 +217,7 @@ const ResourcesMenu = forwardRef(({
                     onClick={handleToggleCardLayoutStyle}
                     square
                 >
-                    <Icon glyph={cardLayoutStyle === 'grid' ? 'list' : 'th'} />
+                    <Icon glyph={cardLayoutStyle === 'grid' ? 'th-list' : 'th'} type="glyphicon"/>
                 </Button>}
                 {orderAlign === 'right' ? orderButtonNode : null}
             </FlexBox>

@@ -219,7 +219,7 @@ export default createPlugin('SaveAs', {
     component: () => null,
     containers: {
         BrandNavbar: {
-            target: 'right-menu',
+            target: 'left-menu',
             position: 3,
             priority: 3,
             Component: SaveAsPlugin
