@@ -9,7 +9,7 @@
 import React from 'react';
 
 import Message from '../../I18N/Message';
-import ConfirmDialog from '../../misc/ConfirmDialog';
+import ConfirmDialog from '../../layout/ConfirmDialog';
 
 export default (Component) => ({
     onDelete = () => {},
@@ -27,10 +27,8 @@ export default (Component) => ({
                     setShowConfirm(true);
                 }}/>
             <ConfirmDialog
-                draggable={false}
-                modal
                 show={showConfirm}
-                onClose={() => {
+                onCancel={() => {
                     setResourceToDelete();
                     setShowConfirm(false);
                 }}
@@ -39,10 +37,9 @@ export default (Component) => ({
                     onDelete(resourceToDelete);
                     setResourceToDelete();
                 }}
-                confirmButtonBSStyle="default"
-                confirmButtonContent={<Message msgId="confirm"/>}
-                closeText={<Message msgId="cancel"/>}
-                closeGlyph="1-close">
+                variant="danger"
+                confirmId="delete"
+                cancelId="cancel">
                 <Message msgId="mapCatalog.deleteConfirmContent" msgParams={{mapName: resourceToDelete?.name}}/>
             </ConfirmDialog>
         </>
