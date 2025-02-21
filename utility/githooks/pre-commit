@@ -1,0 +1,3 @@
+#!/bin/sh
+
+node ./utility/githooks/pre-commit.js

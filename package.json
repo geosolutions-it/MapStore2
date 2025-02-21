@@ -328,7 +328,9 @@
     "generate:icons": "node ./build/generateIcons.js",
     "generate:changelog": "node ./build/generateChangelog.js",
     "json:check": "prettier --ignore-path .prettierignore --check \"./**/*.json\"",
-    "json:write": "prettier --ignore-path .prettierignore --write \"./**/*.json\""
+    "json:write": "prettier --ignore-path .prettierignore --write \"./**/*.json\"",
+    "preinstall": "npm run githooks:setup",
+    "githooks:setup": "node ./utility/githooks/setup.js"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
