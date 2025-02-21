@@ -33,9 +33,13 @@ describe('usersession API server implementation', () => {
             }
         });
         server.writeSession(null, "myname", "myuser", {myprop: "myvalue"}).subscribe((id) => {
-            expect(id).toBe(1);
-            expect(mockAxios.history.post[0].data).toContain("<name><![CDATA[myname]]></name>");
-            expect(mockAxios.history.post[0].data).toContain("<value>myuser</value>");
+            try {
+                expect(id).toBe(1);
+                expect(mockAxios.history.post[0].data).toContain("<name><![CDATA[myname]]></name>");
+                expect(mockAxios.history.post[0].data).toContain("<value><![CDATA[myuser]]></value>");
+            } catch (e) {
+                done(e);
+            }
             done();
         });
     });
