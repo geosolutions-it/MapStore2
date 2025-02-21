@@ -29,14 +29,13 @@ const createLayer = (options, map) => {
 
     const features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
     const vectorFeatureFilter = createVectorFeatureFilter(options);
-
-    const featuresToRender = features.filter(vectorFeatureFilter);        // make filter for features if filter is existing
     let styledFeatures = new GeoJSONStyledFeatures({
-        features: featuresToRender,
+        features,
         id: options?.id,
         map: map,
         opacity: options.opacity,
-        queryable: options.queryable === undefined || options.queryable
+        queryable: options.queryable === undefined || options.queryable,
+        featureFilter: vectorFeatureFilter // make filter for features if filter is existing
     });
 
     layerToGeoStylerStyle(options)
@@ -64,8 +63,9 @@ Layers.registerType('vector', {
         if (!isEqual(newOptions.features, oldOptions.features)) {
             return createLayer(newOptions, map);
         }
-        if (!isEqual(newOptions?.layerFilter, oldOptions?.layerFilter)) {
-            return createLayer(newOptions, map);
+        if (layer?.styledFeatures && !isEqual(newOptions?.layerFilter, oldOptions?.layerFilter)) {
+            const vectorFeatureFilter = createVectorFeatureFilter(newOptions);
+            layer.styledFeatures.setFeatureFilter(vectorFeatureFilter);
         }
 
         if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {
