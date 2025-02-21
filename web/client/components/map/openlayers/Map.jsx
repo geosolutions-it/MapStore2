@@ -302,11 +302,9 @@ class OpenlayersMap extends React.Component {
                 this.map.updateSize();
             }, 0);
         }
-        const centerIsUpdated = this.isNearlyEqual(newProps.center.y, this.props.center.y) &&
-        this.isNearlyEqual(newProps.center.x, this.props.center.x);
 
-        if (this.map && ((this.props.projection !== newProps.projection) || centerIsUpdated || this.haveResolutionsChanged(newProps)) || this.haveRotationChanged(newProps) || this.props.limits !== newProps.limits) {
-            if (this.props.projection !== newProps.projection || centerIsUpdated || this.props.limits !== newProps.limits || this.haveRotationChanged(newProps)) {
+        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.haveRotationChanged(newProps) || this.props.limits !== newProps.limits) {
+            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits || this.haveRotationChanged(newProps)) {
                 let mapProjection = newProps.projection;
                 const center = reproject([
                     newProps.center.x,
