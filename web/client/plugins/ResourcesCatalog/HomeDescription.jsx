@@ -12,6 +12,7 @@ import HTML from '../../components/I18N/HTML';
 import Text from './components/Text';
 import { Jumbotron } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import src from '../../product/assets/img/hero.jpg';
 
 /**
  * This plugin shows a main description in the homepage
@@ -34,10 +35,7 @@ function HomeDescription({
             className={`${className} ms-secondary-colors _padding-lg _relative`}
             style={{
                 ...(backgroundSrc && {
-                    background: `url('${backgroundSrc}')`,
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'cover'
+                    backgroundImage: `url('${backgroundSrc}')`
                 }),
                 ...style
             }}
@@ -59,7 +57,7 @@ HomeDescription.propTypes = {
 };
 
 HomeDescription.defaultProps = {
-    backgroundSrc: 'assets/img/hero.jpg',
+    backgroundSrc: src,
     descriptionFooterMessageId: 'home.shortDescription',
     className: 'ms-home-description'
 };
