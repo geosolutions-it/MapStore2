@@ -8,12 +8,12 @@
 
 import React from 'react';
 import { createPlugin } from "../../utils/PluginsUtils";
-import FlexBox from './components/FlexBox';
+import FlexBox from '../../components/layout/FlexBox';
 import Menu from './components/Menu';
 import usePluginItems from '../../hooks/usePluginItems';
-import Button from './components/Button';
+import Button from '../../components/layout/Button';
 import tooltip from '../../components/misc/enhancers/tooltip';
-import Spinner from './components/Spinner';
+import Spinner from '../../components/layout/Spinner';
 import Icon from './components/Icon';
 import PropTypes from 'prop-types';
 const ButtonWithTooltip = tooltip(Button);

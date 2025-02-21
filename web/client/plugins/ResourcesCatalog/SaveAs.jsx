@@ -23,7 +23,7 @@ import { dashboardSaveError, dashboardSaved, dashboardLoaded } from '../../actio
 import { convertDependenciesMappingForCompatibility } from '../../utils/WidgetsUtils';
 import { show } from '../../actions/notifications';
 import InputControl from './components/InputControl';
-import ConfirmDialog from './components/ConfirmDialog';
+import ConfirmDialog from '../../components/layout/ConfirmDialog';
 
 function parseResourcePayload(resource, { name, resourceType } = {}) {
     return {

@@ -8,8 +8,8 @@
 
 import React from 'react';
 
-import Modal from '../../../components/misc/Modal';
-import Message from '../../../components/I18N/Message';
+import Modal from '../../components/misc/Modal';
+import Message from '../../components/I18N/Message';
 import Button from './Button';
 import FlexBox from './FlexBox';
 import Text from './Text';

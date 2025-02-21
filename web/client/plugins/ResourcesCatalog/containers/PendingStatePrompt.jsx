@@ -8,7 +8,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Prompt, withRouter } from 'react-router';
-import ConfirmDialog from '../components/ConfirmDialog';
+import ConfirmDialog from '../../../components/layout/ConfirmDialog';
 import { connect } from 'react-redux';
 import { push, replace } from 'connected-react-router';
 

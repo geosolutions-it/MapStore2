@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { createPlugin } from "../../utils/PluginsUtils";
-import ConfirmDialog from './components/ConfirmDialog';
+import ConfirmDialog from '../../components/layout/ConfirmDialog';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Persistence from '../../api/persistence';
