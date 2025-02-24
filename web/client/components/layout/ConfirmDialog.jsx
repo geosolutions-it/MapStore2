@@ -81,15 +81,15 @@ ConfirmDialog.defaultProps = {
     show: false,
     onCancel: () => {},
     onConfirm: () => {},
-    titleId: 'confirmTitle',
-    descriptionId: 'confirmMessage',
+    titleId: '',
+    descriptionId: '',
     errorId: '',
     disabled: false,
     loading: false,
     preventHide: true,
     cancelId: 'cancel',
     confirmId: 'confirm',
-    variant: 'primary'
+    variant: 'danger'
 };
 
 ConfirmDialog.propTypes = {
