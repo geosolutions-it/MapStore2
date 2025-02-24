@@ -62,7 +62,13 @@ module.exports = {
     parseSections: (sections) => {
         return Object.fromEntries(Object.keys(sections).map((key) => {
             const options =  sections[key];
-            return [key, checkFolder(path.join(options.path), options.check)];
+            return [key, checkFolder(path.join(options.path), options.check).sort((a, b) => {
+                return a < b
+                    ? -1
+                    : a > b
+                        ? 1
+                        : 0;
+            })];
         }));
     }
 };
