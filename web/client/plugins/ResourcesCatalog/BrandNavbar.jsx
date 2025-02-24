@@ -178,9 +178,9 @@ function BrandNavbar({
                     variant={variant}
                     menuItemComponent={BrandNavbarMenuItem}
                     items={[
-                        ...leftMenuItems,
+                        ...leftMenuItems.map((menuItem, idx) => ({ ...menuItem, position: idx + 1 })),
                         ...pluginLeftMenuItems
-                    ]}
+                    ].sort((a, b) => a.position - b.position)}
                 />
                 <Menu
                     centerChildrenVertically
@@ -190,9 +190,9 @@ function BrandNavbar({
                     size={size}
                     menuItemComponent={BrandNavbarMenuItem}
                     items={[
-                        ...rightMenuItems,
+                        ...rightMenuItems.map((menuItem, idx) => ({ ...menuItem, position: idx + 1 })),
                         ...pluginRightMenuItems
-                    ]}
+                    ].sort((a, b) => a.position - b.position)}
                 />
             </FlexBox>
         </>

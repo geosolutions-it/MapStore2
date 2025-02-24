@@ -76,6 +76,15 @@
     z-index: 1031;
 }
 
+#mapstore-navbar-container {
+    &:has(#search-bar-container) {
+        margin: 4px 0;
+        &:has(#mapstore-burger-menu-container) {
+            margin: 4px;
+        }
+    }
+}
+
 #search-bar-container.no-sidebar {
     margin-right: 0;
     position: relative;

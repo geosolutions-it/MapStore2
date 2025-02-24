@@ -1500,7 +1500,7 @@ describe('OpenlayersMap', () => {
             , document.getElementById("map"));
         map = ReactDOM.render(
             <OpenlayersMap
-                center={{y: 43.9323233378, x: 10.334677678}}
+                center={{y: 43.9323233388, x: 10.3346776790}}
                 zoom={1}
                 measurement={{}}
                 projection="EPSG:4326"

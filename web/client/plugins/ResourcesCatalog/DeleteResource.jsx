@@ -114,7 +114,7 @@ export default createPlugin('DeleteResource', {
             Component: DeleteResourcePlugin
         },
         BrandNavbar: {
-            target: 'right-menu',
+            target: 'left-menu',
             position: 4,
             priority: 3,
             Component: DeleteResourcePlugin
