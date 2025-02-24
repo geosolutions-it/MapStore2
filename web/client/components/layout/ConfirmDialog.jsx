@@ -15,6 +15,7 @@ import FlexBox from './FlexBox';
 import Text from './Text';
 import Spinner from './Spinner';
 import { Alert } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 function ConfirmDialog({
     show,
@@ -24,9 +25,9 @@ function ConfirmDialog({
     descriptionId,
     errorId,
     disabled,
-    cancelId = 'no',
-    confirmId = 'yes',
-    variant = 'danger',
+    cancelId,
+    confirmId,
+    variant,
     loading,
     children,
     preventHide
@@ -75,3 +76,35 @@ function ConfirmDialog({
 }
 
 export default ConfirmDialog;
+
+ConfirmDialog.defaultProps = {
+    show: false,
+    onCancel: () => {},
+    onConfirm: () => {},
+    titleId: 'confirmTitle',
+    descriptionId: 'confirmMessage',
+    errorId: '',
+    disabled: false,
+    loading: false,
+    preventHide: true,
+    cancelId: 'cancel',
+    confirmId: 'confirm',
+    variant: 'primary'
+};
+
+ConfirmDialog.propTypes = {
+    show: PropTypes.bool,
+    onCancel: PropTypes.func,
+    onConfirm: PropTypes.func,
+    titleId: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    descriptionId: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    errorId: PropTypes.string,
+    disabled: PropTypes.bool,
+    loading: PropTypes.bool,
+    preventHide: PropTypes.bool,
+    cancelId: PropTypes.string,
+    confirmId: PropTypes.string,
+    variant: PropTypes.string,
+    children: PropTypes.node
+};
+
