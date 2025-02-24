@@ -708,24 +708,7 @@
             "FeedbackMask"
         ],
         "common": [{
-          "name": "BrandNavbar",
-          "cfg": {
-            "rightMenuItems": [{
-              "type": "link",
-              "href": "https://docs.mapstore.geosolutionsgroup.com/",
-              "target": "blank",
-              "glyph": "book",
-              "labelId": "Documentation",
-              "variant": "default"
-            }, {
-              "type": "link",
-              "href": "https://github.com/geosolutions-it/MapStore2",
-              "target": "blank",
-              "label": "GitHub",
-              "glyph": "github",
-              "variant": "default"
-            }]
-          }
+          "name": "BrandNavbar"
         },
         { "name": "ManagerMenu" },
         "Login","Language", "ScrollTop", "Notifications"],

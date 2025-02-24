@@ -22,6 +22,104 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### HomeDescription plugin configuration changes
+
+The HomeDescription plugin has been refactored and a property has been removed:
+
+- `cfg.name` removed in favor of the translation message `home.shortDescription`
+
+For downstream projects review the `.less` or `.css` files for possible conflicting style related to the `.ms-home-description` class selector
+
+### Update of CDN favicon
+
+The usage of default CDN favicon is deprecated so existing downstream project still using this setup should be updated as follow:
+
+1. Add a favicon image inside the `assets/img` folder:
+
+    ```text
+    MapStoreProject/
+    |-- ...
+    |-- assets/
+    |    |-- img/
+    |         |-- favicon.png (new)
+    |-- ...
+    |-- dashboard-embedded-template.html
+    |-- dashboard-embedded.html
+    |-- embedded.html
+    |-- embeddedTemplate.html
+    |-- geostory-embedded-template.html
+    |-- geostory-embedded.html
+    |-- index.html
+    |-- indexTemplate.html
+    |-- ...
+    |-- prod-webpack.config.js
+    |-- ...
+    ```
+
+2. Remove the existing favicon link from all the html files (index.html, indexTemplate.html, embedded.html, embeddedTemplate.hml, ...):
+
+    ```diff
+    - <link rel="shortcut icon" type="image/png" href="https://cdn.jslibs.mapstore2.geo-solutions.it/leaflet/favicon.ico" />
+    ```
+
+3. Include the new favicon inside the `prod-webpack.config.js` file:
+
+    ```diff
+
+    + const favicon = path.join(__dirname, "assets", "img", "favicon.png');
+
+    module.exports = require('./MapStore2/build/buildConfig')({
+        ...
+        prodPlugins: [
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'indexTemplate.html'),
+                chunks: ['__PROJECTNAME__'],
+                publicPath: 'dist/',
+                inject: "body",
+                hash: true,
+    +           favicon
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'embeddedTemplate.html'),
+                chunks: ['__PROJECTNAME__-embedded'],
+                publicPath: 'dist/',
+                inject: "body",
+                hash: true,
+                filename: 'embedded.html',
+    +           favicon
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'apiTemplate.html'),
+                chunks: ['__PROJECTNAME__-api'],
+                publicPath: 'dist/',
+                inject: 'body',
+                hash: true,
+                filename: 'api.html',
+    +           favicon
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'geostory-embedded-template.html'),
+                chunks: ['geostory-embedded'],
+                publicPath: 'dist/',
+                inject: "body",
+                hash: true,
+                filename: 'geostory-embedded.html',
+    +           favicon
+            }),
+            new HtmlWebpackPlugin({
+                template: path.join(__dirname, 'dashboard-embedded-template.html'),
+                chunks: ['dashboard-embedded'],
+                publicPath: 'dist/',
+                inject: 'body',
+                hash: true,
+                filename: 'dashboard-embedded.html',
+    +           favicon
+            })
+        ],
+        ...
+    });
+    ```
+
 ### New homepage changes
 
 The new homepage work introduces significant changes about plugins and configurations. The list of plugins introduced by the homepage:
