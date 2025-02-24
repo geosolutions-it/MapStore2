@@ -1,9 +1,36 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 -240 1200 1200">
-  <g transform="matrix(1 0 0 -1 0 960)">
-   <path fill="currentColor"
-d="M42 972h114v-112h-114v112zM331 972h826v-112h-826v112zM42 674h114v-114h-114v114zM331 674h826v-114h-826v114zM42 374h114v-114h-114v114zM331 374h826v-114h-826v114zM42 73h114v-112h-114v112zM331 73h826v-112h-826v112z" />
-  </g>
-
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0 -240 1200 1200"
+   id="svg1"
+   sodipodi:docname="th-list.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.34208333"
+     inkscape:cx="176.85749"
+     inkscape:cy="784.89647"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     id="rect1-7"
+     style="stroke-width:2.54661"
+     d="M 42 -13 L 42 101 L 277.94727 101 L 277.94727 -13 L 42 -13 z M 391.94727 -13 L 391.94727 101 L 1157 101 L 1157 -13 L 391.94727 -13 z M 42 286 L 42 400 L 277.94727 400 L 277.94727 286 L 42 286 z M 391.94727 286 L 391.94727 400 L 1157 400 L 1157 286 L 391.94727 286 z M 42 586 L 42 700 L 277.94727 700 L 277.94727 586 L 42 586 z M 391.94727 586 L 391.94727 700 L 1157 700 L 1157 586 L 391.94727 586 z M 42 886 L 42 1000 L 277.94727 1000 L 277.94727 886 L 42 886 z M 391.94727 886 L 391.94727 1000 L 1157 1000 L 1157 886 L 391.94727 886 z " />
 </svg>

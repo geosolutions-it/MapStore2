@@ -9,6 +9,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import { isString } from 'lodash';
+import { createVectorFeatureFilter } from '../../utils/FilterUtils';
 
 /**
  * Base map component that renders a map.
@@ -104,7 +105,8 @@ class BaseMap extends React.Component {
         if (layer.features && layer.type === "vector") {
             const { plugins } = this.props;
             const { Feature } = plugins;
-            return layer.features.map((feature) => {
+            const vectorFeatureFilter = createVectorFeatureFilter(layer);
+            return layer.features.filter(vectorFeatureFilter).map((feature) => {
                 return (
                     <Feature
                         key={feature.id}

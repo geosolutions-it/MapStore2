@@ -103,7 +103,7 @@ class LayoutComponent extends Component {
 
   componentDidUpdate(prevProps) {
       if (prevProps.expanded && !this.props.expanded) {
-          this.setState({
+          this.setState({ // eslint-disable-line -- TODO: need to be fixed
               showModal: false,
               linkTarget: '',
               linkTitle: '',

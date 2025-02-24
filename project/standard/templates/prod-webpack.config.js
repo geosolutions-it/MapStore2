@@ -11,6 +11,9 @@ const paths = {
     framework: path.join(__dirname, "MapStore2", "web", "client"),
     code: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
 };
+
+const favicon = path.join(__dirname, "assets", "img", "favicon.png');
+
 module.exports = require('./MapStore2/build/buildConfig')({
     bundles: {
         '__PROJECTNAME__': path.join(__dirname, "js", "app"),
@@ -31,7 +34,8 @@ module.exports = require('./MapStore2/build/buildConfig')({
             chunks: ['__PROJECTNAME__'],
             publicPath: 'dist/',
             inject: "body",
-            hash: true
+            hash: true,
+            favicon
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'embeddedTemplate.html'),
@@ -39,7 +43,8 @@ module.exports = require('./MapStore2/build/buildConfig')({
             publicPath: 'dist/',
             inject: "body",
             hash: true,
-            filename: 'embedded.html'
+            filename: 'embedded.html',
+            favicon
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'apiTemplate.html'),
@@ -47,7 +52,8 @@ module.exports = require('./MapStore2/build/buildConfig')({
             publicPath: 'dist/',
             inject: 'body',
             hash: true,
-            filename: 'api.html'
+            filename: 'api.html',
+            favicon
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'geostory-embedded-template.html'),
@@ -55,7 +61,8 @@ module.exports = require('./MapStore2/build/buildConfig')({
             publicPath: 'dist/',
             inject: "body",
             hash: true,
-            filename: 'geostory-embedded.html'
+            filename: 'geostory-embedded.html',
+            favicon
         }),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'dashboard-embedded-template.html'),
@@ -63,7 +70,8 @@ module.exports = require('./MapStore2/build/buildConfig')({
             publicPath: 'dist/',
             inject: 'body',
             hash: true,
-            filename: 'dashboard-embedded.html'
+            filename: 'dashboard-embedded.html',
+            favicon
         })
     ],
     alias: {

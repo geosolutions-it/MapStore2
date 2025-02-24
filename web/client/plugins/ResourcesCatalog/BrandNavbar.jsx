@@ -16,6 +16,9 @@ import tooltip from '../../components/misc/enhancers/tooltip';
 import Spinner from './components/Spinner';
 import Icon from './components/Icon';
 import PropTypes from 'prop-types';
+import MenuNavLink from './components/MenuNavLink';
+import src from '../../product/assets/img/logo.png';
+
 const ButtonWithTooltip = tooltip(Button);
 
 function BrandNavbarMenuItem({
@@ -148,7 +151,8 @@ function BrandNavbar({
     variant,
     leftMenuItems,
     rightMenuItems,
-    items
+    items,
+    logo
 }, context) {
     const { loadedPlugins } = context;
     const configuredItems = usePluginItems({ items, loadedPlugins });
@@ -170,6 +174,11 @@ function BrandNavbar({
                 centerChildrenVertically
                 gap="sm"
             >
+                {logo ? (
+                    <MenuNavLink className="ms-brand-navbar-logo" href={logo.href || '#/'}>
+                        <img src={logo?.src} style={{ width: 'auto', height: '2rem', objectFit: 'contain', ...logo.style }}/>
+                    </MenuNavLink>
+                ) : null}
                 <FlexBox.Fill
                     component={Menu}
                     centerChildrenVertically
@@ -178,9 +187,9 @@ function BrandNavbar({
                     variant={variant}
                     menuItemComponent={BrandNavbarMenuItem}
                     items={[
-                        ...leftMenuItems,
+                        ...leftMenuItems.map((menuItem, idx) => ({ ...menuItem, position: idx + 1 })),
                         ...pluginLeftMenuItems
-                    ]}
+                    ].sort((a, b) => a.position - b.position)}
                 />
                 <Menu
                     centerChildrenVertically
@@ -190,9 +199,9 @@ function BrandNavbar({
                     size={size}
                     menuItemComponent={BrandNavbarMenuItem}
                     items={[
-                        ...rightMenuItems,
+                        ...rightMenuItems.map((menuItem, idx) => ({ ...menuItem, position: idx + 1 })),
                         ...pluginRightMenuItems
-                    ]}
+                    ].sort((a, b) => a.position - b.position)}
                 />
             </FlexBox>
         </>
@@ -212,6 +221,10 @@ BrandNavbar.contextTypes = {
 };
 
 BrandNavbar.defaultProps = {
+    logo: {
+        src,
+        href: '#/'
+    },
     leftMenuItems: [],
     rightMenuItems: []
 };
