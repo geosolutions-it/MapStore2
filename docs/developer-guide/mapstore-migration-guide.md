@@ -36,7 +36,7 @@ The usage of default CDN favicon is deprecated so existing downstream project st
 
 1. Add a favicon image inside the `assets/img` folder:
 
-    ```
+    ```text
     MapStoreProject/
     |-- ...
     |-- assets/
