@@ -15,6 +15,7 @@ import {
 } from '../../../../utils/VectorStyleUtils';
 import { applyDefaultStyleToVectorLayer } from '../../../../utils/StyleUtils';
 import GeoJSONStyledFeatures from  '../../../../utils/cesium/GeoJSONStyledFeatures';
+import { createVectorFeatureFilter } from '../../../../utils/FilterUtils';
 
 const createLayer = (options, map) => {
 
@@ -27,13 +28,14 @@ const createLayer = (options, map) => {
     }
 
     const features = flattenFeatures(options?.features || [], ({ style, ...feature }) => feature);
-
+    const vectorFeatureFilter = createVectorFeatureFilter(options);
     let styledFeatures = new GeoJSONStyledFeatures({
         features,
         id: options?.id,
         map: map,
         opacity: options.opacity,
-        queryable: options.queryable === undefined || options.queryable
+        queryable: options.queryable === undefined || options.queryable,
+        featureFilter: vectorFeatureFilter // make filter for features if filter is existing
     });
 
     layerToGeoStylerStyle(options)
@@ -43,7 +45,6 @@ const createLayer = (options, map) => {
                     styledFeatures.setStyleFunction(styleFunc);
                 });
         });
-
     return {
         detached: true,
         styledFeatures,
@@ -61,6 +62,10 @@ Layers.registerType('vector', {
     update: (layer, newOptions, oldOptions, map) => {
         if (!isEqual(newOptions.features, oldOptions.features)) {
             return createLayer(newOptions, map);
+        }
+        if (layer?.styledFeatures && !isEqual(newOptions?.layerFilter, oldOptions?.layerFilter)) {
+            const vectorFeatureFilter = createVectorFeatureFilter(newOptions);
+            layer.styledFeatures.setFeatureFilter(vectorFeatureFilter);
         }
 
         if (layer?.styledFeatures && !isEqual(newOptions.style, oldOptions.style)) {

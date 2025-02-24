@@ -31,7 +31,8 @@ import {
     editorMetadataSelector,
     selectedStyleMetadataSelector,
     editingAllowedRolesSelector,
-    editingAllowedGroupsSelector
+    editingAllowedGroupsSelector,
+    canEditSelector
 } from '../styleeditor';
 import {
     setCustomUtils,
@@ -791,6 +792,34 @@ describe('Test styleeditor selector', () => {
                     }
                 }
             })).toBeFalsy();
+        });
+        it('test `canEdit` taking precedence over allowed roles and groups', () => {
+            expect(canEditStyleSelector({
+                styleeditor: {
+                    canEdit: true,
+                    editingAllowedRoles: ['USER1'],
+                    editingAllowedGroups: ['some']
+                },
+                security: {
+                    user: {
+                        role: 'USER',
+                        groups: {
+                            group: {
+                                enabled: true,
+                                groupName: 'test'
+                            }
+                        }
+                    }
+                }
+            })).toBeTruthy();
+        });
+        it('test canEditSelector', () => {
+            expect(canEditSelector({
+                styleeditor: {
+                    canEdit: true
+                }
+            })).toBeTruthy();
+            expect(canEditSelector()).toBeFalsy();
         });
     });
 });

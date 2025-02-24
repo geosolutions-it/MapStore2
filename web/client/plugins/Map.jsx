@@ -27,7 +27,7 @@ import additionalLayersReducer from "../reducers/additionallayers";
 import mapEpics from "../epics/map";
 import pluginsCreator from "./map/index";
 import withScalesDenominators from "../components/map/enhancers/withScalesDenominators";
-import { createFeatureFilter } from '../utils/FilterUtils';
+import { createVectorFeatureFilter } from '../utils/FilterUtils';
 import ErrorPanel from '../components/map/ErrorPanel';
 import catalog from "../epics/catalog";
 import backgroundSelector from "../epics/backgroundselector";
@@ -343,7 +343,8 @@ class MapPlugin extends React.Component {
     renderLayerContent = (layer, projection) => {
         const plugins = this.state.plugins;
         if (layer.features) {
-            return layer.features.filter(createFeatureFilter(layer.filterObj)).map( (feature) => {
+            const vectorFeatureFilter = createVectorFeatureFilter(layer);
+            return layer.features.filter(vectorFeatureFilter).map((feature) => {
                 return (
                     <plugins.Feature
                         key={feature.id}

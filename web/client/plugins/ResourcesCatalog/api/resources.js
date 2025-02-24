@@ -139,8 +139,20 @@ const getFilter = ({
     };
 };
 
+const parseDetailsSettings = (detailsSettings) => {
+    if (isString(detailsSettings)) {
+        try {
+            return JSON.parse(detailsSettings);
+        } catch (e) {
+            return {};
+        }
+    }
+    return detailsSettings || {};
+};
+
 export const requestResources = ({
-    params
+    params,
+    config
 } = {}, { user } = {}) => {
 
     const {
@@ -160,6 +172,7 @@ export const requestResources = ({
         query
     }),
     {
+        ...config,
         params: {
             includeAttributes: true,
             includeTags: true,
@@ -199,8 +212,13 @@ export const requestResources = ({
                         isNextPageAvailable: page < (response?.totalCount / pageSize),
                         resources: resources
                             .map(({ tags, ...resource }) => {
+                                const detailsSettings = parseDetailsSettings(resource?.attributes?.detailsSettings);
                                 return {
                                     ...resource,
+                                    attributes: {
+                                        ...resource?.attributes,
+                                        detailsSettings
+                                    },
                                     ...(tags && { tags: castArray(tags) })
                                 };
                             })
@@ -219,17 +237,6 @@ export const requestResources = ({
                     };
                 });
         });
-};
-
-const parseDetailsSettings = (detailsSettings) => {
-    if (isString(detailsSettings)) {
-        try {
-            return JSON.parse(detailsSettings);
-        } catch (e) {
-            return {};
-        }
-    }
-    return detailsSettings || {};
 };
 
 export const requestResource = ({ resource, user }) => {

@@ -189,7 +189,7 @@ module.exports = {
         "react/jsx-no-duplicate-props": 2, // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-duplicate-props.md
         "react/display-name": 0,         // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/display-name.md
         "react/jsx-boolean-value": 2,    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-boolean-value.md
-        "react/jsx-quotes": [2, "double"], // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-quotes.md
+        "jsx-quotes": [2, "prefer-double"], // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-quotes.md
         "react/jsx-no-undef": 2,         // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-undef.md
         "react/jsx-sort-props": 0,       // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-sort-props.md
         "react/jsx-sort-prop-types": 0,  // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-sort-prop-types.md
@@ -199,54 +199,20 @@ module.exports = {
         "react/no-did-update-set-state": 2, // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-did-update-set-state.md
         "react/no-multi-comp": 0,        // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-multi-comp.md
         "react/no-unknown-property": 2,  // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-unknown-property.md
-        "react/prop-types": [2, { "ignore": ["children"] }],           // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md
+        "react/prop-types": [0, { "ignore": ["children"] }],           // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/prop-types.md
         "react/react-in-jsx-scope": 2,   // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/react-in-jsx-scope.md
         "react/self-closing-comp": 2,    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md
         "react/wrap-multilines": 2,      // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/wrap-multilines.md
-        "react/sort-comp": [2, {         // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/sort-comp.md
-            "order": [
-                "displayName",
-                "propTypes",
-                "inheritedPropTypes",
-                "contextTypes",
-                "childContextTypes",
-                "mixins",
-                "statics",
-                "defaultProps",
-                "constructor",
-                "getDefaultProps",
-                "/^state$/",
-                "getInitialState",
-                "getChildContext",
-                "UNSAFE_componentWillMount",
-                "componentWillMount",
-                "componentDidMount",
-                "UNSAFE_componentWillReceiveProps",
-                "componentWillReceiveProps",
-                "shouldComponentUpdate",
-                "UNSAFE_componentWillUpdate",
-                "componentWillUpdate",
-                "componentDidUpdate",
-                "componentWillUnmount",
-                "/^on.+$/",
-                "/^get.+$/",
-                "/^render.+$/",
-                "render"
-            ],
-            // CUSTOM
-            // prevent to `import _ from 'lodash';`. Allows `import {get} from 'lodash';` or `import get from 'lodash/get';`
-            // for bundle size
-            "no-restricted-imports": [2,
-                {
-                    "name": "lodash",
-                    "importNames": ["default"],
-                    "message": "Please use the default import from 'lodash/functionName' instead."
-                }
-            ],
-            // prevent to `const _ = require('lodash')`. Allows `const get = require('lodash/get');`
-            // for bundle size
-            "no-restricted-modules": [2, { "paths": ["lodash", "!lodash/*"] }]
-        }]
+        "no-restricted-imports": [2,
+            {
+                "name": "lodash",
+                "importNames": ["default"],
+                "message": "Please use the default import from 'lodash/functionName' instead."
+            }
+        ],
+        // prevent to `const _ = require('lodash')`. Allows `const get = require('lodash/get');`
+        // for bundle size
+        "no-restricted-modules": [2, { "paths": ["lodash", "!lodash/*"] }]
     }
 };
 

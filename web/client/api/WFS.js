@@ -99,6 +99,7 @@ export const getFeatureLayer = (layer, {version =  "1.1.0", filters, proj, outpu
         .concat(featureGridFilter ? featureGridFilter : []);
     const reqBody = wfsGetFeature(query(
         typeName,
+        // TODO: insert propertyName before filter to limit attributes to return
         allFilters.length > 0
             ? filter(
                 and(

@@ -8,6 +8,7 @@
 
 import { isEmpty, isEqual, omit, isArray, isObject } from 'lodash';
 import merge from 'lodash/fp/merge';
+import uuid from 'uuid/v1';
 
 const NODATA = 'NODATA';
 /**
@@ -125,7 +126,8 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
     ];
     const categoryOptions = {
         'thumbnail': {
-            tail: '/raw?decode=datauri',
+            // this forces the reload the thumbnail image when updated
+            tail: `/raw?decode=datauri&v=${uuid()}`,
             category: 'THUMBNAIL'
         },
         'details': {

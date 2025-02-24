@@ -27,7 +27,7 @@ const createAttributeList = (metadata = {}) => {
     const attributes = metadata.attributes || omit(metadata, ["name", "description", "id", "advertised"]);
 
     const xmlAttrs = Object.keys(attributes).map((key) => {
-        return "<attribute><name>" + key + "</name><value>" + attributes[key] + "</value><type>STRING</type></attribute>";
+        return "<attribute><name>" + key + "</name><value><![CDATA[" + attributes[key] + "]]></value><type>STRING</type></attribute>";
     });
     let attributesSection = "";
     if (xmlAttrs.length > 0) {

@@ -32,7 +32,11 @@ const DEFAULT_TIME_PART = "00:00:00";
  * actual timezone
 */
 
-export default ({dateTypeProp = "type", dateProp = 'date', setDateProp = 'onSetDate'} = {}) => compose(
+export default ({
+    dateTypeProp = "type",
+    dateProp = 'date',
+    setDateProp = 'onSetDate'
+} = {}) => compose(
     withPropsOnChange([dateProp], ({ [dateProp]: date, [dateTypeProp]: type, useUTCOffset = true }) => {
         let dateToParse = date;
         let datePart = DEFAULT_DATE_PART;
