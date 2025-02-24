@@ -33,11 +33,11 @@ export default ({
                 onReloadConfirm(false);
                 onMapViewerReload();
             }}
+            titleId={<Message msgId={confirmMessage}/>}
+            preventHide
             variant="danger"
             confirmId="confirm"
-            cancelId="cancel"
-        >
-            <Message msgId={confirmMessage}/>
+            cancelId="cancel">
         </ConfirmDialog>
         <MapViewer
             className={className}

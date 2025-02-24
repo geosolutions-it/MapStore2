@@ -11,9 +11,9 @@ export default ({
     show
     onCancel={onClose}
     onConfirm={onConfirm}
-    variant="success"
-    confirmId="yes"
-    cancelId="no"
+    variant="danger"
+    titleId={<Message msgId="featuregrid.clear"/>}
+    confirmId={`featuregrid.yesButton`}
+    cancelId={`featuregrid.noButton`}
     disabled={saving}>
-    <Message msgId="featuregrid.clear"/>
 </Confirm></Portal>);

@@ -44,10 +44,11 @@ export default ({
                 onConfirm();
                 onShowConfirm(false);
             }}
+            titleId={<Message msgId={confirmMessage}/>}
+            preventHide
             variant="danger"
             confirmId="confirm"
             cancelId="cancel">
-            <Message msgId={confirmMessage}/>
         </ConfirmDialog>
     </Portal>}
 </>);

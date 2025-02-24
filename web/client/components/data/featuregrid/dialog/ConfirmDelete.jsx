@@ -13,8 +13,9 @@ export default ({
     onCancel={onClose}
     onConfirm={onConfirm}
     variant="danger"
-    confirmId="yes"
-    cancelId="no"
+    confirmId={`featuregrid.deleteButton`}
+    cancelId={`featuregrid.noButton`}
+    preventHide
+    titleId={<Message msgId="featuregrid.delete" msgParams={{count: count}}/>}
     disabled={saving}>
-    <Message msgId="featuregrid.delete" msgParams={{count: count}}/>
 </Confirm></Portal>);

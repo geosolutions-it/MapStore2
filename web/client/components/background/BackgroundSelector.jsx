@@ -236,10 +236,11 @@ class BackgroundSelector extends React.Component {
                         this.props.removeBackground(confirmLayerId);
                         this.props.onRemoveBackground(false);
                     }}
+                    titleId={<Message msgId="backgroundSelector.confirmDelete" msgParams={{title: confirmLayerTitle}}/>}
                     variant="danger"
                     confirmId="confirm"
+                    preventHide
                     cancelId="cancel">
-                    <Message msgId="backgroundSelector.confirmDelete" msgParams={{title: confirmLayerTitle}}/>
                 </ConfirmDialog>
                 {this.props.modalParams && <BackgroundDialog
                     onClose={this.props.clearModal}

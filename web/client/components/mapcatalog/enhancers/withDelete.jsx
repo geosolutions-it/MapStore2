@@ -37,10 +37,11 @@ export default (Component) => ({
                     onDelete(resourceToDelete);
                     setResourceToDelete();
                 }}
+                preventHide
+                titleId={<Message msgId="mapCatalog.deleteConfirmContent" msgParams={{mapName: resourceToDelete?.name}}/>}
                 variant="danger"
-                confirmId="delete"
+                confirmId="confirm"
                 cancelId="cancel">
-                <Message msgId="mapCatalog.deleteConfirmContent" msgParams={{mapName: resourceToDelete?.name}}/>
             </ConfirmDialog>
         </>
     );

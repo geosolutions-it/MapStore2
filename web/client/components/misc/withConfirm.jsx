@@ -25,7 +25,7 @@ const ConfirmModal = compose(
     confirmNo = "no",
     confirmTitle = "confirm",
     confirmContent,
-    confirmButtonBSStyle = "primary",
+    confirmButtonBSStyle = "danger",
     show = false,
     onClose = () => { },
     onConfirm = () => { }
@@ -36,11 +36,11 @@ const ConfirmModal = compose(
                 show={show}
                 onCancel={onClose}
                 onConfirm={onConfirm}
-                title={confirmTitle}
+                titleId={confirmTitle}
+                descriptionId={confirmContent}
                 confirmId={confirmYes}
                 cancelId={confirmNo}
                 variant={confirmButtonBSStyle}>
-                {confirmContent}
             </Confirm>
         </div>
     </Portal>) : null;

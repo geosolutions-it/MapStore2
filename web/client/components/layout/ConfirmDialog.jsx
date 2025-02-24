@@ -48,10 +48,10 @@ function ConfirmDialog({
         >
             <FlexBox classNames={['_padding-lr-lg', '_padding-tb-md']} column gap="md">
                 <Text fontSize="lg" strong>
-                    {titleId ? <Message msgId={titleId} /> : null}
+                    {typeof titleId === 'string' ? <Message msgId={titleId} /> : titleId || null}
                 </Text>
                 {descriptionId ? <Text>
-                    <Message msgId={descriptionId} />
+                    {typeof descriptionId === 'string' ? <Message msgId={descriptionId} /> : descriptionId || null}
                 </Text> : null}
                 {children}
                 {errorId
