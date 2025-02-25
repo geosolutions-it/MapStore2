@@ -30,7 +30,9 @@ function ConfirmDialog({
     variant,
     loading,
     children,
-    preventHide
+    preventHide,
+    titleParams,
+    descriptionParams
 }) {
 
     function handleHide() {
@@ -49,10 +51,10 @@ function ConfirmDialog({
         >
             <FlexBox classNames={['_padding-lr-lg', '_padding-tb-md']} column gap="md">
                 <Text fontSize="lg" strong>
-                    {typeof titleId === 'string' ? <Message msgId={titleId} /> : titleId || null}
+                    {titleId ? <Message msgId={titleId} msgParams={titleParams} /> : null}
                 </Text>
                 {descriptionId ? <Text>
-                    {typeof descriptionId === 'string' ? <Message msgId={descriptionId} /> : descriptionId || null}
+                    <Message msgId={descriptionId} msgParams={descriptionParams} />
                 </Text> : null}
                 {children}
                 {errorId
@@ -96,8 +98,8 @@ ConfirmDialog.propTypes = {
     show: PropTypes.bool,
     onCancel: PropTypes.func,
     onConfirm: PropTypes.func,
-    titleId: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    descriptionId: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    titleId: PropTypes.string,
+    descriptionId: PropTypes.string,
     errorId: PropTypes.string,
     disabled: PropTypes.bool,
     loading: PropTypes.bool,

@@ -1,7 +1,7 @@
 import React from 'react';
 import Confirm from '../../../layout/ConfirmDialog';
 import Portal from '../../../misc/Portal';
-import Message from '../../../I18N/Message';
+
 
 export default ({
     onClose = () => {},
@@ -15,6 +15,6 @@ export default ({
     confirmId={`featuregrid.yesButton"`}
     cancelId={`featuregrid.noButton`}
     preventHide
-    titleId={<Message msgId="featuregrid.featureClose"/>}
+    titleId={"featuregrid.featureClose"}
     disabled={saving}>
 </Confirm></Portal>);

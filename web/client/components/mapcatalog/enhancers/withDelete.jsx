@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import Message from '../../I18N/Message';
+
 import ConfirmDialog from '../../layout/ConfirmDialog';
 
 export default (Component) => ({
@@ -38,7 +38,8 @@ export default (Component) => ({
                     setResourceToDelete();
                 }}
                 preventHide
-                titleId={<Message msgId="mapCatalog.deleteConfirmContent" msgParams={{mapName: resourceToDelete?.name}}/>}
+                titleId={"mapCatalog.deleteConfirmContent"}
+                titleParams={{mapName: resourceToDelete?.name}}
                 variant="danger"
                 confirmId="confirm"
                 cancelId="cancel">

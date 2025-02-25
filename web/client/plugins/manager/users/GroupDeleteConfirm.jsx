@@ -58,7 +58,7 @@ class GroupDeleteConfirm extends React.Component {
             confirmId={this.renderConfirmButtonContent()}
             cancelId="cancel"
             preventHide
-            titleId={<Message msgId="usergroups.confirmDeleteGroup" />}
+            titleId={"usergroups.confirmDeleteGroup"}
             disabled={this.props.deleteStatus === "deleting"}>
             <div style={{margin: "10px 0"}}><GroupCard group={this.props.group} /></div>
             <div>{this.renderError()}</div>

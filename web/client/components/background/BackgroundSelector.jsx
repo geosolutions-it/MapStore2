@@ -9,7 +9,6 @@
 import React, { lazy } from 'react';
 
 import assign from 'object-assign';
-import Message from '../I18N/Message';
 import PreviewButton from './PreviewButton';
 import PreviewList from './PreviewList';
 import PreviewIcon from './PreviewIcon';
@@ -236,7 +235,8 @@ class BackgroundSelector extends React.Component {
                         this.props.removeBackground(confirmLayerId);
                         this.props.onRemoveBackground(false);
                     }}
-                    titleId={<Message msgId="backgroundSelector.confirmDelete" msgParams={{title: confirmLayerTitle}}/>}
+                    titleId={"backgroundSelector.confirmDelete"}
+                    titleParams={{title: confirmLayerTitle}}
                     variant="danger"
                     confirmId="confirm"
                     preventHide

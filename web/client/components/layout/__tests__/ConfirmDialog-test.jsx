@@ -59,18 +59,6 @@ describe('ConfirmDialog component', () => {
         expect(buttons.length).toBe(2);
         Simulate.click(buttons[0]);
     });
-    it('should render custom component as title', () => {
-        const CustomTitle = () => <div data-test="custom-title">Custom Title</div>;
-        ReactDOM.render(
-            <ConfirmDialog
-                show
-                titleId={<CustomTitle />}
-            />,
-            document.getElementById('container')
-        );
-        const customTitle = document.querySelector('[data-test="custom-title"]');
-        expect(customTitle).toBeTruthy();
-    });
     it('should disable confirm button when disabled prop is true', () => {
         ReactDOM.render(
             <ConfirmDialog

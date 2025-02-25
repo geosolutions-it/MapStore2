@@ -8,7 +8,6 @@
 
 import React from 'react';
 import Button from '../misc/Button';
-import Message from '../I18N/Message';
 import ConfirmDialog from '../layout/ConfirmDialog';
 import Portal from '../misc/Portal';
 
@@ -44,7 +43,7 @@ export default ({
                 onConfirm();
                 onShowConfirm(false);
             }}
-            titleId={<Message msgId={confirmMessage}/>}
+            titleId={confirmMessage}
             preventHide
             variant="danger"
             confirmId="confirm"

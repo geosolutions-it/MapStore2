@@ -232,7 +232,8 @@ export default ({
                 setTemplateToDelete();
                 onShowDeleteConfirm(false);
             }}
-            titleId={<Message msgId="contextCreator.configureTemplates.deleteConfirm" msgParams={{templateName: get(templateToDelete, 'name')}}/>}
+            titleId={"contextCreator.configureTemplates.deleteConfirm"}
+            titleParams={{templateName: get(templateToDelete, 'name')}}
             preventHide
             variant="danger"
             confirmId="confirm"

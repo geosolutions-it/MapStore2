@@ -8,7 +8,7 @@
 
 import React from 'react';
 
-import Message from '../I18N/Message';
+
 import ConfirmDialog from '../layout/ConfirmDialog';
 import MapViewer from '../../containers/MapViewer';
 import { MapLibraries } from '../../utils/MapTypeUtils';
@@ -33,7 +33,7 @@ export default ({
                 onReloadConfirm(false);
                 onMapViewerReload();
             }}
-            titleId={<Message msgId={confirmMessage}/>}
+            titleId={confirmMessage}
             preventHide
             variant="danger"
             confirmId="confirm"

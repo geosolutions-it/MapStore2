@@ -144,8 +144,8 @@ export default ({
             <ConfirmDialog
                 show={showConfirm}
                 preventHide
-                titleId={<Message msgId="mapTemplates.confirmReplaceTitle"/>}
-                descriptionId={<Message msgId="mapTemplates.confirmReplaceMessage"/>}
+                titleId={"mapTemplates.confirmReplaceTitle"}
+                descriptionId={"mapTemplates.confirmReplaceMessage"}
                 onCancel={() => {
                     setTemplateToReplace();
                     onShowConfirm(false);

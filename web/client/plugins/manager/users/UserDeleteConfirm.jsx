@@ -59,7 +59,7 @@ class UserDeleteConfirm extends React.Component {
             confirmId={this.renderConfirmButtonContent()}
             disabled={this.props.deleteStatus === "deleting"}
             preventHide
-            titleId={<Message msgId="users.confirmDeleteUser" />}>
+            titleId={"users.confirmDeleteUser"}>
             <div style={{margin: "10px 0"}}><UserCard user={this.props.user} /></div>
             <div>{this.renderError()}</div>
         </Confirm>);

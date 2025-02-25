@@ -96,7 +96,7 @@ function AnnotationsInfoViewer({
                     }}
                     variant="danger"
                     preventHide
-                    titleId={<Message msgId="annotations.undoDeleteFeature" />}
+                    titleId={"annotations.undoDeleteFeature"}
                     confirmId={`annotations.confirm`}
                     cancelId={`annotations.cancel`}>
                 </ConfirmDialog>
@@ -296,7 +296,7 @@ function AnnotationsPanel({
                     onConfirm={() => handleConfirmClose()}
                     variant="danger"
                     preventHide
-                    titleId={<Message msgId="annotations.undo" />}
+                    titleId={"annotations.undo"}
                     confirmId={`annotations.confirm`}
                     cancelId={`annotations.cancel`}>
                 </ConfirmDialog>
