@@ -324,7 +324,7 @@ export default {
                             enableScalebox: false,
                             enableRefresh: false
                         },
-                        syncMapPreview: true,
+                        syncMapPreview: false,      // make it false to prevent map sync
                         useFixedScales: false,
                         scales: [],
                         ignoreLayers: ["google", "bing"],
