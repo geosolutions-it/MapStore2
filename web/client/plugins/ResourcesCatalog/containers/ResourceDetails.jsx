@@ -119,6 +119,13 @@ function ResourceDetails({
         onChange(options, resourcesGridId);
     }
 
+    // resource details component can be used with the resources grid (resourceType equal to undefined)
+    // or inside a specific viewer viewer
+    const isSpecificResourceType = resourceType !== undefined;
+
+    // canCopy is possible only inside a specific viewer
+    const canEditResource = !!(resource?.canEdit
+        || (isSpecificResourceType && resource?.canCopy));
     return (
         <div className="ms-details-panel">
             <DetailsHeader
@@ -126,7 +133,7 @@ function ResourceDetails({
                 editing={editing}
                 tools={
                     <FlexBox centerChildrenVertically gap="sm">
-                        {resourceType === undefined && editing ? <Button
+                        {!isSpecificResourceType && editing ? <Button
                             tooltipId="resourcesCatalog.apply"
                             className={isEmpty(pendingChanges?.changes) ? undefined : 'ms-notification-circle warning'}
                             disabled={isEmpty(pendingChanges?.changes)}
@@ -134,7 +141,7 @@ function ResourceDetails({
                         >
                             <Icon glyph="floppy-disk" type="glyphicon" />
                         </Button> : null}
-                        {(resource?.canEdit || resource?.canCopy) ? <Button
+                        {canEditResource ? <Button
                             tooltipId="resourcesCatalog.editResourceProperties"
                             square
                             variant={editing ? 'success' : undefined}
