@@ -4000,8 +4000,9 @@
             "zoomIn": "Veuillez zoomer sur la carte pour voir la couverture Street View",
             "errorOccurred": "Une erreur s'est produite : ",
             "errors": {
-                "invalidCredentials": "Identifiants invalides",
-                "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur."
+              "invalidCredentials": "Identifiants invalides",
+              "projectionNotAvailable": "La projection {srs} configurée n'est pas disponible. Veuillez contacter l'administrateur.",
+              "notLoggedIn": "<p>Vous n'êtes pas connecté à Street Smart. Causes possibles : <ul><li>Votre navigateur peut bloquer les popups. Activez les popups pour ce site et cliquez sur \"Recharger l'API\" pour vous reconnecter.</li><li>Votre session peut être invalide, essayez de cliquer sur \"Déconnexion\", complétez la procédure de déconnexion et rouvrez l'outil.</li></ul>Si le problème persiste, contactez l'administrateur.</p>"
             },
             "reloadAPI": "Recharger l'API"
           }

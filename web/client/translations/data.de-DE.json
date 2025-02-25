@@ -4038,8 +4038,9 @@
             "zoomIn": "Bitte zoomen Sie in die Karte, um die Street-View-Abdeckung zu sehen",
             "errorOccurred": "Fehler aufgetreten: ",
             "errors": {
-                "invalidCredentials": "Ungültige Anmeldeinformationen",
-                "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator."
+              "invalidCredentials": "Ungültige Anmeldeinformationen",
+              "projectionNotAvailable": "Die konfigurierte Projektion {srs} ist nicht verfügbar. Bitte kontaktieren Sie den Administrator.",
+              "notLoggedIn": "<p>Sie sind nicht bei Street Smart angemeldet. Mögliche Ursachen: <ul><li>Ihr Browser blockiert möglicherweise Popups. Aktivieren Sie Popups für diese Seite und klicken Sie auf \"API neu laden\", um sich erneut anzumelden.</li><li>Ihre Sitzung ist möglicherweise ungültig. Versuchen Sie, auf \"Abmelden\" zu klicken, schließen Sie den Abmeldevorgang ab und öffnen Sie das Tool erneut.</li></ul>Wenn das Problem weiterhin besteht, wenden Sie sich an den Administrator.</p>"
             },
             "reloadAPI": "API neu laden"
           }

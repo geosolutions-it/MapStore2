@@ -4012,7 +4012,8 @@
             "errorOccurred": "Error occurred: ",
             "errors": {
               "invalidCredentials": "Invalid credentials",
-              "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator."
+              "projectionNotAvailable": "The projection {srs} configured is not available. Please contact the administrator.",
+              "notLoggedIn": "<p>You are not logged into Street Smart. Possible causes: <ul><li>Your browser might be blocking popups. Enable popups for this site and click \"Reload API\" to log in again.</li><li>Your session might be invalid, try clicking \"Logout\", complete the logout procedure, and reopen the tool.</li></ul>If the problem persists, contact the administrator.</p>"
             },
             "reloadAPI": "Reload API"
           }

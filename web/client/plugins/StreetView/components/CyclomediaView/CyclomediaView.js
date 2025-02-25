@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {isEmpty} from 'lodash';
 import Message from '../../../../components/I18N/Message';
+import HTML from '../../../../components/I18N/HTML';
 
 import { isProjectionAvailable } from '../../../../utils/ProjectionUtils';
 import { reproject } from '../../../../utils/CoordinatesUtils';
@@ -18,21 +19,6 @@ const PROJECTION_NOT_AVAILABLE = "Projection not available";
 const isInvalidCredentials = (error) => {
     return error?.message?.indexOf?.("code 401");
 };
-function checkPopupBlocked(err = "") {
-    const popupErr = "Popup blocked. Please allow popups for this site and refresh the page.";
-    if (err?.message?.indexOf?.("not logged in") >= 0) {
-        const win = window.open('', '_blank', 'width=1,height=1');
-        if (win && win.closed) {
-            return new Error(popupErr);
-        } else if (win) {
-            win.close();
-            return false;
-        }
-        return new Error(popupErr);
-
-    }
-    return false;
-}
 /**
  * Parses the error message to show to the user in the alert an user friendly message
  * @private
@@ -40,11 +26,17 @@ function checkPopupBlocked(err = "") {
  * @returns {string|JSX.Element} the error message
  */
 const getErrorMessage = (error, msgParams = {}) => {
+    if (!error) {
+        return null;
+    }
     if (isInvalidCredentials(error) >= 0) {
         return <Message msgId="streetView.cyclomedia.errors.invalidCredentials" msgParams={msgParams} />;
     }
     if (error?.message?.indexOf?.(PROJECTION_NOT_AVAILABLE) >= 0) {
         return <Message msgId="streetView.cyclomedia.errors.projectionNotAvailable" msgParams={msgParams} />;
+    }
+    if (error?.message?.indexOf?.("not logged in") >= 0) {
+        return <HTML msgId="streetView.cyclomedia.errors.notLoggedIn" />;
     }
     return error?.message ?? "Unknown error";
 };
@@ -221,18 +213,6 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
             setError(null);
         }).catch(function(err) {
             setInitializing(false);
-            if (isConfiguredOauth) {
-                // check if the error is related to the oauth login, in particular to popup blocked.
-                // check if popup is blocked and show a message to the user, because the street smart api error do not provide a clear message
-                const blockedPopup = checkPopupBlocked(err);
-                if ( blockedPopup ) {
-                    console.error('Cyclomedia API: init: error: ' + blockedPopup);
-                    setError(blockedPopup);
-                    setReloadAllowed(true);
-                    return;
-                }
-
-            }
             setError(err);
             setReloadAllowed(true);
             if (err) {
@@ -383,26 +363,32 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
         }} style={{ ...style, display: showPanoramaViewer ? 'block' : 'none'}}  srcDoc={srcDoc}>
 
         </iframe>
-        <Alert bsStyle="danger" style={{...style, textAlign: 'center', alignContent: 'center', display: showError ? 'block' : 'none'}} key="error">
+        <Alert bsStyle="danger"
+            style={{...style, textAlign: 'center', alignContent: 'center', display: showError ? 'block' : 'none', overflow: 'auto'}} key="error">
             <Message msgId="streetView.cyclomedia.errorOccurred" />
             {getErrorMessage(error, {srs})}
-            {initialized || reloadAllowed ? <div><Button
-                onClick={() => {
-                    setError(null);
-                    setReloadAllowed(false);
-                    try {
-                        setReload(reload + 1);
-                    } catch (e) {
-                        console.error(e);
-                    }
-                }}>
-                <Message msgId="streetView.cyclomedia.reloadAPI"/>
-            </Button></div> : null}
-            {
-                isConfiguredOauth
+            <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
+                {initialized || reloadAllowed ? <div><Button
+                    style={{margin: 10}}
+                    onClick={() => {
+                        setError(null);
+                        setReloadAllowed(false);
+                        try {
+                            setReload(reload + 1);
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }}>
+                    <Message msgId="streetView.cyclomedia.reloadAPI"/>
+                </Button></div> : null}
+                {
+                    isConfiguredOauth
+                && showLogout
                 && !showCredentialsForm
                 && !initialized
+                && error?.message?.indexOf?.("not logged in") >= 0
                 && (<CTButton
+                    style={{margin: 10}}
                     key="logout"
                     confirmContent={<Message msgId="streetView.cyclomedia.confirmLogout" />}
                     tooltipId="streetView.cyclomedia.tryForceLogout"
@@ -411,7 +397,8 @@ const CyclomediaView = ({ apiKey, style, location = {}, setPov = () => {}, setLo
                     }}>
                     <Glyphicon glyph="log-out" />&nbsp;<Message msgId="streetView.cyclomedia.logout" />
                 </CTButton>)
-            }
+                }
+            </div>
         </Alert>
     </>);
 };
