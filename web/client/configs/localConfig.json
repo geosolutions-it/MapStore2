@@ -589,8 +589,7 @@
             "FeedbackMask",
             "StyleEditor",
             "SidebarMenu",
-            { "name": "MapViews" },
-            { "name": "Footer", "cfg": { "containerPosition": "footer" } }
+            { "name": "MapViews" }
         ],
         "embedded": ["Details", {
                 "name": "Map",
@@ -965,8 +964,7 @@
             "cfg": {
                 "containerPosition": "header"
             }
-          },
-          { "name": "Footer", "cfg": { "containerPosition": "footer" } }
+          }
         ],
       "geostory-embedded": [
         "GeoStory",
@@ -1066,8 +1064,7 @@
               }
             }
           },
-          "Permalink",
-          { "name": "Footer", "cfg": { "containerPosition": "footer" } }
+          "Permalink"
         ],
         "context-creator": [
           {
@@ -1096,10 +1093,9 @@
             "cfg": {
               "containerPosition": "header"
             }
-          },
-          { "name": "Footer", "cfg": { "containerPosition": "footer" } }
+          }
         ],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
-        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer", { "name": "About" }],
+        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer", { "name": "About" }]
       }
 }
