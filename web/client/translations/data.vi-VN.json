@@ -566,7 +566,6 @@
                     "html": "<h3>Trình xem</h3><p>Trình xem đơn giản</p>"
                 }
             },
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "forkMeOnGitHub": "Chia đôi tôi trên GitHub",
             "open": "Mở",
             "scrollTop": "Cuộn lên đầu trang",
@@ -2172,7 +2171,8 @@
             "errorDeletingTag": "It is not possible to delete the tag",
             "removeFromFavorites": "Remove from favorites",
             "addToFavorites": "Add to favorites",
-            "favorites": "Favorites"
+            "favorites": "Favorites",
+            "documentation": "Documentation"
         }
     }
 }

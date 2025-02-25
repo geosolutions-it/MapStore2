@@ -386,7 +386,6 @@
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
             "scrollTop": "Volver al principio de la página",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "footerCustomHTML": "<div><p>Inserte HTML personalizado en las traducciones para generar un pie de página personalizado.</p></div>"
         },
         "cookiesPolicyNotification": {
@@ -4345,7 +4344,8 @@
             "errorDeletingTag": "No es posible eliminar la etiqueta",
             "removeFromFavorites": "Eliminar de favoritos",
             "addToFavorites": "Añadir a favoritos",
-            "favorites": "Favoritos"
+            "favorites": "Favoritos",
+            "documentation": "Documentación"
         }
     }
 }

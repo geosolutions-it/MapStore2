@@ -120,7 +120,7 @@ function ResourcesFiltersForm({
     targetSelector,
     headerNodeSelector = '#ms-brand-navbar',
     navbarNodeSelector = '',
-    footerNodeSelector = '',
+    footerNodeSelector = '#ms-footer',
     width,
     height,
     user
