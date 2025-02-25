@@ -81,7 +81,6 @@ export function setLocation(location) {
  * @param {object} pov pov object. Can contain :
  * @param {number} pov.heading heading in degrees
  * @param {number} pov.pitch pitch in degrees
- * @returns
  */
 export function setPov(pov) {
     return {

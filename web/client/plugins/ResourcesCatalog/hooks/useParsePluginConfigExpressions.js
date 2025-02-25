@@ -48,6 +48,13 @@ const expressionParsingFunc = (monitoredState) => (value) => {
     }
 };
 
+/**
+ * replace expressions with the parsed value taking into account the monitored state
+ * @param {object} monitoredState the monitored state object
+ * @param {object} payload configuration payload to be parsed
+ * @param {function} options.filterFunc a function to filter the parsed items
+ * @return {object} parsed payload configuration
+ */
 const useParsePluginConfigExpressions = (monitoredState, payload, { filterFunc = item => !item.disableIf } = {}) => {
     const parsedConfig = useMemo(() => {
         const config = recursiveFilter(recursiveParsing(payload, expressionParsingFunc(monitoredState)), filterFunc);

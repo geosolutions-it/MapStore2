@@ -6,13 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import PropTypes from 'prop-types';
 import React, { forwardRef } from 'react';
 
 const addPrefix = (value) => {
     return value ? `_${value}` : undefined;
 };
-
-const Text = forwardRef(({
+/**
+ * Text component with utilities classes
+ * @prop {string} className custom class name
+ * @prop {string[]} classNames list of custom class names
+ * @prop {any} component a valid component to replace the default one
+ * @prop {string} fontSize one of `sm`, `md`, `lg`, `xl` or `xxl`
+ * @prop {bool} ellipsis if true it applies ellipsis when text overflows
+ * @prop {string} textAlign one of `left`, `right` or `center`
+ * @prop {bool} strong if true it applies strong style
+ */
+const Text = ({
     children,
     className,
     classNames = [],
@@ -41,6 +51,21 @@ const Text = forwardRef(({
             {children}
         </Component>
     );
-});
+};
 
-export default Text;
+Text.propsTypes = {
+    className: PropTypes.string,
+    classNames: PropTypes.array,
+    fontSize: PropTypes.string,
+    ellipsis: PropTypes.bool,
+    textAlign: PropTypes.string,
+    strong: PropTypes.bool,
+    component: PropTypes.any
+};
+
+Text.defaultProps = {
+    classNames: [],
+    component: 'div'
+};
+
+export default forwardRef(Text);

@@ -1,236 +1,268 @@
 {
-	"proxyUrl": "/mapstore/proxy/?url=",
-	"geoStoreUrl": "/mapstore/rest/geostore/",
+  "proxyUrl": "/mapstore/proxy/?url=",
+  "geoStoreUrl": "/mapstore/rest/geostore/",
   "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
-	"bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
-	"initialMapFilter": "MS2",
-	"plugins": {
-		"mobile": ["Home", {
-			"name": "About"
-		}, {
-			"name": "Map",
-			"cfg": {
-					"zoomControl": false,
-					"tools": ["measurement", "locate"]
-			}
-		 }, {
-			 	"name": "DrawerMenu"
-		 }, {
-			 	"name": "TOC",
-				"cfg": {
-					"activateLegendTool": true,
-					"activateSettingsTool": false
-				}
-		 }, {
-			 	"name": "Settings",
-				"cfg": {
-					"overrideSettings": {
-	            "language": true,
-	            "history": false
-	        },
-					"style": {
-						"width": "auto"
-					}
-				}
-		 }, {
-			 	"name": "Identify",
-				"hideFrom": ["Settings"],
-				"cfg": {
-					"style": {
-						  "position": "absolute",
-							"width": "100%",
-							"bottom": "0px",
-							"zIndex": 1010,
-							"maxHeight": "70%",
-							"marginBottom": 0
-					},
-					"draggable": false,
-					"collapsible": true,
-					"viewerOptions": {
-						"container": "{context.ReactSwipe}",
-						"header": "{context.SwipeHeader}",
-						"collapsible": false
-					},
-					"bodyClass": "mobile-feature-info"
-				}
-		 }, {
-			 	"name": "MousePosition",
-				"cfg": {
-					"id": "mapstore-mouseposition-mobile"
-				}
-		 }, "Search", {
-			 	"name": "Locate",
-				"cfg": {
-					"id": "locateMeButton"
-				}
-		 }],
-		"desktop": [{
-			"name": "Map",
-			"cfg": {
-				"toolsOptions": {
-					"scalebar": {
-						"leaflet": {
-							"position": "bottomright"
-						}
-					}
-				},
-        "zoomControl": false
-			}
-		}, {
-			"name": "Help"
-		},
-		{
-			"name" : "Share",
-			"cfg": {
-		    "closeGlyph" : "1-close"
-				}
-		},
-		{
+  "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
+  "initialMapFilter": "MS2",
+  "plugins": {
+    "mobile": [
+      "Home",
+      {
+        "name": "About"
+      },
+      {
+        "name": "Map",
+        "cfg": {
+          "zoomControl": false,
+          "tools": ["measurement", "locate"]
+        }
+      },
+      {
+        "name": "DrawerMenu"
+      },
+      {
+        "name": "TOC",
+        "cfg": {
+          "activateLegendTool": true,
+          "activateSettingsTool": false
+        }
+      },
+      {
+        "name": "Settings",
+        "cfg": {
+          "overrideSettings": {
+            "language": true,
+            "history": false
+          },
+          "style": {
+            "width": "auto"
+          }
+        }
+      },
+      {
+        "name": "Identify",
+        "hideFrom": ["Settings"],
+        "cfg": {
+          "style": {
+            "position": "absolute",
+            "width": "100%",
+            "bottom": "0px",
+            "zIndex": 1010,
+            "maxHeight": "70%",
+            "marginBottom": 0
+          },
+          "draggable": false,
+          "collapsible": true,
+          "viewerOptions": {
+            "container": "{context.ReactSwipe}",
+            "header": "{context.SwipeHeader}",
+            "collapsible": false
+          },
+          "bodyClass": "mobile-feature-info"
+        }
+      },
+      {
+        "name": "MousePosition",
+        "cfg": {
+          "id": "mapstore-mouseposition-mobile"
+        }
+      },
+      "Search",
+      {
+        "name": "Locate",
+        "cfg": {
+          "id": "locateMeButton"
+        }
+      }
+    ],
+    "desktop": [
+      {
+        "name": "Map",
+        "cfg": {
+          "toolsOptions": {
+            "scalebar": {
+              "leaflet": {
+                "position": "bottomright"
+              }
+            }
+          },
+          "zoomControl": false
+        }
+      },
+      {
+        "name": "Help"
+      },
+      {
+        "name": "Share",
+        "cfg": {
+          "closeGlyph": "1-close"
+        }
+      },
+      {
         "name": "DrawerMenu",
-				"cfg": {
-					"glyph": "pencil",
-					"buttonStyle": "primary",
+        "cfg": {
+          "glyph": "pencil",
+          "buttonStyle": "primary",
           "buttonClassName": "square-button",
-					"singleSection": true
-				}
-    },
-    {
-       "name": "Identify",
-       "showIn": ["IdentifyBar", "Settings"],
-			 "cfg": {
-				 "enableRevGeocode": true,
-				 "viewerOptions": {
-					"container": "{context.ReactSwipe}",
-					"header": "{context.SwipeHeader}",
-					"headerOptions": {
-						"useButtons": true
-					},
-					"containerProps": {
-						"continuous": false
-					},
-					"collapsible": false
-				}
-			 }
-    },
-    "MadeWithLove",
-    {
-			  "name": "Locate",
-				"override": {
-					"Toolbar": {
-						"alwaysVisible": true
-					}
-				}
-		}, {
-			  "name": "Home"
-		}, {
-				"name": "TOC"
-		}, {
-				"name": "Measure",
-        "cfg":{
+          "singleSection": true
+        }
+      },
+      {
+        "name": "Identify",
+        "showIn": ["IdentifyBar", "Settings"],
+        "cfg": {
+          "enableRevGeocode": true,
+          "viewerOptions": {
+            "container": "{context.ReactSwipe}",
+            "header": "{context.SwipeHeader}",
+            "headerOptions": {
+              "useButtons": true
+            },
+            "containerProps": {
+              "continuous": false
+            },
+            "collapsible": false
+          }
+        }
+      },
+      "MadeWithLove",
+      {
+        "name": "Locate",
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      {
+        "name": "Home"
+      },
+      {
+        "name": "TOC"
+      },
+      {
+        "name": "Measure",
+        "cfg": {
           "showResults": false
         }
-		}, {
-				"name": "MeasureResults"
-		}, {
-				"name": "Print"
-		}, {
-				"name": "MapImport",
-				"cfg": {
-					"wrap": true
-				}
-		}, {
-				"name": "Settings",
-				"cfg": {
+      },
+      {
+        "name": "MeasureResults"
+      },
+      {
+        "name": "Print"
+      },
+      {
+        "name": "MapImport",
+        "cfg": {
+          "wrap": true
+        }
+      },
+      {
+        "name": "Settings",
+        "cfg": {
           "overrideSettings": {
             "history": false
           },
-					"wrap": true
-				}
-		}, {
-				"name": "MetadataExplorer",
-				"cfg": {
-					"wrap": true,
-					"chooseCatalogUrl": false,
-					"initialCatalogURL": "https://demo.geo-solutions.it/geoserver/csw"
-				}
-		}, {
-			"name": "About",
-			"hideFrom": ["DrawerMenu"]
-		}, "MousePosition", {
-				"name": "Search",
-				"cfg": {
-					"withToggle": ["max-width: 768px", "min-width: 768px"]
-				}
-		}, {
-      "name": "Toolbar",
-      "id": "NavigationBar",
-      "stateSelector": "toolbar",
-      "cfg": {
-        "id": "navigationBar"
-      }
-    }, {
-      "name": "Toolbar",
-      "id": "IdentifyBar",
-			"stateSelector": "identify",
-      "cfg": {
-        "id": "identifyBar"
+          "wrap": true
+        }
       },
-      "isDefault": false
-    },
-    "ScaleBox",
-    {
-      "name": "ZoomAll"
-    },
-    {
-			"name": "MapLoading",
-			"override": {
-				"Toolbar": {
-					"alwaysVisible": true
-				}
-			}
-		},
-    {
-				"name": "Snapshot",
-				"hideFrom": ["Toolbar"],
-				"cfg": {
-					"wrap": true
-				}
-		},
-    {
-      "name":"ZoomIn",
-			"override": {
-				"Toolbar": {
-					"alwaysVisible": true
-				}
-			}
-    },
-    {
-      "name":"ZoomOut",
-			"override": {
-				"Toolbar": {
-					"alwaysVisible": true
-				}
-			}
-    }, {
-			"name": "Login",
-      "cfg": {
+      {
+        "name": "MetadataExplorer",
+        "cfg": {
+          "wrap": true,
+          "chooseCatalogUrl": false,
+          "initialCatalogURL": "https://demo.geo-solutions.it/geoserver/csw"
+        }
+      },
+      {
+        "name": "About",
+        "hideFrom": ["DrawerMenu"]
+      },
+      "MousePosition",
+      {
+        "name": "Search",
+        "cfg": {
+          "withToggle": ["max-width: 768px", "min-width: 768px"]
+        }
+      },
+      {
+        "name": "Toolbar",
+        "id": "NavigationBar",
+        "stateSelector": "toolbar",
+        "cfg": {
+          "id": "navigationBar"
+        }
+      },
+      {
+        "name": "Toolbar",
+        "id": "IdentifyBar",
+        "stateSelector": "identify",
+        "cfg": {
+          "id": "identifyBar"
+        },
+        "isDefault": false
+      },
+      "ScaleBox",
+      {
+        "name": "ZoomAll"
+      },
+      {
+        "name": "MapLoading",
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      {
+        "name": "Snapshot",
+        "hideFrom": ["Toolbar"],
+        "cfg": {
+          "wrap": true
+        }
+      },
+      {
+        "name": "ZoomIn",
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      {
+        "name": "ZoomOut",
+        "override": {
+          "Toolbar": {
+            "alwaysVisible": true
+          }
+        }
+      },
+      {
+        "name": "Login",
+        "cfg": {
           "nav": false,
           "menuProps": {
-              "noCaret": true
+            "noCaret": true
           }
+        }
+      },
+      "OmniBar",
+      {
+        "name": "BurgerMenu"
+      },
+      {
+        "name": "SidebarMenu"
+      },
+      {
+        "name": "Expander"
+      },
+      {
+        "name": "Undo"
+      },
+      {
+        "name": "Redo"
       }
-		},
-		"OmniBar",
-		{
-			"name": "BurgerMenu"
-		}, {
-			"name": "SidebarMenu"
-		}, {
-			"name": "Expander"
-		}, {
-			"name": "Undo"
-		}, {
-			"name": "Redo"
-		}]
-	}
+    ]
+  }
 }

@@ -1,136 +1,140 @@
 {
   "version": 2,
-	"map": {
+  "map": {
     "projection": "EPSG:900913",
-		"units": "m",
-		"center": {"x": 1250000.000000, "y": 5370000.000000, "crs": "EPSG:900913"},
-    "zoom":5,
-		"maxExtent": [
-			-20037508.34, -20037508.34,
-			20037508.34, 20037508.34
-		],
-		"layers": [{
-                "format": "image/jpeg",
-                "group": "background",
-                "name": "osm:osm_simple_light",
-                "opacity": 1,
-                "title": "OSM Simple Light",
-                "thumbURL": "product/assets/img/osm-simple-light.jpg",
-                "type": "wms",
-                "url": [
-                    "https://maps1.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps2.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps3.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps4.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps5.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps6.geosolutionsgroup.com/geoserver/wms"
-                ],
-                "tileSize":512,
-                "visibility": false,
-                "singleTile": false,
-                "credits": {
-                    "title": "OSM Simple Light | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
-                }
-            }, {
-                "format": "image/jpeg",
-                "group": "background",
-                "name": "osm:osm_simple_dark",
-                "opacity": 1,
-                "title": "OSM Simple Dark",
-                "thumbURL": "product/assets/img/osm-simple-dark.jpg",
-                "type": "wms",
-                "url": [
-                    "https://maps6.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps3.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps1.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps4.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps2.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps5.geosolutionsgroup.com/geoserver/wms"
-                ],
-                "tileSize":512,
-                "visibility": false,
-                "singleTile": false,
-                "credits": {
-                    "title": "OSM Simple Dark | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
-                }
-            }, {
-                "format": "image/jpeg",
-                "group": "background",
-                "name": "osm:osm",
-                "opacity": 1,
-                "title": "OSM Bright",
-                "thumbURL": "product/assets/img/osm-bright.jpg",
-                "type": "wms",
-                "url": [
-                    "https://maps1.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps2.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps3.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps4.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps5.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps6.geosolutionsgroup.com/geoserver/wms"
-                ],
-                "tileSize":512,
-                "visibility": true,
-                "singleTile": false,
-                "credits": {
-                    "title": "OSM Bright | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
-                }
-            }, {
-                "format": "image/jpeg",
-                "group": "background",
-                "name": "ne:ne-political",
-                "opacity": 1,
-                "title": "NE Political",
-                "thumbURL": "product/assets/img/ne-political.jpg",
-                "type": "wms",
-                "url": [
-                    "https://maps1.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps2.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps3.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps4.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps5.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps6.geosolutionsgroup.com/geoserver/wms"
-                ],
-                "tileSize":512,
-                "visibility": false,
-                "singleTile": false,
-                "credits": {
-                    "title": "<p></p>\n"
-                }
-            }, {
-                "format": "image/jpeg",
-                "group": "background",
-                "name": "s2cloudless:s2cloudless",
-                "opacity": 1,
-                "title": "Sentinel 2 Cloudless",
-                "type": "wms",
-                "url": [
-                    "https://maps1.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps2.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps3.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps4.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps5.geosolutionsgroup.com/geoserver/wms",
-                    "https://maps6.geosolutionsgroup.com/geoserver/wms"
-                ],
-                "tileSize":512,
-                "source": "s2cloudless",
-                "singleTile": false,
-                "visibility": false
-            }, {
-                "type": "osm",
-                "title": "Open Street Map",
-                "name": "mapnik",
-                "source": "osm",
-                "group": "background",
-                "visibility": false
-            }, {
-                "source": "ol",
-                "group": "background",
-                "title": "Empty Background",
-                "fixed": true,
-                "type": "empty",
-                "visibility": false
-            }
-        ]
-	}
+    "units": "m",
+    "center": { "x": 1250000.0, "y": 5370000.0, "crs": "EPSG:900913" },
+    "zoom": 5,
+    "maxExtent": [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+    "layers": [
+      {
+        "format": "image/jpeg",
+        "group": "background",
+        "name": "osm:osm_simple_light",
+        "opacity": 1,
+        "title": "OSM Simple Light",
+        "thumbURL": "product/assets/img/osm-simple-light.jpg",
+        "type": "wms",
+        "url": [
+          "https://maps1.geosolutionsgroup.com/geoserver/wms",
+          "https://maps2.geosolutionsgroup.com/geoserver/wms",
+          "https://maps3.geosolutionsgroup.com/geoserver/wms",
+          "https://maps4.geosolutionsgroup.com/geoserver/wms",
+          "https://maps5.geosolutionsgroup.com/geoserver/wms",
+          "https://maps6.geosolutionsgroup.com/geoserver/wms"
+        ],
+        "tileSize": 512,
+        "visibility": false,
+        "singleTile": false,
+        "credits": {
+          "title": "OSM Simple Light | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+        }
+      },
+      {
+        "format": "image/jpeg",
+        "group": "background",
+        "name": "osm:osm_simple_dark",
+        "opacity": 1,
+        "title": "OSM Simple Dark",
+        "thumbURL": "product/assets/img/osm-simple-dark.jpg",
+        "type": "wms",
+        "url": [
+          "https://maps6.geosolutionsgroup.com/geoserver/wms",
+          "https://maps3.geosolutionsgroup.com/geoserver/wms",
+          "https://maps1.geosolutionsgroup.com/geoserver/wms",
+          "https://maps4.geosolutionsgroup.com/geoserver/wms",
+          "https://maps2.geosolutionsgroup.com/geoserver/wms",
+          "https://maps5.geosolutionsgroup.com/geoserver/wms"
+        ],
+        "tileSize": 512,
+        "visibility": false,
+        "singleTile": false,
+        "credits": {
+          "title": "OSM Simple Dark | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+        }
+      },
+      {
+        "format": "image/jpeg",
+        "group": "background",
+        "name": "osm:osm",
+        "opacity": 1,
+        "title": "OSM Bright",
+        "thumbURL": "product/assets/img/osm-bright.jpg",
+        "type": "wms",
+        "url": [
+          "https://maps1.geosolutionsgroup.com/geoserver/wms",
+          "https://maps2.geosolutionsgroup.com/geoserver/wms",
+          "https://maps3.geosolutionsgroup.com/geoserver/wms",
+          "https://maps4.geosolutionsgroup.com/geoserver/wms",
+          "https://maps5.geosolutionsgroup.com/geoserver/wms",
+          "https://maps6.geosolutionsgroup.com/geoserver/wms"
+        ],
+        "tileSize": 512,
+        "visibility": true,
+        "singleTile": false,
+        "credits": {
+          "title": "OSM Bright | Rendering <a href=\"https://www.geo-solutions.it/\">GeoSolutions</a> | Data © <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"http://www.openstreetmap.org/copyright\">ODbL</a>"
+        }
+      },
+      {
+        "format": "image/jpeg",
+        "group": "background",
+        "name": "ne:ne-political",
+        "opacity": 1,
+        "title": "NE Political",
+        "thumbURL": "product/assets/img/ne-political.jpg",
+        "type": "wms",
+        "url": [
+          "https://maps1.geosolutionsgroup.com/geoserver/wms",
+          "https://maps2.geosolutionsgroup.com/geoserver/wms",
+          "https://maps3.geosolutionsgroup.com/geoserver/wms",
+          "https://maps4.geosolutionsgroup.com/geoserver/wms",
+          "https://maps5.geosolutionsgroup.com/geoserver/wms",
+          "https://maps6.geosolutionsgroup.com/geoserver/wms"
+        ],
+        "tileSize": 512,
+        "visibility": false,
+        "singleTile": false,
+        "credits": {
+          "title": "<p></p>\n"
+        }
+      },
+      {
+        "format": "image/jpeg",
+        "group": "background",
+        "name": "s2cloudless:s2cloudless",
+        "opacity": 1,
+        "title": "Sentinel 2 Cloudless",
+        "type": "wms",
+        "url": [
+          "https://maps1.geosolutionsgroup.com/geoserver/wms",
+          "https://maps2.geosolutionsgroup.com/geoserver/wms",
+          "https://maps3.geosolutionsgroup.com/geoserver/wms",
+          "https://maps4.geosolutionsgroup.com/geoserver/wms",
+          "https://maps5.geosolutionsgroup.com/geoserver/wms",
+          "https://maps6.geosolutionsgroup.com/geoserver/wms"
+        ],
+        "tileSize": 512,
+        "source": "s2cloudless",
+        "singleTile": false,
+        "visibility": false
+      },
+      {
+        "type": "osm",
+        "title": "Open Street Map",
+        "name": "mapnik",
+        "source": "osm",
+        "group": "background",
+        "visibility": false
+      },
+      {
+        "source": "ol",
+        "group": "background",
+        "title": "Empty Background",
+        "fixed": true,
+        "type": "empty",
+        "visibility": false
+      }
+    ]
+  }
 }

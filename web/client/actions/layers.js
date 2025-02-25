@@ -41,7 +41,6 @@ export const REPLACE_LAYERS = 'LAYERS:REPLACE_LAYERS';
 /**
  * full replacement of layers in layers state
  * @param {object[]} layers the new layers to replace in the state
- * @returns
  */
 export function replaceLayers(layers) {
     return {

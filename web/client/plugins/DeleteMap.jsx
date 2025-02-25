@@ -21,7 +21,7 @@ import { showConfirmDeleteMapModalSelector } from '../selectors/controls';
 import Message from '../components/I18N/Message';
 /**
  * @deprecated
- *
+ * @ignore
  */
 class DeleteConfirmDialog extends React.Component {
 

@@ -162,6 +162,7 @@ const ConnectedManagerMenu = connect((state) => ({
 /**
  * This plugin provides a special Manager dropdown menu, that contains various administration tools
  * @memberof plugins
+ * @class
  * @name ManagerMenu
  * @prop {object[]} items this property contains the items injected from the other plugins,
  * using the `containers` option in the plugin that want to inject the new menu items.
