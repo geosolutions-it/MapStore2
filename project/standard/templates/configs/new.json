@@ -1,22 +1,19 @@
 {
-	"map": {
-		"projection": "EPSG:900913",
-		"units": "m",
-		"center": {"x": 1250000.000000, "y": 5370000.000000, "crs": "EPSG:900913"},
-    "zoom":5,
-		"maxExtent": [
-			-20037508.34, -20037508.34,
-			20037508.34, 20037508.34
-		],
-		"layers": [
-			{
-				"type": "osm",
-				"title": "Open Street Map",
-				"name": "mapnik",
+  "map": {
+    "projection": "EPSG:900913",
+    "units": "m",
+    "center": { "x": 1250000.0, "y": 5370000.0, "crs": "EPSG:900913" },
+    "zoom": 5,
+    "maxExtent": [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+    "layers": [
+      {
+        "type": "osm",
+        "title": "Open Street Map",
+        "name": "mapnik",
         "source": "osm",
-				"group": "background",
+        "group": "background",
         "visibility": true
-			},
+      },
       {
         "type": "tileprovider",
         "title": "NASAGIBS Night 2012",
@@ -43,7 +40,12 @@
         "title": "Sentinel 2 Cloudless",
         "type": "wms",
         "url": [
-          "https://1maps.geo-solutions.it/geoserver/wms", "https://2maps.geo-solutions.it/geoserver/wms", "https://3maps.geo-solutions.it/geoserver/wms", "https://4maps.geo-solutions.it/geoserver/wms", "https://5maps.geo-solutions.it/geoserver/wms", "https://6maps.geo-solutions.it/geoserver/wms"
+          "https://1maps.geo-solutions.it/geoserver/wms",
+          "https://2maps.geo-solutions.it/geoserver/wms",
+          "https://3maps.geo-solutions.it/geoserver/wms",
+          "https://4maps.geo-solutions.it/geoserver/wms",
+          "https://5maps.geo-solutions.it/geoserver/wms",
+          "https://6maps.geo-solutions.it/geoserver/wms"
         ],
         "source": "s2cloudless",
         "visibility": false,
@@ -57,11 +59,12 @@
         "type": "empty",
         "visibility": false,
         "args": [
-          "Empty Background", {
+          "Empty Background",
+          {
             "visibility": false
           }
         ]
       }
-		]
-	}
+    ]
+  }
 }
