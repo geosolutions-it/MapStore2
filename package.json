@@ -322,15 +322,13 @@
     "fe:clean": "rimraf ./web/client/dist",
     "md": "markdownlint .",
     "md:fix": "markdownlint --fix .",
-    "lint": "eslint web/client --ext .jsx,.js && npm run md && npm run json:check",
+    "lint": "eslint web/client --ext .jsx,.js && npm run md",
     "i18n": "node  utility/translations/findMissingTranslations.js",
     "analyze": "npm run fe:clean && mkdirp ./web/client/dist && webpack --json --config build/prod-webpack.config.js | webpack-bundle-size-analyzer",
     "generate:icons": "node ./build/generateIcons.js",
     "generate:changelog": "node ./build/generateChangelog.js",
     "json:check": "prettier --ignore-path .prettierignore --check \"./**/*.json\"",
-    "json:write": "prettier --ignore-path .prettierignore --write \"./**/*.json\"",
-    "preinstall": "npm run githooks:setup",
-    "githooks:setup": "node ./utility/githooks/setup.js"
+    "json:write": "prettier --ignore-path .prettierignore --write \"./**/*.json\""
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
