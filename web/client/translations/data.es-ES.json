@@ -4342,6 +4342,7 @@
             "manageTags": "Administrar etiquetas",
             "errorLoadingTags": "No es posible cargar etiquetas",
             "errorUpdatingTag": "No es posible actualizar la etiqueta",
+            "errorTagNameAlreadyExist": "Ya existe una etiqueta con el mismo nombre",
             "errorDeletingTag": "No es posible eliminar la etiqueta",
             "removeFromFavorites": "Eliminar de favoritos",
             "addToFavorites": "Añadir a favoritos",

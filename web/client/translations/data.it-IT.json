@@ -4340,6 +4340,7 @@
             "manageTags": "Gestisci tag",
             "errorLoadingTags": "Impossibile caricare i tag",
             "errorUpdatingTag": "Impossibile aggiornare il tag",
+            "errorTagNameAlreadyExist": "Esiste già un tag con lo stesso nome",
             "errorDeletingTag": "Impossibile eliminare il tag",
             "removeFromFavorites": "Rimuovi dai preferiti",
             "addToFavorites": "Aggiungi ai preferiti",

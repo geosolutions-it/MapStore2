@@ -4380,6 +4380,7 @@
             "manageTags": "Tags verwalten",
             "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
             "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
+            "errorTagNameAlreadyExist": "Ein Tag mit dem gleichen Namen existiert bereits",
             "errorDeletingTag": "Es ist nicht möglich, das Tag zu löschen",
             "removeFromFavorites": "Aus Favoriten entfernen",
             "addToFavorites": "Zu Favoriten hinzufügen",

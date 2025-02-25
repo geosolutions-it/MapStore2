@@ -4342,6 +4342,7 @@
             "manageTags": "Gérer les tags",
             "errorLoadingTags": "Il n'est pas possible de charger des balises",
             "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
+            "errorTagNameAlreadyExist": "Une balise portant le même nom existe déjà",
             "errorDeletingTag": "Il n'est pas possible de supprimer la balise",
             "removeFromFavorites": "Supprimer des favoris",
             "addToFavorites": "Ajouter aux favoris",
