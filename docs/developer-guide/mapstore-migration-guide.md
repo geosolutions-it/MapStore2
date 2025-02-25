@@ -22,6 +22,37 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Footer plugin configuration changes
+
+The Footer plugin has been refactored and some properties have been removed:
+
+- `cfg.logo` is not available anymore in favor of translation html snippet
+- translation message identifier `home.footerDescription` is not used anymore in the footer by default
+
+It is possible to replicate the old footer structure for existing project that want to keep the homepage footer information as before with the following configurations:
+
+1. configure the new Footer plugin in `localConfig.json` as follow:
+
+    ```js
+    {
+        "name": "Footer",
+        "cfg": {
+            "hideMenuItems": true,
+            "customFooter": true,
+            "customFooterMessageId": "home.footerDescription" // by default is using home.footerCustomHTML
+        }
+    }
+    ```
+
+2. update the `home.footerDescription` translation by adding the desired html structure, eg:
+
+    ```js
+    {
+        "home": {
+            "footerDescription": "<footer class=\"ms-flex-box _flex _flex-center-h _padding-md\"><div> ...my previous message </div></footer>"
+        }
+    }
+
 ### HomeDescription plugin configuration changes
 
 The HomeDescription plugin has been refactored and a property has been removed:

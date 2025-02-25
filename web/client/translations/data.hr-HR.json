@@ -193,7 +193,6 @@
             "Examples": "Primjeri",
             "LinkedinGroup": "Mapstore Linkedin grupa",
             "scrollTop": "Pomakni gore na vrh stranice",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "examples":{
                 "viewer":{
                     "html":"<h3>Preglednik</h3><p>Jednostavni preglednik</p>"
@@ -2186,7 +2185,8 @@
             "errorDeletingTag": "It is not possible to delete the tag",
             "removeFromFavorites": "Remove from favorites",
             "addToFavorites": "Add to favorites",
-            "favorites": "Favorites"
+            "favorites": "Favorites",
+            "documentation": "Documentation"
         }
     }
 }

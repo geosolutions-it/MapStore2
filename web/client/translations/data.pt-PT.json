@@ -195,7 +195,6 @@
             "Examples": "Exemplos",
             "LinkedinGroup": "Grupo Mapstore no Linkedin",
             "scrollTop": "Navegar para o topo da página",
-            "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
             "examples":{
                 "viewer":{
                     "html":"<h3>Viewer</h3><p>Visualizador Simples</p>"
@@ -2143,7 +2142,8 @@
             "errorDeletingTag": "It is not possible to delete the tag",
             "removeFromFavorites": "Remove from favorites",
             "addToFavorites": "Add to favorites",
-            "favorites": "Favorites"
+            "favorites": "Favorites",
+            "documentation": "Documentation"
         }
     }
 }
