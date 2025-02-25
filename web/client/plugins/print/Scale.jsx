@@ -11,10 +11,10 @@ import printReducer from "../../reducers/print";
 
 /**
  * Default formatter function for scale.
- *
+ * @memberof plugins.print
  * @param {*} scale current map/printed scale
  * @param {*} locale current application locale
- * @returns 1:<scale>, using the current locale for formatting the denominator.
+ * @returns {string} 1:<scale>, using the current locale for formatting the denominator.
  */
 export function defaultFormat(scale, locale = "en-US") {
     const val = new Intl.NumberFormat(locale, {maximumFractionDigits: 0}).format(scale);

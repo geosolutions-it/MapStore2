@@ -12,6 +12,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { userSelector } from '../../selectors/security';
 
+/**
+ * This plugin adds two buttons for resource cards of type CONTEXT. The two buttons allows a user to:
+ * - create a map from the context
+ * - edit the context configuration
+ * @memberof plugins
+ * @class
+ * @name EditContext
+ */
 function EditContext({
     resource,
     component

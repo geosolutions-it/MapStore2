@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { loadLocale } from '../../actions/locale';
 import castArray from 'lodash/castArray';
+import isEqual from 'lodash/isEqual';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
@@ -44,10 +45,10 @@ function withExtensions(AppComponent) {
         };
 
         shouldComponentUpdate(nextProps, nextState) {
-            if (this.state.pluginsRegistry !== nextState.pluginsRegistry) {
+            if (!isEqual(this.state.pluginsRegistry, nextState.pluginsRegistry)) {
                 return true;
             }
-            if (this.props.pluginsDef !== nextProps.pluginsDef) {
+            if (!isEqual(this.props.pluginsDef, nextProps.pluginsDef)) {
                 return true;
             }
             return false;

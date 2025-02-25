@@ -38,6 +38,13 @@ function parseResourcePayload(resource, { name, resourceType } = {}) {
     };
 }
 
+/**
+ * Plugin to create/clone a resource. Saves the new resource using the persistence API.
+ * @memberof plugins
+ * @class
+ * @name SaveAs
+ * @prop {string} cfg.resourceType one of `MAP`, `DASHBOARD` or `GEOSTORY` based on the viewer in use
+ */
 function SaveAs({
     pendingChanges,
     resourceType,
@@ -219,7 +226,7 @@ export default createPlugin('SaveAs', {
     component: () => null,
     containers: {
         BrandNavbar: {
-            target: 'right-menu',
+            target: 'left-menu',
             position: 3,
             priority: 3,
             Component: SaveAsPlugin

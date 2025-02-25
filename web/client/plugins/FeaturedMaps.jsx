@@ -185,6 +185,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
  * FeaturedMaps plugin. Shows featured resources in a grid.
  * Typically used in the {@link #pages.Maps|home page}.
  * @deprecated
+ * @ignore
  * @name FeaturedMaps
  * @prop {string} cfg.pageSize change the page size (only desktop)
  * @prop {object} cfg.shareOptions configuration applied to share panel grouped by category name

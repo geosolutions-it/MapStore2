@@ -708,24 +708,7 @@
             "FeedbackMask"
         ],
         "common": [{
-          "name": "BrandNavbar",
-          "cfg": {
-            "rightMenuItems": [{
-              "type": "link",
-              "href": "https://docs.mapstore.geosolutionsgroup.com/",
-              "target": "blank",
-              "glyph": "book",
-              "labelId": "Documentation",
-              "variant": "default"
-            }, {
-              "type": "link",
-              "href": "https://github.com/geosolutions-it/MapStore2",
-              "target": "blank",
-              "label": "GitHub",
-              "glyph": "github",
-              "variant": "default"
-            }]
-          }
+          "name": "BrandNavbar"
         },
         { "name": "ManagerMenu" },
         "Login","Language", "ScrollTop", "Notifications"],
@@ -845,6 +828,7 @@
             }
           },
           { "name": "Footer"},
+          { "name": "About" },
           {
           "name": "Cookie",
           "cfg": {
@@ -1111,7 +1095,7 @@
             }
           }
         ],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
-        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer", { "name": "About" }],
+        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer", { "name": "About" }]
       }
 }

@@ -9,7 +9,6 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css" />
-        <link rel="shortcut icon" type="image/png" href="https://cdn.jslibs.mapstore2.geo-solutions.it/leaflet/favicon.ico" />
         <script src="https://maps.google.com/maps/api/js?v=3"></script>
         <!--script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.10/proj4.js"></script-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>

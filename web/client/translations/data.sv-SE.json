@@ -291,8 +291,7 @@
             "Applications": "Applikationer",
             "Exempel": "Exempel",
             "LinkedinGroup": "Mapstore på Linkedin",
-            "scrollTop": "Bläddra till toppen av sidan",
-            "footerDescription": "<strong> GeoSolutions </strong> <a href=\"mailto:sales@geosolutionsgroup.com\"> sales@geosolutionsgroup.com </a>"
+            "scrollTop": "Bläddra till toppen av sidan"
         },
         "cookiesPolicyNotification": {
             "title": "Denna webbplats använder cookies",
@@ -3542,7 +3541,8 @@
             "errorDeletingTag": "It is not possible to delete the tag",
             "removeFromFavorites": "Remove from favorites",
             "addToFavorites": "Add to favorites",
-            "favorites": "Favorites"
+            "favorites": "Favorites",
+            "documentation": "Documentation"
         }
     }
 }

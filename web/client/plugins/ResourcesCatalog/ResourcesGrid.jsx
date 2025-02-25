@@ -20,51 +20,285 @@ import { requestResources } from './api/resources';
 import { getResourceTypesInfo, getResourceStatus, getResourceId } from './utils/ResourcesUtils';
 
 /**
-* @module ResourcesGrid
-*/
-
-/**
- * renders a grid of resource cards, providing the ability to create pages to show a filtered / curated list of resources. For example, a landing page showing only geostories, one page per category or group with a title, some text, etc.
-  * @name ResourcesGrid.
-  * @prop {string} defaultQuery The pre-set filter to be applied by default
-  * @prop {object} order an object defining sort options for resource grid.
-  * @prop {object} extent the extent used in filters side menu to limit search within set bounds.
-  * @prop {array} menuItems contains menu for Add resources button.
-  * @prop {array} filtersFormItems Provides config for various filter metrics.
-  * @prop {number} pageSize number of resources per page. Used in pagination.
-  * @prop {string} targetSelector selector for parent node of resource
-  * @prop {string} headerNodeSelector selector for rendered header.
-  * @prop {string} navbarNodeSelector selector for rendered navbar.
-  * @prop {string} footerNodeSelector selector for rendered footer.
-  * @prop {string} containerSelector selector for rendered resource card grid container.
-  * @prop {string} scrollContainerSelector selector for outer container of resource cards rendered. This is the parent on which scrolling takes place.
-  * @prop {boolean} pagination Provides a config to allow for pagination
-  * @prop {boolean} disableDetailPanel Provides a config to allow resource details to be viewed when selected.
-  * @prop {boolean} disableFilters Provides a config to enable/disable filtering of resources
-  * @prop {array} resourceCardActionsOrder order in which `cfg.items` will be rendered
-  * @prop {boolean} enableGeoNodeCardsMenuItems Provides a config to allow for card menu items to be enabled/disabled.
-  * @prop {boolean} panel when enabled, the component render the list of resources, filters and details preview inside a panel
-  * @prop {string} cardLayoutStyle when specified, the card layout option is forced and the button to toggle card layout is hidden
-  * @prop {string} defaultCardLayoutStyle default layout card style. One of 'list'|'grid'
-  * @prop {array} detailsTabs array of tab object representing the structure of the displayed info properties (see tabs in {@link module:DetailViewer})
-  * @example
-  * {
-  *   "name": "ResourcesGrid",
-  *    "cfg": {
-  *        targetSelector: '#custom-resources-grid',
-  *        containerSelector: '.ms-container',
-  *        menuItems: [],
-  *        filtersFormItems: [],
-  *        defaultQuery: {
-  *          f: 'dataset'
-  *        },
-  *        pagination: false,
-  *        disableDetailPanel: true,
-  *        disableFilters: true,
-  *        enableGeoNodeCardsMenuItems: true
-  *    }
-  * }
-  */
+ * This plugins allows to render a resources grid, it could be configured multiple times in the localConfig with different id
+ * @memberof plugins
+ * @class
+ * @name ResourcesGrid
+ * @prop {string} cfg.id (required) identifier of the resources grid
+ * @prop {string} cfg.titleId title of the resources grid
+ * @prop {number} cfg.pageSize page size of the resources grid
+ * @prop {string} cfg.cardLayoutStyle one of `list` or `grid`, if undefined will render a button to select the style from UI
+ * @prop {bool} cfg.hideWithNoResults if true hides the resources grid when there aren't results
+ * @prop {object} cfg.defaultQuery a default query always included in the request
+ * @prop {boolean} cfg.queryPage if true the page params will be managed in the url query
+ * @prop {object[]} cfg.menuItems additional menu items configuration to include on the right side of the resources menu
+ * @prop {object} cfg.order configuration for the order by menu (if `null` it will not render)
+ * @prop {object} cfg.order.defaultLabelId default message to show on the menu toggle
+ * @prop {string} cfg.order.align if `right` will move the menu on the right
+ * @prop {object[]} cfg.order.options options available in the order by menu
+ * @prop {object|object[]} cfg.metadata configuration of the metadata visible on the card
+ * @prop {string} cfg.headerNodeSelector optional valid query selector for the header in the page, used to set the position of the panel
+ * @prop {string} cfg.navbarNodeSelector optional valid query selector for the navbar under the header, used to set the position of the panel
+ * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
+ * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
+ * @prop {object[]} items this property contains the items injected from the other plugins,
+ * using the `containers` option in the plugin that want to inject new menu items.
+ * The supported targets are:
+ * - `card-options` target adds a menu item in the hidden dropdown list in the card
+ * ```javascript
+ * const MyCardOption = connect(selector, { onActivateTool })(({
+ *  component, // default component that provides a consistent UI (see BrandNavbarMenuItem in BrandNavbar plugin for props)
+ *  resource, // current resource
+ *  viewerUrl, // url to open the viewer
+ *  renderType, // it could be menuItem or undefined
+ *  active, // example of a custom connected prop
+ *  onActivateTool, // example of a custom connected action
+ * }) => {
+ *  const ItemComponent = component;
+ *  return (
+ *      <ItemComponent
+ *          glyph="heart"
+ *          iconType="glyphicon"
+ *          labelId="resourcesCatalog.deleteResource"
+ *          active={active}
+ *          onClick={() => onActivateTool()}
+ *      />
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          ResourcesGrid: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: 'card-options',
+ *              Component: MyCardOption
+ *          },
+ * // ...
+ * ```
+ * - `card-buttons` target adds a visible button on the card
+ * ```javascript
+ * const MyCardButton = connect(selector, { onActivateTool })(({
+ *  component, // default component that provides a consistent UI (see BrandNavbarMenuItem in BrandNavbar plugin for props)
+ *  resource, // current resource
+ *  viewerUrl, // url to open the viewer
+ *  renderType, // it could be menuItem or undefined
+ *  active, // example of a custom connected prop
+ *  onActivateTool, // example of a custom connected action
+ * }) => {
+ *  const ItemComponent = component;
+ *  return (
+ *      <ItemComponent
+ *          glyph="heart"
+ *          iconType="glyphicon"
+ *          labelId="resourcesCatalog.deleteResource"
+ *          active={active}
+ *          square
+ *          onClick={() => onActivateTool()}
+ *      />
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          ResourcesGrid: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: 'card-buttons',
+ *              Component: MyCardButton
+ *          },
+ * // ...
+ * ```
+ * - `left-menu` target adds a new item in the resource card menu, near the resources count
+ * ```javascript
+ * const MyMenuItem = connect(selector, { onActivateTool })(({
+ *  query, // current query
+ *  onActivateTool, // example of a custom connected action
+ * }) => {
+ *  return (
+ *      <button onClick={() => onActivateTool()}>My Button</button>
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          ResourcesGrid: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: 'left-menu',
+ *              Component: MyMenuItem
+ *          },
+ * // ...
+ * ```
+ * - `card` target replace the resource card component wrapper (only the first available item with this target will be used)
+ * ```javascript
+ * const MyCard = forwardRef(({
+ *  children, // content of the resource card
+ *  resource, // current resource
+ *  viewerUrl, // url to open the viewer
+ *  readOnly, // if true a resource is in read only mode
+ *  active, // if true a resource is selected
+ *  interactive, // if true a resource card is interactive
+ *  className // default class names
+ * }, ref) => {
+ *  return (
+ *      <div ref={ref} className={className}>
+ *          {children}
+ *      </div>
+ *  );
+ * });
+ * createPlugin(
+ *  'MyPlugin',
+ *  {
+ *      containers: {
+ *          ResourcesGrid: {
+ *              name: "TOOLNAME", // a name for the current tool.
+ *              target: 'card',
+ *              Component: MyCard
+ *          },
+ * // ...
+ * ```
+ * @example
+ * {
+ *  "name": "ResourcesGrid",
+ *  "cfg": {
+ *      "id": "featured",
+ *      "titleId": "manager.featuredMaps",
+ *      "pageSize": 4,
+ *      "cardLayoutStyle": "grid",
+ *      "order": null,
+ *      "hideWithNoResults": true,
+ *      "defaultQuery": {
+ *          "f": "featured"
+ *      }
+ *  }
+ * },
+ * {
+ *  "name": "ResourcesGrid",
+ *  "cfg": {
+ *      "id": "maps",
+ *      "titleId": "manager.featuredMaps",
+ *      "pageSize": 4,
+ *      "order": null,
+ *      "metadata": {
+ *          "list": [
+ *              {
+ *                  "path": "name",
+ *                  "target": "header",
+ *                  "width": 20,
+ *                  "labelId": "resourcesCatalog.columnName"
+ *              },
+ *              {
+ *                  "path": "description",
+ *                  "width": 40,
+ *                  "labelId": "resourcesCatalog.columnDescription"
+ *              },
+ *              {
+ *                  "path": "lastUpdate",
+ *                  "type": "date",
+ *                  "format": "MMM Do YY, h:mm:ss a",
+ *                  "width": 20,
+ *                  "icon": { "glyph": "clock-o" },
+ *                  "labelId": "resourcesCatalog.columnLastModified",
+ *                  "noDataLabelId": "resourcesCatalog.emptyNA"
+ *              },
+ *              {
+ *                  "path": "creator",
+ *                  "target": "footer",
+ *                  "filter": "filter{creator.in}",
+ *                  "icon": { "glyph": "user", "type": "glyphicon" },
+ *                  "width": 20,
+ *                  "labelId": "resourcesCatalog.columnCreatedBy",
+ *                  "noDataLabelId": "resourcesCatalog.emptyUnknown",
+ *                  "disableIf": "{!state('userrole')}"
+ *              }
+ *          ],
+ *          "grid": [
+ *              {
+ *                  "path": "name",
+ *                  "target": "header"
+ *              },
+ *              {
+ *                  "path": "creator",
+ *                  "target": "footer",
+ *                  "filter": "filter{creator.in}",
+ *                  "icon": { "glyph": "user", "type": 'glyphicon' },
+ *                  "noDataLabelId": "resourcesCatalog.emptyUnknown",
+ *                  "disableIf": "{!state('userrole')}",
+ *                  "tooltipId": "resourcesCatalog.columnCreatedBy"
+ *              }
+ *          ]
+ *      },
+ *      "defaultQuery": {
+ *          "f": "map"
+ *      }
+ *  }
+ * },
+ * {
+ *  "name": "ResourcesGrid",
+ *  "cfg": {
+ *      "id": "catalog",
+ *      "titleId": "resources.contents.title",
+ *      "queryPage": true,
+ *      "cardLayoutStyle": "list",
+ *      "order": {
+ *          "defaultLabelId": "resourcesCatalog.orderBy",
+ *          "align": "right",
+ *          "options": [
+ *              {
+ *                  "label": "Most recent",
+ *                  "labelId": "resourcesCatalog.mostRecent",
+ *                  "value": "-creation"
+ *              },
+ *              {
+ *                  "label": "Less recent",
+ *                  "labelId": "resourcesCatalog.lessRecent",
+ *                  "value": "creation"
+ *              },
+ *              {
+ *                  "label": "A Z",
+ *                  "labelId": "resourcesCatalog.aZ",
+ *                  "value": "name"
+ *              },
+ *              {
+ *                  "label": "Z A",
+ *                  "labelId": "resourcesCatalog.zA",
+ *                  "value": "-name"
+ *              }
+ *          ]
+ *      },
+ *      "menuItems": [
+ *          {
+ *              "labelId": "resourcesCatalog.addResource",
+ *              "disableIf": "{!state('userrole')}",
+ *              "type": "dropdown",
+ *              "variant": "primary",
+ *              "size": "sm",
+ *              "responsive": true,
+ *              "noCaret": true,
+ *              "items": [
+ *                  {
+ *                      "labelId": "resourcesCatalog.createMap",
+ *                      "type": "link",
+ *                      "href": "#/viewer/new"
+ *                  },
+ *                  {
+ *                      "labelId": "resourcesCatalog.createDashboard",
+ *                      "type": "link",
+ *                      "href": "#/dashboard/"
+ *                  },
+ *                  {
+ *                      "labelId": "resourcesCatalog.createGeoStory",
+ *                      "type": "link",
+ *                      "href": "#/geostory/newgeostory/",
+ *                      "disableIf": "{state('userrole') !== 'ADMIN'}"
+ *                  }
+ *              ]
+ *          }
+ *      ]
+ *  }
+ * }
+ */
 function ResourcesGrid({
     items,
     order = {

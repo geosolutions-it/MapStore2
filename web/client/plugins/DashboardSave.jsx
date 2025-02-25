@@ -46,6 +46,7 @@ const SaveBaseDialog = compose(
 /**
  * Implements "save" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
  * @deprecated
+ * @ignore
  * @class
  * @name DashboardSave
  * @memberof plugins
@@ -102,6 +103,8 @@ export const DashboardSave = createPlugin('DashboardSave', {
 /**
  * Implements "save as" button for dashboards, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
  * @class
+ * @ignore
+ * @deprecated
  * @name DashboardSaveAs
  * @memberof plugins
  */

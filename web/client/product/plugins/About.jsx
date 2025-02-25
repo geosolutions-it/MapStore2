@@ -34,6 +34,17 @@ const About = connect((state) => ({
     onClose: toggleControl.bind(null, 'about', null)
 })(AboutComp);
 
+const AboutFooterButton = connect(() => ({}), { onClick: toggleControl.bind(null, 'about', null) })(({ component, onClick }) => {
+    const Component = component;
+    return (
+        <Component
+            labelId="about_title"
+            glyph="info-sign"
+            onClick={() => onClick()}
+        />
+    );
+});
+
 
 /**
  * Plugin for the "About" window in mapstore.
@@ -74,6 +85,13 @@ export default {
                 priority: 1,
                 doNotHide: true,
                 toggle: true
+            },
+            Footer: {
+                target: 'menu',
+                doNotHide: true,
+                priority: 3,
+                position: 0,
+                Component: AboutFooterButton
             }
         }),
     reducers: {

@@ -178,7 +178,6 @@ export function toggleSelection(features) {
  * @memberof actions.featuregrid
  * @param {boolean} [options.multiselect] if true, allows multiple feature selection
  * @param {boolean} [showCheckbox] allow to show/hide checkboxes.
- * @returns
  */
 export function setSelectionOptions({multiselect, showCheckbox} = {}) {
     return {

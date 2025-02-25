@@ -8,6 +8,12 @@
 
 import useLocalStorage from './useLocalStorage';
 
+/**
+ * menage the card layout using the localStorage
+ * @param {string} props.cardLayoutStyle one of `list` or `grid`, if not `undefined` it forces the type of cards style
+ * @param {string} props.defaultCardLayoutStyle initial value, one of `list` or `grid`
+ * @return {object} { cardLayoutStyle, setCardLayoutStyle, hideCardLayoutButton }
+ */
 const useCardLayoutStyle = ({
     cardLayoutStyle,
     defaultCardLayoutStyle

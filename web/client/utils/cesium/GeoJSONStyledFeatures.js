@@ -65,6 +65,7 @@ const featureToCartesianPositions = (feature) => {
  * @param {boolean} options.queryable if false the features will not be queryable, default is true
  * @param {array} options.features array of valid geojson features
  * @param {boolean} options.mergePolygonFeatures if true will merge all polygons with similar styles in a single primitive. This could help to reduce the draw call to the render
+ * @param {func} featureFilter a function to filter feature, it receives a GeoJSON feature as argument and it must return a boolean
  */
 class GeoJSONStyledFeatures {
     constructor(options = {}) {
@@ -81,6 +82,7 @@ class GeoJSONStyledFeatures {
         this._opacity = options.opacity ?? 1;
         this._queryable = options.queryable === undefined ? true : !!options.queryable;
         this._mergePolygonFeatures = !!options?.mergePolygonFeatures;
+        this._featureFilter = options.featureFilter;
         this._dataSource.entities.collectionChanged.addEventListener(() => {
             setTimeout(() => this._map.scene.requestRender(), 300);
         });
@@ -365,7 +367,7 @@ class GeoJSONStyledFeatures {
                 this._styleFunction({
                     map: this._map,
                     opacity: this._opacity,
-                    features: this._features,
+                    features: this._featureFilter ? this._features.filter(this._featureFilter) : this._features,
                     getPreviousStyledFeature: (styledFeature) => {
                         const editingStyleFeature = this._styledFeatures.find(({ id }) => id === styledFeature.id);
                         return editingStyleFeature;
@@ -411,6 +413,10 @@ class GeoJSONStyledFeatures {
     }
     setStyleFunction(styleFunction) {
         this._styleFunction = styleFunction;
+        this._update();
+    }
+    setFeatureFilter(featureFilter) {
+        this._featureFilter = featureFilter;
         this._update();
     }
     destroy() {

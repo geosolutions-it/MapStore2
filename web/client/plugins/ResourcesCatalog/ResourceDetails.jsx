@@ -111,7 +111,7 @@ function ResourceDetails({
     targetSelector,
     headerNodeSelector = '#ms-brand-navbar',
     navbarNodeSelector = '',
-    footerNodeSelector = '',
+    footerNodeSelector = '#ms-footer',
     width,
     height,
     show,
@@ -348,10 +348,7 @@ function BrandNavbarDetailsButton({
     };
     const { title } = getResourceTypesInfo(resource || selectedResource);
     return (
-        <FlexBox centerChildrenVertically gap="xs">
-            <Text ellipsis>
-                {title}
-            </Text>
+        <FlexBox component="li" centerChildrenVertically gap="xs">
             <ButtonWithTooltip
                 active={show}
                 square
@@ -365,8 +362,11 @@ function BrandNavbarDetailsButton({
                 }}
                 borderTransparent
             >
-                <Icon glyph="file-code-o" />
+                <Icon glyph="details" type="glyphicon" />
             </ButtonWithTooltip>
+            <Text ellipsis>
+                {title}
+            </Text>
         </FlexBox>
     );
 }
@@ -376,10 +376,10 @@ export default createPlugin('ResourceDetails', {
     containers: {
         BrandNavbar: {
             priority: 1,
-            target: 'right-menu',
+            target: 'left-menu',
             Component: resourceDetailsConnect(BrandNavbarDetailsButton),
             doNotHide: true,
-            position: 1
+            position: 5
         },
         ResourcesGrid: {
             priority: 2,
@@ -404,7 +404,8 @@ export default createPlugin('ResourceDetails', {
                 return (
                     <Component
                         onClick={handleClick}
-                        glyph="file-code-o"
+                        glyph="details"
+                        iconType="glyphicon"
                         square
                         labelId="resourcesCatalog.viewResourceProperties"
                     />

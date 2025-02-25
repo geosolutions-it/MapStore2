@@ -144,7 +144,6 @@ const INTERVALS = {
 /**
  * Returns the (default) list of grid intervals (in projection units) for the given projection.
  * @param {string} projection
- * @returns
  */
 export function getIntervals(projection) {
     const def = proj4.defs(projection);

@@ -8,7 +8,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
+/**
+ * Spinner circle component, it inherits color and size from the css font rules
+ * @prop {string} id html identifier
+ * @prop {string} className custom class name
+ * @prop {object} style custom style object
+ */
 function Spinner({
     id,
     className,

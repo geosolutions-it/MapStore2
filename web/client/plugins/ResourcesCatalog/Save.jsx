@@ -33,6 +33,13 @@ function addNameToResource(resource) {
     };
 }
 
+/**
+ * Plugin to save resource. Allows to re-save an existing resource using the persistence API. Note: creation of new resource is implemented by {@link #plugins.SaveAs|SaveAs} plugin.
+ * @memberof plugins
+ * @class
+ * @name Save
+ * @prop {string} cfg.resourceType one of `MAP`, `DASHBOARD` or `GEOSTORY` based on the viewer in use
+ */
 function Save({
     pendingChanges,
     resourceType,
@@ -179,7 +186,7 @@ export default createPlugin('Save', {
     component: ConnectedPendingStatePrompt,
     containers: {
         BrandNavbar: {
-            target: 'right-menu',
+            target: 'left-menu',
             position: 2,
             priority: 3,
             Component: SavePlugin,

@@ -13,6 +13,15 @@ const fieldsContainFacets = (fields) => {
     return fields.some(field => field.items ? fieldsContainFacets(field.items) : !!field.facet);
 };
 
+/**
+ * menage facet for the filter form fields
+ * @param {object} props.query filters query object
+ * @param {object[]} props.fields list of filter input fields
+ * @param {func} props.request function that return the facets request
+ * @param {bool} props.visible if true the request will be triggered
+ * @param {array} dependencies list of dependencies to trigger the facet request
+ * @return {object} { fields }
+ */
 const useFilterFacets = ({
     query,
     fields,

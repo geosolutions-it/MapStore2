@@ -160,7 +160,7 @@ export default ({ showFeatureInfoTab = true, loadedPlugins, items, onToggleStyle
             id: 'fields',
             titleId: 'layerProperties.fields.title',
             tooltipId: 'layerProperties.fields.tooltip',
-            glyph: 'th-list',
+            glyph: 'list',
             visible: isLayerNode(props) && hasFields(props?.element),
             Component: Fields
         },

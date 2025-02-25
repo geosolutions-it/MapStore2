@@ -7,7 +7,23 @@
  */
 
 import { useRef, useEffect } from 'react';
-
+/**
+ * check if a component is still mounted
+ * @example
+ * @return {func} function that accept as argument a callback, the callback is triggered only if the component is mounted
+ * function Component({ update }) {
+ *  const isMounted = useIsMounted();
+ *  const [count, setCount] = useState(0);
+ *  useEffect(() => {
+ *      request().then(() =>
+ *          isMounted(() => {
+ *              setCount(prevCount => prevCount + 1)
+ *          })
+ *      );
+ *  }, [update]);
+ *  return <div>{count}</div>;
+ * }
+ */
 const useIsMounted = () => {
     const isMounted = useRef();
     useEffect(() => {

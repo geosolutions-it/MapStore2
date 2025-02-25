@@ -128,38 +128,6 @@ describe('ResourcesUtils', () => {
         );
 
         expect(computePendingChanges(
-            { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
-            { id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } })).toEqual(
-            {
-                initialResource: { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
-                resource: { id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } },
-                saveResource: {
-                    id: 1,
-                    permission: undefined,
-                    category: 'MAP',
-                    metadata: { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' } },
-                    linkedResources: { thumbnail: { tail: '/raw?decode=datauri', category: 'THUMBNAIL', value: '/thumb', data: 'NODATA' } }
-                },
-                changes: { linkedResources: { thumbnail: { tail: '/raw?decode=datauri', category: 'THUMBNAIL', value: '/thumb', data: 'NODATA' } } } }
-        );
-
-        expect(computePendingChanges(
-            { id: 1, name: 'Title', attributes: {}, category: { name: 'MAP' } },
-            { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } })).toEqual(
-            {
-                initialResource: { id: 1, name: 'Title', attributes: { }, category: { name: 'MAP' } },
-                resource: { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
-                saveResource: {
-                    id: 1,
-                    permission: undefined,
-                    category: 'MAP',
-                    metadata: { id: 1, name: 'Title', attributes: {} },
-                    linkedResources: { thumbnail: { tail: '/raw?decode=datauri', category: 'THUMBNAIL', value: 'NODATA', data: '/thumb' } }
-                },
-                changes: { linkedResources: { thumbnail: {  tail: '/raw?decode=datauri', category: 'THUMBNAIL', value: 'NODATA', data: '/thumb' } } } }
-        );
-
-        expect(computePendingChanges(
             { id: 1, name: 'Title', attributes: {}, category: { name: 'MAP' } },
             { id: 1, name: 'Title', attributes: { details: '/details' }, category: { name: 'MAP' } })).toEqual(
             {
@@ -183,6 +151,26 @@ describe('ResourcesUtils', () => {
                 changes: { data: true }
             }
         );
+    });
+    it('computePendingChanges with thumbnail', () => {
+        let computedChanges = computePendingChanges(
+            { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } },
+            { id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } });
+        expect(computedChanges.initialResource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
+        expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '' }, category: { name: 'MAP' } });
+        expect(computedChanges.changes.linkedResources.thumbnail.value).toBe('/thumb');
+        expect(computedChanges.changes.linkedResources.thumbnail.data).toBe('NODATA');
+
+        computedChanges = computePendingChanges(
+            { id: 1, name: 'Title', attributes: {}, category: { name: 'MAP' } },
+            { id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
+        expect(computedChanges.initialResource).toEqual({ id: 1, name: 'Title', attributes: { }, category: { name: 'MAP' } });
+        expect(computedChanges.resource).toEqual({ id: 1, name: 'Title', attributes: { thumbnail: '/thumb' }, category: { name: 'MAP' } });
+        expect(computedChanges.changes.linkedResources.thumbnail.value).toBe('NODATA');
+        expect(computedChanges.changes.linkedResources.thumbnail.data).toBe('/thumb');
+        const tailsParts = computedChanges.changes.linkedResources.thumbnail.tail.split('&');
+        expect(tailsParts[0]).toBe('/raw?decode=datauri');
+        expect(tailsParts[1].includes('v=')).toBe(true);
     });
     it('computePendingChanges with tags', () => {
         const computed = computePendingChanges(
