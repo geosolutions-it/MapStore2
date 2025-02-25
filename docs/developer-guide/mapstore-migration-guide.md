@@ -31,7 +31,7 @@ The Footer plugin has been refactored and some properties have been removed:
 
 It is possible to replicate the old footer structure for existing project that want to keep the homepage footer information as before with the following configurations:
 
-1. configure the new Footer plugin in localConfig.json as follow:
+1. configure the new Footer plugin in `localConfig.json` as follow:
 
     ```js
     {
