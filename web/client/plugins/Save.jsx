@@ -23,6 +23,7 @@ const showMapSaveSelector = state => state.controls && state.controls.mapSave &&
 /**
  * Plugin for Save Map. Allows to re-save an existing map (using the persistence API). Note: creation of new Map is implemented by {@link #plugins.SaveAs|SaveAs} plugin.
  * @deprecated
+ * @ignore
  * @prop {boolean} [cfg.disablePermission=false] disable the permission selector in the tool. Can be used in context when permissions are not needed (resources are private only/using plugin with another API)
  * @name Save
  * @class

@@ -27,7 +27,6 @@ const panels = {
  * @param {string} props.provider the Street View provider.
  * @param {object} props.panelSize the size of the panel. Example: `{"width": 500, "height": 500}`.
  * @param {object} props.providerSettings the settings specific for the provider.
- * @returns
  */
 function Panel({enabled, onClose = () => {}, provider, panelSize, providerSettings, apiKey, resetStViewData}) {
     const margin = 10;

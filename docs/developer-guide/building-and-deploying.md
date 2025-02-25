@@ -46,6 +46,14 @@ To install docma:
 
 `npm install -g docma`
 
+Before generating the documentation verify all files are included in the configuration with:
+
+`npm run jsdoc:check`
+
+Is is possible to update the documentation configuration in case the `jsdoc:check` command fails with:
+
+`npm run jsdoc:update`
+
 While developing you can generate the documentation to be accessible in the local machine by:
 
 `npm run jsdoc:test`

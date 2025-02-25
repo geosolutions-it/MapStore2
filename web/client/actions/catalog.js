@@ -188,7 +188,6 @@ export function addCatalogService(service) {
 /**
  *
  * @param {object[]} services list of services to full replace catalog ones
- * @returns
  */
 export function updateCatalogServices(services) {
     return {

@@ -159,7 +159,7 @@ export function streetViewDataLayerSelector(state) {
 /**
  * gets the API key for Google street view.
  * @memberof selectors.streetview
- * @returns the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.googleStreetViewAPIKey`, `apiKeys.googleAPIKey`, `googleAPIKey`.
+ * @returns {string} the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.googleStreetViewAPIKey`, `apiKeys.googleAPIKey`, `googleAPIKey`.
  */
 export function googleAPIKeySelector(state) {
     return streetViewConfigurationSelector(state)?.apiKey
@@ -171,7 +171,7 @@ export function googleAPIKeySelector(state) {
  * Selector for the cyclomedia API key
  * @memberof selectors.streetview
  * @param {object} state the state
- * @returns the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.cyclomediaAPIKey`.
+ * @returns {string} the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.cyclomediaAPIKey`.
  */
 export function cyclomediaAPIKeySelector(state) {
     return streetViewConfigurationSelector(state)?.apiKey
@@ -181,7 +181,7 @@ export function cyclomediaAPIKeySelector(state) {
  * Selector for the mapillary API key
  * @memberof selectors.streetview
  * @param {object} state the state
- * @returns the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.mapillaryAPIKey`.
+ * @returns {string} the API key in cascade from plugin's `cfg.apiKey` property, `localConfig.json` properties (in this order of priority): `apiKeys.mapillaryAPIKey`.
  */
 export function mapillaryAPIKeySelector(state) {
     const mapillaryConfig = streetViewConfigurationSelector(state);
@@ -193,7 +193,7 @@ export function mapillaryAPIKeySelector(state) {
  * Selector for the API key for the current provider
  * @memberof selectors.streetview
  * @param {object} state the state
- * @returns the API key for the current provider
+ * @returns {string} the API key for the current provider
  */
 export function streetViewAPIKeySelector(state) {
     switch (streetViewProviderSelector(state)) {
@@ -220,7 +220,7 @@ export function useStreetViewDataLayerSelector(state) {
 /**
  * gets from the state the panorama options currently loaded
  * @param {object} state
- * @returns the panorama options configured
+ * @returns {object} the panorama options configured
  */
 export function panoramaOptionsSelector(state) {
     return streetViewConfigurationSelector(state)?.panoramaOptions;

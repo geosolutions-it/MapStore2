@@ -30,7 +30,6 @@ import { mapValues, pickBy } from 'lodash';
  * @memberof reducers
  * @param {object} state previous state
  * @param {action} action
- * @example
  */
 export default (state = {}, action) => {
     switch (action.type) {

@@ -25,6 +25,79 @@ import useResourcePanelWrapper from './hooks/useResourcePanelWrapper';
 import { withResizeDetector } from 'react-resize-detector';
 import { userSelector } from '../../selectors/security';
 
+/**
+ * This plugin renders a side panel with configurable input filters
+ * @memberof plugins
+ * @class
+ * @name ResourcesFiltersForm
+ * @prop {string} cfg.resourcesGridId (required) parent catalog identifier
+ * @prop {string} cfg.headerNodeSelector optional valid query selector for the header in the page, used to set the position of the panel
+ * @prop {string} cfg.navbarNodeSelector optional valid query selector for the navbar under the header, used to set the position of the panel
+ * @prop {string} cfg.footerNodeSelector optional valid query selector for the footer in the page, used to set the position of the panel
+ * @prop {string} cfg.targetSelector optional valid query selector for a node used to mount the plugin root component
+ * @prop {object[]} cfg.fields array of filter object configurations
+ * @example
+ * {
+ *  "name": "ResourcesFiltersForm",
+ *  "cfg": {
+ *      "resourcesGridId": "catalog",
+ *      "fields": [
+ *          {
+ *              "type": "search"
+ *          },
+ *          {
+ *              "type": "group",
+ *              "labelId": "resourcesCatalog.customFiltersTitle",
+ *              "items": [
+ *                  {
+ *                      "id": "my-resources",
+ *                      "labelId": "resourcesCatalog.myResources",
+ *                      "type": "filter",
+ *                      "disableIf": "{!state('userrole')}"
+ *                  },
+ *                  {
+ *                      "id": "map",
+ *                      "labelId": "resourcesCatalog.mapsFilter",
+ *                      "type": "filter"
+ *                  },
+ *                  {
+ *                      "id": "dashboard",
+ *                      "labelId": "resourcesCatalog.dashboardsFilter",
+ *                      "type": "filter"
+ *                  },
+ *                  {
+ *                      "id": "geostory",
+ *                      "labelId": "resourcesCatalog.geostoriesFilter",
+ *                      "type": "filter"
+ *                  },
+ *                  {
+ *                      "id": "context",
+ *                      "labelId": "resourcesCatalog.contextsFilter",
+ *                      "type": "filter"
+ *                  }
+ *              ]
+ *          },
+ *          {
+ *              "type": "divider"
+ *          },
+ *          {
+ *              "type": "select",
+ *              "facet": "group",
+ *              "disableIf": "{!state("userrole")}"
+ *          },
+ *          {
+ *              "type": "select",
+ *              "facet": "context"
+ *          },
+ *          {
+ *              "type": "date-range",
+ *              "filterKey": "creation",
+ *              "labelId": "resourcesCatalog.creationFilter"
+ *          }
+ *      ]
+ *  }
+ * }
+ */
 function ResourcesFiltersForm({
     id = 'ms-filter-form',
     resourcesGridId,

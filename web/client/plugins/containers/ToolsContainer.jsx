@@ -35,6 +35,7 @@ const HelpBadge = connect((state) => ({
  * A container for tools.
  * @memberof plugins.containers
  * @class ToolsContainer
+ * @deprecated
  * @static
  * @prop {object[]} tools An array of tools. Each tool have this shape. the first in order wins:
  * ```
