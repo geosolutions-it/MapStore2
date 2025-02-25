@@ -7,7 +7,7 @@
  */
 
 import React, { forwardRef } from 'react';
-import FlexBox from './FlexBox';
+import FlexBox from '../../../components/layout/FlexBox';
 
 const ResourcesPanelWrapper = forwardRef(({
     top,

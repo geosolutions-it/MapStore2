@@ -9,14 +9,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Message from '../../../components/I18N/Message';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 import Icon from './Icon';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import PermissionsRow from './PermissionsRow';
-import Spinner from './Spinner';
+import Spinner from '../../../components/layout/Spinner';
 import InputControl from './InputControl';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 function PermissionsAddEntriesPanel({
     request,

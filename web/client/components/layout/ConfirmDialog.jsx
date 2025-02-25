@@ -8,13 +8,14 @@
 
 import React from 'react';
 
-import Modal from '../../../components/misc/Modal';
-import Message from '../../../components/I18N/Message';
+import Modal from '../../components/misc/Modal';
+import Message from '../../components/I18N/Message';
 import Button from './Button';
 import FlexBox from './FlexBox';
 import Text from './Text';
 import Spinner from './Spinner';
 import { Alert } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 function ConfirmDialog({
     show,
@@ -24,12 +25,14 @@ function ConfirmDialog({
     descriptionId,
     errorId,
     disabled,
-    cancelId = 'no',
-    confirmId = 'yes',
-    variant = 'danger',
+    cancelId,
+    confirmId,
+    variant,
     loading,
     children,
-    preventHide
+    preventHide,
+    titleParams,
+    descriptionParams
 }) {
 
     function handleHide() {
@@ -48,10 +51,10 @@ function ConfirmDialog({
         >
             <FlexBox classNames={['_padding-lr-lg', '_padding-tb-md']} column gap="md">
                 <Text fontSize="lg" strong>
-                    {titleId ? <Message msgId={titleId} /> : null}
+                    {titleId ? <Message msgId={titleId} msgParams={titleParams} /> : null}
                 </Text>
                 {descriptionId ? <Text>
-                    <Message msgId={descriptionId} />
+                    <Message msgId={descriptionId} msgParams={descriptionParams} />
                 </Text> : null}
                 {children}
                 {errorId
@@ -75,3 +78,35 @@ function ConfirmDialog({
 }
 
 export default ConfirmDialog;
+
+ConfirmDialog.defaultProps = {
+    show: false,
+    onCancel: () => {},
+    onConfirm: () => {},
+    titleId: '',
+    descriptionId: '',
+    errorId: '',
+    disabled: false,
+    loading: false,
+    preventHide: true,
+    cancelId: 'cancel',
+    confirmId: 'confirm',
+    variant: 'danger'
+};
+
+ConfirmDialog.propTypes = {
+    show: PropTypes.bool,
+    onCancel: PropTypes.func,
+    onConfirm: PropTypes.func,
+    titleId: PropTypes.string,
+    descriptionId: PropTypes.string,
+    errorId: PropTypes.string,
+    disabled: PropTypes.bool,
+    loading: PropTypes.bool,
+    preventHide: PropTypes.bool,
+    cancelId: PropTypes.string,
+    confirmId: PropTypes.string,
+    variant: PropTypes.string,
+    children: PropTypes.node
+};
+

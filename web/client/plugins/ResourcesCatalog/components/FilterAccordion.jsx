@@ -11,14 +11,14 @@ import uniq from 'lodash/uniq';
 import isEmpty from 'lodash/isEmpty';
 import PropTypes from "prop-types";
 
-import Button from "./Button";
+import Button from "../../../components/layout/Button";
 import Icon from "./Icon";
 import useLocalStorage from "../hooks/useLocalStorage";
 import Message from "../../../components/I18N/Message";
-import Spinner from "./Spinner";
+import Spinner from "../../../components/layout/Spinner";
 import useIsMounted from "../hooks/useIsMounted";
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 const AccordionTitle = ({
     expanded,

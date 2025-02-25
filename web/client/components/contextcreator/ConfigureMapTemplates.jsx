@@ -13,7 +13,7 @@ import jsonlint from 'jsonlint-mod';
 
 import {formatToGlyph, formatToText} from '../../utils/FileFormatUtils';
 import Transfer from '../misc/transfer/Transfer';
-import ConfirmDialog from '../misc/ConfirmDialog';
+import ConfirmDialog from '../layout/ConfirmDialog';
 import Message from '../I18N/Message';
 import SaveModal from '../resources/modals/Save';
 import handleSaveModal from '../resources/modals/enhancers/handleSaveModal';
@@ -222,10 +222,8 @@ export default ({
             }}
             onClose={() => onShowUploadDialog(false)}/>
         <ConfirmDialog
-            draggable={false}
-            modal
             show={showDeleteConfirm}
-            onClose={() => {
+            onCancel={() => {
                 setTemplateToDelete();
                 onShowDeleteConfirm(false);
             }}
@@ -234,11 +232,12 @@ export default ({
                 setTemplateToDelete();
                 onShowDeleteConfirm(false);
             }}
-            confirmButtonBSStyle="default"
-            confirmButtonContent={<Message msgId="confirm"/>}
-            closeText={<Message msgId="cancel"/>}
-            closeGlyph="1-close">
-            <Message msgId="contextCreator.configureTemplates.deleteConfirm" msgParams={{templateName: get(templateToDelete, 'name')}}/>
+            titleId={"contextCreator.configureTemplates.deleteConfirm"}
+            titleParams={{templateName: get(templateToDelete, 'name')}}
+            preventHide
+            variant="danger"
+            confirmId="confirm"
+            cancelId="cancel">
         </ConfirmDialog>
     </>);
 };

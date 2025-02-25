@@ -9,7 +9,7 @@
 import React, {forwardRef} from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from './MenuItem';
-import FlexBox from './FlexBox';
+import FlexBox from '../../../components/layout/FlexBox';
 
 /**
 * @module components/Menu

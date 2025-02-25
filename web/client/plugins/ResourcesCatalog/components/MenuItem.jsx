@@ -15,7 +15,7 @@ import Message from '../../../components/I18N/Message';
 import DropdownList from './MenuDropdownList';
 import MenuNavLink from './MenuNavLink';
 import Icon from './Icon';
-import Button from './Button';
+import Button from '../../../components/layout/Button';
 
 const isValidBadgeValue = (badge) => !!badge || badge === 0;
 

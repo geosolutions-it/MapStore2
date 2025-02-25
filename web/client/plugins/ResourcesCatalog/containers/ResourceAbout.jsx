@@ -13,10 +13,10 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { getInitialSelectedResource } from '../selectors/resources';
 import { parseNODATA } from '../utils/ResourcesUtils';
-import FlexBox from '../components/FlexBox';
+import FlexBox from '../../../components/layout/FlexBox';
 import Icon from '../components/Icon';
-import Text from '../components/Text';
-import Spinner from '../components/Spinner';
+import Text from '../../../components/layout/Text';
+import Spinner from '../../../components/layout/Spinner';
 
 const ResourceAboutEditor = lazy(() => import('./ResourceAboutEditor'));
 

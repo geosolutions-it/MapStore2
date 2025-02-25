@@ -12,12 +12,12 @@ import { createStructuredSelector } from 'reselect';
 import Permissions from '../components/Permissions';
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { userSelector } from '../../../selectors/security';
-import FlexBox from '../components/FlexBox';
-import Text from '../components/Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 import Icon from '../components/Icon';
 import Message from '../../../components/I18N/Message';
 import useIsMounted from '../hooks/useIsMounted';
-import Spinner from '../components/Spinner';
+import Spinner from '../../../components/layout/Spinner';
 import { castArray } from 'lodash';
 
 function ResourcePermissions({

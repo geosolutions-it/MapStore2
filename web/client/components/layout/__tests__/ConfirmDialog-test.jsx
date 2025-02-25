@@ -59,4 +59,15 @@ describe('ConfirmDialog component', () => {
         expect(buttons.length).toBe(2);
         Simulate.click(buttons[0]);
     });
+    it('should disable confirm button when disabled prop is true', () => {
+        ReactDOM.render(
+            <ConfirmDialog
+                show
+                disabled
+            />,
+            document.getElementById('container')
+        );
+        const confirmButton = document.querySelectorAll('.btn')[1];
+        expect(confirmButton.disabled).toBe(true);
+    });
 });
