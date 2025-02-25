@@ -4000,8 +4000,9 @@
             "zoomIn": "Por favor, acerque el mapa para ver la cobertura de vista de calle",
             "errorOccurred": "Se produjo un error: ",
             "errors": {
-                "invalidCredentials": "Credenciales inválidas",
-                "projectionNotAvailable": "La proyección {srs} configurada no está disponible. Por favor, contacte al administrador."
+              "invalidCredentials": "Credenciales inválidas",
+              "projectionNotAvailable": "La proyección {srs} configurada no está disponible. Por favor, contacte al administrador.",
+              "notLoggedIn": "<p>No has iniciado sesión en Street Smart. Posibles causas: <ul><li>Tu navegador podría estar bloqueando las ventanas emergentes. Habilita las ventanas emergentes para este sitio y haz clic en \"Recargar API\" para iniciar sesión nuevamente.</li><li>Tu sesión podría ser inválida, intenta hacer clic en \"Cerrar sesión\", completa el procedimiento de cierre de sesión y vuelve a abrir la herramienta.</li></ul>Si el problema persiste, contacta al administrador.</p>"
             },
             "reloadAPI": "Recargar API"
           }

@@ -4001,7 +4001,8 @@
               "errorOccurred": "Si è verificato un errore: ",
               "errors": {
                 "invalidCredentials": "Credenziali non valide",
-                "projectionNotAvailable": "La proiezione {srs} configurata non è disponibile. Contattare l'amministratore."
+                "projectionNotAvailable": "La proiezione {srs} configurata non è disponibile. Contattare l'amministratore.",
+                "notLoggedIn": "<p>Non sei connesso a Street Smart. Possibili cause: <ul><li>Il tuo browser potrebbe bloccare i popup. Abilita i popup per questo sito e clicca su \"Ricarica API\" effettuare di nuovo il login.</li><li>La tua sessione potrebbe essere non valida, prova a cliccare su \"Logout\", completa la procedura di logout e riapri lo strumento.</li></ul>Se il problema persiste, contatta l'amministratore.</p>"
               },
               "reloadAPI": "Ricarica API"
             }
