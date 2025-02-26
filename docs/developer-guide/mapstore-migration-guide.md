@@ -30,7 +30,7 @@ The `localConfig.json` configuration for the `rulesmanager` page should be updat
 {
     "rulesmanager": [
         "Redirect" ,
-        {
+-        {
 -           "name": "OmniBar",
 -           "cfg": {
 -               "containerPosition": "header",
