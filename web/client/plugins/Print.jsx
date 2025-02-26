@@ -102,6 +102,7 @@ import { MapLibraries } from '../utils/MapTypeUtils';
  * @prop {object[]} cfg.outputFormatOptions.allowedFormats array of allowed formats, e.g. [{"name": "PDF", "value": "pdf"}]
  * @prop {object} cfg.projectionOptions options for the projections
  * @prop {string[]} cfg.excludeLayersFromLegend list of layer names e.g. ["workspace:layerName"] to exclude from printed document
+ * @prop {object} cfg.mergeableParams object to pass to mapfish-print v2 to merge params, example here https://github.com/mapfish/mapfish-print-v2/blob/main/docs/protocol.rst#printpdf
  * @prop {object[]} cfg.projectionOptions.projections array of available projections, e.g. [{"name": "EPSG:3857", "value": "EPSG:3857"}]
  * @prop {object} cfg.overlayLayersOptions options for overlay layers
  * @prop {boolean} cfg.overlayLayersOptions.enabled if true a checkbox will be shown to exclude or include overlay layers to the print
@@ -290,6 +291,7 @@ export default {
                         overrideOptions: PropTypes.object,
                         items: PropTypes.array,
                         excludeLayersFromLegend: PropTypes.array,
+                        mergeableParams: PropTypes.object,
                         addPrintParameter: PropTypes.func,
                         printingService: PropTypes.object,
                         printMap: PropTypes.object
@@ -608,6 +610,7 @@ export default {
                         this.props.onBeforePrint();
                         this.props.printingService.print({
                             excludeLayersFromLegend: this.props.excludeLayersFromLegend,
+                            mergeableParams: this.props.mergeableParams,
                             layers: this.getMapConfiguration()?.layers,
                             scales: this.props.useFixedScales ? getPrintScales(this.props.capabilities) : undefined,
                             bbox: this.props.map?.bbox
