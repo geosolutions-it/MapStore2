@@ -41,7 +41,8 @@ import {
     SET_UPDATE_URL_SCROLL,
     UPDATE_MEDIA_EDITOR_SETTINGS,
     HIDE_CAROUSEL_ITEMS,
-    ENABLE_DRAW
+    ENABLE_DRAW,
+    RESET_GEOSTORY
 } from '../actions/geostory';
 
 
@@ -374,6 +375,9 @@ export default (state = INITIAL_STATE, action) => {
     }
     case ENABLE_DRAW: {
         return set('drawOptions', action.drawOptions, state);
+    }
+    case RESET_GEOSTORY: {
+        return INITIAL_STATE;
     }
     default:
         return state;

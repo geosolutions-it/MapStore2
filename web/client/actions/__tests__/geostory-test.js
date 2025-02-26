@@ -63,7 +63,9 @@ import {
     hideCarouselItems,
     HIDE_CAROUSEL_ITEMS,
     enableDraw,
-    ENABLE_DRAW
+    ENABLE_DRAW,
+    RESET_GEOSTORY,
+    resetGeostory
 } from '../geostory';
 
 describe('test geostory action creators', () => {
@@ -288,5 +290,9 @@ describe('test geostory action creators', () => {
         const action = geostoryImport(file);
         expect(action.type).toBe(GEOSTORY_IMPORT);
         expect(action.file).toEqual(file);
+    });
+    it('resetGeostory', () => {
+        const action = resetGeostory();
+        expect(action.type).toBe(RESET_GEOSTORY);
     });
 });
