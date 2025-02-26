@@ -626,10 +626,12 @@ export const createPlugin = (name, { component, options = {}, containers = {}, r
  * @returns {Promise} a Promise that resolves to a lazy plugin object.
  */
 export const loadPlugin = (pluginUrl, pluginName) => {
-    return loadScript(pluginUrl)
-        .then(() =>importPlugin(pluginName))
+    const script = document.querySelector(`script[src="${pluginUrl}"]`);
+    // load the script if not already loaded
+    const load = script ? Promise.resolve() : loadScript(pluginUrl);
+    return load
+        .then(() => importPlugin(pluginName))
         .then((plugin) => ({ name: pluginName, plugin}));
-
 };
 
 /**
