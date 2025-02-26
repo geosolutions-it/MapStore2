@@ -2184,7 +2184,8 @@
       "removeFromFavorites": "Remove from favorites",
       "addToFavorites": "Add to favorites",
       "favorites": "Favorites",
-      "documentation": "Documentation"
+      "documentation": "Documentation",
+      "filterApplied": "Filter applied"
     }
   }
 }

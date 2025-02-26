@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import FlexBox from "../components/FlexBox";
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { castArray, isEmpty, omit, uniq } from 'lodash';
-import useIsMounted from '../hooks/useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { searchResources, setSelectedResource } from '../actions/resources';
 import TagsManagerPanel from '../components/TagsManagerPanel';

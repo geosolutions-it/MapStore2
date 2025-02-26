@@ -16,7 +16,7 @@ import FlexBox from '../components/FlexBox';
 import Text from '../components/Text';
 import Icon from '../components/Icon';
 import Message from '../../../components/I18N/Message';
-import useIsMounted from '../hooks/useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 import Spinner from '../components/Spinner';
 import { castArray } from 'lodash';
 

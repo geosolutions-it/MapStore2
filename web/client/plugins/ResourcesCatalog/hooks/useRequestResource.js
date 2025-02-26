@@ -8,7 +8,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import axios from '../../../libs/ajax';
-import useIsMounted from './useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 /**
  * contains all the logic to update the resource in the homepage details panel
  * @param {object} props.user user properties
