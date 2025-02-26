@@ -36,6 +36,41 @@ export const getProxyCacheByUrl = (uri)=>{
     const baseUrl = getBaseUrl(uri);
     return proxyCache[baseUrl];
 };
+
+let testCorsFetch = fetch;
+
+/**
+ * utils to intercept the fetch request, mainly needed for testing
+ * @ignore
+ * @param {function} callback intercept the fetch request and allow to override to default fetch function
+ * @example
+ * it('my test', (done) => {
+ *  getTestCorsFetchInterceptor((url) => {
+ *      expect(url).toBe('my url');
+ *      return () => Promise.reject(); // simulate failing of the test cors fetch request
+ *  });
+ *  // ...
+ * });
+ */
+export const getTestCorsFetchInterceptor = (callback) => {
+    testCorsFetch = (...args) => {
+        const interceptedFetch = callback(...args);
+        return interceptedFetch ? interceptedFetch(...args) : fetch(...args);
+    };
+    return testCorsFetch;
+};
+/**
+ * restore the default fetch function after using the `getTestCorsFetchInterceptor` function
+ * @ignore
+ * @example
+ * afterEach((done) => {
+ *  restoreTestCorsFetch();
+ *  // ...
+ *  setTimeout(done);
+ * });
+ */
+export const restoreTestCorsFetch = () => { testCorsFetch = fetch; };
+
 /**
  * Perform a fetch request to test if a service support CORS
  * @param {string} uri - uri string to test
@@ -50,7 +85,7 @@ export const testCors = (uri) => {
     if (proxy !== undefined) {
         return Promise.resolve(proxy);
     }
-    return fetch(uri, {
+    return testCorsFetch(uri, {
         method: 'GET',
         mode: 'cors'
     })

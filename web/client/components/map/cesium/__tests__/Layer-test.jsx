@@ -34,12 +34,13 @@ import {setStore} from '../../../../utils/SecurityUtils';
 import ConfigUtils, { setConfigProp } from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
-
+import { restoreTestCorsFetch, getTestCorsFetchInterceptor } from '../../../../api/CORS';
 
 describe('Cesium layer', () => {
     let map;
-
+    let mockAxios;
     beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div><div id="container2"></div>';
         map = new Cesium.Viewer("map");
         map.imageryLayers.removeAll();
@@ -48,6 +49,8 @@ describe('Cesium layer', () => {
     });
 
     afterEach((done) => {
+        restoreTestCorsFetch();
+        mockAxios.restore();
         /* eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("map"));
@@ -1812,6 +1815,7 @@ describe('Cesium layer', () => {
     });
 
     it('ensure proxy usage in Model layer', (done) => {
+
         const options = {
             type: "model",
             // url that fails
@@ -1819,10 +1823,10 @@ describe('Cesium layer', () => {
             visibility: true,
             format: 'ifc'
         };
-
-        // Create a mock adapter for axios
-        const mockAxios = new MockAdapter(axios);
-
+        getTestCorsFetchInterceptor((url) => {
+            expect(url).toBe('https://test-CORS/FontaneMarosegeoreferenziato.ifc');
+            return () => Promise.reject(); // simulate failing of the test cors fetch request
+        });
         ReactDOM.render(
             <CesiumLayer
                 type={options.type}
@@ -1830,15 +1834,15 @@ describe('Cesium layer', () => {
                 map={map}
             />, document.getElementById('container'));
 
-
-        setTimeout(() => {
-            // Check if the API call was made
-            expect(mockAxios.history.get.length).toBe(1);
-            // ensure calling from proxy URL (CORS test is performed on fetch before this call)
-            expect(mockAxios.history.get[0].url.includes('/proxy')).toBe(true); // Check the URL
-            expect(mockAxios.history.get[0].url.includes('?url=https%3A%2F%2Ftest-cors%2FFontaneMarosegeoreferenziato.ifc')).toBe(true);
-            mockAxios.restore(); // Restore the original axios instance
-            done();
-        }, 1000);
+        waitFor(() => expect(mockAxios.history.get.length).toBe(1))
+            .then(() => {
+                // Check if the API call was made
+                expect(mockAxios.history.get.length).toBe(1);
+                // ensure calling from proxy URL (CORS test is performed on fetch before this call)
+                expect(mockAxios.history.get[0].url.includes('/proxy')).toBe(true); // Check the URL
+                expect(mockAxios.history.get[0].url.includes('?url=https%3A%2F%2Ftest-cors%2FFontaneMarosegeoreferenziato.ifc')).toBe(true);
+                done();
+            })
+            .catch(done);
     });
 });
