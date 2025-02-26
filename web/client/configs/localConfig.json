@@ -1112,7 +1112,10 @@
       { "name": "FeedbackMask" }
     ],
     "geostory": [
-      { "name": "ResourceDetails", "cfg": { "containerPosition": "columns", "resourceType": "GEOSTORY" } },
+      {
+        "name": "ResourceDetails",
+        "cfg": { "containerPosition": "columns", "resourceType": "GEOSTORY" }
+      },
       { "name": "Save", "cfg": { "resourceType": "GEOSTORY" } },
       { "name": "SaveAs", "cfg": { "resourceType": "GEOSTORY" } },
       {
