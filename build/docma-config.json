@@ -224,7 +224,8 @@
                 "web/client/utils/ogc/WFST/RequestBuilder.js",
                 "web/client/utils/ShareUtils.js",
                 "web/client/utils/StateUtils.js",
-                "web/client/utils/ThumbnailUtils.js"
+                "web/client/utils/ThumbnailUtils.js",
+                "web/client/product/pages/RulesManager.jsx"
             ],
             "jsapi": [
                 "web/client/jsapi/MapStore2.js"
