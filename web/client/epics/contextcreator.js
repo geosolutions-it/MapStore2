@@ -23,7 +23,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
     enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, setParsedTemplate,
     pluginUploaded, pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions, uploadPluginError,
     setWasTutorialShown, setTutorialStep} from '../actions/contextcreator';
-import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
+import {resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
     wasTutorialShownSelector, prefetchedDataSelector, generateContextResource } from '../selectors/contextcreator';
@@ -75,23 +75,23 @@ export const saveContextResource = (action$, store) => action$
     .exhaustMap(({destLocation}) => {
         const state = store.getState();
         const resource = resourceSelector(state);
-        const context = newContextSelector(state);
         const newResource = generateContextResource(state);
+        const destLocations = {manager: '/context-manager', context: `/context/${resource.name}`};
         return (resource && resource.id ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.merge(
                 // LOCATION_CHANGE triggers notifications clear, need to work around that
                 // can't wait for CLEAR_NOTIFICATIONS, because either in firefox notification action doesn't trigger
                 // or in chrome it triggers too early
                 // (on chrome there is another LOCATION_CHANGE after the first one for unknown reason, that cancels out the first)
-                (destLocation === '/context-manager' ? action$.ofType(CONTEXTS_LIST_LOADED).take(1).switchMap(() => Rx.Observable.of(
+                (destLocation === destLocations.manager ? action$.ofType(CONTEXTS_LIST_LOADED).take(1).switchMap(() => Rx.Observable.of(
                     show({
                         title: "saveDialog.saveSuccessTitle",
                         message: "saveDialog.saveSuccessMessage"
                     }))) : Rx.Observable.empty()),
                 Rx.Observable.of(
                     contextSaved(rid),
-                    push(destLocation || `/context/${context.name}`),
-                    loadExtensions(),
+                    push(destLocation || destLocations.context),
+                    ...(Object.values(destLocations).includes(destLocation) ? [loadExtensions()] : []),
                     loading(false, 'contextSaving')
                 )
             ))
