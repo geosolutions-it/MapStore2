@@ -63,7 +63,7 @@ const urlQuery = url.parse(window.location.href, true).query;
   *             "name": "RulesEditor",
   *             "cfg": {
   *                 "containerPosition": "columns",
-  *                 "disableDetails": true
+  *                 "disableDetails": true // Optional - NEEDED for GeoServer Integrated version
   *             }
   *         }
   *     ]
