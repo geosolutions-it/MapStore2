@@ -22,6 +22,47 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Rules manager page changes
+
+The `localConfig.json` configuration for the `rulesmanager` page should be updated in existing project by including the new `BrandNavbar` plugin and removing the deprecated plugins:
+
+```diff
+{
+    "rulesmanager": [
+        "Redirect" ,
+-        {
+-           "name": "OmniBar",
+-           "cfg": {
+-               "containerPosition": "header",
+-               "className": "navbar shadow navbar-home"
+-           }
+-       },
++       {
++           "name": "BrandNavbar",
++           "cfg": {
++               "containerPosition": "header"
++           }
++       },
+        "Home",
+        "ManagerMenu",
+        "Login",
+        "Language",
+-       "NavMenu",
+-       "Attribution",
+        "RulesDataGrid",
+        "Notifications",
+        {
+            "name": "RulesEditor",
+            "cfg": {
+                "containerPosition": "columns",
+                "disableDetails": true
+            }
+        }
+    ]
+}
+
+```
+
 ### Footer plugin configuration changes
 
 The Footer plugin has been refactored and some properties have been removed:
