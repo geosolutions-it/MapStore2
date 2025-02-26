@@ -15,7 +15,7 @@ import axios from '../../../libs/ajax';
 import castArray from 'lodash/castArray';
 import uniq from 'lodash/uniq';
 import { clearQueryParams } from '../utils/ResourcesFiltersUtils';
-import useIsMounted from './useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 
 const cleanParams = (params, exclude = ['d']) => {
     return Object.keys(params)

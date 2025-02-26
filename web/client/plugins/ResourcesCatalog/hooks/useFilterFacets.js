@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import useIsMounted from './useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 
 const fieldsContainFacets = (fields) => {
     return fields.some(field => field.items ? fieldsContainFacets(field.items) : !!field.facet);

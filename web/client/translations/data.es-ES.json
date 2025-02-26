@@ -4343,7 +4343,8 @@
       "removeFromFavorites": "Eliminar de favoritos",
       "addToFavorites": "Añadir a favoritos",
       "favorites": "Favoritos",
-      "documentation": "Documentación"
+      "documentation": "Documentación",
+      "filterApplied": "Filtro aplicado"
     }
   }
 }

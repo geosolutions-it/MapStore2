@@ -4346,7 +4346,8 @@
       "removeFromFavorites": "Rimuovi dai preferiti",
       "addToFavorites": "Aggiungi ai preferiti",
       "favorites": "Preferiti",
-      "documentation": "Documentazione"
+      "documentation": "Documentazione",
+      "filterApplied": "Filtro applicato"
     }
   }
 }
