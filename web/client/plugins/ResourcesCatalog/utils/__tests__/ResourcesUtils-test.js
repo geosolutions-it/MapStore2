@@ -183,4 +183,12 @@ describe('ResourcesUtils', () => {
             { tag: { id: '03' }, action: 'link' }
         ]);
     });
+
+    it('computePendingChanges with empty attributes in initial resource', () => {
+        const computed = computePendingChanges(
+            { },
+            { attributes: { featured: true } }
+        );
+        expect(computed.changes).toEqual({ attributes: { featured: true } });
+    });
 });

@@ -103,10 +103,10 @@ export const getResourceId = (resource) => {
 const recursivePendingChanges = (a, b) => {
     return Object.keys(a).reduce((acc, key) => {
         if (!isArray(a[key]) && isObject(a[key])) {
-            const obj = recursivePendingChanges(a[key], b[key]);
+            const obj = recursivePendingChanges(a[key], b?.[key]);
             return isEmpty(obj) ? acc : { ...acc, [key]: obj };
         }
-        return !isEqual(a[key], b[key])
+        return !isEqual(a[key], b?.[key])
             ? { ...acc, [key]: a[key] }
             : acc;
     }, {});

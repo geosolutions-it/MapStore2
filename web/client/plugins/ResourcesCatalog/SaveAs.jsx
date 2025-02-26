@@ -122,6 +122,12 @@ function SaveAs({
         handleSaveAs();
     }
 
+    function handleShowModal() {
+        // use the currently edited name and fallback to empty name
+        setName(pendingChanges?.changes?.name || '');
+        setShowModal(true);
+    }
+
     if (!((pendingChanges?.resource?.canCopy || pendingChanges?.resource?.canEdit) && user)) {
         return null;
     }
@@ -137,7 +143,7 @@ function SaveAs({
         <>
             <Component
                 className={changes && !hideIndicator ? 'ms-notification-circle warning' : ''}
-                onClick={() => setShowModal(true)}
+                onClick={handleShowModal}
                 labelId="saveDialog.saveAsTooltip"
                 menuItem={menuItem}
                 glyph="floppy-open"
