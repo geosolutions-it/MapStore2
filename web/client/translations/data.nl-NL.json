@@ -4324,6 +4324,7 @@
       "manageTags": "Manage tags",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
+      "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
       "errorDeletingTag": "It is not possible to delete the tag",
       "removeFromFavorites": "Remove from favorites",
       "addToFavorites": "Add to favorites",

@@ -108,8 +108,11 @@ function TagsManager({
                     setNewTag(null);
                 }
             }))
-            .catch(() => isMounted(() => {
-                setErrorId('resourcesCatalog.errorUpdatingTag');
+            .catch((error) => isMounted(() => {
+                setErrorId(error.status === 409
+                    ? 'resourcesCatalog.errorTagNameAlreadyExist'
+                    : 'resourcesCatalog.errorUpdatingTag'
+                );
             }))
             .finally(() => isMounted(() => {
                 setLoading(false);
