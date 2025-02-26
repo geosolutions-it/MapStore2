@@ -339,6 +339,7 @@ Replace `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGe
 +               "name": "ResourceDetails",
 +               "cfg": {
 +                   "resourceType": "GEOSTORY"
++                   "containerPosition": "columns"
 +               }
 +           },
 +           {
