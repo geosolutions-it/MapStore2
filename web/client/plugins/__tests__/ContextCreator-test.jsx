@@ -35,7 +35,10 @@ describe('ContextCreator plugin', () => {
             contextcreator: {
                 stepId: 'configure-themes',
                 newContext: {},
-                plugins
+                plugins,
+                resource: {
+                    name: "context"
+                }
             },
             map: {}
         });
@@ -57,7 +60,10 @@ describe('ContextCreator plugin', () => {
         const { Plugin, actions } = getPluginForTest(ContextCreator, {
             contextcreator: {
                 stepId: 'configure-themes',
-                plugins
+                plugins,
+                resource: {
+                    name: "context"
+                }
             },
             map: {}
         });
