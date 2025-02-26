@@ -22,7 +22,7 @@ import useIsMounted from '../../../hooks/useIsMounted';
  * @prop {string} [tooltipPosition="top"]
  * @prop {string} tooltipTrigger see react overlay trigger
  * @prop {object} tooltipParams parameter to pass to the tooltip message id
- * @prop {number} tooltipShowDelay add a delay in milliseconds before showing the tooltip on mount and when the tooltip content change, useful for transitions in toolbar (default 100ms)
+ * @prop {number} tooltipShowDelay add a delay in milliseconds before showing the tooltip on mount and when the tooltip identifier change, useful for transitions in toolbar (default 100ms)
  * @example
  * render() {
  *   const Cmp = tooltip((props) =><El {...props}></El>); // or simply tooltip(El);
@@ -48,11 +48,11 @@ const withTooltip = (Wrapped) => {
 
         const isMounted = useIsMounted();
 
-        // apply a delay to tooltip in case of transition in between different content
+        // apply a delay to tooltip in case of transition in between different identifier
         // tooltipShowDelay is used for testing set to 0
-        const [showTooltip, setShowTooltip] = useState(tooltipShowDelay === 0);
+        const [showTooltip, setShowTooltip] = useState(!(tooltipId && tooltipShowDelay > 0 ));
         useEffect(() => {
-            if (tooltipShowDelay > 0) {
+            if (tooltipId && tooltipShowDelay > 0) {
                 setShowTooltip(false);
                 setTimeout(() => {
                     isMounted(() => {
@@ -60,7 +60,7 @@ const withTooltip = (Wrapped) => {
                     });
                 }, tooltipShowDelay);
             }
-        }, [tooltip, tooltipId, tooltipShowDelay]);
+        }, [tooltipId, tooltipShowDelay]);
 
         const content = (<Wrapped {...props}>{children}</Wrapped>);
 
