@@ -315,7 +315,7 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
         ],
         "legends": legendLayers,
         "credits": getLayersCredits(spec.layers),
-        ...(mergeableParams ? mergeableParams : {}),
+        ...(mergeableParams ? {mergeableParams} : {}),
         ...params
     };
 };
