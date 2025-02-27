@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { loadLocale } from '../../actions/locale';
 import castArray from 'lodash/castArray';
 import isEqual from 'lodash/isEqual';
+import uniq from 'lodash/uniq';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
@@ -68,7 +69,7 @@ function withExtensions(AppComponent) {
             });
             if (translations.length > 0) {
                 // remove any duplicate paths
-                const translationsPath = [...new Set([...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)])];
+                const translationsPath = uniq([...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
                 ConfigUtils.setConfigProp("translationsPath", translationsPath);
             }
             const locale =  ConfigUtils.getConfigProp('locale');
