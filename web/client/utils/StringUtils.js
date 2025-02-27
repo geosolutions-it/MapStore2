@@ -36,7 +36,7 @@ export const isValidEmail = (str, regexp = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-
 /**
  * Remove duplicate lines in a sentence
  * @param {string} value
- * @returns string with unique lines
+ * @returns {string} string with unique lines
  */
 export const removeDuplicateLines = (value) => {
     const lines = value.split('\n');

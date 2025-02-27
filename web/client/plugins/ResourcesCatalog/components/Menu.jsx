@@ -12,31 +12,20 @@ import MenuItem from './MenuItem';
 import FlexBox from '../../../components/layout/FlexBox';
 
 /**
-* @module components/Menu
-*/
-
-/**
  * Menu component
  * @name Menu
- * @prop {array} items list of menu item
- * @prop {string} containerClass css class of list container
- * @prop {string} childrenClass css class of item in list
- * @prop {string} query string to build the query url in case of link item
- * @prop {function} formatHref function to format the href in case of link item
- * @example
- *  <Menu items={items} />
- *
+ * @prop {object[]} items list of menu item
+ * @prop {string} className custom class name
+ * @prop {string} size button size, one of `xs`, `sm`, `md` or `xl`
+ * @prop {bool} alignRight align the dropdown menu to the right
+ * @prop {string} variant style for the button, one of `undefined`, `default` or `primary`
+ * @prop {any} menuItemComponent a default component to be passed as a prop to a custom `item.Component`
  */
 const Menu = forwardRef(({
     items,
-    containerClass,
-    childrenClass,
-    query,
-    formatHref,
     size,
     alignRight,
     variant,
-    resourceName,
     className,
     menuItemComponent,
     ...props
@@ -50,7 +39,6 @@ const Menu = forwardRef(({
             component="ul"
             ref={ref}
             className={className}
-            classNames={[containerClass]}
         >
             {items
                 .map((item, idx) => {
@@ -58,15 +46,9 @@ const Menu = forwardRef(({
                         <MenuItem
                             key={idx}
                             variant={item.variant || variant}
-                            item={{ ...item, id: item.id || idx }}
+                            item={{ ...item, id: item.id !== undefined ? item.id : idx }}
                             size={item.size || size}
                             alignRight={alignRight}
-                            menuItemsProps={{
-                                query,
-                                formatHref
-                            }}
-                            classItem={childrenClass}
-                            resourceName={resourceName}
                             menuItemComponent={menuItemComponent}
                         />
                     );
@@ -76,21 +58,16 @@ const Menu = forwardRef(({
 });
 
 Menu.propTypes = {
-    items: PropTypes.array.isRequired,
-    containerClass: PropTypes.string,
-    childrenClass: PropTypes.string,
-    query: PropTypes.object,
-    formatHref: PropTypes.func
-
+    items: PropTypes.array,
+    size: PropTypes.string,
+    alignRight: PropTypes.bool,
+    variant: PropTypes.string,
+    className: PropTypes.string,
+    menuItemComponent: PropTypes.any
 };
 
 Menu.defaultProps = {
-    items: [],
-    query: {},
-    user: undefined,
-    formatHref: () => '#',
-    containerClass: ''
+    items: []
 };
-
 
 export default Menu;

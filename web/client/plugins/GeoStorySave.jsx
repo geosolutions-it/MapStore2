@@ -66,6 +66,7 @@ const SaveBaseDialog = compose(
 /**
  * Implements "save" button for geostories, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
  * @deprecated
+ * @ignore
  * @class
  * @name GeoStorySave
  * @memberof plugins
@@ -104,6 +105,8 @@ export const GeoStorySave = createPlugin('GeoStorySave', {
 /**
  * Implements "save as" button for geostories, to render in the {@link #plugins.BurgerMenu|BurgerMenu}}
  * @class
+ * @deprecated
+ * @ignore
  * @name GeoStorySave
  * @memberof plugins
  */

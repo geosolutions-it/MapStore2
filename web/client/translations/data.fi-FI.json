@@ -194,7 +194,6 @@
       "Examples": "Esimerkit",
       "LinkedinGroup": "Mapstore Linkedin Group",
       "scrollTop": "Vieritä sivun yläosaan",
-      "footerDescription": "<strong>GeoSolutions</strong> <a href=\"mailto:sales@geosolutionsgroup.com\">sales@geosolutionsgroup.com</a>",
       "examples": {
         "viewer": {
           "html": "<h3>Viewer</h3><p>Simple Viewer</p>"
@@ -2060,8 +2059,8 @@
           "backConfirmNo": "Ei",
           "backConfirmYes": "Kyllä",
           "save": "Tallenna asetukset",
-          "storyTheme" : "Tarinan teema",
-          "storyHeader" : "Tarinan otsikko",
+          "storyTheme": "Tarinan teema",
+          "storyHeader": "Tarinan otsikko",
           "title": "Otsikko",
           "titlePlaceholder": "Kirjoita otsikko",
           "logo": "Logo",
@@ -2665,16 +2664,16 @@
       "errorResourcePageTitle": "Page Loading Error",
       "errorResourcePageContent": "The selected resources page is not available",
       "catalogSection": {
-          "noContentYetTitle": "Resources Catalog",
-          "noContentYetContent": "This catalog doesn't have published contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
-          "noPublicContentTitle": "Resources Catalog",
-          "noPublicContentContent": "This catalog doesn't have public resources. <br/> Please login to browse the contents."
+        "noContentYetTitle": "Resources Catalog",
+        "noContentYetContent": "This catalog doesn't have published contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
+        "noPublicContentTitle": "Resources Catalog",
+        "noPublicContentContent": "This catalog doesn't have public resources. <br/> Please login to browse the contents."
       },
       "featuredSection": {
-          "noContentYetTitle": "Featured Resources",
-          "noContentYetContent": "This catalog doesn't have published featured contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
-          "noPublicContentTitle": "Featured Resources",
-          "noPublicContentContent": "This catalog doesn't have featured resources."
+        "noContentYetTitle": "Featured Resources",
+        "noContentYetContent": "This catalog doesn't have published featured contents yet. <br/> We're working to populate it with great resources. <br/><br/>Stay tuned!",
+        "noPublicContentTitle": "Featured Resources",
+        "noPublicContentContent": "This catalog doesn't have featured resources."
       },
       "mapsFilter": "Maps",
       "dashboardsFilter": "Dashboards",
@@ -2741,26 +2740,26 @@
       "createNewResourceCancel": "Back to editing",
       "createNewResourceConfirm": "Create",
       "resourceError": {
-          "errorTitle": "Cannot save the current resource",
-          "error403": "You are not allowed to update the resource",
-          "error404": "An error occurred while creating the resource on the server",
-          "error409": "A resource with this name already exists",
-          "error500": "Internal Server Error. Verify if resource configuration file size exceeds fixed limit",
-          "errorDefault": "Network error"
+        "errorTitle": "Cannot save the current resource",
+        "error403": "You are not allowed to update the resource",
+        "error404": "An error occurred while creating the resource on the server",
+        "error409": "A resource with this name already exists",
+        "error500": "Internal Server Error. Verify if resource configuration file size exceeds fixed limit",
+        "errorDefault": "Network error"
       },
       "deleteError": {
-          "error403": "You are not allowed to delete the resource",
-          "error404": "An error occurred while deleting the resource on the server",
-          "error500": "Internal Server Error",
-          "errorDefault": "Network error"
+        "error403": "You are not allowed to delete the resource",
+        "error404": "An error occurred while deleting the resource on the server",
+        "error500": "Internal Server Error",
+        "errorDefault": "Network error"
       },
       "myResources": "My resources",
       "creationFilter": {
-          "from": "Creation date from",
-          "to": "Creation date to"
+        "from": "Creation date from",
+        "to": "Creation date to"
       },
       "deleteTagTitle": "Are you sure you want to delete this tag?",
-      "deleteTagDescription":  "This tag will be deleted including the association with existing resources",
+      "deleteTagDescription": "This tag will be deleted including the association with existing resources",
       "deleteTagConfirm": "Delete",
       "deleteTagCancel": "Keep it",
       "closeTagsTitle": "Are you sure to leave without apply your changes?",
@@ -2785,10 +2784,13 @@
       "manageTags": "Manage tags",
       "errorLoadingTags": "It is not possible to load tags",
       "errorUpdatingTag": "It is not possible to update the tag",
+      "errorTagNameAlreadyExist": "The tag you are trying to create already exists",
       "errorDeletingTag": "It is not possible to delete the tag",
       "removeFromFavorites": "Remove from favorites",
       "addToFavorites": "Add to favorites",
-      "favorites": "Favorites"
+      "favorites": "Favorites",
+      "documentation": "Documentation",
+      "filterApplied": "Filter applied"
     }
   }
 }

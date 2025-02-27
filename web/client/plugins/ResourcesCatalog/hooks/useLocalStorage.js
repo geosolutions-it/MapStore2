@@ -27,7 +27,17 @@ const setValue = (key, value) => {
         //
     }
 };
-
+/**
+ * saves the state in the localStorage
+ * @param {string} key property key
+ * @param {any} defaultValue initial value
+ * @return {array} [storedValue, setStoredValue]
+ * @example
+ * function Component({ defaultValue = 'initial' }) {
+ *  const [myProperty, setMyProperty] = useLocalStorage('myProperty', defaultValue);
+ *  return <button onClick={() => setMyProperty('stored')}>{myProperty}</button>;
+ * }
+ */
 const useLocalStorage = (key, defaultValue) => {
     const [storedValue, setStoredValue] = useState(getValue(key, defaultValue));
     const [prevStoredValue, setPrevStoredValue] = useState(storedValue);

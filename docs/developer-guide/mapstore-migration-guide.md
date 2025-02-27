@@ -22,6 +22,78 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Rules manager page changes
+
+The `localConfig.json` configuration for the `rulesmanager` page should be updated in existing project by including the new `BrandNavbar` plugin and removing the deprecated plugins:
+
+```diff
+{
+    "rulesmanager": [
+        "Redirect" ,
+-        {
+-           "name": "OmniBar",
+-           "cfg": {
+-               "containerPosition": "header",
+-               "className": "navbar shadow navbar-home"
+-           }
+-       },
++       {
++           "name": "BrandNavbar",
++           "cfg": {
++               "containerPosition": "header"
++           }
++       },
+        "Home",
+        "ManagerMenu",
+        "Login",
+        "Language",
+-       "NavMenu",
+-       "Attribution",
+        "RulesDataGrid",
+        "Notifications",
+        {
+            "name": "RulesEditor",
+            "cfg": {
+                "containerPosition": "columns",
+                "disableDetails": true
+            }
+        }
+    ]
+}
+
+```
+
+### Footer plugin configuration changes
+
+The Footer plugin has been refactored and some properties have been removed:
+
+- `cfg.logo` is not available anymore in favor of translation html snippet
+- translation message identifier `home.footerDescription` is not used anymore in the footer by default
+
+It is possible to replicate the old footer structure for existing project that want to keep the homepage footer information as before with the following configurations:
+
+1. configure the new Footer plugin in `localConfig.json` as follow:
+
+    ```js
+    {
+        "name": "Footer",
+        "cfg": {
+            "hideMenuItems": true,
+            "customFooter": true,
+            "customFooterMessageId": "home.footerDescription" // by default is using home.footerCustomHTML
+        }
+    }
+    ```
+
+2. update the `home.footerDescription` translation by adding the desired html structure, eg:
+
+    ```js
+    {
+        "home": {
+            "footerDescription": "<footer class=\"ms-flex-box _flex _flex-center-h _padding-md\"><div> ...my previous message </div></footer>"
+        }
+    }
+
 ### HomeDescription plugin configuration changes
 
 The HomeDescription plugin has been refactored and a property has been removed:
@@ -120,21 +192,470 @@ The usage of default CDN favicon is deprecated so existing downstream project st
     });
     ```
 
-### Add TagsManager and Favorite plugins to localConfig.json
+### New homepage changes
 
-The new TagsManager and Favorite plugin should be added inside the plugins `maps` section of the `localConfig.json` to visualize a new menu item in the admin menu and to to visualize the button on the resource cards
+The new homepage work introduces significant changes about plugins and configurations. The list of plugins introduced by the homepage:
+
+- `BrandNavbar`
+- `DeleteResource`
+- `EditContext`
+- `Favorites`
+- `Footer` (web/client/plugins/ResourcesCatalog/Footer)
+- `HomeDescription` (web/client/plugins/ResourcesCatalog/HomeDescription)
+- `ResourceDetails`
+- `ResourcesFiltersForm`
+- `ResourcesGrid`
+- `Save` (web/client/plugins/ResourcesCatalog/Save)
+- `SaveAs` (web/client/plugins/ResourcesCatalog/SaveAs)
+
+There is also a list of deprecated plugins that will be removed soon:
+
+- `Dashboards`
+- `GeoStories`
+- `Maps`
+- `Attribution`
+- `Footer` (web/client/product/plugins/Footer)
+- `Fork`
+- `HomeDescription` (web/client/product/plugins/HomeDescription)
+- `NavMenu`
+- `ContentTabs`
+- `Contexts`
+- `DeleteMap`
+- `DeleteGeoStory`
+- `DeleteDashboard`
+- `FeaturedMaps`
+- `GeoStorySave`
+- `GeoStorySaveAs`
+- `DashboardSave`
+- `DashboardSaveAs`
+- `Save` (web/client/plugins/Save)
+- `SaveAs` (web/client/plugins/SaveAs)
+
+General advice when updating a custom project:
+
+- new plugins files should be imported in the application entrypoint and the deprecated ones removed. In case of downstream project the new files should be imported automatically
+- ensure to use the correct version of GeoStore (2.3-SNAPSHOT)
+- compare the localConfig.json configuration of the project with the MapStore submodule's localConfig.json
+- compare the pluginsConfig.json configuration of the project with the MapStore submodule's pluginsConfig.json
+
+Below the detail of the changes needed in the configurations
+
+#### GeoStore version update
+
+GeoStore needs to be updated to the `2.3` version, changes needed in the `pom.xml`:
+
+```diff
+- <geostore-webapp.version>2.2-SNAPSHOT</geostore-webapp.version>
++ <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
+```
+
+#### localConfig.json changes
+
+Here below all the changes needed related the localConfig.json configuration:
+
+Add `resourceCanEdit` and `resourceDetails` to the `monitorState` property:
+
+```diff
+{
+    "monitorState": [
+        ...,
++       { "name": "resourceCanEdit", "path": "resources.initialSelectedResource.canEdit" },
++       { "name": "resourceDetails", "path": "resources.initialSelectedResource.attributes.details" }
+    ]
+}
+```
+
+Replace `Save`, `SaveAs` and `DeleteMap` configurations in the `desktop` (map viewer) section with the new configuration:
 
 ```diff
 {
     "plugins": {
-        ...,
-        "maps": [
+        "desktop": [
             ...,
-+           { "name": "TagsManager" },
-+           { "name": "Favorites" }
+-           "Save",
+-           "SaveAs",
+-           "DeleteMap",
++           {
++               "name": "BrandNavbar",
++               "cfg": {
++                   "containerPosition": "header"
++               }
++           },
++           {
++               "name": "ResourceDetails",
++               "cfg": {
++                   "resourceType": "MAP"
++               }
++           },
++           {
++               "name": "Save",
++               "cfg": {
++                   "resourceType": "MAP"
++               }
++           },
++           {
++               "name": "SaveAs",
++               "cfg": {
++                   "resourceType": "MAP"
++               }
++           },
++           {
++               "name": "DeleteResource",
++               "cfg": {
++                   "resourceType": "MAP",
++                   "redirectTo": "/"
++               }
++          }
         ],
-        ...
     }
+}
+```
+
+Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `DeleteDashboard` configurations in the `dashboard` section with the new configuration:
+
+```diff
+{
+    "plugins": {
+        "dashboard": [
+            ...,
+-           "NavMenu",
+-           "Attribution",
+-           "DashboardSave",
+-           "DashboardSaveAs",
+-           "DeleteDashboard",
++           {
++               "name": "BrandNavbar",
++               "cfg": {
++                   "containerPosition": "header"
++               }
++           },
++           {
++               "name": "ResourceDetails",
++               "cfg": {
++                   "resourceType": "DASHBOARD"
++               }
++           },
++           {
++               "name": "Save",
++               "cfg": {
++                   "resourceType": "DASHBOARD"
++               }
++           },
++           {
++               "name": "SaveAs",
++               "cfg": {
++                   "resourceType": "DASHBOARD"
++               }
++           },
++           {
++               "name": "DeleteResource",
++               "cfg": {
++                   "resourceType": "DASHBOARD",
++                   "redirectTo": "/"
++               }
++           }
+        ]
+    }
+}
+```
+
+Replace `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGeoStory` configurations in the `geostory` section with the new configuration:
+
+```diff
+{
+    "plugins": {
+        "geostory": [
+-           "NavMenu",
+-           "Attribution",
+-           "GeoStorySave",
+-           "GeoStorySaveAs",
+-           "DeleteGeoStory",
++           {
++               "name": "BrandNavbar",
++               "cfg": {
++                   "containerPosition": "header"
++               }
++           },
++           {
++               "name": "ResourceDetails",
++               "cfg": {
++                   "resourceType": "GEOSTORY"
++                   "containerPosition": "columns"
++               }
++           },
++           {
++               "name": "Save",
++               "cfg": {
++                   "resourceType": "GEOSTORY"
++               }
++           },
++           {
++               "name": "SaveAs",
++               "cfg": {
++                   "resourceType": "GEOSTORY"
++               }
++           },
++           {
++               "name": "DeleteResource",
++               "cfg": {
++                   "resourceType": "GEOSTORY",
++                   "redirectTo": "/"
++               }
++           }
+        ]
+    }
+}
+```
+
+Remove `NavMenu`, `Attribution` and `OmniBar` configuration from the `context-creator` section, review the `ContextCreator` configuration and add the new `BrandNavbar` plugin:
+
+```diff
+{
+    "plugins": {
+        "context-creator": [
+            ...,
+-           "NavMenu",
+-           "Attribution",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
+            {
+                "name": "ContextCreator",
+                "cfg": {
+                    "documentationBaseURL": "https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins",
+-                   "backToPageDestRoute": "/context-manager",
++                   "backToPageDestRoute": "/",
+                    "backToPageConfirmationMessage": "contextCreator.undo"
+                }
+            },
++           {
++               "name": "BrandNavbar",
++               "cfg": {
++                   "containerPosition": "header"
++               }
++           }
+        ]
+    }
+}
+```
+
+Finally replace the content of the `common` and `maps` (homepage) sections with the following configurations that includes all the nre homepage plugins:
+
+```json
+{
+    "plugins": {
+        "common": [
+            {
+                "name": "BrandNavbar",
+                "cfg": {
+                    "rightMenuItems": [
+                        {
+                            "type": "link",
+                            "href": "https://docs.mapstore.geosolutionsgroup.com/",
+                            "target": "blank",
+                            "glyph": "book",
+                            "labelId": "Documentation",
+                            "variant": "default"
+                        },
+                        {
+                            "type": "link",
+                            "href": "https://github.com/geosolutions-it/MapStore2",
+                            "target": "blank",
+                            "label": "GitHub",
+                            "glyph": "github",
+                            "variant": "default"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "ManagerMenu"
+            },
+            "Login",
+            "Language",
+            "ScrollTop",
+            "Notifications"
+        ],
+        "maps": [
+            {
+                "name": "HomeDescription"
+            },
+            {
+                "name": "ResourcesGrid",
+                "cfg": {
+                    "id": "featured",
+                    "titleId": "manager.featuredMaps",
+                    "pageSize": 4,
+                    "cardLayoutStyle": "grid",
+                    "order": null,
+                    "hideWithNoResults": true,
+                    "defaultQuery": {
+                        "f": "featured"
+                    }
+                }
+            },
+            {
+                "name": "ResourcesGrid",
+                "cfg": {
+                    "id": "catalog",
+                    "titleId": "resources.contents.title",
+                    "queryPage": true,
+                    "menuItems": [
+                        {
+                            "labelId": "resourcesCatalog.addResource",
+                            "disableIf": "{!state('userrole')}",
+                            "type": "dropdown",
+                            "variant": "primary",
+                            "size": "sm",
+                            "responsive": true,
+                            "noCaret": true,
+                            "items": [
+                                {
+                                    "labelId": "resourcesCatalog.createMap",
+                                    "type": "link",
+                                    "href": "#/viewer/new"
+                                },
+                                {
+                                    "labelId": "resourcesCatalog.createDashboard",
+                                    "type": "link",
+                                    "href": "#/dashboard/"
+                                },
+                                {
+                                    "labelId": "resourcesCatalog.createGeoStory",
+                                    "type": "link",
+                                    "href": "#/geostory/newgeostory/"
+                                },
+                                {
+                                    "labelId": "resourcesCatalog.createContext",
+                                    "type": "link",
+                                    "href": "#/context-creator/new",
+                                    "disableIf": "{state('userrole') !== 'ADMIN'}"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "TagsManager"
+            },
+            {
+                "name": "Favorites"
+            },
+            {
+                "name": "ResourcesFiltersForm",
+                "cfg": {
+                    "resourcesGridId": "catalog"
+                }
+            },
+            {
+                "name": "EditContext"
+            },
+            {
+                "name": "DeleteResource"
+            },
+            {
+                "name": "ResourceDetails",
+                "cfg": {
+                    "enableFilters": true
+                }
+            },
+            {
+                "name": "Share",
+                "cfg": {
+                    "draggable": false,
+                    "advancedSettings": false,
+                    "showAPI": false,
+                    "embedOptions": {
+                        "showTOCToggle": false
+                    },
+                    "map": {
+                        "embedOptions": {
+                            "showTOCToggle": true
+                        }
+                    },
+                    "geostory": {
+                        "embedOptions": {
+                            "showTOCToggle": false,
+                            "allowFullScreen": false
+                        },
+                        "shareUrlRegex": "(h[^#]*)#\\/geostory\\/([^\\/]*)\\/([A-Za-z0-9]*)",
+                        "shareUrlReplaceString": "$1geostory-embedded.html#/$3",
+                        "advancedSettings": {
+                            "hideInTab": "embed",
+                            "homeButton": true,
+                            "sectionId": true
+                        }
+                    },
+                    "dashboard": {
+                        "shareUrlRegex": "(h[^#]*)#\\/dashboard\\/([A-Za-z0-9]*)",
+                        "shareUrlReplaceString": "$1dashboard-embedded.html#/$2",
+                        "embedOptions": {
+                            "showTOCToggle": false,
+                            "showConnectionsParamToggle": true
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Footer"
+            },
+            {
+                "name": "Cookie",
+                "cfg": {
+                    "externalCookieUrl": "",
+                    "declineUrl": "http://www.google.com"
+                }
+            }
+        ]
+    }
+}
+```
+
+#### pluginsConfig.json changes
+
+Here below all the changes needed related the pluginsConfig.json configuration
+
+```diff
+{
+    "plugins": [
+        ...,
+        {
+-           "name": "DeleteMap",
++           "name": "DeleteResource",
+            "glyph": "trash",
+            "title": "plugins.DeleteMap.title",
+            "hidden": false,
+            "description": "plugins.DeleteMap.description",
+            "dependencies": [
+                "SidebarMenu"
+            ]
+        },
+        ...,
++       {
++           "name": "BrandNavbar",
++           "title": "plugins.BrandNavbar.title",
++           "description": "plugins.BrandNavbar.description",
++           "defaultConfig": {
++               "containerPosition": "header"
++           }
++       },
++       {
++           "name": "ResourceDetails",
++           "title": "plugins.ResourceDetails.title",
++           "description": "plugins.ResourceDetails.description",
++           "defaultConfig": {
++               "resourceType": "MAP"
++           },
++           "dependencies": [
++               "BrandNavbar"
++           ]
++       }
+    ]
 }
 ```
 

@@ -48,7 +48,7 @@ const getLayersId = (groupId, allLayers) => {
 /**
  * utility to check
  * @param {object} l layer data
- * @returns wps url or fallback to other layer urls
+ * @returns {string} wps url or fallback to other layer urls
  */
 export const getWpsUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
 const initialReorderLayers = (groups, allLayers) => {

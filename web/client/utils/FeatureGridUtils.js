@@ -124,7 +124,6 @@ export const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, si
  * @param {object[]} fields fields configuration (Includes `name` `alias`)
  * @param {object} getters getters functions for creating header, filterRenderer, formatter, heditor ( Includes `getEditor` `getFilterRenderer` `getFormatter` `getHeaderRenderer`)
  * @param {*} param4
- * @returns
  */
 export const featureTypeToGridColumns = (
     describe,

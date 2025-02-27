@@ -45,21 +45,25 @@ const urlQuery = url.parse(window.location.href, true).query;
   *
   * ```
   * "plugins": {
-  *  "rulesmanager": [
-  *         "Redirect" ,
+  *     "rulesmanager": [
+  *         { "name": "Redirect" },
   *         {
-  *             "name": "OmniBar",
-  *                 "cfg": {
-  *                      "containerPosition": "header",
-  *                    "className": "navbar shadow navbar-home"
-  *                 }
-  *         }, "Home", "ManagerMenu", "Login", "Language", "NavMenu",
-  *         "Attribution", "RulesDataGrid", "Notifications"
-  *         ,{
-  *              "name": "RulesEditor",
-  *            "cfg": {
+  *             "name": "BrandNavbar",
+  *             "cfg": {
+  *                 "containerPosition": "header"
+  *             }
+  *         },
+  *         { "name": "Home" },
+  *         { "name": "ManagerMenu" },
+  *         { "name": "Login" },
+  *         { "name": "Language" },
+  *         { "name": "RulesDataGrid" },
+  *         { "name": "Notifications" },
+  *         {
+  *             "name": "RulesEditor",
+  *             "cfg": {
   *                 "containerPosition": "columns",
-*                   "disableDetails": true // Optional - NEEDED for GeoServer Integrated version
+  *                 "disableDetails": true // Optional - NEEDED for GeoServer Integrated version
   *             }
   *         }
   *     ]

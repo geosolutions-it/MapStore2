@@ -17,7 +17,7 @@ import OverlayTrigger from '../../misc/OverlayTrigger';
  * Enhancer to add a popover to a component that triggers on mouse hover.
  * The new Component will look at the `popover` property (an object).
  * If present, as an object, can contain the properties to pass to th PopOver component (react-bootstrap),and the following props:
- * @prop {array[string]} popover.trigger trigger events array (see OverlayTrigger)
+ * @prop {string[]} popover.trigger trigger events array (see OverlayTrigger)
  * @prop {element} popover.text content of the popover
  * @type {function}
  * @name popover

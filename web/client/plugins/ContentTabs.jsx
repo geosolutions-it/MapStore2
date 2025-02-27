@@ -29,6 +29,7 @@ const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${inde
 
 /**
  * @deprecated
+ * @ignore
  * @name ContentTabs
  * @memberof plugins
  * @class

@@ -163,6 +163,7 @@ const MapsPlugin = compose(
  * Can be rendered inside {@link #plugins.ContentTabs|ContentTabs} plugin
  * and adds an entry to the {@link #plugins.NavMenu|NavMenu}
  * @deprecated
+ * @ignore
  * @name Maps
  * @memberof plugins
  * @class

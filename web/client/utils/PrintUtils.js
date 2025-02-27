@@ -277,7 +277,7 @@ export const getLayersCredits = (layers) => {
  * @memberof utils.PrintUtils
  */
 export const getMapfishPrintSpecification = (rawSpec, state) => {
-    const {params, excludeLayersFromLegend, ...baseSpec} = rawSpec;
+    const {params, mergeableParams, excludeLayersFromLegend, ...baseSpec} = rawSpec;
     const spec = {...baseSpec, ...params};
     const printMap = state?.print?.map;
     const projectedCenter = reproject(spec.center, 'EPSG:4326', spec.projection);
@@ -315,6 +315,7 @@ export const getMapfishPrintSpecification = (rawSpec, state) => {
         ],
         "legends": legendLayers,
         "credits": getLayersCredits(spec.layers),
+        ...(mergeableParams ? {mergeableParams} : {}),
         ...params
     };
 };

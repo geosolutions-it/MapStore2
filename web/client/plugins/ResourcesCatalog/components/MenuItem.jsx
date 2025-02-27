@@ -7,42 +7,93 @@
  */
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
-import castArray from 'lodash/castArray';
-import { Badge } from 'react-bootstrap';
 import Message from '../../../components/I18N/Message';
-
-import DropdownList from './MenuDropdownList';
+import HTML from '../../../components/I18N/HTML';
+import { Dropdown, MenuItem as RBMenuItem } from 'react-bootstrap';
 import MenuNavLink from './MenuNavLink';
 import Icon from './Icon';
 import Button from '../../../components/layout/Button';
 
-const isValidBadgeValue = (badge) => !!badge || badge === 0;
+/**
+ * List of menu items for the `dropdown` type
+ * @name DropdownMenuItems
+ * @prop {object[]} items list of items
+ */
+const DropdownMenuItems = ({
+    items
+}) => {
+    return <>
+        {items
+            .map((itm, idx) => {
+                if (itm.Component) {
+                    return (<itm.Component key={idx} variant="default" className={itm.className} showMessage />);
+                }
+                if (itm.type === 'divider') {
+                    return <RBMenuItem key={idx} divider />;
+                }
+                const labelNode = itm.labelId ? <Message msgId={itm.labelId} /> : itm.label;
+                return (
+                    <React.Fragment key={idx}>
+                        <RBMenuItem
+                            href={itm.href}
+                            style={itm.style}
+                            as={itm?.items ? 'span' : 'a' }
+                            target={itm.target}
+                            className={itm.className}
+                        >
+                            {itm.glyph ? <Icon glyph={itm.glyph} type={itm.iconType}/> : null}
+                            {itm.glyph && labelNode ? ' ' : null}
+                            {labelNode}
+                        </RBMenuItem>
+
+                        {itm?.items && <div className="ms-nested-menu-items">
+                            <DropdownMenuItems items={itm?.items}/>
+                        </div>}
+                    </React.Fragment>
+                );
+            })}
+    </>;
+};
 
 /**
  * Menu item component
  * @name MenuItem
- * @memberof components.Menu.MenuItem
  * @prop {object} item the item menu
- * @prop {object} menuItemsProps contains pros to apply to items, to manage single permissions, build href and query url
+ * @prop {string} item.type menu type, one of `dropdown`, `link`, `logo`, `button`, `divider`, `placeholder` and `message`
+ * @prop {string} item.Component custom component for the menu item, it has priority over the `type`
+ * @prop {object[]} item.items list of items (`dropdown` type)
+ * @prop {string} item.id menu item identifier (`dropdown` type)
+ * @prop {string} item.noCaret hide the caret (`dropdown` type)
+ * @prop {string} item.label label rendered as menu item content
+ * @prop {string} item.labelId a message id rendered as menu item content, it has priority over label
+ * @prop {string} item.href a url link for the menu item
+ * @prop {string} item.target link html target attribute
+ * @prop {string} item.style custom inline style
+ * @prop {string} item.className custom class name
+ * @prop {string} item.glyph glyph name
+ * @prop {string} item.iconType glyph types (see `Icon` component)
+ * @prop {string} item.square square style for button
+ * @prop {string} item.tooltipId tooltip message id
+ * @prop {string} item.src image source
  * @prop {node} containerNode the node to append the child element into a DOM
  * @prop {number} tabIndex define navigation order
- * @prop {boolean} draggable is element is draggable
- * @prop {function} classItem class to apply to the Item
- * @example
- *  <MenuItem
- *            tabIndex={tabindex}
- *            item={{ ...item, id: item.id || idx }}
- *            draggable={false}
- *            menuItemsProps={menuItemsProps}
- *            containerNode={containerNode.current}
- *  />
- *
+ * @prop {string} size button size, one of `xs`, `sm`, `md` or `xl`
+ * @prop {bool} alignRight align the dropdown menu to the right
+ * @prop {string} variant style for the button, one of `undefined`, `default` or `primary`
+ * @prop {any} menuItemComponent a default component to be passed as a prop to a custom `item.Component`
  */
+const MenuItem = ({
+    item,
+    containerNode,
+    tabIndex,
+    size,
+    alignRight,
+    variant,
+    menuItemComponent
+}) => {
 
-const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '', size, alignRight, variant, resourceName, menuItemComponent }) => {
-
-    const { formatHref, query } = menuItemsProps || {};
     const {
         id,
         type,
@@ -51,12 +102,9 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
         items = [],
         href,
         style,
-        badge = '',
-        image,
         Component,
         target,
         className,
-        responsive,
         noCaret,
         glyph,
         iconType,
@@ -64,38 +112,52 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
         tooltipId,
         src
     } = item || {};
-    const btnClassName = `btn${variant && ` btn-${variant}` || ''}${size && ` btn-${size}` || ''}${className ? ` ${className}` : ''} _border-transparent`;
 
-    const labelNode = labelId ? <Message msgId={labelId} msgParams={{ resourceName }} /> : label;
-
-    const badgeValue = badge;
-    if (type === 'dropdown') {
-        return (<li><DropdownList
-            id={id}
-            items={items}
-            label={label}
-            labelId={labelId}
-            toggleStyle={style}
-            toggleImage={image}
-            dropdownClass={`${classItem}${className ? ` ${className}` : ''}`}
-            tabIndex={tabIndex}
-            badgeValue={badgeValue}
-            containerNode={containerNode}
-            size={size}
-            alignRight={alignRight}
-            variant={variant}
-            responsive={responsive}
-            noCaret={noCaret}
-        /></li>);
+    if (Component) {
+        return <Component variant={variant} size={size} className={className} component={menuItemComponent}/>;
     }
 
-    if ((type === 'custom' || type === 'plugin') && Component) {
-        return <Component variant={variant} size={size} className={className} component={menuItemComponent}/>;
+    const labelNode = labelId ? <Message msgId={labelId} /> : label;
+
+    if (type === 'dropdown') {
+        return (<li>
+            <Dropdown
+                id={`ms-dropdown-${id}`}
+                className={`${className ? ` ${className}` : ''}`}
+                pullRight={alignRight}
+            >
+                <Dropdown.Toggle
+                    id={ `ms-toggle-dropdown-${id}`}
+                    bsStyle={variant}
+                    tabIndex={tabIndex}
+                    style={style}
+                    bsSize={size}
+                    noCaret={noCaret}
+                >
+                    {src
+                        ? <img src={src} />
+                        : (
+                            <>
+                                {glyph ? <Icon glyph={glyph} type={iconType}/> : null}
+                                {glyph && labelNode ? ' ' : null}
+                                {labelNode}
+                            </>
+                        )}
+                </Dropdown.Toggle>
+                {containerNode
+                    ? createPortal(<Dropdown.Menu>
+                        <DropdownMenuItems items={items} />
+                    </Dropdown.Menu>, containerNode.parentNode)
+                    : <Dropdown.Menu>
+                        <DropdownMenuItems items={items} />
+                    </Dropdown.Menu>}
+            </Dropdown>
+        </li>);
     }
 
     if (type === 'link') {
         return (<li>
-            <MenuNavLink href={href} target={target} className={btnClassName}>
+            <MenuNavLink href={href} target={target}>
                 {glyph ? <Icon glyph={glyph} type={iconType}/> : null}
                 {glyph && labelNode ? ' ' : null}
                 {labelNode}
@@ -140,36 +202,22 @@ const MenuItem = ({ item, menuItemsProps, containerNode, tabIndex, classItem = '
         return <li><span /></li>;
     }
 
-    if (type === 'filter') {
-        const active = castArray(query.f || []).find(value => value === item.id);
-        return (<li>
-            <MenuNavLink
-                target={target}
-                style={style}
-                href={formatHref({
-                    query: { f: item.id },
-                    replaceQuery: active ? false : true
-                })}
-                className={btnClassName}
-            >
-                {glyph ? <Icon glyph={glyph} type={iconType}/> : null}
-                {glyph && labelNode ? ' ' : null}
-                {labelNode}
-                {isValidBadgeValue(badgeValue) && <Badge>{badgeValue}</Badge>}
-            </MenuNavLink>
-        </li>);
+    if (type === 'message' && labelId) {
+        return <li><HTML msgId={labelId} /></li>;
     }
+
     return null;
 };
 
 MenuItem.propTypes = {
-    item: PropTypes.object.isRequired,
-    menuItemsProps: PropTypes.object.isRequired,
+    item: PropTypes.object,
     containerNode: PropTypes.element,
     tabIndex: PropTypes.number,
     draggable: PropTypes.bool,
-    classItem: PropTypes.string
-
+    size: PropTypes.string,
+    alignRight: PropTypes.bool,
+    variant: PropTypes.string,
+    menuItemComponent: PropTypes.any
 };
 
 export default MenuItem;

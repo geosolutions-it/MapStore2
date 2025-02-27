@@ -1,5 +1,5 @@
 {
-  "resources":[
+  "resources": [
     {
       "id": "3025f52e-8d57-48df-9a56-8e21ac252282",
       "type": "map",
@@ -12,12 +12,7 @@
           "crs": "EPSG:4326"
         },
         "zoom": 3,
-        "maxExtent": [
-          -20037508.34,
-          -20037508.34,
-          20037508.34,
-          20037508.34
-        ],
+        "maxExtent": [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
         "layers": [
           {
             "type": "osm",
@@ -200,142 +195,161 @@
     }
   ],
   "type": "cascade",
-  "sections": [{
-    "type": "title",
-    "id": "title_section_id1",
-    "title": "Abstract",
-    "cover": true,
-    "contents": [
-      {
-        "id": "title_content_id1",
-        "background": {
-          "type": "image",
-          "size": "full",
-          "align": "center",
-          "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
-        },
-        "type": "text",
-        "size": "large",
-        "align": "center",
-        "theme": "bright",
-        "html": "<h1 style='text-align:center;'>List of Highest Astronomical Observatories</h1><p style='text-align:center;'><em>From Wikipedia, the free encyclopedia</em></p>"
-      }
-    ]
-  }, {
-    "type": "paragraph",
-    "id": "paragraph_section_id2",
-    "title": "Abstract new paragrph",
-    "contents": [{
-      "type": "column",
-      "id": "paragraph_content_id1",
+  "sections": [
+    {
+      "type": "title",
+      "id": "title_section_id1",
+      "title": "Abstract",
+      "cover": true,
       "contents": [
         {
-          "id": "paragraph_content_content_id1",
+          "id": "title_content_id1",
+          "background": {
+            "type": "image",
+            "size": "full",
+            "align": "center",
+            "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282"
+          },
           "type": "text",
-          "background": {},
-          "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
-        },
-        {
-          "id": "paragraph_content_content_id2",
-          "type": "map",
-          "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282",
-          "enableFullscreen": true,
-          "size": "medium",
-          "align": "center"
+          "size": "large",
+          "align": "center",
+          "theme": "bright",
+          "html": "<h1 style='text-align:center;'>List of Highest Astronomical Observatories</h1><p style='text-align:center;'><em>From Wikipedia, the free encyclopedia</em></p>"
         }
       ]
-    }]
-  }, {
-    "type": "title",
-    "id": "title_section_id2",
-    "title": "Abstract",
-    "contents": [
-      {
-        "id": "title_content_id1",
-        "background": {
-          "type": "image",
-          "resourceId": "48df48df-8d57-48df-9a56-8e21ac252282",
+    },
+    {
+      "type": "paragraph",
+      "id": "paragraph_section_id2",
+      "title": "Abstract new paragrph",
+      "contents": [
+        {
+          "type": "column",
+          "id": "paragraph_content_id1",
+          "contents": [
+            {
+              "id": "paragraph_content_content_id1",
+              "type": "text",
+              "background": {},
+              "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
+            },
+            {
+              "id": "paragraph_content_content_id2",
+              "type": "map",
+              "resourceId": "3025f52e-8d57-48df-9a56-8e21ac252282",
+              "enableFullscreen": true,
+              "size": "medium",
+              "align": "center"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "id": "title_section_id2",
+      "title": "Abstract",
+      "contents": [
+        {
+          "id": "title_content_id1",
+          "background": {
+            "type": "image",
+            "resourceId": "48df48df-8d57-48df-9a56-8e21ac252282",
+            "size": "medium",
+            "align": "center"
+          },
+          "type": "text",
           "size": "medium",
-          "align": "center"
-        },
-        "type": "text",
-        "size": "medium",
-        "align": "center",
-        "theme": "bright",
-        "html": "<h1 style='text-align:center;'>Enter title...</h1>"
-      }
-    ]
-  }, {
-    "type": "immersive",
-    "id": "immersive_section_id1",
-    "title": "Immersive",
-    "contents": [{
-        "type": "column",
-        "id": "column_id1",
-        "background": {
+          "align": "center",
+          "theme": "bright",
+          "html": "<h1 style='text-align:center;'>Enter title...</h1>"
+        }
+      ]
+    },
+    {
+      "type": "immersive",
+      "id": "immersive_section_id1",
+      "title": "Immersive",
+      "contents": [
+        {
+          "type": "column",
+          "id": "column_id1",
+          "background": {
             "type": "image",
             "fit": "cover",
             "size": "medium",
             "align": "center",
             "resourceId": "1ac21ac2-8d57-48df-9a56-8e21ac252282"
           },
-        "contents": [{
-          "id": "immersive_content_id1",
-          "type": "text",
-          "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>",
-          "align": "left",
-          "size": "small"
-        }]
-    },{
-        "type": "column",
-        "id": "column_id2",
-        "background": {
-          "type": "image",
-          "align": "center",
-          "size": "medium",
-          "resourceId": "52285228-8d57-48df-9a56-8e21ac252282"
+          "contents": [
+            {
+              "id": "immersive_content_id1",
+              "type": "text",
+              "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>",
+              "align": "left",
+              "size": "small"
+            }
+          ]
         },
-        "contents": [{
-          "id": "immersive_content_id2",
-          "type": "text",
-          "align": "center",
-          "size": "medium",
-          "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
-        }]
-    },{
-        "type": "column",
-        "id": "column_id3",
-        "background": {
-          "type": "image",
-          "align": "center",
-          "size": "medium",
-          "resourceId": "e21ae21a-8d57-48df-9a56-8e21ac252282"
+        {
+          "type": "column",
+          "id": "column_id2",
+          "background": {
+            "type": "image",
+            "align": "center",
+            "size": "medium",
+            "resourceId": "52285228-8d57-48df-9a56-8e21ac252282"
+          },
+          "contents": [
+            {
+              "id": "immersive_content_id2",
+              "type": "text",
+              "align": "center",
+              "size": "medium",
+              "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
+            }
+          ]
         },
-        "contents": [{
-        "id": "immersive_content_id3",
-        "type": "text",
-        "align": "center",
-        "size": "medium",
-        "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
-      }]
-    },{
-        "type": "column",
-        "id": "column_id4",
-        "background": {
-          "type": "image",
-          "fit": "contain",
-          "align": "center",
-          "size": "medium",
-          "resourceId": "8d8de21a-8d57-48df-9a56-8e21ac252282"
+        {
+          "type": "column",
+          "id": "column_id3",
+          "background": {
+            "type": "image",
+            "align": "center",
+            "size": "medium",
+            "resourceId": "e21ae21a-8d57-48df-9a56-8e21ac252282"
+          },
+          "contents": [
+            {
+              "id": "immersive_content_id3",
+              "type": "text",
+              "align": "center",
+              "size": "medium",
+              "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
+            }
+          ]
         },
-        "contents": [{
-        "id": "immersive_content_id4",
-        "type": "text",
-        "align": "center",
-        "size": "medium",
-        "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
-      }]
+        {
+          "type": "column",
+          "id": "column_id4",
+          "background": {
+            "type": "image",
+            "fit": "contain",
+            "align": "center",
+            "size": "medium",
+            "resourceId": "8d8de21a-8d57-48df-9a56-8e21ac252282"
+          },
+          "contents": [
+            {
+              "id": "immersive_content_id4",
+              "type": "text",
+              "align": "center",
+              "size": "medium",
+              "html": "<p>This is a list of the<strong> </strong><strong><ins>highest astronomical observatories</ins></strong><strong> </strong>in the world, considering only ground-based observatories and ordered by elevation above mean sea level. The main list includes only permanent observatories with facilities constructed at a fixed location, followed by a supplementary list for temporary observatories such as transportable telescopes or instrument packages. For large observatories with numerous telescopes at a single location, only a single entry is included listing the main elevation of the observatory or of the highest operational instrument if that information is available.</p>"
+            }
+          ]
+        }
+      ]
     }
-    ]
-  }]
+  ]
 }

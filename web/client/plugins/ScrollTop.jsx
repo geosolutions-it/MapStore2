@@ -33,7 +33,7 @@ class ScrollTop extends React.Component {
         showUnder: 200,
         btnClassName: 'square-button shadow-far',
         style: {
-            zIndex: 10,
+            zIndex: 5000,
             position: 'fixed',
             bottom: 12,
             right: 8,

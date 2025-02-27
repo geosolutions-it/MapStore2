@@ -8,8 +8,22 @@
 
 import { useEffect, useState, useRef } from 'react';
 import axios from '../../../libs/ajax';
-import useIsMounted from './useIsMounted';
-
+import useIsMounted from '../../../hooks/useIsMounted';
+/**
+ * contains all the logic to update the resource in the homepage details panel
+ * @param {object} props.user user properties
+ * @param {string} props.resourceId identifier of the resource
+ * @param {object} props.resource resource properties
+ * @param {func} props.setRequest it return a promise to perform the setup request
+ * @param {func} props.updateRequest it return a promise to perform the update request
+ * @param {func} props.onSetStart callback triggered on setup request initialization
+ * @param {func} props.onSetSuccess callback triggered on setup request success
+ * @param {func} props.onSetError callback triggered on setup request error
+ * @param {func} props.onUpdateStart callback triggered on update request initialization
+ * @param {func} props.onUpdateSuccess callback triggered on update request success
+ * @param {func} props.onUpdateError callback triggered on update request error
+ * @return {object} { resource, loading, update }
+ */
 const useRequestResource = ({
     user,
     resourceId,

@@ -437,7 +437,7 @@ const buildAst = (tokens) => {
  * @memberof utils.ogc.Filter.CQL.parser
  * @name read
  * @param cqlFilter the cql_filter o parse
- * @return a javascript representation of the filter.
+ * @return {object} a javascript representation of the filter.
  */
 export const read = (text) => buildAst(tokenize(text));
 

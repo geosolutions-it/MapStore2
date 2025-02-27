@@ -212,18 +212,19 @@ const ResourceCardGridBody = ({
     const footerEntry = metadata.find(entry => entry.target === 'footer');
 
     return (
-        <div>
+        <FlexBox.Fill className="ms-resource-card-body" flexBox column>
             <ResourceCardImage
                 className="ms-resource-card-img ms-image-colors"
                 src={thumbnailUrl}
                 icon={icon}
             />
-            <FlexBox
+            <FlexBox.Fill
+                flexBox
                 column
                 gap="sm"
                 classNames={['_padding-sm']}
             >
-                <FlexBox gap="sm" centerChildrenVertically>
+                <FlexBox className="ms-resource-card-body-header" gap="sm" centerChildrenVertically>
                     <FlexBox.Fill flexBox>
                         <Text fontSize="md" ellipsis>
                             {(icon && !loading && !downloading) && (
@@ -256,7 +257,7 @@ const ResourceCardGridBody = ({
                         />
                     );
                 })}
-                <FlexBox gap="sm" centerChildrenVertically>
+                <FlexBox className="ms-resource-card-body-footer" gap="sm" centerChildrenVertically>
                     <FlexBox.Fill flexBox>
                         {footerEntry?.path ? <ResourceCardMetadataEntry
                             entry={footerEntry}
@@ -280,7 +281,7 @@ const ResourceCardGridBody = ({
                         })}
                     </FlexBox>
                 </FlexBox>
-            </FlexBox>
+            </FlexBox.Fill>
             {!readOnly && options?.length > 0
                 ? (
                     <ResourceCardActionButtons
@@ -293,7 +294,7 @@ const ResourceCardGridBody = ({
                     />
                 )
                 : null}
-        </div>
+        </FlexBox.Fill>
     );
 };
 
@@ -317,7 +318,7 @@ const ResourceCardListBody = ({
         ...(optionsProp || [])
     ];
     return (
-        <FlexBox centerChildrenVertically>
+        <FlexBox className="ms-resource-card-body" centerChildrenVertically>
             <div className="ms-resource-card-limit">
                 {(icon && !loading && !downloading) && (
                     <Icon {...icon} />

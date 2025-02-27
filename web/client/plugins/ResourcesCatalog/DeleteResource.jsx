@@ -15,8 +15,16 @@ import Persistence from '../../api/persistence';
 import { searchResources } from './actions/resources';
 import { getPendingChanges } from './selectors/save';
 import { push } from 'connected-react-router';
-import useIsMounted from './hooks/useIsMounted';
+import useIsMounted from '../../hooks/useIsMounted';
 
+/**
+ * Plugin to delete a resource
+ * @memberof plugins
+ * @class
+ * @name DeleteResource
+ * @prop {string} cfg.resourceType one of `MAP`, `DASHBOARD` or `GEOSTORY` when used in a viewer, if undefined can be used in the homepage
+ * @prop {string} cfg.redirectTo optional redirect path after delete completion
+ */
 function DeleteResource({
     resource,
     component,
