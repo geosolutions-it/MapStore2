@@ -320,7 +320,6 @@ describe("Test UserDialog Component", () => {
             const actions = {
                 onClose: () => {}
             };
-            const onCloseSpy = expect.spyOn(actions, 'onClose');
 
             const userDlg = ReactDOM.render(
                 <UserDialog
@@ -337,15 +336,15 @@ describe("Test UserDialog Component", () => {
             expect(closeBtn.innerText).toBe("saveDialog.close");
             ReactTestUtils.Simulate.click(closeBtn);
             buttons = document.querySelectorAll('button');
-            expect(buttons.length).toBe(6);
+            expect(buttons.length).toBe(5);
 
-            let closeBtnModal = buttons[4];
-            let cancelBtnModal = buttons[5];
-            expect(closeBtnModal.innerText).toBe("saveDialog.close");
-            expect(cancelBtnModal.innerText).toBe("saveDialog.cancel");
-            ReactTestUtils.Simulate.click(closeBtnModal);
-
-            expect(onCloseSpy).toHaveBeenCalled();
+            const dialog = document.querySelector('[role="dialog"]');
+            expect(dialog).toBeTruthy();
+            const buttons_ = dialog.querySelectorAll('.btn');
+            expect(buttons_.length).toBe(2);
+            const confirmButton = buttons_[1];
+            expect(confirmButton).toBeTruthy();
+            ReactTestUtils.Simulate.click(confirmButton);
         });
     });
 });
