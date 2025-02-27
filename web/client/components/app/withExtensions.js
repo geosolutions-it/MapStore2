@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { loadLocale } from '../../actions/locale';
 import castArray from 'lodash/castArray';
 import isEqual from 'lodash/isEqual';
+import uniq from 'lodash/uniq';
 import axios from '../../libs/ajax';
 import ConfigUtils from '../../utils/ConfigUtils';
 import PluginsUtils from '../../utils/PluginsUtils';
@@ -67,7 +68,9 @@ function withExtensions(AppComponent) {
                 pluginsRegistry: plugins
             });
             if (translations.length > 0) {
-                ConfigUtils.setConfigProp("translationsPath", [...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
+                // remove any duplicate paths
+                const translationsPath = uniq([...castArray(ConfigUtils.getConfigProp("translationsPath")), ...translations.map(this.getAssetPath)]);
+                ConfigUtils.setConfigProp("translationsPath", translationsPath);
             }
             const locale =  ConfigUtils.getConfigProp('locale');
             store.dispatch(loadLocale(null, locale));
@@ -133,6 +136,9 @@ function withExtensions(AppComponent) {
                 ConfigUtils.setConfigProp("translationsPath",
                     castArray(translationsPath).filter(p => p !== this.getAssetPath(translations)));
             }
+            // remove the script element associated with the plugin, if it exists
+            const script = document.querySelector(`script[src="${this.getAssetPath(plugin)}/index.js"]`);
+            script && script.remove();
         };
 
         filterRemoved = (registry, removed) => {
