@@ -311,7 +311,7 @@ Replace `Save`, `SaveAs` and `DeleteMap` configurations in the `desktop` (map vi
 }
 ```
 
-Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `DeleteDashboard` configurations in the `dashboard` section with the new configuration:
+Replace `OmniBar`, `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `DeleteDashboard` configurations in the `dashboard` section with the new configuration:
 
 ```diff
 {
@@ -323,6 +323,13 @@ Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `Delete
 -           "DashboardSave",
 -           "DashboardSaveAs",
 -           "DeleteDashboard",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
 +           {
 +               "name": "BrandNavbar",
 +               "cfg": {
@@ -359,7 +366,7 @@ Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `Delete
 }
 ```
 
-Replace `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGeoStory` configurations in the `geostory` section with the new configuration:
+Replace `OmniBar`, `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGeoStory` configurations in the `geostory` section with the new configuration:
 
 ```diff
 {
@@ -370,10 +377,18 @@ Replace `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGe
 -           "GeoStorySave",
 -           "GeoStorySaveAs",
 -           "DeleteGeoStory",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
 +           {
 +               "name": "BrandNavbar",
 +               "cfg": {
-+                   "containerPosition": "header"
++                   "containerPosition": "header",
++                   "disablePluginIf": "{(state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
 +               }
 +           },
 +           {
@@ -450,27 +465,7 @@ Finally replace the content of the `common` and `maps` (homepage) sections with 
     "plugins": {
         "common": [
             {
-                "name": "BrandNavbar",
-                "cfg": {
-                    "rightMenuItems": [
-                        {
-                            "type": "link",
-                            "href": "https://docs.mapstore.geosolutionsgroup.com/",
-                            "target": "blank",
-                            "glyph": "book",
-                            "labelId": "Documentation",
-                            "variant": "default"
-                        },
-                        {
-                            "type": "link",
-                            "href": "https://github.com/geosolutions-it/MapStore2",
-                            "target": "blank",
-                            "label": "GitHub",
-                            "glyph": "github",
-                            "variant": "default"
-                        }
-                    ]
-                }
+                "name": "BrandNavbar"
             },
             {
                 "name": "ManagerMenu"
