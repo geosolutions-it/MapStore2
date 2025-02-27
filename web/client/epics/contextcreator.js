@@ -26,7 +26,7 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
 import {resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
-    wasTutorialShownSelector, prefetchedDataSelector, generateContextResource } from '../selectors/contextcreator';
+    wasTutorialShownSelector, prefetchedDataSelector, generateContextResource, isNewPluginsUploaded } from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
@@ -76,6 +76,7 @@ export const saveContextResource = (action$, store) => action$
         const state = store.getState();
         const resource = resourceSelector(state);
         const newResource = generateContextResource(state);
+        const allowLoadExtensions = isNewPluginsUploaded(state);
         const destLocations = {manager: '/context-manager', context: `/context/${resource.name}`};
         return (resource && resource.id ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.merge(
@@ -91,7 +92,7 @@ export const saveContextResource = (action$, store) => action$
                 Rx.Observable.of(
                     contextSaved(rid),
                     push(destLocation || destLocations.context),
-                    ...(Object.values(destLocations).includes(destLocation) ? [loadExtensions()] : []),
+                    ...(allowLoadExtensions ? [loadExtensions()] : []),
                     loading(false, 'contextSaving')
                 )
             ))

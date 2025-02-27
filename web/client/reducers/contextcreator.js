@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-import {get, omit, isObject, head, find, pick} from 'lodash';
+import {get, omit, isObject, head, find, pick, uniq} from 'lodash';
 
 import ConfigUtils from '../utils/ConfigUtils';
 
@@ -186,7 +186,8 @@ export default (state = {}, action) => {
             uploadResult: {
                 result: "ok"
             },
-            plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins]
+            plugins: [...(state.plugins || []).filter(notDuplicate), ...plugins],
+            uploadedPlugins: uniq((state.uploadedPlugins ?? []).concat((action.plugins ?? []).map(p => p.name)))
         };
     }
     case UNINSTALLING_PLUGIN: {
@@ -201,7 +202,8 @@ export default (state = {}, action) => {
     case PLUGIN_UNINSTALLED: {
         return {
             ...state,
-            plugins: state.plugins.filter(p => p.name !== action.plugin)
+            plugins: state.plugins.filter(p => p.name !== action.plugin),
+            uploadedPlugins: (state.uploadedPlugins ?? []).filter(p => p !== action.plugin)
         };
     }
     case SET_RESOURCE: {

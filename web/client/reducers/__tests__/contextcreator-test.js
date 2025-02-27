@@ -592,4 +592,15 @@ describe('contextcreator reducer', () => {
         expect(state).toExist();
         expect(state.contextId).toBe('testId');
     });
+    it('Track extension/plugins', () => {
+        // add new plugin extension
+        let state = contextcreator(undefined, pluginUploaded([{name: 'Sample'}]));
+        expect(state).toBeTruthy();
+        expect(state.uploadedPlugins).toEqual(['Sample']);
+
+        // remove extension
+        state = contextcreator({plugins: [{name: "Sample"}]}, pluginUninstalled({plugin: 'Sample'}));
+        expect(state).toBeTruthy();
+        expect(state.uploadedPlugins).toEqual([]);
+    });
 });

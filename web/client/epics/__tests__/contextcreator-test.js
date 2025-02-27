@@ -891,7 +891,7 @@ describe('contextcreator epics', () => {
             map: {}
         }, done);
     });
-    it('saveContextResource saves a context with destination other than default', (done) => {
+    it('saveContextResource saves a context with new plugin uploaded', (done) => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
         const startActions = [saveNewContext("/context-manager")];
@@ -907,7 +907,8 @@ describe('contextcreator epics', () => {
             contextcreator: {
                 resource: {
                     name: 'context'
-                }
+                },
+                uploadedPlugins: ["Sample"]
             },
             map: {}
         }, done);
