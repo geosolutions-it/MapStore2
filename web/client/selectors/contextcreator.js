@@ -101,3 +101,8 @@ export const generateContextResource = (state) => {
         }
     };
 };
+
+export const isNewPluginsUploaded = (state) => {
+    const uploadedPlugins = state.contextcreator?.uploadedPlugins || [];
+    return uploadedPlugins.length > 0;
+};

@@ -23,10 +23,10 @@ import {SAVE_CONTEXT, SAVE_TEMPLATE, LOAD_CONTEXT, LOAD_TEMPLATE, DELETE_TEMPLAT
     enablePlugins, disablePlugins, setCfgError, changePluginsKey, changeTemplatesKey, setEditedTemplate, setTemplates, setParsedTemplate,
     pluginUploaded, pluginUploading, pluginUninstalled, pluginUninstalling, loadExtensions, uploadPluginError,
     setWasTutorialShown, setTutorialStep} from '../actions/contextcreator';
-import {newContextSelector, resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
+import {resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoadedSelector, contextNameCheckedSelector,
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
-    wasTutorialShownSelector, prefetchedDataSelector, generateContextResource } from '../selectors/contextcreator';
+    wasTutorialShownSelector, prefetchedDataSelector, generateContextResource, isNewPluginsUploaded } from '../selectors/contextcreator';
 import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
@@ -75,8 +75,8 @@ export const saveContextResource = (action$, store) => action$
     .exhaustMap(({destLocation}) => {
         const state = store.getState();
         const resource = resourceSelector(state);
-        const context = newContextSelector(state);
         const newResource = generateContextResource(state);
+        const allowLoadExtensions = isNewPluginsUploaded(state);
         return (resource && resource.id ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.merge(
                 // LOCATION_CHANGE triggers notifications clear, need to work around that
@@ -90,8 +90,8 @@ export const saveContextResource = (action$, store) => action$
                     }))) : Rx.Observable.empty()),
                 Rx.Observable.of(
                     contextSaved(rid),
-                    push(destLocation || `/context/${context.name}`),
-                    loadExtensions(),
+                    push(destLocation || `/context/${resource.name}`),
+                    ...(allowLoadExtensions ? [loadExtensions()] : []),
                     loading(false, 'contextSaving')
                 )
             ))
