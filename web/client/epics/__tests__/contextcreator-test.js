@@ -875,13 +875,16 @@ describe('contextcreator epics', () => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
         const startActions = [saveNewContext("/")];
-        testEpic(saveContextResource, 4, startActions, actions => {
-            expect(actions.length).toBe(4);
-            expect(actions[0].type).toBe(LOADING);
-            expect(actions[1].type).toBe(CONTEXT_SAVED);
+        testEpic(saveContextResource, 5, startActions, actions => {
+            expect(actions.length).toBe(5);
+            expect(actions.map(action => action.type)).toEqual([
+                LOADING,
+                CONTEXT_SAVED,
+                SHOW_NOTIFICATION,
+                LOADING,
+                '@@router/CALL_HISTORY_METHOD'
+            ]);
             expect(actions[1].id).toBe(1);
-            expect(actions[2].type).toBe("@@router/CALL_HISTORY_METHOD");
-            expect(actions[3].type).toBe(LOADING);
         }, {
             contextcreator: {
                 resource: {
@@ -894,15 +897,18 @@ describe('contextcreator epics', () => {
     it('saveContextResource saves a context with new plugin uploaded', (done) => {
         mockAxios.onPost().reply(200, "1");
         mockAxios.onGet().reply(200, {});
-        const startActions = [saveNewContext("/context-manager")];
-        testEpic(saveContextResource, 5, startActions, actions => {
-            expect(actions.length).toBe(5);
-            expect(actions[0].type).toBe(LOADING);
-            expect(actions[1].type).toBe(CONTEXT_SAVED);
+        const startActions = [saveNewContext("/")];
+        testEpic(saveContextResource, 6, startActions, actions => {
+            expect(actions.length).toBe(6);
+            expect(actions.map(action => action.type)).toEqual([
+                LOADING,
+                CONTEXT_SAVED,
+                SHOW_NOTIFICATION,
+                LOADING,
+                '@@router/CALL_HISTORY_METHOD',
+                LOAD_EXTENSIONS
+            ]);
             expect(actions[1].id).toBe(1);
-            expect(actions[2].type).toBe("@@router/CALL_HISTORY_METHOD");
-            expect(actions[3].type).toBe(LOAD_EXTENSIONS);
-            expect(actions[4].type).toBe(LOADING);
         }, {
             contextcreator: {
                 resource: {

@@ -16,7 +16,9 @@ import Editors from './editors';
 import handleDetailsRow from '../enhancers/handleDetailsRow';
 
 const DetailsRow = handleDetailsRow(DetailsRowBase);
-
+/**
+ * @deprecated
+ */
 export default ({
     loading,
     resource = {},

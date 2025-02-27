@@ -52,7 +52,8 @@ const canEditResourcePermission = (user = {}, resource) => {
 };
 /**
  * A Modal window to show map metadata form
-*/
+ * @deprecated
+ */
 class SaveModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool,

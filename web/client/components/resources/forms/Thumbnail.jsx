@@ -15,6 +15,7 @@ import BaseThumbnail from '../../../components/misc/Thumbnail';
 
 /**
  * A Dropzone area for a thumbnail.
+ * @deprecated
  */
 
 class Thumbnail extends React.Component {

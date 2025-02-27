@@ -7,7 +7,9 @@
  */
 
 import { compose, withState, withHandlers } from 'recompose';
-
+/**
+ * @deprecated
+ */
 export default compose(
     withState('showPreview', 'setShowPreview', false),
     withHandlers({
