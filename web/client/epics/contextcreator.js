@@ -77,21 +77,20 @@ export const saveContextResource = (action$, store) => action$
         const resource = resourceSelector(state);
         const newResource = generateContextResource(state);
         const allowLoadExtensions = isNewPluginsUploaded(state);
-        const destLocations = {manager: '/context-manager', context: `/context/${resource.name}`};
         return (resource && resource.id ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.merge(
                 // LOCATION_CHANGE triggers notifications clear, need to work around that
                 // can't wait for CLEAR_NOTIFICATIONS, because either in firefox notification action doesn't trigger
                 // or in chrome it triggers too early
                 // (on chrome there is another LOCATION_CHANGE after the first one for unknown reason, that cancels out the first)
-                (destLocation === destLocations.manager ? action$.ofType(CONTEXTS_LIST_LOADED).take(1).switchMap(() => Rx.Observable.of(
+                (destLocation === '/context-manager' ? action$.ofType(CONTEXTS_LIST_LOADED).take(1).switchMap(() => Rx.Observable.of(
                     show({
                         title: "saveDialog.saveSuccessTitle",
                         message: "saveDialog.saveSuccessMessage"
                     }))) : Rx.Observable.empty()),
                 Rx.Observable.of(
                     contextSaved(rid),
-                    push(destLocation || destLocations.context),
+                    push(destLocation || `/context/${resource.name}`),
                     ...(allowLoadExtensions ? [loadExtensions()] : []),
                     loading(false, 'contextSaving')
                 )
