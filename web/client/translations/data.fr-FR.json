@@ -4340,11 +4340,13 @@
       "manageTags": "Gérer les tags",
       "errorLoadingTags": "Il n'est pas possible de charger des balises",
       "errorUpdatingTag": "Il n'est pas possible de mettre à jour la balise",
+      "errorTagNameAlreadyExist": "La balise que vous essayez de créer existe déjà",
       "errorDeletingTag": "Il n'est pas possible de supprimer la balise",
       "removeFromFavorites": "Supprimer des favoris",
       "addToFavorites": "Ajouter aux favoris",
       "favorites": "Favoris",
-      "documentation": "Documentation"
+      "documentation": "Documentation",
+      "filterApplied": "Filtre appliqué"
     }
   }
 }

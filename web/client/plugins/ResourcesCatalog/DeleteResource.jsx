@@ -15,7 +15,7 @@ import Persistence from '../../api/persistence';
 import { searchResources } from './actions/resources';
 import { getPendingChanges } from './selectors/save';
 import { push } from 'connected-react-router';
-import useIsMounted from './hooks/useIsMounted';
+import useIsMounted from '../../hooks/useIsMounted';
 
 /**
  * Plugin to delete a resource

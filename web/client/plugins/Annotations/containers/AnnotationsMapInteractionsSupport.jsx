@@ -33,6 +33,9 @@ function AnnotationsMapInteractionsSupport({
 }) {
 
     const getGeometryType = ({ properties } = {}) => properties?.annotationType === 'Text' ? 'Point' : properties?.annotationType;
+    const getDrawGeometryType = ({ geometry, properties } = {}) => properties?.annotationType === 'Text'
+    || (properties?.radius > 0 && !geometry) ? 'Point' : properties?.annotationType;
+
     if (!areAnnotationsMapInteractionsSupported(mapType)) {
         return null;
     }
@@ -40,6 +43,7 @@ function AnnotationsMapInteractionsSupport({
     const EditFeatureSupport = editGeoJSONSupportSupports[mapType];
     const isFeatureGeometryValid = validateFeature(feature, true);
     const selectedAnnotationType = getGeometryType(feature);
+    const drawGeometryType = getDrawGeometryType(feature);
     const isGeodesic = !!geodesic[selectedAnnotationType];
     return (
         <Suspense fallback={null}>
@@ -48,7 +52,7 @@ function AnnotationsMapInteractionsSupport({
                     map={map}
                     active={active && feature.geometry === null}
                     depthTestAgainstTerrain={false}
-                    geometryType={selectedAnnotationType}
+                    geometryType={drawGeometryType}
                     geodesic={isGeodesic}
                     getObjectsToExcludeOnPick={() => []}
                     onDrawEnd={({ feature: newFeature }) => {

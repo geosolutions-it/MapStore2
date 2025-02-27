@@ -9,7 +9,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import url from 'url';
-import useIsMounted from '../hooks/useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 import GeoStoreDAO from '../../../api/GeoStoreDAO';
 import { castArray } from 'lodash';
 

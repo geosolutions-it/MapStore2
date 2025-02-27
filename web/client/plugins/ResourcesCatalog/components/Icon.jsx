@@ -9,7 +9,7 @@
 import React, { useState, useEffect } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { loadFontAwesome } from '../../../utils/FontUtils';
-import useIsMounted from '../hooks/useIsMounted';
+import useIsMounted from '../../../hooks/useIsMounted';
 import PropTypes from 'prop-types';
 
 function FaIcon({

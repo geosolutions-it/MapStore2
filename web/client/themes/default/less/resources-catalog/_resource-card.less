@@ -21,10 +21,19 @@
     > div a {
         position: relative;
     }
+    // for icon without interactivity
+    // we need to have the default cursor
+    // and ensure the position does not cause conflicts
+    // with the link covering the resource card
     .fa, .glyphicon {
         cursor: default;
+        position: static;
     }
-    button {
+    // all interactive components
+    // should display the pointer cursor also on the icons
+    button,
+    .btn,
+    a {
         .fa, .glyphicon {
             cursor: pointer;
         }

@@ -4378,11 +4378,13 @@
       "manageTags": "Tags verwalten",
       "errorLoadingTags": "Es ist nicht möglich, Tags zu laden",
       "errorUpdatingTag": "Es ist nicht möglich, das Tag zu aktualisieren",
+      "errorTagNameAlreadyExist": "Das Tag, das Sie erstellen möchten, existiert bereits",
       "errorDeletingTag": "Es ist nicht möglich, das Tag zu löschen",
       "removeFromFavorites": "Aus Favoriten entfernen",
       "addToFavorites": "Zu Favoriten hinzufügen",
       "favorites": "Favoriten",
-      "documentation": "Dokumentation"
+      "documentation": "Dokumentation",
+      "filterApplied": "Filter angewendet"
     }
   }
 }

@@ -45,9 +45,6 @@ describe("EffectSupport", () => {
             layers: [layer],
             target: 'map'
         });
-
-        // Mock useEffect implementation to run given callback synchronously
-        expect.spyOn(React, "useEffect").andCall(f => f());
         setTimeout(done);
     });
 

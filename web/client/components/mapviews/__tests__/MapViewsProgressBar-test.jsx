@@ -52,7 +52,7 @@ describe('MapViewsProgressBar component', () => {
             '50%'
         ]);
     });
-    it('should display tooltip on tick', () => {
+    it('should display tooltip on tick', (done) => {
         ReactDOM.render(<MapViewsProgressBar
             segments={[
                 { duration: 0, view: { title: 'Title 01' } },
@@ -62,11 +62,14 @@ describe('MapViewsProgressBar component', () => {
             ]}
             totalLength={10000}
         />, document.getElementById("container"));
-        const tickNodes = [...document.querySelectorAll('.ms-map-view-progress-tick')];
-        expect(tickNodes.length).toBeTruthy(4);
-        Simulate.mouseOver(tickNodes[0]);
-        const tooltipInner = document.querySelector('.tooltip-inner');
-        expect(tooltipInner.innerText).toBe('Title 01');
+        setTimeout(() => {
+            const tickNodes = [...document.querySelectorAll('.ms-map-view-progress-tick')];
+            expect(tickNodes.length).toBeTruthy(4);
+            Simulate.mouseOver(tickNodes[0]);
+            const tooltipInner = document.querySelector('.tooltip-inner');
+            expect(tooltipInner.innerText).toBe('Title 01');
+            done();
+        }, 101);
     });
     it('should trigger on select by clicking on tick', (done) => {
         ReactDOM.render(<MapViewsProgressBar

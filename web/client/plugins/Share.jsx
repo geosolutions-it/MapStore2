@@ -18,16 +18,17 @@ import { versionSelector } from '../selectors/version';
 import shareEpics from '../epics/queryparams';
 import SharePanel from '../components/share/SharePanel';
 import { createSelector } from 'reselect';
-import { mapSelector } from '../selectors/map';
+import { mapIdSelector, mapSelector } from '../selectors/map';
 import { currentContextSelector } from '../selectors/context';
 import { get } from 'lodash';
 import controls from '../reducers/controls';
 import { changeFormat } from '../actions/mapInfo';
 import { addMarker, hideMarker } from '../actions/search';
 import { updateMapView } from '../actions/map';
-import { updateUrlOnScrollSelector } from '../selectors/geostory';
+import { resourceSelector as geostoryResourceSelector, updateUrlOnScrollSelector } from '../selectors/geostory';
 import { shareSelector } from "../selectors/controls";
 import { mapTypeSelector } from "../selectors/maptype";
+import { dashboardResource } from '../selectors/dashboard';
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
  * You can share it on socials networks(facebook,twitter,google+,linkedIn)
@@ -146,17 +147,22 @@ const ActionCardShareButton = connect(
         iconType="glyphicon"
         glyph="share-alt"
         labelId="share.title"
-        // tooltipId=""
         onClick={handleToggle}
     />);
 });
 
+const shareButtonSelector = createSelector([
+    mapIdSelector,
+    dashboardResource,
+    geostoryResourceSelector
+], (mapId, dashboard, geostory) => {
+    return {
+        style: mapId || dashboard?.id || geostory?.id ? { } : { display: 'none' }
+    };
+});
 
 const SharePlugin = createPlugin('Share', {
     component: Share,
-    options: {
-        disablePluginIf: "{state('router') && (state('router').endsWith('new') || state('router').includes('newgeostory') || state('router').endsWith('dashboard'))}"
-    },
     containers: {
         BurgerMenu: {
             name: 'share',
@@ -166,7 +172,8 @@ const SharePlugin = createPlugin('Share', {
             text: <Message msgId="share.title"/>,
             tooltip: "share.tooltip",
             icon: <Glyphicon glyph="share-alt"/>,
-            action: toggleControl.bind(null, 'share', null)
+            action: toggleControl.bind(null, 'share', null),
+            selector: shareButtonSelector
         },
         SidebarMenu: {
             name: 'share',
@@ -177,7 +184,8 @@ const SharePlugin = createPlugin('Share', {
             text: <Message msgId="share.title"/>,
             icon: <Glyphicon glyph="share-alt"/>,
             action: toggleControl.bind(null, 'share', null),
-            toggle: true
+            toggle: true,
+            selector: shareButtonSelector
         },
         Toolbar: {
             name: 'share',
@@ -187,7 +195,8 @@ const SharePlugin = createPlugin('Share', {
             doNotHide: true,
             tooltip: "share.title",
             icon: <Glyphicon glyph="share-alt"/>,
-            action: toggleControl.bind(null, 'share', null)
+            action: toggleControl.bind(null, 'share', null),
+            selector: shareButtonSelector
         },
         ResourcesGrid: {
             priority: 1,

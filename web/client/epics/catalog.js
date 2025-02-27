@@ -57,6 +57,7 @@ import { currentMessagesSelector } from "../selectors/locale";
 import { getSelectedLayer, selectedNodesSelector } from '../selectors/layers';
 
 import {
+    buildServiceUrl,
     buildSRSMap,
     extractOGCServicesReferences,
     updateServiceData
@@ -583,8 +584,7 @@ export default (API) => ({
                 const state = getState();
                 const pageSize = pageSizeSelector(state);
                 const service = selectedCatalogSelector(state);
-                const { type, url } = service;
-                return Rx.Observable.of(textSearch({ format: type, url, startPosition: 1, maxRecords: pageSize, text, options: { service }}));
+                return Rx.Observable.of(textSearch({ format: service.type, url: buildServiceUrl(service), startPosition: 1, maxRecords: pageSize, text, options: { service }}));
             }),
 
     catalogCloseEpic: (action$, store) =>
