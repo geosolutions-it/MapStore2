@@ -16,7 +16,8 @@ import Page from '../../containers/Page';
 import {
     loadGeostory,
     setEditing,
-    updateUrlOnScroll
+    updateUrlOnScroll,
+    resetGeostory
 } from '../../actions/geostory';
 import { geostoryIdSelector } from '../../selectors/geostory';
 import { isLoggedIn } from '../../selectors/security';
@@ -126,6 +127,6 @@ export default connect((state) => ({
 {
     loadResource: loadGeostory,
     setEditing,
-    updateUrlOnScroll
-    // reset: resetGeostory
+    updateUrlOnScroll,
+    reset: resetGeostory
 })(GeoStoryPage);
