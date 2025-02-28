@@ -7,15 +7,12 @@
  */
 
 import { useRef, useEffect } from 'react';
-import isArray from 'lodash/isArray';
-import omit from 'lodash/omit';
-import isEqual from 'lodash/isEqual';
 import url from 'url';
 import axios from '../../../libs/ajax';
-import castArray from 'lodash/castArray';
 import uniq from 'lodash/uniq';
 import { clearQueryParams } from '../utils/ResourcesFiltersUtils';
 import useIsMounted from '../../../hooks/useIsMounted';
+import { isEmpty, isEqual, isArray, omit, castArray } from 'lodash';
 
 const cleanParams = (params, exclude = ['d']) => {
     return Object.keys(params)
@@ -71,6 +68,7 @@ const mergeParams = (params, defaultQuery) => {
  * @param {bool} props.queryPage if true adds the page to the location query
  * @param {object} props.search search object action, { id, params }, { id, clear } or { id, refresh }
  * @param {func} props.onReset callback to reset the search action
+ * @param {object} props.storedParams query parameter stored in a persisted state (no location query)
  * @return {object} { search, clear } search and clear functions
  */
 const useQueryResourcesByLocation = ({
@@ -87,7 +85,8 @@ const useQueryResourcesByLocation = ({
     user,
     queryPage,
     search,
-    onReset = () => {}
+    onReset = () => {},
+    storedParams
 }) => {
 
     const _prevLocation = useRef();
@@ -161,12 +160,16 @@ const useQueryResourcesByLocation = ({
     const _queryPage = useRef();
     _queryPage.current = queryPage;
 
+    const init = useRef();
+
     useEffect(() => {
-        const [currentParams, currentPage] = getParams(location.search);
-        requestResources.current({
-            ...currentParams,
-            ...(_queryPage.current && { page: currentPage })
-        });
+        if (init.current) {
+            const [currentParams, currentPage] = getParams(location.search);
+            requestResources.current({
+                ...currentParams,
+                ...(_queryPage.current && { page: currentPage })
+            });
+        }
     }, [pageSize, JSON.stringify(defaultQuery), user]);
 
     useEffect(() => {
@@ -211,6 +214,18 @@ const useQueryResourcesByLocation = ({
         const newParams = clearQueryParams(location);
         handleSearch(newParams);
     }
+
+    // restore previous params on initialization
+    useEffect(() => {
+        if (!init.current) {
+            // exclude page to avoid missing page error
+            const { page, ...currentParams } = storedParams || {};
+            if (!isEmpty(currentParams)) {
+                handleSearch(currentParams);
+            }
+            init.current = true;
+        }
+    }, [storedParams]);
 
     useEffect(() => {
         if (search?.id) {
