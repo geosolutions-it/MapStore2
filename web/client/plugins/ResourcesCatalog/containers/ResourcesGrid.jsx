@@ -27,7 +27,8 @@ import {
     getMonitoredStateSelector,
     getRouterLocation,
     getCurrentPage,
-    getSearch
+    getSearch,
+    getCurrentParams
 } from '../selectors/resources';
 import { push } from 'connected-react-router';
 import useQueryResourcesByLocation from '../hooks/useQueryResourcesByLocation';
@@ -99,7 +100,8 @@ function ResourcesGrid({
     getResourceStatus,
     formatHref,
     getResourceTypesInfo,
-    getResourceId
+    getResourceId,
+    storedParams
 }) {
 
     const { query } = url.parse(location.search, true);
@@ -123,7 +125,8 @@ function ResourcesGrid({
         user,
         queryPage,
         onReset: () => onResetSearch(id),
-        search
+        search,
+        storedParams
     });
 
     const {
@@ -262,7 +265,8 @@ const ConnectedResourcesGrid = connect(
         error: getResourcesError,
         isFirstRequest: getIsFirstRequest,
         page: getCurrentPage,
-        search: getSearch
+        search: getSearch,
+        storedParams: getCurrentParams
     }),
     {
         onPush: push,

@@ -269,4 +269,26 @@ describe('useQueryResourcesByLocation', () => {
         />, document.getElementById("container"));
         Simulate.click(document.querySelector('#clear'));
     });
+
+    it('should use stored parameter on initialization', (done) => {
+        ReactDOM.render(<Component
+            id="catalog"
+            pageSize={12}
+            storedParams={{ f: ['map'] }}
+            request={() => {
+                return Promise.resolve({
+                    resources: []
+                });
+            }}
+            location={{
+                pathname: '/',
+                search: '/',
+                hash: ''
+            }}
+            onPush={({ search }) => {
+                expect(search).toBe('?f=map');
+                done();
+            }}
+        />, document.getElementById("container"));
+    });
 });

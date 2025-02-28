@@ -17,7 +17,8 @@ import {
     getSelectedResource,
     getShowDetails,
     getCurrentPage,
-    getSearch
+    getSearch,
+    getCurrentParams
 } from '../resources';
 import expect from 'expect';
 
@@ -72,5 +73,10 @@ describe('resources selectors', () => {
     it('getSearch', () => {
         expect(getSearch()).toBe(null);
         expect(getSearch({ resources: { search: { q: 'a' }  } }, { id: 'catalog' })).toEqual({ q: 'a' });
+    });
+    it('getCurrentParams', () => {
+        expect(getCurrentParams()).toBe(undefined);
+        expect(getCurrentParams({ resources: { sections: { catalog: { params: { page: 2 } } } } }, { id: 'catalog' })).toEqual({ page: 2 });
+        expect(getCurrentParams({ resources: { sections: { catalog: { params: { page: 3 } } } } }, { resourcesGridId: 'catalog' })).toEqual({ page: 3 });
     });
 });
