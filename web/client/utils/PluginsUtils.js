@@ -15,6 +15,7 @@ import curry from 'lodash/curry';
 import {combineEpics as originalCombineEpics} from 'redux-observable';
 import {combineReducers as originalCombineReducers} from 'redux';
 import {wrapEpics} from "./EpicsUtils";
+import { randomInt } from './RandomUtils';
 
 /**
  * Loads a script inside the current page.
@@ -25,7 +26,7 @@ function loadScript(src) {
         const s = document.createElement('script');
         let r = false;
         s.type = 'text/javascript';
-        s.src = src;
+        s.src = src + "?v=" + randomInt();
         s.async = true;
         s.onerror = function(err) {
             reject(err, s);

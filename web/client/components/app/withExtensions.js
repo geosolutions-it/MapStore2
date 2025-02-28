@@ -137,7 +137,7 @@ function withExtensions(AppComponent) {
                     castArray(translationsPath).filter(p => p !== this.getAssetPath(translations)));
             }
             // remove the script element associated with the plugin, if it exists
-            const script = document.querySelector(`script[src="${this.getAssetPath(plugin)}/index.js"]`);
+            const script = document.querySelector(`script[src^="${this.getAssetPath(plugin)}/index.js"]`);
             script && script.remove();
         };
 
