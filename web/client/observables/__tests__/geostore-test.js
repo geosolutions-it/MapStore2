@@ -415,4 +415,46 @@ describe('geostore observables for resources management', () => {
             e => done(e)
         );
     });
+    it('createResource with tags', done => {
+        const ID = 10;
+        const testResource = {
+            id: ID,
+            tags: [{ tag: { id: '1' }, action: 'link'}, { tag: { id: '2' }, action: 'unlink'}]
+        };
+        const DummyAPI = {
+            createResource: testAndResolve(() => {},
+                {
+                    data: ID
+                }
+            ),
+            getResourcePermissions: testAndResolve(() => {}, [{
+                "canRead": true,
+                "canWrite": true,
+                "user": { "id": 3, "name": "admin" }
+            }]),
+            updateResourcePermissions: testAndResolve(
+                (id) => {
+                    expect(id).toBe(ID);
+                }
+            ),
+            linkTagToResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('1');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            ),
+            unlinkTagFromResource: testAndResolve(
+                (tagId, resourceId) => {
+                    expect(tagId).toBe('2');
+                    expect(resourceId).toBe(ID);
+                },
+                {}
+            )
+        };
+        createResource(testResource, DummyAPI).subscribe(
+            () => done(),
+            e => done(e)
+        );
+    });
 });
