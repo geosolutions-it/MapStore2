@@ -18,7 +18,9 @@ import {getMessageById} from '../../../../utils/LocaleUtils';
 import Message from '../../../I18N/Message';
 import Button from '../../../misc/Button';
 import SecurityUtils from '../../../../utils/SecurityUtils';
-
+/**
+ * @deprecated
+ */
 class PermissionEditor extends React.Component {
     static propTypes = {
         // props

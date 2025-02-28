@@ -195,6 +195,44 @@ describe('catalog Epics', () => {
             }
         });
     });
+    it('autoSearchEpic - wms with domain aliases', (done) => {
+        const NUM_ACTIONS = 1;
+        const domainAliases = ['url1', 'url2'];
+        testEpic(autoSearchEpic, NUM_ACTIONS, changeText(""), (actions) => {
+            expect(actions.length).toBe(NUM_ACTIONS);
+            expect(actions[0].type).toBe(TEXT_SEARCH);
+            expect(actions[0].url).toBe("url,url1,url2");
+            expect(actions[0].options).toEqual({
+                service: {
+                    type: "wms",
+                    url: "url",
+                    filter: "test",
+                    domainAliases
+                }
+            });
+            done();
+        }, {
+            catalog: {
+                delayAutoSearch: 50,
+                selectedService: "wmsCatalog",
+                services: {
+                    "wmsCatalog": {
+                        type: "wms",
+                        url: "url",
+                        filter: "test",
+                        domainAliases
+                    }
+                },
+                pageSize: 2
+            },
+            layers: {
+                selected: ["TEST"],
+                flat: [{
+                    id: "TEST"
+                }]
+            }
+        });
+    });
     it('openCatalogEpic', (done) => {
         const NUM_ACTIONS = 2;
         testEpic(openCatalogEpic, NUM_ACTIONS, toggleControl("metadataexplorer", "enabled"), (actions) => {

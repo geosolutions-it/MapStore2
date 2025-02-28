@@ -60,7 +60,7 @@ function DrawGeometrySupport({
                 draw.current = null;
             }
         };
-    }, [map, active, geometryType, coordinatesLength, geodesic]);
+    }, [map, active, geometryType, coordinatesLength, geodesic, onDrawEnd]);
     return null;
 }
 

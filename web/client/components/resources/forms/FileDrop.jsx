@@ -11,7 +11,9 @@ import DropZone from 'react-dropzone';
 import {Glyphicon} from 'react-bootstrap';
 
 import Message from '../../I18N/Message';
-
+/**
+ * @deprecated
+ */
 export default ({
     acceptedFileName,
     label,

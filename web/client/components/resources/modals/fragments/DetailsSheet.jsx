@@ -13,7 +13,9 @@ import Portal from '../../../misc/Portal';
 import Message from '../../../I18N/Message';
 
 import DetailsViewer from './DetailsViewer';
-
+/**
+ * @deprecated
+ */
 export default ({
     children,
     loading = false,

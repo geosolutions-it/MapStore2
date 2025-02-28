@@ -32,7 +32,8 @@ import {
     updateUrlOnScroll,
     updateMediaEditorSettings,
     hideCarouselItems,
-    enableDraw
+    enableDraw,
+    resetGeostory
 } from '../../actions/geostory';
 import geostory from '../../reducers/geostory';
 import {
@@ -482,5 +483,9 @@ describe('geostory reducer', () => {
         const drawOptions = {};
         let state = geostory(undefined, enableDraw(drawOptions));
         expect(state.drawOptions).toBe(drawOptions);
+    });
+    it('RESET_GEOSTORY', () => {
+        const state = geostory({ resource: { id: 10 }}, resetGeostory());
+        expect(state.resource).toBe(undefined);
     });
 });

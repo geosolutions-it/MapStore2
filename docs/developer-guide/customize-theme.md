@@ -79,7 +79,7 @@ example
     "name": "ContextCreator",
     "cfg": {
         "documentationBaseURL": "https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins",
-        "backToPageDestRoute": "/context-manager",
+        "backToPageDestRoute": "/",
         "backToPageConfirmationMessage": "contextCreator.undo",
         "themes": [{
                 "id": "complete-theme-override",

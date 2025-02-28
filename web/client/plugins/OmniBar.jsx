@@ -74,7 +74,7 @@ export default createPlugin(
     {
         component: OmniBar,
         options: {
-            disablePluginIf: "{state('featuregridmode') === 'EDIT' || (state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
+            disablePluginIf: "{state('featuregridmode') === 'EDIT'}"
         }
     }
 );

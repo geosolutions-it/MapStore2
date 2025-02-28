@@ -22,6 +22,86 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Remove context-manager page
+
+The `context-manager` page and related `ContextManager` plugin should be removed from existing downstream project.
+
+1. Remove `context-manager` configuration from `localConfig.json`:
+
+    ```diff
+    {
+        ...,
+        "plugins": {
+            ...,
+    -       "context-manager": [
+    -           "Header",
+    -           "Redirect",
+    -           "Home",
+    -           "ContextManager",
+    -           "Footer",
+    -           { "name": "About" }
+    -       ]
+        }
+    }
+    ```
+
+2. Remove the `ContextManager` page from the `appConfig.js` in custom projects that includes it:
+
+    ```diff
+    [
+        ...,
+    -   {
+    -       name: "context-manager",
+    -       path: "/context-manager",
+    -       component: require('./pages/ContextManager').default
+    -   },
+        ...,
+    ]
+    ```
+
+3. Remove the `ContextManager` plugin from the `pluginsDef` in custom projects that includes it
+
+### Rules manager page changes
+
+The `localConfig.json` configuration for the `rulesmanager` page should be updated in existing project by including the new `BrandNavbar` plugin and removing the deprecated plugins:
+
+```diff
+{
+    "rulesmanager": [
+        "Redirect" ,
+-        {
+-           "name": "OmniBar",
+-           "cfg": {
+-               "containerPosition": "header",
+-               "className": "navbar shadow navbar-home"
+-           }
+-       },
++       {
++           "name": "BrandNavbar",
++           "cfg": {
++               "containerPosition": "header"
++           }
++       },
+        "Home",
+        "ManagerMenu",
+        "Login",
+        "Language",
+-       "NavMenu",
+-       "Attribution",
+        "RulesDataGrid",
+        "Notifications",
+        {
+            "name": "RulesEditor",
+            "cfg": {
+                "containerPosition": "columns",
+                "disableDetails": true
+            }
+        }
+    ]
+}
+
+```
+
 ### Footer plugin configuration changes
 
 The Footer plugin has been refactored and some properties have been removed:
@@ -270,7 +350,7 @@ Replace `Save`, `SaveAs` and `DeleteMap` configurations in the `desktop` (map vi
 }
 ```
 
-Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `DeleteDashboard` configurations in the `dashboard` section with the new configuration:
+Replace `OmniBar`, `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `DeleteDashboard` configurations in the `dashboard` section with the new configuration:
 
 ```diff
 {
@@ -282,6 +362,13 @@ Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `Delete
 -           "DashboardSave",
 -           "DashboardSaveAs",
 -           "DeleteDashboard",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
 +           {
 +               "name": "BrandNavbar",
 +               "cfg": {
@@ -318,7 +405,7 @@ Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `Delete
 }
 ```
 
-Replace `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGeoStory` configurations in the `geostory` section with the new configuration:
+Replace `OmniBar`, `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGeoStory` configurations in the `geostory` section with the new configuration:
 
 ```diff
 {
@@ -329,10 +416,18 @@ Replace `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGe
 -           "GeoStorySave",
 -           "GeoStorySaveAs",
 -           "DeleteGeoStory",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
 +           {
 +               "name": "BrandNavbar",
 +               "cfg": {
-+                   "containerPosition": "header"
++                   "containerPosition": "header",
++                   "disablePluginIf": "{(state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
 +               }
 +           },
 +           {
@@ -409,27 +504,7 @@ Finally replace the content of the `common` and `maps` (homepage) sections with 
     "plugins": {
         "common": [
             {
-                "name": "BrandNavbar",
-                "cfg": {
-                    "rightMenuItems": [
-                        {
-                            "type": "link",
-                            "href": "https://docs.mapstore.geosolutionsgroup.com/",
-                            "target": "blank",
-                            "glyph": "book",
-                            "labelId": "Documentation",
-                            "variant": "default"
-                        },
-                        {
-                            "type": "link",
-                            "href": "https://github.com/geosolutions-it/MapStore2",
-                            "target": "blank",
-                            "label": "GitHub",
-                            "glyph": "github",
-                            "variant": "default"
-                        }
-                    ]
-                }
+                "name": "BrandNavbar"
             },
             {
                 "name": "ManagerMenu"

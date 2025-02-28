@@ -17,6 +17,7 @@ import ConfirmDialog from '../ConfirmModal';
 /**
  * Enhancer to manage resource data for a Save dialog.
  * Stores the original data to handle changes.
+ * @deprecated
  */
 export default compose(
     withStateHandlers(

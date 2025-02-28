@@ -56,19 +56,6 @@ html, body, #container, .fill {
     opacity: 0;
 }
 
-.with-love {
-    position:absolute;
-	width:90px;
-	height:27px;
-	bottom:35px;
-	margin-left:auto;
-	margin-right:auto;
-	left:0;
-	right:0;
-    background-image:url(../img/made-in-italy-logo.png);
-	background-size:contain;
-}
-
 .modal-dialog-container {
     z-index: 2000;
 }

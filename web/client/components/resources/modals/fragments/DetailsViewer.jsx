@@ -10,7 +10,9 @@ import Spinner from 'react-spinkit';
 import { isNil } from 'lodash';
 
 import Message from '../../../I18N/Message';
-
+/**
+ * @deprecated
+ */
 export default ({
     className,
     textContainerClassName,

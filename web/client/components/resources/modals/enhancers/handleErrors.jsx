@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import {compose, withProps, withStateHandlers} from 'recompose';
-
+/**
+ * @deprecated
+ */
 export default compose(
     withStateHandlers(
         () => ({}),
