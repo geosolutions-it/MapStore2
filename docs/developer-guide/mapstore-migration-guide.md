@@ -288,6 +288,16 @@ GeoStore needs to be updated to the `2.3` version, changes needed in the `pom.xm
 + <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
 ```
 
+New tables have been added to support `tags` and `favorites` associated to the resources. If your installation has the database creation mode set to update (the default), the new tables will be added automatically and you do not have to do any action. If it is set to validate instead you will have to run the update scripts.
+
+- For script reference see:
+
+    [postgresql migration from 2.1.0 to 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql)
+
+    [h2 migration from 2.1.0 to 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/h2/h2-migration-from-v.2.1.0-to-v2.3.0.sql)
+
+    [oracle migration from 2.1.0 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/oracle/oracle-migration-from-v.2.1.0-to-v2.3.0.sql)
+
 #### localConfig.json changes
 
 Here below all the changes needed related the localConfig.json configuration:
