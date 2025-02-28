@@ -28,36 +28,36 @@ The `context-manager` page and related `ContextManager` plugin should be removed
 
 1. Remove `context-manager` configuration from `localConfig.json`:
 
-```diff
-{
-    ...,
-    "plugins": {
+    ```diff
+    {
         ...,
--       "context-manager": [
--           "Header",
--           "Redirect",
--           "Home",
--           "ContextManager",
--           "Footer",
--           { "name": "About" }
--       ]
+        "plugins": {
+            ...,
+    -       "context-manager": [
+    -           "Header",
+    -           "Redirect",
+    -           "Home",
+    -           "ContextManager",
+    -           "Footer",
+    -           { "name": "About" }
+    -       ]
+        }
     }
-}
-```
+    ```
 
 2. Remove the `ContextManager` page from the `appConfig.js` in custom projects that includes it:
 
-```diff
-[
-    ...,
--   {
--       name: "context-manager",
--       path: "/context-manager",
--       component: require('./pages/ContextManager').default
--   },
-    ...,
-]
-```
+    ```diff
+    [
+        ...,
+    -   {
+    -       name: "context-manager",
+    -       path: "/context-manager",
+    -       component: require('./pages/ContextManager').default
+    -   },
+        ...,
+    ]
+    ```
 
 3. Remove the `ContextManager` plugin from the `pluginsDef` in custom projects that includes it
 
