@@ -38,7 +38,7 @@ import { isEmpty } from 'lodash';
 import PendingStatePrompt from './containers/PendingStatePrompt';
 import ResourceDetailsComponent from './containers/ResourceDetails';
 import Button from './components/Button';
-import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
+import { getResourceTypesInfo, getResourceId, parseResourceProperties } from './utils/ResourcesUtils';
 import Icon from './components/Icon';
 import Text from './components/Text';
 import FlexBox from './components/FlexBox';
@@ -340,12 +340,12 @@ function BrandNavbarDetailsButton({
     if (!resourceType) {
         return null;
     }
-    const resource = selectedResource ? undefined : {
+    const resource = selectedResource ? undefined : parseResourceProperties({
         ...pendingChanges?.initialResource,
         category: {
             name: resourceType
         }
-    };
+    });
     const { title } = getResourceTypesInfo(resource || selectedResource);
     return (
         <FlexBox component="li" centerChildrenVertically gap="xs">

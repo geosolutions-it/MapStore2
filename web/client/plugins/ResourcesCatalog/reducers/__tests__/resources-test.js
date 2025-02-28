@@ -49,7 +49,12 @@ describe('resources reducer', () => {
         expect(resources({}, setShowFiltersForm(true, 'catalog'))).toEqual({ sections: { catalog: { showFiltersForm: true } } });
     });
     it('setSelectedResource', () => {
-        expect(resources({}, setSelectedResource({ id: 1, name: 'Resource' }))).toEqual({ selectedResource: { id: 1, name: 'Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } });
+        expect(resources({}, setSelectedResource({ id: 1, name: 'Resource' }))).toEqual({ selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} } }, initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: {} } } });
+        expect(resources({}, setSelectedResource(null))).toEqual({ selectedResource: null, initialSelectedResource: null });
+        expect(resources({}, setSelectedResource({ id: 1, name: 'Resource', attributes: { detailsSettings: "{\"showAsModal\":false,\"showAtStartup\":false}" } })))
+            .toEqual({
+                selectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } } },
+                initialSelectedResource: { id: 1, name: 'Resource', attributes: { detailsSettings: { showAsModal: false, showAtStartup: false } } } });
     });
     it('updateSelectedResource', () => {
         expect(resources({ selectedResource: { id: 1, name: 'Resource' }, initialSelectedResource: { id: 1, name: 'Resource' } }, updateSelectedResource({ name: 'New Resource' })))
