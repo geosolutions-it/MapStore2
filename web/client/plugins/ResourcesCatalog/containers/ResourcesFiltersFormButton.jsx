@@ -11,7 +11,7 @@ import castArray from 'lodash/castArray';
 import Message from '../../../components/I18N/Message';
 import tooltip from '../../../components/misc/enhancers/tooltip';
 import Icon from '../components/Icon';
-import Button from '../components/Button';
+import Button from '../../../components/layout/Button';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { getShowFiltersForm } from '../selectors/resources';

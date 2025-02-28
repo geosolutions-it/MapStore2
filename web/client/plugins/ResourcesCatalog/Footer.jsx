@@ -10,12 +10,12 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { createPlugin } from "../../utils/PluginsUtils";
 import Menu from './components/Menu';
-import Button from './components/Button';
-import Spinner from './components/Spinner';
+import Button from '../../components/layout/Button';
+import Spinner from '../../components/layout/Spinner';
 import Icon from './components/Icon';
 import HTML from '../../components/I18N/HTML';
 import Message from '../../components/I18N/Message';
-import FlexBox from './components/FlexBox';
+import FlexBox from '../../components/layout/FlexBox';
 import usePluginItems from '../../hooks/usePluginItems';
 import { withResizeDetector } from 'react-resize-detector';
 function FooterMenuItem({

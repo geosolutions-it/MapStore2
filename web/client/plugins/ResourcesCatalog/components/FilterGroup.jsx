@@ -12,10 +12,11 @@ import PropTypes from "prop-types";
 
 import { Message } from "../../../components/I18N/I18N";
 
-import Spinner from "./Spinner";
+import Spinner from "../../../components/layout/Spinner";
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 import useIsMounted from "../../../hooks/useIsMounted";
-import FlexBox from './FlexBox';
-import Text from './Text';
+
 
 const Title = ({
     loading,

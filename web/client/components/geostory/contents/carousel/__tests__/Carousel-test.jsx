@@ -15,6 +15,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import TestUtils from 'react-dom/test-utils';
 
+
 const Comp = dragDropContext(HTML5Backend)(Carousel);
 const [{contents}] = TEST_STORY.sections.filter(({type})=> type === 'carousel');
 describe('Carousel component', () => {
@@ -206,10 +207,11 @@ describe('Carousel component', () => {
         const removeButton = buttons[1];
         expect(removeButton.querySelector('.glyphicon-trash')).toExist();
         TestUtils.Simulate.click(removeButton);
-        const confirmDialog = document.querySelector('.modal-dialog');
-        expect(confirmDialog.style.display).toNotBe("none");
-        const confirmButton = confirmDialog.querySelector('.btn-group .btn');
-        TestUtils.Simulate.click(confirmButton);
+        const confirmDialog = document.querySelector('[role="dialog"]');
+        expect(confirmDialog).toExist();
+        const buttons_ = confirmDialog.querySelectorAll('.btn');
+        expect(buttons_.length).toBe(2);
+        TestUtils.Simulate.click(buttons_[1]);
         expect(spyRemove).toHaveBeenCalled();
         expect(spyRemove.calls[0].arguments[0]).toEqual('sections[{"id":"SomeID_carousel"}]');
     });
@@ -235,10 +237,11 @@ describe('Carousel component', () => {
         expect(itemButtons.length).toBe(3);
         const removeButton = itemButtons[1];
         TestUtils.Simulate.click(removeButton);
-        const confirmDialog = document.querySelector('.modal-dialog');
-        expect(confirmDialog.style.display).toNotBe("none");
-        const confirmButton = confirmDialog.querySelector('.btn-group .btn');
-        TestUtils.Simulate.click(confirmButton);
+        const confirmDialog = document.querySelector('[role="dialog"]');
+        expect(confirmDialog).toExist();
+        const buttons_ = confirmDialog.querySelectorAll('.btn');
+        expect(buttons_.length).toBe(2);
+        TestUtils.Simulate.click(buttons_[1]);
         expect(spyRemove).toHaveBeenCalled();
         expect(spyRemove.calls[0].arguments[0]).toEqual('sections[{"id":"SomeID_carousel"}].contents[{"id":"ccol2"}]');
     });

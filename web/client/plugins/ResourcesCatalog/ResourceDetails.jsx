@@ -37,11 +37,11 @@ import { requestResource, facets } from './api/resources';
 import { isEmpty } from 'lodash';
 import PendingStatePrompt from './containers/PendingStatePrompt';
 import ResourceDetailsComponent from './containers/ResourceDetails';
-import Button from './components/Button';
+import Button from '../../components/layout/Button';
 import { getResourceTypesInfo, getResourceId } from './utils/ResourcesUtils';
 import Icon from './components/Icon';
-import Text from './components/Text';
-import FlexBox from './components/FlexBox';
+import Text from '../../components/layout/Text';
+import FlexBox from '../../components/layout/FlexBox';
 import tooltip from '../../components/misc/enhancers/tooltip';
 
 const ButtonWithTooltip = tooltip(Button);

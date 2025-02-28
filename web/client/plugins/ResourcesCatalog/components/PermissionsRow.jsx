@@ -11,8 +11,8 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Icon from './Icon';
 import Message from '../../../components/I18N/Message';
-import FlexBox from './FlexBox';
-import Text from './Text';
+import FlexBox from '../../../components/layout/FlexBox';
+import Text from '../../../components/layout/Text';
 
 function PermissionsRow({
     type,
