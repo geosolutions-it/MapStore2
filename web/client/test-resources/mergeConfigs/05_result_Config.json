@@ -867,7 +867,7 @@
               "name": "ContextCreator",
               "cfg": {
                   "documentationBaseURL": "https://mapstore.geosolutionsgroup.com/mapstore/docs/api/plugins",
-                  "backToPageDestRoute": "/context-manager",
+                  "backToPageDestRoute": "/",
                   "backToPageConfirmationMessage": "contextCreator.undo"
               }
           },
@@ -879,7 +879,6 @@
             }
           }
         ],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"],
-        "context-manager": ["Header", "Redirect", "Home", "ContextManager", "Footer"]
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

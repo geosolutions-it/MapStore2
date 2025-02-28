@@ -1232,14 +1232,6 @@
       "GroupManager",
       "Footer",
       { "name": "About" }
-    ],
-    "context-manager": [
-      "Header",
-      "Redirect",
-      "Home",
-      "ContextManager",
-      "Footer",
-      { "name": "About" }
     ]
   }
 }

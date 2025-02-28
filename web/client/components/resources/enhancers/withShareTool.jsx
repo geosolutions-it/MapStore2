@@ -12,7 +12,9 @@ import ConfigUtils from '../../../utils/ConfigUtils';
 import SharePanel from '../../share/SharePanel';
 import {getApiUrl, getConfigUrl} from '../../../utils/ShareUtils';
 import {isString} from 'lodash';
-
+/**
+ * @deprecated
+ */
 export const addSharePanel = Component => props => {
     const { showShareModal, onShowShareModal, shareModalSettings, setShareModalSettings, editedResource, setEditedResource, shareOptions = {}, getLocationObject = () => window.location, version, ...other } = props;
     const { getShareUrl = () => { }, shareApi = false } = other;
@@ -50,6 +52,7 @@ export const addSharePanel = Component => props => {
 * Adds sharing functionality to a resource grid.
 * @memberof components.resources.enhancers
 * @name withShareTool
+* @deprecated
 * @type {function}
 * @prop {function} getShareUrl: takes a resource and returns an appropriate sharing url, or url along with shareApi value to override the one in shareApi prop
 * @prop {boolean} shareApi: controls, whether Share Dialog should include an option if embedding with APIs

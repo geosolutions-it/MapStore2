@@ -26,6 +26,7 @@ const FormControl = localizedProps('placeholder')(BFormControl);
 
 /**
  * A DropDown menu for user details:
+ * @deprecated
  */
 class Metadata extends React.Component {
     static propTypes = {

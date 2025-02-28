@@ -17,7 +17,9 @@ const handleModal = compose(
     handlePermission(),
     handleErrors
 );
-
+/**
+ * @deprecated
+ */
 export default compose(
     branch(
         ({ show }) => !show,

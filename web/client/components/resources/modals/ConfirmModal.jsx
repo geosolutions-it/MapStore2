@@ -10,7 +10,9 @@ import React from 'react';
 import Modal from '../../misc/Modal';
 import Message from '../../I18N/Message';
 import Button from '../../misc/Button';
-
+/**
+ * @deprecated
+ */
 export default ({
     title = <Message msgId="warning" />,
     cancelText = <Message msgId="no" />,
