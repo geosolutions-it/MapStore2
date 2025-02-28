@@ -543,7 +543,8 @@ class OpenlayersMap extends React.Component {
         if (a === undefined || b === undefined) {
             return false;
         }
-        return a.toFixed(8) - b.toFixed(8) <= 0.00000001;
+        // using abs because the difference can be negative, creating a false positive
+        return Math.abs(a.toFixed(8) - b.toFixed(8)) <= 0.00000001;
     };
 
     _updateMapPositionFromNewProps = (newProps) => {
@@ -553,7 +554,6 @@ class OpenlayersMap extends React.Component {
             this.isNearlyEqual(newProps.center.x, currentCenter.x);
 
         if (!centerIsUpdated) {
-            // let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);
             let center = reproject({ x: newProps.center.x, y: newProps.center.y }, 'EPSG:4326', newProps.projection, true);
             view.setCenter([center.x, center.y]);
         }
