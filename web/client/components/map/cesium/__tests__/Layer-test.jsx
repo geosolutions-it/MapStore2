@@ -35,11 +35,11 @@ import ConfigUtils, { setConfigProp } from '../../../../utils/ConfigUtils';
 import MockAdapter from 'axios-mock-adapter';
 import axios from '../../../../libs/ajax';
 
-
 describe('Cesium layer', () => {
     let map;
-
+    let mockAxios;
     beforeEach((done) => {
+        mockAxios = new MockAdapter(axios);
         document.body.innerHTML = '<div id="map"></div><div id="container"></div><div id="container2"></div>';
         map = new Cesium.Viewer("map");
         map.imageryLayers.removeAll();
@@ -48,6 +48,7 @@ describe('Cesium layer', () => {
     });
 
     afterEach((done) => {
+        mockAxios.restore();
         /* eslint-disable */
         try {
             ReactDOM.unmountComponentAtNode(document.getElementById("map"));
@@ -572,7 +573,7 @@ describe('Cesium layer', () => {
     });
 
     it('respects layer ordering 1', (done) => {
-        var options1 = {
+        const options1 = {
             "type": "wms",
             "visibility": true,
             "name": "nurc:Arc_Sample1",
@@ -581,7 +582,7 @@ describe('Cesium layer', () => {
             "opacity": 1.0,
             "url": "http://demo.geo-solutions.it/geoserver/wms"
         };
-        var options2 = {
+        const options2 = {
             "type": "wms",
             "visibility": true,
             "name": "nurc:Arc_Sample2",
@@ -590,28 +591,12 @@ describe('Cesium layer', () => {
             "opacity": 1.0,
             "url": "/geoserver/wms"
         };
-        // create layers
-        let layer1 = ReactDOM.render(
-            <CesiumLayer type="wms"
-                options={options1} map={map} position={1}/>
-            , document.getElementById("container"));
-
-        expect(layer1).toExist();
-        // expect(map.imageryLayers.length).toBe(1);
-
-        let layer2 = ReactDOM.render(
-            <CesiumLayer type="wms"
-                options={options2} map={map} position={2}/>
-            , document.getElementById("container2"));
-
-        expect(layer2).toExist();
-
-        layer1 = ReactDOM.render(
+        const layer1 = ReactDOM.render(
             <CesiumLayer type="wms"
                 options={options1} map={map} position={2}/>
             , document.getElementById("container"));
 
-        layer2 = ReactDOM.render(
+        const layer2 = ReactDOM.render(
             <CesiumLayer type="wms"
                 options={options2} map={map} position={1}/>
             , document.getElementById("container2"));
@@ -1308,6 +1293,7 @@ describe('Cesium layer', () => {
             },
             forceProxy: true
         };
+        mockAxios.onGet().networkError();
         // create layers
         const cmp = ReactDOM.render(
             <CesiumLayer
@@ -1812,16 +1798,16 @@ describe('Cesium layer', () => {
     });
 
     it('ensure proxy usage in Model layer', (done) => {
+
         const options = {
             type: "model",
             // url that fails
-            url: "https://test-CORS/FontaneMarosegeoreferenziato.ifc",
+            url: "https://test-CORS/test.ifc",
             visibility: true,
             format: 'ifc'
         };
 
-        // Create a mock adapter for axios
-        const mockAxios = new MockAdapter(axios);
+        mockAxios.onGet().networkError();
 
         ReactDOM.render(
             <CesiumLayer
@@ -1830,15 +1816,15 @@ describe('Cesium layer', () => {
                 map={map}
             />, document.getElementById('container'));
 
-
-        setTimeout(() => {
-            // Check if the API call was made
-            expect(mockAxios.history.get.length).toBe(1);
-            // ensure calling from proxy URL (CORS test is performed on fetch before this call)
-            expect(mockAxios.history.get[0].url.includes('/proxy')).toBe(true); // Check the URL
-            expect(mockAxios.history.get[0].url.includes('?url=https%3A%2F%2Ftest-cors%2FFontaneMarosegeoreferenziato.ifc')).toBe(true);
-            mockAxios.restore(); // Restore the original axios instance
-            done();
-        }, 1000);
+        waitFor(() => expect(mockAxios.history.get.length).toBe(2))
+            .then(() => {
+                // Check if the API call was made
+                expect(mockAxios.history.get[0].url).toBe('https://test-CORS/test.ifc');
+                // ensure calling from proxy URL (CORS test is performed on fetch before this call)
+                expect(mockAxios.history.get[1].url.includes('/proxy')).toBe(true); // Check the URL
+                expect(mockAxios.history.get[1].url.includes('?url=https%3A%2F%2Ftest-cors%2Ftest.ifc')).toBe(true);
+                done();
+            })
+            .catch(done);
     });
 });

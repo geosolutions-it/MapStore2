@@ -12,7 +12,8 @@ import assign from 'object-assign';
 import PropTypes from 'prop-types';
 import { round, isNil, castArray } from 'lodash';
 import { getResolutions } from '../../../utils/MapUtils';
-import { testCors, getProxyCacheByUrl } from '../../../api/CORS';
+import axios from '../../../libs/ajax';
+import { getProxyCacheByUrl } from '../../../utils/ProxyUtils';
 
 class CesiumLayer extends React.Component {
     static propTypes = {
@@ -300,9 +301,9 @@ class CesiumLayer extends React.Component {
     addLayer = (newProps) => {
         if (this._isProxy === undefined && newProps?.options?.url) {
             const urls = castArray(newProps.options.url);
-            return testCors(urls[0])
-                .then((isProxy) => {
-                    this._isProxy = isProxy;
+            return axios(urls[0], { noProxy: true })
+                .finally(() => {
+                    this._isProxy = !!getProxyCacheByUrl(urls[0]);
                     this.updateLayer(newProps, this.props);
                     this._prevIsProxy = this._isProxy;
                 });
