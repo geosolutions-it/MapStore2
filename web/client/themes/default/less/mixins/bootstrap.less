@@ -506,9 +506,14 @@
 // return all classes for bootstrap modal with css variables
 .modal-with-css-variables(@theme-vars) {
     .modal-header {
-        .color-var(@theme-vars[primary-contrast]);
-        .background-color-var(@theme-vars[primary]);
+        .color-var(#333333);
+        .background-color-var(@theme-vars[main-bg]);
         .border-color-var(@theme-vars[main-border-color]);
+        border-bottom: none;
+        .close{
+            color: #333333
+        }
+        padding: 10px 15px 10px 15px;
     }
 
     .modal-content,
@@ -517,6 +522,12 @@
         .background-color-var(@theme-vars[main-bg]);
         .border-color-var(@theme-vars[main-border-color]);
     }
+
+    .modal-footer{
+        border-top: none;
+    }
+
+
 }
 
 // @theme-vars: ruleset of mapstore theme variables, see @ms-theme-vars in variables.less file
