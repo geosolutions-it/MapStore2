@@ -58,14 +58,15 @@ function resources(state = defaultState, action) {
         });
     }
     case UPDATE_RESOURCES_METADATA: {
-        return setStateById(state, action, {
+        return setStateById(state, action, (stateId) => ({
+            ...stateId,
             total: action.metadata.total,
             isNextPageAvailable: action.metadata.isNextPageAvailable,
             error: action.metadata.error,
             ...(action.metadata.params &&
                 {
                     params: action.metadata.params,
-                    previousParams: state.params,
+                    previousParams: stateId?.params,
                     nextParams: null
                 }),
             ...(!isNil(action.metadata.locationSearch) &&
@@ -76,7 +77,7 @@ function resources(state = defaultState, action) {
                 {
                     locationPathname: action.metadata.locationPathname
                 })
-        });
+        }));
     }
     case LOADING_RESOURCES: {
         return setStateById(state, action, {
