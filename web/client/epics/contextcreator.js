@@ -27,7 +27,6 @@ import {resourceSelector, creationStepSelector, mapConfigSelector, mapViewerLoad
     editedPluginSelector, editedCfgSelector, validationStatusSelector, parsedCfgSelector, cfgErrorSelector,
     pluginsSelector, initialEnabledPluginsSelector, templatesSelector, editedTemplateSelector, tutorialsSelector,
     wasTutorialShownSelector, prefetchedDataSelector, generateContextResource, isNewPluginsUploaded } from '../selectors/contextcreator';
-import {CONTEXTS_LIST_LOADED} from '../actions/contextmanager';
 import {wrapStartStop} from '../observables/epics';
 import {isLoggedIn} from '../selectors/security';
 import {show, error} from '../actions/notifications';
@@ -79,21 +78,24 @@ export const saveContextResource = (action$, store) => action$
         const allowLoadExtensions = isNewPluginsUploaded(state);
         return (resource && resource.id ? updateResource : createResource)(newResource)
             .switchMap(rid => Rx.Observable.merge(
-                // LOCATION_CHANGE triggers notifications clear, need to work around that
-                // can't wait for CLEAR_NOTIFICATIONS, because either in firefox notification action doesn't trigger
-                // or in chrome it triggers too early
-                // (on chrome there is another LOCATION_CHANGE after the first one for unknown reason, that cancels out the first)
-                (destLocation === '/context-manager' ? action$.ofType(CONTEXTS_LIST_LOADED).take(1).switchMap(() => Rx.Observable.of(
-                    show({
-                        title: "saveDialog.saveSuccessTitle",
-                        message: "saveDialog.saveSuccessMessage"
-                    }))) : Rx.Observable.empty()),
                 Rx.Observable.of(
                     contextSaved(rid),
-                    push(destLocation || `/context/${resource.name}`),
-                    ...(allowLoadExtensions ? [loadExtensions()] : []),
-                    loading(false, 'contextSaving')
-                )
+                    show({
+                        title: "saveDialog.saveSuccessTitle",
+                        message: "saveDialog.saveSuccessMessage",
+                        autoDismiss: 1
+                    })
+                ),
+                // add a delay so the notification message is visible
+                Rx.Observable.defer(() => Promise.resolve())
+                    .delay(1000)
+                    .switchMap(() => {
+                        return Rx.Observable.of(
+                            loading(false, 'contextSaving'),
+                            push(destLocation || `/context/${resource.name}`),
+                            ...(allowLoadExtensions ? [loadExtensions()] : [])
+                        );
+                    })
             ))
             .catch(({status, data}) => Rx.Observable.of(error({
                 title: 'contextCreator.saveErrorNotification.titleContext',

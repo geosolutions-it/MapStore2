@@ -11,7 +11,8 @@ import {
     getResourceTypesInfo,
     getResourceStatus,
     getResourceId,
-    computePendingChanges
+    computePendingChanges,
+    parseResourceProperties
 } from '../ResourcesUtils';
 import expect from 'expect';
 
@@ -190,5 +191,12 @@ describe('ResourcesUtils', () => {
             { attributes: { featured: true } }
         );
         expect(computed.changes).toEqual({ attributes: { featured: true } });
+    });
+
+    it('should parse the detailsSettings of resource', () => {
+        let resource = parseResourceProperties({ attributes: { detailsSettings: "{\"showAsModal\":false,\"showAtStartup\":false}" } });
+        expect(resource?.attributes?.detailsSettings).toEqual({ showAsModal: false, showAtStartup: false });
+        resource = parseResourceProperties(resource);
+        expect(resource?.attributes?.detailsSettings).toEqual({ showAsModal: false, showAtStartup: false });
     });
 });

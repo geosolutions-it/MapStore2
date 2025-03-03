@@ -7,7 +7,9 @@
  */
 
 import {compose, withState} from 'recompose';
-
+/**
+ * @deprecated
+ */
 export default compose(
     withState('newGroup', 'onNewGroupChoose'),
     withState('newPermission', 'onNewPermissionChoose')

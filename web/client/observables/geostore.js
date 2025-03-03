@@ -254,11 +254,12 @@ API = GeoStoreDAO ) => {
  *    }
  * ```
  *  }
- * @param {resource} param0 resource content
+ * @param {object} resource resource content
+ * @param {object[]} resource.tags array of tag actions, action can be 'link' or 'unlink', expected structure [{ tag: { id }, action },]
  * @param {object} API the API to use
  * @return an observable that emits the id of the resource
  */
-export const createResource = ({ data, category, metadata, permission: configuredPermission, linkedResources = {} }, API = GeoStoreDAO) =>
+export const createResource = ({ data, category, metadata, permission: configuredPermission, linkedResources = {}, tags }, API = GeoStoreDAO) =>
     // create resource
     Observable.defer(
         () => API.createResource(metadata, data, category)
@@ -285,6 +286,18 @@ export const createResource = ({ data, category, metadata, permission: configure
                         )
                 ).map(() => id)
                 : Observable.of(id)
+        )
+        // update tags
+        .switchMap((id) =>
+            Observable
+                .defer(() => Promise.all(
+                    (tags || [])
+                        .map(({ tag, action }) => action === 'link'
+                            ? API.linkTagToResource(tag.id, id)
+                            : API.unlinkTagFromResource(tag.id, id)
+                        )
+                ))
+                .switchMap(() => Observable.of(id))
         );
 
 export const createCategory = (category, API = GeoStoreDAO) =>

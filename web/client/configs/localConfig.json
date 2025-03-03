@@ -1121,7 +1121,8 @@
       {
         "name": "BrandNavbar",
         "cfg": {
-          "containerPosition": "header"
+          "containerPosition": "header",
+          "disablePluginIf": "{(state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
         }
       },
       {
@@ -1229,14 +1230,6 @@
       "Home",
       "UserManager",
       "GroupManager",
-      "Footer",
-      { "name": "About" }
-    ],
-    "context-manager": [
-      "Header",
-      "Redirect",
-      "Home",
-      "ContextManager",
       "Footer",
       { "name": "About" }
     ]

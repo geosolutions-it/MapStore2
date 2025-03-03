@@ -14,7 +14,9 @@ import Message from '../../../I18N/Message';
 import FileDrop from '../../forms/FileDrop';
 import Metadata from '../../forms/Metadata';
 import Thumbnail from '../../forms/Thumbnail';
-
+/**
+ * @deprecated
+ */
 class MainForm extends React.Component {
     render() {
         /* eslint-disable */

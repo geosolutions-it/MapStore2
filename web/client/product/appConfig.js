@@ -52,10 +52,6 @@ export default {
         path: "/manager/:tool",
         component: require('./pages/Manager').default
     }, {
-        name: "context-manager",
-        path: "/context-manager",
-        component: require('./pages/ContextManager').default
-    }, {
         name: "dashboard",
         path: "/dashboard",
         component: require('./pages/Dashboard').default

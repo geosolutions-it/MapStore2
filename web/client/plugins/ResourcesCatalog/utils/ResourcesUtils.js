@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { isEmpty, isEqual, omit, isArray, isObject } from 'lodash';
+import { isEmpty, isEqual, omit, isArray, isObject, isString } from 'lodash';
 import merge from 'lodash/fp/merge';
 import uuid from 'uuid/v1';
 
@@ -182,6 +182,32 @@ export const computePendingChanges = (initialResource, resource, resourceData) =
             ...(!isEmpty(attributes) && { attributes }),
             ...(!isEmpty(linkedResources) && { linkedResources }),
             ...(resourceData?.pending && { data: true })
+        }
+    };
+};
+/* parse a stringify obj from resource properties */
+const parseStringifyProperties = (property) => {
+    if (isString(property)) {
+        try {
+            return JSON.parse(property);
+        } catch (e) {
+            return {};
+        }
+    }
+    return property || {};
+};
+/**
+ * parse all properties of a resource and it returns a valid resource
+ * @param {object} resource resource properties
+ * @return {object} resource with parsed properties (eg, detailsSettings object parsed from string)
+ */
+export const parseResourceProperties = (resource) => {
+    const detailsSettings = parseStringifyProperties(resource?.attributes?.detailsSettings);
+    return {
+        ...resource,
+        attributes: {
+            ...resource?.attributes,
+            detailsSettings
         }
     };
 };

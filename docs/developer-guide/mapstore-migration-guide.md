@@ -22,6 +22,45 @@ This is a list of things to check if you want to update from a previous version 
 
 ## Migration from 2024.02.00 to 2025.01.00
 
+### Remove context-manager page
+
+The `context-manager` page and related `ContextManager` plugin should be removed from existing downstream project.
+
+1. Remove `context-manager` configuration from `localConfig.json`:
+
+    ```diff
+    {
+        ...,
+        "plugins": {
+            ...,
+    -       "context-manager": [
+    -           "Header",
+    -           "Redirect",
+    -           "Home",
+    -           "ContextManager",
+    -           "Footer",
+    -           { "name": "About" }
+    -       ]
+        }
+    }
+    ```
+
+2. Remove the `ContextManager` page from the `appConfig.js` in custom projects that includes it:
+
+    ```diff
+    [
+        ...,
+    -   {
+    -       name: "context-manager",
+    -       path: "/context-manager",
+    -       component: require('./pages/ContextManager').default
+    -   },
+        ...,
+    ]
+    ```
+
+3. Remove the `ContextManager` plugin from the `pluginsDef` in custom projects that includes it
+
 ### Rules manager page changes
 
 The `localConfig.json` configuration for the `rulesmanager` page should be updated in existing project by including the new `BrandNavbar` plugin and removing the deprecated plugins:
@@ -249,6 +288,16 @@ GeoStore needs to be updated to the `2.3` version, changes needed in the `pom.xm
 + <geostore-webapp.version>2.3-SNAPSHOT</geostore-webapp.version>
 ```
 
+New tables have been added to support `tags` and `favorites` associated to the resources. If your installation has the database creation mode set to update (the default), the new tables will be added automatically and you do not have to do any action. If it is set to validate instead you will have to run the update scripts.
+
+- For script reference see:
+
+    [postgresql migration from 2.1.0 to 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/postgresql/postgresql-migration-from-v.2.1.0-to-v2.3.0.sql)
+
+    [h2 migration from 2.1.0 to 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/h2/h2-migration-from-v.2.1.0-to-v2.3.0.sql)
+
+    [oracle migration from 2.1.0 2.3.0](https://github.com/geosolutions-it/geostore/blob/master/doc/sql/migration/oracle/oracle-migration-from-v.2.1.0-to-v2.3.0.sql)
+
 #### localConfig.json changes
 
 Here below all the changes needed related the localConfig.json configuration:
@@ -311,7 +360,7 @@ Replace `Save`, `SaveAs` and `DeleteMap` configurations in the `desktop` (map vi
 }
 ```
 
-Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `DeleteDashboard` configurations in the `dashboard` section with the new configuration:
+Replace `OmniBar`, `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `DeleteDashboard` configurations in the `dashboard` section with the new configuration:
 
 ```diff
 {
@@ -323,6 +372,13 @@ Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `Delete
 -           "DashboardSave",
 -           "DashboardSaveAs",
 -           "DeleteDashboard",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
 +           {
 +               "name": "BrandNavbar",
 +               "cfg": {
@@ -359,7 +415,7 @@ Replace `NavMenu`, `Attribution`, `DashboardSave`, `DashboardSaveAs` and `Delete
 }
 ```
 
-Replace `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGeoStory` configurations in the `geostory` section with the new configuration:
+Replace `OmniBar`, `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGeoStory` configurations in the `geostory` section with the new configuration:
 
 ```diff
 {
@@ -370,10 +426,18 @@ Replace `NavMenu`, `Attribution`, `GeoStorySave`, `GeoStorySaveAs` and `DeleteGe
 -           "GeoStorySave",
 -           "GeoStorySaveAs",
 -           "DeleteGeoStory",
+-           {
+-               "name": "OmniBar",
+-               "cfg": {
+-                   "containerPosition": "header",
+-                   "className": "navbar shadow navbar-home"
+-               }
+-           },
 +           {
 +               "name": "BrandNavbar",
 +               "cfg": {
-+                   "containerPosition": "header"
++                   "containerPosition": "header",
++                   "disablePluginIf": "{(state('router') && state('router').includes('/geostory/shared') && state('geostorymode') !== 'edit')}"
 +               }
 +           },
 +           {
@@ -450,27 +514,7 @@ Finally replace the content of the `common` and `maps` (homepage) sections with 
     "plugins": {
         "common": [
             {
-                "name": "BrandNavbar",
-                "cfg": {
-                    "rightMenuItems": [
-                        {
-                            "type": "link",
-                            "href": "https://docs.mapstore.geosolutionsgroup.com/",
-                            "target": "blank",
-                            "glyph": "book",
-                            "labelId": "Documentation",
-                            "variant": "default"
-                        },
-                        {
-                            "type": "link",
-                            "href": "https://github.com/geosolutions-it/MapStore2",
-                            "target": "blank",
-                            "label": "GitHub",
-                            "glyph": "github",
-                            "variant": "default"
-                        }
-                    ]
-                }
+                "name": "BrandNavbar"
             },
             {
                 "name": "ManagerMenu"

@@ -72,7 +72,8 @@ export const setAllowedTemplatesEpic = (action$, store) => action$
                 [attr.name]: attr.value
             }), {});
         };
-
+        // Since templates comes from api, override with session attributes
+        const sessionMapTemplates = store?.getState().usersession?.session?.mapTemplates;
         return templates.length > 0
             ? Observable
                 .defer(() => Api.searchListByAttributes(makeFilter(), {params: { includeAttributes: true }}, '/resources/search/list'))
@@ -84,7 +85,9 @@ export const setAllowedTemplatesEpic = (action$, store) => action$
                             ...pick(resource, 'id', 'name', 'description'),
                             ...extractAttributes(resource),
                             dataLoaded: false,
-                            loading: false
+                            loading: false,
+                            // override properties from userSession if any
+                            ...sessionMapTemplates?.find(template => template.id === resource.id)
                         }));
                         return Observable.of(setTemplates(newTemplates), setMapTemplatesLoaded(true));
                     })
