@@ -14,7 +14,7 @@
 # use `printing-bundle` to build also the zip bundle
 #
 # Example
-# $ ./build.sh 2022.02.00 binary
+# $ ./build.sh v2024.02.02 binary
 
 set -u
 set -e
